@@ -1,0 +1,117 @@
+<%= form_with(model: restaurant) do |form| %>
+  <% if restaurant.errors.any? %>
+  <div class="form-group row">
+    <div class: 'col-sm-2 col-form-label'>
+        Errors
+    </div>
+    <div class="col-sm-10">
+      <ul>
+          <% restaurant.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+      </ul>
+    </div>
+  </div>
+  <% end %>
+  <div class="form-group row">
+    <%= form.label :name, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :description, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.text_area :description, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :address1, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.text_field :address1, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :address2, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.text_field :address2, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :state, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.text_field :state, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :city, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.text_field :city, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :postcode, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.text_field :postcode, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :country, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.country_select :country, {}, {class: "form-control", :id => "form.object.country"} %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :image, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.text_field :image, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :status, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.select :status, options_for_select(Restaurant.statuses.keys.to_a, form.object.status), {}, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :capacity, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.text_field :capacity, class: 'form-control', disabled: true %>
+    </div>
+  </div>
+  <%= form.hidden_field :user_id, value: current_user.id %>
+  <!--
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :user_id, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.collection_select :user_id, User.all ,:id, :name, options = {:prompt => 'Select a User...'}, html_options = {class: "form-control"}%>
+    </div>
+  </div>
+  -->
+  <div style='height:8px'></div>
+  <div class="row">
+    <div class="col-sm-2">
+    </div>
+    <div class="col-sm-10">
+        <span class="float-end">
+        <% if restaurant.persisted? %>
+          <div class="btn btn-danger ">
+            <%= link_to 'Destroy', restaurant, method: :delete, class: "text-white text-decoration-none", data: { confirm: 'Are you sure?' } %>
+          </div>
+        <% end %>
+        <%= form.submit class: 'btn btn-primary' %>
+        </span>
+    </div>
+  </div>
+<% end %>

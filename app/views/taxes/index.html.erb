@@ -1,0 +1,47 @@
+
+
+
+<div class="row">
+  <div class="col-sm-6">
+    <h1>Taxes</h1>
+  </div>
+
+  <div class="col-sm-6 text-end">
+  <%= link_to new_tax_path, class: 'btn btn-primary' do %>
+    Add New Tax
+  <% end %>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+    
+        <th>Name</th>
+    
+
+            <th>Taxtype</th>
+            <th>Taxpercentage</th>
+            <th>Restaurant</th>
+            
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @taxes.each do |tax| %>
+        <%= content_tag :tr, id: dom_id(tax), class: dom_class(tax) do %>
+          
+            <td><%= link_to tax.name, tax %></td>
+          
+
+                      <td><%= tax.taxtype %></td>
+                      <td><%= tax.taxpercentage %></td>
+                      <td><%= tax.restaurant %></td>
+          
+          
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

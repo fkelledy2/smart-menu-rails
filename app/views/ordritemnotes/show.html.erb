@@ -1,0 +1,16 @@
+<div class="page-header">
+  <%= link_to ordritemnotes_path, class: 'btn btn-default' do %>
+    All Ordritemnotes
+  <% end %>
+  <%= link_to edit_ordritemnote_path(@ordritemnote), class: 'btn btn-primary' do %>
+    Edit
+  <% end %>
+  <h1>Show ordritemnote</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Note:</dt>
+  <dd><%= @ordritemnote.note %></dd>
+  <dt>Ordritem:</dt>
+  <dd><%= @ordritemnote.ordritem %></dd>
+</dl>

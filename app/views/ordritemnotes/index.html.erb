@@ -1,0 +1,45 @@
+
+
+
+<div class="row">
+  <div class="col-sm-6">
+    <h1>Ordritemnotes</h1>
+  </div>
+
+  <div class="col-sm-6 text-end">
+  <%= link_to new_ordritemnote_path, class: 'btn btn-primary' do %>
+    Add New Ordritemnote
+  <% end %>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+    
+
+            <th>Note</th>
+            <th>Ordritem</th>
+            
+          <th></th>
+        
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @ordritemnotes.each do |ordritemnote| %>
+        <%= content_tag :tr, id: dom_id(ordritemnote), class: dom_class(ordritemnote) do %>
+          
+
+                      <td><%= ordritemnote.note %></td>
+                      <td><%= ordritemnote.ordritem %></td>
+          
+          
+            <td><%= link_to 'Show', ordritemnote %></td>
+          
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

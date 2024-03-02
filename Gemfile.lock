@@ -112,6 +112,10 @@ GEM
     chronic (0.10.2)
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
+    countries (5.7.2)
+      unaccent (~> 0.3)
+    country_select (8.0.3)
+      countries (~> 5.0)
     crass (1.0.6)
     cssbundling-rails (1.4.0)
       railties (>= 6.0.0)
@@ -324,6 +328,7 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    unaccent (0.4.0)
     uri (0.13.0)
     version_gem (1.1.3)
     warden (1.2.9)
@@ -355,6 +360,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   capybara
+  country_select (~> 8.0)
   cssbundling-rails
   debug
   devise (~> 4.9)

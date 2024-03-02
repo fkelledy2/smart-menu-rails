@@ -1,0 +1,49 @@
+<%= form_with(model: allergyn) do |form| %>
+  <% if allergyn.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(allergyn.errors.count, "error") %> prohibited this allergyn from being saved:</h2>
+
+      <ul>
+      <% allergyn.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, class: 'form-label' %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :description, class: 'form-label' %>
+      <%= form.text_area :description, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :symbol, class: 'form-label' %>
+      <%= form.text_field :symbol, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :menuitem_id, class: 'form-label' %>
+      <%= form.text_field :menuitem_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if allergyn.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', allergyn, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if allergyn.persisted? %>
+      <%= link_to "Cancel", allergyn, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", allergyns_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

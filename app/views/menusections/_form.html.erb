@@ -1,0 +1,59 @@
+<%= form_with(model: menusection) do |form| %>
+  <% if menusection.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(menusection.errors.count, "error") %> prohibited this menusection from being saved:</h2>
+
+      <ul>
+      <% menusection.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, class: 'form-label' %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :description, class: 'form-label' %>
+      <%= form.text_area :description, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :image, class: 'form-label' %>
+      <%= form.text_field :image, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :status, class: 'form-label' %>
+      <%= form.number_field :status, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :sequence, class: 'form-label' %>
+      <%= form.number_field :sequence, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :menu_id, class: 'form-label' %>
+      <%= form.text_field :menu_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if menusection.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', menusection, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if menusection.persisted? %>
+      <%= link_to "Cancel", menusection, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", menusections_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

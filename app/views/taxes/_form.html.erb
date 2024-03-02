@@ -1,0 +1,49 @@
+<%= form_with(model: tax) do |form| %>
+  <% if tax.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(tax.errors.count, "error") %> prohibited this tax from being saved:</h2>
+
+      <ul>
+      <% tax.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, class: 'form-label' %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :taxtype, class: 'form-label' %>
+      <%= form.number_field :taxtype, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :taxpercentage, class: 'form-label' %>
+      <%= form.text_field :taxpercentage, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :restaurant_id, class: 'form-label' %>
+      <%= form.text_field :restaurant_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if tax.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', tax, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if tax.persisted? %>
+      <%= link_to "Cancel", tax, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", taxes_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

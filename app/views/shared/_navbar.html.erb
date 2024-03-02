@@ -15,6 +15,41 @@
 
     <div class="collapse navbar-collapse" id="navbarMain">
       <ul class="navbar-nav me-auto mt-2 mt-md-0">
+        <% if current_user %>
+            <li class="nav-item dropdown">
+              <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
+                 Restaurants
+              <% end %>
+              <div id="nav-account-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbar-dropdown">
+                <%= link_to "Restaurants", restaurants_path, class: "dropdown-item" %>
+                <%= link_to "Employees", employees_path, class: "dropdown-item" %>
+                <%= link_to "TableSettings", tablesettings_path, class: "dropdown-item" %>
+                <%= link_to "Taxes", taxes_path, class: "dropdown-item" %>
+              </div>
+            </li>
+
+            <li class="nav-item dropdown">
+              <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
+                 Menus
+              <% end %>
+              <div id="nav-account-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbar-dropdown">
+                <%= link_to "Menus", menus_path, class: "dropdown-item" %>
+                <%= link_to "MenuSections", menusections_path, class: "dropdown-item" %>
+                <%= link_to "MenuItems", menuitems_path, class: "dropdown-item" %>
+                <%= link_to "Allergyns", allergyns_path, class: "dropdown-item" %>
+                <%= link_to "Tags", tags_path, class: "dropdown-item" %>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
+                 Orders
+              <% end %>
+              <div id="nav-account-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbar-dropdown">
+                <%= link_to "Orders", ordrs_path, class: "dropdown-item" %>
+                <%= link_to "Order Items", ordritems_path, class: "dropdown-item" %>
+              </div>
+            </li>
+        <% end %>
       </ul>
 
       <ul class="navbar-nav">

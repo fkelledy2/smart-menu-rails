@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_29_123035) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_29_134137) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_29_123035) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "allergyns", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "symbol"
+    t.bigint "menuitem_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menuitem_id"], name: "index_allergyns_on_menuitem_id"
+  end
+
   create_table "announcements", force: :cascade do |t|
     t.datetime "published_at"
     t.string "announcement_type"
@@ -49,6 +59,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_29_123035) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "employees", force: :cascade do |t|
+    t.string "name"
+    t.string "eid"
+    t.string "image"
+    t.integer "status"
+    t.bigint "restaurant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_employees_on_restaurant_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -60,6 +81,44 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_29_123035) do
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
+  create_table "menuitems", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "image"
+    t.integer "status"
+    t.integer "sequence"
+    t.integer "calories"
+    t.float "price"
+    t.bigint "menusection_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
+  end
+
+  create_table "menus", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "image"
+    t.integer "status"
+    t.integer "sequence"
+    t.bigint "restaurant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_menus_on_restaurant_id"
+  end
+
+  create_table "menusections", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "image"
+    t.integer "status"
+    t.integer "sequence"
+    t.bigint "menu_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id"], name: "index_menusections_on_menu_id"
   end
 
   create_table "noticed_events", force: :cascade do |t|
@@ -86,6 +145,62 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_29_123035) do
     t.index ["recipient_type", "recipient_id"], name: "index_noticed_notifications_on_recipient"
   end
 
+  create_table "ordritemnotes", force: :cascade do |t|
+    t.string "note"
+    t.bigint "ordritem_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ordritem_id"], name: "index_ordritemnotes_on_ordritem_id"
+  end
+
+  create_table "ordritems", force: :cascade do |t|
+    t.bigint "ordr_id", null: false
+    t.bigint "menuitem_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menuitem_id"], name: "index_ordritems_on_menuitem_id"
+    t.index ["ordr_id"], name: "index_ordritems_on_ordr_id"
+  end
+
+  create_table "ordrs", force: :cascade do |t|
+    t.datetime "orderedAt", precision: nil
+    t.datetime "deliveredAt", precision: nil
+    t.datetime "paidAt", precision: nil
+    t.float "nett"
+    t.float "tip"
+    t.float "service"
+    t.float "tax"
+    t.float "gross"
+    t.bigint "employee_id", null: false
+    t.bigint "tablesetting_id", null: false
+    t.bigint "menu_id", null: false
+    t.bigint "restaurant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employee_id"], name: "index_ordrs_on_employee_id"
+    t.index ["menu_id"], name: "index_ordrs_on_menu_id"
+    t.index ["restaurant_id"], name: "index_ordrs_on_restaurant_id"
+    t.index ["tablesetting_id"], name: "index_ordrs_on_tablesetting_id"
+  end
+
+  create_table "restaurants", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "address1"
+    t.string "address2"
+    t.string "state"
+    t.string "city"
+    t.string "postcode"
+    t.string "country"
+    t.string "image"
+    t.integer "status"
+    t.integer "capacity"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_restaurants_on_user_id"
+  end
+
   create_table "services", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "provider"
@@ -98,6 +213,36 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_29_123035) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_services_on_user_id"
+  end
+
+  create_table "tablesettings", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "status"
+    t.integer "capacity"
+    t.bigint "restaurant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_tablesettings_on_restaurant_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.bigint "menuitem_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menuitem_id"], name: "index_tags_on_menuitem_id"
+  end
+
+  create_table "taxes", force: :cascade do |t|
+    t.string "name"
+    t.integer "taxtype"
+    t.float "taxpercentage"
+    t.bigint "restaurant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_taxes_on_restaurant_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -118,5 +263,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_29_123035) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "allergyns", "menuitems"
+  add_foreign_key "employees", "restaurants"
+  add_foreign_key "menuitems", "menusections"
+  add_foreign_key "menus", "restaurants"
+  add_foreign_key "menusections", "menus"
+  add_foreign_key "ordritemnotes", "ordritems"
+  add_foreign_key "ordritems", "menuitems"
+  add_foreign_key "ordritems", "ordrs"
+  add_foreign_key "ordrs", "employees"
+  add_foreign_key "ordrs", "menus"
+  add_foreign_key "ordrs", "restaurants"
+  add_foreign_key "ordrs", "tablesettings"
+  add_foreign_key "restaurants", "users"
   add_foreign_key "services", "users"
+  add_foreign_key "tablesettings", "restaurants"
+  add_foreign_key "tags", "menuitems"
+  add_foreign_key "taxes", "restaurants"
 end

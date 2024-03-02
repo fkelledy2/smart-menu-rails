@@ -1,6 +1,18 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :taxes
+  resources :ordritemnotes
+  resources :ordritems
+  resources :ordrs
+  resources :tablesettings
+  resources :employees
+  resources :tags
+  resources :allergyns
+  resources :menuitems
+  resources :menusections
+  resources :menus
+  resources :restaurants
   draw :madmin
   get '/privacy', to: 'home#privacy'
   get '/terms', to: 'home#terms'

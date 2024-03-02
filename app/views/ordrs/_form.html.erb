@@ -1,0 +1,89 @@
+<%= form_with(model: ordr) do |form| %>
+  <% if ordr.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(ordr.errors.count, "error") %> prohibited this ordr from being saved:</h2>
+
+      <ul>
+      <% ordr.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :orderedAt, class: 'form-label' %>
+      <%= form.datetime_field :orderedAt, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :deliveredAt, class: 'form-label' %>
+      <%= form.datetime_field :deliveredAt, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :paidAt, class: 'form-label' %>
+      <%= form.datetime_field :paidAt, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :nett, class: 'form-label' %>
+      <%= form.text_field :nett, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :tip, class: 'form-label' %>
+      <%= form.text_field :tip, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :service, class: 'form-label' %>
+      <%= form.text_field :service, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :tax, class: 'form-label' %>
+      <%= form.text_field :tax, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :gross, class: 'form-label' %>
+      <%= form.text_field :gross, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :employee_id, class: 'form-label' %>
+      <%= form.text_field :employee_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :tablesetting_id, class: 'form-label' %>
+      <%= form.text_field :tablesetting_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :menu_id, class: 'form-label' %>
+      <%= form.text_field :menu_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :restaurant_id, class: 'form-label' %>
+      <%= form.text_field :restaurant_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if ordr.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', ordr, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if ordr.persisted? %>
+      <%= link_to "Cancel", ordr, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", ordrs_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

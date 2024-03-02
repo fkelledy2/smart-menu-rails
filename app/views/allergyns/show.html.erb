@@ -1,0 +1,20 @@
+<div class="page-header">
+  <%= link_to allergyns_path, class: 'btn btn-default' do %>
+    All Allergyns
+  <% end %>
+  <%= link_to edit_allergyn_path(@allergyn), class: 'btn btn-primary' do %>
+    Edit
+  <% end %>
+  <h1>Show allergyn</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Name:</dt>
+  <dd><%= @allergyn.name %></dd>
+  <dt>Description:</dt>
+  <dd><%= @allergyn.description %></dd>
+  <dt>Symbol:</dt>
+  <dd><%= @allergyn.symbol %></dd>
+  <dt>Menuitem:</dt>
+  <dd><%= @allergyn.menuitem %></dd>
+</dl>

@@ -1,0 +1,20 @@
+<div class="page-header">
+  <%= link_to taxes_path, class: 'btn btn-default' do %>
+    All Taxes
+  <% end %>
+  <%= link_to edit_tax_path(@tax), class: 'btn btn-primary' do %>
+    Edit
+  <% end %>
+  <h1>Show tax</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Name:</dt>
+  <dd><%= @tax.name %></dd>
+  <dt>Taxtype:</dt>
+  <dd><%= @tax.taxtype %></dd>
+  <dt>Taxpercentage:</dt>
+  <dd><%= @tax.taxpercentage %></dd>
+  <dt>Restaurant:</dt>
+  <dd><%= @tax.restaurant %></dd>
+</dl>

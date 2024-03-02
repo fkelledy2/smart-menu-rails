@@ -1,0 +1,69 @@
+<%= form_with(model: menuitem) do |form| %>
+  <% if menuitem.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(menuitem.errors.count, "error") %> prohibited this menuitem from being saved:</h2>
+
+      <ul>
+      <% menuitem.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, class: 'form-label' %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :description, class: 'form-label' %>
+      <%= form.text_area :description, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :image, class: 'form-label' %>
+      <%= form.text_field :image, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :status, class: 'form-label' %>
+      <%= form.number_field :status, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :sequence, class: 'form-label' %>
+      <%= form.number_field :sequence, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :calories, class: 'form-label' %>
+      <%= form.number_field :calories, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :price, class: 'form-label' %>
+      <%= form.text_field :price, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :menusection_id, class: 'form-label' %>
+      <%= form.text_field :menusection_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if menuitem.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', menuitem, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if menuitem.persisted? %>
+      <%= link_to "Cancel", menuitem, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", menuitems_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

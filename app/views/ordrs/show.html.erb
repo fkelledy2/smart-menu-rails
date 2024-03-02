@@ -1,0 +1,36 @@
+<div class="page-header">
+  <%= link_to ordrs_path, class: 'btn btn-default' do %>
+    All Ordrs
+  <% end %>
+  <%= link_to edit_ordr_path(@ordr), class: 'btn btn-primary' do %>
+    Edit
+  <% end %>
+  <h1>Show ordr</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Orderedat:</dt>
+  <dd><%= @ordr.orderedAt %></dd>
+  <dt>Deliveredat:</dt>
+  <dd><%= @ordr.deliveredAt %></dd>
+  <dt>Paidat:</dt>
+  <dd><%= @ordr.paidAt %></dd>
+  <dt>Nett:</dt>
+  <dd><%= @ordr.nett %></dd>
+  <dt>Tip:</dt>
+  <dd><%= @ordr.tip %></dd>
+  <dt>Service:</dt>
+  <dd><%= @ordr.service %></dd>
+  <dt>Tax:</dt>
+  <dd><%= @ordr.tax %></dd>
+  <dt>Gross:</dt>
+  <dd><%= @ordr.gross %></dd>
+  <dt>Employee:</dt>
+  <dd><%= @ordr.employee %></dd>
+  <dt>Tablesetting:</dt>
+  <dd><%= @ordr.tablesetting %></dd>
+  <dt>Menu:</dt>
+  <dd><%= @ordr.menu %></dd>
+  <dt>Restaurant:</dt>
+  <dd><%= @ordr.restaurant %></dd>
+</dl>

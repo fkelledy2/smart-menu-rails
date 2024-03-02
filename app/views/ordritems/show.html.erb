@@ -1,0 +1,16 @@
+<div class="page-header">
+  <%= link_to ordritems_path, class: 'btn btn-default' do %>
+    All Ordritems
+  <% end %>
+  <%= link_to edit_ordritem_path(@ordritem), class: 'btn btn-primary' do %>
+    Edit
+  <% end %>
+  <h1>Show ordritem</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Ordr:</dt>
+  <dd><%= @ordritem.ordr %></dd>
+  <dt>Menuitem:</dt>
+  <dd><%= @ordritem.menuitem %></dd>
+</dl>

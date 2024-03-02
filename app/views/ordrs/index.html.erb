@@ -1,0 +1,65 @@
+
+
+
+<div class="row">
+  <div class="col-sm-6">
+    <h1>Ordrs</h1>
+  </div>
+
+  <div class="col-sm-6 text-end">
+  <%= link_to new_ordr_path, class: 'btn btn-primary' do %>
+    Add New Ordr
+  <% end %>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+    
+
+            <th>Orderedat</th>
+            <th>Deliveredat</th>
+            <th>Paidat</th>
+            <th>Nett</th>
+            <th>Tip</th>
+            <th>Service</th>
+            <th>Tax</th>
+            <th>Gross</th>
+            <th>Employee</th>
+            <th>Tablesetting</th>
+            <th>Menu</th>
+            <th>Restaurant</th>
+
+          <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @ordrs.each do |ordr| %>
+        <%= content_tag :tr, id: dom_id(ordr), class: dom_class(ordr) do %>
+          
+
+                      <td><%= ordr.orderedAt %></td>
+                      <td><%= ordr.deliveredAt %></td>
+                      <td><%= ordr.paidAt %></td>
+                      <td><%= ordr.nett %></td>
+                      <td><%= ordr.tip %></td>
+                      <td><%= ordr.service %></td>
+                      <td><%= ordr.tax %></td>
+                      <td><%= ordr.gross %></td>
+                      <td><%= ordr.employee %></td>
+                      <td><%= ordr.tablesetting %></td>
+                      <td><%= ordr.menu %></td>
+                      <td><%= ordr.restaurant %></td>
+
+
+            <td><%= link_to 'Show', ordr %></td>
+
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

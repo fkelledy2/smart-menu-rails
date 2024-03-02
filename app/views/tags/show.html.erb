@@ -1,0 +1,18 @@
+<div class="page-header">
+  <%= link_to tags_path, class: 'btn btn-default' do %>
+    All Tags
+  <% end %>
+  <%= link_to edit_tag_path(@tag), class: 'btn btn-primary' do %>
+    Edit
+  <% end %>
+  <h1>Show tag</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Name:</dt>
+  <dd><%= @tag.name %></dd>
+  <dt>Description:</dt>
+  <dd><%= @tag.description %></dd>
+  <dt>Menuitem:</dt>
+  <dd><%= @tag.menuitem %></dd>
+</dl>

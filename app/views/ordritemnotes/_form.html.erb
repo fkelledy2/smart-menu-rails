@@ -1,0 +1,39 @@
+<%= form_with(model: ordritemnote) do |form| %>
+  <% if ordritemnote.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(ordritemnote.errors.count, "error") %> prohibited this ordritemnote from being saved:</h2>
+
+      <ul>
+      <% ordritemnote.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :note, class: 'form-label' %>
+      <%= form.text_field :note, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :ordritem_id, class: 'form-label' %>
+      <%= form.text_field :ordritem_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if ordritemnote.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', ordritemnote, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if ordritemnote.persisted? %>
+      <%= link_to "Cancel", ordritemnote, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", ordritemnotes_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

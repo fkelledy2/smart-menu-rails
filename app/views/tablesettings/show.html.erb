@@ -1,0 +1,22 @@
+<div class="page-header">
+  <%= link_to tablesettings_path, class: 'btn btn-default' do %>
+    All Tablesettings
+  <% end %>
+  <%= link_to edit_tablesetting_path(@tablesetting), class: 'btn btn-primary' do %>
+    Edit
+  <% end %>
+  <h1>Show tablesetting</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Name:</dt>
+  <dd><%= @tablesetting.name %></dd>
+  <dt>Description:</dt>
+  <dd><%= @tablesetting.description %></dd>
+  <dt>Status:</dt>
+  <dd><%= @tablesetting.status %></dd>
+  <dt>Capacity:</dt>
+  <dd><%= @tablesetting.capacity %></dd>
+  <dt>Restaurant:</dt>
+  <dd><%= @tablesetting.restaurant %></dd>
+</dl>
