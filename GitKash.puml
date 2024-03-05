@@ -1,0 +1,38 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Consumer -> "GitKash App (Consumer pesona)": Logs in
+
+"Merchant Staff" -> "GitKash App (Merchant pesona)": Logs in
+
+Consumer -> "Merchant Location": Enters
+Consumer -> Consumer : Shops, filling "shopping cart"
+
+Consumer -> Consumer : Decides to leave & pay
+
+Consumer -> POS : Goes to checkout
+
+"Merchant Staff" <- "Consumer" : Gives "shopping cart"
+"Merchant Staff" -> POS : Scans all items
+
+Consumer -> "Merchant Staff" : Informs Merchant Staff they are a GitKash customer
+
+"Merchant Staff" -> Consumer : Asks Consumer to open unique QR code in "GitKash App (Consumer pesona)"
+
+Consumer -> "GitKash App (Consumer pesona)" : Opens QR code page
+
+"Merchant Staff" -> "GitKash App (Merchant pesona)" : Opens App Camera
+
+"GitKash App (Merchant pesona)" <-> "GitKash App (Consumer pesona)" : Merchant persona Scans QR code for Consumer persona
+
+"GitKash App (Merchant pesona)" -> "Merchant Staff" : Presents screen to enter total receipt amount.
+
+"Merchant Staff" -> "Merchant Staff" : Enters bill amount from POS screen & submits
+
+"GitKash App (Merchant pesona)" -> "GitKash Servers" : Transaction (Consumer, location, time, merchant, amount)
+
+"GitKash Servers" -> "GitKash Servers" : Process event, matching active deals, calc reward, credit customer.
+
+@enduml

@@ -1,49 +1,51 @@
-
-
-
 <div class="row">
   <div class="col-sm-6">
-    <h1>Tablesettings</h1>
+    <h1>Table Settings</h1>
   </div>
-
   <div class="col-sm-6 text-end">
   <%= link_to new_tablesetting_path, class: 'btn btn-primary' do %>
-    Add New Tablesetting
+    Add New Table Setting
   <% end %>
   </div>
 </div>
-
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-    
-        <th>Name</th>
-    
-
-            <th>Description</th>
-            <th>Status</th>
-            <th>Capacity</th>
-            <th>Restaurant</th>
-            
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @tablesettings.each do |tablesetting| %>
-        <%= content_tag :tr, id: dom_id(tablesetting), class: dom_class(tablesetting) do %>
-          
-            <td><%= link_to tablesetting.name, tablesetting %></td>
-          
-
-                      <td><%= tablesetting.description %></td>
-                      <td><%= tablesetting.status %></td>
-                      <td><%= tablesetting.capacity %></td>
-                      <td><%= tablesetting.restaurant %></td>
-          
-          
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
+<div id="tablesetting-table">
 </div>
+
+<script>
+    var tableSettingTable = new Tabulator("#tablesetting-table", {
+      height:405,
+      responsiveLayout:true,
+      pagination:"local",
+      paginationSize:10,
+      paginationCounter:"rows",
+      ajaxURL: '/tablesettings.json',
+      layout:"fitColumns",
+      columns: [
+      {
+        title:"Name", field:"id", width: 200, responsive:0, formatter:"link", formatterParams: {
+            labelField:"name",
+            urlPrefix:"/tablesettings/",
+        }
+       },
+       {title:"Description", field:"description", responsive:1},
+       {title:"Status", field:"status", width:150, responsive:0},
+       {title:"Capacity", field:"capacity", width: 200},
+       {title:"Restaurant", field:"restaurant.name", width:200},
+       {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       },
+       {title:"Updated", field:"updated_at", width:200, responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       }
+      ],
+    });
+    //trigger an alert message when the row is clicked
+    tableSettingTable.on("rowClick", function(e, row){
+    });
+</script>

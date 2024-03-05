@@ -5,4 +5,5 @@ class Menu < ApplicationRecord
     active: 1,
     archived: 2
   }
+  validates :name, :presence => true
 end

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html class="h-100">
   <head>
@@ -7,11 +8,10 @@
   <body class="d-flex flex-column h-100">
     <main class="flex-shrink-0"> 
       <%= render 'shared/navbar' %>
-      <%= render 'shared/notices' %>
-
       <div class="container mt-4 mx-auto">
         <%= yield %>
       </div>
+      <%= render 'shared/notices' %>
     </main>
 
     <%= render 'shared/footer' %>

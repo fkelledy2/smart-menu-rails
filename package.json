@@ -15,10 +15,12 @@
     "esbuild": "^0.20.1",
     "esbuild-rails": "^1.0.7",
     "local-time": "^3.0.2",
+    "luxon": "^3.4.4",
     "nodemon": "^3.1.0",
     "postcss": "^8.4.35",
     "postcss-cli": "^11.0.0",
     "sass": "^1.71.1",
+    "tabulator-tables": "^5.6.1",
     "trix": "^2.0.10"
   },
   "scripts": {

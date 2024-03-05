@@ -1,22 +1,54 @@
 <div class="page-header">
-  <%= link_to employees_path, class: 'btn btn-default' do %>
-    All Employees
-  <% end %>
-  <%= link_to edit_employee_path(@employee), class: 'btn btn-primary' do %>
-    Edit
-  <% end %>
-  <h1>Show employee</h1>
+  <div class="row">
+    <div class="col-sm-10">
+          <h1>Show Employee</h1>
+    </div>
+    <div class="col-sm-2">
+        <span class="float-end">
+          <%= link_to employees_path, class: 'btn btn-light' do %>
+            Back
+          <% end %>
+          <%= link_to edit_employee_path(@employee), class: 'btn btn-primary' do %>
+            Edit
+          <% end %>
+        </span>
+    </div>
+  </div>
 </div>
 
-<dl class="dl-horizontal">
-  <dt>Name:</dt>
-  <dd><%= @employee.name %></dd>
-  <dt>Eid:</dt>
-  <dd><%= @employee.eid %></dd>
-  <dt>Image:</dt>
-  <dd><%= @employee.image %></dd>
-  <dt>Status:</dt>
-  <dd><%= @employee.status %></dd>
-  <dt>Restaurant:</dt>
-  <dd><%= @employee.restaurant %></dd>
-</dl>
+<%= form_with(model: @employee) do |form| %>
+  <div class="form-group row">
+    <%= form.label :name, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.text_field :name, class: 'form-control', disabled: 'disabled' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :eid, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.text_field :eid, class: 'form-control', disabled: 'disabled'  %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :image, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.text_field :image, class: 'form-control', disabled: 'disabled'  %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :status, class: 'col-sm-2 col-form-label', disabled: 'disabled'  %>
+    <div class="col-sm-10">
+      <%= form.select :status, options_for_select(Employee.statuses.keys.to_a, form.object.status), {}, class: 'form-control', disabled: 'disabled' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :restaurant_id, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.collection_select :restaurant_id, Restaurant.all ,:id, :name, options = {:prompt => 'Select a Restaurant...'}, html_options = {class: "form-control" , disabled: 'disabled'}%>
+    </div>
+  </div>
+<% end %>

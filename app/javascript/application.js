@@ -7,6 +7,9 @@ import "@hotwired/turbo-rails"
 require("@rails/activestorage").start()
 //require("trix")
 //require("@rails/actiontext")
+//= require jquery3
+//= require jquery_ujs
+//= require_tree .
 require("local-time").start()
 require("@rails/ujs").start()
 
@@ -14,6 +17,12 @@ import './channels/**/*_channel.js'
 import "./controllers"
 
 import * as bootstrap from "bootstrap"
+import {TabulatorFull as Tabulator} from 'tabulator-tables';
+window.Tabulator = Tabulator
+// while we are here make sure you have
+window.bootstrap = bootstrap
+import {DateTime} from 'luxon'
+window.DateTime = DateTime
 
 document.addEventListener("turbo:load", () => {
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

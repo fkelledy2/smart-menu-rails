@@ -1,49 +1,50 @@
-
-
-
 <div class="row">
   <div class="col-sm-6">
     <h1>Employees</h1>
   </div>
-
   <div class="col-sm-6 text-end">
   <%= link_to new_employee_path, class: 'btn btn-primary' do %>
     Add New Employee
   <% end %>
   </div>
 </div>
-
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-    
-        <th>Name</th>
-    
-
-            <th>Eid</th>
-            <th>Image</th>
-            <th>Status</th>
-            <th>Restaurant</th>
-            
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @employees.each do |employee| %>
-        <%= content_tag :tr, id: dom_id(employee), class: dom_class(employee) do %>
-          
-            <td><%= link_to employee.name, employee %></td>
-          
-
-                      <td><%= employee.eid %></td>
-                      <td><%= employee.image %></td>
-                      <td><%= employee.status %></td>
-                      <td><%= employee.restaurant %></td>
-          
-          
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
+<div id="employee-table">
 </div>
+
+<script>
+    var enployeeTable = new Tabulator("#employee-table", {
+      height:405,
+      responsiveLayout:true,
+      pagination:"local",
+      paginationSize:10,
+      paginationCounter:"rows",
+      ajaxURL: '/employees.json',
+      layout:"fitColumns",
+      columns: [
+      {
+        title:"Name", field:"id", width: 200, responsive:0, formatter:"link", formatterParams: {
+            labelField:"name",
+            urlPrefix:"/employees/",
+        }
+       },
+       {title: 'EID', field: 'eid', responsive:1,},
+       {title:"Status", field:"status", width:150, responsive:0},
+       {title:"Restaurant", field:"restaurant.name", width:200},
+       {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       },
+       {title:"Updated", field:"updated_at", width:200, responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       }
+      ],
+    });
+    //trigger an alert message when the row is clicked
+    restaurantTable.on("rowClick", function(e, row){
+    });
+</script>

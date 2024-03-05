@@ -1,3 +1,15 @@
-<h1>New tablesetting</h1>
-
+<div class="page-header">
+  <div class="row">
+    <div class="col-sm-10">
+          <h1>New Table Setting</h1>
+    </div>
+    <div class="col-sm-2">
+        <% if @tablesetting.persisted? %>
+          <%= link_to "Cancel", @tablesetting, class: "float-end btn btn-light" %>
+        <% else %>
+          <%= link_to "Cancel", tablesettings_path, class: "float-end btn btn-light" %>
+        <% end %>
+    </div>
+  </div>
+</div>
 <%= render 'form', tablesetting: @tablesetting %>

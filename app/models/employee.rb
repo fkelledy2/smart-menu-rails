@@ -5,4 +5,8 @@ class Employee < ApplicationRecord
     active: 1,
     archived: 2
   }
+  validates :name, :presence => true
+  validates :eid, :presence => true
+  validates :status, :presence => true
+  validates :restaurant, :presence => true
 end
