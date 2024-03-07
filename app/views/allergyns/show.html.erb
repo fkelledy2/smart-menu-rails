@@ -1,20 +1,47 @@
 <div class="page-header">
-  <%= link_to allergyns_path, class: 'btn btn-default' do %>
-    All Allergyns
-  <% end %>
-  <%= link_to edit_allergyn_path(@allergyn), class: 'btn btn-primary' do %>
-    Edit
-  <% end %>
-  <h1>Show allergyn</h1>
+  <div class="row">
+    <div class="col-sm-10">
+          <h1>Show Allergyn</h1>
+    </div>
+    <div class="col-sm-2">
+        <span class="float-end">
+          <%= link_to allergyns_path, class: 'btn btn-light' do %>
+            Back
+          <% end %>
+          <%= link_to edit_allergyn_path(@allergyn), class: 'btn btn-primary' do %>
+            Edit
+          <% end %>
+        </span>
+    </div>
+  </div>
 </div>
 
-<dl class="dl-horizontal">
-  <dt>Name:</dt>
-  <dd><%= @allergyn.name %></dd>
-  <dt>Description:</dt>
-  <dd><%= @allergyn.description %></dd>
-  <dt>Symbol:</dt>
-  <dd><%= @allergyn.symbol %></dd>
-  <dt>Menuitem:</dt>
-  <dd><%= @allergyn.menuitem %></dd>
-</dl>
+<%= form_with(model: @allergyn) do |form| %>
+  <div class="form-group row">
+    <%= form.label :name, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.text_field :name, class: 'form-control', disabled: 'disabled'  %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :description, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.text_area :description, class: 'form-control', disabled: 'disabled'  %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :symbol, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.text_field :symbol, class: 'form-control', disabled: 'disabled'  %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :menuitem_id, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+        <%= form.collection_select :menuitem_id, Menuitem.all ,:id, :name, options = {:prompt => 'Select a Menu Item...'}, html_options = {class: "form-control", disabled: 'disabled' }%>
+    </div>
+  </div>
+<% end %>

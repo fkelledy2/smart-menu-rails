@@ -1,51 +1,55 @@
-
-
-
 <div class="row">
   <div class="col-sm-6">
-    <h1>Menusections</h1>
+    <h1>Menu Sections</h1>
   </div>
-
   <div class="col-sm-6 text-end">
   <%= link_to new_menusection_path, class: 'btn btn-primary' do %>
-    Add New Menusection
+    Add New Menu Section
   <% end %>
   </div>
 </div>
-
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-    
-        <th>Name</th>
-    
-
-            <th>Description</th>
-            <th>Image</th>
-            <th>Status</th>
-            <th>Sequence</th>
-            <th>Menu</th>
-            
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @menusections.each do |menusection| %>
-        <%= content_tag :tr, id: dom_id(menusection), class: dom_class(menusection) do %>
-          
-            <td><%= link_to menusection.name, menusection %></td>
-          
-
-                      <td><%= menusection.description %></td>
-                      <td><%= menusection.image %></td>
-                      <td><%= menusection.status %></td>
-                      <td><%= menusection.sequence %></td>
-                      <td><%= menusection.menu %></td>
-          
-          
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
+<div id="menusection-table">
 </div>
+
+<script>
+    var menusectionTable = new Tabulator("#menusection-table", {
+      height:405,
+      responsiveLayout:true,
+      pagination:"local",
+      paginationSize:10,
+      paginationCounter:"rows",
+      ajaxURL: '/menusections.json',
+      layout:"fitColumns",
+      columns: [
+      {
+        title:"Menu", field:"menu_id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
+            labelField:"menu.name",
+            urlPrefix:"/menus/",
+        }
+      },
+      {
+        title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
+            labelField:"name",
+            urlPrefix:"/menusections/",
+        }
+       },
+       {title:"Status", field:"status", width:150, responsive:0},
+       {title:"Seq", field:"sequence", width: 100, hozAlign:"right", headerHozAlign:"right"},
+       {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       },
+       {title:"Updated", field:"updated_at", width:200, responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       }
+      ]
+    });
+    //trigger an alert message when the row is clicked
+    menusectionTable.on("rowClick", function(e, row){
+    });
+</script>

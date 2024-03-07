@@ -22,6 +22,12 @@
       layout:"fitColumns",
       columns: [
       {
+        title:"Restaurant", field:"restaurant_id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
+            labelField:"restaurant.name",
+            urlPrefix:"/restaurants/",
+        }
+      },
+      {
         title:"Name", field:"id", width: 200, responsive:0, formatter:"link", formatterParams: {
             labelField:"name",
             urlPrefix:"/tablesettings/",
@@ -30,7 +36,6 @@
        {title:"Description", field:"description", responsive:1},
        {title:"Status", field:"status", width:150, responsive:0},
        {title:"Capacity", field:"capacity", width: 200},
-       {title:"Restaurant", field:"restaurant.name", width:200},
        {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
         inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
         outputFormat:"dd/MM/yyyy HH:mm",

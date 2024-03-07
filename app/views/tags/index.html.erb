@@ -1,45 +1,53 @@
-
-
-
 <div class="row">
   <div class="col-sm-6">
     <h1>Tags</h1>
   </div>
-
   <div class="col-sm-6 text-end">
   <%= link_to new_tag_path, class: 'btn btn-primary' do %>
     Add New Tag
   <% end %>
   </div>
 </div>
-
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-    
-        <th>Name</th>
-    
-
-            <th>Description</th>
-            <th>Menuitem</th>
-            
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @tags.each do |tag| %>
-        <%= content_tag :tr, id: dom_id(tag), class: dom_class(tag) do %>
-          
-            <td><%= link_to tag.name, tag %></td>
-          
-
-                      <td><%= tag.description %></td>
-                      <td><%= tag.menuitem %></td>
-          
-          
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
+<div id="tag-table">
 </div>
+
+<script>
+    var tagTable = new Tabulator("#tag-table", {
+      height:405,
+      responsiveLayout:true,
+      pagination:"local",
+      paginationSize:10,
+      paginationCounter:"rows",
+      ajaxURL: '/tags.json',
+      layout:"fitColumns",
+      columns: [
+      {
+        title:"Menu Item", field:"menuitem_id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
+            labelField:"menuitem.name",
+            urlPrefix:"/menuitems/",
+        }
+      },
+      {
+        title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
+            labelField:"name",
+            urlPrefix:"/tags/",
+        }
+       },
+       {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       },
+       {title:"Updated", field:"updated_at", width:200, responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       }
+      ],
+    });
+    //trigger an alert message when the row is clicked
+    tagTable.on("rowClick", function(e, row){
+    });
+</script>

@@ -1,55 +1,57 @@
-
-
-
 <div class="row">
   <div class="col-sm-6">
-    <h1>Menuitems</h1>
+    <h1>Menu Items</h1>
   </div>
-
   <div class="col-sm-6 text-end">
   <%= link_to new_menuitem_path, class: 'btn btn-primary' do %>
-    Add New Menuitem
+    Add New Menu
   <% end %>
   </div>
 </div>
-
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-    
-        <th>Name</th>
-    
-
-            <th>Description</th>
-            <th>Image</th>
-            <th>Status</th>
-            <th>Sequence</th>
-            <th>Calories</th>
-            <th>Price</th>
-            <th>Menusection</th>
-            
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @menuitems.each do |menuitem| %>
-        <%= content_tag :tr, id: dom_id(menuitem), class: dom_class(menuitem) do %>
-          
-            <td><%= link_to menuitem.name, menuitem %></td>
-          
-
-                      <td><%= menuitem.description %></td>
-                      <td><%= menuitem.image %></td>
-                      <td><%= menuitem.status %></td>
-                      <td><%= menuitem.sequence %></td>
-                      <td><%= menuitem.calories %></td>
-                      <td><%= menuitem.price %></td>
-                      <td><%= menuitem.menusection %></td>
-          
-          
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
+<div id="menuitem-table">
 </div>
+
+<script>
+    var menuItemTable = new Tabulator("#menuitem-table", {
+      height:405,
+      responsiveLayout:true,
+      pagination:"local",
+      paginationSize:10,
+      paginationCounter:"rows",
+      ajaxURL: '/menuitems.json',
+      layout:"fitColumns",
+      columns: [
+      {
+        title:"Menu Section", field:"menusection_id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
+            labelField:"menusection.name",
+            urlPrefix:"/menusections/",
+        }
+      },
+      {
+        title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
+            labelField:"name",
+            urlPrefix:"/menuitems/",
+        }
+       },
+       {title:"Status", field:"status", width:150, responsive:0},
+       {title:"Seq", field:"sequence", width: 100, hozAlign:"right", headerHozAlign:"right", },
+       {title:"Calories", field:"calories", width: 100, hozAlign:"right", headerHozAlign:"right", },
+       {title:"Price", field:"price", width: 100, hozAlign:"right", headerHozAlign:"right", },
+       {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       },
+       {title:"Updated", field:"updated_at", width:200, responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       }
+      ],
+    });
+    //trigger an alert message when the row is clicked
+    menuItemTable.on("rowClick", function(e, row){
+    });
+</script>

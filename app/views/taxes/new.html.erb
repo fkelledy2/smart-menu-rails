@@ -1,3 +1,15 @@
-<h1>New tax</h1>
-
+<div class="page-header">
+  <div class="row">
+    <div class="col-sm-10">
+          <h1>New Tax </h1>
+    </div>
+    <div class="col-sm-2">
+        <% if @tax.persisted? %>
+          <%= link_to "Cancel", @tax, class: "float-end btn btn-light" %>
+        <% else %>
+          <%= link_to "Cancel", taxes_path, class: "float-end btn btn-light" %>
+        <% end %>
+    </div>
+  </div>
+</div>
 <%= render 'form', tax: @tax %>

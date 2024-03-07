@@ -4,16 +4,14 @@
   <head>
     <%= render 'shared/head' %>
   </head>
-
   <body class="d-flex flex-column h-100">
-    <main class="flex-shrink-0"> 
+    <main class="flex-shrink-0">
       <%= render 'shared/navbar' %>
-      <div class="container mt-4 mx-auto">
+      <div class="container-fluid mt-4 mx-auto">
         <%= yield %>
       </div>
       <%= render 'shared/notices' %>
     </main>
-
     <%= render 'shared/footer' %>
   </body>
 </html>
