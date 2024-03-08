@@ -1,6 +1,7 @@
 class Menuitem < ApplicationRecord
   belongs_to :menusection
   has_many :allergyns
+  has_many :tags
 
   enum status: {
     inactive: 0,
