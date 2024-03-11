@@ -4,7 +4,7 @@
   </div>
   <div class="col-sm-6 text-end">
   <%= link_to new_employee_path, class: 'btn btn-primary' do %>
-    Add New Employee
+    <i class="bi bi-plus"></i> Employee
   <% end %>
   </div>
 </div>
@@ -39,7 +39,7 @@
         }
        },
        {title: 'EID', field: 'eid', responsive:1,},
-       {title:"Status", field:"status", width:150, responsive:0},
+       {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
        {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
         inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
         outputFormat:"dd/MM/yyyy HH:mm",

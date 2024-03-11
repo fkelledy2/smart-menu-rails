@@ -4,7 +4,7 @@
   </div>
   <div class="col-sm-6 text-end">
   <%= link_to new_restaurant_path, class: 'btn btn-primary' do %>
-    Add New Restaurant
+    <i class="bi bi-plus"></i> Restaurant
   <% end %>
   </div>
 </div>
@@ -37,7 +37,7 @@
           field: 'address', responsive:1,
           mutator: (value, data) => data.address1 + '\n' + data.address2 + '\n' + data.state + '\n' + data.city + '\n' + data.postcode,
        },
-       {title:"Status", field:"status", width:150, responsive:0},
+       {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
        {title:"Capacity", field:"total_capacity", hozAlign:"right", headerHozAlign:"right", width:150, responsive:3},
        {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
         inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
