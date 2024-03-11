@@ -16,3 +16,4 @@
   end
   json.created_at restaurant.created_at
   json.updated_at restaurant.updated_at
+  json.url restaurant_url(restaurant, format: :json)

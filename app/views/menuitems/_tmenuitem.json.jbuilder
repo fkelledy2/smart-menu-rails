@@ -14,3 +14,4 @@
   end
   json.created_at menuitem.created_at
   json.updated_at menuitem.updated_at
+  json.url menuitem_url(menuitem, format: :json)

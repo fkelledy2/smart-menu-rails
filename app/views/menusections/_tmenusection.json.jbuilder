@@ -9,3 +9,4 @@
   end
   json.created_at menusection.created_at
   json.updated_at menusection.updated_at
+  json.url menusection_url(menusection, format: :json)
