@@ -3,7 +3,7 @@ class MenusectionsController < ApplicationController
 
   # GET /menusections or /menusections.json
   def index
-    @menusections = Menusection.all
+    @menusections = Menusection.order('sequence ASC').all
   end
 
   # GET /menusections/1 or /menusections/1.json

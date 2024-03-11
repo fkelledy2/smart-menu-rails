@@ -23,6 +23,7 @@ window.Tabulator = Tabulator
 window.bootstrap = bootstrap
 import {DateTime} from 'luxon'
 window.DateTime = DateTime
+import '@rails/request.js'
 
 document.addEventListener("turbo:load", () => {
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

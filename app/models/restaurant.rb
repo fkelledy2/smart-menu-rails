@@ -1,9 +1,9 @@
 class Restaurant < ApplicationRecord
   belongs_to :user
-  has_many :tablesettings
-  has_many :menus
-  has_many :employees
-  has_many :taxes
+  has_many :tablesettings, dependent: :delete_all
+  has_many :menus, dependent: :delete_all
+  has_many :employees, dependent: :delete_all
+  has_many :taxes, dependent: :delete_all
 
   enum status: {
     inactive: 0,

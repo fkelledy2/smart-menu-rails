@@ -1,7 +1,11 @@
 class Menuitem < ApplicationRecord
   belongs_to :menusection
-  has_many :allergyns
-  has_many :tags
+
+  has_many :menuitem_allergyn_mappings, dependent: :destroy
+  has_many :allergyns, through: :menuitem_allergyn_mappings
+
+  has_many :menuitem_tag_mappings, dependent: :destroy
+  has_many :tags, through: :menuitem_tag_mappings
 
   enum status: {
     inactive: 0,

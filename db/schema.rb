@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_29_134137) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_08_173932) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,10 +46,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_29_134137) do
     t.string "name"
     t.text "description"
     t.string "symbol"
-    t.bigint "menuitem_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["menuitem_id"], name: "index_allergyns_on_menuitem_id"
   end
 
   create_table "announcements", force: :cascade do |t|
@@ -81,6 +79,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_29_134137) do
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
+  create_table "menuitem_allergyn_mappings", force: :cascade do |t|
+    t.bigint "menuitem_id", null: false
+    t.bigint "allergyn_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["allergyn_id"], name: "index_menuitem_allergyn_mappings_on_allergyn_id"
+    t.index ["menuitem_id"], name: "index_menuitem_allergyn_mappings_on_menuitem_id"
+  end
+
+  create_table "menuitem_tag_mappings", force: :cascade do |t|
+    t.bigint "menuitem_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menuitem_id"], name: "index_menuitem_tag_mappings_on_menuitem_id"
+    t.index ["tag_id"], name: "index_menuitem_tag_mappings_on_tag_id"
   end
 
   create_table "menuitems", force: :cascade do |t|
@@ -229,10 +245,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_29_134137) do
   create_table "tags", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.bigint "menuitem_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["menuitem_id"], name: "index_tags_on_menuitem_id"
   end
 
   create_table "taxes", force: :cascade do |t|
@@ -263,8 +277,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_29_134137) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "allergyns", "menuitems"
   add_foreign_key "employees", "restaurants"
+  add_foreign_key "menuitem_allergyn_mappings", "allergyns"
+  add_foreign_key "menuitem_allergyn_mappings", "menuitems"
+  add_foreign_key "menuitem_tag_mappings", "menuitems"
+  add_foreign_key "menuitem_tag_mappings", "tags"
   add_foreign_key "menuitems", "menusections"
   add_foreign_key "menus", "restaurants"
   add_foreign_key "menusections", "menus"
@@ -278,6 +295,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_29_134137) do
   add_foreign_key "restaurants", "users"
   add_foreign_key "services", "users"
   add_foreign_key "tablesettings", "restaurants"
-  add_foreign_key "tags", "menuitems"
   add_foreign_key "taxes", "restaurants"
 end

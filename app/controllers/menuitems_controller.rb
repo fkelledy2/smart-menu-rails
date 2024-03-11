@@ -3,7 +3,7 @@ class MenuitemsController < ApplicationController
 
   # GET /menuitems or /menuitems.json
   def index
-    @menuitems = Menuitem.all
+    @menuitems = Menuitem.order('sequence ASC').all
   end
 
   # GET /menuitems/1 or /menuitems/1.json
@@ -21,7 +21,7 @@ class MenuitemsController < ApplicationController
 
   # POST /menuitems or /menuitems.json
   def create
-    @menuitem = Menuitem.new(menuitem_params)
+    @menuitem = Menuitem.new(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, allergyn_ids: [], tag_ids: []))
 
     respond_to do |format|
       if @menuitem.save
@@ -37,7 +37,8 @@ class MenuitemsController < ApplicationController
   # PATCH/PUT /menuitems/1 or /menuitems/1.json
   def update
     respond_to do |format|
-      if @menuitem.update(menuitem_params)
+      @menuitem = Menuitem.find(params[:id])
+      if @menuitem.update(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, allergyn_ids: [], tag_ids: []))
         format.html { redirect_to menuitem_url(@menuitem), notice: "Menuitem was successfully updated." }
         format.json { render :show, status: :ok, location: @menuitem }
       else
