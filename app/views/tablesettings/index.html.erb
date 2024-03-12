@@ -3,9 +3,11 @@
     <h1>Table Settings</h1>
   </div>
   <div class="col-sm-6 text-end">
-  <%= link_to new_tablesetting_path, class: 'btn btn-primary' do %>
-    <i class="bi bi-plus"></i> Table Setting
-  <% end %>
+    <button id="activate-row" class='btn btn-success' disabled>Activate</button>
+    <button id="deactivate-row"class='btn btn-danger' disabled>Deactivate</button>
+    <%= link_to new_tablesetting_path, class: 'btn btn-primary' do %>
+        <i class="bi bi-plus"></i> Table Setting
+    <% end %>
   </div>
 </div>
 <div id="tablesetting-table">
@@ -33,7 +35,7 @@
         }
       },
       {
-        title:"Name", field:"id", width: 200, responsive:0, formatter:"link", formatterParams: {
+        title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
             labelField:"name",
             urlPrefix:"/tablesettings/",
         }
@@ -57,4 +59,47 @@
     //trigger an alert message when the row is clicked
     tableSettingTable.on("rowClick", function(e, row){
     });
+    tableSettingTable.on("rowSelectionChanged", function(data, rows){
+      if( data.length > 0 ) {
+        document.getElementById("activate-row").disabled = false;
+        document.getElementById("deactivate-row").disabled = false;
+      } else {
+        document.getElementById("activate-row").disabled = true;
+        document.getElementById("deactivate-row").disabled = true;
+      }
+    });
+    document.getElementById("activate-row").addEventListener("click", function(){
+        const rows = tableSettingTable.getSelectedData();
+        for (let i = 0; i < rows.length; i++) {
+            tableSettingTable.updateData([{id:rows[i].id, status:'active'}]);
+            let r = {
+              'tablesetting': {
+                  'status': 'active'
+              }
+            };
+            patch( rows[i].url, r );
+        }
+    });
+    document.getElementById("deactivate-row").addEventListener("click", function(){
+        const rows = tableSettingTable.getSelectedData();
+        for (let i = 0; i < rows.length; i++) {
+            tableSettingTable.updateData([{id:rows[i].id, status:'inactive'}]);
+            let r = {
+              'tablesetting': {
+                  'status': 'inactive'
+              }
+            };
+            patch( rows[i].url, r );
+        }
+    });
+    function patch( url, body ) {
+            fetch(url, {
+                method: 'PATCH',
+                headers:  {
+                  "Content-Type": "application/json",
+                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                },
+                body: JSON.stringify(body)
+            });
+    }
 </script>

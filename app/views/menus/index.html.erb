@@ -3,9 +3,11 @@
     <h1>Menus</h1>
   </div>
   <div class="col-sm-6 text-end">
-  <%= link_to new_menu_path, class: 'btn btn-primary' do %>
-    <i class="bi bi-plus"></i> Menu
-  <% end %>
+    <button id="activate-row" class='btn btn-success' disabled>Activate</button>
+    <button id="deactivate-row"class='btn btn-danger' disabled>Deactivate</button>
+    <%= link_to new_menu_path, class: 'btn btn-primary' do %>
+      <i class="bi bi-plus"></i> Menu
+    <% end %>
   </div>
 </div>
 <div id="menu-table">
@@ -81,4 +83,47 @@
     //trigger an alert message when the row is clicked
     menuTable.on("rowClick", function(e, row){
     });
+    menuTable.on("rowSelectionChanged", function(data, rows){
+      if( data.length > 0 ) {
+        document.getElementById("activate-row").disabled = false;
+        document.getElementById("deactivate-row").disabled = false;
+      } else {
+        document.getElementById("activate-row").disabled = true;
+        document.getElementById("deactivate-row").disabled = true;
+      }
+    });
+    document.getElementById("activate-row").addEventListener("click", function(){
+        const rows = menuTable.getSelectedData();
+        for (let i = 0; i < rows.length; i++) {
+            menuTable.updateData([{id:rows[i].id, status:'active'}]);
+            let r = {
+              'menu': {
+                  'status': 'active'
+              }
+            };
+            patch( rows[i].url, r );
+        }
+    });
+    document.getElementById("deactivate-row").addEventListener("click", function(){
+        const rows = menuTable.getSelectedData();
+        for (let i = 0; i < rows.length; i++) {
+            menuTable.updateData([{id:rows[i].id, status:'inactive'}]);
+            let r = {
+              'menu': {
+                  'status': 'inactive'
+              }
+            };
+            patch( rows[i].url, r );
+        }
+    });
+    function patch( url, body ) {
+            fetch(url, {
+                method: 'PATCH',
+                headers:  {
+                  "Content-Type": "application/json",
+                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                },
+                body: JSON.stringify(body)
+            });
+    }
 </script>

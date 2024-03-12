@@ -6,7 +6,7 @@
   json.sequence menu.sequence
   json.restaurant menu.restaurant
   json.menusections menu.menusections do |menusection|
-    json.partial! 'menusections/tmenusection', menusection: menusection
+    json.partial! 'menusections/menusection', menusection: menusection
   end
   json.created_at menu.created_at
   json.updated_at menu.updated_at

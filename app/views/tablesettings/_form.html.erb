@@ -40,10 +40,10 @@
         <span class="float-end">
         <% if tablesetting.persisted? %>
           <div class="btn btn-danger ">
-            <%= link_to 'Destroy', tablesetting, method: :delete, class: "text-white text-decoration-none", data: { confirm: 'Are you sure?' } %>
+            <%= link_to 'Delete', tablesetting, method: :delete, class: "text-white text-decoration-none", data: { confirm: 'Are you sure?' } %>
           </div>
         <% end %>
-        <%= form.submit class: 'btn btn-primary' %>
+        <%= form.submit value: 'Save', class: 'btn btn-primary' %>
         </span>
     </div>
   </div>
