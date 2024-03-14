@@ -1,65 +1,133 @@
-
-
-
 <div class="row">
   <div class="col-sm-6">
-    <h1>Ordrs</h1>
+    <h1>Orders</h1>
   </div>
-
   <div class="col-sm-6 text-end">
-  <%= link_to new_ordr_path, class: 'btn btn-primary' do %>
-    Add New Ordr
-  <% end %>
+    <%= link_to new_ordr_path, class: 'btn btn-primary' do %>
+      <i class="bi bi-plus"></i> Order
+    <% end %>
   </div>
 </div>
-
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-    
-
-            <th>Orderedat</th>
-            <th>Deliveredat</th>
-            <th>Paidat</th>
-            <th>Nett</th>
-            <th>Tip</th>
-            <th>Service</th>
-            <th>Tax</th>
-            <th>Gross</th>
-            <th>Employee</th>
-            <th>Tablesetting</th>
-            <th>Menu</th>
-            <th>Restaurant</th>
-
-          <th></th>
-
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @ordrs.each do |ordr| %>
-        <%= content_tag :tr, id: dom_id(ordr), class: dom_class(ordr) do %>
-          
-
-                      <td><%= ordr.orderedAt %></td>
-                      <td><%= ordr.deliveredAt %></td>
-                      <td><%= ordr.paidAt %></td>
-                      <td><%= ordr.nett %></td>
-                      <td><%= ordr.tip %></td>
-                      <td><%= ordr.service %></td>
-                      <td><%= ordr.tax %></td>
-                      <td><%= ordr.gross %></td>
-                      <td><%= ordr.employee %></td>
-                      <td><%= ordr.tablesetting %></td>
-                      <td><%= ordr.menu %></td>
-                      <td><%= ordr.restaurant %></td>
-
-
-            <td><%= link_to 'Show', ordr %></td>
-
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
+<div id="order-table">
 </div>
+<script>
+    var orderTable = new Tabulator("#order-table", {
+      height:405,
+      responsiveLayout:true,
+      pagination:"local",
+      paginationSize:10,
+      paginationCounter:"rows",
+      ajaxURL: '/ordrs.json',
+      layout:"fitColumns",
+      columns: [
+       {
+        title:"Restaurant", field:"restaurant.id", frozen:true, responsive:0, formatter:"link", formatterParams: {
+            labelField:"restaurant.name",
+            urlPrefix:"/restaurants/",
+        }
+       },
+       {
+        title:"Menu", field:"menu.id", frozen:true, responsive:0, formatter:"link", formatterParams: {
+            labelField:"menu.name",
+            urlPrefix:"/menus/",
+        }
+       },
+       {
+        title:"Table", field:"tablesetting.id", frozen:true, responsive:0, formatter:"link", formatterParams: {
+            labelField:"tablesetting.name",
+            urlPrefix:"/tablesettings/",
+        }
+       },
+       {
+        title:"Employee", field:"employee.id", frozen:true, responsive:0, formatter:"link", formatterParams: {
+            labelField:"employee.eid",
+            urlPrefix:"/employees/",
+        }
+       },
+       {
+        title:"Id", field:"id", responsive:0, formatter:"link", formatterParams: {
+            labelField:"id",
+            urlPrefix:"/ordrs/",
+        }
+       },
+       {title:"Ordered", field:"orderedAt", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       },
+       {title:"Delivered", field:"deliveredAt", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       },
+       {title:"Paid", field:"paidAt", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       },
+       {title:"Nett", field:"nett", formatter:"money", hozAlign:"right", headerHozAlign:"right",
+        formatterParams:{
+           decimal:".",
+           thousand:",",
+           symbol:"$",
+           negativeSign:true,
+           precision:2,
+        }
+       },
+       {title:"Tip", field:"tip", formatter:"money", hozAlign:"right", headerHozAlign:"right",
+        formatterParams:{
+           decimal:".",
+           thousand:",",
+           symbol:"$",
+           negativeSign:true,
+           precision:2,
+        }
+       },
+       {title:"Service", field:"service", formatter:"money", hozAlign:"right", headerHozAlign:"right",
+        formatterParams:{
+           decimal:".",
+           thousand:",",
+           symbol:"$",
+           negativeSign:true,
+           precision:2,
+        }
+       },
+       {title:"Tax", field:"tax", formatter:"money", hozAlign:"right", headerHozAlign:"right",
+        formatterParams:{
+           decimal:".",
+           thousand:",",
+           symbol:"$",
+           negativeSign:true,
+           precision:2,
+        }
+       },
+       {title:"Gross", field:"gross", formatter:"money", hozAlign:"right", headerHozAlign:"right",
+        formatterParams:{
+           decimal:".",
+           thousand:",",
+           symbol:"$",
+           negativeSign:true,
+           precision:2,
+        }
+       },
+       {title:"Created", field:"created_at", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       },
+       {title:"Updated", field:"updated_at", responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       }
+      ],
+    });
+    //trigger an alert message when the row is clicked
+    orderTable.on("rowClick", function(e, row){
+    });
+</script>
