@@ -16,46 +16,147 @@
   </div>
 </div>
 
-<%= form_with(model: @menu) do |form| %>
-  <div class="form-group row">
-    <%= form.label :name, class: 'col-sm-2 col-form-label' %>
-    <div class="col-sm-10">
-      <%= form.text_field :name, class: 'form-control', disabled: 'disabled' %>
+
+
+
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12">
+    <hr><br>
+    <div class="row">
+        <div class="col-12">
+            <h1><%= @menu.restaurant.name %></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <h2><%= @menu.name %></h2>
+        </div>
+        <div class="col-4">
+            <span class="float-end">
+                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">
+                  <i class="bi bi-plus"></i> Order
+                </button>
+            </span>
+        </div>
+    </div>
+
+
+    <% @menu.menusections.each do |menusection| %>
+        <hr>
+        <% if menusection.image %>
+            <div class="card border-light text-bg-dark">
+              <img src="<%= menusection.image %>" style="height: 150px" class="card-img" alt="<%= menusection.name %>">
+              <div class="card-img-overlay">
+                <h3 class="card-title"><%= menusection.name %></h3>
+                <p class="card-text"><%= menusection.description %></p>
+              </div>
+            </div>
+        <% else %>
+            <h2><%= menusection.name %></h2>
+        <% end %>
+        <div class="row">
+            <% menusection.menuitems.each do |menuitem| %>
+                <div style="padding-top:20px" class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card">
+                      <img class="card-img-bottom" src="<%= menuitem.image %>" alt="<%= menuitem.name %>">
+                      <div class="card-body">
+                             <div class="row">
+                                <div class="col-11">
+                                    <h5 class="card-title"><%= menuitem.name %></h5>
+                                </div>
+                                <div class="col-1">
+                                    <span class="float-end">
+                                        <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to Order" disabled>
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                             </div>
+                             <div class="row">
+                                <div class="col-12">
+                                    <h6 class="card-text"><%= menuitem.description %></h6>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="btn-group" role="group" aria-label="Allergyns">
+                                                <% menuitem.tags.each do |tag| %>
+                                                    <button type="button" class="btn btn-xs btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= tag.name %>">
+                                                        <%= tag.name %>
+                                                    </button>
+                                                <%end %>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="float-end">
+                                                <div class="btn-group" role="group" aria-label="Allergyns">
+                                                    <% menuitem.allergyns.each do |allergyn| %>
+                                                        <button type="button" class="btn btn-xs btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
+                                                            <%= allergyn.symbol %>
+                                                        </button>
+                                                    <%end %>
+                                                </div>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                      </div>
+                    </div>
+                </div>
+            <%end %>
+        </div>
+    <%end %>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="openOrderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%= form_with(model: @ordr) do |form| %>
+          <%= form.hidden_field :restaurant_id, :value => @menu.restaurant.id %>
+          <%= form.hidden_field :menu_id, :value => @menu.id %>
+          <div class="form-group row">
+            <%= form.label :tablesetting_id, class: 'col-sm-2 col-form-label' %>
+            <div class="col-sm-10">
+                <%= form.collection_select :tablesetting_id, Tablesetting.all ,:id, :name, options = {:prompt => 'Select a Table...'}, html_options = {class: "form-control"}%>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button id="start-order" type="button" class="btn btn-primary">Order</button>
+      </div>
     </div>
   </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <%= form.label :description, class: 'col-sm-2 col-form-label' %>
-    <div class="col-sm-10">
-      <%= form.text_area :description, class: 'form-control', disabled: 'disabled' %>
-    </div>
-  </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <%= form.label :image, class: 'col-sm-2 col-form-label' %>
-    <div class="col-sm-10">
-        <%= form.text_field :image, class: 'form-control', disabled: 'disabled' %>
-    </div>
-  </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <%= form.label :status, class: 'col-sm-2 col-form-label' %>
-    <div class="col-sm-10">
-        <%= form.select :status, options_for_select(Menu.statuses.keys.to_a, form.object.status), {}, class: 'form-control', disabled: 'disabled' %>
-    </div>
-  </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <%= form.label :sequence, class: 'col-sm-2 col-form-label' %>
-    <div class="col-sm-10">
-        <%= form.text_field :sequence, class: 'form-control', disabled: 'disabled' %>
-    </div>
-  </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <%= form.label :restaurant_id, class: 'col-sm-2 col-form-label' %>
-    <div class="col-sm-10">
-        <%= form.collection_select :restaurant_id, Restaurant.all ,:id, :name, options = {:prompt => 'Select a Restaurant...'}, html_options = {class: "form-control" , disabled: 'disabled'}%>
-    </div>
-  </div>
-<% end %>
+</div>
+
+<script>
+    document.getElementById("start-order").addEventListener("click", function(){
+        let ordr = {
+            'ordr': {
+              'tablesetting_id': 1,
+              'employee_id': 1,
+              'restaurant_id': 1,
+              'menu_id': 1
+            }
+        };
+        post( '/ordrs', ordr );
+        return true;
+    });
+    function post( url, body ) {
+            fetch(url, {
+                method: 'POST',
+                headers:  {
+                  "Content-Type": "application/json",
+                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                },
+                body: JSON.stringify(body)
+            });
+    }
+</script>

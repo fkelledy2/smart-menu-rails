@@ -6,4 +6,8 @@ class Ordr < ApplicationRecord
 
   has_many :ordritems
 
+  validates :restaurant, :presence => true
+  validates :menu, :presence => true
+  validates :tablesetting, :presence => true
+
 end

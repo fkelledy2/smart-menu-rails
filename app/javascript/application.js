@@ -24,6 +24,18 @@ window.bootstrap = bootstrap
 import {DateTime} from 'luxon'
 window.DateTime = DateTime
 import '@rails/request.js'
+import './add_jquery'
+
+import './allergyns'
+import './employees'
+import './menuitems'
+import './menus'
+import './menusections'
+import './restaurants'
+import './tablesettings'
+import './tags'
+import './taxes'
+
 
 document.addEventListener("turbo:load", () => {
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -36,3 +48,14 @@ document.addEventListener("turbo:load", () => {
     return new bootstrap.Popover(popoverTriggerEl)
   })
 })
+
+function patch( url, body ) {
+    fetch(url, {
+        method: 'PATCH',
+        headers:  {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+        },
+        body: JSON.stringify(body)
+    });
+}

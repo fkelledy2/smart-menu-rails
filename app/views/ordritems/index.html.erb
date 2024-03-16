@@ -1,45 +1,61 @@
-
-
-
 <div class="row">
   <div class="col-sm-6">
-    <h1>Ordritems</h1>
+    <h1>Order Items</h1>
   </div>
-
   <div class="col-sm-6 text-end">
-  <%= link_to new_ordritem_path, class: 'btn btn-primary' do %>
-    Add New Ordritem
-  <% end %>
+    <%= link_to new_ordritem_path, class: 'btn btn-primary' do %>
+      <i class="bi bi-plus"></i> Order Item
+    <% end %>
   </div>
 </div>
-
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-    
-
-            <th>Ordr</th>
-            <th>Menuitem</th>
-            
-          <th></th>
-        
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @ordritems.each do |ordritem| %>
-        <%= content_tag :tr, id: dom_id(ordritem), class: dom_class(ordritem) do %>
-          
-
-                      <td><%= ordritem.ordr %></td>
-                      <td><%= ordritem.menuitem %></td>
-          
-          
-            <td><%= link_to 'Show', ordritem %></td>
-          
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
+<div id="orderitem-table">
 </div>
+<script>
+    var orderTable = new Tabulator("#orderitem-table", {
+      height:405,
+      responsiveLayout:true,
+      pagination:"local",
+      paginationSize:10,
+      paginationCounter:"rows",
+      ajaxURL: '/ordritems.json',
+      layout:"fitColumns",
+      columns: [
+       {
+        title:"Order", field:"ordr.id", frozen:true, responsive:0, formatter:"link", formatterParams: {
+            labelField:"ordr.id",
+            urlPrefix:"/ordrs/",
+        }
+       },
+       {
+        title:"Menu Item", field:"menuitem.id", responsive:0, formatter:"link", formatterParams: {
+            labelField:"menuitem.name",
+            urlPrefix:"/menuitems/",
+        }
+       },
+       {title:"Price", field:"menuitem.price", formatter:"money", width: 100, hozAlign:"right", headerHozAlign:"right",
+        formatterParams:{
+           decimal:".",
+           thousand:",",
+           symbol:"$",
+           negativeSign:true,
+           precision:2,
+        }
+       },
+       {title:"Created", field:"created_at", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       },
+       {title:"Updated", field:"updated_at", responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        outputFormat:"dd/MM/yyyy HH:mm",
+        invalidPlaceholder:"(invalid date)",
+        }
+       }
+      ],
+    });
+    //trigger an alert message when the row is clicked
+    orderitem.on("rowClick", function(e, row){
+    });
+</script>

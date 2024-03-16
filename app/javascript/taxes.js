@@ -1,0 +1,46 @@
+document.addEventListener("turbo:load", () => {
+    if ($("#tax-table").is(':visible')) {
+        var taxTable = new Tabulator("#tax-table", {
+          height:405,
+          responsiveLayout:true,
+          pagination:"local",
+          paginationSize:10,
+          paginationCounter:"rows",
+          ajaxURL: '/taxes.json',
+          layout:"fitColumns",
+          columns: [
+           {
+             formatter:"rowSelection", titleFormatter:"rowSelection", width: 20, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
+                cell.getRow().toggleSelect();
+             }
+           },
+          {
+            title:"Restaurant", field:"restaurant_id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
+                labelField:"restaurant.name",
+                urlPrefix:"/restaurants/",
+            }
+          },
+          {
+            title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
+                labelField:"name",
+                urlPrefix:"/taxes/",
+            }
+           },
+           {title:"Tax Type", field:"taxtype", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
+           {title:"Tax Percentage", field:"taxpercentage", width: 200, hozAlign:"right", headerHozAlign:"right" },
+           {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            outputFormat:"dd/MM/yyyy HH:mm",
+            invalidPlaceholder:"(invalid date)",
+            }
+           },
+           {title:"Updated", field:"updated_at", width:200, responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            outputFormat:"dd/MM/yyyy HH:mm",
+            invalidPlaceholder:"(invalid date)",
+            }
+           }
+          ],
+        });
+    }
+})
