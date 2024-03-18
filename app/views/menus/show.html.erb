@@ -41,7 +41,7 @@
     </div>
 
 
-    <% @menu.menusections.each do |menusection| %>
+    <% @menu.menusections.order(:sequence).each do |menusection| %>
         <hr>
         <% if menusection.image %>
             <div class="card border-light text-bg-dark">
@@ -55,7 +55,7 @@
             <h2><%= menusection.name %></h2>
         <% end %>
         <div class="row">
-            <% menusection.menuitems.each do |menuitem| %>
+            <% menusection.menuitems.order(:sequence).each do |menuitem| %>
                 <div style="padding-top:20px" class="col-sm-12 col-md-6 col-lg-4">
                     <div class="card">
                       <img class="card-img-bottom" src="<%= menuitem.image %>" alt="<%= menuitem.name %>">

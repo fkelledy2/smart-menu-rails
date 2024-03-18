@@ -7,6 +7,9 @@ class Menuitem < ApplicationRecord
   has_many :menuitem_tag_mappings, dependent: :destroy
   has_many :tags, through: :menuitem_tag_mappings
 
+  has_many :menuitem_size_mappings, dependent: :destroy
+  has_many :sizes, through: :menuitem_size_mappings
+
   enum status: {
     inactive: 0,
     active: 1,

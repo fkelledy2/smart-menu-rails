@@ -1,12 +1,12 @@
 document.addEventListener("turbo:load", () => {
-    if ($("#tag-table").is(':visible')) {
-        var tagTable = new Tabulator("#tag-table", {
+    if ($("#size-table").is(':visible')) {
+        var sizeTable = new Tabulator("#size-table", {
           height:405,
           responsiveLayout:true,
           pagination:"local",
           paginationSize:10,
           paginationCounter:"rows",
-          ajaxURL: '/tags.json',
+          ajaxURL: '/sizes.json',
           layout:"fitColumns",
           columns: [
            {
@@ -15,11 +15,12 @@ document.addEventListener("turbo:load", () => {
              }
            },
            {
-            title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
-                labelField:"name",
-                urlPrefix:"/tags/",
+            title:"Size", field:"id", width:150, responsive:0, formatter:"link", formatterParams: {
+                labelField:"size",
+                urlPrefix:"/sizes/",
             }
            },
+           {title:"Name", field:"name", responsive:0 },
            {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
             inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
             outputFormat:"dd/MM/yyyy HH:mm",

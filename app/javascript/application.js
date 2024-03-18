@@ -35,6 +35,7 @@ import './restaurants'
 import './tablesettings'
 import './tags'
 import './taxes'
+import './sizes'
 
 
 document.addEventListener("turbo:load", () => {

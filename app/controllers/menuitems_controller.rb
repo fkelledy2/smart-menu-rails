@@ -21,7 +21,7 @@ class MenuitemsController < ApplicationController
 
   # POST /menuitems or /menuitems.json
   def create
-    @menuitem = Menuitem.new(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, allergyn_ids: [], tag_ids: []))
+    @menuitem = Menuitem.new(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, allergyn_ids: [], tag_ids: [], size_ids: []))
 
     respond_to do |format|
       if @menuitem.save
@@ -38,7 +38,7 @@ class MenuitemsController < ApplicationController
   def update
     respond_to do |format|
       @menuitem = Menuitem.find(params[:id])
-      if @menuitem.update(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, allergyn_ids: [], tag_ids: []))
+      if @menuitem.update(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, allergyn_ids: [], tag_ids: [], size_ids: []))
         format.html { redirect_to menuitem_url(@menuitem), notice: "Menuitem was successfully updated." }
         format.json { render :show, status: :ok, location: @menuitem }
       else

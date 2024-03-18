@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_08_173932) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_18_082824) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -88,6 +88,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_173932) do
     t.datetime "updated_at", null: false
     t.index ["allergyn_id"], name: "index_menuitem_allergyn_mappings_on_allergyn_id"
     t.index ["menuitem_id"], name: "index_menuitem_allergyn_mappings_on_menuitem_id"
+  end
+
+  create_table "menuitem_size_mappings", force: :cascade do |t|
+    t.bigint "menuitem_id", null: false
+    t.bigint "size_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menuitem_id"], name: "index_menuitem_size_mappings_on_menuitem_id"
+    t.index ["size_id"], name: "index_menuitem_size_mappings_on_size_id"
   end
 
   create_table "menuitem_tag_mappings", force: :cascade do |t|
@@ -193,6 +202,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_173932) do
     t.bigint "restaurant_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status"
     t.index ["employee_id"], name: "index_ordrs_on_employee_id"
     t.index ["menu_id"], name: "index_ordrs_on_menu_id"
     t.index ["restaurant_id"], name: "index_ordrs_on_restaurant_id"
@@ -231,6 +241,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_173932) do
     t.index ["user_id"], name: "index_services_on_user_id"
   end
 
+  create_table "sizes", force: :cascade do |t|
+    t.integer "size"
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "tablesettings", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -247,6 +265,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_173932) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "typs"
   end
 
   create_table "taxes", force: :cascade do |t|
@@ -280,6 +299,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_173932) do
   add_foreign_key "employees", "restaurants"
   add_foreign_key "menuitem_allergyn_mappings", "allergyns"
   add_foreign_key "menuitem_allergyn_mappings", "menuitems"
+  add_foreign_key "menuitem_size_mappings", "menuitems"
+  add_foreign_key "menuitem_size_mappings", "sizes"
   add_foreign_key "menuitem_tag_mappings", "menuitems"
   add_foreign_key "menuitem_tag_mappings", "tags"
   add_foreign_key "menuitems", "menusections"
