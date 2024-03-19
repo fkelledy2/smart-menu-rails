@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_18_082824) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_18_174858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -81,6 +81,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_082824) do
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
+  create_table "ingredients", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "menuitem_allergyn_mappings", force: :cascade do |t|
     t.bigint "menuitem_id", null: false
     t.bigint "allergyn_id", null: false
@@ -88,6 +95,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_082824) do
     t.datetime "updated_at", null: false
     t.index ["allergyn_id"], name: "index_menuitem_allergyn_mappings_on_allergyn_id"
     t.index ["menuitem_id"], name: "index_menuitem_allergyn_mappings_on_menuitem_id"
+  end
+
+  create_table "menuitem_ingredient_mappings", force: :cascade do |t|
+    t.bigint "menuitem_id", null: false
+    t.bigint "ingredient_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ingredient_id"], name: "index_menuitem_ingredient_mappings_on_ingredient_id"
+    t.index ["menuitem_id"], name: "index_menuitem_ingredient_mappings_on_menuitem_id"
   end
 
   create_table "menuitem_size_mappings", force: :cascade do |t|
@@ -299,6 +315,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_082824) do
   add_foreign_key "employees", "restaurants"
   add_foreign_key "menuitem_allergyn_mappings", "allergyns"
   add_foreign_key "menuitem_allergyn_mappings", "menuitems"
+  add_foreign_key "menuitem_ingredient_mappings", "ingredients"
+  add_foreign_key "menuitem_ingredient_mappings", "menuitems"
   add_foreign_key "menuitem_size_mappings", "menuitems"
   add_foreign_key "menuitem_size_mappings", "sizes"
   add_foreign_key "menuitem_tag_mappings", "menuitems"

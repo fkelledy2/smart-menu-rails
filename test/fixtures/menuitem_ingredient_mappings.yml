@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  menuitem: one
+  ingredient: one
+
+two:
+  menuitem: two
+  ingredient: two

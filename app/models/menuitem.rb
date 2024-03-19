@@ -10,6 +10,9 @@ class Menuitem < ApplicationRecord
   has_many :menuitem_size_mappings, dependent: :destroy
   has_many :sizes, through: :menuitem_size_mappings
 
+  has_many :menuitem_ingredient_mappings, dependent: :destroy
+  has_many :ingredients, through: :menuitem_ingredient_mappings
+
   enum status: {
     inactive: 0,
     active: 1,

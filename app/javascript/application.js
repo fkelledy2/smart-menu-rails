@@ -36,6 +36,7 @@ import './tablesettings'
 import './tags'
 import './taxes'
 import './sizes'
+import './ingredients'
 
 
 document.addEventListener("turbo:load", () => {

@@ -39,33 +39,9 @@
         }
        },
        {
-        title:"Employee", field:"employee.id", frozen:true, responsive:0, formatter:"link", formatterParams: {
-            labelField:"employee.eid",
-            urlPrefix:"/employees/",
-        }
-       },
-       {
         title:"Id", field:"id", responsive:0, formatter:"link", formatterParams: {
             labelField:"id",
             urlPrefix:"/ordrs/",
-        }
-       },
-       {title:"Ordered", field:"orderedAt", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-        outputFormat:"dd/MM/yyyy HH:mm",
-        invalidPlaceholder:"(invalid date)",
-        }
-       },
-       {title:"Delivered", field:"deliveredAt", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-        outputFormat:"dd/MM/yyyy HH:mm",
-        invalidPlaceholder:"(invalid date)",
-        }
-       },
-       {title:"Paid", field:"paidAt", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-        inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-        outputFormat:"dd/MM/yyyy HH:mm",
-        invalidPlaceholder:"(invalid date)",
         }
        },
        {title:"Nett", field:"nett", formatter:"money", hozAlign:"right", headerHozAlign:"right",
@@ -126,8 +102,5 @@
         }
        }
       ],
-    });
-    //trigger an alert message when the row is clicked
-    orderTable.on("rowClick", function(e, row){
     });
 </script>
