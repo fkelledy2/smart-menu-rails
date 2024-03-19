@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  startinginventory: 1
+  currentinventory: 1
+  resethour: 1
+  menuitem: one
+
+two:
+  startinginventory: 1
+  currentinventory: 1
+  resethour: 1
+  menuitem: two
