@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_20_152447) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_20_155033) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -69,7 +69,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_152447) do
     t.datetime "updated_at", null: false
     t.integer "role"
     t.string "email"
+    t.bigint "user_id", null: false
     t.index ["restaurant_id"], name: "index_employees_on_restaurant_id"
+    t.index ["user_id"], name: "index_employees_on_user_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -326,6 +328,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_152447) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "employees", "restaurants"
+  add_foreign_key "employees", "users"
   add_foreign_key "inventories", "menuitems"
   add_foreign_key "menuitem_allergyn_mappings", "allergyns"
   add_foreign_key "menuitem_allergyn_mappings", "menuitems"

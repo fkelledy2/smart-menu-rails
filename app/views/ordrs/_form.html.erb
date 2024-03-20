@@ -1,16 +1,4 @@
 <%= form_with(model: ordr) do |form| %>
-  <% if ordr.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(ordr.errors.count, "error") %> prohibited this ordr from being saved:</h2>
-
-      <ul>
-      <% ordr.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
   <div class="mb-3">
     <%= form.label :employee_id, class: 'form-label' %>
       <%= form.text_field :employee_id, class: 'form-control' %>

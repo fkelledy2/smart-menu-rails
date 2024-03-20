@@ -4,7 +4,7 @@ class Ordr < ApplicationRecord
   belongs_to :menu
   belongs_to :restaurant
 
-  has_many :ordritems
+  has_many :ordritems, dependent: :destroy
 
   validates :restaurant, :presence => true
   validates :menu, :presence => true

@@ -1,5 +1,8 @@
 class Employee < ApplicationRecord
+  belongs_to :user
   belongs_to :restaurant
+  has_many :ordrs, dependent: :destroy
+
   enum status: {
     inactive: 0,
     active: 1,
@@ -12,7 +15,7 @@ class Employee < ApplicationRecord
   }
   validates :name, :presence => true
   validates :eid, :presence => true
-  validates :email, :presence => true
+  validates :user, :presence => true
   validates :role, :presence => true
   validates :status, :presence => true
   validates :restaurant, :presence => true
