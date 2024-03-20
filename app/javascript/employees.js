@@ -27,7 +27,9 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/employees/",
             }
            },
-           {title: 'EID', field: 'eid', responsive:1,},
+           {title: 'EID', field: 'eid', responsive:1},
+           {title: 'Email', field: 'email', responsive:1},
+           {title:"Role", field:"role", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
             inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
@@ -79,5 +81,15 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
+        function patch( url, body ) {
+                fetch(url, {
+                    method: 'PATCH',
+                    headers:  {
+                      "Content-Type": "application/json",
+                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                    },
+                    body: JSON.stringify(body)
+                });
+        }
     }
 })

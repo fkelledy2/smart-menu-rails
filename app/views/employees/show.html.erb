@@ -32,9 +32,23 @@
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
+    <%= form.label :email, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.text_field :email, class: 'form-control', disabled: 'disabled'  %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
     <%= form.label :image, class: 'col-sm-2 col-form-label' %>
     <div class="col-sm-10">
         <%= form.text_field :image, class: 'form-control', disabled: 'disabled'  %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <%= form.label :role, class: 'col-sm-2 col-form-label', disabled: 'disabled'  %>
+    <div class="col-sm-10">
+      <%= form.select :role, options_for_select(Employee.roles.keys.to_a, form.object.role), {}, class: 'form-control', disabled: 'disabled' %>
     </div>
   </div>
   <div style='height:4px'></div>
