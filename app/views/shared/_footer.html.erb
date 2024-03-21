@@ -3,7 +3,7 @@
     <span>
         &copy; <%= Date.today.year %> Your Company
         <% if current_user %>
-            <%= current_user.email %>
+            <%= @current_employee.role %>
         <% end %>
     </span>
     <ul class="d-inline float-end list-inline mb-0">

@@ -6,7 +6,12 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  before_action :set_current_employee
+
   protected
+    def set_current_employee
+        @current_employee = Employee.find(current_user.employee_id)
+    end
 
     def configure_permitted_parameters
       devise_parameter_sanitizer.permit(:sign_up, keys: [:name])

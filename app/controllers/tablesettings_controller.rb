@@ -8,6 +8,7 @@ class TablesettingsController < ApplicationController
 
   # GET /tablesettings/1 or /tablesettings/1.json
   def show
+    @qr = RQRCode::QRCode.new(@tablesetting.status)
   end
 
   # GET /tablesettings/new

@@ -1,7 +1,7 @@
   json.id employee.id
   json.name employee.name
   json.role employee.role
-  json.user employee.user.email
+  json.user employee.user
   json.eid employee.eid
   json.image employee.image
   json.status employee.status

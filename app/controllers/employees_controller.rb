@@ -25,6 +25,9 @@ class EmployeesController < ApplicationController
 
     respond_to do |format|
       if @employee.save
+        @employee.email = @employee.user.email
+        @employee.user.update(employee_id: @employee.id)
+
         format.html { redirect_to employee_url(@employee), notice: "Employee was successfully created." }
         format.json { render :show, status: :created, location: @employee }
       else
@@ -38,6 +41,8 @@ class EmployeesController < ApplicationController
   def update
     respond_to do |format|
       if @employee.update(employee_params)
+        @employee.email = @employee.user.email
+        @employee.user.update(employee_id: @employee.id)
         format.html { redirect_to employee_url(@employee), notice: "Employee was successfully updated." }
         format.json { render :show, status: :ok, location: @employee }
       else
