@@ -6,6 +6,12 @@ class Ordr < ApplicationRecord
 
   has_many :ordritems, dependent: :destroy
 
+  enum status: {
+    open: 0,
+    billrequest: 1,
+    close: 2
+  }
+
   validates :restaurant, :presence => true
   validates :menu, :presence => true
   validates :tablesetting, :presence => true

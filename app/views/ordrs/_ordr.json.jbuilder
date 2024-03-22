@@ -1,4 +1,5 @@
   json.id ordr.id
+  json.status ordr.status
   json.orderedAt ordr.orderedAt
   json.deliveredAt ordr.deliveredAt
   json.paidAt ordr.paidAt

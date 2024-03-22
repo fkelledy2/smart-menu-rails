@@ -1,5 +1,75 @@
 document.addEventListener("turbo:load", () => {
-    if ($("#order-table").is(':visible')) {
+
+    $('#closeOrderModal').on('hidden.bs.modal', function (e) {
+        location.reload();
+    });
+
+    $('#openOrderModal').on('hidden.bs.modal', function (e) {
+        location.reload();
+    });
+    if ($('#start-order').length) {
+        document.getElementById("start-order").addEventListener("click", function(){
+            let currentMenu = $('#currentMenu').text();
+            let currentRestaurant = $('#currentRestaurant').text();
+            let currentEmployee = $('#currentEmployee').text();
+            let currentTable = $('#currentTable').text();
+            let ordr = {
+                'ordr': {
+                  'tablesetting_id': currentTable,
+                  'employee_id': currentEmployee,
+                  'restaurant_id': currentRestaurant,
+                  'menu_id': currentMenu,
+                  'status' : 0
+                }
+            };
+            post( '/ordrs', ordr );
+            return true;
+        });
+    }
+
+    if ($('#close-order').length) {
+        document.getElementById("close-order").addEventListener("click", function(){
+            let currentOrder = $('#currentOrder').text();
+            let currentMenu = $('#currentMenu').text();
+            let currentRestaurant = $('#currentRestaurant').text();
+            let currentEmployee = $('#currentEmployee').text();
+            let currentTable = $('#currentTable').text();
+            let ordr = {
+                'ordr': {
+                  'tablesetting_id': currentTable,
+                  'employee_id': currentEmployee,
+                  'restaurant_id': currentRestaurant,
+                  'menu_id': currentMenu,
+                  'status' : 2
+                }
+            };
+            patch( '/ordrs/'+currentOrder, ordr );
+            return true;
+        });
+    }
+
+    function post( url, body ) {
+            fetch(url, {
+                method: 'POST',
+                headers:  {
+                  "Content-Type": "application/json",
+                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                },
+                body: JSON.stringify(body)
+            });
+    }
+    function patch( url, body ) {
+            fetch(url, {
+                method: 'PATCH',
+                headers:  {
+                  "Content-Type": "application/json",
+                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                },
+                body: JSON.stringify(body)
+            });
+    }
+
+    if ($("#order-table").length) {
         var orderTable = new Tabulator("#order-table", {
           height:405,
           responsiveLayout:true,
@@ -28,11 +98,18 @@ document.addEventListener("turbo:load", () => {
             }
            },
            {
+            title:"Employee", field:"employee.id", frozen:true, responsive:0, formatter:"link", formatterParams: {
+                labelField:"employee.name",
+                urlPrefix:"/employees/",
+            }
+           },
+           {
             title:"Id", field:"id", responsive:0, formatter:"link", formatterParams: {
                 labelField:"id",
                 urlPrefix:"/ordrs/",
             }
            },
+           {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {title:"Nett", field:"nett", formatter:"money", hozAlign:"right", headerHozAlign:"right",
             formatterParams:{
                decimal:".",

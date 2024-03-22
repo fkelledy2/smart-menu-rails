@@ -8,6 +8,10 @@ class MenusController < ApplicationController
 
   # GET /menus/1 or /menus/1.json
   def show
+    if params[:menu_id] && params[:id]
+        @tablesetting = Tablesetting.find_by_id(params[:id])
+        @openOrder = Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 0).first
+    end
   end
 
   # GET /menus/new
@@ -60,7 +64,11 @@ class MenusController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_menu
-      @menu = Menu.find(params[:id])
+    if params[:menu_id]
+        @menu = Menu.find(params[:menu_id])
+    else
+        @menu = Menu.find(params[:id])
+    end
     end
 
     # Only allow a list of trusted parameters through.

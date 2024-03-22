@@ -13,6 +13,11 @@ class OrdrsController < ApplicationController
   # GET /ordrs/new
   def new
     @ordr = Ordr.new
+    @ordr.nett = 0
+    @ordr.tip = 0
+    @ordr.service = 0
+    @ordr.tax = 0
+    @ordr.gross = 0
   end
 
   # GET /ordrs/1/edit
@@ -22,6 +27,11 @@ class OrdrsController < ApplicationController
   # POST /ordrs or /ordrs.json
   def create
     @ordr = Ordr.new(ordr_params)
+    @ordr.nett = 0
+    @ordr.tip = 0
+    @ordr.service = 0
+    @ordr.tax = 0
+    @ordr.gross = 0
 
     respond_to do |format|
       if @ordr.save
@@ -65,6 +75,6 @@ class OrdrsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ordr_params
-      params.require(:ordr).permit(:orderedAt, :deliveredAt, :paidAt, :nett, :tip, :service, :tax, :gross, :employee_id, :tablesetting_id, :menu_id, :restaurant_id)
+      params.require(:ordr).permit(:orderedAt, :deliveredAt, :paidAt, :nett, :tip, :service, :tax, :gross, :status, :employee_id, :tablesetting_id, :menu_id, :restaurant_id)
     end
 end

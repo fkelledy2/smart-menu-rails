@@ -8,13 +8,15 @@ Rails.application.routes.draw do
   resources :ordritemnotes
   resources :ordritems
   resources :ordrs
-  resources :tablesettings
   resources :employees
   resources :tags
   resources :allergyns
   resources :menuitems
   resources :menusections
-  resources :menus
+  resources :menus do
+    resources :tablesettings, controller: 'menus', only: [:show]
+  end
+  resources :tablesettings
   resources :restaurants
   draw :madmin
   get '/privacy', to: 'home#privacy'
