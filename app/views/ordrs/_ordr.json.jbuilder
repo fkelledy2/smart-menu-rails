@@ -10,10 +10,14 @@
   json.gross ordr.gross
   json.employee ordr.employee
   json.menu ordr.menu
+  json.diners ordr.diners
   json.tablesetting ordr.tablesetting
   json.restaurant ordr.restaurant
   json.ordritems ordr.ordritems do |ordritem|
     json.partial! 'ordritems/ordritem', ordritem: ordritem
+  end
+  json.ordrparticipants ordr.ordrparticipants do |ordrparticipant|
+    json.partial! 'ordrparticipants/ordrparticipant', ordrparticipant: ordrparticipant
   end
   json.created_at ordr.created_at
   json.updated_at ordr.updated_at

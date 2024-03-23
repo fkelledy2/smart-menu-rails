@@ -18,6 +18,8 @@ class OrdrsController < ApplicationController
     @ordr.service = 0
     @ordr.tax = 0
     @ordr.gross = 0
+    @ordr.ordrparticipants ||= []
+    @ordr.ordritems ||= []
   end
 
   # GET /ordrs/1/edit

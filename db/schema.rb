@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_20_233404) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_23_121314) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -217,6 +217,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_233404) do
     t.index ["ordr_id"], name: "index_ordritems_on_ordr_id"
   end
 
+  create_table "ordrparticipants", force: :cascade do |t|
+    t.string "sessionid"
+    t.integer "action"
+    t.integer "role"
+    t.bigint "employee_id"
+    t.bigint "ordr_id", null: false
+    t.bigint "ordritem_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employee_id"], name: "index_ordrparticipants_on_employee_id"
+    t.index ["ordr_id"], name: "index_ordrparticipants_on_ordr_id"
+    t.index ["ordritem_id"], name: "index_ordrparticipants_on_ordritem_id"
+  end
+
   create_table "ordrs", force: :cascade do |t|
     t.datetime "orderedAt", precision: nil
     t.datetime "deliveredAt", precision: nil
@@ -346,6 +360,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_233404) do
   add_foreign_key "ordritemnotes", "ordritems"
   add_foreign_key "ordritems", "menuitems"
   add_foreign_key "ordritems", "ordrs"
+  add_foreign_key "ordrparticipants", "employees"
+  add_foreign_key "ordrparticipants", "ordritems"
+  add_foreign_key "ordrparticipants", "ordrs"
   add_foreign_key "ordrs", "employees"
   add_foreign_key "ordrs", "menus"
   add_foreign_key "ordrs", "restaurants"
