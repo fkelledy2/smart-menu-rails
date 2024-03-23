@@ -10,7 +10,9 @@ class ApplicationController < ActionController::Base
 
   protected
     def set_current_employee
-        @current_employee = Employee.find(current_user.employee_id)
+        if current_user
+            @current_employee = Employee.find(current_user.employee_id)
+        end
     end
 
     def configure_permitted_parameters

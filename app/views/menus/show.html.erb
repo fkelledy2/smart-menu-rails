@@ -18,6 +18,9 @@
     </div>
     <hr>
 <% end %>
+    <% if @cookie_value %>
+        <%= @cookie_value %>
+    <% end %>
 
 <div style="display:none">
     <% if @openOrder %>
