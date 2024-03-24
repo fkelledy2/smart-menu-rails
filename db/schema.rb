@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_23_121314) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_24_075544) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -240,7 +240,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_23_121314) do
     t.float "service"
     t.float "tax"
     t.float "gross"
-    t.bigint "employee_id", null: false
+    t.integer "employee_id"
     t.bigint "tablesetting_id", null: false
     t.bigint "menu_id", null: false
     t.bigint "restaurant_id", null: false

@@ -1,11 +1,11 @@
 document.addEventListener("turbo:load", () => {
 
     $('#closeOrderModal').on('hidden.bs.modal', function (e) {
-//        location.reload();
+        location.reload();
     });
 
     $('#openOrderModal').on('hidden.bs.modal', function (e) {
-//        location.reload();
+        location.reload();
     });
 
     if ($('#start-order').length) {
