@@ -17,6 +17,10 @@ class Ordr < ApplicationRecord
     ordrparticipants.where(role: 0).distinct.pluck("sessionid").count
   end
 
+  def runningTotal
+    ordritems.pluck("menuitem_id.price").sum
+  end
+
   validates :restaurant, :presence => true
   validates :menu, :presence => true
   validates :tablesetting, :presence => true

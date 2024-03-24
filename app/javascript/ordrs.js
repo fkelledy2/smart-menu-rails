@@ -1,13 +1,66 @@
 document.addEventListener("turbo:load", () => {
 
-    $('#closeOrderModal').on('hidden.bs.modal', function (e) {
-        location.reload();
-    });
+    if ($('#closeOrderModal').length) {
+        $('#closeOrderModal').on('hidden.bs.modal', function (e) {
+            location.reload();
+        });
+    }
 
-    $('#openOrderModal').on('hidden.bs.modal', function (e) {
-        location.reload();
-    });
+    if ($('#openOrderModal').length) {
+        $('#openOrderModal').on('hidden.bs.modal', function (e) {
+            location.reload();
+        });
+    }
+    if ($('#addItemToOrderModal').length) {
+        $('#addItemToOrderModal').on('hidden.bs.modal', function (e) {
+//            location.reload();
+        });
+        const addItemToOrderModal = document.getElementById('addItemToOrderModal')
+        if (addItemToOrderModal) {
+          addItemToOrderModal.addEventListener('show.bs.modal', event => {
+            // Button that triggered the modal
+            const button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            const ordr_id = button.getAttribute('data-bs-ordr_id')
+            const menuitem_id = button.getAttribute('data-bs-menuitem_id')
+            const menuitem_name = button.getAttribute('data-bs-menuitem_name')
+            const menuitem_price = button.getAttribute('data-bs-menuitem_price')
+            const menuitem_description = button.getAttribute('data-bs-menuitem_description')
+            // If necessary, you could initiate an Ajax request here
+            // and then do the updating in a callback.
 
+            // Update the modal's content.
+            const modalTitle = addItemToOrderModal.querySelector('.modal-title');
+            const ordrIdInput = addItemToOrderModal.querySelector('#ordr_id');
+            const menuItemIdInput = addItemToOrderModal.querySelector('#menuitem_id');
+            const menuItemNameInput = addItemToOrderModal.querySelector('#menuitem_name');
+            const menuItemPriceInput = addItemToOrderModal.querySelector('#menuitem_price');
+            const menuItemDescriptionInput = addItemToOrderModal.querySelector('#menuitem_description');
+
+            modalTitle.textContent = `Add to Order`;
+            ordrIdInput.value = ordr_id;
+            menuItemIdInput.value = menuitem_id;
+            menuItemNameInput.value = menuitem_name;
+            menuItemPriceInput.value = menuitem_price;
+            menuItemDescriptionInput.value = menuitem_description;
+          })
+        }
+    }
+
+    if ($('#addItemToOrderButton').length ) {
+        document.getElementById("addItemToOrderButton").addEventListener("click", function(){
+            let ordrId = $('#ordr_id').val();
+            let menuitemId = $('#menuitem_id').val();
+            let ordritem = {
+                'ordritem': {
+                    'ordr_id': ordrId,
+                    'menuitem_id': menuitemId
+                }
+            };
+            post( '/ordritems', ordritem );
+            return true;
+        });
+    }
     if ($('#start-order').length) {
         document.getElementById("start-order").addEventListener("click", function(){
             let currentMenu = $('#currentMenu').text();

@@ -23,6 +23,40 @@
         <%= @cookie_value %>
     <% end %>
 
+<div class="modal fade" id="addItemToOrderModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addItemToOrderModalLabel">New message</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <input type="hidden" class="form-control" id="ordr_id">
+          <input type="hidden" class="form-control" id="menuitem_id">
+          <div class="mb-3">
+            <label for="menuitem_name" class="form-label">Name:</label>
+            <input type="text" class="form-control" id="menuitem_name" disabled>
+          </div>
+          <div class="mb-3">
+            <label for="menuitem_description" class="form-label">Description:</label>
+            <input type="text" class="form-control" id="menuitem_description" disabled>
+          </div>
+          <div class="mb-3">
+            <label for="menuitem_price" class="form-label">Price:</label>
+            <input type="text" class="form-control" id="menuitem_price" disabled>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="addItemToOrderButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Item</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div style="display:none">
     <% if @openOrder %>
         <div id="currentOrder"><%= @openOrder.id %></div>
@@ -97,17 +131,23 @@
                       <img class="card-img-bottom" src="<%= menuitem.image %>" alt="<%= menuitem.name %>">
                       <div class="card-body">
                              <div class="row">
-                                <div class="col-11">
-                                    <h5 class="card-title"><%= menuitem.name %></h5>
+                                <div class="col-10">
+                                    <h5 class="card-title"><%= menuitem.name %> <span class="float-end"><%= number_to_currency(menuitem.price) %></span></h5>
                                 </div>
-                                <div class="col-1">
+                                <div class="col-2">
                                     <span class="float-end">
                                         <% if @openOrder %>
-                                            <button type="button" class="addItemToOrder btn btn-lg btn-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to Order">
+                                            <button type="button" class="addItemToOrder btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                data-bs-ordr_id="<%= @openOrder.id %>",
+                                                data-bs-menuitem_id="<%= menuitem.id %>"
+                                                data-bs-menuitem_name="<%= menuitem.name %>"
+                                                data-bs-menuitem_price="<%= menuitem.price %>"
+                                                data-bs-menuitem_description="<%= menuitem.description %>"
+                                                title="Add to Order">
                                                 <i class="bi bi-plus"></i>
                                             </button>
                                         <% else %>
-                                            <button type="button" class="addItemToOrder btn btn-lg btn-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to Order" disabled>
+                                            <button type="button" class="addItemToOrder btn btn-lg btn-primary" disabled>
                                                 <i class="bi bi-plus"></i>
                                             </button>
                                         <% end %>

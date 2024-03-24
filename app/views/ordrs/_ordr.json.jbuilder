@@ -4,6 +4,7 @@
   json.deliveredAt ordr.deliveredAt
   json.paidAt ordr.paidAt
   json.nett ordr.nett
+  json.runningTotal = ordr.runningTotal
   json.tip ordr.tip
   json.service ordr.service
   json.tax ordr.tax
