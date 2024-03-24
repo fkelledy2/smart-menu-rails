@@ -65,6 +65,6 @@ class OrdritemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ordritem_params
-      params.require(:ordritem).permit(:ordr_id, :menuitem_id)
+      params.require(:ordritem).permit(:ordr_id, :menuitem_id, :ordritemprice)
     end
 end

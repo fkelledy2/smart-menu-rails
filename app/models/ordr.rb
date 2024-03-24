@@ -18,7 +18,7 @@ class Ordr < ApplicationRecord
   end
 
   def runningTotal
-    ordritems.pluck("menuitem_id.price").sum
+    ordritems.pluck("ordritemprice").sum
   end
 
   validates :restaurant, :presence => true

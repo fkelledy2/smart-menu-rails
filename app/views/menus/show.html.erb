@@ -95,7 +95,7 @@
                 <% if @tablesetting %>
                     <% if @openOrder %>
                         <button type="button" class="btn btn-lg btn-light">
-                            Total: <%= number_to_currency(@openOrder.nett) %>
+                            Total: <%= number_to_currency(@openOrder.runningTotal) %>
                         </button>
                         <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#closeOrderModal">
                           <i class="bi bi-minus"></i> Close Tab

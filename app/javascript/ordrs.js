@@ -13,7 +13,7 @@ document.addEventListener("turbo:load", () => {
     }
     if ($('#addItemToOrderModal').length) {
         $('#addItemToOrderModal').on('hidden.bs.modal', function (e) {
-//            location.reload();
+            location.reload();
         });
         const addItemToOrderModal = document.getElementById('addItemToOrderModal')
         if (addItemToOrderModal) {
@@ -51,10 +51,12 @@ document.addEventListener("turbo:load", () => {
         document.getElementById("addItemToOrderButton").addEventListener("click", function(){
             let ordrId = $('#ordr_id').val();
             let menuitemId = $('#menuitem_id').val();
+            let menuitemPrice = $('#menuitem_price').val();
             let ordritem = {
                 'ordritem': {
                     'ordr_id': ordrId,
-                    'menuitem_id': menuitemId
+                    'menuitem_id': menuitemId,
+                    'ordritemprice': menuitemPrice
                 }
             };
             post( '/ordritems', ordritem );
