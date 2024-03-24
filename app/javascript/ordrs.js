@@ -1,28 +1,42 @@
 document.addEventListener("turbo:load", () => {
 
     $('#closeOrderModal').on('hidden.bs.modal', function (e) {
-        location.reload();
+//        location.reload();
     });
 
     $('#openOrderModal').on('hidden.bs.modal', function (e) {
-        location.reload();
+//        location.reload();
     });
+
     if ($('#start-order').length) {
         document.getElementById("start-order").addEventListener("click", function(){
             let currentMenu = $('#currentMenu').text();
             let currentRestaurant = $('#currentRestaurant').text();
-            let currentEmployee = $('#currentEmployee').text();
             let currentTable = $('#currentTable').text();
-            let ordr = {
-                'ordr': {
-                  'tablesetting_id': currentTable,
-                  'employee_id': currentEmployee,
-                  'restaurant_id': currentRestaurant,
-                  'menu_id': currentMenu,
-                  'status' : 0
-                }
-            };
-            post( '/ordrs', ordr );
+            let orderStatus = 0;
+            if ($('#currentEmployee').length) {
+                let currentEmployee = $('#currentEmployee').text();
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': currentTable,
+                      'employee_id': currentEmployee,
+                      'restaurant_id': currentRestaurant,
+                      'menu_id': currentMenu,
+                      'status' : orderStatus
+                    }
+                };
+                post( '/ordrs', ordr );
+            } else {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': currentTable,
+                      'restaurant_id': currentRestaurant,
+                      'menu_id': currentMenu,
+                      'status' : orderStatus
+                    }
+                };
+                post( '/ordrs', ordr );
+            }
             return true;
         });
     }
@@ -32,18 +46,31 @@ document.addEventListener("turbo:load", () => {
             let currentOrder = $('#currentOrder').text();
             let currentMenu = $('#currentMenu').text();
             let currentRestaurant = $('#currentRestaurant').text();
-            let currentEmployee = $('#currentEmployee').text();
             let currentTable = $('#currentTable').text();
-            let ordr = {
-                'ordr': {
-                  'tablesetting_id': currentTable,
-                  'employee_id': currentEmployee,
-                  'restaurant_id': currentRestaurant,
-                  'menu_id': currentMenu,
-                  'status' : 2
-                }
-            };
-            patch( '/ordrs/'+currentOrder, ordr );
+            let orderStatus = 2;
+            if ($('#currentEmployee').length) {
+                let currentEmployee = $('#currentEmployee').text();
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': currentTable,
+                      'employee_id': currentEmployee,
+                      'restaurant_id': currentRestaurant,
+                      'menu_id': currentMenu,
+                      'status' : orderStatus
+                    }
+                };
+                patch( '/ordrs/'+currentOrder, ordr );
+            } else {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': currentTable,
+                      'restaurant_id': currentRestaurant,
+                      'menu_id': currentMenu,
+                      'status' : orderStatus
+                    }
+                };
+                patch( '/ordrs/'+currentOrder, ordr );
+            }
             return true;
         });
     }

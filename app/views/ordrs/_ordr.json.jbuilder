@@ -8,9 +8,9 @@
   json.service ordr.service
   json.tax ordr.tax
   json.gross ordr.gross
+  json.diners ordr.diners
   json.employee ordr.employee
   json.menu ordr.menu
-  json.diners ordr.diners
   json.tablesetting ordr.tablesetting
   json.restaurant ordr.restaurant
   json.ordritems ordr.ordritems do |ordritem|

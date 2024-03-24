@@ -9,27 +9,16 @@ class MenusController < ApplicationController
   # GET /menus/1 or /menus/1.json
   def show
     if params[:menu_id] && params[:id]
-        # This means we are coming from QR code scan.
         @tablesetting = Tablesetting.find_by_id(params[:id])
         @openOrder = Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 0).first
-        # IF we have an openOrder then start tracking session interactions with that open order.
-            @ordrparticipant = Ordrparticipant.new
-            @ordrparticipant.ordr = @openOrder
-            @ordrparticipant.sessionid = session.id
+        if @openOrder
             if current_user
-                @ordrparticipant.employee = @current_employee
-                @ordrparticipant.role = 1
+                @ordrparticipant = Ordrparticipant.new( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id, action: 0 );
             else
-                @ordrparticipant.role = 0
+                @ordrparticipant = Ordrparticipant.new( ordr: @openOrder, role: 0, sessionid: session.id, action: 0 );
             end
-            @ordrparticipant.action = 0
             @ordrparticipant.save
-        cookies["test_cookie2"] = {
-            :value => session.id,
-            :expires => 1.year.from_now,
-            :domain => 'smartmenu.com'
-        }
-        @cookie_value = cookies["test_cookie2"]
+        end
     end
   end
 

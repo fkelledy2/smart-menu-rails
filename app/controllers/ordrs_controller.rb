@@ -37,6 +37,15 @@ class OrdrsController < ApplicationController
 
     respond_to do |format|
       if @ordr.save
+        if( ordr_params[:status] = 0 )
+            if current_user
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id, action: 1 );
+                @ordrparticipant.save
+            else
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id, action: 1 );
+                @ordrparticipant.save
+            end
+        end
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully created." }
         format.json { render :show, status: :created, location: @ordr }
       else
@@ -50,6 +59,24 @@ class OrdrsController < ApplicationController
   def update
     respond_to do |format|
       if @ordr.update(ordr_params)
+        if( ordr_params[:status] = 0 )
+            if current_user
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id, action: 1 );
+                @ordrparticipant.save
+            else
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id, action: 1 );
+                @ordrparticipant.save
+            end
+        end
+        if( ordr_params[:status] = 2 )
+            if current_user
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id, action: 5 );
+                @ordrparticipant.save
+            else
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id, action: 5 );
+                @ordrparticipant.save
+            end
+        end
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully updated." }
         format.json { render :show, status: :ok, location: @ordr }
       else

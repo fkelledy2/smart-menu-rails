@@ -66,9 +66,6 @@ document.addEventListener("turbo:load", () => {
                 });
             }
         });
-        //trigger an alert message when the row is clicked
-        menuTable.on("rowClick", function(e, row){
-        });
         menuTable.on("rowSelectionChanged", function(data, rows){
           if( data.length > 0 ) {
             document.getElementById("activate-row").disabled = false;

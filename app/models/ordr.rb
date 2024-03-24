@@ -8,12 +8,13 @@ class Ordr < ApplicationRecord
   has_many :ordrparticipants, dependent: :destroy
 
   enum status: {
-    open: 0,
-    billrequest: 1,
-    close: 2
+    opened: 0,
+    billrequested: 1,
+    closed: 2
   }
+
   def diners
-    ordrparticipants.where(role: 0).distinct.pluck("role", "sessionid").count
+    ordrparticipants.where(role: 0).distinct.pluck("sessionid").count
   end
 
   validates :restaurant, :presence => true
