@@ -1,10 +1,11 @@
 document.addEventListener("turbo:load", () => {
     if ($("#tag-table").is(':visible')) {
         var tagTable = new Tabulator("#tag-table", {
-          height:405,
+          maxHeight:"100%",
+          minHeight:405,
+          paginationSize:20,
           responsiveLayout:true,
           pagination:"local",
-          paginationSize:10,
           paginationCounter:"rows",
           ajaxURL: '/tags.json',
           layout:"fitColumns",

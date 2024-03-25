@@ -1,10 +1,11 @@
 document.addEventListener("turbo:load", () => {
     if ($("#ingredient-table").is(':visible')) {
         var sizeTable = new Tabulator("#ingredient-table", {
-          height:405,
+          maxHeight:"100%",
+          minHeight:405,
+          paginationSize:20,
           responsiveLayout:true,
           pagination:"local",
-          paginationSize:10,
           paginationCounter:"rows",
           ajaxURL: '/ingredients.json',
           layout:"fitColumns",

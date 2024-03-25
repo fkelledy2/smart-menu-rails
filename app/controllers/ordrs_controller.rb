@@ -58,6 +58,9 @@ class OrdrsController < ApplicationController
   # PATCH/PUT /ordrs/1 or /ordrs/1.json
   def update
     respond_to do |format|
+      if( ordr_params[:status] = 2 )
+          @ordr.nett = @ordr.runningTotal
+      end
       if @ordr.update(ordr_params)
         if( ordr_params[:status] = 0 )
             if current_user

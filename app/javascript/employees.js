@@ -2,10 +2,11 @@ document.addEventListener("turbo:load", () => {
     if ($("#employee-table").is(':visible')) {
         // Employees
         var enployeeTable = new Tabulator("#employee-table", {
-          height:405,
+          maxHeight:"100%",
+          minHeight:405,
+          paginationSize:20,
           responsiveLayout:true,
           pagination:"local",
-          paginationSize:10,
           paginationCounter:"rows",
           ajaxURL: '/employees.json',
           layout:"fitColumns",

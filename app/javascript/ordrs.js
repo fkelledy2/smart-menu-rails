@@ -15,6 +15,7 @@ document.addEventListener("turbo:load", () => {
         $('#addItemToOrderModal').on('hidden.bs.modal', function (e) {
             location.reload();
         });
+
         const addItemToOrderModal = document.getElementById('addItemToOrderModal')
         if (addItemToOrderModal) {
           addItemToOrderModal.addEventListener('show.bs.modal', event => {
@@ -48,7 +49,7 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($('#addItemToOrderButton').length ) {
-        document.getElementById("addItemToOrderButton").addEventListener("click", function(){
+        document.getElementById("addItemToOrderButton").addEventListener("click", function() {
             let ordrId = $('#ordr_id').val();
             let menuitemId = $('#menuitem_id').val();
             let menuitemPrice = $('#menuitem_price').val();
@@ -64,7 +65,7 @@ document.addEventListener("turbo:load", () => {
         });
     }
     if ($('#start-order').length) {
-        document.getElementById("start-order").addEventListener("click", function(){
+        document.getElementById("start-order").addEventListener("click", function() {
             let currentMenu = $('#currentMenu').text();
             let currentRestaurant = $('#currentRestaurant').text();
             let currentTable = $('#currentTable').text();
@@ -153,10 +154,11 @@ document.addEventListener("turbo:load", () => {
 
     if ($("#order-table").length) {
         var orderTable = new Tabulator("#order-table", {
-          height:405,
+          maxHeight:"100%",
+          minHeight:405,
+          paginationSize:20,
           responsiveLayout:true,
           pagination:"local",
-          paginationSize:10,
           paginationCounter:"rows",
           ajaxURL: '/ordrs.json',
           layout:"fitColumns",

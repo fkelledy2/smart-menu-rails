@@ -1,10 +1,11 @@
 document.addEventListener("turbo:load", () => {
     if ($("#menusection-table").is(':visible')) {
         var menusectionTable = new Tabulator("#menusection-table", {
-          height:405,
+          maxHeight:"100%",
+          minHeight:405,
+          paginationSize:20,
           responsiveLayout:true,
           pagination:"local",
-          paginationSize:10,
           paginationCounter:"rows",
           ajaxURL: '/menusections.json',
           layout:"fitColumns",

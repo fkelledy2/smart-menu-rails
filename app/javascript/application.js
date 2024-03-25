@@ -39,6 +39,7 @@ import './sizes'
 import './ingredients'
 import './inventories'
 import './ordrs'
+import './ordritems'
 
 document.addEventListener("turbo:load", () => {
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

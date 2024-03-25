@@ -14,13 +14,15 @@ document.addEventListener("turbo:load", () => {
                 cell.getRow().toggleSelect();
              }
            },
-          {
+           {
             title:"Restaurant", field:"restaurant_id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
                 labelField:"restaurant.name",
                 urlPrefix:"/restaurants/",
             }
-          },
-          {
+           },
+           { rowHandle:true, formatter:"handle", headerSort:false,  width:30, minWidth:30 },
+           { title:" ", field:"sequence", formatter:"rownum", width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
+           {
             title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
                 labelField:"name",
                 urlPrefix:"/taxes/",

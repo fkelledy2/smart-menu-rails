@@ -1,10 +1,11 @@
 document.addEventListener("turbo:load", () => {
     if ($("#size-table").is(':visible')) {
         var sizeTable = new Tabulator("#size-table", {
-          height:405,
+          maxHeight:"100%",
+          minHeight:405,
+          paginationSize:20,
           responsiveLayout:true,
           pagination:"local",
-          paginationSize:10,
           paginationCounter:"rows",
           ajaxURL: '/sizes.json',
           layout:"fitColumns",
