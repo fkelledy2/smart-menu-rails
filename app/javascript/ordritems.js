@@ -13,7 +13,7 @@ document.addEventListener("turbo:load", () => {
           layout:"fitColumns",
           columns: [
            {
-            title:"Order", field:"ordr.id", frozen:true, responsive:0, formatter:"link", formatterParams: {
+            title:"Order", field:"ordr.id", frozen:true, width: 200,  responsive:0, formatter:"link", formatterParams: {
                 labelField:"ordr.id",
                 urlPrefix:"/ordrs/",
             }
@@ -24,7 +24,7 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/menuitems/",
             }
            },
-           {title:"Price", field:"menuitem.price", formatter:"money", width: 100, hozAlign:"right", headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
+           {title:"Price", field:"menuitem.price", formatter:"money", width: 200, hozAlign:"right", headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
             formatterParams:{
                decimal:".",
                thousand:",",
@@ -33,13 +33,13 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
            },
-           {title:"Created", field:"created_at", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+           {title:"Created", field:"created_at", responsive:4, width: 200, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
             inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
             outputFormat:"dd/MM/yyyy HH:mm",
             invalidPlaceholder:"(invalid date)",
             }
            },
-           {title:"Updated", field:"updated_at", responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+           {title:"Updated", field:"updated_at", responsive:5, width: 200, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
             inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
             outputFormat:"dd/MM/yyyy HH:mm",
             invalidPlaceholder:"(invalid date)",

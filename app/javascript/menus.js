@@ -5,6 +5,7 @@ document.addEventListener("turbo:load", () => {
           minHeight:405,
           paginationSize:20,
           responsiveLayout:true,
+          groupBy: ["restaurant.id"],
           pagination:"local",
           paginationCounter:"rows",
           ajaxURL: '/menus.json',
@@ -20,7 +21,7 @@ document.addEventListener("turbo:load", () => {
             }
           },
           {
-            title:"Restaurant", field:"restaurant_id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
+            title:"Restaurant", field:"restaurant.id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
                 labelField:"restaurant.name",
                 urlPrefix:"/restaurants/",
             }

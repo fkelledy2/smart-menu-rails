@@ -5,6 +5,7 @@ document.addEventListener("turbo:load", () => {
           maxHeight:"100%",
           minHeight:405,
           paginationSize:20,
+          groupBy: ["menusection.id"],
           responsiveLayout:true,
           pagination:"local",
           paginationCounter:"rows",
@@ -21,7 +22,7 @@ document.addEventListener("turbo:load", () => {
             }
           },
           {
-            title:"Menu Section", field:"menusection_id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
+            title:"Menu Section", field:"menusection.id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
                 labelField:"menusection.name",
                 urlPrefix:"/menusections/",
             }

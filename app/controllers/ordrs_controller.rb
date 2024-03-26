@@ -64,10 +64,17 @@ class OrdrsController < ApplicationController
 
       taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
       totalTax = 0
+      totalService = 0
       for tax in taxes do
-        totalTax += ((tax.taxpercentage * @ordr.nett)/100)
+        if tax.taxtype == 'service'
+            totalService += ((tax.taxpercentage * @ordr.nett)/100)
+        else
+            totalTax += ((tax.taxpercentage * @ordr.nett)/100)
+        end
       end
       @ordr.tax = totalTax
+      @ordr.service = totalService
+      @ordr.gross = @ordr.nett + @ordr.tip + @ordr.service + @ordr.tax
 
       if @ordr.update(ordr_params)
         if( ordr_params[:status] = 0 )

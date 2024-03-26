@@ -3,7 +3,8 @@ class Tax < ApplicationRecord
   enum taxtype: {
     local: 0,
     state: 1,
-    federal: 2
+    federal: 2,
+    service: 3
   }
   validates :name, :presence => true
 end
