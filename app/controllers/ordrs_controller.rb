@@ -61,6 +61,14 @@ class OrdrsController < ApplicationController
       if( ordr_params[:status] = 2 )
           @ordr.nett = @ordr.runningTotal
       end
+
+      taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
+      totalTax = 0
+      for tax in taxes do
+        totalTax += ((tax.taxpercentage * @ordr.nett)/100)
+      end
+      @ordr.tax = totalTax
+
       if @ordr.update(ordr_params)
         if( ordr_params[:status] = 0 )
             if current_user

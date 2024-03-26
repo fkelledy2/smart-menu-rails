@@ -13,6 +13,10 @@ class Ordr < ApplicationRecord
     closed: 2
   }
 
+  def ordrDate
+      created_at.strftime("%d/%d/%Y")
+  end
+
   def diners
     ordrparticipants.where(role: 0).distinct.pluck("sessionid").count
   end

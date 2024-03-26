@@ -8,6 +8,10 @@ document.addEventListener("turbo:load", () => {
           paginationCounter:"rows",
           ajaxURL: '/taxes.json',
           layout:"fitColumns",
+          initialSort:[
+            {column:"sequence", dir:"asc"},
+          ],
+          movableRows:true,
           columns: [
            {
              formatter:"rowSelection", titleFormatter:"rowSelection", width: 20, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
@@ -43,6 +47,25 @@ document.addEventListener("turbo:load", () => {
             }
            }
           ],
+        });
+        taxTable.on("rowMoved", function(row){
+            const rows = taxTable.getRows();
+            for (let i = 0; i < rows.length; i++) {
+                taxTable.updateData([{id:rows[i].getData().id, sequence:rows[i].getPosition()}]);
+                let mu = {
+                  'tax': {
+                      'sequence': rows[i].getPosition()
+                  }
+                };
+                fetch(rows[i].getData().url, {
+                    method: 'PATCH',
+                    headers:  {
+                      "Content-Type": "application/json",
+                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                    },
+                    body: JSON.stringify(mu)
+                });
+            }
         });
     }
 })

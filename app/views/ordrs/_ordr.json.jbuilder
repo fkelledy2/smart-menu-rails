@@ -20,6 +20,7 @@
   json.ordrparticipants ordr.ordrparticipants do |ordrparticipant|
     json.partial! 'ordrparticipants/ordrparticipant', ordrparticipant: ordrparticipant
   end
+  json.ordrDate ordr.ordrDate
   json.created_at ordr.created_at
   json.updated_at ordr.updated_at
   json.url ordr_url(ordr, format: :json)

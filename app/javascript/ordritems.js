@@ -2,10 +2,12 @@ document.addEventListener("turbo:load", () => {
 
     if ($("#orderitem-table").length) {
         var orderItemTable = new Tabulator("#orderitem-table", {
-          height:405,
+          maxHeight:"100%",
+          minHeight:405,
+          paginationSize:20,
           responsiveLayout:true,
           pagination:"local",
-          paginationSize:10,
+          groupBy:"ordr.id",
           paginationCounter:"rows",
           ajaxURL: '/ordritems.json',
           layout:"fitColumns",
@@ -22,7 +24,7 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/menuitems/",
             }
            },
-           {title:"Price", field:"menuitem.price", formatter:"money", width: 100, hozAlign:"right", headerHozAlign:"right",
+           {title:"Price", field:"menuitem.price", formatter:"money", width: 100, hozAlign:"right", headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
             formatterParams:{
                decimal:".",
                thousand:",",

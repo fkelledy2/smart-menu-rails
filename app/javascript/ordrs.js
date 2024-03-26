@@ -157,12 +157,17 @@ document.addEventListener("turbo:load", () => {
           maxHeight:"100%",
           minHeight:405,
           paginationSize:20,
+          groupBy: ["restaurant.name","menu.name", "ordrDate" ],
           responsiveLayout:true,
           pagination:"local",
           paginationCounter:"rows",
           ajaxURL: '/ordrs.json',
           layout:"fitColumns",
+          initialSort:[
+            {column:"ordrDate", dir:"desc"},
+          ],
           columns: [
+           {title:"Date", field:"ordrDate", frozen:true, width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {
             title:"Restaurant", field:"restaurant.id", frozen:true, responsive:0, formatter:"link", formatterParams: {
                 labelField:"restaurant.name",
@@ -182,19 +187,12 @@ document.addEventListener("turbo:load", () => {
             }
            },
            {
-            title:"Employee", field:"employee.id", frozen:true, responsive:0, formatter:"link", formatterParams: {
-                labelField:"employee.name",
-                urlPrefix:"/employees/",
-            }
-           },
-           {
             title:"Id", field:"id", responsive:0, formatter:"link", formatterParams: {
                 labelField:"id",
                 urlPrefix:"/ordrs/",
             }
            },
-           {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Nett", field:"nett", formatter:"money", hozAlign:"right", headerHozAlign:"right",
+           {title:"Nett", field:"nett", formatter:"money", hozAlign:"right", headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
             formatterParams:{
                decimal:".",
                thousand:",",
@@ -203,7 +201,7 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
            },
-           {title:"Tip", field:"tip", formatter:"money", hozAlign:"right", headerHozAlign:"right",
+           {title:"Tip", field:"tip", formatter:"money", hozAlign:"right", headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
             formatterParams:{
                decimal:".",
                thousand:",",
@@ -212,7 +210,7 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
            },
-           {title:"Service", field:"service", formatter:"money", hozAlign:"right", headerHozAlign:"right",
+           {title:"Service", field:"service", formatter:"money", hozAlign:"right", headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
             formatterParams:{
                decimal:".",
                thousand:",",
@@ -221,7 +219,7 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
            },
-           {title:"Tax", field:"tax", formatter:"money", hozAlign:"right", headerHozAlign:"right",
+           {title:"Tax", field:"tax", formatter:"money", hozAlign:"right", headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
             formatterParams:{
                decimal:".",
                thousand:",",
@@ -230,25 +228,13 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
            },
-           {title:"Gross", field:"gross", formatter:"money", hozAlign:"right", headerHozAlign:"right",
+           {title:"Gross", field:"gross", formatter:"money", hozAlign:"right", headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
             formatterParams:{
                decimal:".",
                thousand:",",
                symbol:"$",
                negativeSign:true,
                precision:2,
-            }
-           },
-           {title:"Created", field:"created_at", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy HH:mm",
-            invalidPlaceholder:"(invalid date)",
-            }
-           },
-           {title:"Updated", field:"updated_at", responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy HH:mm",
-            invalidPlaceholder:"(invalid date)",
             }
            }
           ],
