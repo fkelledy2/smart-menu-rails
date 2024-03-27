@@ -195,7 +195,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="openOrderModalLabel">Open Order</h5>
+        <h5 class="modal-title" id="openOrderModalLabel">Open Tab</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -215,11 +215,42 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="closeOrderModalLabel">Close Order</h5>
+        <h5 class="modal-title" id="closeOrderModalLabel">Close Tab</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Are you sure?
+        <form>
+          <div class="row">
+            <% if @openOrder %>
+                <div class="col-2">
+                    <span class="form-label float-end">Nett:</span>
+                </div>
+                <div class="col-10">
+                    <input type="text" class="form-control" id="tip" value="<%= number_to_currency(@openOrder.nett) %>" disabled>
+                </div>
+                <div class="col-2">
+                    <span class="form-label float-end">Service:</span>
+                </div>
+                <div class="col-10">
+                    <input type="text" class="form-control" id="tip" value="<%= number_to_currency(@openOrder.service) %>" disabled>
+                </div>
+                <div class="col-2">
+                    <span class="form-label float-end">Tax:</span>
+                </div>
+                <div class="col-10">
+                    <input type="text" class="form-control" id="tip" value="<%= number_to_currency(@openOrder.tax) %>" disabled>
+                </div>
+            <% end %>
+          </div>
+          <div class="row">
+            <div class="col-2">
+                <span class="form-label float-end">Add a tip:</span>
+            </div>
+            <div class="col-10">
+                <input type="text" class="form-control" id="tip">
+            </div>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

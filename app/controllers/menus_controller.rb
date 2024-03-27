@@ -12,6 +12,24 @@ class MenusController < ApplicationController
         @tablesetting = Tablesetting.find_by_id(params[:id])
         @openOrder = Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 0).first
         if @openOrder
+
+          @openOrder.nett = @openOrder.runningTotal
+          taxes = Tax.where(restaurant_id: @openOrder.restaurant.id).order(sequence: :asc)
+          totalTax = 0
+          totalService = 0
+          for tax in taxes do
+            if tax.taxtype == 'service'
+                totalService += ((tax.taxpercentage * @openOrder.nett)/100)
+            else
+                totalTax += ((tax.taxpercentage * @openOrder.nett)/100)
+            end
+          end
+          @openOrder.tax = totalTax
+          @openOrder.service = totalService
+          @openOrder.gross = @openOrder.nett + @openOrder.tip + @openOrder.service + @openOrder.tax
+
+
+
             if current_user
                 @ordrparticipant = Ordrparticipant.new( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id, action: 0 );
             else

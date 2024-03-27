@@ -103,6 +103,11 @@ document.addEventListener("turbo:load", () => {
             let currentMenu = $('#currentMenu').text();
             let currentRestaurant = $('#currentRestaurant').text();
             let currentTable = $('#currentTable').text();
+            let tip = 0;
+            if( $('#tip').length > 0 ) {
+                tip = $('#tip').val()
+            }
+            console.log('tip: '+tip);
             let orderStatus = 2;
             if ($('#currentEmployee').length) {
                 let currentEmployee = $('#currentEmployee').text();
@@ -111,6 +116,7 @@ document.addEventListener("turbo:load", () => {
                       'tablesetting_id': currentTable,
                       'employee_id': currentEmployee,
                       'restaurant_id': currentRestaurant,
+                      'tip': tip,
                       'menu_id': currentMenu,
                       'status' : orderStatus
                     }
@@ -121,6 +127,7 @@ document.addEventListener("turbo:load", () => {
                     'ordr': {
                       'tablesetting_id': currentTable,
                       'restaurant_id': currentRestaurant,
+                      'tip': tip,
                       'menu_id': currentMenu,
                       'status' : orderStatus
                     }
@@ -165,6 +172,7 @@ document.addEventListener("turbo:load", () => {
           layout:"fitColumns",
           initialSort:[
             {column:"ordrDate", dir:"desc"},
+            {column:"id", dir:"desc"},
           ],
           columns: [
            {title:"Date", field:"ordrDate", frozen:true, width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
