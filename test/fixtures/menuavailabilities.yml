@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dayofweek: 1
+  starthour: 1
+  startmin: 1
+  endhour: 1
+  endmin: 1
+  menu: one
+
+two:
+  dayofweek: 1
+  starthour: 1
+  startmin: 1
+  endhour: 1
+  endmin: 1
+  menu: two

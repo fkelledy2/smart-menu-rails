@@ -306,6 +306,9 @@ GEM
     rqrcode_core (1.2.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
+    seed_dump (3.3.1)
+      activerecord (>= 4)
+      activesupport (>= 4)
     selenium-webdriver (4.18.1)
       base64 (~> 0.2)
       rexml (~> 3.2, >= 3.2.5)
@@ -395,6 +398,7 @@ DEPENDENCIES
   requestjs-rails
   responders!
   rqrcode-rails3
+  seed_dump
   selenium-webdriver
   sidekiq (~> 6.2)
   sitemap_generator (~> 6.1)

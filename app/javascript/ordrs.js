@@ -247,5 +247,7 @@ document.addEventListener("turbo:load", () => {
            }
           ],
         });
+        $('#order-table').show();
+
     }
 })

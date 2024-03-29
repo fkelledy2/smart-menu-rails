@@ -1,0 +1,53 @@
+
+
+
+<div class="row">
+  <div class="col-sm-6">
+    <h1>Menuavailabilities</h1>
+  </div>
+
+  <div class="col-sm-6 text-end">
+  <%= link_to new_menuavailability_path, class: 'btn btn-primary' do %>
+    Add New Menuavailability
+  <% end %>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+    
+
+            <th>Dayofweek</th>
+            <th>Starthour</th>
+            <th>Startmin</th>
+            <th>Endhour</th>
+            <th>Endmin</th>
+            <th>Menu</th>
+            
+          <th></th>
+        
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @menuavailabilities.each do |menuavailability| %>
+        <%= content_tag :tr, id: dom_id(menuavailability), class: dom_class(menuavailability) do %>
+          
+
+                      <td><%= menuavailability.dayofweek %></td>
+                      <td><%= menuavailability.starthour %></td>
+                      <td><%= menuavailability.startmin %></td>
+                      <td><%= menuavailability.endhour %></td>
+                      <td><%= menuavailability.endmin %></td>
+                      <td><%= menuavailability.menu %></td>
+          
+          
+            <td><%= link_to 'Show', menuavailability %></td>
+          
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

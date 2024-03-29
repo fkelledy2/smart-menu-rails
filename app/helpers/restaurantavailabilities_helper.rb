@@ -1,0 +1,2 @@
+module RestaurantavailabilitiesHelper
+end

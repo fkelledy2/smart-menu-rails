@@ -1,0 +1,59 @@
+<%= form_with(model: menuavailability) do |form| %>
+  <% if menuavailability.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(menuavailability.errors.count, "error") %> prohibited this menuavailability from being saved:</h2>
+
+      <ul>
+      <% menuavailability.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :dayofweek, class: 'form-label' %>
+      <%= form.number_field :dayofweek, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :starthour, class: 'form-label' %>
+      <%= form.number_field :starthour, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :startmin, class: 'form-label' %>
+      <%= form.number_field :startmin, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :endhour, class: 'form-label' %>
+      <%= form.number_field :endhour, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :endmin, class: 'form-label' %>
+      <%= form.number_field :endmin, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :menu_id, class: 'form-label' %>
+      <%= form.text_field :menu_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if menuavailability.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', menuavailability, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if menuavailability.persisted? %>
+      <%= link_to "Cancel", menuavailability, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", menuavailabilities_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

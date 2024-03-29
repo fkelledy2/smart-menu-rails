@@ -16,7 +16,7 @@ document.addEventListener("turbo:load", () => {
              }
            },
           {
-            title:"Restaurant", field:"restaurant_id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
+            title:"Restaurant", field:"restaurant.id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
                 labelField:"restaurant.name",
                 urlPrefix:"/restaurants/",
             }
@@ -27,6 +27,7 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/tablesettings/",
             }
            },
+           {title:"Type", field:"tabletype", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {title:"Capacity", field:"capacity", width: 200, hozAlign:"right", headerHozAlign:"right", },
            {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{

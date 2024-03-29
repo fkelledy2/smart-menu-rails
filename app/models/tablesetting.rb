@@ -5,6 +5,13 @@ class Tablesetting < ApplicationRecord
     active: 1,
     archived: 2
   }
+
+  enum tabletype: {
+    indoor: 1,
+    outdoor: 2
+  }
+
+  validates :tabletype, :presence => true
   validates :name, :presence => true
   validates :capacity, :presence => true
   validates :status, :presence => true

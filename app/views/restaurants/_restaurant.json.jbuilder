@@ -7,6 +7,8 @@
   json.city restaurant.city
   json.postcode restaurant.postcode
   json.status restaurant.status
+  json.image restaurant.image
+  json.genid restaurant.genid
   json.total_capacity restaurant.total_capacity
   json.menus restaurant.menus do |menu|
     json.partial! 'menus/menu', menu: menu

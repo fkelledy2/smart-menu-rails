@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   protected
     def set_current_employee
         if current_user
-            @current_employee = Employee.find(current_user.employee_id)
+            @current_employee = Employee.where(user_id: current_user.id).first
         end
     end
 

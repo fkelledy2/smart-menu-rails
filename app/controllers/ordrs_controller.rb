@@ -72,6 +72,7 @@ class OrdrsController < ApplicationController
             totalTax += ((tax.taxpercentage * @ordr.nett)/100)
         end
       end
+      @ordr.tip = ordr_params[:tip]
       @ordr.tax = totalTax
       @ordr.service = totalService
       @ordr.gross = @ordr.nett + @ordr.tip + @ordr.service + @ordr.tax

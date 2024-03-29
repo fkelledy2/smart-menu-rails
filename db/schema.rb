@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_24_143328) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_29_181528) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -100,6 +100,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_24_143328) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["menuitem_id"], name: "index_inventories_on_menuitem_id"
+  end
+
+  create_table "menuavailabilities", force: :cascade do |t|
+    t.integer "dayofweek"
+    t.integer "starthour"
+    t.integer "startmin"
+    t.integer "endhour"
+    t.integer "endmin"
+    t.bigint "menu_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id"], name: "index_menuavailabilities_on_menu_id"
   end
 
   create_table "menuitem_allergyn_mappings", force: :cascade do |t|
@@ -254,6 +266,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_24_143328) do
     t.index ["tablesetting_id"], name: "index_ordrs_on_tablesetting_id"
   end
 
+  create_table "restaurantavailabilities", force: :cascade do |t|
+    t.integer "dayofweek"
+    t.integer "starthour"
+    t.integer "startmin"
+    t.integer "endhour"
+    t.integer "endmin"
+    t.bigint "restaurant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "status"
+    t.integer "sequence"
+    t.index ["restaurant_id"], name: "index_restaurantavailabilities_on_restaurant_id"
+  end
+
   create_table "restaurants", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -269,6 +295,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_24_143328) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "genid"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 
@@ -302,6 +329,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_24_143328) do
     t.bigint "restaurant_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "tabletype"
     t.index ["restaurant_id"], name: "index_tablesettings_on_restaurant_id"
   end
 
@@ -336,9 +364,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_24_143328) do
     t.boolean "admin", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "employee_id"
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["employee_id"], name: "index_users_on_employee_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -347,6 +373,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_24_143328) do
   add_foreign_key "employees", "restaurants"
   add_foreign_key "employees", "users"
   add_foreign_key "inventories", "menuitems"
+  add_foreign_key "menuavailabilities", "menus"
   add_foreign_key "menuitem_allergyn_mappings", "allergyns"
   add_foreign_key "menuitem_allergyn_mappings", "menuitems"
   add_foreign_key "menuitem_ingredient_mappings", "ingredients"
@@ -368,9 +395,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_24_143328) do
   add_foreign_key "ordrs", "menus"
   add_foreign_key "ordrs", "restaurants"
   add_foreign_key "ordrs", "tablesettings"
+  add_foreign_key "restaurantavailabilities", "restaurants"
   add_foreign_key "restaurants", "users"
   add_foreign_key "services", "users"
   add_foreign_key "tablesettings", "restaurants"
   add_foreign_key "taxes", "restaurants"
-  add_foreign_key "users", "employees"
 end

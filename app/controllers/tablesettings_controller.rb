@@ -66,6 +66,6 @@ class TablesettingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def tablesetting_params
-      params.require(:tablesetting).permit(:name, :description, :status, :capacity, :restaurant_id)
+      params.require(:tablesetting).permit(:name, :description, :status, :tabletype, :capacity, :restaurant_id)
     end
 end

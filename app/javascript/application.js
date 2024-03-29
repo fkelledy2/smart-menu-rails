@@ -40,6 +40,7 @@ import './ingredients'
 import './inventories'
 import './ordrs'
 import './ordritems'
+import './restaurantavailabilities'
 
 document.addEventListener("turbo:load", () => {
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
