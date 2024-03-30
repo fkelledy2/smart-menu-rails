@@ -1,6 +1,7 @@
 document.addEventListener("turbo:load", () => {
     if ($("#ingredient-table").is(':visible')) {
         var sizeTable = new Tabulator("#ingredient-table", {
+          dataLoader: false,
           maxHeight:"100%",
           minHeight:405,
           paginationSize:20,

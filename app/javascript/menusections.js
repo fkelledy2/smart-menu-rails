@@ -1,6 +1,7 @@
 document.addEventListener("turbo:load", () => {
     if ($("#menusection-table").is(':visible')) {
         var menusectionTable = new Tabulator("#menusection-table", {
+          dataLoader: false,
           maxHeight:"100%",
           minHeight:405,
           paginationSize:20,

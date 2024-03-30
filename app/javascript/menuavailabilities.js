@@ -1,6 +1,7 @@
 document.addEventListener("turbo:load", () => {
     if ($("#menuavailability-table").is(':visible')) {
         var menuavailabilityTable = new Tabulator("#menuavailability-table", {
+          dataLoader: false,
           maxHeight:"100%",
           minHeight:405,
           paginationSize:20,

@@ -81,7 +81,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : orderStatus
                     }
                 };
-                post( '/ordrs', ordr );
+                post( '/ordrs', ordr, '/menus/'+currentMenu+'/tablesettings/'+currentTable );
             } else {
                 let ordr = {
                     'ordr': {
@@ -91,7 +91,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : orderStatus
                     }
                 };
-                post( '/ordrs', ordr );
+                post( '/ordrs', ordr, '/menus/'+currentMenu+'/tablesettings/'+currentTable );
             }
             return true;
         });
@@ -121,7 +121,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : orderStatus
                     }
                 };
-                patch( '/ordrs/'+currentOrder, ordr );
+                patch( '/ordrs/'+currentOrder, ordr, '/menus/'+currentMenu+'/tablesettings/'+currentTable );
             } else {
                 let ordr = {
                     'ordr': {
@@ -132,35 +132,44 @@ document.addEventListener("turbo:load", () => {
                       'status' : orderStatus
                     }
                 };
-                patch( '/ordrs/'+currentOrder, ordr );
+                patch( '/ordrs/'+currentOrder, ordr, '/menus/'+currentMenu+'/tablesettings/'+currentTable );
             }
             return true;
         });
     }
 
-    function post( url, body ) {
-            fetch(url, {
-                method: 'POST',
-                headers:  {
+    function post( url, body, redirectUrl ) {
+        fetch(url, {
+            method: 'POST',
+            headers:  {
                   "Content-Type": "application/json",
                   "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                },
-                body: JSON.stringify(body)
-            });
+            },
+            body: JSON.stringify(body)
+        }).then(response => {
+            window.location.href = redirectUrl;
+        }).catch(function(err) {
+            console.info(err + " url: " + url);
+        });
     }
-    function patch( url, body ) {
-            fetch(url, {
-                method: 'PATCH',
-                headers:  {
+    function patch( url, body, redirectUrl ) {
+        fetch(url, {
+            method: 'PATCH',
+            headers:  {
                   "Content-Type": "application/json",
                   "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                },
-                body: JSON.stringify(body)
-            });
+            },
+            body: JSON.stringify(body)
+        }).then(response => {
+            window.location.href = redirectUrl;
+        }).catch(function(err) {
+            console.info(err + " url: " + url);
+        });
     }
 
     if ($("#order-table").length) {
         var orderTable = new Tabulator("#order-table", {
+          dataLoader: false,
           maxHeight:"100%",
           minHeight:405,
           paginationSize:20,
@@ -195,7 +204,7 @@ document.addEventListener("turbo:load", () => {
             }
            },
            {
-            title:"Id", field:"id", responsive:0, formatter:"link", formatterParams: {
+            title:"Id", field:"id", sorter:"number", responsive:0, formatter:"link", formatterParams: {
                 labelField:"id",
                 urlPrefix:"/ordrs/",
             }

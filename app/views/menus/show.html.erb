@@ -19,9 +19,28 @@
     <hr>
 <% end %>
 
-    <% if @cookie_value %>
-        <%= @cookie_value %>
-    <% end %>
+<div class="modal fade" id="addNameToParticipantModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addNameToParticipantModalLabel">Personalise your order by adding your name</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" class="form-control" id="name">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="addItemToOrderButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="addItemToOrderModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -69,6 +88,9 @@
     <% end %>
     <div id="currentMenu"><%= @menu.id %></div>
     <div id="currentRestaurant"><%= @menu.restaurant.id %></div>
+    <% if @existingParticipant %>
+        <div id="existingParticipant"><%= @existingParticipant %></div>
+    <% end %>
 </div>
 
 <div class="row">
@@ -76,8 +98,17 @@
     <div class="row">
         <div class="col-12">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-10">
                         <h1><%= @menu.restaurant.name %> : <%= @menu.name %></h1>
+                    </div>
+                    <div class="col-2">
+                        <span class="float-end">
+                        <% if @existingParticipant == false %>
+                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
+                              <i class="bi bi-plus"></i> Name
+                            </button>
+                        <% end %>
+                        </span>
                     </div>
                 </div>
         </div>
@@ -254,7 +285,7 @@
                 <span class="form-label float-end">Add a tip:</span>
             </div>
             <div class="col-10">
-                <input type="text" class="form-control" id="tip">
+                <input type="text" class="form-control" id="tip" value="0">
             </div>
           </div>
         </form>

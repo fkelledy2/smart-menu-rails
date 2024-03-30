@@ -1,4 +1,5 @@
 document.addEventListener("turbo:load", () => {
+
     if ($("#menu-table").is(':visible')) {
         var menuTable = new Tabulator("#menu-table", {
           maxHeight:"100%",

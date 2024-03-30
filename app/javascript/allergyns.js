@@ -2,6 +2,7 @@ document.addEventListener("turbo:load", () => {
     if ($("#allergyn-table").is(':visible')) {
         // Allergyns
         var allergynTable = new Tabulator("#allergyn-table", {
+          dataLoader: false,
           maxHeight:"100%",
           minHeight:405,
           paginationSize:20,

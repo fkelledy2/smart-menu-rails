@@ -2,6 +2,7 @@ document.addEventListener("turbo:load", () => {
 
     if ($("#orderitem-table").length) {
         var orderItemTable = new Tabulator("#orderitem-table", {
+          dataLoader: false,
           maxHeight:"100%",
           minHeight:405,
           paginationSize:20,

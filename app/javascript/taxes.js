@@ -1,6 +1,7 @@
 document.addEventListener("turbo:load", () => {
     if ($("#tax-table").is(':visible')) {
         var taxTable = new Tabulator("#tax-table", {
+          dataLoader: false,
           height:405,
           responsiveLayout:true,
           pagination:"local",

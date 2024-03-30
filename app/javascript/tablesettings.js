@@ -1,6 +1,7 @@
 document.addEventListener("turbo:load", () => {
     if ($("#tablesetting-table").is(':visible')) {
         var tableSettingTable = new Tabulator("#tablesetting-table", {
+          dataLoader: false,
           maxHeight:"100%",
           minHeight:405,
           paginationSize:20,

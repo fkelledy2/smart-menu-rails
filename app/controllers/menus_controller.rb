@@ -9,6 +9,7 @@ class MenusController < ApplicationController
   # GET /menus/1 or /menus/1.json
   def show
     if params[:menu_id] && params[:id]
+        @participantsFirstTime = false
         @tablesetting = Tablesetting.find_by_id(params[:id])
         @openOrder = Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 0).first
         if @openOrder
@@ -27,11 +28,20 @@ class MenusController < ApplicationController
             @openOrder.service = totalService
             @openOrder.gross = @openOrder.nett + @openOrder.tip + @openOrder.service + @openOrder.tax
             if current_user
-                @ordrparticipant = Ordrparticipant.new( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id, action: 0 );
+                @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, employee: @current_employee, role: 1, sessionid: session.id.to_s, action: 0 );
+                @ordrparticipant.save
             else
-                @ordrparticipant = Ordrparticipant.new( ordr: @openOrder, role: 0, sessionid: session.id, action: 0 );
+                @existingParticipant = Ordrparticipant.where( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s ).first
+                if @existingParticipant == nil
+                    cookies["existingParticipant"] = false
+                    @existingParticipant = cookies["existingParticipant"]
+                else
+                    cookies["existingParticipant"] = true
+                    @existingParticipant = cookies["existingParticipant"]
+                end
+                @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s, action: 0 );
+                @ordrparticipant.save
             end
-            @ordrparticipant.save
         end
     end
   end

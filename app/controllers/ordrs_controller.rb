@@ -42,6 +42,14 @@ class OrdrsController < ApplicationController
                 @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id, action: 1 );
                 @ordrparticipant.save
             else
+                @existingParticipant = Ordrparticipant.where( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s ).first
+                if @existingParticipant == nil
+                    cookies["existingParticipant"] = false
+                    @existingParticipant = cookies["existingParticipant"]
+                else
+                    cookies["existingParticipant"] = true
+                    @existingParticipant = cookies["existingParticipant"]
+                end
                 @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id, action: 1 );
                 @ordrparticipant.save
             end
