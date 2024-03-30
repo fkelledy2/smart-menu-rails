@@ -34,10 +34,8 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/restaurantavailabilities/",
             }
           },
-          {title: 'Start Hour', field: 'starthour', responsive:1, hozAlign:"right", headerHozAlign:"right", },
-          {title: 'Start Min', field: 'startmin', responsive:1, hozAlign:"right", headerHozAlign:"right", },
-          {title: 'End Hour', field: 'endhour', responsive:1, hozAlign:"right", headerHozAlign:"right", },
-          {title: 'End Min', field: 'endmin', responsive:1, hozAlign:"right", headerHozAlign:"right", },
+          {title: 'Opening Time', field: 'starthour', mutator: (value, data) => String(data.starthour).padStart(2, '0') + ':' + String(data.startmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
+          {title: 'Closing Time', field: 'endhour', mutator: (value, data) => String(data.endhour).padStart(2, '0') + ':' + String(data.endmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
           {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
 
           {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
@@ -85,10 +83,10 @@ document.addEventListener("turbo:load", () => {
         document.getElementById("activate-row").addEventListener("click", function(){
             const rows = restaurantavailabilityTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
-                restaurantavailabilityTable.updateData([{id:rows[i].id, status:'active'}]);
+                restaurantavailabilityTable.updateData([{id:rows[i].id, status:'open'}]);
                 let r = {
                   'restaurantavailability': {
-                      'status': 'active'
+                      'status': 'open'
                   }
                 };
                 patch( rows[i].url, r );
@@ -97,10 +95,10 @@ document.addEventListener("turbo:load", () => {
         document.getElementById("deactivate-row").addEventListener("click", function(){
             const rows = restaurantavailabilityTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
-                restaurantavailabilityTable.updateData([{id:rows[i].id, status:'inactive'}]);
+                restaurantavailabilityTable.updateData([{id:rows[i].id, status:'closed'}]);
                 let r = {
                   'restaurantavailability': {
-                      'status': 'inactive'
+                      'status': 'closed'
                   }
                 };
                 patch( rows[i].url, r );
