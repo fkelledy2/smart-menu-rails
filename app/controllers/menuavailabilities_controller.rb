@@ -65,6 +65,6 @@ class MenuavailabilitiesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def menuavailability_params
-      params.require(:menuavailability).permit(:dayofweek, :starthour, :startmin, :endhour, :endmin, :menu_id)
+      params.require(:menuavailability).permit(:dayofweek, :starthour, :startmin, :endhour, :endmin, :status, :sequence, :menu_id)
     end
 end
