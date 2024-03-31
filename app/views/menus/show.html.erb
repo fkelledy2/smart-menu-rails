@@ -28,6 +28,7 @@
       </div>
       <div class="modal-body">
         <form>
+          <input type="hidden" class="form-control" id="ordr_id">
           <div class="mb-3">
             <label for="name" class="form-label">Name:</label>
             <input type="text" class="form-control" id="name">
@@ -36,7 +37,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button id="addItemToOrderButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Add</button>
+        <button id="addNameToParticipantButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Add</button>
       </div>
     </div>
   </div>
@@ -46,7 +47,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addItemToOrderModalLabel">New message</h1>
+        <h1 class="modal-title fs-5" id="addItemToOrderModalLabel">Add to order</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -59,7 +60,7 @@
           </div>
           <div class="mb-3">
             <label for="menuitem_description" class="form-label">Description:</label>
-            <input type="text" class="form-control" id="menuitem_description" disabled>
+            <textarea class="form-control" id="menuitem_description" disabled></textarea>
           </div>
           <div class="mb-3">
             <label for="menuitem_price" class="form-label">Price:</label>
@@ -75,22 +76,25 @@
   </div>
 </div>
 
-
 <div style="display:none">
     <% if @openOrder %>
-        <div id="currentOrder"><%= @openOrder.id %></div>
+        currentOrder: <div id="currentOrder"><%= @openOrder.id %></div>
     <% end %>
     <% if @tablesetting %>
-        <div id="currentTable"><%= @tablesetting.id %></div>
+        currentTable:<div id="currentTable"><%= @tablesetting.id %></div>
     <% end %>
     <% if current_user %>
-        <div id="currentEmployee"><%= @current_employee.id %></div>
+        currentEmployee:<div id="currentEmployee"><%= @current_employee.id %></div>
     <% end %>
-    <div id="currentMenu"><%= @menu.id %></div>
-    <div id="currentRestaurant"><%= @menu.restaurant.id %></div>
+    currentMenu:<div id="currentMenu"><%= @menu.id %></div>
+    currentRestaurant:<div id="currentRestaurant"><%= @menu.restaurant.id %></div>
     <% if @existingParticipant %>
-        <div id="existingParticipant"><%= @existingParticipant %></div>
+        existingParticipant:<div id="existingParticipant"><%= @existingParticipant %></div>
     <% end %>
+    <% if @ordrparticipant %>
+        currentParticipant:<div id="currentParticipant"><%= @ordrparticipant.id %></div>
+    <% end %>
+
 </div>
 
 <div class="row">

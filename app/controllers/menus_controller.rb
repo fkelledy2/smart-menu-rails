@@ -35,11 +35,13 @@ class MenusController < ApplicationController
                 if @existingParticipant == nil
                     cookies["existingParticipant"] = false
                     @existingParticipant = cookies["existingParticipant"]
+                    @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s, action: 0);
                 else
+                    @existingParticipantName = @existingParticipant.name
                     cookies["existingParticipant"] = true
                     @existingParticipant = cookies["existingParticipant"]
+                    @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s, action: 0, name: @existingParticipantName);
                 end
-                @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s, action: 0 );
                 @ordrparticipant.save
             end
         end

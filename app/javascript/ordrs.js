@@ -1,140 +1,104 @@
 document.addEventListener("turbo:load", () => {
 
-    if ($('#closeOrderModal').length) {
-        $('#closeOrderModal').on('hidden.bs.modal', function (e) {
-            location.reload();
-        });
-    }
-
-    if ($('#openOrderModal').length) {
-        $('#openOrderModal').on('hidden.bs.modal', function (e) {
-            location.reload();
-        });
-    }
-    if ($('#addItemToOrderModal').length) {
-        $('#addItemToOrderModal').on('hidden.bs.modal', function (e) {
-            location.reload();
-        });
-
-        const addItemToOrderModal = document.getElementById('addItemToOrderModal')
-        if (addItemToOrderModal) {
-          addItemToOrderModal.addEventListener('show.bs.modal', event => {
+    if ($('#addNameToParticipantModal').length) {
+        const addNameToParticipantModal = document.getElementById('addNameToParticipantModal');
+        addNameToParticipantModal.addEventListener('show.bs.modal', event => {
             // Button that triggered the modal
             const button = event.relatedTarget
-            // Extract info from data-bs-* attributes
-            const ordr_id = button.getAttribute('data-bs-ordr_id')
-            const menuitem_id = button.getAttribute('data-bs-menuitem_id')
-            const menuitem_name = button.getAttribute('data-bs-menuitem_name')
-            const menuitem_price = button.getAttribute('data-bs-menuitem_price')
-            const menuitem_description = button.getAttribute('data-bs-menuitem_description')
-            // If necessary, you could initiate an Ajax request here
-            // and then do the updating in a callback.
-
             // Update the modal's content.
-            const modalTitle = addItemToOrderModal.querySelector('.modal-title');
-            const ordrIdInput = addItemToOrderModal.querySelector('#ordr_id');
-            const menuItemIdInput = addItemToOrderModal.querySelector('#menuitem_id');
-            const menuItemNameInput = addItemToOrderModal.querySelector('#menuitem_name');
-            const menuItemPriceInput = addItemToOrderModal.querySelector('#menuitem_price');
-            const menuItemDescriptionInput = addItemToOrderModal.querySelector('#menuitem_description');
-
-            modalTitle.textContent = `Add to Order`;
-            ordrIdInput.value = ordr_id;
-            menuItemIdInput.value = menuitem_id;
-            menuItemNameInput.value = menuitem_name;
-            menuItemPriceInput.value = menuitem_price;
-            menuItemDescriptionInput.value = menuitem_description;
-          })
-        }
-    }
-
-    if ($('#addItemToOrderButton').length ) {
-        document.getElementById("addItemToOrderButton").addEventListener("click", function() {
-            let ordrId = $('#ordr_id').val();
-            let menuitemId = $('#menuitem_id').val();
-            let menuitemPrice = $('#menuitem_price').val();
-            let ordritem = {
-                'ordritem': {
-                    'ordr_id': ordrId,
-                    'menuitem_id': menuitemId,
-                    'ordritemprice': menuitemPrice
+        });
+        $( "#addNameToParticipantButton" ).on( "click", function() {
+            let ordrparticipant = {
+                'ordrparticipant': {
+                    'name': addNameToParticipantModal.querySelector('#name').value,
                 }
             };
-            post( '/ordritems', ordritem );
-            return true;
+            alert( 'patching: '+'/ordoparticipants/'+$('#currentParticipant').text());
+            patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
         });
     }
+
+    if ($('#addItemToOrderModal').length) {
+        const addItemToOrderModal = document.getElementById('addItemToOrderModal');
+        addItemToOrderModal.addEventListener('show.bs.modal', event => {
+            // Button that triggered the modal
+            const button = event.relatedTarget
+            // Update the modal's content.
+            addItemToOrderModal.querySelector('#ordr_id').value = button.getAttribute('data-bs-ordr_id');
+            addItemToOrderModal.querySelector('#menuitem_id').value = button.getAttribute('data-bs-menuitem_id');
+            addItemToOrderModal.querySelector('#menuitem_name').value = button.getAttribute('data-bs-menuitem_name');
+            addItemToOrderModal.querySelector('#menuitem_price').value = button.getAttribute('data-bs-menuitem_price');
+            addItemToOrderModal.querySelector('#menuitem_description').value = button.getAttribute('data-bs-menuitem_description');
+        });
+        $( "#addItemToOrderButton" ).on( "click", function() {
+            let ordritem = {
+                'ordritem': {
+                    'ordr_id': addItemToOrderModal.querySelector('#ordr_id').value,
+                    'menuitem_id': addItemToOrderModal.querySelector('#menuitem_id').value,
+                    'ordritemprice': addItemToOrderModal.querySelector('#menuitem_price').value
+                }
+            };
+            post( '/ordritems', ordritem, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+        });
+    }
+
     if ($('#start-order').length) {
-        document.getElementById("start-order").addEventListener("click", function() {
-            let currentMenu = $('#currentMenu').text();
-            let currentRestaurant = $('#currentRestaurant').text();
-            let currentTable = $('#currentTable').text();
-            let orderStatus = 0;
+       $( "#start-order" ).on( "click", function() {
             if ($('#currentEmployee').length) {
-                let currentEmployee = $('#currentEmployee').text();
                 let ordr = {
                     'ordr': {
-                      'tablesetting_id': currentTable,
-                      'employee_id': currentEmployee,
-                      'restaurant_id': currentRestaurant,
-                      'menu_id': currentMenu,
-                      'status' : orderStatus
+                      'tablesetting_id': $('#currentTable').text(),
+                      'employee_id': $('#currentEmployee').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : 0
                     }
                 };
-                post( '/ordrs', ordr, '/menus/'+currentMenu+'/tablesettings/'+currentTable );
+                post( '/ordrs', ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
             } else {
                 let ordr = {
                     'ordr': {
-                      'tablesetting_id': currentTable,
-                      'restaurant_id': currentRestaurant,
-                      'menu_id': currentMenu,
-                      'status' : orderStatus
+                      'tablesetting_id': $('#currentTable').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : 0
                     }
                 };
-                post( '/ordrs', ordr, '/menus/'+currentMenu+'/tablesettings/'+currentTable );
+                post( '/ordrs', ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
             }
-            return true;
-        });
+       });
     }
 
     if ($('#close-order').length) {
-        document.getElementById("close-order").addEventListener("click", function(){
-            let currentOrder = $('#currentOrder').text();
-            let currentMenu = $('#currentMenu').text();
-            let currentRestaurant = $('#currentRestaurant').text();
-            let currentTable = $('#currentTable').text();
+        $( "#close-order" ).on( "click", function() {
             let tip = 0;
             if( $('#tip').length > 0 ) {
                 tip = $('#tip').val()
             }
-            console.log('tip: '+tip);
-            let orderStatus = 2;
             if ($('#currentEmployee').length) {
-                let currentEmployee = $('#currentEmployee').text();
                 let ordr = {
                     'ordr': {
-                      'tablesetting_id': currentTable,
-                      'employee_id': currentEmployee,
-                      'restaurant_id': currentRestaurant,
+                      'tablesetting_id': $('#currentTable').text(),
+                      'employee_id': $('#currentEmployee').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
                       'tip': tip,
-                      'menu_id': currentMenu,
-                      'status' : orderStatus
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : 2
                     }
                 };
-                patch( '/ordrs/'+currentOrder, ordr, '/menus/'+currentMenu+'/tablesettings/'+currentTable );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
             } else {
                 let ordr = {
                     'ordr': {
-                      'tablesetting_id': currentTable,
-                      'restaurant_id': currentRestaurant,
+                      'tablesetting_id': $('#currentTable').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
                       'tip': tip,
-                      'menu_id': currentMenu,
-                      'status' : orderStatus
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : 2
                     }
                 };
-                patch( '/ordrs/'+currentOrder, ordr, '/menus/'+currentMenu+'/tablesettings/'+currentTable );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
             }
-            return true;
         });
     }
 
@@ -147,9 +111,10 @@ document.addEventListener("turbo:load", () => {
             },
             body: JSON.stringify(body)
         }).then(response => {
-            window.location.href = redirectUrl;
+            location.reload();
         }).catch(function(err) {
             console.info(err + " url: " + url);
+            location.reload();
         });
     }
     function patch( url, body, redirectUrl ) {
@@ -161,9 +126,10 @@ document.addEventListener("turbo:load", () => {
             },
             body: JSON.stringify(body)
         }).then(response => {
-            window.location.href = redirectUrl;
+            location.reload();
         }).catch(function(err) {
             console.info(err + " url: " + url);
+            location.reload();
         });
     }
 
@@ -256,7 +222,5 @@ document.addEventListener("turbo:load", () => {
            }
           ],
         });
-        $('#order-table').show();
-
     }
 })
