@@ -1,6 +1,8 @@
 class Menu < ApplicationRecord
   belongs_to :restaurant
   has_many :menusections
+  has_many :menuavailabilities
+  has_many :menuitems
 
   enum status: {
     inactive: 0,

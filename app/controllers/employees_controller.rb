@@ -3,7 +3,7 @@ class EmployeesController < ApplicationController
 
   # GET /employees or /employees.json
   def index
-    @employees = Employee.all
+    @employees = Employee.joins(:restaurant).where(restaurant: {user: current_user}).all
   end
 
   # GET /employees/1 or /employees/1.json
@@ -66,7 +66,18 @@ class EmployeesController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_employee
-      @employee = Employee.find(params[:id])
+        begin
+            if current_user
+                @employee = Employee.find(params[:id])
+                if( @employee == nil or @employee.restaurant.user != current_user )
+                    redirect_to home_url
+                end
+            else
+                redirect_to root_url
+            end
+        rescue ActiveRecord::RecordNotFound => e
+            redirect_to root_url
+        end
     end
 
     # Only allow a list of trusted parameters through.

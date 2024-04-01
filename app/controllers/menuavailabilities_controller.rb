@@ -3,8 +3,11 @@ class MenuavailabilitiesController < ApplicationController
 
   # GET /menuavailabilities or /menuavailabilities.json
   def index
-    @menuavailabilities = Menuavailability.all
-  end
+    @menuavailabilities = []
+    Restaurant.where( user: current_user).each do |restaurant|
+        @menuavailabilities += restaurant.menuavailabilities
+    end
+ end
 
   # GET /menuavailabilities/1 or /menuavailabilities/1.json
   def show

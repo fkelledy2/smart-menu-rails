@@ -3,7 +3,7 @@ class RestaurantavailabilitiesController < ApplicationController
 
   # GET /restaurantavailabilities or /restaurantavailabilities.json
   def index
-    @restaurantavailabilities = Restaurantavailability.all
+    @restaurantavailabilities = Restaurantavailability.joins(:restaurant).where(restaurant: {user: current_user}).all
   end
 
   # GET /restaurantavailabilities/1 or /restaurantavailabilities/1.json
@@ -60,7 +60,18 @@ class RestaurantavailabilitiesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_restaurantavailability
-      @restaurantavailability = Restaurantavailability.find(params[:id])
+        begin
+            if current_user
+                @restaurantavailability = Restaurantavailability.find(params[:id])
+                if( @restaurantavailability == nil or @restaurantavailability.restaurant.user != current_user )
+                    redirect_to home_url
+                end
+            else
+                redirect_to root_url
+            end
+        rescue ActiveRecord::RecordNotFound => e
+            redirect_to root_url
+        end
     end
 
     # Only allow a list of trusted parameters through.

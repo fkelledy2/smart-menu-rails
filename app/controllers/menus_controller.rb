@@ -3,7 +3,7 @@ class MenusController < ApplicationController
 
   # GET /menus or /menus.json
   def index
-    @menus = Menu.order('sequence ASC').all
+    @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}).order('sequence ASC').all
   end
 
   # GET /menus/1 or /menus/1.json
@@ -98,11 +98,26 @@ class MenusController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_menu
-    if params[:menu_id]
-        @menu = Menu.find(params[:menu_id])
-    else
-        @menu = Menu.find(params[:id])
-    end
+        begin
+            if current_user
+                if params[:menu_id]
+                    @menu = Menu.find(params[:menu_id])
+                else
+                    @menu = Menu.find(params[:id])
+                end
+                if( @menu == nil or @menu.restaurant.user != current_user )
+                    redirect_to home_url
+                end
+            else
+                if params[:menu_id]
+                    @menu = Menu.find(params[:menu_id])
+                else
+                    @menu = Menu.find(params[:id])
+                end
+            end
+        rescue ActiveRecord::RecordNotFound => e
+            redirect_to root_url
+        end
     end
 
     # Only allow a list of trusted parameters through.

@@ -3,7 +3,10 @@ class MenusectionsController < ApplicationController
 
   # GET /menusections or /menusections.json
   def index
-    @menusections = Menusection.order('sequence ASC').all
+    @menusections = []
+    Restaurant.where( user: current_user).each do |restaurant|
+        @menusections += restaurant.menusections
+    end
   end
 
   # GET /menusections/1 or /menusections/1.json
@@ -60,7 +63,18 @@ class MenusectionsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_menusection
-      @menusection = Menusection.find(params[:id])
+        begin
+            if current_user
+                @menusection = Menusection.find(params[:id])
+                if( @menusection == nil or @menusection.menu.restaurant.user != current_user )
+                    redirect_to home_url
+                end
+            else
+                redirect_to root_url
+            end
+        rescue ActiveRecord::RecordNotFound => e
+            redirect_to root_url
+        end
     end
 
     # Only allow a list of trusted parameters through.

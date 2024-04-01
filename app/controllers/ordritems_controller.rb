@@ -3,7 +3,10 @@ class OrdritemsController < ApplicationController
 
   # GET /ordritems or /ordritems.json
   def index
-    @ordritems = Ordritem.all
+    @ordritems = []
+    Ordr.joins(:restaurant).where(restaurant: {user: current_user}).each do |ordr|
+        @ordritems += Ordritem.where( ordr: ordr).all
+    end
   end
 
   # GET /ordritems/1 or /ordritems/1.json

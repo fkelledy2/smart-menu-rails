@@ -3,7 +3,14 @@ class OrdritemnotesController < ApplicationController
 
   # GET /ordritemnotes or /ordritemnotes.json
   def index
-    @ordritemnotes = Ordritemnote.all
+    @ordritemnotes = []
+    Restaurant.where( user: current_user).each do |restaurant|
+        Ordr.where( restaurant: restaurant).each do |ordr|
+            Ordritem.where( ordr: ordr).each do |ordritem|
+                @ordritemnotes += Ordritemnote.where( ordritem: ordritem).all
+            end
+        end
+    end
   end
 
   # GET /ordritemnotes/1 or /ordritemnotes/1.json
@@ -60,7 +67,18 @@ class OrdritemnotesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_ordritemnote
-      @ordritemnote = Ordritemnote.find(params[:id])
+        begin
+            if current_user
+                @ordritemnote = Ordritemnote.find(params[:id])
+                if( @ordritemnote == nil or @ordritemnote.ordr.restaurant.user != current_user )
+                    redirect_to home_url
+                end
+            else
+                redirect_to root_url
+            end
+        rescue ActiveRecord::RecordNotFound => e
+            redirect_to root_url
+        end
     end
 
     # Only allow a list of trusted parameters through.

@@ -3,7 +3,10 @@ class OrdrparticipantsController < ApplicationController
 
   # GET /ordrparticipants or /ordrparticipants.json
   def index
-    @ordrparticipants = Ordrparticipant.all
+    @ordrparticipants = []
+    Ordr.joins(:restaurant).where(restaurant: {user: current_user}).each do |ordr|
+        @ordrparticipants += Ordrparticipant.where( ordr: ordr).all
+    end
   end
 
   # GET /ordrparticipants/1 or /ordrparticipants/1.json
@@ -61,7 +64,19 @@ class OrdrparticipantsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_ordrparticipant
-      @ordrparticipant = Ordrparticipant.find(params[:id])
+        begin
+            if current_user
+                @ordrparticipant = Ordrparticipant.find(params[:id])
+                if( @ordrparticipant == nil or @ordrparticipant.ordr.restaurant.user != current_user )
+                    redirect_to home_url
+                end
+            else
+                redirect_to root_url
+            end
+        rescue ActiveRecord::RecordNotFound => e
+            redirect_to root_url
+        end
+
     end
 
     # Only allow a list of trusted parameters through.

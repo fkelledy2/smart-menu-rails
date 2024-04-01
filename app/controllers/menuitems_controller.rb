@@ -3,7 +3,14 @@ class MenuitemsController < ApplicationController
 
   # GET /menuitems or /menuitems.json
   def index
-    @menuitems = Menuitem.order('sequence ASC').all
+    @menuitems = []
+    Restaurant.where( user: current_user).each do |restaurant|
+        Menu.where( restaurant: restaurant).each do |menu|
+            Menusection.where( menu: menu).each do |menusection|
+                @menuitems += Menuitem.where( menusection: menusection).all
+            end
+        end
+    end
   end
 
   # GET /menuitems/1 or /menuitems/1.json
@@ -61,7 +68,18 @@ class MenuitemsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_menuitem
-      @menuitem = Menuitem.find(params[:id])
+        begin
+            if current_user
+                @menuitem = Menuitem.find(params[:id])
+                if( @menuitem == nil or @menuitem.menusection.menu.restaurant.user != current_user )
+                    redirect_to home_url
+                end
+            else
+                redirect_to root_url
+            end
+        rescue ActiveRecord::RecordNotFound => e
+            redirect_to root_url
+        end
     end
 
     # Only allow a list of trusted parameters through.

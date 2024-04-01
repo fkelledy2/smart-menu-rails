@@ -3,7 +3,7 @@ class TaxesController < ApplicationController
 
   # GET /taxes or /taxes.json
   def index
-    @taxes = Tax.all
+    @taxes = Tax.joins(:restaurant).where(restaurant: {user: current_user}).all
   end
 
   # GET /taxes/1 or /taxes/1.json
@@ -60,7 +60,18 @@ class TaxesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_tax
-      @tax = Tax.find(params[:id])
+        begin
+            if current_user
+                @tax = Tax.find(params[:id])
+                if( @tax == nil or @tax.restaurant.user != current_user )
+                    redirect_to home_url
+                end
+            else
+                redirect_to root_url
+            end
+        rescue ActiveRecord::RecordNotFound => e
+            redirect_to root_url
+        end
     end
 
     # Only allow a list of trusted parameters through.

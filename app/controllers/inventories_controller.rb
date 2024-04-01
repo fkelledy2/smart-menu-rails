@@ -3,7 +3,16 @@ class InventoriesController < ApplicationController
 
   # GET /inventories or /inventories.json
   def index
-    @inventories = Inventory.all
+    @inventories = []
+    Restaurant.where( user: current_user).each do |restaurant|
+        Menu.where( restaurant: restaurant).each do |menu|
+            Menusection.where( menu: menu).each do |menusection|
+                Menuitem.where( menusection: menusection).each do |menuitem|
+                    @inventories += Inventory.where( menuitem: menuitem).all
+                end
+            end
+        end
+    end
   end
 
   # GET /inventories/1 or /inventories/1.json

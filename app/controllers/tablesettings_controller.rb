@@ -3,7 +3,7 @@ class TablesettingsController < ApplicationController
 
   # GET /tablesettings or /tablesettings.json
   def index
-    @tablesettings = Tablesetting.all
+    @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: {user: current_user}).all
   end
 
   # GET /tablesettings/1 or /tablesettings/1.json
