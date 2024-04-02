@@ -7,16 +7,23 @@ class MenusController < ApplicationController
     @today = Date.today.wday
     if current_user
         if params[:restaurant_id]
+            puts 'aaa'
+            puts params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
             @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, restaurant_id: @restaurant.id).order('sequence ASC').all
         else
+            puts 'bbb'
             @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}).order('sequence ASC').all
         end
     else
         if params[:restaurant_id]
-            @menus = []
+            puts 'ccc'
+            puts params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-            @menus += Menu.where( restaurant: restaurant).all
+            @menus = Menu.where( restaurant: @restaurant).all
+        else
+            puts 'ddd'
+            @menus = Menu.all
         end
     end
   end

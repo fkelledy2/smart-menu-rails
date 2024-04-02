@@ -12,3 +12,5 @@ pin "restaurants", to: "restaurants.js", preload: true
 pin "tablesettings", to: "tablesettings.js", preload: true
 pin "tags", to: "tags.js", preload: true
 pin "taxes", to: "taxes.js", preload: true
+pin "@rails/actioncable", to: "actioncable.esm.js"
+pin_all_from "app/javascript/channels", under: "channels"
