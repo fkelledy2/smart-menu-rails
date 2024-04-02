@@ -4,26 +4,20 @@ class MenusController < ApplicationController
   # GET	/restaurants/:restaurant_id/menus
   # GET /menus or /menus.json
   def index
-    @today = Date.today.wday
+    @today = Date.today.strftime('%A').downcase!
     if current_user
         if params[:restaurant_id]
-            puts 'aaa'
-            puts params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
             @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, restaurant_id: @restaurant.id).order('sequence ASC').all
         else
-            puts 'bbb'
             @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}).order('sequence ASC').all
         end
     else
         if params[:restaurant_id]
-            puts 'ccc'
             puts params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
             @menus = Menu.where( restaurant: @restaurant).all
-        else
-            puts 'ddd'
-            @menus = Menu.all
+            @tablesettings = @restaurant.tablesettings
         end
     end
   end

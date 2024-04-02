@@ -16,14 +16,12 @@ Rails.application.routes.draw do
   resources :allergyns
   resources :menuitems
   resources :menusections
-  resources :menus do
-    resources :tablesettings, controller: 'menus', only: [:show]
-  end
   resources :tablesettings
   resources :restaurants do
-    resources :menus, controller: 'menus', only: [:show, :index] do
-        resources :tablesettings, controller: 'menus', only: [:show]
-    end
+    resources :menus, controller: 'menus', only: [:index]
+  end
+  resources :menus, controller: 'menus' do
+      resources :tablesettings, controller: 'menus', only: [:show]
   end
   draw :madmin
   get '/privacy', to: 'home#privacy'
