@@ -3,15 +3,19 @@ class InventoriesController < ApplicationController
 
   # GET /inventories or /inventories.json
   def index
+    if current_user
     @inventories = []
-    Restaurant.where( user: current_user).each do |restaurant|
-        Menu.where( restaurant: restaurant).each do |menu|
-            Menusection.where( menu: menu).each do |menusection|
-                Menuitem.where( menusection: menusection).each do |menuitem|
-                    @inventories += Inventory.where( menuitem: menuitem).all
+        Restaurant.where( user: current_user).each do |restaurant|
+            Menu.where( restaurant: restaurant).each do |menu|
+                Menusection.where( menu: menu).each do |menusection|
+                    Menuitem.where( menusection: menusection).each do |menuitem|
+                        @inventories += Inventory.where( menuitem: menuitem).all
+                    end
                 end
             end
         end
+    else
+        redirect_to root_url
     end
   end
 

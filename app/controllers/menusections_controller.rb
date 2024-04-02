@@ -3,9 +3,13 @@ class MenusectionsController < ApplicationController
 
   # GET /menusections or /menusections.json
   def index
-    @menusections = []
-    Restaurant.where( user: current_user).each do |restaurant|
-        @menusections += restaurant.menusections
+    if current_user
+        @menusections = []
+        Restaurant.where( user: current_user).each do |restaurant|
+            @menusections += restaurant.menusections
+        end
+    else
+        redirect_to root_url
     end
   end
 

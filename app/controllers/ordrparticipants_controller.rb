@@ -3,9 +3,13 @@ class OrdrparticipantsController < ApplicationController
 
   # GET /ordrparticipants or /ordrparticipants.json
   def index
-    @ordrparticipants = []
-    Ordr.joins(:restaurant).where(restaurant: {user: current_user}).each do |ordr|
-        @ordrparticipants += Ordrparticipant.where( ordr: ordr).all
+    if current_user
+        @ordrparticipants = []
+        Ordr.joins(:restaurant).where(restaurant: {user: current_user}).each do |ordr|
+            @ordrparticipants += Ordrparticipant.where( ordr: ordr).all
+        end
+    else
+        redirect_to root_url
     end
   end
 

@@ -3,11 +3,17 @@ class RestaurantsController < ApplicationController
 
   # GET /restaurants or /restaurants.json
   def index
-    @restaurants = Restaurant.where( user: current_user)
+    if current_user
+        @restaurants = Restaurant.where( user: current_user)
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /restaurants/1 or /restaurants/1.json
   def show
+    if params[:restaurant_id] && params[:id]
+    end
   end
 
   # GET /restaurants/new
@@ -62,12 +68,20 @@ class RestaurantsController < ApplicationController
     def set_restaurant
         begin
             if current_user
-                @restaurant = Restaurant.find(params[:id])
+                if params[:restaurant_id]
+                    @restaurant = Restaurant.find(params[:restaurant_id])
+                else
+                    @restaurant = Restaurant.find(params[:id])
+                end
                 if( @restaurant == nil or @restaurant.user != current_user )
                     redirect_to home_url
                 end
             else
-                redirect_to root_url
+                if params[:restaurant_id]
+                    @restaurant = Restaurant.find(params[:restaurant_id])
+                else
+                    @restaurant = Restaurant.find(params[:id])
+                end
             end
         rescue ActiveRecord::RecordNotFound => e
             redirect_to root_url

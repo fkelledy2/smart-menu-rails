@@ -20,7 +20,11 @@ Rails.application.routes.draw do
     resources :tablesettings, controller: 'menus', only: [:show]
   end
   resources :tablesettings
-  resources :restaurants
+  resources :restaurants do
+    resources :menus, controller: 'menus', only: [:show, :index] do
+        resources :tablesettings, controller: 'menus', only: [:show]
+    end
+  end
   draw :madmin
   get '/privacy', to: 'home#privacy'
   get '/terms', to: 'home#terms'

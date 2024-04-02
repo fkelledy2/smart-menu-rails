@@ -3,7 +3,11 @@ class TaxesController < ApplicationController
 
   # GET /taxes or /taxes.json
   def index
-    @taxes = Tax.joins(:restaurant).where(restaurant: {user: current_user}).all
+    if current_user
+        @taxes = Tax.joins(:restaurant).where(restaurant: {user: current_user}).all
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /taxes/1 or /taxes/1.json

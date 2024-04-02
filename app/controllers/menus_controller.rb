@@ -1,14 +1,39 @@
 class MenusController < ApplicationController
   before_action :set_menu, only: %i[ show edit update destroy ]
 
+  # GET	/restaurants/:restaurant_id/menus
   # GET /menus or /menus.json
   def index
-    @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}).order('sequence ASC').all
+    @today = Date.today.wday
+    if current_user
+        if params[:restaurant_id]
+            @restaurant = Restaurant.find_by_id(params[:restaurant_id])
+            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, restaurant_id: @restaurant.id).order('sequence ASC').all
+        else
+            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}).order('sequence ASC').all
+        end
+    else
+        if params[:restaurant_id]
+            @menus = []
+            @restaurant = Restaurant.find_by_id(params[:restaurant_id])
+            @menus += Menu.where( restaurant: restaurant).all
+        end
+    end
   end
 
+  # GET	/restaurants/:restaurant_id/menus/:menu_id/tablesettings/:id(.:format)	menus#show
+  # GET	/restaurants/:restaurant_id/menus/:id(.:format)	 menus#show
   # GET /menus/1 or /menus/1.json
   def show
     if params[:menu_id] && params[:id]
+        if params[:restaurant_id]
+            @restaurant = Restaurant.find_by_id(params[:restaurant_id])
+            @menu = Menu.find_by_id(params[:menu_id])
+            if @menu.restaurant != @restaurant
+                redirect_to home_url
+            end
+        end
+
         @participantsFirstTime = false
         @tablesetting = Tablesetting.find_by_id(params[:id])
         @openOrder = Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 0).first

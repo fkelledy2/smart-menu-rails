@@ -3,13 +3,17 @@ class OrdritemnotesController < ApplicationController
 
   # GET /ordritemnotes or /ordritemnotes.json
   def index
-    @ordritemnotes = []
-    Restaurant.where( user: current_user).each do |restaurant|
-        Ordr.where( restaurant: restaurant).each do |ordr|
-            Ordritem.where( ordr: ordr).each do |ordritem|
-                @ordritemnotes += Ordritemnote.where( ordritem: ordritem).all
+    if current_user
+        @ordritemnotes = []
+        Restaurant.where( user: current_user).each do |restaurant|
+            Ordr.where( restaurant: restaurant).each do |ordr|
+                Ordritem.where( ordr: ordr).each do |ordritem|
+                    @ordritemnotes += Ordritemnote.where( ordritem: ordritem).all
+                end
             end
         end
+    else
+        redirect_to root_url
     end
   end
 

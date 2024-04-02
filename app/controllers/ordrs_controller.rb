@@ -3,7 +3,11 @@ class OrdrsController < ApplicationController
 
   # GET /ordrs or /ordrs.json
   def index
-    @ordrs = Ordr.joins(:restaurant).where(restaurant: {user: current_user}).all
+    if current_user
+        @ordrs = Ordr.joins(:restaurant).where(restaurant: {user: current_user}).all
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /ordrs/1 or /ordrs/1.json

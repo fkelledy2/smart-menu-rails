@@ -3,7 +3,11 @@ class EmployeesController < ApplicationController
 
   # GET /employees or /employees.json
   def index
-    @employees = Employee.joins(:restaurant).where(restaurant: {user: current_user}).all
+    if current_user
+        @employees = Employee.joins(:restaurant).where(restaurant: {user: current_user}).all
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /employees/1 or /employees/1.json

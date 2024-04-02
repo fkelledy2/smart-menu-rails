@@ -3,9 +3,13 @@ class OrdritemsController < ApplicationController
 
   # GET /ordritems or /ordritems.json
   def index
-    @ordritems = []
-    Ordr.joins(:restaurant).where(restaurant: {user: current_user}).each do |ordr|
-        @ordritems += Ordritem.where( ordr: ordr).all
+    if current_user
+        @ordritems = []
+        Ordr.joins(:restaurant).where(restaurant: {user: current_user}).each do |ordr|
+            @ordritems += Ordritem.where( ordr: ordr).all
+        end
+    else
+        redirect_to root_url
     end
   end
 
