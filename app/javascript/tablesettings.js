@@ -50,32 +50,32 @@ document.addEventListener("turbo:load", () => {
         });
         tableSettingTable.on("rowSelectionChanged", function(data, rows){
           if( data.length > 0 ) {
-            document.getElementById("activate-row").disabled = false;
-            document.getElementById("deactivate-row").disabled = false;
+            document.getElementById("unarchive-row").disabled = false;
+            document.getElementById("archive-row").disabled = false;
           } else {
-            document.getElementById("activate-row").disabled = true;
-            document.getElementById("deactivate-row").disabled = true;
+            document.getElementById("unarchive-row").disabled = true;
+            document.getElementById("archive-row").disabled = true;
           }
         });
-        document.getElementById("activate-row").addEventListener("click", function(){
+        document.getElementById("unarchive-row").addEventListener("click", function(){
             const rows = tableSettingTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
-                tableSettingTable.updateData([{id:rows[i].id, status:'active'}]);
+                tableSettingTable.updateData([{id:rows[i].id, status:'free'}]);
                 let r = {
                   'tablesetting': {
-                      'status': 'active'
+                      'status': 'free'
                   }
                 };
                 patch( rows[i].url, r );
             }
         });
-        document.getElementById("deactivate-row").addEventListener("click", function(){
+        document.getElementById("archive-row").addEventListener("click", function(){
             const rows = tableSettingTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
-                tableSettingTable.updateData([{id:rows[i].id, status:'inactive'}]);
+                tableSettingTable.updateData([{id:rows[i].id, status:'archived'}]);
                 let r = {
                   'tablesetting': {
-                      'status': 'inactive'
+                      'status': 'archived'
                   }
                 };
                 patch( rows[i].url, r );

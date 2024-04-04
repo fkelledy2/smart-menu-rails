@@ -57,6 +57,9 @@ class OrdrsController < ApplicationController
                 @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id, action: 1 );
                 @ordrparticipant.save
             end
+            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
+            @tablesetting.status = 0
+            @tablesetting.save
         end
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully created." }
         format.json { render :show, status: :created, location: @ordr }
@@ -98,6 +101,9 @@ class OrdrsController < ApplicationController
                 @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id, action: 1 );
                 @ordrparticipant.save
             end
+            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
+            @tablesetting.status = 0
+            @tablesetting.save
         end
         if( ordr_params[:status] = 2 )
             if current_user
@@ -107,6 +113,9 @@ class OrdrsController < ApplicationController
                 @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id, action: 5 );
                 @ordrparticipant.save
             end
+            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
+            @tablesetting.status = 1
+            @tablesetting.save
         end
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully updated." }
         format.json { render :show, status: :ok, location: @ordr }

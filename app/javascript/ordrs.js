@@ -13,8 +13,8 @@ document.addEventListener("turbo:load", () => {
                     'name': addNameToParticipantModal.querySelector('#name').value,
                 }
             };
-            alert( 'patching: '+'/ordoparticipants/'+$('#currentParticipant').text());
             patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+            return true;
         });
     }
 
@@ -39,6 +39,7 @@ document.addEventListener("turbo:load", () => {
                 }
             };
             post( '/ordritems', ordritem, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+            return true;
         });
     }
 
@@ -65,6 +66,7 @@ document.addEventListener("turbo:load", () => {
                     }
                 };
                 post( '/ordrs', ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                return true;
             }
        });
     }
@@ -87,6 +89,7 @@ document.addEventListener("turbo:load", () => {
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                return true;
             } else {
                 let ordr = {
                     'ordr': {
@@ -98,6 +101,7 @@ document.addEventListener("turbo:load", () => {
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                return true;
             }
         });
     }

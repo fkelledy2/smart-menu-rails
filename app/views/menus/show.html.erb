@@ -19,63 +19,6 @@
     <hr>
 <% end %>
 
-<div class="modal fade" id="addNameToParticipantModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addNameToParticipantModalLabel">Personalise your order by adding your name</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <input type="hidden" class="form-control" id="ordr_id">
-          <div class="mb-3">
-            <label for="name" class="form-label">Name:</label>
-            <input type="text" class="form-control" id="name">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button id="addNameToParticipantButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Add</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="addItemToOrderModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addItemToOrderModalLabel">Add to order</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <input type="hidden" class="form-control" id="ordr_id">
-          <input type="hidden" class="form-control" id="menuitem_id">
-          <div class="mb-3">
-            <label for="menuitem_name" class="form-label">Name:</label>
-            <input type="text" class="form-control" id="menuitem_name" disabled>
-          </div>
-          <div class="mb-3">
-            <label for="menuitem_description" class="form-label">Description:</label>
-            <textarea class="form-control" id="menuitem_description" disabled></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="menuitem_price" class="form-label">Price:</label>
-            <input type="text" class="form-control" id="menuitem_price" disabled>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button id="addItemToOrderButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Item</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div style="display:none">
     <% if @openOrder %>
         currentOrder: <div id="currentOrder"><%= @openOrder.id %></div>
@@ -111,6 +54,12 @@
                             <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
                               <i class="bi bi-plus"></i> Name
                             </button>
+                        <% else %>
+                            <% if @ordrparticipant && @ordrparticipant.name %>
+                                <h3>
+                                    <%= @ordrparticipant.name %> [1/<%= @openOrder.diners %> diners]
+                                </h3>
+                            <% end %>
                         <% end %>
                         </span>
                     </div>
@@ -297,6 +246,63 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <button id="close-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addNameToParticipantModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addNameToParticipantModalLabel">Personalise your order by adding your name</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <input type="hidden" class="form-control" id="ordr_id">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" class="form-control" id="name">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="addNameToParticipantButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addItemToOrderModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addItemToOrderModalLabel">Add to order</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <input type="hidden" class="form-control" id="ordr_id">
+          <input type="hidden" class="form-control" id="menuitem_id">
+          <div class="mb-3">
+            <label for="menuitem_name" class="form-label">Name:</label>
+            <input type="text" class="form-control" id="menuitem_name" disabled>
+          </div>
+          <div class="mb-3">
+            <label for="menuitem_description" class="form-label">Description:</label>
+            <textarea class="form-control" id="menuitem_description" disabled></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="menuitem_price" class="form-label">Price:</label>
+            <input type="text" class="form-control" id="menuitem_price" disabled>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="addItemToOrderButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Item</button>
       </div>
     </div>
   </div>
