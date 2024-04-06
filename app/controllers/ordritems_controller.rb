@@ -35,13 +35,13 @@ class OrdritemsController < ApplicationController
         if current_user
             @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
             if @ordrparticipant == nil
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s, action: 1 );
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
                 @ordrparticipant.save
             end
         else
             @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s ).first
             if @ordrparticipant == nil
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s, action: 1 );
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s );
                 @ordrparticipant.save
             end
             @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, action: 2)
@@ -76,7 +76,7 @@ class OrdritemsController < ApplicationController
         if current_user
             @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
             if @ordrparticipant == nil
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s, action: 1 );
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
                 @ordrparticipant.save
             end
         else
@@ -84,7 +84,7 @@ class OrdritemsController < ApplicationController
             if @ordrparticipant == nil
                 cookies["existingParticipant"] = false
                 @existingParticipant = cookies["existingParticipant"]
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s, action: 1 );
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s );
                 @ordrparticipant.save
             else
                 cookies["existingParticipant"] = true

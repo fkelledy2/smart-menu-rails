@@ -60,14 +60,14 @@ class MenusController < ApplicationController
             if current_user
                 @ep = Ordrparticipant.where( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
                 if @ep == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id.to_s, action: 0 );
+                    @ordrparticipant = Ordrparticipant.new( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id.to_s);
                     @ordrparticipant.save
                 else
                 end
             else
                 @ep = Ordrparticipant.where( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s ).first
                 if @ep == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s, action: 0);
+                    @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s);
                     @ordrparticipant.save
                     @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 0)
                     @ordraction.save
