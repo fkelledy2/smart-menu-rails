@@ -31,13 +31,9 @@
     <% end %>
     currentMenu:<div id="currentMenu"><%= @menu.id %></div>
     currentRestaurant:<div id="currentRestaurant"><%= @menu.restaurant.id %></div>
-    <% if @existingParticipant %>
-        existingParticipant:<div id="existingParticipant"><%= @existingParticipant %></div>
-    <% end %>
     <% if @ordrparticipant %>
         currentParticipant:<div id="currentParticipant"><%= @ordrparticipant.id %></div>
     <% end %>
-
 </div>
 
 <div class="row">
@@ -50,7 +46,7 @@
                     </div>
                     <div class="col-2">
                         <span class="float-end">
-                        <% if @existingParticipant == false %>
+                        <% if @ordrparticipant && @ordrparticipant.name == nil %>
                             <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
                               <i class="bi bi-plus"></i> Name
                             </button>

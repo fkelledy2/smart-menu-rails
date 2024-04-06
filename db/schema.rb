@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_30_225111) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_04_185504) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -214,6 +214,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_30_225111) do
     t.index ["recipient_type", "recipient_id"], name: "index_noticed_notifications_on_recipient"
   end
 
+  create_table "ordractions", force: :cascade do |t|
+    t.integer "action"
+    t.bigint "ordrparticipant_id", null: false
+    t.bigint "ordr_id", null: false
+    t.bigint "ordritem_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ordr_id"], name: "index_ordractions_on_ordr_id"
+    t.index ["ordritem_id"], name: "index_ordractions_on_ordritem_id"
+    t.index ["ordrparticipant_id"], name: "index_ordractions_on_ordrparticipant_id"
+  end
+
   create_table "ordritemnotes", force: :cascade do |t|
     t.string "note"
     t.bigint "ordritem_id", null: false
@@ -236,12 +248,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_30_225111) do
     t.string "sessionid"
     t.integer "action"
     t.integer "role"
-    t.bigint "employee_id"
     t.bigint "ordr_id", null: false
-    t.bigint "ordritem_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.bigint "ordritem_id"
+    t.bigint "employee_id"
     t.index ["employee_id"], name: "index_ordrparticipants_on_employee_id"
     t.index ["ordr_id"], name: "index_ordrparticipants_on_ordr_id"
     t.index ["ordritem_id"], name: "index_ordrparticipants_on_ordritem_id"
@@ -388,6 +400,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_30_225111) do
   add_foreign_key "menuitems", "menusections"
   add_foreign_key "menus", "restaurants"
   add_foreign_key "menusections", "menus"
+  add_foreign_key "ordractions", "ordritems"
+  add_foreign_key "ordractions", "ordrparticipants"
+  add_foreign_key "ordractions", "ordrs"
   add_foreign_key "ordritemnotes", "ordritems"
   add_foreign_key "ordritems", "menuitems"
   add_foreign_key "ordritems", "ordrs"

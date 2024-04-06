@@ -66,7 +66,6 @@ document.addEventListener("turbo:load", () => {
                     }
                 };
                 post( '/ordrs', ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
-                return true;
             }
        });
     }
@@ -89,7 +88,6 @@ document.addEventListener("turbo:load", () => {
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
-                return true;
             } else {
                 let ordr = {
                     'ordr': {
@@ -101,7 +99,6 @@ document.addEventListener("turbo:load", () => {
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
-                return true;
             }
         });
     }

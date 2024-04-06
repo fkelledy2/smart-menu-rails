@@ -32,6 +32,21 @@ class OrdritemsController < ApplicationController
 
     respond_to do |format|
       if @ordritem.save
+        if current_user
+            @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
+            if @ordrparticipant == nil
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s, action: 1 );
+                @ordrparticipant.save
+            end
+        else
+            @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s ).first
+            if @ordrparticipant == nil
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s, action: 1 );
+                @ordrparticipant.save
+            end
+            @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, action: 2)
+            @ordraction.save
+        end
         format.html { redirect_to ordritem_url(@ordritem), notice: "Ordritem was successfully created." }
         format.json { render :show, status: :created, location: @ordritem }
       else
@@ -57,6 +72,28 @@ class OrdritemsController < ApplicationController
   # DELETE /ordritems/1 or /ordritems/1.json
   def destroy
     @ordritem.destroy!
+
+        if current_user
+            @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
+            if @ordrparticipant == nil
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s, action: 1 );
+                @ordrparticipant.save
+            end
+        else
+            @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
+            if @ordrparticipant == nil
+                cookies["existingParticipant"] = false
+                @existingParticipant = cookies["existingParticipant"]
+                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s, action: 1 );
+                @ordrparticipant.save
+            else
+                cookies["existingParticipant"] = true
+                @existingParticipant = cookies["existingParticipant"]
+            end
+            @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 2)
+            @ordraction.save
+        end
+
 
     respond_to do |format|
       format.html { redirect_to ordritems_url, notice: "Ordritem was successfully destroyed." }

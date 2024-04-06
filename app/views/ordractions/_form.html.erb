@@ -1,0 +1,59 @@
+<%= form_with(model: ordraction) do |form| %>
+  <% if ordraction.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(ordraction.errors.count, "error") %> prohibited this ordraction from being saved:</h2>
+
+      <ul>
+      <% ordraction.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :sessionid, class: 'form-label' %>
+      <%= form.text_field :sessionid, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :action, class: 'form-label' %>
+      <%= form.number_field :action, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :employee_id, class: 'form-label' %>
+      <%= form.text_field :employee_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :ordrparticipant_id, class: 'form-label' %>
+      <%= form.text_field :ordrparticipant_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :ordr_id, class: 'form-label' %>
+      <%= form.text_field :ordr_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :ordritem_id, class: 'form-label' %>
+      <%= form.text_field :ordritem_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if ordraction.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', ordraction, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if ordraction.persisted? %>
+      <%= link_to "Cancel", ordraction, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", ordractions_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

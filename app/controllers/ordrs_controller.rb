@@ -43,19 +43,24 @@ class OrdrsController < ApplicationController
       if @ordr.save
         if( ordr_params[:status] = 0 )
             if current_user
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id, action: 1 );
-                @ordrparticipant.save
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s, action: 1 );
+                    @ordrparticipant.save
+                end
             else
-                @existingParticipant = Ordrparticipant.where( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s ).first
-                if @existingParticipant == nil
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
                     cookies["existingParticipant"] = false
                     @existingParticipant = cookies["existingParticipant"]
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s, action: 1 );
+                    @ordrparticipant.save
                 else
                     cookies["existingParticipant"] = true
                     @existingParticipant = cookies["existingParticipant"]
                 end
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id, action: 1 );
-                @ordrparticipant.save
+                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 1)
+                @ordraction.save
             end
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
@@ -95,11 +100,19 @@ class OrdrsController < ApplicationController
       if @ordr.update(ordr_params)
         if( ordr_params[:status] = 0 )
             if current_user
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id, action: 1 );
-                @ordrparticipant.save
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s, action: 1 );
+                    @ordrparticipant.save
+                end
             else
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id, action: 1 );
-                @ordrparticipant.save
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s, action: 1 );
+                    @ordrparticipant.save
+                end
+                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 1)
+                @ordraction.save
             end
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
@@ -107,11 +120,19 @@ class OrdrsController < ApplicationController
         end
         if( ordr_params[:status] = 2 )
             if current_user
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id, action: 5 );
-                @ordrparticipant.save
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s, action: 5 );
+                    @ordrparticipant.save
+                end
             else
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id, action: 5 );
-                @ordrparticipant.save
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s, action: 5 );
+                    @ordrparticipant.save
+                end
+                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 5)
+                @ordraction.save
             end
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 1

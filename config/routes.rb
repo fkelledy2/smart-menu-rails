@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :ordractions
   resources :restaurantavailabilities
   resources :menuavailabilities
   resources :ordrparticipants

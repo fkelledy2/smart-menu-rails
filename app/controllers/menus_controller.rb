@@ -58,21 +58,24 @@ class MenusController < ApplicationController
             @openOrder.service = totalService
             @openOrder.gross = @openOrder.nett + @openOrder.tip + @openOrder.service + @openOrder.tax
             if current_user
-                @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, employee: @current_employee, role: 1, sessionid: session.id.to_s, action: 0 );
-                @ordrparticipant.save
-            else
-                @existingParticipant = Ordrparticipant.where( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s ).first
-                if @existingParticipant == nil
-                    cookies["existingParticipant"] = false
-                    @existingParticipant = cookies["existingParticipant"]
-                    @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s, action: 0);
+                @ep = Ordrparticipant.where( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
+                if @ep == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id.to_s, action: 0 );
+                    @ordrparticipant.save
                 else
-                    @existingParticipantName = @existingParticipant.name
-                    cookies["existingParticipant"] = true
-                    @existingParticipant = cookies["existingParticipant"]
-                    @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s, action: 0, name: @existingParticipantName);
                 end
-                @ordrparticipant.save
+            else
+                @ep = Ordrparticipant.where( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s ).first
+                if @ep == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s, action: 0);
+                    @ordrparticipant.save
+                    @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 0)
+                    @ordraction.save
+                else
+                    @ordrparticipant = @ep
+                    @ordraction = Ordraction.new( ordrparticipant: @ep, ordr: @openOrder, action: 0)
+                    @ordraction.save
+                end
             end
         end
     end
