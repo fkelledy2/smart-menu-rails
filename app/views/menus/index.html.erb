@@ -21,25 +21,31 @@
         <% menu.menuavailabilities.each do |menuavailability| %>
             <% if menuavailability.dayofweek == @today %>
                 <li>
-                    <b><%= menuavailability.dayofweek%>: <%= format('%02d',menuavailability.starthour)%>:<%= format('%02d',menuavailability.startmin)%> - <%= format('%02d',menuavailability.endhour)%>:<%= format('%02d',menuavailability.endmin)%></b>
-                            <% @tablesettings.each do |tablesetting| %>
-                                <%= tablesetting.status %>
-                                <% if tablesetting.status == 'free' %>
-                                    <%= link_to menu_tablesetting_path(menu, tablesetting), class: 'btn btn-success' do %>
-                                        <%= tablesetting.name %>
-                                    <% end %>
-                                <% end %>
-                                <% if tablesetting.status == 'archived' %>
-                                    <%= link_to menu_tablesetting_path(menu, tablesetting), class: 'btn btn-light disabled' do %>
-                                        <%= tablesetting.name %>
-                                    <% end %>
-                                <% end %>
-                                <% if tablesetting.status == 'occupied' %>
-                                    <%= link_to menu_tablesetting_path(menu, tablesetting), class: 'btn btn-danger' do %>
-                                        <%= tablesetting.name %>
-                                    <% end %>
+                    <b>
+                        <%= menuavailability.dayofweek%>: <%= format('%02d',menuavailability.starthour)%>:<%= format('%02d',menuavailability.startmin)%> - <%= format('%02d',menuavailability.endhour)%>:<%= format('%02d',menuavailability.endmin)%>
+                    </b>
+                    <% if @currentHour >= menuavailability.starthour && @currentMin >= menuavailability.startmin && @currentHour <= menuavailability.endhour && @currentMin <= menuavailability.endmin %>
+                        <% @tablesettings.each do |tablesetting| %>
+                            <%= tablesetting.status %>
+                            <% if tablesetting.status == 'free' %>
+                                <%= link_to menu_tablesetting_path(menu, tablesetting), class: 'btn btn-success' do %>
+                                    <%= tablesetting.name %>
                                 <% end %>
                             <% end %>
+                            <% if tablesetting.status == 'archived' %>
+                                <%= link_to menu_tablesetting_path(menu, tablesetting), class: 'btn btn-light disabled' do %>
+                                    <%= tablesetting.name %>
+                                <% end %>
+                            <% end %>
+                            <% if tablesetting.status == 'occupied' %>
+                                <%= link_to menu_tablesetting_path(menu, tablesetting), class: 'btn btn-danger' do %>
+                                    <%= tablesetting.name %>
+                                <% end %>
+                            <% end %>
+                        <% end %>
+                    <% else %>
+                        Menu currently unavailable
+                    <% end %>
                 </li>
             <% end %>
         <% end %>

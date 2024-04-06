@@ -155,6 +155,6 @@ class MenusController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def menu_params
-      params.require(:menu).permit(:name, :description, :image, :status, :sequence, :restaurant_id)
+      params.require(:menu).permit(:name, :description, :image, :status, :sequence, :restaurant_id, :displayImages, :allowOrdering)
     end
 end

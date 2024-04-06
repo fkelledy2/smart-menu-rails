@@ -81,11 +81,12 @@
                           <i class="bi bi-minus"></i> Close Tab
                         </button>
                     <% else %>
-                        <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">
-                          <i class="bi bi-plus"></i> Open Tab
-                        </button>
+                        <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
+                            <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">
+                              <i class="bi bi-plus"></i> Open Tab
+                            </button>
+                        <% end %>
                     <% end %>
-
                 <% end %>
             </span>
         </div>
@@ -93,14 +94,18 @@
 
     <% @menu.menusections.order(:sequence).each do |menusection| %>
         <hr>
-        <% if menusection.image %>
-            <div class="card border-light text-bg-dark">
-              <img src="<%= menusection.image %>" style="height: 150px" class="card-img" alt="<%= menusection.name %>">
-              <div class="card-img-overlay">
-                <h3 class="card-title"><%= menusection.name %></h3>
-                <p class="card-text"><%= menusection.description %></p>
-              </div>
-            </div>
+        <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
+            <% if menusection.image %>
+                <div class="card border-light text-bg-dark">
+                  <img src="<%= menusection.image %>" style="height: 150px" class="card-img" alt="<%= menusection.name %>">
+                  <div class="card-img-overlay">
+                    <h3 class="card-title"><%= menusection.name %></h3>
+                    <p class="card-text"><%= menusection.description %></p>
+                  </div>
+                </div>
+            <% else %>
+                <h2><%= menusection.name %></h2>
+            <% end %>
         <% else %>
             <h2><%= menusection.name %></h2>
         <% end %>
@@ -108,38 +113,53 @@
             <% menusection.menuitems.order(:sequence).each do |menuitem| %>
                 <div style="padding-top:20px" class="col-sm-12 col-md-6 col-lg-4">
                     <div class="card">
-                      <img class="card-img-bottom" src="<%= menuitem.image %>" alt="<%= menuitem.name %>">
+                      <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
+                          <img class="card-img-bottom" src="<%= menuitem.image %>" alt="<%= menuitem.name %>">
+                      <% end %>
                       <div class="card-body">
                              <div class="row">
-                                <div class="col-10">
-                                     <div class="row">
-                                        <div class="col-9">
-                                            <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
-                                        </div>
-                                        <div class="col-3">
-                                            <h5 class="float-end card-title"><%= number_to_currency(menuitem.price) %></span></h5>
+                                <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
+                                    <div class="col-10">
+                                         <div class="row">
+                                            <div class="col-9">
+                                                <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
+                                            </div>
+                                            <div class="col-3">
+                                                <h5 class="float-end card-title"><%= number_to_currency(menuitem.price) %></span></h5>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-2">
-                                    <span class="float-end">
-                                        <% if @openOrder %>
-                                            <button type="button" class="addItemToOrder btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
-                                                data-bs-ordr_id="<%= @openOrder.id %>",
-                                                data-bs-menuitem_id="<%= menuitem.id %>"
-                                                data-bs-menuitem_name="<%= menuitem.name %>"
-                                                data-bs-menuitem_price="<%= menuitem.price %>"
-                                                data-bs-menuitem_description="<%= menuitem.description %>"
-                                                title="Add to Order">
-                                                <i class="bi bi-plus"></i>
-                                            </button>
-                                        <% else %>
-                                            <button type="button" class="addItemToOrder btn btn-lg btn-primary" disabled>
-                                                <i class="bi bi-plus"></i>
-                                            </button>
-                                        <% end %>
-                                    </span>
-                                </div>
+                                    <div class="col-2">
+                                        <span class="float-end">
+                                            <% if @openOrder %>
+                                                <button type="button" class="addItemToOrder btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                    data-bs-ordr_id="<%= @openOrder.id %>",
+                                                    data-bs-menuitem_id="<%= menuitem.id %>"
+                                                    data-bs-menuitem_name="<%= menuitem.name %>"
+                                                    data-bs-menuitem_price="<%= menuitem.price %>"
+                                                    data-bs-menuitem_description="<%= menuitem.description %>"
+                                                    title="Add to Order">
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            <% else %>
+                                                <button type="button" class="addItemToOrder btn btn-lg btn-primary" disabled>
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            <% end %>
+                                        </span>
+                                    </div>
+                                <% else %>
+                                    <div class="col-12">
+                                         <div class="row">
+                                            <div class="col-9">
+                                                <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
+                                            </div>
+                                            <div class="col-3">
+                                                <h5 class="float-end card-title"><%= number_to_currency(menuitem.price) %></span></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% end %>
                              </div>
                              <div class="row">
                                 <div class="col-12">
