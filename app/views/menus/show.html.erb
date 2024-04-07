@@ -169,7 +169,7 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="btn-group" role="group" aria-label="Inventory">
-                                                <% if menuitem.inventory %>
+                                                <% if @menu.restaurant.allowOrdering == true && @menu.inventoryTracking == true && menuitem.inventory %>
                                                     <% if menuitem.inventory.currentinventory == 0 %>
                                                         <button type="button" class="btn btn-xs btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= menuitem.inventory.startinginventory %>/<%= menuitem.inventory.currentinventory %>">
                                                             N/A

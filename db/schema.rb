@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_06_170235) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_07_112523) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -177,6 +177,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_06_170235) do
     t.datetime "updated_at", null: false
     t.boolean "displayImages", default: false
     t.boolean "allowOrdering", default: false
+    t.boolean "inventoryTracking", default: false
     t.index ["restaurant_id"], name: "index_menus_on_restaurant_id"
   end
 
@@ -314,6 +315,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_06_170235) do
     t.string "genid"
     t.boolean "displayImages", default: false
     t.boolean "allowOrdering", default: false
+    t.boolean "inventoryTracking", default: false
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 
