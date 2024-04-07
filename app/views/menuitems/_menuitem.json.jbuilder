@@ -7,6 +7,8 @@
   json.calories menuitem.calories
   json.price menuitem.price
   json.menusection menuitem.menusection
+  json.inventory menuitem.inventory
+
   json.allergyns menuitem.allergyns do |allergyn|
     json.partial! 'allergyns/tallergyn', allergyn: allergyn
   end

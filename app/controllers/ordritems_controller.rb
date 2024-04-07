@@ -44,7 +44,7 @@ class OrdritemsController < ApplicationController
                 @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s );
                 @ordrparticipant.save
             end
-            @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, action: 2)
+            @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
             @ordraction.save
         end
         format.html { redirect_to ordritem_url(@ordritem), notice: "Ordritem was successfully created." }
@@ -90,11 +90,9 @@ class OrdritemsController < ApplicationController
                 cookies["existingParticipant"] = true
                 @existingParticipant = cookies["existingParticipant"]
             end
-            @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 2)
+            @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, ordritem: @ordritem, action: 3)
             @ordraction.save
         end
-
-
     respond_to do |format|
       format.html { redirect_to ordritems_url, notice: "Ordritem was successfully destroyed." }
       format.json { head :no_content }

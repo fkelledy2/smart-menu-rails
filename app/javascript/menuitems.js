@@ -47,6 +47,14 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
            },
+           {
+               title:"Inventory",
+               columns:[
+                {title:"Starting", field:"inventory.startinginventory", width: 130, hozAlign:"right", headerHozAlign:"right" },
+                {title:"Current", field:"inventory.currentinventory", width: 130, hozAlign:"right", headerHozAlign:"right" },
+                {title:"Resets At", field:"inventory.resethour", width: 130, hozAlign:"right", headerHozAlign:"right" },
+               ],
+           },
            {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
             inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
             outputFormat:"dd/MM/yyyy HH:mm",

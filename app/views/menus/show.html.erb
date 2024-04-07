@@ -163,9 +163,24 @@
                              </div>
                              <div class="row">
                                 <div class="col-12">
-                                    <h6 class="card-text"><%= menuitem.description %></h6>
+                                    <h6 class="card-text">
+                                        <%= menuitem.description %>
+                                    </h6>
                                     <div class="row">
                                         <div class="col-6">
+                                            <div class="btn-group" role="group" aria-label="Inventory">
+                                                <% if menuitem.inventory %>
+                                                    <% if menuitem.inventory.currentinventory == 0 %>
+                                                        <button type="button" class="btn btn-xs btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= menuitem.inventory.startinginventory %>/<%= menuitem.inventory.currentinventory %>">
+                                                            N/A
+                                                        </button>
+                                                    <% else %>
+                                                        <button type="button" class="btn btn-xs btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= menuitem.inventory.startinginventory %>/<%= menuitem.inventory.currentinventory %>">
+                                                            Inventory: <b><%= menuitem.inventory.startinginventory %></b>/<%= menuitem.inventory.currentinventory %>
+                                                        </button>
+                                                    <% end %>
+                                                <% end %>
+                                            </div>
                                             <div class="btn-group" role="group" aria-label="Allergyns">
                                                 <% menuitem.tags.each do |tag| %>
                                                     <button type="button" class="btn btn-xs btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= tag.name %>">
