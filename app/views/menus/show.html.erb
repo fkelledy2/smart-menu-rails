@@ -92,7 +92,20 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-12">
+            <nav class="nav nav-tabs nav-justified">
+              <% @menu.menusections.order(:sequence).each do |menusection| %>
+                  <li class="nav-item">
+                    <a class=" nav-link active" aria-current="page" href="#menusection_<%= menusection.id %>"><span class="h6"><%= menusection.name %></span></a>
+                  </li>
+              <% end %>
+            </ul>
+        </div>
+    </div>
+
     <% @menu.menusections.order(:sequence).each do |menusection| %>
+        <div id="menusection_<%= menusection.id %>"></div>
         <hr>
         <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
             <% if menusection.image %>
