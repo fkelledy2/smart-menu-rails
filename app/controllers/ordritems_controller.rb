@@ -32,6 +32,15 @@ class OrdritemsController < ApplicationController
 
     respond_to do |format|
       if @ordritem.save
+
+        if @ordritem.menuitem.inventory
+            @ordritem.menuitem.inventory.currentinventory -= 1
+            if @ordritem.menuitem.inventory.currentinventory < 0
+                @ordritem.menuitem.inventory.currentinventory = 0
+            end
+            @ordritem.menuitem.inventory.save
+        end
+
         if current_user
             @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
             if @ordrparticipant == nil
@@ -72,6 +81,14 @@ class OrdritemsController < ApplicationController
   # DELETE /ordritems/1 or /ordritems/1.json
   def destroy
     @ordritem.destroy!
+
+        if @ordritem.menuitem.inventory
+            @ordritem.menuitem.inventory.currentinventory += 1
+            if @ordritem.menuitem.inventory.currentinventory > @ordritem.menuitem.inventory.startinginventory
+                @ordritem.menuitem.inventory.currentinventory = @ordritem.menuitem.inventory.startinginventory
+            end
+            @ordritem.menuitem.inventory.save
+        end
 
         if current_user
             @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
