@@ -23,8 +23,9 @@
                 <li>
                     <b>
                         <%= menuavailability.dayofweek%>: <%= format('%02d',menuavailability.starthour)%>:<%= format('%02d',menuavailability.startmin)%> - <%= format('%02d',menuavailability.endhour)%>:<%= format('%02d',menuavailability.endmin)%>
+                        <%= @currentHour %>:<%= @currentMin %>
                     </b>
-                    <% if @currentHour >= menuavailability.starthour && @currentMin >= menuavailability.startmin && @currentHour <= menuavailability.endhour && @currentMin <= menuavailability.endmin %>
+                    <% if @currentHour >= menuavailability.starthour  && @currentHour <= menuavailability.endhour %>
                         <% @tablesettings.each do |tablesetting| %>
                             <%= tablesetting.status %>
                             <% if tablesetting.status == 'free' %>

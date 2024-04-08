@@ -1,107 +1,104 @@
 <% if current_user %>
+<div class="bg-light">
 <% else %>
-<div class="sticky-top bg-white">
+<div class="sticky-top bg-light">
 <% end %>
-<% if current_user %>
-<div class="page-header">
-    <div class="row">
-        <div class="col-sm-10">
-              <h1>Show Menu</h1>
-        </div>
-        <div class="col-sm-2">
-            <span class="float-end">
-              <%= link_to menus_path, class: 'btn btn-light' do %>
-                <i class="bi bi-chevron-left"></i>
-              <% end %>
-              <%= link_to edit_menu_path(@menu), class: 'btn btn-primary' do %>
-                <i class="bi bi-pencil-fill"></i>
-              <% end %>
-            </span>
+    <% if current_user %>
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-10">
+                  <h2>Show Menu</h2>
+            </div>
+            <div class="col-sm-2">
+                <span class="float-end">
+                  <%= link_to menus_path, class: 'btn btn-light' do %>
+                    <i class="bi bi-chevron-left"></i>
+                  <% end %>
+                  <%= link_to edit_menu_path(@menu), class: 'btn btn-primary' do %>
+                    <i class="bi bi-pencil-fill"></i>
+                  <% end %>
+                </span>
+            </div>
         </div>
     </div>
-</div>
-<% end %>
+    <% end %>
 
-<div class="row">
-  <div class="col-sm-12 col-md-12 col-lg-12">
     <div class="row">
-        <div class="col-12">
-                <div class="row">
-                    <div class="col-10">
-                        <h1><%= @menu.restaurant.name %> : <%= @menu.name %></h1>
+      <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <div class="col-12">
+                    <div style="padding-top:5px" class="row">
+                        <div class="col-7">
+                            <h2><%= @menu.restaurant.name %></h2>
+                        </div>
+                        <div class="col-5">
+                            <span class="float-end">
+                                <% if @tablesetting %>
+                                    <button type="button" class="btn btn-outline-secondary">
+                                        Table: <%= @tablesetting.id %>
+                                    </button>
+                                <% end %>
+                                <% if @ordrparticipant && @ordrparticipant.name == nil %>
+                                    <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
+                                      <i class="bi bi-plus"></i> Name
+                                    </button>
+                                <% else %>
+                                    <% if @ordrparticipant && @ordrparticipant.name %>
+                                        <button type="button" class="btn btn-outline-secondary">
+                                            <%= @ordrparticipant.name %>
+                                        </button>
+                                    <% end %>
+                                <% end %>
+                            </span>
+                        </div>
                     </div>
-                    <div class="col-2">
-                        <span class="float-end">
-                        <% if @ordrparticipant && @ordrparticipant.name == nil %>
-                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
-                              <i class="bi bi-plus"></i> Name
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-7">
+                <h3><%= @menu.name %></h3>
+            </div>
+            <div class="col-5">
+                <span class="float-end">
+                    <% if @tablesetting %>
+                        <% if @openOrder %>
+                            <button type="button" class="btn btn-outline-secondary">
+                                Total: <%= number_to_currency(@openOrder.runningTotal) %>
+                            </button>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#closeOrderModal">
+                              <i class="bi bi-minus"></i> Close Tab
                             </button>
                         <% else %>
-                            <% if @ordrparticipant && @ordrparticipant.name %>
-                                <h3>
-                                    <%= @ordrparticipant.name %> [1/<%= @openOrder.diners %> diners]
-                                </h3>
+                            <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">
+                                  <i class="bi bi-plus"></i> Open Tab
+                                </button>
                             <% end %>
                         <% end %>
-                        </span>
-                    </div>
-                </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <h2>
-                <% if @tablesetting %>
-                    Table: <%= @tablesetting.id %>
-                <% end %>
-            </h2>
-        </div>
-        <div class="col-6">
-            <span class="float-end">
-                <% if @tablesetting %>
-                    <% if @openOrder %>
-                        <button type="button" class="btn btn-lg btn-light">
-                            Total: <%= number_to_currency(@openOrder.runningTotal) %>
-                        </button>
-                        <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#closeOrderModal">
-                          <i class="bi bi-minus"></i> Close Tab
-                        </button>
-                    <% else %>
-                        <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
-                            <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">
-                              <i class="bi bi-plus"></i> Open Tab
-                            </button>
-                        <% end %>
                     <% end %>
-                <% end %>
-            </span>
+                </span>
+            </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-                    <ul class="nav nav-pills nav-justified">
-                      <% @menu.menusections.order(:sequence).each do |menusection| %>
-                          <li class="nav-item">
-                            <a class=" btn btn-lg btn-light" aria-current="page" href="#menusection_<%= menusection.id %>"><span class="h6"><%= menusection.name %></span></a>
-                          </li>
-                      <% end %>
-                    </ul>
+        <div class="container">
+          <div class="row flex-nowrap overflow-auto">
+            <% @menu.menusections.order(:sequence).each do |menusection| %>
+                <div class="col-sm-4 col-md-3 col-lg-2">
+                    <a class="btn btn-outline-secondary" aria-current="page" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>
+                </div>
+            <% end %>
+          </div>
         </div>
+      </div>
     </div>
-  </div>
+    <hr>
 </div>
-
-<% if current_user %>
-<% else %>
-<hr>
-</div>
-<% end %>
 
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-12">
     <% @menu.menusections.order(:sequence).each do |menusection| %>
-        <div style="height:40px; scroll-margin-top: 115px;" id="menusection_<%= menusection.id %>"></div>
+        <div style="scroll-margin-top:100px;" id="menusection_<%= menusection.id %>"></div>
         <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
             <% if menusection.image %>
                 <div class="card border-light text-bg-dark">
