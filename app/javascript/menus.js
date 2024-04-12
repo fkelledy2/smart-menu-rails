@@ -1,5 +1,23 @@
 document.addEventListener("turbo:load", () => {
 
+    if ($("#menuu").is(':visible')) {
+        $(".sectionnav").on("click",function(event){
+            event.preventDefault();
+            $('html, body').animate({
+                scrollTop: $($.attr(this, 'href')).offset().top + -180
+            }, 100);
+        });
+    }
+
+    if ($("#menuc").is(':visible')) {
+        $(".sectionnav").on("click",function(event){
+            event.preventDefault();
+            $('html, body').animate({
+                scrollTop: $($.attr(this, 'href')).offset().top + -140
+            }, 100);
+        });
+    }
+
     if ($("#menu-table").is(':visible')) {
         var menuTable = new Tabulator("#menu-table", {
           maxHeight:"100%",
