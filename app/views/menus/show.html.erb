@@ -1,35 +1,22 @@
 <% if current_user %>
-<div id="menuu" class="sticky-top bg-light">
+<div id="menuu" class="sticky-top bg-white">
 <% else %>
-<div id="menuc" class="sticky-top bg-light">
+<div id="menuc" class="sticky-top bg-white">
 <% end %>
-    <% if current_user %>
-    <div class="page-header">
-        <div class="row">
-            <div class="col-sm-10">
-                  <h2>Show Menu</h2>
-            </div>
-            <div class="col-sm-2">
-                <span class="float-end">
-                  <%= link_to menus_path, class: 'btn btn-light' do %>
-                    <i class="bi bi-chevron-left"></i>
-                  <% end %>
-                  <%= link_to edit_menu_path(@menu), class: 'btn btn-primary' do %>
-                    <i class="bi bi-pencil-fill"></i>
-                  <% end %>
-                </span>
-            </div>
-        </div>
-    </div>
-    <% end %>
-
-    <div class="row">
+    <div style="padding-bottom:15px" class="row shadow bottom">
       <div class="col-sm-12 col-md-12 col-lg-12">
         <div class="row">
             <div class="col-12">
                     <div style="padding-top:5px" class="row">
                         <div class="col-7">
-                            <h2><%= @menu.restaurant.name %></h2>
+                            <h2>
+                                <%= @menu.restaurant.name %>
+                                <% if current_user %>
+                                    <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-outline-secondary' do %>
+                                    <i class="bi bi-pencil-fill"></i>
+                                    <% end %>
+                                <% end %>
+                            </h2>
                         </div>
                         <div class="col-5">
                             <span class="float-end">
@@ -58,42 +45,33 @@
 
         <div class="row">
             <div class="col-5">
-                <h3><%= @menu.name %></h3>
+                <h4><%= @menu.name %></h4>
             </div>
             <div class="col-7">
                 <span class="float-end">
                     <% if @tablesetting %>
                         <% if @openOrder %>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">
-                                <%= number_to_currency(@openOrder.runningTotal) %>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
-                              View
-                            </button>
-                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#closeOrderModal">
-                              Close
-                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary"><%= number_to_currency(@openOrder.runningTotal) %></button>
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">View</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#closeOrderModal">Close</button>
                         <% else %>
                             <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
-                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">
-                                  Open
-                                </button>
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">Open</button>
                             <% end %>
                         <% end %>
                     <% end %>
                 </span>
             </div>
         </div>
-        <div style="padding-top:5px" class="container">
-            <nav class="nav nav-pills flex-nowrap overflow-auto">
+        <div style="padding-top:5px" class=" container-fluid">
+            <nav class="nav flex-nowrap overflow-auto">
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
-                      <a class="sectionnav btn btn-outline-secondary text-nowrap" aria-current="page" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>&nbsp;
+                      <a class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" aria-current="page" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>&nbsp;
                 <% end %>
             </nav>
         </div>
       </div>
     </div>
-    <hr>
 </div>
 
 <div class="row">
@@ -138,7 +116,7 @@
                                     <div class="col-2">
                                         <span class="float-end">
                                             <% if @openOrder %>
-                                                <button type="button" class="addItemToOrder btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                <button type="button" class="addItemToOrder btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                                     data-bs-ordr_id="<%= @openOrder.id %>",
                                                     data-bs-menuitem_id="<%= menuitem.id %>"
                                                     data-bs-menuitem_name="<%= menuitem.name %>"
@@ -148,7 +126,7 @@
                                                     <i class="bi bi-plus"></i>
                                                 </button>
                                             <% else %>
-                                                <button type="button" class="addItemToOrder btn btn-lg btn-primary" disabled>
+                                                <button type="button" class="addItemToOrder btn btn-primary" disabled>
                                                     <i class="bi bi-plus"></i>
                                                 </button>
                                             <% end %>
@@ -172,31 +150,23 @@
                                     <h6 class="card-text">
                                         <%= menuitem.description %>
                                     </h6>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="btn-group" role="group" aria-label="Inventory">
-                                                <% if @menu.restaurant.allowOrdering == true && @menu.inventoryTracking == true && menuitem.inventory %>
-                                                    <% if menuitem.inventory.currentinventory == 0 %>
-                                                        <button type="button" class="btn btn-xs btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= menuitem.inventory.startinginventory %>/<%= menuitem.inventory.currentinventory %>">
-                                                            N/A
-                                                        </button>
-                                                    <% else %>
-                                                        <button type="button" class="btn btn-xs btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= menuitem.inventory.currentinventory %>/<%= menuitem.inventory.startinginventory %>">
-                                                            Inventory: <b><%= menuitem.inventory.currentinventory %></b>/<%= menuitem.inventory.startinginventory %>
-                                                        </button>
-                                                    <% end %>
+                                            <% if @menu.restaurant.allowOrdering == true && @menu.inventoryTracking == true && menuitem.inventory %>
+                                                <% if menuitem.inventory.currentinventory == 0 %>
+                                                    <i>Not available.</i>
+                                                <% else %>
+                                                    <small><i><b><%= menuitem.inventory.currentinventory %></b> remaining.</i></small>
                                                 <% end %>
-                                            </div>
-                                            <div class="btn-group" role="group" aria-label="Allergyns">
-                                                <% menuitem.tags.each do |tag| %>
-                                                    <button type="button" class="btn btn-xs btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= tag.name %>">
-                                                        <%= tag.name %>
-                                                    </button>
-                                                <%end %>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
+                                            <% end %>
+                                    <div class="row">
+                                        <div class="col-12">
                                             <span class="float-end">
+                                                <div class="btn-group" role="group" aria-label="Tags">
+                                                    <% menuitem.tags.each do |tag| %>
+                                                        <button type="button" class="btn btn-xs btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= tag.name %>">
+                                                            <%= tag.name %>
+                                                        </button>
+                                                    <%end %>
+                                                </div>
                                                 <div class="btn-group" role="group" aria-label="Allergyns">
                                                     <% menuitem.allergyns.each do |allergyn| %>
                                                         <button type="button" class="btn btn-xs btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
@@ -223,7 +193,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="openOrderModalLabel">Open Tab</h5>
+        <h5 class="modal-title" id="openOrderModalLabel">Open Order</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -242,7 +212,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="viewOrderModalLabel">View Tab</h5>
+        <h5 class="modal-title" id="viewOrderModalLabel">View Order</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -290,7 +260,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="closeOrderModalLabel">Close Tab</h5>
+        <h5 class="modal-title" id="closeOrderModalLabel">Close Order</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -370,17 +340,29 @@
         <form>
           <input type="hidden" class="form-control" id="ordr_id">
           <input type="hidden" class="form-control" id="menuitem_id">
-          <div class="mb-3">
-            <label for="menuitem_name" class="form-label">Name:</label>
-            <input type="text" class="form-control" id="menuitem_name" disabled>
+          <div class="row">
+            <div class="col-3">
+                <label for="menuitem_name" class="form-label">Name:</label>
+            </div>
+            <div class="col-9">
+                <input type="text" class="form-control" id="menuitem_name" disabled>
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="menuitem_description" class="form-label">Description:</label>
-            <textarea class="form-control" id="menuitem_description" disabled></textarea>
+          <div class="row">
+            <div class="col-3">
+                <label for="menuitem_description" class="form-label">Description:</label>
+            </div>
+            <div class="col-9">
+                <textarea class="form-control" id="menuitem_description" disabled></textarea>
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="menuitem_price" class="form-label">Price:</label>
-            <input type="text" class="form-control" id="menuitem_price" disabled>
+          <div class="row">
+            <div class="col-3">
+                <label for="menuitem_price" class="form-label">Price:</label>
+            </div>
+            <div class="col-9">
+                <input type="text" class="form-control" id="menuitem_price" disabled>
+            </div>
           </div>
         </form>
       </div>

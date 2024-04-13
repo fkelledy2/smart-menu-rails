@@ -1,10 +1,11 @@
 document.addEventListener("turbo:load", () => {
 
     if ($("#menuu").is(':visible')) {
+
         $(".sectionnav").on("click",function(event){
             event.preventDefault();
             $('html, body').animate({
-                scrollTop: $($.attr(this, 'href')).offset().top + -180
+                scrollTop: $($.attr(this, 'href')).offset().top - $("#menuu").height()
             }, 100);
         });
     }
@@ -13,7 +14,7 @@ document.addEventListener("turbo:load", () => {
         $(".sectionnav").on("click",function(event){
             event.preventDefault();
             $('html, body').animate({
-                scrollTop: $($.attr(this, 'href')).offset().top + -140
+                scrollTop: $($.attr(this, 'href')).offset().top - $("#menuc").height()
             }, 100);
         });
     }
