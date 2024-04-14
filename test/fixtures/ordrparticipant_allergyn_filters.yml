@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ordrparticipant: one
+  allergyn: one
+
+two:
+  ordrparticipant: two
+  allergyn: two

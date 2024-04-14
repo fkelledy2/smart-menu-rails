@@ -93,6 +93,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
+    allow_numeric (0.1.0)
     base64 (0.2.0)
     bcrypt (3.1.20)
     bigdecimal (3.1.6)
@@ -373,6 +374,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  allow_numeric
   bootsnap
   capybara
   country_select (~> 8.0)

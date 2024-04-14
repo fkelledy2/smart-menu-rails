@@ -1,9 +1,9 @@
 <% if current_user %>
-<div id="menuu" class="sticky-top bg-white">
+<div id="menuu" style="padding-bottom:10px;box-shadow: 0 4px 2px -2px gray;" class="sticky-top bg-white">
 <% else %>
-<div id="menuc" class="sticky-top bg-white">
+<div id="menuc" style="padding-bottom:10px;box-shadow: 0 4px 2px -2px gray;" class="sticky-top bg-white">
 <% end %>
-    <div style="padding-bottom:15px" class="row shadow bottom">
+    <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-12">
         <div class="row">
             <div class="col-12">
@@ -13,28 +13,26 @@
                                 <%= @menu.restaurant.name %>
                                 <% if current_user %>
                                     <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-outline-secondary' do %>
-                                    <i class="bi bi-pencil-fill"></i>
+                                        <i class="bi bi-pencil-fill"></i>
                                     <% end %>
                                 <% end %>
                             </h2>
                         </div>
                         <div class="col-5">
                             <span class="float-end">
+                                <% if @ordrparticipant && @ordrparticipant.name == nil %>
+                                    <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
+                                      <i class="bi bi-person-fill-add"></i>
+                                    </button>
+                                <% else %>
+                                    <% if @ordrparticipant && @ordrparticipant.name %>
+                                            <b><%= @ordrparticipant.name %></b>
+                                    <% end %>
+                                <% end %>
                                 <% if @tablesetting %>
                                     <button type="button" class="btn btn-sm btn-outline-secondary">
                                         <%= @tablesetting.name %>
                                     </button>
-                                <% end %>
-                                <% if @ordrparticipant && @ordrparticipant.name == nil %>
-                                    <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
-                                      <i class="bi bi-plus"></i> Name
-                                    </button>
-                                <% else %>
-                                    <% if @ordrparticipant && @ordrparticipant.name %>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">
-                                            <%= @ordrparticipant.name %>
-                                        </button>
-                                    <% end %>
                                 <% end %>
                             </span>
                         </div>
@@ -42,21 +40,29 @@
             </div>
         </div>
 
-
         <div class="row">
             <div class="col-5">
-                <h4><%= @menu.name %></h4>
+                <h4>
+                    <%= @menu.name %>
+                    <% if current_user %>
+                    <% else %>
+                        <% if @ordrparticipant %>
+                            <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#filterOrderModal"><i class="bi bi-filter"></i></button>
+                        <% end %>
+                    <% end %>
+                </h4>
             </div>
             <div class="col-7">
                 <span class="float-end">
                     <% if @tablesetting %>
                         <% if @openOrder %>
-                            <button type="button" class="btn btn-sm btn-outline-secondary"><%= number_to_currency(@openOrder.runningTotal) %></button>
-                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">View</button>
-                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#closeOrderModal">Close</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#closeOrderModal"><i class="bi bi-credit-card"></i></button>
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
+                                <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal) %>
+                            </button>
                         <% else %>
                             <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
-                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">Open</button>
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal"><i class="bi bi-plus-circle"></i></button>
                             <% end %>
                         <% end %>
                     <% end %>
@@ -95,93 +101,96 @@
         <% end %>
         <div class="row">
             <% menusection.menuitems.order(:sequence).each do |menuitem| %>
-                <div style="padding-top:20px" class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card">
-                      <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
-                          <img class="card-img-bottom" src="<%= menuitem.image %>" alt="<%= menuitem.name %>">
-                      <% end %>
-                      <div class="card-body">
-                             <div class="row">
-                                <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
-                                    <div class="col-10">
-                                         <div class="row">
-                                            <div class="col-9">
-                                                <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
-                                            </div>
-                                            <div class="col-3">
-                                                <h5 class="float-end card-title"><%= number_to_currency(menuitem.price) %></span></h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <span class="float-end">
-                                            <% if @openOrder %>
-                                                <button type="button" class="addItemToOrder btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
-                                                    data-bs-ordr_id="<%= @openOrder.id %>",
-                                                    data-bs-menuitem_id="<%= menuitem.id %>"
-                                                    data-bs-menuitem_name="<%= menuitem.name %>"
-                                                    data-bs-menuitem_price="<%= menuitem.price %>"
-                                                    data-bs-menuitem_description="<%= menuitem.description %>"
-                                                    title="Add to Order">
-                                                    <i class="bi bi-plus"></i>
-                                                </button>
-                                            <% else %>
-                                                <button type="button" class="addItemToOrder btn btn-primary" disabled>
-                                                    <i class="bi bi-plus"></i>
-                                                </button>
-                                            <% end %>
-                                        </span>
-                                    </div>
-                                <% else %>
-                                    <div class="col-12">
-                                         <div class="row">
-                                            <div class="col-9">
-                                                <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
-                                            </div>
-                                            <div class="col-3">
-                                                <h5 class="float-end card-title"><%= number_to_currency(menuitem.price) %></span></h5>
+
+                <% if @ordrparticipant == nil || @ordrparticipant && (@ordrparticipant.allergyns & menuitem.allergyns).empty? %>
+                    <div style="padding-top:20px" class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="card">
+                          <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
+                              <img class="card-img-bottom" src="<%= menuitem.image %>" alt="<%= menuitem.name %>">
+                          <% end %>
+                          <div class="card-body">
+                                 <div class="row">
+                                    <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
+                                        <div class="col-10">
+                                             <div class="row">
+                                                <div class="col-9">
+                                                    <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
+                                                </div>
+                                                <div class="col-3">
+                                                    <h5 class="float-end card-title"><%= number_to_currency(menuitem.price) %></span></h5>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                <% end %>
-                             </div>
-                             <div class="row">
-                                <div class="col-12">
-                                    <h6 class="card-text">
-                                        <%= menuitem.description %>
-                                    </h6>
-                                            <% if @menu.restaurant.allowOrdering == true && @menu.inventoryTracking == true && menuitem.inventory %>
-                                                <% if menuitem.inventory.currentinventory == 0 %>
-                                                    <i>Not available.</i>
-                                                <% else %>
-                                                    <small><i><b><%= menuitem.inventory.currentinventory %></b> remaining.</i></small>
-                                                <% end %>
-                                            <% end %>
-                                    <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-2">
                                             <span class="float-end">
-                                                <div class="btn-group" role="group" aria-label="Tags">
-                                                    <% menuitem.tags.each do |tag| %>
-                                                        <button type="button" class="btn btn-xs btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= tag.name %>">
-                                                            <%= tag.name %>
-                                                        </button>
-                                                    <%end %>
-                                                </div>
-                                                <div class="btn-group" role="group" aria-label="Allergyns">
-                                                    <% menuitem.allergyns.each do |allergyn| %>
-                                                        <button type="button" class="btn btn-xs btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
-                                                            <%= allergyn.symbol %>
-                                                        </button>
-                                                    <%end %>
-                                                </div>
+                                                <% if @openOrder %>
+                                                    <button type="button" class="addItemToOrder btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                        data-bs-ordr_id="<%= @openOrder.id %>",
+                                                        data-bs-menuitem_id="<%= menuitem.id %>"
+                                                        data-bs-menuitem_name="<%= menuitem.name %>"
+                                                        data-bs-menuitem_price="<%= menuitem.price %>"
+                                                        data-bs-menuitem_description="<%= menuitem.description %>"
+                                                        title="Add to Order">
+                                                        <i class="bi bi-plus"></i>
+                                                    </button>
+                                                <% else %>
+                                                    <button type="button" class="addItemToOrder btn btn-primary" disabled>
+                                                        <i class="bi bi-plus"></i>
+                                                    </button>
+                                                <% end %>
                                             </span>
+                                        </div>
+                                    <% else %>
+                                        <div class="col-12">
+                                             <div class="row">
+                                                <div class="col-9">
+                                                    <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
+                                                </div>
+                                                <div class="col-3">
+                                                    <h5 class="float-end card-title"><%= number_to_currency(menuitem.price) %></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% end %>
+                                 </div>
+                                 <div class="row">
+                                    <div class="col-12">
+                                        <h6 class="card-text">
+                                            <%= menuitem.description %>
+                                        </h6>
+                                        <% if @menu.restaurant.allowOrdering == true && @menu.inventoryTracking == true && menuitem.inventory %>
+                                            <% if menuitem.inventory.currentinventory == 0 %>
+                                                <i>Not available.</i>
+                                            <% else %>
+                                                <small><i><b><%= menuitem.inventory.currentinventory %></b> remaining.</i></small>
+                                            <% end %>
+                                        <% end %>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <span class="float-end">
+                                                    <div class="btn-group" role="group" aria-label="Tags">
+                                                        <% menuitem.tags.each do |tag| %>
+                                                            <button type="button" class="btn btn-xs btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= tag.name %>">
+                                                                <%= tag.name %>
+                                                            </button>
+                                                        <%end %>
+                                                    </div>
+                                                    <div class="btn-group" role="group" aria-label="Allergyns">
+                                                        <% menuitem.allergyns.each do |allergyn| %>
+                                                            <button type="button" class="btn btn-xs btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
+                                                                <%= allergyn.symbol %>
+                                                            </button>
+                                                        <%end %>
+                                                    </div>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                      </div>
+                          </div>
+                        </div>
                     </div>
-                </div>
+                <% end %>
             <%end %>
         </div>
     <%end %>
@@ -212,24 +221,53 @@
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="viewOrderModalLabel">View Order</h5>
+        <h5 class="modal-title" id="viewOrderModalLabel">Your Order</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <% if @openOrder %>
-            <% @openOrder.ordritems.each do |ordritem| %>
+            <div class="row">
+                <div class="col-7">
+                    <b>Menu Item</b>
+                </div>
+                <div class="col-2">
+                  <span class="float-end">
+                    <b>Ordered By</b>
+                  </span>
+                </div>
+                <div class="col-2">
+                  <span class="float-end">
+                    <b>Price</b>
+                  </span>
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <% @openOrder.ordractions.each do |ordraction| %>
+                <% if ordraction.ordritem && ordraction.ordritem.in?(@openOrder.ordritems) %>
                 <div class="row">
-                    <div class="col-9">
-                        <ul>
-                            <li><%= ordritem.menuitem.name %></li>
-                        </ul>
+                    <div class="col-7">
+                        &nbsp;-&nbsp;<%= ordraction.ordritem.menuitem.name %>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <span class="float-end">
-                            <%= number_to_currency(ordritem.menuitem.price) %>
+                            <%= ordraction.ordrparticipant.name %>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="float-end">
+                            <%= number_to_currency(ordraction.ordritem.menuitem.price) %>
+                        </span>
+                    </div>
+                    <div class="col-1">
+                        <span class="float-end">
+                            <button type="button" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
                         </span>
                     </div>
                 </div>
+                <% end %>
             <% end %>
             <div class="row">
                 <div class="col-9">
@@ -250,6 +288,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Order</button>
       </div>
     </div>
   </div>
@@ -375,7 +414,42 @@
 </div>
 
 
-<div style="display:none">
+<div class="modal fade" id="filterOrderModal" tabindex="-1" aria-labelledby="filterOrderModalLabel" aria-hidden="true">
+  <%= form_with(model: @ordrparticipant) do |form| %>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="filterOrderModalLabel">Filter order by</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="form-group row">
+                <%= form.label :allergyns, class: 'col-sm-2 col-form-label' %>
+                <div class="col-sm-10">
+                    <div class="form-control">
+                        <%= form.collection_check_boxes :allergyn_ids, Allergyn.all, :id, :name, { hide_label: true } do |b| %>
+                            <div class="form-check">
+                              <%= b.check_box %>
+                              <label class="form-check-label">
+                                <%= b.label %>
+                              </label>
+                            </div>
+                        <% end %>
+                    </div>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <%= form.submit value: 'Save', class: 'btn btn-primary' %>
+          </div>
+        </div>
+      </div>
+  <% end %>
+</div>
+
+
+<div>
     <% if @openOrder %>
         currentOrder: <div id="currentOrder"><%= @openOrder.id %></div>
     <% end %>

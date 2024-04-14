@@ -10,6 +10,7 @@ require("@rails/activestorage").start()
 //= require jquery3
 //= require jquery_ujs
 //= require_tree .
+//= require allow_numeric
 require("local-time").start()
 require("@rails/ujs").start()
 

@@ -4,6 +4,7 @@
   json.image menuitem.image
   json.status menuitem.status
   json.sequence menuitem.sequence
+  json.preptime menuitem.preptime
   json.calories menuitem.calories
   json.price menuitem.price
   json.menusection menuitem.menusection

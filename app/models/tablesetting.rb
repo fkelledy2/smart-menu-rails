@@ -13,7 +13,8 @@ class Tablesetting < ApplicationRecord
 
   validates :tabletype, :presence => true
   validates :name, :presence => true
-  validates :capacity, :presence => true
+  validates :capacity, :presence => true, :numericality => {:only_integer => true}
   validates :status, :presence => true
   validates :restaurant, :presence => true
+
 end

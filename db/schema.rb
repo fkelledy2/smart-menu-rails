@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_07_112523) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_14_161841) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -163,6 +163,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_07_112523) do
     t.bigint "menusection_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "preptime", default: 0
     t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
   end
 
@@ -245,6 +246,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_07_112523) do
     t.float "ordritemprice", default: 0.0
     t.index ["menuitem_id"], name: "index_ordritems_on_menuitem_id"
     t.index ["ordr_id"], name: "index_ordritems_on_ordr_id"
+  end
+
+  create_table "ordrparticipant_allergyn_filters", force: :cascade do |t|
+    t.bigint "ordrparticipant_id", null: false
+    t.bigint "allergyn_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["allergyn_id"], name: "index_ordrparticipant_allergyn_filters_on_allergyn_id"
+    t.index ["ordrparticipant_id"], name: "index_ordrparticipant_allergyn_filters_on_ordrparticipant_id"
   end
 
   create_table "ordrparticipants", force: :cascade do |t|
@@ -411,6 +421,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_07_112523) do
   add_foreign_key "ordritemnotes", "ordritems"
   add_foreign_key "ordritems", "menuitems"
   add_foreign_key "ordritems", "ordrs"
+  add_foreign_key "ordrparticipant_allergyn_filters", "allergyns"
+  add_foreign_key "ordrparticipant_allergyn_filters", "ordrparticipants"
   add_foreign_key "ordrparticipants", "employees"
   add_foreign_key "ordrparticipants", "ordritems"
   add_foreign_key "ordrparticipants", "ordrs"

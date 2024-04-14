@@ -47,6 +47,7 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
            },
+          {title:"Prep Time", field:"preptime", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {
                title:"Inventory",
                columns:[

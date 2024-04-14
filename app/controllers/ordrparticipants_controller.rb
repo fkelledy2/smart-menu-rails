@@ -46,7 +46,7 @@ class OrdrparticipantsController < ApplicationController
     respond_to do |format|
       if @ordrparticipant.update(ordrparticipant_params)
         # Find all entries for participant with same sessionid and order_id and update the name.
-        format.html { redirect_to ordrparticipant_url(@ordrparticipant), notice: "Ordrparticipant was successfully updated." }
+        format.html { redirect_to menu_tablesetting_path(@ordrparticipant.ordr.menu, @ordrparticipant.ordr.tablesetting), notice: "Ordrparticipant was successfully updated." }
         format.json { render :show, status: :ok, location: @ordrparticipant }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -85,6 +85,6 @@ class OrdrparticipantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ordrparticipant_params
-      params.require(:ordrparticipant).permit(:sessionid, :action, :role, :employee_id, :ordr_id, :ordritem_id, :name)
+      params.require(:ordrparticipant).permit(:sessionid, :action, :role, :employee_id, :ordr_id, :ordritem_id, :name, allergyn_ids: [])
     end
 end

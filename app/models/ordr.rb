@@ -6,6 +6,7 @@ class Ordr < ApplicationRecord
 
   has_many :ordritems, dependent: :destroy
   has_many :ordrparticipants, dependent: :destroy
+  has_many :ordractions, dependent: :destroy
 
   enum status: {
     opened: 0,

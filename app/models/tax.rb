@@ -7,4 +7,5 @@ class Tax < ApplicationRecord
     service: 3
   }
   validates :name, :presence => true
+  validates :taxpercentage, :presence => true, :numericality => {:only_float => true}
 end

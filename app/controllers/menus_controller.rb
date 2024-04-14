@@ -5,7 +5,6 @@ class MenusController < ApplicationController
   # GET /menus or /menus.json
   def index
     @today = Date.today.strftime('%A').downcase!
-
     @currentHour = Time.now.strftime("%H").to_i
     @currentMin = Time.now.strftime("%M").to_i
 
@@ -39,6 +38,7 @@ class MenusController < ApplicationController
             end
         end
 
+        @allergyns = Allergyn.all
         @participantsFirstTime = false
         @tablesetting = Tablesetting.find_by_id(params[:id])
         @openOrder = Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 0).first

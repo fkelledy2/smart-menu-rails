@@ -4,7 +4,12 @@ class TablesettingsController < ApplicationController
   # GET /tablesettings or /tablesettings.json
   def index
     if current_user
-        @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: {user: current_user}).all
+        if params[:restaurant_id]
+            @restaurant = Restaurant.find_by_id(params[:restaurant_id])
+            @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: {user: current_user}, restaurant_id: @restaurant.id).all
+        else
+            @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: {user: current_user}).all
+        end
     else
         redirect_to root_url
     end
