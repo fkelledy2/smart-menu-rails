@@ -41,7 +41,9 @@ class MenusController < ApplicationController
         @allergyns = Allergyn.all
         @participantsFirstTime = false
         @tablesetting = Tablesetting.find_by_id(params[:id])
-        @openOrder = Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 0).first
+        @openOrder = Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 0)
+                     .or(Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 10))
+                     .or(Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 20)).first
         if @openOrder
             @openOrder.nett = @openOrder.runningTotal
             taxes = Tax.where(restaurant_id: @openOrder.restaurant.id).order(sequence: :asc)

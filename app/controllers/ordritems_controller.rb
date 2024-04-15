@@ -47,6 +47,8 @@ class OrdritemsController < ApplicationController
                 @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
                 @ordrparticipant.save
             end
+            @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
+            @ordraction.save
         else
             @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s ).first
             if @ordrparticipant == nil

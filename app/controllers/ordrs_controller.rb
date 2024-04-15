@@ -83,7 +83,7 @@ class OrdrsController < ApplicationController
   # PATCH/PUT /ordrs/1 or /ordrs/1.json
   def update
     respond_to do |format|
-      if( ordr_params[:status] = 2 )
+      if( ordr_params[:status] = 10 )
           @ordr.nett = @ordr.runningTotal
       end
 
@@ -97,7 +97,11 @@ class OrdrsController < ApplicationController
             totalTax += ((tax.taxpercentage * @ordr.nett)/100)
         end
       end
-      @ordr.tip = ordr_params[:tip]
+      if ordr_params[:tip]
+        @ordr.tip = ordr_params[:tip]
+      else
+        @ordr.tip = 0
+      end
       @ordr.tax = totalTax
       @ordr.service = totalService
       @ordr.gross = @ordr.nett + @ordr.tip + @ordr.service + @ordr.tax
@@ -123,7 +127,27 @@ class OrdrsController < ApplicationController
             @tablesetting.status = 0
             @tablesetting.save
         end
-        if( ordr_params[:status] = 2 )
+        if( ordr_params[:status] = 10 )
+            if current_user
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
+                    @ordrparticipant.save
+                end
+            else
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s );
+                    @ordrparticipant.save
+                end
+                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 5)
+                @ordraction.save
+            end
+            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
+            @tablesetting.status = 1
+            @tablesetting.save
+        end
+        if( ordr_params[:status] = 20 )
             if current_user
                 @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
                 if @ordrparticipant == nil

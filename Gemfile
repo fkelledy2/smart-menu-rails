@@ -89,3 +89,5 @@ gem 'mini_magick'
 gem 'seed_dump'
 gem 'squasher'
 gem 'allow_numeric'
+gem 'aasm'
+

@@ -70,8 +70,62 @@ document.addEventListener("turbo:load", () => {
        });
     }
 
-    if ($('#close-order').length) {
-        $( "#close-order" ).on( "click", function() {
+    if ($('#confirm-order').length) {
+       $( "#confirm-order" ).on( "click", function() {
+            if ($('#currentEmployee').length) {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'employee_id': $('#currentEmployee').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : 10
+                    }
+                };
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+            } else {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : 10
+                    }
+                };
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+            }
+       });
+    }
+
+    if ($('#request-bill').length) {
+       $( "#request-bill" ).on( "click", function() {
+            if ($('#currentEmployee').length) {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'employee_id': $('#currentEmployee').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : 20
+                    }
+                };
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+            } else {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : 20
+                    }
+                };
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+            }
+       });
+    }
+
+    if ($('#pay-order').length) {
+        $( "#pay-order" ).on( "click", function() {
             let tip = 0;
             if( $('#tip').length > 0 ) {
                 tip = $('#tip').val()
@@ -84,7 +138,7 @@ document.addEventListener("turbo:load", () => {
                       'restaurant_id': $('#currentRestaurant').text(),
                       'tip': tip,
                       'menu_id': $('#currentMenu').text(),
-                      'status' : 2
+                      'status' : 30
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
@@ -95,7 +149,7 @@ document.addEventListener("turbo:load", () => {
                       'restaurant_id': $('#currentRestaurant').text(),
                       'tip': tip,
                       'menu_id': $('#currentMenu').text(),
-                      'status' : 2
+                      'status' : 30
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );

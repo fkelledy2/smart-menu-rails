@@ -1,4 +1,31 @@
 class Ordr < ApplicationRecord
+  include AASM
+
+  aasm :column => 'status' do
+    state :opened, initial:true
+    state :ordered, :billrequested, :paid, :closed
+
+    event :order do
+        status = :ordered
+        transitions from: :opened, to: :ordered
+    end
+
+    event :requestbill do
+        status = :billrequested
+        transitions from: [:opened, :ordered], to: :billrequested
+    end
+
+    event :paybill do
+        status = :billpaid
+        transitions from: [:billrequested], to: :billpaid
+    end
+
+    event :close do
+        status = :closed
+        transitions from: [:billpaid], to: :closed
+    end
+  end
+
   belongs_to :employee, optional: true
   belongs_to :tablesetting
   belongs_to :menu
@@ -10,8 +37,9 @@ class Ordr < ApplicationRecord
 
   enum status: {
     opened: 0,
-    billrequested: 1,
-    closed: 2
+    ordered: 10,
+    billrequested: 20,
+    closed: 30
   }
 
   def ordrDate
