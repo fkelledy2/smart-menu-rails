@@ -2,7 +2,7 @@
   <div class="container-fluid d-flex justify-content-between mx-auto text-muted">
     <span>
         &copy; <%= Date.today.year %> Your Company
-        <% if current_user %>
+        <% if current_user && @current_employee %>
             <%= @current_employee.role %>
         <% end %>
     </span>
