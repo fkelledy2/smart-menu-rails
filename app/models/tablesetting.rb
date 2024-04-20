@@ -1,8 +1,8 @@
 class Tablesetting < ApplicationRecord
   belongs_to :restaurant
   enum status: {
-    occupied: 0,
-    free: 1,
+    free: 0,
+    occupied: 1,
     archived: 2
   }
 

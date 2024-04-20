@@ -23,12 +23,9 @@ Allergyn.create!([
   {name: "Lupin", description: "Lupin", symbol: "L"},
   {name: "Molluscs", description: "Mussels, oysters, squid, snails", symbol: "MO"}
 ])
-Tag.create!([
-  {name: "Seasonal", description: "", typs: nil}
-])
 Tablesetting.create!([
-  {name: "T1", description: "Table 1", status: "active", capacity: 2, restaurant_id: 1},
-  {name: "T2", description: "Table 2", status: "active", capacity: 3, restaurant_id: 1}
+  {name: "T1", description: "Table 1", status: "free", capacity: 2, tabletype: "indoor", restaurant_id: 1},
+  {name: "T2", description: "Table 2", status: "free", capacity: 3, tabletype: "outdoor", restaurant_id: 1}
 ])
 Size.create!([
   {size: "xs", name: "Extra Small", description: ""},
