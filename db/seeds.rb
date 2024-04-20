@@ -101,37 +101,6 @@ Menuitem.create!([
   {name: "Special Earl Grey", description: "Special Earl Grey", image: "http://via.placeholder.com/300x300", status: "active", sequence: 45, calories: 1200, price: 4.25, menusection_id: 6}
 
 ])
-Inventory.create!([
-  {startinginventory: 20, currentinventory: 20, resethour: 13, menuitem_id: 1},
-  {startinginventory: 30, currentinventory: 30, resethour: 13, menuitem_id: 2},
-  {startinginventory: 30, currentinventory: 30, resethour: 13, menuitem_id: 3},
-  {startinginventory: 30, currentinventory: 30, resethour: 13, menuitem_id: 4}
-])
-Ingredient.create!([
-  {name: "Carrots", description: ""},
-  {name: "Crab", description: ""},
-  {name: "Beef", description: ""},
-  {name: "Lamb", description: ""},
-  {name: "Potato", description: ""}
-])
-MenuitemTagMapping.create!([
-  {menuitem_id: 2, tag_id: 1}
-])
-MenuitemSizeMapping.create!([
-  {menuitem_id: 2, size_id: 1},
-  {menuitem_id: 2, size_id: 2}
-])
-MenuitemIngredientMapping.create!([
-  {menuitem_id: 2, ingredient_id: 1},
-  {menuitem_id: 4, ingredient_id: 3},
-  {menuitem_id: 4, ingredient_id: 5}
-])
-MenuitemAllergynMapping.create!([
-  {menuitem_id: 3, allergyn_id: 2},
-  {menuitem_id: 3, allergyn_id: 1},
-  {menuitem_id: 2, allergyn_id: 1},
-  {menuitem_id: 2, allergyn_id: 2}
-])
 Employee.create!([
   {name: "Fergus Kelledy", eid: "FK1", image: "Fake Image", status: "active", restaurant_id: 1, role: "manager", email: 'fkelledy@gmail.com', user_id: 1}
 ])
