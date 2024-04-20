@@ -37,15 +37,11 @@
                 <%= link_to "MenuSections", menusections_path, class: "dropdown-item" %>
                 <%= link_to "MenuItems", menuitems_path, class: "dropdown-item" %>
                 <%= link_to "Allergyns", allergyns_path, class: "dropdown-item" %>
-                <%= link_to "Tags", tags_path, class: "dropdown-item" %>
                 <%= link_to "Sizes", sizes_path, class: "dropdown-item" %>
 
-                <% if @current_employee.role == 'manager' %>
-                <%= link_to "Ingregients", ingredients_path, class: "dropdown-item" %>
                 <%= link_to "Inventories", inventories_path, class: "dropdown-item" %>
                 <%= link_to "TableSettings", tablesettings_path, class: "dropdown-item" %>
                 <%= link_to "Menu Availability", menuavailabilities_path, class: "dropdown-item" %>
-                <% end %>
               </div>
             </li>
             <li style="z-index:1070;" class="nav-item dropdown">
@@ -72,7 +68,7 @@
 
           <li style="z-index:1070;" class="nav-item dropdown">
             <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
-              <%= image_tag avatar_path(current_user, size: 40), height: 20, width: 20, class: "rounded" %>
+              <%= current_user.name %> <%= image_tag avatar_path(current_user, size: 40), height: 20, width: 20, class: "rounded" %>
             <% end %>
             <div id="nav-account-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbar-dropdown">
               <%= link_to "Settings", edit_user_registration_path, class: "dropdown-item" %>

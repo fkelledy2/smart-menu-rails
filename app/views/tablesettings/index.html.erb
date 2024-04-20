@@ -1,14 +1,54 @@
-<div class="row">
-  <div class="col-sm-6">
-    <h1>Table Settings</h1>
-  </div>
-  <div class="col-sm-6 text-end">
-    <button id="unarchive-row" class='btn btn-success' disabled>Unarchive</button>
-    <button id="archive-row"class='btn btn-danger' disabled>Archive</button>
-    <%= link_to new_tablesetting_path, class: 'btn btn-primary' do %>
-        <i class="bi bi-plus"></i> Table Setting
-    <% end %>
-  </div>
-</div>
-<div id="tablesetting-table">
-</div>
+<% if current_user %>
+    <div class="row">
+      <div class="col-sm-6">
+        <h1>Table Settings</h1>
+      </div>
+      <div class="col-sm-6 text-end">
+        <button id="unarchive-row" class='btn btn-success' disabled>Unarchive</button>
+        <button id="archive-row"class='btn btn-danger' disabled>Archive</button>
+        <%= link_to new_tablesetting_path, class: 'btn btn-primary' do %>
+            <i class="bi bi-plus"></i> Table Setting
+        <% end %>
+      </div>
+    </div>
+    <div id="tablesetting-table">
+    </div>
+<% else %>
+    <%= format('%02d',@currentDay) %> - <%= format('%02d',@currentHour) %>:<%= format('%02d',@currentMin) %>
+    <div class="row" style="padding-bottom:20px">
+        <div class="col-12">
+            <span class="h1 text-center"><%= @restaurant.name %>: Seating Plan</span>
+        </div>
+    </div>
+    <div class="row">
+        <% @tablesettings.each do |tablesetting| %>
+            <div class="col-4">
+                <% if tablesetting.status == 'occupied' %>
+                <div class="card text-white bg-danger mb-3">
+                <% else %>
+                <div class="card text-white bg-success mb-3">
+                <% end %>
+                  <div class="card-body">
+                    <h2 class="card-title">
+                        <% if tablesetting.status == 'occupied' %>
+                            <div class="btn btn-lg btn-danger">
+                                <h2><%= tablesetting.name %></h2>
+                            </div>
+                        <% else %>
+                            <%= link_to restaurant_tablesetting_path(@restaurant, tablesetting), class: 'btn btn-lg btn-success' do %>
+                                <h2><%= tablesetting.name %></h2>
+                            <% end %>
+                        <% end %>
+                        <span style="padding-top:7px" class="float-end">Seats: <%= tablesetting.capacity %></span>
+                    </h2>
+                    <div class="row">
+                        <div class="col-12">
+                            <p style="padding:40px" class="h3 text-center"><%= tablesetting.tabletype.capitalize %></p>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        <% end %>
+    </div>
+<% end %>

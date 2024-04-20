@@ -3,6 +3,10 @@ class TablesettingsController < ApplicationController
 
   # GET /tablesettings or /tablesettings.json
   def index
+      @today = Date.today.strftime('%A').downcase!
+      @currentHour = Time.now.strftime("%H").to_i
+      @currentMin = Time.now.strftime("%M").to_i
+      @currentDay = Time.now.wday.to_i
     if current_user
         if params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
@@ -11,13 +15,17 @@ class TablesettingsController < ApplicationController
             @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: {user: current_user}).all
         end
     else
-        redirect_to root_url
+        @restaurant = Restaurant.find_by_id(params[:restaurant_id])
+        @tablesettings = Tablesetting.joins(:restaurant).all
+        @menus = Menu.joins(:restaurant).all
     end
   end
 
   # GET /tablesettings/1 or /tablesettings/1.json
   def show
+    @restaurant = Restaurant.find_by_id(params[:restaurant_id])
     @qr = RQRCode::QRCode.new(@tablesetting.status)
+    @menus = Menu.joins(:restaurant).all
   end
 
   # GET /tablesettings/new
@@ -70,6 +78,10 @@ class TablesettingsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_tablesetting
+      @today = Date.today.strftime('%A').downcase!
+      @currentHour = Time.now.strftime("%H").to_i
+      @currentMin = Time.now.strftime("%M").to_i
+      @currentDay = Time.now.wday.to_i
       @tablesetting = Tablesetting.find(params[:id])
     end
 
