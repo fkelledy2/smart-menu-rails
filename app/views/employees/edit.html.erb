@@ -1,13 +1,13 @@
 <div class="page-header">
   <div class="row">
     <div class="col-sm-10">
-          <h1>Edit Employee</h1>
+          <h1><%=t(".employee")%></h1>
     </div>
     <div class="col-sm-2">
         <% if @employee.persisted? %>
-          <%= link_to "Cancel", @employee, class: "float-end btn btn-light" %>
+          <%= link_to t(".cancel"), @employee, class: "float-end btn btn-light" %>
         <% else %>
-          <%= link_to "Cancel", employees_path, class: "float-end btn btn-light" %>
+          <%= link_to t(".cancel"), employees_path, class: "float-end btn btn-light" %>
         <% end %>
     </div>
   </div>

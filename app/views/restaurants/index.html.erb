@@ -1,12 +1,12 @@
 <div class="row">
   <div class="col-sm-6">
-    <h1>Restaurants</h1>
+    <h1><%=t(".restaurants")%> </h1>
   </div>
   <div class="col-sm-6 text-end">
-    <button id="restaurant-activate-row" class='btn btn-success' disabled>Activate</button>
-    <button id="restaurant-deactivate-row"class='btn btn-danger' disabled>Deactivate</button>
+    <button id="restaurant-activate-row" class='btn btn-success' disabled><%=t(".activate")%></button>
+    <button id="restaurant-deactivate-row"class='btn btn-danger' disabled><%=t(".deactivate")%></button>
     <%= link_to new_restaurant_path, class: 'btn btn-primary' do %>
-      <i class="bi bi-plus"></i> Restaurant
+      <i class="bi bi-plus"></i> <%=t(".restaurant")%>
     <% end %>
   </div>
 </div>

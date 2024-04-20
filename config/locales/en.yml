@@ -28,4 +28,80 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  shared:
+    navbar:
+      restaurants: "Restaurants"
+      employees: "Employees"
+      taxes: "Taxes"
+      openingHours: "Opening Hours"
+
+      menus: "Menus"
+      menuSections: "Menu Sections"
+      menuItems: "Menu Items"
+      allergyns: "Allergyns"
+      menuAvailability: "Menu Availability"
+      sizes: "Sizes"
+      inventories: "Inventories"
+      tableSettings: "Table Settings"
+      orders: "Orders"
+      orderItems: "Order Items"
+  restaurants:
+    index:
+      restaurants: "Restaurants"
+      restaurant: "Restaurant"
+      activate: "Activate"
+      desctivate: "Deactivate"
+    show:
+      restaurant: "View Restaurant"
+    edit:
+      restaurant: "Edit Restaurant"
+    new:
+      restaurant: "New Restaurant"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+  employees:
+    index:
+      employees: "Employees"
+      employee: "Employee"
+      activate: "Activate"
+      desctivate: "Deactivate"
+    show:
+      employee: "View Employee"
+    edit:
+      employee: "Edit Employee"
+    new:
+      employee: "New Employee"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+
+
+  activerecord:
+    attributes:
+      restaurant:
+        name: "Name"
+        description: "Description"
+        address1: "Address Line 1"
+        address2: "Address Line 2"
+        state: "State"
+        city: "City"
+        postcode: "Post Code"
+        country: "Country"
+        image: "Banner Image"
+        genid: "Gen Id"
+        status: "Status"
+        displayImages: "Display Images"
+        allowOrdering: "Allow Ordering"
+        inventoryTracking: "Inventory Tracking"
+        capacity: "Capacity"
+      employee:
+        name: "Name"
+        eid: "Employee ID"
+        user: "User"
+        image: "Image URL"
+        role: "Role"
+        status: "Status"
+        restaurant: "Restaurant"

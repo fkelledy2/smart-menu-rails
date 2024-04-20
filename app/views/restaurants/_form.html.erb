@@ -121,10 +121,10 @@
         <span class="float-end">
         <% if restaurant.persisted? %>
           <div class="btn btn-danger ">
-            <%= link_to 'Delete', restaurant, method: :delete, class: "text-white text-decoration-none", data: { confirm: 'Are you sure?' } %>
+            <%= link_to t('.delete'), restaurant, method: :delete, class: "text-white text-decoration-none", data: { confirm: 'Are you sure?' } %>
           </div>
         <% end %>
-        <%= form.submit value: 'Save', class: 'btn btn-primary' %>
+        <%= form.submit value: t('.save'), class: 'btn btn-primary' %>
         </span>
     </div>
   </div>
