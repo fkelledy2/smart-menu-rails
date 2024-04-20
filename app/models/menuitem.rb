@@ -26,6 +26,6 @@ class Menuitem < ApplicationRecord
   validates :status, :presence => true
   validates :sequence, :presence => true
   validates :preptime, :presence => true, :numericality => {:only_integer => true}
-  validates :price, :presence => true, :numericality => {:only_integer => true}
+  validates :price, :presence => true, :numericality => {:only_float => true}
   validates :calories, :presence => true, :numericality => {:only_integer => true}   
 end
