@@ -138,6 +138,25 @@ en:
       sure: "Are you sure?"
       selectRestaurant: "Select a Restaurant ..."
 
+  menusections:
+    index:
+      menuSections: "Menu Sections"
+      menuSection: "Menu Section"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    show:
+      menuSection: "View Menu Section"
+    edit:
+      menuSection: "Edit Menu Section"
+    new:
+      menuSection: "New Menu Section"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectMenu: "Select a Menu ..."
+
   activerecord:
     attributes:
       restaurant:
@@ -188,3 +207,10 @@ en:
         inventoryTracking: "Inventory Tracking"
         sequence: "Display Order"
         restaurant: "Restaurant"
+      menusection:
+        name: "Name"
+        description: "Description"
+        image: "Image"
+        status: "Status"
+        sequence: "Display Order"
+        menu: "Menu"
