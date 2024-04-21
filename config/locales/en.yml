@@ -237,6 +237,26 @@ en:
       delete: "Delete"
       sure: "Are you sure?"
 
+  menuavailabilities:
+    index:
+      menuAvailabilities: "Availabilities"
+      menuAvailability: "Availability"
+      activate: "Open"
+      deactivate: "Close"
+    show:
+      menuAvailability: "View Availability"
+    edit:
+      menuAvailability: "Edit Availability"
+    new:
+      menuAvailability: "New Availability"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectMenu: "Select a Menu ..."
+      errors: "Errors"
+
   activerecord:
     attributes:
       restaurant:
@@ -321,3 +341,12 @@ en:
         startingInventory: "Starting Inventory"
         currentInventory: "Ending Inventory"
         resetHour: "Reset Hour"
+      menuavailability:
+        dayofweek: "Day of week"
+        starthour: "Opening hour"
+        startmin: "Opening minute"
+        endhour: "Closing hour"
+        endmin: "Closing minute"
+        sequence: "Sequence"
+        status: "Status"
+        menu: "Menu"
