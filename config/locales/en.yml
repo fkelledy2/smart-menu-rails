@@ -34,7 +34,6 @@ en:
       employees: "Employees"
       taxes: "Taxes"
       openingHours: "Opening Hours"
-
       menus: "Menus"
       menuSections: "Menu Sections"
       menuItems: "Menu Items"
@@ -68,7 +67,7 @@ en:
       employees: "Employees"
       employee: "Employee"
       activate: "Activate"
-      desctivate: "Deactivate"
+      deactivate: "Deactivate"
     show:
       employee: "View Employee"
     edit:
@@ -97,6 +96,26 @@ en:
       delete: "Delete"
       sure: "Are you sure?"
       selectRestaurant: "Select a Restaurant ..."
+  restaurantavailabilities:
+    index:
+      restaurantavailabilities: "Opening Hours"
+      restaurantavailability: "Opening Hours"
+      activate: "Open"
+      deactivate: "Close"
+    show:
+      restaurantavailability: "View Opening Hours"
+    edit:
+      restaurantavailability: "Edit Opening Hours"
+    new:
+      restaurantavailability: "New Opening Hours"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+
+
 
   activerecord:
     attributes:
@@ -128,4 +147,13 @@ en:
         name: "Name"
         taxType: "Type"
         taxPercentage: "Percentage"
+        restaurant: "Restaurant"
+      restaurantavailability:
+        dayofweek: "Day of week"
+        starthour: "Opening hour"
+        startmin: "Opening minute"
+        endhour: "Closing hour"
+        endmin: "Closing minute"
+        sequence: "Sequence"
+        status: "Status"
         restaurant: "Restaurant"
