@@ -5,9 +5,9 @@
     </div>
     <div class="col-sm-2">
         <% if @menuitem.persisted? %>
-          <%= link_to "Cancel", @menuitem, class: "float-end btn btn-light" %>
+          <%= link_to t(".cancel"), @menuitem, class: "float-end btn btn-light" %>
         <% else %>
-          <%= link_to "Cancel", menuitems_path, class: "float-end btn btn-light" %>
+          <%= link_to t(".cancel"), menuitems_path, class: "float-end btn btn-light" %>
         <% end %>
     </div>
   </div>
