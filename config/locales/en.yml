@@ -44,6 +44,7 @@ en:
       tableSettings: "Table Settings"
       orders: "Orders"
       orderItems: "Order Items"
+
   restaurants:
     index:
       restaurants: "Restaurants"
@@ -80,6 +81,7 @@ en:
       delete: "Delete"
       sure: "Are you sure?"
       selectRestaurant: "Select a Restaurant ..."
+
   taxes:
     index:
       taxes: "Taxes"
@@ -96,6 +98,7 @@ en:
       delete: "Delete"
       sure: "Are you sure?"
       selectRestaurant: "Select a Restaurant ..."
+
   restaurantavailabilities:
     index:
       restaurantavailabilities: "Opening Hours"
@@ -115,7 +118,25 @@ en:
       sure: "Are you sure?"
       selectRestaurant: "Select a Restaurant ..."
 
-
+  menus:
+    index:
+      menus: "Menus"
+      menu: "Menu"
+      activate: "Activate"
+      deactivate: "Deactivate"
+      unavailable: "Menu is currently unavailable."
+    show:
+      menu: "View Menu"
+    edit:
+      menu: "Edit Menu"
+    new:
+      menu: "New Menu"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
 
   activerecord:
     attributes:
@@ -156,4 +177,14 @@ en:
         endmin: "Closing minute"
         sequence: "Sequence"
         status: "Status"
+        restaurant: "Restaurant"
+      menu:
+        name: "Name"
+        description: "Description"
+        image: "Image"
+        status: "Status"
+        displayImages: "Display Images"
+        allowOrdering: "Allow Ordering"
+        inventoryTracking: "Inventory Tracking"
+        sequence: "Display Order"
         restaurant: "Restaurant"
