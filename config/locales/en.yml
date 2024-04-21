@@ -201,6 +201,24 @@ en:
       delete: "Delete"
       sure: "Are you sure?"
 
+  sizes:
+    index:
+      sizes: "Sizes"
+      size: "Size"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    show:
+      size: "View Size"
+    edit:
+      size: "Edit Size"
+    new:
+      size: "New Size"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+
   activerecord:
     attributes:
       restaurant:
@@ -276,3 +294,7 @@ en:
         name: "Name"
         description: "Description"
         symbol: "Symbol"
+      size:
+        size: "Size"
+        name: "Name"
+        description: "Description"
