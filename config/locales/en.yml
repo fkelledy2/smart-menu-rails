@@ -61,6 +61,8 @@ en:
     form:
       save: "Save"
       delete: "Delete"
+      sure: "Are you sure?"
+
   employees:
     index:
       employees: "Employees"
@@ -77,7 +79,24 @@ en:
     form:
       save: "Save"
       delete: "Delete"
-
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+  taxes:
+    index:
+      taxes: "Taxes"
+      tax: "Tax"
+    show:
+      tax: "View Tax"
+    edit:
+      tax: "Edit Tax"
+    new:
+      tax: "New Tax"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
 
   activerecord:
     attributes:
@@ -104,4 +123,9 @@ en:
         image: "Image URL"
         role: "Role"
         status: "Status"
+        restaurant: "Restaurant"
+      tax:
+        name: "Name"
+        taxType: "Type"
+        taxPercentage: "Percentage"
         restaurant: "Restaurant"

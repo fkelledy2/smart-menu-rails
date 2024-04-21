@@ -16,7 +16,7 @@
   <div class="form-group row">
     <%= form.label :user_id, class: 'col-sm-2 col-form-label' %>
     <div class="col-sm-10">
-        <%= form.collection_select :user_id, User.all ,:id, :email, options = {:prompt => 'Select a User...'}, html_options = {class: "form-control"}%>
+        <%= form.collection_select :user_id, User.all ,:id, :email, options = {:prompt => t(".selectUser")}, html_options = {class: "form-control"}%>
     </div>
   </div>
 
@@ -45,7 +45,7 @@
   <div class="form-group row">
     <%= form.label :restaurant_id, class: 'col-sm-2 col-form-label' %>
     <div class="col-sm-10">
-        <%= form.collection_select :restaurant_id, Restaurant.all ,:id, :name, options = {:prompt => 'Select a Restaurant...'}, html_options = {class: "form-control"}%>
+        <%= form.collection_select :restaurant_id, Restaurant.all ,:id, :name, options = {:prompt => t(".selectRestaurant")}, html_options = {class: "form-control"}%>
     </div>
   </div>
   <div style='height:8px'></div>
@@ -56,17 +56,17 @@
         <span class="float-end">
         <% if employee.persisted? %>
           <div class="btn btn-danger ">
-            <%= link_to 'Delete', employee, method: :delete, class: "text-white text-decoration-none", data: { confirm: 'Are you sure?' } %>
+            <%= link_to t(".delete"), employee, method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
           </div>
         <% end %>
-        <%= form.submit value: 'Save', class: 'btn btn-primary' %>
+        <%= form.submit value: t(".save"), class: 'btn btn-primary' %>
         </span>
     </div>
   </div>
   <% if employee.errors.any? %>
   <div class="row">
     <div class="col-sm-2">
-        Errors
+        <%=t(".errors")%>
     </div>
     <div class="col-sm-10">
       <ul>

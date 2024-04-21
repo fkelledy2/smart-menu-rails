@@ -6,23 +6,23 @@
     </div>
   </div>
   <div class="form-group row">
-    <%= form.label :taxtype, class: 'col-sm-2 col-form-label' %>
+    <%= form.label :taxType, class: 'col-sm-2 col-form-label' %>
     <div class="col-sm-10">
       <%= form.select :taxtype, options_for_select(Tax.taxtypes.keys.to_a, form.object.taxtype), {}, class: 'form-control' %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <%= form.label :taxpercentage, class: 'col-sm-2 col-form-label' %>
+    <%= form.label :taxPercentage, class: 'col-sm-2 col-form-label' %>
     <div class="col-sm-10">
         <%= form.text_field :taxpercentage, class: 'form-control' %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <%= form.label :restaurant_id, class: 'col-sm-2 col-form-label' %>
+    <%= form.label :restaurant, class: 'col-sm-2 col-form-label' %>
     <div class="col-sm-10">
-        <%= form.collection_select :restaurant_id, Restaurant.all ,:id, :name, options = {:prompt => 'Select a Restaurant...'}, html_options = {class: "form-control"}%>
+        <%= form.collection_select :restaurant_id, Restaurant.all ,:id, :name, options = {:prompt => t(".selectRestaurant")}, html_options = {class: "form-control"}%>
     </div>
   </div>
   <div style='height:8px'></div>
@@ -33,10 +33,10 @@
         <span class="float-end">
         <% if tax.persisted? %>
           <div class="btn btn-danger ">
-            <%= link_to 'Delete', tax, method: :delete, class: "text-white text-decoration-none", data: { confirm: 'Are you sure?' } %>
+            <%= link_to t(".delete"), tax, method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
           </div>
         <% end %>
-        <%= form.submit value: 'Save', class: 'btn btn-primary' %>
+        <%= form.submit value: t(".save"), class: 'btn btn-primary' %>
         </span>
     </div>
   </div>
