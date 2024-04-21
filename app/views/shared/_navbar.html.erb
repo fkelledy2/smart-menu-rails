@@ -25,6 +25,9 @@
                 <%= link_to t(".employees"), employees_path, class: "dropdown-item" %>
                 <%= link_to t(".taxes"), taxes_path, class: "dropdown-item" %>
                 <%= link_to t(".openingHours"), restaurantavailabilities_path, class: "dropdown-item" %>
+                <% if @current_employee && @current_employee.role == 'manager' %>
+                <%= link_to t(".tableSettings"), tablesettings_path, class: "dropdown-item" %>
+                <% end %>
               </div>
             </li>
 
@@ -40,7 +43,6 @@
                 <%= link_to t(".sizes"), sizes_path, class: "dropdown-item" %>
                 <% if @current_employee && @current_employee.role == 'manager' %>
                 <%= link_to t(".inventories"), inventories_path, class: "dropdown-item" %>
-                <%= link_to t(".tableSettings"), tablesettings_path, class: "dropdown-item" %>
                 <%= link_to t(".menuAvailability"), menuavailabilities_path, class: "dropdown-item" %>
                 <% end %>
               </div>
