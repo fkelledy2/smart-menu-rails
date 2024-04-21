@@ -219,6 +219,24 @@ en:
       delete: "Delete"
       sure: "Are you sure?"
 
+  inventories:
+    index:
+      inventories: "Inventories"
+      inventory: "Inventory"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    show:
+      inventory: "View Inventory"
+    edit:
+      inventory: "Edit Inventory"
+    new:
+      inventory: "New inventory"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+
   activerecord:
     attributes:
       restaurant:
@@ -298,3 +316,8 @@ en:
         size: "Size"
         name: "Name"
         description: "Description"
+      inventory:
+        menuItem: "Menu Item"
+        startingInventory: "Starting Inventory"
+        currentInventory: "Ending Inventory"
+        resetHour: "Reset Hour"
