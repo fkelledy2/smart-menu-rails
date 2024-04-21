@@ -157,6 +157,24 @@ en:
       sure: "Are you sure?"
       selectMenu: "Select a Menu ..."
 
+  menuitems:
+    index:
+      menuItems: "Menu Items"
+      menuItem: "Menu Item"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    show:
+      menuItem: "View Menu Item"
+    edit:
+      menuItem: "Edit Menu Item"
+    new:
+      menuItem: "New Menu Item"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectMenuSection: "Select a Menu Section ..."
   activerecord:
     attributes:
       restaurant:
@@ -214,3 +232,17 @@ en:
         status: "Status"
         sequence: "Display Order"
         menu: "Menu"
+      menuitem:
+        menusection: "Menu Section"
+        name: "Name"
+        description: "Description"
+        image: "Image"
+        status: "Status"
+        sequence: "Display Order"
+        calories: "Calories"
+        price: "Price"
+        preptime: "Preparation Time"
+        allergyns: "Allergyns"
+        tags: "Tags"
+        sizes: "Sizes"
+        ingredients: "Ingredients"
