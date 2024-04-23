@@ -231,15 +231,14 @@
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="openOrderModalLabel">Open Order</h5>
+        <h5 class="modal-title" id="openOrderModalLabel">Start Order</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Are you sure?
+        Would you like to start an order for this table?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button id="start-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Open</button>
+        <button id="start-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Start</button>
       </div>
     </div>
   </div>
@@ -313,7 +312,6 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Submit Order</button>
       </div>
     </div>
@@ -355,7 +353,6 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn btn-primary">Request Bill</button>
       </div>
     </div>
@@ -405,7 +402,6 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Confirm Payment</button>
       </div>
     </div>
@@ -416,7 +412,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addNameToParticipantModalLabel">Personalise your order by adding your name</h1>
+        <h1 class="modal-title fs-5" id="addNameToParticipantModalLabel">Personalise your order, add your name</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -429,7 +425,6 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button id="addNameToParticipantButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Add</button>
       </div>
     </div>
@@ -440,7 +435,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addItemToOrderModalLabel">Add to order</h1>
+        <h1 class="modal-title fs-5" id="addItemToOrderModalLabel">Add Item To Order</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -474,7 +469,6 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button id="addItemToOrderButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Item</button>
       </div>
     </div>
@@ -486,7 +480,7 @@
       <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="filterOrderModalLabel">Filter order by</h1>
+            <h1 class="modal-title fs-5" id="filterOrderModalLabel">Filter Order By</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <%= form_with(model: @ordrparticipant) do |form| %>
@@ -508,7 +502,6 @@
               </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <%= form.submit value: 'Filer By', class: 'btn btn-primary' %>
           </div>
           <% end %>
