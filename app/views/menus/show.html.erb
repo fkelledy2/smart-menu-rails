@@ -240,7 +240,7 @@
       <div class="modal-body">
         <% if @openOrder %>
             <div class="row">
-                <div class="col-7">
+                <div class="col-6">
                     <b>Menu Item</b>
                 </div>
                 <div class="col-2">
@@ -253,13 +253,13 @@
                     <b>Price</b>
                   </span>
                 </div>
-                <div class="col-1">
+                <div class="col-2">
                 </div>
             </div>
             <% @openOrder.ordractions.each do |ordraction| %>
                 <% if ordraction.ordritem && ordraction.ordritem.in?(@openOrder.ordritems) %>
                 <div style="margin-top:5px" class="row">
-                    <div class="col-7">
+                    <div class="col-6">
                         &nbsp;-&nbsp;<%= ordraction.ordritem.menuitem.name %>
                     </div>
                     <div class="col-2">
@@ -272,7 +272,7 @@
                             <%= number_to_currency(ordraction.ordritem.menuitem.price) %>
                         </span>
                     </div>
-                    <div class="col-1">
+                    <div class="col-2">
                         <span class="float-end">
                             <button type="button" class="btn btn-sm btn-danger">
                                 <i class="bi bi-trash"></i>
