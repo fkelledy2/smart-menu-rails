@@ -17,6 +17,8 @@ require("@rails/ujs").start()
 import './channels/**/*_channel.js'
 import "./controllers"
 
+window.TomSelect = require('tom-select');
+
 import * as bootstrap from "bootstrap"
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 window.Tabulator = Tabulator

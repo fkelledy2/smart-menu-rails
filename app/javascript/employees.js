@@ -1,4 +1,25 @@
 document.addEventListener("turbo:load", () => {
+
+    if ($("#employee_status").is(':visible')) {
+      new TomSelect("#employee_status",{
+      });
+    }
+
+    if ($("#employee_role").is(':visible')) {
+      new TomSelect("#employee_role",{
+      });
+    }
+
+    if ($("#employee_restaurant_id").is(':visible')) {
+      new TomSelect("#employee_restaurant_id",{
+      });
+    }
+
+    if ($("#employee_user_id").is(':visible')) {
+      new TomSelect("#employee_user_id",{
+      });
+    }
+
     if ($("#employee-table").is(':visible')) {
         // Employees
         var enployeeTable = new Tabulator("#employee-table", {

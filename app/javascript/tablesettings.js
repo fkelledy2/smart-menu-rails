@@ -1,4 +1,20 @@
 document.addEventListener("turbo:load", () => {
+
+    if ($("#tablesetting_tabletype").is(':visible')) {
+      new TomSelect("#tablesetting_tabletype",{
+      });
+    }
+
+    if ($("#tablesetting_status").is(':visible')) {
+      new TomSelect("#tablesetting_status",{
+      });
+    }
+
+    if ($("#tablesetting_restaurant_id").is(':visible')) {
+      new TomSelect("#tablesetting_restaurant_id",{
+      });
+    }
+
     if ($("#tablesetting-table").is(':visible')) {
         var tableSettingTable = new Tabulator("#tablesetting-table", {
           dataLoader: false,

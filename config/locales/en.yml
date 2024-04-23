@@ -102,6 +102,24 @@ en:
       selectRestaurant: "Select a Restaurant ..."
       errors: "Errors"
 
+  tablesettings:
+    index:
+      tablesettings: "Table Settings"
+      tablesetting: "Table Setting"
+    show:
+      tablesetting: "View Table Setting"
+    edit:
+      tablesettings: "Edit Table Setting"
+    new:
+      tablesettings: "New Table Setting"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+      errors: "Errors"
+
   restaurantavailabilities:
     index:
       restaurantavailabilities: "Opening Hours"

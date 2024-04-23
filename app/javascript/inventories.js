@@ -1,4 +1,10 @@
   document.addEventListener("turbo:load", () => {
+
+    if ($("#inventory_menuitem_id").is(':visible')) {
+      new TomSelect("#inventory_menuitem_id",{
+      });
+    }
+
     if ($("#inventory-table").is(':visible')) {
         var sizeTable = new Tabulator("#inventory-table", {
           dataLoader: false,

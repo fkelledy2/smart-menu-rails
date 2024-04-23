@@ -1,4 +1,15 @@
 document.addEventListener("turbo:load", () => {
+
+    if ($("#tax_taxtype").is(':visible')) {
+      new TomSelect("#tax_taxtype",{
+      });
+    }
+
+    if ($("#tax_restaurant_id").is(':visible')) {
+      new TomSelect("#tax_restaurant_id",{
+      });
+    }
+
     if ($("#tax-table").is(':visible')) {
         var taxTable = new Tabulator("#tax-table", {
           dataLoader: false,

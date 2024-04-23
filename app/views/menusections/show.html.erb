@@ -55,7 +55,7 @@
   <div class="form-group row">
     <%= form.label :menu_id, class: 'col-sm-2 col-form-label' %>
     <div class="col-sm-10">
-        <%= form.collection_select :menu_id, Menu.all ,:id, :name, options = {:prompt => t(".selectMenu")}, html_options = {class: "form-control", disabled: 'disabled'}%>
+        <%= form.collection_select :menu_id, Menu.all ,:id, :name, options = {:prompt => t(".selectMenu")}, html_options = {disabled: 'disabled'}%>
     </div>
   </div>
 <% end %>

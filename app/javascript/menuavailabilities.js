@@ -1,4 +1,20 @@
 document.addEventListener("turbo:load", () => {
+
+    if ($("#menuavailability_dayofweek").is(':visible')) {
+      new TomSelect("#menuavailability_dayofweek",{
+      });
+    }
+
+    if ($("#menuavailability_status").is(':visible')) {
+      new TomSelect("#menuavailability_status",{
+      });
+    }
+
+    if ($("#menuavailability_menu_id").is(':visible')) {
+      new TomSelect("#menuavailability_menu_id",{
+      });
+    }
+
     if ($("#menuavailability-table").is(':visible')) {
         var menuavailabilityTable = new Tabulator("#menuavailability-table", {
           dataLoader: false,

@@ -91,3 +91,5 @@ gem 'squasher'
 gem 'allow_numeric'
 gem 'aasm'
 
+
+gem "tom-select-rails", "~> 2.3"

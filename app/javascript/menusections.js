@@ -1,4 +1,10 @@
 document.addEventListener("turbo:load", () => {
+
+    if ($("#menusection_menu_id").is(':visible')) {
+      new TomSelect("#menusection_menu_id",{
+      });
+    }
+
     if ($("#menusection-table").is(':visible')) {
         var menusectionTable = new Tabulator("#menusection-table", {
           dataLoader: false,

@@ -1,4 +1,15 @@
 document.addEventListener("turbo:load", () => {
+
+    if ($("#menuitem_menusection_id").is(':visible')) {
+      new TomSelect("#menuitem_menusection_id",{
+      });
+    }
+
+    if ($("#menuitem_status").is(':visible')) {
+      new TomSelect("#menuitem_status",{
+      });
+    }
+
     if ($("#menuitem-table").is(':visible')) {
         // Menuitems
         var menuItemTable = new Tabulator("#menuitem-table", {

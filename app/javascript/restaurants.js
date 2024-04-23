@@ -1,4 +1,30 @@
 document.addEventListener("turbo:load", () => {
+
+    if ($("#restaurant_status").is(':visible')) {
+      new TomSelect("#restaurant_status",{
+      });
+    }
+
+    if ($("#restaurant_displayImages").is(':visible')) {
+      new TomSelect("#restaurant_displayImages",{
+      });
+    }
+
+    if ($("#restaurant_allowOrdering").is(':visible')) {
+      new TomSelect("#restaurant_allowOrdering",{
+      });
+    }
+
+    if ($("#restaurant_inventoryTracking").is(':visible')) {
+      new TomSelect("#restaurant_inventoryTracking",{
+      });
+    }
+
+    if ($("#restaurant_country").is(':visible')) {
+      new TomSelect("#restaurant_country",{
+      });
+    }
+
     if ($("#restaurant-table").is(':visible')) {
         // Restaurants
         var restaurantTable = new Tabulator("#restaurant-table", {

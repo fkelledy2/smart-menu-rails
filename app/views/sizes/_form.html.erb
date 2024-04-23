@@ -2,7 +2,7 @@
   <div class="form-group row">
     <%= form.label :size, class: 'col-sm-2 col-form-label' %>
     <div class="col-sm-10">
-      <%= form.select :size, options_for_select(Size.sizes.keys.to_a, form.object.size), {}, class: 'form-control' %>
+      <%= form.select :size, options_for_select(Size.sizes.keys.to_a, form.object.size), {} %>
     </div>
   </div>
   <div style='height:4px'></div>

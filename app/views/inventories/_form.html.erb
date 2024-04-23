@@ -2,7 +2,7 @@
   <div class="form-group row">
     <%= form.label :menuItem, class: 'col-sm-2 col-form-label' %>
     <div class="col-sm-10">
-        <%= form.collection_select :menuitem_id, Menuitem.all ,:id, :name, options = {:prompt => 'Select a Menu Item...'}, html_options = {class: "form-control"}%>
+        <%= form.collection_select :menuitem_id, Menuitem.all ,:id, :name, options = {:prompt => 'Select a Menu Item...'}%>
     </div>
   </div>
   <div style='height:4px'></div>
