@@ -34,7 +34,7 @@
   <div class="form-group row">
     <%= form.label :user_id, class: 'col-sm-2 col-form-label' %>
     <div class="col-sm-10">
-        <%= form.collection_select :user_id, User.all ,:id, :email, options = {:prompt => 'Select a User...'}, html_options = {class: "form-control" , disabled: 'disabled'}%>
+        <%= form.collection_select :user_id, User.all ,:id, :email, options = {:prompt => t(".selectUser")}, html_options = {disabled: 'disabled'}%>
     </div>
   </div>
   <div style='height:4px'></div>
@@ -48,21 +48,21 @@
   <div class="form-group row">
     <%= form.label :role, class: 'col-sm-2 col-form-label', disabled: 'disabled'  %>
     <div class="col-sm-10">
-      <%= form.select :role, options_for_select(Employee.roles.keys.to_a, form.object.role), {}, class: 'form-control', disabled: 'disabled' %>
+      <%= form.select :role, options_for_select(Employee.roles.keys.to_a, form.object.role), {}, disabled: 'disabled' %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
     <%= form.label :status, class: 'col-sm-2 col-form-label', disabled: 'disabled'  %>
     <div class="col-sm-10">
-      <%= form.select :status, options_for_select(Employee.statuses.keys.to_a, form.object.status), {}, class: 'form-control', disabled: 'disabled' %>
+      <%= form.select :status, options_for_select(Employee.statuses.keys.to_a, form.object.status), {}, disabled: 'disabled' %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
     <%= form.label :restaurant_id, class: 'col-sm-2 col-form-label' %>
     <div class="col-sm-10">
-        <%= form.collection_select :restaurant_id, Restaurant.all ,:id, :name, options = {:prompt => 'Select a Restaurant...'}, html_options = {class: "form-control" , disabled: 'disabled'}%>
+        <%= form.collection_select :restaurant_id, Restaurant.all ,:id, :name, options = {:prompt => t(".selectRestaurant")}, html_options = {disabled: 'disabled'}%>
     </div>
   </div>
 <% end %>
