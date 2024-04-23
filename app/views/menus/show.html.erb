@@ -63,10 +63,10 @@
                             <% end %>
                             <% if @openOrder.status == 'ordered' %>
                                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#requestBillModal">
-                                    Request Bill<i class="bi bi-receipt"></i></i>
+                                    Bill <i class="bi bi-receipt"></i></i>
                                 </button>
                                 <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
-                                    View Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal) %>
+                                    Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal) %>
                                 </button>
                             <% end %>
                             <% if @openOrder.status == 'billrequested' %>
