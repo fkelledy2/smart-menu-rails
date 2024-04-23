@@ -228,7 +228,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="openOrderModal" tabindex="-1" aria-labelledby="openOrderModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="openOrderModalLabel">Open Order</h5>
@@ -322,7 +322,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="requestBillModal" tabindex="-1" aria-labelledby="requestBillModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="requestBillModalLabel">Request Bill</h5>
@@ -364,7 +364,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="payOrderModal" tabindex="-1" aria-labelledby="payOrderModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="payOrderModalLabel">Pay Bill</h5>
@@ -413,7 +413,7 @@
 </div>
 
 <div class="modal fade" id="addNameToParticipantModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="addNameToParticipantModalLabel">Personalise your order by adding your name</h1>
@@ -437,7 +437,7 @@
 </div>
 
 <div class="modal fade" id="addItemToOrderModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="addItemToOrderModalLabel">Add to order</h1>
@@ -483,13 +483,13 @@
 
 
 <div class="modal fade" id="filterOrderModal" tabindex="-1" aria-labelledby="filterOrderModalLabel" aria-hidden="true">
-  <%= form_with(model: @ordrparticipant) do |form| %>
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="filterOrderModalLabel">Filter order by</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <%= form_with(model: @ordrparticipant) do |form| %>
           <div class="modal-body">
               <div class="form-group row">
                 <%= form.label :allergyns, class: 'col-sm-2 col-form-label' %>
@@ -511,9 +511,9 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <%= form.submit value: 'Filer By', class: 'btn btn-primary' %>
           </div>
+          <% end %>
         </div>
       </div>
-  <% end %>
 </div>
 
 
