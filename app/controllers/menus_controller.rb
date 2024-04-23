@@ -71,7 +71,7 @@ class MenusController < ApplicationController
                 if @ep == nil
                     @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s);
                     @ordrparticipant.save
-                    @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 0)
+                    @ordraction = Ordraction.new( ordrparticipant_id: @ordrparticipant.id, ordr: @openOrder, action: 0)
                     @ordraction.save
                 else
                     @ordrparticipant = @ep
