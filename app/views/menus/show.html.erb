@@ -295,18 +295,26 @@
                 <% end %>
             <% end %>
             <div class="row">
-                <div class="col-9">
+                <div class="col-6">
                 </div>
-                <div class="col-3">
+                <div class="col-2">
+                </div>
+                <div class="col-2">
                     <hr>
+                </div>
+                <div class="col-2">
                 </div>
             </div>
             <div class="row">
-                <div class="col-9">
-                    <span class="float-end"><b>Total:</b></span>
+                <div class="col-6">
+                    <b>Total:</b>
+                </div>
+                <div class="col-2">
                 </div>
                 <div class="col-2">
                     <span class="float-end"><b><%= number_to_currency(@openOrder.nett) %></b></span>
+                </div>
+                <div class="col-2">
                 </div>
             </div>
         <% end %>
@@ -330,23 +338,62 @@
         <form>
           <div class="row">
             <% if @openOrder %>
-                <div class="col-2">
-                    <span class="form-label float-end">Nett:</span>
+                <div class="row">
+                    <div class="col-10">
+                        <b>Item</b>
+                    </div>
+                    <div class="col-2">
+                      <span class="float-end">
+                        <b>Price</b>
+                      </span>
+                    </div>
                 </div>
-                <div class="col-10">
-                    <input type="text" class="form-control" value="<%= number_to_currency(@openOrder.nett) %>" disabled>
+                <div class="row">
+                    <div class="col-10">
+                        Nett
+                    </div>
+                    <div class="col-2">
+                      <span class="float-end">
+                        <%= number_to_currency(@openOrder.nett) %>
+                      </span>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <span class="form-label float-end">Service:</span>
+                <div class="row">
+                    <div class="col-10">
+                        Service
+                    </div>
+                    <div class="col-2">
+                      <span class="float-end">
+                        <%= number_to_currency(@openOrder.service) %>
+                      </span>
+                    </div>
                 </div>
-                <div class="col-10">
-                    <input type="text" class="form-control" value="<%= number_to_currency(@openOrder.service) %>" disabled>
+                <div class="row">
+                    <div class="col-10">
+                        Tax
+                    </div>
+                    <div class="col-2">
+                      <span class="float-end">
+                        <%= number_to_currency(@openOrder.tax) %>
+                      </span>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <span class="form-label float-end">Tax:</span>
+                <div class="row">
+                    <div class="col-10">
+                    </div>
+                    <div class="col-2">
+                        <hr>
+                    </div>
                 </div>
-                <div class="col-10">
-                    <input type="text" class="form-control" value="<%= number_to_currency(@openOrder.tax) %>" disabled>
+                <div class="row">
+                    <div class="col-10">
+                        <b>Total</b> <i>(excl. tip)</i>
+                    </div>
+                    <div class="col-2">
+                      <span class="float-end">
+                        <b><%= number_to_currency(@openOrder.gross) %></b>
+                      </span>
+                    </div>
                 </div>
             <% end %>
           </div>
@@ -371,33 +418,72 @@
         <form>
           <div class="row">
             <% if @openOrder %>
-                <div class="col-2">
-                    <span class="form-label float-end">Nett:</span>
+                <div class="row">
+                    <div class="col-9">
+                        <b>Item</b>
+                    </div>
+                    <div class="col-3">
+                      <span class="float-end">
+                        <b>Price</b>
+                      </span>
+                    </div>
                 </div>
-                <div class="col-10">
-                    <input type="text" class="form-control" value="<%= number_to_currency(@openOrder.nett) %>" disabled>
+                <div class="row">
+                    <div class="col-9">
+                        Nett
+                    </div>
+                    <div class="col-3">
+                      <span class="float-end">
+                        <%= number_to_currency(@openOrder.nett) %>
+                      </span>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <span class="form-label float-end">Service:</span>
+                <div class="row">
+                    <div class="col-9">
+                        Service
+                    </div>
+                    <div class="col-3">
+                      <span class="float-end">
+                        <%= number_to_currency(@openOrder.service) %>
+                      </span>
+                    </div>
                 </div>
-                <div class="col-10">
-                    <input type="text" class="form-control" value="<%= number_to_currency(@openOrder.service) %>" disabled>
+                <div class="row">
+                    <div class="col-9">
+                        Tax
+                    </div>
+                    <div class="col-3">
+                      <span class="float-end">
+                        <%= number_to_currency(@openOrder.tax) %>
+                      </span>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <span class="form-label float-end">Tax:</span>
+                <div class="row">
+                    <div class="col-9">
+                    </div>
+                    <div class="col-3">
+                        <hr>
+                    </div>
                 </div>
-                <div class="col-10">
-                    <input type="text" class="form-control" value="<%= number_to_currency(@openOrder.tax) %>" disabled>
+                <div class="row">
+                    <div class="col-9">
+                        <b>Total</b> <i>(excl. tip)</i>
+                    </div>
+                    <div class="col-3">
+                      <span class="float-end">
+                        <b><%= number_to_currency(@openOrder.gross) %></b>
+                      </span>
+                    </div>
                 </div>
+              <div class="row">
+                <div class="col-9">
+                    <span style="margin-top:5px" class="float-end ">Add a tip:</span>
+                </div>
+                <div class="col-3">
+                    <input style="position:relative;left:12px" type="text" class="form-control float-end text-end" id="tip" value="0.00">
+                </div>
+              </div>
             <% end %>
-          </div>
-          <div class="row">
-            <div class="col-2">
-                <span class="form-label float-end">Add a tip:</span>
-            </div>
-            <div class="col-10">
-                <input type="text" class="form-control" id="tip" value="0">
-            </div>
           </div>
         </form>
       </div>
