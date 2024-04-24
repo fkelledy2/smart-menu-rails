@@ -161,7 +161,7 @@
                                             <span class="float-end">
                                                 <% if @openOrder %>
                                                     <button type="button" class="addItemToOrder btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
-                                                        data-bs-ordr_id="<%= @openOrder.id %>",
+                                                        data-bs-ordr_id="<%= @openOrder.id %>"
                                                         data-bs-menuitem_id="<%= menuitem.id %>"
                                                         data-bs-menuitem_name="<%= menuitem.name %>"
                                                         data-bs-menuitem_price="<%= menuitem.price %>"
@@ -269,8 +269,8 @@
                 </div>
             </div>
             <% @openOrder.ordractions.each do |ordraction| %>
-                <% if ordraction.ordritem && ordraction.ordritem.in?(@openOrder.ordritems) %>
-                <div style="margin-top:5px" class="row">
+                <% if ordraction.ordritem && ordraction.ordritem.status == 'added' && ordraction.ordritem.in?(@openOrder.ordritems) %>
+                <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
                     <div class="col-6">
                         <%= ordraction.ordritem.menuitem.name %>
                     </div>
@@ -286,7 +286,8 @@
                     </div>
                     <div class="col-2">
                         <span class="float-end">
-                            <button type="button" class="btn btn-sm btn-danger">
+                            <button type="button" class="removeItemFromOrderButton btn btn-sm btn-danger"
+                                data-bs-ordritem_id="<%= ordraction.ordritem.id %>">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </span>
@@ -320,7 +321,11 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Submit Order</button>
+        <% if @openOrder && @openOrder.nett > 0 %>
+            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Submit Order</button>
+        <% else %>
+            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary" disabled>Submit Order</button>
+        <% end %>
       </div>
     </div>
   </div>
@@ -400,7 +405,11 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn btn-primary">Request Bill</button>
+        <% if @openOrder && @openOrder.gross > 0 %>
+            <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn btn-primary">Request Bill</button>
+        <% else %>
+            <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn btn-primary" disabled>Request Bill</button>
+        <% end %>
       </div>
     </div>
   </div>
@@ -471,24 +480,45 @@
                     </div>
                     <div class="col-3">
                       <span class="float-end">
-                        <b><%= number_to_currency(@openOrder.gross) %></b>
+                        <b><span id="orderGross"><%= number_to_currency(@openOrder.gross) %></span></b>
                       </span>
                     </div>
                 </div>
-              <div class="row">
-                <div class="col-9">
-                    <span style="margin-top:5px" class="float-end ">Add a tip:</span>
+                <div class="row">
+                    <div class="col-9">
+                        <span style="margin-top:5px" class="float-end ">Add a tip:</span>
+                    </div>
+                    <div class="col-3">
+                        <input style="position:relative;left:25px" type="number" min="0.00" max="<%= number_to_currency(@openOrder.gross) %>" step="0.50" class="tipNumberField form-control float-end text-end" id="tip" value="0.00">
+                    </div>
                 </div>
-                <div class="col-3">
-                    <input style="position:relative;left:12px" type="text" class="form-control float-end text-end" id="tip" value="0.00">
+                <div class="row">
+                    <div class="col-9">
+                    </div>
+                    <div class="col-3">
+                        <hr>
+                    </div>
                 </div>
-              </div>
+                <div class="row">
+                    <div class="col-9">
+                        <b>Total</b> <i>(incl. tip)</i>
+                    </div>
+                    <div class="col-3">
+                      <span class="float-end">
+                        <b><span id="orderGrandTotal"><%= number_to_currency(@openOrder.gross) %></span></b>
+                      </span>
+                    </div>
+                </div>
             <% end %>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Confirm Payment</button>
+        <% if @openOrder && @openOrder.gross > 0 %>
+            <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Confirm Payment</button>
+        <% else %>
+            <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn btn-primary" disabled>Confirm Payment</button>
+        <% end %>
       </div>
     </div>
   </div>

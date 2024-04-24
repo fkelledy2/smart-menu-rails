@@ -1,5 +1,13 @@
 document.addEventListener("turbo:load", () => {
 
+    $(".tipNumberField").change(function() {
+        $(this).val(parseFloat($(this).val()).toFixed(2));
+        let gross = parseFloat($("#orderGross").text().replace("$", ""))
+        let tip = parseFloat($(this).val());
+        let total = tip+gross;
+        $("#orderGrandTotal").text('$'+parseFloat(total).toFixed(2));
+    });
+
     if ($('#addNameToParticipantModal').length) {
         const addNameToParticipantModal = document.getElementById('addNameToParticipantModal');
         addNameToParticipantModal.addEventListener('show.bs.modal', event => {
@@ -18,6 +26,18 @@ document.addEventListener("turbo:load", () => {
         });
     }
 
+    $( ".removeItemFromOrderButton" ).on( "click", function(event) {
+       var ordrItemId = $(this).attr('data-bs-ordritem_id');
+       let ordritem = {
+         'ordritem': {
+             'status': 10,
+             'ordritemprice': 0
+         }
+       };
+       patch( '/ordritems/'+ordrItemId, ordritem);
+       return true;
+    });
+
     if ($('#addItemToOrderModal').length) {
         const addItemToOrderModal = document.getElementById('addItemToOrderModal');
         addItemToOrderModal.addEventListener('show.bs.modal', event => {
@@ -35,6 +55,7 @@ document.addEventListener("turbo:load", () => {
                 'ordritem': {
                     'ordr_id': addItemToOrderModal.querySelector('#ordr_id').value,
                     'menuitem_id': addItemToOrderModal.querySelector('#menuitem_id').value,
+                    'status': 0,
                     'ordritemprice': addItemToOrderModal.querySelector('#menuitem_price').value
                 }
             };
@@ -172,7 +193,7 @@ document.addEventListener("turbo:load", () => {
             location.reload();
         });
     }
-    function patch( url, body, redirectUrl ) {
+    function patch( url, body ) {
         fetch(url, {
             method: 'PATCH',
             headers:  {
@@ -185,6 +206,18 @@ document.addEventListener("turbo:load", () => {
         }).catch(function(err) {
             console.info(err + " url: " + url);
             location.reload();
+        });
+    }
+    function del( url ) {
+        fetch(url, {
+            method: 'DELETE',
+            headers:  {
+                  "Content-Type": "application/json",
+                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+            }
+        }).then(response => {
+        }).catch(function(err) {
+            console.info(err + " url: " + url);
         });
     }
 

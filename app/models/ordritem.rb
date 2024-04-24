@@ -4,9 +4,11 @@ class Ordritem < ApplicationRecord
   has_one :ordrparticipant
 
   enum status: {
-    ordered: 0,
-    prepared: 10,
-    delivered: 20,
+    added: 0,
+    removed: 10,
+    ordered: 20,
+    prepared: 30,
+    delivered: 40,
   }
 
 end
