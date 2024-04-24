@@ -203,16 +203,16 @@ en:
 
   allergyns:
     index:
-      allergyns: "Allergyns"
-      allergyn: "Allergyn"
+      allergyns: "Allergens"
+      allergyn: "Allergen"
       activate: "Activate"
       deactivate: "Deactivate"
     show:
-      allergyn: "View Allergyn"
+      allergyn: "View Allergen"
     edit:
-      allergyn: "Edit Allergyn"
+      allergyn: "Edit Allergen"
     new:
-      allergyn: "New Allergyn"
+      allergyn: "New Allergen"
       cancel: "Cancel"
     form:
       save: "Save"
