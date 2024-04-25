@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   get '/terms', to: 'home#terms'
 authenticate :user, lambda { |u| u.admin? } do
   mount Sidekiq::Web => '/sidekiq'
+  mount ActionCable.server => "/cable"
 
   namespace :madmin do
     resources :impersonates do

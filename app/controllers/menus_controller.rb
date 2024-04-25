@@ -38,6 +38,8 @@ class MenusController < ApplicationController
             end
         end
 
+        ActionCable.server.broadcast("ordr_channel", @menu)
+
         @allergyns = Allergyn.all
         @participantsFirstTime = false
         @tablesetting = Tablesetting.find_by_id(params[:id])

@@ -68,3 +68,4 @@ function patch( url, body ) {
         body: JSON.stringify(body)
     });
 }
+import "./channels"
