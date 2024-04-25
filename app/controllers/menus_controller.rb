@@ -38,7 +38,6 @@ class MenusController < ApplicationController
             end
         end
 
-        ActionCable.server.broadcast("ordr_channel", @menu)
 
         @allergyns = Allergyn.all
         @participantsFirstTime = false
@@ -61,6 +60,7 @@ class MenusController < ApplicationController
             @openOrder.tax = totalTax
             @openOrder.service = totalService
             @openOrder.gross = @openOrder.nett + @openOrder.tip + @openOrder.service + @openOrder.tax
+            ActionCable.server.broadcast("ordr_channel", @openOrder)
             if current_user
                 @ep = Ordrparticipant.where( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
                 if @ep == nil

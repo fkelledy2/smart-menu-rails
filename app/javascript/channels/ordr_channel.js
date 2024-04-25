@@ -10,6 +10,6 @@ consumer.subscriptions.create("OrdrChannel", {
   },
 
   received(data) {
-    console.log("received: "+data)
+    console.log("received: "+JSON.strongify(data))
   }
 });
