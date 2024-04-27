@@ -52,7 +52,7 @@ document.addEventListener("turbo:load", () => {
             $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id'));
             $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
             $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
-            $('#a2o_menuitem_price').text(button.getAttribute('data-bs-menuitem_price'));
+            $('#a2o_menuitem_price').text(parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2));
             $('#a2o_menuitem_description').text(button.getAttribute('data-bs-menuitem_description'));
             try {
                 addItemToOrderModal.querySelector('#a2o_menuitem_image').src = button.getAttribute('data-bs-menuitem_image');
