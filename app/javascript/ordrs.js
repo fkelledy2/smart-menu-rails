@@ -49,19 +49,25 @@ document.addEventListener("turbo:load", () => {
             // Button that triggered the modal
             const button = event.relatedTarget
             // Update the modal's content.
-            addItemToOrderModal.querySelector('#ordr_id').value = button.getAttribute('data-bs-ordr_id');
-            addItemToOrderModal.querySelector('#menuitem_id').value = button.getAttribute('data-bs-menuitem_id');
-            addItemToOrderModal.querySelector('#menuitem_name').value = button.getAttribute('data-bs-menuitem_name');
-            addItemToOrderModal.querySelector('#menuitem_price').value = button.getAttribute('data-bs-menuitem_price');
-            addItemToOrderModal.querySelector('#menuitem_description').value = button.getAttribute('data-bs-menuitem_description');
+            $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id'));
+            $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
+            $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
+            $('#a2o_menuitem_price').text(button.getAttribute('data-bs-menuitem_price'));
+            $('#a2o_menuitem_description').text(button.getAttribute('data-bs-menuitem_description'));
+            try {
+                addItemToOrderModal.querySelector('#a2o_menuitem_image').src = button.getAttribute('data-bs-menuitem_image');
+                addItemToOrderModal.querySelector('#a2o_menuitem_image').alt = button.getAttribute('data-bs-menuitem_name');
+            } catch( err ) {
+                // swallow error
+            }
         });
         $( "#addItemToOrderButton" ).on( "click", function() {
             let ordritem = {
                 'ordritem': {
-                    'ordr_id': addItemToOrderModal.querySelector('#ordr_id').value,
-                    'menuitem_id': addItemToOrderModal.querySelector('#menuitem_id').value,
+                    'ordr_id': $('#a2o_ordr_id').text(),
+                    'menuitem_id': $('#a2o_menuitem_id').text(),
                     'status': 0,
-                    'ordritemprice': addItemToOrderModal.querySelector('#menuitem_price').value
+                    'ordritemprice': $('#a2o_menuitem_price').text()
                 }
             };
             post( '/ordritems', ordritem, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );

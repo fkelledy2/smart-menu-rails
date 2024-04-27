@@ -65,9 +65,6 @@
                                     <% end %>
                                 </button>
                             </span>
-
-
-
                         <% end %>
                     <% end %>
                 </h4>
@@ -182,6 +179,7 @@
                                                         data-bs-menuitem_name="<%= menuitem.name %>"
                                                         data-bs-menuitem_price="<%= menuitem.price %>"
                                                         data-bs-menuitem_description="<%= menuitem.description %>"
+                                                        data-bs-menuitem_image="<%= menuitem.image %>"
                                                         title="Add to Order">
                                                         <i class="bi bi-plus"></i>
                                                     </button>
@@ -564,41 +562,51 @@
 </div>
 
 <div class="modal fade" id="addItemToOrderModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
+  <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+  <% else %>
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+  <% end %>
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="addItemToOrderModalLabel">Add Item To Order</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
-          <input type="hidden" class="form-control" id="ordr_id">
-          <input type="hidden" class="form-control" id="menuitem_id">
-          <div class="row">
+        <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
+            <div class="row">
+                <div class="col-12">
+                    <img id="a2o_menuitem_image" class="card-img-bottom" src="" alt="">
+                </div>
+            </div>
+        <div style="margin-top:20px;"></div>
+        <% end %>
+        <span style="display:none" id="a2o_ordr_id"></span>
+        <span style="display:none" id="a2o_menuitem_id"></span>
+        <div class="row">
             <div class="col-3">
-                <label for="menuitem_name" class="form-label">Name:</label>
+                <b>Name:</b>
             </div>
             <div class="col-9">
-                <input type="text" class="form-control" id="menuitem_name" disabled>
+                <span id="a2o_menuitem_name"></span>
             </div>
-          </div>
-          <div class="row">
+        </div>
+        <div style="margin-top:5px;" class="row">
             <div class="col-3">
-                <label for="menuitem_description" class="form-label">Description:</label>
+                <b>Description:</b>
             </div>
             <div class="col-9">
-                <textarea class="form-control" id="menuitem_description" disabled></textarea>
+                <span id="a2o_menuitem_description"></span>
             </div>
-          </div>
-          <div class="row">
+        </div>
+        <div style="margin-top:20px;" class="row">
             <div class="col-3">
-                <label for="menuitem_price" class="form-label">Price:</label>
+                <b>Price:</b>
             </div>
             <div class="col-9">
-                <input type="text" class="form-control" id="menuitem_price" disabled>
+                <b class="float-end">$<span id="a2o_menuitem_price"></span></b>
             </div>
-          </div>
-        </form>
+        </div>
       </div>
       <div class="modal-footer">
         <button id="addItemToOrderButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Item</button>
