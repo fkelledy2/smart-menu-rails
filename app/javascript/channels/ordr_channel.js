@@ -9,8 +9,14 @@ consumer.subscriptions.create("OrdrChannel", {
 
   received(data) {
     if ($('#currentOrder').length) {
-        console.log("received: "+JSON.stringify(data))
-        $("#orderUpdatedSpan").show();
+        let currentOrdrId = parseInt($('#currentOrder').text());
+	    var updatedOrdr = JSON.parse(data);
+        if( updatedOrdr.id == currentOrdrId ) {
+            console.log( 'updatedOrdr.id: '+updatedOrdr.id +' matches currentOrdrId:'+currentOrdrId);
+            $("#orderUpdatedSpan").show();
+        } else {
+            console.log( 'updatedOrdr.id: '+updatedOrdr.id +' does not match currentOrdrId:'+currentOrdrId);
+        }
     }
   }
 });
