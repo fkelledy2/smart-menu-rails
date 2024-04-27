@@ -55,8 +55,19 @@
                     <% else %>
                         <% if @ordrparticipant %>
                             <span id="filterMenuSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="right" title="Filter menu">
-                                <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#filterOrderModal"><i class="bi bi-filter"></i></button>
+                                <button type="button" class="btn btn-sm btn-light position-relative" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#filterOrderModal">
+                                    <i class="bi bi-filter"></i>
+                                    <% if @ordrparticipant.allergyns.size > 0 %>
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            <%= @ordrparticipant.allergyns.size %>
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    <% end %>
+                                </button>
                             </span>
+
+
+
                         <% end %>
                     <% end %>
                 </h4>
