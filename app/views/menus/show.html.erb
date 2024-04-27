@@ -32,6 +32,11 @@
                                     <% end %>
                                 <% end %>
                                 <% if @tablesetting %>
+                                    <span style="display:none" id="orderUpdatedSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="left" title="Order Updated!">
+                                        <button id="orderUpdatedButton" type="button" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-arrow-clockwise"></i>
+                                        </button>
+                                    </span>
                                     <button type="button" class="btn btn-sm btn-outline-secondary">
                                         <%= @tablesetting.name %>
                                     </button>
@@ -638,6 +643,14 @@
                     <div id="currentOrder"><%= @openOrder.id %></div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-2">
+                    orderUpdates:
+                </div>
+                <div class="col-10">
+                    <div id="orderUpdates">0</div>
+                </div>
+            </div>
         <% end %>
         <% if @tablesetting %>
             <div class="row">
@@ -645,7 +658,7 @@
                     currentTable:
                 </div>
                 <div class="col-10">
-                    <div id="currentTable"><%= @tablesetting.id %></div>
+                    <div id="currentTable"><%= @tablesetting.id %></div> - <div id="currentTableName"><%= @tablesetting.name %></div>
                 </div>
             </div>
         <% end %>

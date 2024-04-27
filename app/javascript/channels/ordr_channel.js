@@ -11,5 +11,6 @@ consumer.subscriptions.create("OrdrChannel", {
 
   received(data) {
     console.log("received: "+JSON.stringify(data))
+    $("#orderUpdatedSpan").show();
   }
 });

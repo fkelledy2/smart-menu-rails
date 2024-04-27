@@ -8,6 +8,11 @@ document.addEventListener("turbo:load", () => {
         $("#orderGrandTotal").text('$'+parseFloat(total).toFixed(2));
     });
 
+    $( "#orderUpdatedButton" ).on( "click", function() {
+        location.reload();
+        return true;
+    });
+
     if ($('#addNameToParticipantModal').length) {
         const addNameToParticipantModal = document.getElementById('addNameToParticipantModal');
         addNameToParticipantModal.addEventListener('show.bs.modal', event => {
