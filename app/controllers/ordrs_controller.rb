@@ -106,6 +106,16 @@ class OrdrsController < ApplicationController
       @ordr.service = totalService
       @ordr.gross = @ordr.nett + @ordr.tip + @ordr.service + @ordr.tax
 
+      if( ordr_params[:status] = 10 )
+          @ordr.orderedAt = Time.now
+      end
+      if( ordr_params[:status] = 20 )
+          @ordr.billRequestedAt = Time.now
+      end
+      if( ordr_params[:status] = 30 )
+          @ordr.paidAt = Time.now
+      end
+
       if @ordr.update(ordr_params)
         if( ordr_params[:status] = 0 )
             if current_user
@@ -165,6 +175,26 @@ class OrdrsController < ApplicationController
             end
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 1
+            @tablesetting.save
+        end
+        if( ordr_params[:status] = 30 )
+            if current_user
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
+                    @ordrparticipant.save
+                end
+            else
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s );
+                    @ordrparticipant.save
+                end
+                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 5)
+                @ordraction.save
+            end
+            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
+            @tablesetting.status = 0
             @tablesetting.save
         end
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully updated." }
