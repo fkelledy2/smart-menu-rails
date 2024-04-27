@@ -70,6 +70,7 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
             @tablesetting.save
+            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully created." }
         format.json { render :show, status: :created, location: @ordr }
@@ -136,6 +137,7 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
             @tablesetting.save
+            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         if( ordr_params[:status] = 10 )
             if current_user
@@ -156,6 +158,7 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 1
             @tablesetting.save
+            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         if( ordr_params[:status] = 20 )
             if current_user
@@ -176,6 +179,7 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 1
             @tablesetting.save
+            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         if( ordr_params[:status] = 30 )
             if current_user
@@ -196,6 +200,7 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
             @tablesetting.save
+            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully updated." }
         format.json { render :show, status: :ok, location: @ordr }

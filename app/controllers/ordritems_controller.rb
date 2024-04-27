@@ -49,6 +49,7 @@ class OrdritemsController < ApplicationController
             end
             @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
             @ordraction.save
+            ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
         else
             @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s ).first
             if @ordrparticipant == nil
@@ -57,6 +58,7 @@ class OrdritemsController < ApplicationController
             end
             @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
             @ordraction.save
+            ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
         end
         format.html { redirect_to ordritem_url(@ordritem), notice: "Ordritem was successfully created." }
         format.json { render :show, status: :created, location: @ordritem }
@@ -71,6 +73,7 @@ class OrdritemsController < ApplicationController
   def update
     respond_to do |format|
       if @ordritem.update(ordritem_params)
+        ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
         format.html { redirect_to ordritem_url(@ordritem), notice: "Ordritem was successfully updated." }
         format.json { render :show, status: :ok, location: @ordritem }
       else
@@ -83,7 +86,6 @@ class OrdritemsController < ApplicationController
   # DELETE /ordritems/1 or /ordritems/1.json
   def destroy
     @ordritem.destroy!
-
         if @ordritem.menuitem.inventory
             @ordritem.menuitem.inventory.currentinventory += 1
             if @ordritem.menuitem.inventory.currentinventory > @ordritem.menuitem.inventory.startinginventory
