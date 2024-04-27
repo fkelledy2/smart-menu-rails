@@ -10,7 +10,7 @@ consumer.subscriptions.create("OrdrChannel", {
   received(data) {
     if ($('#currentOrder').length) {
         let currentOrdrId = parseInt($('#currentOrder').text());
-	    var updatedOrdr = JSON.parse(data);
+	    var updatedOrdr = JSON.parse(JSON.stringify(data));
         if( updatedOrdr.id == currentOrdrId ) {
             console.log( 'updatedOrdr.id: '+updatedOrdr.id +' matches currentOrdrId:'+currentOrdrId);
             $("#orderUpdatedSpan").show();
