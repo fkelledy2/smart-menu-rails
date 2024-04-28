@@ -659,65 +659,65 @@
 </div>
 
 
-<div style="margin-top: 20px" class="card">
+<div style="display:none; margin-top: 20px" class="card">
     <div class="card-body">
         <h3>Debug:</h3>
         <% if @openOrder %>
             <div class="row">
-                <div class="col-2">
+                <div class="col-6">
                     currentOrder:
                 </div>
-                <div class="col-10">
+                <div class="col-6">
                     <div id="currentOrder"><%= @openOrder.id %></div>
                 </div>
             </div>
         <% end %>
         <% if @tablesetting %>
             <div class="row">
-                <div class="col-2">
+                <div class="col-6">
                     currentTable:
                 </div>
-                <div class="col-10">
+                <div class="col-6">
                     <div id="currentTable"><%= @tablesetting.id %></div> - <div id="currentTableName"><%= @tablesetting.name %></div>
                 </div>
             </div>
         <% end %>
         <% if current_user %>
             <div class="row">
-                <div class="col-2">
+                <div class="col-6">
                     currentEmployee:
                 </div>
-                <div class="col-10">
+                <div class="col-6">
                     <div id="currentEmployee"><%= @current_employee.id %></div>
                 </div>
             </div>
         <% end %>
         <% if @menu %>
             <div class="row">
-                <div class="col-2">
+                <div class="col-6">
                     currentMenu:
                 </div>
-                <div class="col-10">
+                <div class="col-6">
                     <div id="currentMenu"><%= @menu.id %></div>
                 </div>
             </div>
         <% end %>
         <% if @menu.restaurant %>
             <div class="row">
-                <div class="col-2">
+                <div class="col-6">
                     currentRestaurant:
                 </div>
-                <div class="col-10">
+                <div class="col-6">
                     <div id="currentRestaurant"><%= @menu.restaurant.id %></div>
                 </div>
             </div>
         <% end %>
         <% if @ordrparticipant %>
             <div class="row">
-                <div class="col-2">
+                <div class="col-6">
                     currentParticipant:
                 </div>
-                <div class="col-10">
+                <div class="col-6">
                     <div id="currentParticipant"><%= @ordrparticipant.id %></div>
                 </div>
             </div>
