@@ -60,7 +60,7 @@
                                     <% if @ordrparticipant.allergyns.size > 0 %>
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                             <%= @ordrparticipant.allergyns.size %>
-                                            <span class="visually-hidden">unread messages</span>
+                                            <span class="visually-hidden"></span>
                                         </span>
                                     <% end %>
                                 </button>
@@ -123,6 +123,7 @@
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
                       <a class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" aria-current="page" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>&nbsp;
                 <% end %>
+                <a class="sectionnav btn btn-sm btn-outline-danger text-nowrap" aria-current="page" href="#menusection_allergyns">Allergens</a>&nbsp;
             </nav>
         </div>
       </div>
@@ -131,6 +132,7 @@
 
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-12">
+
     <% @menu.menusections.order(:sequence).each do |menusection| %>
         <div style="padding-top:20px" id="menusection_<%= menusection.id %>"></div>
         <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
@@ -237,6 +239,22 @@
             <%end %>
         </div>
     <%end %>
+    <% if @allergyns && @allergyns.length > 0 %>
+        <div style="padding-top:20px" id="menusection_allergyns"></div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="mx-auto text-center text-danger col-12">
+                        <h2>Allergens</h2>
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <% @allergyns.each do |allergyn| %>
+                            <b><%= allergyn.symbol %></b> - <%= allergyn.symbol %>&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% end %>
   </div>
 </div>
 
