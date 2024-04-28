@@ -1,5 +1,9 @@
 document.addEventListener("turbo:load", () => {
 
+    $('#toggleFilters').click (function () {
+      $(':checkbox').prop('checked', this.checked);
+    });
+
     $(".tipNumberField").change(function() {
         $(this).val(parseFloat($(this).val()).toFixed(2));
         let gross = parseFloat($("#orderGross").text().replace("$", ""))

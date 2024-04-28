@@ -629,30 +629,33 @@
       <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="filterOrderModalLabel">Filter Order By</h1>
+            <h1 class="modal-title fs-5" id="filterOrderModalLabel">Filter Menu By Allergens</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <%= form_with(model: @ordrparticipant) do |form| %>
-          <div class="modal-body">
-              <div class="form-group row">
-                <%= form.label :allergyns, class: 'col-sm-2 col-form-label' %>
-                <div class="col-sm-10">
-                    <div class="form-control">
+              <div class="modal-body">
+                  <div class="form-group row">
+                    <div class="col-sm-8">
                         <%= form.collection_check_boxes :allergyn_ids, Allergyn.all, :id, :name, { hide_label: true } do |b| %>
-                            <div class="form-check">
-                              <%= b.check_box %>
-                              <label class="form-check-label">
-                                <%= b.label %>
-                              </label>
+                            <div form-check">
+                                <%= b.check_box %>
+                                <label class="form-check-label">
+                                    <%= b.label %>
+                                </label>
                             </div>
                         <% end %>
                     </div>
-                </div>
+                    <div class="col-sm-4">
+                        <div class="float-end form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="toggleFilters">
+                          <label class="form-check-label" for="toggleFilters">None / All</label>
+                        </div>
+                    </div>
+                  </div>
               </div>
-          </div>
-          <div class="modal-footer">
-            <%= form.submit value: 'Filer By', class: 'btn btn-primary' %>
-          </div>
+              <div class="modal-footer">
+                <%= form.submit value: 'Filter By', class: 'btn btn-primary' %>
+              </div>
           <% end %>
         </div>
       </div>
