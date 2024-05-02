@@ -1,4 +1,4 @@
-  <style>
+<style>
     .form-control:disabled {
         background-color: #fafafa;
         opacity: 1;
@@ -12,7 +12,7 @@
         font-size: 16px;
         line-height: 18px;
     }
-  </style>
+</style>
 
 <div class="page-header">
   <div class="row">
@@ -199,31 +199,38 @@
           </div>
           <div class="form-group row">
             <div class="col-sm-3">
-                <span class="float-md-end"><%= form.label :capacity, class: 'col-form-label' %> :</span>
             </div>
             <div class="col-sm-9">
-                <%= form.text_field :total_capacity, class: 'form-control', disabled: true %>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Type</th>
+                      <th scope="col"><span class="float-end">Capacity</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @restaurant.tablesettings.each do |tablesetting| %>
+                    <tr>
+                      <th scope="row"><%= tablesetting.name %></th>
+                      <td><%= tablesetting.tabletype %></td>
+                      <td><span style="padding-right:4px" class="float-end"><%= tablesetting.capacity %></span></td>
+                    </tr>
+                    <% end %>
+                  </tbody>
+                </table>
             </div>
           </div>
-        <% end %>
-          <% @restaurant.tablesettings.each do |tablesetting| %>
-              <%= form_with(model: tablesetting) do |tableform| %>
-              <div style='height:4px'></div>
-              <div class="row">
-                <div class="col-sm-3">
-                </div>
-                <div class="col-sm-9">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <%= tableform.text_field :name, class: 'form-control', disabled: true %>
-                        </div>
-                        <div class="col-sm-6">
-                            <%= tableform.text_field :capacity, class: 'form-control', disabled: true %>
-                        </div>
-                    </div>
-                </div>
-              </div>
-              <% end %>
+          <div class="form-group row">
+            <div class="col-sm-3">
+                <span class="float-md-end"><%= form.label :capacity, class: 'col-form-label' %> :</span>
+            </div>
+            <div class="col-sm-8">
+            </div>
+            <div class="col-sm-1">
+                <%= form.text_field :total_capacity, class: 'form-control float-end text-end', disabled: true %>
+            </div>
+          </div>
         <% end %>
     </div>
 </div>

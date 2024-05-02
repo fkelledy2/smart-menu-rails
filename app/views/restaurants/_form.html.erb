@@ -1,6 +1,14 @@
 <%= form_with(model: restaurant) do |form| %>
   <div class="form-group row">
     <div class="col-sm-3">
+    </div>
+    <div class="col-sm-9">
+        <p>
+        <h4>Details</h4>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-3">
         <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %> :</span>
     </div>
     <div class="col-sm-9">
@@ -16,7 +24,14 @@
       <%= form.text_area :description, class: 'form-control', rows: 6 %>
     </div>
   </div>
-  <div style='height:20px'></div>
+  <div class="form-group row">
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-9">
+        <p>
+        <h4>Address</h4>
+    </div>
+  </div>
   <div class="form-group row">
     <div class="col-sm-3">
         <span class="float-md-end"><%= form.label :address1, class: 'col-form-label' %> :</span>
@@ -70,7 +85,14 @@
         <%= form.country_select :country, {} %>
     </div>
   </div>
-  <div style='height:20px'></div>
+  <div class="form-group row">
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-9">
+        <p>
+        <h4>Image Settings</h4>
+    </div>
+  </div>
   <div class="form-group row">
     <div class="col-sm-3">
         <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %> :</span>
@@ -88,7 +110,14 @@
       <%= form.text_field :genid, class: 'form-control' %>
     </div>
   </div>
-  <div style='height:20px'></div>
+  <div class="form-group row">
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-9">
+        <p>
+        <h4>Settings</h4>
+    </div>
+  </div>
   <div class="form-group row">
     <div class="col-sm-3">
         <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %> :</span>
@@ -124,15 +153,48 @@
       <%= form.select :inventoryTracking, [['on', true], ['off', false]], {} %>
     </div>
   </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :capacity, class: 'col-form-label' %> :</span>
-    </div>
-    <div class="col-sm-9">
-        <%= form.text_field :total_capacity, class: 'form-control', disabled: true %>
-    </div>
-  </div>
+          <div class="form-group row">
+            <div class="col-sm-3">
+            </div>
+            <div class="col-sm-9">
+                <p>
+                <h4>Table Settings</h4>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-3">
+            </div>
+            <div class="col-sm-9">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Type</th>
+                      <th scope="col"><span class="float-end">Capacity</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @restaurant.tablesettings.each do |tablesetting| %>
+                    <tr>
+                      <th scope="row"><%= tablesetting.name %></th>
+                      <td><%= tablesetting.tabletype %></td>
+                      <td><span style="padding-right:4px" class="float-end"><%= tablesetting.capacity %></span></td>
+                    </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-3">
+                <span class="float-md-end"><%= form.label :capacity, class: 'col-form-label' %> :</span>
+            </div>
+            <div class="col-sm-8">
+            </div>
+            <div class="col-sm-1">
+                <%= form.text_field :total_capacity, class: 'form-control float-end text-end', disabled: true %>
+            </div>
+          </div>
   <%= form.hidden_field :user_id, value: current_user.id %>
   <div style='height:8px'></div>
   <div class="row">
