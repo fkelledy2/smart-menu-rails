@@ -46,15 +46,13 @@ document.addEventListener("turbo:load", () => {
 
     if ($("#menu-table").is(':visible')) {
         var menuTable = new Tabulator("#menu-table", {
+          dataLoader: false,
           maxHeight:"100%",
-          minHeight:405,
           paginationSize:20,
           responsiveLayout:true,
+          layout:"fitDataFill",
           groupBy: ["restaurant.id"],
-          pagination:"local",
-          paginationCounter:"rows",
           ajaxURL: '/menus.json',
-          layout:"fitColumns",
           initialSort:[
             {column:"sequence", dir:"asc"},
           ],

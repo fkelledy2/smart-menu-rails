@@ -4,14 +4,11 @@ document.addEventListener("turbo:load", () => {
         var orderItemTable = new Tabulator("#orderitem-table", {
           dataLoader: false,
           maxHeight:"100%",
-          minHeight:405,
           paginationSize:20,
           responsiveLayout:true,
-          pagination:"local",
+          layout:"fitDataFill",
           groupBy:"ordr.id",
-          paginationCounter:"rows",
           ajaxURL: '/ordritems.json',
-          layout:"fitColumns",
           columns: [
            {
             title:"Order", field:"ordr.id", frozen:true, width: 200,  responsive:0, formatter:"link", formatterParams: {

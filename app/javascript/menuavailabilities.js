@@ -19,14 +19,11 @@ document.addEventListener("turbo:load", () => {
         var menuavailabilityTable = new Tabulator("#menuavailability-table", {
           dataLoader: false,
           maxHeight:"100%",
-          minHeight:405,
           paginationSize:20,
-          groupBy: ["menu.id"],
           responsiveLayout:true,
-          pagination:"local",
-          paginationCounter:"rows",
+          layout:"fitDataFill",
+          groupBy: ["menu.id"],
           ajaxURL: '/menuavailabilities.json',
-          layout:"fitColumns",
           initialSort:[
             {column:"sequence", dir:"asc"},
           ],

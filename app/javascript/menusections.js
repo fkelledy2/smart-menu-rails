@@ -9,14 +9,11 @@ document.addEventListener("turbo:load", () => {
         var menusectionTable = new Tabulator("#menusection-table", {
           dataLoader: false,
           maxHeight:"100%",
-          minHeight:405,
           paginationSize:20,
-          groupBy: ["menu.id"],
           responsiveLayout:true,
-          pagination:"local",
-          paginationCounter:"rows",
+          layout:"fitDataFill",
+          groupBy: ["menu.id"],
           ajaxURL: '/menusections.json',
-          layout:"fitColumns",
           initialSort:[
             {column:"sequence", dir:"asc"},
           ],

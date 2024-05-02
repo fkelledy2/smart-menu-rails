@@ -3,13 +3,10 @@ document.addEventListener("turbo:load", () => {
         var tagTable = new Tabulator("#tag-table", {
           dataLoader: false,
           maxHeight:"100%",
-          minHeight:405,
           paginationSize:20,
           responsiveLayout:true,
-          pagination:"local",
-          paginationCounter:"rows",
+          layout:"fitDataFill",
           ajaxURL: '/tags.json',
-          layout:"fitColumns",
           columns: [
            {
              formatter:"rowSelection", titleFormatter:"rowSelection", width: 20, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {

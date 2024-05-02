@@ -240,14 +240,11 @@ document.addEventListener("turbo:load", () => {
         var orderTable = new Tabulator("#order-table", {
           dataLoader: false,
           maxHeight:"100%",
-          minHeight:405,
           paginationSize:20,
-          groupBy: ["restaurant.name","menu.name", "ordrDate" ],
           responsiveLayout:true,
-          pagination:"local",
-          paginationCounter:"rows",
+          layout:"fitDataFill",
+          groupBy: ["restaurant.name","menu.name", "ordrDate" ],
           ajaxURL: '/ordrs.json',
-          layout:"fitColumns",
           initialSort:[
             {column:"ordrDate", dir:"desc"},
             {column:"id", dir:"desc"},

@@ -32,8 +32,8 @@ document.addEventListener("turbo:load", () => {
           maxHeight:"100%",
           paginationSize:20,
           responsiveLayout:true,
-          ajaxURL: '/restaurants.json',
           layout:"fitDataFill",
+          ajaxURL: '/restaurants.json',
           columns: [
            {
              formatter:"rowSelection", titleFormatter:"rowSelection", responsive:0, width: 20, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {

@@ -13,13 +13,11 @@ document.addEventListener("turbo:load", () => {
     if ($("#tax-table").is(':visible')) {
         var taxTable = new Tabulator("#tax-table", {
           dataLoader: false,
-          height:405,
+          maxHeight:"100%",
+          paginationSize:20,
           responsiveLayout:true,
-          pagination:"local",
-          paginationSize:10,
-          paginationCounter:"rows",
+          layout:"fitDataFill",
           ajaxURL: '/taxes.json',
-          layout:"fitColumns",
           initialSort:[
             {column:"sequence", dir:"asc"},
           ],

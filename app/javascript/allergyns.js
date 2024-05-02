@@ -4,13 +4,10 @@ document.addEventListener("turbo:load", () => {
         var allergynTable = new Tabulator("#allergyn-table", {
           dataLoader: false,
           maxHeight:"100%",
-          minHeight:405,
           paginationSize:20,
           responsiveLayout:true,
-          pagination:"local",
-          paginationCounter:"rows",
+          layout:"fitDataFill",
           ajaxURL: '/allergyns.json',
-          layout:"fitColumns",
           columns: [
            {
              formatter:"rowSelection", titleFormatter:"rowSelection", width: 20, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
