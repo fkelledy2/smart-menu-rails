@@ -3,12 +3,12 @@
     <h1><%= t(".menuSections") %></h1>
   </div>
   <div class="col-sm-6 text-end">
-    <button id="activate-row" class='btn btn-success' disabled><%= t(".activate") %></button>
-    <button id="deactivate-row"class='btn btn-danger' disabled><%= t(".desctivate") %></button>
-    <%= link_to new_menusection_path, class: 'btn btn-primary' do %>
+    <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t(".activate") %></button>
+    <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t(".desctivate") %></button>
+    <%= link_to new_menusection_path, class: 'btn btn-sm btn-primary' do %>
       <i class="bi bi-plus"></i> <%= t(".menuSection") %>
     <% end %>
   </div>
 </div>
-<div id="menusection-table">
+<div style="padding-top:10px" id="menusection-table">
 </div>
