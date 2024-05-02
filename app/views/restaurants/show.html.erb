@@ -216,7 +216,7 @@
                   <tbody>
                     <% @restaurant.tablesettings.each do |tablesetting| %>
                     <tr>
-                      <th scope="row"><%= tablesetting.name %></th>
+                      <td scope="row"><%= tablesetting.name %></td>
                       <td><%= tablesetting.tabletype %></td>
                       <td><span style="padding-right:4px" class="float-end"><%= tablesetting.capacity %></span></td>
                     </tr>
@@ -257,7 +257,7 @@
                   <tbody>
                     <% @restaurant.taxes.each do |tax| %>
                     <tr>
-                      <th scope="row"><%= tax.name %></th>
+                      <td scope="row"><%= tax.name %></td>
                       <td><%= tax.taxtype %></td>
                       <td><span style="padding-right:4px" class="float-end"><%= number_with_precision(tax.taxpercentage, precision: 2) %>%</span></td>
                     </tr>
@@ -291,7 +291,7 @@
                   <tbody>
                     <% @restaurant.employees.each do |employee| %>
                     <tr>
-                      <th scope="row"><%= employee.name %></th>
+                      <td scope="row"><%= employee.name %></td>
                       <td><%= employee.role %></td>
                       <td><span style="padding-right:4px" class="float-end"><%= employee.eid %></span></td>
                     </tr>
