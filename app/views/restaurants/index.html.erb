@@ -3,13 +3,13 @@
     <h1><%=t(".restaurants")%> </h1>
   </div>
   <div class="col-sm-6 text-end">
-    <button id="restaurant-activate-row" class='btn btn-success' disabled><%=t(".activate")%></button>
-    <button id="restaurant-deactivate-row"class='btn btn-danger' disabled><%=t(".deactivate")%></button>
-    <%= link_to new_restaurant_path, class: 'btn btn-primary' do %>
+    <button id="restaurant-activate-row" class='btn btn-sm btn-success' disabled><%=t(".activate")%></button>
+    <button id="restaurant-deactivate-row"class='btn btn-sm btn-danger' disabled><%=t(".deactivate")%></button>
+    <%= link_to new_restaurant_path, class: 'btn btn-sm btn-primary' do %>
       <i class="bi bi-plus"></i> <%=t(".restaurant")%>
     <% end %>
   </div>
 </div>
-<div id="restaurant-table">
+<div style="padding-top:10px" id="restaurant-table">
 </div>
 
