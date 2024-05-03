@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     resources :tablesettings, controller: 'tablesettings', only: [:index,:show, :edit]
     resources :taxes, controller: 'taxes', only: [:index,:show, :edit]
     resources :employees, controller: 'employees', only: [:index,:show, :edit]
+    resources :restaurantavailabilities, controller: 'restaurantavailabilities', only: [:index,:show, :edit]
     resources :ordrs, controller: 'ordrs', only: [:index]
   end
   resources :menus, controller: 'menus' do

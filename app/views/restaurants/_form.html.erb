@@ -157,14 +157,20 @@
     </div>
   </div>
 
-          <div class="form-group row">
+          <div style="margin-top:20px" class="form-group row">
             <div class="col-sm-3">
             </div>
-            <div class="col-sm-9">
-                <p>
-                <%= link_to restaurant_tablesettings_path(restaurant_id: restaurant.id) do %>
+            <div class="col-sm-7">
+                <%= link_to restaurant_tablesettings_path(restaurant_id: @restaurant.id), class: 'link-dark' do %>
                     <h4>Table Settings</h4>
                 <% end %>
+            </div>
+            <div class="col-sm-2">
+                <span class="float-end">
+                    <%= link_to new_tablesetting_path, class: 'btn btn-sm btn-primary' do %>
+                        <i class="bi bi-plus"></i> Table Setting
+                    <% end %>
+                </span>
             </div>
           </div>
           <div class="form-group row">
@@ -183,7 +189,7 @@
                     <% @restaurant.tablesettings.each do |tablesetting| %>
                     <tr>
                       <td class="w-25" scope="row">
-                        <%= link_to edit_restaurant_tablesetting_path(restaurant_id: restaurant.id, id: tablesetting.id) do %>
+                        <%= link_to edit_restaurant_tablesetting_path(restaurant_id: restaurant.id, id: tablesetting.id), class: 'link-dark' do %>
                             <%= tablesetting.name %>
                         <% end %>
                       </td>
@@ -206,14 +212,20 @@
             </div>
           </div>
 
-          <div class="form-group row">
+          <div style="margin-top:20px" class="form-group row">
             <div class="col-sm-3">
             </div>
-            <div class="col-sm-9">
-                <p>
-                <%= link_to restaurant_taxes_path(restaurant_id: restaurant.id) do %>
+            <div class="col-sm-7">
+                <%= link_to restaurant_taxes_path(restaurant_id: @restaurant.id), class: 'link-dark' do %>
                     <h4>Taxes</h4>
                 <% end %>
+            </div>
+            <div class="col-sm-2">
+                <span class="float-end">
+                    <%= link_to new_tax_path, class: 'btn btn-sm btn-primary' do %>
+                        <i class="bi bi-plus"></i> Tax
+                    <% end %>
+                </span>
             </div>
           </div>
           <div class="form-group row">
@@ -232,7 +244,7 @@
                     <% @restaurant.taxes.each do |tax| %>
                     <tr>
                       <td class="w-25 p-3" scope="row">
-                        <%= link_to edit_restaurant_tax_path(restaurant_id: restaurant.id, id: tax.id) do %>
+                        <%= link_to edit_restaurant_tax_path(restaurant_id: restaurant.id, id: tax.id), class: 'link-dark' do %>
                             <%= tax.name %>
                         <% end %>
                       </td>
@@ -246,14 +258,20 @@
           </div>
 
 
-          <div class="form-group row">
+          <div style="margin-top:20px" class="form-group row">
             <div class="col-sm-3">
             </div>
-            <div class="col-sm-9">
-                <p>
-                <%= link_to restaurant_employees_path(restaurant_id: restaurant.id) do %>
+            <div class="col-sm-7">
+                <%= link_to restaurant_employees_path(restaurant_id: @restaurant.id), class: 'link-dark' do %>
                     <h4>Employees</h4>
                 <% end %>
+            </div>
+            <div class="col-sm-2">
+                <span class="float-end">
+                    <%= link_to new_employee_path, class: 'btn btn-sm btn-primary' do %>
+                        <i class="bi bi-plus"></i> Employee
+                    <% end %>
+                </span>
             </div>
           </div>
           <div class="form-group row">
@@ -272,7 +290,7 @@
                     <% @restaurant.employees.each do |employee| %>
                     <tr>
                       <td class="w-25 p-3" scope="row">
-                        <%= link_to edit_restaurant_employee_path(restaurant_id: restaurant.id, id: employee.id) do %>
+                        <%= link_to edit_restaurant_employee_path(restaurant_id: restaurant.id, id: employee.id), class: 'link-dark' do %>
                             <%= employee.name %>
                         <% end %>
                       </td>

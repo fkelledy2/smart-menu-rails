@@ -5,9 +5,9 @@
     </div>
     <div class="col-sm-2">
         <% if @tablesetting.persisted? %>
-          <%= link_to "Cancel", @tablesetting, class: "float-end btn btn-light" %>
+          <%= link_to "Cancel", restaurant_path(id: @tablesetting.restaurant.id), class: "float-end btn btn-light" %>
         <% else %>
-          <%= link_to "Cancel", tablesettings_path, class: "float-end btn btn-light" %>
+          <%= link_to "Cancel", restaurant_path(id: @tablesetting.restaurant.id), class: "float-end btn btn-light" %>
         <% end %>
     </div>
   </div>
