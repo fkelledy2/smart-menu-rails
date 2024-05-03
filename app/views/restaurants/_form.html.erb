@@ -174,17 +174,17 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th scope="col">Name</th>
-                      <th scope="col">Type</th>
-                      <th scope="col"><span class="float-end">Capacity</span></th>
+                      <th class="w-25" scope="col">Name</th>
+                      <th class="w-25" scope="col">Type</th>
+                      <th class="w-50" scope="col"><span class="float-end">Capacity</span></th>
                     </tr>
                   </thead>
                   <tbody>
                     <% @restaurant.tablesettings.each do |tablesetting| %>
                     <tr>
-                      <td scope="row"><%= tablesetting.name %></td>
-                      <td><%= tablesetting.tabletype %></td>
-                      <td><span style="padding-right:4px" class="float-end"><%= tablesetting.capacity %></span></td>
+                      <td class="w-25" scope="row"><%= tablesetting.name %></td>
+                      <td class="w-25"><%= tablesetting.tabletype %></td>
+                      <td class="w-50"><span style="padding-right:4px" class="float-end"><%= tablesetting.capacity %></span></td>
                     </tr>
                     <% end %>
                   </tbody>
@@ -219,17 +219,17 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th scope="col">Name</th>
-                      <th scope="col">Type</th>
-                      <th scope="col"><span class="float-end">Percentage</span></th>
+                      <th class="w-25 p-3" scope="col">Name</th>
+                      <th class="w-25 p-3" scope="col">Type</th>
+                      <th class="w-50 p-3" scope="col"><span class="float-end">Percentage</span></th>
                     </tr>
                   </thead>
                   <tbody>
                     <% @restaurant.taxes.each do |tax| %>
                     <tr>
-                      <td scope="row"><%= tax.name %></td>
-                      <td><%= tax.taxtype %></td>
-                      <td><span style="padding-right:4px" class="float-end"><%= number_with_precision(tax.taxpercentage, precision: 2) %>%</span></td>
+                      <td class="w-25 p-3" scope="row"><%= tax.name %></td>
+                      <td class="w-25 p-3"><%= tax.taxtype %></td>
+                      <td class="w-50 p-3"><span style="padding-right:4px" class="float-end"><%= number_with_precision(tax.taxpercentage, precision: 2) %>%</span></td>
                     </tr>
                     <% end %>
                   </tbody>
@@ -255,17 +255,17 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th scope="col">Name</th>
-                      <th scope="col">Role</th>
-                      <th scope="col"><span class="float-end">ID</span></th>
+                      <th class="w-25 p-3" scope="col">Name</th>
+                      <th class="w-25 p-3" scope="col">Role</th>
+                      <th class="w-50 p-3" scope="col"><span class="float-end">ID</span></th>
                     </tr>
                   </thead>
                   <tbody>
                     <% @restaurant.employees.each do |employee| %>
                     <tr>
-                      <td scope="row"><%= employee.name %></td>
-                      <td><%= employee.role %></td>
-                      <td><span style="padding-right:4px" class="float-end"><%= employee.eid %></span></td>
+                      <td class="w-25 p-3" scope="row"><%= employee.name %></td>
+                      <td class="w-25 p-3"><%= employee.role %></td>
+                      <td class="w-50 p-3"><span style="padding-right:4px" class="float-end"><%= employee.eid %></span></td>
                     </tr>
                     <% end %>
                   </tbody>
