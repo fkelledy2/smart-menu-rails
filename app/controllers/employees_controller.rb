@@ -30,8 +30,8 @@ class EmployeesController < ApplicationController
     respond_to do |format|
       if @employee.save
         @employee.email = @employee.user.email
-
-        format.html { redirect_to employee_url(@employee), notice: "Employee was successfully created." }
+        format.html { redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: "Employee was successfully created." }
+        # format.html { redirect_to @return_url, notice: "Employee was successfully created." }
         format.json { render :show, status: :created, location: @employee }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -45,7 +45,8 @@ class EmployeesController < ApplicationController
     respond_to do |format|
       if @employee.update(employee_params)
         @employee.email = @employee.user.email
-        format.html { redirect_to employee_url(@employee), notice: "Employee was successfully updated." }
+        format.html { redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: "Employee was successfully updated." }
+        # format.html { redirect_to @return_url, notice: "Employee was successfully updated." }
         format.json { render :show, status: :ok, location: @employee }
       else
         format.html { render :edit, status: :unprocessable_entity }

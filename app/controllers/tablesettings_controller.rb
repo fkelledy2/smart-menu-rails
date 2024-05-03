@@ -43,7 +43,8 @@ class TablesettingsController < ApplicationController
 
     respond_to do |format|
       if @tablesetting.save
-        format.html { redirect_to tablesetting_url(@tablesetting), notice: "Tablesetting was successfully created." }
+        format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: "Tablesetting was successfully created." }
+        # format.html { redirect_to tablesetting_url(@tablesetting), notice: "Tablesetting was successfully created." }
         format.json { render :show, status: :created, location: @tablesetting }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -56,7 +57,8 @@ class TablesettingsController < ApplicationController
   def update
     respond_to do |format|
       if @tablesetting.update(tablesetting_params)
-        format.html { redirect_to tablesetting_url(@tablesetting), notice: "Tablesetting was successfully updated." }
+        format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: "Tablesetting was successfully updated." }
+        # format.html { redirect_to tablesetting_url(@tablesetting), notice: "Tablesetting was successfully updated." }
         format.json { render :show, status: :ok, location: @tablesetting }
       else
         format.html { render :edit, status: :unprocessable_entity }

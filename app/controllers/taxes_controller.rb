@@ -1,5 +1,6 @@
 class TaxesController < ApplicationController
   before_action :set_tax, only: %i[ show edit update destroy ]
+  before_action :return_url
 
   # GET /taxes or /taxes.json
   def index
@@ -29,7 +30,8 @@ class TaxesController < ApplicationController
 
     respond_to do |format|
       if @tax.save
-        format.html { redirect_to tax_url(@tax), notice: "Tax was successfully created." }
+        format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully created." }
+        # format.html { redirect_to @return_url, notice: "Tax was successfully created." }
         format.json { render :show, status: :created, location: @tax }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -42,7 +44,8 @@ class TaxesController < ApplicationController
   def update
     respond_to do |format|
       if @tax.update(tax_params)
-        format.html { redirect_to tax_url(@tax), notice: "Tax was successfully updated." }
+        format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully updated." }
+        # format.html { redirect_to tax_url(@tax), notice: "Tax was successfully updated." }
         format.json { render :show, status: :ok, location: @tax }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -62,6 +65,9 @@ class TaxesController < ApplicationController
   end
 
   private
+    def return_url
+      @return_url = url_from(params[:return_to]) || @tax
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_tax
         begin

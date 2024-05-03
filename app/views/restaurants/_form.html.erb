@@ -182,7 +182,11 @@
                   <tbody>
                     <% @restaurant.tablesettings.each do |tablesetting| %>
                     <tr>
-                      <td class="w-25" scope="row"><%= tablesetting.name %></td>
+                      <td class="w-25" scope="row">
+                        <%= link_to edit_restaurant_tablesetting_path(restaurant_id: restaurant.id, id: tablesetting.id) do %>
+                            <%= tablesetting.name %>
+                        <% end %>
+                      </td>
                       <td class="w-25"><%= tablesetting.tabletype %></td>
                       <td class="w-50"><span style="padding-right:4px" class="float-end"><%= tablesetting.capacity %></span></td>
                     </tr>
@@ -227,7 +231,11 @@
                   <tbody>
                     <% @restaurant.taxes.each do |tax| %>
                     <tr>
-                      <td class="w-25 p-3" scope="row"><%= tax.name %></td>
+                      <td class="w-25 p-3" scope="row">
+                        <%= link_to edit_restaurant_tax_path(restaurant_id: restaurant.id, id: tax.id) do %>
+                            <%= tax.name %>
+                        <% end %>
+                      </td>
                       <td class="w-25 p-3"><%= tax.taxtype %></td>
                       <td class="w-50 p-3"><span style="padding-right:4px" class="float-end"><%= number_with_precision(tax.taxpercentage, precision: 2) %>%</span></td>
                     </tr>
@@ -263,7 +271,11 @@
                   <tbody>
                     <% @restaurant.employees.each do |employee| %>
                     <tr>
-                      <td class="w-25 p-3" scope="row"><%= employee.name %></td>
+                      <td class="w-25 p-3" scope="row">
+                        <%= link_to edit_restaurant_employee_path(restaurant_id: restaurant.id, id: employee.id) do %>
+                            <%= employee.name %>
+                        <% end %>
+                      </td>
                       <td class="w-25 p-3"><%= employee.role %></td>
                       <td class="w-50 p-3"><span style="padding-right:4px" class="float-end"><%= employee.eid %></span></td>
                     </tr>

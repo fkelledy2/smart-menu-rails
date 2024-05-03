@@ -5,7 +5,7 @@
     </div>
     <div class="col-sm-2">
         <span class="float-end">
-          <%= link_to employees_path, class: 'btn btn-light' do %>
+          <%= link_to restaurant_path(id: @employee.restaurant.id), class: 'btn btn-light' do %>
             <i class="bi bi-chevron-left"></i>
           <% end %>
           <%= link_to edit_employee_path(@employee), class: 'btn btn-primary' do %>
