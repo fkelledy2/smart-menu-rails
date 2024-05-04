@@ -1,5 +1,6 @@
 class MenuitemsController < ApplicationController
   before_action :set_menuitem, only: %i[ show edit update destroy ]
+  before_action :set_currency
 
   # GET /menuitems or /menuitems.json
   def index
@@ -84,6 +85,18 @@ class MenuitemsController < ApplicationController
         rescue ActiveRecord::RecordNotFound => e
             redirect_to root_url
         end
+    end
+    def set_currency
+      if params[:id]
+          @menuitem = Menuitem.find(params[:id])
+          if @menuitem.menu.restaurant.currency
+            @restaurantCurrency = ISO4217::Currency.from_code(@menuitem.menu.restaurant.currency)
+          else
+            @restaurantCurrency = ISO4217::Currency.from_code('USD')
+          end
+      else
+        @restaurantCurrency = ISO4217::Currency.from_code('USD')
+      end
     end
 
     # Only allow a list of trusted parameters through.

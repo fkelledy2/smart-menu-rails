@@ -83,6 +83,11 @@ class RestaurantsController < ApplicationController
                     @restaurant = Restaurant.find(params[:id])
                 end
             end
+            if @restaurant.currency
+                @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
+            else
+                @restaurantCurrency = ISO4217::Currency.from_code('USD')
+            end
         rescue ActiveRecord::RecordNotFound => e
             redirect_to root_url
         end
@@ -90,6 +95,6 @@ class RestaurantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def restaurant_params
-      params.require(:restaurant).permit(:name, :description, :address1, :address2, :state, :city, :postcode, :country, :image, :status, :capacity, :user_id, :displayImages, :allowOrdering, :inventoryTracking)
+      params.require(:restaurant).permit(:name, :description, :address1, :address2, :state, :city, :postcode, :country, :image, :status, :capacity, :user_id, :displayImages, :allowOrdering, :inventoryTracking, :currency)
     end
 end

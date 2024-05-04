@@ -1,5 +1,6 @@
 class OrdritemsController < ApplicationController
   before_action :set_ordritem, only: %i[ show edit update destroy ]
+  before_action :set_currency
 
   # GET /ordritems or /ordritems.json
   def index
@@ -124,6 +125,19 @@ class OrdritemsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_ordritem
       @ordritem = Ordritem.find(params[:id])
+    end
+
+    def set_currency
+      if params[:id]
+          @ordritem = Ordritem.find(params[:id])
+          if @ordritem.ordr.restaurant.currency
+            @restaurantCurrency = ISO4217::Currency.from_code(@ordritem.ordr.restaurant.currency)
+          else
+            @restaurantCurrency = ISO4217::Currency.from_code('USD')
+          end
+      else
+        @restaurantCurrency = ISO4217::Currency.from_code('USD')
+      end
     end
 
     # Only allow a list of trusted parameters through.

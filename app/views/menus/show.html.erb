@@ -168,7 +168,7 @@
                                                     <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
                                                 </div>
                                                 <div class="col-3">
-                                                    <h5 class="float-end card-title"><%= number_to_currency(menuitem.price) %></span></h5>
+                                                    <h5 class="float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol) %></span></h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -199,7 +199,7 @@
                                                     <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
                                                 </div>
                                                 <div class="col-3">
-                                                    <h5 class="float-end card-title"><%= number_to_currency(menuitem.price) %></span></h5>
+                                                    <h5 class="float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol) %></span></h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -313,7 +313,7 @@
                     </div>
                     <div class="col-2">
                         <span class="float-end">
-                            <%= number_to_currency(ordraction.ordritem.menuitem.price) %>
+                            <%= number_to_currency(ordraction.ordritem.menuitem.price, unit: @restaurantCurrency.symbol) %>
                         </span>
                     </div>
                     <div class="col-2">
@@ -475,7 +475,7 @@
                     </div>
                     <div class="col-3">
                       <span class="float-end">
-                        <%= number_to_currency(@openOrder.nett) %>
+                        <%= number_to_currency(@openOrder.nett, unit: @restaurantCurrency.symbol) %>
                       </span>
                     </div>
                 </div>
@@ -485,7 +485,7 @@
                     </div>
                     <div class="col-3">
                       <span class="float-end">
-                        <%= number_to_currency(@openOrder.service) %>
+                        <%= number_to_currency(@openOrder.service, unit: @restaurantCurrency.symbol) %>
                       </span>
                     </div>
                 </div>
@@ -495,7 +495,7 @@
                     </div>
                     <div class="col-3">
                       <span class="float-end">
-                        <%= number_to_currency(@openOrder.tax) %>
+                        <%= number_to_currency(@openOrder.tax, unit: @restaurantCurrency.symbol) %>
                       </span>
                     </div>
                 </div>
@@ -512,7 +512,7 @@
                     </div>
                     <div class="col-3">
                       <span class="float-end">
-                        <b><span id="orderGross"><%= number_to_currency(@openOrder.gross) %></span></b>
+                        <b><span id="orderGross"><%= number_to_currency(@openOrder.gross, unit: @restaurantCurrency.symbol) %></span></b>
                       </span>
                     </div>
                 </div>
@@ -521,7 +521,7 @@
                         <span style="margin-top:5px" class="float-end ">Add a tip:</span>
                     </div>
                     <div class="col-3">
-                        <input style="position:relative;left:25px" type="number" min="0.00" max="<%= number_to_currency(@openOrder.gross) %>" step="0.50" class="tipNumberField form-control float-end text-end" id="tip" value="0.00">
+                        <input style="position:relative;left:25px" type="number" min="0.00" max="<%= number_to_currency(@openOrder.gross, unit: @restaurantCurrency.symbol) %>" step="0.50" class="tipNumberField form-control float-end text-end" id="tip" value="0.00">
                     </div>
                 </div>
                 <div class="row">
@@ -537,7 +537,7 @@
                     </div>
                     <div class="col-3">
                       <span class="float-end">
-                        <b><span id="orderGrandTotal"><%= number_to_currency(@openOrder.gross) %></span></b>
+                        <b><span id="orderGrandTotal"><%= number_to_currency(@openOrder.gross, unit: @restaurantCurrency.symbol) %></span></b>
                       </span>
                     </div>
                 </div>

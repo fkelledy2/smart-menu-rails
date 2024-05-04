@@ -123,6 +123,10 @@ GEM
     crass (1.0.6)
     cssbundling-rails (1.4.0)
       railties (>= 6.0.0)
+    currencies (0.4.2)
+    currency_select (6.0.0)
+      actionview (>= 6.1.0, < 7.2)
+      money (~> 6.0)
     date (3.3.4)
     debug (1.9.1)
       irb (~> 1.10)
@@ -178,6 +182,8 @@ GEM
     mini_magick (4.12.0)
     mini_mime (1.1.5)
     minitest (5.22.2)
+    money (6.19.0)
+      i18n (>= 0.6.4, <= 2)
     msgpack (1.7.2)
     multi_xml (0.6.0)
     mutex_m (0.2.0)
@@ -383,6 +389,8 @@ DEPENDENCIES
   capybara
   country_select (~> 8.0)
   cssbundling-rails
+  currencies
+  currency_select
   debug
   devise (~> 4.9)
   friendly_id (~> 5.4)

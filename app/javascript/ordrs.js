@@ -17,6 +17,10 @@ document.addEventListener("turbo:load", () => {
         return true;
     });
 
+    let restaurantCurrencySymbol = '$';
+    if ($('#restaurantCurrency').length) {
+        restaurantCurrencySymbol = $('#restaurantCurrency').text();
+    }
     if ($('#addNameToParticipantModal').length) {
         const addNameToParticipantModal = document.getElementById('addNameToParticipantModal');
         addNameToParticipantModal.addEventListener('show.bs.modal', event => {
@@ -236,6 +240,7 @@ document.addEventListener("turbo:load", () => {
         });
     }
 
+
     if ($("#order-table").length) {
         var orderTable = new Tabulator("#order-table", {
           dataLoader: false,
@@ -279,7 +284,7 @@ document.addEventListener("turbo:load", () => {
             formatterParams:{
                decimal:".",
                thousand:",",
-               symbol:"$",
+               symbol:restaurantCurrencySymbol,
                negativeSign:true,
                precision:2,
             }
@@ -288,7 +293,7 @@ document.addEventListener("turbo:load", () => {
             formatterParams:{
                decimal:".",
                thousand:",",
-               symbol:"$",
+               symbol:restaurantCurrencySymbol,
                negativeSign:true,
                precision:2,
             }
@@ -297,7 +302,7 @@ document.addEventListener("turbo:load", () => {
             formatterParams:{
                decimal:".",
                thousand:",",
-               symbol:"$",
+               symbol:restaurantCurrencySymbol,
                negativeSign:true,
                precision:2,
             }
@@ -306,7 +311,7 @@ document.addEventListener("turbo:load", () => {
             formatterParams:{
                decimal:".",
                thousand:",",
-               symbol:"$",
+               symbol:restaurantCurrencySymbol,
                negativeSign:true,
                precision:2,
             }
@@ -315,7 +320,7 @@ document.addEventListener("turbo:load", () => {
             formatterParams:{
                decimal:".",
                thousand:",",
-               symbol:"$",
+               symbol:restaurantCurrencySymbol,
                negativeSign:true,
                precision:2,
             }

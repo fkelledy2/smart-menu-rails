@@ -1,5 +1,6 @@
 class OrdrsController < ApplicationController
   before_action :set_ordr, only: %i[ show edit update destroy ]
+  before_action :set_currency
 
   # GET /ordrs or /ordrs.json
   def index
@@ -225,6 +226,19 @@ class OrdrsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_ordr
       @ordr = Ordr.find(params[:id])
+    end
+
+    def set_currency
+      if params[:id]
+          @ordr = Ordr.find(params[:id])
+          if @ordr.restaurant.currency
+            @restaurantCurrency = ISO4217::Currency.from_code(@ordr.restaurant.currency)
+          else
+            @restaurantCurrency = ISO4217::Currency.from_code('USD')
+          end
+      else
+        @restaurantCurrency = ISO4217::Currency.from_code('USD')
+      end
     end
 
     # Only allow a list of trusted parameters through.

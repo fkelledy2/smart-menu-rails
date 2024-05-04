@@ -90,6 +90,6 @@ gem 'seed_dump'
 gem 'squasher'
 gem 'allow_numeric'
 gem 'aasm'
-
-
 gem "tom-select-rails", "~> 2.3"
+gem 'currency_select'
+gem 'currencies'

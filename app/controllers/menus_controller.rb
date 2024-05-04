@@ -37,8 +37,6 @@ class MenusController < ApplicationController
                 redirect_to home_url
             end
         end
-
-
         @allergyns = Allergyn.all
         @participantsFirstTime = false
         @tablesetting = Tablesetting.find_by_id(params[:id])
@@ -150,6 +148,11 @@ class MenusController < ApplicationController
                 else
                     @menu = Menu.find(params[:id])
                 end
+            end
+            if @menu.restaurant.currency
+                @restaurantCurrency = ISO4217::Currency.from_code(@menu.restaurant.currency)
+            else
+                @restaurantCurrency = ISO4217::Currency.from_code('USD')
             end
         rescue ActiveRecord::RecordNotFound => e
             redirect_to root_url

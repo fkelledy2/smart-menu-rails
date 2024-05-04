@@ -10,6 +10,10 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
+    let restaurantCurrencySymbol = '$';
+    if ($('#restaurantCurrency').length) {
+        restaurantCurrencySymbol = $('#restaurantCurrency').text();
+    }
     if ($("#menuitem-table").is(':visible')) {
         // Menuitems
         var menuItemTable = new Tabulator("#menuitem-table", {
@@ -50,7 +54,7 @@ document.addEventListener("turbo:load", () => {
             formatterParams:{
                decimal:".",
                thousand:",",
-               symbol:"$",
+               symbol:restaurantCurrencySymbol,
                negativeSign:true,
                precision:2,
             }

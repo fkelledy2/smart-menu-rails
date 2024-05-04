@@ -1,5 +1,9 @@
 document.addEventListener("turbo:load", () => {
 
+    let restaurantCurrencySymbol = '$';
+    if ($('#restaurantCurrency').length) {
+        restaurantCurrencySymbol = $('#restaurantCurrency').text();
+    }
     if ($("#orderitem-table").length) {
         var orderItemTable = new Tabulator("#orderitem-table", {
           dataLoader: false,
@@ -26,7 +30,7 @@ document.addEventListener("turbo:load", () => {
             formatterParams:{
                decimal:".",
                thousand:",",
-               symbol:"$",
+               symbol:restaurantCurrencySymbol,
                negativeSign:true,
                precision:2,
             }
