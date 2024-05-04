@@ -76,7 +76,7 @@
                             <% if @openOrder.status == 'opened' %>
                                 <span id="viewOrderSpan">
                                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
-                                        Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal) %>
+                                        Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                                     </button>
                                 </span>
                             <% end %>
@@ -88,7 +88,7 @@
                                 </span>
                                 <span id="viewOrderSpan">
                                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
-                                        Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal) %>
+                                        Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                                     </button>
                                 </span>
                             <% end %>
