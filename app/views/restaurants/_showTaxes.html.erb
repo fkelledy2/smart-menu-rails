@@ -22,7 +22,7 @@
                   <thead>
                     <tr>
                       <th class="w-25 p-3" scope="col">Name</th>
-                      <th class="w-25 p-3" scope="col">Type</th>
+                      <th class="w-25 p-3" scope="col"><span class="float-end">Type</span></th>
                       <th class="w-25 p-3" scope="col"><span class="float-end">Percentage</span></th>
                     </tr>
                   </thead>
@@ -34,7 +34,7 @@
                             <%= tax.name %>
                           <% end %>
                       </td>
-                      <td class="w-25 p-3"><%= tax.taxtype %></td>
+                      <td class="w-25 p-3"><span class="float-end"><%= tax.taxtype %></span></td>
                       <td class="w-25 p-3"><span style="padding-right:4px" class="float-end"><%= number_with_precision(tax.taxpercentage, precision: 2) %>%</span></td>
                     </tr>
                     <% end %>

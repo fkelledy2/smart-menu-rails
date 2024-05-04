@@ -22,7 +22,7 @@
                   <thead>
                     <tr>
                       <th class="w-25 p-3" scope="col">Name</th>
-                      <th class="w-25 p-3" scope="col">Role</th>
+                      <th class="w-25 p-3" scope="col"><span class="float-end">Role<span></th>
                       <th class="w-25 p-3" scope="col"><span class="float-end">ID</span></th>
                     </tr>
                   </thead>
@@ -34,7 +34,7 @@
                             <%= employee.name %>
                           <% end %>
                       </td>
-                      <td class="w-25 p-3"><%= employee.role %></td>
+                      <td class="w-25 p-3"><span class="float-end"><%= employee.role %></span></td>
                       <td class="w-25 p-3"><span style="padding-right:4px" class="float-end"><%= employee.eid %></span></td>
                     </tr>
                     <% end %>

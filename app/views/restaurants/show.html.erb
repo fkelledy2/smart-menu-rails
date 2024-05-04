@@ -193,7 +193,9 @@
             </div>
           </div>
 
+          <%= render 'showEmployees', restaurant: @restaurant %>
           <% if @current_employee && @current_employee.role == 'manager' %>
+              <%= render 'showOpeningHours', restaurant: @restaurant %>
               <%= render 'showTableSettings', restaurant: @restaurant %>
               <div class="form-group row">
                 <div class="col-sm-11">
@@ -205,7 +207,6 @@
               </div>
               <%= render 'showTaxes', restaurant: @restaurant %>
           <% end %>
-          <%= render 'showEmployees', restaurant: @restaurant %>
         <% end %>
     </div>
 </div>

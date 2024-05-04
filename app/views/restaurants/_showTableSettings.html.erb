@@ -22,7 +22,7 @@
                   <thead>
                     <tr>
                       <th class="w-25 p-3" scope="col">Name</th>
-                      <th class="w-25 p-3" scope="col">Type</th>
+                      <th class="w-25 p-3" scope="col"><span class="float-end">Type</span></th>
                       <th class="w-25 p-3" scope="col"><span class="float-end">Capacity</span></th>
                     </tr>
                   </thead>
@@ -34,7 +34,7 @@
                             <%= tablesetting.name %>
                           <% end %>
                       </td>
-                      <td class="w-25 p-3"><%= tablesetting.tabletype %></td>
+                      <td class="w-25 p-3"><span class="float-end"><%= tablesetting.tabletype %></span></td>
                       <td class="w-25 p-3"><span style="padding-right:4px" class="float-end"><%= tablesetting.capacity %></span></td>
                     </tr>
                     <% end %>
