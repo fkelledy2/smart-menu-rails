@@ -1,15 +1,15 @@
           <div style="margin-top:20px" class="form-group row">
             <div class="col-sm-3">
             </div>
-            <div class="col-sm-7">
+            <div class="col-sm-6">
                 <%= link_to restaurant_tablesettings_path(restaurant_id: @restaurant.id), class: 'link-dark' do %>
-                    <h4>Table Settings</h4>
+                    <h4>Tables</h4>
                 <% end %>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                 <span class="float-end">
                     <%= link_to new_tablesetting_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
-                        <i class="bi bi-plus"></i> Table Setting
+                        <i class="bi bi-plus"></i>&nbsp;Table Setting
                     <% end %>
                 </span>
             </div>
