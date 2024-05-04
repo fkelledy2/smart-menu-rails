@@ -22,6 +22,10 @@ class RestaurantavailabilitiesController < ApplicationController
   # GET /restaurantavailabilities/new
   def new
     @restaurantavailability = Restaurantavailability.new
+    if params[:restaurant_id]
+        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+        @restaurantavailability.restaurant = @futureParentRestaurant
+    end
   end
 
   # GET /restaurantavailabilities/1/edit

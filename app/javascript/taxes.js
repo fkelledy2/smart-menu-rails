@@ -36,7 +36,12 @@ document.addEventListener("turbo:load", () => {
             }
            },
            {title:"Tax Type", field:"taxtype", responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Tax Percentage", field:"taxpercentage", responsive:0, hozAlign:"right", headerHozAlign:"right" },
+           {title:"Tax Percentage", field:"taxpercentage", responsive:0, hozAlign:"right", headerHozAlign:"right", formatter:"money", formatterParams:{
+                decimal:".",
+                symbol:"%",
+                symbolAfter:"p",
+                precision:2,
+           }},
            {title:"Created", field:"created_at", responsive:0, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
             inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
             outputFormat:"dd/MM/yyyy",
