@@ -46,7 +46,7 @@ document.addEventListener("turbo:load", () => {
             }
            },
            {title:"Status", field:"status", responsive:3, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Capacity", field:"total_capacity", responsive:2, hozAlign:"right", headerHozAlign:"right", responsive:3},
+           {title:"Capacity", field:"total_capacity", responsive:2, hozAlign:"right", headerHozAlign:"right"},
            {
               title: 'Address',
               field: 'address', responsive:4,
