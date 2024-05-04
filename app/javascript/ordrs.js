@@ -6,10 +6,10 @@ document.addEventListener("turbo:load", () => {
 
     $(".tipNumberField").change(function() {
         $(this).val(parseFloat($(this).val()).toFixed(2));
-        let gross = parseFloat($("#orderGross").text().replace("$", ""))
+        let gross = parseFloat($("#orderGross").text());
         let tip = parseFloat($(this).val());
         let total = tip+gross;
-        $("#orderGrandTotal").text('$'+parseFloat(total).toFixed(2));
+        $("#orderGrandTotal").text($('#restaurantCurrency').text()+parseFloat(total).toFixed(2));
     });
 
     $( "#orderUpdatedButton" ).on( "click", function() {
