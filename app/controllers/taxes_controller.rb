@@ -18,6 +18,10 @@ class TaxesController < ApplicationController
   # GET /taxes/new
   def new
     @tax = Tax.new
+    if params[:restaurant_id]
+        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+        @tax.restaurant = @futureParentRestaurant
+    end
   end
 
   # GET /taxes/1/edit

@@ -31,6 +31,10 @@ class TablesettingsController < ApplicationController
   # GET /tablesettings/new
   def new
     @tablesetting = Tablesetting.new
+    if params[:restaurant_id]
+        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+        @tablesetting.restaurant = @futureParentRestaurant
+    end
   end
 
   # GET /tablesettings/1/edit

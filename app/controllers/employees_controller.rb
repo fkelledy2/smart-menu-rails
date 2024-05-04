@@ -17,6 +17,10 @@ class EmployeesController < ApplicationController
   # GET /employees/new
   def new
     @employee = Employee.new
+    if params[:restaurant_id]
+        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+        @employee.restaurant = @futureParentRestaurant
+    end
   end
 
   # GET /employees/1/edit

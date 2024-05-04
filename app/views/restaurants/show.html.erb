@@ -193,6 +193,7 @@
             </div>
           </div>
 
+          <% if @current_employee && @current_employee.role == 'manager' %>
           <div style="margin-top:20px" class="form-group row">
             <div class="col-sm-3">
             </div>
@@ -203,7 +204,7 @@
             </div>
             <div class="col-sm-2">
                 <span class="float-end">
-                    <%= link_to new_tablesetting_path, class: 'btn btn-sm btn-primary' do %>
+                    <%= link_to new_tablesetting_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
                         <i class="bi bi-plus"></i> Table Setting
                     <% end %>
                 </span>
@@ -256,7 +257,7 @@
             </div>
             <div class="col-sm-2">
                 <span class="float-end">
-                    <%= link_to new_tax_path, class: 'btn btn-sm btn-primary' do %>
+                    <%= link_to new_tax_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
                         <i class="bi bi-plus"></i> Tax
                     <% end %>
                 </span>
@@ -290,7 +291,7 @@
                 </table>
             </div>
           </div>
-
+          <% end %>
 
           <div style="margin-top:20px" class="form-group row">
             <div class="col-sm-3">
@@ -302,7 +303,7 @@
             </div>
             <div class="col-sm-2">
                 <span class="float-end">
-                    <%= link_to new_employee_path, class: 'btn btn-sm btn-primary' do %>
+                    <%= link_to new_employee_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
                         <i class="bi bi-plus"></i> Employee
                     <% end %>
                 </span>

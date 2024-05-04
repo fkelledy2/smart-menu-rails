@@ -30,9 +30,8 @@ document.addEventListener("turbo:load", () => {
         var restaurantTable = new Tabulator("#restaurant-table", {
           dataLoader: false,
           maxHeight:"100%",
-          paginationSize:20,
           responsiveLayout:true,
-          layout:"fitDataFill",
+          layout:"fitDataStretch",
           ajaxURL: '/restaurants.json',
           columns: [
            {
@@ -46,22 +45,16 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/restaurants/",
             }
            },
+           {title:"Status", field:"status", responsive:3, hozAlign:"right", headerHozAlign:"right" },
+           {title:"Capacity", field:"total_capacity", responsive:2, hozAlign:"right", headerHozAlign:"right", responsive:3},
            {
               title: 'Address',
-              field: 'address', responsive:1,
+              field: 'address', responsive:4,
               mutator: (value, data) => data.address1 + '\n' + data.address2 + '\n' + data.state + '\n' + data.city + '\n' + data.postcode,
            },
-           {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Capacity", field:"total_capacity", hozAlign:"right", headerHozAlign:"right", responsive:3},
-           {title:"Created", field:"created_at", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+           {title:"Created", field:"created_at", responsive:0, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
             inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy HH:mm",
-            invalidPlaceholder:"(invalid date)",
-            }
-           },
-           {title:"Updated", field:"updated_at", width:200, responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy HH:mm",
+            outputFormat:"dd/MM/yyyy",
             invalidPlaceholder:"(invalid date)",
             }
            }
