@@ -1,5 +1,6 @@
 class RestaurantsController < ApplicationController
   before_action :set_restaurant, only: %i[ show edit update destroy ]
+  before_action :set_currency, only: %i[ show index ]
 
   # GET /restaurants or /restaurants.json
   def index
@@ -83,14 +84,22 @@ class RestaurantsController < ApplicationController
                     @restaurant = Restaurant.find(params[:id])
                 end
             end
-            if @restaurant.currency
-                @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
-            else
-                @restaurantCurrency = ISO4217::Currency.from_code('USD')
-            end
         rescue ActiveRecord::RecordNotFound => e
             redirect_to root_url
         end
+    end
+
+    def set_currency
+      if params[:id]
+          @restaurant = Restaurant.find(params[:id])
+          if @restaurant.currency
+            @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
+          else
+            @restaurantCurrency = ISO4217::Currency.from_code('USD')
+          end
+      else
+        @restaurantCurrency = ISO4217::Currency.from_code('USD')
+      end
     end
 
     # Only allow a list of trusted parameters through.
