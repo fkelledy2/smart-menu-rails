@@ -11,7 +11,13 @@
   </div>
 </div>
 <% if @restaurantCurrency %>
-    <div style="display:none" id="restaurantCurrency"><%= @restaurantCurrency.symbol %></div>
+    <div style="display:none" id="restaurantCurrency">
+        <% if @restaurantCurrency.symbol %>
+            <%= @restaurantCurrency.symbol %>
+        <% else %>
+            <%= @restaurantCurrency.iso_code %>&nbsp;
+        <% end %>
+    </div>
 <% end %>
 <div style="padding-top:10px" id="menuitem-table">
 </div>
