@@ -3,7 +3,7 @@
         <% if @restaurantCurrency.symbol %>
             <%= @restaurantCurrency.symbol %>
         <% else %>
-            <%= @restaurantCurrency.iso_code %>&nbsp;
+            <%= @restaurantCurrency.iso_code %>
         <% end %>
     </div>
 <% end %>
@@ -622,7 +622,9 @@
         </div>
         <div style="margin-top:20px;" class="row">
             <div class="col-12">
-                <span class="h4 float-end">$<span id="a2o_menuitem_price"></span></span>
+                <span class="h4 float-end">
+                <%= @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "" %>
+                <span id="a2o_menuitem_price"></span></span>
             </div>
         </div>
       </div>
