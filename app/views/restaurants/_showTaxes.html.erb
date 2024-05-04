@@ -1,0 +1,44 @@
+          <div style="margin-top:20px" class="form-group row">
+            <div class="col-sm-3">
+            </div>
+            <div class="col-sm-7">
+                <%= link_to restaurant_taxes_path(restaurant_id: @restaurant.id), class: 'link-dark' do %>
+                    <h4>Taxes</h4>
+                <% end %>
+            </div>
+            <div class="col-sm-2">
+                <span class="float-end">
+                    <%= link_to new_tax_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
+                        <i class="bi bi-plus"></i> Tax
+                    <% end %>
+                </span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-3">
+            </div>
+            <div class="col-sm-9">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class="w-25 p-3" scope="col">Name</th>
+                      <th class="w-25 p-3" scope="col">Type</th>
+                      <th class="w-25 p-3" scope="col"><span class="float-end">Percentage</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @restaurant.taxes.each do |tax| %>
+                    <tr>
+                      <td class="w-25 p-3">
+                          <%= link_to restaurant_tax_path(restaurant_id: @restaurant.id, id: tax.id), class: 'link-dark' do %>
+                            <%= tax.name %>
+                          <% end %>
+                      </td>
+                      <td class="w-25 p-3"><%= tax.taxtype %></td>
+                      <td class="w-25 p-3"><span style="padding-right:4px" class="float-end"><%= number_with_precision(tax.taxpercentage, precision: 2) %>%</span></td>
+                    </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+            </div>
+          </div>
