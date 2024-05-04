@@ -14,9 +14,8 @@ document.addEventListener("turbo:load", () => {
         var taxTable = new Tabulator("#tax-table", {
           dataLoader: false,
           maxHeight:"100%",
-          paginationSize:20,
           responsiveLayout:true,
-          layout:"fitDataFill",
+          layout:"fitDataStretch",
           ajaxURL: '/taxes.json',
           initialSort:[
             {column:"sequence", dir:"asc"},
@@ -28,12 +27,6 @@ document.addEventListener("turbo:load", () => {
                 cell.getRow().toggleSelect();
              }
            },
-           {
-            title:"Restaurant", field:"restaurant_id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
-                labelField:"restaurant.name",
-                urlPrefix:"/restaurants/",
-            }
-           },
            { rowHandle:true, formatter:"handle", headerSort:false,  width:30, minWidth:30 },
            { title:" ", field:"sequence", formatter:"rownum", width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
            {
@@ -42,17 +35,11 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/taxes/",
             }
            },
-           {title:"Tax Type", field:"taxtype", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Tax Percentage", field:"taxpercentage", width: 200, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+           {title:"Tax Type", field:"taxtype", responsive:0, hozAlign:"right", headerHozAlign:"right" },
+           {title:"Tax Percentage", field:"taxpercentage", responsive:0, hozAlign:"right", headerHozAlign:"right" },
+           {title:"Created", field:"created_at", responsive:0, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
             inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy HH:mm",
-            invalidPlaceholder:"(invalid date)",
-            }
-           },
-           {title:"Updated", field:"updated_at", width:200, responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy HH:mm",
+            outputFormat:"dd/MM/yyyy",
             invalidPlaceholder:"(invalid date)",
             }
            }

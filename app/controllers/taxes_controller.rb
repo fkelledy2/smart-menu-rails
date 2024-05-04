@@ -6,6 +6,12 @@ class TaxesController < ApplicationController
   def index
     if current_user
         @taxes = Tax.joins(:restaurant).where(restaurant: {user: current_user}).all
+        if params[:restaurant_id]
+            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+            @taxes = Tax.joins(:restaurant).where(restaurant: @futureParentRestaurant).all
+        else
+            @taxes = Tax.joins(:restaurant).where(restaurant: {user: current_user}).all
+        end
     else
         redirect_to root_url
     end

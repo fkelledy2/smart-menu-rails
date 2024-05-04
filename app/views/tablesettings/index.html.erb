@@ -4,6 +4,11 @@
         <h1>Table Settings</h1>
       </div>
       <div class="col-sm-6 text-end">
+        <% if @futureParentRestaurant %>
+          <%= link_to restaurant_path(id: @futureParentRestaurant.id), class: 'btn btn-sm btn-light' do %>
+            <i class="bi bi-chevron-left"></i>
+          <% end %>
+        <% end %>
         <button id="unarchive-row" class='btn btn-sm btn-success' disabled>Unarchive</button>
         <button id="archive-row"class='btn btn-sm btn-danger' disabled>Archive</button>
         <%= link_to new_tablesetting_path, class: 'btn btn-primary' do %>

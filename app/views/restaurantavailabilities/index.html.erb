@@ -3,6 +3,11 @@
     <h1><%=t(".restaurantavailabilities")%></h1>
   </div>
   <div class="col-sm-6 text-end">
+    <% if @futureParentRestaurant %>
+      <%= link_to restaurant_path(id: @futureParentRestaurant.id), class: 'btn btn-sm btn-light' do %>
+        <i class="bi bi-chevron-left"></i>
+      <% end %>
+    <% end %>
     <button id="activate-row" class='btn btn-sm btn-success' disabled><%=t(".activate")%></button>
     <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%=t(".deactivate")%></button>
     <%= link_to new_restaurantavailability_path, class: 'btn btn-sm btn-primary' do %>

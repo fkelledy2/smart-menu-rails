@@ -4,7 +4,12 @@ class RestaurantavailabilitiesController < ApplicationController
   # GET /restaurantavailabilities or /restaurantavailabilities.json
   def index
     if current_user
-        @restaurantavailabilities = Restaurantavailability.joins(:restaurant).where(restaurant: {user: current_user}).all
+        if params[:restaurant_id]
+            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+            @restaurantavailabilities = Restaurantavailability.joins(:restaurant).where(restaurant: @futureParentRestaurant).all
+        else
+            @restaurantavailabilities = Restaurantavailability.joins(:restaurant).where(restaurant: {user: current_user}).all
+        end
     else
         redirect_to root_url
     end

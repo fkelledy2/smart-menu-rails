@@ -21,12 +21,12 @@
     </div>
     <div class="col-sm-2">
         <% if @tablesetting.persisted? %>
-          <%= link_to "Cancel", restaurant_path(id: @tablesetting.restaurant.id), class: "float-end btn btn-light" %>
+          <%= link_to "Cancel", restaurant_path(id: @tablesetting.restaurant.id), class: "float-end btn btn-sm btn-light" %>
         <% else %>
           <% if @futureParentRestaurant %>
-              <%= link_to t('.cancel'), restaurant_path(id: @futureParentRestaurant.id), class: "float-end btn btn-light" %>
+              <%= link_to t('.cancel'), restaurant_path(id: @futureParentRestaurant.id), class: "float-end btn btn-sm btn-light" %>
           <% else %>
-              <%= link_to t('.cancel'), tablesettings_path, class: "float-end btn btn-light" %>
+              <%= link_to t('.cancel'), tablesettings_path, class: "float-end btn btn-sm btn-light" %>
           <% end %>
         <% end %>
     </div>

@@ -3,14 +3,14 @@ class TablesettingsController < ApplicationController
 
   # GET /tablesettings or /tablesettings.json
   def index
-      @today = Date.today.strftime('%A').downcase!
-      @currentHour = Time.now.strftime("%H").to_i
-      @currentMin = Time.now.strftime("%M").to_i
-      @currentDay = Time.now.wday.to_i
+    @today = Date.today.strftime('%A').downcase!
+    @currentHour = Time.now.strftime("%H").to_i
+    @currentMin = Time.now.strftime("%M").to_i
+    @currentDay = Time.now.wday.to_i
     if current_user
         if params[:restaurant_id]
-            @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-            @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: {user: current_user}, restaurant_id: @restaurant.id).all
+            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+            @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: @futureParentRestaurant).all
         else
             @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: {user: current_user}).all
         end
