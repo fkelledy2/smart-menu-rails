@@ -44,7 +44,9 @@ en:
       tableSettings: "Table Settings"
       orders: "Orders"
       orderItems: "Order Items"
-
+      logout: "Logout"
+      settings: "Settings"
+      whatsNew: "What's New"
   restaurants:
     index:
       restaurants: "Restaurants"

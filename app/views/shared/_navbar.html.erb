@@ -48,27 +48,25 @@
       </ul>
 
       <ul class="navbar-nav">
-        <li class="nav-item"><%= link_to "What's New", announcements_path, class: "nav-link #{unread_announcements(current_user)}" %></li>
+        <li class="nav-item"><%= link_to t(".whatsNew"), announcements_path, class: "nav-link #{unread_announcements(current_user)}" %></li>
         <% if user_signed_in? %>
-
           <li class="nav-item">
             <%= link_to notifications_path, class: "nav-link" do %>
               <span><i class="far fa-bell" aria-hidden="true"></i></span>
             <% end %>
           </li>
-
           <li style="z-index:1070;" class="nav-item dropdown">
             <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
               <%= current_user.name %> <%= image_tag avatar_path(current_user, size: 40), height: 20, width: 20, class: "rounded" %>
             <% end %>
             <div id="nav-account-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbar-dropdown">
-              <%= link_to "Settings", edit_user_registration_path, class: "dropdown-item" %>
+              <%= link_to t(".settings"), edit_user_registration_path, class: "dropdown-item" %>
               <% if current_user.admin? && respond_to?(:madmin_root_path) %>
                 <div class="dropdown-divider"></div>
-                <%= link_to "Admin Area", madmin_root_path, class: "dropdown-item" %>
+                <%= link_to t(".adminArea"), madmin_root_path, class: "dropdown-item" %>
               <% end %>
               <div class="dropdown-divider"></div>
-              <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+              <%= button_to t(".logout"), destroy_user_session_path, method: :delete, class: "dropdown-item" %>
             </div>
           </li>
 
