@@ -3,13 +3,13 @@
             </div>
             <div class="col-sm-6">
                 <%= link_to restaurant_restaurantavailabilities_path(restaurant_id: @restaurant.id), class: 'link-dark' do %>
-                    <h4>Opening Hours</h4>
+                    <h4><%=t(".openingHours")%></h4>
                 <% end %>
             </div>
             <div class="col-sm-3">
                 <span class="float-end">
                     <%= link_to new_restaurantavailability_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
-                        <i class="bi bi-plus"></i>&nbsp;Opening Hour
+                        <i class="bi bi-plus"></i>&nbsp;<%=t(".openingHour")%>
                     <% end %>
                 </span>
             </div>
@@ -21,9 +21,9 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th class="w-25 p-3" scope="col">Day Of Week</th>
-                      <th class="w-25 p-3" scope="col"><span class="float-end">Opening</span></th>
-                      <th class="w-25 p-3" scope="col"><span class="float-end">Closing</span></th>
+                      <th class="w-25 p-3" scope="col"><%=t(".dayOfWeek")%></th>
+                      <th class="w-25 p-3" scope="col"><span class="float-end"><%=t(".opening")%></span></th>
+                      <th class="w-25 p-3" scope="col"><span class="float-end"><%=t(".closing")%></span></th>
                     </tr>
                   </thead>
                   <tbody>

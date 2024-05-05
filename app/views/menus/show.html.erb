@@ -1,12 +1,4 @@
-<% if @restaurantCurrency %>
-    <div style="display:none" id="restaurantCurrency">
-        <% if @restaurantCurrency.symbol %>
-            <%= @restaurantCurrency.symbol %>
-        <% else %>
-            <%= @restaurantCurrency.iso_code %>
-        <% end %>
-    </div>
-<% end %>
+<%= render 'shared/currency' %>
 <% if current_user %>
 <div id="menuu" style="padding-bottom:10px;box-shadow: 0 4px 2px -2px gray;" class="sticky-top bg-white">
 <% else %>

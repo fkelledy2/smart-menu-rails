@@ -8,14 +8,6 @@
     <% end %>
   </div>
 </div>
-<% if @restaurantCurrency %>
-    <div style="display:none" id="restaurantCurrency">
-        <% if @restaurantCurrency.symbol %>
-            <%= @restaurantCurrency.symbol %>
-        <% else %>
-            <%= @restaurantCurrency.iso_code %>
-        <% end %>
-    </div>
-<% end %>
+<%= render 'shared/currency' %>
 <div style="padding-top:10px" id="orderitem-table">
 </div>

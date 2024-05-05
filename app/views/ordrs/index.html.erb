@@ -3,15 +3,6 @@
     <h1>Orders</h1>
   </div>
 </div>
-
-<% if @restaurantCurrency %>
-    <div style="display:none" id="restaurantCurrency">
-        <% if @restaurantCurrency.symbol %>
-            <%= @restaurantCurrency.symbol %>
-        <% else %>
-            <%= @restaurantCurrency.iso_code %>
-        <% end %>
-    </div>
-<% end %>
+<%= render 'shared/currency' %>
 <div id="order-table" style="display:none">
 </div>

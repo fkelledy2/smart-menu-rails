@@ -1,28 +1,5 @@
-<style>
-    .form-control:disabled {
-        background-color: #fafafa;
-        opacity: 1;
-    }
-    .disabled .ts-control {
-        opacity: 1.0;
-        background-color: #fafafa;
-    }
-    .ts-dropdown, .ts-control, .ts-control input {
-        color: #000000;
-        padding-left:12px;
-        font-size: 16px;
-        line-height: 18px;
-    }
-</style>
-<% if @restaurantCurrency %>
-    <div style="display:none" id="restaurantCurrency">
-        <% if @restaurantCurrency.symbol %>
-            <%= @restaurantCurrency.symbol %>
-        <% else %>
-            <%= @restaurantCurrency.iso_code %>
-        <% end %>
-    </div>
-<% end %>
+<%= render 'shared/customcss' %>
+<%= render 'shared/currency' %>
 <% if current_user %>
     <div class="row">
       <div class="col-sm-6">

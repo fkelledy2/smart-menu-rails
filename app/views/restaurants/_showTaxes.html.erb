@@ -3,13 +3,13 @@
             </div>
             <div class="col-sm-6">
                 <%= link_to restaurant_taxes_path(restaurant_id: @restaurant.id), class: 'link-dark' do %>
-                    <h4>Taxes</h4>
+                    <h4><%=t(".taxes")%></h4>
                 <% end %>
             </div>
             <div class="col-sm-3">
                 <span class="float-end">
                     <%= link_to new_tax_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
-                        <i class="bi bi-plus"></i>&nbsp;Tax
+                        <i class="bi bi-plus"></i>&nbsp;<%=t(".tax")%>
                     <% end %>
                 </span>
             </div>
@@ -21,9 +21,9 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th class="w-25 p-3" scope="col">Name</th>
-                      <th class="w-25 p-3" scope="col"><span class="float-end">Type</span></th>
-                      <th class="w-25 p-3" scope="col"><span class="float-end">Percentage</span></th>
+                      <th class="w-25 p-3" scope="col"><%=t(".name")%></th>
+                      <th class="w-25 p-3" scope="col"><span class="float-end"><%=t(".type")%></span></th>
+                      <th class="w-25 p-3" scope="col"><span class="float-end"><%=t(".percentage")%></span></th>
                     </tr>
                   </thead>
                   <tbody>
