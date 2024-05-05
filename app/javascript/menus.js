@@ -50,9 +50,9 @@ document.addEventListener("turbo:load", () => {
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
-          groupBy: ["restaurant.name"],
           ajaxURL: '/menus.json',
           initialSort:[
+            {column:"restaurant.name", dir:"asc"},
             {column:"sequence", dir:"asc"},
           ],
           movableRows:true,
@@ -68,16 +68,16 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/restaurants/",
             }
           },
-          { rowHandle:true, formatter:"handle", headerSort:false,  width:30, minWidth:30 },
-          { title:" ", field:"sequence", formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
+          { rowHandle:true, formatter:"handle", headerSort:false, responsive:0, width:30, minWidth:30 },
+          { title:" ", field:"sequence", formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {
             title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
                 labelField:"name",
                 urlPrefix:"/menus/",
             }
            },
-           {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Created", field:"created_at", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+           {title:"Status", field:"status", responsive:4, hozAlign:"right", headerHozAlign:"right" },
+           {title:"Created", field:"created_at", responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
             inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
             outputFormat:"dd/MM/yyyy",
             invalidPlaceholder:"(invalid date)",
