@@ -19,13 +19,11 @@ document.addEventListener("turbo:load", () => {
         var menuItemTable = new Tabulator("#menuitem-table", {
           dataLoader: false,
           maxHeight:"100%",
-          paginationSize:20,
           responsiveLayout:true,
-          layout:"fitDataFill",
-          groupBy: ["menusection.id"],
+          layout:"fitDataStretch",
           ajaxURL: '/menuitems.json',
           initialSort:[
-            {column:"sequence", dir:"asc"},
+            {column:"menusection.id", dir:"asc"}
           ],
           movableRows:true,
           columns: [
@@ -35,7 +33,7 @@ document.addEventListener("turbo:load", () => {
             }
           },
           {
-            title:"Menu Section", field:"menusection.id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
+            title:"Menu Section", field:"menusection.id", responsive:0, formatter:"link", formatterParams: {
                 labelField:"menusection.name",
                 urlPrefix:"/menusections/",
             }
@@ -48,9 +46,9 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/menuitems/",
             }
            },
-           {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Calories", field:"calories", width: 100, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Price", field:"price", formatter:"money", width: 100, hozAlign:"right", headerHozAlign:"right",
+           {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" },
+           {title:"Calories", field:"calories", hozAlign:"right", headerHozAlign:"right" },
+           {title:"Price", field:"price", formatter:"money",  hozAlign:"right", headerHozAlign:"right",
             formatterParams:{
                decimal:".",
                thousand:",",
@@ -59,24 +57,18 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
            },
-          {title:"Prep Time", field:"preptime", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
+          {title:"Prep Time", field:"preptime", responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {
                title:"Inventory",
                columns:[
-                {title:"Starting", field:"inventory.startinginventory", width: 130, hozAlign:"right", headerHozAlign:"right" },
-                {title:"Current", field:"inventory.currentinventory", width: 130, hozAlign:"right", headerHozAlign:"right" },
-                {title:"Resets At", field:"inventory.resethour", width: 130, hozAlign:"right", headerHozAlign:"right" },
+                {title:"Starting", field:"inventory.startinginventory", hozAlign:"right", headerHozAlign:"right" },
+                {title:"Current", field:"inventory.currentinventory", hozAlign:"right", headerHozAlign:"right" },
+                {title:"Resets At", field:"inventory.resethour", hozAlign:"right", headerHozAlign:"right" },
                ],
            },
-           {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
+           {title:"Created", field:"created_at", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
             inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy HH:mm",
-            invalidPlaceholder:"(invalid date)",
-            }
-           },
-           {title:"Updated", field:"updated_at", width:200, responsive:5, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy HH:mm",
+            outputFormat:"dd/MM/yyyy",
             invalidPlaceholder:"(invalid date)",
             }
            }
