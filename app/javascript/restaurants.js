@@ -35,7 +35,7 @@ document.addEventListener("turbo:load", () => {
           ajaxURL: '/restaurants.json',
           columns: [
            {
-             formatter:"rowSelection", titleFormatter:"rowSelection", responsive:0, width: 20, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
+             formatter:"rowSelection", titleFormatter:"rowSelection", responsive:0, width: 30, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
                 cell.getRow().toggleSelect();
              }
            },

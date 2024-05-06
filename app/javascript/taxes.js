@@ -23,7 +23,7 @@ document.addEventListener("turbo:load", () => {
           movableRows:true,
           columns: [
            {
-             formatter:"rowSelection", titleFormatter:"rowSelection", width: 20, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
+             formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
                 cell.getRow().toggleSelect();
              }
            },

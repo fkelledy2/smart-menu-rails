@@ -30,7 +30,7 @@ document.addEventListener("turbo:load", () => {
           ajaxURL: '/employees.json',
           columns: [
            {
-             formatter:"rowSelection", titleFormatter:"rowSelection", width: 20, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
+             formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
                 cell.getRow().toggleSelect();
              }
            },
