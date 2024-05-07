@@ -7,9 +7,25 @@ class OrdrsController < ApplicationController
     if current_user
         if params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-            @ordrs = Ordr.joins(:restaurant).where(restaurant_id: @restaurant.id).all
+            @ordrs = Ordr.joins(:restaurant).where(restaurant_id: @restaurant.id, status: [0, 10,20]).all
         else
-            @ordrs = Ordr.joins(:restaurant).where(restaurant: {user: current_user}).all
+            @ordrs = Ordr.joins(:restaurant).where(restaurant: {user: current_user}, status: [0, 10,20]).all
+        end
+        for @ordr in @ordrs do
+            @ordr.nett = @ordr.runningTotal
+            taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
+            totalTax = 0
+            totalService = 0
+            for tax in taxes do
+                if tax.taxtype == 'service'
+                    totalService += ((tax.taxpercentage * @ordr.nett)/100)
+                else
+                    totalTax += ((tax.taxpercentage * @ordr.nett)/100)
+                end
+            end
+            @ordr.tax = totalTax
+            @ordr.service = totalService
+            @ordr.gross = @ordr.nett + @ordr.tip + @ordr.service + @ordr.tax
         end
     else
         redirect_to root_url
@@ -18,6 +34,20 @@ class OrdrsController < ApplicationController
 
   # GET /ordrs/1 or /ordrs/1.json
   def show
+            @ordr.nett = @ordr.runningTotal
+            taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
+            totalTax = 0
+            totalService = 0
+            for tax in taxes do
+                if tax.taxtype == 'service'
+                    totalService += ((tax.taxpercentage * @ordr.nett)/100)
+                else
+                    totalTax += ((tax.taxpercentage * @ordr.nett)/100)
+                end
+            end
+            @ordr.tax = totalTax
+            @ordr.service = totalService
+            @ordr.gross = @ordr.nett + @ordr.tip + @ordr.service + @ordr.tax
   end
 
   # GET /ordrs/new
@@ -229,10 +259,10 @@ class OrdrsController < ApplicationController
     end
 
     def set_currency
-      if params[:id]
-          @ordr = Ordr.find(params[:id])
-          if @ordr.restaurant.currency
-            @restaurantCurrency = ISO4217::Currency.from_code(@ordr.restaurant.currency)
+      if params[:restaurant_id]
+          @restaurant = Restaurant.find(params[:restaurant_id])
+          if @restaurant.currency
+            @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
           else
             @restaurantCurrency = ISO4217::Currency.from_code('USD')
           end

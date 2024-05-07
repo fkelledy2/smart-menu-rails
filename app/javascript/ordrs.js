@@ -245,42 +245,40 @@ document.addEventListener("turbo:load", () => {
         var orderTable = new Tabulator("#order-table", {
           dataLoader: false,
           maxHeight:"100%",
-          paginationSize:20,
           responsiveLayout:true,
-          layout:"fitDataFill",
-          groupBy: ["restaurant.name","menu.name", "ordrDate" ],
+          layout:"fitDataStretch",
           ajaxURL: '/ordrs.json',
           initialSort:[
             {column:"ordrDate", dir:"desc"},
             {column:"id", dir:"desc"},
           ],
           columns: [
-           {title:"Date", field:"ordrDate", frozen:true, width:150, responsive:1, hozAlign:"right", headerHozAlign:"right" },
-           {
-            title:"Restaurant", field:"restaurant.id", width:200, frozen:true, responsive:1, formatter:"link", formatterParams: {
-                labelField:"restaurant.name",
-                urlPrefix:"/restaurants/",
-            }
-           },
-           {
-            title:"Menu", field:"menu.id", frozen:true, width:200, responsive:3, formatter:"link", formatterParams: {
-                labelField:"menu.name",
-                urlPrefix:"/menus/",
-            }
-           },
-           {
-            title:"Table", field:"tablesetting.id", width:120, frozen:true, responsive:4, formatter:"link", formatterParams: {
-                labelField:"tablesetting.name",
-                urlPrefix:"/tablesettings/",
-            }
-           },
            {
             title:"Id", field:"id", sorter:"number", responsive:0, formatter:"link", formatterParams: {
                 labelField:"id",
                 urlPrefix:"/ordrs/",
             }
            },
-           {title:"Nett", field:"nett", formatter:"money", width:120, hozAlign:"right", responsive:0, headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
+           {title:"Date", field:"ordrDate", responsive:1, hozAlign:"right", headerHozAlign:"right" },
+           {
+            title:"Restaurant", field:"restaurant.id", responsive:1, formatter:"link", formatterParams: {
+                labelField:"restaurant.name",
+                urlPrefix:"/restaurants/",
+            }
+           },
+           {
+            title:"Menu", field:"menu.id", responsive:3, formatter:"link", formatterParams: {
+                labelField:"menu.name",
+                urlPrefix:"/menus/",
+            }
+           },
+           {
+            title:"Table", field:"tablesetting.id", responsive:4, formatter:"link", formatterParams: {
+                labelField:"tablesetting.name",
+                urlPrefix:"/tablesettings/",
+            }
+           },
+           {title:"Nett", field:"nett", formatter:"money", hozAlign:"right", responsive:0, headerHozAlign:"right",
             formatterParams:{
                decimal:".",
                thousand:",",
@@ -289,7 +287,7 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
            },
-           {title:"Tip", field:"tip", formatter:"money", width:120, hozAlign:"right", responsive:5, headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
+           {title:"Service", field:"service", formatter:"money", hozAlign:"right", responsive:5, headerHozAlign:"right",
             formatterParams:{
                decimal:".",
                thousand:",",
@@ -298,7 +296,7 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
            },
-           {title:"Service", field:"service", formatter:"money", width:120, hozAlign:"right", responsive:5, headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
+           {title:"Tax", field:"tax", formatter:"money", hozAlign:"right", responsive:5, headerHozAlign:"right",
             formatterParams:{
                decimal:".",
                thousand:",",
@@ -307,16 +305,7 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
            },
-           {title:"Tax", field:"tax", formatter:"money", width:120, hozAlign:"right", responsive:5, headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},
-            formatterParams:{
-               decimal:".",
-               thousand:",",
-               symbol:restaurantCurrencySymbol,
-               negativeSign:true,
-               precision:2,
-            }
-           },
-           {title:"Gross", field:"gross", formatter:"money", width:120, hozAlign:"right", responsive:0, headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2}, frozen:true,
+           {title:"Gross", field:"gross", formatter:"money", hozAlign:"right", responsive:0, headerHozAlign:"right",
             formatterParams:{
                decimal:".",
                thousand:",",

@@ -1,2 +1,21 @@
-<h1>Welcome to Jumpstart!</h1>
-<p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+<% if current_user %>
+    <h1>Landing Page</h1>
+<% else %>
+
+QR code menu ordering offers several benefits:
+<h2>Contactless Experience:</h2>
+<p>Especially in a post-pandemic world, QR code menu ordering reduces physical contact between customers and staff, promoting a safer dining experience.</p>
+<h2>Convenience:</h2>
+<p>Customers can simply scan a QR code with their smartphones to access the menu, eliminating the need for physical menus that can get lost or damaged.</p>
+<h2>Efficiency:</h2>
+<p>Ordering via QR codes can streamline the process, allowing customers to browse the menu at their own pace and place orders directly from their devices, reducing waiting times for both customers and staff.</p>
+<h2>Reduced Errors:</h2>
+<p>With QR code ordering, customers can select their orders directly from the digital menu, reducing the chances of miscommunication or errors in taking orders.</p>
+<h2>Upselling Opportunities:</h2>
+<p>Digital menus can include interactive features such as images, descriptions, and recommendations, enabling businesses to upsell additional items or promotions more effectively.</p>
+<h2>Data Collection:</h2>
+<p>QR code ordering systems can collect valuable data on customer preferences and ordering patterns, enabling businesses to better understand their customers and tailor their offerings accordingly.</p>
+<h2>Environmental Sustainability:</h2>
+<p>By eliminating the need for printed menus, QR code menu ordering can help reduce paper waste and promote environmental sustainability. Overall, QR code menu ordering offers a convenient, efficient, and safer dining experience for both customers and businesses alike.</p>
+
+<% end %>
