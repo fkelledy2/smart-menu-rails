@@ -91,6 +91,10 @@ en:
       name: "Name"
       type: "Type"
       percentage: "Percentage"
+    showTips:
+      tips: "Tip Settings"
+      tip: "Tip"
+      percentage: "Percentage"
     edit:
       restaurant: "Edit Restaurant"
     new:
@@ -118,6 +122,24 @@ en:
       employee: "Edit Employee"
     new:
       employee: "New Employee"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+      errors: "Errors"
+
+  tips:
+    index:
+      tips: "Tip Settings"
+      tip: "Tip Setting"
+    show:
+      tip: "View Tip Setting"
+    edit:
+      tip: "Edit Tip Setting"
+    new:
+      tip: "New Tip Setting"
       cancel: "Cancel"
     form:
       save: "Save"

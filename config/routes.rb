@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :tips
   resources :ordractions
   resources :restaurantavailabilities
   resources :menuavailabilities
@@ -22,6 +23,7 @@ Rails.application.routes.draw do
     resources :menus, controller: 'menus', only: [:index]
     resources :tablesettings, controller: 'tablesettings', only: [:index,:show, :edit]
     resources :taxes, controller: 'taxes', only: [:index,:show, :edit]
+    resources :tips, controller: 'tips', only: [:index,:show, :edit]
     resources :employees, controller: 'employees', only: [:index,:show, :edit]
     resources :restaurantavailabilities, controller: 'restaurantavailabilities', only: [:index,:show, :edit]
     resources :ordrs, controller: 'ordrs', only: [:index]

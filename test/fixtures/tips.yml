@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  percentage: 1.5
+  restaurant: one
+
+two:
+  percentage: 1.5
+  restaurant: two

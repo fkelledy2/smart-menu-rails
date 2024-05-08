@@ -4,6 +4,7 @@ class Restaurant < ApplicationRecord
   has_many :menus, dependent: :delete_all
   has_many :employees, dependent: :delete_all
   has_many :taxes, dependent: :delete_all
+  has_many :tips, dependent: :delete_all
   has_many :restaurantavailabilities, dependent: :delete_all
   has_many :menusections, through: :menus
   has_many :menuavailabilities, through: :menus

@@ -4,7 +4,16 @@ document.addEventListener("turbo:load", () => {
       $(':checkbox').prop('checked', this.checked);
     });
 
-    $(".tipNumberField").change(function() {
+    $(".tipPreset").click(function() {
+        let presetTipPercentage = parseFloat($(this).text());
+        let gross = parseFloat($("#orderGross").text());
+        let tip = ((gross / 100) * presetTipPercentage).toFixed(2);
+        $("#tipNumberField").val(tip);
+        let total = parseFloat(parseFloat(tip)+parseFloat(gross)).toFixed(2);
+        $("#orderGrandTotal").text($('#restaurantCurrency').text()+parseFloat(total).toFixed(2));
+    });
+
+    $("#tipNumberField").change(function() {
         $(this).val(parseFloat($(this).val()).toFixed(2));
         let gross = parseFloat($("#orderGross").text());
         let tip = parseFloat($(this).val());

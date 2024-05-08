@@ -179,6 +179,7 @@
         </div>
     </div>
     <%= render 'showTaxes', restaurant: @restaurant %>
+    <%= render 'showTips', restaurant: @restaurant %>
   <% end %>
 
   <%= form.hidden_field :user_id, value: current_user.id %>
