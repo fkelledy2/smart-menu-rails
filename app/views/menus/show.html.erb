@@ -169,7 +169,7 @@
                                                     <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
                                                 </div>
                                                 <div class="col-3">
-                                                    <h5 class="float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %></span></h5>
+                                                    <h5 style="margin-top:5px" class="float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %></span></h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -200,7 +200,7 @@
                                                     <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
                                                 </div>
                                                 <div class="col-3">
-                                                    <h5 class="float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol) %></span></h5>
+                                                    <h5 style="margin-top:5px" class="float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol) %></span></h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -223,7 +223,7 @@
                                                 <span class="float-end">
                                                     <div class="btn-group" role="group" aria-label="Allergyns">
                                                         <% menuitem.allergyns.each do |allergyn| %>
-                                                            <button type="button" class="btn btn-xs btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
+                                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
                                                                 <%= allergyn.symbol %>
                                                             </button>
                                                         <%end %>
@@ -520,12 +520,12 @@
                 <div class="row">
                     <div class="col-12">
                         <span class="float-end">
-                            <div style="position:relative;left:25px" class="btn-toolbar btn-toolbar-sm mb-3" role="toolbar" aria-label="Tip Options">
+                            <div style="position:relative;left:15px" class="btn-toolbar btn-toolbar-sm mb-3" role="toolbar" aria-label="Tip Options">
                               <div class="btn-group btn-group-sm mr-2" role="group" aria-label="First group">
                                   <% @openOrder.menu.restaurant.tips.sort_by(&:percentage).each do |tip| %>
                                     <button type="button" class="btn btn-sm btn-secondary"><span class="tipPreset"><%= tip.percentage %></span>%</button>
                                   <% end %>
-                                  <input id="tipNumberField" style="width:100px" type="number" min="0.00" max="<%= number_to_currency(@openOrder.gross, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>" class="form-control float-end text-end" id="tip" value="0.00">
+                                  <input id="tipNumberField" style="width:80px" type="number" min="0.00" max="<%= number_to_currency(@openOrder.gross, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>" class="form-control float-end text-end" id="tip" value="0.00">
                               </div>
                             </div>
                         </span>
