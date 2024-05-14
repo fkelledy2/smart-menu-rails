@@ -23,7 +23,8 @@ document.addEventListener("turbo:load", () => {
           layout:"fitDataStretch",
           ajaxURL: '/menuitems.json',
           initialSort:[
-            {column:"menusection.id", dir:"asc"}
+            {column:"menusection.id", dir:"asc"},
+            {column:"sequence", dir:"asc"}
           ],
           movableRows:true,
           columns: [

@@ -75,7 +75,7 @@ class OrdritemsController < ApplicationController
     respond_to do |format|
       if @ordritem.update(ordritem_params)
         ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
-        format.html { redirect_to ordritem_url(@ordritem), notice: "Ordritem was successfully updated." }
+        format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully updated ()" }
         format.json { render :show, status: :ok, location: @ordritem }
       else
         format.html { render :edit, status: :unprocessable_entity }

@@ -17,6 +17,15 @@
   json.ordritems ordr.ordritems do |ordritem|
     json.partial! 'ordritems/ordritem', ordritem: ordritem
   end
+  json.orderedOrdritems ordr.orderedItems do |ordritem|
+    json.partial! 'ordritems/ordritem', ordritem: ordritem
+  end
+  json.preparedOrdritems ordr.preparedItems do |ordritem|
+    json.partial! 'ordritems/ordritem', ordritem: ordritem
+  end
+  json.deliveredOrdritems ordr.deliveredItems do |ordritem|
+    json.partial! 'ordritems/ordritem', ordritem: ordritem
+  end
   json.ordrparticipants ordr.ordrparticipants do |ordrparticipant|
     json.partial! 'ordrparticipants/ordrparticipant', ordrparticipant: ordrparticipant
   end

@@ -7,11 +7,16 @@ class OrdrsController < ApplicationController
     if current_user
         if params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-            @ordrs = Ordr.joins(:restaurant).where(restaurant_id: @restaurant.id, status: [0, 10,20]).all
+            @ordrs = Ordr.joins(:restaurant).where(restaurant_id: @restaurant.id, status: [0, 10, 20]).all
         else
-            @ordrs = Ordr.joins(:restaurant).where(restaurant: {user: current_user}, status: [0, 10,20]).all
+            @ordrs = Ordr.joins(:restaurant).where(restaurant: {user: current_user}, status: [0, 10, 20]).all
         end
+
         for @ordr in @ordrs do
+            remainingItems =  @ordr.orderedItemsCount + @ordr.preparedItemsCount
+            if remainingItems == 0
+                @ordr.status = 25
+            end
             @ordr.nett = @ordr.runningTotal
             taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
             totalTax = 0
@@ -170,27 +175,6 @@ class OrdrsController < ApplicationController
             @tablesetting.save
             ActionCable.server.broadcast("ordr_channel", @ordr)
         end
-        if( ordr_params[:status] = 10 )
-            if current_user
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
-                    @ordrparticipant.save
-                end
-            else
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s );
-                    @ordrparticipant.save
-                end
-                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 5)
-                @ordraction.save
-            end
-            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
-            @tablesetting.status = 1
-            @tablesetting.save
-            ActionCable.server.broadcast("ordr_channel", @ordr)
-        end
         if( ordr_params[:status] = 20 )
             if current_user
                 @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
@@ -210,9 +194,37 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 1
             @tablesetting.save
+            @ordr.ordritems.each do |oi|
+                if oi.status = 10
+                    oi.status = 20
+                    oi.save
+                end
+            end
             ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         if( ordr_params[:status] = 30 )
+            if current_user
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
+                    @ordrparticipant.save
+                end
+            else
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s );
+                    @ordrparticipant.save
+                end
+                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 5)
+                @ordraction.save
+            end
+            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
+            @tablesetting.status = 1
+            @tablesetting.save
+
+            ActionCable.server.broadcast("ordr_channel", @ordr)
+        end
+        if( ordr_params[:status] = 40 )
             if current_user
                 @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
                 if @ordrparticipant == nil

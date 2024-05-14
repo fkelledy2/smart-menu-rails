@@ -37,10 +37,35 @@ class Ordr < ApplicationRecord
 
   enum status: {
     opened: 0,
-    ordered: 10,
-    billrequested: 20,
-    closed: 30
+    ordered: 20,
+    delivered: 25,
+    billrequested: 30,
+    closed: 40
   }
+
+  def orderedItems
+    ordritems.where(status: 20).all
+  end
+
+  def orderedItemsCount
+    ordritems.where(status: 20).count
+  end
+
+  def preparedItems
+    ordritems.where(status: 30).all
+  end
+
+  def preparedItemsCount
+    ordritems.where(status: 30).count
+  end
+
+  def deliveredItems
+    ordritems.where(status: 40).all
+  end
+
+  def deliveredItemsCount
+    ordritems.where(status: 40).count
+  end
 
   def ordrDate
       created_at.strftime("%d/%d/%Y")

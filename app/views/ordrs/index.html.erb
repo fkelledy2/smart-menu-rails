@@ -4,5 +4,91 @@
   </div>
 </div>
 <%= render 'shared/currency' %>
-<div id="order-table" class="table-borderless" >
-</div>
+
+<% @ordrs.each do |ordr| %>
+    <% if ordr.status != 'delivered' %>
+        <div class="row">
+            <div class="col-12">
+                <h2>
+                    <%= ordr.id %>
+                    <span class="float-end">
+                        <%= ordr.created_at.strftime("%d/%m/%Y %I:%M") %>
+                    </span>
+                </h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <h2>Ordered</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <% ordr.orderedItems.each do |ordritem| %>
+                                    <div class="alert alert-danger" role="alert">
+                                        <%= ordritem.menuitem.name %> (<%= ordritem.menuitem.preptime %>)
+                                        <span class="float-end">
+                                            <%= form_with(model: ordritem) do |form| %>
+                                                <%= form.hidden_field :status, value: 'prepared' %>
+                                                <%= button_tag( :class => "btn btn-sm btn-danger") do %>
+                                                  <i class="bi bi-chevron-right"></i>
+                                                <% end %>
+                                            <% end %>
+                                        </span>
+                                    </div>
+                                <% end %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <h2>Prepared</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <% ordr.preparedItems.each do |ordritem| %>
+                                    <div class="alert alert-warning" role="alert">
+                                        <%= ordritem.menuitem.name %>
+                                        <span class="float-end">
+                                            <%= form_with(model: ordritem) do |form| %>
+                                                <%= form.hidden_field :status, value: 'delivered' %>
+                                                <%= button_tag( :class => "btn btn-sm btn-warning") do %>
+                                                  <i class="bi bi-chevron-right"></i>
+                                                <% end %>
+                                            <% end %>
+                                        </span>
+                                    </div>
+                                <% end %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <h2>Delivered</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <% ordr.deliveredItems.each do |ordritem| %>
+                                    <div class="alert alert-success" role="alert">
+                                        <%= ordritem.menuitem.name %>
+                                    </div>
+                                <% end %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% end %>
+<% end %>
+
+<div id="order-table" class="table-borderless" ></div>

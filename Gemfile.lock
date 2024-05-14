@@ -400,6 +400,7 @@ DEPENDENCIES
   madmin
   mini_magick
   name_of_person!
+  nokogiri
   noticed (~> 2.0)
   omniauth-facebook (~> 8.0)
   omniauth-github (~> 2.0)
