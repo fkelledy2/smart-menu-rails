@@ -119,16 +119,16 @@
                 </span>
             </div>
         </div>
-        <div style="padding-top:5px" class=" container-fluid">
+        <div class=" container-fluid">
             <nav id="navbar-example2" class="nav flex-nowrap overflow-auto">
               <ul class="nav nav-pills">
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
                     <li class="nav-item">
-                      <a class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>&nbsp;
+                      <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>
                     </li>
                 <% end %>
                 <li class="nav-item">
-                    <a class="sectionnav btn btn-sm btn-outline-danger text-nowrap" href="#menusection_allergyns">Allergens</a>
+                    <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-danger text-nowrap" href="#menusection_allergyns">Allergens</a>
                 </li>
               </ul>
             </nav>
