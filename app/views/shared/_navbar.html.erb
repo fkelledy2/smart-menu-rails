@@ -16,8 +16,21 @@
     <div class="collapse navbar-collapse" id="navbarMain">
       <ul class="navbar-nav me-auto mt-2 mt-md-0">
         <% if current_user %>
-            <li class="nav-item">
-                <%= link_to t(".restaurants"), restaurants_path, class: "nav-link" %>
+            <li style="z-index:1070;" class="nav-item dropdown">
+              <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
+                Restaurants
+              <% end %>
+              <div id="nav-account-dropdown" class="dropdown-menu" aria-labelledby="navbar-dropdown">
+                <%= link_to restaurants_path, class: "dropdown-item" do %>
+                    Restaurants
+                <% end %>
+                <hr class="dropdown-divider">
+                <% @restaurants.each do |restaurant| %>
+                    <%= link_to restaurant_path(id: restaurant.id), class: "dropdown-item" do %>
+                        <%= restaurant.name %>
+                    <% end %>
+                <% end %>
+              </div>
             </li>
             <li style="z-index:1070;" class="nav-item dropdown">
               <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>

@@ -1,5 +1,6 @@
 class MenusController < ApplicationController
   before_action :set_menu, only: %i[ show edit update destroy ]
+  before_action :set_restaurants
 
   # GET	/restaurants/:restaurant_id/menus
   # GET /menus or /menus.json

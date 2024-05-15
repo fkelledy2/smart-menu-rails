@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
     def set_current_employee
         if current_user
             @current_employee = Employee.where(user_id: current_user.id).first
+            @restaurants = Restaurant.where( user: current_user)
         end
     end
 
