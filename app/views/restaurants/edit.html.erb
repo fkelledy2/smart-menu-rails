@@ -2,7 +2,7 @@
 <div class="page-header">
   <div class="row">
     <div class="col-sm-10">
-          <h1><%=t(".restaurant")%></h1>
+          <h1><%= @restaurant.name %></h1>
     </div>
     <div class="col-sm-2">
         <% if @restaurant.persisted? %>
@@ -16,14 +16,31 @@
 
 <ul class="nav nav-tabs" id="restaurantTabs" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true">Restaurant</button>
+    <button class="nav-link link-dark active" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true">Restaurant</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="menusConfig" aria-selected="false">Menus</button>
+    <button class="nav-link link-dark" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menusConfig" aria-selected="false">Menus</button>
   </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark" id="employees-tab" data-bs-toggle="tab" data-bs-target="#employee" type="button" role="tab" aria-controls="employeesConfig" aria-selected="false">Employees</button>
+  </li>
+  <% if @current_employee && @current_employee.role == 'manager' %>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="tables-tab" data-bs-toggle="tab" data-bs-target="#table" type="button" role="tab" aria-controls="tablesConfig" aria-selected="false">Tables</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="tips-tab" data-bs-toggle="tab" data-bs-target="#tip" type="button" role="tab" aria-controls="tipsConfig" aria-selected="false">Tips</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="taxes-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab" aria-controls="taxesConfig" aria-selected="false">Taxes</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="openinghours-tab" data-bs-toggle="tab" data-bs-target="#openinghour" type="button" role="tab" aria-controls="openinghoursConfig" aria-selected="false">Opening Hours</button>
+      </li>
+  <% end %>
 </ul>
 <div class="tab-content" id="restaurantConfig">
-  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+  <div class="tab-pane fade show active" id="restaurant" role="tabpanel" aria-labelledby="restaurant-tab">
     <p>
     <div class="row">
         <div class="col-sm-11">
@@ -31,6 +48,47 @@
         </div>
     </div>
   </div>
-  <div class="tab-pane fade" id="menuConfig" role="tabpanel" aria-labelledby="profile-tab">
+
+  <div class="tab-content" id="employeeConfig">
+    <div class="tab-pane fade" id="employee" role="tabpanel" aria-labelledby="employee-tab">
+        <%= render 'showEmployees', restaurant: @restaurant, edit: true %>
+    </div>
   </div>
+  <div class="tab-content" id="menusConfig">
+    <div class="tab-pane fade" id="menu" role="tabpanel" aria-labelledby="menu-tab">
+        <%= render 'showMenus', restaurant: @restaurant, edit: true %>
+    </div>
+  </div>
+  <% if @current_employee && @current_employee.role == 'manager' %>
+      <div class="tab-content" id="tablesConfig">
+        <div class="tab-pane fade" id="table" role="tabpanel" aria-labelledby="table-tab">
+            <%= render 'showTableSettings', restaurant: @restaurant, edit: true %>
+        </div>
+      </div>
+      <div class="tab-content" id="tipsConfig">
+        <div class="tab-pane fade" id="tip" role="tabpanel" aria-labelledby="tip-tab">
+            <%= render 'showTips', restaurant: @restaurant, edit: true %>
+        </div>
+      </div>
+      <div class="tab-content" id="taxssConfig">
+        <div class="tab-pane fade" id="tax" role="tabpanel" aria-labelledby="tax-tab">
+            <%= render 'showTaxes', restaurant: @restaurant, edit: true %>
+        </div>
+      </div>
+      <div class="tab-content" id="openinghoursConfig">
+        <div class="tab-pane fade" id="openinghour" role="tabpanel" aria-labelledby="openinghour-tab">
+            <%= render 'showOpeningHours', restaurant: @restaurant, edit: true %>
+            <%= form_with(model: @restaurant) do |form| %>
+            <div class="form-group row">
+               <div class="col-sm-11">
+                  <span class="float-md-end"><%= form.label :capacity, class: 'col-form-label' %> :</span>
+              </div>
+              <div class="col-sm-1">
+                  <%= form.text_field :total_capacity, class: 'form-control float-end text-end', disabled: true %>
+              </div>
+            </div>
+            <% end %>
+        </div>
+      </div>
+  <% end %>
 </div>
