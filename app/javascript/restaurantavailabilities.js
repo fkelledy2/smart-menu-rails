@@ -15,8 +15,8 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
-    if ($("#restaurantavailability-table").is(':visible')) {
-        var restaurantavailabilityTable = new Tabulator("#restaurantavailability-table", {
+    if ($("#restaurantTabs").is(':visible')) {
+        var restaurantOpeningHourTable = new Tabulator("#restaurant-openinghour-table", {
           dataLoader: false,
           maxHeight:"100%",
           paginationSize:20,
@@ -33,7 +33,7 @@ document.addEventListener("turbo:load", () => {
                cell.getRow().toggleSelect();
             }
           },
-          { rowHandle:true, formatter:"handle", responsive:0, headerSort:false,  width:30, minWidth:30 },
+          { rowHandle:true, formatter:"handle", responsive:0, headerSort:false, frozen: true, width:30, minWidth:30 },
           { title:" ", field:"sequence", formatter:"rownum", responsive:0, width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {
             title:"Day of Week", field:"id", responsive:0, formatter:"link", formatterParams: {
@@ -52,10 +52,10 @@ document.addEventListener("turbo:load", () => {
           }
           ]
         });
-        restaurantavailabilityTable.on("rowMoved", function(row){
-            const rows = restaurantavailabilityTable.getRows();
+        restaurantOpeningHourTable.on("rowMoved", function(row){
+            const rows = restaurantOpeningHourTable.getRows();
             for (let i = 0; i < rows.length; i++) {
-                restaurantavailabilityTable.updateData([{id:rows[i].getData().id, sequence:rows[i].getPosition()}]);
+                restaurantOpeningHourTable.updateData([{id:rows[i].getData().id, sequence:rows[i].getPosition()}]);
                 let mu = {
                   'restaurantavailability': {
                       'sequence': rows[i].getPosition()
@@ -71,19 +71,19 @@ document.addEventListener("turbo:load", () => {
                 });
             }
         });
-        restaurantavailabilityTable.on("rowSelectionChanged", function(data, rows){
+        restaurantOpeningHourTable.on("rowSelectionChanged", function(data, rows){
           if( data.length > 0 ) {
-            document.getElementById("activate-row").disabled = false;
-            document.getElementById("deactivate-row").disabled = false;
+            document.getElementById("activate-openinghour").disabled = false;
+            document.getElementById("deactivate-openinghour").disabled = false;
           } else {
-            document.getElementById("activate-row").disabled = true;
-            document.getElementById("deactivate-row").disabled = true;
+            document.getElementById("activate-openinghour").disabled = true;
+            document.getElementById("deactivate-openinghour").disabled = true;
           }
         });
-        document.getElementById("activate-row").addEventListener("click", function(){
-            const rows = restaurantavailabilityTable.getSelectedData();
+        document.getElementById("activate-openinghour").addEventListener("click", function(){
+            const rows = restaurantOpeningHourTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
-                restaurantavailabilityTable.updateData([{id:rows[i].id, status:'open'}]);
+                restaurantOpeningHourTable.updateData([{id:rows[i].id, status:'open'}]);
                 let r = {
                   'restaurantavailability': {
                       'status': 'open'
@@ -92,10 +92,10 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-        document.getElementById("deactivate-row").addEventListener("click", function(){
-            const rows = restaurantavailabilityTable.getSelectedData();
+        document.getElementById("deactivate-openinghour").addEventListener("click", function(){
+            const rows = restaurantOpeningHourTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
-                restaurantavailabilityTable.updateData([{id:rows[i].id, status:'closed'}]);
+                restaurantOpeningHourTable.updateData([{id:rows[i].id, status:'closed'}]);
                 let r = {
                   'restaurantavailability': {
                       'status': 'closed'

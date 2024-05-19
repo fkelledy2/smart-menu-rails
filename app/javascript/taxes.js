@@ -10,8 +10,8 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
-    if ($("#tax-table").is(':visible')) {
-        var taxTable = new Tabulator("#tax-table", {
+    if ($("#restaurantTabs").is(':visible')) {
+        var restaurantTaxTable = new Tabulator("#restaurant-tax-table", {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
@@ -23,11 +23,11 @@ document.addEventListener("turbo:load", () => {
           movableRows:true,
           columns: [
            {
-             formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
+             formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
                 cell.getRow().toggleSelect();
              }
            },
-           { rowHandle:true, formatter:"handle", headerSort:false,  width:30, minWidth:30 },
+           { rowHandle:true, formatter:"handle", headerSort:false,  frozen:true, width:30, minWidth:30 },
            { title:" ", field:"sequence", formatter:"rownum", width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
            {
             title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
@@ -50,10 +50,10 @@ document.addEventListener("turbo:load", () => {
            }
           ],
         });
-        taxTable.on("rowMoved", function(row){
-            const rows = taxTable.getRows();
+        restaurantTaxTable.on("rowMoved", function(row){
+            const rows = restaurantTaxTable.getRows();
             for (let i = 0; i < rows.length; i++) {
-                taxTable.updateData([{id:rows[i].getData().id, sequence:rows[i].getPosition()}]);
+                restaurantTaxTable.updateData([{id:rows[i].getData().id, sequence:rows[i].getPosition()}]);
                 let mu = {
                   'tax': {
                       'sequence': rows[i].getPosition()
@@ -69,5 +69,48 @@ document.addEventListener("turbo:load", () => {
                 });
             }
         });
+        restaurantTaxTable.on("rowSelectionChanged", function(data, rows){
+          if( data.length > 0 ) {
+            document.getElementById("activate-tax").disabled = false;
+            document.getElementById("deactivate-tax").disabled = false;
+          } else {
+            document.getElementById("activate-tax").disabled = true;
+            document.getElementById("deactivate-tax").disabled = true;
+          }
+        });
+        document.getElementById("activate-tax").addEventListener("click", function(){
+            const rows = restaurantTaxTable.getSelectedData();
+            for (let i = 0; i < rows.length; i++) {
+                restaurantTaxTable.updateData([{id:rows[i].id, status:'free'}]);
+                let r = {
+                  'tax': {
+                      'status': 'free'
+                  }
+                };
+                patch( rows[i].url, r );
+            }
+        });
+        document.getElementById("deactivate-tax").addEventListener("click", function(){
+            const rows = restaurantTaxTable.getSelectedData();
+            for (let i = 0; i < rows.length; i++) {
+                restaurantTaxTable.updateData([{id:rows[i].id, status:'archived'}]);
+                let r = {
+                  'tax': {
+                      'status': 'archived'
+                  }
+                };
+                patch( rows[i].url, r );
+            }
+        });
+        function patch( url, body ) {
+                fetch(url, {
+                    method: 'PATCH',
+                    headers:  {
+                      "Content-Type": "application/json",
+                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                    },
+                    body: JSON.stringify(body)
+                });
+        }
     }
 })

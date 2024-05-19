@@ -15,8 +15,8 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
-    if ($("#tablesetting-table").is(':visible')) {
-        var tableSettingTable = new Tabulator("#tablesetting-table", {
+    if ($("#restaurantTabs").is(':visible')) {
+        var tableSettingTable = new Tabulator("#restaurant-tablesetting-table", {
           dataLoader: false,
           maxHeight:"100%",
           paginationSize:20,
@@ -24,11 +24,12 @@ document.addEventListener("turbo:load", () => {
           layout:"fitDataStretch",
           ajaxURL: '/tablesettings.json',
           columns: [
-           {
-             formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
-                cell.getRow().toggleSelect();
-             }
-           },
+          {
+            formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
+               cell.getRow().toggleSelect();
+            }
+          },
+          { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           {
             title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
                 labelField:"name",
@@ -46,19 +47,16 @@ document.addEventListener("turbo:load", () => {
            }
           ],
         });
-        //trigger an alert message when the row is clicked
-        tableSettingTable.on("rowClick", function(e, row){
-        });
         tableSettingTable.on("rowSelectionChanged", function(data, rows){
           if( data.length > 0 ) {
-            document.getElementById("unarchive-row").disabled = false;
-            document.getElementById("archive-row").disabled = false;
+            document.getElementById("activate-tablesetting").disabled = false;
+            document.getElementById("deactivate-tablesetting").disabled = false;
           } else {
-            document.getElementById("unarchive-row").disabled = true;
-            document.getElementById("archive-row").disabled = true;
+            document.getElementById("activate-tablesetting").disabled = true;
+            document.getElementById("deactivate-tablesetting").disabled = true;
           }
         });
-        document.getElementById("unarchive-row").addEventListener("click", function(){
+        document.getElementById("activate-tablesetting").addEventListener("click", function(){
             const rows = tableSettingTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
                 tableSettingTable.updateData([{id:rows[i].id, status:'free'}]);
@@ -70,7 +68,7 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-        document.getElementById("archive-row").addEventListener("click", function(){
+        document.getElementById("deactivate-tablesetting").addEventListener("click", function(){
             const rows = tableSettingTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
                 tableSettingTable.updateData([{id:rows[i].id, status:'archived'}]);

@@ -1,46 +1,20 @@
-          <div style="margin-top:20px" class="form-group row">
-            <div class="col-sm-9">
-                <%= link_to restaurant_tablesettings_path(restaurant_id: @restaurant.id), class: 'link-dark' do %>
-                    <h4 style="padding-left:16px"><%=t(".tableSettings")%></h4>
-                <% end %>
-            </div>
-            <div class="col-sm-3">
-                <span class="float-end">
-                    <% if edit %>
-                        <%= link_to new_tablesetting_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
-                            <i class="bi bi-plus"></i>&nbsp;<%=t(".tableSetting")%>
-                        <% end %>
-                    <% else %>
-                        <%= link_to new_tablesetting_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary disabled' do %>
-                            <i class="bi bi-plus"></i>&nbsp;<%=t(".tableSetting")%>
-                        <% end %>
-                    <% end %>
-                </span>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-sm-12">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th class="w-25 p-3" scope="col"><%=t(".name")%></th>
-                      <th class="w-25 p-3" scope="col"><span class="float-end"><%=t(".type")%></span></th>
-                      <th class="w-25 p-3" scope="col"><span class="float-end"><%=t(".capacity")%></span></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @restaurant.tablesettings.each do |tablesetting| %>
-                    <tr>
-                      <td class="w-25 p-3">
-                          <%= link_to restaurant_tablesetting_path(restaurant_id: @restaurant.id, id: tablesetting.id), class: 'link-dark' do %>
-                            <%= tablesetting.name %>
-                          <% end %>
-                      </td>
-                      <td class="w-25 p-3"><span class="float-end"><%= tablesetting.tabletype %></span></td>
-                      <td class="w-25 p-3"><span style="padding-right:4px" class="float-end"><%= tablesetting.capacity %></span></td>
-                    </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-            </div>
-          </div>
+<p>
+<div class="row">
+  <div class="col-sm-12 text-end">
+    <% if edit %>
+        <button id="activate-tablesetting" class='btn btn-sm btn-success' disabled><%=t(".activate")%></button>
+        <button id="deactivate-tablesetting"class='btn btn-sm btn-danger' disabled><%=t(".deactivate")%></button>
+        <%= link_to new_tablesetting_path, class: 'btn btn-sm btn-primary' do %>
+            <i class="bi bi-plus"></i> <%=t(".tablesetting")%>
+        <% end %>
+    <% else %>
+        <button id="activate-tablesetting" class='btn btn-sm btn-success' disabled><%=t(".activate")%></button>
+        <button id="deactivate-tablesetting"class='btn btn-sm btn-danger' disabled><%=t(".deactivate")%></button>
+        <%= link_to new_tablesetting_path, class: 'btn btn-sm btn-primary disabled' do %>
+            <i class="bi bi-plus"></i> <%=t(".tablesetting")%>
+        <% end %>
+    <% end %>
+  </div>
+</div>
+<div style="padding-top:10px" class="table-borderless" id="restaurant-tablesetting-table">
+</div>

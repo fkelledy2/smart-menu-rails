@@ -20,20 +20,20 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
-    if ($("#employee-table").is(':visible')) {
+    if ($("#restaurantTabs").is(':visible')) {
         // Employees
-        var enployeeTable = new Tabulator("#employee-table", {
+        var restaurantEmployeeTable = new Tabulator("#restaurant-employee-table", {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
           ajaxURL: '/employees.json',
           columns: [
-           {
-             formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
+          {
+             formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
                 cell.getRow().toggleSelect();
              }
-           },
+          },
           {
             title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
                 labelField:"name",
@@ -50,22 +50,19 @@ document.addEventListener("turbo:load", () => {
            }
           ],
         });
-        //trigger an alert message when the row is clicked
-        enployeeTable.on("rowClick", function(e, row){
-        });
-        enployeeTable.on("rowSelectionChanged", function(data, rows){
+        restaurantEmployeeTable.on("rowSelectionChanged", function(data, rows){
           if( data.length > 0 ) {
-            document.getElementById("activate-row").disabled = false;
-            document.getElementById("deactivate-row").disabled = false;
+            document.getElementById("activate-employee").disabled = false;
+            document.getElementById("deactivate-employee").disabled = false;
           } else {
-            document.getElementById("activate-row").disabled = true;
-            document.getElementById("deactivate-row").disabled = true;
+            document.getElementById("activate-employee").disabled = true;
+            document.getElementById("deactivate-employee").disabled = true;
           }
         });
-        document.getElementById("activate-row").addEventListener("click", function(){
-            const rows = enployeeTable.getSelectedData();
+        document.getElementById("activate-employee").addEventListener("click", function(){
+            const rows = restaurantEmployeeTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
-                enployeeTable.updateData([{id:rows[i].id, status:'active'}]);
+                restaurantEmployeeTable.updateData([{id:rows[i].id, status:'active'}]);
                 let r = {
                   'employee': {
                       'status': 'active'
@@ -74,10 +71,10 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-        document.getElementById("deactivate-row").addEventListener("click", function(){
-            const rows = enployeeTable.getSelectedData();
+        document.getElementById("deactivate-employee").addEventListener("click", function(){
+            const rows = restaurantEmployeeTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
-                enployeeTable.updateData([{id:rows[i].id, status:'inactive'}]);
+                restaurantEmployeeTable.updateData([{id:rows[i].id, status:'inactive'}]);
                 let r = {
                   'employee': {
                       'status': 'inactive'

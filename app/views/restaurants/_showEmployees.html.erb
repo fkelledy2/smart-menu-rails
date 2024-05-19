@@ -1,46 +1,23 @@
-          <div style="margin-top:20px" class="form-group row">
-            <div class="col-sm-9">
-                <%= link_to restaurant_employees_path(restaurant_id: @restaurant.id), class: 'link-dark' do %>
-                    <h4 style="padding-left:16px"><%=t(".employees")%></h4>
-                <% end %>
-            </div>
-            <div class="col-sm-3">
-                <span class="float-end">
-                    <% if edit %>
-                        <%= link_to new_employee_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
-                            <i class="bi bi-plus"></i>&nbsp;<%=t(".employee")%>
-                        <% end %>
-                    <% else %>
-                        <%= link_to new_employee_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary disabled' do %>
-                            <i class="bi bi-plus"></i>&nbsp;<%=t(".employee")%>
-                        <% end %>
-                    <% end %>
-                </span>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-sm-12">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th class="w-25 p-3" scope="col"><%=t(".name")%></th>
-                      <th class="w-25 p-3" scope="col"><span class="float-end"><%=t(".role")%><span></th>
-                      <th class="w-25 p-3" scope="col"><span class="float-end"><%=t(".id")%></span></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @restaurant.employees.each do |employee| %>
-                    <tr>
-                      <td class="w-25 p-3">
-                          <%= link_to restaurant_employee_path(restaurant_id: @restaurant.id, id: employee.id), class: 'link-dark' do %>
-                            <%= employee.name %>
-                          <% end %>
-                      </td>
-                      <td class="w-25 p-3"><span class="float-end"><%= employee.role %></span></td>
-                      <td class="w-25 p-3"><span style="padding-right:4px" class="float-end"><%= employee.eid %></span></td>
-                    </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-            </div>
-          </div>
+<p>
+<div class="row">
+  <div class="col-sm-12 text-end">
+    <% if @futureParentRestaurant %>
+      <%= link_to restaurant_path(id: @futureParentRestaurant.id), class: 'btn btn-sm btn-light' do %>
+        <i class="bi bi-chevron-left"></i>
+      <% end %>
+    <% end %>
+    <button id="activate-employee" class='btn btn-sm btn-success' disabled><%=t(".activate")%></button>
+    <button id="deactivate-employee"class='btn btn-sm btn-danger' disabled><%=t(".deactivate")%></button>
+    <% if edit %>
+        <%= link_to new_employee_path, class: 'btn btn-sm btn-primary' do %>
+            <i class="bi bi-plus"></i> <%=t(".employee")%>
+        <% end %>
+    <% else %>
+        <%= link_to new_employee_path, class: 'btn btn-sm btn-primary disabled' do %>
+            <i class="bi bi-plus"></i> <%=t(".employee")%>
+        <% end %>
+    <% end %>
+  </div>
+</div>
+<div style="padding-top:10px" class="table-borderless" id="restaurant-employee-table">
+</div>
