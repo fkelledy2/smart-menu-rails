@@ -23,6 +23,7 @@ document.addEventListener("turbo:load", () => {
           responsiveLayout:true,
           layout:"fitDataStretch",
           ajaxURL: '/tablesettings.json',
+          movableRows:true,
           columns: [
           {
             formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {

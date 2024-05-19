@@ -15,6 +15,7 @@ document.addEventListener("turbo:load", () => {
           initialSort:[
             {column:"percentage", dir:"asc"},
           ],
+          movableRows:true,
           columns: [
           {
             formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
@@ -22,6 +23,7 @@ document.addEventListener("turbo:load", () => {
             }
           },
           { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
+          { title:" ", field:"sequence", formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {
             title:"Tip", field:"id", responsive:0, formatter:"link", formatterParams: {
                 labelField:"percentage",
