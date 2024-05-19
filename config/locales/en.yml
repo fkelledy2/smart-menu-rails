@@ -52,7 +52,7 @@ en:
       restaurants: "Restaurants"
       restaurant: "Restaurant"
       activate: "Activate"
-      desctivate: "Deactivate"
+      deactivate: "Deactivate"
     show:
       restaurant: "View Restaurant"
       details: "Details"

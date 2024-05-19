@@ -1,44 +1,20 @@
-          <div style="margin-top:20px" class="form-group row">
-            <div class="col-sm-9">
-                <%= link_to restaurant_menus_path(restaurant_id: @restaurant.id), class: 'link-dark' do %>
-                    <h4 style="padding-left:16px"><%=t(".menus")%></h4>
+    <p>
+    <div class="row">
+      <div class="col-sm-12 text-end">
+            <% if edit %>
+                <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t(".activate") %></button>
+                <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t(".deactivate") %></button>
+                <%= link_to new_menu_path, class: 'btn btn-sm btn-primary' do %>
+                  <i class="bi bi-plus"></i> <%= t(".menu") %>
                 <% end %>
-            </div>
-            <div class="col-sm-3">
-                <span class="float-end">
-                    <% if edit %>
-                        <%= link_to new_menu_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
-                            <i class="bi bi-plus"></i>&nbsp;<%=t(".menu")%>
-                        <% end %>
-                    <% else %>
-                        <%= link_to new_menu_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary disabled' do %>
-                            <i class="bi bi-plus"></i>&nbsp;<%=t(".menu")%>
-                        <% end %>
-                    <% end %>
-                </span>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-sm-12">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th class="w-25 p-3" scope="col"><span><%=t(".name")%></span></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @restaurant.menus.sort_by(&:sequence).each do |menu| %>
-                    <tr>
-                      <td class="w-25 p-3">
-                        <span>
-                            <%= link_to restaurant_menu_path(restaurant_id: @restaurant.id, id: menu.id), class: 'link-dark' do %>
-                              <%= menu.name %>
-                            <% end %>
-                        </span>
-                      </td>
-                    </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-            </div>
-          </div>
+            <% else %>
+                <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t(".activate") %></button>
+                <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t(".deactivate") %></button>
+                <%= link_to new_menu_path, class: 'btn btn-sm btn-primary disabled' do %>
+                  <i class="bi bi-plus"></i> <%= t(".menu") %>
+                <% end %>
+            <% end %>
+      </div>
+    </div>
+    <div style="padding-top:10px" class="table-borderless" id="restaurant-menu-table">
+    </div>
