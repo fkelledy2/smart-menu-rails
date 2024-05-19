@@ -1,5 +1,17 @@
 document.addEventListener("turbo:load", () => {
 
+    let ORDR_OPENED=0;
+    let ORDR_ORDERED=20;
+    let ORDR_DELIVERED=25;
+    let ORDR_BILLREQUESTED=30;
+    let ORDR_CLOSED=40;
+
+    let ORDRITEM_ADDED=0;
+    let ORDRITEM_REMOVED=10;
+    let ORDRITEM_ORDERED=20;
+    let ORDRITEM_PREPARED=30;
+    let ORDRITEM_DELIVERED=40;
+
     $('#toggleFilters').click (function () {
       $(':checkbox').prop('checked', this.checked);
     });
@@ -52,7 +64,7 @@ document.addEventListener("turbo:load", () => {
        var ordrItemId = $(this).attr('data-bs-ordritem_id');
        let ordritem = {
          'ordritem': {
-             'status': 10,
+             'status': ORDRITEM_REMOVED,
              'ordritemprice': 0
          }
        };
@@ -83,7 +95,7 @@ document.addEventListener("turbo:load", () => {
                 'ordritem': {
                     'ordr_id': $('#a2o_ordr_id').text(),
                     'menuitem_id': $('#a2o_menuitem_id').text(),
-                    'status': 0,
+                    'status': ORDRITEM_ADDED,
                     'ordritemprice': $('#a2o_menuitem_price').text()
                 }
             };
@@ -101,7 +113,7 @@ document.addEventListener("turbo:load", () => {
                       'employee_id': $('#currentEmployee').text(),
                       'restaurant_id': $('#currentRestaurant').text(),
                       'menu_id': $('#currentMenu').text(),
-                      'status' : 0
+                      'status' : ORDR_OPENED
                     }
                 };
                 post( '/ordrs', ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
@@ -111,7 +123,7 @@ document.addEventListener("turbo:load", () => {
                       'tablesetting_id': $('#currentTable').text(),
                       'restaurant_id': $('#currentRestaurant').text(),
                       'menu_id': $('#currentMenu').text(),
-                      'status' : 0
+                      'status' : ORDR_OPENED
                     }
                 };
                 post( '/ordrs', ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
@@ -128,7 +140,7 @@ document.addEventListener("turbo:load", () => {
                       'employee_id': $('#currentEmployee').text(),
                       'restaurant_id': $('#currentRestaurant').text(),
                       'menu_id': $('#currentMenu').text(),
-                      'status' : 20
+                      'status' : ORDR_ORDERED
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
@@ -138,7 +150,7 @@ document.addEventListener("turbo:load", () => {
                       'tablesetting_id': $('#currentTable').text(),
                       'restaurant_id': $('#currentRestaurant').text(),
                       'menu_id': $('#currentMenu').text(),
-                      'status' : 20
+                      'status' : ORDR_ORDERED
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
@@ -155,7 +167,7 @@ document.addEventListener("turbo:load", () => {
                       'employee_id': $('#currentEmployee').text(),
                       'restaurant_id': $('#currentRestaurant').text(),
                       'menu_id': $('#currentMenu').text(),
-                      'status' : 30
+                      'status' : ORDR_BILLREQUESTED
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
@@ -165,7 +177,7 @@ document.addEventListener("turbo:load", () => {
                       'tablesetting_id': $('#currentTable').text(),
                       'restaurant_id': $('#currentRestaurant').text(),
                       'menu_id': $('#currentMenu').text(),
-                      'status' : 30
+                      'status' : ORDR_BILLREQUESTED
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
@@ -187,7 +199,7 @@ document.addEventListener("turbo:load", () => {
                       'restaurant_id': $('#currentRestaurant').text(),
                       'tip': tip,
                       'menu_id': $('#currentMenu').text(),
-                      'status' : 40
+                      'status' : ORDR_CLOSED
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
@@ -198,7 +210,7 @@ document.addEventListener("turbo:load", () => {
                       'restaurant_id': $('#currentRestaurant').text(),
                       'tip': tip,
                       'menu_id': $('#currentMenu').text(),
-                      'status' : 40
+                      'status' : ORDR_CLOSED
                     }
                 };
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );

@@ -15,52 +15,74 @@ class MenusectionsController < ApplicationController
 
   # GET /menusections/1 or /menusections/1.json
   def show
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /menusections/new
   def new
-    @menusection = Menusection.new
+    if current_user
+        @menusection = Menusection.new
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /menusections/1/edit
   def edit
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # POST /menusections or /menusections.json
   def create
-    @menusection = Menusection.new(menusection_params)
-
-    respond_to do |format|
-      if @menusection.save
-        format.html { redirect_to menusection_url(@menusection), notice: "Menusection was successfully created." }
-        format.json { render :show, status: :created, location: @menusection }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @menusection.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        @menusection = Menusection.new(menusection_params)
+        respond_to do |format|
+          if @menusection.save
+            format.html { redirect_to menusection_url(@menusection), notice: "Menusection was successfully created." }
+            format.json { render :show, status: :created, location: @menusection }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @menusection.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # PATCH/PUT /menusections/1 or /menusections/1.json
   def update
-    respond_to do |format|
-      if @menusection.update(menusection_params)
-        format.html { redirect_to menusection_url(@menusection), notice: "Menusection was successfully updated." }
-        format.json { render :show, status: :ok, location: @menusection }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @menusection.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        respond_to do |format|
+          if @menusection.update(menusection_params)
+            format.html { redirect_to menusection_url(@menusection), notice: "Menusection was successfully updated." }
+            format.json { render :show, status: :ok, location: @menusection }
+          else
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @menusection.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # DELETE /menusections/1 or /menusections/1.json
   def destroy
-    @menusection.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to menusections_url, notice: "Menusection was successfully destroyed." }
-      format.json { head :no_content }
+    if current_user
+        @menusection.destroy!
+        respond_to do |format|
+          format.html { redirect_to menusections_url, notice: "Menusection was successfully destroyed." }
+          format.json { head :no_content }
+        end
+    else
+        redirect_to root_url
     end
   end
 

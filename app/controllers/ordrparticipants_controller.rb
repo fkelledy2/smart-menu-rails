@@ -15,53 +15,75 @@ class OrdrparticipantsController < ApplicationController
 
   # GET /ordrparticipants/1 or /ordrparticipants/1.json
   def show
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /ordrparticipants/new
   def new
-    @ordrparticipant = Ordrparticipant.new
+    if current_user
+        @ordrparticipant = Ordrparticipant.new
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /ordrparticipants/1/edit
   def edit
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # POST /ordrparticipants or /ordrparticipants.json
   def create
-    @ordrparticipant = Ordrparticipant.new(ordrparticipant_params)
-
-    respond_to do |format|
-      if @ordrparticipant.save
-        format.html { redirect_to ordrparticipant_url(@ordrparticipant), notice: "Ordrparticipant was successfully created." }
-        format.json { render :show, status: :created, location: @ordrparticipant }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @ordrparticipant.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        @ordrparticipant = Ordrparticipant.new(ordrparticipant_params)
+        respond_to do |format|
+          if @ordrparticipant.save
+            format.html { redirect_to ordrparticipant_url(@ordrparticipant), notice: "Ordrparticipant was successfully created." }
+            format.json { render :show, status: :created, location: @ordrparticipant }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @ordrparticipant.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # PATCH/PUT /ordrparticipants/1 or /ordrparticipants/1.json
   def update
-    respond_to do |format|
-      if @ordrparticipant.update(ordrparticipant_params)
-        # Find all entries for participant with same sessionid and order_id and update the name.
-        format.html { redirect_to menu_tablesetting_path(@ordrparticipant.ordr.menu, @ordrparticipant.ordr.tablesetting), notice: "Ordrparticipant was successfully updated." }
-        format.json { render :show, status: :ok, location: @ordrparticipant }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @ordrparticipant.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        respond_to do |format|
+          if @ordrparticipant.update(ordrparticipant_params)
+            # Find all entries for participant with same sessionid and order_id and update the name.
+            format.html { redirect_to menu_tablesetting_path(@ordrparticipant.ordr.menu, @ordrparticipant.ordr.tablesetting), notice: "Ordrparticipant was successfully updated." }
+            format.json { render :show, status: :ok, location: @ordrparticipant }
+          else
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @ordrparticipant.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # DELETE /ordrparticipants/1 or /ordrparticipants/1.json
   def destroy
-    @ordrparticipant.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to ordrparticipants_url, notice: "Ordrparticipant was successfully destroyed." }
-      format.json { head :no_content }
+    if current_user
+        @ordrparticipant.destroy!
+        respond_to do |format|
+          format.html { redirect_to ordrparticipants_url, notice: "Ordrparticipant was successfully destroyed." }
+          format.json { head :no_content }
+        end
+    else
+        redirect_to root_url
     end
   end
 

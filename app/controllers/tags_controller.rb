@@ -3,57 +3,83 @@ class TagsController < ApplicationController
 
   # GET /tags or /tags.json
   def index
-    @tags = Tag.all
+    if current_user
+        @tags = Tag.all
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /tags/1 or /tags/1.json
   def show
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /tags/new
   def new
-    @tag = Tag.new
+    if current_user
+        @tag = Tag.new
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /tags/1/edit
   def edit
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # POST /tags or /tags.json
   def create
-    @tag = Tag.new(tag_params)
-
-    respond_to do |format|
-      if @tag.save
-        format.html { redirect_to tag_url(@tag), notice: "Tag was successfully created." }
-        format.json { render :show, status: :created, location: @tag }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @tag.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        @tag = Tag.new(tag_params)
+        respond_to do |format|
+          if @tag.save
+            format.html { redirect_to tag_url(@tag), notice: "Tag was successfully created." }
+            format.json { render :show, status: :created, location: @tag }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @tag.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # PATCH/PUT /tags/1 or /tags/1.json
   def update
-    respond_to do |format|
-      if @tag.update(tag_params)
-        format.html { redirect_to tag_url(@tag), notice: "Tag was successfully updated." }
-        format.json { render :show, status: :ok, location: @tag }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @tag.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        respond_to do |format|
+          if @tag.update(tag_params)
+            format.html { redirect_to tag_url(@tag), notice: "Tag was successfully updated." }
+            format.json { render :show, status: :ok, location: @tag }
+          else
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @tag.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # DELETE /tags/1 or /tags/1.json
   def destroy
-    @tag.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to tags_url, notice: "Tag was successfully destroyed." }
-      format.json { head :no_content }
+    if current_user
+        @tag.destroy!
+        respond_to do |format|
+          format.html { redirect_to tags_url, notice: "Tag was successfully destroyed." }
+          format.json { head :no_content }
+        end
+    else
+        redirect_to root_url
     end
   end
 

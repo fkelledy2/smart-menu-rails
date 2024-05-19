@@ -29,64 +29,61 @@ class OrdritemsController < ApplicationController
 
   # POST /ordritems or /ordritems.json
   def create
-    @ordritem = Ordritem.new(ordritem_params)
-
-    respond_to do |format|
-      if @ordritem.save
-
-        if @ordritem.menuitem.inventory
-            @ordritem.menuitem.inventory.currentinventory -= 1
-            if @ordritem.menuitem.inventory.currentinventory < 0
-                @ordritem.menuitem.inventory.currentinventory = 0
+        @ordritem = Ordritem.new(ordritem_params)
+        respond_to do |format|
+        if @ordritem.save
+            if @ordritem.menuitem.inventory
+                @ordritem.menuitem.inventory.currentinventory -= 1
+                if @ordritem.menuitem.inventory.currentinventory < 0
+                    @ordritem.menuitem.inventory.currentinventory = 0
+                end
+                @ordritem.menuitem.inventory.save
             end
-            @ordritem.menuitem.inventory.save
-        end
-
-        if current_user
-            @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
-            if @ordrparticipant == nil
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
-                @ordrparticipant.save
+            if current_user
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
+                    @ordrparticipant.save
+                end
+                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
+                @ordraction.save
+                ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
+            else
+                @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s ).first
+                if @ordrparticipant == nil
+                    @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s );
+                    @ordrparticipant.save
+                end
+                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
+                @ordraction.save
+                ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
             end
-            @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
-            @ordraction.save
-            ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
-        else
-            @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s ).first
-            if @ordrparticipant == nil
-                @ordrparticipant = Ordrparticipant.new( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s );
-                @ordrparticipant.save
-            end
-            @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
-            @ordraction.save
-            ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
-        end
-        format.html { redirect_to ordritem_url(@ordritem), notice: "Ordritem was successfully created." }
-        format.json { render :show, status: :created, location: @ordritem }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @ordritem.errors, status: :unprocessable_entity }
-      end
-    end
+            format.html { redirect_to ordritem_url(@ordritem), notice: "Ordritem was successfully created." }
+            format.json { render :show, status: :created, location: @ordritem }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @ordritem.errors, status: :unprocessable_entity }
+          end
+       end
   end
 
   # PATCH/PUT /ordritems/1 or /ordritems/1.json
   def update
-    respond_to do |format|
-      if @ordritem.update(ordritem_params)
-        ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
-        format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully updated ()" }
-        format.json { render :show, status: :ok, location: @ordritem }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @ordritem.errors, status: :unprocessable_entity }
-      end
-    end
+        respond_to do |format|
+          if @ordritem.update(ordritem_params)
+            ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
+            format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully updated ()" }
+            format.json { render :show, status: :ok, location: @ordritem }
+          else
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @ordritem.errors, status: :unprocessable_entity }
+          end
+        end
   end
 
   # DELETE /ordritems/1 or /ordritems/1.json
   def destroy
-    @ordritem.destroy!
+        @ordritem.destroy!
         if @ordritem.menuitem.inventory
             @ordritem.menuitem.inventory.currentinventory += 1
             if @ordritem.menuitem.inventory.currentinventory > @ordritem.menuitem.inventory.startinginventory
@@ -94,7 +91,6 @@ class OrdritemsController < ApplicationController
             end
             @ordritem.menuitem.inventory.save
         end
-
         if current_user
             @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
             if @ordrparticipant == nil
@@ -115,10 +111,10 @@ class OrdritemsController < ApplicationController
             @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, ordritem: @ordritem, action: 3)
             @ordraction.save
         end
-    respond_to do |format|
-      format.html { redirect_to ordritems_url, notice: "Ordritem was successfully destroyed." }
-      format.json { head :no_content }
-    end
+        respond_to do |format|
+            format.html { redirect_to ordritems_url, notice: "Ordritem was successfully destroyed." }
+            format.json { head :no_content }
+        end
   end
 
   private

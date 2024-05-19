@@ -15,52 +15,74 @@ class MenuavailabilitiesController < ApplicationController
 
   # GET /menuavailabilities/1 or /menuavailabilities/1.json
   def show
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /menuavailabilities/new
   def new
-    @menuavailability = Menuavailability.new
+    if current_user
+        @menuavailability = Menuavailability.new
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /menuavailabilities/1/edit
   def edit
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # POST /menuavailabilities or /menuavailabilities.json
   def create
-    @menuavailability = Menuavailability.new(menuavailability_params)
-
-    respond_to do |format|
-      if @menuavailability.save
-        format.html { redirect_to menuavailability_url(@menuavailability), notice: "Menuavailability was successfully created." }
-        format.json { render :show, status: :created, location: @menuavailability }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @menuavailability.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        @menuavailability = Menuavailability.new(menuavailability_params)
+        respond_to do |format|
+          if @menuavailability.save
+            format.html { redirect_to menuavailability_url(@menuavailability), notice: "Menuavailability was successfully created." }
+            format.json { render :show, status: :created, location: @menuavailability }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @menuavailability.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # PATCH/PUT /menuavailabilities/1 or /menuavailabilities/1.json
   def update
-    respond_to do |format|
-      if @menuavailability.update(menuavailability_params)
-        format.html { redirect_to menuavailability_url(@menuavailability), notice: "Menuavailability was successfully updated." }
-        format.json { render :show, status: :ok, location: @menuavailability }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @menuavailability.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        respond_to do |format|
+          if @menuavailability.update(menuavailability_params)
+            format.html { redirect_to menuavailability_url(@menuavailability), notice: "Menuavailability was successfully updated." }
+            format.json { render :show, status: :ok, location: @menuavailability }
+          else
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @menuavailability.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # DELETE /menuavailabilities/1 or /menuavailabilities/1.json
   def destroy
-    @menuavailability.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to menuavailabilities_url, notice: "Menuavailability was successfully destroyed." }
-      format.json { head :no_content }
+    if current_user
+        @menuavailability.destroy!
+        respond_to do |format|
+          format.html { redirect_to menuavailabilities_url, notice: "Menuavailability was successfully destroyed." }
+          format.json { head :no_content }
+        end
+    else
+        redirect_to root_url
     end
   end
 

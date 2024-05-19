@@ -20,53 +20,75 @@ class MenuitemsController < ApplicationController
 
   # GET /menuitems/1 or /menuitems/1.json
   def show
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /menuitems/new
   def new
-    @menuitem = Menuitem.new
+    if current_user
+        @menuitem = Menuitem.new
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /menuitems/1/edit
   def edit
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # POST /menuitems or /menuitems.json
   def create
-    @menuitem = Menuitem.new(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: []))
-
-    respond_to do |format|
-      if @menuitem.save
-        format.html { redirect_to menuitem_url(@menuitem), notice: "Menuitem was successfully created." }
-        format.json { render :show, status: :created, location: @menuitem }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @menuitem.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        @menuitem = Menuitem.new(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: []))
+        respond_to do |format|
+          if @menuitem.save
+            format.html { redirect_to menuitem_url(@menuitem), notice: "Menuitem was successfully created." }
+            format.json { render :show, status: :created, location: @menuitem }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @menuitem.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # PATCH/PUT /menuitems/1 or /menuitems/1.json
   def update
-    respond_to do |format|
-      @menuitem = Menuitem.find(params[:id])
-      if @menuitem.update(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: []))
-        format.html { redirect_to menuitem_url(@menuitem), notice: "Menuitem was successfully updated." }
-        format.json { render :show, status: :ok, location: @menuitem }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @menuitem.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        respond_to do |format|
+          @menuitem = Menuitem.find(params[:id])
+          if @menuitem.update(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: []))
+            format.html { redirect_to menuitem_url(@menuitem), notice: "Menuitem was successfully updated." }
+            format.json { render :show, status: :ok, location: @menuitem }
+          else
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @menuitem.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # DELETE /menuitems/1 or /menuitems/1.json
   def destroy
-    @menuitem.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to menuitems_url, notice: "Menuitem was successfully destroyed." }
-      format.json { head :no_content }
+    if current_user
+        @menuitem.destroy!
+        respond_to do |format|
+          format.html { redirect_to menuitems_url, notice: "Menuitem was successfully destroyed." }
+          format.json { head :no_content }
+        end
+    else
+        redirect_to root_url
     end
   end
 

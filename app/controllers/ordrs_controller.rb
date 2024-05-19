@@ -143,13 +143,13 @@ class OrdrsController < ApplicationController
       @ordr.service = totalService
       @ordr.gross = @ordr.nett + @ordr.tip + @ordr.service + @ordr.tax
 
-      if( ordr_params[:status] = 10 )
+      if( ordr_params[:status] = 20 )
           @ordr.orderedAt = Time.now
       end
-      if( ordr_params[:status] = 20 )
+      if( ordr_params[:status] = 30 )
           @ordr.billRequestedAt = Time.now
       end
-      if( ordr_params[:status] = 30 )
+      if( ordr_params[:status] = 40 )
           @ordr.paidAt = Time.now
       end
 

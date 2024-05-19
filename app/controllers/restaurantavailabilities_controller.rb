@@ -17,56 +17,78 @@ class RestaurantavailabilitiesController < ApplicationController
 
   # GET /restaurantavailabilities/1 or /restaurantavailabilities/1.json
   def show
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /restaurantavailabilities/new
   def new
-    @restaurantavailability = Restaurantavailability.new
-    if params[:restaurant_id]
-        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-        @restaurantavailability.restaurant = @futureParentRestaurant
+    if current_user
+        @restaurantavailability = Restaurantavailability.new
+        if params[:restaurant_id]
+            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+            @restaurantavailability.restaurant = @futureParentRestaurant
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # GET /restaurantavailabilities/1/edit
   def edit
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # POST /restaurantavailabilities or /restaurantavailabilities.json
   def create
-    @restaurantavailability = Restaurantavailability.new(restaurantavailability_params)
-
-    respond_to do |format|
-      if @restaurantavailability.save
-        format.html { redirect_to restaurantavailability_url(@restaurantavailability), notice: "Restaurantavailability was successfully created." }
-        format.json { render :show, status: :created, location: @restaurantavailability }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @restaurantavailability.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        @restaurantavailability = Restaurantavailability.new(restaurantavailability_params)
+        respond_to do |format|
+          if @restaurantavailability.save
+            format.html { redirect_to restaurantavailability_url(@restaurantavailability), notice: "Restaurantavailability was successfully created." }
+            format.json { render :show, status: :created, location: @restaurantavailability }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @restaurantavailability.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # PATCH/PUT /restaurantavailabilities/1 or /restaurantavailabilities/1.json
   def update
-    respond_to do |format|
-      if @restaurantavailability.update(restaurantavailability_params)
-        format.html { redirect_to restaurantavailability_url(@restaurantavailability), notice: "Restaurantavailability was successfully updated." }
-        format.json { render :show, status: :ok, location: @restaurantavailability }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @restaurantavailability.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        respond_to do |format|
+          if @restaurantavailability.update(restaurantavailability_params)
+            format.html { redirect_to restaurantavailability_url(@restaurantavailability), notice: "Restaurantavailability was successfully updated." }
+            format.json { render :show, status: :ok, location: @restaurantavailability }
+          else
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @restaurantavailability.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # DELETE /restaurantavailabilities/1 or /restaurantavailabilities/1.json
   def destroy
-    @restaurantavailability.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to restaurantavailabilities_url, notice: "Restaurantavailability was successfully destroyed." }
-      format.json { head :no_content }
+    if current_user
+        @restaurantavailability.destroy!
+        respond_to do |format|
+          format.html { redirect_to restaurantavailabilities_url, notice: "Restaurantavailability was successfully destroyed." }
+          format.json { head :no_content }
+        end
+    else
+        redirect_to root_url
     end
   end
 

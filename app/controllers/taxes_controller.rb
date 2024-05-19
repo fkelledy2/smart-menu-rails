@@ -19,58 +19,80 @@ class TaxesController < ApplicationController
 
   # GET /taxes/1 or /taxes/1.json
   def show
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /taxes/new
   def new
-    @tax = Tax.new
-    if params[:restaurant_id]
-        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-        @tax.restaurant = @futureParentRestaurant
+    if current_user
+        @tax = Tax.new
+        if params[:restaurant_id]
+            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+            @tax.restaurant = @futureParentRestaurant
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # GET /taxes/1/edit
   def edit
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # POST /taxes or /taxes.json
   def create
-    @tax = Tax.new(tax_params)
-
-    respond_to do |format|
-      if @tax.save
-        format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully created." }
-        # format.html { redirect_to @return_url, notice: "Tax was successfully created." }
-        format.json { render :show, status: :created, location: @tax }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @tax.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        @tax = Tax.new(tax_params)
+        respond_to do |format|
+          if @tax.save
+            format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully created." }
+            # format.html { redirect_to @return_url, notice: "Tax was successfully created." }
+            format.json { render :show, status: :created, location: @tax }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @tax.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # PATCH/PUT /taxes/1 or /taxes/1.json
   def update
-    respond_to do |format|
-      if @tax.update(tax_params)
-        format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully updated." }
-        # format.html { redirect_to tax_url(@tax), notice: "Tax was successfully updated." }
-        format.json { render :show, status: :ok, location: @tax }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @tax.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        respond_to do |format|
+          if @tax.update(tax_params)
+            format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully updated." }
+            # format.html { redirect_to tax_url(@tax), notice: "Tax was successfully updated." }
+            format.json { render :show, status: :ok, location: @tax }
+          else
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @tax.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # DELETE /taxes/1 or /taxes/1.json
   def destroy
-    @tax.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to taxes_url, notice: "Tax was successfully destroyed." }
-      format.json { head :no_content }
+    if current_user
+        @tax.destroy!
+        respond_to do |format|
+          format.html { redirect_to taxes_url, notice: "Tax was successfully destroyed." }
+          format.json { head :no_content }
+        end
+    else
+        redirect_to root_url
     end
   end
 

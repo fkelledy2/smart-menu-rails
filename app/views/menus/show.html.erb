@@ -675,7 +675,7 @@
 </div>
 
 
-<div style="display:none; margin-top: 20px" class="card">
+<div style="margin-top: 20px" class="card">
     <div class="card-body">
         <h3>Debug:</h3>
         <% if @openOrder %>
@@ -687,6 +687,14 @@
                     <div id="currentOrder"><%= @openOrder.id %></div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-6">
+                    currentOrder.status:
+                </div>
+                <div class="col-6">
+                    <div id="currentOrder"><%= @openOrder.status %></div>
+                </div>
+            </div>
         <% end %>
         <% if @tablesetting %>
             <div class="row">
@@ -694,7 +702,7 @@
                     currentTable:
                 </div>
                 <div class="col-6">
-                    <div id="currentTable"><%= @tablesetting.id %></div> - <div id="currentTableName"><%= @tablesetting.name %></div>
+                    <div id="currentTable"><%= @tablesetting.id %></div></div>
                 </div>
             </div>
         <% end %>

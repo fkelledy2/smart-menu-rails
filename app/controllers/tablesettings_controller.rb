@@ -30,54 +30,72 @@ class TablesettingsController < ApplicationController
 
   # GET /tablesettings/new
   def new
-    @tablesetting = Tablesetting.new
-    if params[:restaurant_id]
-        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-        @tablesetting.restaurant = @futureParentRestaurant
+    if current_user
+        @tablesetting = Tablesetting.new
+        if params[:restaurant_id]
+            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+            @tablesetting.restaurant = @futureParentRestaurant
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # GET /tablesettings/1/edit
   def edit
+    if current_user
+    else
+        redirect_to root_url
+    end
   end
 
   # POST /tablesettings or /tablesettings.json
   def create
-    @tablesetting = Tablesetting.new(tablesetting_params)
-
-    respond_to do |format|
-      if @tablesetting.save
-        format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: "Tablesetting was successfully created." }
-        # format.html { redirect_to tablesetting_url(@tablesetting), notice: "Tablesetting was successfully created." }
-        format.json { render :show, status: :created, location: @tablesetting }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @tablesetting.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        @tablesetting = Tablesetting.new(tablesetting_params)
+        respond_to do |format|
+          if @tablesetting.save
+            format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: "Tablesetting was successfully created." }
+            # format.html { redirect_to tablesetting_url(@tablesetting), notice: "Tablesetting was successfully created." }
+            format.json { render :show, status: :created, location: @tablesetting }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @tablesetting.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # PATCH/PUT /tablesettings/1 or /tablesettings/1.json
   def update
-    respond_to do |format|
-      if @tablesetting.update(tablesetting_params)
-        format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: "Tablesetting was successfully updated." }
-        # format.html { redirect_to tablesetting_url(@tablesetting), notice: "Tablesetting was successfully updated." }
-        format.json { render :show, status: :ok, location: @tablesetting }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @tablesetting.errors, status: :unprocessable_entity }
-      end
+    if current_user
+        respond_to do |format|
+          if @tablesetting.update(tablesetting_params)
+            format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: "Tablesetting was successfully updated." }
+            # format.html { redirect_to tablesetting_url(@tablesetting), notice: "Tablesetting was successfully updated." }
+            format.json { render :show, status: :ok, location: @tablesetting }
+          else
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @tablesetting.errors, status: :unprocessable_entity }
+          end
+        end
+    else
+        redirect_to root_url
     end
   end
 
   # DELETE /tablesettings/1 or /tablesettings/1.json
   def destroy
-    @tablesetting.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to tablesettings_url, notice: "Tablesetting was successfully destroyed." }
-      format.json { head :no_content }
+    if current_user
+        @tablesetting.destroy!
+        respond_to do |format|
+          format.html { redirect_to tablesettings_url, notice: "Tablesetting was successfully destroyed." }
+          format.json { head :no_content }
+        end
+    else
+        redirect_to root_url
     end
   end
 
