@@ -119,17 +119,13 @@
                 </span>
             </div>
         </div>
-        <div class=" container-fluid">
-            <nav id="navbar-example2" class="nav flex-nowrap overflow-auto">
-              <ul class="nav nav-pills">
+        <div style="height:40px"class="container-fluid">
+            <nav id="navbar-example2" style="position:relative; left:-10px" class="nav flex-nowrap overflow-auto">
+              <ul style="position:relative; left:-37px" class="d-flex">
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
-                    <li class="nav-item">
                       <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>
-                    </li>
                 <% end %>
-                <li class="nav-item">
                     <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-danger text-nowrap" href="#menusection_allergyns">Allergens</a>
-                </li>
               </ul>
             </nav>
         </div>
