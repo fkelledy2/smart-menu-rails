@@ -39,7 +39,7 @@ document.addEventListener("turbo:load", () => {
            },
            {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {title:"Type", field:"tabletype", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Capacity", field:"capacity", width: 200, hozAlign:"right", headerHozAlign:"right", },
+           {title:"Capacity", field:"capacity", width: 200, hozAlign:"right", bottomCalc:"sum", headerHozAlign:"right", },
            {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
             inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
             outputFormat:"dd/MM/yyyy",
