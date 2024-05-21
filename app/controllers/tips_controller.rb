@@ -88,7 +88,7 @@ class TipsController < ApplicationController
     if current_user
         @tip.destroy!
         respond_to do |format|
-          format.html { redirect_to tips_url, notice: "Tip was successfully destroyed." }
+          format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: "Tip was successfully deleted." }
           format.json { head :no_content }
         end
     else

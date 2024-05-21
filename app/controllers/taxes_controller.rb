@@ -88,7 +88,7 @@ class TaxesController < ApplicationController
     if current_user
         @tax.destroy!
         respond_to do |format|
-          format.html { redirect_to taxes_url, notice: "Tax was successfully destroyed." }
+          format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully updated." }
           format.json { head :no_content }
         end
     else

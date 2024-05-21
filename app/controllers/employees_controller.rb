@@ -52,7 +52,6 @@ class EmployeesController < ApplicationController
           if @employee.save
             @employee.email = @employee.user.email
             format.html { redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: "Employee was successfully created." }
-            # format.html { redirect_to @return_url, notice: "Employee was successfully created." }
             format.json { render :show, status: :created, location: @employee }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -88,7 +87,7 @@ class EmployeesController < ApplicationController
     if current_user
         @employee.destroy!
         respond_to do |format|
-          format.html { redirect_to employees_url, notice: "Employee was successfully destroyed." }
+          format.html { redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: "Employee was successfully deleted." }
           format.json { head :no_content }
         end
     else

@@ -84,7 +84,15 @@ class MenusController < ApplicationController
 
   # GET /menus/new
   def new
-    @menu = Menu.new
+    if current_user
+        @menu = Menu.new
+        if params[:restaurant_id]
+            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+            @menu.restaurant = @futureParentRestaurant
+        end
+    else
+        redirect_to root_url
+    end
   end
 
   # GET /menus/1/edit
@@ -94,10 +102,9 @@ class MenusController < ApplicationController
   # POST /menus or /menus.json
   def create
     @menu = Menu.new(menu_params)
-
     respond_to do |format|
       if @menu.save
-        format.html { redirect_to menu_url(@menu), notice: "Menu was successfully created." }
+        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully created." }
         format.json { render :show, status: :created, location: @menu }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -110,7 +117,7 @@ class MenusController < ApplicationController
   def update
     respond_to do |format|
       if @menu.update(menu_params)
-        format.html { redirect_to menu_url(@menu), notice: "Menu was successfully updated." }
+        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully deleted." }
         format.json { render :show, status: :ok, location: @menu }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -122,9 +129,8 @@ class MenusController < ApplicationController
   # DELETE /menus/1 or /menus/1.json
   def destroy
     @menu.destroy!
-
     respond_to do |format|
-      format.html { redirect_to menus_url, notice: "Menu was successfully destroyed." }
+      format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully deleted." }
       format.json { head :no_content }
     end
   end

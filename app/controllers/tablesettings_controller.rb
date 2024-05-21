@@ -91,7 +91,7 @@ class TablesettingsController < ApplicationController
     if current_user
         @tablesetting.destroy!
         respond_to do |format|
-          format.html { redirect_to tablesettings_url, notice: "Tablesetting was successfully destroyed." }
+          format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: "Tablesetting was successfully created." }
           format.json { head :no_content }
         end
     else

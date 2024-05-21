@@ -19,7 +19,6 @@
         <%= form.collection_select :user_id, User.all ,:id, :email, options = {:prompt => t(".selectUser")}%>
     </div>
   </div>
-
   <div style='height:4px'></div>
   <div class="form-group row">
     <%= form.label :image, class: 'col-sm-2 col-form-label' %>
@@ -41,13 +40,11 @@
       <%= form.select :status, options_for_select(Employee.statuses.keys.to_a, form.object.status), {} %>
     </div>
   </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <%= form.label :restaurant_id, class: 'col-sm-2 col-form-label' %>
-    <div class="col-sm-10">
-        <%= form.collection_select :restaurant_id, Restaurant.all ,:id, :name, options = {:prompt => t(".selectRestaurant")}%>
-    </div>
-  </div>
+  <% if @futureParentRestaurant %>
+      <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
+  <% else %>
+      <%= form.hidden_field :restaurant_id %>
+  <% end %>
   <div style='height:8px'></div>
   <div class="row">
     <div class="col-sm-2">
