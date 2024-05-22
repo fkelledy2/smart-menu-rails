@@ -1,5 +1,33 @@
 document.addEventListener("turbo:load", () => {
 
+    if ($("#restaurantTabs").is(':visible')) {
+        const pillsTab = document.querySelector('#restaurantTabs');
+        const pills = pillsTab.querySelectorAll('button[data-bs-toggle="tab"]');
+
+        pills.forEach(pill => {
+          pill.addEventListener('shown.bs.tab', (event) => {
+            const { target } = event;
+            const { id: targetId } = target;
+            savePillId(targetId);
+          });
+        });
+
+        const savePillId = (selector) => {
+          localStorage.setItem('activePillId', selector);
+        };
+
+        const getPillId = () => {
+          const activePillId = localStorage.getItem('activePillId');
+          // if local storage item is null, show default tab
+          if (!activePillId) return;
+          // call 'show' function
+          const someTabTriggerEl = document.querySelector(`#${activePillId}`)
+          const tab = new bootstrap.Tab(someTabTriggerEl);
+          tab.show();
+        };
+        // get pill id on load
+        getPillId();
+    }
     if ($("#restaurant_status").is(':visible')) {
       new TomSelect("#restaurant_status",{
       });
