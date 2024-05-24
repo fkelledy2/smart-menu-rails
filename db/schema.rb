@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_24_144646) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -48,6 +48,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.string "symbol"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "archived", default: false
   end
 
   create_table "announcements", force: :cascade do |t|
@@ -70,6 +71,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.integer "role"
     t.string "email"
     t.bigint "user_id", null: false
+    t.boolean "archived", default: false
     t.index ["restaurant_id"], name: "index_employees_on_restaurant_id"
     t.index ["user_id"], name: "index_employees_on_user_id"
   end
@@ -90,6 +92,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "archived", default: false
   end
 
   create_table "inventories", force: :cascade do |t|
@@ -99,6 +102,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.bigint "menuitem_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "archived", default: false
     t.index ["menuitem_id"], name: "index_inventories_on_menuitem_id"
   end
 
@@ -113,6 +117,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.datetime "updated_at", null: false
     t.integer "status"
     t.integer "sequence"
+    t.boolean "archived", default: false
     t.index ["menu_id"], name: "index_menuavailabilities_on_menu_id"
   end
 
@@ -164,6 +169,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "preptime", default: 0
+    t.boolean "archived", default: false
     t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
   end
 
@@ -179,6 +185,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.boolean "displayImages", default: false
     t.boolean "allowOrdering", default: false
     t.boolean "inventoryTracking", default: false
+    t.boolean "archived", default: false
     t.index ["restaurant_id"], name: "index_menus_on_restaurant_id"
   end
 
@@ -191,6 +198,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.bigint "menu_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "archived", default: false
     t.index ["menu_id"], name: "index_menusections_on_menu_id"
   end
 
@@ -306,6 +314,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.datetime "updated_at", null: false
     t.integer "status"
     t.integer "sequence"
+    t.boolean "archived", default: false
     t.index ["restaurant_id"], name: "index_restaurantavailabilities_on_restaurant_id"
   end
 
@@ -329,6 +338,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.boolean "allowOrdering", default: false
     t.boolean "inventoryTracking", default: false
     t.string "currency"
+    t.boolean "archived", default: false
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 
@@ -352,6 +362,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "archived", default: false
   end
 
   create_table "tablesettings", force: :cascade do |t|
@@ -363,6 +374,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "tabletype"
+    t.boolean "archived", default: false
     t.index ["restaurant_id"], name: "index_tablesettings_on_restaurant_id"
   end
 
@@ -372,6 +384,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "typs"
+    t.boolean "archived", default: false
   end
 
   create_table "taxes", force: :cascade do |t|
@@ -382,6 +395,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "sequence"
+    t.boolean "archived", default: false
     t.index ["restaurant_id"], name: "index_taxes_on_restaurant_id"
   end
 
@@ -390,6 +404,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_08_130848) do
     t.bigint "restaurant_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "archived", default: false
     t.index ["restaurant_id"], name: "index_tips_on_restaurant_id"
   end
 

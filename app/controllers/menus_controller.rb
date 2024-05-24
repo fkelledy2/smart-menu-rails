@@ -133,6 +133,7 @@ class MenusController < ApplicationController
         respond_to do |format|
           format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully deleted." }
           format.json { head :no_content }
+        end
     else
         redirect_to root_url
     end
