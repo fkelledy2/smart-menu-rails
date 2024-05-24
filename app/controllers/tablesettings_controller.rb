@@ -10,14 +10,14 @@ class TablesettingsController < ApplicationController
     if current_user
         if params[:restaurant_id]
             @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-            @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: @futureParentRestaurant).all
+            @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: @futureParentRestaurant, archived: false).all
         else
-            @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: {user: current_user}).all
+            @tablesettings = Tablesetting.joins(:restaurant).where(restaurant: {user: current_user}, archived: false).all
         end
     else
         @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-        @tablesettings = Tablesetting.joins(:restaurant).all
-        @menus = Menu.joins(:restaurant).all
+        @tablesettings = Tablesetting.joins(:restaurant).where(archived: false).all
+        @menus = Menu.joins(:restaurant).where(archived: false).all
     end
   end
 
@@ -89,7 +89,7 @@ class TablesettingsController < ApplicationController
   # DELETE /tablesettings/1 or /tablesettings/1.json
   def destroy
     if current_user
-        @tablesetting.destroy!
+        @tablesetting.update( archived: true )
         respond_to do |format|
           format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: "Tablesetting was successfully created." }
           format.json { head :no_content }

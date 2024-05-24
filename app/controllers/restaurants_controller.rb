@@ -5,7 +5,7 @@ class RestaurantsController < ApplicationController
   # GET /restaurants or /restaurants.json
   def index
     if current_user
-        @restaurants = Restaurant.where( user: current_user)
+        @restaurants = Restaurant.where( user: current_user, archived: false)
     else
         redirect_to root_url
     end
@@ -76,7 +76,7 @@ class RestaurantsController < ApplicationController
   # DELETE /restaurants/1 or /restaurants/1.json
   def destroy
     if current_user
-        @restaurant.destroy!
+        @restaurant.update( archived: true )
         respond_to do |format|
           format.html { redirect_to restaurants_url, notice: "Restaurant was successfully destroyed." }
           format.json { head :no_content }

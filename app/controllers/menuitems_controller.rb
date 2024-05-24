@@ -6,10 +6,10 @@ class MenuitemsController < ApplicationController
   def index
     if current_user
         @menuitems = []
-        Restaurant.where( user: current_user).each do |restaurant|
-            Menu.where( restaurant: restaurant).each do |menu|
-                Menusection.where( menu: menu).each do |menusection|
-                    @menuitems += Menuitem.where( menusection: menusection).all
+        Restaurant.where( user: current_user, archived: false).each do |restaurant|
+            Menu.where( restaurant: restaurant, archived: false).each do |menu|
+                Menusection.where( menu: menu, archived: false).each do |menusection|
+                    @menuitems += Menuitem.where( menusection: menusection, archived: false).all
                 end
             end
         end
@@ -82,7 +82,7 @@ class MenuitemsController < ApplicationController
   # DELETE /menuitems/1 or /menuitems/1.json
   def destroy
     if current_user
-        @menuitem.destroy!
+        @menuitem.update( archived: true )
         respond_to do |format|
           format.html { redirect_to menuitems_url, notice: "Menuitem was successfully destroyed." }
           format.json { head :no_content }

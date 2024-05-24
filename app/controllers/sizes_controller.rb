@@ -4,7 +4,7 @@ class SizesController < ApplicationController
   # GET /sizes or /sizes.json
   def index
     if current_user
-        @sizes = Size.all
+        @sizes = Size.where(archived: false).all
     else
         redirect_to root_url
     end
@@ -73,7 +73,7 @@ class SizesController < ApplicationController
   # DELETE /sizes/1 or /sizes/1.json
   def destroy
     if current_user
-        @size.destroy!
+        @size.update( archived: true )
         respond_to do |format|
           format.html { redirect_to sizes_url, notice: "Size was successfully destroyed." }
           format.json { head :no_content }

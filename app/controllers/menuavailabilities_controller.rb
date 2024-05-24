@@ -5,7 +5,7 @@ class MenuavailabilitiesController < ApplicationController
   def index
     if current_user
         @menuavailabilities = []
-        Restaurant.where( user: current_user).each do |restaurant|
+        Restaurant.where( user: current_user, archived: false).each do |restaurant|
             @menuavailabilities += restaurant.menuavailabilities
         end
     else
@@ -76,7 +76,7 @@ class MenuavailabilitiesController < ApplicationController
   # DELETE /menuavailabilities/1 or /menuavailabilities/1.json
   def destroy
     if current_user
-        @menuavailability.destroy!
+        @menuavailability.update( archived: true )
         respond_to do |format|
           format.html { redirect_to menuavailabilities_url, notice: "Menuavailability was successfully destroyed." }
           format.json { head :no_content }

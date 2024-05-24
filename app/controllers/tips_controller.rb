@@ -5,12 +5,11 @@ class TipsController < ApplicationController
   # GET /tips or /tips.json
   def index
     if current_user
-        @tips = Tip.joins(:restaurant).where(restaurant: {user: current_user}).all
         if params[:restaurant_id]
             @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-            @tips = Tip.joins(:restaurant).where(restaurant: @futureParentRestaurant).all
+            @tips = Tip.joins(:restaurant).where(restaurant: @futureParentRestaurant, archived: false).all
         else
-            @tips = Tip.joins(:restaurant).where(restaurant: {user: current_user}).all
+            @tips = Tip.joins(:restaurant).where(restaurant: {user: current_user}, archived: false).all
         end
     else
         redirect_to root_url
@@ -86,7 +85,7 @@ class TipsController < ApplicationController
   # DELETE /tips/1 or /tips/1.json
   def destroy
     if current_user
-        @tip.destroy!
+        @tip.update( archived: true )
         respond_to do |format|
           format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: "Tip was successfully deleted." }
           format.json { head :no_content }

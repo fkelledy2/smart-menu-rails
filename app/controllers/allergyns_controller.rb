@@ -4,7 +4,7 @@ class AllergynsController < ApplicationController
   # GET /allergyns or /allergyns.json
   def index
     if current_user
-        @allergyns = Allergyn.all
+        @allergyns = Allergyn.where( archived: false).all
     else
         redirect_to root_url
     end
@@ -73,7 +73,7 @@ class AllergynsController < ApplicationController
   # DELETE /allergyns/1 or /allergyns/1.json
   def destroy
     if current_user
-        @allergyn.destroy!
+        @allergyn.update( archived: true )
         respond_to do |format|
           format.html { redirect_to allergyns_url, notice: "Allergyn was successfully destroyed." }
           format.json { head :no_content }

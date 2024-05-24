@@ -4,7 +4,7 @@ class IngredientsController < ApplicationController
   # GET /ingredients or /ingredients.json
   def index
     if current_user
-        @ingredients = Ingredient.all
+        @ingredients = Ingredient.where( archived: false).all
     else
         redirect_to root_url
     end
@@ -73,7 +73,7 @@ class IngredientsController < ApplicationController
   # DELETE /ingredients/1 or /ingredients/1.json
   def destroy
     if current_user
-        @ingredient.destroy!
+        @ingredient.update( archived: true )
         respond_to do |format|
           format.html { redirect_to ingredients_url, notice: "Ingredient was successfully destroyed." }
           format.json { head :no_content }

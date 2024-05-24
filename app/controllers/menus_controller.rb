@@ -11,9 +11,9 @@ class MenusController < ApplicationController
     if current_user
         if params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, restaurant_id: @restaurant.id).order('sequence ASC').all
+            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, restaurant_id: @restaurant.id, archived: false).order('sequence ASC').all
         else
-            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}).order('sequence ASC').all
+            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, archived: false).order('sequence ASC').all
         end
     else
         if params[:restaurant_id]
@@ -128,10 +128,13 @@ class MenusController < ApplicationController
 
   # DELETE /menus/1 or /menus/1.json
   def destroy
-    @menu.destroy!
-    respond_to do |format|
-      format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully deleted." }
-      format.json { head :no_content }
+    if current_user
+        @menu.update( archived: true )
+        respond_to do |format|
+          format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully deleted." }
+          format.json { head :no_content }
+    else
+        redirect_to root_url
     end
   end
 

@@ -5,11 +5,11 @@ class InventoriesController < ApplicationController
   def index
     if current_user
         @inventories = []
-        Restaurant.where( user: current_user).each do |restaurant|
-            Menu.where( restaurant: restaurant).each do |menu|
-                Menusection.where( menu: menu).each do |menusection|
-                    Menuitem.where( menusection: menusection).each do |menuitem|
-                        @inventories += Inventory.where( menuitem: menuitem).all
+        Restaurant.where( user: current_user, archived: false).each do |restaurant|
+            Menu.where( restaurant: restaurant, archived: false).each do |menu|
+                Menusection.where( menu: menu, archived: false).each do |menusection|
+                    Menuitem.where( menusection: menusection, archived: false).each do |menuitem|
+                        @inventories += Inventory.where( menuitem: menuitem, archived: false).all
                     end
                 end
             end
@@ -82,7 +82,7 @@ class InventoriesController < ApplicationController
   # DELETE /inventories/1 or /inventories/1.json
   def destroy
     if current_user
-        @inventory.destroy!
+        @inventory.update( archived: true )
         respond_to do |format|
           format.html { redirect_to inventories_url, notice: "Inventory was successfully destroyed." }
           format.json { head :no_content }

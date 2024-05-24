@@ -4,7 +4,7 @@ class TagsController < ApplicationController
   # GET /tags or /tags.json
   def index
     if current_user
-        @tags = Tag.all
+        @tags = Tag.where(archived: false).all
     else
         redirect_to root_url
     end
@@ -73,7 +73,7 @@ class TagsController < ApplicationController
   # DELETE /tags/1 or /tags/1.json
   def destroy
     if current_user
-        @tag.destroy!
+        @tag.update( archived: true )
         respond_to do |format|
           format.html { redirect_to tags_url, notice: "Tag was successfully destroyed." }
           format.json { head :no_content }

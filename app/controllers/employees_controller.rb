@@ -6,9 +6,9 @@ class EmployeesController < ApplicationController
     if current_user
         if params[:restaurant_id]
             @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-            @employees = Employee.joins(:restaurant).where(restaurant: @futureParentRestaurant).all
+            @employees = Employee.joins(:restaurant).where(restaurant: @futureParentRestaurant, archived: false).all
         else
-            @employees = Employee.joins(:restaurant).where(restaurant: {user: current_user}).all
+            @employees = Employee.joins(:restaurant).where(restaurant: {user: current_user}, archived: false).all
         end
     else
         redirect_to root_url
@@ -85,7 +85,7 @@ class EmployeesController < ApplicationController
   # DELETE /employees/1 or /employees/1.json
   def destroy
     if current_user
-        @employee.destroy!
+        @employee.update( archived: true )
         respond_to do |format|
           format.html { redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: "Employee was successfully deleted." }
           format.json { head :no_content }
