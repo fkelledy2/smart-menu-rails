@@ -41,48 +41,36 @@
         <h4><%=t(".address")%></h4>
     </div>
   </div>
-  <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :address1, class: 'col-form-label' %> :</span>
-    </div>
-    <div class="col-sm-9">
-        <%= form.text_field :address1, class: 'form-control' %>
-    </div>
-  </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :address2, class: 'col-form-label' %> :</span>
-    </div>
-    <div class="col-sm-9">
-        <%= form.text_field :address2, class: 'form-control' %>
-    </div>
-  </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :state, class: 'col-form-label' %> :</span>
-    </div>
-    <div class="col-sm-9">
-        <%= form.text_field :state, class: 'form-control' %>
-    </div>
-  </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :city, class: 'col-form-label' %> :</span>
-    </div>
-    <div class="col-sm-9">
-        <%= form.text_field :city, class: 'form-control' %>
-    </div>
-  </div>
+              <div style='height:4px'></div>
+              <div class="form-group row">
+                <div class="col-sm-3">
+                </div>
+                <div class="col-sm-9">
+                    <div style="px;width:100%" id="place-picker-box">
+                      <div style="width:100%" id="place-picker-container">
+                        <gmpx-place-picker style="width:100%; disabled" placeholder="Enter an address" disabled></gmpx-place-picker>
+                      </div>
+                    </div>
+                    <gmp-map style="padding-top:2px;padding-bottom:5px;width:100%;height:200px;" center="40.749933,-73.98633" zoom="13" map-id="DEMO_MAP_ID">
+                      <gmp-advanced-marker></gmp-advanced-marker>
+                    </gmp-map>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-3">
+                    <span class="float-md-end"><%= form.label :address1, class: 'col-form-label' %> :</span>
+                </div>
+                <div class="col-sm-9">
+                    <%= form.text_field :address1, class: 'form-control' %>
+                </div>
+              </div>
   <div style='height:4px'></div>
   <div class="form-group row">
     <div class="col-sm-3">
         <span class="float-md-end"><%= form.label :postcode, class: 'col-form-label' %> :</span>
     </div>
     <div class="col-sm-9">
-        <%= form.text_field :postcode, class: 'form-control' %>
+        <%= form.text_field :postcode, class: 'form-control', disabled: true  %>
     </div>
   </div>
   <div style='height:4px'></div>
@@ -91,7 +79,7 @@
         <span class="float-md-end"><%= form.label :country, class: 'col-form-label' %> :</span>
     </div>
     <div class="col-sm-9">
-        <%= form.country_select :country, {} %>
+        <%= form.country_select :country, {}, disabled: true  %>
     </div>
   </div>
   <div class="form-group row">

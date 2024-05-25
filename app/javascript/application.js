@@ -70,3 +70,40 @@ function patch( url, body ) {
     });
 }
 import "./channels"
+
+    if ($("#restaurantTabs").is(':visible')) {
+      async function init() {
+        console.log( 'gmaps: init');
+        await customElements.whenDefined('gmp-map');
+        const map = document.querySelector('gmp-map');
+        const marker = document.querySelector('gmp-advanced-marker');
+        const placePicker = document.querySelector('gmpx-place-picker');
+        const infowindow = new google.maps.InfoWindow();
+        map.innerMap.setOptions({
+          mapTypeControl: false
+        });
+        placePicker.addEventListener('gmpx-placechange', () => {
+          const place = placePicker.value;
+          console.log( 'place: '+place.id );
+          console.log( 'place: '+place.formattedAddress);
+          $('#restaurant_address1').val(place.formattedAddress);
+          console.log( 'place: '+JSON.stringify(place.addressComponents));
+          if (!place.location) {
+            window.alert(
+              "No details available for input: '" + place.name + "'"
+            );
+            infowindow.close();
+            marker.position = null;
+            return;
+          }
+          if (place.viewport) {
+            map.innerMap.fitBounds(place.viewport);
+          } else {
+            map.center = place.location;
+            map.zoom = 17;
+          }
+          marker.position = place.location;
+        });
+      }
+      document.addEventListener('DOMContentLoaded', init);
+    }
