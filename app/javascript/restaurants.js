@@ -1,6 +1,34 @@
 document.addEventListener("turbo:load", () => {
 
     if ($("#restaurantTabs").is(':visible')) {
+        const placePicker = document.querySelector('gmpx-place-picker');
+            try {
+                placePicker.addEventListener('gmpx-placechange', () => {
+                  const place = placePicker.value;
+                  if( place && place.id ) {
+                      $('#restaurant_address1').val(place.formattedAddress);
+                  }
+                  if( place && place.addressComponents ) {
+                      $('#restaurant_postcode').val("n/a");
+                      for (let i = 0; i < place.addressComponents.length; i++) {
+                        if( place.addressComponents[i].types.includes('country') ) {
+                            $("#restaurant_country").val(place.addressComponents[i].shortText).change();
+                        }
+                        if( place.addressComponents[i].types.includes('postal_code') ) {
+                            $('#restaurant_postcode').val(place.addressComponents[i].longText);
+                        }
+                      }
+                  }
+                  if( place && place.location ) {
+                      $('#restaurant_latitude').val(place.location.lat);
+                      $('#restaurant_longitude').val(place.location.lng);
+                  }
+                });
+            } catch( err ) {
+            }
+    }
+
+    if ($("#restaurantTabs").is(':visible')) {
         const pillsTab = document.querySelector('#restaurantTabs');
         const pills = pillsTab.querySelectorAll('button[data-bs-toggle="tab"]');
 
