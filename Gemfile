@@ -94,3 +94,4 @@ gem "tom-select-rails", "~> 2.3"
 gem 'currency_select'
 gem 'currencies'
 gem 'nokogiri'
+gem 'stripe'

@@ -37,6 +37,9 @@
       <li class="nav-item" role="presentation">
         <button class="nav-link link-dark" id="openinghours-tab" data-bs-toggle="tab" data-bs-target="#openinghour" type="button" role="tab" aria-controls="openinghoursConfig" aria-selected="false">Opening Hours</button>
       </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="billing-tab" data-bs-toggle="tab" data-bs-target="#billing" type="button" role="tab" aria-controls="billingsConfig" aria-selected="false">Billing</button>
+      </li>
   <% end %>
 </ul>
 <div class="tab-content" id="restaurantConfig">
@@ -226,6 +229,11 @@
       <div class="tab-content" id="openinghoursConfig">
         <div class="tab-pane fade" id="openinghour" role="tabpanel" aria-labelledby="openinghour-tab">
             <%= render 'showOpeningHours', restaurant: @restaurant, edit: false %>
+        </div>
+      </div>
+      <div class="tab-content" id="billingsConfig">
+        <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
+            Billing Stuff!!! STRIPE!
         </div>
       </div>
   <% end %>
