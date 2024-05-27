@@ -117,6 +117,6 @@ class TipsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def tip_params
-      params.require(:tip).permit(:percentage, :restaurant_id)
+      params.require(:tip).permit(:percentage, :restaurant_id, :sequence)
     end
 end

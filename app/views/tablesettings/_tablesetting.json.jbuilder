@@ -1,6 +1,7 @@
   json.id tablesetting.id
   json.name tablesetting.name
   json.description tablesetting.description
+  json.sequence tablesetting.sequence
   json.status tablesetting.status
   json.tabletype tablesetting.tabletype
   json.capacity tablesetting.capacity

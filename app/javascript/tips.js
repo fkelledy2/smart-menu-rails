@@ -13,7 +13,7 @@ document.addEventListener("turbo:load", () => {
           layout:"fitDataStretch",
           ajaxURL: '/tips.json',
           initialSort:[
-            {column:"percentage", dir:"asc"},
+            {column:"sequence", dir:"asc"},
           ],
           movableRows:true,
           columns: [
@@ -43,6 +43,25 @@ document.addEventListener("turbo:load", () => {
             }
           }
           ],
+        });
+        restaurantTipTable.on("rowMoved", function(row){
+            const rows = restaurantTipTable.getRows();
+            for (let i = 0; i < rows.length; i++) {
+                restaurantTipTable.updateData([{id:rows[i].getData().id, sequence:rows[i].getPosition()}]);
+                let mu = {
+                  'tip': {
+                      'sequence': rows[i].getPosition()
+                  }
+                };
+                fetch(rows[i].getData().url, {
+                    method: 'PATCH',
+                    headers:  {
+                      "Content-Type": "application/json",
+                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                    },
+                    body: JSON.stringify(mu)
+                });
+            }
         });
         restaurantTipTable.on("rowSelectionChanged", function(data, rows){
           if( data.length > 0 ) {

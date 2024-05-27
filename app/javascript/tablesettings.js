@@ -31,6 +31,7 @@ document.addEventListener("turbo:load", () => {
             }
           },
           { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
+          { title:" ", field:"sequence", formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {
             title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
                 labelField:"name",
@@ -47,6 +48,25 @@ document.addEventListener("turbo:load", () => {
             }
            }
           ],
+        });
+        tableSettingTable.on("rowMoved", function(row){
+            const rows = tableSettingTable.getRows();
+            for (let i = 0; i < rows.length; i++) {
+                tableSettingTable.updateData([{id:rows[i].getData().id, sequence:rows[i].getPosition()}]);
+                let mu = {
+                  'tablesetting': {
+                      'sequence': rows[i].getPosition()
+                  }
+                };
+                fetch(rows[i].getData().url, {
+                    method: 'PATCH',
+                    headers:  {
+                      "Content-Type": "application/json",
+                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                    },
+                    body: JSON.stringify(mu)
+                });
+            }
         });
         tableSettingTable.on("rowSelectionChanged", function(data, rows){
           if( data.length > 0 ) {

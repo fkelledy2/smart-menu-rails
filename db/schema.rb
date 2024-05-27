@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_25_203753) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_26_171302) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -377,6 +377,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_203753) do
     t.datetime "updated_at", null: false
     t.integer "tabletype"
     t.boolean "archived", default: false
+    t.integer "sequence"
     t.index ["restaurant_id"], name: "index_tablesettings_on_restaurant_id"
   end
 
@@ -407,6 +408,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_203753) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "archived", default: false
+    t.integer "sequence"
     t.index ["restaurant_id"], name: "index_tips_on_restaurant_id"
   end
 
