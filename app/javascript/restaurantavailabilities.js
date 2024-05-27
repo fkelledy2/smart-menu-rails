@@ -43,13 +43,7 @@ document.addEventListener("turbo:load", () => {
           },
           {title:"Status", field:"status", responsive:1, hozAlign:"right", headerHozAlign:"right" },
           {title: 'Opening Time', field: 'starthour', mutator: (value, data) => String(data.starthour).padStart(2, '0') + ':' + String(data.startmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
-          {title: 'Closing Time', field: 'endhour', mutator: (value, data) => String(data.endhour).padStart(2, '0') + ':' + String(data.endmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
-          {title:"Created", field:"created_at", responsive:3, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy",
-            invalidPlaceholder:"(invalid date)",
-            }
-          }
+          {title: 'Closing Time', field: 'endhour', mutator: (value, data) => String(data.endhour).padStart(2, '0') + ':' + String(data.endmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" }
           ]
         });
         restaurantOpeningHourTable.on("rowMoved", function(row){

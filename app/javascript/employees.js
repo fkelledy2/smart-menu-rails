@@ -41,13 +41,7 @@ document.addEventListener("turbo:load", () => {
             }
            },
            {title:"Status", field:"status", responsive:1, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Role", field:"role", responsive:4, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Created", field:"created_at", responsive:0, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy",
-            invalidPlaceholder:"(invalid date)",
-            }
-           }
+           {title:"Role", field:"role", responsive:4, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         restaurantEmployeeTable.on("rowSelectionChanged", function(data, rows){

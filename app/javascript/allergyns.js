@@ -14,13 +14,7 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/allergyns/",
             }
           },
-          {title:"Symbol", field:"symbol", width:150, responsive:0},
-          {title:"Created", field:"created_at", width:200, responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy",
-            invalidPlaceholder:"(invalid date)",
-            }
-          }
+          {title:"Symbol", field:"symbol", width:150, responsive:0}
           ],
         });
     }

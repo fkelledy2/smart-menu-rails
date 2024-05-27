@@ -107,12 +107,6 @@ document.addEventListener("turbo:load", () => {
               title: 'Address',
               field: 'address', responsive:4,
               mutator: (value, data) => data.address1 + '\n' + data.address2 + '\n' + data.state + '\n' + data.city + '\n' + data.postcode,
-           },
-           {title:"Created", field:"created_at", responsive:0, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy",
-            invalidPlaceholder:"(invalid date)",
-            }
            }
           ],
         });

@@ -21,13 +21,7 @@
            },
            {title:"Starting Inventory", field:"startinginventory", responsive:0, hozAlign:"right", headerHozAlign:"right"},
            {title:"Current Inventory", field:"currentinventory", responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Reset Hour", field:"resethour", responsive:3, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Created", field:"created_at", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy",
-            invalidPlaceholder:"(invalid date)",
-            }
-           }
+           {title:"Reset Hour", field:"resethour", responsive:3, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
     }

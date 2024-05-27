@@ -66,12 +66,6 @@ document.addEventListener("turbo:load", () => {
                 {title:"Current", field:"inventory.currentinventory", hozAlign:"right", headerHozAlign:"right" },
                 {title:"Resets At", field:"inventory.resethour", hozAlign:"right", headerHozAlign:"right" },
                ],
-           },
-           {title:"Created", field:"created_at", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy",
-            invalidPlaceholder:"(invalid date)",
-            }
            }
           ],
         });

@@ -37,13 +37,7 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/menusections/",
             }
            },
-           {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Created", field:"created_at", responsive:4, hozAlign:"right", headerHozAlign:"right", formatter:"datetime", formatterParams:{
-            inputFormat:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            outputFormat:"dd/MM/yyyy",
-            invalidPlaceholder:"(invalid date)",
-            }
-           }
+           {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" }
           ]
         });
         menusectionTable.on("rowMoved", function(row){
