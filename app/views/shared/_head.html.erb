@@ -12,5 +12,5 @@
 <script type="module" src="https://unpkg.com/@googlemaps/extended-component-library@0.6"></script>
 
 <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm1ON2SrOfIEmJewwfXnDXTZi9F45IjRs&loading=async">
+    src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials[:google_maps_api_key] %>&loading=async">
 </script>
