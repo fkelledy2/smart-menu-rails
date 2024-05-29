@@ -1,15 +1,12 @@
-<footer class="bg-light footer mt-auto py-3">
-  <div class="container-fluid d-flex justify-content-between mx-auto text-muted">
-    <span>
-        &copy; <%= Date.today.year %> Your Company
-        <% if current_user && @current_employee %>
-            <%= @current_employee.role %>
-        <% end %>
-    </span>
-    <ul class="d-inline float-end list-inline mb-0">
-      <li class="list-inline-item mr-3"><%= link_to "Terms", terms_path %></li>
-      <li class="list-inline-item mr-3"><%= link_to "Privacy", privacy_path %></li>
+<div class="container-fluid">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <p class="col-md-4 mb-0 text-muted">© 2024 mellow.menu, Ltd.</p>
+    <%= link_to root_path, class: "navbar-brand" do %>
+       <%= image_tag "logo.png", height:'56' %>
+    <% end %>
+    <ul class="nav col-md-4 justify-content-end">
+      <li class="nav-item"><%= link_to "Terms", terms_path, class: "nav-link px-2 text-muted"  %></li>
+      <li class="nav-item"><%= link_to "Privacy", privacy_path, class: "nav-link px-2 text-muted"  %></li>
     </ul>
-  </div>
-</footer>
-
+  </footer>
+</div>
