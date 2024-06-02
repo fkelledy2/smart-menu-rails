@@ -16,13 +16,14 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#restaurantTabs").is(':visible')) {
+        const restaurantId = document.getElementById('restaurant-tablesetting-table').getAttribute('data-bs-restaurant_id');
         var tableSettingTable = new Tabulator("#restaurant-tablesetting-table", {
           dataLoader: false,
           maxHeight:"100%",
           paginationSize:20,
           responsiveLayout:true,
           layout:"fitDataStretch",
-          ajaxURL: '/tablesettings.json',
+          ajaxURL: '/restaurants/'+restaurantId+'/tablesettings.json',
           movableRows:true,
           columns: [
           {

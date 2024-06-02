@@ -6,12 +6,13 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#restaurantTabs").is(':visible')) {
+        const restaurantId = document.getElementById('restaurant-tip-table').getAttribute('data-bs-restaurant_id');
         var restaurantTipTable = new Tabulator("#restaurant-tip-table", {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
-          ajaxURL: '/tips.json',
+          ajaxURL: '/restaurants/'+restaurantId+'/tips.json',
           initialSort:[
             {column:"sequence", dir:"asc"},
           ],

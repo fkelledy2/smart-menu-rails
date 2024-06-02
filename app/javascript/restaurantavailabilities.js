@@ -16,13 +16,14 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#restaurantTabs").is(':visible')) {
+        const restaurantId = document.getElementById('restaurant-openinghour-table').getAttribute('data-bs-restaurant_id');
         var restaurantOpeningHourTable = new Tabulator("#restaurant-openinghour-table", {
           dataLoader: false,
           maxHeight:"100%",
           paginationSize:20,
           responsiveLayout:true,
           layout:"fitDataStretch",
-          ajaxURL: '/restaurantavailabilities.json',
+          ajaxURL: '/restaurants/'+restaurantId+'/restaurantavailabilities.json',
           initialSort:[
             {column:"sequence", dir:"asc"},
           ],

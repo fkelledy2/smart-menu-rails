@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  layout "marketing", :only => [ :index, :terms, :privacy ]
+
   def index
   end
 

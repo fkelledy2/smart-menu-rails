@@ -20,10 +20,10 @@ class Restaurant < ApplicationRecord
   end
 
   validates :name, :presence => true
-  validates :address1, :presence => true
-  validates :city, :presence => true
-  validates :postcode, :presence => true
-  validates :country, :presence => true
+  validates :address1, :presence => false
+  validates :city, :presence => false
+  validates :postcode, :presence => false
+  validates :country, :presence => false
   validates :status, :presence => true
   validates :user, :presence => true
 end

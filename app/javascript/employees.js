@@ -22,12 +22,13 @@ document.addEventListener("turbo:load", () => {
 
     if ($("#restaurantTabs").is(':visible')) {
         // Employees
+        const restaurantId = document.getElementById('restaurant-employee-table').getAttribute('data-bs-restaurant_id');
         var restaurantEmployeeTable = new Tabulator("#restaurant-employee-table", {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
-          ajaxURL: '/employees.json',
+          ajaxURL: '/restaurants/'+restaurantId+'/employees.json',
           columns: [
           {
              formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {

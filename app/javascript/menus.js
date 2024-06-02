@@ -143,12 +143,13 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#restaurantTabs").is(':visible')) {
+        const restaurantId = document.getElementById('restaurant-menu-table').getAttribute('data-bs-restaurant_id');
         var restaurantMenuTable = new Tabulator("#restaurant-menu-table", {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
-          ajaxURL: '/menus.json',
+          ajaxURL: '/restaurants/'+restaurantId+'/menus.json',
           initialSort:[
             {column:"sequence", dir:"asc"},
           ],

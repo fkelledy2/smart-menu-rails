@@ -11,12 +11,13 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#restaurantTabs").is(':visible')) {
+        const restaurantId = document.getElementById('restaurant-tax-table').getAttribute('data-bs-restaurant_id');
         var restaurantTaxTable = new Tabulator("#restaurant-tax-table", {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
-          ajaxURL: '/taxes.json',
+          ajaxURL: '/restaurants/'+restaurantId+'/taxes.json',
           initialSort:[
             {column:"sequence", dir:"asc"},
           ],
