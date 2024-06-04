@@ -117,7 +117,7 @@ class MenusController < ApplicationController
   def update
     respond_to do |format|
       if @menu.update(menu_params)
-        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully deleted." }
+        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully updated." }
         format.json { render :show, status: :ok, location: @menu }
       else
         format.html { render :edit, status: :unprocessable_entity }
