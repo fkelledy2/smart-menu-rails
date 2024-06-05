@@ -38,7 +38,7 @@ class AllergynsController < ApplicationController
   # POST /allergyns or /allergyns.json
   def create
     if current_user
-        @allergyn = Allergyn.new(allergyn_params)
+      @allergyn = Allergyn.new(allergyn_params)
         respond_to do |format|
           if @allergyn.save
             format.html { redirect_to allergyn_url(@allergyn), notice: "Allergyn was successfully created." }

@@ -1,5 +1,5 @@
 document.addEventListener("turbo:load", () => {
-    if ($("#allergyn-table").is(':visible')) {
+    if ($("#menusectionConfig").is(':visible')) {
         // Allergyns
         var allergynTable = new Tabulator("#allergyn-table", {
           dataLoader: false,

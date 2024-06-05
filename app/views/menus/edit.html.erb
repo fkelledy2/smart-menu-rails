@@ -9,7 +9,7 @@
 
 <ul class="nav nav-tabs" id="menuTabs" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="menu-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true">
+    <button class="nav-link link-dark">
       <%= link_to restaurant_path(@menu.restaurant), class: "link-dark" do %>
         <strong><i class="bi bi-chevron-double-left"></i></strong>
       <% end %>
@@ -72,7 +72,7 @@
       <p>
       <div class="row">
         <div class="col-sm-12">
-          Allergyns
+          <%= render 'showAllergyns', menu: @menu, edit: true %>
         </div>
       </div>
     </div>

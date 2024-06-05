@@ -25,8 +25,36 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
-    if ($("#menuu").is(':visible')) {
+    if ($("#menuTabs").is(':visible')) {
+        const pillsTab = document.querySelector('#menuTabs');
+        const pills = pillsTab.querySelectorAll('button[data-bs-toggle="tab"]');
 
+        pills.forEach(pill => {
+            pill.addEventListener('shown.bs.tab', (event) => {
+                const { target } = event;
+                const { id: targetId } = target;
+                savePillId(targetId);
+            });
+        });
+
+        const savePillId = (selector) => {
+            localStorage.setItem('activeMenuPillId', selector);
+        };
+
+        const getPillId = () => {
+            const activePillId = localStorage.getItem('activeMenuPillId');
+            // if local storage item is null, show default tab
+            if (!activePillId) return;
+            // call 'show' function
+            const someTabTriggerEl = document.querySelector(`#${activePillId}`)
+            const tab = new bootstrap.Tab(someTabTriggerEl);
+            tab.show();
+        };
+        // get pill id on load
+        getPillId();
+    }
+
+    if ($("#menuu").is(':visible')) {
         $(".sectionnav").on("click",function(event){
             event.preventDefault();
             $('html, body').animate({

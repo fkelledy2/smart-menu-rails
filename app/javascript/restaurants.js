@@ -41,11 +41,11 @@ document.addEventListener("turbo:load", () => {
         });
 
         const savePillId = (selector) => {
-          localStorage.setItem('activePillId', selector);
+          localStorage.setItem('activeRestaurantPillId', selector);
         };
 
         const getPillId = () => {
-          const activePillId = localStorage.getItem('activePillId');
+          const activePillId = localStorage.getItem('activeRestaurantPillId');
           // if local storage item is null, show default tab
           if (!activePillId) return;
           // call 'show' function
@@ -56,6 +56,7 @@ document.addEventListener("turbo:load", () => {
         // get pill id on load
         getPillId();
     }
+
     if ($("#restaurant_status").is(':visible')) {
       new TomSelect("#restaurant_status",{
       });
