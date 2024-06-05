@@ -19,11 +19,11 @@ document.addEventListener("turbo:load", () => {
           movableRows:true,
           columns: [
           {
-            formatter:"rowSelection", titleFormatter:"rowSelection", frozen:true, width: 30, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
-               cell.getRow().toggleSelect();
-            }
+              formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
+                  cell.getRow().toggleSelect();
+              }
           },
-          { rowHandle:true, formatter:"handle", headerSort:false,  width:30, minWidth:30 },
+          { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           { title:" ", field:"sequence", formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {
             title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {

@@ -14,7 +14,8 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/allergyns/",
             }
           },
-          {title:"Symbol", field:"symbol", width:150, responsive:0}
+          {title:"Description", field:"description", responsive:5},
+          {title:"Symbol", field:"symbol", responsive:0, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
     }
