@@ -7,7 +7,6 @@ class MenusController < ApplicationController
     @today = Date.today.strftime('%A').downcase!
     @currentHour = Time.now.strftime("%H").to_i
     @currentMin = Time.now.strftime("%M").to_i
-
     if current_user
         if params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])

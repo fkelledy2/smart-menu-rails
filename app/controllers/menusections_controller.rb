@@ -5,8 +5,14 @@ class MenusectionsController < ApplicationController
   def index
     if current_user
         @menusections = []
-        Restaurant.where( user: current_user, archived: false).each do |restaurant|
+        puts params[:menu_id]
+        if params[:menu_id]
+          @menu = Menu.find_by_id(params[:menu_id])
+          @menusections += @menu.menusections
+        else
+          Restaurant.where( user: current_user, archived: false).each do |restaurant|
             @menusections += restaurant.menusections
+          end
         end
     else
         redirect_to root_url

@@ -1,0 +1,18 @@
+<p>
+<div class="row">
+  <div class="col-sm-12 text-end">
+    <button id="activate-menusection" class='btn btn-sm btn-success' disabled><%=t(".activate")%></button>
+    <button id="deactivate-menusection"class='btn btn-sm btn-danger' disabled><%=t(".deactivate")%></button>
+    <% if edit %>
+        <%= link_to new_menusection_path(menu_id: @menu), class: 'btn btn-sm btn-primary' do %>
+            <i class="bi bi-plus"></i> <%=t(".menusection")%>
+        <% end %>
+    <% else %>
+        <%= link_to new_menusection_path(menu_id: @menu), class: 'btn btn-sm btn-primary' do %>
+            <i class="bi bi-plus"></i> <%=t(".menusection")%>
+        <% end %>
+    <% end %>
+  </div>
+</div>
+<div style="padding-top:10px" class="table-borderless" id="menu-menusection-table" data-bs-menu="<%= @menu.id %>">
+</div>

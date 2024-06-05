@@ -38,6 +38,10 @@
     </div>
     <div class="col-sm-9">
       <%= form.text_field :image, class: 'form-control' %>
+      <% if menu.image %>
+        <img src="<%=menu.image%>" class="img-fluid" alt="...">
+      <% end %>
+
     </div>
   </div>
   <div style='height:4px'></div>

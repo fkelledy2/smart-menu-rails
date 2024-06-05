@@ -5,14 +5,14 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
-    if ($("#menusection-table").is(':visible')) {
-        var menusectionTable = new Tabulator("#menusection-table", {
+    if ($("#menusectionConfig").is(':visible')) {
+        const menuId = document.getElementById('menu-menusection-table').getAttribute('data-bs-menu');
+        var menusectionTable = new Tabulator("#menu-menusection-table", {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
-          groupBy: ["menu.name"],
-          ajaxURL: '/menusections.json',
+          ajaxURL: '/menus/'+menuId+'/menusections.json',
           initialSort:[
             {column:"sequence", dir:"asc"},
           ],
@@ -21,12 +21,6 @@ document.addEventListener("turbo:load", () => {
           {
             formatter:"rowSelection", titleFormatter:"rowSelection", frozen:true, width: 30, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
                cell.getRow().toggleSelect();
-            }
-          },
-          {
-            title:"Menu", field:"menu.id", responsive:0, width:200, formatter:"link", formatterParams: {
-                labelField:"menu.name",
-                urlPrefix:"/menus/",
             }
           },
           { rowHandle:true, formatter:"handle", headerSort:false,  width:30, minWidth:30 },
@@ -59,19 +53,16 @@ document.addEventListener("turbo:load", () => {
                 });
             }
         });
-        //trigger an alert message when the row is clicked
-        menusectionTable.on("rowClick", function(e, row){
-        });
         menusectionTable.on("rowSelectionChanged", function(data, rows){
           if( data.length > 0 ) {
-            document.getElementById("activate-row").disabled = false;
-            document.getElementById("deactivate-row").disabled = false;
+            document.getElementById("activate-menusection").disabled = false;
+            document.getElementById("deactivate-menusection").disabled = false;
           } else {
-            document.getElementById("activate-row").disabled = true;
-            document.getElementById("deactivate-row").disabled = true;
+            document.getElementById("activate-menusection").disabled = true;
+            document.getElementById("deactivate-menusection").disabled = true;
           }
         });
-        document.getElementById("activate-row").addEventListener("click", function(){
+        document.getElementById("activate-menusection").addEventListener("click", function(){
             const rows = menusectionTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
                 menusectionTable.updateData([{id:rows[i].id, status:'active'}]);
@@ -83,7 +74,7 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-        document.getElementById("deactivate-row").addEventListener("click", function(){
+        document.getElementById("deactivate-menusection").addEventListener("click", function(){
             const rows = menusectionTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
                 menusectionTable.updateData([{id:rows[i].id, status:'inactive'}]);

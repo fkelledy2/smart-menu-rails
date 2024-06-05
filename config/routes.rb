@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     resources :ordrs, controller: 'ordrs', only: [:index]
   end
   resources :menus, controller: 'menus' do
+      resources :menusections, controller: 'menusections', only: [:index,:show, :edit]
       resources :tablesettings, controller: 'menus', only: [:show]
   end
   draw :madmin

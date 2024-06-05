@@ -4,25 +4,31 @@
     <div class="col-sm-10">
         <h1><%= @menu.name %></h1>
     </div>
-    <div class="col-sm-2">
-        <% if @menu.persisted? %>
-          <%= link_to t(".cancel"), @menu, class: "float-end btn btn-sm btn-light" %>
-        <% else %>
-          <%= link_to t(".cancel"), menus_path, class: "float-end btn btn-sm btn-light" %>
-        <% end %>
-    </div>
   </div>
 </div>
 
 <ul class="nav nav-tabs" id="menuTabs" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark active" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true">Menu</button>
+    <button class="nav-link link-dark" id="menu-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true">
+      <%= link_to restaurant_path(@menu.restaurant), class: "link-dark" do %>
+        <strong><i class="bi bi-chevron-double-left"></i></strong>
+      <% end %>
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark active" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menuConfig" aria-selected="true">Menu</button>
   </li>
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark" id="menusection-tab" data-bs-toggle="tab" data-bs-target="#menusection" type="button" role="tab" aria-controls="menusectionConfig" aria-selected="false">Sections</button>
   </li>
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark" id="menuitem-tab" data-bs-toggle="tab" data-bs-target="#menuitem" type="button" role="tab" aria-controls="menuitemConfig" aria-selected="false">Items</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark" id="allergyn-tab" data-bs-toggle="tab" data-bs-target="#allergyn" type="button" role="tab" aria-controls="allergynConfig" aria-selected="false">Allergyns</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark" id="sizes-tab" data-bs-toggle="tab" data-bs-target="#size" type="button" role="tab" aria-controls="sizeConfig" aria-selected="false">Sizes</button>
   </li>
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory" type="button" role="tab" aria-controls="inventoryConfig" aria-selected="false">Inventories</button>
@@ -45,7 +51,7 @@
       <p>
       <div class="row">
         <div class="col-sm-12">
-          Menu Sections
+          <%= render 'showMenusections', menu: @menu, edit: false %>
         </div>
       </div>
     </div>
@@ -60,6 +66,29 @@
       </div>
     </div>
   </div>
+
+  <div class="tab-content" id="allergynConfig">
+    <div class="tab-pane fade" id="allergyn" role="tabpanel" aria-labelledby="allergyn-tab">
+      <p>
+      <div class="row">
+        <div class="col-sm-12">
+          Allergyns
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="sizeConfig">
+    <div class="tab-pane fade" id="size" role="tabpanel" aria-labelledby="size-tab">
+      <p>
+      <div class="row">
+        <div class="col-sm-12">
+          Sizes
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="tab-content" id="inventoryConfig">
     <div class="tab-pane fade" id="inventory" role="tabpanel" aria-labelledby="inventory-tab">
       <p>
