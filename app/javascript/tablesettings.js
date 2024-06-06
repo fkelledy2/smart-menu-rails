@@ -16,6 +16,12 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#restaurantTabs").is(':visible')) {
+        function link(cell, formatterParams){
+            var id = cell.getValue();
+            var name = cell.getRow();
+            var rowData = cell.getRow().getData("data").name;
+            return "<a class='link-dark' href='/tablesettings/"+id+"/edit'>"+rowData+"</a>";
+        }
         const restaurantId = document.getElementById('restaurant-tablesetting-table').getAttribute('data-bs-restaurant_id');
         var tableSettingTable = new Tabulator("#restaurant-tablesetting-table", {
           dataLoader: false,
@@ -33,15 +39,10 @@ document.addEventListener("turbo:load", () => {
           },
           { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           { title:" ", field:"sequence", formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
-          {
-            title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
-                labelField:"name",
-                urlPrefix:"/tablesettings/",
-            }
-           },
-           {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Type", field:"tabletype", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Capacity", field:"capacity", width: 200, hozAlign:"right", bottomCalc:"sum", headerHozAlign:"right", }
+          {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
+          {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
+          {title:"Type", field:"tabletype", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" },
+          {title:"Capacity", field:"capacity", width: 200, hozAlign:"right", bottomCalc:"sum", headerHozAlign:"right", }
           ],
         });
         tableSettingTable.on("rowMoved", function(row){

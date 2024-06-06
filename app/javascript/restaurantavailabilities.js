@@ -16,6 +16,12 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#restaurantTabs").is(':visible')) {
+        function link(cell, formatterParams){
+            var id = cell.getValue();
+            var name = cell.getRow();
+            var rowData = cell.getRow().getData("data").dayofweek;
+            return "<a class='link-dark' href='/restaurantavailabilities/"+id+"/edit'>"+rowData+"</a>";
+        }
         const restaurantId = document.getElementById('restaurant-openinghour-table').getAttribute('data-bs-restaurant_id');
         var restaurantOpeningHourTable = new Tabulator("#restaurant-openinghour-table", {
           dataLoader: false,
@@ -36,12 +42,7 @@ document.addEventListener("turbo:load", () => {
           },
           { rowHandle:true, formatter:"handle", responsive:0, headerSort:false, frozen: true, width:30, minWidth:30 },
           { title:" ", field:"sequence", formatter:"rownum", responsive:0, width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
-          {
-            title:"Day of Week", field:"id", responsive:0, formatter:"link", formatterParams: {
-                labelField:"dayofweek",
-                urlPrefix:"/restaurantavailabilities/",
-            }
-          },
+          {title:"Day of Week", field:"id", responsive:0, formatter:link, hozAlign:"left"},
           {title:"Status", field:"status", responsive:1, hozAlign:"right", headerHozAlign:"right" },
           {title: 'Opening Time', field: 'starthour', mutator: (value, data) => String(data.starthour).padStart(2, '0') + ':' + String(data.startmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
           {title: 'Closing Time', field: 'endhour', mutator: (value, data) => String(data.endhour).padStart(2, '0') + ':' + String(data.endmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" }

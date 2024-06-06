@@ -21,7 +21,12 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#restaurantTabs").is(':visible')) {
-        // Employees
+        function link(cell, formatterParams){
+            var id = cell.getValue();
+            var name = cell.getRow();
+            var rowData = cell.getRow().getData("data").name;
+            return "<a class='link-dark' href='/employees/"+id+"/edit'>"+rowData+"</a>";
+        }
         const restaurantId = document.getElementById('restaurant-employee-table').getAttribute('data-bs-restaurant_id');
         var restaurantEmployeeTable = new Tabulator("#restaurant-employee-table", {
           dataLoader: false,
@@ -35,14 +40,9 @@ document.addEventListener("turbo:load", () => {
                 cell.getRow().toggleSelect();
              }
           },
-          {
-            title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
-                labelField:"name",
-                urlPrefix:"/employees/",
-            }
-           },
-           {title:"Status", field:"status", responsive:1, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Role", field:"role", responsive:4, hozAlign:"right", headerHozAlign:"right" }
+          {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
+          {title:"Status", field:"status", responsive:1, hozAlign:"right", headerHozAlign:"right" },
+          {title:"Role", field:"role", responsive:4, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         restaurantEmployeeTable.on("rowSelectionChanged", function(data, rows){

@@ -67,7 +67,7 @@ class MenusectionsController < ApplicationController
     if current_user
         respond_to do |format|
           if @menusection.update(menusection_params)
-            format.html { redirect_to menusection_url(@menusection), notice: "Menusection was successfully updated." }
+            format.html { redirect_to edit_menu_path(@menusection.menu), notice: "Menusection was successfully updated." }
             format.json { render :show, status: :ok, location: @menusection }
           else
             format.html { render :edit, status: :unprocessable_entity }

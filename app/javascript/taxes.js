@@ -11,6 +11,12 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#restaurantTabs").is(':visible')) {
+        function link(cell, formatterParams){
+            var id = cell.getValue();
+            var name = cell.getRow();
+            var rowData = cell.getRow().getData("data").name;
+            return "<a class='link-dark' href='/taxes/"+id+"/edit'>"+rowData+"</a>";
+        }
         const restaurantId = document.getElementById('restaurant-tax-table').getAttribute('data-bs-restaurant_id');
         var restaurantTaxTable = new Tabulator("#restaurant-tax-table", {
           dataLoader: false,
@@ -30,12 +36,7 @@ document.addEventListener("turbo:load", () => {
            },
            { rowHandle:true, formatter:"handle", headerSort:false,  frozen:true, width:30, minWidth:30 },
            { title:" ", field:"sequence", formatter:"rownum", width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
-           {
-            title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
-                labelField:"name",
-                urlPrefix:"/taxes/",
-            }
-           },
+           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
            {title:"Tax Type", field:"taxtype", responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {title:"Tax Percentage", field:"taxpercentage", responsive:0, hozAlign:"right", headerHozAlign:"right", formatter:"money", formatterParams:{
                 decimal:".",

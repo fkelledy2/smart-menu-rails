@@ -6,6 +6,12 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#menusectionConfig").is(':visible')) {
+        function link(cell, formatterParams){
+            var id = cell.getValue();
+            var name = cell.getRow();
+            var rowData = cell.getRow().getData("data").name;
+            return "<a class='link-dark' href='/menusections/"+id+"/edit'>"+rowData+"</a>";
+        }
         const menuId = document.getElementById('menu-menusection-table').getAttribute('data-bs-menu');
         var menusectionTable = new Tabulator("#menu-menusection-table", {
           dataLoader: false,
@@ -25,13 +31,9 @@ document.addEventListener("turbo:load", () => {
           },
           { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           { title:" ", field:"sequence", formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
-          {
-            title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
-                labelField:"name",
-                urlPrefix:"/menusections/",
-            }
-           },
-           {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" }
+          {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
+          {title:"Description", field:"description", responsive:5, hozAlign:"left", headerHozAlign:"left" },
+          {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" }
           ]
         });
         menusectionTable.on("rowMoved", function(row){
