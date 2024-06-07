@@ -28,7 +28,7 @@
                 <% end %>
                 <hr class="dropdown-divider">
                 <% @restaurants.each do |restaurant| %>
-                    <%= link_to restaurant_path(id: restaurant.id), class: "dropdown-item" do %>
+                    <%= link_to edit_restaurant_path(id: restaurant.id), class: "dropdown-item" do %>
                         <%= restaurant.name %>
                     <% end %>
                 <% end %>

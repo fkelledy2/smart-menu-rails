@@ -1,18 +1,10 @@
 <p>
 <div class="row">
   <div class="col-sm-12 text-end">
-    <% if edit %>
-        <button id="activate-tablesetting" class='btn btn-sm btn-success' disabled><%=t(".activate")%></button>
-        <button id="deactivate-tablesetting"class='btn btn-sm btn-danger' disabled><%=t(".deactivate")%></button>
-        <%= link_to new_tablesetting_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
-            <i class="bi bi-plus"></i> <%=t(".tablesetting")%>
-        <% end %>
-    <% else %>
-        <button id="activate-tablesetting" class='btn btn-sm btn-success' disabled><%=t(".activate")%></button>
-        <button id="deactivate-tablesetting"class='btn btn-sm btn-danger' disabled><%=t(".deactivate")%></button>
-        <%= link_to new_tablesetting_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary disabled' do %>
-            <i class="bi bi-plus"></i> <%=t(".tablesetting")%>
-        <% end %>
+    <button id="activate-tablesetting" class='btn btn-sm btn-dark' disabled><%=t(".activate")%></button>
+    <button id="deactivate-tablesetting"class='btn btn-sm btn-dark' disabled><%=t(".deactivate")%></button>
+    <%= link_to new_tablesetting_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-dark' do %>
+      <i class="bi bi-plus"></i> <%=t(".tablesetting")%>
     <% end %>
   </div>
 </div>

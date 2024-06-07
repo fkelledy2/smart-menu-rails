@@ -1,15 +1,19 @@
 <div class="page-header">
-  <div class="row">
-    <div class="col-sm-10">
+  <div style='padding-top: 20px' class="row">
+    <div class="col-sm-9">
           <h1><%=t(".employee")%></h1>
     </div>
     <div class="col-sm-2">
         <% if @employee.persisted? %>
-          <%= link_to t(".cancel"), restaurant_path(id: @employee.restaurant.id), class: "float-end btn btn-sm btn-light" %>
+          <%= link_to t(".cancel"), edit_restaurant_path(id: @employee.restaurant.id), class: "float-end btn btn-light" %>
         <% else %>
-          <%= link_to t(".cancel"), restaurant_path(id: @employee.restaurant.id), class: "float-end btn btn-sm btn-light" %>
+          <%= link_to t(".cancel"), edit_restaurant_path(id: @employee.restaurant.id), class: "float-end btn btn-light" %>
         <% end %>
     </div>
   </div>
 </div>
-<%= render 'form', employee: @employee %>
+<div class="row">
+  <div class="col-sm-11">
+    <%= render 'form', employee: @employee %>
+  </div>
+</div>

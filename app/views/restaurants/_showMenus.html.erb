@@ -1,19 +1,11 @@
     <p>
     <div class="row">
       <div class="col-sm-12 text-end">
-            <% if edit %>
-                <button id="activate-menu" class='btn btn-sm btn-success' disabled><%= t(".activate") %></button>
-                <button id="deactivate-menu"class='btn btn-sm btn-danger' disabled><%= t(".deactivate") %></button>
-                <%= link_to new_menu_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' do %>
-                  <i class="bi bi-plus"></i> <%= t(".menu") %>
-                <% end %>
-            <% else %>
-                <button id="activate-menu" class='btn btn-sm btn-success' disabled><%= t(".activate") %></button>
-                <button id="deactivate-menu"class='btn btn-sm btn-danger' disabled><%= t(".deactivate") %></button>
-                <%= link_to new_menu_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary disabled' do %>
-                  <i class="bi bi-plus"></i> <%= t(".menu") %>
-                <% end %>
-            <% end %>
+        <button id="activate-menu" class='btn btn-sm btn-dark' disabled><%= t(".activate") %></button>
+        <button id="deactivate-menu"class='btn btn-sm btn-dark' disabled><%= t(".deactivate") %></button>
+        <%= link_to new_menu_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-dark' do %>
+          <i class="bi bi-plus"></i> <%= t(".menu") %>
+        <% end %>
       </div>
     </div>
     <div style="padding-top:10px" class="table-borderless" id="restaurant-menu-table" data-bs-restaurant_id="<%= @restaurant.id %>">
