@@ -35,7 +35,7 @@ document.addEventListener("turbo:load", () => {
              }
            },
            { rowHandle:true, formatter:"handle", headerSort:false,  frozen:true, width:30, minWidth:30 },
-           { title:" ", field:"sequence", formatter:"rownum", width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
+           { title:"", field:"sequence", visible:false, formatter:"rownum", width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
            {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
            {title:"Tax Type", field:"taxtype", responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {title:"Tax Percentage", field:"taxpercentage", responsive:0, hozAlign:"right", headerHozAlign:"right", formatter:"money", formatterParams:{
