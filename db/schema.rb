@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_26_171302) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_08_205504) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,6 +49,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_26_171302) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "archived", default: false
+    t.integer "status", default: 0
+    t.integer "sequence"
   end
 
   create_table "announcements", force: :cascade do |t|
@@ -72,6 +74,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_26_171302) do
     t.string "email"
     t.bigint "user_id", null: false
     t.boolean "archived", default: false
+    t.integer "sequence"
     t.index ["restaurant_id"], name: "index_employees_on_restaurant_id"
     t.index ["user_id"], name: "index_employees_on_user_id"
   end
@@ -103,6 +106,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_26_171302) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "archived", default: false
+    t.integer "status", default: 0
+    t.integer "sequence"
     t.index ["menuitem_id"], name: "index_inventories_on_menuitem_id"
   end
 
@@ -341,6 +346,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_26_171302) do
     t.boolean "archived", default: false
     t.float "latitude"
     t.float "longitude"
+    t.integer "sequence"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 
@@ -365,6 +371,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_26_171302) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "archived", default: false
+    t.integer "status", default: 0
+    t.integer "sequence"
   end
 
   create_table "tablesettings", force: :cascade do |t|
@@ -399,6 +407,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_26_171302) do
     t.datetime "updated_at", null: false
     t.integer "sequence"
     t.boolean "archived", default: false
+    t.integer "status", default: 0
     t.index ["restaurant_id"], name: "index_taxes_on_restaurant_id"
   end
 
@@ -409,6 +418,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_26_171302) do
     t.datetime "updated_at", null: false
     t.boolean "archived", default: false
     t.integer "sequence"
+    t.integer "status", default: 0
     t.index ["restaurant_id"], name: "index_tips_on_restaurant_id"
   end
 

@@ -74,19 +74,19 @@ document.addEventListener("turbo:load", () => {
                 restaurantTipTable.updateData([{id:rows[i].id, status:'free'}]);
                 let r = {
                   'tip': {
-                      'status': 'free'
+                      'status': 'active'
                   }
                 };
                 patch( rows[i].url, r );
             }
         });
-        document.getElementById("deactivate-tablesetting").addEventListener("click", function(){
+        document.getElementById("deactivate-tip").addEventListener("click", function(){
             const rows = restaurantTipTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
                 restaurantTipTable.updateData([{id:rows[i].id, status:'archived'}]);
                 let r = {
                   'tip': {
-                      'status': 'archived'
+                      'status': 'inactive'
                   }
                 };
                 patch( rows[i].url, r );

@@ -80,7 +80,7 @@ document.addEventListener("turbo:load", () => {
                 restaurantTaxTable.updateData([{id:rows[i].id, status:'free'}]);
                 let r = {
                   'tax': {
-                      'status': 'free'
+                      'status': 'active'
                   }
                 };
                 patch( rows[i].url, r );
@@ -92,7 +92,7 @@ document.addEventListener("turbo:load", () => {
                 restaurantTaxTable.updateData([{id:rows[i].id, status:'archived'}]);
                 let r = {
                   'tax': {
-                      'status': 'archived'
+                      'status': 'inactive'
                   }
                 };
                 patch( rows[i].url, r );

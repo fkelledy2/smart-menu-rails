@@ -11,6 +11,12 @@ class Size < ApplicationRecord
     xl: 4,
   }
 
+  enum status: {
+    inactive: 0,
+    active: 1,
+    archived: 2
+  }
+
   validates :name, :presence => true
   validates :size, :presence => true
 end

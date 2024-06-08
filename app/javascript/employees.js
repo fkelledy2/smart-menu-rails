@@ -33,19 +33,42 @@ document.addEventListener("turbo:load", () => {
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
+          initialSort:[
+            {column:"sequence", dir:"asc"},
+          ],
           ajaxURL: '/restaurants/'+restaurantId+'/employees.json',
+          movableRows:true,
           columns: [
-              {
-                  formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"left", hozAlign:"left", headerSort:false, cellClick:function(e, cell) {
-                      cell.getRow().toggleSelect();
-                  }
-              },
-              { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
-              { title:"", field:"sequence", visible:false, formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
+          {
+              formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"left", hozAlign:"left", headerSort:false, cellClick:function(e, cell) {
+                  cell.getRow().toggleSelect();
+              }
+          },
+          { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
+          {title:"", field:"sequence", visible:true, formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
           {title:"Role", field:"role", responsive:5, hozAlign:"right", headerHozAlign:"right" },
           {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
+        });
+        restaurantEmployeeTable.on("rowMoved", function(row){
+            const rows = restaurantEmployeeTable.getRows();
+            for (let i = 0; i < rows.length; i++) {
+                restaurantEmployeeTable.updateData([{id:rows[i].getData().id, sequence:rows[i].getPosition()}]);
+                let mu = {
+                    'employee': {
+                        'sequence': rows[i].getPosition()
+                    }
+                };
+                fetch(rows[i].getData().url, {
+                    method: 'PATCH',
+                    headers:  {
+                        "Content-Type": "application/json",
+                        "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                    },
+                    body: JSON.stringify(mu)
+                });
+            }
         });
         restaurantEmployeeTable.on("rowSelectionChanged", function(data, rows){
             if( data.length > 0 ) {

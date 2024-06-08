@@ -7,6 +7,7 @@
   json.city restaurant.city
   json.postcode restaurant.postcode
   json.status restaurant.status
+  json.sequence restaurant.sequence
   json.image restaurant.image
   json.genid restaurant.genid
   json.total_capacity restaurant.total_capacity

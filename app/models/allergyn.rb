@@ -6,6 +6,12 @@ class Allergyn < ApplicationRecord
   has_many :ordrparticipant_allergyn_filters, dependent: :destroy
   has_many :ordrparticipants, through: :ordrparticipant_allergyn_filters
 
+  enum status: {
+    inactive: 0,
+    active: 1,
+    archived: 2
+  }
+
   validates :name, :presence => true
   validates :symbol, :presence => true
 

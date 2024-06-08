@@ -5,6 +5,7 @@
   json.eid employee.eid
   json.image employee.image
   json.status employee.status
+  json.sequence employee.sequence
   json.restaurant employee.restaurant
   json.created_at employee.created_at
   json.updated_at employee.updated_at
