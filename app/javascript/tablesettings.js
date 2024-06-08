@@ -39,8 +39,8 @@ document.addEventListener("turbo:load", () => {
           { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           { title:"", field:"sequence", visible:false, formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
-          {title:"Type", field:"tabletype", responsive:0, hozAlign:"right", headerHozAlign:"right" },
-          {title:"Capacity", field:"capacity", hozAlign:"right", bottomCalc:"sum", headerHozAlign:"right" },
+          {title:"Type", field:"tabletype", responsive:5, hozAlign:"right", headerHozAlign:"right" },
+          {title:"Capacity", field:"capacity", responsive:0, hozAlign:"right", bottomCalc:"sum", headerHozAlign:"right" },
           {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
