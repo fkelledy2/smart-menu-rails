@@ -36,7 +36,6 @@ document.addEventListener("turbo:load", () => {
           {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" }
           ]
         });
-        menusectionTable.toggleColumn("sequence");
         menusectionTable.on("rowMoved", function(row){
             const rows = menusectionTable.getRows();
             for (let i = 0; i < rows.length; i++) {
@@ -58,11 +57,9 @@ document.addEventListener("turbo:load", () => {
         });
         menusectionTable.on("rowSelectionChanged", function(data, rows){
           if( data.length > 0 ) {
-            document.getElementById("activate-menusection").disabled = false;
-            document.getElementById("deactivate-menusection").disabled = false;
+            document.getElementById("menusection-actions").disabled = false;
           } else {
-            document.getElementById("activate-menusection").disabled = true;
-            document.getElementById("deactivate-menusection").disabled = true;
+            document.getElementById("menusection-actions").disabled = true;
           }
         });
         document.getElementById("activate-menusection").addEventListener("click", function(){

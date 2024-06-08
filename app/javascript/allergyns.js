@@ -13,11 +13,25 @@ document.addEventListener("turbo:load", () => {
           responsiveLayout:true,
           layout:"fitDataStretch",
           ajaxURL: '/allergyns.json',
+          movableRows:true,
           columns: [
+          {
+            formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"left", hozAlign:"left", headerSort:false, cellClick:function(e, cell) {
+                cell.getRow().toggleSelect();
+            }
+          },
+          { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
           {title:"Description", field:"description", responsive:5},
           {title:"Symbol", field:"symbol", responsive:0, hozAlign:"right", headerHozAlign:"right" }
           ],
+        });
+        allergynTable.on("rowSelectionChanged", function(data, rows){
+            if( data.length > 0 ) {
+                document.getElementById("allergyn-actions").disabled = false;
+            } else {
+                document.getElementById("allergyn-actions").disabled = true;
+            }
         });
     }
 })

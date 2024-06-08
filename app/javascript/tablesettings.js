@@ -65,13 +65,11 @@ document.addEventListener("turbo:load", () => {
             }
         });
         tableSettingTable.on("rowSelectionChanged", function(data, rows){
-          if( data.length > 0 ) {
-            document.getElementById("activate-tablesetting").disabled = false;
-            document.getElementById("deactivate-tablesetting").disabled = false;
-          } else {
-            document.getElementById("activate-tablesetting").disabled = true;
-            document.getElementById("deactivate-tablesetting").disabled = true;
-          }
+            if( data.length > 0 ) {
+                document.getElementById("tablesetting-actions").disabled = false;
+            } else {
+                document.getElementById("tablesetting-actions").disabled = true;
+            }
         });
         document.getElementById("activate-tablesetting").addEventListener("click", function(){
             const rows = tableSettingTable.getSelectedData();

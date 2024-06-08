@@ -41,18 +41,16 @@ document.addEventListener("turbo:load", () => {
              }
           },
           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
-          {title:"Status", field:"status", responsive:1, hozAlign:"right", headerHozAlign:"right" },
-          {title:"Role", field:"role", responsive:4, hozAlign:"right", headerHozAlign:"right" }
+          {title:"Role", field:"role", responsive:4, hozAlign:"right", headerHozAlign:"right" },
+          {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         restaurantEmployeeTable.on("rowSelectionChanged", function(data, rows){
-          if( data.length > 0 ) {
-            document.getElementById("activate-employee").disabled = false;
-            document.getElementById("deactivate-employee").disabled = false;
-          } else {
-            document.getElementById("activate-employee").disabled = true;
-            document.getElementById("deactivate-employee").disabled = true;
-          }
+            if( data.length > 0 ) {
+                document.getElementById("employee-actions").disabled = false;
+            } else {
+                document.getElementById("employee-actions").disabled = true;
+            }
         });
         document.getElementById("activate-employee").addEventListener("click", function(){
             const rows = restaurantEmployeeTable.getSelectedData();

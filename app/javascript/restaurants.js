@@ -84,6 +84,12 @@ document.addEventListener("turbo:load", () => {
 
     if ($("#restaurant-table").is(':visible')) {
         // Restaurants
+        function link(cell, formatterParams){
+            var id = cell.getValue();
+            var name = cell.getRow();
+            var rowData = cell.getRow().getData("data").name;
+            return "<a class='link-dark' href='/restaurants/"+id+"/edit'>"+rowData+"</a>";
+        }
         var restaurantTable = new Tabulator("#restaurant-table", {
           dataLoader: false,
           maxHeight:"100%",
@@ -96,32 +102,23 @@ document.addEventListener("turbo:load", () => {
                 cell.getRow().toggleSelect();
              }
            },
-           {
-            title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
-                labelField:"name",
-                urlPrefix:"/restaurants/",
-            }
-           },
-           {title:"Status", field:"status", responsive:3, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Capacity", field:"total_capacity", responsive:2, hozAlign:"right", headerHozAlign:"right"},
+           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
            {
               title: 'Address',
-              field: 'address', responsive:4,
+              field: 'address', responsive:5,
               mutator: (value, data) => data.address1 + '\n' + data.address2 + '\n' + data.state + '\n' + data.city + '\n' + data.postcode,
-           }
+           },
+           {title:"Capacity", field:"total_capacity", responsive:2, hozAlign:"right", headerHozAlign:"right"},
+           {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" },
           ],
         });
-
         restaurantTable.on("rowSelectionChanged", function(data, rows){
-          if( data.length > 0 ) {
-            document.getElementById("restaurant-activate-row").disabled = false;
-            document.getElementById("restaurant-deactivate-row").disabled = false;
-          } else {
-            document.getElementById("restaurant-activate-row").disabled = true;
-            document.getElementById("restaurant-deactivate-row").disabled = true;
-          }
+            if( data.length > 0 ) {
+                document.getElementById("restaurant-actions").disabled = false;
+            } else {
+                document.getElementById("restaurant-actions").disabled = true;
+            }
         });
-
         document.getElementById("restaurant-activate-row").addEventListener("click", function(){
             const rows = restaurantTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {

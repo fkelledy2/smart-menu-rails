@@ -220,13 +220,11 @@ document.addEventListener("turbo:load", () => {
             }
         });
         restaurantMenuTable.on("rowSelectionChanged", function(data, rows){
-          if( data.length > 0 ) {
-            document.getElementById("activate-menu").disabled = false;
-            document.getElementById("deactivate-menu").disabled = false;
-          } else {
-            document.getElementById("activate-menu").disabled = true;
-            document.getElementById("deactivate-menu").disabled = true;
-          }
+            if( data.length > 0 ) {
+                document.getElementById("menu-actions").disabled = false;
+            } else {
+                document.getElementById("menu-actions").disabled = true;
+            }
         });
         document.getElementById("activate-menu").addEventListener("click", function(){
             const rows = restaurantMenuTable.getSelectedData();

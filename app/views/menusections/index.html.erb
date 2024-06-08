@@ -3,9 +3,9 @@
     <h1><%= t(".menuSections") %></h1>
   </div>
   <div class="col-sm-6 text-end">
-    <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t(".activate") %></button>
-    <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t(".deactivate") %></button>
-    <%= link_to new_menusection_path, class: 'btn btn-sm btn-primary' do %>
+    <button id="activate-row" class='btn btn-sm btn-dark' disabled><%= t(".activate") %></button>
+    <button id="deactivate-row"class='btn btn-sm btn-dark' disabled><%= t(".deactivate") %></button>
+    <%= link_to new_menusection_path, class: 'btn btn-sm btn-dark' do %>
       <i class="bi bi-plus"></i> <%= t(".menuSection") %>
     <% end %>
   </div>

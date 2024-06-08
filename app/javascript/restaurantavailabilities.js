@@ -68,13 +68,11 @@ document.addEventListener("turbo:load", () => {
             }
         });
         restaurantOpeningHourTable.on("rowSelectionChanged", function(data, rows){
-          if( data.length > 0 ) {
-            document.getElementById("activate-openinghour").disabled = false;
-            document.getElementById("deactivate-openinghour").disabled = false;
-          } else {
-            document.getElementById("activate-openinghour").disabled = true;
-            document.getElementById("deactivate-openinghour").disabled = true;
-          }
+            if( data.length > 0 ) {
+                document.getElementById("openinghour-actions").disabled = false;
+            } else {
+                document.getElementById("openinghour-actions").disabled = true;
+            }
         });
         document.getElementById("activate-openinghour").addEventListener("click", function(){
             const rows = restaurantOpeningHourTable.getSelectedData();

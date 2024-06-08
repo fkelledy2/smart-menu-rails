@@ -67,13 +67,11 @@ document.addEventListener("turbo:load", () => {
             }
         });
         restaurantTaxTable.on("rowSelectionChanged", function(data, rows){
-          if( data.length > 0 ) {
-            document.getElementById("activate-tax").disabled = false;
-            document.getElementById("deactivate-tax").disabled = false;
-          } else {
-            document.getElementById("activate-tax").disabled = true;
-            document.getElementById("deactivate-tax").disabled = true;
-          }
+            if( data.length > 0 ) {
+                document.getElementById("tax-actions").disabled = false;
+            } else {
+                document.getElementById("tax-actions").disabled = true;
+            }
         });
         document.getElementById("activate-tax").addEventListener("click", function(){
             const rows = restaurantTaxTable.getSelectedData();

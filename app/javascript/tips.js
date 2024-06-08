@@ -61,13 +61,11 @@ document.addEventListener("turbo:load", () => {
             }
         });
         restaurantTipTable.on("rowSelectionChanged", function(data, rows){
-          if( data.length > 0 ) {
-            document.getElementById("activate-tip").disabled = false;
-            document.getElementById("deactivate-tip").disabled = false;
-          } else {
-            document.getElementById("activate-tip").disabled = true;
-            document.getElementById("deactivate-tip").disabled = true;
-          }
+            if( data.length > 0 ) {
+                document.getElementById("tip-actions").disabled = false;
+            } else {
+                document.getElementById("tip-actions").disabled = true;
+            }
         });
         document.getElementById("activate-tip").addEventListener("click", function(){
             const rows = restaurantTipTable.getSelectedData();

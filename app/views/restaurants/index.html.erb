@@ -1,13 +1,24 @@
-<div class="row">
+<div style='padding-top:20px' class="row">
   <div class="col-sm-6">
     <h1><%=t(".restaurants")%> </h1>
   </div>
   <div class="col-sm-6 text-end">
-    <button id="restaurant-activate-row" class='btn btn-sm btn-success' disabled><%=t(".activate")%></button>
-    <button id="restaurant-deactivate-row"class='btn btn-sm btn-danger' disabled><%=t(".deactivate")%></button>
-    <%= link_to new_restaurant_path, class: 'btn btn-sm btn-primary' do %>
-      <i class="bi bi-plus"></i> <%=t(".restaurant")%>
-    <% end %>
+    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+      <div class="btn-group" role="group">
+        <button id="restaurant-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
+          Actions
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
+          <li><a id="activate-restaurant" class="dropdown-item" href="#"><%=t(".activate")%></a></li>
+          <li><a id="deactivate-restaurant" class="dropdown-item" href="#"><%=t(".deactivate")%></a></li>
+        </ul>
+      </div>
+      <button type="button" class="btn btn-dark">
+        <%= link_to new_restaurant_path, class: 'link-light' do %>
+          <i class="bi bi-plus"></i>
+        <% end %>
+      </button>
+    </div>
   </div>
 </div>
 <div style="padding-top:10px" class="table-borderless" id="restaurant-table">
