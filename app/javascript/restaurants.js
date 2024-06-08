@@ -108,8 +108,8 @@ document.addEventListener("turbo:load", () => {
               field: 'address', responsive:5,
               mutator: (value, data) => data.address1 + '\n' + data.address2 + '\n' + data.state + '\n' + data.city + '\n' + data.postcode,
            },
-           {title:"Capacity", field:"total_capacity", responsive:2, hozAlign:"right", headerHozAlign:"right"},
-           {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" },
+           {title:"Capacity", field:"total_capacity", responsive:4, hozAlign:"right", headerHozAlign:"right"},
+           {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         restaurantTable.on("rowSelectionChanged", function(data, rows){
@@ -119,7 +119,7 @@ document.addEventListener("turbo:load", () => {
                 document.getElementById("restaurant-actions").disabled = true;
             }
         });
-        document.getElementById("restaurant-activate-row").addEventListener("click", function(){
+        document.getElementById("activate-restaurant").addEventListener("click", function(){
             const rows = restaurantTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
                 restaurantTable.updateData([{id:rows[i].id, status:'active'}]);
@@ -132,7 +132,7 @@ document.addEventListener("turbo:load", () => {
             }
         });
 
-        document.getElementById("restaurant-deactivate-row").addEventListener("click", function(){
+        document.getElementById("deactivate-restaurant").addEventListener("click", function(){
             const rows = restaurantTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
                 restaurantTable.updateData([{id:rows[i].id, status:'inactive'}]);

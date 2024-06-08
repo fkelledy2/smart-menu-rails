@@ -36,13 +36,13 @@ document.addEventListener("turbo:load", () => {
           ajaxURL: '/restaurants/'+restaurantId+'/employees.json',
           columns: [
           {
-             formatter:"rowSelection", titleFormatter:"rowSelection", responsive:0, width: 50, frozen:true, headerHozAlign:"left", hozAlign:"left", headerSort:false, cellClick:function(e, cell) {
+             formatter:"rowSelection", titleFormatter:"rowSelection", responsive:0, width: 40, frozen:true, headerHozAlign:"left", hozAlign:"left", headerSort:false, cellClick:function(e, cell) {
                 cell.getRow().toggleSelect();
              }
           },
           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
-          {title:"Role", field:"role", responsive:4, hozAlign:"right", headerHozAlign:"right" },
-          {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" }
+          {title:"Role", field:"role", responsive:5, hozAlign:"right", headerHozAlign:"right" },
+          {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         restaurantEmployeeTable.on("rowSelectionChanged", function(data, rows){

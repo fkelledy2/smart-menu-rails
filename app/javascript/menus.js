@@ -96,14 +96,14 @@ document.addEventListener("turbo:load", () => {
             }
           },
           { rowHandle:true, formatter:"handle", headerSort:false, responsive:0, width:30, minWidth:30 },
-          { title:" ", field:"sequence", formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
+          { title:"", field:"sequence", formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {
             title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
                 labelField:"name",
                 urlPrefix:"/menus/",
             }
            },
-           {title:"Status", field:"status", responsive:4, hozAlign:"right", headerHozAlign:"right" }
+          {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         menuTable.on("rowMoved", function(row){
@@ -197,7 +197,7 @@ document.addEventListener("turbo:load", () => {
           { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           { title:"", field:"sequence", visible:false, formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {title:"Name", field:"id", formatter:link, hozAlign:"left"},
-          {title:"Status", field:"status", responsive:4, hozAlign:"right", headerHozAlign:"right" }
+          {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         restaurantMenuTable.on("rowMoved", function(row){

@@ -43,9 +43,9 @@ document.addEventListener("turbo:load", () => {
           { rowHandle:true, formatter:"handle", responsive:0, headerSort:false, frozen: true, width:30, minWidth:30 },
           { title:"", field:"sequence", visible:false, formatter:"rownum", responsive:0, width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {title:"Day of Week", field:"id", responsive:0, formatter:link, hozAlign:"left"},
-          {title:"Status", field:"status", responsive:1, hozAlign:"right", headerHozAlign:"right" },
           {title: 'Opening Time', field: 'starthour', mutator: (value, data) => String(data.starthour).padStart(2, '0') + ':' + String(data.startmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
-          {title: 'Closing Time', field: 'endhour', mutator: (value, data) => String(data.endhour).padStart(2, '0') + ':' + String(data.endmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" }
+          {title: 'Closing Time', field: 'endhour', mutator: (value, data) => String(data.endhour).padStart(2, '0') + ':' + String(data.endmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
+          {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ]
         });
         restaurantOpeningHourTable.on("rowMoved", function(row){

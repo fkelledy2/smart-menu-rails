@@ -33,7 +33,7 @@ document.addEventListener("turbo:load", () => {
           { title:"", field:"sequence", visible:false, formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
           {title:"Description", field:"description", responsive:5, hozAlign:"left", headerHozAlign:"left" },
-          {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" }
+          {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ]
         });
         menusectionTable.on("rowMoved", function(row){
