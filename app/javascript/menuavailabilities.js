@@ -14,40 +14,33 @@ document.addEventListener("turbo:load", () => {
       new TomSelect("#menuavailability_menu_id",{
       });
     }
-
-    if ($("#menuavailability-table").is(':visible')) {
-        var menuavailabilityTable = new Tabulator("#menuavailability-table", {
+    if ($("#menu-menuavailability-table").is(':visible')) {
+        function link(cell, formatterParams){
+            var id = cell.getValue();
+            var name = cell.getRow();
+            var rowData = cell.getRow().getData("data").dayofweek;
+            return "<a class='link-dark' href='/menuavailabilities/"+id+"/edit'>"+rowData+"</a>";
+        }
+        const menuId = document.getElementById('menu-menusection-table').getAttribute('data-bs-menu');
+        var menuavailabilityTable = new Tabulator("#menu-menuavailability-table", {
           dataLoader: false,
           maxHeight:"100%",
-          paginationSize:20,
           responsiveLayout:true,
-          layout:"fitDataFill",
-          groupBy: ["menu.id"],
-          ajaxURL: '/menuavailabilities.json',
+          layout:"fitDataStretch",
+          ajaxURL: '/menus/'+menuId+'/menuavailabilities.json',
           initialSort:[
-            {column:"sequence", dir:"asc"},
+              {column:"sequence", dir:"asc"},
           ],
           movableRows:true,
           columns: [
           {
-            formatter:"rowSelection", titleFormatter:"rowSelection", frozen:true, width: 30, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
-               cell.getRow().toggleSelect();
+            formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"left", hozAlign:"left", headerSort:false, cellClick:function(e, cell) {
+                cell.getRow().toggleSelect();
             }
           },
-          {
-            title:"Menu", field:"menu.id", responsive:0, width:200, frozen:true, formatter:"link", formatterParams: {
-                labelField:"menu.name",
-                urlPrefix:"/menus/",
-            }
-          },
-          { rowHandle:true, formatter:"handle", headerSort:false,  width:30, minWidth:30 },
-          { title:" ", field:"sequence", formatter:"rownum", width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
-          {
-            title:"Day of Week", field:"id", responsive:0, width:200, formatter:"link", formatterParams: {
-                labelField:"dayofweek",
-                urlPrefix:"/menuavailabilities/",
-            }
-          },
+          { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
+          { title:"", field:"sequence", visible:false, formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
+          {title:"Day of Week", field:"id", responsive:0, formatter:link, hozAlign:"left"},
           {title: 'Opening Time', field: 'starthour', mutator: (value, data) => String(data.starthour).padStart(2, '0') + ':' + String(data.startmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
           {title: 'Closing Time', field: 'endhour', mutator: (value, data) => String(data.endhour).padStart(2, '0') + ':' + String(data.endmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
           {title:"Status", field:"status", width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" }
@@ -73,33 +66,31 @@ document.addEventListener("turbo:load", () => {
             }
         });
         menuavailabilityTable.on("rowSelectionChanged", function(data, rows){
-          if( data.length > 0 ) {
-            document.getElementById("activate-row").disabled = false;
-            document.getElementById("deactivate-row").disabled = false;
-          } else {
-            document.getElementById("activate-row").disabled = true;
-            document.getElementById("deactivate-row").disabled = true;
-          }
+            if( data.length > 0 ) {
+                document.getElementById("menuavailability-actions").disabled = false;
+            } else {
+                document.getElementById("menuavailability-actions").disabled = true;
+            }
         });
-        document.getElementById("activate-row").addEventListener("click", function(){
+        document.getElementById("activate-menuavailability").addEventListener("click", function(){
             const rows = menuavailabilityTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
-                menuavailabilityTable.updateData([{id:rows[i].id, status:'open'}]);
+                menuavailabilityTable.updateData([{id:rows[i].id, status:'active'}]);
                 let r = {
                   'menuavailability': {
-                      'status': 'open'
+                      'status': 'active'
                   }
                 };
                 patch( rows[i].url, r );
             }
         });
-        document.getElementById("deactivate-row").addEventListener("click", function(){
+        document.getElementById("deactivate-menuavailability").addEventListener("click", function(){
             const rows = menuavailabilityTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
-                menuavailabilityTable.updateData([{id:rows[i].id, status:'closed'}]);
+                menuavailabilityTable.updateData([{id:rows[i].id, status:'inactive'}]);
                 let r = {
                   'menuavailability': {
-                      'status': 'closed'
+                      'status': 'inactive'
                   }
                 };
                 patch( rows[i].url, r );

@@ -4,14 +4,15 @@ class MenuavailabilitiesController < ApplicationController
   # GET /menuavailabilities or /menuavailabilities.json
   def index
     if current_user
-        @menuavailabilities = []
-        Restaurant.where( user: current_user, archived: false).each do |restaurant|
-            @menuavailabilities += restaurant.menuavailabilities
-        end
+      @menuavailabilities = []
+      if params[:menu_id]
+        @menu = Menu.find_by_id(params[:menu_id])
+        @menuavailabilities += @menu.menuavailabilities
+      end
     else
-        redirect_to root_url
+      redirect_to root_url
     end
- end
+  end
 
   # GET /menuavailabilities/1 or /menuavailabilities/1.json
   def show

@@ -1,0 +1,23 @@
+<p>
+<div class="row">
+  <div class="col-sm-12 text-end">
+    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+      <div class="btn-group" role="group">
+        <button id="menuavailability-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
+          Actions
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
+          <li><a id="activate-menuavailability" class="dropdown-item" href="#"><%=t(".activate")%></a></li>
+          <li><a id="deactivate-menuavailability" class="dropdown-item" href="#"><%=t(".deactivate")%></a></li>
+        </ul>
+      </div>
+      <button type="button" class="btn btn-dark">
+        <%= link_to new_menuavailability_path(menu_id: @menu), class: 'link-light' do %>
+          <i class="bi bi-plus"></i>
+        <% end %>
+      </button>
+    </div>
+  </div>
+</div>
+<div style="padding-top:10px" class="table-borderless" id="menu-menuavailability-table" data-bs-menu="<%= @menu.id %>">
+</div>

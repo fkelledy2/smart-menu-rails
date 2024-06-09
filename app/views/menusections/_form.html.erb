@@ -1,6 +1,13 @@
 <%= form_with(model: menusection) do |form| %>
   <div class="form-group row">
     <div class="col-sm-3">
+    </div>
+    <div class="col-sm-9">
+      <h4><%=t(".details")%></h4>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-3">
       <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %> : </span>
     </div>
     <div class="col-sm-9">
@@ -19,10 +26,29 @@
   <div style='height:4px'></div>
   <div class="form-group row">
     <div class="col-sm-3">
+    </div>
+    <div class="col-sm-9">
+      <h4><%=t(".imageSettings")%></h4>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <div class="col-sm-3">
       <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %> : </span>
     </div>
     <div class="col-sm-9">
       <%= form.text_field :image, class: 'form-control' %>
+      <% if menusection.image %>
+        <img src="<%=menusection.image%>" class="img-fluid" alt="...">
+      <% end %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-9">
+      <h4><%=t(".settings")%></h4>
     </div>
   </div>
   <div style='height:4px'></div>
@@ -32,15 +58,6 @@
     </div>
     <div class="col-sm-9">
       <%= form.select :status, options_for_select(Menusection.statuses.keys.to_a, form.object.status), {}, class: 'form-control' %>
-    </div>
-  </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :sequence, class: 'col-form-label' %> : </span>
-    </div>
-    <div class="col-sm-9">
-      <%= form.text_field :sequence, class: 'form-control' %>
     </div>
   </div>
   <div style='height:4px'></div>

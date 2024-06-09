@@ -1,5 +1,5 @@
 document.addEventListener("turbo:load", () => {
-    if ($("#menusectionConfig").is(':visible')) {
+    if ($("#restaurantTabs").is(':visible')) {
         // Allergyns
         function link(cell, formatterParams){
             var id = cell.getValue();

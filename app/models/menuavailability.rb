@@ -12,7 +12,7 @@ class Menuavailability < ApplicationRecord
   }
 
   enum status: {
-    open: 0,
-    closed: 1
+    active: 0,
+    inactive: 1
   }
 end
