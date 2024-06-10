@@ -14,16 +14,23 @@ document.addEventListener("turbo:load", () => {
     if ($('#restaurantCurrency').length) {
         restaurantCurrencySymbol = $('#restaurantCurrency').text();
     }
-    if ($("#menuitem-table").is(':visible')) {
+
+    if ($("#sectionTabs").is(':visible')) {
         // Menuitems
-        var menuItemTable = new Tabulator("#menuitem-table", {
+        function link(cell, formatterParams){
+            var id = cell.getValue();
+            var name = cell.getRow();
+            var rowData = cell.getRow().getData("data").name;
+            return "<a class='link-dark' href='/menuitems/"+id+"/edit'>"+rowData+"</a>";
+        }
+        const menusectionId = document.getElementById('menusection-menuitem-table').getAttribute('data-bs-menusection');
+        var menuItemTable = new Tabulator("#menusection-menuitem-table", {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
-          ajaxURL: '/menuitems.json',
+          ajaxURL: '/menusections/'+menusectionId+'/menuitems.json',
           initialSort:[
-            {column:"menusection.id", dir:"asc"},
             {column:"sequence", dir:"asc"}
           ],
           movableRows:true,
@@ -33,23 +40,11 @@ document.addEventListener("turbo:load", () => {
                cell.getRow().toggleSelect();
             }
           },
-          {
-            title:"Menu Section", field:"menusection.id", responsive:0, formatter:"link", formatterParams: {
-                labelField:"menusection.name",
-                urlPrefix:"/menusections/",
-            }
-          },
-          { rowHandle:true, formatter:"handle", headerSort:false,  width:30, minWidth:30 },
-          { title:" ", field:"sequence", formatter:"rownum", width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
-          {
-            title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
-                labelField:"name",
-                urlPrefix:"/menuitems/",
-            }
-           },
-           {title:"Status", field:"status", responsive:0, hozAlign:"right", headerHozAlign:"right" },
-           {title:"Calories", field:"calories", hozAlign:"right", headerHozAlign:"right" },
-           {title:"Price", field:"price", formatter:"money",  hozAlign:"right", headerHozAlign:"right",
+          { rowHandle:true, formatter:"handle", frozen:true, headerSort:false,  width:30, minWidth:30 },
+          { title:"", field:"sequence", visible:false, formatter:"rownum", width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
+          {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
+          {title:"Calories", field:"calories", hozAlign:"right", headerHozAlign:"right" },
+          {title:"Price", field:"price", formatter:"money",  hozAlign:"right", headerHozAlign:"right",
             formatterParams:{
                decimal:".",
                thousand:",",
@@ -57,7 +52,7 @@ document.addEventListener("turbo:load", () => {
                negativeSign:true,
                precision:2,
             }
-           },
+          },
           {title:"Prep Time", field:"preptime", responsive:0, hozAlign:"right", headerHozAlign:"right" },
            {
                title:"Inventory",
@@ -66,73 +61,69 @@ document.addEventListener("turbo:load", () => {
                 {title:"Current", field:"inventory.currentinventory", hozAlign:"right", headerHozAlign:"right" },
                 {title:"Resets At", field:"inventory.resethour", hozAlign:"right", headerHozAlign:"right" },
                ],
-           }
-          ],
+           },
+          {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
+          ]
         });
         menuItemTable.on("rowMoved", function(row){
             const rows = menuItemTable.getRows();
             for (let i = 0; i < rows.length; i++) {
                 menuItemTable.updateData([{id:rows[i].getData().id, sequence:rows[i].getPosition()}]);
-                let mui = {
-                  'menuitem': {
-                      'sequence': rows[i].getPosition()
-                  }
+                let mus = {
+                    'menuitem': {
+                        'sequence': rows[i].getPosition()
+                    }
                 };
                 fetch(rows[i].getData().url, {
                     method: 'PATCH',
                     headers:  {
-                      "Content-Type": "application/json",
-                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                        "Content-Type": "application/json",
+                        "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
                     },
-                    body: JSON.stringify(mui)
+                    body: JSON.stringify(mus)
                 });
             }
         });
-        menuItemTable.on("rowClick", function(e, row){
-            console.log("Row: " + JSON.stringify(row.getData()));
-        });
         menuItemTable.on("rowSelectionChanged", function(data, rows){
-          if( data.length > 0 ) {
-            document.getElementById("activate-row").disabled = false;
-            document.getElementById("deactivate-row").disabled = false;
-          } else {
-            document.getElementById("activate-row").disabled = true;
-            document.getElementById("deactivate-row").disabled = true;
-          }
+            if( data.length > 0 ) {
+                document.getElementById("menuitem-actions").disabled = false;
+            } else {
+                document.getElementById("menuitem-actions").disabled = true;
+            }
         });
-        document.getElementById("activate-row").addEventListener("click", function(){
+        document.getElementById("activate-menuitem").addEventListener("click", function(){
             const rows = menuItemTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
                 menuItemTable.updateData([{id:rows[i].id, status:'active'}]);
                 let r = {
-                  'menuitem': {
-                      'status': 'active'
-                  }
+                    'menuitem': {
+                        'status': 'active'
+                    }
                 };
                 patch( rows[i].url, r );
             }
         });
-        document.getElementById("deactivate-row").addEventListener("click", function(){
+        document.getElementById("deactivate-menuitem").addEventListener("click", function(){
             const rows = menuItemTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
                 menuItemTable.updateData([{id:rows[i].id, status:'inactive'}]);
                 let r = {
-                  'menuitem': {
-                      'status': 'inactive'
-                  }
+                    'menuitem': {
+                        'status': 'inactive'
+                    }
                 };
                 patch( rows[i].url, r );
             }
         });
         function patch( url, body ) {
-                fetch(url, {
-                    method: 'PATCH',
-                    headers:  {
-                      "Content-Type": "application/json",
-                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                    },
-                    body: JSON.stringify(body)
-                });
+            fetch(url, {
+                method: 'PATCH',
+                headers:  {
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                },
+                body: JSON.stringify(body)
+            });
         }
     }
 })

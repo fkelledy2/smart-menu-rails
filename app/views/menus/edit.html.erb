@@ -28,12 +28,6 @@
     <button class="nav-link link-dark" id="menusection-tab" data-bs-toggle="tab" data-bs-target="#menusection" type="button" role="tab" aria-controls="menusectionConfig" aria-selected="false">Sections</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="menuitem-tab" data-bs-toggle="tab" data-bs-target="#menuitem" type="button" role="tab" aria-controls="menuitemConfig" aria-selected="false">Items</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory" type="button" role="tab" aria-controls="inventoryConfig" aria-selected="false">Inventories</button>
-  </li>
-  <li class="nav-item" role="presentation">
     <button class="nav-link link-dark" id="menuavailability-tab" data-bs-toggle="tab" data-bs-target="#menuavailability" type="button" role="tab" aria-controls="menuavailabilityConfig" aria-selected="false">Availabilites</button>
   </li>
 </ul>
@@ -52,27 +46,6 @@
       <div class="row">
         <div class="col-sm-12">
           <%= render 'showMenusections', menu: @menu, edit: false %>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="tab-content" id="menuitemConfig">
-    <div class="tab-pane fade" id="menuitem" role="tabpanel" aria-labelledby="menuitem-tab">
-      <p>
-      <div class="row">
-        <div class="col-sm-12">
-          Menu Items
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="tab-content" id="inventoryConfig">
-    <div class="tab-pane fade" id="inventory" role="tabpanel" aria-labelledby="inventory-tab">
-      <p>
-      <div class="row">
-        <div class="col-sm-12">
-          Menu Inventories
         </div>
       </div>
     </div>

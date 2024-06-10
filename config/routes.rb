@@ -32,6 +32,10 @@ Rails.application.routes.draw do
       resources :menusections, controller: 'menusections', only: [:index,:show, :edit]
       resources :menuavailabilities, controller: 'menuavailabilities', only: [:index,:show, :edit]
       resources :tablesettings, controller: 'menus', only: [:show]
+      resources :menuitems, controller: 'menuitems', only: [:index,:show, :edit]
+  end
+  resources :menusections, controller: 'menusections' do
+    resources :menuitems, controller: 'menuitems', only: [:index,:show, :edit]
   end
   draw :madmin
   get '/privacy', to: 'home#privacy'

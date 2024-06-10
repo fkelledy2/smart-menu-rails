@@ -5,6 +5,35 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
+    if ($("#sectionTabs").is(':visible')) {
+        const pillsTab = document.querySelector('#sectionTabs');
+        const pills = pillsTab.querySelectorAll('button[data-bs-toggle="tab"]');
+
+        pills.forEach(pill => {
+            pill.addEventListener('shown.bs.tab', (event) => {
+                const { target } = event;
+                const { id: targetId } = target;
+                savePillId(targetId);
+            });
+        });
+
+        const savePillId = (selector) => {
+            localStorage.setItem('activeSectionPillId', selector);
+        };
+
+        const getPillId = () => {
+            const activePillId = localStorage.getItem('activeSectionPillId');
+            // if local storage item is null, show default tab
+            if (!activePillId) return;
+            // call 'show' function
+            const someTabTriggerEl = document.querySelector(`#${activePillId}`)
+            const tab = new bootstrap.Tab(someTabTriggerEl);
+            tab.show();
+        };
+        // get pill id on load
+        getPillId();
+    }
+
     if ($("#menusectionConfig").is(':visible')) {
         function link(cell, formatterParams){
             var id = cell.getValue();

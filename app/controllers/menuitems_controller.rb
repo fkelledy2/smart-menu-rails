@@ -5,16 +5,13 @@ class MenuitemsController < ApplicationController
   # GET /menuitems or /menuitems.json
   def index
     if current_user
-        @menuitems = []
-        Restaurant.where( user: current_user, archived: false).each do |restaurant|
-            Menu.where( restaurant: restaurant, archived: false).each do |menu|
-                Menusection.where( menu: menu, archived: false).each do |menusection|
-                    @menuitems += Menuitem.where( menusection: menusection, archived: false).all
-                end
-            end
-        end
+      @menuitems = []
+      if params[:menusection_id]
+        menusection = Menusection.find_by_id(params[:menusection_id])
+        @menuitems += Menuitem.where( menusection: menusection, archived: false).all
+      end
     else
-        redirect_to root_url
+      redirect_to root_url
     end
   end
 
