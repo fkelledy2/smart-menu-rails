@@ -36,15 +36,15 @@ document.addEventListener("turbo:load", () => {
           movableRows:true,
           columns: [
           {
-            formatter:"rowSelection", titleFormatter:"rowSelection", frozen:true, width: 30, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell) {
-               cell.getRow().toggleSelect();
-            }
+              formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, headerHozAlign:"left", hozAlign:"left", headerSort:false, cellClick:function(e, cell) {
+                  cell.getRow().toggleSelect();
+              }
           },
-          { rowHandle:true, formatter:"handle", frozen:true, headerSort:false,  width:30, minWidth:30 },
-          { title:"", field:"sequence", visible:false, formatter:"rownum", width: 50, hozAlign:"right", headerHozAlign:"right", headerSort:false },
+          { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
+          { title:"", field:"sequence", visible:false, formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
-          {title:"Calories", field:"calories", hozAlign:"right", headerHozAlign:"right" },
-          {title:"Price", field:"price", formatter:"money",  hozAlign:"right", headerHozAlign:"right",
+          {title:"Calories", field:"calories", responsive:5, hozAlign:"right", headerHozAlign:"right" },
+          {title:"Price", field:"price", responsive:4, formatter:"money",  hozAlign:"right", headerHozAlign:"right",
             formatterParams:{
                decimal:".",
                thousand:",",
@@ -53,13 +53,13 @@ document.addEventListener("turbo:load", () => {
                precision:2,
             }
           },
-          {title:"Prep Time", field:"preptime", responsive:0, hozAlign:"right", headerHozAlign:"right" },
+          {title:"Prep Time", field:"preptime", responsive:5, hozAlign:"right", headerHozAlign:"right" },
            {
                title:"Inventory",
                columns:[
-                {title:"Starting", field:"inventory.startinginventory", hozAlign:"right", headerHozAlign:"right" },
-                {title:"Current", field:"inventory.currentinventory", hozAlign:"right", headerHozAlign:"right" },
-                {title:"Resets At", field:"inventory.resethour", hozAlign:"right", headerHozAlign:"right" },
+                {title:"Starting", responsive:5, field:"inventory.startinginventory", hozAlign:"right", headerHozAlign:"right" },
+                {title:"Current", responsive:5, field:"inventory.currentinventory", hozAlign:"right", headerHozAlign:"right" },
+                {title:"Resets At", responsive:5, field:"inventory.resethour", hozAlign:"right", headerHozAlign:"right" },
                ],
            },
           {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
