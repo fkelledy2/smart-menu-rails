@@ -42,7 +42,7 @@ document.addEventListener("turbo:load", () => {
           },
           { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           { title:"", field:"sequence", visible:false, formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
-          {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
+          {title:"Name", field:"id", responsive:0, maxWidth: 180, formatter:link, hozAlign:"left"},
           {title:"Calories", field:"calories", responsive:5, hozAlign:"right", headerHozAlign:"right" },
           {title:"Price", field:"price", responsive:4, formatter:"money",  hozAlign:"right", headerHozAlign:"right",
             formatterParams:{
