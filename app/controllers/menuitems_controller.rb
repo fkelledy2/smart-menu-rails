@@ -64,7 +64,7 @@ class MenuitemsController < ApplicationController
         respond_to do |format|
           @menuitem = Menuitem.find(params[:id])
           if @menuitem.update(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: []))
-            format.html { redirect_to menuitem_url(@menuitem), notice: "Menuitem was successfully updated." }
+            format.html { redirect_to edit_menusection_path(@menuitem.menusection), notice: "Menuitem was successfully updated." }
             format.json { render :show, status: :ok, location: @menuitem }
           else
             format.html { render :edit, status: :unprocessable_entity }

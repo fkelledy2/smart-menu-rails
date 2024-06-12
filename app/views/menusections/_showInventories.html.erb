@@ -1,0 +1,23 @@
+<p>
+<div class="row">
+  <div class="col-sm-12 text-end">
+    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+      <div class="btn-group" role="group">
+        <button id="inventory-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
+          Actions
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
+          <li><a id="activate-inventory" class="dropdown-item" href="#"><%=t(".activate")%></a></li>
+          <li><a id="deactivate-inventory" class="dropdown-item" href="#"><%=t(".deactivate")%></a></li>
+        </ul>
+      </div>
+      <button type="button" class="btn btn-dark">
+        <%= link_to new_inventory_path(menusecton_id: @menusection), class: 'link-light' do %>
+          <i class="bi bi-plus"></i>
+        <% end %>
+      </button>
+    </div>
+  </div>
+</div>
+<%= render 'shared/currency' %>
+<div style="padding-top:10px" class="table-borderless" id="menusection-inventory-table" data-bs-menusection="<%= menusection.id %>">
