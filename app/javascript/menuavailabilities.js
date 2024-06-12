@@ -14,7 +14,7 @@ document.addEventListener("turbo:load", () => {
       new TomSelect("#menuavailability_menu_id",{
       });
     }
-    if ($("#menu-menuavailability-table").is(':visible')) {
+    if ($("#menuTabs").is(':visible')) {
         function link(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();

@@ -34,7 +34,7 @@ document.addEventListener("turbo:load", () => {
         getPillId();
     }
 
-    if ($("#menusectionConfig").is(':visible')) {
+    if ($("#menuTabs").is(':visible')) {
         function link(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();
