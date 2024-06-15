@@ -79,7 +79,7 @@ class MenusectionsController < ApplicationController
     if current_user
         @menusection.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to menusections_url, notice: "Menusection was successfully destroyed." }
+          format.html { redirect_to edit_menu_path(@menusection.menu), notice: "Menusection was successfully deleted." }
           format.json { head :no_content }
         end
     else

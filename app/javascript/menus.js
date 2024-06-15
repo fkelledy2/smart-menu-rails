@@ -1,5 +1,11 @@
 document.addEventListener("turbo:load", () => {
 
+
+    if ($("#size_size").is(':visible')) {
+        new TomSelect("#size_size",{
+        });
+    }
+
     if ($("#menu_status").is(':visible')) {
       new TomSelect("#menu_status",{
       });

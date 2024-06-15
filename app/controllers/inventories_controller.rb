@@ -84,7 +84,7 @@ class InventoriesController < ApplicationController
     if current_user
         @inventory.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to inventories_url, notice: "Inventory was successfully destroyed." }
+          format.html { redirect_to edit_menusection_path(@inventory.menuitem.menusection), notice: "Inventory was successfully deleted." }
           format.json { head :no_content }
         end
     else

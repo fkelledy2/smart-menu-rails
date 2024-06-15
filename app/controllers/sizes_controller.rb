@@ -21,7 +21,10 @@ class SizesController < ApplicationController
   # GET /sizes/new
   def new
     if current_user
-        @size = Size.new
+      @size = Size.new
+      if params[:restaurant_id]
+        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      end
     else
         redirect_to root_url
     end

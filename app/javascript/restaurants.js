@@ -1,6 +1,6 @@
 document.addEventListener("turbo:load", () => {
 
-    if ($("#restaurantTabs").is(':visible')) {
+    if ($("#restaurantTabs").is(':visible') || $("#newRestaurant").is(':visible')) {
         const placePicker = document.querySelector('gmpx-place-picker');
             try {
                 placePicker.addEventListener('gmpx-placechange', () => {
@@ -106,7 +106,8 @@ document.addEventListener("turbo:load", () => {
            {
               title: 'Address',
               field: 'address', responsive:5,
-              mutator: (value, data) => data.address1 + '\n' + data.address2 + '\n' + data.state + '\n' + data.city + '\n' + data.postcode,
+              mutator: (value, data) =>
+                  [data.address1, data.address2, data.state, data.city].filter(Boolean).join(", "),
            },
            {title:"Capacity", field:"total_capacity", responsive:4, hozAlign:"right", headerHozAlign:"right"},
            {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }

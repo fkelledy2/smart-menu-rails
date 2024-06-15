@@ -28,7 +28,7 @@ class RestaurantavailabilitiesController < ApplicationController
     if current_user
         @restaurantavailability = Restaurantavailability.new
         if params[:restaurant_id]
-            @futureParentRestaurant = Restaurant.find(params[:restaurant_id], archived: false)
+            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
             @restaurantavailability.restaurant = @futureParentRestaurant
         end
     else

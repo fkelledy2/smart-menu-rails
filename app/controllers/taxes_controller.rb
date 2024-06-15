@@ -88,7 +88,7 @@ class TaxesController < ApplicationController
     if current_user
         @tax.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully updated." }
+          format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully deleted." }
           format.json { head :no_content }
         end
     else

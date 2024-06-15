@@ -44,7 +44,7 @@ class RestaurantsController < ApplicationController
         @restaurant = Restaurant.new(restaurant_params)
         respond_to do |format|
           if @restaurant.save
-            format.html { redirect_to restaurant_url(@restaurant), notice: "Restaurant was successfully created." }
+            format.html { redirect_to restaurants_path, notice: "Restaurant was successfully updated." }
             format.json { render :show, status: :created, location: @restaurant }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -61,7 +61,7 @@ class RestaurantsController < ApplicationController
     if current_user
         respond_to do |format|
           if @restaurant.update(restaurant_params)
-            format.html { redirect_to edit_restaurant_path(@restaurant), notice: "Restaurant was successfully updated." }
+            format.html { redirect_to restaurants_path(@restaurant), notice: "Restaurant was successfully updated." }
             format.json { render :show, status: :ok, location: @restaurant }
           else
             format.html { render :edit, status: :unprocessable_entity }

@@ -81,7 +81,7 @@ class MenuitemsController < ApplicationController
     if current_user
         @menuitem.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to menuitems_url, notice: "Menuitem was successfully destroyed." }
+          format.html { redirect_to edit_menusection_path(@menuitem.menusection), notice: "Menuitem was successfully deleted." }
           format.json { head :no_content }
         end
     else
