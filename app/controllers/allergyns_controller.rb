@@ -22,6 +22,10 @@ class AllergynsController < ApplicationController
   def new
     if current_user
         @allergyn = Allergyn.new
+        if params[:restaurant_id]
+          @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+          @allergyn.restaurant = @futureParentRestaurant
+        end
     else
         redirect_to root_url
     end
@@ -91,6 +95,6 @@ class AllergynsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def allergyn_params
-      params.require(:allergyn).permit(:name, :description, :symbol, :menuitem_id, :status, :sequence)
+      params.require(:allergyn).permit(:name, :description, :symbol, :menuitem_id, :status, :sequence, :restaurant_id)
     end
 end

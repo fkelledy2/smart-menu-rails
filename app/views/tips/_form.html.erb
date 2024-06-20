@@ -14,9 +14,7 @@
   <% end %>
   <div style='height:8px'></div>
   <div class="row">
-    <div class="col-sm-2">
-    </div>
-    <div class="col-sm-10">
+    <div class="col-sm-12">
         <span class="float-end">
         <% if tip.persisted? %>
           <div class="btn btn-dark ">
@@ -29,10 +27,10 @@
   </div>
   <% if tip.errors.any? %>
   <div class="row">
-    <div class="col-sm-2">
-        Errors
+    <div class="col-sm-3">
+      <span class="float-md-end"><%=t(".errors")%> : </span>
     </div>
-    <div class="col-sm-10">
+    <div class="col-sm-9">
       <ul>
           <% tip.errors.full_messages.each do |message| %>
             <li><%= message %></li>

@@ -1,5 +1,7 @@
 class Size < ApplicationRecord
 
+  belongs_to :restaurant
+
   has_many :menuitem_size_mappings, dependent: :destroy
   has_many :menuitems, through: :menuitem_size_mappings
 

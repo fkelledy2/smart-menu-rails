@@ -1,15 +1,23 @@
 <div class="page-header">
   <div class="row">
-    <div class="col-sm-10">
+    <div class="col-sm-9">
       <h1><%= t(".allergyn") %></h1>
     </div>
     <div class="col-sm-2">
-        <% if @allergyn.persisted? %>
-          <%= link_to t(".cancel"), @allergyn, class: "float-end btn btn-light" %>
+      <% if @allergyn.persisted? %>
+        <%= link_to t('.cancel'), edit_restaurant_path(id: @allergyn.restaurant.id), class: "float-end btn btn-light" %>
+      <% else %>
+        <% if @futureParentRestaurant %>
+          <%= link_to t('.cancel'), edit_restaurant_path(id: @futureParentRestaurant.id), class: "float-end btn btn-light" %>
         <% else %>
-          <%= link_to t(".cancel"), allergyns_path, class: "float-end btn btn-light" %>
+          <%= link_to t('.cancel'), allergyns_path, class: "float-end btn btn-light" %>
         <% end %>
+      <% end %>
     </div>
   </div>
 </div>
-<%= render 'form', allergyn: @allergyn %>
+<div class="row">
+  <div class="col-sm-11">
+    <%= render 'form', allergyn: @allergyn %>
+  </div>
+</div>

@@ -11,12 +11,12 @@
         </ul>
       </div>
       <button type="button" class="btn btn-dark">
-        <%= link_to new_allergyn_path(menu_id: @menu), class: 'link-light' do %>
+        <%= link_to new_allergyn_path(restaurant_id: @restaurant), class: 'link-light' do %>
           <i class="bi bi-plus"></i>
         <% end %>
       </button>
     </div>
   </div>
 </div>
-<div style="padding-top:10px" class="table-borderless" id="allergyn-table">
+<div style="padding-top:10px" class="table-borderless" id="allergyn-table" data-bs-restaurant_id="<%= @restaurant.id %>">
 </div>

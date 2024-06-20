@@ -7,6 +7,7 @@ document.addEventListener("turbo:load", () => {
             var rowData = cell.getRow().getData("data").name;
             return "<a class='link-dark' href='/allergyns/"+id+"/edit'>"+rowData+"</a>";
         }
+        const restaurantId = document.getElementById('allergyn-table').getAttribute('data-bs-restaurant_id');
         var allergynTable = new Tabulator("#allergyn-table", {
           dataLoader: false,
           maxHeight:"100%",
@@ -37,7 +38,8 @@ document.addEventListener("turbo:load", () => {
                 allergynTable.updateData([{id:rows[i].getData().id, sequence:rows[i].getPosition()}]);
                 let mu = {
                     'allergyn': {
-                        'sequence': rows[i].getPosition()
+                        'sequence': rows[i].getPosition(),
+                        'restaurant_id': restaurantId
                     }
                 };
                 fetch(rows[i].getData().url, {

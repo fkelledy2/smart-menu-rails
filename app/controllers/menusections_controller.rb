@@ -26,6 +26,11 @@ class MenusectionsController < ApplicationController
   def new
     if current_user
         @menusection = Menusection.new
+        if params[:menu_id]
+          @futureParentMenu = Menu.find(params[:menu_id])
+          @menusection.menu = @futureParentMenu
+        end
+
     else
         redirect_to root_url
     end

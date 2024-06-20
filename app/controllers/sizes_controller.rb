@@ -24,6 +24,7 @@ class SizesController < ApplicationController
       @size = Size.new
       if params[:restaurant_id]
         @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+        @size.restaurant = @futureParentRestaurant
       end
     else
         redirect_to root_url
@@ -44,7 +45,7 @@ class SizesController < ApplicationController
         @size = Size.new(size_params)
         respond_to do |format|
           if @size.save
-            format.html { redirect_to size_url(@size), notice: "Size was successfully created." }
+            format.html { redirect_to edit_restaurant_path(@size.restaurant_id), notice: "Size was successfully created." }
             format.json { render :show, status: :created, location: @size }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -61,7 +62,7 @@ class SizesController < ApplicationController
     if current_user
         respond_to do |format|
           if @size.update(size_params)
-            format.html { redirect_to size_url(@size), notice: "Size was successfully updated." }
+            format.html { redirect_to edit_restaurant_path(@size.restaurant_id), notice: "Size was successfully updated." }
             format.json { render :show, status: :ok, location: @size }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -78,7 +79,7 @@ class SizesController < ApplicationController
     if current_user
         @size.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to sizes_url, notice: "Size was successfully destroyed." }
+          format.html { redirect_to edit_restaurant_path(@size.restaurant_id), notice: "Size was successfully deleted." }
           format.json { head :no_content }
         end
     else
@@ -94,6 +95,6 @@ class SizesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def size_params
-      params.require(:size).permit(:size, :name, :description, :status, :sequence)
+      params.require(:size).permit(:size, :name, :description, :status, :sequence, :restaurant_id)
     end
 end

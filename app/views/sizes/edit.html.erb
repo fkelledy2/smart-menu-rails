@@ -4,12 +4,13 @@
         <h1><%= t(".size") %></h1>
     </div>
     <div class="col-sm-2">
-        <% if @size.persisted? %>
-          <%= link_to t(".cancel"), @size, class: "float-end btn btn-light" %>
-        <% else %>
-          <%= link_to t(".cancel"), sizes_path, class: "float-end btn btn-light" %>
-        <% end %>
+      <%= link_to t(".cancel"), edit_restaurant_path(@size.restaurant), class: "float-end btn btn-light" %>
     </div>
   </div>
 </div>
-<%= render 'form', size: @size %>
+<div class="row">
+  <div class="col-sm-11">
+    <%= render 'form', size: @size %>
+  </div>
+</div>
+

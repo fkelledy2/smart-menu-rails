@@ -1,5 +1,7 @@
 class Allergyn < ApplicationRecord
 
+  belongs_to :restaurant
+
   has_many :menuitem_allergyn_mappings, dependent: :destroy
   has_many :menuitems, through: :menuitem_allergyn_mappings
 

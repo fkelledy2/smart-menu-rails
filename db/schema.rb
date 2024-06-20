@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_08_205504) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_15_183050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,6 +51,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_08_205504) do
     t.boolean "archived", default: false
     t.integer "status", default: 0
     t.integer "sequence"
+    t.bigint "restaurant_id"
+    t.index ["restaurant_id"], name: "index_allergyns_on_restaurant_id"
   end
 
   create_table "announcements", force: :cascade do |t|
@@ -373,6 +375,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_08_205504) do
     t.boolean "archived", default: false
     t.integer "status", default: 0
     t.integer "sequence"
+    t.bigint "restaurant_id"
+    t.index ["restaurant_id"], name: "index_sizes_on_restaurant_id"
   end
 
   create_table "tablesettings", force: :cascade do |t|
@@ -440,6 +444,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_08_205504) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "allergyns", "restaurants"
   add_foreign_key "employees", "restaurants"
   add_foreign_key "employees", "users"
   add_foreign_key "inventories", "menuitems"
@@ -473,6 +478,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_08_205504) do
   add_foreign_key "restaurantavailabilities", "restaurants"
   add_foreign_key "restaurants", "users"
   add_foreign_key "services", "users"
+  add_foreign_key "sizes", "restaurants"
   add_foreign_key "tablesettings", "restaurants"
   add_foreign_key "taxes", "restaurants"
   add_foreign_key "tips", "restaurants"

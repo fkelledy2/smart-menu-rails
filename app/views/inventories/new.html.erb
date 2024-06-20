@@ -1,15 +1,23 @@
 <div class="page-header">
   <div class="row">
-    <div class="col-sm-10">
+    <div class="col-sm-9">
       <h1><%=t(".inventory")%></h1>
     </div>
     <div class="col-sm-2">
-        <% if @inventory.persisted? %>
-          <%= link_to t(".cancel"), @inventory, class: "float-end btn btn-light" %>
+      <% if @inventory.persisted? %>
+        <%= link_to t('.cancel'), edit_restaurant_path(id: @inventory.menuitem.menusection.menu.restaurant.id), class: "float-end btn btn-light" %>
+      <% else %>
+        <% if @futureParentRestaurant %>
+          <%= link_to t('.cancel'), edit_restaurant_path(id: @futureParentRestaurant.id), class: "float-end btn btn-light" %>
         <% else %>
-          <%= link_to t(".cancel"), inventories_path, class: "float-end btn btn-light" %>
+          <%= link_to t('.cancel'), inventories_path, class: "float-end btn btn-light" %>
         <% end %>
+      <% end %>
     </div>
   </div>
 </div>
-<%= render 'form', inventory: @inventory %>
+<div class="row">
+  <div class="col-sm-11">
+    <%= render 'form', inventory: @inventory %>
+  </div>
+</div>

@@ -26,6 +26,10 @@ class MenuavailabilitiesController < ApplicationController
   def new
     if current_user
         @menuavailability = Menuavailability.new
+        if params[:menu_id]
+          @futureParentMenu = Menu.find(params[:menu_id])
+          @menuavailability.menu = @futureParentMenu
+        end
     else
         redirect_to root_url
     end

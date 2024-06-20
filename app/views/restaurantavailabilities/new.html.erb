@@ -1,7 +1,7 @@
 <%= render 'shared/customcss' %>
 <div class="page-header">
   <div class="row">
-    <div class="col-sm-10">
+    <div class="col-sm-9">
         <h1><%=t(".restaurantavailability")%></h1>
     </div>
     <div class="col-sm-2">
@@ -17,4 +17,10 @@
     </div>
   </div>
 </div>
-<%= render 'form', restaurantavailability: @restaurantavailability %>
+<div class="row">
+  <div class="col-sm-11">
+    <%= render 'form', restaurantavailability: @restaurantavailability %>
+  </div>
+</div>
+
+
