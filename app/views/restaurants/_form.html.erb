@@ -72,10 +72,8 @@
         <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %> :</span>
     </div>
     <div class="col-sm-9">
-        <%= form.text_field :image, class: 'form-control' %>
-        <% if @restaurant.image %>
-            <img src="<%=@restaurant.image%>" class="img-fluid" alt="...">
-        <% end %>
+        <%= form.file_field :image, class: 'form-control' %>
+        <%= image_tag @restaurant.image_url if @restaurant.image %>
     </div>
   </div>
   <div style='height:4px'></div>

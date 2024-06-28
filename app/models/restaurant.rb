@@ -1,4 +1,5 @@
 class Restaurant < ApplicationRecord
+  include ImageUploader::Attachment(:image)
   belongs_to :user
   has_many :tablesettings, dependent: :delete_all
   has_many :menus, dependent: :delete_all
