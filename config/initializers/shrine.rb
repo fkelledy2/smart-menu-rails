@@ -10,8 +10,8 @@ if  Rails.env.test?
   }
 else
   Shrine.storages = {
-    cache: Shrine::Storage::Memory.new,
-    store: Shrine::Storage::Memory.new,
+    cache: Shrine::Storage::S3.new( bucket: "<%= Rails.application.credentials.dig(:aws, :bucket) %>", region: "<%= Rails.application.credentials.dig(:aws, :region) %>", access_key_id: "<%= Rails.application.credentials.dig(:aws, :access_key_id) %>", secret_access_key: "<%= Rails.application.credentials.dig(:aws, :secret_access_key) %>"),
+    store: Shrine::Storage::S3.new( bucket: "<%= Rails.application.credentials.dig(:aws, :bucket) %>", region: "<%= Rails.application.credentials.dig(:aws, :region) %>", access_key_id: "<%= Rails.application.credentials.dig(:aws, :access_key_id) %>", secret_access_key: "<%= Rails.application.credentials.dig(:aws, :secret_access_key) %>")
   }
 end
 Shrine.plugin :activerecord # loads Active Record integration
