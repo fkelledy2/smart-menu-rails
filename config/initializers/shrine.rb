@@ -10,8 +10,8 @@ if  Rails.env.test?
   }
 else
   Shrine.storages = {
-    cache: Shrine::Storage::S3.new( bucket: "<%= Rails.application.credentials.dig(:aws, :bucket) %>", region: "<%= Rails.application.credentials.dig(:aws, :region) %>", access_key_id: "<%= Rails.application.credentials.dig(:aws, :access_key_id) %>", secret_access_key: "<%= Rails.application.credentials.dig(:aws, :secret_access_key) %>"),
-    store: Shrine::Storage::S3.new( bucket: "<%= Rails.application.credentials.dig(:aws, :bucket) %>", region: "<%= Rails.application.credentials.dig(:aws, :region) %>", access_key_id: "<%= Rails.application.credentials.dig(:aws, :access_key_id) %>", secret_access_key: "<%= Rails.application.credentials.dig(:aws, :secret_access_key) %>")
+    cache: Shrine::Storage::S3.new( bucket: "bucketeer-965413d8-bbfb-447a-b727-c2eb2ed49fb1", region: "eu-west-1", access_key_id: "AKIAVVKH7VVUJUEUKY2R", secret_access_key: "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"),
+    store: Shrine::Storage::S3.new( bucket: "bucketeer-965413d8-bbfb-447a-b727-c2eb2ed49fb1", region: "eu-west-1", access_key_id: "AKIAVVKH7VVUJUEUKY2R", secret_access_key: "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")
   }
 end
 Shrine.plugin :activerecord # loads Active Record integration
