@@ -1,6 +1,8 @@
 require "shrine"
 require "shrine/storage/file_system"
 require "shrine/storage/memory"
+require "shrine/storage/s3"
+
 if  Rails.env.test?
   Shrine.storages = {
     cache: Shrine::Storage::Memory.new,
@@ -8,8 +10,9 @@ if  Rails.env.test?
   }
 else
   Shrine.storages = {
-    cache: Shrine::Storage::FileSystem.new("public", prefix: "uploads/cache"), # temporary
-    store: Shrine::Storage::FileSystem.new("public", prefix: "uploads"), # permanent
+    cache: Shrine::Storage::S3.new( bucket: "<%= ENV['BUCKETEER_BUCKET_NAME'] %>", region: "<%= ENV['BUCKETEER_AWS_REGION'] %>", access_key_id: "<%= ENV['BUCKETEER_AWS_ACCESS_KEY_ID'] %>", secret_access_key: "<%= ENV['BUCKETEER_AWS_SECRET_ACCESS_KEY'] %>"),
+    store: Shrine::Storage::S3.new( bucket: "<%= ENV['BUCKETEER_BUCKET_NAME'] %>", region: "<%= ENV['BUCKETEER_AWS_REGION'] %>", access_key_id: "<%= ENV['BUCKETEER_AWS_ACCESS_KEY_ID'] %>", secret_access_key: "<%= ENV['BUCKETEER_AWS_SECRET_ACCESS_KEY'] %>")
+
   }
 end
 Shrine.plugin :activerecord # loads Active Record integration
