@@ -12,6 +12,8 @@ require("@rails/activestorage").start()
 //= require jquery_ujs
 //= require_tree .
 //= require allow_numeric
+//= require cropper
+//= require jquery-cropper
 require("local-time").start()
 require("@rails/ujs").start()
 

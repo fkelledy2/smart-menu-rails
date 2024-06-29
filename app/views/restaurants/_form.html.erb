@@ -73,7 +73,7 @@
     </div>
     <div class="col-sm-9">
         <%= form.file_field :image, class: 'form-control' %>
-        <%= image_tag @restaurant.image_url if @restaurant.image %>
+        <%= image_tag @restaurant.image_url, :class => "img-fluid" if @restaurant.image %>
     </div>
   </div>
   <div style='height:4px'></div>

@@ -39,7 +39,7 @@
     <div class="col-sm-9">
       <%= form.text_field :image, class: 'form-control' %>
       <% if menu.image %>
-        <img src="<%=menu.image%>" class="img-fluid" alt="...">
+        <%= image_tag menu.image, :class => "img-fluid" if menu.image %>
       <% end %>
     </div>
   </div>
