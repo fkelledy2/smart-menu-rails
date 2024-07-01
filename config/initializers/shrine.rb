@@ -10,8 +10,8 @@ if  Rails.env.test?
   }
 else
   Shrine.storages = {
-    cache: Shrine::Storage::S3.new( bucket: "bucketeer-965413d8-bbfb-447a-b727-c2eb2ed49fb1", region: "eu-west-1", access_key_id: "AKIAVVKH7VVUJUEUKY2R", secret_access_key: "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"),
-    store: Shrine::Storage::S3.new( bucket: "bucketeer-965413d8-bbfb-447a-b727-c2eb2ed49fb1", region: "eu-west-1", access_key_id: "AKIAVVKH7VVUJUEUKY2R", secret_access_key: "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")
+    cache: Shrine::Storage::FileSystem.new("public", prefix: "uploads/cache"), # temporary
+    store: Shrine::Storage::FileSystem.new("public", prefix: "uploads"), # permanent
   }
 end
 Shrine.plugin :activerecord # loads Active Record integration
