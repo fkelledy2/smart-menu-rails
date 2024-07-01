@@ -58,8 +58,12 @@ class RestaurantsController < ApplicationController
 
   # PATCH/PUT /restaurants/1 or /restaurants/1.json
   def update
+    puts 'xxx'
+    puts params[:image]
+    puts params[:image_data]
     if current_user
         respond_to do |format|
+
           if @restaurant.update(restaurant_params)
             format.html { redirect_to restaurants_path(@restaurant), notice: "Restaurant was successfully updated." }
             format.json { render :show, status: :ok, location: @restaurant }
@@ -126,6 +130,6 @@ class RestaurantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def restaurant_params
-      params.require(:restaurant).permit(:name, :description, :address1, :address2, :state, :city, :postcode, :country, :image, :status, :sequence, :capacity, :user_id, :displayImages, :allowOrdering, :inventoryTracking, :currency, :genid, :latitude, :longitude)
+      params.require(:restaurant).permit(:name, :description, :address1, :address2, :state, :city, :postcode, :country, :image_data, :image, :status, :sequence, :capacity, :user_id, :displayImages, :allowOrdering, :inventoryTracking, :currency, :genid, :latitude, :longitude)
     end
 end

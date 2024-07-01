@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_23_160909) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_01_172251) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -349,6 +349,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_23_160909) do
     t.float "longitude"
     t.integer "sequence"
     t.text "image_data"
+    t.text "image"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 
