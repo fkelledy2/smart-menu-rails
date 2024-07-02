@@ -72,9 +72,9 @@
         <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %> :</span>
     </div>
     <div class="col-sm-9">
-      <%= image_tag form.object.image_url if form.object.cached_image_data %>
-      <%= form.hidden_field :image, value: form.object.cached_image_data %>
+      <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
       <%= form.file_field :image, class: 'form-control' %>
+      <%= image_tag @restaurant.image_url, :class => "img-fluid" if @restaurant.image %>
     </div>
   </div>
   <div style='height:4px'></div>

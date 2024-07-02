@@ -58,9 +58,11 @@ class RestaurantsController < ApplicationController
 
   # PATCH/PUT /restaurants/1 or /restaurants/1.json
   def update
-    puts 'xxx'
+    puts '111'
     puts params[:image]
+    puts '222'
     puts params[:image_data]
+    puts '333'
     if current_user
         respond_to do |format|
 
