@@ -1,4 +1,5 @@
 class Menu < ApplicationRecord
+  include ImageUploader::Attachment(:image)
   belongs_to :restaurant
   has_many :menusections
   has_many :menuavailabilities

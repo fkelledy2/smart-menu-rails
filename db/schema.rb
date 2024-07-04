@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_01_172251) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_04_150255) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -167,7 +167,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_01_172251) do
   create_table "menuitems", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.string "image"
     t.integer "status"
     t.integer "sequence"
     t.integer "calories"
@@ -177,13 +176,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_01_172251) do
     t.datetime "updated_at", null: false
     t.integer "preptime", default: 0
     t.boolean "archived", default: false
+    t.text "image_data"
     t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
   end
 
   create_table "menus", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.string "image"
     t.integer "status"
     t.integer "sequence"
     t.bigint "restaurant_id", null: false
@@ -193,6 +192,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_01_172251) do
     t.boolean "allowOrdering", default: false
     t.boolean "inventoryTracking", default: false
     t.boolean "archived", default: false
+    t.text "image_data"
     t.index ["restaurant_id"], name: "index_menus_on_restaurant_id"
   end
 
@@ -206,6 +206,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_01_172251) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "archived", default: false
+    t.text "image_data"
     t.index ["menu_id"], name: "index_menusections_on_menu_id"
   end
 
@@ -349,7 +350,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_01_172251) do
     t.float "longitude"
     t.integer "sequence"
     t.text "image_data"
-    t.text "image"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 

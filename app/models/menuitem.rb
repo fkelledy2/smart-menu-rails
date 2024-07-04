@@ -1,4 +1,5 @@
 class Menuitem < ApplicationRecord
+  include ImageUploader::Attachment(:image)
   belongs_to :menusection
 
   has_many :menuitem_allergyn_mappings, dependent: :destroy

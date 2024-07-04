@@ -1,4 +1,5 @@
 class Menusection < ApplicationRecord
+  include ImageUploader::Attachment(:image)
   belongs_to :menu
   has_many :menuitems
 
