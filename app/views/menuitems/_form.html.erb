@@ -38,10 +38,9 @@
       <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %> : </span>
     </div>
     <div class="col-sm-9">
-      <%= form.text_field :image, class: 'form-control' %>
-      <% if menuitem.image %>
-        <img src="<%=menuitem.image%>" class="img-fluid" alt="...">
-      <% end %>
+      <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
+      <%= form.file_field :image, class: 'form-control' %>
+      <%= image_tag menuitem.image_url, :class => "img-fluid" if menuitem.image %>
     </div>
   </div>
   <div style='height:4px'></div>

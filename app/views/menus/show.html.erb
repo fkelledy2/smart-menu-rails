@@ -140,7 +140,7 @@
         <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
             <% if menusection.image %>
                 <div class="card border-light text-bg-dark">
-                  <img src="<%= menusection.image %>" style="height: 150px" class="card-img" alt="<%= menusection.name %>">
+                  <img src="<%= menusection.image_url %>" style="height: 150px" class="card-img" alt="<%= menusection.name %>">
                   <div class="card-img-overlay">
                     <h3 class="card-title"><%= menusection.name %></h3>
                     <p class="card-text"><%= menusection.description %></p>
@@ -158,7 +158,9 @@
                     <div style="padding-top:20px" class="col-sm-12 col-md-6 col-lg-4">
                         <div class="card">
                           <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
-                              <img class="card-img-bottom" src="<%= menuitem.image %>" alt="<%= menuitem.name %>">
+                            <% if menuitem.image %>
+                              <img style="height:350px" class="card-img-bottom" src="<%= menuitem.image_url %>" alt="<%= menuitem.name %>">
+                            <% end %>
                           <% end %>
                           <div class="card-body">
                                  <div class="row">
