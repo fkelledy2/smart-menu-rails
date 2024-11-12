@@ -120,6 +120,6 @@ class MenuitemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def menuitem_params
-      params.require(:menuitem).permit(:name, :description, :image, :status, :sequence, :calories, :price, :menusection_id, :preptime)
+      params.require(:menuitem).permit(:name, :description, :image, :remove_image, :status, :sequence, :calories, :price, :menusection_id, :preptime)
     end
 end

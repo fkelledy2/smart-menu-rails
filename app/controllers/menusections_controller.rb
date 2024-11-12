@@ -111,6 +111,6 @@ class MenusectionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def menusection_params
-      params.require(:menusection).permit(:name, :description, :image, :status, :sequence, :menu_id)
+      params.require(:menusection).permit(:name, :description, :image, :remove_image, :status, :sequence, :menu_id)
     end
 end
