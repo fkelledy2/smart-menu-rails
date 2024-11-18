@@ -1,0 +1,29 @@
+<%= form_with(model: metric) do |form| %>
+  <% if metric.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(metric.errors.count, "error") %> prohibited this metric from being saved:</h2>
+
+      <ul>
+      <% metric.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <% if metric.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', metric, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if metric.persisted? %>
+      <%= link_to "Cancel", metric, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", metrics_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

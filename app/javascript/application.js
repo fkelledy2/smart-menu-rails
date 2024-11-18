@@ -51,6 +51,7 @@ import './ordrs'
 import './ordritems'
 import './restaurantavailabilities'
 import './menuavailabilities'
+import './metrics'
 
 document.addEventListener("turbo:load", () => {
 

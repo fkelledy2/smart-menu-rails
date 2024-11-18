@@ -2,6 +2,7 @@
 //= link_tree ../images
 //= link allergyns.js
 //= link employees.js
+//= link metrics.js
 //= link menuitems.js
 //= link menus.js
 //= link menusections.js

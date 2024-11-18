@@ -5,6 +5,7 @@ pin "bootstrap", to: "bootstrap.min.js", preload: true
 
 pin "allergyns", to: "allergyns.js", preload: true
 pin "employees", to: "employees.js", preload: true
+pin "metrics", to: "metrics.js", preload: true
 pin "menuitems", to: "menuitems.js", preload: true
 pin "menus", to: "menus.js", preload: true
 pin "menusections", to: "menusections.js", preload: true
