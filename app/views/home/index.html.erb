@@ -1,9 +1,19 @@
 <% if current_user %>
     <h1>Landing Page</h1>
 <% else %>
+
+  <div class="container px-1 py-2">
+    <div class="p-5 mb-4 bg-light rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Menus, only smarter</h1>
+        <p class="col-md-8 fs-4">Discover the future of dining with our seamless digital menu ordering system. Elevate your service and enhance your customer's experience through menus which are, simply smarter!</p>
+        <a href="#contact_us" class="btn btn-primary btn-lg" type="button">Contact us</a>
+      </div>
+    </div>
+  </div>
+
   <div class="container px-1 py-2" id="hanging-icons">
-    <h2 class="pb-2 border-bottom">Menus, only smarter</h2>
-    <p style='text-align:justify;' >Discover the future of dining with our seamless digital menu ordering system. Elevate your service and enhance your customers' experience through menus which are:</p>
+    <h2 class="pb-2 border-bottom">Features</h2>
     <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
       <div class="col d-flex align-items-start">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
@@ -64,9 +74,9 @@
   </div>
 
   <div id="metrics-table" class="container px-1 py-2" id="hanging-icons">
-    <h2 class="pb-2 border-bottom">The Numbers ...</h2>
+    <h2 class="pb-2 border-bottom">Numbers</h2>
     <p style='text-align:justify;'>Our stats, restaurants, menus, orders & value under management:</p>
-    <div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
+    <div class="row g-4 py-5 row-cols-2 row-cols-sm-2 row-cols-lg-4">
       <div class="col d-flex align-items-start">
         <div class="card text-center" style="width:100%">
           <div class="card-header">
@@ -100,7 +110,7 @@
       <div class="col d-flex align-items-start">
         <div class="card text-center" style="width:100%">
           <div class="card-header">
-            <h3 class="card-title">Total Order Value</h3>
+            <h3 class="card-title">Order Value</h3>
           </div>
           <div class="card-body">
             <h1 style="color:green;">
@@ -110,5 +120,79 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="metrics-table" class="container px-1 py-2" id="hanging-icons">
+    <h2 class="pb-2 border-bottom">Testimonials</h2>
+    <p style='text-align:justify;'>A few words from our happy clients:</p>
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="card" style="width:100%">
+              <div style='text-align:left;'class="card-header">
+                <h3 class="card-title">Testimonial 1</h3>
+              </div>
+              <div class="card-body text-center">
+                <h4><i style='color:green;'>"<span>Something nice about us ...</span>"</i></h4>
+                <div style='text-align:right;'>
+                  <h6>Author 1</h6>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="card text-center" style="width:100%">
+              <div style='text-align:left;'class="card-header">
+                <h3 class="card-title">Testimonial 2</h3>
+              </div>
+              <div class="card-body">
+                <h4><i style='color:green;'>"<span>Something nice about us ...</span>"</i></h4>
+                <div style='text-align:right;'>
+                  <h6>Author 2</h6>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="card text-center" style="width:100%">
+              <div style='text-align:left;'class="card-header">
+                <h3 class="card-title">Testimonial 3</h3>
+              </div>
+              <div class="card-body">
+                <h4><i style='color:green;'>"<span>Something nice about us ...</span>"</i></h4>
+                <div style='text-align:right;'>
+                  <h6>Author 3</h6>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+
+  <hr>
+
+  <div id="contact_us" class="container px-1 py-2" id="hanging-icons">
+    <h2 class="pb-2 border-bottom">Contact us</h2>
+    <form>
+      <div class="mb-3">
+        <label for="exampleInputEmail" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp">
+        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+      </div>
+      <div class="mb-3">
+        <label for="inputMessage" class="form-label">Message</label>
+        <textarea id="inputMessage" class="form-control" aria-label="Message"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
   </div>
 <% end %>
