@@ -262,89 +262,24 @@ document.addEventListener("turbo:load", () => {
     }
 
 
-    if ($("#order-table").length) {
-        var orderTable = new Tabulator("#order-table", {
-          dataLoader: false,
-          maxHeight:"100%",
-          responsiveLayout:true,
-          layout:"fitDataStretch",
-          ajaxURL: '/ordrs.json',
-          initialSort:[
-            {column:"ordrDate", dir:"desc"},
-            {column:"id", dir:"desc"},
-          ],
-          columns: [
-           {
-            title:"Id", field:"id", sorter:"number", responsive:0, formatter:"link", formatterParams: {
-                labelField:"id",
-                urlPrefix:"/ordrs/",
-            }
-           },
-           {title:"Date", field:"ordrDate", responsive:1, hozAlign:"right", headerHozAlign:"right" },
-           {
-            title:"Restaurant", field:"restaurant.id", responsive:1, formatter:"link", formatterParams: {
-                labelField:"restaurant.name",
-                urlPrefix:"/restaurants/",
-            }
-           },
-           {
-            title:"Menu", field:"menu.id", responsive:3, formatter:"link", formatterParams: {
-                labelField:"menu.name",
-                urlPrefix:"/menus/",
-            }
-           },
-           {
-            title:"Table", field:"tablesetting.id", responsive:4, formatter:"link", formatterParams: {
-                labelField:"tablesetting.name",
-                urlPrefix:"/tablesettings/",
-            }
-           },
-           {title:"Nett", field:"nett", formatter:"money", hozAlign:"right", responsive:0, headerHozAlign:"right",
-            formatterParams:{
-               decimal:".",
-               thousand:",",
-               symbol:restaurantCurrencySymbol,
-               negativeSign:true,
-               precision:2,
-            }
-           },
-           {title:"Service", field:"service", formatter:"money", hozAlign:"right", responsive:5, headerHozAlign:"right",
-            formatterParams:{
-               decimal:".",
-               thousand:",",
-               symbol:restaurantCurrencySymbol,
-               negativeSign:true,
-               precision:2,
-            }
-           },
-           {title:"Tax", field:"tax", formatter:"money", hozAlign:"right", responsive:5, headerHozAlign:"right",
-            formatterParams:{
-               decimal:".",
-               thousand:",",
-               symbol:restaurantCurrencySymbol,
-               negativeSign:true,
-               precision:2,
-            }
-           },
-           {title:"Gross", field:"gross", formatter:"money", hozAlign:"right", responsive:0, headerHozAlign:"right",
-            formatterParams:{
-               decimal:".",
-               thousand:",",
-               symbol:restaurantCurrencySymbol,
-               negativeSign:true,
-               precision:2,
-            }
-           }
-          ],
-        });
-    }
-
     if ($("#restaurantTabs").is(':visible')) {
-        function link(cell, formatterParams){
+        function linkOrdr(cell, formatterParams){
+            var id = cell.getValue();
+            var name = cell.getRow();
+            var rowData = cell.getRow().getData("data").name;
+            return "<a class='link-dark' href='/ordrs/"+id+"/edit'>"+rowData+"</a>";
+        }
+        function linkMenu(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();
             var rowData = cell.getRow().getData("data").name;
             return "<a class='link-dark' href='/menus/"+id+"/edit'>"+rowData+"</a>";
+        }
+        function linkTablesetting(cell, formatterParams){
+            var id = cell.getValue();
+            var name = cell.getRow();
+            var rowData = cell.getRow().getData("data").name;
+            return "<a class='link-dark' href='/tablesettings/"+id+"/edit'>"+rowData+"</a>";
         }
         const restaurantId = document.getElementById('restaurant-ordr-table').getAttribute('data-bs-restaurant_id');
         var restaurantOrdrTable = new Tabulator("#restaurant-ordr-table", {
@@ -358,24 +293,9 @@ document.addEventListener("turbo:load", () => {
             {column:"id", dir:"desc"},
           ],
           columns: [
-           {
-            title:"Id", field:"id", sorter:"number", responsive:0, formatter:"link", formatterParams: {
-                labelField:"id",
-                urlPrefix:"/ordrs/",
-            }
-           },
-           {
-            title:"Menu", field:"menu.id", responsive:3, formatter:"link", formatterParams: {
-                labelField:"menu.name",
-                urlPrefix:"/menus/",
-            }
-           },
-           {
-            title:"Table", field:"tablesetting.id", responsive:4, formatter:"link", formatterParams: {
-                labelField:"tablesetting.name",
-                urlPrefix:"/tablesettings/",
-            }
-           },
+           {title:"Id", field:"id", formatter:linkOrdr, hozAlign:"left"},
+           {title:"Menu", field:"menu.id", formatter:linkMenu, hozAlign:"left"},
+           {title:"Table", field:"tablesetting.id", formatter:linkTablesetting, hozAlign:"left"},
            {title:"Nett", field:"nett", formatter:"money", hozAlign:"right", responsive:0, headerHozAlign:"right",
             formatterParams:{
                decimal:".",
