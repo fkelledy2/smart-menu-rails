@@ -68,7 +68,7 @@ class Ordr < ApplicationRecord
   end
 
   def ordrDate
-      created_at.strftime("%d/%d/%Y")
+      created_at.strftime("%d/%m/%Y")
   end
 
   def diners
