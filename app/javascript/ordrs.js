@@ -338,4 +338,83 @@ document.addEventListener("turbo:load", () => {
           ],
         });
     }
+
+    if ($("#restaurantTabs").is(':visible')) {
+        function link(cell, formatterParams){
+            var id = cell.getValue();
+            var name = cell.getRow();
+            var rowData = cell.getRow().getData("data").name;
+            return "<a class='link-dark' href='/menus/"+id+"/edit'>"+rowData+"</a>";
+        }
+        const restaurantId = document.getElementById('restaurant-ordr-table').getAttribute('data-bs-restaurant_id');
+        var restaurantOrdrTable = new Tabulator("#restaurant-ordr-table", {
+          dataLoader: false,
+          maxHeight:"100%",
+          responsiveLayout:true,
+          layout:"fitDataStretch",
+          ajaxURL: '/restaurants/'+restaurantId+'/ordrs.json',
+          initialSort:[
+            {column:"ordrDate", dir:"desc"},
+            {column:"id", dir:"desc"},
+          ],
+          columns: [
+           {
+            title:"Id", field:"id", sorter:"number", responsive:0, formatter:"link", formatterParams: {
+                labelField:"id",
+                urlPrefix:"/ordrs/",
+            }
+           },
+           {
+            title:"Menu", field:"menu.id", responsive:3, formatter:"link", formatterParams: {
+                labelField:"menu.name",
+                urlPrefix:"/menus/",
+            }
+           },
+           {
+            title:"Table", field:"tablesetting.id", responsive:4, formatter:"link", formatterParams: {
+                labelField:"tablesetting.name",
+                urlPrefix:"/tablesettings/",
+            }
+           },
+           {title:"Nett", field:"nett", formatter:"money", hozAlign:"right", responsive:0, headerHozAlign:"right",
+            formatterParams:{
+               decimal:".",
+               thousand:",",
+               symbol:restaurantCurrencySymbol,
+               negativeSign:true,
+               precision:2,
+            }
+           },
+           {title:"Service", field:"service", formatter:"money", hozAlign:"right", responsive:5, headerHozAlign:"right",
+            formatterParams:{
+               decimal:".",
+               thousand:",",
+               symbol:restaurantCurrencySymbol,
+               negativeSign:true,
+               precision:2,
+            }
+           },
+           {title:"Tax", field:"tax", formatter:"money", hozAlign:"right", responsive:5, headerHozAlign:"right",
+            formatterParams:{
+               decimal:".",
+               thousand:",",
+               symbol:restaurantCurrencySymbol,
+               negativeSign:true,
+               precision:2,
+            }
+           },
+           {title:"Gross", field:"gross", formatter:"money", hozAlign:"right", responsive:0, headerHozAlign:"right",
+            formatterParams:{
+               decimal:".",
+               thousand:",",
+               symbol:restaurantCurrencySymbol,
+               negativeSign:true,
+               precision:2,
+            }
+           },
+           {title:"Date", field:"ordrDate", responsive:1, hozAlign:"right", headerHozAlign:"right" },
+          ],
+        });
+    }
+
 })

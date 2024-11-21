@@ -35,10 +35,13 @@
         <button class="nav-link link-dark" id="openinghours-tab" data-bs-toggle="tab" data-bs-target="#openinghour" type="button" role="tab" aria-controls="openinghoursConfig" aria-selected="false">Opening Hours</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="allergyn-tab" data-bs-toggle="tab" data-bs-target="#allergyn" type="button" role="tab" aria-controls="allergynConfig" aria-selected="false">Allergyns</button>
+        <button class="nav-link link-dark" id="allergyns-tab" data-bs-toggle="tab" data-bs-target="#allergyn" type="button" role="tab" aria-controls="allergynConfig" aria-selected="false">Allergyns</button>
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link link-dark" id="sizes-tab" data-bs-toggle="tab" data-bs-target="#size" type="button" role="tab" aria-controls="sizeConfig" aria-selected="false">Sizes</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="ordrs-tab" data-bs-toggle="tab" data-bs-target="#ordr" type="button" role="tab" aria-controls="ordrConfig" aria-selected="false">Orders</button>
       </li>
   <% end %>
 </ul>
@@ -99,12 +102,22 @@
         <p>
         <div class="row">
           <div class="col-sm-12">
-            <%= render 'showSizes', menu: @menu, edit: true %>
+            <%= render 'showSizes', restaurant: @restaurant, edit: true %>
           </div>
         </div>
       </div>
     </div>
 
+    <div class="tab-content" id="ordrConfig">
+      <div class="tab-pane fade" id="ordr" role="tabpanel" aria-labelledby="ordr-tab">
+        <p>
+        <div class="row">
+          <div class="col-sm-12">
+            <%= render 'showOrdrs', restaurant: @restaurant, edit: true %>
+          </div>
+        </div>
+      </div>
+    </div>
 
 <% end %>
 </div>

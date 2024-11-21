@@ -34,31 +34,6 @@
                 <% end %>
               </div>
             </li>
-            <li style="z-index:1070;" class="nav-item dropdown">
-              <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
-                 Menus
-              <% end %>
-              <div id="nav-account-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbar-dropdown">
-                <%= link_to t(".menus"), menus_path, class: "dropdown-item" %>
-                <%= link_to t(".menuSections"), menusections_path, class: "dropdown-item" %>
-                <%= link_to t(".menuItems"), menuitems_path, class: "dropdown-item" %>
-                <%= link_to t(".allergyns"), allergyns_path, class: "dropdown-item" %>
-                <%= link_to t(".sizes"), sizes_path, class: "dropdown-item" %>
-                <% if @current_employee && @current_employee.role == 'manager' %>
-                <%= link_to t(".inventories"), inventories_path, class: "dropdown-item" %>
-                <%= link_to t(".menuAvailability"), menuavailabilities_path, class: "dropdown-item" %>
-                <% end %>
-              </div>
-            </li>
-            <li style="z-index:1070;" class="nav-item dropdown">
-              <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
-                 Orders
-              <% end %>
-              <div id="nav-account-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbar-dropdown">
-                <%= link_to t(".orders"), ordrs_path, class: "dropdown-item" %>
-                <%= link_to t(".orderItems"), ordritems_path, class: "dropdown-item" %>
-              </div>
-            </li>
         <% end %>
       </ul>
       <ul class="navbar-nav">

@@ -14,6 +14,8 @@ require("@rails/activestorage").start()
 //= require allow_numeric
 //= require cropper
 //= require jquery-cropper
+//= require chatgpt
+
 require("local-time").start()
 require("@rails/ujs").start()
 
