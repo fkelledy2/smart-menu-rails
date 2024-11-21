@@ -266,19 +266,19 @@ document.addEventListener("turbo:load", () => {
         function linkOrdr(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();
-            var rowData = cell.getRow().getData("data").name;
+            var rowData = cell.getRow().getData("data").id;
             return "<a class='link-dark' href='/ordrs/"+id+"/edit'>"+rowData+"</a>";
         }
         function linkMenu(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();
-            var rowData = cell.getRow().getData("data").name;
+            var rowData = cell.getRow().getData("data").menu.id;
             return "<a class='link-dark' href='/menus/"+id+"/edit'>"+rowData+"</a>";
         }
         function linkTablesetting(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();
-            var rowData = cell.getRow().getData("data").name;
+            var rowData = cell.getRow().getData("data").tablesetting.id;
             return "<a class='link-dark' href='/tablesettings/"+id+"/edit'>"+rowData+"</a>";
         }
         const restaurantId = document.getElementById('restaurant-ordr-table').getAttribute('data-bs-restaurant_id');
