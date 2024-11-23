@@ -224,6 +224,8 @@ en:
       sure: "Are you sure?"
       selectRestaurant: "Select a Restaurant ..."
       errors: "Errors"
+      details: "Details"
+      preview: "Preview"
 
   menusections:
     index:
