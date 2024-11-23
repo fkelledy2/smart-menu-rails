@@ -1,5 +1,8 @@
 document.addEventListener("turbo:load", () => {
     if ($("#restaurantTabs").is(':visible')) {
+        function status(cell, formatterParams){
+            return cell.getRow().getData("data").status.toUpperCase();
+        }
         // Allergyns
         function link(cell, formatterParams){
             var id = cell.getValue();
@@ -29,7 +32,7 @@ document.addEventListener("turbo:load", () => {
           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
           {title:"Symbol", field:"symbol", responsive:0, hozAlign:"right", headerHozAlign:"right" },
           {title:"Description", field:"description", responsive:5},
-          {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
+          {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         allergynTable.on("rowMoved", function(row){

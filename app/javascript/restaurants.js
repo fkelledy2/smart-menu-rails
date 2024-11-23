@@ -84,6 +84,9 @@ document.addEventListener("turbo:load", () => {
 
     if ($("#restaurant-table").is(':visible')) {
         // Restaurants
+        function status(cell, formatterParams){
+            return cell.getRow().getData("data").status.toUpperCase();
+        }
         function link(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();

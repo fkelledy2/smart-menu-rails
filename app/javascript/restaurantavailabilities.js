@@ -16,6 +16,9 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#restaurantTabs").is(':visible')) {
+        function status(cell, formatterParams){
+            return cell.getRow().getData("data").status.toUpperCase();
+        }
         function link(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();
@@ -45,7 +48,7 @@ document.addEventListener("turbo:load", () => {
           {title:"Day of Week", field:"id", responsive:0, formatter:link, hozAlign:"left"},
           {title: 'Opening Time', field: 'starthour', mutator: (value, data) => String(data.starthour).padStart(2, '0') + ':' + String(data.startmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
           {title: 'Closing Time', field: 'endhour', mutator: (value, data) => String(data.endhour).padStart(2, '0') + ':' + String(data.endmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
-          {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
+          {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ]
         });
         restaurantOpeningHourTable.on("rowMoved", function(row){

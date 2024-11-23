@@ -16,6 +16,9 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#sectionTabs").is(':visible')) {
+        function status(cell, formatterParams){
+            return cell.getRow().getData("data").status.toUpperCase();
+        }
         // Menuitems
         function link(cell, formatterParams){
             var id = cell.getValue();
@@ -62,7 +65,7 @@ document.addEventListener("turbo:load", () => {
                 {title:"Resets At", responsive:5, field:"inventory.resethour", hozAlign:"right", headerHozAlign:"right" },
                ],
            },
-          {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
+          {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ]
         });
         menuItemTable.on("rowMoved", function(row){

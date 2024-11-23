@@ -11,6 +11,9 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#restaurantTabs").is(':visible')) {
+        function status(cell, formatterParams){
+            return cell.getRow().getData("data").status.toUpperCase();
+        }
         function link(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();
@@ -45,7 +48,7 @@ document.addEventListener("turbo:load", () => {
                 precision:2,
             }
            },
-           { title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
+           { title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ]
         });
         restaurantTaxTable.on("rowMoved", function(row){

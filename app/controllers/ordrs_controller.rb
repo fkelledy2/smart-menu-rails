@@ -7,9 +7,9 @@ class OrdrsController < ApplicationController
     if current_user
         if params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-            @ordrs = Ordr.joins(:restaurant).where(restaurant_id: @restaurant.id, status: [0, 10, 20]).all
+            @ordrs = Ordr.joins(:restaurant).where(restaurant_id: @restaurant.id).all
         else
-            @ordrs = Ordr.joins(:restaurant).where(restaurant: {user: current_user}, status: [0, 10, 20]).all
+            @ordrs = Ordr.joins(:restaurant).where(restaurant: {user: current_user}).all
         end
 
         for @ordr in @ordrs do

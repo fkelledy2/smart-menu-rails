@@ -1,6 +1,9 @@
 document.addEventListener("turbo:load", () => {
     if ($("#size-table").is(':visible')) {
         // Sizes
+        function status(cell, formatterParams){
+            return cell.getRow().getData("data").status.toUpperCase();
+        }
         function link(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();
@@ -28,7 +31,7 @@ document.addEventListener("turbo:load", () => {
            { title:"", field:"sequence", visible:false, formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
            {title:"Size", field:"id", responsive:0, formatter:link, hozAlign:"left"},
            {title:"Name", field:"name", responsive:0 },
-           {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
+           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         sizeTable.on("rowMoved", function(row){

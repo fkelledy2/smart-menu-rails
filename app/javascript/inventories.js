@@ -6,6 +6,9 @@
     }
 
     if ($("#sectionTabs").is(':visible')) {
+        function status(cell, formatterParams){
+            return cell.getRow().getData("data").status.toUpperCase();
+        }
         // Menuitems
         function link(cell, formatterParams){
            var id = cell.getValue();
@@ -35,7 +38,7 @@
             {title:"Starting Inventory", field:"startinginventory", responsive:0, hozAlign:"right", headerHozAlign:"right"},
             {title:"Current Inventory", field:"currentinventory", responsive:0, hozAlign:"right", headerHozAlign:"right" },
             {title:"Reset Hour", field:"resethour", responsive:3, hozAlign:"right", headerHozAlign:"right" },
-            {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
+            {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         inventoryTable.on("rowMoved", function(row){
