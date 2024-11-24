@@ -82,7 +82,7 @@
           <span style="position:relative;top:5px!important;margin-top:5px" class="float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
         </div>
       </div>
-      <%= image_tag menu.image_url, :class => "img-fluid" if restaurant.image %>
+      <%= image_tag restaurant.image_url, :class => "img-fluid" if restaurant.image %>
     </div>
   </div>
 
