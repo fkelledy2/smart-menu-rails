@@ -12,15 +12,15 @@
                         <div class="col-7">
                             <h2>
                                 <%= @menu.restaurant.name %>
-                                <% if current_user %>
-                                    <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-outline-secondary' do %>
-                                        <i class="bi bi-pencil-fill"></i>
-                                    <% end %>
-                                <% end %>
                             </h2>
                         </div>
                         <div class="col-5">
                             <span class="float-end">
+                                <% if current_user %>
+                                    <%= link_to edit_menu_path(@menu), class: 'btn btn-dark' do %>
+                                        <i class="bi bi-pencil-fill"></i>
+                                    <% end %>
+                                <% end %>
                                 <% if @ordrparticipant && @ordrparticipant.name == nil %>
                                     <span id="addYourNameSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="left" title="Add your name">
                                         <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">

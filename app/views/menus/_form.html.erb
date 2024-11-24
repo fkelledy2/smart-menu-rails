@@ -4,21 +4,22 @@
     </div>
     <div class="col-sm-9">
         <div class="row">
-            <div class="col-sm-6">
-                <h4><%=t(".details")%></h4>
-            </div>
-            <div class="col-sm-6">
-                <span class="float-end">
-                <div style="top:-7px" class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-dark">
-                            <%= link_to menu_path(@menu), class: 'text-white text-decoration-none link-light' do %>
-                                <%=t(".preview")%> <i class="bi bi-eye-fill"></i>
-                            <% end %>
-                        </button>
+            <div class="col-sm-12">
+                <h4>
+                    <%=t(".details")%>
+                    <% if menu.id %>
+                    <span class="float-end">
+                    <div style="top:-7px" class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-dark">
+                                <%= link_to menu_path(@menu), class: 'text-white text-decoration-none link-light' do %>
+                                    <i class="bi bi-eye-fill"></i>
+                                <% end %>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                </span>
+                    <% end %>
+                </h4>
             </div>
         </div>
     </div>
