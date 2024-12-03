@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<ul class="nav nav-tabs" id="menuTabs" role="tablist">
+<ul class="nav nav-tabs overflow-auto flex-nowrap" id="menuTabs" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark">
       <%= link_to edit_restaurant_path(@menu.restaurant), class: "link-dark" do %>
@@ -31,6 +31,7 @@
     <button class="nav-link link-dark" id="menuavailability-tab" data-bs-toggle="tab" data-bs-target="#menuavailability" type="button" role="tab" aria-controls="menuavailabilityConfig" aria-selected="false">Availabilites</button>
   </li>
 </ul>
+
 <div class="tab-content" id="menuConfig">
   <div class="tab-pane fade show active" id="menu" role="tabpanel" aria-labelledby="home-tab">
     <p>

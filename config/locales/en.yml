@@ -33,7 +33,7 @@ en:
       restaurants: "Restaurants"
       employees: "Employees"
       taxes: "Taxes"
-      openingHours: "Opening Hours"
+      openingHours: "Openings"
       menus: "Menus"
       menuSections: "Menu Sections"
       menuItems: "Menu Items"
@@ -74,7 +74,7 @@ en:
       role: "Role"
       id: "ID"
     showOpeningHours:
-      openingHours: "Opening Hours"
+      openingHours: "Openings"
       openingHour: "Opening Hour"
       dayOfWeek: "Day Of Week"
       opening: "Opening Time"
@@ -186,16 +186,16 @@ en:
 
   restaurantavailabilities:
     index:
-      restaurantavailabilities: "Opening Hours"
-      restaurantavailability: "Opening Hours"
+      restaurantavailabilities: "Openings"
+      restaurantavailability: "Openings"
       activate: "Open"
       deactivate: "Close"
     show:
-      restaurantavailability: "View Opening Hours"
+      restaurantavailability: "View Openings"
     edit:
-      restaurantavailability: "Edit Opening Hours"
+      restaurantavailability: "Edit Openings"
     new:
-      restaurantavailability: "New Opening Hours"
+      restaurantavailability: "New Openings"
       cancel: "Cancel"
     form:
       save: "Save"
