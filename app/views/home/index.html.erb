@@ -1,14 +1,36 @@
 <% if current_user %>
     <h1>Landing Page</h1>
 <% else %>
-
-  <div class="container px-1 py-2">
-    <div class="p-5 mb-4 bg-light rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Menus, only smarter</h1>
-        <p class="col-md-8 fs-4">Discover the future of dining with our seamless digital menu ordering system. Elevate your service and enhance your customer's experience through menus which are, simply smarter!</p>
-        <a href="#contact_us" class="btn btn-primary btn-lg" type="button">Contact us</a>
+  <div id="cta-table" class="container px-1 py-2" id="hanging-icons">
+    <div id="heroCarouselAutoplaying" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Menus, only smarter</h1>
+            <p class="col-md-8 fs-4">
+                Discover the future of dining with our seamless digital menu ordering system. Elevate your service and enhance your customer's experience through menus which are, simply smarter!
+            </p>
+            <a href="#contact_us" class="btn btn-primary btn-lg" type="button">Contact Us</a>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Restaurants, optimised</h1>
+            <p class="col-md-8 fs-4">
+                Achieve more, with less. Adding smart menus and smart ordering, frees your staff to focus their precious time on your precious customers.
+            </p>
+            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-danger btn-lg" %>
+          </div>
+        </div>
       </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#heroCarouselAutoplaying" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#heroCarouselAutoplaying" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
     </div>
   </div>
 
@@ -21,7 +43,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis">Contactless</h3>
-          <p style='text-align:justify;min-height:120px;'>In a world where safety is paramount, our digital menus offer a fully contactless experience. Customers simply scan with their smartphones to browse, order, and pay reducing physical contact while promoting a safer dining environment.</p>
+          <p style='min-height:120px;'>In a world where safety is paramount, our digital menus offer a fully contactless experience. Customers simply scan with their smartphones to browse, order, and pay reducing physical contact while promoting a safer dining environment.</p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -30,7 +52,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis">Effortless</h3>
-          <p style='text-align:justify;min-height:120px;'>Say goodbye to outdated, easily damaged menus. Digital menus streamline the ordering process, allowing customers to view the menu and place orders at their own pace, minimizing wait times for both guests and staff.</p>
+          <p style='min-height:120px;'>Say goodbye to outdated, easily damaged menus. Digital menus streamline the ordering process, allowing customers to view the menu and place orders at their own pace, minimizing wait times for both guests and staff.</p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -39,7 +61,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis">Accurate</h3>
-          <p style='text-align:justify;min-height:120px;'>With digital ordering, customers can select items directly from the digital menu, helping reduce miscommunication and errors in orders enhancing satisfaction on both sides.</p>
+          <p style='min-height:120px;'>With digital ordering, customers can select items directly from the digital menu, helping reduce miscommunication and errors in orders enhancing satisfaction on both sides.</p>
         </div>
       </div>
 
@@ -49,7 +71,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis">Engaging</h3>
-          <p style='text-align:justify;min-height:120px;'>Our interactive digital menus come alive with vibrant images, item descriptions, and tailored recommendations. Upsell effortlessly with targeted suggestions and promotions, increasing customer spend and satisfaction.</p>
+          <p style='min-height:120px;'>Our interactive digital menus come alive with vibrant images, item descriptions, and tailored recommendations. Upsell effortlessly with targeted suggestions and promotions, increasing customer spend and satisfaction.</p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -58,7 +80,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis">Environmental</h3>
-          <p style='text-align:justify;min-height:120px;'>Reduce paper waste and embrace sustainability. By eliminating printed menus, digital ordering supports your eco-friendly goals while providing a modern dining experience.</p>
+          <p style='min-height:120px;'>Reduce paper waste and embrace sustainability. By eliminating printed menus, digital ordering supports your eco-friendly goals while providing a modern dining experience.</p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -67,7 +89,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis">Insightful</h3>
-          <p style='text-align:justify;min-height:120px;'>Gain valuable insights into your customers' preferences. Our system gathers data on ordering patterns, allowing you to tailor your offerings and improve service based on real customer insights.</p>
+          <p style='min-height:120px;'>Gain valuable insights into your customers' preferences. Our system gathers data on ordering patterns, allowing you to tailor your offerings and improve service based on real customer insights.</p>
         </div>
       </div>
     </div>
@@ -122,7 +144,7 @@
     </div>
   </div>
 
-  <div id="metrics-table" class="container px-1 py-2" id="hanging-icons">
+  <div id="testimonials" class="container px-1 py-2" id="hanging-icons">
     <h2 class="pb-2 border-bottom">Testimonials</h2>
     <p style='text-align:justify;'>A few words from our happy clients:</p>
     <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
