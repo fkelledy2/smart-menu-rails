@@ -22,14 +22,18 @@
   <head>
     <%= render 'shared/head' %>
   </head>
-  <body class="d-flex flex-column h-100">
-    <main class="flex-shrink-0">
-      <%= render 'shared/navbar' %>
-      <div class="container-fluid mx-auto">
-            <div style="height:5px"></div>
-            <%= yield %>
+  <body class="d-flex flex-column min-vh-100">
+    <div style=' display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;'>
+      <div class="container-fluid">
+        <main class="flex-wrapper">
+          <%= render 'shared/navbar' %>
+          <div class="container-fluid mx-auto">
+                <div style="height:5px"></div>
+                <%= yield %>
+          </div>
+        </main>
       </div>
-    </main>
-    <%= render 'shared/footer' %>
+      <%= render 'shared/footer' %>
+    </div>
   </body>
 </html>

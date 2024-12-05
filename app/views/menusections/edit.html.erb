@@ -38,14 +38,15 @@
   </li>
 </ul>
 
-<div class="tab-content" id="sectionConfig">
-  <div class="tab-pane fade show active" id="section" role="tabpanel" aria-labelledby="home-tab">
-    <p>
-    <div class="row">
-      <div class="col-sm-11">
-        <%= render 'form', menusection: @menusection %>  </div>
+<div style="position:relative;top:-43px;">
+  <div class="tab-content" id="sectionConfig">
+      <p>
+      <div class="tab-pane fade show active" id="section" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row">
+          <div class="col-sm-11">
+            <%= render 'form', menusection: @menusection %>
+          </div>
       </div>
-    </div>
   </div>
   <div class="tab-content" id="menuitemConfig">
       <div class="tab-pane fade" id="menuitem" role="tabpanel" aria-labelledby="menuitem-tab">
@@ -58,7 +59,6 @@
   </div>
   <div class="tab-content" id="inventoryConfig">
       <div class="tab-pane fade" id="inventory" role="tabpanel" aria-labelledby="inventory-tab">
-        <p>
         <div class="row">
           <div class="col-sm-12">
             <%= render 'showInventories', menusection: @menusection, edit: false %>
