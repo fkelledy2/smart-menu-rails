@@ -82,10 +82,11 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
-    document.getElementById("generate-restaurant-image").addEventListener("click", function(){
-        alert('down the Witches Road!');
-    });
-
+    if ($("#generate-restaurant-image").is(':visible')) {
+        document.getElementById("generate-restaurant-image").addEventListener("click", function(){
+            alert('down the Witches Road!');
+        });
+    }
     if ($("#restaurant-table").is(':visible')) {
         // Restaurants
         function status(cell, formatterParams){
