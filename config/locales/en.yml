@@ -109,6 +109,7 @@ en:
       delete: "Delete"
       sure: "Are you sure?"
       errors: "Errors"
+      generateImage: "Generate Image"
 
   employees:
     index:

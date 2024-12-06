@@ -82,6 +82,10 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
+    document.getElementById("generate-restaurant-image").addEventListener("click", function(){
+        alert('down the Witches Road!');
+    });
+
     if ($("#restaurant-table").is(':visible')) {
         // Restaurants
         function status(cell, formatterParams){
@@ -135,7 +139,6 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-
         document.getElementById("deactivate-restaurant").addEventListener("click", function(){
             const rows = restaurantTable.getSelectedData();
             for (let i = 0; i < rows.length; i++) {
@@ -148,6 +151,7 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
+
         function patch( url, body ) {
                 fetch(url, {
                     method: 'PATCH',
