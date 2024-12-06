@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_17_141328) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_06_162715) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -90,6 +90,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_17_141328) do
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
+  create_table "genimages", force: :cascade do |t|
+    t.text "image_data"
+    t.string "name"
+    t.text "description"
+    t.bigint "restaurant_id", null: false
+    t.bigint "menu_id"
+    t.bigint "menusection_id"
+    t.bigint "menuitem_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id"], name: "index_genimages_on_menu_id"
+    t.index ["menuitem_id"], name: "index_genimages_on_menuitem_id"
+    t.index ["menusection_id"], name: "index_genimages_on_menusection_id"
+    t.index ["restaurant_id"], name: "index_genimages_on_restaurant_id"
   end
 
   create_table "ingredients", force: :cascade do |t|
@@ -458,6 +474,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_17_141328) do
   add_foreign_key "allergyns", "restaurants"
   add_foreign_key "employees", "restaurants"
   add_foreign_key "employees", "users"
+  add_foreign_key "genimages", "menuitems"
+  add_foreign_key "genimages", "menus"
+  add_foreign_key "genimages", "menusections"
+  add_foreign_key "genimages", "restaurants"
   add_foreign_key "inventories", "menuitems"
   add_foreign_key "menuavailabilities", "menus"
   add_foreign_key "menuitem_allergyn_mappings", "allergyns"

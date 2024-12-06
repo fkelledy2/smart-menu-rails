@@ -2,6 +2,7 @@ class Menusection < ApplicationRecord
   include ImageUploader::Attachment(:image)
   belongs_to :menu
   has_many :menuitems
+  has_one :genimage, dependent: :destroy
 
   enum status: {
     inactive: 0,

@@ -97,6 +97,17 @@ class MenuitemsController < ApplicationController
                 @menuitem = Menuitem.find(params[:id])
                 if( @menuitem == nil or @menuitem.menusection.menu.restaurant.user != current_user )
                     redirect_to home_url
+                else
+                    if( @menuitem.genimage == nil)
+                        @genimage = Genimage.new
+                        @genimage.restaurant = @menuitem.menusection.menu.restaurant
+                        @genimage.menu = @menuitem.menusection.menu
+                        @genimage.menusection = @menuitem.menusection
+                        @genimage.menuitem = @menuitem
+                        @genimage.created_at = Date.current
+                        @genimage.updated_at = Date.current
+                        @genimage.save
+                    end
                 end
             else
                 redirect_to root_url

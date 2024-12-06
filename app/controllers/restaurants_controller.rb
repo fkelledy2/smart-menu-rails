@@ -58,17 +58,11 @@ class RestaurantsController < ApplicationController
 
   # PATCH/PUT /restaurants/1 or /restaurants/1.json
   def update
-    puts '111'
-    puts params[:image]
-    puts '222'
-    puts params[:image_data]
-    puts '333'
     if current_user
         respond_to do |format|
-
           if @restaurant.update(restaurant_params)
-            format.html { redirect_to restaurants_path(@restaurant), notice: "Restaurant was successfully updated." }
-            format.json { render :show, status: :ok, location: @restaurant }
+            format.html { redirect_to edit_restaurant_path(@restaurant), notice: "Restaurant was successfully updated." }
+            format.json { render :edit, status: :ok, location: @restaurant }
           else
             format.html { render :edit, status: :unprocessable_entity }
             format.json { render json: @restaurant.errors, status: :unprocessable_entity }
@@ -104,6 +98,14 @@ class RestaurantsController < ApplicationController
                 end
                 if( @restaurant == nil or @restaurant.user != current_user )
                     redirect_to home_url
+                else
+                    if( @restaurant.genimage == nil)
+                        @genimage = Genimage.new
+                        @genimage.restaurant = @restaurant
+                        @genimage.created_at = Date.current
+                        @genimage.updated_at = Date.current
+                        @genimage.save
+                    end
                 end
             else
                 if params[:restaurant_id]

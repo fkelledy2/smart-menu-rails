@@ -9,6 +9,7 @@ class Restaurant < ApplicationRecord
   has_many :restaurantavailabilities, dependent: :delete_all
   has_many :menusections, through: :menus
   has_many :menuavailabilities, through: :menus
+  has_one :genimage, dependent: :destroy
 
   enum status: {
     inactive: 0,

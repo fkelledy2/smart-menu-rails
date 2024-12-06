@@ -4,6 +4,7 @@ class Menu < ApplicationRecord
   has_many :menusections
   has_many :menuavailabilities
   has_many :menuitems
+  has_one :genimage, dependent: :destroy
 
   enum status: {
     inactive: 0,

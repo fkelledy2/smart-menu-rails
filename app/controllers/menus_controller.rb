@@ -150,6 +150,15 @@ class MenusController < ApplicationController
                 end
                 if( @menu == nil or @menu.restaurant.user != current_user )
                     redirect_to home_url
+                else
+                    if( @menu.genimage == nil)
+                        @genimage = Genimage.new
+                        @genimage.restaurant = @menu.restaurant
+                        @genimage.menu = @menu
+                        @genimage.created_at = Date.current
+                        @genimage.updated_at = Date.current
+                        @genimage.save
+                    end
                 end
             else
                 if params[:menu_id]

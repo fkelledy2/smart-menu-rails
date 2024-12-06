@@ -100,6 +100,16 @@ class MenusectionsController < ApplicationController
                 @menusection = Menusection.find(params[:id])
                 if( @menusection == nil or @menusection.menu.restaurant.user != current_user )
                     redirect_to home_url
+                else
+                    if( @menusection.genimage == nil)
+                        @genimage = Genimage.new
+                        @genimage.restaurant = @menusection.menu.restaurant
+                        @genimage.menu = @menusection.menu
+                        @genimage.menusection = @menusection
+                        @genimage.created_at = Date.current
+                        @genimage.updated_at = Date.current
+                        @genimage.save
+                    end
                 end
             else
                 redirect_to root_url

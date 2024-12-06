@@ -15,6 +15,7 @@ class Menuitem < ApplicationRecord
   has_many :ingredients, through: :menuitem_ingredient_mappings
 
   has_one :inventory, dependent: :destroy
+  has_one :genimage, dependent: :destroy
 
   enum status: {
     inactive: 0,
