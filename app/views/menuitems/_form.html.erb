@@ -33,6 +33,15 @@
     </div>
   </div>
   <div style='height:4px'></div>
+
+  <div class="form-group row">
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-9">
+        <p>
+        <h4><%=t(".imageSettings")%></h4>
+    </div>
+  </div>
   <div class="form-group row">
     <div class="col-sm-3">
       <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %> : </span>
@@ -44,12 +53,44 @@
           <%= form.file_field :image, class: 'form-control' %>
         </div>
         <div class="col-sm-2">
-          <span style="margin-top:5px" class="float-md-end">Delete: <%= form.check_box :remove_image %></span>
+          <span style="position:relative;top:5px!important;margin-top:5px" class="float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
         </div>
       </div>
       <%= image_tag menuitem.image_url, :class => "img-fluid" if menuitem.image %>
     </div>
   </div>
+
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <div class="col-sm-3">
+        <span class="float-md-end"><%= form.label :genid, class: 'col-form-label' %> :</span>
+    </div>
+    <div class="col-sm-9">
+      <div class="row">
+        <div class="col-sm-10">
+          <%= form.text_field :gen_image_theme, class: 'form-control' %>
+        </div>
+        <div class="col-sm-2">
+          <div class="float-end btn-group" role="group" aria-label="Button group with nested dropdown">
+            <div class="btn-group" role="group">
+              <button id="menuitem-image-actions" type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Actions
+              </button>
+              <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="allergyn-actions">
+                <li>
+                <span class="float-end">
+                <a id="generate-menuitem-image" class="dropdown-item" href="#"><%=t(".generateImage")%></a>
+                </span>
+                </li>
+             </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <div style='height:4px'></div>
   <div class="form-group row">
     <div class="col-sm-3">

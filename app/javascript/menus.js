@@ -239,5 +239,9 @@ document.addEventListener("turbo:load", () => {
                 });
         }
     }
-
+    if (document.getElementById("generate-menu-image") != null) {
+        document.getElementById("generate-menu-image").addEventListener("click", function(){
+            alert('Menu: Down the Witches Road!');
+        });
+    }
 })

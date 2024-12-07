@@ -11,6 +11,15 @@ class Menu < ApplicationRecord
     active: 1,
     archived: 2
   }
+
+  def gen_image_theme
+      if( genimage )
+          genimage.id
+      else
+          'x'
+      end
+  end
+
   validates :name, :presence => true
   validates :restaurant, :presence => true
   validates :status, :presence => true

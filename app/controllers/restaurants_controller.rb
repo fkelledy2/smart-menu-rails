@@ -44,6 +44,13 @@ class RestaurantsController < ApplicationController
         @restaurant = Restaurant.new(restaurant_params)
         respond_to do |format|
           if @restaurant.save
+            if( @restaurant.genimage == nil)
+                @genimage = Genimage.new
+                @genimage.restaurant = @restaurant
+                @genimage.created_at = DateTime.current
+                @restaurant.genimage.updated_at = DateTime.current
+                @restaurant.genimage.save
+            end
             format.html { redirect_to restaurants_path, notice: "Restaurant was successfully updated." }
             format.json { render :show, status: :created, location: @restaurant }
           else
@@ -61,6 +68,13 @@ class RestaurantsController < ApplicationController
     if current_user
         respond_to do |format|
           if @restaurant.update(restaurant_params)
+            if( @restaurant.genimage == nil)
+                @genimage = Genimage.new
+                @genimage.restaurant = @restaurant
+                @genimage.created_at = DateTime.current
+                @restaurant.genimage.updated_at = DateTime.current
+                @restaurant.genimage.save
+            end
             format.html { redirect_to edit_restaurant_path(@restaurant), notice: "Restaurant was successfully updated." }
             format.json { render :edit, status: :ok, location: @restaurant }
           else
@@ -98,14 +112,6 @@ class RestaurantsController < ApplicationController
                 end
                 if( @restaurant == nil or @restaurant.user != current_user )
                     redirect_to home_url
-                else
-                    if( @restaurant.genimage == nil)
-                        @genimage = Genimage.new
-                        @genimage.restaurant = @restaurant
-                        @genimage.created_at = Date.current
-                        @genimage.updated_at = Date.current
-                        @genimage.save
-                    end
                 end
             else
                 if params[:restaurant_id]

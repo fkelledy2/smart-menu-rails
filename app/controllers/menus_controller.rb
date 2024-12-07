@@ -103,6 +103,14 @@ class MenusController < ApplicationController
     @menu = Menu.new(menu_params)
     respond_to do |format|
       if @menu.save
+        if( @menu.genimage == nil)
+            @genimage = Genimage.new
+            @genimage.restaurant = @menu.restaurant
+            @genimage.menu = @menu
+            @genimage.created_at = DateTime.current
+            @genimage.updated_at = DateTime.current
+            @genimage.save
+        end
         format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully created." }
         format.json { render :show, status: :created, location: @menu }
       else
@@ -116,6 +124,14 @@ class MenusController < ApplicationController
   def update
     respond_to do |format|
       if @menu.update(menu_params)
+        if( @menu.genimage == nil)
+            @genimage = Genimage.new
+            @genimage.restaurant = @menu.restaurant
+            @genimage.menu = @menu
+            @genimage.created_at = DateTime.current
+            @genimage.updated_at = DateTime.current
+            @genimage.save
+        end
         format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully updated." }
         format.json { render :show, status: :ok, location: @menu }
       else
@@ -150,15 +166,6 @@ class MenusController < ApplicationController
                 end
                 if( @menu == nil or @menu.restaurant.user != current_user )
                     redirect_to home_url
-                else
-                    if( @menu.genimage == nil)
-                        @genimage = Genimage.new
-                        @genimage.restaurant = @menu.restaurant
-                        @genimage.menu = @menu
-                        @genimage.created_at = Date.current
-                        @genimage.updated_at = Date.current
-                        @genimage.save
-                    end
                 end
             else
                 if params[:menu_id]

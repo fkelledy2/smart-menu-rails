@@ -22,6 +22,13 @@ class Menuitem < ApplicationRecord
     active: 1,
     archived: 2
   }
+  def gen_image_theme
+      if( genimage )
+          genimage.id
+      else
+          'x'
+      end
+  end
   validates :inventory, :presence => false
   validates :name, :presence => true
   validates :menusection, :presence => true

@@ -46,6 +46,16 @@ class MenuitemsController < ApplicationController
         @menuitem = Menuitem.new(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: []))
         respond_to do |format|
           if @menuitem.save
+            if( @menuitem.genimage == nil)
+                @genimage = Genimage.new
+                @genimage.restaurant = @menuitem.menusection.menu.restaurant
+                @genimage.menu = @menuitem.menusection.menu
+                @genimage.menusection = @menuitem.menusection
+                @genimage.menuitem = @menuitem
+                @genimage.created_at = DateTime.current
+                @genimage.updated_at = DateTime.current
+                @genimage.save
+            end
             format.html { redirect_to menuitem_url(@menuitem), notice: "Menuitem was successfully created." }
             format.json { render :show, status: :created, location: @menuitem }
           else
@@ -64,6 +74,16 @@ class MenuitemsController < ApplicationController
         respond_to do |format|
           @menuitem = Menuitem.find(params[:id])
           if @menuitem.update(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: []))
+            if( @menuitem.genimage == nil)
+                @genimage = Genimage.new
+                @genimage.restaurant = @menuitem.menusection.menu.restaurant
+                @genimage.menu = @menuitem.menusection.menu
+                @genimage.menusection = @menuitem.menusection
+                @genimage.menuitem = @menuitem
+                @genimage.created_at = DateTime.current
+                @genimage.updated_at = DateTime.current
+                @genimage.save
+            end
             format.html { redirect_to edit_menusection_path(@menuitem.menusection), notice: "Menuitem was successfully updated." }
             format.json { render :show, status: :ok, location: @menuitem }
           else
@@ -97,17 +117,6 @@ class MenuitemsController < ApplicationController
                 @menuitem = Menuitem.find(params[:id])
                 if( @menuitem == nil or @menuitem.menusection.menu.restaurant.user != current_user )
                     redirect_to home_url
-                else
-                    if( @menuitem.genimage == nil)
-                        @genimage = Genimage.new
-                        @genimage.restaurant = @menuitem.menusection.menu.restaurant
-                        @genimage.menu = @menuitem.menusection.menu
-                        @genimage.menusection = @menuitem.menusection
-                        @genimage.menuitem = @menuitem
-                        @genimage.created_at = Date.current
-                        @genimage.updated_at = Date.current
-                        @genimage.save
-                    end
                 end
             else
                 redirect_to root_url

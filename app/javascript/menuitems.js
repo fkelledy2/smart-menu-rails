@@ -129,4 +129,9 @@ document.addEventListener("turbo:load", () => {
             });
         }
     }
+    if (document.getElementById("generate-menuitem-image") != null) {
+        document.getElementById("generate-menuitem-image").addEventListener("click", function(){
+            alert('MenuItem: Down the Witches Road!');
+        });
+    }
 })

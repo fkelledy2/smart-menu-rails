@@ -17,6 +17,14 @@ class Restaurant < ApplicationRecord
     archived: 2
   }
 
+  def gen_image_theme
+      if( genimage )
+          genimage.id
+      else
+          'x'
+      end
+  end
+
   def total_capacity
     tablesettings.map(&:capacity).sum
   end

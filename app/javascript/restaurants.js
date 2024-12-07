@@ -82,11 +82,6 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
-    if ($("#generate-restaurant-image").is(':visible')) {
-        document.getElementById("generate-restaurant-image").addEventListener("click", function(){
-            alert('down the Witches Road!');
-        });
-    }
     if ($("#restaurant-table").is(':visible')) {
         // Restaurants
         function status(cell, formatterParams){
@@ -163,5 +158,10 @@ document.addEventListener("turbo:load", () => {
                     body: JSON.stringify(body)
                 });
         }
+    }
+    if (document.getElementById("generate-restaurant-image") != null) {
+        document.getElementById("generate-restaurant-image").addEventListener("click", function(){
+            alert('Restaurant: Down the Witches Road!');
+        });
     }
 })
