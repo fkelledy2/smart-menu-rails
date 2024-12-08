@@ -1,0 +1,2 @@
+module GenimagesHelper
+end

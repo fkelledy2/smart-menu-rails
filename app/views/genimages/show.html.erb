@@ -1,0 +1,26 @@
+<div class="page-header">
+  <%= link_to genimages_path, class: 'btn btn-default' do %>
+    All Genimages
+  <% end %>
+  <%= link_to edit_genimage_path(@genimage), class: 'btn btn-primary' do %>
+    Edit
+  <% end %>
+  <h1>Show genimage</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Image data:</dt>
+  <dd><%= @genimage.image_data %></dd>
+  <dt>Name:</dt>
+  <dd><%= @genimage.name %></dd>
+  <dt>Description:</dt>
+  <dd><%= @genimage.description %></dd>
+  <dt>Restaurant:</dt>
+  <dd><%= @genimage.restaurant %></dd>
+  <dt>Menu:</dt>
+  <dd><%= @genimage.menu %></dd>
+  <dt>Menusection:</dt>
+  <dd><%= @genimage.menusection %></dd>
+  <dt>Menuitem:</dt>
+  <dd><%= @genimage.menuitem %></dd>
+</dl>

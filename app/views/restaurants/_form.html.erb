@@ -104,9 +104,9 @@
               </button>
               <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="allergyn-actions">
                 <li>
-                <span class="float-end">
-                <a id="generate-restaurant-image" class="dropdown-item" href="#"><%=t(".generateImage")%></a>
-                </span>
+                    <span class="float-end">
+                        <%= link_to t(".generateImage"), genimage_path(restaurant.genimage.id, genimage: { id: restaurant.genimage.id }), method: 'patch', class: 'dropdown-item' %>
+                    </span>
                 </li>
              </ul>
             </div>

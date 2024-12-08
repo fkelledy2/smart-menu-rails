@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :genimages
   resources :metrics
   resources :tips
   resources :ordractions

@@ -1,0 +1,64 @@
+<%= form_with(model: genimage) do |form| %>
+  <% if genimage.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(genimage.errors.count, "error") %> prohibited this genimage from being saved:</h2>
+
+      <ul>
+      <% genimage.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :image_data, class: 'form-label' %>
+      <%= form.text_area :image_data, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :name, class: 'form-label' %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :description, class: 'form-label' %>
+      <%= form.text_area :description, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :restaurant_id, class: 'form-label' %>
+      <%= form.text_field :restaurant_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :menu_id, class: 'form-label' %>
+      <%= form.text_field :menu_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :menusection_id, class: 'form-label' %>
+      <%= form.text_field :menusection_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :menuitem_id, class: 'form-label' %>
+      <%= form.text_field :menuitem_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if genimage.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', genimage, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if genimage.persisted? %>
+      <%= link_to "Cancel", genimage, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", genimages_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

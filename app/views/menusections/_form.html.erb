@@ -69,9 +69,9 @@
               </button>
               <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="allergyn-actions">
                 <li>
-                <span class="float-end">
-                <a id="generate-menusection-image" class="dropdown-item" href="#"><%=t(".generateImage")%></a>
-                </span>
+                    <span class="float-end">
+                        <%= link_to t(".generateImage"), genimage_path(menusection.genimage.id, genimage: { id: menusection.genimage.id }), method: 'patch', class: 'dropdown-item' %>
+                    </span>
                 </li>
              </ul>
             </div>

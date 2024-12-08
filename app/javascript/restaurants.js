@@ -57,27 +57,27 @@ document.addEventListener("turbo:load", () => {
         getPillId();
     }
 
-    if ($("#restaurant_status").is(':visible')) {
+    if (document.getElementById("restaurant_status") != null) {
       new TomSelect("#restaurant_status",{
       });
     }
 
-    if ($("#restaurant_displayImages").is(':visible')) {
+    if (document.getElementById("restaurant_displayImages") != null) {
       new TomSelect("#restaurant_displayImages",{
       });
     }
 
-    if ($("#restaurant_allowOrdering").is(':visible')) {
+    if (document.getElementById("restaurant_allowOrdering") != null) {
       new TomSelect("#restaurant_allowOrdering",{
       });
     }
 
-    if ($("#restaurant_inventoryTracking").is(':visible')) {
+    if (document.getElementById("restaurant_inventoryTracking") != null) {
       new TomSelect("#restaurant_inventoryTracking",{
       });
     }
 
-    if ($("#restaurant_country").is(':visible')) {
+    if (document.getElementById("restaurant_country") != null) {
       new TomSelect("#restaurant_country",{
       });
     }
@@ -147,7 +147,6 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-
         function patch( url, body ) {
                 fetch(url, {
                     method: 'PATCH',
@@ -158,10 +157,24 @@ document.addEventListener("turbo:load", () => {
                     body: JSON.stringify(body)
                 });
         }
+
     }
     if (document.getElementById("generate-restaurant-image") != null) {
         document.getElementById("generate-restaurant-image").addEventListener("click", function(){
-            alert('Restaurant: Down the Witches Road!');
+                let r = {
+                  'genimage': {
+                    'id' : $('#restaurant_genimage_id').text()
+                  }
+                };
+                fetch('/genimages/'+$('#restaurant_genimage_id').text(), {
+                    method: 'PATCH',
+                    headers:  {
+                      "Content-Type": "application/json",
+                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                    },
+                    body: JSON.stringify(r)
+                });
+            alert('patched');
         });
     }
 })
