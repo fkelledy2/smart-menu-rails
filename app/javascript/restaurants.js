@@ -157,7 +157,6 @@ document.addEventListener("turbo:load", () => {
                     body: JSON.stringify(body)
                 });
         }
-
     }
     if (document.getElementById("generate-restaurant-image") != null) {
         document.getElementById("generate-restaurant-image").addEventListener("click", function(){

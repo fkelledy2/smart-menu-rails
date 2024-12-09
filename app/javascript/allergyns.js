@@ -62,5 +62,42 @@ document.addEventListener("turbo:load", () => {
                 document.getElementById("allergyn-actions").disabled = true;
             }
         });
+
+        document.getElementById("activate-allergyn").addEventListener("click", function(){
+            const rows = allergynTable.getSelectedData();
+            for (let i = 0; i < rows.length; i++) {
+                allergynTable.updateData([{id:rows[i].id, status:'active'}]);
+                let r = {
+                  'allergyn': {
+                      'status': 'active'
+                  }
+                };
+                patch( rows[i].url, r );
+            }
+        });
+        document.getElementById("deactivate-allergyn").addEventListener("click", function(){
+            const rows = allergynTable.getSelectedData();
+            for (let i = 0; i < rows.length; i++) {
+                allergynTable.updateData([{id:rows[i].id, status:'inactive'}]);
+                let r = {
+                  'allergyn': {
+                      'status': 'inactive'
+                  }
+                };
+                patch( rows[i].url, r );
+            }
+        });
+        function patch( url, body ) {
+                fetch(url, {
+                    method: 'PATCH',
+                    headers:  {
+                      "Content-Type": "application/json",
+                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+                    },
+                    body: JSON.stringify(body)
+                });
+        }
+
+
     }
 })
