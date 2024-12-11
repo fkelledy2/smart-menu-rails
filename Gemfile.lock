@@ -148,6 +148,7 @@ GEM
       jquery-rails (~> 4.0)
     cssbundling-rails (1.4.1)
       railties (>= 6.0.0)
+    csv (3.3.0)
     currencies (0.4.2)
     currency_select (8.0.0)
       actionview (>= 7.0.0, < 8.1)
@@ -187,6 +188,10 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.0.7)
       domain_name (~> 0.5)
+    httparty (0.22.0)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     image_processing (1.13.0)
@@ -464,6 +469,7 @@ DEPENDENCIES
   debug
   devise (~> 4.9)
   friendly_id (~> 5.4)
+  httparty
   image_processing (~> 1.12, >= 1.12.1)
   importmap-rails
   jbuilder
