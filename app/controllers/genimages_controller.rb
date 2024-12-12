@@ -45,7 +45,7 @@ class GenimagesController < ApplicationController
     if current_user
         respond_to do |format|
           chatGPTclient = ChatGPT::Client.new(Rails.application.credentials.openai_api_key)
-          GenerateImageJob.perform_async(@genimage.id)
+          GenerateImageJob.perform_sync(@genimage.id)
           format.html { redirect_to edit_menusection_path(@genimage.menuitem.menusection), notice: "Menuitem was successfully updated." }
           format.json { render :show, status: :ok, location: @genimage }
         end
