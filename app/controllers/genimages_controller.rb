@@ -44,84 +44,10 @@ class GenimagesController < ApplicationController
   def update
     if current_user
         respond_to do |format|
-        chatGPTclient = ChatGPT::Client.new(Rails.application.credentials.openai_api_key)
-
-#         response = chatGPTclient.chat([
-#           { role: "user", content: "Create an image of a sunset over mountains" }
-#         ])
-#         puts response.dig("choices", 0, "message", "content")
-
-          puts 'genimage: '+@genimage.id.to_s
-          @genimage.updated_at = DateTime.current
-          if @genimage.update(genimage_params)
-              puts @genimage.to_s
-            if( @genimage.menuitem != nil )
-                puts 'menuitem: genimage'
-                response = generate_image(@genimage.menuitem.description,'512x512')
-                puts response
-                if response.success?
-                  seed = response['created']
-                  puts seed
-                  image_url = response['data'][0]['url']
-                    downloaded_image = URI.parse(image_url).open
-                    @genimage.name = seed
-                    @genimage.save
-                    @genimage.menuitem.image = downloaded_image
-                    @genimage.menuitem.save
-                else
-                    puts 'error'
-                end
-                format.html { redirect_to edit_menuitem_path(@genimage.menuitem), notice: "MenuItem: Image Refreshed." }
-            else
-                if( @genimage.menusection != nil )
-                    puts 'menusection: genimage'
-                    response = generate_image(@genimage.menusection.description, '1024x256')
-                    if response.success?
-                      image_url = response['data'][0]['url']
-                        downloaded_image = URI.parse(image_url).open
-                        @genimage.menusection.image = downloaded_image
-                        @genimage.menusection.save
-                    else
-                        puts 'error'
-                    end
-                    format.html { redirect_to edit_menusection_path(@genimage.menusection), notice: "MenuSection: Image Refreshed." }
-                else
-                    if( @genimage.menu != nil )
-                        puts 'menu: genimage'
-                        response = generate_image(@genimage.menu.description, '1024x256')
-                        if response.success?
-                          image_url = response['data'][0]['url']
-                            downloaded_image = URI.parse(image_url).open
-                            @genimage.menu.image = downloaded_image
-                            @genimage.menu.save
-                        else
-                            puts 'error'
-                        end
-                        format.html { redirect_to edit_menu_path(@genimage.menu), notice: "Menu: Image Refreshed." }
-                    else
-                        puts 'restaurant: genimage'
-                        puts @genimage.restaurant.description
-                        response = generate_image(@genimage.restaurant.description, '512x512')
-                        seed = response['created']
-                        puts seed
-                        if response.success?
-                          image_url = response['data'][0]['url']
-                            downloaded_image = URI.parse(image_url).open
-                            @genimage.restaurant.image = downloaded_image
-                            @genimage.restaurant.genid = seed
-                            @genimage.restaurant.save
-                        else
-                            puts 'error'
-                        end
-                        format.html { redirect_to edit_restaurant_path(@genimage.restaurant), notice: "Restaurant: Image Refreshed." }
-                    end
-                end
-            end
-            format.json { render :edit, status: :ok, location: @genimage }
-          else
-            format.html { render :edit, status: :unprocessable_entity }
-            format.json { render json: @genimage.errors, status: :unprocessable_entity }
-          end
+          chatGPTclient = ChatGPT::Client.new(Rails.application.credentials.openai_api_key)
+          GenerateImageJob.perform_async(@genimage.id)
+          format.html { redirect_to edit_menuitem_path(@genimage.menuitem), notice: "MenuItem: Image Refreshed." }
+          format.json { render :edit, status: :ok, location: @genimage }
         end
     else
         redirect_to root_url
