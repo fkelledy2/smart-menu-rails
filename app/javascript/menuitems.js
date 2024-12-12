@@ -46,6 +46,7 @@ document.addEventListener("turbo:load", () => {
           { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           { title:"", field:"sequence", visible:false, formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {title:"Name", field:"id", responsive:0, maxWidth: 180, formatter:link, hozAlign:"left"},
+          {title:"genimageId", visible:false, field:"genimageId"},
           {title:"Calories", field:"calories", responsive:5, hozAlign:"right", headerHozAlign:"right" },
           {title:"Price", field:"price", responsive:4, formatter:"money",  hozAlign:"right", headerHozAlign:"right",
             formatterParams:{
@@ -92,6 +93,17 @@ document.addEventListener("turbo:load", () => {
                 document.getElementById("menuitem-actions").disabled = false;
             } else {
                 document.getElementById("menuitem-actions").disabled = true;
+            }
+        });
+        document.getElementById("genimage-menuitem").addEventListener("click", function(){
+            const rows = menuItemTable.getSelectedData();
+            for (let i = 0; i < rows.length; i++) {
+                let r = {
+                    'genimage': {
+                        'id': rows[i].genimageId
+                    }
+                };
+                patch( '/genimages/'+rows[i].genimageId, r );
             }
         });
         document.getElementById("activate-menuitem").addEventListener("click", function(){

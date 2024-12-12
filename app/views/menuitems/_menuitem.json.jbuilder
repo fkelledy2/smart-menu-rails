@@ -1,4 +1,5 @@
   json.id menuitem.id
+  json.genimageId menuitem.genimage.id
   json.name menuitem.name
   json.description menuitem.description
   json.image menuitem.image
