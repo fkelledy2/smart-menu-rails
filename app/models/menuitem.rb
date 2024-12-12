@@ -22,9 +22,11 @@ class Menuitem < ApplicationRecord
     active: 1,
     archived: 2
   }
-  def gen_image_theme
+  def genImageId
       if( genimage )
           genimage.id
+      else
+        -1
       end
   end
   validates :inventory, :presence => false
