@@ -56,9 +56,14 @@
           <span style="position:relative;top:5px!important;margin-top:5px" class="float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
         </div>
       </div>
-      <%= image_tag menuitem.image_url, :class => "img-fluid" if menuitem.image %>
     </div>
   </div>
+  <div style='height:4px'></div>
+      <div class="row">
+        <div class="col-sm-12">
+          <%= image_tag menuitem.image_url, :class => "img-thumbnail rounded mx-auto d-block" if menuitem.image %>
+        </div>
+      </div>
 
   <div style='height:4px'></div>
   <div class="form-group row">

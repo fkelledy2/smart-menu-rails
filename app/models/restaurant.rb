@@ -20,8 +20,6 @@ class Restaurant < ApplicationRecord
   def gen_image_theme
       if( genimage )
           genimage.id
-      else
-          'x'
       end
   end
 

@@ -12,8 +12,6 @@ class Menusection < ApplicationRecord
   def gen_image_theme
       if( genimage )
           genimage.id
-      else
-          'x'
       end
   end
   validates :name, :presence => true

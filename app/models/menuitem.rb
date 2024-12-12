@@ -25,8 +25,6 @@ class Menuitem < ApplicationRecord
   def gen_image_theme
       if( genimage )
           genimage.id
-      else
-          'x'
       end
   end
   validates :inventory, :presence => false
