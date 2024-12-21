@@ -90,3 +90,7 @@ document.addEventListener("turbo:load", () => {
         }, 5000);
     });
 });
+
+window.fadeIn = function(obj) {
+    $(obj).fadeIn(1000);
+}
