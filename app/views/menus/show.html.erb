@@ -159,7 +159,14 @@
                         <div class="card">
                           <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
                             <% if menuitem.image %>
-                              <img class="img-thumbnail card-img-bottom" style="display:none;" onload="fadeIn(this)" src="<%= menuitem.image_url %>" alt="<%= menuitem.name %>">
+                                <div class="ratio ratio-1x1">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                      <div class="spinner-border m-5" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                      </div>
+                                    </div>
+                                  <img class="img-thumbnail card-img-bottom" style="display:none;" onload="fadeIn(this)" src="<%= menuitem.image_url %>" alt="<%= menuitem.name %>">
+                                </div>
                             <% end %>
                           <% end %>
                           <div class="card-body">
