@@ -127,7 +127,7 @@ class MenusController < ApplicationController
             user_id: current_user.id,
             event: 'menus.edit',
             properties: {
-              restaurant_id: @restaurant.id,
+              restaurant_id: @menu.restaurant.id,
               menu_id: @menu.id,
             }
         )
