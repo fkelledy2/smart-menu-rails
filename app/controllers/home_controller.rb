@@ -3,19 +3,22 @@ class HomeController < ApplicationController
 
   def index
       Analytics.track(
-          event: 'home.index'
+        anonymous_id: session[:session_id],
+        event: 'home.index'
       )
   end
 
   def terms
       Analytics.track(
-          event: 'home.terms'
+        anonymous_id: session[:session_id],
+        event: 'home.terms'
       )
   end
 
   def privacy
       Analytics.track(
-          event: 'home.privacy'
+        anonymous_id: session[:session_id],
+        event: 'home.privacy'
       )
   end
 end
