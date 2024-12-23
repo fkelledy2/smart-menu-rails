@@ -6,6 +6,10 @@ class RestaurantsController < ApplicationController
   def index
     if current_user
         @restaurants = Restaurant.where( user: current_user, archived: false)
+            Analytics.track(
+                user_id: current_user.id,
+                event: 'list.restaurant'
+            )
     else
         redirect_to root_url
     end
@@ -15,6 +19,13 @@ class RestaurantsController < ApplicationController
   def show
     if current_user
         if params[:restaurant_id] && params[:id]
+            Analytics.track(
+                user_id: current_user.id,
+                event: 'show.restaurant',
+                properties: {
+                  id: params[:restaurant_id]
+                }
+            )
         end
     else
         redirect_to root_url
@@ -33,6 +44,13 @@ class RestaurantsController < ApplicationController
   # GET /restaurants/1/edit
   def edit
     if current_user
+            Analytics.track(
+                user_id: current_user.id,
+                event: 'show.restaurant',
+                properties: {
+                  id: params[:restaurant_id]
+                }
+            )
     else
         redirect_to root_url
     end
