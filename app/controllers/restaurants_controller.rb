@@ -8,7 +8,10 @@ class RestaurantsController < ApplicationController
         @restaurants = Restaurant.where( user: current_user, archived: false)
             Analytics.track(
                 user_id: current_user.id,
-                event: 'list.restaurant'
+                event: 'restaurants.index',
+                properties: {
+                  user_name: current_user.name
+                }
             )
     else
         redirect_to root_url
@@ -21,9 +24,10 @@ class RestaurantsController < ApplicationController
         if params[:restaurant_id] && params[:id]
             Analytics.track(
                 user_id: current_user.id,
-                event: 'show.restaurant',
+                event: 'restaurants.show',
                 properties: {
-                  id: params[:restaurant_id]
+                  id: params[:id],
+                  user_name: current_user.name
                 }
             )
         end
@@ -36,6 +40,13 @@ class RestaurantsController < ApplicationController
   def new
     if current_user
         @restaurant = Restaurant.new
+            Analytics.track(
+                user_id: current_user.id,
+                event: 'restaurants.new',
+                properties: {
+                  user_name: current_user.name
+                }
+            )
     else
         redirect_to root_url
     end
@@ -46,9 +57,10 @@ class RestaurantsController < ApplicationController
     if current_user
             Analytics.track(
                 user_id: current_user.id,
-                event: 'show.restaurant',
+                event: 'restaurants.edit',
                 properties: {
-                  id: params[:restaurant_id]
+                  id: params[:id],
+                  user_name: current_user.name
                 }
             )
     else
@@ -62,6 +74,14 @@ class RestaurantsController < ApplicationController
         @restaurant = Restaurant.new(restaurant_params)
         respond_to do |format|
           if @restaurant.save
+            Analytics.track(
+                user_id: current_user.id,
+                event: 'restaurants.save',
+                properties: {
+                  id: params[:id],
+                  user_name: current_user.name
+                }
+            )
             if( @restaurant.genimage == nil)
                 @genimage = Genimage.new
                 @genimage.restaurant = @restaurant
@@ -86,6 +106,14 @@ class RestaurantsController < ApplicationController
     if current_user
         respond_to do |format|
           if @restaurant.update(restaurant_params)
+            Analytics.track(
+                user_id: current_user.id,
+                event: 'restaurants.update',
+                properties: {
+                  id: params[:id],
+                  user_name: current_user.name
+                }
+            )
             if( @restaurant.genimage == nil)
                 @genimage = Genimage.new
                 @genimage.restaurant = @restaurant
@@ -109,6 +137,14 @@ class RestaurantsController < ApplicationController
   def destroy
     if current_user
         @restaurant.update( archived: true )
+            Analytics.track(
+                user_id: current_user.id,
+                event: 'restaurants.destroy',
+                properties: {
+                  id: params[:id],
+                  user_name: current_user.name
+                }
+            )
         respond_to do |format|
           format.html { redirect_to restaurants_url, notice: "Restaurant was successfully destroyed." }
           format.json { head :no_content }
