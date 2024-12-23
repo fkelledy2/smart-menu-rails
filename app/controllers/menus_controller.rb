@@ -14,12 +14,24 @@ class MenusController < ApplicationController
         else
             @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, archived: false).order('sequence ASC').all
         end
+        Analytics.track(
+            user_id: current_user.id,
+            event: 'menus.index',
+            properties: {
+              restaurant_id: @restaurant.id,
+            }
+        )
     else
         if params[:restaurant_id]
-            puts params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
             @menus = Menu.where( restaurant: @restaurant).all
             @tablesettings = @restaurant.tablesettings
+            Analytics.track(
+                event: 'menus.index',
+                properties: {
+                  restaurant_id: @restaurant.id
+                }
+            )
         end
     end
   end
@@ -37,6 +49,13 @@ class MenusController < ApplicationController
                 redirect_to home_url
             end
         end
+        Analytics.track(
+            event: 'menus.show',
+            properties: {
+              restaurant_id: @restaurant.id,
+              menu_id: @menu.id,
+            }
+        )
         @participantsFirstTime = false
         @tablesetting = Tablesetting.find_by_id(params[:id])
         @openOrder = Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 0)
@@ -88,6 +107,13 @@ class MenusController < ApplicationController
         if params[:restaurant_id]
             @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
             @menu.restaurant = @futureParentRestaurant
+            Analytics.track(
+                user_id: current_user.id,
+                event: 'menus.new',
+                properties: {
+                  restaurant_id: @restaurant.id,
+                }
+            )
         end
     else
         redirect_to root_url
@@ -96,6 +122,18 @@ class MenusController < ApplicationController
 
   # GET /menus/1/edit
   def edit
+    if current_user
+        Analytics.track(
+            user_id: current_user.id,
+            event: 'menus.edit',
+            properties: {
+              restaurant_id: @restaurant.id,
+              menu_id: @menu.id,
+            }
+        )
+    else
+        redirect_to root_url
+    end
   end
 
   # POST /menus or /menus.json
@@ -103,6 +141,14 @@ class MenusController < ApplicationController
     @menu = Menu.new(menu_params)
     respond_to do |format|
       if @menu.save
+        Analytics.track(
+            user_id: current_user.id,
+            event: 'menus.create',
+            properties: {
+              restaurant_id: @menu.restaurant.id,
+              menu_id: @menu.id,
+            }
+        )
         if( @menu.genimage == nil)
             @genimage = Genimage.new
             @genimage.restaurant = @menu.restaurant
@@ -124,6 +170,14 @@ class MenusController < ApplicationController
   def update
     respond_to do |format|
       if @menu.update(menu_params)
+        Analytics.track(
+            user_id: current_user.id,
+            event: 'menus.update',
+            properties: {
+              restaurant_id: @menu.restaurant.id,
+              menu_id: @menu.id,
+            }
+        )
         if( @menu.genimage == nil)
             @genimage = Genimage.new
             @genimage.restaurant = @menu.restaurant
@@ -145,6 +199,14 @@ class MenusController < ApplicationController
   def destroy
     if current_user
         @menu.update( archived: true )
+        Analytics.track(
+            user_id: current_user.id,
+            event: 'menus.destroy',
+            properties: {
+              restaurant_id: @menu.restaurant.id,
+              menu_id: @menu.id,
+            }
+        )
         respond_to do |format|
           format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully deleted." }
           format.json { head :no_content }

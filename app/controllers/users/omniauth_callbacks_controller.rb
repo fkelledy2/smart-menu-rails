@@ -59,6 +59,14 @@ module Users
       else
         @user = create_user
       end
+      Analytics.identify(
+          user_id: @user.id,
+          traits: {
+            name: @user.name,
+            email: @user.email,
+            created_at: DateTime.now
+          }
+      )
     end
 
     def service_attrs

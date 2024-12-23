@@ -8,10 +8,7 @@ class RestaurantsController < ApplicationController
         @restaurants = Restaurant.where( user: current_user, archived: false)
             Analytics.track(
                 user_id: current_user.id,
-                event: 'restaurants.index',
-                properties: {
-                  user_name: current_user.name
-                }
+                event: 'restaurants.index'
             )
     else
         redirect_to root_url
@@ -26,8 +23,7 @@ class RestaurantsController < ApplicationController
                 user_id: current_user.id,
                 event: 'restaurants.show',
                 properties: {
-                  id: params[:id],
-                  user_name: current_user.name
+                  restaurant_id: params[:id]
                 }
             )
         end
@@ -42,10 +38,7 @@ class RestaurantsController < ApplicationController
         @restaurant = Restaurant.new
             Analytics.track(
                 user_id: current_user.id,
-                event: 'restaurants.new',
-                properties: {
-                  user_name: current_user.name
-                }
+                event: 'restaurants.new'
             )
     else
         redirect_to root_url
@@ -59,8 +52,7 @@ class RestaurantsController < ApplicationController
                 user_id: current_user.id,
                 event: 'restaurants.edit',
                 properties: {
-                  id: params[:id],
-                  user_name: current_user.name
+                  restaurant_id: params[:id]
                 }
             )
     else
@@ -78,8 +70,7 @@ class RestaurantsController < ApplicationController
                 user_id: current_user.id,
                 event: 'restaurants.save',
                 properties: {
-                  id: params[:id],
-                  user_name: current_user.name
+                  restaurant_id: params[:id]
                 }
             )
             if( @restaurant.genimage == nil)
@@ -110,8 +101,7 @@ class RestaurantsController < ApplicationController
                 user_id: current_user.id,
                 event: 'restaurants.update',
                 properties: {
-                  id: params[:id],
-                  user_name: current_user.name
+                  restaurant_id: params[:id]
                 }
             )
             if( @restaurant.genimage == nil)
@@ -141,8 +131,7 @@ class RestaurantsController < ApplicationController
                 user_id: current_user.id,
                 event: 'restaurants.destroy',
                 properties: {
-                  id: params[:id],
-                  user_name: current_user.name
+                  restaurant_id: params[:id]
                 }
             )
         respond_to do |format|
