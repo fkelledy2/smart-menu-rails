@@ -2,23 +2,29 @@ class HomeController < ApplicationController
   layout "marketing", :only => [ :index, :terms, :privacy ]
 
   def index
-      Analytics.track(
-        anonymous_id: session[:session_id],
-        event: 'home.index'
-      )
+      if session[:session_id]
+          Analytics.track(
+            anonymous_id: session[:session_id],
+            event: 'home.index'
+          )
+      end
   end
 
   def terms
-      Analytics.track(
-        anonymous_id: session[:session_id],
-        event: 'home.terms'
-      )
+      if session[:session_id]
+          Analytics.track(
+            anonymous_id: session[:session_id],
+            event: 'home.terms'
+          )
+      end
   end
 
   def privacy
-      Analytics.track(
-        anonymous_id: session[:session_id],
-        event: 'home.privacy'
-      )
+      if session[:session_id]
+          Analytics.track(
+            anonymous_id: session[:session_id],
+            event: 'home.privacy'
+          )
+      end
   end
 end

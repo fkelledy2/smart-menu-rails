@@ -27,14 +27,14 @@
     </div>
 
 <% else %>
-  <div id="cta-table" class="container px-1 py-2" id="hanging-icons">
+  <div id="cta-table" style='min-height:450px' class="container px-1 py-2" id="hanging-icons">
     <div id="heroCarouselAutoplaying" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
           <div class="container-fluid py-5">
             <h1 class="display-5 fw-bold">Menus, only smarter</h1>
             <p class="col-md-8 fs-4">
-                Discover the future of dining with our seamless digital menu ordering system. Elevate your service and enhance your customer's experience through menus which are, simply smarter!
+                Discover the future of dining with our seamless digital menu ordering system. Elevate your service and enhance your customers experience through menus which are, simply smarter!
             </p>
             <a href="#contact_us" class="btn btn-primary btn-lg" type="button">Contact Us</a>
           </div>
@@ -115,7 +115,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis">Insightful</h3>
-          <p style='min-height:120px;'>Gain valuable insights into your customers' preferences. Our system gathers data on ordering patterns, allowing you to tailor your offerings and improve service based on real customer insights.</p>
+          <p style='min-height:120px;'>Gain valuable insights into your customers preferences. Our system gathers data on ordering patterns, allowing you to tailor your offerings and improve service based on real customer insights.</p>
         </div>
       </div>
     </div>
@@ -229,18 +229,26 @@
   <hr>
 
   <div id="contact_us" class="container px-1 py-2" id="hanging-icons">
-    <h2 class="pb-2 border-bottom">Contact us</h2>
-    <form>
-      <div class="mb-3">
-        <label for="exampleInputEmail" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp">
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+      <div class="row">
+        <div class="col-1">
+        </div>
+        <div class="col-10">
+            <h2 class="pb-2 border-bottom">Contact us</h2>
+            <form>
+              <div class="mb-3">
+                <label for="exampleInputEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+              </div>
+              <div class="mb-3">
+                <label for="inputMessage" class="form-label">Message</label>
+                <textarea id="inputMessage" class="form-control" aria-label="Message"></textarea>
+              </div>
+              <button type="submit" class="float-end btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="col-1">
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="inputMessage" class="form-label">Message</label>
-        <textarea id="inputMessage" class="form-control" aria-label="Message"></textarea>
-      </div>
-      <button type="submit" class="float-end btn btn-primary">Submit</button>
-    </form>
   </div>
 <% end %>
