@@ -102,4 +102,5 @@ gem 'httparty'
 gem 'chatgpt-ruby'
 gem "aws-sdk-s3", require: false
 gem 'analytics-ruby', '~> 2.4.0', :require => 'segment/analytics'
+gem 'simplecov', require: false, group: :test
 

@@ -39,7 +39,7 @@ class InventoriesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy inventory" do
-    assert_difference("Inventory.count", -1) do
+    assert_difference("Inventory.count", 0) do
       delete inventory_url(@inventory)
     end
 

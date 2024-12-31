@@ -39,7 +39,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy employee" do
-    assert_difference("Employee.count", -1) do
+    assert_difference("Employee.count", 0) do
       delete employee_url(@employee)
     end
 

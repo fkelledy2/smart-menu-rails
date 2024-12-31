@@ -9,7 +9,6 @@ one:
   city: MyString
   postcode: MyString
   country: MyString
-  image: MyString
   status: 1
   capacity: 1
   user: one
@@ -23,7 +22,6 @@ two:
   city: MyString
   postcode: MyString
   country: MyString
-  image: MyString
   status: 1
   capacity: 1
   user: two

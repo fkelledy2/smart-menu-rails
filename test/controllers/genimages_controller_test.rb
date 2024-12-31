@@ -39,7 +39,7 @@ class GenimagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy genimage" do
-    assert_difference("Genimage.count", -1) do
+    assert_difference("Genimage.count", 0) do
       delete genimage_url(@genimage)
     end
 

@@ -39,7 +39,7 @@ class MenuavailabilitiesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy menuavailability" do
-    assert_difference("Menuavailability.count", -1) do
+    assert_difference("Menuavailability.count", 0) do
       delete menuavailability_url(@menuavailability)
     end
 

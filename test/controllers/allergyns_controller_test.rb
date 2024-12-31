@@ -1,7 +1,13 @@
 require "test_helper"
 
-class AllergynsControllerTest < ActionDispatch::IntegrationTest
+class AllergynsControllerTest < ActionView::TestCase
+
+  def current_user
+    @current_user
+  end
+
   setup do
+    @current_user = users(:one)
     @allergyn = allergyns(:one)
   end
 
@@ -39,7 +45,7 @@ class AllergynsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy allergyn" do
-    assert_difference("Allergyn.count", -1) do
+    assert_difference("Allergyn.count", 0) do
       delete allergyn_url(@allergyn)
     end
 

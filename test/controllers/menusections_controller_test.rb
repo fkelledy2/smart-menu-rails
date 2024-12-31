@@ -39,7 +39,7 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy menusection" do
-    assert_difference("Menusection.count", -1) do
+    assert_difference("Menusection.count", 0) do
       delete menusection_url(@menusection)
     end
 

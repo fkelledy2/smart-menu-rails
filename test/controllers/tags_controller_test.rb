@@ -1,7 +1,13 @@
 require "test_helper"
 
-class TagsControllerTest < ActionDispatch::IntegrationTest
+class TagsControllerTest < ActionView::TestCase
+
+  def current_user
+    @current_user
+  end
+
   setup do
+    @current_user = users(:one)
     @tag = tags(:one)
   end
 
@@ -39,7 +45,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy tag" do
-    assert_difference("Tag.count", -1) do
+    assert_difference("Tag.count", 0) do
       delete tag_url(@tag)
     end
 

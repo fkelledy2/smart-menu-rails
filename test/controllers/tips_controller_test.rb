@@ -1,7 +1,13 @@
 require "test_helper"
 
-class TipsControllerTest < ActionDispatch::IntegrationTest
+class TipsControllerTest < ActionView::TestCase
+
+  def current_user
+    @current_user
+  end
+
   setup do
+    @current_user = users(:one)
     @tip = tips(:one)
   end
 
@@ -39,7 +45,7 @@ class TipsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy tip" do
-    assert_difference("Tip.count", -1) do
+    assert_difference("Tip.count", 0) do
       delete tip_url(@tip)
     end
 

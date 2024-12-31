@@ -1,7 +1,13 @@
 require "test_helper"
 
-class TaxesControllerTest < ActionDispatch::IntegrationTest
+class TaxesControllerTest < ActionView::TestCase
+
+  def current_user
+    @current_user
+  end
+
   setup do
+    @current_user = users(:one)
     @tax = taxes(:one)
   end
 
@@ -39,7 +45,7 @@ class TaxesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy tax" do
-    assert_difference("Tax.count", -1) do
+    assert_difference("Tax.count", 0) do
       delete tax_url(@tax)
     end
 

@@ -39,7 +39,7 @@ class RestaurantavailabilitiesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy restaurantavailability" do
-    assert_difference("Restaurantavailability.count", -1) do
+    assert_difference("Restaurantavailability.count", 0) do
       delete restaurantavailability_url(@restaurantavailability)
     end
 

@@ -2,7 +2,6 @@
 
 one:
   sessionid: MyString
-  action: 1
   role: 1
   employee: one
   ordr: one
@@ -10,7 +9,6 @@ one:
 
 two:
   sessionid: MyString
-  action: 1
   role: 1
   employee: two
   ordr: two

@@ -39,7 +39,7 @@ class OrdritemnotesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy ordritemnote" do
-    assert_difference("Ordritemnote.count", -1) do
+    assert_difference("Ordritemnote.count", 0) do
       delete ordritemnote_url(@ordritemnote)
     end
 

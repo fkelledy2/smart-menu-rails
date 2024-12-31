@@ -1,17 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  sessionid: MyString
   action: 1
-  employee: one
   ordrparticipant: one
   ordr: one
   ordritem: one
 
 two:
-  sessionid: MyString
   action: 1
-  employee: two
   ordrparticipant: two
   ordr: two
   ordritem: two

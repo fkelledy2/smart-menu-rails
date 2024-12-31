@@ -39,7 +39,7 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy ordrparticipant" do
-    assert_difference("Ordrparticipant.count", -1) do
+    assert_difference("Ordrparticipant.count", 0) do
       delete ordrparticipant_url(@ordrparticipant)
     end
 

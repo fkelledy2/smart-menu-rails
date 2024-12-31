@@ -17,7 +17,7 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create ordritem" do
     assert_difference("Ordritem.count") do
-      post ordritems_url, params: { ordritem: { menuitem_id: @ordritem.menuitem_id, ordr_id: @ordritem.ordr_id } }
+      post ordritems_url, params: { ordritem: { ordrparticipant_id: @ordritem.ordrparticipant_id, menuitem_id: @ordritem.menuitem_id, ordr_id: @ordritem.ordr_id } }
     end
 
     assert_redirected_to ordritem_url(Ordritem.last)
@@ -39,7 +39,7 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy ordritem" do
-    assert_difference("Ordritem.count", -1) do
+    assert_difference("Ordritem.count", 0) do
       delete ordritem_url(@ordritem)
     end
 

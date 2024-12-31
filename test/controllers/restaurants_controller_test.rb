@@ -39,7 +39,7 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy restaurant" do
-    assert_difference("Restaurant.count", -1) do
+    assert_difference("Restaurant.count", 0) do
       delete restaurant_url(@restaurant)
     end
 

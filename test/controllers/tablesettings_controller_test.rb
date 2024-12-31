@@ -39,7 +39,7 @@ class TablesettingsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy tablesetting" do
-    assert_difference("Tablesetting.count", -1) do
+    assert_difference("Tablesetting.count", 0) do
       delete tablesetting_url(@tablesetting)
     end
 

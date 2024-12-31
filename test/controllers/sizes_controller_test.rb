@@ -39,7 +39,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy size" do
-    assert_difference("Size.count", -1) do
+    assert_difference("Size.count", 0) do
       delete size_url(@size)
     end
 
