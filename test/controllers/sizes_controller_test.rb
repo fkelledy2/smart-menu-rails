@@ -2,6 +2,7 @@ require "test_helper"
 
 class SizesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @size = sizes(:one)
   end
 

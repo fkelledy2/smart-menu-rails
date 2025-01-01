@@ -2,12 +2,8 @@ require "test_helper"
 
 class TaxesControllerTest < ActionView::TestCase
 
-  def current_user
-    @current_user
-  end
-
   setup do
-    @current_user = users(:one)
+    sign_in users(:one)
     @tax = taxes(:one)
   end
 

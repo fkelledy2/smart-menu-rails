@@ -2,6 +2,7 @@ require "test_helper"
 
 class InventoriesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @inventory = inventories(:one)
   end
 

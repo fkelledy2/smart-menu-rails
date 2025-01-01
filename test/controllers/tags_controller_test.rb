@@ -2,12 +2,8 @@ require "test_helper"
 
 class TagsControllerTest < ActionView::TestCase
 
-  def current_user
-    @current_user
-  end
-
   setup do
-    @current_user = users(:one)
+    sign_in users(:one)
     @tag = tags(:one)
   end
 

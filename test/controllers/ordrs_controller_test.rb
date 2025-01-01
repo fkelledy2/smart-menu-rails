@@ -2,6 +2,7 @@ require "test_helper"
 
 class OrdrsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @ordr = ordrs(:one)
   end
 

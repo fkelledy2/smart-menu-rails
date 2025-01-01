@@ -2,6 +2,7 @@ require "test_helper"
 
 class MetricsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @metric = metrics(:one)
   end
 

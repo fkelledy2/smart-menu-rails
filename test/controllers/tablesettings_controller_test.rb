@@ -2,6 +2,7 @@ require "test_helper"
 
 class TablesettingsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @tablesetting = tablesettings(:one)
   end
 

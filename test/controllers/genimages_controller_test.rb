@@ -2,6 +2,7 @@ require "test_helper"
 
 class GenimagesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @genimage = genimages(:one)
   end
 

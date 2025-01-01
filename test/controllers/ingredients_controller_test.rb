@@ -2,6 +2,7 @@ require "test_helper"
 
 class IngredientsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @ingredient = ingredients(:one)
   end
 

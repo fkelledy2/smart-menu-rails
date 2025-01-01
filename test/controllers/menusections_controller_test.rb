@@ -2,6 +2,7 @@ require "test_helper"
 
 class MenusectionsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @menusection = menusections(:one)
   end
 

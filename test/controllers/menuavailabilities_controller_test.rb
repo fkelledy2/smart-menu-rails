@@ -2,6 +2,7 @@ require "test_helper"
 
 class MenuavailabilitiesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @menuavailability = menuavailabilities(:one)
   end
 

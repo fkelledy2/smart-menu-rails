@@ -2,6 +2,7 @@ require "test_helper"
 
 class RestaurantavailabilitiesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @restaurantavailability = restaurantavailabilities(:one)
   end
 

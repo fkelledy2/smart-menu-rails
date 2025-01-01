@@ -154,7 +154,7 @@ class RestaurantsController < ApplicationController
                     @restaurant = Restaurant.find(params[:id])
                 end
                 if( @restaurant == nil or @restaurant.user != current_user )
-                    redirect_to home_url
+                    redirect_to root_url
                 end
             else
                 if params[:restaurant_id]

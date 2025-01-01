@@ -2,6 +2,7 @@ require "test_helper"
 
 class OrdritemnotesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @ordritemnote = ordritemnotes(:one)
   end
 
