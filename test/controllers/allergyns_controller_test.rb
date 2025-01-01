@@ -1,6 +1,6 @@
 require "test_helper"
 
-class AllergynsControllerTest < ActionView::TestCase
+class AllergynsControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     sign_in users(:one)

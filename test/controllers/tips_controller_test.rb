@@ -1,6 +1,6 @@
 require "test_helper"
 
-class TipsControllerTest < ActionView::TestCase
+class TipsControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     sign_in users(:one)

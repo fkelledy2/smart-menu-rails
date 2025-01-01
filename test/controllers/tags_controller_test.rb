@@ -1,6 +1,6 @@
 require "test_helper"
 
-class TagsControllerTest < ActionView::TestCase
+class TagsControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     sign_in users(:one)

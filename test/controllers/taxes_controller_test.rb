@@ -1,6 +1,6 @@
 require "test_helper"
 
-class TaxesControllerTest < ActionView::TestCase
+class TaxesControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     sign_in users(:one)
