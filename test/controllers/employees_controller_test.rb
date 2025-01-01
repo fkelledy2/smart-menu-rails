@@ -20,8 +20,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Employee.count") do
       post employees_url, params: { employee: { eid: @employee.eid, image: @employee.image, name: @employee.name, restaurant_id: @employee.restaurant_id, status: @employee.status } }
     end
-
-    assert_redirected_to employee_url(Employee.last)
+    assert_redirected_to edit_restaurant_url(@employee.restaurant)
   end
 
   test "should show employee" do
@@ -36,14 +35,13 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
 
   test "should update employee" do
     patch employee_url(@employee), params: { employee: { eid: @employee.eid, image: @employee.image, name: @employee.name, restaurant_id: @employee.restaurant_id, status: @employee.status } }
-    assert_redirected_to employee_url(@employee)
+    assert_redirected_to edit_restaurant_url(@employee.restaurant)
   end
 
   test "should destroy employee" do
     assert_difference("Employee.count", 0) do
       delete employee_url(@employee)
     end
-
-    assert_redirected_to employees_url
+    assert_redirected_to edit_restaurant_url(@employee.restaurant)
   end
 end

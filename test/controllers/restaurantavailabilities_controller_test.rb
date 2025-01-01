@@ -20,8 +20,7 @@ class RestaurantavailabilitiesControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Restaurantavailability.count") do
       post restaurantavailabilities_url, params: { restaurantavailability: { dayofweek: @restaurantavailability.dayofweek, endhour: @restaurantavailability.endhour, endmin: @restaurantavailability.endmin, restaurant_id: @restaurantavailability.restaurant_id, starthour: @restaurantavailability.starthour, startmin: @restaurantavailability.startmin } }
     end
-
-    assert_redirected_to restaurantavailability_url(Restaurantavailability.last)
+    assert_redirected_to edit_restaurants_url(@restaurantavailability.restaurant)
   end
 
   test "should show restaurantavailability" do
@@ -36,14 +35,13 @@ class RestaurantavailabilitiesControllerTest < ActionDispatch::IntegrationTest
 
   test "should update restaurantavailability" do
     patch restaurantavailability_url(@restaurantavailability), params: { restaurantavailability: { dayofweek: @restaurantavailability.dayofweek, endhour: @restaurantavailability.endhour, endmin: @restaurantavailability.endmin, restaurant_id: @restaurantavailability.restaurant_id, starthour: @restaurantavailability.starthour, startmin: @restaurantavailability.startmin } }
-    assert_redirected_to restaurantavailability_url(@restaurantavailability)
+    assert_redirected_to edit_restaurants_url(@restaurantavailability.restaurant)
   end
 
   test "should destroy restaurantavailability" do
     assert_difference("Restaurantavailability.count", 0) do
       delete restaurantavailability_url(@restaurantavailability)
     end
-
-    assert_redirected_to restaurantavailabilities_url
+    assert_redirected_to edit_restaurants_url(@restaurantavailability.restaurant)
   end
 end

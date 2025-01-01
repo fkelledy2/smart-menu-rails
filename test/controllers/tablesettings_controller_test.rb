@@ -20,8 +20,7 @@ class TablesettingsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Tablesetting.count") do
       post tablesettings_url, params: { tablesetting: { capacity: @tablesetting.capacity, description: @tablesetting.description, name: @tablesetting.name, restaurant_id: @tablesetting.restaurant_id, status: @tablesetting.status } }
     end
-
-    assert_redirected_to tablesetting_url(Tablesetting.last)
+    assert_redirected_to edit_restaurants_url(@tablesetting.restaurant)
   end
 
   test "should show tablesetting" do
@@ -36,14 +35,13 @@ class TablesettingsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update tablesetting" do
     patch tablesetting_url(@tablesetting), params: { tablesetting: { capacity: @tablesetting.capacity, description: @tablesetting.description, name: @tablesetting.name, restaurant_id: @tablesetting.restaurant_id, status: @tablesetting.status } }
-    assert_redirected_to tablesetting_url(@tablesetting)
+    assert_redirected_to edit_restaurants_url(@tablesetting.restaurant)
   end
 
   test "should destroy tablesetting" do
     assert_difference("Tablesetting.count", 0) do
       delete tablesetting_url(@tablesetting)
     end
-
-    assert_redirected_to tablesettings_url
+    assert_redirected_to edit_restaurants_url(@tablesetting.restaurant)
   end
 end

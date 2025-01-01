@@ -20,8 +20,7 @@ class InventoriesControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Inventory.count") do
       post inventories_url, params: { inventory: { currentinventory: @inventory.currentinventory, menuitem_id: @inventory.menuitem_id, resethour: @inventory.resethour, startinginventory: @inventory.startinginventory } }
     end
-
-    assert_redirected_to inventory_url(Inventory.last)
+    assert_redirected_to edit_restaurant_url(@inventory.restaurant)
   end
 
   test "should show inventory" do
@@ -36,14 +35,13 @@ class InventoriesControllerTest < ActionDispatch::IntegrationTest
 
   test "should update inventory" do
     patch inventory_url(@inventory), params: { inventory: { currentinventory: @inventory.currentinventory, menuitem_id: @inventory.menuitem_id, resethour: @inventory.resethour, startinginventory: @inventory.startinginventory } }
-    assert_redirected_to inventory_url(@inventory)
+    assert_redirected_to edit_restaurant_url(@inventory.restaurant)
   end
 
   test "should destroy inventory" do
     assert_difference("Inventory.count", 0) do
       delete inventory_url(@inventory)
     end
-
-    assert_redirected_to inventories_url
+    assert_redirected_to restaurants_url
   end
 end

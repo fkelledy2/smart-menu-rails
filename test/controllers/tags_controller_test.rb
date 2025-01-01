@@ -45,6 +45,6 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
       delete tag_url(@tag)
     end
 
-    assert_redirected_to tags_url
+    assert_redirected_to restaurants_url
   end
 end

@@ -20,8 +20,7 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Menusection.count") do
       post menusections_url, params: { menusection: { description: @menusection.description, image: @menusection.image, menu_id: @menusection.menu_id, name: @menusection.name, sequence: @menusection.sequence, status: @menusection.status } }
     end
-
-    assert_redirected_to menusection_url(Menusection.last)
+    assert_redirected_to edit_restaurant_url(@menusection.menu.restaurant)
   end
 
   test "should show menusection" do
@@ -36,7 +35,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update menusection" do
     patch menusection_url(@menusection), params: { menusection: { description: @menusection.description, image: @menusection.image, menu_id: @menusection.menu_id, name: @menusection.name, sequence: @menusection.sequence, status: @menusection.status } }
-    assert_redirected_to menusection_url(@menusection)
+    assert_redirected_to edit_restaurant_url(@menusection.menu.restaurant)
+
   end
 
   test "should destroy menusection" do
@@ -44,6 +44,6 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
       delete menusection_url(@menusection)
     end
 
-    assert_redirected_to menusections_url
+    assert_redirected_to restaurants_url
   end
 end
