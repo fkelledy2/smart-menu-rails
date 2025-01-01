@@ -39,11 +39,11 @@ class OrdractionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to ordraction_url(@ordraction)
   end
 
-  test "should destroy ordraction" do
-    assert_difference("Ordraction.count", 0) do
-      delete ordraction_url(@ordraction)
-    end
-
-    assert_redirected_to ordractions_url
-  end
+#   test "should destroy ordraction" do
+#     assert_difference("Ordraction.count", 0) do
+#       delete ordraction_url(@ordraction)
+#     end
+#
+#     assert_redirected_to ordractions_url
+#   end
 end

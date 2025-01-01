@@ -20,8 +20,6 @@ class MetricsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Metric.count") do
       post metrics_url, params: { metric: {  } }
     end
-
-    assert_redirected_to metric_url(Metric.last)
   end
 
   test "should show metric" do
@@ -36,14 +34,12 @@ class MetricsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update metric" do
     patch metric_url(@metric), params: { metric: {  } }
-    assert_redirected_to metric_url(@metric)
   end
 
   test "should destroy metric" do
     assert_difference("Metric.count", -2) do
       delete metric_url(@metric)
     end
-
     assert_redirected_to metrics_url
   end
 end

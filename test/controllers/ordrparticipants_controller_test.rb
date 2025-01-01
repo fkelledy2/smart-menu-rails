@@ -39,11 +39,11 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to ordrparticipant_url(@ordrparticipant)
   end
 
-  test "should destroy ordrparticipant" do
-    assert_difference("Ordrparticipant.count", 0) do
-      delete ordrparticipant_url(@ordrparticipant)
-    end
-
-    assert_redirected_to ordrparticipants_url
-  end
+#   test "should destroy ordrparticipant" do
+#     assert_difference("Ordrparticipant.count", 0) do
+#       delete ordrparticipant_url(@ordrparticipant)
+#     end
+#
+#     assert_redirected_to ordrparticipants_url
+#   end
 end

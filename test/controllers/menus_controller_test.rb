@@ -42,6 +42,6 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Menu.count", 0) do
       delete menu_url(@menu)
     end
-    assert_redirected_to edit_restaurants_url(@menu.restaurant)
+    assert_redirected_to edit_restaurant_url(@menu.restaurant)
   end
 end

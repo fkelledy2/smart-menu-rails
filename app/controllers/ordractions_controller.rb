@@ -91,6 +91,6 @@ class OrdractionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ordraction_params
-      params.require(:ordraction).permit(:sessionid, :action, :employee_id, :ordrparticipant_id, :ordr_id, :ordritem_id)
+      params.require(:ordraction).permit(:action, :employee_id, :ordrparticipant_id, :ordr_id, :ordritem_id)
     end
 end

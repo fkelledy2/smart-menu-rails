@@ -58,7 +58,7 @@ class OrdritemsController < ApplicationController
                 @ordraction.save
                 ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
             end
-            format.html { redirect_to ordritem_url(@ordritem), notice: "Ordritem was successfully created." }
+            format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully created." }
             format.json { render :show, status: :created, location: @ordritem }
           else
             format.html { render :new, status: :unprocessable_entity }

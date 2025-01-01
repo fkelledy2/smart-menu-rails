@@ -95,6 +95,6 @@ class AllergynsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def allergyn_params
-      params.require(:allergyn).permit(:name, :description, :symbol, :menuitem_id, :status, :sequence, :restaurant_id)
+      params.require(:allergyn).permit(:name, :description, :symbol, :status, :sequence, :restaurant_id)
     end
 end

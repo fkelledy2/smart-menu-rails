@@ -59,7 +59,7 @@ class MenusectionsController < ApplicationController
                 @genimage.updated_at = DateTime.current
                 @genimage.save
             end
-            format.html { redirect_to menusection_url(@menusection), notice: "Menusection was successfully created." }
+            format.html { redirect_to edit_menu_url(@menusection.menu), notice: "Menusection was successfully created." }
             format.json { render :show, status: :created, location: @menusection }
           else
             format.html { render :new, status: :unprocessable_entity }
