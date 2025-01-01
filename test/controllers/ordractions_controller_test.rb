@@ -18,7 +18,7 @@ class OrdractionsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create ordraction" do
     assert_difference("Ordraction.count") do
-      post ordractions_url, params: { ordraction: { action: @ordraction.action, employee_id: @ordraction.employee_id, ordr_id: @ordraction.ordr_id, ordritem_id: @ordraction.ordritem_id, ordrparticipant_id: @ordraction.ordrparticipant_id, sessionid: @ordraction.sessionid } }
+      post ordractions_url, params: { ordraction: { action: @ordraction.action, ordr_id: @ordraction.ordr_id, ordritem_id: @ordraction.ordritem_id, ordrparticipant_id: @ordraction.ordrparticipant_id } }
     end
 
     assert_redirected_to ordraction_url(Ordraction.last)
@@ -35,7 +35,7 @@ class OrdractionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update ordraction" do
-    patch ordraction_url(@ordraction), params: { ordraction: { action: @ordraction.action, employee_id: @ordraction.employee_id, ordr_id: @ordraction.ordr_id, ordritem_id: @ordraction.ordritem_id, ordrparticipant_id: @ordraction.ordrparticipant_id, sessionid: @ordraction.sessionid } }
+    patch ordraction_url(@ordraction), params: { ordraction: { action: @ordraction.action, ordr_id: @ordraction.ordr_id, ordritem_id: @ordraction.ordritem_id, ordrparticipant_id: @ordraction.ordrparticipant_id } }
     assert_redirected_to ordraction_url(@ordraction)
   end
 

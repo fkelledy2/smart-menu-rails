@@ -42,12 +42,17 @@ class AllergynsController < ApplicationController
   # POST /allergyns or /allergyns.json
   def create
     if current_user
-      @allergyn = Allergyn.new(allergyn_params)
+        puts 'create.allergyn.1'
+        @allergyn = Allergyn.new(allergyn_params)
+        puts 'create.allergyn.2'
         respond_to do |format|
+        puts 'create.allergyn.3'
           if @allergyn.save
+        puts 'create.allergyn.4'
             format.html { redirect_to allergyn_url(@allergyn), notice: "Allergyn was successfully created." }
             format.json { render :show, status: :created, location: @allergyn }
           else
+        puts 'create.allergyn.5'
             format.html { render :new, status: :unprocessable_entity }
             format.json { render json: @allergyn.errors, status: :unprocessable_entity }
           end

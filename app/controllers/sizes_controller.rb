@@ -62,7 +62,7 @@ class SizesController < ApplicationController
     if current_user
         respond_to do |format|
           if @size.update(size_params)
-            format.html { redirect_to edit_restaurant_path(@size.restaurant_id), notice: "Size was successfully updated." }
+            format.html { redirect_to edit_restaurant_path(@size.restaurant), notice: "Size was successfully updated." }
             format.json { render :show, status: :ok, location: @size }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -79,7 +79,7 @@ class SizesController < ApplicationController
     if current_user
         @size.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(@size.restaurant_id), notice: "Size was successfully deleted." }
+          format.html { redirect_to edit_restaurant_path(@size.restaurant), notice: "Size was successfully deleted." }
           format.json { head :no_content }
         end
     else

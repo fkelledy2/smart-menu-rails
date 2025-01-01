@@ -18,9 +18,9 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create size" do
     assert_difference("Size.count") do
-      post sizes_url, params: { size: { description: @size.description, name: @size.name, size: @size.size } }
+      post sizes_url, params: { size: { description: @size.description, name: @size.name, size: @size.size, restaurant_id: @size.restaurant_id } }
     end
-    assert_redirected_to edit_restaurants_url(@size.restaurant)
+    assert_redirected_to edit_restaurant_url(@size.restaurant)
   end
 
   test "should show size" do
@@ -34,14 +34,14 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update size" do
-    patch size_url(@size), params: { size: { description: @size.description, name: @size.name, size: @size.size } }
-    assert_redirected_to edit_restaurants_url(@size.restaurant)
+    patch size_url(@size), params: { size: { description: @size.description, name: @size.name, size: @size.size, restaurant_id: @size.restaurant_id } }
+    assert_redirected_to edit_restaurant_url(@size.restaurant)
   end
 
   test "should destroy size" do
     assert_difference("Size.count", 0) do
       delete size_url(@size)
     end
-    assert_redirected_to edit_restaurants_url(@size.restaurant)
+    assert_redirected_to edit_restaurant_url(@size.restaurant)
   end
 end

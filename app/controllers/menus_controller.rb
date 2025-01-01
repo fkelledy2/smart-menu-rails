@@ -16,10 +16,7 @@ class MenusController < ApplicationController
         end
         Analytics.track(
             user_id: current_user.id,
-            event: 'menus.index',
-            properties: {
-              restaurant_id: @restaurant.id,
-            }
+            event: 'menus.index'
         )
     else
         if params[:restaurant_id]
@@ -29,7 +26,7 @@ class MenusController < ApplicationController
             Analytics.track(
                 event: 'menus.index',
                 properties: {
-                  restaurant_id: @restaurant.id
+                  restaurant_id: @menus.restaurant.id,
                 }
             )
         end
@@ -52,7 +49,7 @@ class MenusController < ApplicationController
         Analytics.track(
             event: 'menus.show',
             properties: {
-              restaurant_id: @restaurant.id,
+              restaurant_id: @menu.restaurant.id,
               menu_id: @menu.id,
             }
         )
@@ -111,7 +108,7 @@ class MenusController < ApplicationController
                 user_id: current_user.id,
                 event: 'menus.new',
                 properties: {
-                  restaurant_id: @restaurant.id,
+                  restaurant_id: @menu.restaurant.id,
                 }
             )
         end

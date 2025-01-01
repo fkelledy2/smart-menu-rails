@@ -44,7 +44,7 @@ class OrdrparticipantsController < ApplicationController
         @ordrparticipant = Ordrparticipant.new(ordrparticipant_params)
         respond_to do |format|
           if @ordrparticipant.save
-            format.html { redirect_to ordrparticipant_url(@ordrparticipant), notice: "Ordrparticipant was successfully created." }
+            format.html { redirect_to menu_tablesetting_path(@ordrparticipant.ordr.menu, @ordrparticipant.ordr.tablesetting), notice: "Ordrparticipant was successfully created." }
             format.json { render :show, status: :created, location: @ordrparticipant }
           else
             format.html { render :new, status: :unprocessable_entity }

@@ -17,10 +17,6 @@
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-    
-
-            <th>Sessionid</th>
-            <th>Action</th>
             <th>Employee</th>
             <th>Ordrparticipant</th>
             <th>Ordr</th>
@@ -34,10 +30,6 @@
     <tbody>
       <% @ordractions.each do |ordraction| %>
         <%= content_tag :tr, id: dom_id(ordraction), class: dom_class(ordraction) do %>
-          
-
-                      <td><%= ordraction.sessionid %></td>
-                      <td><%= ordraction.action %></td>
                       <td><%= ordraction.employee %></td>
                       <td><%= ordraction.ordrparticipant %></td>
                       <td><%= ordraction.ordr %></td>

@@ -4,8 +4,10 @@ one:
   size: 1
   name: MyString
   description: MyText
+  restaurant: one
 
 two:
   size: 1
   name: MyString
   description: MyText
+  restaurant: one
