@@ -97,7 +97,7 @@ class OrdritemnotesController < ApplicationController
             if current_user
                 @ordritemnote = Ordritemnote.find(params[:id])
                 if( @ordritemnote == nil or @ordritemnote.ordr.restaurant.user != current_user )
-                    redirect_to home_url
+                    redirect_to root_url
                 end
             else
                 redirect_to root_url

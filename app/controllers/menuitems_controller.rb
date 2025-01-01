@@ -116,7 +116,7 @@ class MenuitemsController < ApplicationController
             if current_user
                 @menuitem = Menuitem.find(params[:id])
                 if( @menuitem == nil or @menuitem.menusection.menu.restaurant.user != current_user )
-                    redirect_to home_url
+                    redirect_to root_url
                 end
             else
                 redirect_to root_url

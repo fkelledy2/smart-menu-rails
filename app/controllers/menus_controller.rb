@@ -43,16 +43,16 @@ class MenusController < ApplicationController
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
             @menu = Menu.find_by_id(params[:menu_id])
             if @menu.restaurant != @restaurant
-                redirect_to home_url
+                redirect_to root_url
             end
+            Analytics.track(
+                event: 'menus.show',
+                properties: {
+                  restaurant_id: @menu.restaurant.id,
+                  menu_id: @menu.id,
+                }
+            )
         end
-        Analytics.track(
-            event: 'menus.show',
-            properties: {
-              restaurant_id: @menu.restaurant.id,
-              menu_id: @menu.id,
-            }
-        )
         @participantsFirstTime = false
         @tablesetting = Tablesetting.find_by_id(params[:id])
         @openOrder = Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 0)
@@ -120,14 +120,22 @@ class MenusController < ApplicationController
   # GET /menus/1/edit
   def edit
     if current_user
-        Analytics.track(
-            user_id: current_user.id,
-            event: 'menus.edit',
-            properties: {
-              restaurant_id: @menu.restaurant.id,
-              menu_id: @menu.id,
-            }
-        )
+        if params[:menu_id] && params[:id]
+            if params[:restaurant_id]
+                @restaurant = Restaurant.find_by_id(params[:restaurant_id])
+                @menu = Menu.find_by_id(params[:menu_id])
+                if @menu.restaurant != @restaurant
+                    redirect_to root_url
+                end
+            end
+            Analytics.track(
+                event: 'menus.edit',
+                properties: {
+                  restaurant_id: @menu.restaurant.id,
+                  menu_id: @menu.id,
+                }
+            )
+        end
     else
         redirect_to root_url
     end
@@ -136,6 +144,7 @@ class MenusController < ApplicationController
   # POST /menus or /menus.json
   def create
     @menu = Menu.new(menu_params)
+      puts menu_params
     respond_to do |format|
       if @menu.save
         Analytics.track(
@@ -194,8 +203,11 @@ class MenusController < ApplicationController
 
   # DELETE /menus/1 or /menus/1.json
   def destroy
+      puts 'menu.destroy.1'
     if current_user
+      puts 'menu.destroy.2'
         @menu.update( archived: true )
+      puts 'menu.destroy.3'
         Analytics.track(
             user_id: current_user.id,
             event: 'menus.destroy',
@@ -204,11 +216,15 @@ class MenusController < ApplicationController
               menu_id: @menu.id,
             }
         )
+      puts 'menu.destroy.4'
         respond_to do |format|
+      puts 'menu.destroy.5'
           format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully deleted." }
+      puts 'menu.destroy.6'
           format.json { head :no_content }
         end
     else
+      puts 'menu.destroy.7'
         redirect_to root_url
     end
   end
@@ -224,7 +240,7 @@ class MenusController < ApplicationController
                     @menu = Menu.find(params[:id])
                 end
                 if( @menu == nil or @menu.restaurant.user != current_user )
-                    redirect_to home_url
+                    redirect_to root_url
                 end
             else
                 if params[:menu_id]

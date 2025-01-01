@@ -103,7 +103,7 @@ class EmployeesController < ApplicationController
             if current_user
                 @employee = Employee.find(params[:id])
                 if( @employee == nil or @employee.restaurant.user != current_user )
-                    redirect_to home_url
+                    redirect_to root_url
                 end
             else
                 redirect_to root_url

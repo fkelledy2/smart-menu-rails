@@ -21,5 +21,4 @@ class Menu < ApplicationRecord
   validates :name, :presence => true
   validates :restaurant, :presence => true
   validates :status, :presence => true
-  validates :sequence, :presence => true
 end

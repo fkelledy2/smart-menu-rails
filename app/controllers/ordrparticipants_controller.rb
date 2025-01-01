@@ -94,7 +94,7 @@ class OrdrparticipantsController < ApplicationController
             if current_user
                 @ordrparticipant = Ordrparticipant.find(params[:id])
                 if( @ordrparticipant == nil or @ordrparticipant.ordr.restaurant.user != current_user )
-                    redirect_to home_url
+                    redirect_to root_url
                 end
             else
                 @ordrparticipant = Ordrparticipant.find(params[:id])
