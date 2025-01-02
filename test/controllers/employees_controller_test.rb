@@ -4,6 +4,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:one)
     @employee = employees(:one)
+    @user = users(:one)
   end
 
   test "should get index" do
@@ -18,7 +19,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create employee" do
     assert_difference("Employee.count") do
-      post employees_url, params: { employee: { eid: @employee.eid, image: @employee.image, name: @employee.name, restaurant_id: @employee.restaurant_id, status: @employee.status } }
+      post employees_url, params: { employee: { role: @employee.role, user_id: @employee.user.id, eid: @employee.eid, image: @employee.image, name: @employee.name, restaurant_id: @employee.restaurant_id, status: @employee.status } }
     end
     assert_redirected_to edit_restaurant_url(@employee.restaurant)
   end

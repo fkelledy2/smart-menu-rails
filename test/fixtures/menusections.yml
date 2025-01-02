@@ -7,11 +7,3 @@ one:
   status: 1
   sequence: 1
   menu: one
-
-two:
-  name: MyString
-  description: MyText
-  image: MyString
-  status: 1
-  sequence: 1
-  menu: two

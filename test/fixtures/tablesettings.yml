@@ -5,11 +5,5 @@ one:
   description: MyText
   status: 1
   capacity: 1
+  tabletype: 1
   restaurant: one
-
-two:
-  name: MyString
-  description: MyText
-  status: 1
-  capacity: 1
-  restaurant: two

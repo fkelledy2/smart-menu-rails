@@ -4,6 +4,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:one)
     @menu = menus(:one)
+    @restaurant = restaurants(:one)
   end
 
   test "should get index" do
@@ -22,7 +23,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
         name: @menu.name,
         description: @menu.description,
         status: @menu.status,
-        restaurant: @menu.restaurant,
+        restaurant_id: @restaurant.id,
         sequence: @menu.sequence,
         displayImages: @menu.displayImages,
         allowOrdering: @menu.allowOrdering,

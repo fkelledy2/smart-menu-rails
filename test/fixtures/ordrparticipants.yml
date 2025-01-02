@@ -6,10 +6,3 @@ one:
   employee: one
   ordr: one
   ordritem: one
-
-two:
-  sessionid: MyString
-  role: 1
-  employee: two
-  ordr: two
-  ordritem: two

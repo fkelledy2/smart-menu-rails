@@ -5,18 +5,7 @@ one:
   description: MyText
   status: 1
   sequence: 1
-  restaurant: two
-  displayImages: false
-  allowOrdering: false
-  inventoryTracking: false
-  imagecontext: MyText
-
-two:
-  name: MyString
-  description: MyText
-  status: 1
-  sequence: 1
-  restaurant: two
+  restaurant: one
   displayImages: false
   allowOrdering: false
   inventoryTracking: false

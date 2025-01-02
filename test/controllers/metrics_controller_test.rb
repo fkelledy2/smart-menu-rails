@@ -37,7 +37,7 @@ class MetricsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy metric" do
-    assert_difference("Metric.count", -2) do
+    assert_difference("Metric.count", -1) do
       delete metric_url(@metric)
     end
     assert_redirected_to metrics_url

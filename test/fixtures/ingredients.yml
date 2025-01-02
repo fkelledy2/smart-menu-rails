@@ -3,7 +3,3 @@
 one:
   name: MyString
   description: MyText
-
-two:
-  name: MyString
-  description: MyText

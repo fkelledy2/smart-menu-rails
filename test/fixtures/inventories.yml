@@ -5,9 +5,3 @@ one:
   currentinventory: 1
   resethour: 1
   menuitem: one
-
-two:
-  startinginventory: 1
-  currentinventory: 1
-  resethour: 1
-  menuitem: two

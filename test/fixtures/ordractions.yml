@@ -5,9 +5,3 @@ one:
   ordrparticipant: one
   ordr: one
   ordritem: one
-
-two:
-  action: 1
-  ordrparticipant: two
-  ordr: two
-  ordritem: two

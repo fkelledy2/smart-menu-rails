@@ -13,17 +13,3 @@ one:
   tablesetting: one
   menu: one
   restaurant: one
-
-two:
-  orderedAt: 2024-02-29 13:41:30
-  deliveredAt: 2024-02-29 13:41:30
-  paidAt: 2024-02-29 13:41:30
-  nett: 1.5
-  tip: 1.5
-  service: 1.5
-  tax: 1.5
-  gross: 1.5
-  employee: two
-  tablesetting: two
-  menu: two
-  restaurant: two

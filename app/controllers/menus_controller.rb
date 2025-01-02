@@ -144,7 +144,6 @@ class MenusController < ApplicationController
   # POST /menus or /menus.json
   def create
     @menu = Menu.new(menu_params)
-      puts menu_params
     respond_to do |format|
       if @menu.save
         Analytics.track(
@@ -203,11 +202,8 @@ class MenusController < ApplicationController
 
   # DELETE /menus/1 or /menus/1.json
   def destroy
-      puts 'menu.destroy.1'
     if current_user
-      puts 'menu.destroy.2'
         @menu.update( archived: true )
-      puts 'menu.destroy.3'
         Analytics.track(
             user_id: current_user.id,
             event: 'menus.destroy',
@@ -216,15 +212,11 @@ class MenusController < ApplicationController
               menu_id: @menu.id,
             }
         )
-      puts 'menu.destroy.4'
         respond_to do |format|
-      puts 'menu.destroy.5'
           format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully deleted." }
-      puts 'menu.destroy.6'
           format.json { head :no_content }
         end
     else
-      puts 'menu.destroy.7'
         redirect_to root_url
     end
   end

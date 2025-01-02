@@ -5,13 +5,6 @@ one:
   eid: MyString
   image: MyString
   status: 1
+  role: 1
   restaurant: one
   user: one
-
-two:
-  name: MyString
-  eid: MyString
-  image: MyString
-  status: 1
-  restaurant: two
-  user: two

@@ -18,7 +18,7 @@ class TablesettingsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create tablesetting" do
     assert_difference("Tablesetting.count") do
-      post tablesettings_url, params: { tablesetting: { capacity: @tablesetting.capacity, description: @tablesetting.description, name: @tablesetting.name, restaurant_id: @tablesetting.restaurant_id, status: @tablesetting.status } }
+      post tablesettings_url, params: { tablesetting: { tabletype: @tablesetting.tabletype, capacity: @tablesetting.capacity, description: @tablesetting.description, name: @tablesetting.name, restaurant_id: @tablesetting.restaurant_id, status: @tablesetting.status } }
     end
     assert_redirected_to edit_restaurant_url(@tablesetting.restaurant)
   end

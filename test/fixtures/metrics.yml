@@ -6,10 +6,3 @@ one:
   numberOfMenuItems: 1
   numberOfOrders: 1
   totalOrderValue: 1.5
-
-two:
-  numberOfRestaurants: 1
-  numberOfMenus: 1
-  numberOfMenuItems: 1
-  numberOfOrders: 1
-  totalOrderValue: 1.5

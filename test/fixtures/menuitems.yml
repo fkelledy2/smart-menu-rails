@@ -8,12 +8,3 @@ one:
   calories: 1
   price: 1.5
   menusection: one
-
-two:
-  name: MyString
-  description: MyText
-  status: 1
-  sequence: 1
-  calories: 1
-  price: 1.5
-  menusection: two

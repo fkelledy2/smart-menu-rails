@@ -5,9 +5,3 @@ one:
   taxtype: 1
   taxpercentage: 1.5
   restaurant: one
-
-two:
-  name: MyString
-  taxtype: 1
-  taxpercentage: 1.5
-  restaurant: two

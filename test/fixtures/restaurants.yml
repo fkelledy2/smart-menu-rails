@@ -12,16 +12,3 @@ one:
   status: 1
   capacity: 1
   user: one
-
-two:
-  name: MyString
-  description: MyText
-  address1: MyString
-  address2: MyString
-  state: MyString
-  city: MyString
-  postcode: MyString
-  country: MyString
-  status: 1
-  capacity: 1
-  user: two

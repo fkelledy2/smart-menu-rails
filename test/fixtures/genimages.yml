@@ -8,12 +8,3 @@ one:
   menu: one
   menusection: one
   menuitem: one
-
-two:
-  image_data: MyText
-  name: MyString
-  description: MyText
-  restaurant: two
-  menu: two
-  menusection: two
-  menuitem: two
