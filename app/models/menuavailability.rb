@@ -11,6 +11,12 @@ class Menuavailability < ApplicationRecord
     saturday: 6
   }
 
+  def get_parent_restaurant
+      if( menu )
+          menu.restaurant
+      end
+  end
+
   enum status: {
     active: 0,
     inactive: 1
