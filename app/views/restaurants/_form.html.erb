@@ -1,52 +1,48 @@
 <%= form_with(model: restaurant) do |form| %>
   <div class="form-group row">
-    <div class="col-sm-3">
-    </div>
-    <div class="col-sm-9">
+    <div class="col-12">
         <h4><%=t(".details")%></h4>
     </div>
   </div>
 
   <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %> :</span>
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.text_field :name, class: 'form-control' %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :description, class: 'col-form-label' %> :</span>
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :description, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.text_area :description, class: 'form-control', rows: 6 %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :currency, class: 'col-form-label' %> :</span>
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :currency, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.currency_select(:currency, ["USD", "EUR", "CAD"], {}, {class: "form-control"}) %>
     </div>
   </div>
   <div class="form-group row">
-    <div class="col-sm-3">
-    </div>
-    <div class="col-sm-9">
+    <div class="col-12">
         <p>
         <h4><%=t(".address")%></h4>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :address, class: 'col-form-label' %> :</span>
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :address, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
         <div style="px;width:100%" id="place-picker-box">
             <div style="width:100%" id="place-picker-container">
                 <gmpx-place-picker style="width:100%; disabled" placeholder="<%= restaurant.address1 %>" disabled></gmpx-place-picker>
@@ -61,98 +57,94 @@
   </div>
 
   <div class="form-group row">
-    <div class="col-sm-3">
-    </div>
-    <div class="col-sm-9">
+    <div class="col-12">
         <p>
         <h4><%=t(".imageSettings")%></h4>
     </div>
   </div>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <div class="row">
-        <div class="col-sm-10">
+        <div class="col-10">
           <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
           <%= form.file_field :image, class: 'form-control' %>
         </div>
-        <div class="col-sm-2">
-          <span style="position:relative;top:5px!important;margin-top:5px" class="float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
+        <div class="col-2">
+          <span style="position:relative;top:-5px!important;margin-top:5px" class="float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-3">
+    </div>
+    <div class="col-9">
       <%= image_tag restaurant.image_url, :class => "img-thumbnail rounded mx-auto d-block" if restaurant.image %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :genid, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+        <%= form.text_field :genid, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :imagecontext, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.text_area :imagecontext, class: 'form-control', rows: 6 %>
     </div>
   </div>
 
   <div class="form-group row">
-    <div class="col-sm-3">
-    </div>
-    <div class="col-sm-9">
+    <div class="col-12">
         <p>
         <h4><%=t(".settings")%></h4>
     </div>
   </div>
   <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %> :</span>
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.select :status, options_for_select(Restaurant.statuses.keys.to_a, form.object.status), {} %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :displayImages, class: 'col-form-label' %> :</span>
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :displayImages, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.select :displayImages, [['on', true], ['off', false]], {} %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :allowOrdering, class: 'col-form-label' %> :</span>
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :allowOrdering, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.select :allowOrdering, [['on', true], ['off', false]], {} %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :inventoryTracking, class: 'col-form-label' %> :</span>
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :inventoryTracking, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.select :inventoryTracking, [['on', true], ['off', false]], {} %>
     </div>
   </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :imagecontext, class: 'col-form-label' %> :</span>
-    </div>
-    <div class="col-sm-9">
-      <%= form.text_area :imagecontext, class: 'form-control', rows: 6 %>
-    </div>
-  </div>
-
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <div class="col-sm-3">
-        <span class="float-md-end"><%= form.label :genid, class: 'col-form-label' %> :</span>
-    </div>
-    <div class="col-sm-9">
-      <div class="row">
-        <div class="col-sm-9">
-          <%= form.text_field :genid, class: 'form-control' %>
-        </div>
-      </div>
-    </div>
-  </div>
-
 
   <% if current_user %>
     <%= form.hidden_field :user_id, value: current_user.id %>
