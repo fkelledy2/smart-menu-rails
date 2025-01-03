@@ -364,7 +364,7 @@ en:
         currency: "Currency"
       employee:
         name: "Name"
-        eid: "Employee ID"
+        eid: "ID"
         user: "User"
         image: "Image URL"
         role: "Role"

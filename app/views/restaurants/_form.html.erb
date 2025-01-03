@@ -152,7 +152,7 @@
 
   <div style='height:8px'></div>
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-12">
         <span class="float-end">
         <% if restaurant.persisted? %>
           <div class="btn btn-dark ">
@@ -165,10 +165,10 @@
   </div>
   <% if restaurant.errors.any? %>
   <div class="row">
-    <div class="col-sm-3">
+    <div class="col-3">
       <span class="float-md-end"><%=t(".errors")%> : </span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <ul>
           <% restaurant.errors.full_messages.each do |message| %>
             <li><%= message %></li>

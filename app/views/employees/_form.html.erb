@@ -1,54 +1,45 @@
 <%= form_with(model: employee) do |form| %>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.text_field :name, class: 'form-control' %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :eid, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :eid, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.text_field :eid, class: 'form-control' %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :user_id, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :user_id, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.collection_select :user_id, User.all ,:id, :email, options = {:prompt => t(".selectUser")}%>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :role, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
-      <%= form.text_field :image, class: 'form-control' %>
-    </div>
-  </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :role, class: 'col-form-label' %> : </span>
-    </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.select :role, options_for_select(Employee.roles.keys.to_a, form.object.role), {} %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.select :status, options_for_select(Employee.statuses.keys.to_a, form.object.status), {} %>
     </div>
   </div>
@@ -59,9 +50,9 @@
   <% end %>
   <div style='height:8px'></div>
   <div class="row">
-    <div class="col-sm-3">
+    <div class="col-3">
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
         <span class="float-end">
         <% if employee.persisted? %>
           <div class="btn btn-dark ">
@@ -74,10 +65,10 @@
   </div>
   <% if employee.errors.any? %>
   <div class="row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%=t(".errors")%> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%=t(".errors")%></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <ul>
           <% employee.errors.full_messages.each do |message| %>
             <li><%= message %></li>
