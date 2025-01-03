@@ -1,13 +1,27 @@
 <div class="container-fluid">
-  <footer class="d-flex flex-wrap justify-content-between align-items-center py-1 my-2 border-top">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-1 my-0 border-top">
     <p class="col-md-4 mb-0 text-muted">© 2024</p>
     <%= link_to root_path, class: "navbar-brand" do %>
        <%= image_tag "logo.png", height:'56' %>
     <% end %>
     <ul class="nav col-md-4 justify-content-end">
-      <li class="nav-item"><%= link_to "Terms", terms_path, class: "nav-link px-2 text-muted"  %></li>
-      <li class="nav-item"><%= link_to "Privacy", privacy_path, class: "nav-link px-2 text-muted"  %></li>
+      <li class="nav-item"><a href="#" aria-label="Facebook"><i class="px-2 text-muted fab fa-facebook"></i></a></li>
+      <li class="nav-item"><a href="#" aria-label="Instagram"><i class="px-2 text-muted fab fa-instagram"></i></a></li>
+      <li class="nav-item"><a href="#" aria-label="Twitter"><i class="px-2 text-muted fab fa-twitter"></i></a></li>
+      <li class="nav-item"><a href="#" aria-label="LinkedIn"><i class="px-2 text-muted fab fa-linkedin"></i></a></li>
     </ul>
   </footer>
-  <%= render 'shared/notices' %>
+    <div style='min-height:45px' class="row">
+        <div class="col-6">
+            <ul class="nav">
+              <li class="nav-item"><small><%= link_to "Terms", terms_path, class: "nav-link px-2 text-muted"  %></small></li>
+              <li class="nav-item"><small><%= link_to "Privacy", privacy_path, class: "nav-link px-2 text-muted"  %></small></li>
+            </ul>
+        </div>
+        <div class="col-6">
+            <span class="float-end">
+                <%= render 'shared/notices' %>
+            </span>
+        </div>
+    </div>
 </div>
