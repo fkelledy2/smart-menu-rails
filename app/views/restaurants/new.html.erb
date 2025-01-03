@@ -1,9 +1,9 @@
 <div class="page-header">
   <div class="row">
-    <div class="col-sm-9">
+    <div class="col-10">
         <h2 id="newRestaurant"><%=t(".restaurant")%></h2>
     </div>
-    <div class="col-sm-2">
+    <div class="col-2">
         <% if @restaurant.persisted? %>
           <%= link_to t('.cancel'), @restaurant, class: "float-end btn btn-sm btn-light" %>
         <% else %>
@@ -13,7 +13,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-11">
+  <div class="col-12">
     <%= render 'form', restaurant: @restaurant %>
   </div>
 </div>

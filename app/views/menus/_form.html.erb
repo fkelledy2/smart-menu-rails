@@ -1,18 +1,16 @@
 <%= form_with(model: menu) do |form| %>
   <div class="form-group row">
-    <div class="col-3">
-    </div>
-    <div class="col-9">
+    <div class="col-12">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-12">
                 <h4>
                     <%=t(".details")%>
                     <% if menu.id %>
                     <span class="float-end">
                     <div style="top:-7px" class="btn-group" role="group" aria-label="Button group with nested dropdown">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-dark">
-                                <%= link_to menu_path(@menu), class: 'text-white text-decoration-none link-light' do %>
+                            <button type="button" class="btn btn-sm btn-dark">
+                                <%= link_to restaurant_menu_path(@menu.restaurant, @menu), class: 'text-white text-decoration-none link-light' do %>
                                     <i class="bi bi-eye-fill"></i>
                                 <% end %>
                             </button>
@@ -142,6 +140,7 @@
         </span>
     </div>
   </div>
+  <div style='height:4px'></div>
   <% if menu.errors.any? %>
     <div class="row">
     <div class="col-3">

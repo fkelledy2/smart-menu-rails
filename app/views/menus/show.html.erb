@@ -17,7 +17,7 @@
                         <div class="col-5">
                             <span class="float-end">
                                 <% if current_user %>
-                                    <%= link_to edit_menu_path(@menu), class: 'btn btn-dark' do %>
+                                    <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-dark' do %>
                                         <i class="bi bi-pencil-fill"></i>
                                     <% end %>
                                 <% end %>
@@ -680,7 +680,7 @@
 </div>
 
 
-<div style="margin-top: 20px" class="card">
+<div style="display:none;margin-top: 20px" class="card">
     <div class="card-body">
         <h3>Debug:</h3>
         <% if @openOrder %>

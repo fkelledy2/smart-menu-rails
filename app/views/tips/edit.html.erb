@@ -1,35 +1,19 @@
-<style>
-    .form-control:disabled {
-        background-color: #fafafa;
-        opacity: 1;
-    }
-    .disabled .ts-control {
-        opacity: 1.0;
-        background-color: #fafafa;
-    }
-    .ts-dropdown, .ts-control, .ts-control input {
-        color: #000000;
-        padding-left:12px;
-        font-size: 16px;
-        line-height: 18px;
-    }
-</style>
 <div class="page-header">
   <div style='padding-top: 20px' class="row">
-    <div class="col-sm-9">
-        <h1><%= t(".tip") %></h1>
+    <div class="col-10">
+        <h2><%= t(".tip") %></h2>
     </div>
-    <div class="col-sm-2">
+    <div class="col-2">
         <% if @tip.persisted? %>
-          <%= link_to t(".cancel"), restaurant_path(id: @tip.restaurant.id), class: "float-end btn btn-light" %>
+          <%= link_to t(".cancel"), edit_restaurant_path(id: @tip.restaurant.id), class: "float-end btn btn-light" %>
         <% else %>
-          <%= link_to t(".cancel"), restaurant_path(id: @tip.restaurant.id), class: "float-end btn btn-light" %>
+          <%= link_to t(".cancel"), edit_restaurant_path(id: @tip.restaurant.id), class: "float-end btn btn-light" %>
         <% end %>
     </div>
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-11">
+  <div class="col-12">
     <%= render 'form', tip: @tip %>
   </div>
 </div>

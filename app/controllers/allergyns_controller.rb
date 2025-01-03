@@ -49,7 +49,7 @@ class AllergynsController < ApplicationController
         puts 'create.allergyn.3'
           if @allergyn.save
         puts 'create.allergyn.4'
-            format.html { redirect_to allergyn_url(@allergyn), notice: "Allergyn was successfully created." }
+            format.html { redirect_to edit_restaurant_path(id: @allergyn.restaurant.id), notice: "Allergyn was successfully created." }
             format.json { render :show, status: :created, location: @allergyn }
           else
         puts 'create.allergyn.5'
@@ -67,7 +67,7 @@ class AllergynsController < ApplicationController
     if current_user
         respond_to do |format|
           if @allergyn.update(allergyn_params)
-            format.html { redirect_to allergyn_url(@allergyn), notice: "Allergyn was successfully updated." }
+            format.html { redirect_to edit_restaurant_path(id: @allergyn.restaurant.id), notice: "Allergyn was successfully updated." }
             format.json { render :show, status: :ok, location: @allergyn }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -84,7 +84,7 @@ class AllergynsController < ApplicationController
     if current_user
         @allergyn.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to allergyns_url, notice: "Allergyn was successfully destroyed." }
+          format.html { redirect_to edit_restaurant_path(id: @allergyn.restaurant.id), notice: "Allergyn was successfully destroyed." }
           format.json { head :no_content }
         end
     else

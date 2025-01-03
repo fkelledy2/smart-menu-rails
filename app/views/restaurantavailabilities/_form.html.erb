@@ -1,54 +1,54 @@
 <%= form_with(model: restaurantavailability) do |form| %>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :dayofweek, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :dayofweek, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.select :dayofweek, options_for_select(Restaurantavailability.dayofweeks.keys.to_a, form.object.dayofweek), {} %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :starthour, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :starthour, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.text_field :starthour, class: 'form-control' %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :startmin, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :startmin, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.text_field :startmin, class: 'form-control' %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :endhour, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :endhour, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.text_field :endhour, class: 'form-control' %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :endmin, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :endmin, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.text_field :endmin, class: 'form-control' %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-sm-3">
-      <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %> : </span>
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <%= form.select :status, options_for_select(Restaurantavailability.statuses.keys.to_a, form.object.status), {} %>
     </div>
   </div>
@@ -59,9 +59,9 @@
   <% end %>
   <div style='height:8px'></div>
   <div class="row">
-    <div class="col-sm-3">
+    <div class="col-3">
     </div>
-    <div class="col-sm-9">
+    <div class="col-9">
         <span class="float-end">
         <% if restaurantavailability.persisted? %>
           <div class="btn btn-dark ">
@@ -72,12 +72,13 @@
         </span>
     </div>
   </div>
+  <div style='height:4px'></div>
   <% if restaurantavailability.errors.any? %>
   <div class="row">
-    <div class="col-sm-3">
+    <div class="col-3">
       <span class="float-md-end"><%=t(".errors")%> : </span>
      </div>
-    <div class="col-sm-9">
+    <div class="col-9">
       <ul>
           <% restaurantavailability.errors.full_messages.each do |message| %>
             <li><%= message %></li>
