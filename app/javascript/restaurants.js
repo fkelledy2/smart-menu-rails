@@ -113,7 +113,7 @@ document.addEventListener("turbo:load", () => {
                   [data.address1, data.address2, data.state, data.city].filter(Boolean).join(", "),
            },
            {title:"Capacity", field:"total_capacity", responsive:4, hozAlign:"right", headerHozAlign:"right"},
-           {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
+           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         restaurantTable.on("rowSelectionChanged", function(data, rows){

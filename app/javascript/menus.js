@@ -78,6 +78,9 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($("#menu-table").is(':visible')) {
+        function status(cell, formatterParams){
+            return cell.getRow().getData("data").status.toUpperCase();
+        }
         var menuTable = new Tabulator("#menu-table", {
           dataLoader: false,
           maxHeight:"100%",
@@ -108,7 +111,7 @@ document.addEventListener("turbo:load", () => {
                 urlPrefix:"/menus/",
             }
            },
-          {title:"Status", field:"status", responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
+          {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         menuTable.on("rowMoved", function(row){
