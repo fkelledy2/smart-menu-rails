@@ -172,14 +172,14 @@ en:
 
   tablesettings:
     index:
-      tablesettings: "Table Settings"
-      tablesetting: "Table Setting"
+      tablesettings: "Tables"
+      tablesetting: "Table"
     show:
-      tablesetting: "View Table Setting"
+      tablesetting: "Table"
     edit:
-      tablesettings: "Edit Table Setting"
+      tablesetting: "Edit Table"
     new:
-      tablesettings: "New Table Setting"
+      tablesetting: "New Table"
       cancel: "Cancel"
     form:
       save: "Save"

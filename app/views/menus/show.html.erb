@@ -5,7 +5,7 @@
 <div id="menuc" style="padding-bottom:10px;box-shadow: 0 4px 2px -2px gray;" class="sticky-top bg-white">
 <% end %>
     <div class="row">
-      <div class="col-sm-12 col-md-12 col-lg-12">
+      <div class="col-12 col-md-12 col-lg-12">
         <div class="row">
             <div class="col-12">
                     <div style="padding-top:5px" class="row">
@@ -134,7 +134,7 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+  <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
     <% @menu.menusections.order(:sequence).each do |menusection| %>
         <div style="padding-top:20px" id="menusection_<%= menusection.id %>"></div>
         <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
@@ -155,7 +155,7 @@
         <div class="row">
             <% menusection.menuitems.order(:sequence).each do |menuitem| %>
                 <% if @ordrparticipant == nil || @ordrparticipant && (@ordrparticipant.allergyns & menuitem.allergyns).empty? %>
-                    <div style="padding-top:20px" class="col-sm-12 col-md-6 col-lg-4">
+                    <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
                         <div class="card">
                           <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
                             <% if menuitem.image %>

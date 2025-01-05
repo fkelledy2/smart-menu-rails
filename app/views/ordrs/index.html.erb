@@ -1,9 +1,33 @@
-<div class="row">
-  <div class="col-12">
-    <h1>Orders</h1>
+<%= render 'shared/customcss' %>
+<%= render 'shared/currency' %>
+<div class="page-header">
+  <div class="row">
+    <div class="col-12">
+      <h3>
+        <%= link_to edit_restaurant_path(id: @restaurant), class: "link-dark" do %>
+          <%= @restaurant.name %>
+        <% end %>
+      </h3>
+    </div>
   </div>
 </div>
-<%= render 'shared/currency' %>
+<ul style="height:43px;overflow-y:hidden;" class="nav nav-tabs overflow-auto flex-nowrap" id="taxTabsBack" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark">
+      <%= link_to edit_restaurant_path(id: @restaurant), class: "link-dark" do %>
+        <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
+      <% end %>
+    </button>
+  </li>
+</ul>
+<p>
+<div class="page-header">
+  <div class="row">
+    <div class="col-12">
+        <h4><%= t(".orders") %></h4>
+    </div>
+  </div>
+</div>
 
 <% @ordrs.each do |ordr| %>
     <% if ordr.status != 'delivered' %>

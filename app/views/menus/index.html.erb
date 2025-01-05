@@ -2,10 +2,10 @@
 <%= render 'shared/currency' %>
 <% if current_user %>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-6">
         <h1><%= t(".menus") %></h1>
       </div>
-          <div class="col-sm-6 text-end">
+          <div class="col-6 text-end">
             <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t(".activate") %></button>
             <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t(".deactivate") %></button>
             <%= link_to new_menu_path, class: 'btn btn-sm btn-primary' do %>

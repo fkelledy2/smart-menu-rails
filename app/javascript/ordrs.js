@@ -267,7 +267,7 @@ document.addEventListener("turbo:load", () => {
             var id = cell.getValue();
             var name = cell.getRow();
             var rowData = cell.getRow().getData("data").id;
-            return "<a class='link-dark' href='/ordrs/"+id+"/show'>"+rowData+"</a>";
+            return "<a class='link-dark' href='/ordrs/"+id+"'>"+rowData+"</a>";
         }
         function linkMenu(cell, formatterParams){
             var id = cell.getValue();

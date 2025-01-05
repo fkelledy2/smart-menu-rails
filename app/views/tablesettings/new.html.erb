@@ -1,19 +1,29 @@
 <%= render 'shared/customcss' %>
 <div class="page-header">
   <div class="row">
-    <div class="col-10">
-          <h2>New Table Setting</h2>
-    </div>
-    <div class="col-2">
-        <% if @tablesetting.persisted? %>
-          <%= link_to "Cancel", edit_restaurant_path(id: @tablesetting.restaurant.id), class: "float-end btn btn-light" %>
-        <% else %>
-          <% if @futureParentRestaurant %>
-              <%= link_to t('.cancel'), edit_restaurant_path(id: @futureParentRestaurant.id), class: "float-end btn btn-light" %>
-          <% else %>
-              <%= link_to t('.cancel'), tablesettings_path, class: "float-end btn btn-light" %>
-          <% end %>
+    <div class="col-12">
+      <h4>
+        <%= link_to edit_restaurant_path(id: @tablesetting.restaurant.id), class: "link-dark" do %>
+          <%= @tablesetting.restaurant.name %>
         <% end %>
+      </h4>
+    </div>
+  </div>
+</div>
+<ul style="height:43px;overflow-y:hidden;" class="nav nav-tabs overflow-auto flex-nowrap" id="tablesettingTabsBack" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark">
+      <%= link_to edit_restaurant_path(id: @tablesetting.restaurant.id), class: "link-dark" do %>
+        <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
+      <% end %>
+    </button>
+  </li>
+</ul>
+<p>
+<div class="page-header">
+  <div class="row">
+    <div class="col-12">
+        <h4><%= t(".tablesetting") %></h4>
     </div>
   </div>
 </div>

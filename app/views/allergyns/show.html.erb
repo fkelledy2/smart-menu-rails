@@ -1,9 +1,9 @@
 <div class="page-header">
   <div class="row">
-    <div class="col-sm-10">
+    <div class="col-10">
       <h1><%= t(".allergyn") %></h1>
     </div>
-    <div class="col-sm-2">
+    <div class="col-2">
         <span class="float-end">
           <%= link_to allergyns_path, class: 'btn btn-light' do %>
             <i class="bi bi-chevron-left"></i>
@@ -18,21 +18,21 @@
 
 <%= form_with(model: @allergyn) do |form| %>
   <div class="form-group row">
-    <%= form.label :name, class: 'col-sm-2 col-form-label' %>
-    <div class="col-sm-10">
+    <%= form.label :name, class: 'col-2 col-form-label' %>
+    <div class="col-10">
       <%= form.text_field :name, class: 'form-control', disabled: 'disabled'  %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <%= form.label :description, class: 'col-sm-2 col-form-label' %>
-    <div class="col-sm-10">
+    <%= form.label :description, class: 'col-2 col-form-label' %>
+    <div class="col-10">
       <%= form.text_area :description, class: 'form-control', disabled: 'disabled'  %>
     </div>
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <%= form.label :symbol, class: 'col-sm-2 col-form-label' %>
+    <%= form.label :symbol, class: 'col-2 col-form-label' %>
     <div class="col-sm-10">
         <%= form.text_field :symbol, class: 'form-control', disabled: 'disabled'  %>
     </div>

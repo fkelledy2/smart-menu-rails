@@ -1,16 +1,33 @@
 <div class="page-header">
   <div class="row">
-    <div class="col-10">
-        <h1><%= t(".allergyn") %></h1>
+    <div class="col-12">
+      <h4>
+        <%= link_to edit_restaurant_path(@allergyn.restaurant), class: "link-dark" do %>
+          <%= @allergyn.restaurant.name %>
+        <% end %>
+      </h4>
     </div>
-    <div class="col-2">
-      <%= link_to t(".cancel"), edit_restaurant_path(@allergyn.restaurant), class: "float-end btn btn-light" %>
+  </div>
+</div>
+<ul style="height:43px;overflow-y:hidden;" class="nav nav-tabs overflow-auto flex-nowrap" id="enployeeTabsBack" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark">
+      <%= link_to edit_restaurant_path(@allergyn.restaurant), class: "link-dark" do %>
+        <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
+      <% end %>
+    </button>
+  </li>
+</ul>
+<p>
+<div class="page-header">
+  <div class="row">
+    <div class="col-12">
+        <h4><%= t(".allergyn") %></h4>
     </div>
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-12">
     <%= render 'form', allergyn: @allergyn %>
   </div>
 </div>
-
