@@ -3,7 +3,7 @@
     <div class="col-9">
         <h2><%= t(".menuSection") %></h2>
     </div>
-    <div class="col-sm-2">
+    <div class="col-2">
       <% if @menusection.persisted? %>
         <%= link_to t('.cancel'), edit_menu_path(id: @menusection.menu.id), class: "float-end btn btn-light" %>
       <% else %>
@@ -17,7 +17,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-11">
+  <div class="col-12">
     <%= render 'form', menusection: @menusection %>
   </div>
 </div>

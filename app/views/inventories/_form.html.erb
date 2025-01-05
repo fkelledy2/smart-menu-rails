@@ -36,9 +36,9 @@
   </div>
   <div style='height:8px'></div>
   <div class="row">
-    <div class="col-sm-2">
+    <div class="col-2">
     </div>
-    <div class="col-sm-10">
+    <div class="col-10">
         <span class="float-end">
         <% if inventory.persisted? %>
           <div class="btn btn-dark ">
@@ -51,10 +51,10 @@
   </div>
   <% if inventory.errors.any? %>
   <div class="row">
-    <div class="col-sm-2">
+    <div class="col-2">
         <%= t(".errors") %>
     </div>
-    <div class="col-sm-10">
+    <div class="col-10">
       <ul>
           <% inventory.errors.full_messages.each do |message| %>
             <li><%= message %></li>

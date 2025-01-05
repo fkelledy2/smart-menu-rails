@@ -8,7 +8,7 @@
       <% end %>
 
       <div class="row announcement" id="<%= dom_id(announcement) %>">
-        <div class="col-sm-1 text-center">
+        <div class="col-1 text-center">
           <%= link_to announcements_path(anchor: dom_id(announcement)) do %>
             <strong><%= announcement.published_at.strftime("%b %d") %></strong>
           <% end %>
