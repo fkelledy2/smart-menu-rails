@@ -1,14 +1,52 @@
+<ul style="height:43px;overflow-y:hidden;" class="nav nav-tabs overflow-auto flex-nowrap" id="restaurantTabsBack" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark">
+      <%= link_to restaurants_path(), class: "link-dark" do %>
+        <strong><i class="bi bi-chevron-double-left"></i></strong>
+      <% end %>
+    </button>
+  </li>
+</ul>
+<ul style="position:relative;top:-43px;left:50px;height:43px;overflow-y:hidden;width:85%;mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%" class="nav nav-tabs overflow-auto flex-nowrap" id="restaurantTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark active" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true">Restaurant</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menusConfig" aria-selected="false">Menus</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark" id="employees-tab" data-bs-toggle="tab" data-bs-target="#employee" type="button" role="tab" aria-controls="employeesConfig" aria-selected="false">Employees</button>
+  </li>
+  <% if @current_employee && @current_employee.role == 'manager' %>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="tables-tab" data-bs-toggle="tab" data-bs-target="#table" type="button" role="tab" aria-controls="tablesConfig" aria-selected="false">Tables</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="tips-tab" data-bs-toggle="tab" data-bs-target="#tip" type="button" role="tab" aria-controls="tipsConfig" aria-selected="false">Tips</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="taxes-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab" aria-controls="taxesConfig" aria-selected="false">Taxes</button>
+      </li>
+      <li class="nav-item flex-nowrap" role="presentation">
+        <button class="nav-link link-dark" id="openinghours-tab" data-bs-toggle="tab" data-bs-target="#openinghour" type="button" role="tab" aria-controls="openinghoursConfig" aria-selected="false">Openings</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="allergyns-tab" data-bs-toggle="tab" data-bs-target="#allergyn" type="button" role="tab" aria-controls="allergynConfig" aria-selected="false">Allergyns</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="sizes-tab" data-bs-toggle="tab" data-bs-target="#size" type="button" role="tab" aria-controls="sizeConfig" aria-selected="false">Sizes</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="ordrs-tab" data-bs-toggle="tab" data-bs-target="#ordr" type="button" role="tab" aria-controls="ordrConfig" aria-selected="false">Orders</button>
+      </li>
+  <% end %>
+</ul>
 <div class="page-header">
   <div style='padding-top: 20px' class="row">
-    <div class="col-9">
-          <h1><%=t(".employee")%></h1>
-    </div>
-    <div class="col-3">
-        <% if @employee.persisted? %>
-          <%= link_to t(".cancel"), edit_restaurant_path(id: @employee.restaurant.id), class: "float-end btn btn-light" %>
-        <% else %>
-          <%= link_to t(".cancel"), edit_restaurant_path(id: @employee.restaurant.id), class: "float-end btn btn-light" %>
-        <% end %>
+    <div class="col-12">
+          <h2>
+            <%=t(".employee")%>
+          </h2>
     </div>
   </div>
 </div>

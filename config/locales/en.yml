@@ -74,6 +74,7 @@ en:
       role: "Role"
       id: "ID"
     showOpeningHours:
+      openings: "Openings"
       openingHours: "Openings"
       openingHour: "Opening Hour"
       dayOfWeek: "Day Of Week"
@@ -92,9 +93,11 @@ en:
       type: "Type"
       percentage: "Percentage"
     showTips:
-      tips: "Tip Settings"
+      tips: "Tips"
       tip: "Tip"
       percentage: "Percentage"
+    showOrdrs:
+      ordrs: "Orders"
     edit:
       restaurant: "Edit Restaurant"
     new:
@@ -133,14 +136,14 @@ en:
 
   tips:
     index:
-      tips: "Tip Settings"
-      tip: "Tip Setting"
+      tips: "Tips"
+      tip: "Tip"
     show:
-      tip: "View Tip Setting"
+      tip: "View Tip"
     edit:
-      tip: "Edit Tip Setting"
+      tip: "Edit Tip"
     new:
-      tip: "New Tip Setting"
+      tip: "New Tip"
       cancel: "Cancel"
     form:
       save: "Save"
@@ -362,6 +365,7 @@ en:
         inventoryTracking: "Inventory"
         capacity: "Capacity"
         currency: "Currency"
+        tips: "xxxxx"
       employee:
         name: "Name"
         eid: "ID"
@@ -376,11 +380,11 @@ en:
         taxPercentage: "Percentage"
         restaurant: "Restaurant"
       restaurantavailability:
-        dayofweek: "Day of week"
-        starthour: "Opening hour"
-        startmin: "Opening minute"
-        endhour: "Closing hour"
-        endmin: "Closing minute"
+        dayofweek: "Day"
+        starthour: "Opening"
+        startmin: "Opening"
+        endhour: "Closing"
+        endmin: "Closing"
         sequence: "Sequence"
         status: "Status"
         restaurant: "Restaurant"
@@ -431,9 +435,9 @@ en:
         resetHour: "Resets at"
       menuavailability:
         dayofweek: "Day"
-        starthour: "Open Hr"
+        starthour: "Opening"
         startmin: "Open Mn"
-        endhour: "Close Hr"
+        endhour: "Closing"
         endmin: "Close Mn"
         status: "Status"
         menu: "Menu"
