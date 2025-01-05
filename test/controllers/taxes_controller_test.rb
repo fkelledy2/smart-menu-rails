@@ -5,6 +5,7 @@ class TaxesControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:one)
     @tax = taxes(:one)
+    @restaurant = restaurants(:one)
   end
 
   test "should get index" do
@@ -13,7 +14,7 @@ class TaxesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_tax_url
+    get new_tax_url, params: { restaurant_id: @restaurant.id }
     assert_response :success
   end
 

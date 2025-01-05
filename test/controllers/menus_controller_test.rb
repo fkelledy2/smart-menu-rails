@@ -13,7 +13,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_menu_url
+    get new_menu_url, params: { restaurant_id: @restaurant.id }
     assert_response :success
   end
 

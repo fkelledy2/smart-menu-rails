@@ -4,6 +4,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:one)
     @size = sizes(:one)
+    @restaurant = restaurants(:one)
   end
 
   test "should get index" do
@@ -12,7 +13,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_size_url
+    get new_size_url, params: { restaurant_id: @restaurant.id }
     assert_response :success
   end
 

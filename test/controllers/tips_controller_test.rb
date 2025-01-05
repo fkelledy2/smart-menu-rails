@@ -5,6 +5,7 @@ class TipsControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:one)
     @tip = tips(:one)
+    @restaurant = restaurants(:one)
   end
 
   test "should get index" do
@@ -13,7 +14,7 @@ class TipsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_tip_url
+    get new_tip_url, params: { restaurant_id: @restaurant.id }
     assert_response :success
   end
 

@@ -4,6 +4,7 @@ class TablesettingsControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:one)
     @tablesetting = tablesettings(:one)
+    @restaurant = restaurants(:one)
   end
 
   test "should get index" do
@@ -12,7 +13,7 @@ class TablesettingsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_tablesetting_url
+    get new_tablesetting_url, params: { restaurant_id: @restaurant.id }
     assert_response :success
   end
 

@@ -5,6 +5,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:one)
     @employee = employees(:one)
     @user = users(:one)
+    @restaurant = restaurants(:one)
   end
 
   test "should get index" do
@@ -13,7 +14,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_employee_url
+    get new_employee_url, params: { restaurant_id: @restaurant.id }
     assert_response :success
   end
 

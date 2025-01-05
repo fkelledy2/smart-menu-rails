@@ -4,6 +4,7 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:one)
     @ordr = ordrs(:one)
+    @restaurant = restaurants(:one)
   end
 
   test "should get index" do
@@ -12,7 +13,7 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_ordr_url
+    get new_ordr_url, params: { restaurant_id: @restaurant.id }
     assert_response :success
   end
 

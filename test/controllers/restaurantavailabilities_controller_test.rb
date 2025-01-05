@@ -4,6 +4,7 @@ class RestaurantavailabilitiesControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:one)
     @restaurantavailability = restaurantavailabilities(:one)
+    @restaurant = restaurants(:one)
   end
 
   test "should get index" do
@@ -12,7 +13,7 @@ class RestaurantavailabilitiesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_restaurantavailability_url
+    get new_restaurantavailability_url, params: { restaurant_id: @restaurant.id }
     assert_response :success
   end
 
