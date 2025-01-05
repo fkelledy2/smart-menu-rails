@@ -51,7 +51,7 @@
               <div class="form-group row">
                 <div class="col-sm-3">
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                     <h4><%=t(".details")%></h4>
                 </div>
               </div>
@@ -59,7 +59,7 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                   <%= form.text_field :name, class: 'form-control', disabled: true %>
                 </div>
               </div>
@@ -68,7 +68,7 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :description, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                   <%= form.text_area :description, class: 'form-control', rows: 6, disabled: true %>
                 </div>
               </div>
@@ -77,14 +77,14 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :currency, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                   <%= form.text_field :currency, class: 'form-control', disabled: true %>
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-sm-3">
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                     <p>
                     <h4><%=t(".address")%></h4>
                 </div>
@@ -93,7 +93,7 @@
               <div class="form-group row">
                 <div class="col-sm-3">
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                     <gmp-map style="padding-top:2px;padding-bottom:5px;width:100%;height:200px;" center="40.749933,-73.98633" zoom="13" map-id="DEMO_MAP_ID">
                       <gmp-advanced-marker></gmp-advanced-marker>
                     </gmp-map>
@@ -103,7 +103,7 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :address1, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                     <%= form.text_field :address1, class: 'form-control', disabled: true %>
                 </div>
               </div>
@@ -112,7 +112,7 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :postcode, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                     <%= form.text_field :postcode, class: 'form-control', disabled: true %>
                 </div>
               </div>
@@ -121,14 +121,14 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :country, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                     <%= form.country_select :country, {}, {disabled: true} %>
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-sm-3">
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                     <p>
                     <h4><%=t(".imageSettings")%></h4>
                 </div>
@@ -137,7 +137,7 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                     <%= form.text_field :image, class: 'form-control', disabled: true %>
                     <% if @restaurant.image %>
                         <img src="<%=@restaurant.image%>" class="img-fluid" alt="...">
@@ -149,14 +149,14 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :genid, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                   <%= form.text_field :genid, class: 'form-control', disabled: true %>
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-sm-3">
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                     <p>
                     <h4><%=t(".settings")%></h4>
                 </div>
@@ -165,7 +165,7 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                     <%= form.select :status, options_for_select(Restaurant.statuses.keys.to_a, form.object.status), {}, disabled: 'disabled' %>
                 </div>
               </div>
@@ -174,7 +174,7 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :displayImages, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                   <%= form.select :displayImages, [['on', true], ['off', false]], {}, disabled: 'disabled' %>
                 </div>
               </div>
@@ -183,7 +183,7 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :allowOrdering, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                   <%= form.select :allowOrdering, [['on', true], ['off', false]], {}, disabled: 'disabled' %>
                 </div>
               </div>
@@ -192,7 +192,7 @@
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :inventoryTracking, class: 'col-form-label' %> :</span>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-9">
                   <%= form.select :inventoryTracking, [['on', true], ['off', false]], {}, disabled: 'disabled' %>
                 </div>
               </div>
