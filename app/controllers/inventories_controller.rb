@@ -65,8 +65,13 @@ class InventoriesController < ApplicationController
   # PATCH/PUT /inventories/1 or /inventories/1.json
   def update
     if current_user
+        puts inventory_params
         respond_to do |format|
           if @inventory.update(inventory_params)
+            if @inventory.currentinventory > @inventory.startinginventory
+                @inventory.currentinventory = @inventory.startinginventory
+                @inventory.save
+            end
             format.html { redirect_to edit_menusection_path(@inventory.menuitem.menusection), notice: "Inventory was successfully updated." }
             format.json { render :show, status: :ok, location: @inventory }
           else

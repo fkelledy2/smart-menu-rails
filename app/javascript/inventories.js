@@ -35,7 +35,7 @@
             { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
             { title:"", field:"sequence", visible:true, formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
             {title:"Item", field:"id", responsive:0, maxWidth: 180, formatter:link, hozAlign:"left"},
-            {title:"Inventory", field: "startinginventory", responsive:0, hozAlign:"right", headerHozAlign:"right", mutator: (value, data) => data.currentinventory + '/' + data.startinginventory },
+            {title:"Inventory", field: "inventory", responsive:0, hozAlign:"right", headerHozAlign:"right", mutator: (value, data) => data.currentinventory + '/' + data.startinginventory },
             {title:"Resets At", field:"resethour", responsive:3, hozAlign:"right", headerHozAlign:"right" },
             {title:"Status", field:"status", formatter:status, responsive:3, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
@@ -85,6 +85,18 @@
                 let r = {
                     'inventory': {
                         'status': 'inactive'
+                    }
+                };
+                patch( rows[i].url, r );
+            }
+        });
+        document.getElementById("reset-inventory").addEventListener("click", function(){
+            const rows = inventoryTable.getSelectedData();
+            for (let i = 0; i < rows.length; i++) {
+                inventoryTable.updateData([{id:rows[i].id, currentinventory: rows[i].startinginventory}]);
+                let r = {
+                    'inventory': {
+                        'currentinventory': rows[i].startinginventory
                     }
                 };
                 patch( rows[i].url, r );
