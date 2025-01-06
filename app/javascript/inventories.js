@@ -34,11 +34,10 @@
             },
             { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
             { title:"", field:"sequence", visible:true, formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
-            {title:"Inventory Item", field:"id", responsive:0, maxWidth: 180, formatter:link, hozAlign:"left"},
-            {title:"Starting Inventory", field:"startinginventory", responsive:0, hozAlign:"right", headerHozAlign:"right"},
-            {title:"Current Inventory", field:"currentinventory", responsive:0, hozAlign:"right", headerHozAlign:"right" },
-            {title:"Reset Hour", field:"resethour", responsive:3, hozAlign:"right", headerHozAlign:"right" },
-            {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
+            {title:"Item", field:"id", responsive:0, maxWidth: 180, formatter:link, hozAlign:"left"},
+            {title:"Inventory", field: "startinginventory", responsive:0, hozAlign:"right", headerHozAlign:"right", mutator: (value, data) => data.currentinventory + '/' + data.startinginventory },
+            {title:"Resets At", field:"resethour", responsive:3, hozAlign:"right", headerHozAlign:"right" },
+            {title:"Status", field:"status", formatter:status, responsive:3, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
         });
         inventoryTable.on("rowMoved", function(row){
