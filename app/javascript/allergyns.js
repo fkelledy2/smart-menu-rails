@@ -19,7 +19,7 @@ document.addEventListener("turbo:load", () => {
               {column:"sequence", dir:"asc"},
           ],
           layout:"fitDataStretch",
-          ajaxURL: '/allergyns.json',
+          ajaxURL: '/restaurants/'+restaurantId+'/allergyns.json',
           movableRows:true,
           columns: [
            {

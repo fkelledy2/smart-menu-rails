@@ -4,9 +4,28 @@ class AllergynsController < ApplicationController
   # GET /allergyns or /allergyns.json
   def index
     if current_user
-        @allergyns = Allergyn.where( archived: false).all
+        if params[:restaurant_id]
+            @restaurant = Restaurant.find_by_id(params[:restaurant_id])
+            @allergyns = Allergyn.where( restaurant: @restaurant).all
+        end
+        Analytics.track(
+            user_id: current_user.id,
+            event: 'allergyns.index',
+            properties: {
+              restaurant_id: @restaurant.id,
+            }
+        )
     else
-        redirect_to root_url
+        if params[:restaurant_id]
+            @restaurant = Restaurant.find_by_id(params[:restaurant_id])
+            @allergyns = Allergyn.where( restaurant: @restaurant).all
+            Analytics.track(
+                event: 'allergyns.index',
+                properties: {
+                  restaurant_id: @restaurant.id,
+                }
+            )
+        end
     end
   end
 
