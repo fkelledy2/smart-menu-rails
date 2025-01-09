@@ -94,7 +94,6 @@ gem "tom-select-rails", "~> 2.3"
 gem 'currency_select'
 gem 'currencies'
 gem 'nokogiri'
-gem 'stripe'
 gem 'shrine', '~> 3.3'
 gem 'image_processing', '~> 1.12', '>= 1.12.1'
 gem 'cropper_rails'
@@ -103,4 +102,6 @@ gem 'chatgpt-ruby'
 gem "aws-sdk-s3", require: false
 gem 'analytics-ruby', '~> 2.4.0', :require => 'segment/analytics'
 gem 'simplecov', require: false, group: :test
-
+gem "pay", "~> 8.0"
+gem "stripe", "~> 13.0"
+gem "receipts", "~> 2.0"

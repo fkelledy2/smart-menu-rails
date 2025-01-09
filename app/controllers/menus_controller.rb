@@ -1,3 +1,5 @@
+require "rqrcode"
+
 class MenusController < ApplicationController
   before_action :set_menu, only: %i[ show edit update destroy ]
 
@@ -136,6 +138,10 @@ class MenusController < ApplicationController
                 }
             )
         end
+        @qrURL = Rails.application.routes.url_helpers.menu_url(@menu, :host => request.host_with_port)
+        @qrURL.sub! 'http', 'https'
+        @qrURL.sub! '/edit', ''
+        @qr = RQRCode::QRCode.new(@qrURL)
     else
         redirect_to root_url
     end

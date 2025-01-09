@@ -1,4 +1,6 @@
 class Employee < ApplicationRecord
+  pay_customer
+
   belongs_to :user
   belongs_to :restaurant
   has_many :ordrs, dependent: :destroy

@@ -32,6 +32,9 @@
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark" id="menuavailability-tab" data-bs-toggle="tab" data-bs-target="#menuavailability" type="button" role="tab" aria-controls="menuavailabilityConfig" aria-selected="false">Availabilites</button>
   </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark" id="menu-qrcode-tab" data-bs-toggle="tab" data-bs-target="#menuqrcode" type="button" role="tab" aria-controls="menuqrcodeConfig" aria-selected="false">QRCode</button>
+  </li>
 </ul>
 
 <div style="position:relative;top:-43px;">
@@ -63,6 +66,25 @@
           <%= render 'showMenuavailabilities', menu: @menu, edit: false %>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="tab-content" id="menuqrcodeConfig">
+    <div class="tab-pane fade" id="menuqrcode" role="tabpanel" aria-labelledby="menuqrcode-tab">
+        <p style='height:30px'>
+        <div class="card">
+          <h5 class="card-header d-flex justify-content-center"> Scan for Menu: <%= @menu.name %></h5>
+          <div class="card-body">
+              <div class="row">
+                <span style='display:none' id="qr_slug"><%= @qrURL %></span>
+                <span style='display:none' id="qr_icon"><%= image_url('qr-icon.svg') %></span>
+                <div class="col-12">
+                    <div id="qrcanvas" class="d-flex justify-content-center">
+                    </div>
+                </div>
+              </div>
+          </div>
+        </div>
+
     </div>
   </div>
 </div>
