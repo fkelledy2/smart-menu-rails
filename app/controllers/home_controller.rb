@@ -11,7 +11,9 @@ class HomeController < ApplicationController
       @demoMenu = Menu.first
       if @demoMenu
           @qrDemoURL = Rails.application.routes.url_helpers.menu_url(@demoMenu, :host => request.host_with_port)
-          @qrDemoURL.sub! 'http://', 'https://'
+          if request.host != 'localhost'
+              @qrDemoURL.sub! 'http://', 'https://'
+          end
           @qrDemoURL.sub! '/edit', ''
       end
   end
