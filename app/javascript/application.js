@@ -66,6 +66,7 @@ document.addEventListener("turbo:load", () => {
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl)
     })
+
 })
 
 function patch(url, body) {

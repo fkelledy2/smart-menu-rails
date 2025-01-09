@@ -8,6 +8,12 @@ class HomeController < ApplicationController
             event: 'home.index'
           )
       end
+      @demoMenu = Menu.first
+      if @demoMenu
+          @qrDemoURL = Rails.application.routes.url_helpers.menu_url(@demoMenu, :host => request.host_with_port)
+          @qrDemoURL.sub! 'http', 'https'
+          @qrDemoURL.sub! '/edit', ''
+      end
   end
 
   def terms

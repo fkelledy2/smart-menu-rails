@@ -1,8 +1,8 @@
 document.addEventListener("turbo:load", () => {
 
     const qrCode = new QRCodeStyling({
-        width: 320,
-        height: 320,
+        width: 300,
+        height: 300,
         type: "svg",
         data: $("#qr_slug").text(),
         image: $("#qr_icon").text(),
