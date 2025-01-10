@@ -29,6 +29,7 @@ class MenusectionsController < ApplicationController
         if params[:menu_id]
           @futureParentMenu = Menu.find(params[:menu_id])
           @menusection.menu = @futureParentMenu
+          @menusection.sequence = 1
         end
 
     else

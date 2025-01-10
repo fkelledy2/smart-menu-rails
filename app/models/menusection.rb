@@ -17,5 +17,4 @@ class Menusection < ApplicationRecord
   validates :name, :presence => true
   validates :menu, :presence => true
   validates :status, :presence => true
-  validates :sequence, :presence => true
 end
