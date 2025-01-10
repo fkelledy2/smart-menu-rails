@@ -23,16 +23,6 @@
   </div>
   <div style='height:4px'></div>
   <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :menusection_id, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.collection_select :menusection_id, Menusection.all ,:id, :name, options = {:prompt => t(".selectMenuSection")}%>
-    </div>
-  </div>
-  <div style='height:4px'></div>
-
-  <div class="form-group row">
     <div class="col-12">
         <p>
         <h4><%=t(".imageSettings")%></h4>
@@ -55,13 +45,19 @@
     </div>
   </div>
   <div style='height:4px'></div>
-      <div class="row">
+  <div class="row">
         <div class="col-3">
         </div>
         <div class="col-9">
           <%= image_tag menuitem.image_url, :class => "img-thumbnail" if menuitem.image %>
         </div>
-      </div>
+  </div>
+
+  <% if @futureParentMenuSection %>
+      <%= form.hidden_field :menusection_id, value: @futureParentMenuSection.id %>
+  <% else %>
+      <%= form.hidden_field :menusection_id %>
+  <% end %>
 
   <div style='height:4px'></div>
   <div class="form-group row">
@@ -132,42 +128,46 @@
       <%= form.text_field :preptime, class: 'form-control' %>
     </div>
   </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :allergyns, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-        <div class="form-control">
-            <%= form.collection_check_boxes :allergyn_ids, Allergyn.all, :id, :name, { hide_label: true } do |b| %>
-                <div class="form-check">
-                  <%= b.check_box %>
-                  <label class="form-check-label">
-                    <%= b.label %>
-                  </label>
-                </div>
-            <% end %>
+  <% if Allergyn.where( restaurant_id: menuitem.menusection.menu.restaurant.id ).count > 0 %>
+      <div style='height:4px'></div>
+      <div class="form-group row">
+        <div class="col-3">
+          <span class="float-md-end"><%= form.label :allergyns, class: 'col-form-label' %></span>
         </div>
-    </div>
-  </div>
-  <div style='height:4px'></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :sizes, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-        <div class="form-control">
-            <%= form.collection_check_boxes :size_ids, Size.all, :id, :name, { hide_label: true } do |b| %>
-                <div class="form-check">
-                  <%= b.check_box %>
-                  <label class="form-check-label">
-                    <%= b.label %>
-                  </label>
-                </div>
-            <% end %>
+        <div class="col-9">
+            <div class="form-control">
+                <%= form.collection_check_boxes :allergyn_ids, Allergyn.where( restaurant_id: menuitem.menusection.menu.restaurant.id ), :id, :name, { hide_label: true } do |b| %>
+                    <div class="form-check">
+                      <%= b.check_box %>
+                      <label class="form-check-label">
+                        <%= b.label %>
+                      </label>
+                    </div>
+                <% end %>
+            </div>
         </div>
-    </div>
-  </div>
+      </div>
+  <% end %>
+  <% if Size.where( restaurant_id: menuitem.menusection.menu.restaurant.id ).count > 0 %>
+      <div style='height:4px'></div>
+      <div class="form-group row">
+        <div class="col-3">
+          <span class="float-md-end"><%= form.label :sizes, class: 'col-form-label' %></span>
+        </div>
+        <div class="col-9">
+            <div class="form-control">
+                <%= form.collection_check_boxes :size_ids, Size.where( restaurant_id: menuitem.menusection.menu.restaurant.id ), :id, :name, { hide_label: true } do |b| %>
+                    <div class="form-check">
+                      <%= b.check_box %>
+                      <label class="form-check-label">
+                        <%= b.label %>
+                      </label>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+      </div>
+  <% end %>
   <div style='height:8px'></div>
   <div class="row">
     <div class="col-3">
