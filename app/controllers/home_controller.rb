@@ -8,7 +8,7 @@ class HomeController < ApplicationController
             event: 'home.index'
           )
       end
-      @demoMenu = Menu.(id: 3)
+      @demoMenu = Menu.find(id: 3)
       if @demoMenu
           @qrDemoURL = Rails.application.routes.url_helpers.menu_url(@demoMenu, :host => request.host_with_port)
           if request.host != 'localhost'
