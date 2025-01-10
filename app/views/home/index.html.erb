@@ -126,7 +126,7 @@
       <h2 class="pb-2 border-bottom">Demo Menu</h2>
       <p style='text-align:justify;'><strong>Scan</strong> or <strong>tap</strong> this QR code to see what our smart menus are capable of!</p>
       <div class="row g-4 py-5 row-cols-2 row-cols-2 row-cols-lg-4">
-            <span style='display:none' id="qr_slug"><%= @qrDemoURL %></span>
+            <span id="qr_slug"><%= @qrDemoURL %></span>
             <span style='display:none' id="qr_icon"><%= image_url('qr-icon.svg') %></span>
             <div class="col-12">
                 <a href="<%= @qrDemoURL %>" target="_blank">
