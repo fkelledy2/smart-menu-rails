@@ -27,6 +27,11 @@ class MenuitemsController < ApplicationController
   def new
     if current_user
         @menuitem = Menuitem.new
+        if params[:menusection_id]
+          @futureParentMenuSection = Menusection.find_by_id(params[:menusection_id])
+          @menuitem.menusection = @futureParentMenuSection
+          @menuitem.sequence = 1
+        end
     else
         redirect_to root_url
     end

@@ -28,8 +28,6 @@ module SmartMenu
 
     config.action_view.field_error_proc = Proc.new { |html_tag, instance| "#{html_tag}".html_safe
 
-    config.action_mailer.default_url_options = { host: "gmail.com" }
-
 }
   end
 end
