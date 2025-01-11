@@ -11,6 +11,7 @@ class GenerateImageJob
             if( @genimage.menuitem.menusection.menu && @genimage.menuitem.menusection.menu.imagecontext )
                 prompt += @genimage.menuitem.menusection.menu.imagecontext+' with '
             end
+            prompt += @genimage.menuitem.name + ' : '
             prompt += @genimage.menuitem.description
             if( @genimage.menuitem.menusection.menu.restaurant && @genimage.menuitem.menusection.menu.restaurant.imagecontext )
                 prompt += ' set on a '+@genimage.menuitem.menusection.menu.restaurant.imagecontext
