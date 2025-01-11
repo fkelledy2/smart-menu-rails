@@ -9,13 +9,18 @@ class GenerateImageJob
         if( @genimage.menuitem != nil )
             prompt = 'generate an image of '
             prompt += @genimage.menuitem.name + ' : '
-            prompt += @genimage.menuitem.description
-            if( @genimage.menuitem.menusection.menu && @genimage.menuitem.menusection.menu.imagecontext )
-                prompt += ' set on a '+@genimage.menuitem.menusection.menu.imagecontext
-            end
+            prompt += @genimage.menuitem.description + ' '
             if( @genimage.menuitem.menusection.menu.restaurant && @genimage.menuitem.menusection.menu.restaurant.imagecontext )
-                prompt += ' set in a '+@genimage.menuitem.menusection.menu.restaurant.imagecontext
+                prompt += 'The restaurant is a '+@genimage.menuitem.menusection.menu.restaurant.imagecontext
             end
+            prompt += 'The table setting is '
+            if( @genimage.menuitem.menusection.menu && @genimage.menuitem.menusection.menu.imagecontext )
+                prompt += @genimage.menuitem.menusection.menu.imagecontext
+            end
+            prompt += ', showcasing the meal as the centerpiece. '
+            prompt += 'The focus is 75% on the plate, capturing every detail of the foods presentation, '
+            prompt += 'while the background is blurred to emphasize the dish. '
+
 #             if( @genimage.name )
 #                 prompt += 'use seed: '+@genimage.name
 #             end
