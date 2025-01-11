@@ -40,6 +40,11 @@ class MenuitemsController < ApplicationController
   # GET /menuitems/1/edit
   def edit
     if current_user
+        if @menuitem.genimage
+            puts @menuitem.genimage.id
+            puts @menuitem.genimage.name
+            puts @menuitem.genimage.description
+        end
     else
         redirect_to root_url
     end

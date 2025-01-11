@@ -7,21 +7,19 @@ class GenerateImageJob
     @genimage = Genimage.find(genimage_id)
     if( @genimage )
         if( @genimage.menuitem != nil )
-            prompt = ''
-            if( @genimage.menuitem.menusection.menu && @genimage.menuitem.menusection.menu.imagecontext )
-                prompt += @genimage.menuitem.menusection.menu.imagecontext+' with '
-            end
+            prompt = 'generate an image of '
             prompt += @genimage.menuitem.name + ' : '
             prompt += @genimage.menuitem.description
+            if( @genimage.menuitem.menusection.menu && @genimage.menuitem.menusection.menu.imagecontext )
+                prompt += ' set on a '+@genimage.menuitem.menusection.menu.imagecontext
+            end
             if( @genimage.menuitem.menusection.menu.restaurant && @genimage.menuitem.menusection.menu.restaurant.imagecontext )
-                prompt += ' set on a '+@genimage.menuitem.menusection.menu.restaurant.imagecontext
+                prompt += ' set in a '+@genimage.menuitem.menusection.menu.restaurant.imagecontext
             end
-            prompt +=' The image is captured at an angle of 33 degrees, emphasizing the appetizing presentation, with the background softly blurred to keep focus on the dish. '
-            if( @genimage.menuitem.menusection.menu.restaurant.genid )
-                prompt += 'use seed_id: '+@genimage.menuitem.menusection.menu.restaurant.genid
-            end
+#             if( @genimage.name )
+#                 prompt += 'use seed: '+@genimage.name
+#             end
 
-            puts prompt
             response = generate_image(prompt, 1, '512x512')
             puts response
             if response.success?
@@ -45,6 +43,7 @@ class GenerateImageJob
         api_key = Rails.application.credentials.openai_api_key
         headers = { 'Authorization' => "Bearer #{api_key}", 'Content-Type' => 'application/json' }
         body = { prompt: prompt, n: number, size: size }.to_json
+        puts body
         HTTParty.post(
           'https://api.openai.com/v1/images/generations',
           headers: headers,
@@ -67,3 +66,13 @@ class GenerateImageJob
   end
 
 end
+
+# https://oaidalleapiprodscus.blob.core.windows.net/private/org-LzD1hb4w3WMelt7pEVnBYP2R/user-GjMFpkTLTGr1PCr06hyZx5Yj/img-8ieCFhLNUGlJ9P2621AHwQ7m.png?
+# st=2025-01-11T15%3A42%3A19Z&se=2025-01-11T17%3A42%3A19Z&
+# sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&
+# skoid=d505667d-d6c1-4a0a-bac7-5c84a87759f8&
+# sktid=a48cca56-e6da-484e-a814-9c849652bcb3
+# &skt=2025-01-11T00%3A19%3A06Z
+# &ske=2025-01-12T00%3A19%3A06Z&sks=b
+# &skv=2024-08-04&
+# sig=d0rop2TSBSGJlSMWhl/XkqgDocSrmicOswAq%2BtpaRO4%3D"

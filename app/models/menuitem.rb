@@ -29,6 +29,12 @@ class Menuitem < ApplicationRecord
         -1
       end
   end
+
+  def seed
+      if( genimage )
+          genimage.name
+      end
+  end
   validates :inventory, :presence => false
   validates :name, :presence => true
   validates :menusection, :presence => true
