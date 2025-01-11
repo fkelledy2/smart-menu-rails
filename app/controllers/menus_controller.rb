@@ -39,7 +39,6 @@ class MenusController < ApplicationController
   # GET	/restaurants/:restaurant_id/menus/:id(.:format)	 menus#show
   # GET /menus/1 or /menus/1.json
   def show
-    @allergyns = Allergyn.where( status: 'active').all
     if params[:menu_id] && params[:id]
         if params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
@@ -96,6 +95,9 @@ class MenusController < ApplicationController
                 end
             end
         end
+    else
+        @menu = Menu.find_by_id(params[:id])
+        @allergyns = Allergyn.where( restaurant_id: @menu.restaurant.id )
     end
   end
 
