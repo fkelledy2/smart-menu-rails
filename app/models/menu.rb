@@ -19,7 +19,11 @@ class Menu < ApplicationRecord
   end
 
   def slug
-      Smartmenu.where(restaurant: restaurant, menu: self).first.slug
+      if Smartmenu.where(restaurant: restaurant, menu: self).first
+          Smartmenu.where(restaurant: restaurant, menu: self).first.slug
+      else
+          ''
+      end
   end
 
   validates :name, :presence => true
