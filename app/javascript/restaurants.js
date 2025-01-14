@@ -2,25 +2,96 @@ document.addEventListener("turbo:load", () => {
 
     $(".qrSlug").each(function(){
         var qrSlug = $(this).text();
-        alert( 'qrSlug: '+'https://'+$("#qrHost").text()+'/smartmenus/'+qrSlug);
-        const qrCode = new QRCodeStyling({
-            width: 300,
-            height: 300,
-            type: "svg",
-            data: 'https://'+$("#qrHost").text()+'/smartmenus/'+qrSlug,
-            image: $("#qrIcon").text(),
-            dotsOptions: {
-                color: "#000000",
-                type: "rounded"
-            },
-            backgroundOptions: {
-                color: "#ffffff",
-            },
-            imageOptions: {
-                crossOrigin: "anonymous",
-                margin: 20
-            }
+        var qrCode = new QRCodeStyling({
+           "type":"canvas",
+           "shape":"square",
+           "width":300,
+           "height":300,
+           "data":'https://'+$("#qrHost").text()+'/smartmenus/'+qrSlug,
+           "margin":0,
+           "qrOptions":{
+              "typeNumber":"0",
+              "mode":"Byte",
+              "errorCorrectionLevel":"Q"
+           },
+           "imageOptions":{
+              "saveAsBlob":true,
+              "hideBackgroundDots":true,
+              "imageSize":0.4,
+              "margin":0
+           },
+           "dotsOptions":{
+              "type":"extra-rounded",
+              "color":"#000000",
+              "roundSize":true
+           },
+           "backgroundOptions":{
+              "round":0,
+              "color":"#ffffff"
+           },
+           "image": $("#qrIcon").text(),
+           "dotsOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#6a1a4c",
+                 "color2":"#6a1a4c",
+                 "rotation":"0"
+              }
+           },
+           "cornersSquareOptions":{
+              "type":"extra-rounded",
+              "color":"#000000"
+           },
+           "cornersSquareOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#000000",
+                 "color2":"#000000",
+                 "rotation":"0"
+              }
+           },
+           "cornersDotOptions":{
+              "type":"",
+              "color":"#000000"
+           },
+           "cornersDotOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#000000",
+                 "color2":"#000000",
+                 "rotation":"0"
+              }
+           },
+           "backgroundOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#ffffff",
+                 "color2":"#ffffff",
+                 "rotation":"0"
+              }
+           }
         });
+
         document.getElementById(qrSlug).innerHTML = '';
         qrCode.append(document.getElementById(qrSlug));
     });

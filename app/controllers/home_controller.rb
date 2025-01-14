@@ -8,14 +8,8 @@ class HomeController < ApplicationController
             event: 'home.index'
           )
       end
-      @demoMenu = Menu.where(id: 1).first
-      if @demoMenu
-          @qrDemoURL = Rails.application.routes.url_helpers.smartmenu_path(@demoMenu.slug, :host => request.host_with_port)
-          if request.host != 'localhost'
-              @qrDemoURL.sub! 'http://', 'https://'
-          end
-          @qrDemoURL.sub! '/edit', ''
-      end
+      @qrHost = request.host_with_port
+      @demoMenu = Smartmenu.where(restaurant_id: 3, menu_id: 3).first
   end
 
   def terms

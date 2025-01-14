@@ -122,15 +122,16 @@
   </div>
 
   <% if @demoMenu %>
+    <span style='display:none' id="qrIcon"><%= image_url('qr-icon.svg') %></span>
+    <span style='display:none' id="qrHost"><%= @qrHost %></span>
     <div id="demo-table" class="container px-1 py-2">
       <h2 class="pb-2 border-bottom">Demo Menu</h2>
       <p style='text-align:justify;'><strong>Scan</strong> or <strong>tap</strong> this QR code to see what our smart menus are capable of!</p>
       <div class="row g-4 py-5 row-cols-2 row-cols-2 row-cols-lg-4">
-            <span style='display:none' id="qr_slug"><%= @qrDemoURL %></span>
-            <span style='display:none' id="qr_icon"><%= image_url('qr-icon.svg') %></span>
+            <span style='display:none' class="qrSlug"><%= @demoMenu.slug %></span>
             <div class="col-12">
-                <a href="<%= @qrDemoURL %>" target="_blank">
-                    <div id="qrcanvas" class="d-flex justify-content-center">
+                <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
+                    <div id="<%= @demoMenu.slug %>" class="d-flex justify-content-center">
                     </div>
                 </a>
             </div>

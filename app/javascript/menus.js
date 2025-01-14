@@ -1,26 +1,5 @@
 document.addEventListener("turbo:load", () => {
 
-    const qrCode = new QRCodeStyling({
-        width: 300,
-        height: 300,
-        type: "svg",
-        data: $("#qr_slug").text(),
-        image: $("#qr_icon").text(),
-        dotsOptions: {
-            color: "#000000",
-            type: "rounded"
-        },
-        backgroundOptions: {
-            color: "#ffffff",
-        },
-        imageOptions: {
-            crossOrigin: "anonymous",
-            margin: 20
-        }
-    });
-
-    qrCode.append(document.getElementById("qrcanvas"));
-
     if ($("#size_size").is(':visible')) {
         new TomSelect("#size_size",{
         });
