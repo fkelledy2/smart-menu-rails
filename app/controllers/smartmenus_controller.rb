@@ -20,9 +20,9 @@ class SmartmenusController < ApplicationController
 #         }
 #     )
     if @tablesetting != nil
-        @openOrder = Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 0)
-                     .or(Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 20))
-                     .or(Ordr.where( menu_id: params[:menu_id], tablesetting_id: params[:id], restaurant_id: @tablesetting.restaurant_id, status: 30)).first
+        @openOrder = Ordr.where( menu_id: @menu.id, tablesetting_id: @tablesetting.id, restaurant_id: @tablesetting.restaurant.id, status: 0)
+                 .or(Ordr.where( menu_id: @menu.id, tablesetting_id: @tablesetting.id, restaurant_id: @tablesetting.restaurant.id, status: 20))
+                 .or(Ordr.where( menu_id: @menu.id, tablesetting_id: @tablesetting.id, restaurant_id: @tablesetting.restaurant.id, status: 30)).first
         if @openOrder
             @openOrder.nett = @openOrder.runningTotal
             taxes = Tax.where(restaurant_id: @openOrder.restaurant.id).order(sequence: :asc)

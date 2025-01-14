@@ -252,13 +252,12 @@
     <% if @allergyns && @allergyns.length > 0 %>
         <div style="padding-top:20px" id="menusection_allergyns"></div>
         <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="mx-auto text-center text-danger col-12">
+            <div class="card-body mx-auto text-center text-danger ">
+                <div class="row ">
+                    <div class="col-12">
                         <h2>Allergens</h2>
-                        &nbsp;&nbsp;|&nbsp;&nbsp;
                         <% @allergyns.each do |allergyn| %>
-                            <b><%= allergyn.symbol %></b> - <%= allergyn.name %>&nbsp;&nbsp;|&nbsp;&nbsp;
+                            <span style='white-space:nowrap'>| <b><%= allergyn.symbol %></b>&nbsp;-&nbsp;<%= allergyn.name %> |&nbsp;&nbsp;</span>
                         <% end %>
                     </div>
                 </div>

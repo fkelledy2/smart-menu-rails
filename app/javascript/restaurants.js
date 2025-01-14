@@ -20,6 +20,7 @@ document.addEventListener("turbo:load", () => {
                 margin: 20
             }
         });
+        document.getElementById(qrSlug).innerHTML = '';
         qrCode.append(document.getElementById(qrSlug));
     });
 
