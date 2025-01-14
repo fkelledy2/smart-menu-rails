@@ -92,6 +92,8 @@ en:
       name: "Name"
       type: "Type"
       percentage: "Percentage"
+    showSmartMenus:
+      smartQRs: "Smart QRs"
     showTips:
       tips: "Tips"
       tip: "Tip"

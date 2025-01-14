@@ -48,13 +48,15 @@ class RestaurantsController < ApplicationController
   # GET /restaurants/1/edit
   def edit
     if current_user
-            Analytics.track(
-                user_id: current_user.id,
-                event: 'restaurants.edit',
-                properties: {
+        @qrHost = request.host_with_port
+
+        Analytics.track(
+            user_id: current_user.id,
+            event: 'restaurants.edit',
+            properties: {
                   restaurant_id: params[:id]
-                }
-            )
+            }
+        )
     else
         redirect_to root_url
     end
@@ -97,6 +99,8 @@ class RestaurantsController < ApplicationController
     if current_user
         respond_to do |format|
           if @restaurant.update(restaurant_params)
+            SmartMenuSyncJob.perform_sync(@restaurant)
+
             Analytics.track(
                 user_id: current_user.id,
                 event: 'restaurants.update',

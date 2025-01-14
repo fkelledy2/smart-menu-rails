@@ -1,5 +1,28 @@
 document.addEventListener("turbo:load", () => {
 
+    $(".qrSlug").each(function(){
+        var qrSlug = $(this).text();
+        const qrCode = new QRCodeStyling({
+            width: 300,
+            height: 300,
+            type: "svg",
+            data: 'https://'+$("#qrHost").text()+'/smartmenus/'+qrSlug,
+            image: $("#qrIcon").text(),
+            dotsOptions: {
+                color: "#000000",
+                type: "rounded"
+            },
+            backgroundOptions: {
+                color: "#ffffff",
+            },
+            imageOptions: {
+                crossOrigin: "anonymous",
+                margin: 20
+            }
+        });
+        qrCode.append(document.getElementById(qrSlug));
+    });
+
     if ($("#restaurantTabs").is(':visible') || $("#newRestaurant").is(':visible')) {
         const placePicker = document.querySelector('gmpx-place-picker');
             try {

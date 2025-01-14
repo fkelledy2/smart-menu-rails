@@ -10,7 +10,7 @@
                     <div style="top:-7px" class="btn-group" role="group" aria-label="Button group with nested dropdown">
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-sm btn-dark">
-                                <%= link_to restaurant_menu_path(@menu.restaurant, @menu), class: 'text-white text-decoration-none link-light' do %>
+                                <%= link_to smartmenu_path(@menu.slug), class: 'text-white text-decoration-none link-light' do %>
                                     <i class="bi bi-eye-fill"></i>
                                 <% end %>
                             </button>

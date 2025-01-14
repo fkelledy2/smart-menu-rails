@@ -1,0 +1,49 @@
+<%= form_with(model: smartmenu) do |form| %>
+  <% if smartmenu.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(smartmenu.errors.count, "error") %> prohibited this smartmenu from being saved:</h2>
+
+      <ul>
+      <% smartmenu.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :slug, class: 'form-label' %>
+      <%= form.text_field :slug, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :restaurant_id, class: 'form-label' %>
+      <%= form.text_field :restaurant_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :menu_id, class: 'form-label' %>
+      <%= form.text_field :menu_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :tablesetting_id, class: 'form-label' %>
+      <%= form.text_field :tablesetting_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if smartmenu.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', smartmenu, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if smartmenu.persisted? %>
+      <%= link_to "Cancel", smartmenu, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", smartmenus_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

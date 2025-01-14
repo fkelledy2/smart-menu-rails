@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_08_181710) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_12_213653) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -504,6 +504,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_08_181710) do
     t.index ["restaurant_id"], name: "index_sizes_on_restaurant_id"
   end
 
+  create_table "smartmenus", force: :cascade do |t|
+    t.string "slug", null: false
+    t.bigint "restaurant_id", null: false
+    t.bigint "menu_id"
+    t.bigint "tablesetting_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id"], name: "index_smartmenus_on_menu_id"
+    t.index ["restaurant_id"], name: "index_smartmenus_on_restaurant_id"
+    t.index ["slug"], name: "index_smartmenus_on_slug"
+    t.index ["tablesetting_id"], name: "index_smartmenus_on_tablesetting_id"
+  end
+
   create_table "tablesettings", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -612,6 +625,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_08_181710) do
   add_foreign_key "restaurants", "users"
   add_foreign_key "services", "users"
   add_foreign_key "sizes", "restaurants"
+  add_foreign_key "smartmenus", "menus"
+  add_foreign_key "smartmenus", "restaurants"
+  add_foreign_key "smartmenus", "tablesettings"
   add_foreign_key "tablesettings", "restaurants"
   add_foreign_key "taxes", "restaurants"
   add_foreign_key "tips", "restaurants"
