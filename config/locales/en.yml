@@ -93,7 +93,7 @@ en:
       type: "Type"
       percentage: "Percentage"
     showSmartMenus:
-      smartQRs: "Smart QRs"
+      smartQRs: "QRs"
     showTips:
       tips: "Tips"
       tip: "Tip"
@@ -102,6 +102,7 @@ en:
       ordrs: "Orders"
     edit:
       restaurant: "Edit Restaurant"
+      smartQRs: "QRs"
     new:
       restaurant: "New Restaurant"
       cancel: "Cancel"

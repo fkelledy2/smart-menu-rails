@@ -60,6 +60,7 @@ class SmartmenusController < ApplicationController
             end
         end
     end
+    expires_in 10.minutes
   end
 
   # GET /smartmenus/new

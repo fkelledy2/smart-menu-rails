@@ -22,7 +22,7 @@
                                     <% end %>
                                 <% end %>
                                 <% if @ordrparticipant && @ordrparticipant.name == nil %>
-                                    <span id="addYourNameSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="left" title="Add your name">
+                                    <span id="addYourNameSpan">
                                         <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
                                           <i class="bi bi-person-fill-add"></i>
                                         </button>
@@ -55,7 +55,7 @@
                     <% if current_user %>
                     <% else %>
                         <% if @ordrparticipant %>
-                            <span id="filterMenuSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="right" title="Filter menu">
+                            <span id="filterMenuSpan">
                                 <button type="button" class="btn btn-sm btn-light position-relative" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#filterOrderModal">
                                     <i class="bi bi-filter"></i>
                                     <% if @ordrparticipant.allergyns.size > 0 %>
@@ -654,7 +654,7 @@
               <div class="modal-body">
                   <div class="form-group row">
                     <div class="col-8">
-                        <%= form.collection_check_boxes :allergyn_ids, Allergyn.all, :id, :name, { hide_label: true } do |b| %>
+                        <%= form.collection_check_boxes :allergyn_ids, Allergyn.where(restaurant_id: @menu.restaurant.id), :id, :name, { hide_label: true } do |b| %>
                             <div form-check">
                                 <%= b.check_box %>
                                 <label class="form-check-label">

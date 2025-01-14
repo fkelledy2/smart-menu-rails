@@ -40,38 +40,32 @@ class OrdrparticipantsController < ApplicationController
 
   # POST /ordrparticipants or /ordrparticipants.json
   def create
-    if current_user
         @ordrparticipant = Ordrparticipant.new(ordrparticipant_params)
         respond_to do |format|
           if @ordrparticipant.save
-            format.html { redirect_to menu_tablesetting_path(@ordrparticipant.ordr.menu, @ordrparticipant.ordr.tablesetting), notice: "Ordrparticipant was successfully created." }
+            @smartMenu = Smartmenu.where( restaurant_id: @ordrparticipant.ordr.menu.restaurant.id, menu_id: @ordrparticipant.ordr.menu.id, tablesetting_id: @ordrparticipant.ordr.tablesetting.id ).first
+            format.html { redirect_to smartmenu_path(@smartMenu.slug), notice: "Ordrparticipant was successfully created." }
             format.json { render :show, status: :created, location: @ordrparticipant }
           else
             format.html { render :new, status: :unprocessable_entity }
             format.json { render json: @ordrparticipant.errors, status: :unprocessable_entity }
           end
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # PATCH/PUT /ordrparticipants/1 or /ordrparticipants/1.json
   def update
-    if current_user
         respond_to do |format|
           if @ordrparticipant.update(ordrparticipant_params)
             # Find all entries for participant with same sessionid and order_id and update the name.
-            format.html { redirect_to menu_tablesetting_path(@ordrparticipant.ordr.menu, @ordrparticipant.ordr.tablesetting), notice: "Ordrparticipant was successfully updated." }
+            @smartMenu = Smartmenu.where( restaurant_id: @ordrparticipant.ordr.menu.restaurant.id, menu_id: @ordrparticipant.ordr.menu.id, tablesetting_id: @ordrparticipant.ordr.tablesetting.id ).first
+            format.html { redirect_to smartmenu_path(@smartMenu.slug), notice: "Ordrparticipant was successfully updated." }
             format.json { render :show, status: :ok, location: @ordrparticipant }
           else
             format.html { render :edit, status: :unprocessable_entity }
             format.json { render json: @ordrparticipant.errors, status: :unprocessable_entity }
           end
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # DELETE /ordrparticipants/1 or /ordrparticipants/1.json
@@ -97,7 +91,9 @@ class OrdrparticipantsController < ApplicationController
                     redirect_to root_url
                 end
             else
+                puts params[:id]
                 @ordrparticipant = Ordrparticipant.find(params[:id])
+                puts @ordrparticipant.id
             end
         rescue ActiveRecord::RecordNotFound => e
             redirect_to root_url
