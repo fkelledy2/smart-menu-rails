@@ -1,8 +1,8 @@
 document.addEventListener("turbo:load", () => {
 
     $(".qrSlug").each(function(){
-        console.log( 'qrSlug: '+'https://'+$("#qrHost").text()+'/smartmenus/'+qrSlug)
         var qrSlug = $(this).text();
+        alert( 'qrSlug: '+'https://'+$("#qrHost").text()+'/smartmenus/'+qrSlug);
         const qrCode = new QRCodeStyling({
             width: 300,
             height: 300,
