@@ -9,7 +9,11 @@ class HomeController < ApplicationController
           )
       end
       @qrHost = request.host_with_port
-      @demoMenu = Smartmenu.where(restaurant_id: 3, menu_id: 3).first
+      if request.host == 'localhost'
+          @demoMenu = Smartmenu.where(restaurant_id: 1, menu_id: 1).first
+      else
+          @demoMenu = Smartmenu.where(restaurant_id: 3, menu_id: 3).first
+      end
   end
 
   def terms

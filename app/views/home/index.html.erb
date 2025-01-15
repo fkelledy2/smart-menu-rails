@@ -127,13 +127,15 @@
     <div id="demo-table" class="container px-1 py-2">
       <h2 class="pb-2 border-bottom">Demo Menu</h2>
       <p style='text-align:justify;'><strong>Scan</strong> or <strong>tap</strong> this QR code to see what our smart menus are capable of!</p>
-      <div class="row g-4 py-5 row-cols-2 row-cols-2 row-cols-lg-4">
+      <div class="row g-4 py-5 row-cols-12 row-cols-12 row-cols-lg-12">
             <span style='display:none' class="qrSlug"><%= @demoMenu.slug %></span>
-            <div class="col-12 d-flex justify-content-center"">
-                <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
-                    <div id="<%= @demoMenu.slug %>">
-                    </div>
-                </a>
+            <div class="col-12">
+                <div class="d-flex justify-content-center">
+                    <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
+                        <div id="<%= @demoMenu.slug %>">
+                        </div>
+                    </a>
+                </div>
             </div>
       </div>
     </div>
