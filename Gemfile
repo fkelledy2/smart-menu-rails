@@ -105,3 +105,4 @@ gem 'simplecov', require: false, group: :test
 gem "pay", "~> 8.0"
 gem "stripe", "~> 13.0"
 gem "receipts", "~> 2.0"
+gem "ruby-limiter"

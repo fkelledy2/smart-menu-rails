@@ -1,9 +1,19 @@
 require 'sidekiq'
 
 class GenerateImageJob
-  include Sidekiq::Job
+  include Sidekiq::Worker
+  sidekiq_options queue: "limited"
+
+  extend Limiter::Mixin
+  limit_method :expensive_api_call, rate: 4, interval: 60, balanced: true
 
   def perform(genimage_id)
+    expensive_api_call(genimage_id)
+  end
+
+  private
+
+  def expensive_api_call(genimage_id)
     @genimage = Genimage.find(genimage_id)
     if( @genimage )
         if( @genimage.menuitem != nil )
@@ -26,7 +36,7 @@ class GenerateImageJob
 #                 prompt += 'use seed: '+@genimage.name
 #             end
 
-            response = generate_image(prompt, 1, '512x512')
+            response = generate_image(prompt, 1, '256x256')
             puts response
             if response.success?
               seed = response['created']
@@ -42,8 +52,6 @@ class GenerateImageJob
         end
     end
   end
-
-  private
 
   def generate_image(prompt, number, size)
         api_key = Rails.application.credentials.openai_api_key

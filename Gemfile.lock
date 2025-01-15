@@ -392,6 +392,7 @@ GEM
     rqrcode-rails3 (0.1.7)
       rqrcode (>= 0.4.2)
     rqrcode_core (1.2.0)
+    ruby-limiter (2.3.0)
     ruby-vips (2.2.2)
       ffi (~> 1.12)
       logger
@@ -516,6 +517,7 @@ DEPENDENCIES
   requestjs-rails
   responders!
   rqrcode-rails3
+  ruby-limiter
   seed_dump
   selenium-webdriver
   shrine (~> 3.3)
