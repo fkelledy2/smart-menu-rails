@@ -129,9 +129,9 @@
       <p style='text-align:justify;'><strong>Scan</strong> or <strong>tap</strong> this QR code to see what our smart menus are capable of!</p>
       <div class="row g-4 py-5 row-cols-2 row-cols-2 row-cols-lg-4">
             <span style='display:none' class="qrSlug"><%= @demoMenu.slug %></span>
-            <div class="col-12">
+            <div class="col-12 d-flex justify-content-center"">
                 <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
-                    <div id="<%= @demoMenu.slug %>" class="d-flex justify-content-center">
+                    <div id="<%= @demoMenu.slug %>">
                     </div>
                 </a>
             </div>
