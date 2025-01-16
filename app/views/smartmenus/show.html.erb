@@ -154,9 +154,7 @@
             <% end %>
             <div class="row">
                 <% menusection.menuitems.order(:sequence).each do |menuitem| %>
-                    <% cache(menuitem) do %>
-                        <%= render "showMenuitem", menuitem: menuitem %>
-                    <% end %>
+                    <%= render "showMenuitem", menuitem: menuitem %>
                 <% end %>
             </div>
     <%end %>
