@@ -138,7 +138,6 @@
 <div class="row">
   <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
     <% @menu.menusections.order(:sequence).each do |menusection| %>
-        <% cache(menusection) do %>
             <div style="padding-top:20px" id="menusection_<%= menusection.id %>"></div>
             <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
                 <% if menusection.image %>
@@ -160,7 +159,6 @@
                     <%= render "showMenuitem", menuitem: menuitem %>
                 <% end %>
             </div>
-        <%end %>
     <%end %>
     <%= render "showAllergyns" %>
   </div>

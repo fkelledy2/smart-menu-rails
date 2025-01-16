@@ -1,4 +1,3 @@
-                <% cache(menuitem) do %>
                 <% if @ordrparticipant == nil || @ordrparticipant && (@ordrparticipant.allergyns & menuitem.allergyns).empty? %>
                     <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
                         <div class="card">
@@ -91,4 +90,3 @@
                         </div>
                     </div>
                 <% end %>
-                <%end %>
