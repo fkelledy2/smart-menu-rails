@@ -1,0 +1,86 @@
+<!-- Modal -->
+<div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewOrderModalLabel">Your Order</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <% if @openOrder %>
+            <div class="row">
+                <div class="col-6">
+                    <b>Menu Item</b>
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col-2">
+                  <span class="float-end">
+                    <b>Price</b>
+                  </span>
+                </div>
+                <div class="col-2">
+                </div>
+            </div>
+            <% @openOrder.ordractions.each do |ordraction| %>
+                <% if ordraction.ordritem && ordraction.ordritem.status == 'added' && ordraction.ordritem.in?(@openOrder.ordritems) %>
+                <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
+                    <div class="col-6">
+                        <%= ordraction.ordritem.menuitem.name %>
+                    </div>
+                    <div class="col-2">
+                        <span class="float-end">
+                            <%= ordraction.ordrparticipant.name %>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="float-end">
+                            <%= number_to_currency(ordraction.ordritem.menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="float-end">
+                            <button type="button" class="removeItemFromOrderButton btn btn-sm btn-danger"
+                                data-bs-ordritem_id="<%= ordraction.ordritem.id %>">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <% end %>
+            <% end %>
+            <div class="row">
+                <div class="col-6">
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col-2">
+                    <hr>
+                </div>
+                <div class="col-2">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <b>Total:</b>
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col-2">
+                    <span class="float-end"><b><%= number_to_currency(@openOrder.nett, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %></b></span>
+                </div>
+                <div class="col-2">
+                </div>
+            </div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <% if @openOrder && @openOrder.nett > 0 %>
+            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Submit Order</button>
+        <% else %>
+            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary" disabled>Submit Order</button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

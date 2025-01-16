@@ -1,0 +1,17 @@
+<% if @allergyns && @allergyns.length > 0 %>
+    <div style="padding-top:20px" id="menusection_allergyns"></div>
+    <div class="card">
+        <div class="card-body mx-auto text-center text-danger ">
+            <div class="row ">
+                <div class="col-12">
+                    <h2>Allergens</h2>
+                    <% @allergyns.each do |allergyn| %>
+                        <% cache(allergyn) do %>
+                            <span style='white-space:nowrap'>| <b><%= allergyn.symbol %></b>&nbsp;-&nbsp;<%= allergyn.name %> |&nbsp;&nbsp;</span>
+                        <% end %>
+                    <% end %>
+                </div>
+            </div>
+       </div>
+    </div>
+<% end %>

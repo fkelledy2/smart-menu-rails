@@ -1,0 +1,94 @@
+                <% cache(menuitem) do %>
+                <% if @ordrparticipant == nil || @ordrparticipant && (@ordrparticipant.allergyns & menuitem.allergyns).empty? %>
+                    <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
+                        <div class="card">
+                          <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
+                            <% if menuitem.image %>
+                                <div class="ratio ratio-1x1">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                      <div class="spinner-border m-5" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                      </div>
+                                    </div>
+                                  <img class="img-thumbnail card-img-bottom" style="display:none;" onload="fadeIn(this)" src="<%= menuitem.image_url %>" alt="<%= menuitem.name %>">
+                                </div>
+                            <% end %>
+                          <% end %>
+                          <div class="card-body">
+                                 <div class="row">
+                                    <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
+                                        <div class="col-10">
+                                             <div class="row">
+                                                <div class="col-9">
+                                                    <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
+                                                </div>
+                                                <div class="col-3">
+                                                    <h5 style="margin-top:5px" class="float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <span class="float-end">
+                                                <% if @openOrder %>
+                                                    <button type="button" class="addItemToOrder btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                        data-bs-ordr_id="<%= @openOrder.id %>"
+                                                        data-bs-menuitem_id="<%= menuitem.id %>"
+                                                        data-bs-menuitem_name="<%= menuitem.name %>"
+                                                        data-bs-menuitem_price="<%= menuitem.price %>"
+                                                        data-bs-menuitem_description="<%= menuitem.description %>"
+                                                        data-bs-menuitem_image="<%= menuitem.image %>"
+                                                        title="Add to Order">
+                                                        <i class="bi bi-plus"></i>
+                                                    </button>
+                                                <% else %>
+                                                    <button type="button" class="addItemToOrder btn btn-primary" disabled>
+                                                        <i class="bi bi-plus"></i>
+                                                    </button>
+                                                <% end %>
+                                            </span>
+                                        </div>
+                                    <% else %>
+                                        <div class="col-12">
+                                             <div class="row">
+                                                <div class="col-9">
+                                                    <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
+                                                </div>
+                                                <div class="col-3">
+                                                    <h5 style="margin-top:5px" class="float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol) %></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% end %>
+                                 </div>
+                                 <div class="row">
+                                    <div class="col-12">
+                                        <h6 class="card-text">
+                                            <%= menuitem.description %>
+                                        </h6>
+                                        <% if @menu.restaurant.allowOrdering == true && @menu.inventoryTracking == true && menuitem.inventory %>
+                                            <% if menuitem.inventory.currentinventory == 0 %>
+                                                <i>Not available.</i>
+                                            <% else %>
+                                                <small><i><b><%= menuitem.inventory.currentinventory %></b> remaining.</i></small>
+                                            <% end %>
+                                        <% end %>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <span class="float-end">
+                                                    <div class="btn-group" role="group" aria-label="Allergyns">
+                                                        <% menuitem.allergyns.each do |allergyn| %>
+                                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
+                                                                <%= allergyn.symbol %>
+                                                            </button>
+                                                        <%end %>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                          </div>
+                        </div>
+                    </div>
+                <% end %>
+                <%end %>
