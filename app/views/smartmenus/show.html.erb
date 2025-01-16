@@ -123,9 +123,7 @@
             <nav id="navbar-example2" style="position:relative; left:-10px" class="nav flex-nowrap overflow-auto">
               <ul style="position:relative; left:-37px" class="d-flex">
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
-                  <% cache(menusection) do %>
                       <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>
-                  <% end %>
                 <% end %>
                 <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-danger text-nowrap" href="#menusection_allergyns">Allergens</a>
               </ul>
@@ -156,7 +154,9 @@
             <% end %>
             <div class="row">
                 <% menusection.menuitems.order(:sequence).each do |menuitem| %>
-                    <%= render "showMenuitem", menuitem: menuitem %>
+                    <% cache(menuitem) do %>
+                        <%= render "showMenuitem", menuitem: menuitem %>
+                    <% end %>
                 <% end %>
             </div>
     <%end %>
