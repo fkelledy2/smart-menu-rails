@@ -202,6 +202,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_CLOSED
                     }
                 };
+                alert('1. '+ordr);
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
             } else {
                 let ordr = {
@@ -213,6 +214,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_CLOSED
                     }
                 };
+                alert('2. '+ordr);
                 patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
             }
         });

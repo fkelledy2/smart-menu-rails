@@ -14,6 +14,7 @@ class Menusection < ApplicationRecord
           genimage.id
       end
   end
+
   validates :name, :presence => true
   validates :menu, :presence => true
   validates :status, :presence => true

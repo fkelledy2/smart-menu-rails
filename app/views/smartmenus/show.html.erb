@@ -134,17 +134,17 @@
 </div>
 
 <div class="row">
-  <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
-    <% @menu.menusections.order(:sequence).each do |menusection| %>
+    <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+        <% @menu.menusections.order(:sequence).each do |menusection| %>
             <div style="padding-top:20px" id="menusection_<%= menusection.id %>"></div>
             <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
                 <% if menusection.image %>
                     <div class="card border-light text-bg-dark">
-                      <img src="<%= menusection.image_url %>" style="height: 150px" class="card-img" alt="<%= menusection.name %>">
-                      <div class="card-img-overlay">
-                        <h3 class="card-title"><%= menusection.name %></h3>
-                        <p class="card-text"><%= menusection.description %></p>
-                      </div>
+                        <img src="<%= menusection.image_url %>" style="height: 150px" class="card-img" alt="<%= menusection.name %>">
+                        <div class="card-img-overlay">
+                            <h3 class="card-title"><%= menusection.name %></h3>
+                            <p class="card-text"><%= menusection.description %></p>
+                        </div>
                     </div>
                 <% else %>
                     <h2><%= menusection.name %></h2>
@@ -154,7 +154,9 @@
             <% end %>
             <div class="row">
                 <% menusection.menuitems.order(:sequence).each do |menuitem| %>
-                    <%= render "showMenuitem", menuitem: menuitem %>
+                    <% if @ordrparticipant == nil || @ordrparticipant && (@ordrparticipant.allergyns & menuitem.allergyns).empty? %>
+                        <%= render "showMenuitem", menuitem: menuitem %>
+                    <% end %>
                 <% end %>
             </div>
     <%end %>
@@ -169,7 +171,5 @@
 <%= render "showAddNameToParticipantModal" %>
 <%= render "showAddItemToOrderModal" %>
 <%= render "showFilterOrderModal" %>
+<%= render "showContext" %>
 
-<% if 1==2 %>
-    <%= render "showDebug" %>
-<% end %>

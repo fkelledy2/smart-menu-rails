@@ -83,7 +83,7 @@ class MenuitemsController < ApplicationController
     if current_user
         respond_to do |format|
           @menuitem = Menuitem.find(params[:id])
-          if @menuitem.update(params.require(:menuitem).permit(:name, :description, :image, :status, :calories, :sequence, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: []))
+          if @menuitem.update(params.require(:menuitem).permit(:name, :description, :image, :status, :remove_image, :calories, :sequence, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: []))
             if( @menuitem.genimage == nil)
                 @genimage = Genimage.new
                 @genimage.restaurant = @menuitem.menusection.menu.restaurant
@@ -93,6 +93,10 @@ class MenuitemsController < ApplicationController
                 @genimage.created_at = DateTime.current
                 @genimage.updated_at = DateTime.current
                 @genimage.save
+            end
+            if params[:remove_image]
+                @menuitem.image = nil
+                @menuitem.save
             end
             format.html { redirect_to edit_menusection_path(@menuitem.menusection), notice: "Menuitem was successfully updated." }
             format.json { render :show, status: :ok, location: @menuitem }
@@ -150,6 +154,6 @@ class MenuitemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def menuitem_params
-      params.require(:menuitem).permit(:name, :description, :image, :remove_image, :status, :sequence, :calories, :price, :menusection_id, :preptime)
+      params.require(:menuitem).permit(:name, :description, :image, :seed, :remove_image, :status, :sequence, :calories, :price, :menusection_id, :preptime)
     end
 end
