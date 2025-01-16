@@ -22,6 +22,13 @@ class Menuitem < ApplicationRecord
     active: 1,
     archived: 2
   }
+
+  enum itemtype: {
+    food: 0,
+    beverage: 1,
+    wine: 2
+  }
+
   def genImageId
       if( genimage )
           genimage.id
@@ -33,6 +40,7 @@ class Menuitem < ApplicationRecord
   validates :inventory, :presence => false
   validates :name, :presence => true
   validates :menusection, :presence => true
+  validates :itemtype, :presence => true
   validates :status, :presence => true
   validates :preptime, :presence => true, :numericality => {:only_integer => true}
   validates :price, :presence => true, :numericality => {:only_float => true}

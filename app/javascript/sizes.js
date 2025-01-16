@@ -19,7 +19,7 @@ document.addEventListener("turbo:load", () => {
               {column:"sequence", dir:"asc"},
           ],
           layout:"fitDataStretch",
-          ajaxURL: '/sizes.json',
+          ajaxURL: '/restaurants/'+restaurantId+'/sizes.json',
           movableRows:true,
           columns: [
            {

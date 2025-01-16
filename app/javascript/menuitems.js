@@ -10,6 +10,14 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
+    if ($("#menuitem_itemtype").is(':visible')) {
+      new TomSelect("#menuitem_itemtype",{
+      });
+    }
+    if ($("#menuitem_sizesupport").is(':visible')) {
+      new TomSelect("#menuitem_sizesupport",{
+      });
+    }
     let restaurantCurrencySymbol = '$';
     if ($('#restaurantCurrency').length) {
         restaurantCurrencySymbol = $('#restaurantCurrency').text();

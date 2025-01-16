@@ -4,7 +4,13 @@ class SizesController < ApplicationController
   # GET /sizes or /sizes.json
   def index
     if current_user
-        @sizes = Size.where(archived: false).all
+        puts params
+        if params[:restaurant_id]
+            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+            @sizes = Size.joins(:restaurant).where(restaurant: @futureParentRestaurant, archived: false).all
+        else
+            @sizes = Size.joins(:restaurant).where(restaurant: {user: current_user}, archived: false).all
+        end
     else
         redirect_to root_url
     end

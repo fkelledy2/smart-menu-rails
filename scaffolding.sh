@@ -23,5 +23,4 @@ rails g scaffold Ordr           orderedAt:timestamp deliveredAt:timestamp paidAt
 rails g scaffold Ordritem       ordr:references menuitem:references --force
 rails g scaffold Ordritemnote   note:string ordritem:references --force
 rails g scaffold Taxes          name:string taxtype:integer taxpercentage:float restaurant:references --force
-
 rails g scaffold Smartmenu      slug:string:index restaurant:references menu:references tablesetting:references

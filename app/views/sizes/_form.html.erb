@@ -7,6 +7,11 @@
       <%= form.select :size, options_for_select(Size.sizes.keys.to_a, form.object.size), {} %>
     </div>
   </div>
+  <% if @futureParentRestaurant %>
+      <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
+  <% else %>
+      <%= form.hidden_field :restaurant_id %>
+  <% end %>
   <div style='height:4px'></div>
   <div class="form-group row">
     <div class="col-3">
