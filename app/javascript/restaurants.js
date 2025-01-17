@@ -269,7 +269,6 @@ document.addEventListener("turbo:load", () => {
                     },
                     body: JSON.stringify(r)
                 });
-            alert('patched');
         });
     }
 })

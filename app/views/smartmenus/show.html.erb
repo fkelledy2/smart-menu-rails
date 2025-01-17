@@ -16,11 +16,6 @@
                         </div>
                         <div class="col-5">
                             <span class="float-end">
-                                <% if current_user %>
-                                    <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-dark' do %>
-                                        <i class="bi bi-pencil-fill"></i>
-                                    <% end %>
-                                <% end %>
                                 <% if @ordrparticipant && @ordrparticipant.name == nil %>
                                     <span id="addYourNameSpan">
                                         <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
@@ -41,6 +36,32 @@
                                     <button type="button" class="btn btn-sm btn-outline-secondary">
                                         <%= @tablesetting.name %>
                                     </button>
+                                <% else %>
+
+                                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                      <div class="btn-group" role="group">
+                                        <button id="menu-actions" type="button" class="btn btn-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                          Select Table
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
+                                          <% Smartmenu.where( restaurant_id: @restaurant.id, menu_id: @menu.id ).each do |smartmenu| %>
+                                              <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
+                                                  <li>
+                                                    <%= link_to smartmenu_path(smartmenu.slug), class: "dropdown-item" do %>
+                                                        <%= smartmenu.tablesetting.name %>
+                                                    <% end %>
+                                                  </li>
+                                              <% end %>
+                                          <% end %>
+                                        </ul>
+                                      </div>
+                                    </div>
+
+                                <% end %>
+                                <% if current_user %>
+                                    <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-dark' do %>
+                                        <i class="bi bi-pencil-fill"></i>
+                                    <% end %>
                                 <% end %>
                             </span>
                         </div>
