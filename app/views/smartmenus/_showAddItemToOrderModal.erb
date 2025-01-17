@@ -13,7 +13,7 @@
         <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
             <div class="row">
                 <div class="col-12">
-                    <img id="a2o_menuitem_image" class="card-img-bottom" src="" alt="">
+                    <img id="a2o_menuitem_image" class="img-thumbnail card-img-bottom" src="" alt="">
                 </div>
             </div>
         <div style="margin-top:20px;"></div>
@@ -21,20 +21,18 @@
         <span style="display:none" id="a2o_ordr_id"></span>
         <span style="display:none" id="a2o_menuitem_id"></span>
         <div class="row">
-            <div class="col-12">
-                <span class="h2" id="a2o_menuitem_name"></span>
+            <div class="col-10">
+                <span class="h4" id="a2o_menuitem_name"></span>
+            </div>
+            <div class="col-2">
+                <span class="h4 float-end">
+                    <%= @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "" %><span id="a2o_menuitem_price"></span>
+                </span>
             </div>
         </div>
         <div style="margin-top:5px;" class="row">
             <div class="col-12">
                 <span id="a2o_menuitem_description"></span>
-            </div>
-        </div>
-        <div style="margin-top:20px;" class="row">
-            <div class="col-12">
-                <span class="h4 float-end">
-                <%= @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "" %>
-                <span id="a2o_menuitem_price"></span></span>
             </div>
         </div>
       </div>
