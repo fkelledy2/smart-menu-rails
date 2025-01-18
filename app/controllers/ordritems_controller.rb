@@ -66,7 +66,12 @@ class OrdritemsController < ApplicationController
             puts 'sss.2'
             update_ordr( @uo )
             puts 'sss.3'
+            begin
             ActionCable.server.broadcast("ordr_channel", @uo)
+            rescue
+                puts 'sss.3.1'
+            end
+            puts 'sss.4'
 #             format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully created." }
             format.json { render :show, status: :created, location: @ordritem }
           else
