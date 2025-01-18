@@ -18,5 +18,7 @@ consumer.subscriptions.create("OrdrChannel", {
             $("#orderUpdatedSpan").show();
         }
     }
+    location.reload();
+    return true;
   }
 });

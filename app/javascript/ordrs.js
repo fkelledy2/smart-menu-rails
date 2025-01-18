@@ -1,5 +1,7 @@
 document.addEventListener("turbo:load", () => {
 
+    let locationReload = false;
+
     let ORDR_OPENED=0;
     let ORDR_ORDERED=20;
     let ORDR_DELIVERED=25;
@@ -34,7 +36,9 @@ document.addEventListener("turbo:load", () => {
     });
 
     $( "#orderUpdatedButton" ).on( "click", function() {
-        location.reload();
+        if( locationReload ) {
+            location.reload();
+        }
         return true;
     });
 
@@ -227,11 +231,16 @@ document.addEventListener("turbo:load", () => {
             },
             body: JSON.stringify(body)
         }).then(response => {
-            location.reload();
+            if( locationReload ) {
+                location.reload();
+            }
         }).catch(function(err) {
             console.info(err + " url: " + url);
-            location.reload();
+            if( locationReload ) {
+                location.reload();
+            }
         });
+        return false;
     }
     function patch( url, body ) {
         fetch(url, {
@@ -242,11 +251,16 @@ document.addEventListener("turbo:load", () => {
             },
             body: JSON.stringify(body)
         }).then(response => {
-            location.reload();
+            if( locationReload ) {
+                location.reload();
+            }
         }).catch(function(err) {
             console.info(err + " url: " + url);
-            location.reload();
+            if( locationReload ) {
+                location.reload();
+            }
         });
+        return false;
     }
     function del( url ) {
         fetch(url, {
@@ -339,5 +353,4 @@ document.addEventListener("turbo:load", () => {
           ],
         });
     }
-
 })

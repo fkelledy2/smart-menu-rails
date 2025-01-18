@@ -29,7 +29,12 @@ class OrdritemsController < ApplicationController
 
   # POST /ordritems or /ordritems.json
   def create
+        puts ordritem_params
+        puts ordritem_params[:ordr_id]
         @ordritem = Ordritem.new(ordritem_params)
+        puts 'sss'
+        puts @ordritem.ordr_id
+
         respond_to do |format|
         if @ordritem.save
             if @ordritem.menuitem.inventory
@@ -47,7 +52,6 @@ class OrdritemsController < ApplicationController
                 end
                 @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
                 @ordraction.save
-                ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
             else
                 @ordrparticipant = Ordrparticipant.where( ordr: @ordritem.ordr, role: 0, sessionid: session.id.to_s ).first
                 if @ordrparticipant == nil
@@ -56,9 +60,11 @@ class OrdritemsController < ApplicationController
                 end
                 @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
                 @ordraction.save
-                ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
             end
-            format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully created." }
+            @uo = Ordr.find(ordritem_params[:ordr_id])
+            update_ordr( @uo )
+            ActionCable.server.broadcast("ordr_channel", @uo)
+#             format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully created." }
             format.json { render :show, status: :created, location: @ordritem }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -71,8 +77,12 @@ class OrdritemsController < ApplicationController
   def update
         respond_to do |format|
           if @ordritem.update(ordritem_params)
-            ActionCable.server.broadcast("ordr_channel", @ordritem.ordr)
-            format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully updated ()" }
+
+            @uo = Ordr.find(ordritem_params[:ordr_id])
+            update_ordr( @uo )
+            ActionCable.server.broadcast("ordr_channel", @uo)
+
+#             format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully updated ()" }
             format.json { render :show, status: :ok, location: @ordritem }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -121,6 +131,24 @@ class OrdritemsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_ordritem
       @ordritem = Ordritem.find(params[:id])
+    end
+
+    def update_ordr( ordr )
+        ordr.nett = ordr.runningTotal
+        taxes = Tax.where(restaurant_id: ordr.restaurant.id).order(sequence: :asc)
+        totalTax = 0
+        totalService = 0
+        for tax in taxes do
+            if tax.taxtype == 'service'
+                totalService += ((tax.taxpercentage * ordr.nett)/100)
+            else
+                totalTax += ((tax.taxpercentage * ordr.nett)/100)
+            end
+        end
+        ordr.tax = totalTax
+        ordr.service = totalService
+        ordr.gross = ordr.nett + ordr.tip + ordr.service + ordr.tax
+        ordr.save
     end
 
     def set_currency
