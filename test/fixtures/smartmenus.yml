@@ -5,9 +5,3 @@ one:
   restaurant: one
   menu: one
   tablesetting: one
-
-two:
-  slug: MyString
-  restaurant: two
-  menu: two
-  tablesetting: two
