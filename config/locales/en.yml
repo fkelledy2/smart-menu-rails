@@ -220,6 +220,7 @@ en:
       unavailable: "Menu is currently unavailable."
     show:
       menu: "View Menu"
+      table: "XXX"
     edit:
       menu: "Edit Menu"
     new:
@@ -233,6 +234,31 @@ en:
       errors: "Errors"
       details: "Details"
       preview: "Preview"
+
+  smartmenus:
+    index:
+      menus: "Menus"
+      menu: "Menu"
+      activate: "Activate"
+      deactivate: "Deactivate"
+      unavailable: "Menu is currently unavailable."
+    show:
+      menu: "View Menu"
+      table: "Table"
+    edit:
+      menu: "Edit Menu"
+    new:
+      menu: "New Menu"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+      errors: "Errors"
+      details: "Details"
+      preview: "Preview"
+
 
   menusections:
     index:

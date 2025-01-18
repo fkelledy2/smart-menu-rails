@@ -41,7 +41,7 @@
                                         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                                           <div class="btn-group" role="group">
                                             <button id="menu-actions" type="button" class="btn btn-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                              Select Table
+                                              <%= t(".table") %>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
                                               <% Smartmenu.where( restaurant_id: @restaurant.id, menu_id: @menu.id ).each do |smartmenu| %>
