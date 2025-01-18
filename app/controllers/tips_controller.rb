@@ -28,7 +28,6 @@ class TipsController < ApplicationController
   def new
     if current_user
         @tip = Tip.new
-        puts params
         if params[:restaurant_id]
             @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
             @tip.restaurant = @futureParentRestaurant

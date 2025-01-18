@@ -91,9 +91,7 @@ class OrdrparticipantsController < ApplicationController
                     redirect_to root_url
                 end
             else
-                puts params[:id]
                 @ordrparticipant = Ordrparticipant.find(params[:id])
-                puts @ordrparticipant.id
             end
         rescue ActiveRecord::RecordNotFound => e
             redirect_to root_url

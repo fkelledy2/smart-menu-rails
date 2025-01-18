@@ -54,7 +54,6 @@ class EmployeesController < ApplicationController
             format.html { redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: "Employee was successfully created." }
             format.json { render :show, status: :created, location: @employee }
           else
-          puts @employee.errors.to_json
             format.html { render :new, status: :unprocessable_entity }
             format.json { render json: @employee.errors, status: :unprocessable_entity }
           end

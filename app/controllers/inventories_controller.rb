@@ -65,7 +65,6 @@ class InventoriesController < ApplicationController
   # PATCH/PUT /inventories/1 or /inventories/1.json
   def update
     if current_user
-        puts inventory_params
         respond_to do |format|
           if @inventory.update(inventory_params)
             if @inventory.currentinventory > @inventory.startinginventory

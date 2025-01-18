@@ -118,14 +118,6 @@ class SmartmenusController < ApplicationController
           @menu = @smartmenu.menu
           @tablesetting = @smartmenu.tablesetting
 
-          puts @restaurant.name
-          if @menu
-          puts @menu.name
-          end
-          if @tablesetting
-          puts @tablesetting.name
-          end
-
           if current_user
                 if( @menu == nil or @menu.restaurant.user != current_user )
                     redirect_to root_url
