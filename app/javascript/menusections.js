@@ -49,7 +49,7 @@ document.addEventListener("turbo:load", () => {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
-          layout:"fitDataStretch",
+          layout:"fitColumns",
           ajaxURL: '/menus/'+menuId+'/menusections.json',
           initialSort:[
             {column:"sequence", dir:"asc"},
@@ -64,7 +64,6 @@ document.addEventListener("turbo:load", () => {
           { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           { title:"", field:"sequence", visible:false, formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
-          {title:"Description", field:"description", responsive:5, hozAlign:"left", headerHozAlign:"left" },
           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ]
         });
