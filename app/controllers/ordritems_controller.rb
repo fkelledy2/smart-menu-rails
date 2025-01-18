@@ -61,8 +61,11 @@ class OrdritemsController < ApplicationController
                 @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
                 @ordraction.save
             end
+            puts 'sss.1'
             @uo = Ordr.find(ordritem_params[:ordr_id])
+            puts 'sss.2'
             update_ordr( @uo )
+            puts 'sss.3'
             ActionCable.server.broadcast("ordr_channel", @uo)
 #             format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully created." }
             format.json { render :show, status: :created, location: @ordritem }
@@ -134,20 +137,32 @@ class OrdritemsController < ApplicationController
     end
 
     def update_ordr( ordr )
+            puts 'sss.2.1'
         ordr.nett = ordr.runningTotal
+            puts 'sss.2.2'
         taxes = Tax.where(restaurant_id: ordr.restaurant.id).order(sequence: :asc)
+            puts 'sss.2.3'
         totalTax = 0
+            puts 'sss.2.4'
         totalService = 0
+            puts 'sss.2.5'
         for tax in taxes do
+            puts 'sss.2.6'
             if tax.taxtype == 'service'
+            puts 'sss.2.7'
                 totalService += ((tax.taxpercentage * ordr.nett)/100)
             else
+            puts 'sss.2.8'
                 totalTax += ((tax.taxpercentage * ordr.nett)/100)
             end
         end
+            puts 'sss.2.9'
         ordr.tax = totalTax
+            puts 'sss.2.10'
         ordr.service = totalService
+            puts 'sss.2.11'
         ordr.gross = ordr.nett + ordr.tip + ordr.service + ordr.tax
+            puts 'sss.2.12'
         ordr.save
     end
 
