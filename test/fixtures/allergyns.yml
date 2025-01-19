@@ -4,3 +4,4 @@ one:
   name: MyString1
   description: MyText1
   symbol: MyString1
+  restaurant: one

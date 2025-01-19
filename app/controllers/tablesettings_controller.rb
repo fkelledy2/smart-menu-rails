@@ -60,7 +60,6 @@ class TablesettingsController < ApplicationController
             format.json { render :show, status: :created, location: @tablesetting }
           else
             format.html { render :new, status: :unprocessable_entity }
-          puts @tablesetting.errors.to_json
             format.json { render json: @tablesetting.errors, status: :unprocessable_entity }
           end
         end

@@ -3,7 +3,13 @@ require "test_helper"
 class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:one)
+    @menu = menus(:one)
+    @restaurant = restaurants(:one)
     @menuitem = menuitems(:one)
+    @menusection = menusections(:one)
+    @menuitem.menusection = @menusection
+    @menusection.menu = @menu
+    @menu.restaurant = @restaurant
   end
 
   test "should get index" do
@@ -12,7 +18,7 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_menuitem_url
+    get new_menuitem_url, params: {menusection_id: @menusection.id }
     assert_response :success
   end
 
