@@ -42,7 +42,7 @@
       <div class="row">
         <div class="col-10">
           <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
-          <%= form.file_field :image, class: 'form-control' %>
+          <%= form.file_field :image, multiple: false, accept:'image/*;capture=camera', class: 'form-control' %>
         </div>
         <div class="col-2">
           <span style="position:relative;top:-5px!important;margin-top:5px" class="float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
