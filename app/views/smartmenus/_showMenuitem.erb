@@ -20,24 +20,41 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="row">
-                            <div class="col-9">
-                                <h6 style='padding-top:5px' class="card-title"><strong><%= menuitem.name %></strong></h6>
-                            </div>
-                            <div class="col-3">
-                                <span class="float-end">
-                                    <div class="btn-group" role="group" aria-label="Allergyns">
-                                        <% menuitem.allergyns.each do |allergyn| %>
-                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
-                                                <%= allergyn.symbol %>
-                                            </button>
-                                        <% end %>
-                                    </div>
-                                </span>
-                            </div>
+                            <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
+                                <div class="col-12">
+                                    <h6 style="padding-top:5px" class="card-title"><strong><%= menuitem.name %></strong></h6>
+                                </div>
+                                <div class="col-12">
+                                    <span style="position:relative;top:-100px" class="float-end">
+                                        <div class="btn-group" role="group" aria-label="Allergyns">
+                                            <% menuitem.allergyns.each do |allergyn| %>
+                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
+                                                    <%= allergyn.symbol %>
+                                                </button>
+                                            <% end %>
+                                        </div>
+                                    </span>
+                                </div>
+                            <% else %>
+                                <div class="col-9">
+                                    <h6 style='padding-top:5px' class="card-title"><strong><%= menuitem.name %></strong></h6>
+                                </div>
+                                <div class="col-3">
+                                    <span class="float-end">
+                                        <div class="btn-group" role="group" aria-label="Allergyns">
+                                            <% menuitem.allergyns.each do |allergyn| %>
+                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
+                                                    <%= allergyn.symbol %>
+                                                </button>
+                                            <% end %>
+                                        </div>
+                                    </span>
+                                </div>
+                            <% end %>
                         </div>
                     </div>
                     <div class="col-12">
-                        <h6 class="text-justify"><small><%= menuitem.description %></small></h6>
+                        <h6><small><%= menuitem.description %></small></h6>
                     </div>
                     <div class="col-12">
                         <span class="float-end">
