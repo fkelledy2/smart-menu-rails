@@ -294,6 +294,7 @@ en:
       menuItem: "New Menu Item"
       cancel: "Cancel"
     form:
+      sizes: "xxx"
       save: "Save"
       update: "Update"
       delete: "Delete"
@@ -448,7 +449,9 @@ en:
         preptime: "Prep Mn"
         allergyns: "Allergyns"
         tags: "Tags"
-        sizes: "Sizes"
+        sizes: "Variants"
+        variantPricing: "Variant Pricing"
+        sizesupport: "Sizes"
         ingredients: "Ingredients"
       allergyn:
         name: "Name"
