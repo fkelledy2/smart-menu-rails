@@ -1,0 +1,14 @@
+<% if current_user != true_user %>
+  <div class="alert alert-warning text-center">
+    You're logged in as <b><%= current_user.name %> (<%= current_user.email %>)</b>
+    <%= link_to stop_impersonating_madmin_impersonates_path, method: :post do %><%= icon("fas", "times") %> Logout <% end %>
+  </div>
+<% end %>
+
+<nav style="padding:0px!important;" class="navbar navbar-expand-md navbar-light bg-light">
+  <div class="container-fluid mx-auto">
+    <%= link_to root_path, class: "navbar-brand" do %>
+        <%= image_tag "qr-icon.svg", height:'56' %><%= image_tag "logo.png", height:'56' %>
+    <% end %>
+  </div>
+</nav>

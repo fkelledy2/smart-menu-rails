@@ -1,4 +1,5 @@
 <%= form_with(model: menuitem) do |form| %>
+
   <% if @futureParentMenuSection %>
       <%= form.hidden_field :menusection_id, value: @futureParentMenuSection.id %>
   <% else %>
@@ -179,11 +180,11 @@
         <div class="col-9">
             <div class="form-control">
                 <span style='position:relative;right:25px;'>
-                <%= form.collection_check_boxes :size_ids, Size.where( restaurant_id: menuitem.menusection.menu.restaurant.id ), :id, :name, { hide_label: true } do |b| %>
+                <%= form.collection_check_boxes :size_ids, Size.where( restaurant_id: menuitem.menusection.menu.restaurant.id ), :id, :name, { hide_label: true } do |size| %>
                     <div class="form-check">
-                      <%= b.check_box %>
+                      <%= size.check_box %>
                       <label class="form-check-label">
-                        <%= b.label %>
+                        <%= size.label %>
                       </label>
                     </div>
                 <% end %>
@@ -222,3 +223,26 @@
   </div>
   <% end %>
 <% end %>
+  <div class="form-group row">
+      <div class="col-12">
+        <h4><%=t(".priceAdjustments")%></h4>
+      </div>
+  </div>
+  <% menuitem.menuitem_size_mappings.each do |menuitemSizeMapping| %>
+    <%= form_with(model: menuitemSizeMapping) do |menuitemSizeMappingForm| %>
+        <div style='height:4px'></div>
+        <div class="form-group row">
+            <div class="col-4">
+                <span class="float-md-end"><%= menuitemSizeMapping.sizeName %></span>
+            </div>
+            <div class="col-4">
+                <%= menuitemSizeMappingForm.text_field :price, class: 'form-control' %>
+            </div>
+            <div class="col-4">
+                <span class="float-end">
+                    <%= menuitemSizeMappingForm.submit value: t(".update"), class: 'btn btn-sm btn-dark' %>
+                </span>
+            </div>
+        </div>
+    <% end %>
+  <% end %>

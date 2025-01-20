@@ -1,4 +1,5 @@
 class SmartmenusController < ApplicationController
+  layout "smartmenu", :only => [ :show ]
   before_action :set_smartmenu, only: %i[ show edit update destroy ]
 
   # GET /smartmenus or /smartmenus.json

@@ -22,6 +22,8 @@ Rails.application.routes.draw do
   resources :menuitems
   resources :menusections
   resources :tablesettings
+  resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
+
   resources :restaurants do
     resources :menus, controller: 'menus', only: [:index,:show, :edit]
     resources :tablesettings, controller: 'tablesettings', only: [:index,:show, :edit]
