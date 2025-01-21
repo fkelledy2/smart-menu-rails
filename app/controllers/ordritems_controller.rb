@@ -73,11 +73,9 @@ class OrdritemsController < ApplicationController
   def update
         respond_to do |format|
           if @ordritem.update(ordritem_params)
-
-            @uo = Ordr.find(ordritem_params[:ordr_id])
-            update_ordr( @uo )
-            ActionCable.server.broadcast("ordr_channel", @uo)
-
+            @uoi = Ordritem.find(params[:id])
+            update_ordr( @uoi.ordr )
+            ActionCable.server.broadcast("ordr_channel", @uoi.ordr )
 #             format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully updated ()" }
             format.json { render :show, status: :ok, location: @ordritem }
           else
