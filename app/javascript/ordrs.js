@@ -66,7 +66,6 @@ document.addEventListener("turbo:load", () => {
 
     $( ".removeItemFromOrderButton" ).on( "click", function(event) {
        var ordrItemId = $(this).attr('data-bs-ordritem_id');
-       alert('ordrItemId: '+ordrItemId);
        let ordritem = {
          'ordritem': {
              'status': ORDRITEM_REMOVED,
