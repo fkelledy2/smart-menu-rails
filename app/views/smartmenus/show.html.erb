@@ -177,7 +177,7 @@
             <div class="row">
                 <% menusection.menuitems.order(:sequence).each do |menuitem| %>
                     <% if @ordrparticipant == nil || @ordrparticipant && (@ordrparticipant.allergyns & menuitem.allergyns).empty? %>
-                        <%= render "showMenuitem", menuitem: menuitem %>
+                        <%= render "showMenuitemHorizontal", menuitem: menuitem %>
                     <% end %>
                 <% end %>
             </div>

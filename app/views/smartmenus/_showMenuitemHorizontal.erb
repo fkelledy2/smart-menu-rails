@@ -1,0 +1,86 @@
+    <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
+        <div class="card">
+            <div class="row">
+                <div class="col-12">
+                </div>
+            </div>
+            <% if @menu.displayImages == true && @menu.restaurant.displayImages == true && menuitem.image %>
+                <div class="row">
+                    <div class="col-5">
+                        <div class="ratio ratio-1x1">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <div class="m-5" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                            <img class="card-img-left" style="-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));display:none;" onload="fadeIn(this)" src="<%= menuitem.image_url %>" alt="<%= menuitem.name %>">
+                        </div>
+                    </div>
+                    <div style='padding-left:0px' class="col-7">
+                        <h6 style='padding-top:10px' class="card-title"><strong><%= menuitem.name %></strong></h6>
+                        <h6 style='padding-top:0px' ><small><%= menuitem.description %></small></h6>
+                        <span class="float-end">
+                            <h6 style='padding-right:5px' class="card-title">
+                                <%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                <% if @openOrder %>
+                                        <button type="button" class="addItemToOrder btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                            data-bs-ordr_id="<%= @openOrder.id %>"
+                                            data-bs-menuitem_id="<%= menuitem.id %>"
+                                            data-bs-menuitem_name="<%= menuitem.name %>"
+                                            data-bs-menuitem_price="<%= menuitem.price %>"
+                                            data-bs-menuitem_description="<%= menuitem.description %>"
+                                            data-bs-menuitem_image="<%= menuitem.image_url %>"
+                                            title="Add to Order">
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                <% end %>
+                            </h6>
+                        </span>
+                        <span class="float-start">
+                            <div class="btn-group" role="group" aria-label="Allergyns">
+                                <% menuitem.allergyns.each do |allergyn| %>
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
+                                        <%= allergyn.symbol %>
+                                    </button>
+                                <% end %>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            <% else %>
+                <div class="row">
+                    <div class="col-12">
+                        <h6 style='padding-left:10px;padding-top:10px' class="card-title"><strong><%= menuitem.name %></strong></h6>
+                        <h6 style='padding-left:10px;padding-top:0px' ><small><%= menuitem.description %></small></h6>
+                        <span class="float-end">
+                            <h6 style='padding-right:5px' class="card-title">
+                                <%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                <% if @openOrder %>
+                                        <button type="button" class="addItemToOrder btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                            data-bs-ordr_id="<%= @openOrder.id %>"
+                                            data-bs-menuitem_id="<%= menuitem.id %>"
+                                            data-bs-menuitem_name="<%= menuitem.name %>"
+                                            data-bs-menuitem_price="<%= menuitem.price %>"
+                                            data-bs-menuitem_description="<%= menuitem.description %>"
+                                            data-bs-menuitem_image="<%= menuitem.image_url %>"
+                                            title="Add to Order">
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                <% end %>
+                            </h6>
+                        </span>
+                        <span style='padding-left:10px;' class="float-start">
+                            <div class="btn-group" role="group" aria-label="Allergyns">
+                                <% menuitem.allergyns.each do |allergyn| %>
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
+                                        <%= allergyn.symbol %>
+                                    </button>
+                                <% end %>
+                            </div>
+                        </span>
+
+                    </div>
+                </div>
+            <% end %>
+        </div>
+    </div>

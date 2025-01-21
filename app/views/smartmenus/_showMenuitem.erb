@@ -22,9 +22,7 @@
                         <div class="row">
                             <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
                                 <div class="col-12">
-                                    <h6 style="padding-top:5px" class="card-title"><strong><%= menuitem.name %></strong></h6>
-                                </div>
-                                <div class="col-12">
+                                    <h6 class="card-title"><strong><%= menuitem.name %></strong></h6>
                                     <span style="position:relative;top:-100px" class="float-end">
                                         <div class="btn-group" role="group" aria-label="Allergyns">
                                             <% menuitem.allergyns.each do |allergyn| %>
@@ -53,9 +51,15 @@
                             <% end %>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <h6><small><%= menuitem.description %></small></h6>
-                    </div>
+                    <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
+                        <div style='padding-top:0px;' class="col-12">
+                            <h6><small><%= menuitem.description %></small></h6>
+                        </div>
+                    <% else %>
+                        <div class="col-12">
+                            <h6><small><%= menuitem.description %></small></h6>
+                        </div>
+                    <% end %>
                     <div class="col-12">
                         <span class="float-end">
                             <h6 class="card-title">
