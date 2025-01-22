@@ -49,7 +49,18 @@ document.addEventListener("turbo:load", () => {
             }
            },
            { title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
-          ]
+          ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"Nome", //replace the title of column name with the value "Name"
+                    "taxtype":"Typa", //replace the title of column name with the value "Name"
+                    "taxpercentage":"%", //replace the title of column name with the value "Name"
+                    "status":"Stato", //replace the title of column name with the value "Name"
+                }
+            }
+          }
         });
         restaurantTaxTable.on("rowMoved", function(row){
             const rows = restaurantTaxTable.getRows();

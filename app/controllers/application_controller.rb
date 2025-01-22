@@ -2,6 +2,15 @@ class ApplicationController < ActionController::Base
   impersonates :user
   include Pundit::Authorization
 
+  around_action :switch_locale
+
+  def switch_locale(&action)
+      if request.env["HTTP_ACCEPT_LANGUAGE"] != nil
+          @locale = request.env["HTTP_ACCEPT_LANGUAGE"].scan(/^[a-z]{2}/).first
+          I18n.with_locale(@locale, &action)
+      end
+  end
+
   protect_from_forgery with: :exception
 
   before_action :configure_permitted_parameters, if: :devise_controller?

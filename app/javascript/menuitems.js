@@ -75,7 +75,16 @@ document.addEventListener("turbo:load", () => {
                ],
            },
           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
-          ]
+          ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"Nome", //replace the title of column name with the value "Name"
+                    "status":"Stato", //replace the title of column name with the value "Name"
+                }
+            }
+          }
         });
         menuItemTable.on("rowMoved", function(row){
             const rows = menuItemTable.getRows();

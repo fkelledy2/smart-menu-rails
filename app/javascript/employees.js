@@ -53,6 +53,16 @@ document.addEventListener("turbo:load", () => {
           {title:"Role", field:"role", responsive:5, hozAlign:"right", headerHozAlign:"right" },
           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"Nome", //replace the title of column name with the value "Name"
+                    "role":"Ruolo", //replace the title of column name with the value "Name"
+                    "status":"Stato", //replace the title of column name with the value "Name"
+                }
+            }
+          }
         });
         restaurantEmployeeTable.on("rowMoved", function(row){
             const rows = restaurantEmployeeTable.getRows();

@@ -189,6 +189,7 @@ document.addEventListener("turbo:load", () => {
             var rowData = cell.getRow().getData("data").name;
             return "<a class='link-dark' href='/restaurants/"+id+"/edit'>"+rowData+"</a>";
         }
+
         var restaurantTable = new Tabulator("#restaurant-table", {
           dataLoader: false,
           maxHeight:"100%",
@@ -211,7 +212,19 @@ document.addEventListener("turbo:load", () => {
            {title:"Capacity", field:"total_capacity", responsive:4, hozAlign:"right", headerHozAlign:"right"},
            {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"Nome", //replace the title of column name with the value "Name"
+                    "address":"Indirizzo", //replace the title of column name with the value "Name"
+                    "total_capacity":"Capacità", //replace the title of column name with the value "Name"
+                    "status":"Stato", //replace the title of column name with the value "Name"
+                }
+            }
+          }
         });
+
         restaurantTable.on("rowSelectionChanged", function(data, rows){
             if( data.length > 0 ) {
                 document.getElementById("restaurant-actions").disabled = false;

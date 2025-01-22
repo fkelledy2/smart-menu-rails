@@ -39,6 +39,17 @@
             {title:"Resets At", field:"resethour", responsive:3, hozAlign:"right", headerHozAlign:"right" },
             {title:"Status", field:"status", formatter:status, responsive:3, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"Articolo", //replace the title of column name with the value "Name"
+                    "inventory":"inventario", //replace the title of column name with the value "Name"
+                    "resethour":"Si ripristina a", //replace the title of column name with the value "Name"
+                    "status":"Stato", //replace the title of column name with the value "Name"
+                }
+            }
+          }
         });
         inventoryTable.on("rowMoved", function(row){
             const rows = inventoryTable.getRows();

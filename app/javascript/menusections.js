@@ -65,7 +65,16 @@ document.addEventListener("turbo:load", () => {
           { title:"", field:"sequence", visible:false, formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
-          ]
+          ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"Nome", //replace the title of column name with the value "Name"
+                    "status":"Stato", //replace the title of column name with the value "Name"
+                }
+            }
+          }
         });
         menusectionTable.on("rowMoved", function(row){
             const rows = menusectionTable.getRows();

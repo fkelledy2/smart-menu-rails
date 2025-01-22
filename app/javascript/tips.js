@@ -43,7 +43,17 @@ document.addEventListener("turbo:load", () => {
            }
           },
           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
-          ]
+          ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"Mancia", //replace the title of column name with the value "Name"
+                    "percentage":"%", //replace the title of column name with the value "Name"
+                    "status":"Stato", //replace the title of column name with the value "Name"
+                }
+            }
+          }
         });
         restaurantTipTable.on("rowMoved", function(row){
             const rows = restaurantTipTable.getRows();

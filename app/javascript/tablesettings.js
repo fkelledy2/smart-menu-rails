@@ -46,6 +46,17 @@ document.addEventListener("turbo:load", () => {
           {title:"Seats", field:"capacity", responsive:0, hozAlign:"right", bottomCalc:"sum", headerHozAlign:"right" },
           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"Nome", //replace the title of column name with the value "Name"
+                    "tabletype":"Tipa", //replace the title of column name with the value "Name"
+                    "capacity":"Capacità", //replace the title of column name with the value "Name"
+                    "status":"Stato", //replace the title of column name with the value "Name"
+                }
+            }
+          }
         });
         tableSettingTable.on("rowMoved", function(row){
             const rows = tableSettingTable.getRows();

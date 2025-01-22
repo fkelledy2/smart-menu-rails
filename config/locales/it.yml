@@ -1,0 +1,91 @@
+
+it:
+  shared:
+    navbar:
+      restaurants: "Ristoranti"
+      employees: "Dipendenti"
+      taxes: "Tasse"
+      openingHours: "Orari di Apertura"
+      menus: "Menu"
+      menuSections: "Sezioni del Menu"
+      menuItems: "Elementi del Menu"
+      allergyns: "Allergeni"
+      menuAvailability: "Disponibilità del Menu"
+      sizes: "Taglie"
+      inventories: "Inventari"
+      tableSettings: "Impostazioni Tavoli"
+      orders: "Ordini"
+      orderItems: "Elementi dell'Ordine"
+      logout: "Disconnetti"
+      settings: "Impostazioni"
+      whatsNew: "Novità"
+  restaurants:
+    index:
+      restaurants: "Ristoranti"
+      restaurant: "Ristorante"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
+    show:
+      restaurant: "Visualizza Ristorante"
+      details: "Dettagli"
+      address: "Indirizzo"
+      imageSettings: "Impostazioni Immagini"
+      settings: "Impostazioni"
+      name: "Nome"
+      description: "Descrizione"
+      currency: "Valuta"
+      address1: "Linea Indirizzo 1"
+      address2: "Linea Indirizzo 2"
+      city: "Città"
+      state: "Stato"
+      postcode: "Codice Postale"
+    showEmployees:
+      employees: "Dipendenti"
+      employee: "Dipendente"
+      name: "Nome"
+      role: "Ruolo"
+      id: "ID"
+    showOpeningHours:
+      openings: "Orari"
+      openingHours: "Orari di Apertura"
+      openingHour: "Orario di Apertura"
+      dayOfWeek: "Giorno della Settimana"
+      opening: "Orario di Apertura"
+      closing: "Orario di Chiusura"
+    showTableSettings:
+      tableSettings: "Tavoli"
+      tableSetting: "Tavolo"
+      name: "Nome"
+      type: "Tipo"
+      capacity: "Capacità"
+    showTaxes:
+      taxes: "Tasse"
+      tax: "Tassa"
+      name: "Nome"
+      type: "Tipo"
+      percentage: "Percentuale"
+    showSmartMenus:
+      smartQRs: "QR"
+    showTips:
+      tips: "Suggerimenti"
+      tip: "Suggerimento"
+      percentage: "Percentuale"
+    showOrdrs:
+      ordrs: "Ordini"
+    edit:
+      restaurant: "Modifica Ristorante"
+      smartQRs: "QR"
+    new:
+      restaurant: "Nuovo Ristorante"
+      cancel: "Annulla"
+    form:
+      details: "Dettagli"
+      address: "Indirizzo"
+      imageSettings: "Impostazioni Immagini"
+      settings: "Impostazioni"
+      save: "Salva"
+      delete: "Elimina"
+      sure: "Sei sicuro?"
+      errors: "Errori"
+      generateImage: "Genera Immagine"

@@ -49,7 +49,18 @@ document.addEventListener("turbo:load", () => {
           {title: 'Opening Time', field: 'starthour', mutator: (value, data) => String(data.starthour).padStart(2, '0') + ':' + String(data.startmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
           {title: 'Closing Time', field: 'endhour', mutator: (value, data) => String(data.endhour).padStart(2, '0') + ':' + String(data.endmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
-          ]
+          ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"Giorno", //replace the title of column name with the value "Name"
+                    "starthour":"Di partenza", //replace the title of column name with the value "Name"
+                    "endhour":"Fine", //replace the title of column name with the value "Name"
+                    "status":"Stato", //replace the title of column name with the value "Name"
+                }
+            }
+          }
         });
         restaurantOpeningHourTable.on("rowMoved", function(row){
             const rows = restaurantOpeningHourTable.getRows();

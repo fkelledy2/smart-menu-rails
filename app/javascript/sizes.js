@@ -33,6 +33,16 @@ document.addEventListener("turbo:load", () => {
            {title:"Name", field:"name", responsive:0 },
            {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"Misurare", //replace the title of column name with the value "Name"
+                    "name":"Nome", //replace the title of column name with the value "Name"
+                    "status":"Stato", //replace the title of column name with the value "Name"
+                }
+            }
+          }
         });
         sizeTable.on("rowMoved", function(row){
             const rows = sizeTable.getRows();

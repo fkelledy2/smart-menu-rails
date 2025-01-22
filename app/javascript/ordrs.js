@@ -351,6 +351,22 @@ document.addEventListener("turbo:load", () => {
            },
            {title:"Date", field:"ordrDate", responsive:0, hozAlign:"right", headerHozAlign:"right" },
           ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"ID",
+                    "menu.id":"Menu",
+                    "tablesetting.id":"Tavolo",
+                    "status":"Stato",
+                    "nett":"Tetto",
+                    "service":"Servizio",
+                    "tax":"Tassare",
+                    "gross":"Totale",
+                    "ordrDate":"Data",
+                }
+            }
+          }
         });
     }
 })

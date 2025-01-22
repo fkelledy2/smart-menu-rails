@@ -34,6 +34,17 @@ document.addEventListener("turbo:load", () => {
            {title:"Description", field:"description", responsive:5},
            {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
+          locale:true,
+          langs:{
+            "it":{
+                "columns":{
+                    "id":"Nome", //replace the title of column name with the value "Name"
+                    "symbol":"Simbolo", //replace the title of column name with the value "Name"
+                    "description":"Descrizione", //replace the title of column name with the value "Name"
+                    "status":"Stato", //replace the title of column name with the value "Name"
+                }
+            }
+          }
         });
         allergynTable.on("rowMoved", function(row){
             const rows = allergynTable.getRows();
