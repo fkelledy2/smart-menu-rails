@@ -1,91 +1,486 @@
-
 it:
+  home:
+    index:
+      ctaTitle1: "Menu, solo più intelligenti"
+      ctaBody1: "Scopri il futuro della ristorazione con il nostro sistema di ordinazione di menu digitale senza soluzione di continuità. Migliora il tuo servizio e migliora l'esperienza dei tuoi clienti attraverso menu che sono semplicemente più intelligenti!"
+      ctaTitle2: "Ristoranti, ottimizzati"
+      ctaBody2: "Ottieni di più, con meno. Aggiungendo menu intelligenti e ordinazioni intelligenti, il tuo personale potrà dedicare il proprio tempo prezioso ai tuoi preziosi clienti."
+      contactUs: "Contattaci"
+      signup: "Iscrizione"
+      previous: "Previous"
+      next: "Next"
+      featureTitle1: "Senza contatto"
+      featureDescription1: "In un mondo in cui la sicurezza è fondamentale, i nostri menu digitali offrono un'esperienza completamente senza contatto. I clienti eseguono semplicemente la scansione con il proprio smartphone per navigare, ordinare e pagare riducendo il contatto fisico e promuovendo al tempo stesso un ambiente di ristorazione più sicuro."
+      featureTitle2: "Senza sforzo"
+      featureDescription2: "Dì addio ai menu obsoleti e facilmente danneggiabili. I menu digitali semplificano il processo di ordinazione, consentendo ai clienti di visualizzare il menu ed effettuare ordini secondo i propri ritmi, riducendo al minimo i tempi di attesa sia per gli ospiti che per il personale."
+      featureTitle3: "Preciso"
+      featureDescription3: "Con l'ordinazione digitale, i clienti possono selezionare gli articoli direttamente dal menu digitale, contribuendo a ridurre i problemi di comunicazione e gli errori negli ordini, aumentando la soddisfazione di entrambe le parti."
+      featureTitle4: "Coinvolgente"
+      featureDescription4: "I nostri menu digitali interattivi prendono vita con immagini vivaci, descrizioni di articoli e consigli personalizzati. Effettua facilmente l'upselling con suggerimenti e promozioni mirate, aumentando la spesa e la soddisfazione dei clienti."
+      featureTitle5: "Ambientale"
+      featureDescription5: "Riduci lo spreco di carta e abbraccia la sostenibilità. Eliminando i menu stampati, l'ordinazione digitale supporta i tuoi obiettivi ecologici offrendo allo stesso tempo un'esperienza culinaria moderna."
+      featureTitle6: "Perspicace"
+      featureDescription6: "Ottieni informazioni preziose sulle preferenze dei tuoi clienti. Il nostro sistema raccoglie dati sui modelli di ordinazione, consentendoti di personalizzare le tue offerte e migliorare il servizio sulla base delle informazioni reali dei clienti."
+      demoMenu: "Menù dimostrativo"
+      demoMenuTag: "Scansiona o tocca questo codice QR per vedere di cosa sono capaci i nostri menu intelligenti!"
+      numbers: "Numeri"
+      numbersTag: "Le nostre statistiche, ristoranti, menu, ordini e valore in gestione:"
+      restaurants: "Ristoranti"
+      menus: "Menù"
+      orders: "Ordini"
+      orderValue: "Valore dell'ordine"
+      testimonials: "Testimonianze"
+      testimonialsTag: "Alcune parole dai nostri clienti soddisfatti:"
+      pricing: "Prezzi"
+      pricingTag: "Scegli tra i nostri piani tariffari flessibili:"
+      emailAddress: "Indirizzo e-mail"
+      emailAddressTag: "Non condivideremo mai la tua email con nessun altro."
+      message: "Messaggio"
+      submit: "Invia"
+
   shared:
     navbar:
-      restaurants: "Ristoranti"
-      employees: "Dipendenti"
-      taxes: "Tasse"
-      openingHours: "Orari di Apertura"
-      menus: "Menu"
-      menuSections: "Sezioni del Menu"
-      menuItems: "Elementi del Menu"
-      allergyns: "Allergeni"
-      menuAvailability: "Disponibilità del Menu"
-      sizes: "Taglie"
-      inventories: "Inventari"
-      tableSettings: "Impostazioni Tavoli"
-      orders: "Ordini"
-      orderItems: "Elementi dell'Ordine"
-      logout: "Disconnetti"
-      settings: "Impostazioni"
-      whatsNew: "Novità"
+      restaurants: "Restaurants"
+      employees: "Employees"
+      taxes: "Taxes"
+      openingHours: "Openings"
+      menus: "Menus"
+      menuSections: "Menu Sections"
+      menuItems: "Menu Items"
+      allergyns: "Allergyns"
+      menuAvailability: "Menu Availability"
+      sizes: "Sizes"
+      inventories: "Inventories"
+      tableSettings: "Table Settings"
+      orders: "Orders"
+      orderItems: "Order Items"
+      logout: "Logout"
+      settings: "Settings"
+      whatsNew: "What's New"
   restaurants:
     index:
-      restaurants: "Ristoranti"
-      restaurant: "Ristorante"
-      actions: "Azioni"
-      activate: "Attiva"
-      deactivate: "Disattiva"
+      restaurants: "Restaurants"
+      restaurant: "Restaurant"
+      activate: "Activate"
+      deactivate: "Deactivate"
     show:
-      restaurant: "Visualizza Ristorante"
-      details: "Dettagli"
-      address: "Indirizzo"
-      imageSettings: "Impostazioni Immagini"
-      settings: "Impostazioni"
-      name: "Nome"
-      description: "Descrizione"
-      currency: "Valuta"
-      address1: "Linea Indirizzo 1"
-      address2: "Linea Indirizzo 2"
-      city: "Città"
-      state: "Stato"
-      postcode: "Codice Postale"
+      restaurant: "View Restaurant"
+      details: "Details"
+      address: "Address"
+      imageSettings: "Image Settings"
+      settings: "Settings"
+      name: "Name"
+      description: "Description"
+      currency: "Currency"
+      address1: "Address Line 1"
+      address2: "Address Line 2"
+      city: "City"
+      state: "State"
+      postcode: "Post Code"
     showEmployees:
-      employees: "Dipendenti"
-      employee: "Dipendente"
-      name: "Nome"
-      role: "Ruolo"
+      employees: "Employees"
+      employee: "Employee"
+      name: "Name"
+      role: "Role"
       id: "ID"
     showOpeningHours:
-      openings: "Orari"
-      openingHours: "Orari di Apertura"
-      openingHour: "Orario di Apertura"
-      dayOfWeek: "Giorno della Settimana"
-      opening: "Orario di Apertura"
-      closing: "Orario di Chiusura"
+      openings: "Openings"
+      openingHours: "Openings"
+      openingHour: "Opening Hour"
+      dayOfWeek: "Day Of Week"
+      opening: "Opening Time"
+      closing: "Closing Time"
     showTableSettings:
-      tableSettings: "Tavoli"
-      tableSetting: "Tavolo"
-      name: "Nome"
-      type: "Tipo"
-      capacity: "Capacità"
+      tableSettings: "Tables"
+      tableSetting: "Table"
+      name: "Name"
+      type: "Type"
+      capacity: "Capacity"
     showTaxes:
-      taxes: "Tasse"
-      tax: "Tassa"
-      name: "Nome"
-      type: "Tipo"
-      percentage: "Percentuale"
+      taxes: "Taxes"
+      tax: "Tax"
+      name: "Name"
+      type: "Type"
+      percentage: "Percentage"
     showSmartMenus:
-      smartQRs: "QR"
+      smartQRs: "QRs"
     showTips:
-      tips: "Suggerimenti"
-      tip: "Suggerimento"
-      percentage: "Percentuale"
+      tips: "Tips"
+      tip: "Tip"
+      percentage: "Percentage"
     showOrdrs:
-      ordrs: "Ordini"
+      ordrs: "Orders"
     edit:
-      restaurant: "Modifica Ristorante"
-      smartQRs: "QR"
+      restaurant: "Edit Restaurant"
+      smartQRs: "QRs"
     new:
-      restaurant: "Nuovo Ristorante"
-      cancel: "Annulla"
+      restaurant: "New Restaurant"
+      cancel: "Cancel"
     form:
-      details: "Dettagli"
-      address: "Indirizzo"
-      imageSettings: "Impostazioni Immagini"
-      settings: "Impostazioni"
-      save: "Salva"
-      delete: "Elimina"
-      sure: "Sei sicuro?"
-      errors: "Errori"
-      generateImage: "Genera Immagine"
+      details: "Details"
+      address: "Address"
+      imageSettings: "Image Settings"
+      settings: "Settings"
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      errors: "Errors"
+      generateImage: "Generate Image"
+
+  employees:
+    index:
+      employees: "Employees"
+      employee: "Employee"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    show:
+      employee: "View Employee"
+    edit:
+      employee: "Edit Employee"
+    new:
+      employee: "New Employee"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+      errors: "Errors"
+
+  tips:
+    index:
+      tips: "Tips"
+      tip: "Tip"
+    show:
+      tip: "View Tip"
+    edit:
+      tip: "Edit Tip"
+    new:
+      tip: "New Tip"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+      errors: "Errors"
+
+  taxes:
+    index:
+      taxes: "Taxes"
+      tax: "Tax"
+    show:
+      tax: "View Tax"
+    edit:
+      tax: "Edit Tax"
+    new:
+      tax: "New Tax"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+      errors: "Errors"
+
+  tablesettings:
+    index:
+      tablesettings: "Tables"
+      tablesetting: "Table"
+    show:
+      tablesetting: "Table"
+    edit:
+      tablesetting: "Edit Table"
+    new:
+      tablesetting: "New Table"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+      errors: "Errors"
+
+  restaurantavailabilities:
+    index:
+      restaurantavailabilities: "Openings"
+      restaurantavailability: "Openings"
+      activate: "Open"
+      deactivate: "Close"
+    show:
+      restaurantavailability: "View Openings"
+    edit:
+      restaurantavailability: "Edit Openings"
+    new:
+      restaurantavailability: "New Openings"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+      errors: "Errors"
+
+  menus:
+    index:
+      menus: "Menus"
+      menu: "Menu"
+      activate: "Activate"
+      deactivate: "Deactivate"
+      unavailable: "Menu is currently unavailable."
+    show:
+      menu: "View Menu"
+      table: "XXX"
+    edit:
+      menu: "Edit Menu"
+    new:
+      menu: "New Menu"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+      errors: "Errors"
+      details: "Details"
+      preview: "Preview"
+
+  smartmenus:
+    index:
+      menus: "Menus"
+      menu: "Menu"
+      activate: "Activate"
+      deactivate: "Deactivate"
+      unavailable: "Menu is currently unavailable."
+    show:
+      menu: "View Menu"
+      table: "Table"
+    edit:
+      menu: "Edit Menu"
+    new:
+      menu: "New Menu"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectRestaurant: "Select a Restaurant ..."
+      errors: "Errors"
+      details: "Details"
+      preview: "Preview"
+
+
+  menusections:
+    index:
+      menuSections: "Menu Sections"
+      menuSection: "Menu Section"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    show:
+      menuSection: "View Menu Section"
+    edit:
+      menuSection: "Edit Menu Section"
+    new:
+      menuSection: "New Menu Section"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectMenu: "Select a Menu ..."
+      errors: "Errors"
+
+  menuitems:
+    index:
+      menuItems: "Menu Items"
+      menuItem: "Menu Item"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    show:
+      menuItem: "View Menu Item"
+    edit:
+      menuItem: "Edit Menu Item"
+    new:
+      menuItem: "New Menu Item"
+      cancel: "Cancel"
+    form:
+      sizes: "xxx"
+      save: "Save"
+      update: "Update"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectMenuSection: "Select a Menu Section ..."
+      errors: "Errors"
+
+  allergyns:
+    index:
+      allergyns: "Allergens"
+      allergyn: "Allergen"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    show:
+      allergyn: "View Allergen"
+    edit:
+      allergyn: "Edit Allergen"
+    new:
+      allergyn: "New Allergen"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+
+  sizes:
+    index:
+      sizes: "Sizes"
+      size: "Size"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    show:
+      size: "View Size"
+    edit:
+      size: "Edit Size"
+    new:
+      size: "New Size"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+
+  inventories:
+    index:
+      inventories: "Inventories"
+      inventory: "Inventory"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    show:
+      inventory: "View Inventory"
+    edit:
+      inventory: "Edit Inventory"
+    new:
+      inventory: "New inventory"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+
+  menuavailabilities:
+    index:
+      menuAvailabilities: "Availabilities"
+      menuAvailability: "Availability"
+      activate: "Open"
+      deactivate: "Close"
+    show:
+      menuAvailability: "View Availability"
+    edit:
+      menuAvailability: "Edit Availability"
+    new:
+      menuAvailability: "New Availability"
+      cancel: "Cancel"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
+      selectMenu: "Select a Menu ..."
+      errors: "Errors"
+
+  activerecord:
+    attributes:
+      restaurant:
+        name: "Name"
+        description: "Description"
+        address1: "Address Line 1"
+        address2: "Address Line 2"
+        state: "State"
+        city: "City"
+        postcode: "Post Code"
+        country: "Country"
+        image: "Image"
+        imagecontext: "Context"
+        genid: "Gen Id"
+        status: "Status"
+        displayImages: "Images"
+        allowOrdering: "Ordering"
+        inventoryTracking: "Inventory"
+        capacity: "Capacity"
+        currency: "Currency"
+        tips: "xxxxx"
+      employee:
+        name: "Name"
+        eid: "ID"
+        user: "User"
+        image: "Image URL"
+        role: "Role"
+        status: "Status"
+        restaurant: "Restaurant"
+      tax:
+        name: "Name"
+        taxType: "Type"
+        taxPercentage: "Percentage"
+        restaurant: "Restaurant"
+      restaurantavailability:
+        dayofweek: "Day"
+        starthour: "Opening"
+        startmin: "Opening"
+        endhour: "Closing"
+        endmin: "Closing"
+        sequence: "Sequence"
+        status: "Status"
+        restaurant: "Restaurant"
+      menu:
+        name: "Name"
+        description: "Description"
+        image: "Image"
+        imagecontext: "Context"
+        status: "Status"
+        displayImages: "Images"
+        allowOrdering: "Ordering"
+        inventoryTracking: "Tracking"
+        sequence: "Display Order"
+        restaurant: "Restaurant"
+      menusection:
+        name: "Name"
+        description: "Description"
+        image: "Image"
+        status: "Status"
+        sequence: "Display Order"
+        menu: "Menu"
+      menuitem:
+        menusection_id: "Section"
+        name: "Name"
+        description: "Description"
+        image: "Image"
+        status: "Status"
+        sequence: "Display Order"
+        calories: "Calories"
+        price: "Price"
+        preptime: "Prep Mn"
+        allergyns: "Allergyns"
+        tags: "Tags"
+        sizes: "Variants"
+        variantPricing: "Variant Pricing"
+        sizesupport: "Sizes"
+        ingredients: "Ingredients"
+      allergyn:
+        name: "Name"
+        description: "Description"
+        symbol: "Symbol"
+      size:
+        size: "Size"
+        name: "Name"
+        description: "Description"
+      inventory:
+        menuItem: "Item"
+        startingInventory: "Starting"
+        currentInventory: "Ending"
+        resetHour: "Resets at"
+      menuavailability:
+        dayofweek: "Day"
+        starthour: "Opening"
+        startmin: "Open Mn"
+        endhour: "Closing"
+        endmin: "Close Mn"
+        status: "Status"
+        menu: "Menu"
