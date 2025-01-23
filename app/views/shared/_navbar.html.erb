@@ -54,8 +54,8 @@
           </li>
 
         <% else %>
-          <li style="z-index:1070;" class="nav-item"><%= link_to "Sign Up", new_user_registration_path, class: "nav-link" %></li>
-          <li style="z-index:1070;" class="nav-item"><%= link_to "Login", new_user_session_path, class: "nav-link" %></li>
+          <li style="z-index:1070;" class="nav-item"><%= link_to t(".signUp"), new_user_registration_path, class: "nav-link" %></li>
+          <li style="z-index:1070;" class="nav-item"><%= link_to t(".login"), new_user_session_path, class: "nav-link" %></li>
         <% end %>
       </ul>
     </div>

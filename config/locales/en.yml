@@ -55,6 +55,8 @@ en:
       orders: "Orders"
       orderItems: "Order Items"
       logout: "Logout"
+      signUp: "Sign Up"
+      login: "Login"
       settings: "Settings"
       whatsNew: "What's New"
   restaurants:
@@ -113,6 +115,7 @@ en:
     edit:
       restaurant: "Edit Restaurant"
       smartQRs: "QRs"
+      restaurantTab: "Restaurant"
     new:
       restaurant: "New Restaurant"
       cancel: "Cancel"
@@ -244,6 +247,7 @@ en:
       errors: "Errors"
       details: "Details"
       preview: "Preview"
+      imageSettings: "Image Settings"
 
   smartmenus:
     index:
