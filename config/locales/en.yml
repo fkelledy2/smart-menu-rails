@@ -37,6 +37,9 @@ en:
       emailAddressTag: "We'll never share your email with anyone else."
       message: "Message"
       submit: "Submit"
+      actions: "Actions"
+      activate: "Activate"
+      deactivate: "Deactivate"
 
   shared:
     navbar:
@@ -63,6 +66,7 @@ en:
     index:
       restaurants: "Restaurants"
       restaurant: "Restaurant"
+      actions: "Actions"
       activate: "Activate"
       deactivate: "Deactivate"
     show:

@@ -274,10 +274,10 @@ it:
       table: "Tavolo"
     edit:
       menu: "Menu"
-      sections: "Sections"
-      availabilities: "Availabilities"
+      sections: "Sezioni"
+      availabilities: "Disponibilità"
     showMenusections:
-      sections: "Sections"
+      sections: "Sezioni"
       actions: "Azioni"
       activate: "Attiva"
       deactivate: "Disattiva"
