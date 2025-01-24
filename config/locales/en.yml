@@ -85,6 +85,9 @@ en:
       name: "Name"
       role: "Role"
       id: "ID"
+    showMenus:
+      menus: "Menus"
+      actions: "Actions"
     showOpeningHours:
       openings: "Openings"
       openingHours: "Openings"
@@ -114,8 +117,18 @@ en:
       ordrs: "Orders"
     edit:
       restaurant: "Edit Restaurant"
-      smartQRs: "QRs"
+      smartQRTab: "QRs"
       restaurantTab: "Restaurant"
+      menuTab: "Menu"
+      tableTab: "Tavoli"
+      employeesTab: "Dipendenti"
+      tipsTab: "Suggerimenti"
+      taxesTab: "Tasse"
+      openingsTab: "Aperture"
+      allergynsTab: "Allergyns"
+      sizesTab: "Sizes"
+      ordersTab: "Orders"
+
     new:
       restaurant: "New Restaurant"
       cancel: "Cancel"
@@ -232,10 +245,22 @@ en:
       deactivate: "Deactivate"
       unavailable: "Menu is currently unavailable."
     show:
-      menu: "View Menu"
-      table: "XXX"
+      menu: "Menu"
+      table: "Table"
     edit:
-      menu: "Edit Menu"
+      menu: "Menu"
+      sections: "Sections"
+      availabilities: "Availabilities"
+    showMenusections:
+      sections: "Sections"
+      actions: "Actions"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    showMenuavailabilities:
+      availabilities: "Availabilities"
+      actions: "Actions"
+      activate: "Activate"
+      deactivate: "Deactivate"
     new:
       menu: "New Menu"
       cancel: "Cancel"
@@ -273,7 +298,6 @@ en:
       details: "Details"
       preview: "Preview"
 
-
   menusections:
     index:
       menuSections: "Menu Sections"
@@ -281,13 +305,30 @@ en:
       activate: "Activate"
       deactivate: "Deactivate"
     show:
-      menuSection: "View Menu Section"
+      menuSection: "Menu Section"
     edit:
-      menuSection: "Edit Menu Section"
+      menuSection: "Menu Section"
+      items: "Items"
+      inventories: "Inventories"
     new:
       menuSection: "New Menu Section"
       cancel: "Cancel"
+    showMenuitems:
+      menuItems: "Itmes"
+      actions: "Actions"
+      activate: "Activate"
+      deactivate: "Deactivate"
+      genimage: "Generate Image"
+    showInventories:
+      inventories: "Inventories"
+      actions: "Actions"
+      activate: "Activate"
+      deactivate: "Deactivate"
+      reset: "Reset"
     form:
+      details: "Details"
+      imageSettings: "Image Settings"
+      settings: "Settings"
       save: "Save"
       delete: "Delete"
       sure: "Are you sure?"

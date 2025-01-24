@@ -64,6 +64,7 @@ it:
     index:
       restaurants: "Ristoranti"
       restaurant: "Ristorante"
+      actions: "Azioni"
       activate: "Attiva"
       deactivate: "Disattiva"
     show:
@@ -86,6 +87,14 @@ it:
       name: "Nome"
       role: "Ruolo"
       id: "ID"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
+    showMenus:
+      menus: "Menus"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
     showOpeningHours:
       openings: "Orari"
       openingHours: "Orari"
@@ -93,36 +102,58 @@ it:
       dayOfWeek: "Giorno della settimana"
       opening: "Ora di apertura"
       closing: "Ora di chiusura"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
     showTableSettings:
       tableSettings: "Tavoli"
       tableSetting: "Tavolo"
       name: "Nome"
       type: "Tipo"
       capacity: "Capacità"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
     showTaxes:
       taxes: "Tasse"
       tax: "Tassa"
       name: "Nome"
       type: "Tipo"
       percentage: "Percentuale"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
     showSmartMenus:
       smartQRs: "QR"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
     showTips:
       tips: "Mance"
       tip: "Mancia"
       percentage: "Percentuale"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
     showOrdrs:
       ordrs: "Ordini"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
     edit:
       restaurant: "Modifica Ristorante"
-      smartQRs: "QR"
+      smartQRTab: "QRs"
       restaurantTab: "Ristorante"
-      menuTab: "Menu"
+      menuTab: "Menus"
       tableTab: "Tavoli"
       employeesTab: "Dipendenti"
       tipsTab: "Suggerimenti"
       taxesTab: "Tasse"
       openingsTab: "Aperture"
+      allergynsTab: "Allergeni"
+      sizesTab: "Dimensioni"
+      ordersTab: "Ordini"
+
     new:
       restaurant: "Nuovo Ristorante"
       cancel: "Annulla"
@@ -239,10 +270,22 @@ it:
       deactivate: "Disattiva"
       unavailable: "Il menu non è attualmente disponibile."
     show:
-      menu: "Visualizza Menu"
-      table: "XXX"
+      menu: "Menu"
+      table: "Tavolo"
     edit:
-      menu: "Modifica Menu"
+      menu: "Menu"
+      sections: "Sections"
+      availabilities: "Availabilities"
+    showMenusections:
+      sections: "Sections"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
+    showMenuavailabilities:
+      availabilities: "Availabilities"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
     new:
       menu: "Nuovo Menu"
       cancel: "Annulla"
@@ -288,13 +331,30 @@ it:
       activate: "Attiva"
       deactivate: "Disattiva"
     show:
-      menuSection: "Visualizza Sezione del Menu"
+      menuSection: "Sezione del Menu"
     edit:
-      menuSection: "Modifica Sezione del Menu"
+      section: "Sezione del Menu"
+      items: "Elementi"
+      inventories: "Inventories"
     new:
       menuSection: "Nuova Sezione del Menu"
       cancel: "Annulla"
+    showMenuitems:
+      menuItems: "Elementi"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
+      genimage: "Genera immagine"
+    showInventories:
+      inventories: "Inventari"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
+      reset: "Reset"
     form:
+      details: "Dettagli"
+      imageSettings: "Impostazioni dell'immagine"
+      settings: "Impostazioni"
       save: "Salva"
       delete: "Elimina"
       sure: "Sei sicuro?"
@@ -308,14 +368,18 @@ it:
       activate: "Attiva"
       deactivate: "Disattiva"
     show:
-      menuItem: "Visualizza Elemento del Menu"
+      menuItem: "Elemento del Menu"
     edit:
-      menuItem: "Modifica Elemento del Menu"
+      menuItem: "Elemento del Menu"
     new:
       menuItem: "Nuovo Elemento del Menu"
       cancel: "Annulla"
     form:
-      sizes: "xxx"
+      details: "Dettagli"
+      imageSettings: "Impostazioni dell'immagine"
+      settings: "Impostazioni"
+      variantPricing: "Prezzi delle varianti"
+      sizes: "Dimensioni"
       save: "Salva"
       update: "Aggiorna"
       delete: "Elimina"

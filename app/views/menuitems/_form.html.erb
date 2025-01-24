@@ -223,11 +223,13 @@
   </div>
   <% end %>
 <% end %>
-  <div class="form-group row">
-      <div class="col-12">
-        <h4><%=t(".variantPricing")%></h4>
+  <% if menuitem.menuitem_size_mappings.count > 0 %>
+      <div class="form-group row">
+          <div class="col-12">
+            <h4><%=t(".variantPricing")%></h4>
+          </div>
       </div>
-  </div>
+  <% end %>
   <% menuitem.menuitem_size_mappings.each do |menuitemSizeMapping| %>
     <%= form_with(model: menuitemSizeMapping) do |menuitemSizeMappingForm| %>
         <div style='height:4px'></div>
