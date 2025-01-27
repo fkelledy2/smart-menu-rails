@@ -137,7 +137,7 @@
         </div>
         <div style="height:40px"class="container-fluid">
             <nav id="navbar-example2" style="position:relative; left:-10px;width:106%;mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 140%" class="nav flex-nowrap overflow-auto">
-              <ul style="position:relative; left:-37px" class="d-flex">
+              <ul style="position:relative; left:-37px" class="menu_sections_tab d-flex">
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
                       <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>
                 <% end %>

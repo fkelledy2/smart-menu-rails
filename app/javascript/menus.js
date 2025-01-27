@@ -1,5 +1,31 @@
 document.addEventListener("turbo:load", () => {
 
+    $(window).on('activate.bs.scrollspy', function () {
+        clearTimeout($.data(this, 'scrollTimer'));
+        $.data(this, 'scrollTimer', setTimeout(function() {
+            var element = document.querySelector(".menu_sections_tab a.active");
+            if( element ) {
+                var element = document.querySelector(".menu_sections_tab a.active");
+                element.scrollIntoView({behavior: "smooth" ,inline: "center"});
+                $(".menu_sections_tab a.active").click();
+            }
+        }, 100));
+    });
+
+    $(".sectionnav").on("click",function(event){
+        event.preventDefault();
+        if ($("#menuu").is(':visible')) {
+            $('html, body').animate({
+                scrollTop: $($.attr(this, 'href')).offset().top - $("#menuu").height()
+            }, 100);
+        }
+        if ($("#menuc").is(':visible')) {
+            $('html, body').animate({
+                scrollTop: $($.attr(this, 'href')).offset().top - $("#menuc").height()
+            }, 100);
+        }
+    });
+
     if ($("#size_size").is(':visible')) {
         new TomSelect("#size_size",{
         });
@@ -59,23 +85,6 @@ document.addEventListener("turbo:load", () => {
         getPillId();
     }
 
-    if ($("#menuu").is(':visible')) {
-        $(".sectionnav").on("click",function(event){
-            event.preventDefault();
-            $('html, body').animate({
-                scrollTop: $($.attr(this, 'href')).offset().top - $("#menuu").height()
-            }, 100);
-        });
-    }
-
-    if ($("#menuc").is(':visible')) {
-        $(".sectionnav").on("click",function(event){
-            event.preventDefault();
-            $('html, body').animate({
-                scrollTop: $($.attr(this, 'href')).offset().top - $("#menuc").height()
-            }, 100);
-        });
-    }
 
     if ($("#menu-table").is(':visible')) {
         function status(cell, formatterParams){
