@@ -7,7 +7,7 @@ document.addEventListener("turbo:load", () => {
             if( element ) {
                 var element = document.querySelector(".menu_sections_tab a.active");
                 element.scrollIntoView({behavior: "smooth" ,inline: "center"});
-                $(".menu_sections_tab a.active").click();
+//                $(".menu_sections_tab a.active").click();
             }
         }, 100));
     });
