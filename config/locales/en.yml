@@ -282,6 +282,8 @@ en:
       preview: "Preview"
       imageSettings: "Image Settings"
       settings: "Settings"
+    showMenuBanner:
+      table: "Table"
 
   smartmenus:
     index:

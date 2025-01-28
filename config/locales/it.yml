@@ -326,6 +326,8 @@ it:
       errors: "Errori"
       details: "Dettagli"
       preview: "Anteprima"
+    showMenuBanner:
+      table: "Tavolo"
 
   menusections:
     index:
