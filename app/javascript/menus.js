@@ -5,7 +5,7 @@ document.addEventListener("turbo:load", () => {
         $.data(this, 'scrollTimer', setTimeout(function() {
             var element = document.querySelector(".menu_sections_tab a.active");
             if( element ) {
-                element.scrollIntoView({behavior: "smooth" ,inline: "center"});
+                element.scrollIntoView();
 //                $(".menu_sections_tab a.active").click();
             }
         }, 100));
