@@ -1,27 +1,32 @@
-<div class="container-fluid">
-  <footer class="d-flex flex-wrap justify-content-between align-items-center py-1 my-0 border-top">
-    <p class="col-md-4 mb-0 text-muted">© 2025</p>
-    <%= link_to root_path, class: "navbar-brand" do %>
-       <%= image_tag "qr-icon.svg", height:'36' %><%= image_tag "logo.png", height:'36' %>
-    <% end %>
-    <ul class="nav col-md-4 justify-content-end">
-      <li class="nav-item"><a href="#" aria-label="Facebook"><i class="px-2 text-muted fab fa-facebook"></i></a></li>
-      <li class="nav-item"><a href="#" aria-label="Instagram"><i class="px-2 text-muted fab fa-instagram"></i></a></li>
-      <li class="nav-item"><a href="#" aria-label="Twitter"><i class="px-2 text-muted fab fa-twitter"></i></a></li>
-      <li class="nav-item"><a href="#" aria-label="LinkedIn"><i class="px-2 text-muted fab fa-linkedin"></i></a></li>
-    </ul>
-  </footer>
-    <div style='min-height:45px' class="row">
-        <div class="col-5">
-            <ul class="nav">
-              <li class="nav-item"><small><%= link_to t(".terms"), terms_path, class: "nav-link px-2 text-muted"  %></small></li>
-              <li class="nav-item"><small><%= link_to t(".privacy"), privacy_path, class: "nav-link px-2 text-muted"  %></small></li>
-            </ul>
+  <footer style='min-height:60px;' class="container-fluid py-1 my-0 border-top">
+    <div class="row">
+        <div class='col-7'>
+            <%= link_to root_path, class: "navbar-brand" do %>
+               <%= image_tag "qr-icon.svg", height:'48' %>
+            <% end %>
+            <span style='max-height:40px'><%= render 'shared/notices' %></span>
         </div>
-        <div class="col-7">
-            <span class="float-end">
-                <%= render 'shared/notices' %>
-            </span>
+        <div class='col-5'>
+           <span class="float-end">
+           <div class="row">
+                <div class='col-12'>
+                   <ul class="nav col-md-4 justify-content-center">
+                      <li class="nav-item"><small><%= link_to t(".terms"), terms_path, class: "px-2 text-muted"  %></small></li>
+                      <li class="nav-item"><small><%= link_to t(".privacy"), privacy_path, class: "px-2 text-muted"  %></small></li>
+                   </ul>
+                </div>
+           </div>
+           <div class="row">
+                <div class='col-12'>
+                   <ul class="nav col-md-4 justify-content-center">
+                      <li class="nav-item"><a href="#" aria-label="Facebook"><i class="px-2 text-muted fab fa-facebook"></i></a></li>
+                      <li class="nav-item"><a href="#" aria-label="Instagram"><i class="px-2 text-muted fab fa-instagram"></i></a></li>
+                      <li class="nav-item"><a href="#" aria-label="Twitter"><i class="px-2 text-muted fab fa-twitter"></i></a></li>
+                      <li class="nav-item"><a href="#" aria-label="LinkedIn"><i class="px-2 text-muted fab fa-linkedin"></i></a></li>
+                   </ul>
+                </div>
+           </div>
+           </span>
         </div>
     </div>
-</div>
+  </footer>

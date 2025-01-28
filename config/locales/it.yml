@@ -59,6 +59,9 @@ it:
       login: "Accedi"
       settings: "Impostazioni"
       whatsNew: "Novità"
+    footer:
+      terms: "Termini"
+      privacy: "Privacy"
 
   restaurants:
     index:

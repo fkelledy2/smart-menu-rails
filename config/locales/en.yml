@@ -62,6 +62,10 @@ en:
       login: "Login"
       settings: "Settings"
       whatsNew: "What's New"
+    footer:
+      terms: "Termsß"
+      privacy: "Privacy"
+
   restaurants:
     index:
       restaurants: "Restaurants"
