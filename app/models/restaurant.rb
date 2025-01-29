@@ -35,9 +35,15 @@ class Restaurant < ApplicationRecord
 
   def wifiQRString
     wifiQRString = 'WIFI:S:'
-    wifiQRString.concat(wifissid+';')
-    wifiQRString.concat('T:'+wifiEncryptionType+';')
-    wifiQRString.concat('P:'+wifiPassword+';')
+    if wifissid
+        wifiQRString.concat(wifissid+';')
+    end
+    if wifiEncryptionType
+        wifiQRString.concat('T:'+wifiEncryptionType+';')
+    end
+    if wifiPassword
+        wifiQRString.concat('P:'+wifiPassword+';')
+    end
     if wifiHidden
         wifiQRString.concat('H:true;')
     else
