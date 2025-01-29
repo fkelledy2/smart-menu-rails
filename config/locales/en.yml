@@ -332,6 +332,8 @@ en:
       errors: "Errors"
       details: "Details"
       preview: "Preview"
+    showMenuBanner:
+      table: "Table"
 
   menusections:
     index:
