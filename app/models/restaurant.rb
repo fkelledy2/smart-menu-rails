@@ -17,6 +17,12 @@ class Restaurant < ApplicationRecord
     archived: 2
   }
 
+  enum wifiEncryptionType: {
+    WPA: 0,
+    WEP: 1,
+    NONE: 2
+  }
+
   def gen_image_theme
       if( genimage )
           genimage.id
@@ -25,6 +31,18 @@ class Restaurant < ApplicationRecord
 
   def total_capacity
     tablesettings.map(&:capacity).sum
+  end
+
+  def wifiQRString
+    wifiQRString = 'WIFI:S:'
+    wifiQRString.concat(wifissid+';')
+    wifiQRString.concat('T:'+wifiEncryptionType+';')
+    wifiQRString.concat('P:'+wifiPassword+';')
+    if wifiHidden
+        wifiQRString.concat('H:true;')
+    else
+        wifiQRString.concat('H:false;')
+    end
   end
 
   validates :name, :presence => true

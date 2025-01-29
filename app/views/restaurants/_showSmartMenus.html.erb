@@ -25,6 +25,35 @@
     <div>
     <span style='display:none' id="qrIcon"><%= image_url('qr-icon.svg') %></span>
     <span style='display:none' id="qrHost"><%= @qrHost %></span>
+
+    <% if restaurant.wifissid != '' %>
+        <div class="row">
+            <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6">
+                                 <span class="h1">WiFi</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="h1 float-end">Scan to Join</span>
+                            </div>
+                        </div>
+                        <span style='display:none' class="qrWiFi"><%= restaurant.wifiQRString %></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="col-12">
+                                <div style="padding-top:20px;padding-bottom:20px" id="<%= restaurant.wifiQRString %>" class="d-flex justify-content-center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
     <div class="row">
         <% Smartmenu.where( restaurant_id: @restaurant.id).each do |smartmenu| %>
             <% if smartmenu.menu != nil && smartmenu.menu.status == 'active' %>
@@ -55,5 +84,4 @@
             </div>
             <% end %>
         <% end %>
-        </div>
     </div>

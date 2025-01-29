@@ -91,10 +91,106 @@ document.addEventListener("turbo:load", () => {
               }
            }
         });
-
         document.getElementById(qrSlug).innerHTML = '';
         qrCode.append(document.getElementById(qrSlug));
     });
+
+    $(".qrWiFi").each(function(){
+        var qrSlug = $(this).text();
+        var qrCode = new QRCodeStyling({
+           "type":"canvas",
+           "shape":"square",
+           "width":300,
+           "height":300,
+           "data":qrSlug,
+           "margin":0,
+           "qrOptions":{
+              "typeNumber":"0",
+              "mode":"Byte",
+              "errorCorrectionLevel":"Q"
+           },
+           "imageOptions":{
+              "saveAsBlob":true,
+              "hideBackgroundDots":true,
+              "imageSize":0.4,
+              "margin":0
+           },
+           "dotsOptions":{
+              "type":"extra-rounded",
+              "color":"#000000",
+              "roundSize":true
+           },
+           "backgroundOptions":{
+              "round":0,
+              "color":"#ffffff"
+           },
+           "image": $("#qrIcon").text(),
+           "dotsOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#6a1a4c",
+                 "color2":"#6a1a4c",
+                 "rotation":"0"
+              }
+           },
+           "cornersSquareOptions":{
+              "type":"extra-rounded",
+              "color":"#000000"
+           },
+           "cornersSquareOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#000000",
+                 "color2":"#000000",
+                 "rotation":"0"
+              }
+           },
+           "cornersDotOptions":{
+              "type":"",
+              "color":"#000000"
+           },
+           "cornersDotOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#000000",
+                 "color2":"#000000",
+                 "rotation":"0"
+              }
+           },
+           "backgroundOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#ffffff",
+                 "color2":"#ffffff",
+                 "rotation":"0"
+              }
+           }
+        });
+        document.getElementById(qrSlug).innerHTML = '';
+        qrCode.append(document.getElementById(qrSlug));
+    });
+
+
 
     if ($("#restaurantTabs").is(':visible') || $("#newRestaurant").is(':visible')) {
         const placePicker = document.querySelector('gmpx-place-picker');
@@ -153,6 +249,14 @@ document.addEventListener("turbo:load", () => {
         getPillId();
     }
 
+    if (document.getElementById("restaurant_wifiEncryptionType") != null) {
+      new TomSelect("#restaurant_wifiEncryptionType",{
+      });
+    }
+    if (document.getElementById("restaurant_wifiHidden") != null) {
+      new TomSelect("#restaurant_wifiHidden",{
+      });
+    }
     if (document.getElementById("restaurant_status") != null) {
       new TomSelect("#restaurant_status",{
       });

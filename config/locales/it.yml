@@ -170,6 +170,7 @@ it:
       sure: "Sei sicuro?"
       errors: "Errori"
       generateImage: "Genera Immagine"
+      wifi: "WiFi"
 
   employees:
     index:
@@ -486,7 +487,11 @@ it:
         inventoryTracking: "Inventario"
         capacity: "Capacità"
         currency: "Valuta"
-        tips: "xxxxx"
+        tips: "Tips"
+        wifissid: "SSID"
+        wifiEncryptionType: "Encryption"
+        wifiPassword: "Password"
+        wifiHidden: "Hidden"
       employee:
         name: "Nome"
         eid: "ID"

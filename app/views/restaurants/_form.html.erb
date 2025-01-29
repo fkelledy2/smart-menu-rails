@@ -146,6 +146,48 @@
     </div>
   </div>
 
+  <div class="form-group row">
+    <div class="col-12">
+        <p>
+        <h4><%=t(".wifi")%></h4>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :wifissid, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.text_field :wifissid, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :wifiEncryptionType, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.select :wifiEncryptionType, options_for_select(Restaurant.wifiEncryptionTypes.keys.to_a, form.object.wifiEncryptionType), {} %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :wifiPassword, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.password_field :wifiPassword, class: 'form-control' %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <div class="col-3">
+        <span class="float-md-end"><%= form.label :wifiHidden, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.select :wifiHidden, [['true', true], ['false', false]], {} %>
+    </div>
+  </div>
+
   <% if current_user %>
     <%= form.hidden_field :user_id, value: current_user.id %>
   <% end %>
