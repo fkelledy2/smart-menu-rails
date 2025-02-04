@@ -2,13 +2,49 @@
       <div class="col-12 col-md-12 col-lg-12">
         <div class="row">
             <div class="col-12">
-                    <div style="padding-top:5px" class="row">
-                        <div class="col-8">
-                            <h5>
-                                <%= @menu.restaurant.name %>
-                            </h5>
-                        </div>
-                        <div class="col-4">
+                <div style="padding-top:5px" class="row">
+                    <div class="col-11">
+                        <h5>
+                            <%= @menu.restaurant.name %>
+                        </h5>
+                    </div>
+                    <div class="col-1">
+                        <% if current_user %>
+                            <span class="float-end">
+                                <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-dark' do %>
+                                    <i class="bi bi-pencil-fill"></i>
+                               <% end %>
+                            </span>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-5">
+                <h5>
+                    <%= @menu.name %>
+                    <% if current_user %>
+                    <% else %>
+                        <% if @ordrparticipant %>
+                            <span id="filterMenuSpan">
+                                <button type="button" class="btn btn-sm btn-light position-relative" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#filterOrderModal">
+                                    <i class="bi bi-filter"></i>
+                                    <% if @ordrparticipant.allergyns.size > 0 %>
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            <%= @ordrparticipant.allergyns.size %>
+                                            <span class="visually-hidden"></span>
+                                        </span>
+                                    <% end %>
+                                </button>
+                            </span>
+                        <% end %>
+                    <% end %>
+                </h5>
+            </div>
+
+            <div class="col-7">
                             <span class="float-end">
                                 <% if @ordrparticipant && @ordrparticipant.name == nil %>
                                     <span id="addYourNameSpan">
@@ -52,41 +88,12 @@
                                         </div>
                                     <% end %>
                                 <% end %>
-                                <% if current_user %>
-                                    <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-dark' do %>
-                                        <i class="bi bi-pencil-fill"></i>
-                                    <% end %>
-                                <% end %>
                             </span>
-                        </div>
-                    </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-5">
-                <h5>
-                    <%= @menu.name %>
-                    <% if current_user %>
-                    <% else %>
-                        <% if @ordrparticipant %>
-                            <span id="filterMenuSpan">
-                                <button type="button" class="btn btn-sm btn-light position-relative" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#filterOrderModal">
-                                    <i class="bi bi-filter"></i>
-                                    <% if @ordrparticipant.allergyns.size > 0 %>
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            <%= @ordrparticipant.allergyns.size %>
-                                            <span class="visually-hidden"></span>
-                                        </span>
-                                    <% end %>
-                                </button>
-                            </span>
-                        <% end %>
-                    <% end %>
-                </h5>
-            </div>
-
-            <div class="col-7">
+            <div class="col-12">
                 <span class="float-end">
                     <% if @tablesetting %>
                         <% if @openOrder %>
@@ -135,6 +142,8 @@
                 </span>
             </div>
         </div>
+
+
         <div style="height:40px"class="container-fluid">
             <nav id="navbar-example2" style="position:relative; left:-10px;width:106%;mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 140%" class="nav flex-nowrap overflow-auto">
               <ul style="position:relative; left:-37px" class="menu_sections_tab d-flex">

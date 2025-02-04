@@ -60,6 +60,9 @@ document.addEventListener("turbo:load", () => {
                 }
             };
             patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+            if( locationReload ) {
+                location.reload();
+            }
             return true;
         });
     }
