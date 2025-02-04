@@ -25,26 +25,11 @@ class SmartmenusController < ApplicationController
                  .or(Ordr.where( menu_id: @menu.id, tablesetting_id: @tablesetting.id, restaurant_id: @tablesetting.restaurant.id, status: 20))
                  .or(Ordr.where( menu_id: @menu.id, tablesetting_id: @tablesetting.id, restaurant_id: @tablesetting.restaurant.id, status: 30)).first
         if @openOrder
-            @openOrder.nett = @openOrder.runningTotal
-            taxes = Tax.where(restaurant_id: @openOrder.restaurant.id).order(sequence: :asc)
-            totalTax = 0
-            totalService = 0
-            for tax in taxes do
-                if tax.taxtype == 'service'
-                    totalService += ((tax.taxpercentage * @openOrder.nett)/100)
-                else
-                    totalTax += ((tax.taxpercentage * @openOrder.nett)/100)
-                end
-            end
-            @openOrder.tax = totalTax
-            @openOrder.service = totalService
-            @openOrder.gross = @openOrder.nett + @openOrder.tip + @openOrder.service + @openOrder.tax
             if current_user
                 @ep = Ordrparticipant.where( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
                 if @ep == nil
                     @ordrparticipant = Ordrparticipant.new( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id.to_s);
                     @ordrparticipant.save
-                else
                 end
             else
                 @ep = Ordrparticipant.where( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s ).first

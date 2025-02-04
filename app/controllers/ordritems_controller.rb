@@ -30,7 +30,6 @@ class OrdritemsController < ApplicationController
   # POST /ordritems or /ordritems.json
   def create
         @ordritem = Ordritem.new(ordritem_params)
-
         respond_to do |format|
         if @ordritem.save
             if @ordritem.menuitem.inventory

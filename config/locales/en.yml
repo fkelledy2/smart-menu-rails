@@ -40,6 +40,8 @@ en:
       actions: "Actions"
       activate: "Activate"
       deactivate: "Deactivate"
+      signUp: "Sign Up"
+      features: "Features"
 
   shared:
     navbar:
