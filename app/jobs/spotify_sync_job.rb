@@ -9,7 +9,7 @@ class SpotifySyncJob
       puts args
       @restaurant = Restaurant.find_by_id(args[0])
       if @restaurant.spotifyuserid != nil
-            # '31jr3waqr4jdel5x7pwbr6iikzim'
+            # '31jr3waqr4jdel5x7p:wbr6iikzim'
             puts @restaurant.spotifyuserid
             me = RSpotify::User.find(@restaurant.spotifyuserid)
             me.playlists #=> (Playlist array)

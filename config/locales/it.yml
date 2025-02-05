@@ -171,6 +171,7 @@ it:
       errors: "Errori"
       generateImage: "Genera Immagine"
       wifi: "WiFi"
+      music: "Music"
 
   employees:
     index:
@@ -493,6 +494,7 @@ it:
         wifiPassword: "Password"
         wifiHidden: "Hidden"
         music: "Music"
+        spotifyuserid: "Spotify ID"
 
       employee:
         name: "Nome"
