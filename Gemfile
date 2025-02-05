@@ -110,3 +110,4 @@ gem "stackprof"
 gem "sentry-ruby"
 gem "sentry-rails"
 gem 'http_accept_language'
+gem 'rspotify'

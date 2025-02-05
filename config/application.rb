@@ -34,5 +34,6 @@ module SmartMenu
 
     config.action_view.debug_missing_translation = false
 
+    RSpotify::authenticate("d64885cb29c8490ca4a6ad9958a6e62b", "ee8c40842c11442b899002a3d0256943")
   end
 end
