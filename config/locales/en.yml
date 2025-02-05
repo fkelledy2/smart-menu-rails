@@ -495,7 +495,7 @@ en:
         wifiEncryptionType: "Encryption"
         wifiPassword: "Password"
         wifiHidden: "Hidden"
-
+        music: "Music"
       employee:
         name: "Name"
         eid: "ID"

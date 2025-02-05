@@ -492,6 +492,8 @@ it:
         wifiEncryptionType: "Encryption"
         wifiPassword: "Password"
         wifiHidden: "Hidden"
+        music: "Music"
+
       employee:
         name: "Nome"
         eid: "ID"
