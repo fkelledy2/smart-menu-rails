@@ -101,7 +101,7 @@ class RestaurantsController < ApplicationController
     if current_user
         respond_to do |format|
           if @restaurant.update(restaurant_params)
-#             SmartMenuSyncJob.perform_sync(@restaurant)
+            SmartMenuSyncJob.perform_sync(@restaurant)
             SpotifySyncJob.perform_async(@restaurant.id)
 
             Analytics.track(
