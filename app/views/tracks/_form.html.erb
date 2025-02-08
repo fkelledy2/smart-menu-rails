@@ -1,0 +1,59 @@
+<%= form_with(model: track) do |form| %>
+  <% if track.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(track.errors.count, "error") %> prohibited this track from being saved:</h2>
+
+      <ul>
+      <% track.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :externalid, class: 'form-label' %>
+      <%= form.text_field :externalid, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :name, class: 'form-label' %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :description, class: 'form-label' %>
+      <%= form.text_area :description, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :image, class: 'form-label' %>
+      <%= form.text_field :image, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :sequence, class: 'form-label' %>
+      <%= form.number_field :sequence, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :restaurant_id, class: 'form-label' %>
+      <%= form.text_field :restaurant_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if track.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', track, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if track.persisted? %>
+      <%= link_to "Cancel", track, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", tracks_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

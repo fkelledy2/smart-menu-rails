@@ -59,6 +59,14 @@ document.addEventListener("turbo:load", () => {
                     "endhour":"Fine", //replace the title of column name with the value "Name"
                     "status":"Stato", //replace the title of column name with the value "Name"
                 }
+            },
+            "en":{
+                "columns":{
+                    "id":"Day", //replace the title of column name with the value "Name"
+                    "starthour":"Starts", //replace the title of column name with the value "Name"
+                    "endhour":"Ends", //replace the title of column name with the value "Name"
+                    "status":"Status", //replace the title of column name with the value "Name"
+                }
             }
           }
         });

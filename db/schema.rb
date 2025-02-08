@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_04_172505) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_08_110821) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -572,6 +572,22 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_04_172505) do
     t.index ["restaurant_id"], name: "index_tips_on_restaurant_id"
   end
 
+  create_table "tracks", force: :cascade do |t|
+    t.string "externalid"
+    t.string "name"
+    t.text "description"
+    t.string "image"
+    t.integer "sequence"
+    t.bigint "restaurant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "artist"
+    t.boolean "explicit"
+    t.boolean "is_playable"
+    t.integer "status"
+    t.index ["restaurant_id"], name: "index_tracks_on_restaurant_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -639,4 +655,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_04_172505) do
   add_foreign_key "tablesettings", "restaurants"
   add_foreign_key "taxes", "restaurants"
   add_foreign_key "tips", "restaurants"
+  add_foreign_key "tracks", "restaurants"
 end

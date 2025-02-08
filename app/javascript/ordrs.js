@@ -368,6 +368,19 @@ document.addEventListener("turbo:load", () => {
                     "gross":"Totale",
                     "ordrDate":"Data",
                 }
+            },
+            "en":{
+                "columns":{
+                    "id":"ID",
+                    "menu.id":"Menu",
+                    "tablesetting.id":"Table",
+                    "status":"Status",
+                    "nett":"nett",
+                    "service":"Service",
+                    "tax":"Tax",
+                    "gross":"Gross",
+                    "ordrDate":"Date",
+                }
             }
           }
         });

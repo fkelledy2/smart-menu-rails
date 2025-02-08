@@ -59,6 +59,14 @@ document.addEventListener("turbo:load", () => {
                     "taxpercentage":"%", //replace the title of column name with the value "Name"
                     "status":"Stato", //replace the title of column name with the value "Name"
                 }
+            },
+            "en":{
+                "columns":{
+                    "id":"Name", //replace the title of column name with the value "Name"
+                    "taxtype":"Type", //replace the title of column name with the value "Name"
+                    "taxpercentage":"%", //replace the title of column name with the value "Name"
+                    "status":"Status", //replace the title of column name with the value "Name"
+                }
             }
           }
         });

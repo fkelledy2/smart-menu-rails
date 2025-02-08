@@ -148,6 +148,21 @@ en:
       actions: "Actions"
       activate: "Activate"
       deactivate: "Deactivate"
+    showTracks:
+      tracks: "Playlist"
+      actions: "Actions"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    showAllergyns:
+      allergyns: "Allergyns"
+      actions: "Actions"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    showSizes:
+      sizes: "Sizes"
+      actions: "Actions"
+      activate: "Activate"
+      deactivate: "Deactivate"
     edit:
       restaurant: "Edit Restaurant"
       smartQRTab: "QRs"
@@ -161,6 +176,7 @@ en:
       allergynsTab: "Allergyns"
       sizesTab: "Sizes"
       ordersTab: "Orders"
+      tracksTab: "Playlist"
 
     new:
       restaurant: "New Restaurant"

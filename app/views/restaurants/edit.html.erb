@@ -57,6 +57,9 @@
       <li class="nav-item" role="presentation">
         <button class="nav-link link-dark" id="ordrs-tab" data-bs-toggle="tab" data-bs-target="#ordr" type="button" role="tab" aria-controls="ordrConfig" aria-selected="false"><%= t(".ordersTab")%></button>
       </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="tracks-tab" data-bs-toggle="tab" data-bs-target="#track" type="button" role="tab" aria-controls="trackConfig" aria-selected="false"><%= t(".tracksTab")%></button>
+      </li>
   <% end %>
 </ul>
 <div style="position:relative;top:-43px;" class="tab-content" id="restaurantConfig">
@@ -71,38 +74,38 @@
 
   <div class="tab-content" id="employeeConfig">
     <div class="tab-pane fade" id="employee" role="tabpanel" aria-labelledby="employee-tab">
-        <%= render 'showEmployees', restaurant: @restaurant, edit: true, cached: true %>
+        <%= render 'showEmployees', restaurant: @restaurant, edit: true %>
     </div>
   </div>
   <div class="tab-content" id="menusConfig">
     <div class="tab-pane fade" id="menu" role="tabpanel" aria-labelledby="menu-tab">
-        <%= render 'showMenus', restaurant: @restaurant, edit: true, cached: true %>
+        <%= render 'showMenus', restaurant: @restaurant, edit: true %>
     </div>
   </div>
   <div class="tab-content" id="smartMenusConfig">
     <div class="tab-pane fade" id="smartmenu" role="tabpanel" aria-labelledby="menu-tab">
-        <%= render 'showSmartMenus', restaurant: @restaurant, edit: true, cached: true%>
+        <%= render 'showSmartMenus', restaurant: @restaurant, edit: true %>
     </div>
   </div>
   <% if @current_employee && @current_employee.role == 'manager' %>
       <div class="tab-content" id="tablesConfig">
         <div class="tab-pane fade" id="table" role="tabpanel" aria-labelledby="table-tab">
-            <%= render 'showTableSettings', restaurant: @restaurant, edit: true, cached: true %>
+            <%= render 'showTableSettings', restaurant: @restaurant, edit: true %>
         </div>
       </div>
       <div class="tab-content" id="tipsConfig">
         <div class="tab-pane fade" id="tip" role="tabpanel" aria-labelledby="tip-tab">
-            <%= render 'showTips', restaurant: @restaurant, edit: true, cached: true %>
+            <%= render 'showTips', restaurant: @restaurant, edit: true %>
         </div>
       </div>
       <div class="tab-content" id="taxssConfig">
         <div class="tab-pane fade" id="tax" role="tabpanel" aria-labelledby="tax-tab">
-            <%= render 'showTaxes', restaurant: @restaurant, edit: true, cached: true %>
+            <%= render 'showTaxes', restaurant: @restaurant, edit: true %>
         </div>
       </div>
       <div class="tab-content" id="openinghoursConfig">
         <div class="tab-pane fade" id="openinghour" role="tabpanel" aria-labelledby="openinghour-tab">
-            <%= render 'showOpeningHours', restaurant: @restaurant, edit: true, cached: true %>
+            <%= render 'showOpeningHours', restaurant: @restaurant, edit: true %>
         </div>
       </div>
     <div class="tab-content" id="allergynConfig">
@@ -110,7 +113,7 @@
         <p>
         <div class="row">
           <div class="col-12">
-            <%= render 'showAllergyns', menu: @menu, edit: true, cached: true%>
+            <%= render 'showAllergyns', menu: @menu, edit: true %>
           </div>
         </div>
       </div>
@@ -138,5 +141,10 @@
       </div>
     </div>
 
+    <div class="tab-content" id="tracksConfig">
+      <div class="tab-pane fade" id="track" role="tabpanel" aria-labelledby="track-tab">
+          <%= render 'showTracks', restaurant: @restaurant, edit: true %>
+      </div>
+    </div>
 <% end %>
 </div>

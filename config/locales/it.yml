@@ -143,6 +143,21 @@ it:
       actions: "Azioni"
       activate: "Attiva"
       deactivate: "Disattiva"
+    showTracks:
+      tracks: "Playlist"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
+    showAllergyns:
+      allergyns: "Allergyns"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
+    showSizes:
+      sizes: "Sizes"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
     edit:
       restaurant: "Modifica Ristorante"
       smartQRTab: "QRs"
@@ -156,6 +171,7 @@ it:
       allergynsTab: "Allergeni"
       sizesTab: "Dimensioni"
       ordersTab: "Ordini"
+      tracksTab: "Playlist"
 
     new:
       restaurant: "Nuovo Ristorante"

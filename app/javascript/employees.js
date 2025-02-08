@@ -61,6 +61,13 @@ document.addEventListener("turbo:load", () => {
                     "role":"Ruolo", //replace the title of column name with the value "Name"
                     "status":"Stato", //replace the title of column name with the value "Name"
                 }
+            },
+            "en":{
+                "columns":{
+                    "id":"Name", //replace the title of column name with the value "Name"
+                    "role":"Role", //replace the title of column name with the value "Name"
+                    "status":"Status", //replace the title of column name with the value "Name"
+                }
             }
           }
         });

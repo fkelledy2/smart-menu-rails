@@ -1,0 +1,24 @@
+<div class="page-header">
+  <%= link_to tracks_path, class: 'btn btn-default' do %>
+    All Tracks
+  <% end %>
+  <%= link_to edit_track_path(@track), class: 'btn btn-primary' do %>
+    Edit
+  <% end %>
+  <h1>Show track</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Externalid:</dt>
+  <dd><%= @track.externalid %></dd>
+  <dt>Name:</dt>
+  <dd><%= @track.name %></dd>
+  <dt>Description:</dt>
+  <dd><%= @track.description %></dd>
+  <dt>Image:</dt>
+  <dd><%= @track.image %></dd>
+  <dt>Sequence:</dt>
+  <dd><%= @track.sequence %></dd>
+  <dt>Restaurant:</dt>
+  <dd><%= @track.restaurant %></dd>
+</dl>

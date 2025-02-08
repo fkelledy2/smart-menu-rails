@@ -225,6 +225,12 @@ document.addEventListener("turbo:load", () => {
                     "id":"Nome", //replace the title of column name with the value "Name"
                     "status":"Stato", //replace the title of column name with the value "Name"
                 }
+            },
+            "en":{
+                "columns":{
+                    "id":"Name", //replace the title of column name with the value "Name"
+                    "status":"Status", //replace the title of column name with the value "Name"
+                }
             }
           }
         });
