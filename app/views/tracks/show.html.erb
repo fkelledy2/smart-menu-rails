@@ -1,24 +1,17 @@
-<div class="page-header">
-  <%= link_to tracks_path, class: 'btn btn-default' do %>
-    All Tracks
-  <% end %>
-  <%= link_to edit_track_path(@track), class: 'btn btn-primary' do %>
-    Edit
-  <% end %>
-  <h1>Show track</h1>
+<%= render 'shared/currency' %>
+<% if current_user %>
+<div id="menuu" style="padding-bottom:10px;box-shadow: 0 4px 2px -2px gray;" class="sticky-top bg-white">
+<% else %>
+<div id="menuc" style="padding-bottom:10px;box-shadow: 0 4px 2px -2px gray;" class="sticky-top bg-white">
+<% end %>
 </div>
 
-<dl class="dl-horizontal">
-  <dt>Externalid:</dt>
-  <dd><%= @track.externalid %></dd>
-  <dt>Name:</dt>
-  <dd><%= @track.name %></dd>
-  <dt>Description:</dt>
-  <dd><%= @track.description %></dd>
-  <dt>Image:</dt>
-  <dd><%= @track.image %></dd>
-  <dt>Sequence:</dt>
-  <dd><%= @track.sequence %></dd>
-  <dt>Restaurant:</dt>
-  <dd><%= @track.restaurant %></dd>
-</dl>
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+        <div class="row">
+            <% restaurant.tracks.order(:sequence).each do |track| %>
+                <%= render "showTrack", track: track %>
+            <% end %>
+        </div>
+    </div>
+</div>

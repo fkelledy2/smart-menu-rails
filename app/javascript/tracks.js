@@ -12,8 +12,6 @@ document.addEventListener("turbo:load", () => {
         }
         const restaurantId = document.getElementById('restaurant-tracks-table').getAttribute('data-bs-restaurant_id');
         var restaurantTracksTable = new Tabulator("#restaurant-tracks-table", {
-          pagination:true, //enable.
-          paginationSize:10, // this option can take any positive integer value
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
@@ -34,11 +32,6 @@ document.addEventListener("turbo:load", () => {
           { title:"Name", field:"name", responsive:0, hozAlign:"left"},
           { title:"Artist", field:"artist", responsive:3, hozAlign:"left"},
           { title:"Album", field:"description", responsive:4, hozAlign:"left"},
-          { title:"image", field:"image", responsive:5, formatter:"image", headerSort:false, headerHozAlign:"right", hozAlign:"right", formatterParams:{
-                height:"75px",
-                width:"75px"
-            }
-          },
           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
           locale:true,

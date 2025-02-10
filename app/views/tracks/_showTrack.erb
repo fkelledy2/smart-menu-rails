@@ -1,0 +1,16 @@
+    <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
+        <div class="card">
+            <div class="row">
+                <div class="col-4">
+                    <div class="ratio ratio-1x1">
+                        <%= render "showImage", src: track.image, alt: track.name %>
+                        <span style='text-shadow: 2px 2px #000000;' class="text-light d-flex align-items-center justify-content-center h1"><b><%= track.sequence %></b></span>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <h6 style='padding-top:5px;padding-right:10px;' class="card-title"><strong><%= track.name %></strong></h6>
+                    <h6 style='padding-top:0px;padding-right:10px;' ><small><%= track.description %></small></h6>
+                </div>
+            </div>
+        </div>
+    </div>

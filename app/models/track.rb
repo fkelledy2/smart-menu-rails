@@ -7,4 +7,7 @@ class Track < ApplicationRecord
     archived: 2
   }
 
+  def sequenceImage
+      "https://fakeimg.pl/128x128/ffffff/000?text="+sequence.to_s
+  end
 end

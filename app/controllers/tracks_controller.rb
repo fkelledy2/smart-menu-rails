@@ -6,9 +6,9 @@ class TracksController < ApplicationController
     if current_user
         if params[:restaurant_id]
             @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-            @tracks = Track.joins(:restaurant).where(restaurant: @futureParentRestaurant).all
+            @tracks = Track.joins(:restaurant).where(restaurant: @futureParentRestaurant).order(sequence: :asc).all
         else
-            @tracks = Track.joins(:restaurant).where(restaurant: {user: current_user}).all
+            @tracks = Track.joins(:restaurant).where(restaurant: {user: current_user}).order(sequence: :asc).all
         end
     else
         redirect_to root_url

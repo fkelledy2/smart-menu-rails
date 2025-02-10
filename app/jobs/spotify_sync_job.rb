@@ -20,18 +20,19 @@ class SpotifySyncJob
 #                 if playlist.id == '25862YMjra6u07FoPSc7UI'
                     playlist.tracks.each do |track|
                         puts track
-                                    puts track.name
-                                    @track = Track.new
-                                    @track.restaurant = @restaurant
-                                    @track.externalid = track.id
-                                    @track.description = track.album.name
-                                    @track.name = track.name
-                                    @track.status = 0
-                                    @pj = track.album.images
-                                    puts @pj[0]['url']
-                                    @track.image = @pj[0]['url']
-                                    @track.artist = track.artists[0].name
-                                    @track.save
+                        puts track.name
+                        @track = Track.new
+                        @track.restaurant = @restaurant
+                        @track.externalid = track.id
+                        @track.description = track.album.name
+                        @track.name = track.name
+                        @track.status = 0
+                        @pj = track.album.images
+                        puts @pj[0]['url']
+                        @track.image = @pj[0]['url']
+                        @track.artist = track.artists[0].name
+                        @track.sequence = Track.where(restaurant: @restaurant).count
+                        @track.save
 #                         album = RSpotify::Album.find(track.album.id)
 #                         if album != nil
 #                             puts album.name
