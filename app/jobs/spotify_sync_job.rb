@@ -10,7 +10,6 @@ class SpotifySyncJob
       puts @restaurant.name
       puts @restaurant.spotifyuserid
       if @restaurant.spotifyuserid != nil
-            # '31jr3waqr4jdel5x7p:wbr6iikzim'
             me = RSpotify::User.find(@restaurant.spotifyuserid)
             puts me
             Track.where(restaurant: @restaurant).destroy_all

@@ -34,10 +34,6 @@ module SmartMenu
 
     config.action_view.debug_missing_translation = false
 
-    puts 'RSpotify.start'
-    puts Rails.application.credentials.spotify_key
-    puts Rails.application.credentials.spotify_secret
     RSpotify::authenticate(Rails.application.credentials.spotify_key, Rails.application.credentials.spotify_secret)
-    puts 'RSpotify.end'
   end
 end

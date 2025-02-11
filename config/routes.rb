@@ -49,6 +49,9 @@ Rails.application.routes.draw do
   draw :madmin
   get '/privacy', to: 'home#privacy'
   get '/terms', to: 'home#terms'
+
+  get '/auth/spotify/callback', to: 'restaurants#spotify'
+
 authenticate :user, lambda { |u| u.admin? } do
   mount Sidekiq::Web => '/sidekiq'
   mount ActionCable.server => "/cable"

@@ -32,7 +32,7 @@ document.addEventListener("turbo:load", () => {
           { title:"Name", field:"name", responsive:0, hozAlign:"left"},
           { title:"Artist", field:"artist", responsive:3, hozAlign:"left"},
           { title:"Album", field:"description", responsive:4, hozAlign:"left"},
-          {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
+          { title:"Status", field:"status", formatter:status, frozen:true, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
           locale:true,
           langs:{

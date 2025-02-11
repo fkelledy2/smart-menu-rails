@@ -4,6 +4,11 @@ class RestaurantsController < ApplicationController
   before_action :set_restaurant, only: %i[ show edit update destroy ]
   before_action :set_currency, only: %i[ show index ]
 
+  def spotify
+    spotify_user = RSpotify::User.new(request.env['omniauth.auth'])
+    puts spotify_user
+  end
+
   # GET /restaurants or /restaurants.json
   def index
     if current_user
@@ -104,9 +109,14 @@ class RestaurantsController < ApplicationController
             puts 'SmartMenuSyncJob.start'
             SmartMenuSyncJob.perform_sync(@restaurant)
             puts 'SmartMenuSyncJob.end'
-            puts 'SpotifySyncJob.start'
-            SpotifySyncJob.perform_sync(@restaurant.id)
-            puts 'SpotifySyncJob.end'
+
+#             puts 'SpotifySyncJob.start'
+#             SpotifySyncJob.perform_sync(@restaurant.id)
+#             puts 'SpotifySyncJob.end'
+
+            puts 'SpotifyPlayJob.start'
+            SpotifyPlayJob.perform_sync(@restaurant.id)
+            puts 'SpotifyPlayJob.end'
 
             Analytics.track(
                 user_id: current_user.id,

@@ -111,3 +111,7 @@ gem "sentry-ruby"
 gem "sentry-rails"
 gem 'http_accept_language'
 gem 'rspotify'
+gem 'omniauth'
+gem 'omniauth-spotify'
+gem 'omniauth-rails_csrf_protection'
+gem 'rack-cors'

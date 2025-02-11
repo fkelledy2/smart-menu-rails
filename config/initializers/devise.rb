@@ -280,6 +280,10 @@ Devise.setup do |config|
     end
   end
 
+  config.omniauth :spotify, Rails.application.credentials.spotify_key, Rails.application.credentials.spotify_secret, scope: %w(
+    app-remote-control
+  ).join(' ')
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
