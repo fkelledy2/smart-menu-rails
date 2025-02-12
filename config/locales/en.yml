@@ -182,6 +182,7 @@ en:
       restaurant: "New Restaurant"
       cancel: "Cancel"
     form:
+      spotify: "Spotify"
       details: "Details"
       address: "Address"
       imageSettings: "Image Settings"

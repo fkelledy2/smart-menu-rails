@@ -50,7 +50,11 @@ Rails.application.routes.draw do
   get '/privacy', to: 'home#privacy'
   get '/terms', to: 'home#terms'
 
-  get '/auth/spotify/callback', to: 'restaurants#spotify'
+
+  get 'auth/spotify', to: 'sessions#spotify_auth'
+  get 'auth/spotify/callback', to: 'sessions#spotify_callback'
+  get 'me', to: 'sessions#me'  # Endpoint to get logged-in user details
+  delete 'logout', to: 'sessions#logout'
 
 authenticate :user, lambda { |u| u.admin? } do
   mount Sidekiq::Web => '/sidekiq'

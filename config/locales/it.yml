@@ -177,6 +177,7 @@ it:
       restaurant: "Nuovo Ristorante"
       cancel: "Annulla"
     form:
+      spotify: "Spotify"
       details: "Dettagli"
       address: "Indirizzo"
       imageSettings: "Impostazioni immagine"

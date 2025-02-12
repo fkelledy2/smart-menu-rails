@@ -1,6 +1,7 @@
 require_relative "boot"
 
 require "rails/all"
+require 'dotenv'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -35,5 +36,8 @@ module SmartMenu
     config.action_view.debug_missing_translation = false
 
     RSpotify::authenticate(Rails.application.credentials.spotify_key, Rails.application.credentials.spotify_secret)
+
+    Dotenv.load
+
   end
 end

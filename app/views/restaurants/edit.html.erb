@@ -5,7 +5,6 @@
       <h4>
         <%= link_to edit_restaurant_path(@restaurant), class: "link-dark" do %>
           <%= @restaurant.name %>
-          <%= link_to 'Sign in with Spotify', '/users/auth/spotify', method: :post, data: { turbo: false } %>
         <% end %>
       </h4>
     </div>

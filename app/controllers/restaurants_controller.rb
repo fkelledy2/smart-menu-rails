@@ -4,11 +4,6 @@ class RestaurantsController < ApplicationController
   before_action :set_restaurant, only: %i[ show edit update destroy ]
   before_action :set_currency, only: %i[ show index ]
 
-  def spotify
-    spotify_user = RSpotify::User.new(request.env['omniauth.auth'])
-    puts spotify_user
-  end
-
   # GET /restaurants or /restaurants.json
   def index
     if current_user
