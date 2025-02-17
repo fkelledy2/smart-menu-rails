@@ -23,18 +23,12 @@ document.addEventListener("turbo:load", () => {
           ],
           movableRows:true,
           columns: [
-          {
-            formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, responsive:0, frozen:true, headerHozAlign:"left", hozAlign:"left", headerSort:false, cellClick:function(e, cell) {
-               cell.getRow().toggleSelect();
-            }
-          },
           { rowHandle:true, formatter:"handle", vertAlign:"top", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           { title:"", field:"sequence", visible:false, formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
           { title:"Sequence", field:"sequence", sorter:"number", visible: false, responsive:0, hozAlign:"left"},
           { title:"Name", field:"name", responsive:0, hozAlign:"left"},
           { title:"Artist", field:"artist", responsive:3, hozAlign:"left"},
           { title:"Album", field:"description", responsive:4, hozAlign:"left"},
-          { title:"Status", field:"status", formatter:status, frozen:true, responsive:0, maxWidth: 150, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
           locale:true,
           langs:{
@@ -74,6 +68,10 @@ document.addEventListener("turbo:load", () => {
                 document.getElementById("togglePlay").disabled = false;
                 document.getElementById("previousTrack").disabled = false;
                 document.getElementById("nextTrack").disabled = false;
+                $('#spotifyConnect').addClass('btn-success').removeClass('btn-dark');
+                $('#togglePlay').addClass('btn-success').removeClass('btn-dark');
+                $('#previousTrack').addClass('btn-success').removeClass('btn-dark');
+                $('#nextTrack').addClass('btn-success').removeClass('btn-dark');
             });
 
             // Not Ready
@@ -82,6 +80,10 @@ document.addEventListener("turbo:load", () => {
                 document.getElementById("togglePlay").disabled = true;
                 document.getElementById("previousTrack").disabled = true;
                 document.getElementById("nextTrack").disabled = true;
+                $('#spotifyConnect').addClass('btn-dark').removeClass('btn-success');
+                $('#togglePlay').addClass('btn-dark').removeClass('btn-success');
+                $('#previousTrack').addClass('btn-dark').removeClass('btn-success');
+                $('#nextTrack').addClass('btn-dark').removeClass('btn-success');
             });
 
             player.addListener('initialization_error', ({ message }) => {

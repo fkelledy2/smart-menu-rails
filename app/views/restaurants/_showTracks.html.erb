@@ -7,19 +7,12 @@
     <span style='padding-top:5px' class='float-start h4'><%= t('.tracks') %></span>
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
       <div class="btn-group" role="group">
-        <%= link_to @restaurant.spotifyAuthUrl, class: 'btn btn-dark', data: { turbo: false } do %>
+        <%= link_to @restaurant.spotifyAuthUrl, id: 'spotifyConnect', class: 'btn btn-dark', data: { turbo: false } do %>
           <i class="bi bi-spotify"></i>
         <% end %>
         <button id="togglePlay"     type="button" class='btn btn-dark' disabled ><i class="bi bi-play-btn-fill"></i></i></button>
         <button id="previousTrack"  type="button" class='btn btn-dark' disabled><i class="bi bi-chevron-double-left"></i></button>
         <button id="nextTrack"      type="button" class='btn btn-dark' disabled><i class="bi bi-chevron-double-right"></i></button>
-        <button id="tracks-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
-          <%=t(".actions")%>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="tracks-actions">
-          <li><a id="activate-track" class="dropdown-item" href="#"><%=t(".activate")%></a></li>
-          <li><a id="deactivate-track" class="dropdown-item" href="#"><%=t(".deactivate")%></a></li>
-        </ul>
       </div>
     </div>
   </div>
