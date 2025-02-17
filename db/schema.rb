@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_08_110821) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_15_171433) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -482,6 +482,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_08_110821) do
     t.string "wifiPassword"
     t.boolean "wifiHidden", default: false
     t.string "spotifyuserid"
+    t.string "spotifyaccesstoken"
+    t.string "spotifyrefreshtoken"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 

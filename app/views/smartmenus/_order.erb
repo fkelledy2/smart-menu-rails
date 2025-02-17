@@ -1,0 +1,44 @@
+<span id="updateOrderSpan">
+                        <% if @openOrder %>
+                            <% if @openOrder.status == 'opened' %>
+                                <span id="viewOrderSpan">
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
+                                        Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                    </button>
+                                </span>
+                            <% end %>
+                            <% if @openOrder.status == 'ordered' %>
+                                <span id="requestBillSpan">
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#requestBillModal">
+                                    Bill <i class="bi bi-receipt"></i></i>
+                                </button>
+                                </span>
+                                <span id="viewOrderSpan">
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
+                                        Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                    </button>
+                                </span>
+                            <% end %>
+                            <% if @openOrder.status == 'billrequested' %>
+                                <% if current_user %>
+                                    <span id="takePaymentSpan">
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#payOrderModal">
+                                            Take Payment <i class="bi bi-credit-card"></i>
+                                        </button>
+                                    </span>
+                                <% else %>
+                                    <span id="staffAlertedSpan">
+                                        <button type="button" class="btn btn-sm btn-danger">
+                                            Staff Alerted <i class="bi bi-receipt"></i></i>
+                                        </button>
+                                    </span>
+                                <% end %>
+                            <% end %>
+                        <% else %>
+                            <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
+                                    <span id="startOrderSpan">
+                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">Start Order <i class="bi bi-plus-circle"></i></button>
+                                    </span>
+                            <% end %>
+                        <% end %>
+</span>

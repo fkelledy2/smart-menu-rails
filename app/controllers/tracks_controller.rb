@@ -67,10 +67,6 @@ class TracksController < ApplicationController
     if current_user
         respond_to do |format|
           if @track.update(track_params)
-
-            player = user.player
-            player.play_track(nil, "spotify:track:4iV5W9uYEdYUVa79Axb7Rh")
-
             format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: "Track was successfully updated." }
             format.json { render :show, status: :ok, location: @track }
           else

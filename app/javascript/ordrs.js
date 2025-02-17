@@ -123,7 +123,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_OPENED
                     }
                 };
-                post( '/ordrs', ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                post( '/ordrs', ordr );
             } else {
                 let ordr = {
                     'ordr': {
@@ -133,7 +133,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_OPENED
                     }
                 };
-                post( '/ordrs', ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                post( '/ordrs', ordr );
             }
        });
     }
@@ -150,7 +150,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_ORDERED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
             } else {
                 let ordr = {
                     'ordr': {
@@ -160,7 +160,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_ORDERED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
             }
        });
     }
@@ -177,7 +177,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_BILLREQUESTED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
             } else {
                 let ordr = {
                     'ordr': {
@@ -187,7 +187,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_BILLREQUESTED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                patch( '/ordrs/'+$('#currentOrder').text() );
             }
        });
     }
@@ -209,7 +209,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_CLOSED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
             } else {
                 let ordr = {
                     'ordr': {
@@ -220,12 +220,12 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_CLOSED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
             }
         });
     }
 
-    function post( url, body, redirectUrl ) {
+    function post( url, body ) {
         fetch(url, {
             method: 'POST',
             headers:  {

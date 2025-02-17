@@ -24,6 +24,10 @@ class Restaurant < ApplicationRecord
     NONE: 2
   }
 
+  def spotifyAuthUrl
+    '/auth/spotify?restaurant_id='+self.id.to_s
+  end
+
   def gen_image_theme
       if( genimage )
           genimage.id

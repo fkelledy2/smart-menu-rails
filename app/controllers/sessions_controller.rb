@@ -8,10 +8,10 @@ class SessionsController < ApplicationController
       user-library-read
       playlist-read-private
       user-read-recently-played
+      app-remote-control
+      streaming
     ].join(' ')
-
     spotify_auth_url = "https://accounts.spotify.com/authorize?client_id="+Rails.application.credentials.spotify_key+"&response_type=code&redirect_uri=#{ENV['SPOTIFY_REDIRECT_URI']}&scope=#{scopes}"
-
     redirect_to spotify_auth_url, allow_other_host: true
   end
 
@@ -24,10 +24,8 @@ class SessionsController < ApplicationController
         client_id: Rails.application.credentials.spotify_key,
         client_secret: Rails.application.credentials.spotify_secret
       })
-
       auth_data = JSON.parse(auth_response.body)
-
-      # Fetch user data using access token
+      puts auth_data
       spotify_user = RSpotify::User.new(auth_data)
 
       session[:spotify_user] = {

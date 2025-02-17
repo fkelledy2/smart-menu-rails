@@ -515,6 +515,8 @@ en:
         wifiHidden: "Hidden"
         music: "Music"
         spotifyuserid: "Spotify ID"
+        spotifyaccesstoken: "Access Token"
+        spotifyrefreshtoken: "Refresh Token"
 
       employee:
         name: "Name"

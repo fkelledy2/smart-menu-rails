@@ -11,18 +11,18 @@ class SpotifySyncJob
       puts @restaurant.spotifyuserid
       if @restaurant.spotifyuserid != nil
             me = RSpotify::User.find(@restaurant.spotifyuserid)
-            puts me
+            puts me.to_json
             Track.where(restaurant: @restaurant).destroy_all
             puts 'delete.tracks'
-            me.playlists.each do |playlist|
-                puts playlist.name
-#                 if playlist.id == '25862YMjra6u07FoPSc7UI'
+            playlist = RSpotify::Playlist.find(me.id, '25862YMjra6u07FoPSc7UI')
+            puts playlist.name
+            @seq = 1
                     playlist.tracks.each do |track|
-                        puts track
+                        puts track.to_json
                         puts track.name
                         @track = Track.new
                         @track.restaurant = @restaurant
-                        @track.externalid = track.id
+                        @track.externalid = track.uri
                         @track.description = track.album.name
                         @track.name = track.name
                         @track.status = 0
@@ -30,17 +30,10 @@ class SpotifySyncJob
                         puts @pj[0]['url']
                         @track.image = @pj[0]['url']
                         @track.artist = track.artists[0].name
-                        @track.sequence = Track.where(restaurant: @restaurant).count
+                        @track.sequence = @seq
                         @track.save
-#                         album = RSpotify::Album.find(track.album.id)
-#                         if album != nil
-#                             puts album.name
-#                             album.tracks.each do |track|
-#                             end
-#                         end
+                        @seq = @seq + 1
                     end
-#                 end
-            end
       end
   end
 end

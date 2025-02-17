@@ -59,8 +59,9 @@ class OrdritemsController < ApplicationController
             @uo = Ordr.find(ordritem_params[:ordr_id])
             update_ordr( @uo )
             ActionCable.server.broadcast("ordr_channel", @uo)
-#             format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully created." }
+            format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully created." }
             format.json { render :show, status: :created, location: @ordritem }
+#             format.turbo_stream { render turbo_stream: turbo_stream.replace("updateOrderSpan", partial: "smartmenus/order", locals: {openOrder:@uo, menu: @uo.menu}) }
           else
             format.html { render :new, status: :unprocessable_entity }
             format.json { render json: @ordritem.errors, status: :unprocessable_entity }
@@ -74,9 +75,10 @@ class OrdritemsController < ApplicationController
           if @ordritem.update(ordritem_params)
             @uoi = Ordritem.find(params[:id])
             update_ordr( @uoi.ordr )
-            ActionCable.server.broadcast("ordr_channel", @uoi.ordr )
+#             ActionCable.server.broadcast("ordr_channel", @uoi.ordr )
 #             format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully updated ()" }
             format.json { render :show, status: :ok, location: @ordritem }
+#             format.turbo_stream { render turbo_stream: turbo_stream.replace("updateOrderSpan", partial: "smartmenus/order", locals: {openOrder:@uoi.ordr, menu: @uoi.ordr.menu}) }
           else
             format.html { render :edit, status: :unprocessable_entity }
             format.json { render json: @ordritem.errors, status: :unprocessable_entity }
