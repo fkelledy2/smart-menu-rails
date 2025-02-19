@@ -1,5 +1,28 @@
-    <div class="row">
-                <% @tracks.each do |track| %>
-                    <%= render "showTrack", track: track %>
-                <% end %>
+<div style='height:4px'></div>
+<span style='display:none' id='spotifyAccessToken'><%= @restaurant.spotifyaccesstoken %></span>
+<span style='display:none' id='spotifyRefreshToken'><%= @restaurant.spotifyrefreshtoken %></span>
+<p>
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10 text-end">
+    <span id="mellowMenuPlaylist" class='float-start h1'><%= t('.tracks') %></span>
+    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+      <div class="btn-group" role="group">
+        <%= link_to @restaurant.spotifyAuthUrl, id: 'spotifyConnect', class: 'btn btn-dark', data: { turbo: false } do %>
+          <i class="bi bi-spotify"></i>
+        <% end %>
+        <button id="togglePlay"     type="button" class='btn btn-dark' disabled ><i class="bi bi-play-btn-fill"></i></i></button>
+        <button id="previousTrack"  type="button" class='btn btn-dark' disabled><i class="bi bi-chevron-double-left"></i></button>
+        <button id="nextTrack"      type="button" class='btn btn-dark' disabled><i class="bi bi-chevron-double-right"></i></button>
+      </div>
     </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<div style='height:90vh;overflow:scroll 'class="row">
+    <% @tracks.each do |track| %>
+        <%= render "showTrack", track: track %>
+    <% end %>
+</div>

@@ -1,4 +1,5 @@
 class TracksController < ApplicationController
+  layout "playlist", :only => [ :index ]
   before_action :set_track, only: %i[ show edit update destroy ]
 
   # GET /tracks or /tracks.json
@@ -10,6 +11,7 @@ class TracksController < ApplicationController
         else
             @tracks = Track.joins(:restaurant).where(restaurant: {user: current_user}).order(sequence: :asc).all
         end
+        @restaurant = @futureParentRestaurant
     else
         redirect_to root_url
     end

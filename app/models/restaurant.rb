@@ -28,6 +28,10 @@ class Restaurant < ApplicationRecord
     '/auth/spotify?restaurant_id='+self.id.to_s
   end
 
+  def spotifyPlaylistUrl
+    '/restaurants/'+self.id.to_s+'/tracks'
+  end
+
   def gen_image_theme
       if( genimage )
           genimage.id

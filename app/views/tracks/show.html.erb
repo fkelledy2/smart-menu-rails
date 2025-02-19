@@ -7,11 +7,16 @@
 </div>
 
 <div class="row">
-    <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+
+    <div class="col-1">
+    </div>
+    <div class="col-10" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
         <div class="row">
             <% restaurant.tracks.order(:sequence).each do |track| %>
                 <%= render "showTrack", track: track %>
             <% end %>
         </div>
+    </div>
+    <div class="col-1">
     </div>
 </div>

@@ -1,6 +1,6 @@
-    <div style='height:4px'></div>
-    <span style='display:none' id='spotifyAccessToken'><%= @restaurant.spotifyaccesstoken %></span>
-    <span style='display:none' id='spotifyRefreshToken'><%= @restaurant.spotifyrefreshtoken %></span>
+<div style='height:4px'></div>
+<span style='display:none' id='spotifyAccessToken'><%= @restaurant.spotifyaccesstoken %></span>
+<span style='display:none' id='spotifyRefreshToken'><%= @restaurant.spotifyrefreshtoken %></span>
 <p>
 <div class="row">
   <div class="col-12 text-end">
@@ -13,6 +13,9 @@
         <button id="togglePlay"     type="button" class='btn btn-dark' disabled ><i class="bi bi-play-btn-fill"></i></i></button>
         <button id="previousTrack"  type="button" class='btn btn-dark' disabled><i class="bi bi-chevron-double-left"></i></button>
         <button id="nextTrack"      type="button" class='btn btn-dark' disabled><i class="bi bi-chevron-double-right"></i></button>
+        <%= link_to @restaurant.spotifyPlaylistUrl, class: 'btn btn-dark', :target => "_blank" do %>
+          <i class="bi bi-box-arrow-up-right"></i>
+        <% end %>
       </div>
     </div>
   </div>

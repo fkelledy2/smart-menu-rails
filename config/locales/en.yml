@@ -42,7 +42,6 @@ en:
       deactivate: "Deactivate"
       signUp: "Sign Up"
       features: "Features"
-
   shared:
     navbar:
       restaurants: "Restaurants"
@@ -487,6 +486,9 @@ en:
       sure: "Are you sure?"
       selectMenu: "Select a Menu ..."
       errors: "Errors"
+  tracks:
+    index:
+      tracks: "Playlist"
 
   activerecord:
     attributes:

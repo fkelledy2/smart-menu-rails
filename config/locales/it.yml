@@ -485,6 +485,10 @@ it:
       selectMenu: "Seleziona un Menu ..."
       errors: "Errori"
 
+  tracks:
+    index:
+      tracks: "Playlist"
+
   activerecord:
     attributes:
       restaurant:
