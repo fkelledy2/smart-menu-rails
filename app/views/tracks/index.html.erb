@@ -3,9 +3,7 @@
 <span style='display:none' id='spotifyRefreshToken'><%= @restaurant.spotifyrefreshtoken %></span>
 <p>
 <div class="row">
-  <div class="col-1">
-  </div>
-  <div class="col-10 text-end">
+  <div class="col-12 text-end">
     <span id="mellowMenuPlaylist" class='float-start h1'><%= t('.tracks') %></span>
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
       <div class="btn-group" role="group">
@@ -17,8 +15,6 @@
         <button id="nextTrack"      type="button" class='btn btn-dark' disabled><i class="bi bi-chevron-double-right"></i></button>
       </div>
     </div>
-  </div>
-  <div class="col-1">
   </div>
 </div>
 <div style='height:90vh;overflow:scroll 'class="row">
