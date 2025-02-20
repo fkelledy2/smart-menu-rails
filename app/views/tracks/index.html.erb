@@ -1,10 +1,8 @@
-<div style='height:4px'></div>
 <span style='display:none' id='spotifyAccessToken'><%= @restaurant.spotifyaccesstoken %></span>
 <span style='display:none' id='spotifyRefreshToken'><%= @restaurant.spotifyrefreshtoken %></span>
-<p>
-<div class="row">
-  <div class="col-12 text-end">
-    <span id="mellowMenuPlaylist" class='float-start h1'><%= t('.tracks') %></span>
+<div class="row bg-light">
+  <div style='padding-bottom:5px;' class="col-12 text-end">
+    <span id="mellowMenuPlaylist" class='float-start h2'><%= t('.tracks') %></span>
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
       <div class="btn-group" role="group">
         <%= link_to @restaurant.spotifyAuthUrl, id: 'spotifyConnect', class: 'btn btn-dark', data: { turbo: false } do %>
