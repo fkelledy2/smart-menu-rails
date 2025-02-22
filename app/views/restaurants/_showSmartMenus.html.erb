@@ -55,7 +55,7 @@
     <% end %>
 
     <div class="row">
-        <% Smartmenu.where( restaurant_id: @restaurant.id).each do |smartmenu| %>
+        <% Smartmenu.where( restaurant_id: @restaurant.id).includes([:menu]).includes([:tablesetting]).each do |smartmenu| %>
             <% if smartmenu.menu != nil && smartmenu.menu.status == 'active' %>
             <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
                 <div class="card">

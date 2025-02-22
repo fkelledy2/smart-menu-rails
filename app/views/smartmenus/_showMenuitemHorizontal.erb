@@ -96,7 +96,7 @@
                         <div class="col-12">
                             <span class="float-end">
                                 <h6 style='padding-right:5px' class="card-title">
-                                    <% menuitem.menuitem_size_mappings.each do |menuitemsize| %>
+                                    <% menuitem.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
                                         <i>(<%= menuitemsize.size.name %>)</i> <%= number_to_currency(menuitemsize.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                                         <% if @openOrder %>
                                                 <button type="button" class="addItemToOrder btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
