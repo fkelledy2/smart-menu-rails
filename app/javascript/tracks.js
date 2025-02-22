@@ -63,9 +63,13 @@ document.addEventListener("turbo:load", () => {
               console.log('Position in Song', position);
               console.log('Duration of Song', duration);
               console.log( 'searching for: '+current_track.name );
-              console.log( 'searching for: '+current_track.album.name );
+              console.log( cleanString(current_track.name));
+              document.getElementById(cleanString(current_track.name)).scrollIntoView({ behavior: 'smooth' });
             });
 
+            function cleanString(name) {
+                return name.replace(/\s/g, '').replace(/[^\w\s]/g, '');
+            }
             document.getElementById('togglePlay').onclick = function() {
               player.togglePlay();
             };
