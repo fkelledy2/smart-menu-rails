@@ -318,6 +318,14 @@ document.addEventListener("turbo:load", () => {
           ],
           locale:true,
           langs:{
+            "en":{
+                "columns":{
+                    "id":"Name", //replace the title of column name with the value "Name"
+                    "address":"Address", //replace the title of column name with the value "Name"
+                    "total_capacity":"Capacity", //replace the title of column name with the value "Name"
+                    "status":"Status", //replace the title of column name with the value "Name"
+                }
+            },
             "it":{
                 "columns":{
                     "id":"Nome", //replace the title of column name with the value "Name"

@@ -1,5 +1,5 @@
   json.id menuitem.id
-  json.genImageId menuitem.genImageId
+  json.genImageId menuitem.genimage.id unless menuitem.genimage.nil?
   json.name menuitem.name
   json.description menuitem.description
   json.image menuitem.image

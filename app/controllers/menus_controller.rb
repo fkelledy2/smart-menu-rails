@@ -12,9 +12,15 @@ class MenusController < ApplicationController
     if current_user
         if params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, restaurant_id: @restaurant.id, archived: false).order('sequence ASC').all
+            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, restaurant_id: @restaurant.id, archived: false)
+            .includes([:genimage])
+            .includes([:menuavailabilities])
+            .order('sequence ASC').all
         else
-            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, archived: false).order('sequence ASC').all
+            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, archived: false).order('sequence ASC')
+            .includes([:genimage])
+            .includes([:menuavailabilities])
+            .all
         end
         Analytics.track(
             user_id: current_user.id,

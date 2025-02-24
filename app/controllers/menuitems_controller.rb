@@ -8,7 +8,15 @@ class MenuitemsController < ApplicationController
       @menuitems = []
       if params[:menusection_id]
         menusection = Menusection.find_by_id(params[:menusection_id])
-        @menuitems += Menuitem.where( menusection: menusection, archived: false).all
+        @menuitems += Menuitem.where( menusection: menusection, archived: false)
+        .includes([:genimage])
+        .includes([:menusection])
+        .includes([:inventory])
+        .includes([:allergyns])
+        .includes([:sizes])
+        .includes([:tags])
+        .includes([:ingredients])
+        .all
       end
     else
       redirect_to root_url
