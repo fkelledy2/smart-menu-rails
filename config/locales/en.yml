@@ -363,6 +363,7 @@ en:
     show:
       menuSection: "Menu Section"
     edit:
+      section: "Section"
       menuSection: "Menu Section"
       items: "Items"
       inventories: "Inventories"
