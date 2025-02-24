@@ -18,7 +18,7 @@ class OrdrsController < ApplicationController
                 @ordr.status = 25
             end
             @ordr.nett = @ordr.runningTotal
-            taxes = Tax.where(restaurant_id: @ordr.restaurant.id).includes([:ordrparticipants]).order(sequence: :asc)
+            taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
             totalTax = 0
             totalService = 0
             for tax in taxes do
