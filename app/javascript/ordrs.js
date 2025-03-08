@@ -1,6 +1,6 @@
 document.addEventListener("turbo:load", () => {
 
-    let locationReload = false;
+    let locationReload = true;
 
     let ORDR_OPENED=0;
     let ORDR_ORDERED=20;

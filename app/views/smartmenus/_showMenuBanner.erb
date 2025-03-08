@@ -54,7 +54,11 @@
                                     </span>
                                 <% else %>
                                     <% if @ordrparticipant && @ordrparticipant.name %>
-                                        <b><small><%= @ordrparticipant.name %></small></b>
+                                    <span id="addYourNameSpan">
+                                        <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
+                                            <small><%= @ordrparticipant.name %></small>&nbsp;<i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                    </span>
                                     <% end %>
                                 <% end %>
                                 <% if @tablesetting %>

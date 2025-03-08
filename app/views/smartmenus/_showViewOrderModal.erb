@@ -22,7 +22,7 @@
                 <div class="col-2">
                 </div>
             </div>
-            <% @openOrder.ordractions.each do |ordraction| %>
+            <% @openOrder.ordractions.includes([:ordritem]).includes([:ordrparticipant]).each do |ordraction| %>
                 <% if ordraction.ordritem && ordraction.ordritem.status == 'added' && ordraction.ordritem.in?(@openOrder.ordritems) %>
                 <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
                     <div class="col-6">

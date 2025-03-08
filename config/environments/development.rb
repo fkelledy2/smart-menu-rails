@@ -11,6 +11,18 @@ Rails.application.configure do
     Bullet.counter_cache_enable = false
   end
 
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+   address:              'smtp.gmail.com',
+   port:                 587,
+   domain:               'mellow.menu',
+   user_name:            'admin@mellow.menu',
+   password:             'sqel qkxt tpsh coyt',
+   authentication:       'plain',
+   enable_starttls_auto: true,
+   open_timeout:         5,
+   read_timeout:         5 }
+
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   # Settings specified here will take precedence over those in config/application.rb.
 
