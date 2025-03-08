@@ -187,7 +187,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_BILLREQUESTED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text() );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
             }
        });
     }
