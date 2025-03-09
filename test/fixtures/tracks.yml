@@ -7,11 +7,3 @@ one:
   image: MyString
   sequence: 1
   restaurant: one
-
-two:
-  externalid: MyString
-  name: MyString
-  description: MyText
-  image: MyString
-  sequence: 1
-  restaurant: two

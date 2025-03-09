@@ -406,6 +406,9 @@ en:
       menuItem: "New Menu Item"
       cancel: "Cancel"
     form:
+      imageSettings: "Image Settings"
+      settings: "Settings"
+      details: "Details"
       sizes: "xxx"
       save: "Save"
       update: "Update"

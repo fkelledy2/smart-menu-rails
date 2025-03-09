@@ -127,6 +127,7 @@ class RestaurantsController < ApplicationController
 
   # POST /restaurants or /restaurants.json
   def create
+      puts restaurant_params
     if current_user
         @restaurant = Restaurant.new(restaurant_params)
         respond_to do |format|

@@ -7,4 +7,5 @@ one:
   sequence: 1
   calories: 1
   price: 1.5
+  itemtype: food
   menusection: one

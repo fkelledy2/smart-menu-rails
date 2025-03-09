@@ -52,7 +52,6 @@ class TipsController < ApplicationController
         respond_to do |format|
           if @tip.save
             format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: "Tip was successfully created." }
-            # format.html { redirect_to @return_url, notice: "Tip was successfully created." }
             format.json { render :show, status: :created, location: @tip }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -66,18 +65,26 @@ class TipsController < ApplicationController
 
   # PATCH/PUT /tips/1 or /tips/1.json
   def update
+    puts 'update.tip.1'
     if current_user
+    puts 'update.tip.2'
         respond_to do |format|
+    puts 'update.tip.3'
           if @tip.update(tip_params)
+    puts 'update.tip.4'
             format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: "Tip was successfully updated." }
+    puts 'update.tip.5'
             # format.html { redirect_to tip_url(@tip), notice: "Tip was successfully updated." }
             format.json { render :show, status: :ok, location: @tip }
           else
+    puts 'update.tip.6'
             format.html { render :edit, status: :unprocessable_entity }
+    puts 'update.tip.7'
             format.json { render json: @tip.errors, status: :unprocessable_entity }
           end
         end
     else
+    puts 'update.tip.8'
         redirect_to root_url
     end
   end
