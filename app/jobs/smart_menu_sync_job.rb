@@ -5,7 +5,6 @@ class SmartMenuSyncJob
   include Sidekiq::Job
 
   def perform(*args)
-      puts args
       Smartmenu.destroy_all
       Restaurant.all.each do |restaurant|
           Menu.where(restaurant_id: restaurant.id).each do |menu|
@@ -14,7 +13,7 @@ class SmartMenuSyncJob
               @smartmenu.menu = menu
               @smartmenu.slug = uuid = SecureRandom.uuid
               @smartmenu.save
-              Tablesetting.where(restaurant_id: restaurant.id).each do |tablesetting|
+              Tablesetting.where(restaurant_id: restaurant.id).order('name ASC').each do |tablesetting|
                 @smartmenu = Smartmenu.new
                 @smartmenu.restaurant = restaurant
                 @smartmenu.menu = menu
@@ -23,13 +22,12 @@ class SmartMenuSyncJob
                 @smartmenu.save
               end
           end
-          Tablesetting.where(restaurant_id: restaurant.id).each do |tablesetting|
+          Tablesetting.where(restaurant_id: restaurant.id).order('name ASC').each do |tablesetting|
             @smartmenu = Smartmenu.new
             @smartmenu.restaurant = restaurant
             @smartmenu.tablesetting = tablesetting
             @smartmenu.slug = uuid = SecureRandom.uuid
             @smartmenu.save
-            puts @smartmenu.id
           end
       end
   end

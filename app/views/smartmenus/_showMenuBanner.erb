@@ -78,7 +78,7 @@
                                               <%= t(".table") %>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
-                                              <% Smartmenu.where( restaurant_id: @restaurant.id, menu_id: @menu.id ).includes([:tablesetting]).each do |smartmenu| %>
+                                              <% Smartmenu.where( restaurant_id: @restaurant.id, menu_id: @menu.id ).includes([:tablesetting]).order('id ASC').each do |smartmenu| %>
                                                   <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
                                                       <li>
                                                         <%= link_to smartmenu_path(smartmenu.slug), class: "dropdown-item" do %>

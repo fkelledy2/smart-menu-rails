@@ -18,7 +18,7 @@ class OrdrsController < ApplicationController
                 @ordr.status = 25
             end
             @ordr.nett = @ordr.runningTotal
-            taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
+            taxes = Tax.where(restaurant_id: @ordr.restaurant.id).includes([:restaurant]).order(sequence: :asc)
             totalTax = 0
             totalService = 0
             for tax in taxes do
@@ -194,7 +194,10 @@ class OrdrsController < ApplicationController
             @tablesetting.status = 1
             @tablesetting.save
             @ordr.ordritems.each do |oi|
-                if oi.status = 10
+                puts 'xxx'
+                puts oi.status
+                puts 'xxx'
+                if oi.status == 'added'
                     oi.status = 20
                     oi.save
                 end

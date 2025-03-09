@@ -178,6 +178,7 @@ en:
       tracksTab: "Playlist"
 
     new:
+      restaurants: "Restaurants"
       restaurant: "New Restaurant"
       cancel: "Cancel"
     form:

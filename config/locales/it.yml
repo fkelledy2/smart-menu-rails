@@ -174,6 +174,7 @@ it:
       tracksTab: "Playlist"
 
     new:
+      restaurants: "Ristoranti"
       restaurant: "Nuovo Ristorante"
       cancel: "Annulla"
     form:

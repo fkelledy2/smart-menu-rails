@@ -127,7 +127,6 @@ class RestaurantsController < ApplicationController
 
   # POST /restaurants or /restaurants.json
   def create
-      puts restaurant_params
     if current_user
         @restaurant = Restaurant.new(restaurant_params)
         respond_to do |format|
@@ -163,9 +162,9 @@ class RestaurantsController < ApplicationController
     if current_user
         respond_to do |format|
           if @restaurant.update(restaurant_params)
-#             puts 'SmartMenuSyncJob.start'
-#             SmartMenuSyncJob.perform_sync(@restaurant)
-#             puts 'SmartMenuSyncJob.end'
+            puts 'SmartMenuSyncJob.start'
+            SmartMenuSyncJob.perform_sync(@restaurant)
+            puts 'SmartMenuSyncJob.end'
 
             puts 'SpotifySyncJob.start'
             SpotifySyncJob.perform_sync(@restaurant.id)

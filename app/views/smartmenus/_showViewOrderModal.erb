@@ -26,7 +26,7 @@
                 <% if ordraction.ordritem && ordraction.ordritem.status == 'added' && ordraction.ordritem.in?(@openOrder.ordritems) %>
                 <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
                     <div class="col-6">
-                        <%= ordraction.ordritem.menuitem.name %>
+                        <%= ordraction.ordritem.menuitem.name %> <%= ordraction.ordritem.status %>
                     </div>
                     <div class="col-2">
                         <span class="float-end">
@@ -44,6 +44,31 @@
                                 data-bs-ordritem_id="<%= ordraction.ordritem.id %>">
                                 <i class="bi bi-trash"></i>
                             </button>
+                        </span>
+                    </div>
+                </div>
+                <% end %>
+            <% end %>
+            <hr>
+            <% @openOrder.ordractions.includes([:ordritem]).each do |ordraction| %>
+                <% if ordraction.ordritem && ordraction.ordritem.status == 'ordered' && ordraction.ordritem.in?(@openOrder.ordritems) %>
+                <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
+                    <div class="col-6">
+                        <%= ordraction.ordritem.menuitem.name %>
+                    </div>
+                    <div class="col-2">
+                        <span class="float-end">
+                            <%= ordraction.ordrparticipant.name %>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="float-end">
+                            <%= number_to_currency(ordraction.ordritem.menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="float-end">
+                            <%= ordraction.ordritem.status %>
                         </span>
                     </div>
                 </div>
