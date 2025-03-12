@@ -267,6 +267,11 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
+    if (document.getElementById("restaurant_displayImagesInPopup") != null) {
+      new TomSelect("#restaurant_displayImagesInPopup",{
+      });
+    }
+
     if (document.getElementById("restaurant_allowOrdering") != null) {
       new TomSelect("#restaurant_allowOrdering",{
       });

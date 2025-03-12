@@ -104,6 +104,15 @@
       <%= form.select :displayImages, [['on', true], ['off', false]], {} %>
     </div>
   </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :displayImagesInPopup, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.select :displayImagesInPopup, [['on', true], ['off', false]], {} %>
+    </div>
+  </div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :allowOrdering, class: 'col-form-label' %></span>

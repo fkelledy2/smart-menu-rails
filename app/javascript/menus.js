@@ -40,6 +40,11 @@ document.addEventListener("turbo:load", () => {
         });
     }
 
+    if ($("#menu_displayImagesInPopup").is(':visible')) {
+        new TomSelect("#menu_displayImagesInPopup",{
+        });
+    }
+
     if ($("#menu_allowOrdering").is(':visible')) {
         new TomSelect("#menu_allowOrdering",{
         });
