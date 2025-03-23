@@ -27,7 +27,7 @@ Devise.setup do |config|
   config.mailer_sender = 'admin@mellow.menu'
 
   # Configure the class responsible to send e-mails.
-  config.mailer = 'Devise::Mailer'
+  # config.mailer = 'Devise::Mailer'
 
   # Configure the parent class responsible to send e-mails.
   # config.parent_mailer = 'ActionMailer::Base'
@@ -126,7 +126,7 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 12
 
   # Set up a pepper to generate the hashed password.
-  # config.pepper = '9566b4cb4dae42a201fce9a658c943546acd30eb0f2e662e48285e2e8238dd53ec03df716656cdf57695b54ce5df5bae3f4c62ff891d87fe6ce1a4ec327c892c'
+  # config.pepper = 'c2cce662a1a2c37bfeddd365855ffdea4cc2f5c26eb3b4d4eb4e6105de599623a0b4ad62d3c2f4937afbb832653b1c04b47373dc502747a88580097196cc3c2b'
 
   # Send a notification to the original email when the user's email is changed.
   # config.send_email_changed_notification = false

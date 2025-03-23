@@ -63,6 +63,7 @@ en:
       login: "Login"
       settings: "Settings"
       whatsNew: "What's New"
+      adminArea: "Admin Area"
     footer:
       terms: "Terms"
       privacy: "Privacy"
