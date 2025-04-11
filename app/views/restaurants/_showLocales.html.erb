@@ -1,0 +1,28 @@
+    <p>
+    <div class="row">
+      <div class="col-6">
+        <h4><%= t('.menus') %></h4>
+      </div>
+      <div class="col-6 text-end">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+          <div class="btn-group" role="group">
+            <button id="locale-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
+              <%=t(".actions")%>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
+              <li><a id="activate-locale" class="dropdown-item" href="#"><%=t(".activate")%></a></li>
+              <li><a id="default-locale" class="dropdown-item" href="#"><%=t(".default")%></a></li>
+              <li><a id="deactivate-locale" class="dropdown-item" href="#"><%=t(".deactivate")%></a></li>
+              <li><a id="delete-locale" class="dropdown-item" href="#"><%=t(".delete")%></a></li>
+            </ul>
+          </div>
+          <button type="button" class="btn btn-dark">
+            <%= link_to new_restaurantlocale_path(restaurant_id: @restaurant.id), class: 'link-light' do %>
+              <i class="bi bi-plus"></i>
+            <% end %>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div style="padding-top:10px" class="table-borderless" id="restaurant-locale-table" data-bs-restaurant_id="<%= @restaurant.id %>">
+    </div>

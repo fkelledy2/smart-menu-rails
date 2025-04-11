@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_12_190107) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_08_135053) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -179,6 +179,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_12_190107) do
     t.datetime "updated_at", null: false
     t.index ["menuitem_id"], name: "index_menuitem_tag_mappings_on_menuitem_id"
     t.index ["tag_id"], name: "index_menuitem_tag_mappings_on_tag_id"
+  end
+
+  create_table "menuitemlocales", force: :cascade do |t|
+    t.string "locale"
+    t.integer "status"
+    t.string "name"
+    t.string "description"
+    t.bigint "menuitem_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menuitem_id"], name: "index_menuitemlocales_on_menuitem_id"
   end
 
   create_table "menuitems", force: :cascade do |t|
@@ -453,6 +464,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_12_190107) do
     t.index ["restaurant_id"], name: "index_restaurantavailabilities_on_restaurant_id"
   end
 
+  create_table "restaurantlocales", force: :cascade do |t|
+    t.string "locale"
+    t.integer "status"
+    t.bigint "restaurant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "dfault"
+    t.index ["restaurant_id"], name: "index_restaurantlocales_on_restaurant_id"
+  end
+
   create_table "restaurants", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -627,6 +648,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_12_190107) do
   add_foreign_key "menuitem_size_mappings", "sizes"
   add_foreign_key "menuitem_tag_mappings", "menuitems"
   add_foreign_key "menuitem_tag_mappings", "tags"
+  add_foreign_key "menuitemlocales", "menuitems"
   add_foreign_key "menuitems", "menusections"
   add_foreign_key "menus", "restaurants"
   add_foreign_key "menusections", "menus"
@@ -650,6 +672,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_12_190107) do
   add_foreign_key "pay_payment_methods", "pay_customers", column: "customer_id"
   add_foreign_key "pay_subscriptions", "pay_customers", column: "customer_id"
   add_foreign_key "restaurantavailabilities", "restaurants"
+  add_foreign_key "restaurantlocales", "restaurants"
   add_foreign_key "restaurants", "users"
   add_foreign_key "services", "users"
   add_foreign_key "sizes", "restaurants"

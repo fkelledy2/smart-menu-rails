@@ -143,6 +143,13 @@ en:
       actions: "Actions"
       activate: "Activate"
       deactivate: "Deactivate"
+    showLocales:
+      menus: "Locales"
+      actions: "Actions"
+      activate: "Activate"
+      default: "Set Default"
+      deactivate: "Deactivate"
+      delete: "Delete"
     showOrdrs:
       ordrs: "Orders"
       actions: "Actions"
@@ -167,7 +174,8 @@ en:
       restaurant: "Edit Restaurant"
       smartQRTab: "QRs"
       restaurantTab: "Restaurant"
-      menuTab: "Menu"
+      localesTab: "Locales"
+      menuTab: "Menus"
       tableTab: "Tables"
       employeesTab: "Employees"
       tipsTab: "Tips"
@@ -195,6 +203,11 @@ en:
       generateImage: "Generate Image"
       wifi: "WiFi"
       music: "Music"
+  restaurantlocales:
+    new:
+      restaurantlocale: "New Locale"
+    form:
+      save: "Save"
 
   employees:
     index:
@@ -526,6 +539,10 @@ en:
         spotifyuserid: "Spotify ID"
         spotifyaccesstoken: "Access Token"
         spotifyrefreshtoken: "Refresh Token"
+
+      restaurantlocale:
+        locale: "Locale"
+        dfault: "Default"
 
       employee:
         name: "Name"

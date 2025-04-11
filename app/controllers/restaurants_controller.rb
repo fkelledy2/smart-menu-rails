@@ -166,9 +166,9 @@ class RestaurantsController < ApplicationController
             SmartMenuSyncJob.perform_sync(@restaurant)
             puts 'SmartMenuSyncJob.end'
 
-            puts 'SpotifySyncJob.start'
-            SpotifySyncJob.perform_sync(@restaurant.id)
-            puts 'SpotifySyncJob.end'
+#             puts 'SpotifySyncJob.start'
+#             SpotifySyncJob.perform_sync(@restaurant.id)
+#             puts 'SpotifySyncJob.end'
 
             Analytics.track(
                 user_id: current_user.id,

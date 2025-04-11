@@ -170,6 +170,7 @@ GEM
     debug (1.9.2)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    deepl-rb (3.2.0)
     devise (4.9.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -541,6 +542,7 @@ DEPENDENCIES
   currencies
   currency_select
   debug
+  deepl-rb
   devise (~> 4.9)
   dotenv-rails
   friendly_id (~> 5.4)

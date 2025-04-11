@@ -40,6 +40,9 @@
   </li>
   <% if @current_employee && @current_employee.role == 'manager' %>
       <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="tips-tab" data-bs-toggle="tab" data-bs-target="#locale" type="button" role="tab" aria-controls="localesConfig" aria-selected="false"><%= t(".localesTab")%></button>
+      </li>
+      <li class="nav-item" role="presentation">
         <button class="nav-link link-dark" id="tips-tab" data-bs-toggle="tab" data-bs-target="#tip" type="button" role="tab" aria-controls="tipsConfig" aria-selected="false"><%= t(".tipsTab")%></button>
       </li>
       <li class="nav-item" role="presentation">
@@ -108,43 +111,48 @@
             <%= render 'showOpeningHours', restaurant: @restaurant, edit: true %>
         </div>
       </div>
-    <div class="tab-content" id="allergynConfig">
-      <div class="tab-pane fade" id="allergyn" role="tabpanel" aria-labelledby="allergyn-tab">
-        <p>
-        <div class="row">
-          <div class="col-12">
-            <%= render 'showAllergyns', menu: @menu, edit: true %>
+      <div class="tab-content" id="allergynConfig">
+        <div class="tab-pane fade" id="allergyn" role="tabpanel" aria-labelledby="allergyn-tab">
+          <p>
+          <div class="row">
+            <div class="col-12">
+              <%= render 'showAllergyns', menu: @menu, edit: true %>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <div class="tab-content" id="localesConfig">
+        <div class="tab-pane fade" id="locale" role="tabpanel" aria-labelledby="locale-tab">
+            <%= render 'showLocales', restaurant: @restaurant, edit: true %>
+        </div>
+      </div>
 
-    <div class="tab-content" id="sizeConfig">
-      <div class="tab-pane fade" id="size" role="tabpanel" aria-labelledby="size-tab">
-        <p>
-        <div class="row">
-          <div class="col-12">
-            <%= render 'showSizes', restaurant: @restaurant, edit: true %>
+      <div class="tab-content" id="sizeConfig">
+        <div class="tab-pane fade" id="size" role="tabpanel" aria-labelledby="size-tab">
+          <p>
+          <div class="row">
+            <div class="col-12">
+              <%= render 'showSizes', restaurant: @restaurant, edit: true %>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="tab-content" id="ordrConfig">
-      <div class="tab-pane fade" id="ordr" role="tabpanel" aria-labelledby="ordr-tab">
-        <p>
-        <div class="row">
-          <div class="col-12">
-            <%= render 'showOrdrs', restaurant: @restaurant, edit: true %>
+      <div class="tab-content" id="ordrConfig">
+        <div class="tab-pane fade" id="ordr" role="tabpanel" aria-labelledby="ordr-tab">
+          <p>
+          <div class="row">
+            <div class="col-12">
+              <%= render 'showOrdrs', restaurant: @restaurant, edit: true %>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="tab-content" id="tracksConfig">
-      <div class="tab-pane fade" id="track" role="tabpanel" aria-labelledby="track-tab">
+      <div class="tab-content" id="tracksConfig">
+        <div class="tab-pane fade" id="track" role="tabpanel" aria-labelledby="track-tab">
           <%= render 'showTracks', restaurant: @restaurant, edit: true %>
+        </div>
       </div>
-    </div>
 <% end %>
 </div>

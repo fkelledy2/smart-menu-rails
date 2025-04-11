@@ -1,0 +1,34 @@
+<%= render 'shared/customcss' %>
+<div class="page-header">
+  <div class="row">
+    <div class="col-12">
+      <h4>
+        <%= link_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), class: "link-dark" do %>
+          <%= @restaurantlocale.restaurant.name %>
+        <% end %>
+      </h4>
+    </div>
+  </div>
+</div>
+<ul style="height:43px;overflow-y:hidden;" class="nav nav-tabs overflow-auto flex-nowrap" id="restaurantlocaleTabsBack" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link link-dark">
+      <%= link_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), class: "link-dark" do %>
+        <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
+      <% end %>
+    </button>
+  </li>
+</ul>
+<p>
+<div class="page-header">
+  <div class="row">
+    <div class="col-12">
+        <h4><%= t(".restaurantlocale") %></h4>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <%= render 'form', restaurantlocale: @restaurantlocale %>
+  </div>
+</div>

@@ -1,17 +1,24 @@
-<div class="row">
+  <style>
+    .flag-icon {
+      width: 35px;
+      height: 25px;
+      object-fit: cover;
+    }
+  </style>
+  <div class="row">
       <div class="col-12 col-md-12 col-lg-12">
         <div class="row">
             <div class="col-12">
                 <div style="padding-top:5px" class="row">
-                    <div class="col-11">
+                    <div class="col-10">
                         <h5>
                             <%= @menu.restaurant.name %>
                         </h5>
                     </div>
-                    <div class="col-1">
+                    <div class="col-2">
                         <% if current_user %>
                             <span class="float-end">
-                                <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-dark' do %>
+                               <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-dark' do %>
                                     <i class="bi bi-pencil-fill"></i>
                                <% end %>
                             </span>
@@ -89,6 +96,19 @@
                                               <% end %>
                                             </ul>
                                           </div>
+                                        </div>
+                                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button id="lovale-actions" type="button" class="btn btn-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="bi bi-globe-americas"></i>
+                                                </button>
+                                                <ul style="--bs-dropdown-padding-y: 0.0rem;--bs-dropdown-min-width:0em" class="dropdown-menu" aria-labelledby="locales">
+                                                  <li><a style="padding-right:4px;padding-left:4px" class="dropdown-item" href="#"><img src="https://flagcdn.com/w40/gb.png" class="flag-icon"></a></li>
+                                                  <li><a style="padding-right:4px;padding-left:4px" class="dropdown-item" href="#"><img src="https://flagcdn.com/w40/fr.png" class="flag-icon"></a></li>
+                                                  <li><a style="padding-right:4px;padding-left:4px" class="dropdown-item" href="#"><img src="https://flagcdn.com/w40/es.png" class="flag-icon"></a></li>
+                                                  <li><a style="padding-right:4px;padding-left:4px" class="dropdown-item" href="#"><img src="https://flagcdn.com/w40/it.png" class="flag-icon"></a></li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     <% end %>
                                 <% end %>

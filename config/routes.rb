@@ -1,6 +1,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :restaurantlocales
+  resources :menuitemlocales
   resources :tracks
   resources :smartmenus
   resources :genimages
@@ -26,6 +28,7 @@ Rails.application.routes.draw do
   resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
 
   resources :restaurants do
+    resources :restaurantlocales, controller: 'restaurantlocales', only: [:index,:show, :edit, :delete]
     resources :menus, controller: 'menus', only: [:index,:show, :edit]
     resources :tablesettings, controller: 'tablesettings', only: [:index,:show, :edit]
     resources :taxes, controller: 'taxes', only: [:index,:show, :edit]

@@ -1,0 +1,54 @@
+<%= form_with(model: menuitemlocale) do |form| %>
+  <% if menuitemlocale.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(menuitemlocale.errors.count, "error") %> prohibited this menuitemlocale from being saved:</h2>
+
+      <ul>
+      <% menuitemlocale.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :locale, class: 'form-label' %>
+      <%= form.text_field :locale, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :status, class: 'form-label' %>
+      <%= form.number_field :status, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :name, class: 'form-label' %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :description, class: 'form-label' %>
+      <%= form.text_field :description, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :menuitem_id, class: 'form-label' %>
+      <%= form.text_field :menuitem_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if menuitemlocale.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', menuitemlocale, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if menuitemlocale.persisted? %>
+      <%= link_to "Cancel", menuitemlocale, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", menuitemlocales_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

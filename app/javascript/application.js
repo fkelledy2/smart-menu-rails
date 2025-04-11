@@ -55,6 +55,7 @@ import './restaurantavailabilities'
 import './menuavailabilities'
 import './metrics'
 import './tracks'
+import './restaurantlocales'
 
 document.addEventListener("turbo:load", () => {
 

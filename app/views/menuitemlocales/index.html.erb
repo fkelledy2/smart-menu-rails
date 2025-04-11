@@ -1,0 +1,49 @@
+
+
+
+<div class="row">
+  <div class="col-sm-6">
+    <h1>Menuitemlocales</h1>
+  </div>
+
+  <div class="col-sm-6 text-end">
+  <%= link_to new_menuitemlocale_path, class: 'btn btn-primary' do %>
+    Add New Menuitemlocale
+  <% end %>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+    
+        <th>Name</th>
+    
+
+            <th>Locale</th>
+            <th>Status</th>
+            <th>Description</th>
+            <th>Menuitem</th>
+            
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @menuitemlocales.each do |menuitemlocale| %>
+        <%= content_tag :tr, id: dom_id(menuitemlocale), class: dom_class(menuitemlocale) do %>
+          
+            <td><%= link_to menuitemlocale.name, menuitemlocale %></td>
+          
+
+                      <td><%= menuitemlocale.locale %></td>
+                      <td><%= menuitemlocale.status %></td>
+                      <td><%= menuitemlocale.description %></td>
+                      <td><%= menuitemlocale.menuitem %></td>
+          
+          
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

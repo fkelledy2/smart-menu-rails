@@ -1,0 +1,52 @@
+<%= form_with(model: restaurantlocale) do |form| %>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :locale, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.select :locale, [['English', 'EN'], ['French', 'FR'], ['Italian', 'IT'], ['Spanish', 'ES']], {}, {class: "form-control"} %>
+    </div>
+  </div>
+  <div style='height:4px'></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :dfault, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.select :dfault, [['TRUE', true], ['FALSE', false]], {}, {class: "form-control"} %>
+    </div>
+  </div>
+  <% if @futureParentRestaurant %>
+      <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
+  <% else %>
+      <%= form.hidden_field :restaurant_id %>
+  <% end %>
+  <%= form.hidden_field :status, value: 'active' %>
+  <div style='height:8px'></div>
+  <div class="row">
+    <div class="col-12">
+        <span class="float-end">
+        <% if restaurantlocale.persisted? %>
+          <div class="btn btn-dark ">
+            <%= link_to t(".delete"), restaurantlocale, method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
+          </div>
+        <% end %>
+        <%= form.submit value: t(".save"), class: 'btn btn-dark' %>
+        </span>
+    </div>
+  </div>
+  <% if restaurantlocale.errors.any? %>
+  <div class="row">
+    <div class="col-3">
+      <span class="float-md-end"><%=t(".errors")%></span>
+    </div>
+    <div class="col-9">
+      <ul>
+          <% restaurantlocale.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+      </ul>
+    </div>
+  </div>
+  <% end %>
+<% end %>

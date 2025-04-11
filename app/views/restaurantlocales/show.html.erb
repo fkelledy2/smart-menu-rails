@@ -1,0 +1,18 @@
+<div class="page-header">
+  <%= link_to restaurantlocales_path, class: 'btn btn-default' do %>
+    All Restaurantlocales
+  <% end %>
+  <%= link_to edit_restaurantlocale_path(@restaurantlocale), class: 'btn btn-primary' do %>
+    Edit
+  <% end %>
+  <h1>Show restaurantlocale</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Locale:</dt>
+  <dd><%= @restaurantlocale.locale %></dd>
+  <dt>Status:</dt>
+  <dd><%= @restaurantlocale.status %></dd>
+  <dt>Restaurant:</dt>
+  <dd><%= @restaurantlocale.restaurant %></dd>
+</dl>

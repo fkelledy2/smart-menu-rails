@@ -1,0 +1,2 @@
+module MenuitemlocalesHelper
+end
