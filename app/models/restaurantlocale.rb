@@ -7,7 +7,23 @@ class Restaurantlocale < ApplicationRecord
     archived: 2
   }
 
-  def getLanguage
+  def flag
+    if locale == 'IT'
+        "https://flagcdn.com/w40/it.png"
+    else
+        if locale == 'FR'
+            "https://flagcdn.com/w40/fr.png"
+        else
+            if locale == 'ES'
+                "https://flagcdn.com/w40/es.png"
+            else
+                "https://flagcdn.com/w40/gb.png"
+            end
+        end
+    end
+  end
+
+  def language
     if locale == 'IT'
         "Italian"
     else
@@ -22,4 +38,5 @@ class Restaurantlocale < ApplicationRecord
         end
     end
   end
+
 end

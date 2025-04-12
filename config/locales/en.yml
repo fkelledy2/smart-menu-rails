@@ -368,6 +368,8 @@ en:
       preview: "Preview"
     showMenuBanner:
       table: "Table"
+    showTableSelector:
+      table: "Table"
 
   menusections:
     index:
