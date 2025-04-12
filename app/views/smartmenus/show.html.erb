@@ -29,7 +29,11 @@
             <div class="row">
                 <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).order(:sequence).each do |menuitem| %>
                     <% if @ordrparticipant == nil || @ordrparticipant && (@ordrparticipant.allergyns & menuitem.allergyns).empty? %>
-                        <%= render "showMenuitemHorizontal", menuitem: menuitem %>
+                        <% if current_user %>
+                            <%= render "showMenuitemStaff", menuitem: menuitem %>
+                        <% else %>
+                            <%= render "showMenuitemHorizontal", menuitem: menuitem %>
+                        <% end %>
                     <% end %>
                 <% end %>
             </div>

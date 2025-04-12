@@ -10,19 +10,22 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <% if (@menu.displayImages == true && @menu.restaurant.displayImages == true) || (@menu.displayImagesInPopup == true && @menu.restaurant.displayImagesInPopup == true) %>
-            <div class="row">
-                <div class="col-12">
-                    <%= image_tag "",
-                        :id => "a2o_menuitem_image",
-                        :title => "",
-                        :class => "rounded card-img-top",
-                        :onload => "fadeIn(this)",
-                        :style => "-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));display:none;"
-                    %>
+        <% if current_user %>
+        <% else %>
+            <% if (@menu.displayImages == true && @menu.restaurant.displayImages == true) || (@menu.displayImagesInPopup == true && @menu.restaurant.displayImagesInPopup == true) %>
+                <div class="row">
+                    <div class="col-12">
+                        <%= image_tag "",
+                            :id => "a2o_menuitem_image",
+                            :title => "",
+                            :class => "rounded card-img-top",
+                            :onload => "fadeIn(this)",
+                            :style => "-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));display:none;"
+                        %>
+                    </div>
                 </div>
-            </div>
-        <div style="margin-top:20px;"></div>
+                <div style="margin-top:20px;"></div>
+            <% end %>
         <% end %>
         <span style="display:none" id="a2o_ordr_id"></span>
         <span style="display:none" id="a2o_menuitem_id"></span>
