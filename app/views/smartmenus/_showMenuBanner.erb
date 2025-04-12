@@ -53,19 +53,21 @@
 
             <div class="col-7">
                             <span class="float-end">
-                                <% if @ordrparticipant && @ordrparticipant.name == nil %>
-                                    <span id="addYourNameSpan">
-                                        <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
-                                          <i class="bi bi-person-fill-add"></i>
-                                        </button>
-                                    </span>
-                                <% else %>
-                                    <% if @ordrparticipant && @ordrparticipant.name %>
-                                    <span id="addYourNameSpan">
-                                        <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
-                                            <small><%= @ordrparticipant.name %></small>&nbsp;<i class="bi bi-pencil-fill"></i>
-                                        </button>
-                                    </span>
+                                <% if current_user %>
+                                    <% if @ordrparticipant && @ordrparticipant.name == nil %>
+                                        <span id="addYourNameSpan">
+                                            <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
+                                              <i class="bi bi-person-fill-add"></i>
+                                            </button>
+                                        </span>
+                                    <% else %>
+                                        <% if @ordrparticipant && @ordrparticipant.name %>
+                                        <span id="addYourNameSpan">
+                                            <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
+                                                <small><%= @ordrparticipant.name %></small>&nbsp;<i class="bi bi-pencil-fill"></i>
+                                            </button>
+                                        </span>
+                                        <% end %>
                                     <% end %>
                                 <% end %>
                                 <% if @tablesetting %>
