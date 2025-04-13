@@ -1,6 +1,6 @@
     <div style="padding-top:1px" class="col-6 col-md-4 col-lg-4">
         <div class="card">
-                <% if @openOrder %>
+                <% if @openOrder && @openOrder.status != 'billrequested' %>
                     <div class="row">
                         <div class="col-12">
                             <div class="d-grid gap-2">
