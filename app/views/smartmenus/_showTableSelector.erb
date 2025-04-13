@@ -1,18 +1,39 @@
-<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-    <div class="btn-group" role="group">
-        <button id="menu-actions" type="button" class="btn btn-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <%= t(".table") %>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
-            <% Smartmenu.where( restaurant_id: @restaurant.id, menu_id: @menu.id ).includes([:tablesetting]).order('id ASC').each do |smartmenu| %>
-                <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
-                    <li>
-                        <%= link_to smartmenu_path(smartmenu.slug), class: "dropdown-item" do %>
-                            <%= smartmenu.tablesetting.name %>
-                        <% end %>
-                    </li>
+<% if current_user %>
+    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+        <div class="btn-group" role="group">
+            <button id="menu-actions" type="button" class="btn btn-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <% if @tablesetting %>
+                    <%= @tablesetting.name %>
+                <% else %>
+                    <%= t(".table") %>
                 <% end %>
+            </button>
+            <% if @openOrder %>
+            <% else %>
+                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
+                    <% Smartmenu.where( restaurant_id: @restaurant.id, menu_id: @menu.id ).includes([:tablesetting]).order('id ASC').each do |smartmenu| %>
+                        <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
+                            <li>
+                                <%= link_to smartmenu_path(smartmenu.slug), class: "dropdown-item" do %>
+                                    <%= smartmenu.tablesetting.name %>
+                                <% end %>
+                            </li>
+                        <% end %>
+                    <% end %>
+                </ul>
             <% end %>
-        </ul>
+        </div>
     </div>
-</div>
+<% else %>
+    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+        <div class="btn-group" role="group">
+            <button id="menu-actions" type="button" class="btn btn-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <% if @tablesetting %>
+                    <%= @tablesetting.name %>
+                <% else %>
+                    <%= t(".table") %>
+                <% end %>
+            </button>
+        </div>
+    </div>
+<% end %>

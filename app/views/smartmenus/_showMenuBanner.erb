@@ -11,27 +11,18 @@
             <div class="col-12">
                 <div style="padding-top:5px" class="row">
                     <div class="col-8">
-                        <h5>
-                            <%= @menu.restaurant.name %>
-                        </h5>
+                        <% if current_user %>
+                           <%= link_to edit_menu_path(@menu), class: 'link-dark' do %>
+                               <h5><%= @menu.restaurant.name %></h5>
+                           <% end %>
+                        <% else %>
+                            <h5><%= @menu.restaurant.name %></h5>
+                        <% end %>
                     </div>
                     <div class="col-4">
                         <span class="float-end">
-                            <% if @tablesetting %>
-                               <button type="button" class="btn btn-sm btn-dark">
-                                   <%= @tablesetting.name %>
-                               </button>
-                            <% else %>
-                               <% if current_user %>
-                                   <%= render "showTableSelector" %>
-                               <% end %>
-                            <% end %>
-                            <%= render "showLocalSelector" %>
-                            <% if current_user %>
-                                   <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-dark' do %>
-                                        <i class="bi bi-pencil-fill"></i>
-                                   <% end %>
-                            <% end %>
+                                <%= render "showTableSelector" %>
+                                <%= render "showLocalSelector" %>
                         </span>
                     </div>
                 </div>

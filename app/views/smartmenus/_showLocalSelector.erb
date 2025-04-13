@@ -4,7 +4,7 @@
             <button id="lovale-actions" type="button" class="btn btn-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-globe-americas"></i>
             </button>
-            <ul style="--bs-dropdown-padding-y: 0.0rem;--bs-dropdown-min-width:0em" class="dropdown-menu" aria-labelledby="locales">
+            <ul style="--bs-dropdown-padding-y: 0.0rem;--bs-dropdown-min-width:0em" class="dropdown-menu dropdown-menu-dark" aria-labelledby="locales">
                 <% Restaurantlocale.where(restaurant_id: @restaurant.id, status: 'active').each do |restaurantlocale| %>
                     <li>
                         <a style="padding-right:4px;padding-left:4px" class="dropdown-item" href="#">
