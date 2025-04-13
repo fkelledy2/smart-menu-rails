@@ -173,6 +173,7 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
             @tablesetting.save
+            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         if( ordr_params[:status] = 20 )
             if current_user
@@ -194,14 +195,12 @@ class OrdrsController < ApplicationController
             @tablesetting.status = 1
             @tablesetting.save
             @ordr.ordritems.each do |oi|
-                puts 'xxx'
-                puts oi.status
-                puts 'xxx'
                 if oi.status == 'added'
                     oi.status = 20
                     oi.save
                 end
             end
+            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         if( ordr_params[:status] = 30 )
             if current_user
@@ -222,6 +221,7 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 1
             @tablesetting.save
+            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         if( ordr_params[:status] = 40 )
             if current_user
@@ -242,8 +242,8 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
             @tablesetting.save
+            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
-        ActionCable.server.broadcast("ordr_channel", @ordr)
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully updated." }
         format.json { render :show, status: :ok, location: @ordr }
 #         format.turbo_stream

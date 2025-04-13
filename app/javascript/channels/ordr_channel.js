@@ -18,7 +18,9 @@ consumer.subscriptions.create("OrdrChannel", {
             $("#orderUpdatedSpan").show();
         }
     }
-    location.reload();
+//    if( data['status'] != 'closed' ) {
+        location.reload();
+//    }
     return true;
   }
 });

@@ -1,6 +1,6 @@
 document.addEventListener("turbo:load", () => {
 
-    let locationReload = true;
+    let locationReload = false;
 
     let ORDR_OPENED=0;
     let ORDR_ORDERED=20;
@@ -150,7 +150,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_ORDERED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, true );
             } else {
                 let ordr = {
                     'ordr': {
@@ -160,7 +160,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_ORDERED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, true );
             }
        });
     }
@@ -177,7 +177,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_BILLREQUESTED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, true );
             } else {
                 let ordr = {
                     'ordr': {
@@ -187,7 +187,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_BILLREQUESTED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, true );
             }
        });
     }
@@ -209,7 +209,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_CLOSED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
             } else {
                 let ordr = {
                     'ordr': {
@@ -220,7 +220,7 @@ document.addEventListener("turbo:load", () => {
                       'status' : ORDR_CLOSED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
             }
         });
     }
@@ -234,18 +234,12 @@ document.addEventListener("turbo:load", () => {
             },
             body: JSON.stringify(body)
         }).then(response => {
-            if( locationReload ) {
-                location.reload();
-            }
         }).catch(function(err) {
             console.info(err + " url: " + url);
-            if( locationReload ) {
-                location.reload();
-            }
         });
         return false;
     }
-    function patch( url, body ) {
+    function patch( url, body, reloadOverride ) {
         fetch(url, {
             method: 'PATCH',
             headers:  {
@@ -254,14 +248,8 @@ document.addEventListener("turbo:load", () => {
             },
             body: JSON.stringify(body)
         }).then(response => {
-            if( locationReload ) {
-                location.reload();
-            }
         }).catch(function(err) {
             console.info(err + " url: " + url);
-            if( locationReload ) {
-                location.reload();
-            }
         });
         return false;
     }
@@ -277,7 +265,6 @@ document.addEventListener("turbo:load", () => {
             console.info(err + " url: " + url);
         });
     }
-
 
     if ($("#restaurantTabs").is(':visible')) {
         function linkOrdr(cell, formatterParams){

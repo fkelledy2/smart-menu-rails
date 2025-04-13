@@ -10,24 +10,33 @@
         <div class="row">
             <div class="col-12">
                 <div style="padding-top:5px" class="row">
-                    <div class="col-10">
+                    <div class="col-8">
                         <h5>
                             <%= @menu.restaurant.name %>
                         </h5>
                     </div>
-                    <div class="col-2">
-                        <% if current_user %>
-                            <span class="float-end">
-                               <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-dark' do %>
-                                    <i class="bi bi-pencil-fill"></i>
+                    <div class="col-4">
+                        <span class="float-end">
+                            <% if @tablesetting %>
+                               <button type="button" class="btn btn-sm btn-dark">
+                                   <%= @tablesetting.name %>
+                               </button>
+                            <% else %>
+                               <% if current_user %>
+                                   <%= render "showTableSelector" %>
                                <% end %>
-                            </span>
-                        <% end %>
+                            <% end %>
+                            <%= render "showLocalSelector" %>
+                            <% if current_user %>
+                                   <%= link_to edit_menu_path(@menu), class: 'btn btn-sm btn-dark' do %>
+                                        <i class="bi bi-pencil-fill"></i>
+                                   <% end %>
+                            <% end %>
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-5">
                 <h5>
@@ -54,6 +63,7 @@
             <div class="col-7">
                             <span class="float-end">
                                 <% if current_user %>
+                                <% else %>
                                     <% if @ordrparticipant && @ordrparticipant.name == nil %>
                                         <span id="addYourNameSpan">
                                             <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
@@ -71,31 +81,9 @@
                                     <% end %>
                                 <% end %>
                                 <% if @tablesetting %>
-                                    <span style="display:none" id="orderUpdatedSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="left" title="Order Updated!">
-                                        <button id="orderUpdatedButton" type="button" class="btn btn-sm btn-danger">
-                                            <i class="bi bi-arrow-clockwise"></i>
-                                        </button>
-                                    </span>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">
-                                        <%= @tablesetting.name %>
-                                    </button>
-                                    <%= render "showLocalSelector" %>
-                                <% else %>
-                                    <% if current_user %>
-                                        <%= render "showTableSelector" %>
-                                        <%= render "showLocalSelector" %>
-                                    <% end %>
+                                    <%= render "order" %>
                                 <% end %>
                             </span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <span class="float-end">
-                    <% if @tablesetting %>
-                        <%= render "order" %>
-                    <% end %>
-                </span>
             </div>
         </div>
         <div style="height:40px"class="container-fluid">
