@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_08_135053) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_14_162432) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -325,6 +325,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_08_135053) do
     t.string "name"
     t.bigint "ordritem_id"
     t.bigint "employee_id"
+    t.string "preferredlocale"
     t.index ["employee_id"], name: "index_ordrparticipants_on_employee_id"
     t.index ["ordr_id"], name: "index_ordrparticipants_on_ordr_id"
     t.index ["ordritem_id"], name: "index_ordrparticipants_on_ordritem_id"

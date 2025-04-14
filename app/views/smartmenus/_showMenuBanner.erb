@@ -22,7 +22,10 @@
                     <div class="col-4">
                         <span class="float-end">
                                 <%= render "showTableSelector" %>
-                                <%= render "showLocalSelector" %>
+                                <% if current_user %>
+                                <% else %>
+                                    <%= render "showLocalSelector" %>
+                                <% end %>
                         </span>
                     </div>
                 </div>

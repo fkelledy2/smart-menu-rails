@@ -37,6 +37,26 @@ class Menuitem < ApplicationRecord
       end
   end
 
+  def localisedName(locale)
+      mil = Menuitemlocale.where(menuitem_id: id, locale: locale).first
+      rl = Restaurantlocale.where(restaurant_id: self.menusection.menu.restaurant.id, locale: locale).first
+      if rl.dfault == true
+        name
+      else
+          mil.name
+      end
+  end
+
+  def localisedDescription(locale)
+      mil = Menuitemlocale.where(menuitem_id: id, locale: locale).first
+      rl = Restaurantlocale.where(restaurant_id: self.menusection.menu.restaurant.id, locale: locale).first
+      if rl.dfault == true
+        description
+      else
+          mil.description
+      end
+  end
+
   validates :inventory, :presence => false
   validates :name, :presence => true
   validates :menusection, :presence => true

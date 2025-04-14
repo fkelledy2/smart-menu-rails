@@ -17,8 +17,20 @@
                         </div>
                     </div>
                     <div style='padding-left:0px' class="col-7">
-                        <h6 style='padding-top:5px;padding-right:10px;' class="card-title"><strong><%= menuitem.name %></strong></h6>
-                        <h6 style='padding-top:0px;padding-right:10px;' ><small><%= menuitem.description %></small></h6>
+                        <h6 style='padding-top:5px;padding-right:10px;' class="card-title">
+                            <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                                <strong><%= menuitem.localisedName(@ordrparticipant.preferredlocale) %></strong>
+                            <% else %>
+                                <strong><%= menuitem.name %></strong>
+                            <% end %>
+                        </h6>
+                        <h6 style='padding-top:5px;padding-right:10px;'>
+                            <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                                <small><%= menuitem.localisedDescription(@ordrparticipant.preferredlocale) %></small>
+                            <% else %>
+                                <small><%= menuitem.description %></small>
+                            <% end %>
+                        </h6>
                     </div>
                 </div>
                 <div class="row">
@@ -55,8 +67,20 @@
             <% else %>
                 <div class="row">
                     <div class="col-12">
-                        <h6 style='padding-left:10px;padding-right:10px;padding-top:10px' class="card-title"><strong><%= menuitem.name %></strong></h6>
-                        <h6 style='padding-left:10px;padding-right:10px;padding-top:0px' ><small><%= menuitem.description %></small></h6>
+                        <h6 style='padding-left:10px;padding-right:10px;padding-top:10px' class="card-title">
+                            <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                                <strong><%= menuitem.localisedName(@ordrparticipant.preferredlocale) %></strong>
+                            <% else %>
+                                <strong><%= menuitem.name %></strong>
+                            <% end %>
+                        </h6>
+                        <h6 style='padding-left:10px;padding-right:10px;padding-top:0px'>
+                            <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                                <small><%= menuitem.localisedDescription(@ordrparticipant.preferredlocale) %></small>
+                            <% else %>
+                                <small><%= menuitem.description %></small>
+                            <% end %>
+                        </h6>
                     </div>
                 </div>
                 <div class="row">

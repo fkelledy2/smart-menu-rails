@@ -53,19 +53,27 @@ document.addEventListener("turbo:load", () => {
             const button = event.relatedTarget
             // Update the modal's content.
         });
-        $( "#addNameToParticipantButton" ).on( "click", function() {
-            let ordrparticipant = {
-                'ordrparticipant': {
-                    'name': addNameToParticipantModal.querySelector('#name').value,
-                }
-            };
-            patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
-            if( locationReload ) {
-                location.reload();
+        $( "#addNameToParticipantButton" ).on( "click", function(event) {
+           let ordrparticipant = {
+            'ordrparticipant': {
+                'name': addNameToParticipantModal.querySelector('#name').value,
             }
-            return true;
+           };
+           patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant );
+           event.preventDefault();
         });
     }
+
+    $( ".setparticipantlocale" ).on( "click", function(event) {
+       var locale = $(this).attr('href');
+       let ordrparticipant = {
+            'ordrparticipant': {
+                'preferredlocale': locale
+            }
+       };
+       patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant);
+       event.preventDefault();
+    });
 
     $( ".removeItemFromOrderButton" ).on( "click", function(event) {
        var ordrItemId = $(this).attr('data-bs-ordritem_id');
@@ -239,7 +247,7 @@ document.addEventListener("turbo:load", () => {
         });
         return false;
     }
-    function patch( url, body, reloadOverride ) {
+    function patch( url, body ) {
         fetch(url, {
             method: 'PATCH',
             headers:  {

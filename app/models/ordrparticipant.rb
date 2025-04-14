@@ -13,5 +13,5 @@ class Ordrparticipant < ApplicationRecord
 
   validates :ordr, :presence => true
   validates :sessionid, :presence => true
-
+  validates :preferredlocale, :presence => false
 end

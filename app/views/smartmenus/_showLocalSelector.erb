@@ -7,7 +7,7 @@
             <ul style="--bs-dropdown-padding-y: 0.0rem;--bs-dropdown-min-width:0em" class="dropdown-menu dropdown-menu-dark" aria-labelledby="locales">
                 <% Restaurantlocale.where(restaurant_id: @restaurant.id, status: 'active').each do |restaurantlocale| %>
                     <li>
-                        <a style="padding-right:4px;padding-left:4px" class="dropdown-item" href="#">
+                        <a style="padding-right:4px;padding-left:4px" class="setparticipantlocale dropdown-item" href="<%= restaurantlocale.locale %>">
                             <img src="<%= restaurantlocale.flag %>" tooltip="<%= restaurantlocale.language %>"class="flag-icon">
                         </a>
                     </li>
