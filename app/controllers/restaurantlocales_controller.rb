@@ -76,7 +76,7 @@ class RestaurantlocalesController < ApplicationController
               end
           end
         end
-        TranslateMenuJob.perform_async(@restaurantlocale.id)
+        TranslateMenuJob.perform_sync(@restaurantlocale.id)
         format.html { redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), notice: "Restaurant Locale was successfully created." }
         format.json { render :show, status: :created, location: @restaurantlocale }
       else
