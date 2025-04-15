@@ -30,15 +30,23 @@ class TranslateMenuJob
                         menu_item_locale.name = menuitem.name
                         menu_item_locale.description = menuitem.description
                     else
-                        translation = DeeplApiService.translate(menuitem.name, to: restaurantlocale.locale, from: 'en')
-                        menu_item_locale.name = translation
-                        puts 'Localising:'
-                        puts menuitem.name
-                        puts menu_item_locale.name
-                        translation = DeeplApiService.translate(menuitem.description, to: restaurantlocale.locale, from: 'en')
-                        menu_item_locale.description = translation
-                        puts menuitem.description
-                        puts menu_item_locale.description
+                        begin
+                            translation = DeeplApiService.translate(menuitem.name, to: restaurantlocale.locale, from: 'en')
+                            menu_item_locale.name = translation
+                            puts 'Localising:'
+                            puts menuitem.name
+                            puts menu_item_locale.name
+                        rescue ActiveRecord::CatchAll
+                            menu_item_locale.name = menuitem.name
+                        end
+                        begin
+                            translation = DeeplApiService.translate(menuitem.description, to: restaurantlocale.locale, from: 'en')
+                            menu_item_locale.description = translation
+                            puts menuitem.description
+                            puts menu_item_locale.description
+                        rescue ActiveRecord::CatchAll
+                            menu_item_locale.description = menuitem.description
+                        end
                     end
                     menu_item_locale.save
                 end
