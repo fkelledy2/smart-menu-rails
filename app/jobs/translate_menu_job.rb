@@ -3,10 +3,10 @@ require "deepl"
 
 class TranslateMenuJob
   include Sidekiq::Worker
-  sidekiq_options queue: "limited"
-
-  extend Limiter::Mixin
-  limit_method :expensive_api_call, rate: 4, interval: 60, balanced: true
+#   sidekiq_options queue: "limited"
+#
+#   extend Limiter::Mixin
+#   limit_method :expensive_api_call, rate: 4, interval: 60, balanced: true
 
   def perform(restaurant_id)
     expensive_api_call(restaurant_id)
@@ -14,35 +14,33 @@ class TranslateMenuJob
 
   private
 
-  def expensive_api_call(restaurant_id)
-    Menuitemlocale.destroy_all
-    @restaurant = Restaurant.find(restaurant_id)
-    if( @restaurant )
-        Menu.where(restaurant_id: @restaurant.id).each do |menu|
+  def expensive_api_call(restaurantlocaleid)
+    restaurantlocale = Restaurantlocale.where(id: restaurantlocaleid).first
+    restaurant = Restaurant.find(restaurantlocale.restaurant_id)
+    if( restaurant )
+        Menu.where(restaurant_id: restaurant.id).each do |menu|
             Menusection.where( menu_id: menu.id).each do |menusection|
                 Menuitem.where( menusection_id: menusection.id).each do |menuitem|
-                    Menuitemlocale.where(menuitem_id: menuitem.id).destroy_all
-                    Restaurantlocale.where(restaurant_id: @restaurant.id).each do |restaurantlocale|
-                        @menu_item_locale = Menuitemlocale.new()
-                        @menu_item_locale.locale = restaurantlocale.locale
-                        @menu_item_locale.status = restaurantlocale.status
-                        @menu_item_locale.menuitem_id = menuitem.id
-                        if restaurantlocale.dfault == true
-                            @menu_item_locale.name = menuitem.name
-                            @menu_item_locale.description = menuitem.description
-                        else
-                            translation = DeeplApiService.translate(menuitem.name, to: restaurantlocale.locale, from: 'en')
-                            @menu_item_locale.name = translation
-                            puts 'Localising:'
-                            puts menuitem.name
-                            puts @menu_item_locale.name
-                            translation = DeeplApiService.translate(menuitem.description, to: restaurantlocale.locale, from: 'en')
-                            @menu_item_locale.description = translation
-                            puts menuitem.description
-                            puts @menu_item_locale.description
-                        end
-                        @menu_item_locale.save
+                    Menuitemlocale.where(menuitem_id: menuitem.id, locale: restaurantlocale.locale).destroy_all
+                    menu_item_locale = Menuitemlocale.new()
+                    menu_item_locale.locale = restaurantlocale.locale
+                    menu_item_locale.status = restaurantlocale.status
+                    menu_item_locale.menuitem_id = menuitem.id
+                    if restaurantlocale.dfault == true
+                        menu_item_locale.name = menuitem.name
+                        menu_item_locale.description = menuitem.description
+                    else
+                        translation = DeeplApiService.translate(menuitem.name, to: restaurantlocale.locale, from: 'en')
+                        menu_item_locale.name = translation
+                        puts 'Localising:'
+                        puts menuitem.name
+                        puts menu_item_locale.name
+                        translation = DeeplApiService.translate(menuitem.description, to: restaurantlocale.locale, from: 'en')
+                        menu_item_locale.description = translation
+                        puts menuitem.description
+                        puts menu_item_locale.description
                     end
+                    menu_item_locale.save
                 end
             end
         end
