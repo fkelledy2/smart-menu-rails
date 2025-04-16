@@ -32,8 +32,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-5">
-                <h5>
+            <div class="col-12">
+                <span>
                     <%= @menu.name %>
                     <% if current_user %>
                     <% else %>
@@ -51,11 +51,8 @@
                             </span>
                         <% end %>
                     <% end %>
-                </h5>
-            </div>
-
-            <div class="col-7">
-                            <span class="float-end">
+                </span>
+                <span class="float-end">
                                 <% if current_user %>
                                 <% else %>
                                     <% if @ordrparticipant && @ordrparticipant.name == nil %>
@@ -77,7 +74,7 @@
                                 <% if @tablesetting %>
                                     <%= render "order" %>
                                 <% end %>
-                            </span>
+                </span>
             </div>
         </div>
         <div style="height:40px"class="container-fluid">
