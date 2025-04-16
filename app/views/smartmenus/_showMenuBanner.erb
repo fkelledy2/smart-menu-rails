@@ -15,16 +15,14 @@
         <div class="row">
             <div class="col-12">
                 <div style="padding-top:5px" class="row">
-                    <div class="col-8">
+                    <div class="col-12">
                         <% if current_user %>
                            <%= link_to edit_menu_path(@menu), class: 'link-dark' do %>
-                               <h5><%= @menu.restaurant.name %></h5>
+                               <span class="h5"><%= @menu.restaurant.name %></span>
                            <% end %>
                         <% else %>
-                            <h5><%= @menu.restaurant.name %></h5>
+                            <span class="h5"><%= @menu.restaurant.name %></span>
                         <% end %>
-                    </div>
-                    <div class="col-4">
                         <span class="float-end">
                                 <%= render "showTableSelector" %>
                                 <% if current_user %>
@@ -36,7 +34,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div style='padding-top:2px' class="row">
             <div class="col-12">
                 <span>
                     <%= @menu.name %>
