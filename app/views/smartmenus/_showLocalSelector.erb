@@ -2,13 +2,21 @@
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
         <div class="btn-group" role="group">
             <button id="lovale-actions" type="button" class="btn btn-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-globe-americas"></i>
+                <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                    <img src="<%= @restaurant.getLocale(@ordrparticipant.preferredlocale).flag %>" class="rounded-1 border border-white flag-icon-selected">
+                <% else %>
+                    <% if @restaurant.defaultLocale %>
+                        <img src="<%= @restaurant.defaultLocale.flag %>" tooltip="<%= @restaurant.defaultLocale.language %>" class="rounded-1 border border-white flag-icon-selected">
+                    <% else %>
+                        <i class="bi bi-translate"></i>
+                    <% end %>
+                <% end %>
             </button>
             <ul style="--bs-dropdown-padding-y: 0.0rem;--bs-dropdown-min-width:0em" class="dropdown-menu dropdown-menu-dark" aria-labelledby="locales">
                 <% Restaurantlocale.where(restaurant_id: @restaurant.id, status: 'active').each do |restaurantlocale| %>
                     <li>
                         <a style="padding-right:4px;padding-left:4px" class="setparticipantlocale dropdown-item" href="<%= restaurantlocale.locale %>">
-                            <img src="<%= restaurantlocale.flag %>" tooltip="<%= restaurantlocale.language %>"class="flag-icon">
+                            <img src="<%= restaurantlocale.flag %>" tooltip="<%= restaurantlocale.language %>" class="rounded-1 border border-white flag-icon">
                         </a>
                     </li>
                 <% end %>

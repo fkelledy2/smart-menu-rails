@@ -43,7 +43,11 @@ class Menuitem < ApplicationRecord
       if rl.dfault == true
         name
       else
-          mil.name
+          if mil
+              mil.name
+          else
+              name
+          end
       end
   end
 
@@ -53,7 +57,11 @@ class Menuitem < ApplicationRecord
       if rl.dfault == true
         description
       else
-          mil.description
+          if mil
+              mil.description
+          else
+              description
+          end
       end
   end
 

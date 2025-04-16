@@ -60,6 +60,14 @@ class Restaurant < ApplicationRecord
     end
   end
 
+  def defaultLocale
+    Restaurantlocale.where(restaurant_id: self.id, status: 'active', dfault: true).first
+  end
+
+  def getLocale( locale )
+    Restaurantlocale.where(restaurant_id: self.id, status: 'active', locale: locale).first
+  end
+
   validates :name, :presence => true
   validates :address1, :presence => false
   validates :city, :presence => false
