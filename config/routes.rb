@@ -2,7 +2,6 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   resources :restaurantlocales
-  resources :menuitemlocales
   resources :tracks
   resources :smartmenus
   resources :genimages

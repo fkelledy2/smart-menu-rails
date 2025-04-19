@@ -19,7 +19,53 @@ class TranslateMenuJob
     restaurant = Restaurant.find(restaurantlocale.restaurant_id)
     if( restaurant )
         Menu.where(restaurant_id: restaurant.id).each do |menu|
+            Menulocale.where(menu_id: menu.id, locale: restaurantlocale.locale).destroy_all
+            menu_locale = Menulocale.new()
+            menu_locale.locale = restaurantlocale.locale
+            menu_locale.status = restaurantlocale.status
+            menu_locale.menu_id = menu.id
+            if restaurantlocale.dfault == true
+                menu_locale.name = menu.name
+                menu_locale.description = menu.description
+            else
+                begin
+                    translation = DeeplApiService.translate(menu.name, to: restaurantlocale.locale, from: 'en')
+                    menu_locale.name = translation
+                rescue
+                    menu_locale.name = menu.name
+                end
+                begin
+                    translation = DeeplApiService.translate(menu.description, to: restaurantlocale.locale, from: 'en')
+                    menu_locale.description = translation
+                rescue
+                    menu_locale.description = menu.description
+                end
+            end
+            menu_locale.save
             Menusection.where( menu_id: menu.id).each do |menusection|
+                Menusectionlocale.where(menusection_id: menusection.id, locale: restaurantlocale.locale).destroy_all
+                menusection_locale = Menusectionlocale.new()
+                menusection_locale.locale = restaurantlocale.locale
+                menusection_locale.status = restaurantlocale.status
+                menusection_locale.menusection_id = menusection.id
+                if restaurantlocale.dfault == true
+                    menusection_locale.name = menusection.name
+                    menusection_locale.description = menusection.description
+                else
+                    begin
+                        translation = DeeplApiService.translate(menusection.name, to: restaurantlocale.locale, from: 'en')
+                        menusection_locale.name = translation
+                    rescue
+                        menusection_locale.name = menusection.name
+                    end
+                    begin
+                        translation = DeeplApiService.translate(menu.description, to: restaurantlocale.locale, from: 'en')
+                        menusection_locale.description = translation
+                    rescue
+                        menusection_locale.description = menusection.description
+                    end
+                end
+                menusection_locale.save
                 Menuitem.where( menusection_id: menusection.id).each do |menuitem|
                     Menuitemlocale.where(menuitem_id: menuitem.id, locale: restaurantlocale.locale).destroy_all
                     menu_item_locale = Menuitemlocale.new()
@@ -33,18 +79,13 @@ class TranslateMenuJob
                         begin
                             translation = DeeplApiService.translate(menuitem.name, to: restaurantlocale.locale, from: 'en')
                             menu_item_locale.name = translation
-                            puts 'Localising:'
-                            puts menuitem.name
-                            puts menu_item_locale.name
-                        rescue ActiveRecord::CatchAll
+                        rescue
                             menu_item_locale.name = menuitem.name
                         end
                         begin
                             translation = DeeplApiService.translate(menuitem.description, to: restaurantlocale.locale, from: 'en')
                             menu_item_locale.description = translation
-                            puts menuitem.description
-                            puts menu_item_locale.description
-                        rescue ActiveRecord::CatchAll
+                        rescue
                             menu_item_locale.description = menuitem.description
                         end
                     end

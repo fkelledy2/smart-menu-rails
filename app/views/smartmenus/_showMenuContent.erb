@@ -12,10 +12,18 @@
                             </div>
                         </div>
                     <% else %>
-                        <h2><%= menusection.name %></h2>
+                        <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                            <h2><%= menusection.localisedName(@ordrparticipant.preferredlocale) %></h2>
+                        <% else %>
+                            <h2><%= menusection.name %></h2>
+                        <% end %>
                     <% end %>
                 <% else %>
-                    <h2><%= menusection.name %></h2>
+                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                        <h2><%= menusection.localisedName(@ordrparticipant.preferredlocale) %></h2>
+                    <% else %>
+                        <h2><%= menusection.name %></h2>
+                    <% end %>
                 <% end %>
                 <div class="row">
                     <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).order(:sequence).each do |menuitem| %>

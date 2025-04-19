@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_14_162432) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_18_164623) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -210,6 +210,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_14_162432) do
     t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
   end
 
+  create_table "menulocales", force: :cascade do |t|
+    t.string "locale"
+    t.integer "status"
+    t.string "name"
+    t.string "description"
+    t.bigint "menu_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id"], name: "index_menulocales_on_menu_id"
+  end
+
   create_table "menus", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -226,6 +237,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_14_162432) do
     t.string "imagecontext"
     t.boolean "displayImagesInPopup", default: false
     t.index ["restaurant_id"], name: "index_menus_on_restaurant_id"
+  end
+
+  create_table "menusectionlocales", force: :cascade do |t|
+    t.string "locale"
+    t.integer "status"
+    t.string "name"
+    t.string "description"
+    t.bigint "menusection_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menusection_id"], name: "index_menusectionlocales_on_menusection_id"
   end
 
   create_table "menusections", force: :cascade do |t|
@@ -651,7 +673,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_14_162432) do
   add_foreign_key "menuitem_tag_mappings", "tags"
   add_foreign_key "menuitemlocales", "menuitems"
   add_foreign_key "menuitems", "menusections"
+  add_foreign_key "menulocales", "menus"
   add_foreign_key "menus", "restaurants"
+  add_foreign_key "menusectionlocales", "menusections"
   add_foreign_key "menusections", "menus"
   add_foreign_key "ordractions", "ordritems"
   add_foreign_key "ordractions", "ordrparticipants"

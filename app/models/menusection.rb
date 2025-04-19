@@ -15,6 +15,34 @@ class Menusection < ApplicationRecord
       end
   end
 
+  def localisedName(locale)
+      mil = Menusectionlocale.where(menusection_id: id, locale: locale).first
+      rl = Restaurantlocale.where(restaurant_id: self.menu.restaurant.id, locale: locale).first
+      if rl.dfault == true
+        name
+      else
+          if mil
+              mil.name
+          else
+              name
+          end
+      end
+  end
+
+  def localisedDescription(locale)
+      mil = Menulocale.where(menusection_id: id, locale: locale).first
+      rl = Restaurantlocale.where(restaurant_id: self.menu.restaurant.id, locale: locale).first
+      if rl.dfault == true
+        description
+      else
+          if mil
+              mil.description
+          else
+              description
+          end
+      end
+  end
+
   validates :name, :presence => true
   validates :menu, :presence => true
   validates :status, :presence => true

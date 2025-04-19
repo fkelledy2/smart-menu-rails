@@ -37,7 +37,11 @@
         <div style='padding-top:2px' class="row">
             <div class="col-12">
                 <span>
-                    <%= @menu.name %>
+                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                        <%= @menu.localisedName(@ordrparticipant.preferredlocale) %>
+                    <% else %>
+                        <%= @menu.name %>
+                    <% end %>
                     <% if current_user %>
                     <% else %>
                         <% if @ordrparticipant %>
@@ -84,7 +88,13 @@
             <nav id="navbar-example2" style="position:relative; left:-10px;width:106%;mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 140%" class="nav flex-nowrap overflow-auto">
               <ul style="position:relative; left:-37px" class="menu_sections_tab d-flex">
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
-                      <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>
+                      <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>">
+                        <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                            <%= menusection.localisedName(@ordrparticipant.preferredlocale) %>
+                        <% else %>
+                            <%= menusection.name %>
+                        <% end %>
+                      </a>
                 <% end %>
                 <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-danger text-nowrap" href="#menusection_allergyns">Allergens</a>
               </ul>
