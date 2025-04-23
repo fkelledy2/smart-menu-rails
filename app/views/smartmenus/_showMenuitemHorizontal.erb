@@ -38,7 +38,7 @@
                         <span class="float-end">
                             <h6 style='padding-right:5px' class="card-title">
                                 <%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
-                                <% if @openOrder %>
+                                <% if @openOrder && @openOrder.status != 'billrequested' %>
                                         <button type="button" class="addItemToOrder btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                             data-bs-ordr_id="<%= @openOrder.id %>"
                                             data-bs-menuitem_id="<%= menuitem.id %>"
@@ -88,7 +88,7 @@
                         <span class="float-end">
                             <h6 style='padding-right:5px' class="card-title">
                                     <%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
-                                    <% if @openOrder %>
+                                        <% if @openOrder && @openOrder.status != 'billrequested' %>
                                             <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                                 data-bs-ordr_id="<%= @openOrder.id %>"
                                                 data-bs-menuitem_id="<%= menuitem.id %>"
