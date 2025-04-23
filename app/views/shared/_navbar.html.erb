@@ -54,7 +54,9 @@
           </li>
 
         <% else %>
-          <li style="z-index:1070;" class="nav-item"><%= link_to t(".signUp"), new_user_registration_path, class: "nav-link" %></li>
+          <% if 1==2 %>
+            <li style="z-index:1070;" class="nav-item"><%= link_to t(".signUp"), new_user_registration_path, class: "nav-link" %></li>
+          <% end %>
           <li style="z-index:1070;" class="nav-item"><%= link_to t(".login"), new_user_session_path, class: "nav-link" %></li>
         <% end %>
       </ul>
