@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_18_164623) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_25_175616) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -261,6 +261,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_164623) do
     t.datetime "updated_at", null: false
     t.boolean "archived", default: false
     t.text "image_data"
+    t.integer "fromhour", default: 0
+    t.integer "frommin", default: 0
+    t.integer "tohour", default: 23
+    t.integer "tomin", default: 59
+    t.boolean "restricted", default: false
     t.index ["menu_id"], name: "index_menusections_on_menu_id"
   end
 

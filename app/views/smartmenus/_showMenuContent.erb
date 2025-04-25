@@ -12,18 +12,44 @@
                             </div>
                         </div>
                     <% else %>
-                        <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
-                            <h2><%= menusection.localisedName(@ordrparticipant.preferredlocale) %></h2>
-                        <% else %>
-                            <h2><%= menusection.name %></h2>
-                        <% end %>
+                        <div class="row">
+                            <div class="col-12">
+                                <span class='h3'>
+                                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                                        <%= menusection.localisedName(@ordrparticipant.preferredlocale) %>
+                                    <% else %>
+                                        <%= menusection.name %>
+                                    <% end %>
+                                    <% if menusection.restricted == true %>
+                                        <span class='float-end'>
+                                            <small class="text-muted">
+                                                <%= menusection.fromhour %>:<%= menusection.frommin %> - <%= menusection.tohour %>:<%= menusection.tomin %>
+                                            </small>
+                                        <span>
+                                    <% end %>
+                                </span>
+                            </div>
+                        </div>
                     <% end %>
                 <% else %>
-                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
-                        <h2><%= menusection.localisedName(@ordrparticipant.preferredlocale) %></h2>
-                    <% else %>
-                        <h2><%= menusection.name %></h2>
-                    <% end %>
+                        <div class="row">
+                            <div class="col-12">
+                                <span class='h3'>
+                                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                                        <%= menusection.localisedName(@ordrparticipant.preferredlocale) %>
+                                    <% else %>
+                                        <%= menusection.name %>
+                                    <% end %>
+                                    <% if menusection.restricted == true %>
+                                        <span class='float-end'>
+                                            <small class="text-muted">
+                                                <%= menusection.fromhour %>:<%= menusection.frommin %> - <%= menusection.tohour %>:<%= menusection.tomin %>
+                                            </small>
+                                        <span>
+                                    <% end %>
+                                </span>
+                            </div>
+                        </div>
                 <% end %>
                 <div class="row">
                     <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).order(:sequence).each do |menuitem| %>

@@ -1,6 +1,11 @@
   json.id menusection.id
   json.name menusection.name
   json.description menusection.description
+  json.fromhour menusection.fromhour
+  json.frommin menusection.frommin
+  json.tohour menusection.tohour
+  json.tomin menusection.tomin
+  json.restricted menusection.restricted
   json.image menusection.image
   json.status menusection.status
   json.sequence menusection.sequence

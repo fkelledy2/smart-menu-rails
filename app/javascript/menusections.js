@@ -4,6 +4,10 @@ document.addEventListener("turbo:load", () => {
       new TomSelect("#menusection_menu_id",{
       });
     }
+    if ($("#menusection_restricted").is(':visible')) {
+      new TomSelect("#menusection_restricted",{
+      });
+    }
 
     if ($("#sectionTabs").is(':visible')) {
         const pillsTab = document.querySelector('#sectionTabs');
@@ -64,6 +68,9 @@ document.addEventListener("turbo:load", () => {
           { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           { title:"", field:"sequence", visible:false, formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
+          {title: 'Available From', field: 'fromhour', mutator: (value, data) => String(data.fromhour).padStart(2, '0') + ':' + String(data.frommin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
+          {title: 'Available To', field: 'tohour', mutator: (value, data) => String(data.tohour).padStart(2, '0') + ':' + String(data.tomin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
+          {title: 'Restricted', field: 'restricted', hozAlign:"right", headerHozAlign:"right" },
           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
           locale:true,
