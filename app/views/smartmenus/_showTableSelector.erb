@@ -8,8 +8,6 @@
                     <%= t(".table") %>
                 <% end %>
             </button>
-            <% if @openOrder %>
-            <% else %>
                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
                     <% Smartmenu.where( restaurant_id: @restaurant.id, menu_id: @menu.id ).includes([:tablesetting]).order('id ASC').each do |smartmenu| %>
                         <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
@@ -21,10 +19,10 @@
                         <% end %>
                     <% end %>
                 </ul>
-            <% end %>
         </div>
     </div>
 <% else %>
+    ncu
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
         <div class="btn-group" role="group">
             <button id="menu-actions" type="button" class="btn btn-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
