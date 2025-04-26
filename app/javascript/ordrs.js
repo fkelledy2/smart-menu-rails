@@ -14,6 +14,24 @@ document.addEventListener("turbo:load", () => {
     let ORDRITEM_PREPARED=30;
     let ORDRITEM_DELIVERED=40;
 
+
+    if ($("#smartmenu").is(':visible')) {
+        var date = new Date;
+        var minutes = date.getMinutes();
+        var hour = date.getHours();
+        var sectionFromOffset = parseInt($("#sectionFromOffset").html());
+        var sectionToOffset = parseInt($("#sectionToOffset").html());
+        var currentOffset = (hour*60)+minutes;
+        $( ".addItemToOrder" ).each(function() {
+            const fromOffeset = $(this).data('bs-menusection_from_offset');
+            const toOffeset = $(this).data('bs-menusection_to_offset');
+            if( currentOffset >= fromOffeset && currentOffset <= toOffeset ) {
+            } else {
+                $(this).attr("disabled","disabled");
+            }
+        });
+    }
+
     $('#toggleFilters').click (function () {
       $(':checkbox').prop('checked', this.checked);
     });

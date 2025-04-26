@@ -1,11 +1,13 @@
-    <div style="padding-top:1px" class="col-6 col-md-4 col-lg-4">
-        <div class="card">
-                <% if @openOrder && @openOrder.status != 'billrequested' %>
+ <div style="padding-top:1px" class="col-6 col-md-4 col-lg-4">
+    <div class="card">
+        <% if @openOrder && @openOrder.status != 'billrequested' %>
                     <div class="row">
                         <div class="col-12">
                             <div class="d-grid gap-2">
                                 <div style="min-height:100px" class="btn-group">
                                     <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
+                                                data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
                                                 data-bs-ordr_id="<%= @openOrder.id %>"
                                                 data-bs-menuitem_id="<%= menuitem.id %>"
                                                 data-bs-menuitem_name="<%= menuitem.name %>"
@@ -15,7 +17,9 @@
                                                     <%= menuitem.name %>
                                     </button>
                                     <% if menuitem.menuitem_size_mappings.count > 0 %>
-                                        <button type="button" style='max-width:50px' class="btn btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button type="button" style='max-width:50px' class="addItemToOrder btn btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
+                                                            data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
+                                                            data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>">
                                             <span class="visually-hidden">Toggle Dropdown</span>
                                         </button>
                                         <ul class="dropdown-menu">
@@ -23,6 +27,8 @@
                                                 <li>
                                                     <a class="dropdown-item" href="#">
                                                         <button style="background: none!important;border: none;padding: 0!important;" type="button" class="addItemToOrder" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                            data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
+                                                            data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
                                                             data-bs-ordr_id="<%= @openOrder.id %>"
                                                             data-bs-menuitem_id="<%= menuitem.id %>"
                                                             data-bs-menuitem_name="<%= menuitem.name %>"
@@ -40,34 +46,34 @@
                             </div>
                         </div>
                     </div>
-                <% else %>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="d-grid gap-2">
-                                <div style="min-height:100px" class="btn-group">
-                                    <button class="btn btn-sm btn-dark" disabled>
-                                        <%= menuitem.name %>
-                                    </button>
-                                    <% if menuitem.menuitem_size_mappings.count > 0 %>
-                                        <button style='max-width:50px' class="btn btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                            <span class="visually-hidden">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <% menuitem.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
-                                                <li>
-                                                    <a class="dropdown-item" href="#">
-                                                        <button style="background: none!important;border: none;padding: 0!important;" disabled>
-                                                            <i class="bi bi-plus"></i> <%= menuitemsize.size.name %>
-                                                        </button>
-                                                    </a>
-                                                </li>
-                                            <% end %>
-                                        </ul>
+        <% else %>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-grid gap-2">
+                        <div style="min-height:100px" class="btn-group">
+                            <button class="btn btn-sm btn-dark" disabled>
+                                <%= menuitem.name %>
+                            </button>
+                            <% if menuitem.menuitem_size_mappings.count > 0 %>
+                                <button style='max-width:50px' class="btn btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <% menuitem.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
+                                        <li>
+                                            <a class="dropdown-item" href="#">
+                                                <button style="background: none!important;border: none;padding: 0!important;" disabled>
+                                                    <i class="bi bi-plus"></i> <%= menuitemsize.size.name %>
+                                                </button>
+                                            </a>
+                                        </li>
                                     <% end %>
-                                </div>
-                            </div>
+                                </ul>
+                            <% end %>
                         </div>
                     </div>
-                <% end %>
-        </div>
+                </div>
+            </div>
+        <% end %>
     </div>
+ </div>

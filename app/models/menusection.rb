@@ -15,6 +15,13 @@ class Menusection < ApplicationRecord
       end
   end
 
+  def fromOffset
+      (fromhour*60)+frommin
+  end
+  def toOffset
+      (tohour*60)+tomin
+  end
+
   def localisedName(locale)
       mil = Menusectionlocale.where(menusection_id: id, locale: locale).first
       rl = Restaurantlocale.where(restaurant_id: self.menu.restaurant.id, locale: locale).first

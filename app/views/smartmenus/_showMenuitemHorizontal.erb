@@ -40,6 +40,8 @@
                                 <%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                                 <% if @openOrder && @openOrder.status != 'billrequested' %>
                                         <button type="button" class="addItemToOrder btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                            data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
+                                            data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
                                             data-bs-ordr_id="<%= @openOrder.id %>"
                                             data-bs-menuitem_id="<%= menuitem.id %>"
                                             data-bs-menuitem_name="<%= menuitem.name %>"
@@ -90,6 +92,8 @@
                                     <%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                                         <% if @openOrder && @openOrder.status != 'billrequested' %>
                                             <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
+                                                data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
                                                 data-bs-ordr_id="<%= @openOrder.id %>"
                                                 data-bs-menuitem_id="<%= menuitem.id %>"
                                                 data-bs-menuitem_name="<%= menuitem.name %>"
@@ -123,7 +127,9 @@
                                     <% menuitem.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
                                         <i>(<%= menuitemsize.size.name %>)</i> <%= number_to_currency(menuitemsize.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                                         <% if @openOrder %>
-                                                <button type="button" class="addItemToOrder btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                    data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
+                                                    data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
                                                     data-bs-ordr_id="<%= @openOrder.id %>"
                                                     data-bs-menuitem_id="<%= menuitem.id %>"
                                                     data-bs-menuitem_name="<%= menuitem.name %>"
