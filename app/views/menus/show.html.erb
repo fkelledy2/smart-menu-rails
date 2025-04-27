@@ -76,7 +76,7 @@
                         <% if @openOrder %>
                             <% if @openOrder.status == 'opened' %>
                                 <span id="viewOrderSpan">
-                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
+                                    <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
                                         Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                                     </button>
                                 </span>
@@ -88,7 +88,7 @@
                                 </button>
                                 </span>
                                 <span id="viewOrderSpan">
-                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
+                                    <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
                                         Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                                     </button>
                                 </span>
@@ -111,7 +111,7 @@
                         <% else %>
                             <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
                                     <span id="startOrderSpan">
-                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">Start Order <i class="bi bi-plus-circle"></i></button>
+                                        <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">Start Order <i class="bi bi-plus-circle"></i></button>
                                     </span>
                             <% end %>
                         <% end %>
@@ -185,7 +185,7 @@
                                         <div class="col-2">
                                             <span class="float-end">
                                                 <% if @openOrder %>
-                                                    <button type="button" class="addItemToOrder btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                    <button type="button" class="addItemToOrder btn btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                                         data-bs-ordr_id="<%= @openOrder.id %>"
                                                         data-bs-menuitem_id="<%= menuitem.id %>"
                                                         data-bs-menuitem_name="<%= menuitem.name %>"
@@ -196,7 +196,7 @@
                                                         <i class="bi bi-plus"></i>
                                                     </button>
                                                 <% else %>
-                                                    <button type="button" class="addItemToOrder btn btn-primary" disabled>
+                                                    <button type="button" class="addItemToOrder btn btn-dark" disabled>
                                                         <i class="bi bi-plus"></i>
                                                     </button>
                                                 <% end %>
@@ -280,7 +280,7 @@
         Would you like to start an order for this table?
       </div>
       <div class="modal-footer">
-        <button id="start-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Start</button>
+        <button id="start-order" type="button" data-bs-dismiss="modal" class="btn btn-dark">Start</button>
       </div>
     </div>
   </div>
@@ -364,9 +364,9 @@
       </div>
       <div class="modal-footer">
         <% if @openOrder && @openOrder.nett > 0 %>
-            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Submit Order</button>
+            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-dark">Submit Order</button>
         <% else %>
-            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary" disabled>Submit Order</button>
+            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-dark" disabled>Submit Order</button>
         <% end %>
       </div>
     </div>
@@ -448,9 +448,9 @@
       </div>
       <div class="modal-footer">
         <% if @openOrder && @openOrder.gross > 0 %>
-            <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn btn-primary">Request Bill</button>
+            <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn btn-dark">Request Bill</button>
         <% else %>
-            <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn btn-primary" disabled>Request Bill</button>
+            <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn btn-dark" disabled>Request Bill</button>
         <% end %>
       </div>
     </div>
@@ -563,9 +563,9 @@
       </div>
       <div class="modal-footer">
         <% if @openOrder && @openOrder.gross > 0 %>
-            <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn btn-primary">Confirm Payment</button>
+            <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn btn-dark">Confirm Payment</button>
         <% else %>
-            <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn btn-primary" disabled>Confirm Payment</button>
+            <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn btn-dark" disabled>Confirm Payment</button>
         <% end %>
       </div>
     </div>
@@ -589,7 +589,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button id="addNameToParticipantButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Add</button>
+        <button id="addNameToParticipantButton" type="button" class="btn btn-dark" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Add</button>
       </div>
     </div>
   </div>
@@ -636,7 +636,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button id="addItemToOrderButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Item</button>
+        <button id="addItemToOrderButton" type="button" class="btn btn-dark" data-bs-dismiss="modal"><i class="bi bi-plus"></i> Item</button>
       </div>
     </div>
   </div>
@@ -672,7 +672,7 @@
                   </div>
               </div>
               <div class="modal-footer">
-                <%= form.submit value: 'Filter By', class: 'btn btn-primary' %>
+                <%= form.submit value: 'Filter By', class: 'btn btn-dark' %>
               </div>
           <% end %>
         </div>
