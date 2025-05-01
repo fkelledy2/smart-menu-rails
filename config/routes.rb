@@ -1,6 +1,9 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :features_plans
+  resources :features
+  resources :plans
   resources :restaurantlocales
   resources :tracks
   resources :smartmenus

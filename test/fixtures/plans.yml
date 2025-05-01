@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  key: MyString
+  descriptionKey: MyString
+  attribute1: MyString
+  attribute2: MyString
+  attribute3: MyString
+  attribute4: MyString
+  attribute5: MyString
+  attribut6: MyString
+  status: 1
+  favourite: false
+  pricePerMonth: 9.99
+  pricePerYear: 9.99
+  action: 1
+
+two:
+  key: MyString
+  descriptionKey: MyString
+  attribute1: MyString
+  attribute2: MyString
+  attribute3: MyString
+  attribute4: MyString
+  attribute5: MyString
+  attribut6: MyString
+  status: 1
+  favourite: false
+  pricePerMonth: 9.99
+  pricePerYear: 9.99
+  action: 1

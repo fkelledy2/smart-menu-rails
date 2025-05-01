@@ -14,6 +14,8 @@ class HomeController < ApplicationController
       else
           @demoMenu = Smartmenu.where(restaurant_id: 3, menu_id: 3).first
       end
+      @plans = Plan.all
+      @features = Feature.all
   end
 
   def terms

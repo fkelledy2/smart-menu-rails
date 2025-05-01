@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  plan: one
+  feature: one
+  featurePlanNote: MyString
+  status: 1
+
+two:
+  plan: two
+  feature: two
+  featurePlanNote: MyString
+  status: 1

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_25_175616) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_28_082635) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -79,6 +79,26 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_25_175616) do
     t.integer "sequence"
     t.index ["restaurant_id"], name: "index_employees_on_restaurant_id"
     t.index ["user_id"], name: "index_employees_on_user_id"
+  end
+
+  create_table "features", force: :cascade do |t|
+    t.string "key"
+    t.string "descriptionKey"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "features_plans", force: :cascade do |t|
+    t.bigint "plan_id", null: false
+    t.bigint "feature_id", null: false
+    t.string "featurePlanNote"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feature_id"], name: "index_features_plans_on_feature_id"
+    t.index ["plan_id", "feature_id"], name: "index_features_plans_on_plan_id_and_feature_id", unique: true
+    t.index ["plan_id"], name: "index_features_plans_on_plan_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -477,6 +497,24 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_25_175616) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "plans", force: :cascade do |t|
+    t.string "key"
+    t.string "descriptionKey"
+    t.string "attribute1"
+    t.string "attribute2"
+    t.string "attribute3"
+    t.string "attribute4"
+    t.string "attribute5"
+    t.string "attribut6"
+    t.integer "status"
+    t.boolean "favourite"
+    t.decimal "pricePerMonth"
+    t.decimal "pricePerYear"
+    t.integer "action"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "restaurantavailabilities", force: :cascade do |t|
     t.integer "dayofweek"
     t.integer "starthour"
@@ -662,6 +700,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_25_175616) do
   add_foreign_key "allergyns", "restaurants"
   add_foreign_key "employees", "restaurants"
   add_foreign_key "employees", "users"
+  add_foreign_key "features_plans", "features"
+  add_foreign_key "features_plans", "plans"
   add_foreign_key "genimages", "menuitems"
   add_foreign_key "genimages", "menus"
   add_foreign_key "genimages", "menusections"

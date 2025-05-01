@@ -1,0 +1,2 @@
+class FeaturesPlansController < ApplicationController
+end

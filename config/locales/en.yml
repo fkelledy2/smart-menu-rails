@@ -1,4 +1,38 @@
 en:
+  feature1:
+    key: Feature 1
+  feature2:
+    key: Feature 2
+  feature3:
+    key: Feature 3
+  feature4:
+    key: Feature 4
+  feature5:
+    key: Feature 5
+  feature6:
+    key: Feature 6
+  plan:
+    trial:
+      key: "Trial"
+      attribute1: "Attribute 1"
+      attribute2: "Attribute 2"
+      attribute3: "Attribute 3"
+    pro:
+      key: "Pro"
+      attribute1: "Attribute 1"
+      attribute2: "Attribute 2"
+      attribute3: "Attribute 3"
+      attribute4: "Attribute 4"
+    enterprise:
+      key: "Enterprise"
+      attribute1: "Attribute 1"
+      attribute2: "Attribute 2"
+      attribute3: "Attribute 3"
+      attribute4: "Attribute 4"
+      attribute5: "Attribute 5"
+      attribut6: "Attribute 6"
+    register: "Register"
+    call: "Contact Us"
   home:
     index:
       ctaTitle1: "Menus, only smarter"

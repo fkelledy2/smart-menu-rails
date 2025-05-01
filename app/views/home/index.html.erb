@@ -38,7 +38,7 @@
             <p class="col-md-8 fs-4">
                 <%=t(".ctaBody1")%>
             </p>
-            <a href="#contact_us" class="btn btn-danger btn-lg" type="button"><%=t(".contactUs")%></a>
+            <a href="#contact_us" class="btn btn-danger btn-lg"><%=t(".contactUs")%></a>
           </div>
         </div>
         <div class="carousel-item">
@@ -49,7 +49,7 @@
             <p class="col-md-8 fs-4">
                 <%=t(".ctaBody2")%>
             </p>
-            <%= link_to t('.signUp'), new_user_registration_path, class: "btn btn-danger btn-lg" %>
+            <a href="#contact_us" class="btn btn-danger btn-lg"><%=t(".contactUs")%></a>
           </div>
         </div>
       </div>
@@ -194,6 +194,9 @@
     </div>
   </div>
 
+
+
+
   <div id="testimonials" class="container px-1 py-2">
     <h2 class="pb-2 border-bottom"><%=t(".testimonials")%></h2>
     <p style='text-align:justify;'><%=t(".testimonialsTag")%></p>
@@ -250,54 +253,101 @@
     </div>
   </div>
 
-  <span style='display:none'>
-  <div id="Pricing" class="container px-1 py-2">
-    <h2 class="pb-2 border-bottom"><%=t(".pricing")%></h2>
-    <p style='text-align:justify;'><%=t(".pricingTag")%>Choose from our flexible pricing plans:</p>
+  <div class="container px-1 py-2">
+   <h2 class="pb-2 border-bottom"><%=t(".pricing")%></h2>
+   <p style='text-align:justify;'><%=t(".pricingTag")%></p>
 
-    <div class="container">
-      <div class="card-deck mb-3 text-center">
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Trial</h4>
+   <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+   <% @plans.each do |plan| %>
+      <div class="col">
+        <% if plan.favourite %>
+         <div class="card mb-4 rounded-3 shadow-sm border-primary">
+            <div class="card-header py-3 text-bg-primary border-primary">
+        <% else %>
+          <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+        <% end %>
+            <h4 class="my-0 fw-normal"><%= t(plan.key) %></h4>
           </div>
           <div class="card-body">
-            <h1 class="card-title pricing-card-title">$0 <small class="text-muted">/ mo</small></h1>
+            <% if plan.pricePerMonth %>
+                <h1 class="card-title pricing-card-title">$<%= plan.pricePerMonth %><small class="text-body-secondary fw-light">/mo</small></h1>
+            <% else %>
+                <h1 class="card-title pricing-card-title">Contact<small class="text-body-secondary fw-light"></small></h1>
+            <% end %>
+            <% if plan.pricePerYear %>
+                <h1 class="card-title pricing-card-title">$<%= plan.pricePerYear %><small class="text-body-secondary fw-light">/yr</small></h1>
+            <% else %>
+                <h1 class="card-title pricing-card-title">Us<small class="text-body-secondary fw-light"></small></h1>
+            <% end %>
             <ul class="list-unstyled mt-3 mb-4">
-              <li>Features</li>
+              <% if plan.attribute1 %>
+                  <li><%= t(plan.attribute1) %></li>
+              <% else %>
+                  <li>&nbsp</li>
+              <% end %>
+              <% if plan.attribute2 %>
+                  <li><%= t(plan.attribute2) %></li>
+              <% else %>
+                  <li>&nbsp</li>
+              <% end %>
+              <% if plan.attribute3 %>
+                  <li><%= t(plan.attribute3) %></li>
+              <% else %>
+                  <li>&nbsp</li>
+              <% end %>
+              <% if plan.attribute4 %>
+                  <li><%= t(plan.attribute4) %></li>
+              <% else %>
+                  <li>&nbsp</li>
+              <% end %>
+              <% if plan.attribute5 %>
+                  <li><%= t(plan.attribute5) %></li>
+              <% else %>
+                  <li>&nbsp</li>
+              <% end %>
+              <% if plan.attribut6 %>
+                  <li><%= t(plan.attribut6) %></li>
+              <% else %>
+                  <li>&nbsp</li>
+              <% end %>
             </ul>
-            <%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger btn-lg" %>
-          </div>
-        </div>
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Boutique</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">$15 <small class="text-muted">/ mo</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>Features</li>
-            </ul>
-            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-danger btn-lg" %>
-          </div>
-        </div>
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Enterprise</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">$29 <small class="text-muted">/ mo</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>Features</li>
-            </ul>
-            <a href="#contact_us" class="btn btn-dark btn-lg" type="button"><%=t(".contactUs")%></a>
+            <button type="button" class="w-100 btn btn-lg btn-outline-primary"><%= t('plan.'+plan.action) %></button>
           </div>
         </div>
       </div>
+      <% end %>
     </div>
-  </div>
-  </span>
-  <hr>
+
+   <h2 class="pb-2">Compare plans</h2>
+
+    <div class="table-responsive">
+      <table class="table text-center">
+        <thead>
+          <tr>
+            <th style="width: 34%;"></th>
+            <% @plans.each do |plan| %>
+            <th style="width: 22%;"><%= t(plan.key) %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @features.each do |feature| %>
+          <tr>
+            <th scope="row" class="text-start"><%= t(feature.key) %></th>
+            <% @plans.each do |plan| %>
+            <td>
+                <% if FeaturesPlan.where( plan_id: plan.id, feature_id: feature.id).first %>
+                    <i class="bi bi-check2"></i>
+                <% end %>
+            </td>
+            <% end %>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+   </div>
 
   <div id="contact_us" class="container px-1 py-2" id="hanging-icons">
       <div class="row">
