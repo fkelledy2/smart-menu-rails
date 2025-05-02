@@ -1,36 +1,36 @@
 en:
   feature1:
-    key: Feature 1
+    key: Smart menus
   feature2:
-    key: Feature 2
+    key: Staff ordering
   feature3:
-    key: Feature 3
+    key: Customer ordering
   feature4:
-    key: Feature 4
+    key: Allergen filtering
   feature5:
-    key: Feature 5
+    key: AI Menu translations
   feature6:
-    key: Feature 6
+    key: AI Menu image generation
   plan:
     trial:
       key: "Trial"
-      attribute1: "Attribute 1"
-      attribute2: "Attribute 2"
-      attribute3: "Attribute 3"
+      attribute1: "<li><h3>Restaurants: <span class='badge text-bg-primary'>1</span></h3></li>"
+      attribute2: "<li><h3>Menus / restaurant: <span class='badge text-bg-primary'>1</span></li><br>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Digital Menu Display (Text only)</li><li><i class='bi bi-check-lg'></i> Basic Ordering System (Staff only)</li><li><i class='bi bi-check-lg'></i> Dietary Filters</li><li>&nbsp;</li><li>&nbsp;</li><li>&nbsp;</li>"
     pro:
       key: "Pro"
-      attribute1: "Attribute 1"
-      attribute2: "Attribute 2"
-      attribute3: "Attribute 3"
-      attribute4: "Attribute 4"
+      attribute1: "<li><h3>Restaurants: <span class='badge text-bg-primary'>3</span></h3></li>"
+      attribute2: "<li><h3>Menus / restaurant: <span class='badge text-bg-primary'>3</span></h3></li><br>"
+      attribute3: "<li><strong>Trial Features +</strong></li><li><i class='bi bi-check-lg'></i> Digital Menu Display (Text & Images)</li><i class='bi bi-check-lg'></i> Advanced Ordering System (Staff and customers)</li><li><i class='bi bi-check-lg'></i> Menu Analytics (Top-Selling Dishes, Trends)</li><li><i class='bi bi-check-lg'></i> Multi-Language Support (Basic)<li><li>&nbsp;</li>"
+      attribute4: ""
     enterprise:
       key: "Enterprise"
-      attribute1: "Attribute 1"
-      attribute2: "Attribute 2"
-      attribute3: "Attribute 3"
-      attribute4: "Attribute 4"
-      attribute5: "Attribute 5"
-      attribut6: "Attribute 6"
+      attribute1: "<li><h3>Restaurants: <span class='badge text-bg-primary'>*</span></h3></li>"
+      attribute2: "<li><h3>Menus / restaurant: <span class='badge text-bg-primary'>5</span></h3></li><br>"
+      attribute3: "<li><strong>Pro Features +</strong></li><li><i class='bi bi-check-lg'></i> AI-Powered Smart Recommendations</li><li><i class='bi bi-check-lg'></i> AI Generated Dish Previews</li><li><i class='bi bi-check-lg'></i> Multi-Language Support (AI Translations)</li><li><i class='bi bi-check-lg'></i> Dedicated Customer Support & Setup Assistance</li><li><i class='bi bi-check-lg'></i> Custom Branding</li>"
+      attribute4: ""
+      attribute5: ""
+      attribut6: ""
     register: "Register"
     call: "Contact Us"
   home:

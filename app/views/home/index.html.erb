@@ -282,32 +282,19 @@
             <% end %>
             <ul class="list-unstyled mt-3 mb-4">
               <% if plan.attribute1 %>
-                  <li><%= t(plan.attribute1) %></li>
+                  <%= t(plan.attribute1).html_safe %>
               <% else %>
                   <li>&nbsp</li>
               <% end %>
               <% if plan.attribute2 %>
-                  <li><%= t(plan.attribute2) %></li>
+                  <%= t(plan.attribute2).html_safe %>
               <% else %>
                   <li>&nbsp</li>
               <% end %>
               <% if plan.attribute3 %>
-                  <li><%= t(plan.attribute3) %></li>
-              <% else %>
-                  <li>&nbsp</li>
-              <% end %>
-              <% if plan.attribute4 %>
-                  <li><%= t(plan.attribute4) %></li>
-              <% else %>
-                  <li>&nbsp</li>
-              <% end %>
-              <% if plan.attribute5 %>
-                  <li><%= t(plan.attribute5) %></li>
-              <% else %>
-                  <li>&nbsp</li>
-              <% end %>
-              <% if plan.attribut6 %>
-                  <li><%= t(plan.attribut6) %></li>
+            <div class="text-start">
+                  <%= t(plan.attribute3).html_safe %>
+            </div>
               <% else %>
                   <li>&nbsp</li>
               <% end %>
