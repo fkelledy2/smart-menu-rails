@@ -27,40 +27,29 @@
     </div>
 
 <% else %>
-  <div id="cta-table" style='min-height:450px' class="container px-1 py-2" id="hanging-icons">
-    <div id="heroCarouselAutoplaying" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold">
-                <%=t(".ctaTitle1")%>
-            </h1>
-            <p class="col-md-8 fs-4">
-                <%=t(".ctaBody1")%>
-            </p>
-            <a href="#contact_us" class="btn btn-danger btn-lg"><%=t(".contactUs")%></a>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold">
-                <%=t(".ctaTitle2")%>
-            </h1>
-            <p class="col-md-8 fs-4">
-                <%=t(".ctaBody2")%>
-            </p>
-            <a href="#contact_us" class="btn btn-danger btn-lg"><%=t(".contactUs")%></a>
+
+  <div id="myCarousel" class="carousel carousel-dark slide mb-6" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <svg class="bd-placeholder-img" width="100%" height="300px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><rect width="100%" height="100%" fill="none"/></svg>
+        <div class="container">
+          <div style='left:11%;right:11%;' class="carousel-caption text-start">
+            <h2><%=t(".ctaTitle1")%></h2>
+            <p><%=t(".ctaBody1")%></p>
+            <p><a class="btn btn-danger" href="#contact_us"><%=t(".signup")%></a></p>
           </div>
         </div>
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#heroCarouselAutoplaying" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden"><%=t(".previous")%></span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#heroCarouselAutoplaying" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden"><%=t(".next")%></span>
-      </button>
+      <div class="carousel-item">
+        <svg class="bd-placeholder-img" width="100%" height="300px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><rect width="100%" height="100%" fill="none"/></svg>
+        <div class="container">
+          <div style='left:11%;right:11%;' class="carousel-caption text-start">
+            <h2><%=t(".ctaTitle2")%></h2>
+            <p><%=t(".ctaBody2")%></p>
+            <p><a class="btn btn-danger" href="#contact_us"><%=t(".contactUs")%></a></p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -258,11 +247,11 @@
    <p style='text-align:justify;'><%=t(".pricingTag")%></p>
 
    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-   <% @plans.each do |plan| %>
+    <% @plans.each do |plan| %>
       <div class="col">
         <% if plan.favourite %>
-         <div class="card mb-4 rounded-3 shadow-sm border-primary">
-            <div class="card-header py-3 text-bg-primary border-primary">
+         <div class="card mb-4 rounded-3 shadow-lg">
+            <div class="card-header py-3">
         <% else %>
           <div class="card mb-4 rounded-3 shadow-sm">
             <div class="card-header py-3">
@@ -280,6 +269,7 @@
             <% else %>
                 <h1 class="card-title pricing-card-title">Us<small class="text-body-secondary fw-light"></small></h1>
             <% end %>
+            <div class="text-start">
             <ul class="list-unstyled mt-3 mb-4">
               <% if plan.attribute1 %>
                   <%= t(plan.attribute1).html_safe %>
@@ -292,23 +282,22 @@
                   <li>&nbsp</li>
               <% end %>
               <% if plan.attribute3 %>
-            <div class="text-start">
+                    <hr>
                   <%= t(plan.attribute3).html_safe %>
-            </div>
               <% else %>
                   <li>&nbsp</li>
               <% end %>
             </ul>
-            <button type="button" class="w-100 btn btn-lg btn-outline-primary"><%= t('plan.'+plan.action) %></button>
+            </div>
+            <button type="button" class="w-100 btn btn-danger"><%= t('plan.'+plan.action) %></button>
           </div>
         </div>
       </div>
-      <% end %>
-    </div>
+    <% end %>
+   </div>
 
-   <h2 class="pb-2">Compare plans</h2>
-
-    <div class="table-responsive">
+   <h2 style='display:none' class="pb-2">Compare plans</h2>
+   <div style='display:none' class="table-responsive">
       <table class="table text-center">
         <thead>
           <tr>
