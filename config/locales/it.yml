@@ -1,43 +1,81 @@
 it:
+  feature1:
+    key: Menu Intelligenti
+  feature2:
+    key: Ordinazioni del Personale
+  feature3:
+    key: Filtro Allergeni
+  feature4:
+    key: Ordinazioni Clienti
+  feature5:
+    key: Traduzioni Automatiche del Menu
+  feature6:
+    key: Generazione Immagini del Menu con IA
+  plan:
+    trial:
+      key: "Prova"
+      attribute1: "<li><strong>1</strong> Ristorante</li>"
+      attribute2: "<li><strong>1</strong> Menu</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Visualizzazione Menu Digitale</li><li><i class='bi bi-check-lg'></i> Ordinazioni solo per il personale</li><li><i class='bi bi-check-lg'></i> Filtri Dietetici</li><li>&nbsp;</li><li>&nbsp;</li>"
+    pro:
+      key: "Pro"
+      attribute1: "<li>Fino a <strong>3</strong> Ristoranti</li>"
+      attribute2: "<li><strong>3</strong> Menu per sede</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Visualizzazione Menu Digitale (+Foto)</li><i class='bi bi-check-lg'></i> Ordinazioni Clienti</li><li><i class='bi bi-check-lg'></i> Analisi dei Piatti più Venduti</li><li><i class='bi bi-check-lg'></i> Supporto Multilingue Base</li><li>&nbsp;</li>"
+      attribute4: ""
+    enterprise:
+      key: "Enterprise"
+      attribute1: "<li>Località <strong>Illimitate</strong></li>"
+      attribute2: "<li>Menu <strong>Illimitati</strong></li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Suggerimenti Intelligenti con IA</li><li><i class='bi bi-check-lg'></i> Anteprime Piatti con IA</li><li><i class='bi bi-check-lg'></i> Supporto Multilingue Avanzato</li><li><i class='bi bi-check-lg'></i> Account Manager Dedicato</li><li><i class='bi bi-check-lg'></i> Branding Personalizzato</li>"
+      attribute4: ""
+      attribute5: ""
+      attribut6: ""
+    register: "Registrati"
+    call: "Contattaci"
   home:
     index:
-      ctaTitle1: "Menu, solo più intelligenti"
-      ctaBody1: "Scopri il futuro della ristorazione con il nostro sistema di ordinazione di menu digitale senza soluzione di continuità. Migliora il tuo servizio e migliora l'esperienza dei tuoi clienti attraverso menu che sono semplicemente più intelligenti!"
-      ctaTitle2: "Ristoranti, ottimizzati"
-      ctaBody2: "Ottieni di più, con meno. Aggiungendo menu intelligenti e ordinazioni intelligenti, il tuo personale potrà dedicare il proprio tempo prezioso ai tuoi preziosi clienti."
+      ctaTitle1: "Ottimizza il Servizio. Migliora l'Esperienza."
+      ctaBody1: "Gestisci un ristorante più intelligente con strumenti digitali che lavorano quanto il tuo team. Dai fornelli al tavolo, i nostri menu intelligenti e sistemi di ordinazione liberano il personale per concentrarsi sull’eccellenza del servizio."
+      ctaTitle2: "Qui Inizia il Ristorante Intelligente"
+      ctaBody2: "Fai di più con meno: i nostri menu digitali e strumenti di ordinazione automatica permettono al tuo team di offrire un servizio migliore, senza sovraccarichi."
       contactUs: "Contattaci"
-      signup: "Iscrizione"
-      previous: "Previous"
-      next: "Next"
-      featureTitle1: "Senza contatto"
-      featureDescription1: "In un mondo in cui la sicurezza è fondamentale, i nostri menu digitali offrono un'esperienza completamente senza contatto. I clienti eseguono semplicemente la scansione con il proprio smartphone per navigare, ordinare e pagare riducendo il contatto fisico e promuovendo al tempo stesso un ambiente di ristorazione più sicuro."
-      featureTitle2: "Senza sforzo"
-      featureDescription2: "Dì addio ai menu obsoleti e facilmente danneggiabili. I menu digitali semplificano il processo di ordinazione, consentendo ai clienti di visualizzare il menu ed effettuare ordini secondo i propri ritmi, riducendo al minimo i tempi di attesa sia per gli ospiti che per il personale."
-      featureTitle3: "Preciso"
-      featureDescription3: "Con l'ordinazione digitale, i clienti possono selezionare gli articoli direttamente dal menu digitale, contribuendo a ridurre i problemi di comunicazione e gli errori negli ordini, aumentando la soddisfazione di entrambe le parti."
-      featureTitle4: "Coinvolgente"
-      featureDescription4: "I nostri menu digitali interattivi prendono vita con immagini vivaci, descrizioni di articoli e consigli personalizzati. Effettua facilmente l'upselling con suggerimenti e promozioni mirate, aumentando la spesa e la soddisfazione dei clienti."
-      featureTitle5: "Ambientale"
-      featureDescription5: "Riduci lo spreco di carta e abbraccia la sostenibilità. Eliminando i menu stampati, l'ordinazione digitale supporta i tuoi obiettivi ecologici offrendo allo stesso tempo un'esperienza culinaria moderna."
-      featureTitle6: "Perspicace"
-      featureDescription6: "Ottieni informazioni preziose sulle preferenze dei tuoi clienti. Il nostro sistema raccoglie dati sui modelli di ordinazione, consentendoti di personalizzare le tue offerte e migliorare il servizio sulla base delle informazioni reali dei clienti."
-      demoMenu: "Menù dimostrativo"
-      demoMenuTag: "Scansiona o tocca questo codice QR per vedere di cosa sono capaci i nostri menu intelligenti!"
+      signup: "Iscriviti"
+      previous: "Precedente"
+      next: "Successivo"
+      featureTitle1: "Esperienza Contactless"
+      featureDescription1: "Priorità alla sicurezza degli ospiti con un’esperienza completamente senza contatto. Basta una scansione del QR code per consultare il menu, ordinare e pagare—senza contanti, menu stampati o terminali."
+      featureTitle2: "Servizio Più Veloce, Clienti Più Felici"
+      featureDescription2: "Dì addio ai tempi morti. Con l'ordinazione autonoma, i clienti controllano il ritmo del servizio—riducendo i tempi di attesa e alleggerendo il carico operativo del personale."
+      featureTitle3: "Ordini Accurati, Sempre"
+      featureDescription3: "Riduci gli errori grazie agli ordini digitali inviati direttamente in cucina. Nessun errore di comunicazione, solo precisione e fluidità nel servizio."
+      featureTitle4: "Menu che Vendono da Soli"
+      featureDescription4: "Trasforma il tuo menu in un’esperienza visiva. Foto invitanti, descrizioni accattivanti e suggerimenti intelligenti aiutano a incrementare lo scontrino medio senza sforzo."
+      featureTitle5: "Servizio Sostenibile"
+      featureDescription5: "Elimina la carta e riduci gli sprechi. I nostri menu digitali sostengono i tuoi obiettivi ecologici offrendo un'esperienza moderna e responsabile."
+      featureTitle6: "Dati Reali, Decisioni Intelligenti"
+      featureDescription6: "Accedi subito ai dati più importanti. Scopri i piatti più venduti, le abitudini dei clienti e ottimizza il menu in base alle preferenze reali."
+      demoMenu: "Scopri il Menu Intelligente"
+      demoMenuTag: "Scansiona o tocca il codice QR qui sotto per provare un nuovo modo di servire. I menu digitali rendono il servizio più semplice e coinvolgente."
       numbers: "Numeri"
-      numbersTag: "Le nostre statistiche, ristoranti, menu, ordini e valore in gestione:"
+      numbersTag: "Le nostre statistiche: ristoranti, menu, ordini e valore gestito:"
       restaurants: "Ristoranti"
-      menus: "Menù"
+      menus: "Menu"
       orders: "Ordini"
-      orderValue: "Valore dell'ordine"
+      orderValue: "Valore Ordini"
       testimonials: "Testimonianze"
-      testimonialsTag: "Alcune parole dai nostri clienti soddisfatti:"
-      pricing: "Prezzi"
-      pricingTag: "Scegli tra i nostri piani tariffari flessibili:"
-      emailAddress: "Indirizzo e-mail"
-      emailAddressTag: "Non condivideremo mai la tua email con nessun altro."
+      testimonialsTag: "Cosa dicono i nostri clienti:"
+      pricing: "Prezzi Chiari per Ogni Ristorante"
+      pricingTag: "Scegli il piano che si adatta meglio al tuo locale:"
+      emailAddress: "Indirizzo Email"
+      emailAddressTag: "Non condivideremo mai il tuo indirizzo con nessun altro."
       message: "Messaggio"
       submit: "Invia"
-
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
+      signUp: "Iscriviti"
+      features: "Funzionalità"
   shared:
     navbar:
       restaurants: "Ristoranti"
