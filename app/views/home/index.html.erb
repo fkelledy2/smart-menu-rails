@@ -31,20 +31,20 @@
   <div id="myCarousel" class="carousel carousel-dark slide mb-6" data-bs-ride="carousel">
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <svg class="bd-placeholder-img" width="100%" height="300px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><rect width="100%" height="100%" fill="none"/></svg>
+        <svg class="bd-placeholder-img" width="100%" height="325px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><rect width="100%" height="100%" fill="none"/></svg>
         <div class="container">
           <div style='left:11%;right:11%;' class="carousel-caption text-start">
-            <h2><%=t(".ctaTitle1")%></h2>
+            <h1><%=t(".ctaTitle1")%></h1>
             <p><%=t(".ctaBody1")%></p>
             <p><a class="btn btn-danger" href="#contact_us"><%=t(".signup")%></a></p>
           </div>
         </div>
       </div>
       <div class="carousel-item">
-        <svg class="bd-placeholder-img" width="100%" height="300px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><rect width="100%" height="100%" fill="none"/></svg>
+        <svg class="bd-placeholder-img" width="100%" height="325px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><rect width="100%" height="100%" fill="none"/></svg>
         <div class="container">
           <div style='left:11%;right:11%;' class="carousel-caption text-start">
-            <h2><%=t(".ctaTitle2")%></h2>
+            <h1><%=t(".ctaTitle2")%></h1>
             <p><%=t(".ctaBody2")%></p>
             <p><a class="btn btn-danger" href="#contact_us"><%=t(".contactUs")%></a></p>
           </div>
@@ -260,14 +260,14 @@
           </div>
           <div class="card-body">
             <% if plan.pricePerMonth %>
-                <h1 class="card-title pricing-card-title">$<%= plan.pricePerMonth %><small class="text-body-secondary fw-light">/mo</small></h1>
+                <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= plan.pricePerMonth %><small class="text-body-secondary fw-light">/mo</small></h1>
             <% else %>
-                <h1 class="card-title pricing-card-title">Contact<small class="text-body-secondary fw-light"></small></h1>
+                <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i><small class="text-body-secondary fw-light"></small></h1>
             <% end %>
             <% if plan.pricePerYear %>
-                <h1 class="card-title pricing-card-title">$<%= plan.pricePerYear %><small class="text-body-secondary fw-light">/yr</small></h1>
+                <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= plan.pricePerYear %><small class="text-body-secondary fw-light">/yr</small></h1>
             <% else %>
-                <h1 class="card-title pricing-card-title">Us<small class="text-body-secondary fw-light"></small></h1>
+                <h1 class="card-title pricing-card-title">Let's Talk<small class="text-body-secondary fw-light"></small></h1>
             <% end %>
             <div class="text-start">
             <ul class="list-unstyled mt-3 mb-4">
@@ -339,7 +339,7 @@
                 <label for="inputMessage" class="form-label"><%=t(".message")%></label>
                 <textarea id="inputMessage" class="form-control" aria-label="Message"></textarea>
               </div>
-              <button type="submit" class="float-end btn btn-dark"><%=t(".submit")%></button>
+              <button type="submit" class="float-end btn btn-danger"><%=t(".submit")%></button>
             </form>
         </div>
         <div class="col-1">
