@@ -325,25 +325,28 @@
     </div>
    </div>
 
-  <div id="contact_us" class="container px-1 py-2" id="hanging-icons">
+   <div id="contact_us" class="container px-1 py-2" id="hanging-icons">
       <div class="row">
         <div class="col-12">
             <h2 class="pb-2 border-bottom"><%=t(".contactUs")%></h2>
-            <form>
-              <div class="mb-3">
-                <label for="exampleInputEmail" class="form-label"><%=t(".emailAddress")%></label>
-                <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text"><%=t(".emailAddressTag")%></div>
+            <%= form_with(model: @contact, local: true) do |form| %>
+
+              <div class="form-group row">
+                <div class="mb-3">
+                  <%= form.label :email, class: 'col-form-label' %>
+                  <%= form.email_field :email, class: 'form-control' %>
+                  <div id="emailHelp" class="form-text"><%=t(".emailAddressTag")%></div>
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="inputMessage" class="form-label"><%=t(".message")%></label>
-                <textarea id="inputMessage" class="form-control" aria-label="Message"></textarea>
+              <div class="form-group row">
+                <div class="mb-3">
+                  <%= form.label :message, class: 'col-form-label' %>
+                  <%= form.text_area :message, class: 'form-control' %>
+                </div>
               </div>
-              <button type="submit" class="float-end btn btn-danger"><%=t(".submit")%></button>
-            </form>
-        </div>
-        <div class="col-1">
+              <%= form.submit value: t(".submit"), class: 'float-end btn btn-danger' %>
+            <% end %>
         </div>
       </div>
-  </div>
+   </div>
 <% end %>

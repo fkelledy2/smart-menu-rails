@@ -16,6 +16,7 @@ class HomeController < ApplicationController
       end
       @plans = Plan.all
       @features = Feature.all
+      @contact = Contact.new
   end
 
   def terms
