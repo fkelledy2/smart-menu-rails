@@ -1,4 +1,33 @@
 en:
+  devise:
+    shared:
+      links:
+        forgotYourPassword: Forgot your password?
+        didntReceiverEmailConfirmation: Didn't receive your email confirmation?
+        didntReceiverUnlockInstructions: Didn't receive unlock instructions?
+    registrations:
+      edit:
+        currentPasswordHelp: We need your current password to confirm your changes
+        password: Password
+        passwordHelp: Leave password blank if you don't want to change it
+        confirmPassword: Confirm password
+        currentPassword: Current password
+        account: Account
+        saveChanges: Save Changes
+        deactivateMyAccount: Deactivate my account
+        deactivateMyAccountAreYouSure: Are you sure? You cannot undo this.
+      new:
+        signUp: Sign Up
+        fullName: Full name
+        emailAddress: Email Address
+        password: Password
+        confirmPassword: Confirm Password
+    sessions:
+      new:
+        login: Login
+        emailAddress: Email Address
+        password: Password
+        rememberMe: Remember me
   feature1:
     key: Smart Menus
   feature2:

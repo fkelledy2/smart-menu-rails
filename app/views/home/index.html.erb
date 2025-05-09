@@ -36,7 +36,7 @@
           <div style='left:5%;right:5%;' class="carousel-caption text-start">
             <h1><%=t(".ctaTitle1")%></h1>
             <p><%=t(".ctaBody1")%></p>
-            <p><a class="btn btn-danger" href="#contact_us"><%=t(".signup")%></a></p>
+            <p><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
           </div>
         </div>
       </div>
@@ -289,7 +289,11 @@
               <% end %>
             </ul>
             </div>
-            <button type="button" class="w-100 btn btn-danger"><%= t('plan.'+plan.action) %></button>
+            <% if plan.action == 'register' %>
+                <%= link_to t(".signUp"), new_user_registration_path, class: "w-100 btn btn-danger" %>
+            <% else %>
+                <a class="w-100 btn btn-danger" href="#contact_us"><%= t('plan.'+plan.action) %></a>
+            <% end %>
           </div>
         </div>
       </div>
