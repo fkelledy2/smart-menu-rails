@@ -1,2 +1,8 @@
-json.extract! smartmenu, :id, :slug, :restaurant_id, :menu_id, :tablesetting_id, :created_at, :updated_at
-json.url smartmenu_url(smartmenu, format: :json)
+json.slug smartmenu.slug
+json.restaurant smartmenu.restaurant
+json.menu smartmenu.menu
+json.tablesetting smartmenu.tablesetting
+json.created_at smartmenu.created_at
+json.updated_at smartmenu.updated_at
+json.url smartmenu_url(smartmenu.slug, format: :json)
+
