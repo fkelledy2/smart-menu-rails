@@ -5,8 +5,8 @@ SitemapGenerator::Sitemap.create do
   add '/terms', priority: 0.8, changefreq: 'monthly'
   add '/privacy', priority: 0.5, changefreq: 'monthly'
 
-  # Add dynamic routes
-  Smartmenu.find_each do |smartmenu|
-    add smartmenu_path(smartmenu.slug), lastmod: smartmenu.updated_at
-  end
+#   # Add dynamic routes
+#   Smartmenu.find_each do |smartmenu|
+#     add smartmenu_path(smartmenu.slug), lastmod: smartmenu.updated_at
+#   end
 end
