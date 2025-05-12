@@ -203,6 +203,8 @@ GEM
       activerecord (>= 4.0.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    gmaps-autocomplete-rails (0.3.1)
+      rails (>= 3.1.0)
     hashie (5.0.0)
     http-cookie (1.0.7)
       domain_name (~> 0.5)
@@ -546,11 +548,13 @@ DEPENDENCIES
   devise (~> 4.9)
   dotenv-rails
   friendly_id (~> 5.4)
+  gmaps-autocomplete-rails
   http_accept_language
   httparty
   image_processing (~> 1.12, >= 1.12.1)
   importmap-rails
   jbuilder
+  jquery-rails
   jsbundling-rails
   letter_opener
   madmin

@@ -10,6 +10,7 @@ require("@rails/activestorage").start()
 //require("@rails/actiontext")
 //= require jquery3
 //= require jquery_ujs
+//= require gmaps-auto-complete
 //= require_tree .
 //= require allow_numeric
 //= require cropper
@@ -55,7 +56,7 @@ import './ordritems'
 import './restaurantavailabilities'
 import './menuavailabilities'
 import './metrics'
-import './tracks'
+//import './tracks'
 import './restaurantlocales'
 
 document.addEventListener("turbo:load", () => {

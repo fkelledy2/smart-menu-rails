@@ -42,16 +42,14 @@
         <span class="float-md-end"><%= form.label :address, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-        <div style="px;width:100%" id="place-picker-box">
-            <div style="width:100%" id="place-picker-container">
-                <gmpx-place-picker style="width:100%; disabled" placeholder="<%= restaurant.address1 %>" disabled></gmpx-place-picker>
-            </div>
-        </div>
-        <%= form.hidden_field :address1, value: restaurant.address1 %>
-        <%= form.hidden_field :latitude, value: restaurant.latitude %>
-        <%= form.hidden_field :longitude, value: restaurant.longitude %>
-        <%= form.hidden_field :postcode, value: restaurant.postcode %>
-        <%= form.hidden_field :country, value: restaurant.country %>
+        <%= form.text_field :address1, value: restaurant.address1, class: "form-control" %>
+        <%= form.text_field :latitude, value: restaurant.latitude, class: "form-control" %>
+        <%= form.text_field :longitude, value: restaurant.longitude, class: "form-control" %>
+        <%= form.text_field :country, value: restaurant.country %>
+        <%= form.text_field :address2, value: restaurant.address2, class: "form-control" %>
+        <%= form.text_field :city, value: restaurant.city, class: "form-control" %>
+        <%= form.text_field :state, value: restaurant.state, class: "form-control" %>
+        <%= form.text_field :postcode, value: restaurant.postcode, class: "form-control" %>
     </div>
   </div>
 

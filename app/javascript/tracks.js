@@ -1,101 +1,101 @@
 document.addEventListener("turbo:load", () => {
 
-        window.onSpotifyWebPlaybackSDKReady = () => {
-            const token = $('#spotifyAccessToken').text();
-            const player = new Spotify.Player({
-                name: 'Mellow Menu :: Jukebox',
-                getOAuthToken: cb => { cb(token); },
-                volume: 0.75
-            });
-
-            // Ready
-            player.addListener('ready', ({ device_id }) => {
-                if( document.getElementById('togglePlay') != null ) {
-                    console.log('Ready with Device ID', device_id);
-                    document.getElementById("togglePlay").disabled = false;
-                    document.getElementById("previousTrack").disabled = false;
-                    document.getElementById("nextTrack").disabled = false;
-                    $('#spotifyConnect').addClass('btn-success').removeClass('btn-dark');
-                    $('#togglePlay').addClass('btn-success').removeClass('btn-dark');
-                    $('#previousTrack').addClass('btn-success').removeClass('btn-dark');
-                    $('#nextTrack').addClass('btn-success').removeClass('btn-dark');
-                }
-            });
-
-            // Not Ready
-            player.addListener('not_ready', ({ device_id }) => {
-                if( document.getElementById('togglePlay') != null ) {
-                    console.log('Device ID has gone offline', device_id);
-                    document.getElementById("togglePlay").disabled = true;
-                    document.getElementById("previousTrack").disabled = true;
-                    document.getElementById("nextTrack").disabled = true;
-                    $('#spotifyConnect').addClass('btn-dark').removeClass('btn-success');
-                    $('#togglePlay').addClass('btn-dark').removeClass('btn-success');
-                    $('#previousTrack').addClass('btn-dark').removeClass('btn-success');
-                    $('#nextTrack').addClass('btn-dark').removeClass('btn-success');
-                }
-            });
-
-            player.addListener('initialization_error', ({ message }) => {
-                if( document.getElementById('togglePlay') != null ) {
-                    console.error(message);
-                    document.getElementById("togglePlay").disabled = true;
-                    document.getElementById("previousTrack").disabled = true;
-                    document.getElementById("nextTrack").disabled = true;
-                }
-            });
-
-            player.addListener('authentication_error', ({ message }) => {
-                if( document.getElementById('togglePlay') != null ) {
-                    console.error(message);
-                    document.getElementById("togglePlay").disabled = true;
-                    document.getElementById("previousTrack").disabled = true;
-                    document.getElementById("nextTrack").disabled = true;
-                }
-            });
-
-            player.addListener('account_error', ({ message }) => {
-                if( document.getElementById('togglePlay') != null ) {
-                    console.error(message);
-                    document.getElementById("togglePlay").disabled = true;
-                    document.getElementById("previousTrack").disabled = true;
-                    document.getElementById("nextTrack").disabled = true;
-                }
-            });
-            player.addListener('player_state_changed', ({
-              position,
-              duration,
-              track_window: { current_track }
-            }) => {
-              console.log('Currently Playing', current_track);
-              console.log('Position in Song', position);
-              console.log('Duration of Song', duration);
-              console.log( 'searching for: '+current_track.name );
-              console.log( cleanString(current_track.name));
-              document.getElementById(cleanString(current_track.name)).scrollIntoView({ behavior: 'smooth' });
-            });
-
-            function cleanString(name) {
-                return name.replace(/\s/g, '').replace(/[^\w\s]/g, '');
-            }
-            if( document.getElementById('togglePlay') != null ) {
-                document.getElementById('togglePlay').onclick = function() {
-                  player.togglePlay();
-                };
-            }
-
-            if( document.getElementById('nextTrack') != null ) {
-                document.getElementById('nextTrack').onclick = function() {
-                  player.nextTrack();
-                };
-            }
-            if( document.getElementById('previousTrack') != null ) {
-                document.getElementById('previousTrack').onclick = function() {
-                  player.previousTrack();
-                };
-            }
-            player.connect();
-        }
+//        window.onSpotifyWebPlaybackSDKReady = () => {
+//            const token = $('#spotifyAccessToken').text();
+//            const player = new Spotify.Player({
+//                name: 'Mellow Menu :: Jukebox',
+//                getOAuthToken: cb => { cb(token); },
+//                volume: 0.75
+//            });
+//
+//            // Ready
+//            player.addListener('ready', ({ device_id }) => {
+//                if( document.getElementById('togglePlay') != null ) {
+//                    console.log('Ready with Device ID', device_id);
+//                    document.getElementById("togglePlay").disabled = false;
+//                    document.getElementById("previousTrack").disabled = false;
+//                    document.getElementById("nextTrack").disabled = false;
+//                    $('#spotifyConnect').addClass('btn-success').removeClass('btn-dark');
+//                    $('#togglePlay').addClass('btn-success').removeClass('btn-dark');
+//                    $('#previousTrack').addClass('btn-success').removeClass('btn-dark');
+//                    $('#nextTrack').addClass('btn-success').removeClass('btn-dark');
+//                }
+//            });
+//
+//            // Not Ready
+//            player.addListener('not_ready', ({ device_id }) => {
+//                if( document.getElementById('togglePlay') != null ) {
+//                    console.log('Device ID has gone offline', device_id);
+//                    document.getElementById("togglePlay").disabled = true;
+//                    document.getElementById("previousTrack").disabled = true;
+//                    document.getElementById("nextTrack").disabled = true;
+//                    $('#spotifyConnect').addClass('btn-dark').removeClass('btn-success');
+//                    $('#togglePlay').addClass('btn-dark').removeClass('btn-success');
+//                    $('#previousTrack').addClass('btn-dark').removeClass('btn-success');
+//                    $('#nextTrack').addClass('btn-dark').removeClass('btn-success');
+//                }
+//            });
+//
+//            player.addListener('initialization_error', ({ message }) => {
+//                if( document.getElementById('togglePlay') != null ) {
+//                    console.error(message);
+//                    document.getElementById("togglePlay").disabled = true;
+//                    document.getElementById("previousTrack").disabled = true;
+//                    document.getElementById("nextTrack").disabled = true;
+//                }
+//            });
+//
+//            player.addListener('authentication_error', ({ message }) => {
+//                if( document.getElementById('togglePlay') != null ) {
+//                    console.error(message);
+//                    document.getElementById("togglePlay").disabled = true;
+//                    document.getElementById("previousTrack").disabled = true;
+//                    document.getElementById("nextTrack").disabled = true;
+//                }
+//            });
+//
+//            player.addListener('account_error', ({ message }) => {
+//                if( document.getElementById('togglePlay') != null ) {
+//                    console.error(message);
+//                    document.getElementById("togglePlay").disabled = true;
+//                    document.getElementById("previousTrack").disabled = true;
+//                    document.getElementById("nextTrack").disabled = true;
+//                }
+//            });
+//            player.addListener('player_state_changed', ({
+//              position,
+//              duration,
+//              track_window: { current_track }
+//            }) => {
+//              console.log('Currently Playing', current_track);
+//              console.log('Position in Song', position);
+//              console.log('Duration of Song', duration);
+//              console.log( 'searching for: '+current_track.name );
+//              console.log( cleanString(current_track.name));
+//              document.getElementById(cleanString(current_track.name)).scrollIntoView({ behavior: 'smooth' });
+//            });
+//
+//            function cleanString(name) {
+//                return name.replace(/\s/g, '').replace(/[^\w\s]/g, '');
+//            }
+//            if( document.getElementById('togglePlay') != null ) {
+//                document.getElementById('togglePlay').onclick = function() {
+//                  player.togglePlay();
+//                };
+//            }
+//
+//            if( document.getElementById('nextTrack') != null ) {
+//                document.getElementById('nextTrack').onclick = function() {
+//                  player.nextTrack();
+//                };
+//            }
+//            if( document.getElementById('previousTrack') != null ) {
+//                document.getElementById('previousTrack').onclick = function() {
+//                  player.previousTrack();
+//                };
+//            }
+//            player.connect();
+//        }
 
     if ($("#restaurantTabs").is(':visible')) {
 

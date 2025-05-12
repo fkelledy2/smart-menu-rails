@@ -1,5 +1,9 @@
 document.addEventListener("turbo:load", () => {
 
+    $(document).on("keydown", "form", function(event) {
+        return event.key != "Enter";
+    });
+
     $(".qrSlug").each(function(){
         var qrSlug = $(this).text();
         var qrCode = new QRCodeStyling({
@@ -193,31 +197,33 @@ document.addEventListener("turbo:load", () => {
 
 
     if ($("#restaurantTabs").is(':visible') || $("#newRestaurant").is(':visible')) {
-        const placePicker = document.querySelector('gmpx-place-picker');
-            try {
-                placePicker.addEventListener('gmpx-placechange', () => {
-                  const place = placePicker.value;
-                  if( place && place.id ) {
-                      $('#restaurant_address1').val(place.formattedAddress);
-                  }
-                  if( place && place.addressComponents ) {
-                      $('#restaurant_postcode').val("n/a");
-                      for (let i = 0; i < place.addressComponents.length; i++) {
-                        if( place.addressComponents[i].types.includes('country') ) {
-                            $("#restaurant_country").val(place.addressComponents[i].shortText).change();
+      var autocomplete = new google.maps.places.Autocomplete(document.getElementById("restaurant_address1"));
+      google.maps.event.addListener(autocomplete, "place_changed", function() {
+        var place = autocomplete.getPlace();
+        if( place ) {
+           console.log(JSON.stringify(place));
+           $('#restaurant_address1').val(place.formatted_address);
+           for (let i = 0; i < place.address_components.length; i++) {
+                        if( place.address_components[i].types.includes('country') ) {
+                            $("#restaurant_country").val(place.address_components[i].short_name).change();
                         }
-                        if( place.addressComponents[i].types.includes('postal_code') ) {
-                            $('#restaurant_postcode').val(place.addressComponents[i].longText);
+                        if( place.address_components[i].types.includes('postal_code') ) {
+                            $('#restaurant_postcode').val(place.address_components[i].long_name);
                         }
-                      }
-                  }
-                  if( place && place.location ) {
-                      $('#restaurant_latitude').val(place.location.lat);
-                      $('#restaurant_longitude').val(place.location.lng);
-                  }
-                });
-            } catch( err ) {
-            }
+                        if( place.address_components[i].types.includes('administrative_area_level_3') ) {
+                            $('#restaurant_address2').val(place.address_components[i].long_name);
+                        }
+                        if( place.address_components[i].types.includes('administrative_area_level_2') ) {
+                            $('#restaurant_city').val(place.address_components[i].long_name);
+                        }
+                        if( place.address_components[i].types.includes('administrative_area_level_1') ) {
+                            $('#restaurant_state').val(place.address_components[i].long_name);
+                        }
+           }
+           $('#restaurant_latitude').val(place.geometry.location.lat);
+           $('#restaurant_longitude').val(place.geometry.location.lng);
+        }
+      });
     }
 
     if ($("#restaurantTabs").is(':visible')) {
