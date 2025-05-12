@@ -201,24 +201,23 @@ document.addEventListener("turbo:load", () => {
       google.maps.event.addListener(autocomplete, "place_changed", function() {
         var place = autocomplete.getPlace();
         if( place ) {
-           console.log(JSON.stringify(place));
            $('#restaurant_address1').val(place.formatted_address);
            for (let i = 0; i < place.address_components.length; i++) {
-                        if( place.address_components[i].types.includes('country') ) {
-                            $("#restaurant_country").val(place.address_components[i].short_name).change();
-                        }
-                        if( place.address_components[i].types.includes('postal_code') ) {
-                            $('#restaurant_postcode').val(place.address_components[i].long_name);
-                        }
-                        if( place.address_components[i].types.includes('administrative_area_level_3') ) {
-                            $('#restaurant_address2').val(place.address_components[i].long_name);
-                        }
-                        if( place.address_components[i].types.includes('administrative_area_level_2') ) {
-                            $('#restaurant_city').val(place.address_components[i].long_name);
-                        }
-                        if( place.address_components[i].types.includes('administrative_area_level_1') ) {
-                            $('#restaurant_state').val(place.address_components[i].long_name);
-                        }
+            if( place.address_components[i].types.includes('country') ) {
+                $("#restaurant_country").val(place.address_components[i].short_name).change();
+            }
+            if( place.address_components[i].types.includes('postal_code') ) {
+                $('#restaurant_postcode').val(place.address_components[i].long_name);
+            }
+            if( place.address_components[i].types.includes('administrative_area_level_3') ) {
+                $('#restaurant_address2').val(place.address_components[i].long_name);
+            }
+            if( place.address_components[i].types.includes('administrative_area_level_2') ) {
+                $('#restaurant_city').val(place.address_components[i].long_name);
+            }
+            if( place.address_components[i].types.includes('administrative_area_level_1') ) {
+                $('#restaurant_state').val(place.address_components[i].long_name);
+            }
            }
            $('#restaurant_latitude').val(place.geometry.location.lat);
            $('#restaurant_longitude').val(place.geometry.location.lng);
@@ -288,10 +287,10 @@ document.addEventListener("turbo:load", () => {
       });
     }
 
-    if (document.getElementById("restaurant_country") != null) {
-      new TomSelect("#restaurant_country",{
-      });
-    }
+//    if (document.getElementById("restaurant_country") != null) {
+//      new TomSelect("#restaurant_country",{
+//      });
+//    }
 
     if ($("#restaurant-table").is(':visible')) {
         // Restaurants

@@ -43,13 +43,13 @@
     </div>
     <div class="col-9">
         <%= form.text_field :address1, value: restaurant.address1, class: "form-control" %>
-        <%= form.text_field :latitude, value: restaurant.latitude, class: "form-control" %>
-        <%= form.text_field :longitude, value: restaurant.longitude, class: "form-control" %>
-        <%= form.text_field :country, value: restaurant.country %>
-        <%= form.text_field :address2, value: restaurant.address2, class: "form-control" %>
-        <%= form.text_field :city, value: restaurant.city, class: "form-control" %>
-        <%= form.text_field :state, value: restaurant.state, class: "form-control" %>
-        <%= form.text_field :postcode, value: restaurant.postcode, class: "form-control" %>
+        <%= form.hidden_field :latitude, value: restaurant.latitude, class: "form-control" %>
+        <%= form.hidden_field :longitude, value: restaurant.longitude, class: "form-control" %>
+        <%= form.hidden_field :country, value: restaurant.country %>
+        <%= form.hidden_field :address2, value: restaurant.address2, class: "form-control" %>
+        <%= form.hidden_field :city, value: restaurant.city, class: "form-control" %>
+        <%= form.hidden_field :state, value: restaurant.state, class: "form-control" %>
+        <%= form.hidden_field :postcode, value: restaurant.postcode, class: "form-control" %>
     </div>
   </div>
 
