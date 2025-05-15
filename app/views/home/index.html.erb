@@ -58,15 +58,6 @@
     <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
       <div class="col d-flex align-items-start">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i style="color:green;" class="bi bi-fingerprint"></i></h2>
-        </div>
-        <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle1")%></h3>
-          <p style='min-height:120px;'><%=t(".featureDescription1")%></p>
-        </div>
-      </div>
-      <div class="col d-flex align-items-start">
-        <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-activity"></i></h2>
         </div>
         <div>
@@ -83,7 +74,6 @@
           <p style='min-height:120px;'><%=t(".featureDescription3")%></p>
         </div>
       </div>
-
       <div class="col d-flex align-items-start">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-emoji-heart-eyes"></i></h2>
@@ -91,6 +81,15 @@
         <div>
           <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle4")%></h3>
           <p style='min-height:120px;'><%=t(".featureDescription4")%></p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+            <h2><i style="color:green;" class="bi bi-graph-up-arrow"></i></h2>
+        </div>
+        <div>
+          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle6")%></h3>
+          <p style='min-height:120px;'><%=t(".featureDescription6")%></p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -104,11 +103,11 @@
       </div>
       <div class="col d-flex align-items-start">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i style="color:green;" class="bi bi-graph-up-arrow"></i></h2>
+            <h2><i style="color:green;" class="bi bi-fingerprint"></i></h2>
         </div>
         <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle6")%></h3>
-          <p style='min-height:120px;'><%=t(".featureDescription6")%></p>
+          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle1")%></h3>
+          <p style='min-height:120px;'><%=t(".featureDescription1")%></p>
         </div>
       </div>
     </div>
@@ -119,6 +118,12 @@
     <span style='display:none' id="qrHost"><%= @qrHost %></span>
     <div id="demo-table" class="container px-1 py-2">
       <h2 class="pb-2 border-bottom"><%=t(".demoMenu")%></h2>
+      <div class="embed-responsive embed-responsive-16by9">
+            <video class="rounded-video video-container" width="100%" controls autoplay loop muted>
+              <source src="<%= asset_path('smart-menu.mp4') %>" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+      </div>
       <p style='text-align:justify;'><%=t(".demoMenuTag")%></p>
       <div class="row g-4 py-5 row-cols-12 row-cols-12 row-cols-lg-12">
             <span style='display:none' class="qrSlug"><%= @demoMenu.slug %></span>
