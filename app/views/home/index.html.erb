@@ -27,53 +27,31 @@
     </div>
 
 <% else %>
-
-  <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel" >
+  <div style="padding-top:10px">
+  <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel" style="z-index:-10000;min-height:500px;background: url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover; border-radius: 10px;">
     <div class="carousel-inner">
-        <div class="carousel-item active">
-        <div class="container">
-          <div style='left:5%;right:5%;' class="carousel-caption text-start">
-            <h1><%=t(".ctaTitle1")%></h1>
-            <p><%=t(".ctaBody1")%></p>
-            <p><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
-          </div>
-        </div>
-        </div>
-        <div class="carousel-item">
-        <div class="container">
-          <div style='left:5%;right:5%;' class="carousel-caption text-start">
-            <h1><%=t(".ctaTitle1")%></h1>
-            <p><%=t(".ctaBody1")%></p>
-            <p><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
-          </div>
-        </div>
-        </div>
-    </div>
-</div>
-
-  <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel" style="z-index:-10000;min-height:500px;background: url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover;">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
+      <div class="carousel-item justify-content-center active">
         <%= image_tag "https://placehold.co/1x500/transparent/transparent", class: "img-responsive bg-item parallax img-fluid" %>
         <div class="container">
           <div style='left:5%;right:5%;' class="carousel-caption text-start">
             <h1><%=t(".ctaTitle1")%></h1>
-            <p><%=t(".ctaBody1")%></p>
+            <p><strong><%=t(".ctaBody1")%></strong></p>
             <p><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
           </div>
         </div>
       </div>
-      <div class="carousel-item">
+      <div class="carousel-item justify-content-center">
         <%= image_tag "https://placehold.co/1x500/transparent/transparent", class: "img-responsive bg-item parallax img-fluid" %>
         <div class="container">
           <div style='left:5%;right:5%;' class="carousel-caption text-start">
             <h1><%=t(".ctaTitle2")%></h1>
-            <p><%=t(".ctaBody2")%></p>
+            <p><strong><%=t(".ctaBody2")%></strong></p>
             <p><a class="btn btn-danger" href="#contact_us"><%=t(".contactUs")%></a></p>
           </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <div class="container px-1 py-2">
