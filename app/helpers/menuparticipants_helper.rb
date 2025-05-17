@@ -1,0 +1,2 @@
+module MenuparticipantsHelper
+end

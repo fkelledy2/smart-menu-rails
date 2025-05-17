@@ -173,7 +173,6 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
             @tablesetting.save
-            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         if( ordr_params[:status] = 20 )
             if current_user
@@ -200,7 +199,6 @@ class OrdrsController < ApplicationController
                     oi.save
                 end
             end
-            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         if( ordr_params[:status] = 30 )
             if current_user
@@ -221,7 +219,6 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 1
             @tablesetting.save
-            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
         if( ordr_params[:status] = 40 )
             if current_user
@@ -242,11 +239,9 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
             @tablesetting.save
-            ActionCable.server.broadcast("ordr_channel", @ordr)
         end
-        format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully updated." }
         format.json { render :show, status: :ok, location: @ordr }
-#         format.turbo_stream
+        ActionCable.server.broadcast("ordr_channel", @ordr)
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @ordr.errors, status: :unprocessable_entity }

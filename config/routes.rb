@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :menuparticipants
   resources :contacts, only: [:new, :create]
   resources :features_plans
   resources :features

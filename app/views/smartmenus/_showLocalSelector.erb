@@ -5,10 +5,14 @@
                 <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
                     <img src="<%= @restaurant.getLocale(@ordrparticipant.preferredlocale).flag %>" class="rounded-1 border border-white flag-icon-selected">
                 <% else %>
-                    <% if @restaurant.defaultLocale %>
-                        <img src="<%= @restaurant.defaultLocale.flag %>" tooltip="<%= @restaurant.defaultLocale.language %>" class="rounded-1 border border-white flag-icon-selected">
+                    <% if @menuparticipant && @menuparticipant.preferredlocale %>
+                        <img src="<%= @restaurant.getLocale(@menuparticipant.preferredlocale).flag %>" class="rounded-1 border border-white flag-icon-selected">
                     <% else %>
-                        <i class="bi bi-translate"></i>
+                        <% if @restaurant.defaultLocale %>
+                            <img src="<%= @restaurant.defaultLocale.flag %>" tooltip="<%= @restaurant.defaultLocale.language %>" class="rounded-1 border border-white flag-icon-selected">
+                        <% else %>
+                            <i class="bi bi-translate"></i>
+                        <% end %>
                     <% end %>
                 <% end %>
             </button>

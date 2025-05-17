@@ -1,4 +1,4 @@
-<% if 1==1 %>
+<% if 1==2 %>
     <% if @openOrder %>
         <div style='display:none' id="currentOrder"><%= @openOrder.id %></div>
         <div style='display:none' id="currentOrder"><%= @openOrder.status %></div>
@@ -17,6 +17,9 @@
     <% end %>
     <% if @ordrparticipant %>
         <div style='display:none' id="currentParticipant"><%= @ordrparticipant.id %></div>
+    <% end %>
+    <% if @menuparticipant %>
+        <div style='display:none' id="menuParticipant"><%= @menuparticipant.id %></div>
     <% end %>
 <% else %>
     <div style="margin-top: 20px" class="card">
@@ -87,6 +90,16 @@
                     </div>
                     <div class="col-6">
                         <div id="currentParticipant"><%= @ordrparticipant.id %></div>
+                    </div>
+                </div>
+            <% end %>
+            <% if @menuparticipant %>
+                <div class="row">
+                    <div class="col-6">
+                        menuParticipant: cccc
+                    </div>
+                    <div class="col-6">
+                        <div id="menuParticipant"><%= @menuparticipant.id %> : <%= @menuparticipant.preferredlocale %></div>
                     </div>
                 </div>
             <% end %>

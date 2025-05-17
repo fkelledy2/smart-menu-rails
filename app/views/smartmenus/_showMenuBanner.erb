@@ -92,7 +92,11 @@
                         <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
                             <%= menusection.localisedName(@ordrparticipant.preferredlocale) %>
                         <% else %>
-                            <%= menusection.name %>
+                            <% if @menuparticipant && @menuparticipant.preferredlocale %>
+                              <%= menusection.localisedName(@menuparticipant.preferredlocale) %>
+                            <% else %>
+                              <%= menusection.name %>
+                            <% end %>
                         <% end %>
                       </a>
                 <% end %>

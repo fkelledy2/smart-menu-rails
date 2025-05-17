@@ -84,12 +84,22 @@ document.addEventListener("turbo:load", () => {
 
     $( ".setparticipantlocale" ).on( "click", function(event) {
        var locale = $(this).attr('href');
-       let ordrparticipant = {
-            'ordrparticipant': {
-                'preferredlocale': locale
-            }
-       };
-       patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant);
+       if( $('#currentParticipant').text() ) {
+           let ordrparticipant = {
+                 'ordrparticipant': {
+                     'preferredlocale': locale
+                 }
+           };
+           patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant);
+       }
+       if( $('#menuParticipant').text() ) {
+           let menuparticipant = {
+                 'menuparticipant': {
+                     'preferredlocale': locale
+                 }
+            };
+           patch( '/menuparticipants/'+$('#menuParticipant').text(), menuparticipant);
+       }
        event.preventDefault();
     });
 
