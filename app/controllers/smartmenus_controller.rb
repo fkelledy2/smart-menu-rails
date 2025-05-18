@@ -35,6 +35,10 @@ class SmartmenusController < ApplicationController
                 @ep = Ordrparticipant.where( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s ).first
                 if @ep == nil
                     @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s);
+                    @menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
+                    if @menuparticipant
+                        @ordrparticipant.preferredlocale = @menuparticipant.preferredlocale
+                    end
                     @ordrparticipant.save
                     @ordraction = Ordraction.new( ordrparticipant_id: @ordrparticipant.id, ordr: @openOrder, action: 0)
                     @ordraction.save
@@ -107,19 +111,20 @@ class SmartmenusController < ApplicationController
     def set_smartmenu
       begin
           @smartmenu = Smartmenu.where( slug: params[:id]).first
-          @restaurant = @smartmenu.restaurant
-          @menu = @smartmenu.menu
-          @tablesetting = @smartmenu.tablesetting
-
-          if current_user
-                if( @menu == nil or @menu.restaurant.user != current_user )
-                    redirect_to root_url
-                end
-          end
-          if @menu.restaurant.currency
-                @restaurantCurrency = ISO4217::Currency.from_code(@menu.restaurant.currency)
-          else
-                @restaurantCurrency = ISO4217::Currency.from_code('USD')
+          if @smartmenu
+              @restaurant = @smartmenu.restaurant
+              @menu = @smartmenu.menu
+              @tablesetting = @smartmenu.tablesetting
+              if current_user
+                    if( @menu == nil or @menu.restaurant.user != current_user )
+                        redirect_to root_url
+                    end
+              end
+              if @restaurant.currency
+                    @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
+              else
+                    @restaurantCurrency = ISO4217::Currency.from_code('USD')
+              end
           end
       rescue ActiveRecord::RecordNotFound => e
             redirect_to root_url

@@ -28,7 +28,10 @@
 
 <% else %>
   <div style="padding-top:10px">
-  <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel" style="z-index:-10000;min-height:500px;background: url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover; border-radius: 10px;">
+  <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel"
+
+  style="z-index:-10000;min-height:500px;background: radial-gradient(circle, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 100%),url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover; border-radius: 10px;">
+
     <div class="carousel-inner">
       <div class="carousel-item justify-content-center active">
         <%= image_tag "https://placehold.co/1x500/transparent/transparent", class: "img-responsive bg-item parallax img-fluid" %>
@@ -62,8 +65,8 @@
             <h2><i style="color:green;" class="bi bi-activity"></i></h2>
         </div>
         <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle2")%></h3>
-          <p style='min-height:120px;'><%=t(".featureDescription2")%></p>
+          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle2").html_safe %></h3>
+          <p style='min-height:120px;text-align:justify'><%=t(".featureDescription2").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -71,8 +74,8 @@
             <h2><i style="color:green;" class="bi bi-bullseye"></i></h2>
         </div>
         <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle3")%></h3>
-          <p style='min-height:120px;'><%=t(".featureDescription3")%></p>
+          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle3").html_safe %></h3>
+          <p style='min-height:120px;text-align:justify'><%=t(".featureDescription3").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -80,8 +83,8 @@
             <h2><i style="color:green;" class="bi bi-emoji-heart-eyes"></i></h2>
         </div>
         <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle4")%></h3>
-          <p style='min-height:120px;'><%=t(".featureDescription4")%></p>
+          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle4").html_safe %></h3>
+          <p style='min-height:120px;text-align:justify'><%=t(".featureDescription4").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -89,8 +92,8 @@
             <h2><i style="color:green;" class="bi bi-graph-up-arrow"></i></h2>
         </div>
         <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle6")%></h3>
-          <p style='min-height:120px;'><%=t(".featureDescription6")%></p>
+          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle6").html_safe %></h3>
+          <p style='min-height:120px;text-align:justify'><%=t(".featureDescription6").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -98,17 +101,8 @@
             <h2><i style="color:green;" class="bi bi-tree"></i></h2>
         </div>
         <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle5")%></h3>
-          <p style='min-height:120px;'><%=t(".featureDescription5")%></p>
-        </div>
-      </div>
-      <div class="col d-flex align-items-start">
-        <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i style="color:green;" class="bi bi-fingerprint"></i></h2>
-        </div>
-        <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle1")%></h3>
-          <p style='min-height:120px;'><%=t(".featureDescription1")%></p>
+          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle5").html_safe %></h3>
+          <p style='min-height:120px;text-align:justify'><%=t(".featureDescription5").html_safe %></p>
         </div>
       </div>
     </div>
@@ -119,18 +113,20 @@
     <span style='display:none' id="qrHost"><%= @qrHost %></span>
     <div id="demo-table" class="container px-1 py-2">
       <h2 class="pb-2 border-bottom"><%=t(".demoMenu")%></h2>
-      <p style='text-align:justify;'><%=t(".demoMenuTag")%></p>
       <div class="row g-4 py-2 row-cols-12 row-cols-12 row-cols-lg-12 align-items-center">
             <span style='display:none' class="qrSlug"><%= @demoMenu.slug %></span>
             <div class="col-sm-12 col-md-12 col-lg-8">
               <div class="embed-responsive embed-responsive-16by9">
-                    <video class="video-container" width="100%" loop muted playsinline autoplay>
+                  <div class="video-container">
+                    <video class="rounded-video" width="100%" loop muted playsinline autoplay>
                       <source src="<%= asset_path('smart-menu.mp4') %>" type="video/mp4">
                       Your browser does not support the video tag.
                     </video>
+                  </div>
               </div>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-4">
+                <h6 style='text-align:center;'><%=t(".demoMenuTag").html_safe %></h6>
                 <div class="d-flex justify-content-center">
                     <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
                         <div id="<%= @demoMenu.slug %>">
