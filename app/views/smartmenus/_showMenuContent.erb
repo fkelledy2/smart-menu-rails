@@ -64,14 +64,12 @@
                         </div>
                 <% end %>
                 <div class="row">
-                    <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).order(:sequence).each do |menuitem| %>
-                        <% if menuitem.status != 'archived' %>
-                            <% if @ordrparticipant == nil || @ordrparticipant && (@ordrparticipant.allergyns & menuitem.allergyns).empty? %>
-                                <% if current_user %>
-                                    <%= render "showMenuitemStaff", menuitem: menuitem %>
-                                <% else %>
-                                    <%= render "showMenuitemHorizontal", menuitem: menuitem %>
-                                <% end %>
+                    <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).where(status: 'active').order(:sequence).each do |menuitem| %>
+                        <% if @ordrparticipant == nil || @ordrparticipant && (@ordrparticipant.allergyns & menuitem.allergyns).empty? %>
+                            <% if current_user %>
+                                <%= render "showMenuitemStaff", menuitem: menuitem %>
+                            <% else %>
+                                <%= render "showMenuitemHorizontal", menuitem: menuitem %>
                             <% end %>
                         <% end %>
                     <% end %>
