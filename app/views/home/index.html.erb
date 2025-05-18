@@ -28,9 +28,9 @@
 
 <% else %>
   <div style="padding-top:10px">
-  <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel"
+  <div id="myCarousel" class="carousel slide mb-6 background-container" data-bs-ride="carousel"
 
-  style="z-index:-10000;min-height:500px;background: radial-gradient(circle, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 100%),url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover; border-radius: 10px;">
+  style="background: radial-gradient(circle, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 100%),url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover; border-radius: 10px;">
 
     <div class="carousel-inner">
       <div class="carousel-item justify-content-center active">
@@ -39,7 +39,7 @@
           <div style='left:5%;right:5%;' class="carousel-caption text-start">
             <h1><%=t(".ctaTitle1")%></h1>
             <p><strong><%=t(".ctaBody1")%></strong></p>
-            <p><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
+            <p style="z-index:+10000;"><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
           </div>
         </div>
       </div>
