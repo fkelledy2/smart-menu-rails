@@ -123,6 +123,9 @@ class MetricsController < ApplicationController
           @starter.favourite = false
           @starter.pricePerMonth = 29
           @starter.pricePerYear = 290
+          @starter.itemspermenu = 50
+          @starter.languages = 1
+          @starter.locations = 1
           @starter.action = 0
           @starter.save
 
@@ -139,6 +142,9 @@ class MetricsController < ApplicationController
           @pro.favourite = true
           @pro.pricePerMonth = 79
           @pro.pricePerYear = 790
+          @pro.itemspermenu = 100
+          @pro.languages = 4
+          @pro.locations = 3
           @pro.action = 0
           @pro.save
 
@@ -156,6 +162,9 @@ class MetricsController < ApplicationController
           @business.favourite = false
           @business.pricePerMonth = 149
           @business.pricePerYear = 1490
+          @business.itemspermenu = -1
+          @business.languages = -1
+          @business.locations = 10
           @business.action = 0
           @business.save
 
@@ -169,6 +178,9 @@ class MetricsController < ApplicationController
           @enterprise.attribute5 = "plan.enterprise.attribute5"
           @enterprise.attribut6 = "plan.enterprise.attribut6"
           @enterprise.status = 0
+          @enterprise.itemspermenu = -1
+          @enterprise.languages = -1
+          @enterprise.locations = -1
           @enterprise.favourite = false
           @enterprise.action = 1
           @enterprise.save

@@ -9,4 +9,28 @@ class Plan < ApplicationRecord
     register: 0,
     call: 1,
   }
+
+  def getLanguages
+      if languages != -1
+          languages
+      else
+          "Unlimited"
+      end
+  end
+
+  def getLocations
+      if locations != -1
+          locations
+      else
+          "Unlimited"
+      end
+  end
+
+  def getItemsPerMenu
+      if itemspermenu != -1
+          itemspermenu
+      else
+          "Unlimited"
+      end
+  end
 end
