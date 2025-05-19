@@ -69,11 +69,11 @@ class MetricsController < ApplicationController
       @metric.totalOrderValue = Ordr.all.sum(:gross)
       @metric.save
 
-      if Plan.count > 0
-          FeaturesPlan.delete_all
-          Plan.delete_all
-          Feature.delete_all
-#       if Plan.count == 0
+#       if Plan.count > 0
+#           FeaturesPlan.delete_all
+#           Plan.delete_all
+#           Feature.delete_all
+      if Plan.count == 0
           @feature1 = Feature.new()
           @feature1.key = "feature1.key"
           @feature1.descriptionKey = "feature1.description"
