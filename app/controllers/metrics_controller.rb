@@ -69,11 +69,11 @@ class MetricsController < ApplicationController
       @metric.totalOrderValue = Ordr.all.sum(:gross)
       @metric.save
 
-#       if Plan.count > 0
-#           FeaturesPlan.delete_all
-#           Plan.delete_all
-#           Feature.delete_all
-      if Plan.count == 0
+      if Plan.count > 0
+          FeaturesPlan.delete_all
+          Plan.delete_all
+          Feature.delete_all
+#       if Plan.count == 0
           @feature1 = Feature.new()
           @feature1.key = "feature1.key"
           @feature1.descriptionKey = "feature1.description"
@@ -110,18 +110,21 @@ class MetricsController < ApplicationController
           @feature6.status = 0
           @feature6.save
 
-          @trial = Plan.new()
-          @trial.key = "plan.trial.key"
-          @trial.descriptionKey = "plan.trial.description"
-          @trial.attribute1 = "plan.trial.attribute1"
-          @trial.attribute2 = "plan.trial.attribute2"
-          @trial.attribute3 = "plan.trial.attribute3"
-          @trial.status = 0
-          @trial.favourite = false
-          @trial.pricePerMonth = 10
-          @trial.pricePerYear = 100
-          @trial.action = 0
-          @trial.save
+          @starter = Plan.new()
+          @starter.key = "plan.starter.key"
+          @starter.descriptionKey = "plan.starter.description"
+          @starter.attribute1 = "plan.starter.attribute1"
+          @starter.attribute2 = "plan.starter.attribute2"
+          @starter.attribute3 = "plan.starter.attribute3"
+          @starter.attribute4 = "plan.starter.attribute4"
+          @starter.attribute5 = "plan.starter.attribut5"
+          @starter.attribut6 = "plan.starter.attribut6"
+          @starter.status = 0
+          @starter.favourite = false
+          @starter.pricePerMonth = 29
+          @starter.pricePerYear = 290
+          @starter.action = 0
+          @starter.save
 
           @pro = Plan.new()
           @pro.key = "plan.pro.key"
@@ -130,13 +133,32 @@ class MetricsController < ApplicationController
           @pro.attribute2 = "plan.pro.attribute2"
           @pro.attribute3 = "plan.pro.attribute3"
           @pro.attribute4 = "plan.pro.attribute4"
+          @pro.attribute5 = "plan.pro.attribute5"
+          @pro.attribut6 = "plan.pro.attribut6"
           @pro.status = 0
           @pro.favourite = true
-          @pro.pricePerMonth = 15
-          @pro.pricePerYear = 150
+          @pro.pricePerMonth = 79
+          @pro.pricePerYear = 790
           @pro.action = 0
-
           @pro.save
+
+
+          @business = Plan.new()
+          @business.key = "plan.business.key"
+          @business.descriptionKey = "plan.business.description"
+          @business.attribute1 = "plan.business.attribute1"
+          @business.attribute2 = "plan.business.attribute2"
+          @business.attribute3 = "plan.business.attribute3"
+          @business.attribute4 = "plan.business.attribute4"
+          @business.attribute5 = "plan.business.attribute5"
+          @business.attribut6 = "plan.business.attribut6"
+          @business.status = 0
+          @business.favourite = false
+          @business.pricePerMonth = 149
+          @business.pricePerYear = 1490
+          @business.action = 0
+          @business.save
+
           @enterprise = Plan.new()
           @enterprise.key = "plan.enterprise.key"
           @enterprise.descriptionKey = "plan.enterprise.description"
@@ -151,96 +173,96 @@ class MetricsController < ApplicationController
           @enterprise.action = 1
           @enterprise.save
 
-          @feature1Plan1 = FeaturesPlan.new()
-          @feature1Plan1.feature = @feature1
-          @feature1Plan1.plan = @trial
-          @feature1Plan1.featurePlanNote = "feature1.trial.note"
-          @feature1Plan1.status = 0
-          @feature1Plan1.save
-          @feature1Plan2 = FeaturesPlan.new()
-          @feature1Plan2.feature = @feature1
-          @feature1Plan2.plan = @pro
-          @feature1Plan2.featurePlanNote = "feature1.pro.note"
-          @feature1Plan2.status = 0
-          @feature1Plan2.save
-          @feature1Plan3 = FeaturesPlan.new()
-          @feature1Plan3.feature = @feature1
-          @feature1Plan3.plan = @enterprise
-          @feature1Plan3.featurePlanNote = "feature1.enterprise.note"
-          @feature1Plan3.status = 0
-          @feature1Plan3.save
-
-          @feature2Plan1 = FeaturesPlan.new()
-          @feature2Plan1.feature = @feature2
-          @feature2Plan1.plan = @trial
-          @feature2Plan1.featurePlanNote = "feature2.trial.note"
-          @feature2Plan1.status = 0
-          @feature2Plan1.save
-          @feature2Plan2 = FeaturesPlan.new()
-          @feature2Plan2.feature = @feature2
-          @feature2Plan2.plan = @pro
-          @feature2Plan2.featurePlanNote = "feature2.pro.note"
-          @feature2Plan2.status = 0
-          @feature2Plan2.save
-          @feature2Plan3 = FeaturesPlan.new()
-          @feature2Plan3.feature = @feature2
-          @feature2Plan3.plan = @enterprise
-          @feature2Plan3.featurePlanNote = "feature2.enterprise.note"
-          @feature2Plan3.status = 0
-          @feature2Plan3.save
-
-          @feature3Plan2 = FeaturesPlan.new()
-          @feature3Plan2.feature = @feature3
-          @feature3Plan2.plan = @pro
-          @feature3Plan2.featurePlanNote = "feature3.pro.note"
-          @feature3Plan2.status = 0
-          @feature3Plan2.save
-          @feature3Plan3 = FeaturesPlan.new()
-          @feature3Plan3.feature = @feature3
-          @feature3Plan3.plan = @enterprise
-          @feature3Plan3.featurePlanNote = "feature3.enterprise.note"
-          @feature3Plan3.status = 0
-          @feature3Plan3.save
-
-          @feature4Plan1 = FeaturesPlan.new()
-          @feature4Plan1.feature = @feature4
-          @feature4Plan1.plan = @trial
-          @feature4Plan1.featurePlanNote = "feature4.trial.note"
-          @feature4Plan1.status = 0
-          @feature4Plan1.save
-          @feature4Plan2 = FeaturesPlan.new()
-          @feature4Plan2.feature = @feature4
-          @feature4Plan2.plan = @pro
-          @feature4Plan2.featurePlanNote = "feature4.pro.note"
-          @feature4Plan2.status = 0
-          @feature4Plan2.save
-          @feature4Plan3 = FeaturesPlan.new()
-          @feature4Plan3.feature = @feature4
-          @feature4Plan3.plan = @enterprise
-          @feature4Plan3.featurePlanNote = "feature4.enterprise.note"
-          @feature4Plan3.status = 0
-          @feature4Plan3.save
-
-
-          @feature5Plan2 = FeaturesPlan.new()
-          @feature5Plan2.feature = @feature5
-          @feature5Plan2.plan = @pro
-          @feature5Plan2.featurePlanNote = "feature5.pro.note"
-          @feature5Plan2.status = 0
-          @feature5Plan2.save
-          @feature5Plan3 = FeaturesPlan.new()
-          @feature5Plan3.feature = @feature5
-          @feature5Plan3.plan = @enterprise
-          @feature5Plan3.featurePlanNote = "feature5.enterprise.note"
-          @feature5Plan3.status = 0
-          @feature5Plan3.save
-
-          @feature6Plan3 = FeaturesPlan.new()
-          @feature6Plan3.feature = @feature6
-          @feature6Plan3.plan = @enterprise
-          @feature6Plan3.featurePlanNote = "feature6.enterprise.note"
-          @feature6Plan3.status = 0
-          @feature6Plan3.save
+#           @feature1Plan1 = FeaturesPlan.new()
+#           @feature1Plan1.feature = @feature1
+#           @feature1Plan1.plan = @trial
+#           @feature1Plan1.featurePlanNote = "feature1.trial.note"
+#           @feature1Plan1.status = 0
+#           @feature1Plan1.save
+#           @feature1Plan2 = FeaturesPlan.new()
+#           @feature1Plan2.feature = @feature1
+#           @feature1Plan2.plan = @pro
+#           @feature1Plan2.featurePlanNote = "feature1.pro.note"
+#           @feature1Plan2.status = 0
+#           @feature1Plan2.save
+#           @feature1Plan3 = FeaturesPlan.new()
+#           @feature1Plan3.feature = @feature1
+#           @feature1Plan3.plan = @enterprise
+#           @feature1Plan3.featurePlanNote = "feature1.enterprise.note"
+#           @feature1Plan3.status = 0
+#           @feature1Plan3.save
+#
+#           @feature2Plan1 = FeaturesPlan.new()
+#           @feature2Plan1.feature = @feature2
+#           @feature2Plan1.plan = @trial
+#           @feature2Plan1.featurePlanNote = "feature2.trial.note"
+#           @feature2Plan1.status = 0
+#           @feature2Plan1.save
+#           @feature2Plan2 = FeaturesPlan.new()
+#           @feature2Plan2.feature = @feature2
+#           @feature2Plan2.plan = @pro
+#           @feature2Plan2.featurePlanNote = "feature2.pro.note"
+#           @feature2Plan2.status = 0
+#           @feature2Plan2.save
+#           @feature2Plan3 = FeaturesPlan.new()
+#           @feature2Plan3.feature = @feature2
+#           @feature2Plan3.plan = @enterprise
+#           @feature2Plan3.featurePlanNote = "feature2.enterprise.note"
+#           @feature2Plan3.status = 0
+#           @feature2Plan3.save
+#
+#           @feature3Plan2 = FeaturesPlan.new()
+#           @feature3Plan2.feature = @feature3
+#           @feature3Plan2.plan = @pro
+#           @feature3Plan2.featurePlanNote = "feature3.pro.note"
+#           @feature3Plan2.status = 0
+#           @feature3Plan2.save
+#           @feature3Plan3 = FeaturesPlan.new()
+#           @feature3Plan3.feature = @feature3
+#           @feature3Plan3.plan = @enterprise
+#           @feature3Plan3.featurePlanNote = "feature3.enterprise.note"
+#           @feature3Plan3.status = 0
+#           @feature3Plan3.save
+#
+#           @feature4Plan1 = FeaturesPlan.new()
+#           @feature4Plan1.feature = @feature4
+#           @feature4Plan1.plan = @trial
+#           @feature4Plan1.featurePlanNote = "feature4.trial.note"
+#           @feature4Plan1.status = 0
+#           @feature4Plan1.save
+#           @feature4Plan2 = FeaturesPlan.new()
+#           @feature4Plan2.feature = @feature4
+#           @feature4Plan2.plan = @pro
+#           @feature4Plan2.featurePlanNote = "feature4.pro.note"
+#           @feature4Plan2.status = 0
+#           @feature4Plan2.save
+#           @feature4Plan3 = FeaturesPlan.new()
+#           @feature4Plan3.feature = @feature4
+#           @feature4Plan3.plan = @enterprise
+#           @feature4Plan3.featurePlanNote = "feature4.enterprise.note"
+#           @feature4Plan3.status = 0
+#           @feature4Plan3.save
+#
+#
+#           @feature5Plan2 = FeaturesPlan.new()
+#           @feature5Plan2.feature = @feature5
+#           @feature5Plan2.plan = @pro
+#           @feature5Plan2.featurePlanNote = "feature5.pro.note"
+#           @feature5Plan2.status = 0
+#           @feature5Plan2.save
+#           @feature5Plan3 = FeaturesPlan.new()
+#           @feature5Plan3.feature = @feature5
+#           @feature5Plan3.plan = @enterprise
+#           @feature5Plan3.featurePlanNote = "feature5.enterprise.note"
+#           @feature5Plan3.status = 0
+#           @feature5Plan3.save
+#
+#           @feature6Plan3 = FeaturesPlan.new()
+#           @feature6Plan3.feature = @feature6
+#           @feature6Plan3.plan = @enterprise
+#           @feature6Plan3.featurePlanNote = "feature6.enterprise.note"
+#           @feature6Plan3.status = 0
+#           @feature6Plan3.save
 
       end
     end

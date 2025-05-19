@@ -41,22 +41,35 @@ en:
   feature6:
     key: AI Menu image generation
   plan:
-    trial:
-      key: "Trial"
-      attribute1: "<li><strong>1</strong> Restaurant</li>"
-      attribute2: "<li><strong>1</strong> Menu</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Digital Menu Display</li><li><i class='bi bi-check-lg'></i> Staff-only Ordering</li><li><i class='bi bi-check-lg'></i> Dietary Filters</li><li>&nbsp;</li><li>&nbsp;</li>"
+    starter:
+      key: "Starter"
+      attribute1: "<li><i class='bi bi-check-lg'></i> For small cafes</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> QR location</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>50</strong> menu items</li><li><i class='bi bi-check-lg'></i> <strong>1</strong> language</li><li><i class='bi bi-check-lg'></i> Staff ordering</li><li><i class='bi bi-check-lg'></i> Email support</li><li>&nbsp;</li>"
+      attribute4: ""
+      attribute5: ""
+      attribut6: ""
     pro:
       key: "Pro"
-      attribute1: "<li>Up to <strong>3</strong> Restaurants</h3></li>"
-      attribute2: "<li><strong>3</strong> Menus per location</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Digital Menu Display (+Photos)</li><i class='bi bi-check-lg'></i> Customer Ordering</li><li><i class='bi bi-check-lg'></i> Analytics for Top-Sellers</li><li><i class='bi bi-check-lg'></i> Basic Multi-Language Support<li><li>&nbsp;</li>"
+      attribute1: "<li><i class='bi bi-check-lg'></i> For growing restaurants</li></li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> Up to <strong>3</strong> QR locations</li></li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>500</strong> menu items</li><li><i class='bi bi-check-lg'></i> Up to <strong>4</strong> languages</li><li><i class='bi bi-check-lg'></i> Staff & customer ordering</li><li><i class='bi bi-check-lg'></i> AI menu item images</li><li><i class='bi bi-check-lg'></i> Priority email support</li>"
       attribute4: ""
+      attribute5: ""
+      attribut6: ""
+    business:
+      key: "Business"
+      attribute1: "<li><i class='bi bi-check-lg'></i> For multi-location venues</li></li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> Up to <strong>10</strong> QR locations</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>Unlimited</strong> menu items</li><li><i class='bi bi-check-lg'></i> <strong>Unlimited</strong> languages</li><li><i class='bi bi-check-lg'></i> Inventory management</li><li><i class='bi bi-check-lg'></i> AI assisted branding</li><li><i class='bi bi-check-lg'></i> Priority email support</li>"
+      attribute4: ""
+      attribute5: ""
+      attribut6: ""
     enterprise:
       key: "Enterprise"
-      attribute1: "<li><strong>Unlimited</strong> Locations</li>"
-      attribute2: "<li><strong>Unlimited</strong> Menus</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> AI Smart Suggestions</li><li><i class='bi bi-check-lg'></i> AI Dish Previews</li><li><i class='bi bi-check-lg'></i> Full Multi-Language Support</li><li><i class='bi bi-check-lg'></i> Dedicated Account Manager</li><li><i class='bi bi-check-lg'></i> Custom Branding</li>"
+      attribute1: "<li><i class='bi bi-check-lg'></i> For large restaurant chains</li></li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>Unlimited</strong> QR locations</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>Unlimited</strong> menu items</li><li><i class='bi bi-check-lg'></i> <strong>Unlimited</strong> languages</li><li><i class='bi bi-check-lg'></i> Data insights & analytics</li><li><i class='bi bi-check-lg'></i> Dedicated account manager</li><li><i class='bi bi-check-lg'></i> Priority email support</li>"
       attribute4: ""
       attribute5: ""
       attribut6: ""

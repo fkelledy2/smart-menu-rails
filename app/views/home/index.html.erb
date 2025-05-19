@@ -187,9 +187,6 @@
     </div>
   </div>
 
-
-
-
   <div id="testimonials" class="container px-1 py-2">
     <h2 class="pb-2 border-bottom"><%=t(".testimonials")%></h2>
     <p style='text-align:justify;'><%=t(".testimonialsTag")%></p>
@@ -250,7 +247,7 @@
    <h2 class="pb-2 border-bottom"><%=t(".pricing")%></h2>
    <p style='text-align:justify;'><%=t(".pricingTag")%></p>
 
-   <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+   <div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
     <% @plans.each do |plan| %>
       <div class="col">
         <% if plan.favourite %>
@@ -263,16 +260,20 @@
             <h4 class="my-0 fw-normal"><%= t(plan.key) %></h4>
           </div>
           <div class="card-body">
-            <% if plan.pricePerMonth %>
-                <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerMonth, precision: 0) %><small class="text-body-secondary fw-light">/mo</small></h1>
-            <% else %>
-                <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i><small class="text-body-secondary fw-light"></small></h1>
-            <% end %>
-            <% if plan.pricePerYear %>
-                <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerYear, precision: 0) %><small class="text-body-secondary fw-light">/yr</small></h1>
-            <% else %>
-                <h1 class="card-title pricing-card-title"><%=t(".contactUs")%><small class="text-body-secondary fw-light"></small></h1>
-            <% end %>
+            <div>
+                <% if plan.pricePerMonth %>
+                    <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerMonth, precision: 0) %><small class="text-body-secondary fw-light">/mo</small></h1>
+                <% else %>
+                    <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i><small class="text-body-secondary fw-light"></small></h1>
+                <% end %>
+            </div>
+            <div style='display:none'>
+                <% if plan.pricePerYear %>
+                    <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerYear, precision: 0) %><small class="text-body-secondary fw-light">/yr</small></h1>
+                <% else %>
+                    <h1 class="card-title pricing-card-title"><%=t(".contactUs")%><small class="text-body-secondary fw-light"></small></h1>
+                <% end %>
+            </div>
             <div class="text-start">
             <ul class="list-unstyled mt-3 mb-4">
               <% if plan.attribute1 %>
