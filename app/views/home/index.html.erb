@@ -33,7 +33,6 @@
       <% if @current_user.plan == nil %>
 
         <div class="col-lg-4 offset-lg-4">
-            <% if @userplan && @userplan.user %>
                 <br>
                 <br>
                 <br>
@@ -51,7 +50,6 @@
                     <%= f.submit t(".saveChanges"), class: 'btn btn-lg btn-danger' %>
                   </div>
                 <% end %>
-            <% end %>
           </div>
 
       <% else %>
