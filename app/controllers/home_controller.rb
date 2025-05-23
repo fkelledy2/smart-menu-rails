@@ -18,6 +18,7 @@ class HomeController < ApplicationController
         @userplan = Userplan.where( user_id: @current_user.id).first
       else
         @userplan = Userplan.new
+        @userplan.plan = Plan.first
       end
       @plans = Plan.all
       @features = Feature.all
