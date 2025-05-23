@@ -14,9 +14,6 @@ class HomeController < ApplicationController
       else
           @demoMenu = Smartmenu.where(restaurant_id: 3, menu_id: 3).first
       end
-      if @userplan == nil
-          @userplan = Userplan.new
-      end
       @plans = Plan.all
       @features = Feature.all
       @contact = Contact.new

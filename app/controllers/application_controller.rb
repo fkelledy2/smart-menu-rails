@@ -22,6 +22,8 @@ class ApplicationController < ActionController::Base
             @current_employee = Employee.where(user_id: current_user.id).first
             @restaurants = Restaurant.where( user: current_user)
             @userplan = Userplan.where( user_id: @current_user.id).first
+        else
+            @userplan = Userplan.new
         end
     end
 
