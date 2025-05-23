@@ -1,0 +1,68 @@
+  <div class="container px-1 py-2">
+   <h2 class="text-center"><%= t(".selectPlan").html_safe %></h2>
+   <div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
+    <% @plans.each do |plan| %>
+      <div class="col">
+        <% if plan == @userplan.plan %>
+         <div class="card mb-4 rounded-3 shadow-lg">
+            <div class="card-header bg-danger text-white py-3">
+        <% else %>
+          <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+        <% end %>
+            <h4 class="my-0 fw-normal"><%= t(plan.key) %></h4>
+          </div>
+          <div class="card-body">
+            <div>
+                <% if plan.pricePerMonth %>
+                    <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerMonth, precision: 0) %><small class="text-body-secondary fw-light">/mo</small></h1>
+                <% else %>
+                    <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i><small class="text-body-secondary fw-light"></small></h1>
+                <% end %>
+            </div>
+            <div style='display:none'>
+                <% if plan.pricePerYear %>
+                    <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerYear, precision: 0) %><small class="text-body-secondary fw-light">/yr</small></h1>
+                <% else %>
+                    <h1 class="card-title pricing-card-title"><%=t(".contactUs")%><small class="text-body-secondary fw-light"></small></h1>
+                <% end %>
+            </div>
+            <div class="text-start">
+            <ul class="list-unstyled mt-3 mb-4">
+              <% if plan.attribute1 %>
+                  <%= t(plan.attribute1, locations: plan.locations).html_safe %>
+              <% else %>
+                  <li>&nbsp</li>
+              <% end %>
+              <% if plan.attribute2 %>
+                  <%= t(plan.attribute2, locations: plan.getLocations, dishes: plan.getItemsPerMenu, languages: plan.getLanguages).html_safe %>
+              <% else %>
+                  <li>&nbsp</li>
+              <% end %>
+              <% if plan.attribute3 %>
+                    <hr>
+                  <%= t(plan.attribute3, locations: plan.getLocations, dishes: plan.getItemsPerMenu, languages: plan.getLanguages).html_safe %>
+              <% else %>
+                  <li>&nbsp</li>
+              <% end %>
+            </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+   </div>
+
+        <div class="col-lg-4 offset-lg-4">
+            <br>
+            <%= form_with(model: @userplan) do |f| %>
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1"><%= f.label :plan %></span>
+                <%= f.select :plan_id, options_for_select(Plan.all.collect { |p| [t(p.key), p.id] }, f.object.plan_id), {}, { class: 'form-select'}%>
+                <%= f.hidden_field :user_id, value: @current_user.id %>
+              </div>
+              <div class="mb-3 d-grid">
+                <%= f.submit t(".saveChanges"), class: 'btn btn-lg btn-danger' %>
+              </div>
+            <% end %>
+          </div>

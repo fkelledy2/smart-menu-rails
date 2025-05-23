@@ -1,0 +1,16 @@
+<div class="page-header">
+  <%= link_to userplans_path, class: 'btn btn-default' do %>
+    All Userplans
+  <% end %>
+  <%= link_to edit_userplan_path(@userplan), class: 'btn btn-dark' do %>
+    Edit
+  <% end %>
+  <h1>Show userplan</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>User:</dt>
+  <dd><%= @userplan.user %></dd>
+  <dt>Plan:</dt>
+  <dd><%= @userplan.plan %></dd>
+</dl>

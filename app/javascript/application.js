@@ -99,3 +99,8 @@ document.addEventListener("turbo:load", () => {
 window.fadeIn = function(obj) {
     $(obj).fadeIn(1000);
 }
+
+if ($("#user_plan").is(':visible')) {
+    new TomSelect("#user_plan",{
+    });
+}

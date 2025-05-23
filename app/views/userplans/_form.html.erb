@@ -1,0 +1,22 @@
+<%= form_with(model: userplan) do |form| %>
+  <%= form.hidden_field :user_id, value: @current_user.id %>
+  <div class="mb-3">
+    <%= form.label :plan_id, class: 'form-label' %>
+      <%= form.select :plan_id, options_for_select(Plan.all.collect { |p| [t(p.key), p.id] }), {}, { class: 'form-select'}%>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <% if userplan.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', userplan, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+    <%= form.submit class: 'btn btn-dark' %>
+    <% if userplan.persisted? %>
+      <%= link_to "Cancel", userplan, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", userplans_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

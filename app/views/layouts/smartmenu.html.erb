@@ -17,8 +17,17 @@
     .tabulator-row-even {
         background-color: #ffffff !important;
     }
+    .disabled .ts-control {
+        opacity: 1.0;
+        background-color: #fafafa;
+    }
+    .ts-dropdown, .ts-control, .ts-control input {
+        color: #000000;
+        padding-left:12px;
+        font-size: 16px;
+        line-height: 18px;
+    }
 </style>
-
   <head>
     <%= render 'shared/head' %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>

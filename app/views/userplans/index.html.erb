@@ -1,0 +1,45 @@
+
+
+
+<div class="row">
+  <div class="col-sm-6">
+    <h1>Userplans</h1>
+  </div>
+
+  <div class="col-sm-6 text-end">
+  <%= link_to new_userplan_path, class: 'btn btn-dark' do %>
+    Add New Userplan
+  <% end %>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+    
+
+            <th>User</th>
+            <th>Plan</th>
+            
+          <th></th>
+        
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @userplans.each do |userplan| %>
+        <%= content_tag :tr, id: dom_id(userplan), class: dom_class(userplan) do %>
+          
+
+                      <td><%= userplan.user %></td>
+                      <td><%= userplan.plan %></td>
+          
+          
+            <td><%= link_to 'Show', userplan %></td>
+          
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

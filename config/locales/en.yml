@@ -1,4 +1,8 @@
 en:
+  userplans:
+    edit:
+      selectPlan: Choose Plan
+      saveChanges: Update
   devise:
     shared:
       links:
@@ -7,6 +11,8 @@ en:
         didntReceiverUnlockInstructions: Didn't receive unlock instructions?
     registrations:
       edit:
+        selectPlan: Select Plan
+        billing: Billing
         currentPasswordHelp: We need your current password to confirm your changes
         password: Password
         passwordHelp: Leave password blank if you don't want to change it
@@ -78,6 +84,9 @@ en:
     call: "Contact Us"
   home:
     index:
+      welcome: Welcome!
+      selectPlan: Please <strong>select a plan</strong> to proceed.
+      saveChanges: Save
       ctaTitle1: "Streamline Service. Elevate Experience."
       ctaBody1: "Run a smarter restaurant with digital tools that work as hard as your team. From kitchen to customer, our smart menus and ordering systems free up your staff to focus on what matters most—exceptional service."
       ctaTitle2: "Smarter Restaurants Start Here"
@@ -139,6 +148,7 @@ en:
       signUp: "Sign Up"
       login: "Login"
       settings: "Settings"
+      billing: "Billing"
       whatsNew: "What's New"
       adminArea: "Admin Area"
     footer:

@@ -1,31 +1,83 @@
+<style>
+    ::-webkit-scrollbar {
+        height: 0px;
+        width: 4px;
+        border: 1px solid #d5d5d5;
+    }
+    .form-control:disabled {
+        background-color: #fafafa;
+        opacity: 1;
+    }
+    .tabulator-row-odd {
+        background-color: #ffffff !important;
+    }
+    .tabulator-row-even {
+        background-color: #ffffff !important;
+    }
+    .disabled .ts-control {
+        opacity: 1.0;
+        background-color: #fafafa;
+    }
+    .ts-dropdown, .ts-control, .ts-control input {
+        border: 0px;
+        color: #000000;
+        padding-left:12px;
+        font-size: 16px;
+        line-height: 18px;
+    }
+</style>
+
 <% if current_user %>
 
     <div style='padding-top:20px' class="row">
-      <div class="col-6">
-        <h1><%=t(".restaurants")%> </h1>
-      </div>
-      <div class="col-6 text-end">
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-          <div class="btn-group" role="group">
-            <button id="restaurant-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
-              <%=t(".actions")%>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
-              <li><a id="activate-restaurant" class="dropdown-item" href="#"><%=t(".activate")%></a></li>
-              <li><a id="deactivate-restaurant" class="dropdown-item" href="#"><%=t(".deactivate")%></a></li>
-            </ul>
-          </div>
-          <button type="button" class="btn btn-dark">
-            <%= link_to new_restaurant_path, class: 'link-light' do %>
-              <i class="bi bi-plus"></i>
-            <% end %>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div style="padding-top:10px" class="table-borderless" id="restaurant-table">
-    </div>
+      <% if @current_user.plan == nil %>
 
+        <div class="col-lg-4 offset-lg-4">
+            <br>
+            <br>
+            <br>
+            <h1 class="text-center"><%= t(".welcome").html_safe %></h1>
+            <br>
+            <h2 class="text-center"><%= t(".selectPlan").html_safe %></h2>
+            <br>
+            <%= form_with(model: @userplan) do |f| %>
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1"><%= f.label :plan %></span>
+                <%= f.select :plan_id, options_for_select(Plan.all.collect { |p| [t(p.key), p.id] }, f.object.plan), {}, { class: 'form-select'}%>
+                <%= f.hidden_field :user_id, value: @current_user.id %>
+              </div>
+              <div class="mb-3 d-grid">
+                <%= f.submit t(".saveChanges"), class: 'btn btn-lg btn-danger' %>
+              </div>
+            <% end %>
+          </div>
+
+      <% else %>
+          <div class="col-6">
+            <h1><%=t(".restaurants")%> </h1>
+          </div>
+          <div class="col-6 text-end">
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+              <div class="btn-group" role="group">
+                <button id="restaurant-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
+                  <%=t(".actions")%>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
+                  <li><a id="activate-restaurant" class="dropdown-item" href="#"><%=t(".activate")%></a></li>
+                  <li><a id="deactivate-restaurant" class="dropdown-item" href="#"><%=t(".deactivate")%></a></li>
+                </ul>
+              </div>
+              <button type="button" class="btn btn-dark">
+                <%= link_to new_restaurant_path, class: 'link-light' do %>
+                  <i class="bi bi-plus"></i>
+                <% end %>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div style="padding-top:10px" class="table-borderless" id="restaurant-table">
+        </div>
+      <% end %>
 <% else %>
   <div style="padding-top:10px">
   <div id="myCarousel" class="carousel slide mb-6 background-container" data-bs-ride="carousel"
@@ -246,13 +298,12 @@
   <div class="container px-1 py-2">
    <h2 class="pb-2 border-bottom"><%=t(".pricing")%></h2>
    <p style='text-align:justify;'><%=t(".pricingTag")%></p>
-
    <div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
     <% @plans.each do |plan| %>
       <div class="col">
         <% if plan.favourite %>
          <div class="card mb-4 rounded-3 shadow-lg">
-            <div class="card-header py-3">
+            <div class="card-header bg-danger text-white py-3 py-3">
         <% else %>
           <div class="card mb-4 rounded-3 shadow-sm">
             <div class="card-header py-3">
