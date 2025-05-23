@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
   impersonates :user
   include Pundit::Authorization
-
   around_action :switch_locale
 
   def switch_locale(&action)
