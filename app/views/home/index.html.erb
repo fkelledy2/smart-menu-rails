@@ -33,22 +33,24 @@
       <% if @current_user.plan == nil %>
 
         <div class="col-lg-4 offset-lg-4">
-            <br>
-            <br>
-            <br>
-            <h1 class="text-center"><%= t(".welcome").html_safe %></h1>
-            <br>
-            <h2 class="text-center"><%= t(".selectPlan").html_safe %></h2>
-            <br>
-            <%= form_with(model: @userplan) do |f| %>
-              <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1"><%= f.label :plan %></span>
-                <%= f.select :plan_id, options_for_select(Plan.all.collect { |p| [t(p.key), p.id] }, f.object.plan), {}, { class: 'form-select'}%>
-                <%= f.hidden_field :user_id, value: @current_user.id %>
-              </div>
-              <div class="mb-3 d-grid">
-                <%= f.submit t(".saveChanges"), class: 'btn btn-lg btn-danger' %>
-              </div>
+            <% if @userplan && @userplan.user %>
+                <br>
+                <br>
+                <br>
+                <h1 class="text-center"><%= t(".welcome").html_safe %></h1>
+                <br>
+                <h2 class="text-center"><%= t(".selectPlan").html_safe %></h2>
+                <br>
+                <%= form_with(model: @userplan) do |f| %>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1"><%= f.label :plan %></span>
+                    <%= f.select :plan_id, options_for_select(Plan.all.collect { |p| [t(p.key), p.id] }, f.object.plan_id), {}, { class: 'form-select'}%>
+                    <%= f.hidden_field :user_id, value: @current_user.id %>
+                  </div>
+                  <div class="mb-3 d-grid">
+                    <%= f.submit t(".saveChanges"), class: 'btn btn-lg btn-danger' %>
+                  </div>
+                <% end %>
             <% end %>
           </div>
 

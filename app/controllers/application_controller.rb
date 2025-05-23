@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
             @userplan = Userplan.where( user_id: @current_user.id).first
         else
             @userplan = Userplan.new
+            @userplan.plan = Plan.first
         end
     end
 
