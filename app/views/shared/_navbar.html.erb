@@ -49,7 +49,7 @@
             <% end %>
             <div id="nav-account-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbar-dropdown">
               <%= link_to t(".settings"), edit_user_registration_path, class: "dropdown-item" %>
-              <% if @userplan %>
+              <% if @userplan && @userplan.id %>
                   <%= link_to t(".billing"), edit_userplan_path(@userplan), class: "dropdown-item" %>
               <% end %>
               <% if current_user.admin? && respond_to?(:madmin_root_path) %>
