@@ -33,4 +33,11 @@ class Plan < ApplicationRecord
           "Unlimited"
       end
   end
+  def getMenusPerLocation
+      if menusperlocation != -1
+          menusperlocation
+      else
+          "Unlimited"
+      end
+  end
 end

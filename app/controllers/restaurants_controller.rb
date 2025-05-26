@@ -67,12 +67,17 @@ class RestaurantsController < ApplicationController
 
   # GET /restaurants or /restaurants.json
   def index
-    if current_user
+    if current_user && current_user.plan
         @restaurants = Restaurant.where( user: current_user, archived: false)
-            Analytics.track(
-                user_id: current_user.id,
-                event: 'restaurants.index'
-            )
+        Analytics.track(
+            user_id: current_user.id,
+            event: 'restaurants.index'
+        )
+        if @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
+           @canAddRestaurant = true
+        else
+           @canAddRestaurant = false
+        end
     else
         redirect_to root_url
     end

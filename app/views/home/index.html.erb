@@ -29,9 +29,8 @@
 
 <% if current_user %>
 
-    <div style='padding-top:20px' class="row">
+    <div class="row">
       <% if @current_user.plan == nil %>
-
         <div class="col-lg-4 offset-lg-4">
                 <br>
                 <br>
@@ -54,7 +53,7 @@
 
       <% else %>
           <div class="col-6">
-            <h1><%=t(".restaurants")%> </h1>
+            <h4><%=t(".restaurants")%> </h4>
           </div>
           <div class="col-6 text-end">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
@@ -67,11 +66,13 @@
                   <li><a id="deactivate-restaurant" class="dropdown-item" href="#"><%=t(".deactivate")%></a></li>
                 </ul>
               </div>
-              <button type="button" class="btn btn-dark">
-                <%= link_to new_restaurant_path, class: 'link-light' do %>
-                  <i class="bi bi-plus"></i>
-                <% end %>
-              </button>
+              <% if @canAddRestaurant == true %>
+                  <button type="button" class="btn btn-dark">
+                    <%= link_to new_restaurant_path, class: 'link-light' do %>
+                      <i class="bi bi-plus"></i>
+                    <% end %>
+                  </button>
+              <% end %>
             </div>
           </div>
         </div>
@@ -333,13 +334,13 @@
                   <li>&nbsp</li>
               <% end %>
               <% if plan.attribute2 %>
-                  <%= t(plan.attribute2, locations: plan.getLocations, dishes: plan.getItemsPerMenu, languages: plan.getLanguages).html_safe %>
+                  <%= t(plan.attribute2, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages).html_safe %>
               <% else %>
                   <li>&nbsp</li>
               <% end %>
               <% if plan.attribute3 %>
                     <hr>
-                  <%= t(plan.attribute3, locations: plan.getLocations, dishes: plan.getItemsPerMenu, languages: plan.getLanguages).html_safe %>
+                  <%= t(plan.attribute3, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages).html_safe %>
               <% else %>
                   <li>&nbsp</li>
               <% end %>

@@ -69,11 +69,16 @@ class MetricsController < ApplicationController
       @metric.totalOrderValue = Ordr.all.sum(:gross)
       @metric.save
 
-#       if Plan.count > 0
-#           FeaturesPlan.delete_all
-#           Plan.delete_all
-#           Feature.delete_all
-      if Plan.count == 0
+      if Plan.count > 0
+          FeaturesPlan.delete_all
+          User.all.each do |user|
+              user.plan = nil;
+              user.save
+          end
+          Userplan.delete_all
+          Plan.delete_all
+          Feature.delete_all
+#       if Plan.count == 0
           @feature1 = Feature.new()
           @feature1.key = "feature1.key"
           @feature1.descriptionKey = "feature1.description"
@@ -123,6 +128,7 @@ class MetricsController < ApplicationController
           @starter.favourite = false
           @starter.pricePerMonth = 29
           @starter.pricePerYear = 290
+          @starter.menusperlocation = 1
           @starter.itemspermenu = 50
           @starter.languages = 1
           @starter.locations = 1
@@ -142,6 +148,7 @@ class MetricsController < ApplicationController
           @pro.favourite = true
           @pro.pricePerMonth = 79
           @pro.pricePerYear = 790
+          @pro.menusperlocation = 3
           @pro.itemspermenu = 100
           @pro.languages = 4
           @pro.locations = 3
@@ -162,8 +169,9 @@ class MetricsController < ApplicationController
           @business.favourite = false
           @business.pricePerMonth = 149
           @business.pricePerYear = 1490
-          @business.itemspermenu = -1
-          @business.languages = -1
+          @business.menusperlocation = 5
+          @business.itemspermenu = 200
+          @business.languages = 10
           @business.locations = 10
           @business.action = 0
           @business.save
@@ -178,6 +186,7 @@ class MetricsController < ApplicationController
           @enterprise.attribute5 = "plan.enterprise.attribute5"
           @enterprise.attribut6 = "plan.enterprise.attribut6"
           @enterprise.status = 0
+          @enterprise.menusperlocation = -1
           @enterprise.itemspermenu = -1
           @enterprise.languages = -1
           @enterprise.locations = -1

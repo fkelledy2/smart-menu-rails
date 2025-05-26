@@ -35,13 +35,13 @@
                   <li>&nbsp</li>
               <% end %>
               <% if plan.attribute2 %>
-                  <%= t(plan.attribute2, locations: plan.getLocations, dishes: plan.getItemsPerMenu, languages: plan.getLanguages).html_safe %>
+                  <%= t(plan.attribute2, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages).html_safe %>
               <% else %>
                   <li>&nbsp</li>
               <% end %>
               <% if plan.attribute3 %>
                     <hr>
-                  <%= t(plan.attribute3, locations: plan.getLocations, dishes: plan.getItemsPerMenu, languages: plan.getLanguages).html_safe %>
+                  <%= t(plan.attribute3, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages).html_safe %>
               <% else %>
                   <li>&nbsp</li>
               <% end %>
