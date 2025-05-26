@@ -14,16 +14,6 @@ class HomeController < ApplicationController
       else
           @demoMenu = Smartmenu.where(restaurant_id: 3, menu_id: 3).first
       end
-      if current_user && current_user.plan
-          @restaurants = Restaurant.where( user: current_user, archived: false)
-          if @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
-              @canAddRestaurant = true
-          else
-              @canAddRestaurant = false
-          end
-      else
-          @canAddRestaurant = false
-      end
       @plans = Plan.all
       @features = Feature.all
       @contact = Contact.new
@@ -46,4 +36,5 @@ class HomeController < ApplicationController
           )
       end
   end
+
 end

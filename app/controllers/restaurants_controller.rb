@@ -241,6 +241,14 @@ class RestaurantsController < ApplicationController
                     @restaurant = Restaurant.find(params[:id])
                 end
             end
+            @canAddMenu = false
+            if @restaurant && current_user
+                @menuCount = Menu.where( restaurant: @restaurant, status: 'active', archived: false).count
+                if @menuCount < current_user.plan.menusperlocation || current_user.plan.menusperlocation == -1
+                    @canAddMenu = true
+                end
+            end
+
         rescue ActiveRecord::RecordNotFound => e
             redirect_to root_url
         end

@@ -15,8 +15,19 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   before_action :set_current_employee
+  before_action :set_permissions
 
   protected
+    def set_permissions
+      @canAddRestaurant = false
+      if current_user && current_user.plan
+          @restaurants = Restaurant.where( user: current_user, archived: false)
+          if @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
+              @canAddRestaurant = true
+          end
+      end
+    end
+
     def set_current_employee
         if current_user
             @current_employee = Employee.where(user_id: current_user.id).first
