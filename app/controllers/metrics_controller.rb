@@ -70,15 +70,15 @@ class MetricsController < ApplicationController
       @metric.save
 
       if Plan.count > 0
-          FeaturesPlan.delete_all
-          User.all.each do |user|
-              user.plan = nil;
-              user.save
-          end
-          Userplan.delete_all
-          Plan.delete_all
-          Feature.delete_all
-#       if Plan.count == 0
+#           FeaturesPlan.delete_all
+#           User.all.each do |user|
+#               user.plan = nil;
+#               user.save
+#           end
+#           Userplan.delete_all
+#           Plan.delete_all
+#           Feature.delete_all
+      if Plan.count == 0
           @feature1 = Feature.new()
           @feature1.key = "feature1.key"
           @feature1.descriptionKey = "feature1.description"
