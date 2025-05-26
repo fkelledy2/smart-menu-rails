@@ -69,7 +69,7 @@ class MetricsController < ApplicationController
       @metric.totalOrderValue = Ordr.all.sum(:gross)
       @metric.save
 
-      if Plan.count > 0
+#       if Plan.count > 0
 #           FeaturesPlan.delete_all
 #           User.all.each do |user|
 #               user.plan = nil;
