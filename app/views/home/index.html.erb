@@ -80,10 +80,9 @@
         </div>
       <% end %>
 <% else %>
-  <div style="padding-top:10px">
   <div id="myCarousel" class="carousel slide mb-6 background-container" data-bs-ride="carousel"
 
-  style="background: radial-gradient(circle, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 100%),url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover; border-radius: 10px;">
+  style="background: url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover;">
 
     <div class="carousel-inner">
       <div class="carousel-item justify-content-center active">
@@ -119,7 +118,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle2").html_safe %></h3>
-          <p style='min-height:120px;text-align:justify'><%=t(".featureDescription2").html_safe %></p>
+          <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription2").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -128,7 +127,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle3").html_safe %></h3>
-          <p style='min-height:120px;text-align:justify'><%=t(".featureDescription3").html_safe %></p>
+          <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription3").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -137,7 +136,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle4").html_safe %></h3>
-          <p style='min-height:120px;text-align:justify'><%=t(".featureDescription4").html_safe %></p>
+          <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription4").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -146,7 +145,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle6").html_safe %></h3>
-          <p style='min-height:120px;text-align:justify'><%=t(".featureDescription6").html_safe %></p>
+          <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription6").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start">
@@ -155,7 +154,7 @@
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle5").html_safe %></h3>
-          <p style='min-height:120px;text-align:justify'><%=t(".featureDescription5").html_safe %></p>
+          <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription5").html_safe %></p>
         </div>
       </div>
     </div>
@@ -168,14 +167,12 @@
       <h2 class="pb-2 border-bottom"><%=t(".demoMenu")%></h2>
       <div class="row g-4 py-2 row-cols-12 row-cols-12 row-cols-lg-12 align-items-center">
             <span style='display:none' class="qrSlug"><%= @demoMenu.slug %></span>
-            <div class="col-sm-12 col-md-12 col-lg-8">
+            <div style="padding-left: 0;padding-right: 0;" class="col-sm-12 col-md-12 col-lg-8">
               <div class="embed-responsive embed-responsive-16by9">
-                  <div class="video-container">
-                    <video class="rounded-video" width="100%" loop muted playsinline autoplay>
+                    <video width="100%" loop muted playsinline autoplay>
                       <source src="<%= asset_path('smart-menu.mp4') %>" type="video/mp4">
                       Your browser does not support the video tag.
                     </video>
-                  </div>
               </div>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-4">
