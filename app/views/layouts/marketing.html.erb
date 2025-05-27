@@ -34,16 +34,14 @@
   </head>
 
   <body style='overflow-x: hidden;' class="d-flex flex-column min-vh-100">
-    <div style=' display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;'>
-      <div style='padding-left:0px;padding-right:0px;' class="container-fluid">
-        <main class="flex-wrapper">
+    <div style='overflow-x: hidden;display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;'>
+        <main>
           <%= render 'shared/navbar' %>
-          <div style="--bs-gutter-x:0.0rem;" class="container-fluid">
+          <div style='overflow-x: hidden;' class="container-fluid mx-auto">
                 <div style="height:5px"></div>
                 <%= yield %>
           </div>
         </main>
-      </div>
       <%= render 'shared/footer' %>
     </div>
   </body>

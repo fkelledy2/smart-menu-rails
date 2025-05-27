@@ -80,10 +80,7 @@
         </div>
       <% end %>
 <% else %>
-  <div id="myCarousel" class="carousel slide mb-6 background-container" data-bs-ride="carousel"
-
-  style="background: url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover;">
-
+  <div id="myCarousel" class="carousel" data-bs-ride="carousel" style="overflow-x: hidden;width: calc(100% + 50px);margin-left: -25px;margin-right: -25px; background: url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover;">
     <div class="carousel-inner">
       <div class="carousel-item justify-content-center active">
         <%= image_tag "https://placehold.co/1x500/transparent/transparent", class: "img-responsive bg-item parallax img-fluid" %>
