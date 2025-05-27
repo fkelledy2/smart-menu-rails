@@ -3,7 +3,7 @@ class Menu < ApplicationRecord
   belongs_to :restaurant
   has_many :menusections
   has_many :menuavailabilities
-  has_many :menuitems
+  has_many :menuitems, through: :menusections
   has_one :genimage, dependent: :destroy
 
   enum status: {

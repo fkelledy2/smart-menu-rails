@@ -123,6 +123,13 @@ class MenusectionsController < ApplicationController
             else
                 redirect_to root_url
             end
+            @canAddMenuItem = false
+            if @menusection.menu && current_user
+                @menuItemCount = @menusection.menu.menuitems.count
+                if @menuItemCount < current_user.plan.itemspermenu || current_user.plan.itemspermenu == -1
+                    @canAddMenuItem = true
+                end
+            end
         rescue ActiveRecord::RecordNotFound => e
             redirect_to root_url
         end

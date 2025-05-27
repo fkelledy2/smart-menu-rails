@@ -3,6 +3,7 @@
     <h4><%= t('.menuItems') %></h4>
   </div>
   <div class="col-6 text-end">
+    [<%=@menuItemCount %>/<%= current_user.plan.itemspermenu %>]
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
       <div class="btn-group" role="group">
         <button id="menuitem-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
@@ -14,11 +15,13 @@
           <li><a id="genimage-menuitem" class="dropdown-item" href="#"><%=t(".genimage")%></a></li>
         </ul>
       </div>
-      <button type="button" class="btn btn-dark">
-        <%= link_to new_menuitem_path(menusection_id: @menusection), class: 'link-light' do %>
-          <i class="bi bi-plus"></i>
-        <% end %>
-      </button>
+      <% if @canAddMenuItem %>
+          <button type="button" class="btn btn-dark">
+            <%= link_to new_menuitem_path(menusection_id: @menusection), class: 'link-light' do %>
+              <i class="bi bi-plus"></i>
+            <% end %>
+          </button>
+      <% end %>
     </div>
   </div>
 </div>

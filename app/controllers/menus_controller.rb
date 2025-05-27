@@ -260,6 +260,13 @@ class MenusController < ApplicationController
             else
                 @restaurantCurrency = ISO4217::Currency.from_code('USD')
             end
+            @canAddMenuItem = false
+            if @menu && current_user
+                @menuItemCount = @menu.menuitems.count
+                if @menuItemCount < current_user.plan.itemspermenu || current_user.plan.itemspermenu == -1
+                    @canAddMenuItem = true
+                end
+            end
         rescue ActiveRecord::RecordNotFound => e
             redirect_to root_url
         end
