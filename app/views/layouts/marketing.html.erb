@@ -35,13 +35,20 @@
 
   <body style='overflow-x: hidden;' class="d-flex flex-column min-vh-100">
     <div style=' display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;'>
-      <div style='padding-left: 0;padding-right: 0;' class="container-fluid">
+      <div style='padding-left:0px;padding-right:0px;' class="container-fluid">
         <main class="flex-wrapper">
           <%= render 'shared/navbar' %>
-          <div style="padding:0px!important;" class="container-fluid mx-auto">
-                <div style="height:5px"></div>
-                <%= yield %>
-          </div>
+          <% if current_user %>
+              <div class="container-fluid mx-auto">
+                    <div style="height:5px"></div>
+                    <%= yield %>
+              </div>
+          <% else %>
+              <div style="padding:0px!important;" class="container-fluid mx-auto">
+                    <div style="height:5px"></div>
+                    <%= yield %>
+              </div>
+          <% end %>
         </main>
       </div>
       <%= render 'shared/footer' %>
