@@ -33,7 +33,7 @@
     <%= render 'shared/head' %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
-  <body class="d-flex flex-column min-vh-100">
+  <body style='overflow-x: hidden;' class="d-flex flex-column min-vh-100">
     <div style="display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;">
         <main class="flex-wrapper">
           <%= render "shared/navbar" %>
