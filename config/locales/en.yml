@@ -432,6 +432,7 @@ en:
 
   smartmenus:
     index:
+      smartmenus: "Smart Menus"
       menus: "Menus"
       menu: "Menu"
       activate: "Activate"

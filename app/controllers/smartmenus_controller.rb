@@ -4,7 +4,7 @@ class SmartmenusController < ApplicationController
 
   # GET /smartmenus or /smartmenus.json
   def index
-    @smartmenus = Smartmenu.where(tablesetting_id: nil).all
+    @smartmenus = Smartmenu.joins(:menu).where(tablesetting_id: nil, menus: { status: 'active' })
   end
 
   # GET /smartmenus/1 or /smartmenus/1.json

@@ -19,6 +19,14 @@ class Smartmenu < ApplicationRecord
       end
   end
 
+  def fqlinkname
+      if menu && restaurant
+          restaurant.name + ' - ' + menu.name
+      else
+          restaurant.name
+      end
+  end
+
   validates :slug, :presence => true
   validates :restaurant, :presence => false
 end
