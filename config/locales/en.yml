@@ -84,6 +84,7 @@ en:
     call: "Contact Us"
   home:
     index:
+      demoMenuTagBrowse: or
       welcome: Welcome!
       selectPlan: Please <strong>select a plan</strong> to proceed.
       saveChanges: Save
@@ -95,6 +96,7 @@ en:
       signup: "Signup"
       previous: "Previous"
       next: "Next"
+      browse: "Browse Our Live Smart Menus"
       featureTitle1: "Contactless Convenience"
       featureDescription1: "Prioritize guest safety with a fully touch-free experience. Guests scan a QR code to browse, order, and pay—no printed menus, no terminals, no hassle."
       featureTitle2: "Faster Turnarounds, Happier Tables"

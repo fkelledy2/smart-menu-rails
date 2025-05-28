@@ -6,6 +6,7 @@ document.addEventListener("turbo:load", () => {
         var rowData = cell.getRow().getData("data").fqlinkname;
         return "<a class='link-dark' href='/smartmenus/"+id+"'>"+rowData+"</a>";
     }
+    const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
     if ($("#smartmenu-table").is(':visible')) {
         var smartmenuTable = new Tabulator("#smartmenu-table", {
@@ -21,7 +22,18 @@ document.addEventListener("turbo:load", () => {
           ajaxConfig: "GET",
           movableRows:false,
           columns: [
-          { title:"", field:"restaurant.country", maxWidth: 125, hozAlign:"right", headerHozAlign:"right", responsive:0, headerFilter:"input", widthGrow: 0 },
+          { title: "", hozAlign:"right", maxWidth: 100, field: "restaurant.country", headerFilter:"input",
+            mutator: function(value) {
+                console.log( value );
+                if( value.toUpperCase() == 'GB' ) {
+                    return "UK";
+                }
+                if( value.toUpperCase() == 'US' ) {
+                    return "USA";
+                }
+                return regionNames.of(value.toUpperCase()) || "Unknown";
+            }
+          },
           { title:"Address", field:"restaurant.address1", headerFilter:"input", widthGrow: 1 },
           {title:"Menu", field:"slug", responsive:0, formatter:smlink, hozAlign:"left", headerFilter:"input", widthGrow: 3,
             headerFilterFunc: function(headerValue, rowValue, rowData) {

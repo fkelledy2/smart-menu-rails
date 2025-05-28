@@ -21,7 +21,7 @@ class Smartmenu < ApplicationRecord
 
   def fqlinkname
       if menu && restaurant
-          restaurant.name + ' - ' + menu.name
+          menu.name + ' @ ' + restaurant.name
       else
           restaurant.name
       end
