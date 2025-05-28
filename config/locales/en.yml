@@ -107,7 +107,7 @@ en:
       featureDescription5: "Cut the clutter and reduce paper waste. Our digital menus support your eco-conscious brand while offering a sleek, modern dining experience."
       featureTitle6: "Real Data, Smarter Decisions"
       featureDescription6: "Get instant access to what’s hot (and what’s not). Track top-selling items, dining trends, and guest preferences to refine your menu and optimize operations."
-      demoMenu: "Experience the Smart Menu"
+      demoMenu: "Our Smart Menus"
       demoMenuTag: "<strong>SCAN</strong> or <strong>TAP</strong> the QR to test-drive a smarter way to serve."
       numbers: "Numbers"
       numbersTag: "Our stats, restaurants, menus, orders & value under management:"
@@ -117,7 +117,7 @@ en:
       orderValue: "Order Value"
       testimonials: "Testimonials"
       testimonialsTag: "A few words from our happy clients:"
-      pricing: "Simple Pricing for Every Restaurant"
+      pricing: "Our Pricing"
       pricingTag: "Choose from our flexible pricing plans:"
       emailAddress: "Email Address"
       emailAddressTag: "We'll never share your email with anyone else."
@@ -127,7 +127,7 @@ en:
       activate: "Activate"
       deactivate: "Deactivate"
       signUp: "Sign Up"
-      features: "Features"
+      features: "Our Features"
   shared:
     navbar:
       restaurants: "Restaurants"

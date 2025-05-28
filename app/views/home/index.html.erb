@@ -108,8 +108,8 @@
 
   <div class="container px-1 py-2">
     <h2 class="pb-2 border-bottom"><%=t(".features")%></h2>
-    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-      <div class="col d-flex align-items-start">
+    <div class="row g-4 py-3 row-cols-1 row-cols-lg-3">
+      <div style='padding-left:15px;' class="col d-flex align-items-start">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-activity"></i></h2>
         </div>
@@ -118,7 +118,7 @@
           <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription2").html_safe %></p>
         </div>
       </div>
-      <div class="col d-flex align-items-start">
+      <div style='padding-left:15px;' class="col d-flex align-items-start">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-bullseye"></i></h2>
         </div>
@@ -127,7 +127,7 @@
           <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription3").html_safe %></p>
         </div>
       </div>
-      <div class="col d-flex align-items-start">
+      <div style='padding-left:15px;' class="col d-flex align-items-start">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-emoji-heart-eyes"></i></h2>
         </div>
@@ -136,7 +136,7 @@
           <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription4").html_safe %></p>
         </div>
       </div>
-      <div class="col d-flex align-items-start">
+      <div style='padding-left:15px;' class="col d-flex align-items-start">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-graph-up-arrow"></i></h2>
         </div>
@@ -145,7 +145,7 @@
           <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription6").html_safe %></p>
         </div>
       </div>
-      <div class="col d-flex align-items-start">
+      <div style='padding-left:15px;' class="col d-flex align-items-start">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-tree"></i></h2>
         </div>
@@ -173,7 +173,7 @@
               </div>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-4">
-                <h6 style='text-align:center;'><%=t(".demoMenuTag").html_safe %></h6>
+                <h6 style='padding-left:10px;padding-right:10px;text-align:center;'><%=t(".demoMenuTag").html_safe %></h6>
                 <div class="d-flex justify-content-center">
                     <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
                         <div id="<%= @demoMenu.slug %>">
