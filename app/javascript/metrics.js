@@ -13,7 +13,7 @@ document.addEventListener("turbo:load", () => {
           $('#metrics-totalOrderValue').html(parseFloat(totalOrderValue).toFixed(0));
       } else {
           $('#metrics-table').hide();
-          $('#testimonials').hide();
+//          $('#testimonials').hide();
       }
     });
 })
