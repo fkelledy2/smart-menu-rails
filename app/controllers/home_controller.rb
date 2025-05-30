@@ -17,6 +17,7 @@ class HomeController < ApplicationController
       @plans = Plan.all
       @features = Feature.all
       @contact = Contact.new
+      @testimonials = Testimonial.where(status: 'approved').order(:sequence).all
   end
 
   def terms

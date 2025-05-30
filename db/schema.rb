@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_26_153035) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_30_152632) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -672,6 +672,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_26_153035) do
     t.index ["restaurant_id"], name: "index_taxes_on_restaurant_id"
   end
 
+  create_table "testimonials", force: :cascade do |t|
+    t.integer "sequence"
+    t.integer "status"
+    t.string "testimonial"
+    t.bigint "user_id", null: false
+    t.bigint "restaurant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_testimonials_on_restaurant_id"
+    t.index ["user_id"], name: "index_testimonials_on_user_id"
+  end
+
   create_table "tips", force: :cascade do |t|
     t.float "percentage"
     t.bigint "restaurant_id", null: false
@@ -783,6 +795,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_26_153035) do
   add_foreign_key "smartmenus", "tablesettings"
   add_foreign_key "tablesettings", "restaurants"
   add_foreign_key "taxes", "restaurants"
+  add_foreign_key "testimonials", "restaurants"
+  add_foreign_key "testimonials", "users"
   add_foreign_key "tips", "restaurants"
   add_foreign_key "tracks", "restaurants"
   add_foreign_key "userplans", "plans"

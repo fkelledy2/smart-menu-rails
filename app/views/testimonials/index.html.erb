@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-6">
+    <h4><%=t(".testimonials")%> </h4>
+  </div>
+  <div class="col-6 text-end">
+    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+      <div class="btn-group" role="group">
+        <button id="testimonial-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
+          <%=t(".actions")%>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
+          <li><a id="approve-testimonial" class="dropdown-item" href="#"><%=t(".approve")%></a></li>
+          <li><a id="unapprove-testimonial" class="dropdown-item" href="#"><%=t(".unapprove")%></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="padding-top:10px" class="table-borderless" id="testimonial-table">
+</div>
+

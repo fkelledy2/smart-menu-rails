@@ -333,71 +333,46 @@
   <div id="testimonials" class="container px-1 py-2">
     <h2 class="pb-2 border-bottom"><%=t(".testimonials")%></h2>
     <p style='text-align:justify;'><%=t(".testimonialsTag")%></p>
-    <div id="myCarousel" class="carousel carousel-dark slide mb-6" data-bs-ride="carousel">
+    <div id="testimonialCarousel" class="carousel carousel-dark slide mb-6" data-bs-ride="carousel">
         <div class="carousel-indicators">
-            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" class=""></button>
-            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class="active" aria-current="true"></button>
+            <% @testimonials.each_with_index do |testimonial, index| %>
+                <% if index == 0 %>
+                    <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="<%= index %>" aria-label="" class="active" aria-current="true"></button>
+                <% else %>
+                    <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="<%= index %>" aria-label="" class=""></button>
+                <% end %>
+            <% end %>
         </div>
         <div class="carousel-inner">
-            <div class="carousel-item active">
-                <svg aria-hidden="true" class="bd-placeholder-img " height="200px" preserveAspectRatio="xMidYMid slice" width="100%" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="100%" height="100%" fill="none"></rect>
-                </svg>
-                <div class="container">
-                    <div class="carousel-caption text-start">
-                        <figure class="text-end">
-                          <blockquote class="blockquote">
-                            <p><strong>“</strong> Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci. <strong>”</strong></p>
-                          </blockquote>
-                          <figcaption class="blockquote-footer">
-                            by <cite title="Author 1">Author 1</cite>
-                          </figcaption>
-                        </figure>
+            <% @testimonials.each_with_index do |testimonial, index| %>
+                <% if index == 0 %>
+                <div class="carousel-item active">
+                <% else %>
+                <div class="carousel-item">
+                <% end %>
+                    <svg aria-hidden="true" class="bd-placeholder-img " height="200px" preserveAspectRatio="xMidYMid slice" width="100%" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100%" height="100%" fill="none"></rect>
+                    </svg>
+                    <div class="container">
+                        <div class="carousel-caption text-start">
+                            <figure class="text-end">
+                              <blockquote class="blockquote">
+                                <p><strong>“</strong> <%= testimonial.testimonial %> <strong>”</strong></p>
+                              </blockquote>
+                              <figcaption class="blockquote-footer">
+                                by <cite title="<%= testimonial.user.name %> @ <%= testimonial.restaurant.name %>"><%= testimonial.user.name %> @ <%= testimonial.restaurant.name %></cite>
+                              </figcaption>
+                            </figure>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="carousel-item">
-                <svg aria-hidden="true" class="bd-placeholder-img " height="200px" preserveAspectRatio="xMidYMid slice" width="100%" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="100%" height="100%" fill="none"></rect>
-                </svg>
-                <div class="container">
-                    <div class="carousel-caption">
-                        <figure class="text-end">
-                          <blockquote class="blockquote">
-                            <p><strong>“</strong> Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci. <strong>”</strong></p>
-                          </blockquote>
-                          <figcaption class="blockquote-footer">
-                            by <cite title="Author 2">Author 2</cite>
-                          </figcaption>
-                        </figure>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <svg aria-hidden="true" class="bd-placeholder-img " height="200px" preserveAspectRatio="xMidYMid slice" width="100%" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="100%" height="100%" fill="none"></rect>
-                </svg>
-                <div class="container">
-                    <div class="carousel-caption text-end">
-                        <figure class="text-end">
-                          <blockquote class="blockquote">
-                            <p><strong>“</strong> Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci. <strong>”</strong></p>
-                          </blockquote>
-                          <figcaption class="blockquote-footer">
-                            by <cite title="Author 3">Author 3</cite>
-                          </figcaption>
-                        </figure>
-                    </div>
-                </div>
-            </div>
+            <% end %>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>

@@ -1,4 +1,10 @@
 en:
+  testimonials:
+    index:
+      testimonials: Testimonials
+      actions: Actions
+      approve: Aprove
+      unapprove: Unapprove
   userplans:
     edit:
       selectPlan: Choose Plan
@@ -133,6 +139,7 @@ en:
   shared:
     navbar:
       restaurants: "Restaurants"
+      testimonials: "Testimonials"
       employees: "Employees"
       taxes: "Taxes"
       openingHours: "Openings"

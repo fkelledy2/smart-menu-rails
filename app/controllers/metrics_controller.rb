@@ -69,6 +69,21 @@ class MetricsController < ApplicationController
       @metric.totalOrderValue = Ordr.all.sum(:gross)
       @metric.save
 
+      if Testimonial.count == 0
+        tSeq = 0
+        Restaurant.all.each do |restaurant|
+            if restaurant.status = 'active'
+              @testimonial = Testimonial.new()
+              @testimonial.sequence = tSeq
+              @testimonial.restaurant = restaurant
+              @testimonial.status = 0
+              @testimonial.user = restaurant.user
+              @testimonial.testimonial = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci."
+              @testimonial.save
+            end
+            tSeq = tSeq + 1
+        end
+      end
 #       if Plan.count > 0
 #           FeaturesPlan.delete_all
 #           User.all.each do |user|

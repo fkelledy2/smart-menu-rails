@@ -58,6 +58,7 @@ import './menuavailabilities'
 import './metrics'
 //import './tracks'
 import './restaurantlocales'
+import './testimonials'
 
 document.addEventListener("turbo:load", () => {
 

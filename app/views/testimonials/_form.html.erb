@@ -1,0 +1,44 @@
+<%= form_with(model: testimonial) do |form| %>
+  <% if testimonial.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(testimonial.errors.count, "error") %> prohibited this testimonial from being saved:</h2>
+
+      <ul>
+      <% testimonial.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :testimonial, class: 'form-label' %>
+      <%= form.text_field :testimonial, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :user_id, class: 'form-label' %>
+      <%= form.text_field :user_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :restaurant_id, class: 'form-label' %>
+      <%= form.text_field :restaurant_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if testimonial.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', testimonial, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-dark' %>
+
+    <% if testimonial.persisted? %>
+      <%= link_to "Cancel", testimonial, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", testimonials_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>
