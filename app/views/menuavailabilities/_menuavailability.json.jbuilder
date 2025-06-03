@@ -6,7 +6,7 @@
   json.endmin menuavailability.endmin
   json.status menuavailability.status
   json.sequence menuavailability.sequence
-  json.menu menuavailability.menu
+  json.menu menuavailability.menu.id
   json.created_at menuavailability.created_at
   json.updated_at menuavailability.updated_at
   json.url menuavailability_url(menuavailability, format: :json)

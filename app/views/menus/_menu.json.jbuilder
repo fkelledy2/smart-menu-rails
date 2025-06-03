@@ -4,7 +4,7 @@
   json.image menu.image
   json.status menu.status
   json.sequence menu.sequence
-  json.restaurant menu.restaurant
+  json.restaurant menu.restaurant.id
   json.menusections menu.menusections do |menusection|
     json.partial! 'menusections/menusection', menusection: menusection
   end

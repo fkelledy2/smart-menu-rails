@@ -8,7 +8,7 @@
   json.preptime menuitem.preptime
   json.calories menuitem.calories
   json.price menuitem.price
-  json.menusection menuitem.menusection
+  json.menusection menuitem.menusection.id
   json.inventory menuitem.inventory
 
   json.allergyns menuitem.allergyns do |allergyn|
