@@ -6,7 +6,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Would you like to start an order for this table?
+                <% if @tablesetting %>
+                    Would you like to start an order for <input style='width:50px' type="number" id="orderCapacity" value=<%= @tablesetting.capacity%> oninput="validateIntegerInput(this)"> at this table?
+                <% end %>
             </div>
             <div class="modal-footer">
                 <button id="start-order" type="button" data-bs-dismiss="modal" class="btn btn-dark">Start</button>
@@ -14,3 +16,8 @@
         </div>
     </div>
 </div>
+<script>
+  function validateIntegerInput(input) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+  }
+</script>

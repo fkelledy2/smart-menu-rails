@@ -149,6 +149,7 @@ document.addEventListener("turbo:load", () => {
 
     if ($('#start-order').length) {
        $( "#start-order" ).on( "click", function() {
+            const ordercapacity = document.getElementById('orderCapacity').value;
             if ($('#currentEmployee').length) {
                 let ordr = {
                     'ordr': {
@@ -156,6 +157,7 @@ document.addEventListener("turbo:load", () => {
                       'employee_id': $('#currentEmployee').text(),
                       'restaurant_id': $('#currentRestaurant').text(),
                       'menu_id': $('#currentMenu').text(),
+                      'ordercapacity': ordercapacity,
                       'status' : ORDR_OPENED
                     }
                 };
@@ -166,6 +168,7 @@ document.addEventListener("turbo:load", () => {
                       'tablesetting_id': $('#currentTable').text(),
                       'restaurant_id': $('#currentRestaurant').text(),
                       'menu_id': $('#currentMenu').text(),
+                      'ordercapacity': ordercapacity,
                       'status' : ORDR_OPENED
                     }
                 };
@@ -231,9 +234,10 @@ document.addEventListener("turbo:load", () => {
     if ($('#pay-order').length) {
         $( "#pay-order" ).on( "click", function() {
             let tip = 0;
-            if( $('#tip').length > 0 ) {
-                tip = $('#tip').val()
+            if( $('#tipNumberField').length > 0 ) {
+                tip = $('#tipNumberField').val()
             }
+            alert('tip: '+tip);
             if ($('#currentEmployee').length) {
                 let ordr = {
                     'ordr': {

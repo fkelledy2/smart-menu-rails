@@ -440,6 +440,9 @@ en:
       table: "Table"
 
   smartmenus:
+    showCoverCharge:
+      covercharge: "Cover charge"
+      coverchargeUnit: "per person"
     index:
       smartmenus: "Smart Menus"
       menus: "Menus"
@@ -677,6 +680,7 @@ en:
         inventoryTracking: "Tracking"
         sequence: "Display Order"
         restaurant: "Restaurant"
+        covercharge: "Cover Charge"
       menusection:
         name: "Name"
         description: "Description"

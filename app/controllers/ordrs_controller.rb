@@ -50,9 +50,10 @@ class OrdrsController < ApplicationController
                     totalTax += ((tax.taxpercentage * @ordr.nett)/100)
                 end
             end
+            @ordr.covercharge = @ordr.ordercapacity * @ordr.menu.covercharge
             @ordr.tax = totalTax
             @ordr.service = totalService
-            @ordr.gross = @ordr.nett + @ordr.tip + @ordr.service + @ordr.tax
+            @ordr.gross = @ordr.nett + @ordr.covercharge + @ordr.tip + @ordr.service + @ordr.tax
   end
 
   # GET /ordrs/new
@@ -127,11 +128,12 @@ class OrdrsController < ApplicationController
       taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
       totalTax = 0
       totalService = 0
+      @ordr.covercharge = @ordr.ordercapacity * @ordr.menu.covercharge
       for tax in taxes do
         if tax.taxtype == 'service'
-            totalService += ((tax.taxpercentage * @ordr.nett)/100)
+            totalService += ((tax.taxpercentage * (@ordr.nett+@ordr.covercharge))/100)
         else
-            totalTax += ((tax.taxpercentage * @ordr.nett)/100)
+            totalTax += ((tax.taxpercentage * (@ordr.nett+@ordr.covercharge))/100)
         end
       end
       if ordr_params[:tip]
@@ -141,7 +143,7 @@ class OrdrsController < ApplicationController
       end
       @ordr.tax = totalTax
       @ordr.service = totalService
-      @ordr.gross = @ordr.nett + @ordr.tip + @ordr.service + @ordr.tax
+      @ordr.gross = @ordr.nett + @ordr.covercharge + @ordr.tip + @ordr.service + @ordr.tax
 
       if( ordr_params[:status] = 20 )
           @ordr.orderedAt = Time.now
@@ -280,6 +282,6 @@ class OrdrsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ordr_params
-      params.require(:ordr).permit(:orderedAt, :deliveredAt, :paidAt, :nett, :tip, :service, :tax, :gross, :status, :employee_id, :tablesetting_id, :menu_id, :restaurant_id)
+      params.require(:ordr).permit(:orderedAt, :deliveredAt, :paidAt, :nett, :tip, :service, :tax, :gross, :status, :ordercapacity, :covercharge, :employee_id, :tablesetting_id, :menu_id, :restaurant_id)
     end
 end

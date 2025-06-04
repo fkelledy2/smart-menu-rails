@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_30_152632) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_04_165129) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -272,6 +272,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_30_152632) do
     t.text "image_data"
     t.string "imagecontext"
     t.boolean "displayImagesInPopup", default: false
+    t.float "covercharge", default: 0.0
     t.index ["restaurant_id"], name: "index_menus_on_restaurant_id"
   end
 
@@ -411,6 +412,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_30_152632) do
     t.datetime "updated_at", null: false
     t.integer "status"
     t.datetime "billRequestedAt"
+    t.integer "ordercapacity", default: 0
+    t.float "covercharge", default: 0.0
     t.index ["employee_id"], name: "index_ordrs_on_employee_id"
     t.index ["menu_id"], name: "index_ordrs_on_menu_id"
     t.index ["restaurant_id"], name: "index_ordrs_on_restaurant_id"

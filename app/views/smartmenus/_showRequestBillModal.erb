@@ -20,6 +20,18 @@
                       </span>
                     </div>
                 </div>
+                <% if @openOrder.covercharge > 0 %>
+                    <div class="row">
+                        <div class="col-10">
+                            Cover Charge
+                        </div>
+                        <div class="col-2">
+                          <span class="float-end">
+                            <%= number_to_currency(@openOrder.covercharge, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                          </span>
+                        </div>
+                    </div>
+                <% end %>
                 <div class="row">
                     <div class="col-10">
                         Nett
@@ -30,26 +42,31 @@
                       </span>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-10">
-                        Service
+                <hr>
+                <% if @openOrder.service > 0 %>
+                    <div class="row">
+                        <div class="col-10">
+                            Service
+                        </div>
+                        <div class="col-2">
+                          <span class="float-end">
+                            <%= number_to_currency(@openOrder.service, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                          </span>
+                        </div>
                     </div>
-                    <div class="col-2">
-                      <span class="float-end">
-                        <%= number_to_currency(@openOrder.service, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
-                      </span>
+                <% end %>
+                <% if @openOrder.tax > 0 %>
+                    <div class="row">
+                        <div class="col-10">
+                            Tax
+                        </div>
+                        <div class="col-2">
+                          <span class="float-end">
+                            <%= number_to_currency(@openOrder.tax, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                          </span>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-10">
-                        Tax
-                    </div>
-                    <div class="col-2">
-                      <span class="float-end">
-                        <%= number_to_currency(@openOrder.tax, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
-                      </span>
-                    </div>
-                </div>
+                <% end %>
                 <div class="row">
                     <div class="col-10">
                     </div>
