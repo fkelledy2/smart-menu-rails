@@ -23,8 +23,8 @@ document.addEventListener("turbo:load", () => {
           { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
           {title:"", field:"sequence", visible:true, formatter:"rownum", responsive:5, hozAlign:"right", headerHozAlign:"right", headerSort:false },
           {title:"Testimonial", field:"testimonial", responsive:0, hozAlign:"left"},
-          {title:"Author", field:"user.first_name", responsive:0, hozAlign:"left"},
-          {title:"Restaurant", field:"restaurant.name", responsive:0, hozAlign:"left"},
+          {title:"Author", field:"first_name", responsive:0, hozAlign:"left"},
+          {title:"Restaurant", field:"restaurant_name", responsive:0, hozAlign:"left"},
           {title:"Status", field:"status", formatter:status, responsive:0, hozAlign:"right", headerHozAlign:"right" }
           ]
         });
