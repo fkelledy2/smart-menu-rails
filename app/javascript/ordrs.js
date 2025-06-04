@@ -237,7 +237,6 @@ document.addEventListener("turbo:load", () => {
             if( $('#tipNumberField').length > 0 ) {
                 tip = $('#tipNumberField').val()
             }
-            alert('tip: '+tip);
             if ($('#currentEmployee').length) {
                 let ordr = {
                     'ordr': {
