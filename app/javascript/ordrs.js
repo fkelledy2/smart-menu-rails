@@ -236,7 +236,6 @@ document.addEventListener("turbo:load", () => {
         if( document.getElementById("generateLink") ) {
           document.getElementById("generateLink").addEventListener("click", async () => {
             const amount = document.getElementById("paymentAmount").value;
-            alert( amount );
             try {
               const response = await fetch("/create_payment_link", {
                 method: "POST",
