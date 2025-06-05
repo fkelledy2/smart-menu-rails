@@ -579,6 +579,7 @@ DEPENDENCIES
   redis (>= 4.0.1)
   requestjs-rails
   responders!
+  rqrcode (~> 2.2)
   rqrcode-rails3
   rspotify
   ruby-limiter

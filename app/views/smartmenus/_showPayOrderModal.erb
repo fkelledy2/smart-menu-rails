@@ -114,6 +114,21 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div style='display: flex;justify-content: center;' class="col-12">
+                                    <button id="generateLink" type="button" style='width:200px' class="btn btn-dark">Payment Link</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div style='display: flex;justify-content: center;' class="col-12">
+                                    <input type="hidden" id="paymentAmount" value="<%= @openOrder.gross %>">
+                                    <span style='display:none' id="qrIcon"><%= image_url('qr-icon.svg') %></span>
+                                    <span style='display:none' id="paymentlink"></span>
+                                    <a id="paymentAnchor" target="_blank" href="">
+                                        <span id="paymentQR"></span>
+                                    </a>
+                                </div>
+                            </div>
                         <% end %>
                     </div>
                 </form>

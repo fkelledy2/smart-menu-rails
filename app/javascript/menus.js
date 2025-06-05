@@ -305,4 +305,7 @@ document.addEventListener("turbo:load", () => {
             alert('Menu: Down the Witches Road!');
         });
     }
+
+
+
 })

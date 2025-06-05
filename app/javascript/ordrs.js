@@ -43,6 +43,7 @@ document.addEventListener("turbo:load", () => {
         $("#tipNumberField").val(tip);
         let total = parseFloat(parseFloat(tip)+parseFloat(gross)).toFixed(2);
         $("#orderGrandTotal").text($('#restaurantCurrency').text()+parseFloat(total).toFixed(2));
+        $("#paymentAmount").val(parseFloat(total).toFixed(2));
     });
 
     $("#tipNumberField").change(function() {
@@ -232,6 +233,34 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($('#pay-order').length) {
+        if( document.getElementById("generateLink") ) {
+          document.getElementById("generateLink").addEventListener("click", async () => {
+            const amount = document.getElementById("paymentAmount").value;
+            alert( amount );
+            try {
+              const response = await fetch("/create_payment_link", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Accept": "application/json"
+                },
+                body: JSON.stringify({ amount })
+              });
+
+              const data = await response.json();
+              if (data.payment_link) {
+                $("#paymentlink").text(data.payment_link);
+                $("#paymentAnchor").prop("href", data.payment_link);
+                fetchQR(data.payment_link)
+              } else {
+                alert("Failed to generate payment link.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Something went wrong.");
+            }
+          });
+        }
         $( "#pay-order" ).on( "click", function() {
             let tip = 0;
             if( $('#tipNumberField').length > 0 ) {
@@ -411,4 +440,99 @@ document.addEventListener("turbo:load", () => {
           }
         });
     }
+
+  function fetchQR(paymentUrl) {
+    var qrCode = new QRCodeStyling({
+           "type":"canvas",
+           "shape":"square",
+           "width":200,
+           "height":200,
+           "data": paymentUrl,
+           "margin":0,
+           "qrOptions":{
+              "typeNumber":"0",
+              "mode":"Byte",
+              "errorCorrectionLevel":"Q"
+           },
+           "imageOptions":{
+              "saveAsBlob":true,
+              "hideBackgroundDots":true,
+              "imageSize":0.4,
+              "margin":0
+           },
+           "dotsOptions":{
+              "type":"extra-rounded",
+              "color":"#000000",
+              "roundSize":true
+           },
+           "backgroundOptions":{
+              "round":0,
+              "color":"#ffffff"
+           },
+           "image": $("#qrIcon").text(),
+           "dotsOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#6a1a4c",
+                 "color2":"#6a1a4c",
+                 "rotation":"0"
+              }
+           },
+           "cornersSquareOptions":{
+              "type":"extra-rounded",
+              "color":"#000000"
+           },
+           "cornersSquareOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#000000",
+                 "color2":"#000000",
+                 "rotation":"0"
+              }
+           },
+           "cornersDotOptions":{
+              "type":"",
+              "color":"#000000"
+           },
+           "cornersDotOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#000000",
+                 "color2":"#000000",
+                 "rotation":"0"
+              }
+           },
+           "backgroundOptionsHelper":{
+              "colorType":{
+                 "single":true,
+                 "gradient":false
+              },
+              "gradient":{
+                 "linear":true,
+                 "radial":false,
+                 "color1":"#ffffff",
+                 "color2":"#ffffff",
+                 "rotation":"0"
+              }
+           }
+    });
+    document.getElementById('paymentQR').innerHTML = '';
+    qrCode.append(document.getElementById('paymentQR'));
+  }
+
 })

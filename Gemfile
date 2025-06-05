@@ -122,3 +122,4 @@ gem 'deepl-rb', require: 'deepl'
 gem 'bullet', group: 'development'
 gem 'jquery-rails'
 gem 'gmaps-autocomplete-rails'
+gem "rqrcode", "~> 2.2"

@@ -55,6 +55,9 @@ Rails.application.routes.draw do
   resources :menusections, controller: 'menusections' do
     resources :menuitems, controller: 'menuitems', only: [:index,:show, :edit]
   end
+  post "/create_payment_link", to: "payments#create_payment_link"
+  post "/generate_qr", to: "payments#generate_qr"
+
   draw :madmin
   get '/privacy', to: 'home#privacy'
   get '/terms', to: 'home#terms'
