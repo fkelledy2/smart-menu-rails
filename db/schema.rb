@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_04_165129) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_06_080125) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -414,6 +414,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_165129) do
     t.datetime "billRequestedAt"
     t.integer "ordercapacity", default: 0
     t.float "covercharge", default: 0.0
+    t.string "paymentlink"
+    t.integer "paymentstatus", default: 0
     t.index ["employee_id"], name: "index_ordrs_on_employee_id"
     t.index ["menu_id"], name: "index_ordrs_on_menu_id"
     t.index ["restaurant_id"], name: "index_ordrs_on_restaurant_id"

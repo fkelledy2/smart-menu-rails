@@ -43,6 +43,10 @@ class Ordr < ApplicationRecord
     closed: 40
   }
 
+  def grossInCents
+      gross * 100
+  end
+
   def orderedItems
     ordritems.where(status: 20).all
   end

@@ -43,7 +43,11 @@ document.addEventListener("turbo:load", () => {
         $("#tipNumberField").val(tip);
         let total = parseFloat(parseFloat(tip)+parseFloat(gross)).toFixed(2);
         $("#orderGrandTotal").text($('#restaurantCurrency').text()+parseFloat(total).toFixed(2));
-        $("#paymentAmount").val(parseFloat(total).toFixed(2));
+        $("#paymentAmount").val((parseFloat(total).toFixed(2)*100));
+        $("#paymentlink").text('');
+        $("#paymentAnchor").prop("href", '');
+        $("#paymentQR").html('');
+        $("#paymentQR").text('');
     });
 
     $("#tipNumberField").change(function() {
@@ -233,9 +237,13 @@ document.addEventListener("turbo:load", () => {
     }
 
     if ($('#pay-order').length) {
-        if( document.getElementById("generateLink") ) {
-          document.getElementById("generateLink").addEventListener("click", async () => {
+        if( document.getElementById("refreshPaymentLink") ) {
+          document.getElementById("refreshPaymentLink").addEventListener("click", async () => {
             const amount = document.getElementById("paymentAmount").value;
+            const currency = document.getElementById("paymentCurrency").value;
+            const restaurantName = document.getElementById("paymentRestaurantName").value;
+            const restaurantId = document.getElementById("paymentRestaurantId").value;
+            const openOrderId = document.getElementById("openOrderId").value;
             try {
               const response = await fetch("/create_payment_link", {
                 method: "POST",
@@ -243,9 +251,8 @@ document.addEventListener("turbo:load", () => {
                   "Content-Type": "application/json",
                   "Accept": "application/json"
                 },
-                body: JSON.stringify({ amount })
+                body: JSON.stringify({ openOrderId, amount, currency, restaurantName, restaurantId })
               });
-
               const data = await response.json();
               if (data.payment_link) {
                 $("#paymentlink").text(data.payment_link);
