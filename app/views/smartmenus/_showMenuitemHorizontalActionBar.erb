@@ -1,4 +1,4 @@
-<div style='padding:0px' class="card-footer text-muted">
+<div style='padding:0px;min-height:32px' class="card-footer text-muted">
                 <div class="row">
                     <div class="col-12">
                         <span class="float-start">
@@ -10,7 +10,8 @@
                                     <% end %>
                                 </div>
                         </span>
-                        <span class="float-end">
+                        <% if @openOrder %>
+                            <span class="float-end">
                                 <div class="btn-group btn-group-sm btn-order-group-custom-rounded" role="group" aria-label="Order">
                                     <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                             data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
@@ -53,7 +54,8 @@
                                         </ul>
                                     <% end %>
                                 </div>
-                        </span>
+                            </span>
+                        <% end %>
                     </div>
                 </div>
 </div>
