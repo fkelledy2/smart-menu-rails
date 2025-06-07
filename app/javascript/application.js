@@ -97,6 +97,10 @@ document.addEventListener("turbo:load", () => {
     });
 });
 
+function validateIntegerInput(input) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+}
+
 window.fadeIn = function(obj) {
     $(obj).fadeIn(1000);
 }

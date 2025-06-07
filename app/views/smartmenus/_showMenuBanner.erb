@@ -1,15 +1,3 @@
-  <style>
-    .flag-icon {
-      width: 35px;
-      height: 25px;
-      object-fit: cover;
-    }
-    .flag-icon-selected {
-      width: 25px;
-      height: 17px;
-      object-fit: cover;
-    }
-  </style>
   <div class="row">
       <div class="col-12 col-md-12 col-lg-12">
         <div class="row">
@@ -24,11 +12,11 @@
                             <span class="h5"><%= @menu.restaurant.name %></span>
                         <% end %>
                         <span class="float-end">
-                                <%= render "showTableSelector" %>
-                                <% if current_user %>
-                                <% else %>
-                                    <%= render "showLocalSelector" %>
-                                <% end %>
+                            <%= render "showTableSelector" %>
+                            <% if current_user %>
+                            <% else %>
+                                <%= render "showLocalSelector" %>
+                            <% end %>
                         </span>
                     </div>
                 </div>
