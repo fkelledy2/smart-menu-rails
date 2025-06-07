@@ -26,7 +26,15 @@
                 <% if ordraction.ordritem && ordraction.ordritem.status == 'added' && ordraction.ordritem.in?(@openOrder.ordritems) %>
                 <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
                     <div class="col-6">
-                        <%= ordraction.ordritem.menuitem.name %> <%= ordraction.ordritem.status %>
+                        <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                            <%= ordraction.ordritem.menuitem.localisedName(@ordrparticipant.preferredlocale) %>
+                        <% else %>
+                            <% if @menuparticipant && @menuparticipant.preferredlocale %>
+                                <%= ordraction.ordritem.menuitem.localisedName(@menuparticipant.preferredlocale) %>
+                            <% else %>
+                                <%= ordraction.ordritem.menuitem.name %>
+                            <% end %>
+                        <% end %>
                     </div>
                     <div class="col-2">
                         <span class="float-end">

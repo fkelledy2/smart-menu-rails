@@ -13,18 +13,49 @@
                         <% if @openOrder %>
                             <span class="float-end">
                                 <div class="btn-group btn-group-sm btn-order-group-custom-rounded" role="group" aria-label="Order">
-                                    <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+
+                                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                                        <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                             data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
                                             data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
                                             data-bs-ordr_id="<%= @openOrder.id %>"
                                             data-bs-menuitem_id="<%= menuitem.id %>"
-                                            data-bs-menuitem_name="<%= menuitem.name %>"
+                                            data-bs-menuitem_name="<%= menuitem.localisedName(@ordrparticipant.preferredlocale) %>"
+                                            data-bs-menuitem_description="<%= menuitem.localisedDescription(@ordrparticipant.preferredlocale) %>"
                                             data-bs-menuitem_price="<%= menuitem.price %>"
-                                            data-bs-menuitem_description="<%= menuitem.description %>"
                                             data-bs-menuitem_image="<%= menuitem.image_url %>">
                                             <%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                                             <i class="bi bi-plus"></i>
-                                    </button>
+                                        </button>
+                                    <% else %>
+                                        <% if @menuparticipant && @menuparticipant.preferredlocale %>
+                                            <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
+                                                data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
+                                                data-bs-ordr_id="<%= @openOrder.id %>"
+                                                data-bs-menuitem_id="<%= menuitem.id %>"
+                                                data-bs-menuitem_name="<%= menuitem.localisedName(@menuparticipant.preferredlocale) %>"
+                                                data-bs-menuitem_description="<%= menuitem.localisedDescription(@menuparticipant.preferredlocale) %>"
+                                                data-bs-menuitem_price="<%= menuitem.price %>"
+                                                data-bs-menuitem_image="<%= menuitem.image_url %>">
+                                                <%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        <% else %>
+                                            <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
+                                                data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
+                                                data-bs-ordr_id="<%= @openOrder.id %>"
+                                                data-bs-menuitem_id="<%= menuitem.id %>"
+                                                data-bs-menuitem_name="<%= menuitem.name %>"
+                                                data-bs-menuitem_description="<%= menuitem.description %>"
+                                                data-bs-menuitem_price="<%= menuitem.price %>"
+                                                data-bs-menuitem_image="<%= menuitem.image_url %>">
+                                                <%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        <% end %>
+                                    <% end %>
                                     <% if menuitem.menuitem_size_mappings.count > 0 %>
                                         <button type="button" style='border-top-right-radius: 0px;border-bottom-right-radius: 5px;max-width:50px' class="addItemToOrder btn btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                                                             data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
