@@ -168,7 +168,7 @@ class RestaurantsController < ApplicationController
         respond_to do |format|
           if @restaurant.update(restaurant_params)
             puts 'SmartMenuSyncJob.start'
-            SmartMenuSyncJob.perform_sync(@restaurant)
+            SmartMenuSyncJob.perform_sync(@restaurant.id)
             puts 'SmartMenuSyncJob.end'
 
 #             puts 'SpotifySyncJob.start'
