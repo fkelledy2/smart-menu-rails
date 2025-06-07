@@ -440,6 +440,8 @@ en:
       table: "Table"
 
   smartmenus:
+    showAddItemToOrderModal:
+      addToOrder: "Add to order"
     showCoverCharge:
       covercharge: "Cover charge"
       coverchargeUnit: "per person"

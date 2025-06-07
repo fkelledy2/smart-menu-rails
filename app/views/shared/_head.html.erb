@@ -102,27 +102,54 @@
       pointer-events: none; /* Ensures the overlay doesn’t interfere with video controls */
     }
 
-.background-container {
-  position: relative;
-  min-height:500px;
-}
+    .background-container {
+      position: relative;
+      min-height:500px;
+    }
 
-.background-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* Prevents blocking clicks */
-}
+    .background-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* Prevents blocking clicks */
+    }
 
-.button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2; /* Ensures button is above the background */
-}
+    .button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2; /* Ensures button is above the background */
+    }
+
+    .btn-allergyn-group-custom-rounded .btn:first-child {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 5px;
+    }
+    .btn-allergyn-group-custom-rounded .btn:last-child {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    .btn-order-group-custom-rounded .btn:first-child {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+    .btn-order-group-custom-rounded .btn:last-child {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 5px;
+    }
+
+    .btn-order-input-group-custom-rounded .btn:first-child {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+    .btn-order-input-group-custom-rounded .btn:last-child {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 5px;
+    }
 
 </style>

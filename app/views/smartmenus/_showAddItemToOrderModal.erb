@@ -6,10 +6,10 @@
   <% end %>
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addItemToOrderModalLabel">Add Item To Order</h1>
+        <h1 class="modal-title fs-5" id="addItemToOrderModalLabel"><%= t(".addToOrder") %></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div style="padding:0px" class="modal-body">
         <% if current_user %>
         <% else %>
             <% if (@menu.displayImages == true && @menu.restaurant.displayImages == true) || (@menu.displayImagesInPopup == true && @menu.restaurant.displayImagesInPopup == true) %>
@@ -18,9 +18,9 @@
                         <%= image_tag "",
                             :id => "a2o_menuitem_image",
                             :title => "",
-                            :class => "rounded card-img-top",
+                            :class => "card-img-top",
                             :onload => "fadeIn(this)",
-                            :style => "-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));display:none;"
+                            :style => "display:none;"
                         %>
                     </div>
                 </div>
@@ -29,21 +29,25 @@
         <% end %>
         <span style="display:none" id="a2o_ordr_id"></span>
         <span style="display:none" id="a2o_menuitem_id"></span>
-        <div class="row">
+        <div style="padding:15px" class="row">
             <div class="col-12">
                 <span class="h4" id="a2o_menuitem_name"></span>
             </div>
         </div>
-        <div style="margin-top:5px;" class="row">
+        <div style="padding:15px;margin-top:5px;" class="row">
             <div class="col-12">
                 <span id="a2o_menuitem_description"></span>
             </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <span class="h4 float-end">
-            <%= @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "" %><span id="a2o_menuitem_price"></span>
-            <button id="addItemToOrderButton" type="button" class="btn btn-dark" data-bs-dismiss="modal"><i class="bi bi-plus"></i></button>
+      <div style='border-top:0px;padding:0px' class="modal-footer">
+        <span class="float-end">
+            <div style='position:relative;right:-5px;bottom:-5px;' class="btn-group btn-group-lg btn-order-group-custom-rounded" role="group" aria-label="Order">
+                <button id="addItemToOrderButton" type="button" class="btn btn-dark" data-bs-dismiss="modal">
+                    <%= @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "" %><span id="a2o_menuitem_price"></span>
+                    <i class="bi bi-plus"></i>
+                </button>
+            </div>
         </span>
       </div>
     </div>
