@@ -470,7 +470,7 @@ en:
       preview: "Preview"
     showMenuBanner:
       table: "Table"
-    showTableSelector:
+    showTableLocaleSelector:
       table: "Table"
 
   menusections:
