@@ -12,11 +12,7 @@
                             <span class="h5"><%= @menu.restaurant.name %></span>
                         <% end %>
                         <span class="float-end">
-                            <%= render "showTableSelector" %>
-                            <% if current_user %>
-                            <% else %>
-                                <%= render "showLocalSelector" %>
-                            <% end %>
+                            <%= render "showTableLocaleSelector" %>
                         </span>
                     </div>
                 </div>
@@ -48,28 +44,26 @@
                     <% end %>
                 </span>
                 <span class="float-end">
-                                <% if current_user %>
-                                <% else %>
-                                    <% if @ordrparticipant && @ordrparticipant.name == nil %>
-                                        <span id="addYourNameSpan">
-                                            <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
-                                              <i class="bi bi-person-fill-add"></i>
-                                            </button>
-                                        </span>
-                                    <% else %>
-                                        <% if @ordrparticipant && @ordrparticipant.name %>
-                                        <span id="addYourNameSpan">
-                                            <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
-                                                <small><%= @ordrparticipant.name %></small>&nbsp;<i class="bi bi-pencil-fill"></i>
-                                            </button>
-                                        </span>
-                                        <% end %>
-                                    <% end %>
-                                <% end %>
-                                <% if @tablesetting %>
-                                    <%= render "order" %>
-                                <% end %>
+                <div class="btn-group" role="group">
+                    <% if current_user %>
+                    <% else %>
+                        <% if @ordrparticipant && @ordrparticipant.name == nil %>
+                           <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
+                              <i class="bi bi-person-fill-add"></i>
+                           </button>
+                        <% else %>
+                           <% if @ordrparticipant && @ordrparticipant.name %>
+                              <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
+                                  <small><%= @ordrparticipant.name %></small>&nbsp;<i class="bi bi-pencil-fill"></i>
+                              </button>
+                           <% end %>
+                        <% end %>
+                    <% end %>
+                    <% if @tablesetting %>
+                        <%= render "order" %>
+                    <% end %>
                 </span>
+                </div>
             </div>
         </div>
         <div style="height:40px"class="container-fluid">
