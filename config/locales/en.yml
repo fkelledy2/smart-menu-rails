@@ -470,9 +470,16 @@ en:
       preview: "Preview"
     showMenuBanner:
       table: "Table"
+      allergyns: "Allergens"
+
     showTableLocaleSelector:
       table: "Table"
-
+    order:
+      staffAlerted: "Staff Notified"
+      takePayment: "Take Payment"
+      startOrder: "Start Order"
+      bill: "Get Bill"
+      order: "Order"
   menusections:
     index:
       menuSections: "Menu Sections"

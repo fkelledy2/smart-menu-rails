@@ -48,13 +48,13 @@
                     <% if current_user %>
                     <% else %>
                         <% if @ordrparticipant && @ordrparticipant.name == nil %>
-                           <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
+                           <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
                               <i class="bi bi-person-fill-add"></i>
                            </button>
                         <% else %>
                            <% if @ordrparticipant && @ordrparticipant.name %>
-                              <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
-                                  <small><%= @ordrparticipant.name %></small>&nbsp;<i class="bi bi-pencil-fill"></i>
+                              <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
+                                  <small><%= @ordrparticipant.name %></small>
                               </button>
                            <% end %>
                         <% end %>
@@ -82,7 +82,7 @@
                         <% end %>
                       </a>
                 <% end %>
-                <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-danger text-nowrap" href="#menusection_allergyns">Allergens</a>
+                <a style='margin:5px' class="sectionnav btn btn-sm btn-warning text-nowrap" href="#menusection_allergyns"><%= t(".allergyns") %></a>
               </ul>
             </nav>
         </div>

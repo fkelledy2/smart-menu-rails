@@ -83,6 +83,14 @@ class Ordr < ApplicationRecord
     ordritems.pluck("ordritemprice").sum
   end
 
+  def orderedCount
+      self.ordractions.joins(:ordritem).where(ordritems: { status: 20 }).count
+  end
+
+  def addedCount
+      self.ordractions.joins(:ordritem).where(ordritems: { status: 0 }).count
+  end
+
   validates :restaurant, :presence => true
   validates :menu, :presence => true
   validates :tablesetting, :presence => true

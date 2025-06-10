@@ -4,18 +4,17 @@
                         <span class="float-start">
                                 <div class="btn-group btn-allergyn-group-custom-rounded" role="group" aria-label="Allergyns">
                                     <% menuitem.allergyns.each do |allergyn| %>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
+                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
                                             <%= allergyn.symbol %>
                                         </button>
                                     <% end %>
                                 </div>
                         </span>
-                        <% if @openOrder %>
+                        <% if @openOrder && @openOrder.status != 'billrequested' %>
                             <span class="float-end">
                                 <div class="btn-group btn-group-sm btn-order-group-custom-rounded" role="group" aria-label="Order">
-
                                     <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
-                                        <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                        <button type="button" class="addItemToOrder btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                             data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
                                             data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
                                             data-bs-ordr_id="<%= @openOrder.id %>"
@@ -29,7 +28,7 @@
                                         </button>
                                     <% else %>
                                         <% if @menuparticipant && @menuparticipant.preferredlocale %>
-                                            <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                            <button type="button" class="addItemToOrder btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                                 data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
                                                 data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
                                                 data-bs-ordr_id="<%= @openOrder.id %>"
@@ -42,7 +41,7 @@
                                                 <i class="bi bi-plus"></i>
                                             </button>
                                         <% else %>
-                                            <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                            <button type="button" class="addItemToOrder btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                                 data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
                                                 data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
                                                 data-bs-ordr_id="<%= @openOrder.id %>"
@@ -57,12 +56,12 @@
                                         <% end %>
                                     <% end %>
                                     <% if menuitem.menuitem_size_mappings.count > 0 %>
-                                        <button type="button" style='border-top-right-radius: 0px;border-bottom-right-radius: 5px;max-width:50px' class="addItemToOrder btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
+                                        <button type="button" style='border-top-right-radius: 0px;border-bottom-right-radius: 5px;max-width:50px' class="addItemToOrder btn btn-sm btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                                                             data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
                                                             data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>">
                                             <span class="visually-hidden">Toggle Dropdown</span>
                                         </button>
-                                        <ul style="--bs-dropdown-padding-y: 0.0rem;--bs-dropdown-min-width:0em" class="dropdown-menu dropdown-menu-dark" class="dropdown-menu">
+                                        <ul style="--bs-dropdown-padding-y: 0.0rem;--bs-dropdown-min-width:0em" class="dropdown-menu dropdown-menu-danger" class="dropdown-menu">
                                             <% menuitem.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
                                                 <li class="float-end">
                                                     <a class="float-end dropdown-item" href="#">
