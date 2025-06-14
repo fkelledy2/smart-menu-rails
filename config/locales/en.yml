@@ -440,6 +440,11 @@ en:
       table: "Table"
 
   smartmenus:
+    showViewOrderModal:
+      yourOrder: "Your Order"
+      menuItem: "Menu Item"
+      price: "Price"
+      total: "Total"
     showAddItemToOrderModal:
       addToOrder: "Add to order"
     showCoverCharge:

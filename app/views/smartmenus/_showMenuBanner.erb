@@ -53,7 +53,7 @@
                            </button>
                         <% else %>
                            <% if @ordrparticipant && @ordrparticipant.name %>
-                              <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
+                              <button type="button" style="max-width: 100px;" class="btn btn-sm btn-dark d-inline-block text-truncate" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
                                   <small><%= @ordrparticipant.name %></small>
                               </button>
                            <% end %>

@@ -3,20 +3,20 @@
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="viewOrderModalLabel">Your Order</h5>
+        <h5 class="modal-title" id="viewOrderModalLabel"><%= t(".yourOrder")%></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <% if @openOrder %>
             <div class="row">
                 <div class="col-6">
-                    <b>Menu Item</b>
+                    <b><%= t(".menuItem")%></b>
                 </div>
                 <div class="col-2">
                 </div>
                 <div class="col-2">
                   <span class="float-end">
-                    <b>Price</b>
+                    <b><%= t(".price")%></b>
                   </span>
                 </div>
                 <div class="col-2">
@@ -26,20 +26,26 @@
                 <% if ordraction.ordritem && ordraction.ordritem.status == 'added' && ordraction.ordritem.in?(@openOrder.ordritems) %>
                     <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
                         <div class="col-6">
-                            <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
-                                <%= ordraction.ordritem.menuitem.localisedName(@ordrparticipant.preferredlocale) %>
-                            <% else %>
-                                <% if @menuparticipant && @menuparticipant.preferredlocale %>
-                                    <%= ordraction.ordritem.menuitem.localisedName(@menuparticipant.preferredlocale) %>
-                                <% else %>
-                                    <%= ordraction.ordritem.menuitem.name %>
-                                <% end %>
-                            <% end %>
+                            <div class="d-flex w-100 overflow-hidden">
+                                <p class="text-truncate">
+                                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                                        <%= ordraction.ordritem.menuitem.localisedName(@ordrparticipant.preferredlocale) %>
+                                    <% else %>
+                                        <% if @menuparticipant && @menuparticipant.preferredlocale %>
+                                            <%= ordraction.ordritem.menuitem.localisedName(@menuparticipant.preferredlocale) %>
+                                        <% else %>
+                                            <%= ordraction.ordritem.menuitem.name %>
+                                        <% end %>
+                                    <% end %>
+                                </p>
+                            </div>
                         </div>
                         <div class="col-2">
-                            <span class="float-end">
-                                <%= ordraction.ordrparticipant.name %>
-                            </span>
+                            <div class="d-flex w-100 overflow-hidden">
+                                <p class="text-truncate">
+                                    <%= ordraction.ordrparticipant.name %>
+                                </p>
+                            </div>
                         </div>
                         <div class="col-2">
                             <span class="float-end">
@@ -62,23 +68,29 @@
                 <% if ordraction.ordritem && ordraction.ordritem.status == 'ordered' && ordraction.ordritem.in?(@openOrder.ordritems) %>
                     <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
                         <div class="col-6">
-                            <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
-                                <%= ordraction.ordritem.menuitem.localisedName(@ordrparticipant.preferredlocale) %>
-                            <% else %>
-                                <% if @menuparticipant && @menuparticipant.preferredlocale %>
-                                    <%= ordraction.ordritem.menuitem.localisedName(@menuparticipant.preferredlocale) %>
-                                <% else %>
-                                    <%= ordraction.ordritem.menuitem.name %>
-                                <% end %>
-                            <% end %>
+                            <div class="d-flex w-100 overflow-hidden">
+                                <p class="text-muted text-truncate">
+                                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                                        <%= ordraction.ordritem.menuitem.localisedName(@ordrparticipant.preferredlocale) %>
+                                    <% else %>
+                                        <% if @menuparticipant && @menuparticipant.preferredlocale %>
+                                            <%= ordraction.ordritem.menuitem.localisedName(@menuparticipant.preferredlocale) %>
+                                        <% else %>
+                                            <%= ordraction.ordritem.menuitem.name %>
+                                        <% end %>
+                                    <% end %>
+                                </p>
+                            </div>
                         </div>
                         <div class="col-2">
-                            <span class="float-end">
-                                <%= ordraction.ordrparticipant.name %>
-                            </span>
+                            <div class="d-flex w-100 overflow-hidden">
+                                <p class="text-muted text-truncate">
+                                    <%= ordraction.ordrparticipant.name %>
+                                </p>
+                            </div>
                         </div>
                         <div class="col-2">
-                            <span class="float-end">
+                            <span class="text-muted float-end">
                                 <%= number_to_currency(ordraction.ordritem.menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                             </span>
                         </div>
@@ -94,18 +106,7 @@
             <% end %>
             <div class="row">
                 <div class="col-6">
-                </div>
-                <div class="col-2">
-                </div>
-                <div class="col-2">
-                    <hr>
-                </div>
-                <div class="col-2">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <b>Total:</b>
+                    <b><%= t(".total")%>:</b>
                 </div>
                 <div class="col-2">
                 </div>
