@@ -117,6 +117,7 @@ document.addEventListener("turbo:load", () => {
          }
        };
        patch( '/ordritems/'+ordrItemId, ordritem);
+       $('#ordritem_'+ordrItemId).fadeOut();
        return true;
     });
 

@@ -9,8 +9,7 @@
       <div class="modal-body">
         <% if @openOrder %>
             <div class="row">
-                <div class="col-6">
-                    <b><%= t(".menuItem")%></b>
+                <div class="col-8">
                 </div>
                 <div class="col-2">
                 </div>
@@ -19,15 +18,25 @@
                     <b><%= t(".price")%></b>
                   </span>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-2">
+                    <p>Selected</p>
+                </div>
+                <div class="col-10">
+                    <hr>
                 </div>
             </div>
             <% @openOrder.ordractions.includes([:ordritem]).each do |ordraction| %>
                 <% if ordraction.ordritem && ordraction.ordritem.status == 'added' && ordraction.ordritem.in?(@openOrder.ordritems) %>
                     <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
-                        <div class="col-6">
+                        <div class="col-8">
                             <div class="d-flex w-100 overflow-hidden">
                                 <p class="text-truncate">
+                                    <button type="button" class="removeItemFromOrderButton btn btn-sm btn-dark"
+                                        data-bs-ordritem_id="<%= ordraction.ordritem.id %>">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                     <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
                                         <%= ordraction.ordritem.menuitem.localisedName(@ordrparticipant.preferredlocale) %>
                                     <% else %>
@@ -52,24 +61,26 @@
                                 <%= number_to_currency(ordraction.ordritem.ordritemprice, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                             </span>
                         </div>
-                        <div class="col-2">
-                            <span class="float-end">
-                                <button type="button" class="removeItemFromOrderButton btn btn-sm btn-dark"
-                                    data-bs-ordritem_id="<%= ordraction.ordritem.id %>">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </span>
-                        </div>
                     </div>
                 <% end %>
             <% end %>
-            <hr>
+            <div class="row">
+                <div class="col-2">
+                    <p>Submitted</p>
+                </div>
+                <div class="col-10">
+                    <hr>
+                </div>
+            </div>
             <% @openOrder.ordractions.includes([:ordritem]).each do |ordraction| %>
                 <% if ordraction.ordritem && ordraction.ordritem.status == 'ordered' && ordraction.ordritem.in?(@openOrder.ordritems) %>
                     <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
-                        <div class="col-6">
+                        <div class="col-8">
                             <div class="d-flex w-100 overflow-hidden">
                                 <p class="text-muted text-truncate">
+                                    <button type="button" class="btn btn-sm btn-dark">
+                                        <i class="bi bi-arrow-right-circle-fill"></i>
+                                    </button>
                                     <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
                                         <%= ordraction.ordritem.menuitem.localisedName(@ordrparticipant.preferredlocale) %>
                                     <% else %>
@@ -94,26 +105,17 @@
                                 <%= number_to_currency(ordraction.ordritem.menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                             </span>
                         </div>
-                        <div class="col-2">
-                            <span class="float-end">
-                                <button type="button" class="btn btn-sm btn-dark">
-                                    <i class="bi bi-arrow-right-circle-fill"></i>
-                                </button>
-                            </span>
-                        </div>
                     </div>
                 <% end %>
             <% end %>
             <div class="row">
-                <div class="col-6">
+                <div class="col-8">
+                </div>
+                <div class="col-2">
                     <b><%= t(".total")%>:</b>
                 </div>
                 <div class="col-2">
-                </div>
-                <div class="col-2">
                     <span class="float-end"><b><%= number_to_currency(@openOrder.nett, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %></b></span>
-                </div>
-                <div class="col-2">
                 </div>
             </div>
         <% end %>
