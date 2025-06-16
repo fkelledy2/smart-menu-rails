@@ -2,7 +2,7 @@
   <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
   <div class="modal-dialog modal-dialog-scrollable modal-lg">
   <% else %>
-  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
   <% end %>
     <div class="modal-content">
       <div class="modal-header">
@@ -15,13 +15,24 @@
             <% if (@menu.displayImages == true && @menu.restaurant.displayImages == true) || (@menu.displayImagesInPopup == true && @menu.restaurant.displayImagesInPopup == true) %>
                 <div class="row">
                     <div class="col-12">
-                        <%= image_tag "",
-                            :id => "a2o_menuitem_image",
-                            :title => "",
-                            :class => "card-img-top",
-                            :onload => "fadeIn(this)",
-                            :style => "display:none;"
-                        %>
+
+                        <div class="image-container position-relative">
+                            <!-- Placeholder image (same size as final image) -->
+                            <img id="placeholder" src="https://placehold.co/600x400/white/white" class="w-100" style="visibility: visible;">
+                            <!-- Spinner overlay -->
+                            <div id="spinner" class="position-absolute top-50 start-50 translate-middle">
+                                <div class="spinner-border text-primary"></div>
+                            </div>
+                            <%= image_tag "",
+                                :id => "a2o_menuitem_image",
+                                :title => "",
+                                :class => "addItemToOrderImage card-img-top",
+                                :onload => "fadeIn(this)",
+                                :style => "display:none;"
+                            %>
+                        </div>
+
+
                     </div>
                 </div>
                 <div style="margin-top:20px;"></div>

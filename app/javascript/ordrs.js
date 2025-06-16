@@ -117,8 +117,14 @@ document.addEventListener("turbo:load", () => {
          }
        };
        patch( '/ordritems/'+ordrItemId, ordritem);
-       $('#ordritem_'+ordrItemId).fadeOut();
+       $('#confirm-order').click();
        return true;
+    });
+
+    document.getElementById('a2o_menuitem_image').addEventListener('load', function () {
+        document.getElementById('spinner').style.display = 'none'; // Hide spinner
+        document.getElementById('placeholder').style.display = 'none'; // Hide placeholder
+        this.style.opacity = 1; // Smoothly fade in the image
     });
 
     if ($('#addItemToOrderModal').length) {
