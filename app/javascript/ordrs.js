@@ -121,11 +121,14 @@ document.addEventListener("turbo:load", () => {
        return true;
     });
 
-    document.getElementById('a2o_menuitem_image').addEventListener('load', function () {
-        document.getElementById('spinner').style.display = 'none'; // Hide spinner
-        document.getElementById('placeholder').style.display = 'none'; // Hide placeholder
-        this.style.opacity = 1; // Smoothly fade in the image
-    });
+    var a2oMenuitemImage = document.getElementById("a2o_menuitem_image");
+    if( a2oMenuitemImage ) {
+        a2oMenuitemImage.addEventListener('load', function () {
+            document.getElementById('spinner').style.display = 'none'; // Hide spinner
+            document.getElementById('placeholder').style.display = 'none'; // Hide placeholder
+            this.style.opacity = 1; // Smoothly fade in the image
+        });
+    }
 
     if ($('#addItemToOrderModal').length) {
         const addItemToOrderModal = document.getElementById('addItemToOrderModal');
