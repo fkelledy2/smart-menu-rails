@@ -6,7 +6,7 @@
                     <%= t(".order") %> <i class="bi bi-cart"></i>
                 </button>
             <% else %>
-                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal" disabled>
+                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
                     <%= t(".order") %> <i class="bi bi-cart"></i>
                 </button>
             <% end %>
@@ -25,7 +25,7 @@
                     <%= t(".order") %> <i class="bi bi-cart"></i>
                 </button>
             <% else %>
-                <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal" disabled>
+                <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
                     <%= t(".order") %> <i class="bi bi-cart"></i>
                 </button>
             <% end %>

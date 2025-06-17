@@ -19,95 +19,100 @@
                   </span>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-2">
-                    <p>Selected</p>
-                </div>
-                <div class="col-10">
-                    <hr>
-                </div>
-            </div>
-            <% @openOrder.ordractions.includes([:ordritem]).each do |ordraction| %>
-                <% if ordraction.ordritem && ordraction.ordritem.status == 'added' && ordraction.ordritem.in?(@openOrder.ordritems) %>
-                    <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
-                        <div class="col-8">
-                            <div class="d-flex w-100 overflow-hidden">
-                                <p class="text-truncate">
-                                    <button type="button" class="removeItemFromOrderButton btn btn-sm btn-dark"
-                                        data-bs-ordritem_id="<%= ordraction.ordritem.id %>">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
-                                        <%= ordraction.ordritem.menuitem.localisedName(@ordrparticipant.preferredlocale) %>
-                                    <% else %>
-                                        <% if @menuparticipant && @menuparticipant.preferredlocale %>
-                                            <%= ordraction.ordritem.menuitem.localisedName(@menuparticipant.preferredlocale) %>
-                                        <% else %>
-                                            <%= ordraction.ordritem.menuitem.name %>
-                                        <% end %>
-                                    <% end %>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="d-flex w-100 overflow-hidden">
-                                <p class="text-truncate">
-                                    <%= ordraction.ordrparticipant.name %>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <span class="float-end">
-                                <%= number_to_currency(ordraction.ordritem.ordritemprice, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
-                            </span>
-                        </div>
+            <% if @openOrder && @openOrder.addedCount > 0 %>
+                <div class="row">
+                    <div class="col-2">
+                        <p>Selected</p>
                     </div>
+                    <div class="col-10">
+                        <hr>
+                    </div>
+                </div>
+                <% @openOrder.ordractions.includes([:ordritem]).each do |ordraction| %>
+                    <% if ordraction.ordritem && ordraction.ordritem.status == 'added' && ordraction.ordritem.in?(@openOrder.ordritems) %>
+                        <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
+                            <div class="col-8">
+                                <div class="d-flex w-100 overflow-hidden">
+                                    <p class="text-truncate">
+                                        <button type="button" class="removeItemFromOrderButton btn btn-sm btn-dark"
+                                            data-bs-ordritem_id="<%= ordraction.ordritem.id %>">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                        <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                                            <%= ordraction.ordritem.menuitem.localisedName(@ordrparticipant.preferredlocale) %>
+                                        <% else %>
+                                            <% if @menuparticipant && @menuparticipant.preferredlocale %>
+                                                <%= ordraction.ordritem.menuitem.localisedName(@menuparticipant.preferredlocale) %>
+                                            <% else %>
+                                                <%= ordraction.ordritem.menuitem.name %>
+                                            <% end %>
+                                        <% end %>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="d-flex w-100 overflow-hidden">
+                                    <p class="text-truncate">
+                                        <%= ordraction.ordrparticipant.name %>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <span class="float-end">
+                                    <%= number_to_currency(ordraction.ordritem.ordritemprice, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                </span>
+                            </div>
+                        </div>
+                    <% end %>
                 <% end %>
             <% end %>
-            <div class="row">
-                <div class="col-2">
-                    <p>Submitted</p>
-                </div>
-                <div class="col-10">
-                    <hr>
-                </div>
-            </div>
-            <% @openOrder.ordractions.includes([:ordritem]).each do |ordraction| %>
-                <% if ordraction.ordritem && ordraction.ordritem.status == 'ordered' && ordraction.ordritem.in?(@openOrder.ordritems) %>
-                    <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
-                        <div class="col-8">
-                            <div class="d-flex w-100 overflow-hidden">
-                                <p class="text-muted text-truncate">
-                                    <button type="button" class="btn btn-sm btn-dark">
-                                        <i class="bi bi-arrow-right-circle-fill"></i>
-                                    </button>
-                                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
-                                        <%= ordraction.ordritem.menuitem.localisedName(@ordrparticipant.preferredlocale) %>
-                                    <% else %>
-                                        <% if @menuparticipant && @menuparticipant.preferredlocale %>
-                                            <%= ordraction.ordritem.menuitem.localisedName(@menuparticipant.preferredlocale) %>
-                                        <% else %>
-                                            <%= ordraction.ordritem.menuitem.name %>
-                                        <% end %>
-                                    <% end %>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="d-flex w-100 overflow-hidden">
-                                <p class="text-muted text-truncate">
-                                    <%= ordraction.ordrparticipant.name %>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <span class="text-muted float-end">
-                                <%= number_to_currency(ordraction.ordritem.menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
-                            </span>
-                        </div>
+            <% if @openOrder && @openOrder.orderedCount > 0 %>
+                <div class="row">
+                    <div class="col-2">
+                        <p>Submitted</p>
                     </div>
+                    <div class="col-10">
+                        <hr>
+                    </div>
+                </div>
+                <% @openOrder.ordractions.includes([:ordritem]).each do |ordraction| %>
+                    <% if ordraction.ordritem && ordraction.ordritem.status == 'ordered' && ordraction.ordritem.in?(@openOrder.ordritems) %>
+                        <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
+                            <div class="col-8">
+                                <div class="d-flex w-100 overflow-hidden">
+                                    <p class="text-muted text-truncate">
+                                        <button type="button" class="btn btn-sm btn-dark">
+                                            <i class="bi bi-arrow-right-circle-fill"></i>
+                                        </button>
+                                        <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+                                            <%= ordraction.ordritem.menuitem.localisedName(@ordrparticipant.preferredlocale) %>
+                                        <% else %>
+                                            <% if @menuparticipant && @menuparticipant.preferredlocale %>
+                                                <%= ordraction.ordritem.menuitem.localisedName(@menuparticipant.preferredlocale) %>
+                                            <% else %>
+                                                <%= ordraction.ordritem.menuitem.name %>
+                                            <% end %>
+                                        <% end %>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="d-flex w-100 overflow-hidden">
+                                    <p class="text-muted text-truncate">
+                                        <%= ordraction.ordrparticipant.name %>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <span class="text-muted float-end">
+                                    <%= number_to_currency(ordraction.ordritem.menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                </span>
+                            </div>
+                        </div>
+                    <% end %>
                 <% end %>
             <% end %>
+
             <div class="row">
                 <div class="col-8">
                 </div>
@@ -121,10 +126,10 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <% if @openOrder && @openOrder.nett > 0 %>
-            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-dark">Submit Order</button>
+        <% if @openOrder && @openOrder.addedCount > 0 %>
+            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-danger">Submit Order</button>
         <% else %>
-            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-dark" disabled>Submit Order</button>
+            <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-danger" disabled>Submit Order</button>
         <% end %>
       </div>
     </div>
