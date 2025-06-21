@@ -286,7 +286,8 @@ class OrdrsController < ApplicationController
             viewOrderModal: ApplicationController.renderer.render(
                 partial: 'smartmenus/showViewOrderModal',
                 locals: { order: ordr, restaurantCurrency: @restaurantCurrency, ordrparticipant: ordrparticipant, menuparticipant: @menuparticipant}
-            )
+            ),
+            fullPageRefresh: { refresh: false }
         }
         ActionCable.server.broadcast("ordr_channel", partials)
     end

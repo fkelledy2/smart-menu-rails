@@ -39,7 +39,7 @@ class MenuparticipantsController < ApplicationController
     respond_to do |format|
       if @menuparticipant.update(menuparticipant_params)
         format.json { render :show, status: :ok, location: @menuparticipant }
-        ActionCable.server.broadcast("ordr_channel", @menuparticipant)
+        broadcastPartials()
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menuparticipant.errors, status: :unprocessable_entity }
@@ -58,6 +58,18 @@ class MenuparticipantsController < ApplicationController
   end
 
   private
+
+    def broadcastPartials()
+        @menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
+        if @menuparticipant
+            @ordrparticipant.preferredlocale = @menuparticipant.preferredlocale
+        end
+        partials = {
+            fullPageRefresh: { refresh: true }
+        }
+        ActionCable.server.broadcast("ordr_channel", partials)
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_menuparticipant
       @menuparticipant = Menuparticipant.find(params[:id])

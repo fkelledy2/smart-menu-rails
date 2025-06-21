@@ -38,7 +38,9 @@ consumer.subscriptions.create("OrdrChannel", {
 
   received(data) {
     console.log( 'received:'+JSON.stringify(data));
-//        location.reload();
+    if( data.fullPageRefresh.refresh ) {
+        location.reload();
+    }
     if( document.getElementById("currentEmployee") ) {
         document.getElementById("openOrderContainer").innerHTML = data.orderStaff;
     } else {
