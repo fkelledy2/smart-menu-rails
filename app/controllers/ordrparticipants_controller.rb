@@ -43,7 +43,18 @@ class OrdrparticipantsController < ApplicationController
         @ordrparticipant = Ordrparticipant.new(ordrparticipant_params)
         respond_to do |format|
           if @ordrparticipant.save
-            ActionCable.server.broadcast("ordr_channel", @ordrparticipant.ordr)
+            if current_user
+                ordrHtml = ApplicationController.renderer.render(
+                  partial: 'smartmenus/orderStaff',
+                  locals: { order: @ordrparticipant.ordr, menu: @ordrparticipant.ordr.menu, restaurant: @ordrparticipant.ordr.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant }
+                )
+            else
+                ordrHtml = ApplicationController.renderer.render(
+                  partial: 'smartmenus/orderCustomer',
+                  locals: { order: @ordrparticipant.ordr, menu: @ordrparticipant.ordr.menu, restaurant: @ordrparticipant.ordr.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant }
+                )
+            end
+            ActionCable.server.broadcast("ordr_channel", ordrHtml)
             format.json { render :show, status: :ok, location: @ordrparticipant.ordr }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -57,7 +68,7 @@ class OrdrparticipantsController < ApplicationController
         respond_to do |format|
           if @ordrparticipant.update(ordrparticipant_params)
             # Find all entries for participant with same sessionid and order_id and update the name.
-            ActionCable.server.broadcast("ordr_channel", @ordrparticipant.ordr)
+            broadcastPartials( @ordrparticipant.ordr, @tablesetting, @ordrparticipant )
             format.json { render :show, status: :ok, location: @ordrparticipant.ordr }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -80,6 +91,34 @@ class OrdrparticipantsController < ApplicationController
   end
 
   private
+
+    def broadcastPartials( ordr, tablesetting, ordrparticipant )
+        if ordr.menu.restaurant.currency
+            @restaurantCurrency = ISO4217::Currency.from_code(ordr.menu.restaurant.currency)
+        else
+            @restaurantCurrency = ISO4217::Currency.from_code('USD')
+        end
+        @menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
+        if @menuparticipant
+            @ordrparticipant.preferredlocale = @menuparticipant.preferredlocale
+        end
+        partials = {
+            orderCustomer: ApplicationController.renderer.render(
+                partial: 'smartmenus/orderCustomer',
+                locals: { order: ordr, menu: ordr.menu, restaurant: ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
+            ),
+            orderStaff: ApplicationController.renderer.render(
+                partial: 'smartmenus/orderStaff',
+                locals: { order: ordr, menu: ordr.menu, restaurant: ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
+            ),
+            viewOrderModal: ApplicationController.renderer.render(
+                partial: 'smartmenus/showViewOrderModal',
+                locals: { order: ordr, restaurantCurrency: @restaurantCurrency, ordrparticipant: ordrparticipant, menuparticipant: @menuparticipant}
+            )
+        }
+        ActionCable.server.broadcast("ordr_channel", partials)
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_ordrparticipant
         begin

@@ -1,0 +1,61 @@
+        <div style='padding-top:2px' class="row">
+            <div class="col-12">
+                <span>
+                    <% if ordrparticipant && ordrparticipant.preferredlocale %>
+                        <%= menu.localisedName(ordrparticipant.preferredlocale) %>
+                    <% else %>
+                        <%= menu.name %>
+                    <% end %>
+                </span>
+                <span class="float-end">
+                <div class="btn-group" role="group">
+                    <% if tablesetting %>
+                        <% if order %>
+                            <% if order.status == 'opened' %>
+                                <% if order.nett > 0 %>
+                                    <% if order.addedCount > 0 %>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
+                                            <%= t(".order") %> <i class="bi bi-cart"></i>
+                                        </button>
+                                    <% else %>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
+                                            <%= t(".order") %> <i class="bi bi-cart"></i>
+                                        </button>
+                                    <% end %>
+                                <% else %>
+                                    <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" disabled>
+                                        <%= t(".order") %> <i class="bi bi-cart"></i>
+                                    </button>
+                                <% end %>
+                            <% end %>
+                                <% if order.status == 'ordered' %>
+                                    <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#requestBillModal">
+                                        <%= t(".bill") %> <i class="bi bi-receipt"></i></i>
+                                    </button>
+                                    <% if order.addedCount > 0 %>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
+                                            <%= t(".order") %> <i class="bi bi-cart"></i>
+                                        </button>
+                                    <% else %>
+                                        <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
+                                            <%= t(".order") %> <i class="bi bi-cart"></i>
+                                        </button>
+                                    <% end %>
+                                <% end %>
+                                <% if order.status == 'billrequested' %>
+                                        <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#payOrderModal">
+                                            <%= t(".takePayment") %> <i class="bi bi-credit-card"></i>
+                                        </button>
+                                <% end %>
+                        <% else %>
+                            <% if menu.allowOrdering == true && menu.restaurant.allowOrdering == true %>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#openOrderModal">
+                                    <%= t(".startOrder") %> <i class="bi bi-plus-circle"></i>
+                                </button>
+                            <% end %>
+                        <% end %>
+                    <% end %>
+                </span>
+                </div>
+            </div>
+        </div>

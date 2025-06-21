@@ -18,53 +18,22 @@
                 </div>
             </div>
         </div>
-        <div style='padding-top:2px' class="row">
-            <div class="col-12">
-                <span>
-                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
-                        <%= @menu.localisedName(@ordrparticipant.preferredlocale) %>
-                    <% else %>
-                        <%= @menu.name %>
-                    <% end %>
-                    <% if current_user %>
-                    <% else %>
-                        <% if @ordrparticipant %>
-                            <span id="filterMenuSpan">
-                                <button type="button" class="btn btn-sm btn-light position-relative" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#filterOrderModal">
-                                    <i class="bi bi-filter"></i>
-                                    <% if @ordrparticipant.allergyns.size > 0 %>
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            <%= @ordrparticipant.allergyns.size %>
-                                            <span class="visually-hidden"></span>
-                                        </span>
-                                    <% end %>
-                                </button>
-                            </span>
-                        <% end %>
-                    <% end %>
-                </span>
-                <span class="float-end">
-                <div class="btn-group" role="group">
-                    <% if current_user %>
-                    <% else %>
-                        <% if @ordrparticipant && @ordrparticipant.name == nil %>
-                           <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
-                              <i class="bi bi-person-fill-add"></i>
-                           </button>
-                        <% else %>
-                           <% if @ordrparticipant && @ordrparticipant.name %>
-                              <button type="button" style="max-width: 100px;" class="btn btn-sm btn-dark d-inline-block text-truncate" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
-                                  <small><%= @ordrparticipant.name %></small>
-                              </button>
-                           <% end %>
-                        <% end %>
-                    <% end %>
-                    <% if @tablesetting %>
-                        <%= render "order" %>
-                    <% end %>
-                </span>
-                </div>
-            </div>
+
+        <div id="openOrderContainer">
+            <% if @openOrder %>
+                <% if current_user %>
+                    <%= render partial: "orderStaff", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @openOrder.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+                <% else %>
+                    <%= render partial: "orderCustomer", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @openOrder.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+                <% end %>
+            <% else %>
+                <% if current_user %>
+                    <%= render partial: "orderStaff", locals: { order: nil, menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+                <% else %>
+                    <%= render partial: "orderCustomer", locals: { order: nil, menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+                <% end %>
+            <% end %>
+
         </div>
         <div style="height:40px"class="container-fluid">
             <nav id="navbar-example2" style="position:relative; left:-10px;width:106%;mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 140%" class="nav flex-nowrap overflow-auto">

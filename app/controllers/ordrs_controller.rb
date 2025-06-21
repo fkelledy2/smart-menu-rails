@@ -107,7 +107,8 @@ class OrdrsController < ApplicationController
             @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
             @tablesetting.save
-            ActionCable.server.broadcast("ordr_channel", @ordr)
+
+            broadcastPartials( @ordr, @tablesetting, @ordrparticipant )
         end
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully created." }
         format.json { render :show, status: :created, location: @ordr }
@@ -243,7 +244,7 @@ class OrdrsController < ApplicationController
             @tablesetting.save
         end
         format.json { render :show, status: :ok, location: @ordr }
-        ActionCable.server.broadcast("ordr_channel", @ordr)
+        broadcastPartials( @ordr, @tablesetting, @ordrparticipant )
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @ordr.errors, status: :unprocessable_entity }
@@ -262,6 +263,34 @@ class OrdrsController < ApplicationController
   end
 
   private
+
+    def broadcastPartials( ordr, tablesetting, ordrparticipant )
+        if ordr.menu.restaurant.currency
+            @restaurantCurrency = ISO4217::Currency.from_code(ordr.menu.restaurant.currency)
+        else
+            @restaurantCurrency = ISO4217::Currency.from_code('USD')
+        end
+        @menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
+        if @menuparticipant
+            @ordrparticipant.preferredlocale = @menuparticipant.preferredlocale
+        end
+        partials = {
+            orderCustomer: ApplicationController.renderer.render(
+                partial: 'smartmenus/orderCustomer',
+                locals: { order: ordr, menu: ordr.menu, restaurant: ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
+            ),
+            orderStaff: ApplicationController.renderer.render(
+                partial: 'smartmenus/orderStaff',
+                locals: { order: ordr, menu: ordr.menu, restaurant: ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
+            ),
+            viewOrderModal: ApplicationController.renderer.render(
+                partial: 'smartmenus/showViewOrderModal',
+                locals: { order: ordr, restaurantCurrency: @restaurantCurrency, ordrparticipant: ordrparticipant, menuparticipant: @menuparticipant}
+            )
+        }
+        ActionCable.server.broadcast("ordr_channel", partials)
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_ordr
       @ordr = Ordr.find(params[:id])

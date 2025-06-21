@@ -6,8 +6,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <% if @tablesetting %>
-                    Would you like to start an order for <input style='width:50px' type="number" id="orderCapacity" value=<%= @tablesetting.capacity%> oninput="validateIntegerInput(this)"> at this table?
+                <% if tablesetting %>
+                    Would you like to start an order for <input style='width:50px' type="number" id="orderCapacity" value=<%= tablesetting.capacity%> oninput="validateIntegerInput(this)"> at this table?
                 <% end %>
             </div>
             <div class="modal-footer">

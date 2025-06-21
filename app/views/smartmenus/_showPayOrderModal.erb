@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <form>
                     <div class="row">
-                        <% if @openOrder %>
+                        <% if order %>
                             <div class="row">
                                 <div class="col-9">
                                     <b>Item</b>
@@ -20,14 +20,14 @@
                                     </span>
                                 </div>
                             </div>
-                            <% if @openOrder.covercharge > 0 %>
+                            <% if order.covercharge > 0 %>
                                 <div class="row">
                                     <div class="col-10">
                                         Cover Charge
                                     </div>
                                     <div class="col-2">
                                       <span class="float-end">
-                                        <%= number_to_currency(@openOrder.covercharge, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                        <%= number_to_currency(order.covercharge, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
                                       </span>
                                     </div>
                                 </div>
@@ -38,30 +38,30 @@
                                 </div>
                                 <div class="col-3">
                                     <span class="float-end">
-                                        <%= number_to_currency(@openOrder.nett, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                        <%= number_to_currency(order.nett, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
                                     </span>
                                 </div>
                             </div>
-                            <% if @openOrder.service > 0 %>
+                            <% if order.service > 0 %>
                                 <div class="row">
                                     <div class="col-9">
                                         Service
                                     </div>
                                     <div class="col-3">
                                         <span class="float-end">
-                                            <%= number_to_currency(@openOrder.service, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                            <%= number_to_currency(order.service, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
                                         </span>
                                     </div>
                                 </div>
                             <% end %>
-                            <% if @openOrder.tax > 0 %>
+                            <% if order.tax > 0 %>
                                 <div class="row">
                                     <div class="col-9">
                                         Tax
                                     </div>
                                     <div class="col-3">
                                         <span class="float-end">
-                                            <%= number_to_currency(@openOrder.tax, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                            <%= number_to_currency(order.tax, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
                                         </span>
                                     </div>
                                 </div>
@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="col-3">
                                     <span class="float-end">
-                                        <b><%= @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "" %><span id="orderGross"><%= number_to_currency(@openOrder.gross, unit: "") %></span></b>
+                                        <b><%= restaurantCurrency.symbol ? restaurantCurrency.symbol : "" %><span id="orderGross"><%= number_to_currency(order.gross, unit: "") %></span></b>
                                     </span>
                                 </div>
                             </div>
@@ -88,10 +88,10 @@
                                     <span class="float-end">
                                         <div style="position:relative;left:15px" class="btn-toolbar btn-toolbar-sm mb-3" role="toolbar" aria-label="Tip Options">
                                             <div class="btn-group btn-group-sm mr-2" role="group" aria-label="First group">
-                                                <% @openOrder.menu.restaurant.tips.sort_by(&:percentage).each do |tip| %>
+                                                <% order.menu.restaurant.tips.sort_by(&:percentage).each do |tip| %>
                                                     <button type="button" class="btn btn-sm btn-secondary"><span class="tipPreset"><%= tip.percentage %></span>%</button>
                                                 <% end %>
-                                                <input id="tipNumberField" style="width:80px" type="number" min="0.00" max="<%= number_to_currency(@openOrder.gross, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>" class="form-control float-end text-end" id="tip" value="0.00">
+                                                <input id="tipNumberField" style="width:80px" type="number" min="0.00" max="<%= number_to_currency(order.gross, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>" class="form-control float-end text-end" id="tip" value="0.00">
                                             </div>
                                         </div>
                                     </span>
@@ -110,7 +110,7 @@
                                 </div>
                                 <div class="col-3">
                                     <span class="float-end">
-                                        <b><span id="orderGrandTotal"><%= number_to_currency(@openOrder.gross, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %></span></b>
+                                        <b><span id="orderGrandTotal"><%= number_to_currency(order.gross, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></span></b>
                                     </span>
                                 </div>
                             </div>
@@ -121,11 +121,11 @@
                             </div>
                             <div class="row">
                                 <div style='display: flex;justify-content: center;' class="col-12">
-                                    <input type="hidden" id="openOrderId" value="<%= @openOrder.id %>">
-                                    <input type="hidden" id="paymentAmount" value="<%= @openOrder.grossInCents %>">
-                                    <input type="hidden" id="paymentCurrency" value="<%= @restaurantCurrency.code %>">
-                                    <input type="hidden" id="paymentRestaurantName" value="Bill: <%= @openOrder.restaurant.name %>">
-                                    <input type="hidden" id="paymentRestaurantId" value="<%= @openOrder.restaurant.id %>">
+                                    <input type="hidden" id="openOrderId" value="<%= order.id %>">
+                                    <input type="hidden" id="paymentAmount" value="<%= order.grossInCents %>">
+                                    <input type="hidden" id="paymentCurrency" value="<%= restaurantCurrency.code %>">
+                                    <input type="hidden" id="paymentRestaurantName" value="Bill: <%= order.restaurant.name %>">
+                                    <input type="hidden" id="paymentRestaurantId" value="<%= order.restaurant.id %>">
                                     <span style='display:none' id="qrIcon"><%= image_url('qr-icon.svg') %></span>
                                     <span style='display:none' id="paymentlink"></span>
                                     <a id="paymentAnchor" target="_blank" href="">
@@ -138,7 +138,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <% if @openOrder && @openOrder.gross > 0 %>
+                <% if order && order.gross > 0 %>
                     <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn btn-dark">Confirm Payment</button>
                 <% else %>
                     <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn btn-dark" disabled>Confirm Payment</button>

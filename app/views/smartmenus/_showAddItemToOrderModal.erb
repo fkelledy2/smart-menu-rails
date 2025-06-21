@@ -1,5 +1,5 @@
 <div class="modal fade" id="addItemToOrderModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
-  <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
+  <% if menu.displayImages == true && menu.restaurant.displayImages == true %>
   <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
   <% else %>
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
@@ -12,7 +12,7 @@
       <div style="padding:0px" class="modal-body">
         <% if current_user %>
         <% else %>
-            <% if (@menu.displayImages == true && @menu.restaurant.displayImages == true) || (@menu.displayImagesInPopup == true && @menu.restaurant.displayImagesInPopup == true) %>
+            <% if (menu.displayImages == true && menu.restaurant.displayImages == true) || (menu.displayImagesInPopup == true && menu.restaurant.displayImagesInPopup == true) %>
                 <div class="row">
                     <div class="col-12">
 
@@ -55,7 +55,7 @@
         <span class="float-end">
             <div style='position:relative;right:-5px;bottom:-5px;' class="btn-group btn-group-lg btn-order-group-custom-rounded" role="group" aria-label="Order">
                 <button id="addItemToOrderButton" type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                    <%= @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "" %><span id="a2o_menuitem_price"></span>
+                    <%= restaurantCurrency.symbol ? restaurantCurrency.symbol : "" %><span id="a2o_menuitem_price"></span>
                     <i class="bi bi-plus"></i>
                 </button>
             </div>

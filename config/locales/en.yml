@@ -479,7 +479,13 @@ en:
 
     showTableLocaleSelector:
       table: "Table"
-    order:
+    orderStaff:
+      staffAlerted: "Staff Notified"
+      takePayment: "Take Payment"
+      startOrder: "Start Order"
+      bill: "Get Bill"
+      order: "Order"
+    orderCustomer:
       staffAlerted: "Staff Notified"
       takePayment: "Take Payment"
       startOrder: "Start Order"

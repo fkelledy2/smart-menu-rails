@@ -4,26 +4,26 @@
 <% else %>
 <div id="menuc" style="padding-bottom:10px;box-shadow: 0 4px 2px -2px gray;" class="sticky-top bg-white">
 <% end %>
-    <%= render "showMenuBanner" %>
+    <%= render partial: "showMenuBanner" %>
 </div>
 
 <% if @currentUser && @openOrder %>
-    <%= render "showMenuContent" %>
+    <%= render partial: "showMenuContent" %>
 <% else %>
     <% if @currentUser %>
     <% else %>
-        <%= render "showMenuContent" %>
+        <%= render partial: "showMenuContent" %>
     <% end %>
 <% end %>
 <div id="smartmenu"></div>
-<%= render "showOpenOrderModal" %>
-<%= render "showViewOrderModal" %>
-<%= render "showRequestBillModal" %>
-<%= render "showPayOrderModal" %>
-<%= render "showAddNameToParticipantModal" %>
-<%= render "showAddItemToOrderModal" %>
-<%= render "showFilterOrderModal" %>
-<%= render "showContext" %>
+<%= render partial: "showOpenOrderModal", locals: { tablesetting: @tablesetting } %>
+<%= render partial: "showViewOrderModal", locals: { order: @openOrder, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency } %>
+<%= render partial: "showRequestBillModal", locals: { order: @openOrder, restaurantCurrency: @restaurantCurrency } %>
+<%= render partial: "showPayOrderModal", locals: { order: @openOrder, restaurantCurrency: @restaurantCurrency } %>
+<%= render partial: "showAddNameToParticipantModal" %>
+<%= render partial: "showAddItemToOrderModal", locals: { menu: @menu, restaurantCurrency: @restaurantCurrency } %>
+<%= render partial: "showFilterOrderModal", locals: { menu: @menu, ordrparticipant: @ordrparticipant } %>
+<%= render partial: "showContext", locals: { order: @openOrder, menu: @menu, current_employee: @current_employee, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, tablesetting: @tablesetting } %>
 
 
 
