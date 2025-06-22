@@ -1,6 +1,6 @@
  <div style="padding-top:1px" class="col-6 col-md-4 col-lg-4">
     <div class="card">
-        <% if @openOrder && @openOrder.status != 'billrequested' %>
+        <% if order && order.status != 'billrequested' %>
                     <div class="row">
                         <div class="col-12">
                             <div class="d-grid gap-2">
@@ -8,7 +8,7 @@
                                     <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                                 data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
                                                 data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
-                                                data-bs-ordr_id="<%= @openOrder.id %>"
+                                                data-bs-ordr_id="<%= order.id %>"
                                                 data-bs-menuitem_id="<%= menuitem.id %>"
                                                 data-bs-menuitem_name="<%= menuitem.name %>"
                                                 data-bs-menuitem_price="<%= menuitem.price %>"
@@ -29,7 +29,7 @@
                                                         <button style="background: none!important;border: none;padding: 0!important;" type="button" class="addItemToOrder" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                                             data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
                                                             data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
-                                                            data-bs-ordr_id="<%= @openOrder.id %>"
+                                                            data-bs-ordr_id="<%= order.id %>"
                                                             data-bs-menuitem_id="<%= menuitem.id %>"
                                                             data-bs-menuitem_name="<%= menuitem.name %>"
                                                             data-bs-menuitem_price="<%= menuitemsize.price %>"
