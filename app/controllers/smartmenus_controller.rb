@@ -9,10 +9,10 @@ class SmartmenusController < ApplicationController
 
   # GET /smartmenus/1 or /smartmenus/1.json
   def show
-    @allergyns = Allergyn.where( restaurant_id: @restaurant.id )
     if @menu.restaurant != @restaurant
         redirect_to root_url
     end
+    @allergyns = Allergyn.where( restaurant_id: @menu.restaurant.id )
 #     Analytics.track(
 #         event: 'menus.show',
 #         properties: {

@@ -335,6 +335,7 @@ consumer.subscriptions.create("OrdrChannel", {
   },
 
   received(data) {
+    console.log( 'data.fullPageRefresh.refresh: '+data.fullPageRefresh.refresh);
     if( data.fullPageRefresh.refresh ) {
         location.reload();
     } else {

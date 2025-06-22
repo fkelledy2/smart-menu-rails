@@ -83,6 +83,7 @@ class OrdrsController < ApplicationController
 
     respond_to do |format|
       if @ordr.save
+        @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
         if( ordr_params[:status] = 0 )
             if current_user
                 @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
@@ -104,10 +105,8 @@ class OrdrsController < ApplicationController
                 @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 1)
                 @ordraction.save
             end
-            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
             @tablesetting.save
-
             broadcastPartials( @ordr, @tablesetting, @ordrparticipant )
         end
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully created." }
@@ -157,6 +156,7 @@ class OrdrsController < ApplicationController
       end
 
       if @ordr.update(ordr_params)
+        @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
         if( ordr_params[:status] = 0 )
             if current_user
                 @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
@@ -173,7 +173,6 @@ class OrdrsController < ApplicationController
                 @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 1)
                 @ordraction.save
             end
-            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
             @tablesetting.save
         end
@@ -193,7 +192,6 @@ class OrdrsController < ApplicationController
                 @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 5)
                 @ordraction.save
             end
-            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 1
             @tablesetting.save
             @ordr.ordritems.each do |oi|
@@ -219,7 +217,6 @@ class OrdrsController < ApplicationController
                 @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 5)
                 @ordraction.save
             end
-            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 1
             @tablesetting.save
         end
@@ -239,7 +236,6 @@ class OrdrsController < ApplicationController
                 @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 5)
                 @ordraction.save
             end
-            @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
             @tablesetting.status = 0
             @tablesetting.save
         end
@@ -275,7 +271,10 @@ class OrdrsController < ApplicationController
             @ordrparticipant.preferredlocale = @menuparticipant.preferredlocale
         end
         @allergyns = Allergyn.where( restaurant_id: ordr.menu.restaurant.id )
-
+        fullRefresh = false
+        if ordr.status == 'closed'
+            fullRefresh = true
+        end
         partials = {
             modals: ApplicationController.renderer.render(
                 partial: 'smartmenus/showModals',
@@ -297,7 +296,7 @@ class OrdrsController < ApplicationController
                 partial: 'smartmenus/orderStaff',
                 locals: { order: ordr, menu: ordr.menu, restaurant: ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
             ),
-            fullPageRefresh: { refresh: false }
+            fullPageRefresh: { refresh: fullRefresh }
         }
         ActionCable.server.broadcast("ordr_channel", partials)
     end

@@ -43,18 +43,8 @@ class OrdrparticipantsController < ApplicationController
         @ordrparticipant = Ordrparticipant.new(ordrparticipant_params)
         respond_to do |format|
           if @ordrparticipant.save
-            if current_user
-                ordrHtml = ApplicationController.renderer.render(
-                  partial: 'smartmenus/orderStaff',
-                  locals: { order: @ordrparticipant.ordr, menu: @ordrparticipant.ordr.menu, restaurant: @ordrparticipant.ordr.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant }
-                )
-            else
-                ordrHtml = ApplicationController.renderer.render(
-                  partial: 'smartmenus/orderCustomer',
-                  locals: { order: @ordrparticipant.ordr, menu: @ordrparticipant.ordr.menu, restaurant: @ordrparticipant.ordr.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant }
-                )
-            end
-            ActionCable.server.broadcast("ordr_channel", ordrHtml)
+            @tablesetting = Tablesetting.find_by_id(@ordrparticipant.ordr.tablesetting.id)
+            broadcastPartials( @ordrparticipant.ordr, @tablesetting, @ordrparticipant )
             format.json { render :show, status: :ok, location: @ordrparticipant.ordr }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -68,6 +58,7 @@ class OrdrparticipantsController < ApplicationController
         respond_to do |format|
           if @ordrparticipant.update(ordrparticipant_params)
             # Find all entries for participant with same sessionid and order_id and update the name.
+            @tablesetting = Tablesetting.find_by_id(@ordrparticipant.ordr.tablesetting.id)
             broadcastPartials( @ordrparticipant.ordr, @tablesetting, @ordrparticipant )
             format.json { render :show, status: :ok, location: @ordrparticipant.ordr }
           else
@@ -125,7 +116,7 @@ class OrdrparticipantsController < ApplicationController
                 partial: 'smartmenus/orderStaff',
                 locals: { order: ordr, menu: ordr.menu, restaurant: ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
             ),
-            fullPageRefresh: { refresh: true }
+            fullPageRefresh: { refresh: false }
         }
         ActionCable.server.broadcast("ordr_channel", partials)
     end
