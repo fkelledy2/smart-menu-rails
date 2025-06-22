@@ -1,9 +1,9 @@
-<% if current_user == nil && @menu.covercharge > 0 %>
+<% if menu != nil && menu.covercharge > 0 %>
     <div style="padding-top:20px" id="menusection_covercharge"></div>
         <div class="mx-auto text-center ">
             <div class="row ">
                 <div class="col-12">
-                    <p><%= t('.covercharge') %>: <strong><%= number_to_currency(@menu.covercharge, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %></strong> <%= t('.coverchargeUnit') %></p>
+                    <p><%= t('.covercharge') %>: <strong><%= number_to_currency(menu.covercharge, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></strong> <%= t('.coverchargeUnit') %></p>
                 </div>
             </div>
        </div>

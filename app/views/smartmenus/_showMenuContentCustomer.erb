@@ -1,0 +1,77 @@
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+            <% menu.menusections.order(:sequence).each do |menusection| %>
+                <div style="padding-top:20px" id="menusection_<%= menusection.id %>"></div>
+                <% if menu.displayImages == true && menu.restaurant.displayImages == true %>
+                    <% if menusection.image %>
+                        <div class="card border-light text-bg-dark">
+                            <img src="<%= menusection.image_url %>" style="height: 150px" class="card-img" alt="<%= menusection.name %>">
+                            <div class="card-img-overlay">
+                                <h3 class="card-title"><%= menusection.name %></h3>
+                                <p class="card-text"><%= menusection.description %></p>
+                            </div>
+                        </div>
+                    <% else %>
+                        <div class="row">
+                            <div class="col-12">
+                                <span class='h3'>
+                                    <% if ordrparticipant && ordrparticipant.preferredlocale %>
+                                        <%= menusection.localisedName(ordrparticipant.preferredlocale) %>
+                                    <% else %>
+                                        <% if menuparticipant && menuparticipant.preferredlocale %>
+                                            <%= menusection.localisedName(menuparticipant.preferredlocale) %>
+                                        <% else %>
+                                            <%= menusection.name %>
+                                        <% end %>
+                                    <% end %>
+                                    <% if menusection.restricted == true %>
+                                        <span class='float-end'>
+                                            <small class="text-muted">
+                                                <%= menusection.fromhour %>:<%= menusection.frommin %> - <%= menusection.tohour %>:<%= menusection.tomin %>
+                                                <div style='display:none' id="sectionFromOffset"><%= menusection.fromOffset %></div>
+                                                <div style='display:none' id="sectionToOffset"><%= menusection.toOffset %></div>
+                                            </small>
+                                        <span>
+                                    <% end %>
+                                </span>
+                            </div>
+                        </div>
+                    <% end %>
+                <% else %>
+                        <div class="row">
+                            <div class="col-12">
+                                <span class='h3'>
+                                    <% if ordrparticipant && ordrparticipant.preferredlocale %>
+                                        <%= menusection.localisedName(ordrparticipant.preferredlocale) %>
+                                    <% else %>
+                                        <% if menuparticipant && menuparticipant.preferredlocale %>
+                                            <%= menusection.localisedName(menuparticipant.preferredlocale) %>
+                                        <% else %>
+                                            <%= menusection.name %>
+                                        <% end %>
+                                    <% end %>
+                                    <% if menusection.restricted == true %>
+                                        <span class='float-end'>
+                                            <small class="text-muted">
+                                                <%= menusection.fromhour %>:<%= menusection.frommin %> - <%= menusection.tohour %>:<%= menusection.tomin %>
+                                                <div style='display:none' id="sectionFromOffset"><%= menusection.fromOffset %></div>
+                                                <div style='display:none' id="sectionToOffset"><%= menusection.toOffset %></div>
+                                            </small>
+                                        <span>
+                                    <% end %>
+                                </span>
+                            </div>
+                        </div>
+                <% end %>
+                <div class="row">
+                    <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).where(status: 'active').order(:sequence).each do |mi| %>
+                        <% if ordrparticipant == nil || ordrparticipant && (ordrparticipant.allergyns & mi.allergyns).empty? %>
+                            <%= render partial: "smartmenus/showMenuitemHorizontal", locals: { order: order, menu: menu, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, mi: mi, restaurantCurrency: restaurantCurrency } %>
+                        <% end %>
+                    <% end %>
+                </div>
+        <% end %>
+        <%= render partial: "smartmenus/showAllergyns", locals: { allergyns: allergyns }  %>
+        <%= render partial: "smartmenus/showCoverCharge", locals: { menu: menu, restaurantCurrency: restaurantCurrency } %>
+      </div>
+    </div>

@@ -1,108 +1,108 @@
-<% if 1==1 %>
-    <% if order %>
-        <div style='display:none' id="currentOrder"><%= order.id %></div>
-        <div style='display:none' id="currentOrder"><%= order.status %></div>
-    <% end %>
-    <% if tablesetting %>
-        <div style='display:none' id="currentTable"><%= tablesetting.id %></div></div>
-    <% end %>
-    <% if current_user %>
-        <div style='display:none' id="currentEmployee"><%= current_employee.id %></div>
-    <% end %>
-    <% if menu %>
-        <div style='display:none' id="currentMenu"><%= menu.id %></div>
-    <% end %>
-    <% if menu.restaurant %>
-        <div style='display:none' id="currentRestaurant"><%= menu.restaurant.id %></div>
-    <% end %>
-    <% if ordrparticipant %>
-        <div style='display:none' id="currentParticipant"><%= ordrparticipant.id %></div>
-    <% end %>
-    <% if menuparticipant %>
-        <div style='display:none' id="menuParticipant"><%= menuparticipant.id %></div>
-    <% end %>
-<% else %>
-    <div style="margin-top: 20px" class="card">
-        <div class="card-body">
-            <h3>Debug:</h3>
-            <% if order %>
-                <div class="row">
-                    <div class="col-6">
-                        currentOrder:
+    <% if 1==1 %>
+        <% if order %>
+            <div style='display:none' id="currentOrder"><%= order.id %></div>
+            <div style='display:none' id="currentOrder"><%= order.status %></div>
+        <% end %>
+        <% if tablesetting %>
+            <div style='display:none' id="currentTable"><%= tablesetting.id %></div></div>
+        <% end %>
+        <% if current_user %>
+            <div style='display:none' id="currentEmployee"><%= current_employee.id %></div>
+        <% end %>
+        <% if menu %>
+            <div style='display:none' id="currentMenu"><%= menu.id %></div>
+        <% end %>
+        <% if menu.restaurant %>
+            <div style='display:none' id="currentRestaurant"><%= menu.restaurant.id %></div>
+        <% end %>
+        <% if ordrparticipant %>
+            <div style='display:none' id="currentParticipant"><%= ordrparticipant.id %></div>
+        <% end %>
+        <% if menuparticipant %>
+            <div style='display:none' id="menuParticipant"><%= menuparticipant.id %></div>
+        <% end %>
+    <% else %>
+        <div style="margin-top: 20px" class="card">
+            <div class="card-body">
+                <h3>Debug:</h3>
+                <% if order %>
+                    <div class="row">
+                        <div class="col-6">
+                            currentOrder:
+                        </div>
+                        <div class="col-6">
+                            <div id="currentOrder"><%= order.id %></div>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <div id="currentOrder"><%= order.id %></div>
+                    <div class="row">
+                        <div class="col-6">
+                            currentOrder.status:
+                        </div>
+                        <div class="col-6">
+                            <div id="currentOrder"><%= order.status %></div>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        currentOrder.status:
+                <% end %>
+                <% if tablesetting %>
+                    <div class="row">
+                        <div class="col-6">
+                            currentTable:
+                        </div>
+                        <div class="col-6">
+                            <div id="currentTable"><%= tablesetting.id %></div></div>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <div id="currentOrder"><%= order.status %></div>
+                <% end %>
+                <% if current_user %>
+                    <div class="row">
+                        <div class="col-6">
+                            currentEmployee:
+                        </div>
+                        <div class="col-6">
+                            <div id="currentEmployee"><%= current_employee.id %></div>
+                        </div>
                     </div>
-                </div>
-            <% end %>
-            <% if tablesetting %>
-                <div class="row">
-                    <div class="col-6">
-                        currentTable:
+                <% end %>
+                <% if menu %>
+                    <div class="row">
+                        <div class="col-6">
+                            currentMenu:
+                        </div>
+                        <div class="col-6">
+                            <div id="currentMenu"><%= menu.id %></div>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <div id="currentTable"><%= tablesetting.id %></div></div>
+                <% end %>
+                <% if menu.restaurant %>
+                    <div class="row">
+                        <div class="col-6">
+                            currentRestaurant:
+                        </div>
+                        <div class="col-6">
+                            <div id="currentRestaurant"><%= menu.restaurant.id %></div>
+                        </div>
                     </div>
-                </div>
-            <% end %>
-            <% if current_user %>
-                <div class="row">
-                    <div class="col-6">
-                        currentEmployee:
+                <% end %>
+                <% if ordrparticipant %>
+                    <div class="row">
+                        <div class="col-6">
+                            currentParticipant:
+                        </div>
+                        <div class="col-6">
+                            <div id="currentParticipant"><%= ordrparticipant.id %></div>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <div id="currentEmployee"><%= current_employee.id %></div>
+                <% end %>
+                <% if menuparticipant %>
+                    <div class="row">
+                        <div class="col-6">
+                            menuParticipant: cccc
+                        </div>
+                        <div class="col-6">
+                            <div id="menuParticipant"><%= menuparticipant.id %> : <%= menuparticipant.preferredlocale %></div>
+                        </div>
                     </div>
-                </div>
-            <% end %>
-            <% if menu %>
-                <div class="row">
-                    <div class="col-6">
-                        currentMenu:
-                    </div>
-                    <div class="col-6">
-                        <div id="currentMenu"><%= menu.id %></div>
-                    </div>
-                </div>
-            <% end %>
-            <% if menu.restaurant %>
-                <div class="row">
-                    <div class="col-6">
-                        currentRestaurant:
-                    </div>
-                    <div class="col-6">
-                        <div id="currentRestaurant"><%= menu.restaurant.id %></div>
-                    </div>
-                </div>
-            <% end %>
-            <% if ordrparticipant %>
-                <div class="row">
-                    <div class="col-6">
-                        currentParticipant:
-                    </div>
-                    <div class="col-6">
-                        <div id="currentParticipant"><%= ordrparticipant.id %></div>
-                    </div>
-                </div>
-            <% end %>
-            <% if menuparticipant %>
-                <div class="row">
-                    <div class="col-6">
-                        menuParticipant: cccc
-                    </div>
-                    <div class="col-6">
-                        <div id="menuParticipant"><%= menuparticipant.id %> : <%= menuparticipant.preferredlocale %></div>
-                    </div>
-                </div>
-            <% end %>
+                <% end %>
+            </div>
         </div>
-    </div>
-<% end %>
+    <% end %>

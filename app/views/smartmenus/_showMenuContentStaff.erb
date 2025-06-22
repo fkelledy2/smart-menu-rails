@@ -1,8 +1,8 @@
     <div class="row">
         <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
-            <% @menu.menusections.order(:sequence).each do |menusection| %>
+            <% menu.menusections.order(:sequence).each do |menusection| %>
                 <div style="padding-top:20px" id="menusection_<%= menusection.id %>"></div>
-                <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
+                <% if menu.displayImages == true && menu.restaurant.displayImages == true %>
                     <% if menusection.image %>
                         <div class="card border-light text-bg-dark">
                             <img src="<%= menusection.image_url %>" style="height: 150px" class="card-img" alt="<%= menusection.name %>">
@@ -15,11 +15,11 @@
                         <div class="row">
                             <div class="col-12">
                                 <span class='h3'>
-                                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
-                                        <%= menusection.localisedName(@ordrparticipant.preferredlocale) %>
+                                    <% if ordrparticipant && ordrparticipant.preferredlocale %>
+                                        <%= menusection.localisedName(ordrparticipant.preferredlocale) %>
                                     <% else %>
-                                        <% if @menuparticipant && @menuparticipant.preferredlocale %>
-                                            <%= menusection.localisedName(@menuparticipant.preferredlocale) %>
+                                        <% if menuparticipant && menuparticipant.preferredlocale %>
+                                            <%= menusection.localisedName(menuparticipant.preferredlocale) %>
                                         <% else %>
                                             <%= menusection.name %>
                                         <% end %>
@@ -41,11 +41,11 @@
                         <div class="row">
                             <div class="col-12">
                                 <span class='h3'>
-                                    <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
-                                        <%= menusection.localisedName(@ordrparticipant.preferredlocale) %>
+                                    <% if ordrparticipant && ordrparticipant.preferredlocale %>
+                                        <%= menusection.localisedName(ordrparticipant.preferredlocale) %>
                                     <% else %>
-                                        <% if @menuparticipant && @menuparticipant.preferredlocale %>
-                                            <%= menusection.localisedName(@menuparticipant.preferredlocale) %>
+                                        <% if menuparticipant && menuparticipant.preferredlocale %>
+                                            <%= menusection.localisedName(menuparticipant.preferredlocale) %>
                                         <% else %>
                                             <%= menusection.name %>
                                         <% end %>
@@ -65,17 +65,13 @@
                 <% end %>
                 <div class="row">
                     <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).where(status: 'active').order(:sequence).each do |menuitem| %>
-                        <% if @ordrparticipant == nil || @ordrparticipant && (@ordrparticipant.allergyns & menuitem.allergyns).empty? %>
-                            <% if current_user %>
-                                <%= render "showMenuitemStaff", menuitem: menuitem %>
-                            <% else %>
-                                <%= render "showMenuitemHorizontal", menuitem: menuitem %>
-                            <% end %>
+                        <% if ordrparticipant == nil || ordrparticipant && (ordrparticipant.allergyns & menuitem.allergyns).empty? %>
+                            <%= render partial: "smartmenus/showMenuitemStaff", locals: { menu: menu, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, menuitem: menuitem } %>
                         <% end %>
                     <% end %>
                 </div>
         <% end %>
-        <%= render "showAllergyns" %>
-        <%= render "showCoverCharge" %>
+        <%= render partial: "smartmenus/showAllergyns", locals: { allergyns: allergyns }  %>
+        <%= render partial: "smartmenus/showCoverCharge", locals: { menu: menu, restaurantCurrency: restaurantCurrency } %>
       </div>
     </div>

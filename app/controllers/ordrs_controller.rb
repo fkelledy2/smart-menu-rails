@@ -274,7 +274,21 @@ class OrdrsController < ApplicationController
         if @menuparticipant
             @ordrparticipant.preferredlocale = @menuparticipant.preferredlocale
         end
+        @allergyns = Allergyn.where( restaurant_id: ordr.menu.restaurant.id )
+
         partials = {
+            modals: ApplicationController.renderer.render(
+                partial: 'smartmenus/showModals',
+                locals: { order: ordr, menu: ordr.menu, ordrparticipant: ordrparticipant, tablesetting: tablesetting, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, current_employee: @current_employee }
+            ),
+            menuContentStaff: ApplicationController.renderer.render(
+                partial: 'smartmenus/showMenuContentStaff',
+                locals: { order: ordr, menu: ordr.menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant }
+            ),
+            menuContentCustomer: ApplicationController.renderer.render(
+                partial: 'smartmenus/showMenuContentCustomer',
+                locals: { order: ordr, menu: ordr.menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant }
+            ),
             orderCustomer: ApplicationController.renderer.render(
                 partial: 'smartmenus/orderCustomer',
                 locals: { order: ordr, menu: ordr.menu, restaurant: ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
@@ -282,10 +296,6 @@ class OrdrsController < ApplicationController
             orderStaff: ApplicationController.renderer.render(
                 partial: 'smartmenus/orderStaff',
                 locals: { order: ordr, menu: ordr.menu, restaurant: ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
-            ),
-            viewOrderModal: ApplicationController.renderer.render(
-                partial: 'smartmenus/showViewOrderModal',
-                locals: { order: ordr, restaurantCurrency: @restaurantCurrency, ordrparticipant: ordrparticipant, menuparticipant: @menuparticipant}
             ),
             fullPageRefresh: { refresh: false }
         }
