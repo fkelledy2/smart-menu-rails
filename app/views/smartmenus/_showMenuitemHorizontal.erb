@@ -39,7 +39,7 @@
                         </h6>
                     </div>
                 </div>
-                <%= render "showMenuitemHorizontalActionBar", mi: mi %>
+                <%= render partial: "smartmenus/showMenuitemHorizontalActionBar", locals: { order: order, mi: mi, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, restaurantCurrency: restaurantCurrency } %>
             <% else %>
                 <div class="row">
                     <div class="col-12">
