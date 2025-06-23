@@ -302,11 +302,11 @@ class OrdrsController < ApplicationController
             ),
             tableLocaleSelectorStaff: ApplicationController.renderer.render(
                 partial: 'smartmenus/showTableLocaleSelectorStaff',
-                locals: { menu: @smartmenu.menu, restaurant: @smartmenu.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
+                locals: { menu: @ordr.menu, restaurant: @ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
             ),
             tableLocaleSelectorCustomer: ApplicationController.renderer.render(
                 partial: 'smartmenus/showTableLocaleSelectorCustomer',
-                locals: { menu: @smartmenu.menu, restaurant: @smartmenu.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
+                locals: { menu: @ordr.menu, restaurant: @ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
             ),
             fullPageRefresh: { refresh: fullRefresh }
         }

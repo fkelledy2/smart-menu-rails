@@ -168,11 +168,11 @@ class OrdritemsController < ApplicationController
             ),
             tableLocaleSelectorStaff: ApplicationController.renderer.render(
                 partial: 'smartmenus/showTableLocaleSelectorStaff',
-                locals: { menu: @smartmenu.menu, restaurant: @smartmenu.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
+                locals: { menu: @ordritem.ordr.menu, restaurant: @ordritem.ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
             ),
             tableLocaleSelectorCustomer: ApplicationController.renderer.render(
                 partial: 'smartmenus/showTableLocaleSelectorCustomer',
-                locals: { menu: @smartmenu.menu, restaurant: @smartmenu.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
+                locals: { menu: @ordritem.ordr.menu, restaurant: @ordritem.ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
             ),
             fullPageRefresh: { refresh: fullRefresh }
         }
