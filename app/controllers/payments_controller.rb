@@ -3,8 +3,6 @@ class PaymentsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create_payment_link]
 
   def create_payment_link
-      puts params
-      puts 'xxx'
     openOrderId = params[:openOrderId]
     amount = params[:amount].to_i;
     currency = params[:currency] || "usd"

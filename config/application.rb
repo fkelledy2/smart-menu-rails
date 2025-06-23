@@ -19,6 +19,8 @@ module SmartMenu
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w(assets tasks))
 
+    config.middleware.use Rack::Deflater
+
     config.i18n.load_path += Dir[Rails.root.join("my", "locales", "*.{rb,yml}")]
     config.i18n.default_locale = :en
     config.i18n.available_locales = %w(en it)

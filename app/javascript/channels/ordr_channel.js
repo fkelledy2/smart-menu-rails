@@ -347,6 +347,7 @@ consumer.subscriptions.create("OrdrChannel", {
             document.getElementById("menuContentContainer").innerHTML = data.menuContentCustomer;
         }
         document.getElementById("modalsContainer").innerHTML = data.modals;
+        document.getElementById("contextContainer").innerHTML = data.context;
         refreshOrderJSLogic();
     }
     return true;

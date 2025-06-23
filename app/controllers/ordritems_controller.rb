@@ -128,28 +128,35 @@ class OrdritemsController < ApplicationController
 
     def broadcastPartials( ordr, tablesetting, ordrparticipant )
         if ordr.menu.restaurant.currency
-            @restaurantCurrency = ISO4217::Currency.from_code(ordr.menu.restaurant.currency)
+            restaurantCurrency = ISO4217::Currency.from_code(ordr.menu.restaurant.currency)
         else
-            @restaurantCurrency = ISO4217::Currency.from_code('USD')
+            restaurantCurrency = ISO4217::Currency.from_code('USD')
         end
-        @menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
-        if @menuparticipant
-            @ordrparticipant.preferredlocale = @menuparticipant.preferredlocale
+        menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
+        if menuparticipant
+            ordrparticipant.preferredlocale = menuparticipant.preferredlocale
         end
-        @allergyns = Allergyn.where( restaurant_id: ordr.menu.restaurant.id )
-
+        allergyns = Allergyn.where( restaurant_id: ordr.menu.restaurant.id )
+        fullRefresh = false
+        if ordr.status == 'closed'
+            fullRefresh = true
+        end
         partials = {
+            context: ApplicationController.renderer.render(
+                partial: 'smartmenus/showContext',
+                locals: { order: ordr, menu: ordr.menu, ordrparticipant: ordrparticipant, tablesetting: tablesetting, menuparticipant: menuparticipant, current_employee: @current_employee }
+            ),
             modals: ApplicationController.renderer.render(
                 partial: 'smartmenus/showModals',
-                locals: { order: ordr, menu: ordr.menu, ordrparticipant: ordrparticipant, tablesetting: tablesetting, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, current_employee: @current_employee }
+                locals: { order: ordr, menu: ordr.menu, ordrparticipant: ordrparticipant, tablesetting: tablesetting, menuparticipant: menuparticipant, restaurantCurrency: restaurantCurrency, current_employee: @current_employee }
             ),
             menuContentStaff: ApplicationController.renderer.render(
                 partial: 'smartmenus/showMenuContentStaff',
-                locals: { order: ordr, menu: ordr.menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant }
+                locals: { order: ordr, menu: ordr.menu, allergyns: allergyns, restaurantCurrency: restaurantCurrency, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
             ),
             menuContentCustomer: ApplicationController.renderer.render(
                 partial: 'smartmenus/showMenuContentCustomer',
-                locals: { order: ordr, menu: ordr.menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant }
+                locals: { order: ordr, menu: ordr.menu, allergyns: allergyns, restaurantCurrency: restaurantCurrency, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
             ),
             orderCustomer: ApplicationController.renderer.render(
                 partial: 'smartmenus/orderCustomer',
@@ -159,7 +166,7 @@ class OrdritemsController < ApplicationController
                 partial: 'smartmenus/orderStaff',
                 locals: { order: ordr, menu: ordr.menu, restaurant: ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
             ),
-            fullPageRefresh: { refresh: false }
+            fullPageRefresh: { refresh: fullRefresh }
         }
         ActionCable.server.broadcast("ordr_channel", partials)
     end
