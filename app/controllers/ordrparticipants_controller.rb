@@ -123,6 +123,14 @@ class OrdrparticipantsController < ApplicationController
                 partial: 'smartmenus/orderStaff',
                 locals: { order: ordr, menu: ordr.menu, restaurant: ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
             ),
+            tableLocaleSelectorStaff: ApplicationController.renderer.render(
+                partial: 'smartmenus/showTableLocaleSelectorStaff',
+                locals: { menu: @ordrparticipant.ordr.menu, restaurant: @ordrparticipant.ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
+            ),
+            tableLocaleSelectorCustomer: ApplicationController.renderer.render(
+                partial: 'smartmenus/showTableLocaleSelectorCustomer',
+                locals: { menu: @ordrparticipant.ordr.menu, restaurant: @ordrparticipant.ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
+            ),
             fullPageRefresh: { refresh: fullRefresh }
         }
         ActionCable.server.broadcast("ordr_channel", partials)

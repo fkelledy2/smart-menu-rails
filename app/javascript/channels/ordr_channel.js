@@ -71,7 +71,7 @@ import consumer from "./consumer"
             });
         }
         $( ".setparticipantlocale" ).on( "click", function(event) {
-           var locale = $(this).attr('href');
+           var locale = $(this).data('locale')
            if( $('#currentParticipant').text() ) {
                let ordrparticipant = {
                      'ordrparticipant': {
@@ -342,9 +342,11 @@ consumer.subscriptions.create("OrdrChannel", {
         if( document.getElementById("currentEmployee") ) {
             document.getElementById("openOrderContainer").innerHTML = data.orderStaff;
             document.getElementById("menuContentContainer").innerHTML = data.menuContentStaff;
+            document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorStaff;
         } else {
             document.getElementById("openOrderContainer").innerHTML = data.orderCustomer;
             document.getElementById("menuContentContainer").innerHTML = data.menuContentCustomer;
+            document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorCustomer;
         }
         document.getElementById("modalsContainer").innerHTML = data.modals;
         document.getElementById("contextContainer").innerHTML = data.context;

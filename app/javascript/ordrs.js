@@ -75,7 +75,7 @@ document.addEventListener("turbo:load", () => {
             });
         }
         $( ".setparticipantlocale" ).on( "click", function(event) {
-           var locale = $(this).attr('href');
+           var locale = $(this).data('locale')
            if( $('#currentParticipant').text() ) {
                let ordrparticipant = {
                      'ordrparticipant': {

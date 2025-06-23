@@ -12,7 +12,13 @@
                             <span class="h5"><%= @menu.restaurant.name %></span>
                         <% end %>
                         <span class="float-end">
-                            <%= render "showTableLocaleSelector" %>
+                            <div id="tableLocaleSelectorContainer">
+                                <% if current_user %>
+                                    <%= render partial: "showTableLocaleSelectorStaff", locals: { menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+                                <% else %>
+                                    <%= render partial: "showTableLocaleSelectorCustomer", locals: { menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+                                <% end %>
+                            </div>
                         </span>
                     </div>
                 </div>
@@ -33,7 +39,6 @@
                     <%= render partial: "orderCustomer", locals: { order: nil, menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
                 <% end %>
             <% end %>
-
         </div>
         <div style="height:40px"class="container-fluid">
             <nav id="navbar-example2" style="position:relative; left:-10px;width:106%;mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 140%" class="nav flex-nowrap overflow-auto">

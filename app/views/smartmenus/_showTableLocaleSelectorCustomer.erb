@@ -1,0 +1,40 @@
+<div class="btn-group" role="group">
+        <div class="btn-group" role="group">
+            <button id="menu-actions" type="button" class="btn btn-sm btn-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                <% if tablesetting %>
+                    <%= tablesetting.name %>
+                <% else %>
+                    <%= t(".table") %>
+                <% end %>
+            </button>
+        </div>
+        <% if Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active').count > 0 %>
+            <div class="btn-group" role="group">
+                <button id="lovale-actions" type="button" class="btn btn-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <% if ordrparticipant && ordrparticipant.preferredlocale %>
+                        <img src="<%= restaurant.getLocale(ordrparticipant.preferredlocale).flag %>" class="rounded-1 border border-white flag-icon-selected">
+                    <% else %>
+                        <% if menuparticipant && menuparticipant.preferredlocale %>
+                            <img src="<%= restaurant.getLocale(menuparticipant.preferredlocale).flag %>" class="rounded-1 border border-white flag-icon-selected">
+                        <% else %>
+                            <% if restaurant.defaultLocale %>
+                                <img src="<%= restaurant.defaultLocale.flag %>" tooltip="<%= restaurant.defaultLocale.language %>" class="rounded-1 border border-white flag-icon-selected">
+                            <% else %>
+                                <i class="bi bi-translate"></i>
+                            <% end %>
+                        <% end %>
+                    <% end %>
+                </button>
+                <ul style="--bs-dropdown-padding-y: 0.0rem;--bs-dropdown-min-width:0em" class="dropdown-menu dropdown-menu-dark" aria-labelledby="locales">
+                    <% Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active').each do |restaurantlocale| %>
+                        <li>
+                            <a style="padding-right:4px;padding-left:4px" class="dropdown-item" href="#">
+                                <img src="<%= restaurantlocale.flag %>" data-locale="<%= restaurantlocale.locale %>" tooltip="<%= restaurantlocale.language %>" class="setparticipantlocale rounded-1 border border-white flag-icon">
+                            </a>
+                        </li>
+                    <% end %>
+                </ul>
+            </div>
+    <% end %>
+</div>
+
