@@ -67,7 +67,7 @@ class MenuparticipantsController < ApplicationController
         partials = {
             fullPageRefresh: { refresh: true }
         }
-        ActionCable.server.broadcast("ordr_channel", partials)
+        ActionCable.server.broadcast("ordr_"+@menuparticipant.smartmenu.slug+"_channel", partials)
     end
 
     # Use callbacks to share common setup or constraints between actions.

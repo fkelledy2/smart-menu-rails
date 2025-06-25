@@ -49,13 +49,14 @@ class SmartmenusController < ApplicationController
                 end
             end
         end
+    end
+    @menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
+    if @menuparticipant
+        @menuparticipant.smartmenu = @smartmenu
+        @menuparticipant.save
     else
-        @menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
-        if @menuparticipant
-        else
-            @menuparticipant = Menuparticipant.new( smartmenu_id: @smartmenu.id, sessionid: session.id.to_s );
-            @menuparticipant.save
-        end
+        @menuparticipant = Menuparticipant.new( smartmenu_id: @smartmenu.id, sessionid: session.id.to_s );
+        @menuparticipant.save
     end
   end
 

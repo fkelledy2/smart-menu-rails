@@ -34,7 +34,7 @@
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
 
-  <body style='overflow-x: hidden;' class="d-flex flex-column min-vh-100">
+  <body style='overflow-x: hidden;' class="d-flex flex-column min-vh-100" data-session-id="<%= session.id %>">
     <div style=' display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;'>
       <div style='padding-left:0px;padding-right:0px;' class="container-fluid">
         <main class="flex-wrapper">

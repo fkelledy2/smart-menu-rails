@@ -325,33 +325,35 @@ import consumer from "./consumer"
         });
     }
 
-consumer.subscriptions.create("OrdrChannel", {
-  connected() {
-    console.log( 'connected');
-  },
-
-  disconnected() {
-    console.log( 'disconnected');
-  },
-
-  received(data) {
-    console.log( 'data.fullPageRefresh.refresh: '+data.fullPageRefresh.refresh);
-    if( data.fullPageRefresh.refresh ) {
-        location.reload();
-    } else {
-        if( document.getElementById("currentEmployee") ) {
-            document.getElementById("openOrderContainer").innerHTML = data.orderStaff;
-            document.getElementById("menuContentContainer").innerHTML = data.menuContentStaff;
-            document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorStaff;
+var orderId = document.body.dataset.smartmenuId;
+if( orderId ) {
+    consumer.subscriptions.create({ channel: "OrdrChannel", order_id: orderId }, {
+      connected() {
+        console.log( 'OrdrChannel:['+orderId+'] - connected');
+      },
+      disconnected() {
+        console.log( 'OrdrChannel:['+orderId+'] - disconnected');
+      },
+      received(data) {
+        console.log('OrdrChannel:['+orderId+'] - message ');
+        if( data.fullPageRefresh.refresh ) {
+            location.reload();
         } else {
-            document.getElementById("openOrderContainer").innerHTML = data.orderCustomer;
-            document.getElementById("menuContentContainer").innerHTML = data.menuContentCustomer;
-            document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorCustomer;
+            if( document.getElementById("currentEmployee") ) {
+                document.getElementById("openOrderContainer").innerHTML = data.orderStaff;
+                document.getElementById("menuContentContainer").innerHTML = data.menuContentStaff;
+                document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorStaff;
+            } else {
+                document.getElementById("openOrderContainer").innerHTML = data.orderCustomer;
+                document.getElementById("menuContentContainer").innerHTML = data.menuContentCustomer;
+                document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorCustomer;
+            }
+            document.getElementById("modalsContainer").innerHTML = data.modals;
+            document.getElementById("contextContainer").innerHTML = data.context;
+            refreshOrderJSLogic();
         }
-        document.getElementById("modalsContainer").innerHTML = data.modals;
-        document.getElementById("contextContainer").innerHTML = data.context;
-        refreshOrderJSLogic();
-    }
-    return true;
-  }
-});
+        return true;
+      }
+    });
+}
+

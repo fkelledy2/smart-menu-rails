@@ -107,7 +107,7 @@ class OrdrsController < ApplicationController
             end
             @tablesetting.status = 0
             @tablesetting.save
-            broadcastPartials( @ordr, @tablesetting, @ordrparticipant )
+            broadcastPartials( @ordr, @tablesetting, @ordrparticipant, true )
         end
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully created." }
         format.json { render :show, status: :created, location: @ordr }
@@ -122,9 +122,7 @@ class OrdrsController < ApplicationController
   # PATCH/PUT /ordrs/1 or /ordrs/1.json
   def update
     respond_to do |format|
-#       if( ordr_params[:status] = 10 )
-          @ordr.nett = @ordr.runningTotal
-#       end
+      @ordr.nett = @ordr.runningTotal
       taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
       totalTax = 0
       totalService = 0
@@ -154,7 +152,6 @@ class OrdrsController < ApplicationController
       if( ordr_params[:status] = 40 )
           @ordr.paidAt = Time.now
       end
-
       if @ordr.update(ordr_params)
         @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
         if( ordr_params[:status] = 0 )
@@ -239,8 +236,12 @@ class OrdrsController < ApplicationController
             @tablesetting.status = 0
             @tablesetting.save
         end
+        fullRefresh = false
+        if @ordr.status == 'closed'
+            fullRefresh = true
+        end
         format.json { render :show, status: :ok, location: @ordr }
-        broadcastPartials( @ordr, @tablesetting, @ordrparticipant )
+        broadcastPartials( @ordr, @tablesetting, @ordrparticipant, fullRefresh )
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @ordr.errors, status: :unprocessable_entity }
@@ -260,7 +261,7 @@ class OrdrsController < ApplicationController
 
   private
 
-    def broadcastPartials( ordr, tablesetting, ordrparticipant )
+    def broadcastPartials( ordr, tablesetting, ordrparticipant, fullRefresh )
         if ordr.menu.restaurant.currency
             restaurantCurrency = ISO4217::Currency.from_code(ordr.menu.restaurant.currency)
         else
@@ -271,10 +272,6 @@ class OrdrsController < ApplicationController
             ordrparticipant.preferredlocale = menuparticipant.preferredlocale
         end
         allergyns = Allergyn.where( restaurant_id: ordr.menu.restaurant.id )
-        fullRefresh = false
-        if ordr.status == 'closed'
-            fullRefresh = true
-        end
         partials = {
             context: ApplicationController.renderer.render(
                 partial: 'smartmenus/showContext',
@@ -310,7 +307,7 @@ class OrdrsController < ApplicationController
             ),
             fullPageRefresh: { refresh: fullRefresh }
         }
-        ActionCable.server.broadcast("ordr_channel", partials)
+        ActionCable.server.broadcast("ordr_"+menuparticipant.smartmenu.slug+"_channel", partials)
     end
 
     # Use callbacks to share common setup or constraints between actions.

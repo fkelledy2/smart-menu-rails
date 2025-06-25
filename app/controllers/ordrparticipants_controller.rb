@@ -133,7 +133,7 @@ class OrdrparticipantsController < ApplicationController
             ),
             fullPageRefresh: { refresh: fullRefresh }
         }
-        ActionCable.server.broadcast("ordr_channel", partials)
+        ActionCable.server.broadcast("ordr_"+menuparticipant.smartmenu.slug+"_channel", partials)
     end
 
     # Use callbacks to share common setup or constraints between actions.
