@@ -61,14 +61,14 @@ class MenuparticipantsController < ApplicationController
 
     def broadcastPartials()
         @menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
-        if @menuparticipant
+        if @menuparticipant && @ordrparticipant
             @ordrparticipant.preferredlocale = @menuparticipant.preferredlocale
         end
         partials = {
             fullPageRefresh: { refresh: true }
         }
         ActionCable.server.broadcast("ordr_"+@menuparticipant.smartmenu.slug+"_channel", partials)
-    end
+     end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_menuparticipant

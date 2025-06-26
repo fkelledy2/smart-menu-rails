@@ -478,7 +478,9 @@ en:
       table: "Table"
       allergyns: "Allergens"
 
-    showTableLocaleSelector:
+    showTableLocaleSelectorStaff:
+      table: "Table"
+    showTableLocaleSelectorCustomer:
       table: "Table"
     orderStaff:
       staffAlerted: "Staff Notified"
