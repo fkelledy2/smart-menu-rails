@@ -193,6 +193,7 @@ GEM
       logger
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
+    fastimage (2.4.0)
     ffi (1.17.0-aarch64-linux-gnu)
     ffi (1.17.0-arm-linux-gnu)
     ffi (1.17.0-arm64-darwin)
@@ -547,6 +548,7 @@ DEPENDENCIES
   deepl-rb
   devise (~> 4.9)
   dotenv-rails
+  fastimage
   friendly_id (~> 5.4)
   gmaps-autocomplete-rails
   http_accept_language

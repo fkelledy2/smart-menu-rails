@@ -65,6 +65,22 @@ class Menuitem < ApplicationRecord
       end
   end
 
+  def image_url_or_fallback(size = nil)
+    if image_attacher.derivatives&.key?(size)
+      image_url(size)
+    else
+      image_url # fallback to original
+    end
+  end
+
+  def thumb_url
+    image_url_or_fallback(:thumb)
+  end
+
+  def large_url
+    image_url_or_fallback(:large)
+  end
+
   validates :inventory, :presence => false
   validates :name, :presence => true
   validates :menusection, :presence => true
