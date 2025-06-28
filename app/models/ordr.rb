@@ -63,6 +63,10 @@ class Ordr < ApplicationRecord
     ordritems.where(status: 30).count
   end
 
+  def totalItemsCount
+    ordritems.where(status: 0).count + ordritems.where(status: 20).count + ordritems.where(status: 30).count + ordritems.where(status: 40).count
+  end
+
   def deliveredItems
     ordritems.where(status: 40).all
   end

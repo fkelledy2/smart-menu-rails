@@ -16,15 +16,27 @@
                                     <% if order.addedCount > 0 %>
                                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
                                             <%= t(".order") %> <i class="bi bi-cart"></i>
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+                                                <%= order.totalItemsCount %>
+                                                <span class="visually-hidden">items in cart</span>
+                                            </span>
                                         </button>
                                     <% else %>
                                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
                                             <%= t(".order") %> <i class="bi bi-cart"></i>
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+                                                <%= order.totalItemsCount %>
+                                                <span class="visually-hidden">items in cart</span>
+                                            </span>
                                         </button>
                                     <% end %>
                                 <% else %>
                                     <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" disabled>
                                         <%= t(".order") %> <i class="bi bi-cart"></i>
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+                                            <%= order.totalItemsCount %>
+                                            <span class="visually-hidden">items in cart</span>
+                                        </span>
                                     </button>
                                 <% end %>
                             <% end %>
@@ -35,10 +47,18 @@
                                     <% if order.addedCount > 0 %>
                                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
                                             <%= t(".order") %> <i class="bi bi-cart"></i>
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+                                                <%= order.totalItemsCount %>
+                                                <span class="visually-hidden">items in cart</span>
+                                            </span>
                                         </button>
                                     <% else %>
                                         <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
                                             <%= t(".order") %> <i class="bi bi-cart"></i>
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+                                                <%= order.totalItemsCount %>
+                                                <span class="visually-hidden">items in cart</span>
+                                            </span>
                                         </button>
                                     <% end %>
                                 <% end %>
