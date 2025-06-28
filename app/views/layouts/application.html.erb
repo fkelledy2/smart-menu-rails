@@ -32,6 +32,7 @@
   <head>
     <%= render 'shared/head' %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
+    <%= tag.link rel: "manifest", href: "/manifest.json" %>
   </head>
 
   <body style='overflow-x: hidden;' class="d-flex flex-column min-vh-100" data-session-id="<%= session.id %>">
