@@ -451,6 +451,12 @@ en:
       price: "Price"
       total: "Total"
       addToOrder: "Add to order"
+      cancel: "Cancel"
+      start: "Start Order"
+      startOrder: "Start a new Order"
+      submit: "Submit Order"
+      requestBill: "Request Bill"
+      confirmPayment: "Confirm Payment"
     index:
       smartmenus: "Smart Menus"
       menus: "Menus"
