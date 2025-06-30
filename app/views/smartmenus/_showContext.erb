@@ -1,7 +1,7 @@
 <div id="contextContainer">
-    <div id="currentSession"><%= session.id %></div>
+    <div style='display:none' id="currentSession"><%= session.id %></div>
     <% if order %>
-        <div id="currentOrder"><%= order.id %></div>
+        <div style='display:none' id="currentOrder"><%= order.id %></div>
         <div style='display:none' id="currentOrderStatus"><%= order.status %></div>
     <% end %>
     <% if tablesetting %>
@@ -17,9 +17,9 @@
         <% end %>
     <% end %>
     <% if ordrparticipant %>
-        <div id="currentParticipant"><%= ordrparticipant.id %></div>
+        <div style='display:none' id="currentParticipant"><%= ordrparticipant.id %></div>
     <% end %>
     <% if menuparticipant %>
-        <div id="menuParticipant"><%= menuparticipant.id %></div>
+        <div style='display:none' id="menuParticipant"><%= menuparticipant.id %></div>
     <% end %>
 </div>

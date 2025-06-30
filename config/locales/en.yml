@@ -457,6 +457,11 @@ en:
       submit: "Submit Order"
       requestBill: "Request Bill"
       confirmPayment: "Confirm Payment"
+      filterBy: "Filter by"
+      noneAll: "None / all"
+      filterAllergyns: "Filter Allergens"
+      customiseOrderWithName: "Personalise your order"
+      add: "Add Name"
     index:
       smartmenus: "Smart Menus"
       menus: "Menus"
