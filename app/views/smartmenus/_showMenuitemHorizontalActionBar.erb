@@ -62,10 +62,10 @@
                                             <span class="visually-hidden">Toggle Dropdown</span>
                                         </button>
                                         <ul style="--bs-dropdown-padding-y: 0.0rem;--bs-dropdown-min-width:0em" class="dropdown-menu dropdown-menu-danger" class="dropdown-menu">
-                                            <%= mi.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
+                                            <% mi.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
                                                 <li class="float-end">
                                                     <a class="float-end dropdown-item" href="#">
-                                                        <button style="color:white;background:none!important;border:none;padding:0px!important;" type="button" class="btn btn-sm addItemToOrder" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                        <button style="background: none!important;border: none;padding: 0!important;" type="button" class="btn btn-sm addItemToOrder" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                                             data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                             data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                                             data-bs-ordr_id="<%= order.id %>"
