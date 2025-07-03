@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_06_080125) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_03_181508) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -234,6 +234,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_06_080125) do
     t.text "image_data"
     t.integer "itemtype", default: 0
     t.boolean "sizesupport", default: false
+    t.float "unitcost", default: 0.0
     t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
   end
 

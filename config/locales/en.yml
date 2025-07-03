@@ -730,6 +730,7 @@ en:
         status: "Status"
         sequence: "Display Order"
         calories: "Calories"
+        unitcost: "Unit Cost"
         price: "Price"
         preptime: "Prep Mn"
         allergyns: "Allergyns"
