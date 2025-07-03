@@ -16,6 +16,55 @@ document.addEventListener("turbo:load", () => {
 
     let restaurantCurrencySymbol = '$';
 
+    document.getElementById('openOrderModalLabel').addEventListener('shown.bs.modal', () => {
+      document.getElementById('backgroundContent').setAttribute('inert', '');
+    });
+    document.getElementById('openOrderModalLabel').addEventListener('hidden.bs.modal', () => {
+      document.getElementById('backgroundContent').removeAttribute('inert');
+    });
+
+    document.getElementById('addItemToOrderModalLabel').addEventListener('shown.bs.modal', () => {
+      document.getElementById('backgroundContent').setAttribute('inert', '');
+    });
+    document.getElementById('addItemToOrderModalLabel').addEventListener('hidden.bs.modal', () => {
+      document.getElementById('backgroundContent').removeAttribute('inert');
+    });
+
+    document.getElementById('filterOrderModalLabel').addEventListener('shown.bs.modal', () => {
+      document.getElementById('backgroundContent').setAttribute('inert', '');
+    });
+    document.getElementById('filterOrderModalLabel').addEventListener('hidden.bs.modal', () => {
+      document.getElementById('backgroundContent').removeAttribute('inert');
+    });
+
+    document.getElementById('viewOrderModalLabel').addEventListener('shown.bs.modal', () => {
+      document.getElementById('backgroundContent').setAttribute('inert', '');
+    });
+    document.getElementById('viewOrderModalLabel').addEventListener('hidden.bs.modal', () => {
+      document.getElementById('backgroundContent').removeAttribute('inert');
+    });
+
+    document.getElementById('requestBillModalLabel').addEventListener('shown.bs.modal', () => {
+      document.getElementById('backgroundContent').setAttribute('inert', '');
+    });
+    document.getElementById('requestBillModalLabel').addEventListener('hidden.bs.modal', () => {
+      document.getElementById('backgroundContent').removeAttribute('inert');
+    });
+
+    document.getElementById('payOrderModalLabel').addEventListener('shown.bs.modal', () => {
+      document.getElementById('backgroundContent').setAttribute('inert', '');
+    });
+    document.getElementById('payOrderModalLabel').addEventListener('hidden.bs.modal', () => {
+      document.getElementById('backgroundContent').removeAttribute('inert');
+    });
+
+    document.getElementById('addNameToParticipantModal').addEventListener('shown.bs.modal', () => {
+      document.getElementById('backgroundContent').setAttribute('inert', '');
+    });
+    document.getElementById('addNameToParticipantModal').addEventListener('hidden.bs.modal', () => {
+      document.getElementById('backgroundContent').removeAttribute('inert');
+    });
+
     function refreshOrderJSLogic() {
         if ($("#smartmenu").is(':visible')) {
             var date = new Date;

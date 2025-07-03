@@ -12,6 +12,11 @@ import consumer from "./consumer"
     let ORDRITEM_PREPARED=30;
     let ORDRITEM_DELIVERED=40;
 
+    function closeAllModals() {
+      $('.modal').modal('hide'); // Hide all modals
+      $('.modal-backdrop').remove(); // Remove backdrop if needed
+    }
+
     function refreshOrderJSLogic() {
         if ($("#smartmenu").is(':visible')) {
             var date = new Date;
@@ -339,6 +344,7 @@ if( orderId ) {
         if( data.fullPageRefresh.refresh ) {
             location.reload();
         } else {
+//            closeAllModals();
             if( document.getElementById("currentEmployee") ) {
                 document.getElementById("openOrderContainer").innerHTML = data.orderStaff;
                 document.getElementById("menuContentContainer").innerHTML = data.menuContentStaff;

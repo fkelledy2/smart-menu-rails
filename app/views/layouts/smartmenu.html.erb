@@ -33,7 +33,7 @@
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
   <body class="d-flex flex-column min-vh-100" data-smartmenu-id="<%= @smartmenu.slug %>">
-    <div style="display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;">
+    <div id="backgroundContent" style="display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;">
         <main class="flex-wrapper">
           <% if current_user %>
               <%= render "shared/navbar" %>
@@ -47,5 +47,7 @@
         </main>
       <%= render 'shared/footer' %>
     </div>
+    <%= render partial: "smartmenus/showModals", locals: { order: @openOrder, menu: @menu, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting, current_employee: @current_employee } %>
+    <%= render partial: "smartmenus/showContext", locals: { order: @openOrder, menu: @menu, current_employee: @current_employee, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting } %>
   </body>
 </html>
