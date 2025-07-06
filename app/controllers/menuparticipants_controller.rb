@@ -25,7 +25,7 @@ class MenuparticipantsController < ApplicationController
 
     respond_to do |format|
       if @menuparticipant.save
-        format.html { redirect_to @menuparticipant, notice: "Menuparticipant was successfully created." }
+        broadcastPartials()
         format.json { render :show, status: :created, location: @menuparticipant }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,8 +38,8 @@ class MenuparticipantsController < ApplicationController
   def update
     respond_to do |format|
       if @menuparticipant.update(menuparticipant_params)
-        format.json { render :show, status: :ok, location: @menuparticipant }
         broadcastPartials()
+        format.json { render :show, status: :ok, location: @menuparticipant }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menuparticipant.errors, status: :unprocessable_entity }
