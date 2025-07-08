@@ -16,54 +16,62 @@ document.addEventListener("turbo:load", () => {
 
     let restaurantCurrencySymbol = '$';
 
-    document.getElementById('openOrderModalLabel').addEventListener('shown.bs.modal', () => {
-      document.getElementById('backgroundContent').setAttribute('inert', '');
-    });
-    document.getElementById('openOrderModalLabel').addEventListener('hidden.bs.modal', () => {
-      document.getElementById('backgroundContent').removeAttribute('inert');
-    });
-
-    document.getElementById('addItemToOrderModalLabel').addEventListener('shown.bs.modal', () => {
-      document.getElementById('backgroundContent').setAttribute('inert', '');
-    });
-    document.getElementById('addItemToOrderModalLabel').addEventListener('hidden.bs.modal', () => {
-      document.getElementById('backgroundContent').removeAttribute('inert');
-    });
-
-    document.getElementById('filterOrderModalLabel').addEventListener('shown.bs.modal', () => {
-      document.getElementById('backgroundContent').setAttribute('inert', '');
-    });
-    document.getElementById('filterOrderModalLabel').addEventListener('hidden.bs.modal', () => {
-      document.getElementById('backgroundContent').removeAttribute('inert');
-    });
-
-    document.getElementById('viewOrderModalLabel').addEventListener('shown.bs.modal', () => {
-      document.getElementById('backgroundContent').setAttribute('inert', '');
-    });
-    document.getElementById('viewOrderModalLabel').addEventListener('hidden.bs.modal', () => {
-      document.getElementById('backgroundContent').removeAttribute('inert');
-    });
-
-    document.getElementById('requestBillModalLabel').addEventListener('shown.bs.modal', () => {
-      document.getElementById('backgroundContent').setAttribute('inert', '');
-    });
-    document.getElementById('requestBillModalLabel').addEventListener('hidden.bs.modal', () => {
-      document.getElementById('backgroundContent').removeAttribute('inert');
-    });
-
-    document.getElementById('payOrderModalLabel').addEventListener('shown.bs.modal', () => {
-      document.getElementById('backgroundContent').setAttribute('inert', '');
-    });
-    document.getElementById('payOrderModalLabel').addEventListener('hidden.bs.modal', () => {
-      document.getElementById('backgroundContent').removeAttribute('inert');
-    });
-
-    document.getElementById('addNameToParticipantModal').addEventListener('shown.bs.modal', () => {
-      document.getElementById('backgroundContent').setAttribute('inert', '');
-    });
-    document.getElementById('addNameToParticipantModal').addEventListener('hidden.bs.modal', () => {
-      document.getElementById('backgroundContent').removeAttribute('inert');
-    });
+    if( document.getElementById("openOrderModalLabel") ) {
+        document.getElementById("openOrderModalLabel").addEventListener("shown.bs.modal", () => {
+          document.getElementById("backgroundContent").setAttribute("inert", "");
+        });
+        document.getElementById("openOrderModalLabel").addEventListener("hidden.bs.modal", () => {
+          document.getElementById("backgroundContent").removeAttribute("inert");
+        });
+    }
+    if( document.getElementById("addItemToOrderModalLabel") ) {
+        document.getElementById("addItemToOrderModalLabel").addEventListener("shown.bs.modal", () => {
+          document.getElementById("backgroundContent").setAttribute("inert", "");
+        });
+        document.getElementById("addItemToOrderModalLabel").addEventListener("hidden.bs.modal", () => {
+          document.getElementById("backgroundContent").removeAttribute("inert");
+        });
+    }
+    if( document.getElementById("filterOrderModalLabel") ) {
+        document.getElementById("filterOrderModalLabel").addEventListener("shown.bs.modal", () => {
+          document.getElementById("backgroundContent").setAttribute("inert", "");
+        });
+        document.getElementById("filterOrderModalLabel").addEventListener("hidden.bs.modal", () => {
+          document.getElementById("backgroundContent").removeAttribute("inert");
+        });
+    }
+    if( document.getElementById("viewOrderModalLabel") ) {
+        document.getElementById("viewOrderModalLabel").addEventListener("shown.bs.modal", () => {
+          document.getElementById("backgroundContent").setAttribute("inert", "");
+        });
+        document.getElementById("viewOrderModalLabel").addEventListener("hidden.bs.modal", () => {
+          document.getElementById("backgroundContent").removeAttribute("inert");
+        });
+    }
+    if( document.getElementById("requestBillModalLabel") ) {
+        document.getElementById("requestBillModalLabel").addEventListener("shown.bs.modal", () => {
+          document.getElementById("backgroundContent").setAttribute("inert", "");
+        });
+        document.getElementById("requestBillModalLabel").addEventListener("hidden.bs.modal", () => {
+          document.getElementById("backgroundContent").removeAttribute("inert");
+        });
+    }
+    if( document.getElementById("payOrderModalLabel") ) {
+        document.getElementById("payOrderModalLabel").addEventListener("shown.bs.modal", () => {
+          document.getElementById("backgroundContent").setAttribute("inert", "");
+        });
+        document.getElementById("payOrderModalLabel").addEventListener("hidden.bs.modal", () => {
+          document.getElementById("backgroundContent").removeAttribute("inert");
+        });
+    }
+    if( document.getElementById("addNameToParticipantModal") ) {
+        document.getElementById("addNameToParticipantModal").addEventListener("shown.bs.modal", () => {
+          document.getElementById("backgroundContent").setAttribute("inert", "");
+        });
+        document.getElementById("addNameToParticipantModal").addEventListener("hidden.bs.modal", () => {
+          document.getElementById("backgroundContent").removeAttribute("inert");
+        });
+    }
 
     function refreshOrderJSLogic() {
         if ($("#smartmenu").is(':visible')) {
