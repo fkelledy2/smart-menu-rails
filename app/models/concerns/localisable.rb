@@ -8,7 +8,7 @@ module Localisable
     def localisable(locale_model:, locale_foreign_key:, parent_chain: nil)
       define_method :localised_name do |locale|
         locale_record = locale_model.constantize.find_by(locale_foreign_key => id, locale: locale)
-        restaurant_locale = parent_chain ? parent_chain.call(self).restaurant.locales.find_by(locale: locale) : nil
+        restaurant_locale = parent_chain ? parent_chain.call(self).restaurant.restaurantlocales.find_by(locale: locale) : nil
         if restaurant_locale&.dfault
           name
         else
@@ -18,7 +18,7 @@ module Localisable
 
       define_method :localised_description do |locale|
         locale_record = locale_model.constantize.find_by(locale_foreign_key => id, locale: locale)
-        restaurant_locale = parent_chain ? parent_chain.call(self).restaurant.locales.find_by(locale: locale) : nil
+        restaurant_locale = parent_chain ? parent_chain.call(self).restaurant.restaurantlocales.find_by(locale: locale) : nil
         if restaurant_locale&.dfault
           description
         else

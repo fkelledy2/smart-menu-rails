@@ -14,6 +14,11 @@ class Restaurant < ApplicationRecord
   has_many :tracks, dependent: :delete_all
   has_many :restaurantlocales, dependent: :delete_all
 
+  # Returns all locale codes for this restaurant
+  def locales
+    restaurantlocales.pluck(:locale)
+  end
+
   enum status: {
     inactive: 0,
     active: 1,
