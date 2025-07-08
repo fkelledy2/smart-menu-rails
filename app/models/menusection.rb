@@ -1,4 +1,35 @@
 class Menusection < ApplicationRecord
+  # Responsive image helpers
+  def image_url_or_fallback(size = nil)
+    if image_attacher.derivatives&.key?(size)
+      image_url(size)
+    else
+      image_url # fallback to original
+    end
+  end
+  def thumb_url
+    image_url_or_fallback(:thumb)
+  end
+
+  def medium_url
+    image_url_or_fallback(:medium)
+  end
+
+  def large_url
+    image_url_or_fallback(:large)
+  end
+
+  def image_srcset
+    [
+      "#{thumb_url} 200w",
+      "#{medium_url} 600w",
+      "#{large_url} 1000w"
+    ].join(', ')
+  end
+
+  def image_sizes
+    '(max-width: 600px) 200px, (max-width: 1200px) 600px, 1000px'
+  end
   include ImageUploader::Attachment(:image)
   include Localisable
 

@@ -55,8 +55,26 @@ class Menuitem < ApplicationRecord
     image_url_or_fallback(:thumb)
   end
 
+  def medium_url
+    image_url_or_fallback(:medium)
+  end
+
   def large_url
     image_url_or_fallback(:large)
+  end
+
+  # Returns a srcset string for responsive images
+  def image_srcset
+    [
+      "#{thumb_url} 200w",
+      "#{medium_url} 600w",
+      "#{large_url} 1000w"
+    ].join(', ')
+  end
+
+  # Returns a default sizes attribute for responsive images
+  def image_sizes
+    '(max-width: 600px) 200px, (max-width: 1200px) 600px, 1000px'
   end
 
   validates :inventory, :presence => false

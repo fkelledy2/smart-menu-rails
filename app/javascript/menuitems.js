@@ -1,7 +1,8 @@
+import { initTomSelectIfNeeded } from './tomselect_helper';
+
 document.addEventListener("turbo:load", () => {
 
     if ($("#menuitem_menusection_id").is(':visible')) {
-      import { initTomSelectIfNeeded } from './tomselect_helper';
       initTomSelectIfNeeded("#menuitem_menusection_id",{
       });
     }

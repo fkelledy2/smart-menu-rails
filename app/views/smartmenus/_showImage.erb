@@ -1,6 +1,9 @@
 <%= image_tag src,
-    :title => alt,
-    :class => "float-left",
-    :onload => "fadeIn(this)",
-    :style => "border-top-left-radius: 5px;display:none;"
+    title: alt,
+    class: "float-left img-fluid",
+    onload: "fadeIn(this)",
+    style: "border-top-left-radius: 5px;",
+    srcset: (defined?(srcset) && srcset.present?) ? srcset : nil,
+    sizes: (defined?(sizes) && sizes.present?) ? sizes : nil,
+    loading: (defined?(loading) ? loading : 'lazy')
 %>

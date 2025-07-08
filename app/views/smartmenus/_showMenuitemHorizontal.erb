@@ -23,7 +23,7 @@
                                     <span class="visually-hidden">Loading...</span>
                                 </div>
                             </div>
-                            <%= render "smartmenus/showImage", src: mi.thumb_url, alt: mi.name, cached: true, loading: "lazy", class: "img-fluid" %>
+                            <%= render "smartmenus/showImage", src: mi.medium_url, alt: mi.name, srcset: mi.image_srcset, sizes: mi.image_sizes, cached: true, loading: "lazy", class: "img-fluid" %>
                         </div>
                     </div>
                     <div style='padding-left:0px' class="col-7">

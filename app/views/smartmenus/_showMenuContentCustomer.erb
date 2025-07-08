@@ -6,7 +6,13 @@
                 <% if menu.displayImages == true && menu.restaurant.displayImages == true %>
                     <% if menusection.image %>
                         <div class="card border-light text-bg-dark">
-                            <img src="<%= menusection.image_url %>" style="height: 150px" class="card-img img-fluid" alt="<%= menusection.name %>" loading="lazy">
+                            <img src="<%= menusection.medium_url %>"
+                             srcset="<%= menusection.image_srcset %>"
+                             sizes="<%= menusection.image_sizes %>"
+                             style="height: 150px"
+                             class="card-img img-fluid"
+                             alt="<%= menusection.name %>"
+                             loading="lazy">
                             <div class="card-img-overlay">
                                 <h3 class="card-title"><%= menusection.name %></h3>
                                 <p class="card-text"><%= menusection.description %></p>
