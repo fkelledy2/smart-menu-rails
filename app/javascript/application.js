@@ -8,17 +8,8 @@ import "@hotwired/turbo-rails"
 require("@rails/activestorage").start()
 //require("trix")
 //require("@rails/actiontext")
-//= require jquery3
-//= require jquery_ujs
-//= require gmaps-auto-complete
-//= require_tree .
-//= require allow_numeric
-//= require cropper
-//= require jquery-cropper
-//= require chatgpt
 
 require("local-time").start()
-require("@rails/ujs").start()
 
 import './channels/**/*_channel.js'
 import "./controllers"

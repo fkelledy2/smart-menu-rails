@@ -1,11 +1,12 @@
+import { initTomSelectIfNeeded } from './tomselect_helper';
 document.addEventListener("turbo:load", () => {
 
     if ($("#menusection_menu_id").is(':visible')) {
-      new TomSelect("#menusection_menu_id",{
+      initTomSelectIfNeeded("#menusection_menu_id",{
       });
     }
     if ($("#menusection_restricted").is(':visible')) {
-      new TomSelect("#menusection_restricted",{
+      initTomSelectIfNeeded("#menusection_restricted",{
       });
     }
 

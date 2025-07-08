@@ -1,22 +1,23 @@
+import { initTomSelectIfNeeded } from './tomselect_helper';
 document.addEventListener("turbo:load", () => {
 
     if ($("#employee_status").is(':visible')) {
-      new TomSelect("#employee_status",{
+      initTomSelectIfNeeded("#employee_status",{
       });
     }
 
     if ($("#employee_role").is(':visible')) {
-      new TomSelect("#employee_role",{
+      initTomSelectIfNeeded("#employee_role",{
       });
     }
 
     if ($("#employee_restaurant_id").is(':visible')) {
-      new TomSelect("#employee_restaurant_id",{
+      initTomSelectIfNeeded("#employee_restaurant_id",{
       });
     }
 
     if ($("#employee_user_id").is(':visible')) {
-      new TomSelect("#employee_user_id",{
+      initTomSelectIfNeeded("#employee_user_id",{
       });
     }
 

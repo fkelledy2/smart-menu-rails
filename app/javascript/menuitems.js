@@ -1,21 +1,22 @@
 document.addEventListener("turbo:load", () => {
 
     if ($("#menuitem_menusection_id").is(':visible')) {
-      new TomSelect("#menuitem_menusection_id",{
+      import { initTomSelectIfNeeded } from './tomselect_helper';
+      initTomSelectIfNeeded("#menuitem_menusection_id",{
       });
     }
 
     if ($("#menuitem_status").is(':visible')) {
-      new TomSelect("#menuitem_status",{
+      initTomSelectIfNeeded("#menuitem_status",{
       });
     }
 
     if ($("#menuitem_itemtype").is(':visible')) {
-      new TomSelect("#menuitem_itemtype",{
+      initTomSelectIfNeeded("#menuitem_itemtype",{
       });
     }
     if ($("#menuitem_sizesupport").is(':visible')) {
-      new TomSelect("#menuitem_sizesupport",{
+      initTomSelectIfNeeded("#menuitem_sizesupport",{
       });
     }
     let restaurantCurrencySymbol = '$';

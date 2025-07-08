@@ -1,5 +1,10 @@
 class Menuitem < ApplicationRecord
   include ImageUploader::Attachment(:image)
+  include Localisable
+
+  has_many :menuitemlocales
+
+  localisable locale_model: 'Menuitemlocale', locale_foreign_key: :menuitem_id, parent_chain: ->(item) { item.menusection.menu }
   belongs_to :menusection
 
   has_many :menuitem_allergyn_mappings, dependent: :destroy
@@ -37,33 +42,6 @@ class Menuitem < ApplicationRecord
       end
   end
 
-  def localisedName(locale)
-      mil = Menuitemlocale.where(menuitem_id: id, locale: locale).first
-      rl = Restaurantlocale.where(restaurant_id: self.menusection.menu.restaurant.id, locale: locale).first
-      if rl.dfault == true
-        name
-      else
-          if mil
-              mil.name
-          else
-              name
-          end
-      end
-  end
-
-  def localisedDescription(locale)
-      mil = Menuitemlocale.where(menuitem_id: id, locale: locale).first
-      rl = Restaurantlocale.where(restaurant_id: self.menusection.menu.restaurant.id, locale: locale).first
-      if rl.dfault == true
-        description
-      else
-          if mil
-              mil.description
-          else
-              description
-          end
-      end
-  end
 
   def image_url_or_fallback(size = nil)
     if image_attacher.derivatives&.key?(size)

@@ -1,17 +1,18 @@
+import { initTomSelectIfNeeded } from './tomselect_helper';
 document.addEventListener("turbo:load", () => {
 
     if ($("#restaurantavailability_dayofweek").is(':visible')) {
-      new TomSelect("#restaurantavailability_dayofweek",{
+      initTomSelectIfNeeded("#restaurantavailability_dayofweek",{
       });
     }
 
     if ($("#restaurantavailability_status").is(':visible')) {
-      new TomSelect("#restaurantavailability_status",{
+      initTomSelectIfNeeded("#restaurantavailability_status",{
       });
     }
 
     if ($("#restaurantavailability_restaurant_id").is(':visible')) {
-      new TomSelect("#restaurantavailability_restaurant_id",{
+      initTomSelectIfNeeded("#restaurantavailability_restaurant_id",{
       });
     }
 

@@ -1,17 +1,18 @@
+import { initTomSelectIfNeeded } from './tomselect_helper';
 document.addEventListener("turbo:load", () => {
 
     if ($("#menuavailability_dayofweek").is(':visible')) {
-      new TomSelect("#menuavailability_dayofweek",{
+      initTomSelectIfNeeded("#menuavailability_dayofweek",{
       });
     }
 
     if ($("#menuavailability_status").is(':visible')) {
-      new TomSelect("#menuavailability_status",{
+      initTomSelectIfNeeded("#menuavailability_status",{
       });
     }
 
     if ($("#menuavailability_menu_id").is(':visible')) {
-      new TomSelect("#menuavailability_menu_id",{
+      initTomSelectIfNeeded("#menuavailability_menu_id",{
       });
     }
     if ($("#menuTabs").is(':visible')) {

@@ -31,6 +31,7 @@
   <head>
     <%= render 'shared/head' %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
+    <%= javascript_include_tag "application", defer: true %>
   </head>
   <body class="d-flex flex-column min-vh-100" data-smartmenu-id="<%= @smartmenu.slug %>">
     <div id="backgroundContent" style="display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;">

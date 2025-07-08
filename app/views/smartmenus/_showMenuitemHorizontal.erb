@@ -1,12 +1,13 @@
+<% cache(mi) do %>
     <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
         <div class="card">
             <div style='padding:5px' class="card-header">
                         <span>
                             <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                                <%= mi.localisedName(ordrparticipant.preferredlocale) %>
+                                <%= mi.localised_name(ordrparticipant.preferredlocale) %>
                             <% else %>
                                 <% if menuparticipant && menuparticipant.preferredlocale %>
-                                    <%= mi.localisedName(menuparticipant.preferredlocale) %>
+                                    <%= mi.localised_name(menuparticipant.preferredlocale) %>
                                 <% else %>
                                     <%= mi.name %>
                                 <% end %>
@@ -22,16 +23,16 @@
                                     <span class="visually-hidden">Loading...</span>
                                 </div>
                             </div>
-                            <%= render "smartmenus/showImage", src: mi.thumb_url, alt: mi.name, cached: true %>
+                            <%= render "smartmenus/showImage", src: mi.thumb_url, alt: mi.name, cached: true, loading: "lazy", class: "img-fluid" %>
                         </div>
                     </div>
                     <div style='padding-left:0px' class="col-7">
                         <h6 style='padding-top:5px;padding-right:10px;'>
                             <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                                <small><%= mi.localisedDescription(ordrparticipant.preferredlocale) %></small>
+                                <small><%= mi.localised_description(ordrparticipant.preferredlocale) %></small>
                             <% else %>
                                 <% if menuparticipant && menuparticipant.preferredlocale %>
-                                    <small><%= mi.localisedDescription(menuparticipant.preferredlocale) %></small>
+                                    <small><%= mi.localised_description(menuparticipant.preferredlocale) %></small>
                                 <% else %>
                                     <small><%= mi.description %></small>
                                 <% end %>
@@ -45,10 +46,10 @@
                     <div class="col-12">
                         <h6 style='padding-left:10px;padding-right:10px;padding-top:5px'>
                             <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                                <small><%= mi.localisedDescription(ordrparticipant.preferredlocale) %></small>
+                                <small><%= mi.localised_description(ordrparticipant.preferredlocale) %></small>
                             <% else %>
                                 <% if menuparticipant && menuparticipant.preferredlocale %>
-                                    <small><%= mi.localisedDescription(menuparticipant.preferredlocale) %></small>
+                                    <small><%= mi.localised_description(menuparticipant.preferredlocale) %></small>
                                 <% else %>
                                     <small><%= mi.description %></small>
                                 <% end %>
@@ -60,3 +61,4 @@
             <% end %>
         </div>
     </div>
+<% end %>

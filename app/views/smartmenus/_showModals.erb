@@ -163,10 +163,10 @@
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                             <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                                                <%= ordraction.ordritem.menuitem.localisedName(ordrparticipant.preferredlocale) %>
+                                                <%= ordraction.ordritem.menuitem.localised_name(ordrparticipant.preferredlocale) %>
                                             <% else %>
                                                 <% if menuparticipant && menuparticipant.preferredlocale %>
-                                                    <%= ordraction.ordritem.menuitem.localisedName(menuparticipant.preferredlocale) %>
+                                                    <%= ordraction.ordritem.menuitem.localised_name(menuparticipant.preferredlocale) %>
                                                 <% else %>
                                                     <%= ordraction.ordritem.menuitem.name %>
                                                 <% end %>
@@ -209,10 +209,10 @@
                                                 <i class="bi bi-arrow-right-circle-fill"></i>
                                             </button>
                                             <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                                                <%= ordraction.ordritem.menuitem.localisedName(ordrparticipant.preferredlocale) %>
+                                                <%= ordraction.ordritem.menuitem.localised_name(ordrparticipant.preferredlocale) %>
                                             <% else %>
                                                 <% if menuparticipant && menuparticipant.preferredlocale %>
-                                                    <%= ordraction.ordritem.menuitem.localisedName(menuparticipant.preferredlocale) %>
+                                                    <%= ordraction.ordritem.menuitem.localised_name(menuparticipant.preferredlocale) %>
                                                 <% else %>
                                                     <%= ordraction.ordritem.menuitem.name %>
                                                 <% end %>

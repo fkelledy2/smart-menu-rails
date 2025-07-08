@@ -1,11 +1,12 @@
     <div class="row">
-        <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+        <div class="col-12 col-md-12 col-lg-12 scrollspy-example" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" tabindex="0">
             <% menu.menusections.order(:sequence).each do |menusection| %>
+              <% cache(menusection) do %>
                 <div style="padding-top:20px" id="menusection_<%= menusection.id %>"></div>
                 <% if menu.displayImages == true && menu.restaurant.displayImages == true %>
                     <% if menusection.image %>
                         <div class="card border-light text-bg-dark">
-                            <img src="<%= menusection.image_url %>" style="height: 150px" class="card-img" alt="<%= menusection.name %>">
+                            <img src="<%= menusection.image_url %>" style="height: 150px" class="card-img img-fluid" alt="<%= menusection.name %>" loading="lazy">
                             <div class="card-img-overlay">
                                 <h3 class="card-title"><%= menusection.name %></h3>
                                 <p class="card-text"><%= menusection.description %></p>
@@ -16,10 +17,10 @@
                             <div class="col-12">
                                 <span class='h3'>
                                     <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                                        <%= menusection.localisedName(ordrparticipant.preferredlocale) %>
+                                        <%= menusection.localised_name(ordrparticipant.preferredlocale) %>
                                     <% else %>
                                         <% if menuparticipant && menuparticipant.preferredlocale %>
-                                            <%= menusection.localisedName(menuparticipant.preferredlocale) %>
+                                            <%= menusection.localised_name(menuparticipant.preferredlocale) %>
                                         <% else %>
                                             <%= menusection.name %>
                                         <% end %>
@@ -42,10 +43,10 @@
                             <div class="col-12">
                                 <span class='h3'>
                                     <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                                        <%= menusection.localisedName(ordrparticipant.preferredlocale) %>
+                                        <%= menusection.localised_name(ordrparticipant.preferredlocale) %>
                                     <% else %>
                                         <% if menuparticipant && menuparticipant.preferredlocale %>
-                                            <%= menusection.localisedName(menuparticipant.preferredlocale) %>
+                                            <%= menusection.localised_name(menuparticipant.preferredlocale) %>
                                         <% else %>
                                             <%= menusection.name %>
                                         <% end %>
@@ -70,6 +71,7 @@
                         <% end %>
                     <% end %>
                 </div>
+              <% end %>
         <% end %>
         <%= render partial: "smartmenus/showAllergyns", locals: { allergyns: allergyns }  %>
         <%= render partial: "smartmenus/showCoverCharge", locals: { menu: menu, restaurantCurrency: restaurantCurrency } %>

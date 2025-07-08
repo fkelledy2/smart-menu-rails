@@ -19,8 +19,8 @@
                                             data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                             data-bs-ordr_id="<%= order.id %>"
                                             data-bs-menuitem_id="<%= mi.id %>"
-                                            data-bs-menuitem_name="<%= mi.localisedName(ordrparticipant.preferredlocale) %>"
-                                            data-bs-menuitem_description="<%= mi.localisedDescription(ordrparticipant.preferredlocale) %>"
+                                            data-bs-menuitem_name="<%= mi.localised_name(ordrparticipant.preferredlocale) %>"
+                                            data-bs-menuitem_description="<%= mi.localised_description(ordrparticipant.preferredlocale) %>"
                                             data-bs-menuitem_price="<%= mi.price %>"
                                             data-bs-menuitem_image="<%= mi.image_url %>">
                                             <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
@@ -33,8 +33,8 @@
                                                 data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                                 data-bs-ordr_id="<%= order.id %>"
                                                 data-bs-menuitem_id="<%= mi.id %>"
-                                                data-bs-menuitem_name="<%= mi.localisedName(menuparticipant.preferredlocale) %>"
-                                                data-bs-menuitem_description="<%= mi.localisedDescription(menuparticipant.preferredlocale) %>"
+                                                data-bs-menuitem_name="<%= mi.localised_name(menuparticipant.preferredlocale) %>"
+                                                data-bs-menuitem_description="<%= mi.localised_description(menuparticipant.preferredlocale) %>"
                                                 data-bs-menuitem_price="<%= mi.price %>"
                                                 data-bs-menuitem_image="<%= mi.image_url %>">
                                                 <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>

@@ -1,7 +1,8 @@
+import { initTomSelectIfNeeded } from './tomselect_helper';
 document.addEventListener("turbo:load", () => {
 
     if ($("#restaurantlocale_restaurant_id").is(':visible')) {
-      new TomSelect("#restaurantlocale_restaurant_id",{
+      initTomSelectIfNeeded("#restaurantlocale_restaurant_id",{
       });
     }
 

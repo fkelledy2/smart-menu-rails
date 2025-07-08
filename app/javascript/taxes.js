@@ -1,12 +1,13 @@
+import { initTomSelectIfNeeded } from './tomselect_helper';
 document.addEventListener("turbo:load", () => {
 
     if ($("#tax_taxtype").is(':visible')) {
-      new TomSelect("#tax_taxtype",{
+      initTomSelectIfNeeded("#tax_taxtype",{
       });
     }
 
     if ($("#tax_restaurant_id").is(':visible')) {
-      new TomSelect("#tax_restaurant_id",{
+      initTomSelectIfNeeded("#tax_restaurant_id",{
       });
     }
 

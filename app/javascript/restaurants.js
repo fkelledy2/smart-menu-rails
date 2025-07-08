@@ -1,3 +1,4 @@
+import { initTomSelectIfNeeded } from './tomselect_helper';
 document.addEventListener("turbo:load", () => {
 
     $(document).on("keydown", "form", function(event) {
@@ -254,37 +255,37 @@ document.addEventListener("turbo:load", () => {
         getPillId();
     }
 
-    if (document.getElementById("restaurant_wifiEncryptionType") != null) {
-      new TomSelect("#restaurant_wifiEncryptionType",{
-      });
+    const wifiEncryptionTypeEl = document.getElementById("restaurant_wifiEncryptionType");
+    if (wifiEncryptionTypeEl) {
+      initTomSelectIfNeeded(wifiEncryptionTypeEl,{});
     }
-    if (document.getElementById("restaurant_wifiHidden") != null) {
-      new TomSelect("#restaurant_wifiHidden",{
-      });
+    const wifiHiddenEl = document.getElementById("restaurant_wifiHidden");
+    if (wifiHiddenEl) {
+      initTomSelectIfNeeded(wifiHiddenEl,{});
     }
-    if (document.getElementById("restaurant_status") != null) {
-      new TomSelect("#restaurant_status",{
-      });
-    }
-
-    if (document.getElementById("restaurant_displayImages") != null) {
-      new TomSelect("#restaurant_displayImages",{
-      });
+    const restaurantStatusEl = document.getElementById("restaurant_status");
+    if (restaurantStatusEl) {
+      initTomSelectIfNeeded(restaurantStatusEl,{});
     }
 
-    if (document.getElementById("restaurant_displayImagesInPopup") != null) {
-      new TomSelect("#restaurant_displayImagesInPopup",{
-      });
+    const displayImagesEl = document.getElementById("restaurant_displayImages");
+    if (displayImagesEl) {
+      initTomSelectIfNeeded(displayImagesEl,{});
     }
 
-    if (document.getElementById("restaurant_allowOrdering") != null) {
-      new TomSelect("#restaurant_allowOrdering",{
-      });
+    const displayImagesInPopupEl = document.getElementById("restaurant_displayImagesInPopup");
+    if (displayImagesInPopupEl) {
+      initTomSelectIfNeeded(displayImagesInPopupEl,{});
     }
 
-    if (document.getElementById("restaurant_inventoryTracking") != null) {
-      new TomSelect("#restaurant_inventoryTracking",{
-      });
+    const allowOrderingEl = document.getElementById("restaurant_allowOrdering");
+    if (allowOrderingEl) {
+      initTomSelectIfNeeded(allowOrderingEl,{});
+    }
+
+    const inventoryTrackingEl = document.getElementById("restaurant_inventoryTracking");
+    if (inventoryTrackingEl) {
+      initTomSelectIfNeeded(inventoryTrackingEl,{});
     }
 
 //    if (document.getElementById("restaurant_country") != null) {

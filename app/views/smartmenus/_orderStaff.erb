@@ -1,8 +1,8 @@
-        <div style='padding-top:2px' class="row">
+        <div class="pt-2 row">
             <div class="col-12">
                 <span>
                     <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                        <%= menu.localisedName(ordrparticipant.preferredlocale) %>
+                        <%= menu.localised_name(ordrparticipant.preferredlocale) %>
                     <% else %>
                         <%= menu.name %>
                     <% end %>

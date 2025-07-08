@@ -1,3 +1,4 @@
+import { initTomSelectIfNeeded } from './tomselect_helper';
 document.addEventListener("turbo:load", () => {
 
     $(window).on('activate.bs.scrollspy', function () {
@@ -26,37 +27,37 @@ document.addEventListener("turbo:load", () => {
     });
 
     if ($("#size_size").is(':visible')) {
-        new TomSelect("#size_size",{
+        initTomSelectIfNeeded("#size_size",{
         });
     }
 
     if ($("#menu_status").is(':visible')) {
-        new TomSelect("#menu_status",{
+        initTomSelectIfNeeded("#menu_status",{
         });
     }
 
     if ($("#menu_displayImages").is(':visible')) {
-        new TomSelect("#menu_displayImages",{
+        initTomSelectIfNeeded("#menu_displayImages",{
         });
     }
 
     if ($("#menu_displayImagesInPopup").is(':visible')) {
-        new TomSelect("#menu_displayImagesInPopup",{
+        initTomSelectIfNeeded("#menu_displayImagesInPopup",{
         });
     }
 
     if ($("#menu_allowOrdering").is(':visible')) {
-        new TomSelect("#menu_allowOrdering",{
+        initTomSelectIfNeeded("#menu_allowOrdering",{
         });
     }
 
     if ($("#menu_inventoryTracking").is(':visible')) {
-        new TomSelect("#menu_inventoryTracking",{
+        initTomSelectIfNeeded("#menu_inventoryTracking",{
         });
     }
 
     if ($("#menu_restaurant_id").is(':visible')) {
-        new TomSelect("#menu_restaurant_id",{
+        initTomSelectIfNeeded("#menu_restaurant_id",{
         });
     }
 

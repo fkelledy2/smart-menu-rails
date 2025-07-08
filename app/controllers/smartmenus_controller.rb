@@ -111,7 +111,19 @@ class SmartmenusController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_smartmenu
       begin
-          @smartmenu = Smartmenu.where( slug: params[:id]).first
+          @smartmenu = Smartmenu.where(slug: params[:id]).includes(
+  menu: [
+    :restaurant,
+    { menusections: [
+        { menuitems: [
+            :menuitemlocales, :tags, :sizes, :ingredients, :allergyns, :genimage, :inventory
+          ] },
+        :genimage
+      ] },
+    :menuavailabilities,
+    :genimage
+  ]
+).first
           if @smartmenu
               @restaurant = @smartmenu.restaurant
               @menu = @smartmenu.menu
