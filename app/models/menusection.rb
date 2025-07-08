@@ -31,13 +31,39 @@ class Menusection < ApplicationRecord
     '(max-width: 600px) 200px, (max-width: 1200px) 600px, 1000px'
   end
   include ImageUploader::Attachment(:image)
-  include Localisable
 
-  localisable locale_model: 'Menusectionlocale', locale_foreign_key: :menusection_id, parent_chain: ->(section) { section.menu }
   belongs_to :menu
   has_many :menuitems
   has_many :menusectionlocales
   has_one :genimage, dependent: :destroy
+
+  def localised_name(locale)
+      mil = Menusectionlocale.where(menusection_id: id, locale: locale).first
+      rl = Restaurantlocale.where(restaurant_id: self.menu.restaurant.id, locale: locale).first
+      if rl.dfault == true
+        name
+      else
+          if mil
+              mil.name
+          else
+              name
+          end
+      end
+  end
+
+  def localised_description(locale)
+      mil = Menulocale.where(menusection_id: id, locale: locale).first
+      rl = Restaurantlocale.where(restaurant_id: self.menu.restaurant.id, locale: locale).first
+      if rl.dfault == true
+        description
+      else
+          if mil
+              mil.description
+          else
+              description
+          end
+      end
+  end
 
   enum status: {
     inactive: 0,

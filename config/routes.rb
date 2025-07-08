@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :restaurantlocales
   resources :tracks
   resources :smartmenus
+  patch 'smartmenus/:smartmenu_id/locale', to: 'smartmenus_locale#update', as: :smartmenu_locale
   resources :genimages
   resources :metrics
   resources :tips

@@ -42,10 +42,10 @@ class MenuparticipantsController < ApplicationController
         @menuparticipant.smartmenu = Smartmenu.find(params[:menuparticipant][:smartmenu_id]) if params[:menuparticipant][:smartmenu_id]
         @menuparticipant.save
         broadcastPartials()
-        format.html { redirect_to @menuparticipant, notice: "Menuparticipant was successfully updated." }
+#         format.html { redirect_to @menuparticipant, notice: "Menuparticipant was successfully updated." }
         format.json { render :show, status: :ok, location: @menuparticipant }
       else
-        @smartmenus = Smartmenu.all
+#         @smartmenus = Smartmenu.all
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menuparticipant.errors, status: :unprocessable_entity }
       end
@@ -67,7 +67,7 @@ class MenuparticipantsController < ApplicationController
     def broadcastPartials()
         menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
         if menuparticipant.smartmenu.restaurant.currency
-            restaurantCurrency = ISO4217::Currency.from_code(ordr.menu.restaurant.currency)
+            restaurantCurrency = ISO4217::Currency.from_code(menuparticipant.smartmenu.restaurant.currency)
         else
             restaurantCurrency = ISO4217::Currency.from_code('USD')
         end
@@ -84,11 +84,11 @@ class MenuparticipantsController < ApplicationController
             ),
             menuContentStaff: ApplicationController.renderer.render(
                 partial: 'smartmenus/showMenuContentStaff',
-                locals: { order: nil, menu: menuparticipant.smartmenu.menu, allergyns: allergyns, restaurantCurrency: restaurantCurrency, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
+                locals: { order: nil, menu: menuparticipant.smartmenu.menu, allergyns: allergyns, restaurantCurrency: restaurantCurrency, ordrparticipant: nil, menuparticipant: menuparticipant }
             ),
             menuContentCustomer: ApplicationController.renderer.render(
                 partial: 'smartmenus/showMenuContentCustomer',
-                locals: { order: nil, menu: menuparticipant.smartmenu.menu, allergyns: allergyns, restaurantCurrency: restaurantCurrency, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
+                locals: { order: nil, menu: menuparticipant.smartmenu.menu, allergyns: allergyns, restaurantCurrency: restaurantCurrency, ordrparticipant: nil, menuparticipant: menuparticipant }
             ),
             orderCustomer: ApplicationController.renderer.render(
                 partial: 'smartmenus/orderCustomer',
