@@ -1,12 +1,7 @@
 class Restaurant < ApplicationRecord
   include ImageUploader::Attachment(:image)
   belongs_to :user
-  has_many :restaurantlocales, dependent: :delete_all
 
-  # Returns all locale codes for this restaurant
-  def locales
-    restaurantlocales.pluck(:locale)
-  end
   has_many :tablesettings, dependent: :delete_all
   has_many :menus, dependent: :delete_all
   has_many :employees, dependent: :delete_all
@@ -17,6 +12,7 @@ class Restaurant < ApplicationRecord
   has_many :menuavailabilities, through: :menus
   has_one  :genimage, dependent: :destroy
   has_many :tracks, dependent: :delete_all
+  has_many :restaurantlocales, dependent: :delete_all
 
   enum status: {
     inactive: 0,
