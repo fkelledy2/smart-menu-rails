@@ -9,3 +9,13 @@ one:
   price: 1.5
   itemtype: food
   menusection: one
+
+two:
+  name: AnotherString
+  description: AnotherText
+  status: 1
+  sequence: 2
+  calories: 2
+  price: 2.5
+  itemtype: drink
+  menusection: one

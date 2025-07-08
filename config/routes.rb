@@ -30,6 +30,9 @@ Rails.application.routes.draw do
   resources :allergyns
   resources :menuitems
   resources :menusections
+  resources :menuitemlocales
+  resources :menusectionlocales
+  resources :menulocales
   resources :tablesettings
   resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
 

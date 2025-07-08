@@ -17,6 +17,7 @@ class UserplansController < ApplicationController
 
   # GET /userplans/1/edit
   def edit
+    @plans = Plan.all
   end
 
   # POST /userplans or /userplans.json
@@ -44,9 +45,10 @@ class UserplansController < ApplicationController
         @user = User.where( id: @userplan.user.id).first
         @user.plan = @userplan.plan
         @user.save
-        format.html { redirect_to edit_userplan_path(@userplan), notice: "Userplan was successfully updated." }
+        format.html { redirect_to @userplan, notice: "Userplan was successfully updated." }
         format.json { render :show, status: :ok, location: @userplan }
       else
+        @plans = Plan.all
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @userplan.errors, status: :unprocessable_entity }
       end

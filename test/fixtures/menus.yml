@@ -10,3 +10,47 @@ one:
   allowOrdering: false
   inventoryTracking: false
   imagecontext: MyText
+
+two:
+  name: AnotherMenu
+  description: AnotherText
+  status: 1
+  sequence: 2
+  restaurant: one
+  displayImages: true
+  allowOrdering: true
+  inventoryTracking: true
+  imagecontext: AnotherContext
+
+three:
+  name: ThirdMenu
+  description: ThirdText
+  status: 1
+  sequence: 3
+  restaurant: two
+  displayImages: false
+  allowOrdering: false
+  inventoryTracking: false
+  imagecontext: ThirdContext
+
+four:
+  name: FourthMenu
+  description: FourthText
+  status: 1
+  sequence: 4
+  restaurant: two
+  displayImages: true
+  allowOrdering: true
+  inventoryTracking: true
+  imagecontext: FourthContext
+
+five:
+  name: FifthMenu
+  description: FifthText
+  status: 1
+  sequence: 5
+  restaurant: one
+  displayImages: false
+  allowOrdering: false
+  inventoryTracking: false
+  imagecontext: FifthContext

@@ -28,6 +28,7 @@ class MenuparticipantsController < ApplicationController
         broadcastPartials()
         format.json { render :show, status: :created, location: @menuparticipant }
       else
+        @smartmenus = Smartmenu.all
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @menuparticipant.errors, status: :unprocessable_entity }
       end
@@ -38,9 +39,13 @@ class MenuparticipantsController < ApplicationController
   def update
     respond_to do |format|
       if @menuparticipant.update(menuparticipant_params)
+        @menuparticipant.smartmenu = Smartmenu.find(params[:menuparticipant][:smartmenu_id]) if params[:menuparticipant][:smartmenu_id]
+        @menuparticipant.save
         broadcastPartials()
+        format.html { redirect_to @menuparticipant, notice: "Menuparticipant was successfully updated." }
         format.json { render :show, status: :ok, location: @menuparticipant }
       else
+        @smartmenus = Smartmenu.all
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menuparticipant.errors, status: :unprocessable_entity }
       end

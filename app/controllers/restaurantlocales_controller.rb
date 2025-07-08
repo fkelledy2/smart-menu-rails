@@ -108,7 +108,7 @@ class RestaurantlocalesController < ApplicationController
   # DELETE /restaurantlocales/1 or /restaurantlocales/1.json
   def destroy
     if current_user
-        if @restaurantlocale.status == 'inactive'
+        if @restaurantlocale.inactive?
             @restaurantlocale.destroy!
             respond_to do |format|
               format.html { redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), notice: "Locale was deleted." }

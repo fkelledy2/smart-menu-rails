@@ -5,3 +5,15 @@ one:
   restaurant: one
   menu: one
   tablesetting: one
+
+two:
+  slug: AnotherString
+  restaurant: one
+  menu: two
+  tablesetting: one
+
+three:
+  slug: ThirdString
+  restaurant: two
+  menu: three
+  tablesetting: one

@@ -7,3 +7,11 @@ one:
   status: 1
   sequence: 1
   menu: one
+
+two:
+  name: AnotherSection
+  description: AnotherText
+  image: AnotherImage
+  status: 1
+  sequence: 2
+  menu: one

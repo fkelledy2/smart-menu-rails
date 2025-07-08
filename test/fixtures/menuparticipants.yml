@@ -9,3 +9,13 @@ two:
   sessionid: MyString
   preferredlocale: MyString
   smartmenu: two
+
+three:
+  sessionid: ThirdSession
+  preferredlocale: ThirdLocale
+  smartmenu: two
+
+four:
+  sessionid: FourthSession
+  preferredlocale: FourthLocale
+  smartmenu: one

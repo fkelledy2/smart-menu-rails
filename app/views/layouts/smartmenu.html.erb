@@ -33,7 +33,9 @@
     <%= Sentry.get_trace_propagation_meta.html_safe %>
     <%= javascript_include_tag "application", defer: true %>
   </head>
-  <body class="d-flex flex-column min-vh-100" data-smartmenu-id="<%= @smartmenu.slug %>">
+  <body class="d-flex flex-column min-vh-100"
+      data-smartmenu-id="<%= @smartmenu.slug %>"
+      data-page="<%= controller.controller_name %><%= "-#{controller.action_name}" if controller.action_name.present? %>">
     <div id="backgroundContent" style="display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;">
         <main class="flex-wrapper">
           <% if current_user %>

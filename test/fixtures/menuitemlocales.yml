@@ -13,3 +13,10 @@ two:
   name: MyString
   description: MyString
   menuitem: two
+
+three:
+  locale: AnotherLocale
+  status: 1
+  name: AnotherName
+  description: AnotherDescription
+  menuitem: one

@@ -2,14 +2,21 @@
 
 one:
   locale: MyString
-  status: 1
+  status: 0
   name: MyString
   description: MyString
   menusection: one
 
 two:
   locale: MyString
-  status: 1
+  status: 0
   name: MyString
   description: MyString
   menusection: two
+
+three:
+  locale: AnotherLocale
+  status: 0
+  name: AnotherName
+  description: AnotherDescription
+  menusection: one

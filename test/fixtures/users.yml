@@ -6,3 +6,6 @@
 #
 one:
   email: test1@gmail.com
+
+two:
+  email: test2@gmail.com

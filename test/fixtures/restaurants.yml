@@ -12,3 +12,16 @@ one:
   status: 1
   capacity: 1
   user: one
+
+two:
+  name: AnotherRestaurant
+  description: AnotherText
+  address1: AnotherAddress1
+  address2: AnotherAddress2
+  state: AnotherState
+  city: AnotherCity
+  postcode: AnotherPostcode
+  country: AnotherCountry
+  status: 1
+  capacity: 2
+  user: one

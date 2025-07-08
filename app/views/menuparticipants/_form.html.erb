@@ -1,0 +1,31 @@
+<%= form_with(model: menuparticipant, local: true) do |form| %>
+  <% if menuparticipant.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(menuparticipant.errors.count, "error") %> prohibited this menuparticipant from being saved:</h2>
+      <ul>
+      <% menuparticipant.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :sessionid %>
+    <%= form.text_field :sessionid %>
+  </div>
+
+  <div class="field">
+    <%= form.label :preferredlocale %>
+    <%= form.text_field :preferredlocale %>
+  </div>
+
+  <div class="field">
+    <%= form.label :smartmenu_id %>
+    <%= form.collection_select :smartmenu_id, defined?(@smartmenus) ? @smartmenus : Smartmenu.all, :id, :slug, prompt: true %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

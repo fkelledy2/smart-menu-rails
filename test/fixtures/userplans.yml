@@ -7,3 +7,11 @@ one:
 two:
   user: two
   plan: two
+
+three:
+  user: one
+  plan: two
+
+four:
+  user: two
+  plan: one
