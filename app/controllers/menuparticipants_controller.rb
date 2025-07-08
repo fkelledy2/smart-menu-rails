@@ -65,12 +65,12 @@ class MenuparticipantsController < ApplicationController
   private
 
     def broadcastPartials()
+        menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
         if menuparticipant.smartmenu.restaurant.currency
             restaurantCurrency = ISO4217::Currency.from_code(ordr.menu.restaurant.currency)
         else
             restaurantCurrency = ISO4217::Currency.from_code('USD')
         end
-        menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
         allergyns = Allergyn.where( restaurant_id: menuparticipant.smartmenu.restaurant.id )
         fullRefresh = false
         partials = {
