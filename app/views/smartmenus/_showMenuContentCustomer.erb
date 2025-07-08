@@ -1,6 +1,7 @@
     <div class="row">
         <div class="col-12 col-md-12 col-lg-12 scrollspy-example" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" tabindex="0">
             <% menu.menusections.order(:sequence).each do |menusection| %>
+              <% cache([menusection.cache_key_with_version, I18n.locale]) do %>
                 <div style="padding-top:20px" id="menusection_<%= menusection.id %>"></div>
                 <% if menu.displayImages == true && menu.restaurant.displayImages == true %>
                     <% if menusection.image %>
@@ -76,6 +77,7 @@
                         <% end %>
                     <% end %>
                 </div>
+              <% end %>
         <% end %>
         <%= render partial: "smartmenus/showAllergyns", locals: { allergyns: allergyns }  %>
         <%= render partial: "smartmenus/showCoverCharge", locals: { menu: menu, restaurantCurrency: restaurantCurrency } %>

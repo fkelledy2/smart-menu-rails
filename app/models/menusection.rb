@@ -36,6 +36,7 @@ class Menusection < ApplicationRecord
   localisable locale_model: 'Menusectionlocale', locale_foreign_key: :menusection_id, parent_chain: ->(section) { section.menu }
   belongs_to :menu
   has_many :menuitems
+  has_many :menusectionlocales
   has_one :genimage, dependent: :destroy
 
   enum status: {

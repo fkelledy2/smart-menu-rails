@@ -7,23 +7,63 @@ module Localisable
     # Configure the concern with the locale model and foreign key
     def localisable(locale_model:, locale_foreign_key:, parent_chain: nil)
       define_method :localised_name do |locale|
-        locale_record = locale_model.constantize.find_by(locale_foreign_key => id, locale: locale)
-        restaurant_locale = parent_chain ? parent_chain.call(self).restaurant.restaurantlocales.find_by(locale: locale) : nil
-        if restaurant_locale&.dfault
+        @localised_name_cache ||= {}
+        return @localised_name_cache[locale] if @localised_name_cache.key?(locale)
+
+        # Use in-memory association if loaded, else fallback to DB
+        locale_assoc = send(locale_model.underscore.pluralize)
+        locale_record = if locale_assoc.loaded?
+          locale_assoc.detect { |l| l.locale == locale }
+        else
+          locale_assoc.find_by(locale: locale)
+        end
+
+        restaurant_locale = nil
+        if parent_chain
+          restaurantlocales_assoc = parent_chain.call(self).restaurant.restaurantlocales
+          restaurant_locale = if restaurantlocales_assoc.loaded?
+            restaurantlocales_assoc.detect { |l| l.locale == locale }
+          else
+            restaurantlocales_assoc.find_by(locale: locale)
+          end
+        end
+
+        result = if restaurant_locale&.dfault
           name
         else
           locale_record&.name || name
         end
+        @localised_name_cache[locale] = result
       end
 
       define_method :localised_description do |locale|
-        locale_record = locale_model.constantize.find_by(locale_foreign_key => id, locale: locale)
-        restaurant_locale = parent_chain ? parent_chain.call(self).restaurant.restaurantlocales.find_by(locale: locale) : nil
-        if restaurant_locale&.dfault
+        @localised_description_cache ||= {}
+        return @localised_description_cache[locale] if @localised_description_cache.key?(locale)
+
+        # Use in-memory association if loaded, else fallback to DB
+        locale_assoc = send(locale_model.underscore.pluralize)
+        locale_record = if locale_assoc.loaded?
+          locale_assoc.detect { |l| l.locale == locale }
+        else
+          locale_assoc.find_by(locale: locale)
+        end
+
+        restaurant_locale = nil
+        if parent_chain
+          restaurantlocales_assoc = parent_chain.call(self).restaurant.restaurantlocales
+          restaurant_locale = if restaurantlocales_assoc.loaded?
+            restaurantlocales_assoc.detect { |l| l.locale == locale }
+          else
+            restaurantlocales_assoc.find_by(locale: locale)
+          end
+        end
+
+        result = if restaurant_locale&.dfault
           description
         else
           locale_record&.description || description
         end
+        @localised_description_cache[locale] = result
       end
     end
   end

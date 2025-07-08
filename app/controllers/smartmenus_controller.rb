@@ -113,11 +113,11 @@ class SmartmenusController < ApplicationController
       begin
           @smartmenu = Smartmenu.where(slug: params[:id]).includes(
   menu: [
-    :restaurant,
+    { restaurant: :restaurantlocales },
+    :menulocales,
     { menusections: [
-        { menuitems: [
-            :menuitemlocales, :tags, :sizes, :ingredients, :allergyns, :genimage, :inventory
-          ] },
+        :menusectionlocales,
+        { menuitems: [:menuitemlocales, :tags, :sizes, :ingredients, :allergyns, :genimage, :inventory] },
         :genimage
       ] },
     :menuavailabilities,
