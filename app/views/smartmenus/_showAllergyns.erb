@@ -6,9 +6,7 @@
                 <div class="col-12">
                     <h2><%= t(".allergyns") %></h2>
                     <% allergyns.each do |allergyn| %>
-                        <% cache(allergyn) do %>
-                            <span style='white-space:nowrap'>| <b><%= allergyn.symbol %></b>&nbsp;-&nbsp;<%= allergyn.name %> |&nbsp;&nbsp;</span>
-                        <% end %>
+                         <span style='white-space:nowrap'>| <b><%= allergyn.symbol %></b>&nbsp;-&nbsp;<%= allergyn.name %> |&nbsp;&nbsp;</span>
                     <% end %>
                 </div>
             </div>
