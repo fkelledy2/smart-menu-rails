@@ -341,22 +341,28 @@ if( orderId ) {
       },
       received(data) {
         console.log('OrdrChannel:['+orderId+'] - message ');
-        if( data.fullPageRefresh.refresh ) {
-            location.reload();
+        if (data.menuitem_updates) {
+          Object.entries(data.menuitem_updates).forEach(([dom_id, html]) => {
+            const el = document.getElementById(dom_id);
+            if (el) el.outerHTML = html;
+          });
+          refreshOrderJSLogic();
+        } else if( data.fullPageRefresh && data.fullPageRefresh.refresh ) {
+          location.reload();
         } else {
-//            closeAllModals();
-            if( document.getElementById("currentEmployee") ) {
-                document.getElementById("openOrderContainer").innerHTML = data.orderStaff;
-                document.getElementById("menuContentContainer").innerHTML = data.menuContentStaff;
-                document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorStaff;
-            } else {
-                document.getElementById("openOrderContainer").innerHTML = data.orderCustomer;
-                document.getElementById("menuContentContainer").innerHTML = data.menuContentCustomer;
-                document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorCustomer;
-            }
-            document.getElementById("modalsContainer").innerHTML = data.modals;
-            document.getElementById("contextContainer").innerHTML = data.context;
-            refreshOrderJSLogic();
+          // Existing fallback: full section update
+          if( document.getElementById("currentEmployee") ) {
+              document.getElementById("openOrderContainer").innerHTML = data.orderStaff;
+              document.getElementById("menuContentContainer").innerHTML = data.menuContentStaff;
+              document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorStaff;
+          } else {
+              document.getElementById("openOrderContainer").innerHTML = data.orderCustomer;
+              document.getElementById("menuContentContainer").innerHTML = data.menuContentCustomer;
+              document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorCustomer;
+          }
+          document.getElementById("modalsContainer").innerHTML = data.modals;
+          document.getElementById("contextContainer").innerHTML = data.context;
+          refreshOrderJSLogic();
         }
         return true;
       }

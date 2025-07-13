@@ -1,3 +1,8 @@
+    <div class="row mb-3">
+      <div class="col-12">
+        <input type="text" id="menu-item-search" class="form-control" placeholder="Search menu items...">
+      </div>
+    </div>
     <div class="row">
         <div class="col-12 col-md-12 col-lg-12 scrollspy-example" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" tabindex="0">
             <% menu.menusections.order(:sequence).each do |menusection| %>
@@ -81,3 +86,22 @@
         <%= render partial: "smartmenus/showCoverCharge", locals: { menu: menu, restaurantCurrency: restaurantCurrency } %>
       </div>
     </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const searchInput = document.getElementById("menu-item-search");
+  if (!searchInput) return;
+  searchInput.addEventListener("input", function() {
+    const term = searchInput.value.toLowerCase();
+    document.querySelectorAll(".menu-item-card").forEach(function(card) {
+      const name = card.getAttribute("data-name") || "";
+      const desc = card.getAttribute("data-description") || "";
+      if (name.includes(term) || desc.includes(term)) {
+        card.style.display = "";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  });
+});
+</script>
