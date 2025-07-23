@@ -14,7 +14,7 @@ document.addEventListener("turbo:load", () => {
       {title: "Country", field: "country", sorter: "string", responsive:4, hozAlign:"right", headerHozAlign:"right", widthGrow: 0},
       {title: "Restaurant", widthGrow:6, field: "restaurant_name", sorter: "string", responsive:1},
       {title: "Menu", field: "menu_name", sorter: "string", responsive:1, hozAlign:"right", headerHozAlign:"right", widthGrow: 1},
-      {title: "Nett", field:"nett_amount", formatter:"money", hozAlign:"right", headerHozAlign:"right", responsive:0, headerHozAlign:"right", widthGrow: 0,
+      {title: "Nett", field:"nett_amount", formatter:"money", hozAlign:"right", headerHozAlign:"right", responsive:0, widthGrow: 0,
         formatterParams:{
            decimal:".",
            thousand:",",
@@ -23,7 +23,7 @@ document.addEventListener("turbo:load", () => {
            precision:2,
         }
       },      
-      {title: "Tax", field:"tax_amount", formatter:"money", hozAlign:"right", headerHozAlign:"right", responsive:4, headerHozAlign:"right", widthGrow: 0,
+      {title: "Tax", field:"tax_amount", formatter:"money", hozAlign:"right", headerHozAlign:"right", responsive:4, widthGrow: 0,
         formatterParams:{
            decimal:".",
            thousand:",",
@@ -32,7 +32,7 @@ document.addEventListener("turbo:load", () => {
            precision:2,
         }
       },
-      {title: "Tip", field:"tip_amount", formatter:"money", hozAlign:"right", headerHozAlign:"right", responsive:4, headerHozAlign:"right", widthGrow: 0,
+      {title: "Tip", field:"tip_amount", formatter:"money", hozAlign:"right", headerHozAlign:"right", responsive:4, widthGrow: 0,
         formatterParams:{
            decimal:".",
            thousand:",",
@@ -41,7 +41,7 @@ document.addEventListener("turbo:load", () => {
            precision:2,
         }
       },
-      {title: "Cover", field:"covercharge_amount", formatter:"money", headerHozAlign:"right", hozAlign:"right", responsive:4, headerHozAlign:"right", widthGrow: 0,
+      {title: "Cover", field:"covercharge_amount", formatter:"money", headerHozAlign:"right", hozAlign:"right", responsive:4, widthGrow: 0,
         formatterParams:{
            decimal:".",
            thousand:",",
@@ -50,7 +50,7 @@ document.addEventListener("turbo:load", () => {
            precision:2,
         }
       },
-      {title: "Gross", field:"gross_amount", formatter:"money", hozAlign:"right", headerHozAlign:"right", responsive:0, headerHozAlign:"right", widthGrow: 0,
+      {title: "Gross", field:"gross_amount", formatter:"money", hozAlign:"right", headerHozAlign:"right", responsive:0, widthGrow: 0,
         formatterParams:{
            decimal:".",
            thousand:",",
