@@ -39,6 +39,32 @@
       <%= form.text_area :description, class: 'form-control' %>
     </div>
   </div>
+
+  <div class="form-group row">
+    <div class="col-12">
+        <p>
+        <h4><%=t(".pdfSettings")%></h4>
+    </div>
+  </div>
+  <div style='height:8px'></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :pdf_menu_scan, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.file_field :pdf_menu_scan, class: 'form-control', accept: 'application/pdf' %>
+      <% if menu.pdf_menu_scan.attached? %>
+        <div class="mt-2">
+          <strong>Current PDF:</strong>
+          <%= link_to menu.pdf_menu_scan.filename, rails_blob_path(menu.pdf_menu_scan, disposition: "attachment"), target: "_blank" %>
+          <span class="float-end">
+            <%= check_box_tag 'menu[remove_pdf_menu_scan]', '1', false %> Remove
+          </span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
   <div class="form-group row">
     <div class="col-12">
         <p>
@@ -51,15 +77,13 @@
     </div>
     <div class="col-9">
       <div class="row">
-          <div class="row">
-            <div class="col-10">
+            <div class="col-9">
               <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
               <%= form.file_field :image, class: 'form-control' %>
             </div>
             <div class="col-2">
               <span style="position:relative;top:-5px!important;margin-top:5px" class="float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
             </div>
-          </div>
       </div>
     </div>
   </div>
@@ -73,12 +97,13 @@
   <div style='height:4px'></div>
   <div class="form-group row">
     <div class="col-3">
-        <span class="float-md-end"><%= form.label :imagecontext, class: 'col-form-label' %></span>
+      <span class="float-md-end"><%= form.label :imagecontext, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
       <%= form.text_area :imagecontext, class: 'form-control', rows: 6 %>
     </div>
   </div>
+
 
   <div style='height:4px'></div>
   <div class="form-group row">

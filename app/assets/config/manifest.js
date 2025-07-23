@@ -9,8 +9,17 @@
 //= link restaurants.js
 //= link tablesettings.js
 //= link tags.js
+//= link tips.js
 //= link taxes.js
+//= link sizes.js
+//= link ordrs.js
+//= link ordritems.js
+//= link restaurantavailabilities.js
+//= link menuavailabilities.js
 //= link channels/consumer.js
 //= link channels/index.js
 //= link channels/ordr_channel.js
-
+//= link dw_orders_mv.js
+//= link smartmenus.js
+//= link restaurantlocales.js
+//= link testimonials.js

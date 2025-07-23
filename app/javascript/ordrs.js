@@ -409,11 +409,11 @@ document.addEventListener("turbo:load", () => {
         const restaurantId = document.getElementById('restaurant-ordr-table').getAttribute('data-bs-restaurant_id');
         var restaurantOrdrTable = new Tabulator("#restaurant-ordr-table", {
           pagination:true, //enable.
-          paginationSize:5, // this option can take any positive integer value
+          paginationSize:10, // this option can take any positive integer value
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
-          layout:"fitDataStretch",
+          layout:"fitColumns",
           ajaxURL: '/restaurants/'+restaurantId+'/ordrs.json',
           initialSort:[
             {column:"ordrDate", dir:"desc"},
@@ -587,5 +587,62 @@ document.addEventListener("turbo:load", () => {
     document.getElementById('paymentQR').innerHTML = '';
     qrCode.append(document.getElementById('paymentQR'));
   }
+
+
+
+  const tableElement = document.getElementById('dw-orders-mv-table');
+  const loadingElement = document.getElementById('tabulator-loading');
+  if (!tableElement || !loadingElement) return;
+
+  showLoading();
+  fetchData()
+    .then(data => {
+      hideLoading();
+      if (!data || data.length === 0) {
+        tableElement.innerHTML = '<div class="alert alert-info">No data found.</div>';
+        return;
+      }
+      renderTable(tableElement, data);
+    })
+    .catch(error => {
+      hideLoading();
+      tableElement.innerHTML = '<div class="alert alert-danger">Failed to load data.</div>';
+    });
+
+  function showLoading() {
+    loadingElement.style.display = 'block';
+  }
+
+  function hideLoading() {
+    loadingElement.style.display = 'none';
+  }
+
+  function fetchData() {
+    const url = tableElement.getAttribute('data-json-url');
+    return fetch(url).then(response => response.json());
+  }
+
+  function renderTable(element, data) {
+    const columns = Object.keys(data[0]).map(key => ({
+      title: key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      field: key,
+      headerFilter: true
+    }));
+    columns.push({
+      title: "Actions",
+      formatter: function(cell, formatterParams, onRendered) {
+        const id = cell.getRow().getData().id;
+        return id ? `<a href='/dw_orders_mv/${id}'>Show</a>` : '';
+      }
+    });
+    new Tabulator(element, {
+      data: data,
+      layout: "fitDataTable",
+      columns: columns,
+      movableColumns: true
+    });
+  }
+
+
 
 })

@@ -37,6 +37,8 @@ Rails.application.routes.draw do
   resources :tablesettings
   resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
 
+  resources :dw_orders_mv, only: [:index, :show]
+
   resources :restaurants do
     resources :restaurantlocales, controller: 'restaurantlocales', only: [:index,:show, :edit, :delete]
     resources :menus, controller: 'menus', only: [:index,:show, :edit]

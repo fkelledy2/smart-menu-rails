@@ -159,6 +159,10 @@ class MenusController < ApplicationController
   def create
     @menu = Menu.new(menu_params)
     respond_to do |format|
+      # Remove PDF if requested
+      if params[:menu][:remove_pdf_menu_scan] == '1'
+        @menu.pdf_menu_scan.purge if @menu.pdf_menu_scan.attached?
+      end
       if @menu.save
         Analytics.track(
             user_id: current_user.id,
@@ -188,6 +192,10 @@ class MenusController < ApplicationController
   # PATCH/PUT /menus/1 or /menus/1.json
   def update
     respond_to do |format|
+      # Remove PDF if requested
+      if params[:menu][:remove_pdf_menu_scan] == '1'
+        @menu.pdf_menu_scan.purge if @menu.pdf_menu_scan.attached?
+      end
       if @menu.update(menu_params)
         Analytics.track(
             user_id: current_user.id,
@@ -274,6 +282,6 @@ class MenusController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def menu_params
-      params.require(:menu).permit(:name, :description, :image, :remove_image, :status, :sequence, :restaurant_id, :displayImages, :displayImagesInPopup, :allowOrdering, :inventoryTracking, :imagecontext, :covercharge)
+      params.require(:menu).permit(:name, :description, :image, :remove_image, :pdf_menu_scan, :status, :sequence, :restaurant_id, :displayImages, :displayImagesInPopup, :allowOrdering, :inventoryTracking, :imagecontext, :covercharge)
     end
 end

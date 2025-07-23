@@ -50,6 +50,7 @@ import './metrics'
 //import './tracks'
 import './restaurantlocales'
 import './testimonials'
+import './dw_orders_mv'
 
 document.addEventListener("turbo:load", () => {
 

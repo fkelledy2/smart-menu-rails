@@ -176,6 +176,7 @@ en:
       details: "Details"
       address: "Address"
       imageSettings: "Image Settings"
+      pdfSettings: "PDF Settings"
       settings: "Settings"
       name: "Name"
       description: "Description"
@@ -291,6 +292,7 @@ en:
       details: "Details"
       address: "Address"
       imageSettings: "Image Settings"
+      pdfSettings: "PDF Settings"
       settings: "Settings"
       save: "Save"
       delete: "Delete"
@@ -435,6 +437,8 @@ en:
       details: "Details"
       preview: "Preview"
       imageSettings: "Image Settings"
+      pdfSettings: "PDF Settings"
+      pdfMenuScan: "Original PDF"
       settings: "Settings"
     showMenuBanner:
       table: "Table"
@@ -715,6 +719,7 @@ en:
         sequence: "Display Order"
         restaurant: "Restaurant"
         covercharge: "Cover Charge"
+        pdf_menu_scan: "Original PDF"
       menusection:
         name: "Name"
         description: "Description"

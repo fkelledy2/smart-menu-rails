@@ -1,0 +1,14 @@
+<h1>DW Order Materialized View Record</h1>
+
+<table class="table table-bordered table-striped">
+  <tbody>
+    <% @dw_order_mv.attributes.each do |attr, val| %>
+      <tr>
+        <th><%= attr.titleize %></th>
+        <td><%= val %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Back to List', dw_orders_mv_index_path, class: 'btn btn-secondary' %>

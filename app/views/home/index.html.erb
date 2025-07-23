@@ -82,17 +82,21 @@
 <% else %>
   <div id="myCarousel" class="carousel" data-bs-ride="carousel" style="overflow-x: hidden;width: calc(100% + 50px);margin-left: -25px;margin-right: -25px; background: url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover;">
     <div class="carousel-inner">
-      <div class="carousel-item justify-content-center active">
+      <div class="carousel-item justify-content-center active position-relative">
+  <!-- Subtle overlay for text readability -->
+  <div class="hero-overlay position-absolute w-100 h-100" style="top:0;left:0;background:rgba(0,0,0,0.32);z-index:1;pointer-events:none;"></div>
         <%= image_tag "https://placehold.co/1x500/transparent/transparent", class: "img-responsive bg-item parallax img-fluid" %>
         <div class="container">
           <div style='left:5%;right:5%;' class="carousel-caption text-start">
             <h1><%=t(".ctaTitle1")%></h1>
             <p><strong><%=t(".ctaBody1")%></strong></p>
-            <p style="z-index:+10000;"><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
+            <p style="z-index:+10000;"><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger hero-cta-btn" %></p>
           </div>
         </div>
       </div>
-      <div class="carousel-item justify-content-center">
+      <div class="carousel-item justify-content-center position-relative">
+  <!-- Subtle overlay for text readability -->
+  <div class="hero-overlay position-absolute w-100 h-100" style="top:0;left:0;background:rgba(0,0,0,0.32);z-index:1;pointer-events:none;"></div>
         <%= image_tag "https://placehold.co/1x500/transparent/transparent", class: "img-responsive bg-item parallax img-fluid" %>
         <div class="container">
           <div style='left:5%;right:5%;' class="carousel-caption text-start">
@@ -109,7 +113,7 @@
   <div class="container px-1 py-2">
     <h2 class="pb-2 border-bottom"><%=t(".features")%></h2>
     <div class="row g-4 py-3 row-cols-1 row-cols-lg-3">
-      <div style='padding-left:15px;' class="col d-flex align-items-start">
+      <div style='padding-left:15px;' class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-activity"></i></h2>
         </div>
@@ -118,7 +122,7 @@
           <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription2").html_safe %></p>
         </div>
       </div>
-      <div style='padding-left:15px;' class="col d-flex align-items-start">
+      <div style='padding-left:15px;' class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-bullseye"></i></h2>
         </div>
@@ -127,7 +131,7 @@
           <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription3").html_safe %></p>
         </div>
       </div>
-      <div style='padding-left:15px;' class="col d-flex align-items-start">
+      <div style='padding-left:15px;' class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-emoji-heart-eyes"></i></h2>
         </div>
@@ -136,7 +140,7 @@
           <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription4").html_safe %></p>
         </div>
       </div>
-      <div style='padding-left:15px;' class="col d-flex align-items-start">
+      <div style='padding-left:15px;' class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-graph-up-arrow"></i></h2>
         </div>
@@ -145,7 +149,7 @@
           <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription6").html_safe %></p>
         </div>
       </div>
-      <div style='padding-left:15px;' class="col d-flex align-items-start">
+      <div style='padding-left:15px;' class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i style="color:green;" class="bi bi-tree"></i></h2>
         </div>

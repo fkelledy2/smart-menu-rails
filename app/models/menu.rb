@@ -1,6 +1,25 @@
 class Menu < ApplicationRecord
   include ImageUploader::Attachment(:image)
 
+  has_one_attached :pdf_menu_scan
+  validate :pdf_menu_scan_format
+
+  def slug
+      if Smartmenu.where(restaurant: restaurant, menu: self).first
+          Smartmenu.where(restaurant: restaurant, menu: self).first.slug
+      else
+          ''
+      end
+  end
+
+  private
+  def pdf_menu_scan_format
+    return unless pdf_menu_scan.attached?
+    if !pdf_menu_scan.content_type.in?(%w(application/pdf))
+      errors.add(:pdf_menu_scan, 'must be a PDF file')
+    end
+  end
+
   belongs_to :restaurant
   has_many :menusections
   has_many :menuavailabilities
@@ -47,15 +66,6 @@ class Menu < ApplicationRecord
           genimage.id
       end
   end
-
-  def slug
-      if Smartmenu.where(restaurant: restaurant, menu: self).first
-          Smartmenu.where(restaurant: restaurant, menu: self).first.slug
-      else
-          ''
-      end
-  end
-
 
   validates :name, :presence => true
   validates :restaurant, :presence => true

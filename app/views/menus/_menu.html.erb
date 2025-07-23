@@ -14,6 +14,13 @@
     <%= menu.image %>
   </p>
 
+  <% if menu.pdf_menu_scan.attached? %>
+    <p>
+      <strong>PDF Menu Scan:</strong>
+      <%= link_to menu.pdf_menu_scan.filename, rails_blob_path(menu.pdf_menu_scan, disposition: "attachment"), target: "_blank" %>
+    </p>
+  <% end %>
+
   <p>
     <strong>Status:</strong>
     <%= menu.status %>
