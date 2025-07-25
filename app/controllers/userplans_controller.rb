@@ -3,7 +3,7 @@ class UserplansController < ApplicationController
 
   # GET /userplans or /userplans.json
   def index
-    @userplans = Userplan.all
+    @userplans = Userplan.limit(100) # Use limit for memory safety, since pagination gem is not installed
   end
 
   # GET /userplans/1 or /userplans/1.json

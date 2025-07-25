@@ -3,7 +3,7 @@ class MenuparticipantsController < ApplicationController
 
   # GET /menuparticipants or /menuparticipants.json
   def index
-    @menuparticipants = Menuparticipant.all
+    @menuparticipants = Menuparticipant.limit(100) # Use limit for memory safety, since pagination gem is not installed
   end
 
   # GET /menuparticipants/1 or /menuparticipants/1.json

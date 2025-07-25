@@ -4,7 +4,11 @@ class SmartmenusController < ApplicationController
 
   # GET /smartmenus or /smartmenus.json
   def index
-    @smartmenus = Smartmenu.joins(:menu).where(tablesetting_id: nil, menus: { status: 'active' })
+    @smartmenus = Smartmenu
+        .includes(:menu, :restaurant, :tablesetting)
+        .joins(:menu)
+        .where(tablesetting_id: nil, menus: { status: 'active' })
+        .limit(100)
   end
 
   # GET /smartmenus/1 or /smartmenus/1.json
@@ -112,18 +116,13 @@ class SmartmenusController < ApplicationController
     def set_smartmenu
       begin
           @smartmenu = Smartmenu.where(slug: params[:id]).includes(
-  menu: [
-    { restaurant: :restaurantlocales },
-    :menulocales,
-    { menusections: [
-        :menusectionlocales,
-        { menuitems: [:menuitemlocales, :tags, :sizes, :ingredients, :allergyns, :genimage, :inventory] },
-        :genimage
-      ] },
-    :menuavailabilities,
-    :genimage
-  ]
-).first
+            :restaurant,
+            :tablesetting,
+            menu: [
+              :menusections,
+              { menuitems: [:menuitemlocales, :tags, :sizes, :ingredients, :allergyns, :genimage, :inventory] },
+            ]
+          ).first                     
           if @smartmenu
               @restaurant = @smartmenu.restaurant
               @menu = @smartmenu.menu

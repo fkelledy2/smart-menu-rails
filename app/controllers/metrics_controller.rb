@@ -1,9 +1,9 @@
 class MetricsController < ApplicationController
-  before_action :set_metric, only: %i[ index show edit update destroy ]
+  before_action :set_metric, only: %i[ edit update destroy ]
 
   # GET /metrics or /metrics.json
   def index
-    @metrics = Metric.all
+    @metrics = Metric.limit(100) # Use limit for memory safety, since pagination gem is not installed
   end
 
   # GET /metrics/1 or /metrics/1.json

@@ -4,18 +4,17 @@ class InventoriesController < ApplicationController
   # GET /inventories or /inventories.json
   def index
     if current_user
-        @inventories = []
-        Restaurant.where( user: current_user, archived: false).each do |restaurant|
-            Menu.where( restaurant: restaurant, archived: false).each do |menu|
-                Menusection.where( menu: menu, archived: false).each do |menusection|
-                    Menuitem.where( menusection: menusection, archived: false).each do |menuitem|
-                        @inventories += Inventory.where( menuitem: menuitem, archived: false).all
-                    end
-                end
-            end
-        end
+      @inventories = Inventory.joins(menuitem: { menusection: { menu: :restaurant } })
+        .where(
+          restaurants: { user_id: current_user.id, archived: false },
+          menus: { archived: false },
+          menusections: { archived: false },
+          menuitems: { archived: false },
+          inventories: { archived: false }
+        )
+        .includes(menuitem: { menusection: { menu: :restaurant } })
     else
-        redirect_to root_url
+      redirect_to root_url
     end
   end
 
