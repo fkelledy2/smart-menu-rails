@@ -83,67 +83,162 @@ class OrdrparticipantsController < ApplicationController
 
   private
 
-    def broadcastPartials(ordr, tablesetting, ordrparticipant)
+    def broadcast_partials(ordr, tablesetting, ordrparticipant)
       # Eager load all associations needed by partials to prevent N+1 queries
       ordr = Ordr.includes(menu: [:restaurant, :menusections, :menuavailabilities]).find(ordr.id)
       menu = ordr.menu
       restaurant = menu.restaurant
       menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
       allergyns = Allergyn.where(restaurant_id: restaurant.id)
-      restaurantCurrency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
-      fullRefresh = ordr.status == 'closed'
+      restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
+      full_refresh = ordr.status == 'closed'
       ordrparticipant.preferredlocale = menuparticipant.preferredlocale if menuparticipant
 
-      require 'zlib'
-      require 'base64'
-      
-      def compress_string(str)
-        Base64.strict_encode64(Zlib::Deflate.deflate(str))
-      end
-      
       partials = {
-        context: compress_string(ApplicationController.renderer.render(
-          partial: 'smartmenus/showContext',
-          locals: { order: ordr, menu: menu, ordrparticipant: ordrparticipant, tablesetting: tablesetting, menuparticipant: menuparticipant, current_employee: @current_employee }
-        )),
-        modals: compress_string(Rails.cache.fetch([:show_modals, ordr.cache_key_with_version, menu.cache_key_with_version, tablesetting.try(:id), menuparticipant.try(:id), restaurantCurrency.code, @current_employee.try(:id)]) do
+        context: compress_string(
           ApplicationController.renderer.render(
-            partial: 'smartmenus/showModals',
-            locals: { order: ordr, menu: menu, ordrparticipant: ordrparticipant, tablesetting: tablesetting, menuparticipant: menuparticipant, restaurantCurrency: restaurantCurrency, current_employee: @current_employee }
+            partial: 'smartmenus/showContext',
+            locals: {
+              order: ordr,
+              menu: menu,
+              ordrparticipant: ordrparticipant,
+              tablesetting: tablesetting,
+              menuparticipant: menuparticipant,
+              current_employee: @current_employee
+            }
           )
-        end),
-        menuContentStaff: compress_string(Rails.cache.fetch([:menu_content_staff, ordr.cache_key_with_version, menu.cache_key_with_version, allergyns.maximum(:updated_at), restaurantCurrency.code, ordrparticipant.try(:id), menuparticipant.try(:id)]) do
+        ),
+        modals: compress_string(
+          Rails.cache.fetch([
+            :show_modals,
+            ordr.cache_key_with_version,
+            menu.cache_key_with_version,
+            tablesetting.try(:id),
+            menuparticipant.try(:id),
+            restaurant_currency.code,
+            @current_employee.try(:id)
+          ]) do
+            ApplicationController.renderer.render(
+              partial: 'smartmenus/showModals',
+              locals: {
+                order: ordr,
+                menu: menu,
+                ordrparticipant: ordrparticipant,
+                tablesetting: tablesetting,
+                menuparticipant: menuparticipant,
+                restaurantCurrency: restaurant_currency,
+                current_employee: @current_employee
+              }
+            )
+          end
+        ),
+        menuContentStaff: compress_string(
+          Rails.cache.fetch([
+            :menu_content_staff,
+            ordr.cache_key_with_version,
+            menu.cache_key_with_version,
+            allergyns.maximum(:updated_at),
+            restaurant_currency.code,
+            ordrparticipant.try(:id),
+            menuparticipant.try(:id)
+          ]) do
+            ApplicationController.renderer.render(
+              partial: 'smartmenus/showMenuContentStaff',
+              locals: {
+                order: ordr,
+                menu: menu,
+                allergyns: allergyns,
+                restaurantCurrency: restaurant_currency,
+                ordrparticipant: ordrparticipant,
+                menuparticipant: menuparticipant
+              }
+            )
+          end
+        ),
+        menuContentCustomer: compress_string(
+          Rails.cache.fetch([
+            :menu_content_customer,
+            ordr.cache_key_with_version,
+            menu.cache_key_with_version,
+            allergyns.maximum(:updated_at),
+            restaurant_currency.code,
+            ordrparticipant.try(:id),
+            menuparticipant.try(:id)
+          ]) do
+            ApplicationController.renderer.render(
+              partial: 'smartmenus/showMenuContentCustomer',
+              locals: {
+                order: ordr,
+                menu: menu,
+                allergyns: allergyns,
+                restaurantCurrency: restaurant_currency,
+                ordrparticipant: ordrparticipant,
+                menuparticipant: menuparticipant
+              }
+            )
+          end
+        ),
+        orderCustomer: compress_string(
           ApplicationController.renderer.render(
-            partial: 'smartmenus/showMenuContentStaff',
-            locals: { order: ordr, menu: menu, allergyns: allergyns, restaurantCurrency: restaurantCurrency, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
+            partial: 'smartmenus/orderCustomer',
+            locals: {
+              order: ordr,
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: ordrparticipant
+            }
           )
-        end),
-        menuContentCustomer: compress_string(Rails.cache.fetch([:menu_content_customer, ordr.cache_key_with_version, menu.cache_key_with_version, allergyns.maximum(:updated_at), restaurantCurrency.code, ordrparticipant.try(:id), menuparticipant.try(:id)]) do
+        ),
+        orderStaff: compress_string(
           ApplicationController.renderer.render(
-            partial: 'smartmenus/showMenuContentCustomer',
-            locals: { order: ordr, menu: menu, allergyns: allergyns, restaurantCurrency: restaurantCurrency, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
+            partial: 'smartmenus/orderStaff',
+            locals: {
+              order: ordr,
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: ordrparticipant
+            }
           )
-        end),
-        orderCustomer: compress_string(ApplicationController.renderer.render(
-          partial: 'smartmenus/orderCustomer',
-          locals: { order: ordr, menu: menu, restaurant: restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
-        )),
-        orderStaff: compress_string(ApplicationController.renderer.render(
-          partial: 'smartmenus/orderStaff',
-          locals: { order: ordr, menu: menu, restaurant: restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant }
-        )),
-        tableLocaleSelectorStaff: compress_string(ApplicationController.renderer.render(
-          partial: 'smartmenus/showTableLocaleSelectorStaff',
-          locals: { menu: menu, restaurant: restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
-        )),
-        tableLocaleSelectorCustomer: compress_string(ApplicationController.renderer.render(
-          partial: 'smartmenus/showTableLocaleSelectorCustomer',
-          locals: { menu: menu, restaurant: restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
-        )),
-        fullPageRefresh: { refresh: fullRefresh }
+        ),
+        tableLocaleSelectorStaff: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showTableLocaleSelectorStaff',
+            locals: {
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: ordrparticipant,
+              menuparticipant: menuparticipant
+            }
+          )
+        ),
+        tableLocaleSelectorCustomer: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showTableLocaleSelectorCustomer',
+            locals: {
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: ordrparticipant,
+              menuparticipant: menuparticipant
+            }
+          )
+        ),
+        fullPageRefresh: { refresh: full_refresh }
       }
       ActionCable.server.broadcast("ordr_#{menuparticipant.smartmenu.slug}_channel", partials)
     end
+
+    private
+
+    def compress_string(str)
+      require 'zlib'
+      require 'base64'
+      Base64.strict_encode64(Zlib::Deflate.deflate(str))
+    end
+
 
     # Use callbacks to share common setup or constraints between actions.
     def set_ordrparticipant
