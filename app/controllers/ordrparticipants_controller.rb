@@ -143,17 +143,6 @@ class OrdrparticipantsController < ApplicationController
         fullPageRefresh: { refresh: fullRefresh }
       }
       ActionCable.server.broadcast("ordr_#{menuparticipant.smartmenu.slug}_channel", partials)
-
-    end                partial: 'smartmenus/showTableLocaleSelectorStaff',
-                locals: { menu: @ordrparticipant.ordr.menu, restaurant: @ordrparticipant.ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
-            ),
-            tableLocaleSelectorCustomer: ApplicationController.renderer.render(
-                partial: 'smartmenus/showTableLocaleSelectorCustomer',
-                locals: { menu: @ordrparticipant.ordr.menu, restaurant: @ordrparticipant.ordr.menu.restaurant, tablesetting: tablesetting, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant }
-            ),
-            fullPageRefresh: { refresh: fullRefresh }
-        }
-        ActionCable.server.broadcast("ordr_"+menuparticipant.smartmenu.slug+"_channel", partials)
     end
 
     # Use callbacks to share common setup or constraints between actions.
