@@ -14,54 +14,49 @@ class SmartmenusController < ApplicationController
   # GET /smartmenus/1 or /smartmenus/1.json
   def show
     if @menu.restaurant != @restaurant
-        redirect_to root_url
+      redirect_to root_url and return
     end
-    @allergyns = Allergyn.where( restaurant_id: @menu.restaurant.id )
-#     Analytics.track(
-#         event: 'menus.show',
-#         properties: {
-#             restaurant_id: @menu.restaurant.id,
-#             menu_id: @menu.id,
-#         }
-#     )
-    if @tablesetting != nil
-        @openOrder = Ordr.where( menu_id: @menu.id, tablesetting_id: @tablesetting.id, restaurant_id: @tablesetting.restaurant.id, status: 0)
-                 .or(Ordr.where( menu_id: @menu.id, tablesetting_id: @tablesetting.id, restaurant_id: @tablesetting.restaurant.id, status: 20))
-                 .or(Ordr.where( menu_id: @menu.id, tablesetting_id: @tablesetting.id, restaurant_id: @tablesetting.restaurant.id, status: 30)).first
-        if @openOrder
-            if current_user
-                @ep = Ordrparticipant.where( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
-                if @ep == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @openOrder, employee: @current_employee, role: 1, sessionid: session.id.to_s);
-                    @ordrparticipant.save
-                end
-            else
-                @ep = Ordrparticipant.where( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s ).first
-                if @ep == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr_id: @openOrder.id, role: 0, sessionid: session.id.to_s);
-                    @menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
-                    if @menuparticipant
-                        @ordrparticipant.preferredlocale = @menuparticipant.preferredlocale
-                    end
-                    @ordrparticipant.save
-                    @ordraction = Ordraction.new( ordrparticipant_id: @ordrparticipant.id, ordr: @openOrder, action: 0)
-                    @ordraction.save
-                else
-                    @ordrparticipant = @ep
-                    @ordraction = Ordraction.new( ordrparticipant: @ep, ordr: @openOrder, action: 0)
-                    @ordraction.save
-                end
-            end
+
+    # Eager load associations if used in view (add more as needed)
+    @menu = Menu.includes(:menusections, :menuavailabilities).find(@menu.id) if @menu && !@menu.association(:menusections).loaded?
+
+    @allergyns = Allergyn.where(restaurant_id: @menu.restaurant_id)
+
+    if @tablesetting
+      @openOrder = Ordr.where(
+        menu_id: @menu.id,
+        tablesetting_id: @tablesetting.id,
+        restaurant_id: @tablesetting.restaurant_id,
+        status: [0, 20, 30]
+      ).first
+
+      if @openOrder
+        if current_user
+          @ordrparticipant = Ordrparticipant.find_or_create_by(
+            ordr: @openOrder,
+            employee: @current_employee,
+            role: 1,
+            sessionid: session.id.to_s
+          )
+        else
+          @ordrparticipant = Ordrparticipant.find_or_create_by(
+            ordr_id: @openOrder.id,
+            role: 0,
+            sessionid: session.id.to_s
+          )
+          @menuparticipant = Menuparticipant.find_by(sessionid: session.id.to_s)
+          if @menuparticipant
+            @ordrparticipant.update(preferredlocale: @menuparticipant.preferredlocale)
+          end
+          Ordraction.create(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 0)
         end
+      end
     end
-    @menuparticipant = Menuparticipant.where( sessionid: session.id.to_s ).first
-    if @menuparticipant
-        @menuparticipant.smartmenu = @smartmenu
-        @menuparticipant.save
-    else
-        @menuparticipant = Menuparticipant.new( smartmenu_id: @smartmenu.id, sessionid: session.id.to_s );
-        @menuparticipant.save
+
+    @menuparticipant = Menuparticipant.find_or_create_by(sessionid: session.id.to_s) do |mp|
+      mp.smartmenu = @smartmenu
     end
+    @menuparticipant.update(smartmenu: @smartmenu) unless @menuparticipant.smartmenu == @smartmenu
   end
 
   # GET /smartmenus/new
