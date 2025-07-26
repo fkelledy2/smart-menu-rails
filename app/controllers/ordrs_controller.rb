@@ -107,7 +107,7 @@ class OrdrsController < ApplicationController
             end
             @tablesetting.status = 0
             @tablesetting.save
-            broadcastPartials( @ordr, @tablesetting, @ordrparticipant, true )
+            broadcast_partials( @ordr, @tablesetting, @ordrparticipant, true )
         end
         format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully created." }
         format.json { render :show, status: :created, location: @ordr }
@@ -241,7 +241,7 @@ class OrdrsController < ApplicationController
             fullRefresh = true
         end
         format.json { render :show, status: :ok, location: @ordr }
-        broadcastPartials( @ordr, @tablesetting, @ordrparticipant, fullRefresh )
+        broadcast_partials( @ordr, @tablesetting, @ordrparticipant, fullRefresh )
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @ordr.errors, status: :unprocessable_entity }
