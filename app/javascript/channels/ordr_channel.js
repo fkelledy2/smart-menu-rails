@@ -1,4 +1,16 @@
 import consumer from "./consumer"
+import pako from "pako";
+
+function decompressPartial(compressed) {
+  if (!compressed || typeof compressed !== 'string') return '';
+  const binaryString = atob(compressed);
+  const charData = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    charData[i] = binaryString.charCodeAt(i);
+  }
+  return pako.inflate(charData, { to: 'string' });
+}
+
 
     let ORDR_OPENED=0;
     let ORDR_ORDERED=20;
@@ -340,7 +352,7 @@ if( orderId ) {
         console.log( 'OrdrChannel:['+orderId+'] - disconnected');
       },
       received(data) {
-        console.log('OrdrChannel:['+orderId+'] - message ');
+        console.log('OrdrChannel:['+orderId+'] - message '+data);
         if (data.menuitem_updates) {
           Object.entries(data.menuitem_updates).forEach(([dom_id, html]) => {
             const el = document.getElementById(dom_id);
@@ -350,18 +362,26 @@ if( orderId ) {
         } else if( data.fullPageRefresh && data.fullPageRefresh.refresh ) {
           location.reload();
         } else {
-          // Existing fallback: full section update
-          if( document.getElementById("currentEmployee") ) {
-              document.getElementById("openOrderContainer").innerHTML = data.orderStaff;
-              document.getElementById("menuContentContainer").innerHTML = data.menuContentStaff;
-              document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorStaff;
-          } else {
-              document.getElementById("openOrderContainer").innerHTML = data.orderCustomer;
-              document.getElementById("menuContentContainer").innerHTML = data.menuContentCustomer;
-              document.getElementById("tableLocaleSelectorContainer").innerHTML = data.tableLocaleSelectorCustomer;
+          const decompressedPartials = {};
+          for (const key in data) {
+            if (key === 'fullPageRefresh' || key === 'menuitem_updates') {
+              decompressedPartials[key] = data[key];
+            } else {
+              decompressedPartials[key] = decompressPartial(data[key]);
+            }
           }
-          document.getElementById("modalsContainer").innerHTML = data.modals;
-          document.getElementById("contextContainer").innerHTML = data.context;
+          // Now use decompressedPartials.context, .modals, etc. as HTML
+          if( document.getElementById("currentEmployee") ) {
+              document.getElementById("openOrderContainer").innerHTML = decompressedPartials.orderStaff;
+              document.getElementById("menuContentContainer").innerHTML = decompressedPartials.menuContentStaff;
+              document.getElementById("tableLocaleSelectorContainer").innerHTML = decompressedPartials.tableLocaleSelectorStaff;
+          } else {
+              document.getElementById("openOrderContainer").innerHTML = decompressedPartials.orderCustomer;
+              document.getElementById("menuContentContainer").innerHTML = decompressedPartials.menuContentCustomer;
+              document.getElementById("tableLocaleSelectorContainer").innerHTML = decompressedPartials.tableLocaleSelectorCustomer;
+          }
+          document.getElementById("modalsContainer").innerHTML = decompressedPartials.modals;
+          document.getElementById("contextContainer").innerHTML = decompressedPartials.context;
           refreshOrderJSLogic();
         }
         return true;
