@@ -17,6 +17,7 @@
 //= link restaurantavailabilities.js
 //= link menuavailabilities.js
 //= link channels/consumer.js
+//= link channels/consumer_with_reconnect.js
 //= link channels/index.js
 //= link channels/ordr_channel.js
 //= link dw_orders_mv.js

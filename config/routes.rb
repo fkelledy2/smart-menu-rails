@@ -39,6 +39,14 @@ Rails.application.routes.draw do
 
   resources :dw_orders_mv, only: [:index, :show]
 
+  # Google Vision API endpoints
+  namespace :api do
+    namespace :v1 do
+      post 'vision/analyze', to: 'vision#analyze'
+      post 'vision/detect_menu_items', to: 'vision#detect_menu_items'
+    end
+  end
+
   resources :restaurants do
     resources :restaurantlocales, controller: 'restaurantlocales', only: [:index,:show, :edit, :delete]
     resources :menus, controller: 'menus', only: [:index,:show, :edit]
