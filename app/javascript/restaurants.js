@@ -197,33 +197,50 @@ document.addEventListener("turbo:load", () => {
 
 
 
-    if ($("#restaurantTabs").is(':visible') || $("#newRestaurant").is(':visible')) {
-      var autocomplete = new google.maps.places.Autocomplete(document.getElementById("restaurant_address1"));
-      google.maps.event.addListener(autocomplete, "place_changed", function() {
-        var place = autocomplete.getPlace();
-        if( place ) {
-           $('#restaurant_address1').val(place.formatted_address);
-           for (let i = 0; i < place.address_components.length; i++) {
-            if( place.address_components[i].types.includes('country') ) {
-                $("#restaurant_country").val(place.address_components[i].short_name).change();
+    if (($("#restaurantTabs").is(':visible') || $("#newRestaurant").is(':visible')) && window.google && window.google.maps && window.google.maps.places) {
+      const addressInput = document.getElementById("restaurant_address1");
+      
+      // Create the AutocompleteElement
+      const autocomplete = new google.maps.places.PlaceAutocompleteElement({
+        inputElement: addressInput,
+        componentRestrictions: { country: [] },
+        fields: ['address_components', 'formatted_address']
+      });
+
+      // Listen for place changes
+      autocomplete.addEventListener('place_changed', () => {
+        const place = autocomplete.place;
+        if (place) {
+          // Update the address field with the formatted address
+          $('#restaurant_address1').val(place.formatted_address || '');
+          
+          // Process address components
+          if (place.address_components) {
+            for (let i = 0; i < place.address_components.length; i++) {
+              const component = place.address_components[i];
+              
+              if (component.types.includes('country')) {
+                $("#restaurant_country").val(component.short_name).change();
+              }
+              if (component.types.includes('postal_code')) {
+                $('#restaurant_postcode').val(component.long_name);
+              }
+              if (component.types.includes('sublocality_level_1') || component.types.includes('neighborhood')) {
+                $('#restaurant_address2').val(component.long_name);
+              }
+              if (component.types.includes('locality') || component.types.includes('postal_town')) {
+                $('#restaurant_city').val(component.long_name);
+              }
+              if (component.types.includes('administrative_area_level_1')) {
+                $('#restaurant_state').val(component.long_name);
+              }
             }
-            if( place.address_components[i].types.includes('postal_code') ) {
-                $('#restaurant_postcode').val(place.address_components[i].long_name);
-            }
-            if( place.address_components[i].types.includes('administrative_area_level_3') ) {
-                $('#restaurant_address2').val(place.address_components[i].long_name);
-            }
-            if( place.address_components[i].types.includes('administrative_area_level_2') ) {
-                $('#restaurant_city').val(place.address_components[i].long_name);
-            }
-            if( place.address_components[i].types.includes('administrative_area_level_1') ) {
-                $('#restaurant_state').val(place.address_components[i].long_name);
-            }
-           }
-           $('#restaurant_latitude').val(place.geometry.location.lat);
-           $('#restaurant_longitude').val(place.geometry.location.lng);
+          }
         }
       });
+      
+      // Make the autocomplete element available globally if needed elsewhere
+      window.restaurantAutocomplete = autocomplete;
     }
 
     if ($("#restaurantTabs").is(':visible')) {

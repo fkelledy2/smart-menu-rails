@@ -1,7 +1,11 @@
 // Entry point for esbuild
 import '@hotwired/turbo-rails'
-import 'jquery'
-import 'bootstrap'
+import jquery from 'jquery'
+import * as bootstrap from 'bootstrap'
+
+// Make jQuery and Bootstrap available globally
+window.jQuery = window.$ = jquery
+window.bootstrap = bootstrap
 
 // Import and configure local-time
 import localTime from 'local-time'

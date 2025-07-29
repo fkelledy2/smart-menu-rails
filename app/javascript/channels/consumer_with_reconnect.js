@@ -10,45 +10,64 @@ class ReconnectingConsumer {
     this.reconnectTimer = null;
     this.subscriptions = [];
     this.isConnected = false;
+    this.connectionMonitor = null;
     
     this.connect();
   }
   
   connect() {
-    this.consumer = createConsumer();
-    
-    // Store original subscription method
-    const originalSubscribe = this.consumer.subscriptions.create.bind(this.consumer.subscriptions);
-    
-    // Override subscription to track active subscriptions
-    this.consumer.subscriptions.create = (channelName, mixin) => {
-      const subscription = originalSubscribe(channelName, {
-        ...mixin,
-        connected: function() {
-          this.isConnected = true;
-          this.reconnectAttempts = 0;
-          if (mixin.connected) {
-            mixin.connected.call(this);
-          }
-        },
-        disconnected: function() {
-          this.isConnected = false;
-          if (mixin.disconnected) {
-            mixin.disconnected.call(this);
-          }
-          this.attemptReconnect();
-        }.bind(this),
-        rejected: function() {
-          if (mixin.rejected) {
-            mixin.rejected.call(this);
-          }
-          this.attemptReconnect();
-        }.bind(this)
-      });
+    try {
+      this.consumer = createConsumer();
       
-      this.subscriptions.push({ channelName, mixin, subscription });
-      return subscription;
-    };
+      // Store original subscription method
+      const originalSubscribe = this.consumer.subscriptions.create.bind(this.consumer.subscriptions);
+      const self = this;
+      
+      // Override subscription to track active subscriptions
+      this.consumer.subscriptions.create = function(channelName, mixin) {
+        const enhancedMixin = {
+          ...mixin,
+          connected: function() {
+            this.isConnected = true;
+            this.reconnectAttempts = 0;
+            if (mixin.connected) {
+              return mixin.connected.apply(this, arguments);
+            }
+          },
+          disconnected: function() {
+            this.isConnected = false;
+            if (mixin.disconnected) {
+              mixin.disconnected.apply(this, arguments);
+            }
+            if (self.attemptReconnect) {
+              self.attemptReconnect();
+            }
+          },
+          rejected: function() {
+            if (mixin.rejected) {
+              mixin.rejected.apply(this, arguments);
+            }
+            if (self.attemptReconnect) {
+              self.attemptReconnect();
+            }
+          }
+        };
+        
+        const subscription = originalSubscribe(channelName, enhancedMixin);
+        
+        // Store subscription with proper context
+        self.subscriptions.push({ 
+          channelName, 
+          mixin: enhancedMixin, 
+          subscription,
+          context: self
+        });
+        
+        return subscription;
+      };
+    } catch (error) {
+      console.error('Error initializing ActionCable consumer:', error);
+    }
     
     // Handle connection state changes
     const setupConnectionMonitoring = () => {
