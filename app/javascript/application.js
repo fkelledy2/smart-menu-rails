@@ -1,26 +1,40 @@
-// This file is automatically compiled by Webpack, along with any other files
-// present in this directory. You're encouraged to place your actual application logic in
-// a relevant structure within app/javascript and only use these pack files to reference
-// that code so it'll be compiled.
+// Entry point for esbuild
+import '@hotwired/turbo-rails'
+import 'jquery'
+import 'bootstrap'
 
-import "@hotwired/turbo-rails"
+// Import and configure local-time
+import localTime from 'local-time'
+localTime.start()
 
-require("@rails/activestorage").start()
-//require("trix")
-//require("@rails/actiontext")
+// Import application channels
+import './channels'
 
-require("local-time").start()
+// Import and configure Stimulus controllers
+import { application } from './controllers/application'
 
-import './channels/**/*_channel.js'
-import "./controllers"
-
-window.TomSelect = require('tom-select');
-
-import * as bootstrap from "bootstrap"
-import {TabulatorFull as Tabulator} from 'tabulator-tables';
-
+// Import Tabulator
+import { TabulatorFull as Tabulator } from 'tabulator-tables'
 window.Tabulator = Tabulator
-// while we are here make sure you have
+
+// Import TomSelect
+import TomSelect from 'tom-select'
+window.TomSelect = TomSelect
+
+// Initialize Bootstrap tooltips and popovers on turbo:load
+document.addEventListener('turbo:load', () => {
+  // Initialize tooltips
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  tooltipTriggerList.forEach(tooltipTriggerEl => {
+    new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+  
+  // Initialize popovers
+  const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  popoverTriggerList.forEach(popoverTriggerEl => {
+    new bootstrap.Popover(popoverTriggerEl)
+  })
+})
 window.bootstrap = bootstrap
 import {DateTime} from 'luxon'
 

@@ -1,5 +1,6 @@
 //= link_tree ../builds
 //= link_tree ../images
+//= link controllers/application.js
 //= link allergyns.js
 //= link employees.js
 //= link metrics.js
@@ -24,3 +25,5 @@
 //= link smartmenus.js
 //= link restaurantlocales.js
 //= link testimonials.js
+//= link controllers/hello_controller.js
+//= link controllers/index.js
