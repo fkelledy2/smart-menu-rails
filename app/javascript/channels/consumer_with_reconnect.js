@@ -10,9 +10,77 @@ class ReconnectingConsumer {
     this.reconnectTimer = null;
     this.subscriptions = [];
     this.isConnected = false;
-    this.connectionMonitor = null;
+    this.originalHandlers = {
+      connected: null,
+      disconnected: null,
+      rejected: null
+    };
     
     this.connect();
+  }
+  
+  // Safe getter for monitor with fallback
+  getMonitor() {
+    return this.consumer?.connection?.monitor || null;
+  }
+  
+  // Safe getter for events with fallback
+  getEvents() {
+    const monitor = this.getMonitor();
+    if (!monitor) return null;
+    if (!monitor.events) {
+      monitor.events = {};
+    }
+    return monitor.events;
+  }
+  
+  // Store original handlers safely
+  storeOriginalHandlers() {
+    const events = this.getEvents();
+    if (!events) return false;
+    
+    // Store original handlers if they exist and are functions
+    this.originalHandlers = {
+      connected: typeof events.connected === 'function' ? events.connected : null,
+      disconnected: typeof events.disconnected === 'function' ? events.disconnected : null,
+      rejected: typeof events.rejected === 'function' ? events.rejected : null
+    };
+    
+    return true;
+  }
+  
+  // Setup our custom event handlers
+  setupEventHandlers() {
+    const events = this.getEvents();
+    if (!events) return false;
+    
+    events.connected = () => {
+      console.log('WebSocket connection established');
+      this.isConnected = true;
+      this.reconnectAttempts = 0;
+      if (this.originalHandlers.connected) {
+        this.originalHandlers.connected();
+      }
+    };
+    
+    events.disconnected = () => {
+      console.log('WebSocket connection lost');
+      this.isConnected = false;
+      if (this.originalHandlers.disconnected) {
+        this.originalHandlers.disconnected();
+      }
+      this.attemptReconnect();
+    };
+    
+    events.rejected = () => {
+      console.log('WebSocket connection rejected');
+      if (this.originalHandlers.rejected) {
+        this.originalHandlers.rejected();
+      }
+      this.attemptReconnect();
+    };
+    
+    return true;
   }
   
   connect() {
@@ -65,51 +133,42 @@ class ReconnectingConsumer {
         
         return subscription;
       };
+      
+      // Setup connection monitoring
+      this.setupConnectionMonitoring();
+      
     } catch (error) {
       console.error('Error initializing ActionCable consumer:', error);
+      this.attemptReconnect();
     }
     
-    // Handle connection state changes
-    const setupConnectionMonitoring = () => {
-      if (!this.consumer || !this.consumer.connection || !this.consumer.connection.monitor) {
-        console.log('Connection monitor not ready, retrying...');
-        setTimeout(setupConnectionMonitoring, 100);
-        return;
-      }
-      
-      const monitor = this.consumer.connection.monitor;
-      monitor.reconnectAttempts = 0;
-      
-      // Store original handlers to call them after our custom logic
-      const originalConnected = monitor.events.connected;
-      const originalDisconnected = monitor.events.disconnected;
-      const originalRejected = monitor.events.rejected;
-      
-      monitor.events.connected = () => {
-        console.log('WebSocket connection established');
-        this.isConnected = true;
-        this.reconnectAttempts = 0;
-        if (originalConnected) originalConnected();
-      };
-      
-      monitor.events.disconnected = () => {
-        console.log('WebSocket connection lost');
-        this.isConnected = false;
-        if (originalDisconnected) originalDisconnected();
-        this.attemptReconnect();
-      };
-      
-      monitor.events.rejected = () => {
-        console.log('WebSocket connection rejected');
-        if (originalRejected) originalRejected();
-        this.attemptReconnect();
-      };
-    };
-    
-    // Start monitoring with a small delay to ensure connection is ready
-    setTimeout(setupConnectionMonitoring, 100);
-    
     return this.consumer;
+  }
+  
+  // Setup connection monitoring with retry logic
+  setupConnectionMonitoring() {
+    // Check if we have everything we need
+    if (!this.consumer?.connection?.monitor) {
+      console.log('Connection monitor not ready, will retry...');
+      setTimeout(() => this.setupConnectionMonitoring(), 100);
+      return;
+    }
+    
+    // Store original handlers
+    if (!this.storeOriginalHandlers()) {
+      console.log('Could not store original handlers, will retry...');
+      setTimeout(() => this.setupConnectionMonitoring(), 100);
+      return;
+    }
+    
+    // Setup our event handlers
+    if (!this.setupEventHandlers()) {
+      console.log('Could not setup event handlers, will retry...');
+      setTimeout(() => this.setupConnectionMonitoring(), 100);
+      return;
+    }
+    
+    console.log('Connection monitoring initialized successfully');
   }
   
   attemptReconnect() {

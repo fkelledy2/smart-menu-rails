@@ -1,5 +1,47 @@
-import consumer from "./consumer_with_reconnect"
-import pako from "pako";
+import consumer from "./consumer"
+import pako from 'pako';
+
+    function post( url, body ) {
+        fetch(url, {
+            method: 'POST',
+            headers:  {
+                  "Content-Type": "application/json",
+                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+            },
+            body: JSON.stringify(body)
+        }).then(response => {
+        }).catch(function(err) {
+            console.info(err + " url: " + url);
+        });
+        return false;
+    }
+    function patch( url, body ) {
+        fetch(url, {
+            method: 'PATCH',
+            headers:  {
+                  "Content-Type": "application/json",
+                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+            },
+            body: JSON.stringify(body)
+        }).then(response => {
+        }).catch(function(err) {
+            console.info(err + " url: " + url);
+        });
+        return false;
+    }
+
+function fetchQR(paymentLink) {
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(paymentLink)}`;
+  const qrCodeImg = document.createElement('img');
+  qrCodeImg.src = qrCodeUrl;
+  qrCodeImg.alt = 'QR Code';
+  
+  const qrContainer = document.getElementById('paymentQR');
+  if (qrContainer) {
+    qrContainer.innerHTML = '';
+    qrContainer.appendChild(qrCodeImg);
+  }
+}
 
 // Check if we're in a browser environment
 const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
@@ -16,9 +58,9 @@ const createConnectionStatusElement = () => {
   statusEl = document.createElement('div');
   statusEl.id = 'connection-status';
   statusEl.style.position = 'fixed';
-  statusEl.style.bottom = '10px';
-  statusEl.style.right = '10px';
-  statusEl.style.padding = '10px 15px';
+  statusEl.style.top = '5px';
+  statusEl.style.right = '5px';
+  statusEl.style.padding = '5px 10px';
   statusEl.style.borderRadius = '4px';
   statusEl.style.zIndex = '9999';
   statusEl.style.transition = 'all 0.3s ease';
@@ -87,38 +129,31 @@ const updateConnectionStatus = (status, message) => {
 
 function decompressPartial(compressed) {
   if (!compressed || typeof compressed !== 'string') return '';
-  const binaryString = window.atob(compressed);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
+  try {
+    // Decode the Base64 string to a binary string
+    const binaryString = window.atob(compressed);
+    const len = binaryString.length;
+    // Convert the binary string to a Uint8Array
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    // Decompress using pako (which handles zlib format)
+    const decompressed = pako.inflate(bytes, { to: 'string' });
+    return decompressed;
+  } catch (error) {
+    console.error('Error decompressing partial:', error);
+    return '';
   }
-  return pako.inflate(bytes, { to: 'string' });
 }
 
-// Order status constants
-const ORDER_STATUS = {
-  OPENED: 0,
-  ORDERED: 20,
-  DELIVERED: 25,
-  PAID: 30,
-  CANCELED: 40,
-  ARCHIVED: 50,
-  DELETED: 60,
-  CLOSED: 70,
-  REFUNDED: 80,
-  PARTIALLY_REFUNDED: 90,
-  PARTIALLY_PAID: 100
-};
+let ORDR_OPENED=0;
+let ORDR_ORDERED=20;
+let ORDR_BILLREQUESTED=30;
+let ORDR_CLOSED=40;
 
-// Order item status constants
-const ORDER_ITEM_STATUS = {
-  ADDED: 0,
-  REMOVED: 10,
-  ORDERED: 20,
-  PREPARED: 30,
-  DELIVERED: 40
-};
+let ORDRITEM_ADDED=0;
+let ORDRITEM_REMOVED=10;
 
 function closeAllModals() {
   if (isBrowser && typeof $ !== 'undefined') {
@@ -128,61 +163,276 @@ function closeAllModals() {
 }
 
 function refreshOrderJSLogic() {
-  if (!isBrowser || !$ || !$("#smartmenu").is(':visible')) return;
-  
-  const date = new Date();
-  const minutes = date.getMinutes();
-  const hour = date.getHours();
-  const currentOffset = (hour * 60) + minutes;
-  
-  $(".addItemToOrder").each(function() {
-    const fromOffset = $(this).data('bs-menusection_from_offset');
-    const toOffset = $(this).data('bs-menusection_to_offset');
-    if (currentOffset < fromOffset || currentOffset > toOffset) {
-      $(this).attr("disabled", "disabled");
+        if ($("#smartmenu").is(':visible')) {
+            var date = new Date;
+            var minutes = date.getMinutes();
+            var hour = date.getHours();
+            var sectionFromOffset = parseInt($("#sectionFromOffset").html());
+            var sectionToOffset = parseInt($("#sectionToOffset").html());
+            var currentOffset = (hour*60)+minutes;
+            $( ".addItemToOrder" ).each(function() {
+                const fromOffeset = $(this).data('bs-menusection_from_offset');
+                const toOffeset = $(this).data('bs-menusection_to_offset');
+                if( currentOffset >= fromOffeset && currentOffset <= toOffeset ) {
+                } else {
+                    $(this).attr("disabled","disabled");
+                }
+            });
+        }
+        $('#toggleFilters').click (function () {
+          $(':checkbox').prop('checked', this.checked);
+        });
+        $(".tipPreset").click(function() {
+            let presetTipPercentage = parseFloat($(this).text());
+            let gross = parseFloat($("#orderGross").text());
+            let tip = ((gross / 100) * presetTipPercentage).toFixed(2);
+            $("#tipNumberField").val(tip);
+            let total = parseFloat(parseFloat(tip)+parseFloat(gross)).toFixed(2);
+            $("#orderGrandTotal").text($('#restaurantCurrency').text()+parseFloat(total).toFixed(2));
+            $("#paymentAmount").val((parseFloat(total).toFixed(2)*100));
+            $("#paymentlink").text('');
+            $("#paymentAnchor").prop("href", '');
+            $("#paymentQR").html('');
+            $("#paymentQR").text('');
+        });
+        $("#tipNumberField").change(function() {
+            $(this).val(parseFloat($(this).val()).toFixed(2));
+            let gross = parseFloat($("#orderGross").text());
+            let tip = parseFloat($(this).val());
+            let total = tip+gross;
+            $("#orderGrandTotal").text($('#restaurantCurrency').text()+parseFloat(total).toFixed(2));
+        });
+        if ($('#restaurantCurrency').length) {
+            restaurantCurrencySymbol = $('#restaurantCurrency').text();
+        }
+        if ($('#addNameToParticipantModal').length) {
+            const addNameToParticipantModal = document.getElementById('addNameToParticipantModal');
+            addNameToParticipantModal.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget
+            });
+            $( "#addNameToParticipantButton" ).on( "click", function(event) {
+               let ordrparticipant = {
+                'ordrparticipant': {
+                    'name': addNameToParticipantModal.querySelector('#name').value,
+                }
+               };
+               patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant );
+               event.preventDefault();
+            });
+        }
+        $( ".setparticipantlocale" ).on( "click", function(event) {
+           var locale = $(this).data('locale')
+           if( $('#currentParticipant').text() ) {
+               let ordrparticipant = {
+                     'ordrparticipant': {
+                         'preferredlocale': locale
+                     }
+               };
+               patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant);
+           }
+           if( $('#menuParticipant').text() ) {
+               let menuparticipant = {
+                     'menuparticipant': {
+                         'preferredlocale': locale
+                     }
+                };
+               patch( '/menuparticipants/'+$('#menuParticipant').text(), menuparticipant);
+           }
+           event.preventDefault();
+        });
+        $( ".removeItemFromOrderButton" ).on( "click", function(event) {
+           var ordrItemId = $(this).attr('data-bs-ordritem_id');
+           let ordritem = {
+             'ordritem': {
+                 'status': ORDRITEM_REMOVED,
+                 'ordritemprice': 0
+             }
+           };
+           patch( '/ordritems/'+ordrItemId, ordritem);
+           $('#confirm-order').click();
+           return true;
+        });
+        var a2oMenuitemImage = document.getElementById("a2o_menuitem_image");
+        if( a2oMenuitemImage ) {
+            a2oMenuitemImage.addEventListener('load', function () {
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('placeholder').style.display = 'none';
+                this.style.opacity = 1;
+            });
+        }
+        if ($('#addItemToOrderModal').length) {
+            const addItemToOrderModal = document.getElementById('addItemToOrderModal');
+            addItemToOrderModal.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget
+                $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id'));
+                $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
+                $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
+                $('#a2o_menuitem_price').text(parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2));
+                $('#a2o_menuitem_description').text(button.getAttribute('data-bs-menuitem_description'));
+                try {
+                    addItemToOrderModal.querySelector('#a2o_menuitem_image').src = button.getAttribute('data-bs-menuitem_image');
+                    addItemToOrderModal.querySelector('#a2o_menuitem_image').alt = button.getAttribute('data-bs-menuitem_name');
+                } catch( err ) {
+                    // swallow error
+                }
+            });
+            $( "#addItemToOrderButton" ).on( "click", function() {
+                let ordritem = {
+                    'ordritem': {
+                        'ordr_id': $('#a2o_ordr_id').text(),
+                        'menuitem_id': $('#a2o_menuitem_id').text(),
+                        'status': ORDRITEM_ADDED,
+                        'ordritemprice': $('#a2o_menuitem_price').text()
+                    }
+                };
+                post( '/ordritems', ordritem, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+                return true;
+            });
+        }
+        if ($('#start-order').length) {
+           $( "#start-order" ).on( "click", function() {
+                const ordercapacity = document.getElementById('orderCapacity').value;
+                if ($('#currentEmployee').length) {
+                    let ordr = {
+                        'ordr': {
+                          'tablesetting_id': $('#currentTable').text(),
+                          'employee_id': $('#currentEmployee').text(),
+                          'restaurant_id': $('#currentRestaurant').text(),
+                          'menu_id': $('#currentMenu').text(),
+                          'ordercapacity': ordercapacity,
+                          'status' : ORDR_OPENED
+                        }
+                    };
+                    post( '/ordrs', ordr );
+                } else {
+                    let ordr = {
+                        'ordr': {
+                          'tablesetting_id': $('#currentTable').text(),
+                          'restaurant_id': $('#currentRestaurant').text(),
+                          'menu_id': $('#currentMenu').text(),
+                          'ordercapacity': ordercapacity,
+                          'status' : ORDR_OPENED
+                        }
+                    };
+                    post( '/ordrs', ordr );
+                }
+           });
+        }
+        if ($('#confirm-order').length) {
+           $( "#confirm-order" ).on( "click", function() {
+                if ($('#currentEmployee').length) {
+                    let ordr = {
+                        'ordr': {
+                          'tablesetting_id': $('#currentTable').text(),
+                          'employee_id': $('#currentEmployee').text(),
+                          'restaurant_id': $('#currentRestaurant').text(),
+                          'menu_id': $('#currentMenu').text(),
+                          'status' : ORDR_ORDERED
+                        }
+                    };
+                    patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                } else {
+                    let ordr = {
+                        'ordr': {
+                          'tablesetting_id': $('#currentTable').text(),
+                          'restaurant_id': $('#currentRestaurant').text(),
+                          'menu_id': $('#currentMenu').text(),
+                          'status' : ORDR_ORDERED
+                        }
+                    };
+                    patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                }
+           });
+        }
+        if ($('#request-bill').length) {
+           $( "#request-bill" ).on( "click", function() {
+                if ($('#currentEmployee').length) {
+                    let ordr = {
+                        'ordr': {
+                          'tablesetting_id': $('#currentTable').text(),
+                          'employee_id': $('#currentEmployee').text(),
+                          'restaurant_id': $('#currentRestaurant').text(),
+                          'menu_id': $('#currentMenu').text(),
+                          'status' : ORDR_BILLREQUESTED
+                        }
+                    };
+                    patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                } else {
+                    let ordr = {
+                        'ordr': {
+                          'tablesetting_id': $('#currentTable').text(),
+                          'restaurant_id': $('#currentRestaurant').text(),
+                          'menu_id': $('#currentMenu').text(),
+                          'status' : ORDR_BILLREQUESTED
+                        }
+                    };
+                    patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                }
+           });
+        }
+        if ($('#pay-order').length) {
+            if( document.getElementById("refreshPaymentLink") ) {
+              document.getElementById("refreshPaymentLink").addEventListener("click", async () => {
+                const amount = document.getElementById("paymentAmount").value;
+                const currency = document.getElementById("paymentCurrency").value;
+                const restaurantName = document.getElementById("paymentRestaurantName").value;
+                const restaurantId = document.getElementById("paymentRestaurantId").value;
+                const openOrderId = document.getElementById("openOrderId").value;
+                try {
+                  const response = await fetch("/create_payment_link", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      "Accept": "application/json"
+                    },
+                    body: JSON.stringify({ openOrderId, amount, currency, restaurantName, restaurantId })
+                  });
+                  const data = await response.json();
+                  if (data.payment_link) {
+                    $("#paymentlink").text(data.payment_link);
+                    $("#paymentAnchor").prop("href", data.payment_link);
+                    fetchQR(data.payment_link)
+                  } else {
+                    alert("Failed to generate payment link.");
+                  }
+                } catch (error) {
+                  console.error("Error:", error);
+                  alert("Something went wrong.");
+                }
+              });
+            }
+            $( "#pay-order" ).on( "click", function() {
+                let tip = 0;
+                if( $('#tipNumberField').length > 0 ) {
+                    tip = $('#tipNumberField').val()
+                }
+                if ($('#currentEmployee').length) {
+                    let ordr = {
+                        'ordr': {
+                          'tablesetting_id': $('#currentTable').text(),
+                          'employee_id': $('#currentEmployee').text(),
+                          'restaurant_id': $('#currentRestaurant').text(),
+                          'tip': tip,
+                          'menu_id': $('#currentMenu').text(),
+                          'status' :  ORDR_CLOSED
+                        }
+                    };
+                    patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
+                } else {
+                    let ordr = {
+                        'ordr': {
+                          'tablesetting_id': $('#currentTable').text(),
+                          'restaurant_id': $('#currentRestaurant').text(),
+                          'tip': tip,
+                          'menu_id': $('#currentMenu').text(),
+                          'status' :  ORDR_CLOSED
+                        }
+                    };
+                    patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
+                }
+            });
+        }
     }
-  });
-  
-  $('#toggleFilters').click(function() {
-    $(':checkbox').prop('checked', this.checked);
-  });
-  
-  $(".tipPreset").click(function() {
-    const presetTipPercentage = parseFloat($(this).text());
-    const gross = parseFloat($("#orderGross").text());
-    const tip = ((gross / 100) * presetTipPercentage).toFixed(2);
-    $("#tipNumberField").val(tip);
-    const total = (parseFloat(tip) + parseFloat(gross)).toFixed(2);
-    $("#orderGrandTotal").text($('#restaurantCurrency').text() + parseFloat(total).toFixed(2));
-    $("#paymentAmount").val((parseFloat(total).toFixed(2) * 100));
-    $("#paymentlink").text('');
-    $("#paymentAnchor").prop("href", '');
-    $("#paymentQR").empty();
-  });
-  
-  $("#tipNumberField").on('change', function() {
-    $(this).val(parseFloat($(this).val() || 0).toFixed(2));
-    const gross = parseFloat($("#orderGross").text());
-    const tip = parseFloat($(this).val() || 0);
-    const total = tip + gross;
-    $("#orderGrandTotal").text($('#restaurantCurrency').text() + total.toFixed(2));
-  });
-  
-  if ($('#restaurantCurrency').length) {
-    window.restaurantCurrencySymbol = $('#restaurantCurrency').text();
-  }
-  
-  if ($('#addNameToParticipantModal').length) {
-    const modal = document.getElementById('addNameToParticipantModal');
-    modal.addEventListener('show.bs.modal', event => {
-      // Handle modal show event
-    });
-    
-    $("#addNameToParticipantButton").on("click", function() {
-      // Handle participant name addition
-    });
-  }
-}
 
 // Initialize the order channel subscription
 function initializeOrderChannel() {
@@ -203,12 +453,12 @@ function initializeOrderChannel() {
       {
         connected() {
           console.log('Connected to OrdrChannel');
-          updateConnectionStatus('connected', 'Connected to server');
+          updateConnectionStatus('connected', 'Connected');
         },
         
         disconnected() {
           console.log('Disconnected from OrdrChannel');
-          updateConnectionStatus('disconnected', 'Disconnected from server');
+          updateConnectionStatus('disconnected', 'Disconnected');
         },
         
         rejected() {
@@ -217,29 +467,82 @@ function initializeOrderChannel() {
         },
         
         received(data) {
+          console.log('Received WebSocket message with keys:', Object.keys(data));
+          
           try {
-            if (data.html) {
-              // Handle HTML updates
-              const element = document.querySelector(data.selector);
-              if (element) {
-                element.outerHTML = data.html;
+            // Map WebSocket data keys to their corresponding DOM selectors
+            const partialsToUpdate = [
+              { key: 'context', selector: '#contextContainer' },
+              { key: 'modals', selector: '#modalsContainer' },
+              { 
+                key: 'menuContentStaff', 
+                selector: '#menuContentContainer',
+                // For staff content, we need to check if we're in staff mode
+                shouldUpdate: () => document.getElementById('menuu') !== null
+              },
+              { 
+                key: 'menuContentCustomer', 
+                selector: '#menuContentContainer',
+                // For customer content, we check if we're in customer mode
+                shouldUpdate: () => document.getElementById('menuc') !== null
+              },
+              { 
+                key: 'orderCustomer', 
+                selector: '#openOrderContainer',
+                shouldUpdate: () => document.getElementById('menuc') !== null
+              },
+              { 
+                key: 'orderStaff', 
+                selector: '#openOrderContainer',
+                shouldUpdate: () => document.getElementById('menuu') !== null
+              },
+              { 
+                key: 'tableLocaleSelectorStaff', 
+                selector: '#tableLocaleSelectorContainer',
+                shouldUpdate: () => document.getElementById('menuu') !== null
+              },
+              { 
+                key: 'tableLocaleSelectorCustomer', 
+                selector: '#tableLocaleSelectorContainer',
+                shouldUpdate: () => document.getElementById('menuc') !== null
               }
-            } else if (data.partial) {
-              // Handle partial updates
-              const element = document.querySelector(data.selector);
-              if (element) {
-                element.outerHTML = decompressPartial(data.partial);
+            ];
+
+            // Update each partial if it exists in the data and should be updated
+            partialsToUpdate.forEach(({ key, selector, shouldUpdate }) => {
+              // Skip if the key doesn't exist in the data or shouldn't be updated
+              if (!data[key] || (shouldUpdate && !shouldUpdate())) {
+                return;
               }
-            } else if (data.action === 'refresh') {
-              // Handle refresh actions
-              if (data.selector) {
-                const element = document.querySelector(data.selector);
-                if (element) {
-                  element.innerHTML = data.content;
+              
+              console.log(`Updating partial: ${key}`);
+              const element = document.querySelector(selector);
+              
+              if (element) {
+                try {
+                  const decompressed = decompressPartial(data[key]);
+                  
+                  // Special handling for menu content to replace the entire container
+                  if (key === 'menuContentStaff' || key === 'menuContentCustomer') {
+                    element.innerHTML = decompressed;
+                  } else {
+                    // For other elements, replace the content
+                    element.innerHTML = decompressed;
+                  }
+                  
+                  console.log(`Updated ${key} with ${decompressed.length} characters`);
+                } catch (error) {
+                  console.error(`Error processing ${key}:`, error);
                 }
               } else {
-                window.location.reload();
+                console.warn(`Element not found for selector: ${selector} (key: ${key})`);
               }
+            });
+
+            // Handle full page refresh if needed
+            if (data.fullPageRefresh && data.fullPageRefresh.refresh === true) {
+              console.log('Full page refresh requested');
+              window.location.reload();
             }
             
             // Refresh any order-related logic

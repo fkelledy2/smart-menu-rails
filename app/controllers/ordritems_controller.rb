@@ -119,6 +119,7 @@ class OrdritemsController < ApplicationController
   end
 
   def broadcast_partials(ordr, tablesetting, ordrparticipant)
+    puts 'xxxxxxx'
     # Eager load all associations needed by partials to prevent N+1 queries
     ordr = Ordr.includes(menu: [:restaurant, :menusections, :menuavailabilities]).find(ordr.id)
     menu = ordr.menu
