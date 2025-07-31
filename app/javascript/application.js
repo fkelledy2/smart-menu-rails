@@ -1,7 +1,15 @@
-// Entry point for esbuild
+// Entry point for the application
 import '@hotwired/turbo-rails'
+
+// Import and configure jQuery
 import jquery from 'jquery'
+window.jQuery = window.$ = jquery
+
+// Import Bootstrap and make it globally available
 import * as bootstrap from 'bootstrap'
+window.bootstrap = bootstrap
+
+// Import other libraries
 import localTime from 'local-time'
 import { TabulatorFull as Tabulator } from 'tabulator-tables'
 import TomSelect from 'tom-select'
@@ -9,13 +17,11 @@ import { DateTime } from 'luxon'
 import '@rails/request.js'
 
 // Make libraries available globally
-window.jQuery = window.$ = jquery
-window.bootstrap = bootstrap
 window.Tabulator = Tabulator
 window.TomSelect = TomSelect
 window.DateTime = DateTime
 
-// Import and configure local-time
+// Configure local-time
 localTime.start()
 
 // Import application channels
