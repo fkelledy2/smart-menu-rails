@@ -1,5 +1,6 @@
 import consumer from "./consumer"
 import pako from 'pako';
+import { initAccessibleModal } from '../utils/accessibleModal';
 
     function post( url, body ) {
         fetch(url, {
@@ -262,20 +263,41 @@ function refreshOrderJSLogic() {
         }
         if ($('#addItemToOrderModal').length) {
             const addItemToOrderModal = document.getElementById('addItemToOrderModal');
-            addItemToOrderModal.addEventListener('show.bs.modal', event => {
-                const button = event.relatedTarget
-                $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id'));
-                $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
-                $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
-                $('#a2o_menuitem_price').text(parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2));
-                $('#a2o_menuitem_description').text(button.getAttribute('data-bs-menuitem_description'));
-                try {
-                    addItemToOrderModal.querySelector('#a2o_menuitem_image').src = button.getAttribute('data-bs-menuitem_image');
-                    addItemToOrderModal.querySelector('#a2o_menuitem_image').alt = button.getAttribute('data-bs-menuitem_name');
-                } catch( err ) {
-                    // swallow error
-                }
-            });
+            const modalInstance = initAccessibleModal(addItemToOrderModal);
+            
+            if (modalInstance) {
+                // Add custom show handler for this specific modal
+                addItemToOrderModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    // Update modal content
+                    const ordrId = button.getAttribute('data-bs-ordr_id');
+                    const menuItemId = button.getAttribute('data-bs-menuitem_id');
+                    const menuItemName = button.getAttribute('data-bs-menuitem_name');
+                    const menuItemPrice = parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2);
+                    const menuItemDesc = button.getAttribute('data-bs-menuitem_description');
+                    
+                    $('#a2o_ordr_id').text(ordrId);
+                    $('#a2o_menuitem_id').text(menuItemId);
+                    $('#a2o_menuitem_name').text(menuItemName);
+                    $('#a2o_menuitem_price').text(menuItemPrice);
+                    $('#a2o_menuitem_description').text(menuItemDesc);
+                    
+                    // Handle image loading
+                    const img = addItemToOrderModal.querySelector('#a2o_menuitem_image');
+                    if (img) {
+                        img.style.opacity = 0;
+                        img.onload = function() {
+                            const spinner = document.getElementById('spinner');
+                            const placeholder = document.getElementById('placeholder');
+                            if (spinner) spinner.style.display = 'none';
+                            if (placeholder) placeholder.style.display = 'none';
+                            this.style.opacity = 1;
+                        };
+                        img.src = button.getAttribute('data-bs-menuitem_image');
+                        img.alt = menuItemName;
+                    }
+                });
+            }
             $( "#addItemToOrderButton" ).on( "click", function() {
                 let ordritem = {
                     'ordritem': {
@@ -467,8 +489,6 @@ function initializeOrderChannel() {
         },
         
         received(data) {
-          console.log('Received WebSocket message with keys:', Object.keys(data));
-          
           try {
             // Map WebSocket data keys to their corresponding DOM selectors
             const partialsToUpdate = [
@@ -515,7 +535,6 @@ function initializeOrderChannel() {
                 return;
               }
               
-              console.log(`Updating partial: ${key}`);
               const element = document.querySelector(selector);
               
               if (element) {
@@ -529,8 +548,6 @@ function initializeOrderChannel() {
                     // For other elements, replace the content
                     element.innerHTML = decompressed;
                   }
-                  
-                  console.log(`Updated ${key} with ${decompressed.length} characters`);
                 } catch (error) {
                   console.error(`Error processing ${key}:`, error);
                 }

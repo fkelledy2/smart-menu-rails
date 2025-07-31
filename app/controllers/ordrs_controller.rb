@@ -85,7 +85,7 @@ class OrdrsController < ApplicationController
         
         if ordr_params[:status].to_i == 0
           update_tablesetting_status(@tablesetting, 0)
-          broadcast_partials(@ordr, @tablesetting, @ordrparticipant, true)
+          broadcast_partials(@ordr, @tablesetting, @ordrparticipant, false)
         end
         
         respond_to do |format|
