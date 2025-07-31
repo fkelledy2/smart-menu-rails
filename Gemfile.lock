@@ -622,6 +622,7 @@ DEPENDENCIES
   bullet
   capybara
   chatgpt-ruby
+  connection_pool
   country_select (~> 8.0)
   cropper_rails
   cssbundling-rails
