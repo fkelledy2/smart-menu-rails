@@ -38,6 +38,18 @@ Rails.application.configure do
 
   # Do not eager load code on boot.
   config.eager_load = false
+  
+  # Disable route preloading in development
+  config.after_initialize do
+    Rails.application.reload_routes! unless Rails.configuration.cache_classes
+  end
+  
+  # Disable route caching
+  config.action_controller.perform_caching = false
+  config.cache_store = :null_store
+  
+  # Disable view template caching
+  config.action_view.cache_template_loading = false
 
   # Show full error reports.
   config.consider_all_requests_local = true
