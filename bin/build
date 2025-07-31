@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Install JavaScript dependencies
+yarn install --check-files
+
+# Precompile assets
+bundle exec rake assets:precompile
+
+# Clean up old assets
+bundle exec rake assets:clean
+
+# Run any database migrations if needed
+bundle exec rails db:migrate
+
+echo "Build completed successfully!"

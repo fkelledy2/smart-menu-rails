@@ -34,36 +34,70 @@
     <%= Sentry.get_trace_propagation_meta.html_safe %>
     <%= tag.link rel: "manifest", href: "/manifest.json" %>
     
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://code.jquery.com/jquery-3.6.0.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" as="script">
+    
     <!-- Load jQuery first -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     
     <!-- Load Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    
+    <!-- Preload application assets -->
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     
     <!-- Load Bootstrap JS bundle (includes Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <!-- Importmap must come after jQuery and Bootstrap -->
     <%= javascript_importmap_tags %>
     
     <script>
-      // Make Bootstrap available globally
-      window.bootstrap = bootstrap || {};
+      // Make sure Bootstrap is available globally
+      document.addEventListener('DOMContentLoaded', function() {
+        // Set a global reference to bootstrap
+        window.bootstrap = bootstrap || window.bootstrap || {};
+        
+        // If bootstrap is still not defined, load it dynamically
+        if (typeof bootstrap === 'undefined' || typeof bootstrap.Tooltip === 'undefined') {
+          console.warn('Bootstrap not properly loaded, attempting to load dynamically...');
+          var script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
+          script.integrity = 'sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz';
+          script.crossOrigin = 'anonymous';
+          script.onload = function() {
+            window.bootstrap = bootstrap;
+            console.log('Bootstrap loaded dynamically');
+          };
+          document.head.appendChild(script);
+        }
+      });
       
       // Simple function to safely use Bootstrap components
       function safeBootstrap(componentName, method, selector, options = {}) {
-        document.addEventListener('DOMContentLoaded', function() {
+        const initComponent = function() {
           const elements = document.querySelectorAll(selector);
-          if (elements.length && bootstrap[componentName]) {
+          if (elements.length && window.bootstrap && window.bootstrap[componentName]) {
             elements.forEach(element => {
-              const instance = bootstrap[componentName].getInstance(element) || 
-                             new bootstrap[componentName](element, options);
-              if (instance && method) {
-                instance[method]();
+              try {
+                const instance = bootstrap[componentName].getInstance(element) || 
+                               new bootstrap[componentName](element, options);
+                if (instance && method) {
+                  instance[method]();
+                }
+              } catch (e) {
+                console.error(`Error initializing Bootstrap ${componentName}:`, e);
               }
             });
           }
-        });
+        };
+        
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initComponent);
+        } else {
+          initComponent();
+        }
       }
     </script>
   </head>

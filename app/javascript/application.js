@@ -5,10 +5,6 @@ import '@hotwired/turbo-rails'
 import jquery from 'jquery'
 window.jQuery = window.$ = jquery
 
-// Import Bootstrap and make it globally available
-import * as bootstrap from 'bootstrap'
-window.bootstrap = bootstrap
-
 // Import other libraries
 import localTime from 'local-time'
 import { TabulatorFull as Tabulator } from 'tabulator-tables'

@@ -1,0 +1,51 @@
+{
+  "name": "Smart Menu",
+  "description": "Smart digital menu system for restaurants",
+  "scripts": {
+    "postdeploy": "bundle exec rake db:migrate && bundle exec rake assets:precompile"
+  },
+  "env": {
+    "RAILS_ENV": {
+      "description": "The Rails environment for the app",
+      "value": "production"
+    },
+    "RAILS_SERVE_STATIC_FILES": {
+      "description": "Enable serving static files from Rails",
+      "value": "true"
+    },
+    "RAILS_LOG_TO_STDOUT": {
+      "description": "Log to STDOUT for Heroku",
+      "value": "true"
+    },
+    "NODE_MODULES_CACHE": {
+      "description": "Disable Yarn cache to prevent issues",
+      "value": "false"
+    },
+    "WEBPACKER_PRECOMPILE": {
+      "description": "Enable Webpacker precompilation",
+      "value": "true"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "addons": [
+    "heroku-postgresql:hobby-dev",
+    "heroku-redis:hobby-dev"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/ruby"
+    },
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
