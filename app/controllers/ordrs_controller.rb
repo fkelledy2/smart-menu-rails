@@ -74,192 +74,141 @@ class OrdrsController < ApplicationController
 
   # POST /ordrs or /ordrs.json
   def create
-    @ordr = Ordr.new(ordr_params)
-    @ordr.nett = 0
-    @ordr.tip = 0
-    @ordr.service = 0
-    @ordr.tax = 0
-    @ordr.gross = 0
-
-    respond_to do |format|
+    @ordr = Ordr.new(ordr_params.merge(
+      nett: 0, tip: 0, service: 0, tax: 0, gross: 0
+    ))
+  
+    ActiveRecord::Base.transaction do
       if @ordr.save
-        @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
-        if( ordr_params[:status] = 0 )
-            if current_user
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s);
-                    @ordrparticipant.save
-                end
-            else
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    cookies["existingParticipant"] = false
-                    @existingParticipant = cookies["existingParticipant"]
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s );
-                    @ordrparticipant.save
-                else
-                    cookies["existingParticipant"] = true
-                    @existingParticipant = cookies["existingParticipant"]
-                end
-                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 1)
-                @ordraction.save
-            end
-            @tablesetting.status = 0
-            @tablesetting.save
-            broadcast_partials( @ordr, @tablesetting, @ordrparticipant, true )
+        @tablesetting = @ordr.tablesetting
+        @ordrparticipant = find_or_create_ordr_participant(@ordr)
+        
+        if ordr_params[:status].to_i == 0
+          update_tablesetting_status(@tablesetting, 0)
+          broadcast_partials(@ordr, @tablesetting, @ordrparticipant, true)
         end
-        format.html { redirect_to ordr_url(@ordr), notice: "Ordr was successfully created." }
-        format.json { render :show, status: :created, location: @ordr }
-#         format.turbo_stream
+        
+        respond_to do |format|
+          format.html { redirect_to ordr_url(@ordr), notice: "Order was successfully created." }
+          format.json { render :show, status: :created, location: @ordr }
+        end
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @ordr.errors, status: :unprocessable_entity }
+        respond_to do |format|
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @ordr.errors, status: :unprocessable_entity }
+        end
+        return # Return early to prevent double render
       end
     end
   end
 
   # PATCH/PUT /ordrs/1 or /ordrs/1.json
   def update
-    respond_to do |format|
-      @ordr.nett = @ordr.runningTotal
-      taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
-      totalTax = 0
-      totalService = 0
-      @ordr.covercharge = @ordr.ordercapacity * @ordr.menu.covercharge
-      for tax in taxes do
-        if tax.taxtype == 'service'
-            totalService += ((tax.taxpercentage * (@ordr.nett+@ordr.covercharge))/100)
-        else
-            totalTax += ((tax.taxpercentage * (@ordr.nett+@ordr.covercharge))/100)
-        end
+    ActiveRecord::Base.transaction do
+      @ordr.assign_attributes(ordr_params)
+      calculate_order_totals(@ordr)
+      
+      if @ordr.status_changed?
+        handle_status_change(@ordr, ordr_params[:status])
       end
-      if ordr_params[:tip]
-        @ordr.tip = ordr_params[:tip]
+  
+      if @ordr.save
+        @tablesetting = @ordr.tablesetting
+        @ordrparticipant = find_or_create_ordr_participant(@ordr)
+        full_refresh = @ordr.status == 'closed'
+  
+        respond_to do |format|
+          format.json { render :show, status: :ok, location: @ordr }
+          broadcast_partials(@ordr, @tablesetting, @ordrparticipant, full_refresh)
+        end
       else
-        @ordr.tip = 0
-      end
-      @ordr.tax = totalTax
-      @ordr.service = totalService
-      @ordr.gross = @ordr.nett + @ordr.covercharge + @ordr.tip + @ordr.service + @ordr.tax
-
-      if( ordr_params[:status] = 20 )
-          @ordr.orderedAt = Time.now
-      end
-      if( ordr_params[:status] = 30 )
-          @ordr.billRequestedAt = Time.now
-      end
-      if( ordr_params[:status] = 40 )
-          @ordr.paidAt = Time.now
-      end
-      if @ordr.update(ordr_params)
-        @tablesetting = Tablesetting.find_by_id(@ordr.tablesetting.id)
-        if( ordr_params[:status] = 0 )
-            if current_user
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
-                    @ordrparticipant.save
-                end
-            else
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s );
-                    @ordrparticipant.save
-                end
-                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 1)
-                @ordraction.save
-            end
-            @tablesetting.status = 0
-            @tablesetting.save
+        respond_to do |format|
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @ordr.errors, status: :unprocessable_entity }
         end
-        if( ordr_params[:status] = 20 )
-            if current_user
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
-                    @ordrparticipant.save
-                end
-            else
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s );
-                    @ordrparticipant.save
-                end
-                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 5)
-                @ordraction.save
-            end
-            @tablesetting.status = 1
-            @tablesetting.save
-            @ordr.ordritems.each do |oi|
-                if oi.status == 'added'
-                    oi.status = 20
-                    oi.save
-                end
-            end
-        end
-        if( ordr_params[:status] = 30 )
-            if current_user
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
-                    @ordrparticipant.save
-                end
-            else
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s );
-                    @ordrparticipant.save
-                end
-                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 5)
-                @ordraction.save
-            end
-            @tablesetting.status = 1
-            @tablesetting.save
-        end
-        if( ordr_params[:status] = 40 )
-            if current_user
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s );
-                    @ordrparticipant.save
-                end
-            else
-                @ordrparticipant = Ordrparticipant.where( ordr: @ordr, role: 0, sessionid: session.id.to_s ).first
-                if @ordrparticipant == nil
-                    @ordrparticipant = Ordrparticipant.new( ordr: @ordr, role: 0, sessionid: session.id.to_s );
-                    @ordrparticipant.save
-                end
-                @ordraction = Ordraction.new( ordrparticipant: @ordrparticipant, ordr: @ordr, action: 5)
-                @ordraction.save
-            end
-            @tablesetting.status = 0
-            @tablesetting.save
-        end
-        fullRefresh = false
-        if @ordr.status == 'closed'
-            fullRefresh = true
-        end
-        format.json { render :show, status: :ok, location: @ordr }
-        broadcast_partials( @ordr, @tablesetting, @ordrparticipant, fullRefresh )
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @ordr.errors, status: :unprocessable_entity }
       end
     end
   end
 
   # DELETE /ordrs/1 or /ordrs/1.json
   def destroy
-    @ordr.destroy!
-
+    ActiveRecord::Base.transaction do
+      @ordr.destroy!
+      respond_to do |format|
+        format.html { redirect_to ordrs_url, notice: "Order was successfully destroyed." }
+        format.json { head :no_content }
+      end
+    end
+  rescue ActiveRecord::RecordNotDestroyed => e
     respond_to do |format|
-      format.html { redirect_to ordrs_url, notice: "Ordr was successfully destroyed." }
-      format.json { head :no_content }
+      format.html { redirect_to ordrs_url, alert: "Could not delete order: #{e.message}" }
+      format.json { render json: { error: e.message }, status: :unprocessable_entity }
     end
   end
 
   private
+
+    def find_or_create_ordr_participant(ordr)
+      if current_user
+        ordr.ordrparticipants.find_or_create_by!(
+          employee: @current_employee,
+          role: 1,
+          sessionid: session.id.to_s
+        ) do |participant|
+          participant.ordr = ordr
+        end
+      else
+        participant = ordr.ordrparticipants.find_or_create_by!(
+          role: 0,
+          sessionid: session.id.to_s
+        ) do |p|
+          p.ordr = ordr
+        end
+        ordr.ordractions.create!(
+          ordrparticipant: participant,
+          action: ordr.status == 'closed' ? 5 : 1
+        )
+        participant
+      end
+    end
+    
+    def calculate_order_totals(ordr)
+      ordr.nett = ordr.runningTotal
+      ordr.covercharge = ordr.ordercapacity * ordr.menu.covercharge
+      
+      taxes = Tax.where(restaurant_id: ordr.restaurant_id).order(:sequence)
+      total_tax = 0
+      total_service = 0
+      taxable_amount = ordr.nett + ordr.covercharge
+      
+      taxes.each do |tax|
+        amount = (tax.taxpercentage * taxable_amount) / 100
+        tax.taxtype == 'service' ? total_service += amount : total_tax += amount
+      end
+      
+      ordr.tip ||= 0
+      ordr.tax = total_tax
+      ordr.service = total_service
+      ordr.gross = ordr.nett + ordr.covercharge + ordr.tip + ordr.service + ordr.tax
+    end
+    
+    def update_tablesetting_status(tablesetting, status)
+      tablesetting.update!(status: status)
+    end
+    
+    def handle_status_change(ordr, new_status)
+      case new_status.to_i
+      when 0  # opened
+        ordr.orderedAt = Time.current
+      when 20 # ordered
+        ordr.orderedAt = Time.current
+        ordr.ordritems.added.update_all(status: 20) # Batch update
+      when 30 # bill requested
+        ordr.billRequestedAt = Time.current
+      when 40 # paid
+        ordr.paidAt = Time.current
+      end
+    end
 
     def broadcast_partials(ordr, tablesetting, ordrparticipant, full_refresh)
       # Eager load all associations needed by partials to prevent N+1 queries
