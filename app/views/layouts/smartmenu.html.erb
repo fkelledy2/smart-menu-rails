@@ -46,15 +46,19 @@
     <!-- 3. Application CSS -->
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     
-    <!-- 4. Load Bootstrap JS with a script that ensures it's globally available -->
+    <!-- 4. Bootstrap Loader - Must run before any other scripts -->
     <script>
-      // This will hold our reference to Bootstrap
-      window.bootstrap = null;
-      
-      // Function to initialize Bootstrap
-      function initializeBootstrap() {
-        // If Bootstrap is already loaded, use it
-        if (window.bootstrap) return;
+      // Create a promise that resolves when Bootstrap is loaded
+      window.bootstrapLoaded = new Promise(resolve => {
+        // Check if Bootstrap is already loaded
+        if (window.bootstrap && window.bootstrap.Modal) {
+          console.log('Bootstrap already loaded in smartmenu');
+          resolve(window.bootstrap);
+          return;
+        }
+        
+        // Store the original bootstrap reference if it exists
+        const originalBootstrap = window.bootstrap;
         
         // Create a script element to load Bootstrap
         const script = document.createElement('script');
@@ -64,33 +68,32 @@
         
         script.onload = function() {
           // Store Bootstrap in our global variable
-          window.bootstrap = bootstrap;
-          console.log('Bootstrap loaded successfully in smartmenu layout');
+          window.bootstrap = bootstrap || originalBootstrap || window.bootstrap;
+          console.log('Bootstrap loaded successfully in smartmenu');
           
           // Dispatch an event that Bootstrap is ready
           const event = new Event('bootstrap:ready');
           document.dispatchEvent(event);
+          
+          // Resolve the promise
+          resolve(window.bootstrap);
         };
         
         script.onerror = function() {
-          console.error('Failed to load Bootstrap in smartmenu layout');
+          console.error('Failed to load Bootstrap in smartmenu');
+          // Resolve with null if loading fails
+          resolve(null);
         };
         
+        // Add the script to the head
         document.head.appendChild(script);
-      }
+      });
       
-      // Start loading Bootstrap immediately
-      initializeBootstrap();
-      
-      // Helper function to safely use Bootstrap components
+      // Safe Bootstrap component initializer
       window.safeBootstrap = function(componentName, method, selector, options = {}) {
-        const initComponent = function() {
-          if (!window.bootstrap || !window.bootstrap[componentName]) {
-            // If Bootstrap isn't loaded yet, wait for it
-            document.addEventListener('bootstrap:ready', function onReady() {
-              document.removeEventListener('bootstrap:ready', onReady);
-              safeBootstrap(componentName, method, selector, options);
-            });
+        window.bootstrapLoaded.then(bootstrap => {
+          if (!bootstrap || !bootstrap[componentName]) {
+            console.warn(`Bootstrap ${componentName} not available in smartmenu`);
             return;
           }
           
@@ -109,14 +112,11 @@
               console.error(`Error initializing Bootstrap ${componentName} in smartmenu:`, e);
             }
           });
-        };
-        
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', initComponent);
-        } else {
-          initComponent();
-        }
+        });
       };
+      
+      // Start loading Bootstrap immediately
+      window.bootstrapLoaded.catch(console.error);
     </script>
     
     <!-- 5. Importmap and other scripts -->

@@ -31,105 +31,99 @@ import './add_jquery'
 import './allergyns'
 import './employees'
 
-// Initialize Bootstrap components and other UI elements
+// Wait for Bootstrap to be loaded before initializing UI components
 function initializeUI() {
-  // Check if Bootstrap is available
-  if (typeof bootstrap === 'undefined' || !bootstrap) {
-    console.warn('Bootstrap not available during UI initialization');
-    return;
-  }
-
-  // Initialize tooltips
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.forEach(tooltipTriggerEl => {
-    try {
-      // Destroy existing tooltip if it exists
-      const existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-      if (existingTooltip) existingTooltip.dispose();
-      
-      // Initialize new tooltip
-      if (bootstrap.Tooltip) {
-        new bootstrap.Tooltip(tooltipTriggerEl);
-      }
-    } catch (e) {
-      console.error('Error initializing tooltip:', e);
+  // Use the bootstrapLoaded promise to ensure Bootstrap is available
+  window.bootstrapLoaded.then(bootstrap => {
+    if (!bootstrap) {
+      console.warn('Bootstrap not available during UI initialization');
+      return;
     }
-  });
-  
-  // Initialize popovers
-  const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-  popoverTriggerList.forEach(popoverTriggerEl => {
-    try {
-      // Destroy existing popover if it exists
-      const existingPopover = bootstrap.Popover.getInstance(popoverTriggerEl);
-      if (existingPopover) existingPopover.dispose();
-      
-      // Initialize new popover
-      if (bootstrap.Popover) {
-        new bootstrap.Popover(popoverTriggerEl);
-      }
-    } catch (e) {
-      console.error('Error initializing popover:', e);
-    }
-  });
 
-  // Initialize modals if the function exists
-  if (typeof initAccessibleModal === 'function') {
+    // Initialize tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltipTriggerList.forEach(tooltipTriggerEl => {
+      try {
+        // Destroy existing tooltip if it exists
+        const existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+        if (existingTooltip) existingTooltip.dispose();
+        
+        // Initialize new tooltip
+        if (bootstrap.Tooltip) {
+          new bootstrap.Tooltip(tooltipTriggerEl);
+        }
+      } catch (e) {
+        console.error('Error initializing tooltip:', e);
+      }
+    });
+    
+    // Initialize popovers
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    popoverTriggerList.forEach(popoverTriggerEl => {
+      try {
+        // Destroy existing popover if it exists
+        const existingPopover = bootstrap.Popover.getInstance(popoverTriggerEl);
+        if (existingPopover) existingPopover.dispose();
+        
+        // Initialize new popover
+        if (bootstrap.Popover) {
+          new bootstrap.Popover(popoverTriggerEl);
+        }
+      } catch (e) {
+        console.error('Error initializing popover:', e);
+      }
+    });
+
+    // Initialize modals
     initAccessibleModal();
-  }
+  }).catch(error => {
+    console.error('Error during UI initialization:', error);
+  });
 }
-
-// Safe initialization function that waits for Bootstrap to be available
-function safeInitializeUI() {
-  if (typeof bootstrap !== 'undefined' && bootstrap) {
-    initializeUI();
-  } else {
-    // If Bootstrap isn't loaded yet, wait for it
-    document.addEventListener('bootstrap:ready', initializeUI);
-  }
-}
-
-// Initialize UI when the page loads
-document.addEventListener('DOMContentLoaded', safeInitializeUI);
-// Re-initialize UI after Turbo navigation
-document.addEventListener('turbo:load', safeInitializeUI);
 
 // Initialize modals
 function initAccessibleModal() {
-  if (typeof bootstrap === 'undefined' || !bootstrap.Modal) {
-    console.warn('Bootstrap Modal not available');
-    return;
-  }
-
-  // Initialize modals with data-bs-toggle="modal"
-  const modalElements = document.querySelectorAll('[data-bs-toggle="modal"]');
-  modalElements.forEach(modalEl => {
-    try {
-      const target = modalEl.dataset.bsTarget;
-      if (target) {
-        const modal = document.querySelector(target);
-        if (modal) {
-          // Initialize the modal
-          const bsModal = new bootstrap.Modal(modal);
-          
-          // Handle modal show/hide events
-          modal.addEventListener('show.bs.modal', function (e) {
-            // Add any additional show logic here
-          });
-          
-          modal.addEventListener('hidden.bs.modal', function (e) {
-            // Add any additional hide logic here
-          });
-        }
-      }
-    } catch (e) {
-      console.error('Error initializing modal:', e);
+  window.bootstrapLoaded.then(bootstrap => {
+    if (!bootstrap || !bootstrap.Modal) {
+      console.warn('Bootstrap Modal not available');
+      return;
     }
+
+    // Initialize modals with data-bs-toggle="modal"
+    const modalElements = document.querySelectorAll('[data-bs-toggle="modal"]');
+    modalElements.forEach(modalEl => {
+      try {
+        const target = modalEl.dataset.bsTarget;
+        if (target) {
+          const modal = document.querySelector(target);
+          if (modal) {
+            // Initialize the modal
+            const bsModal = new bootstrap.Modal(modal);
+            
+            // Handle modal show/hide events
+            modal.addEventListener('show.bs.modal', function (e) {
+              // Add any additional show logic here
+            });
+            
+            modal.addEventListener('hidden.bs.modal', function (e) {
+              // Add any additional hide logic here
+            });
+          }
+        }
+      } catch (e) {
+        console.error('Error initializing modal:', e);
+      }
+    });
   });
 }
 
 // Make initAccessibleModal available globally
 window.initAccessibleModal = initAccessibleModal;
+
+// Initialize UI when the page loads
+document.addEventListener('DOMContentLoaded', initializeUI);
+// Re-initialize UI after Turbo navigation
+document.addEventListener('turbo:load', initializeUI);
 
 // Initialize TomSelect for plan selector
 function initializeTomSelect() {
