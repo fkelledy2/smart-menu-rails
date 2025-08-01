@@ -1,6 +1,5 @@
 import consumer from "./consumer"
 import pako from 'pako';
-import { initAccessibleModal } from '../utils/accessibleModal';
 
     function post( url, body ) {
         fetch(url, {
@@ -36,7 +35,7 @@ function fetchQR(paymentLink) {
   const qrCodeImg = document.createElement('img');
   qrCodeImg.src = qrCodeUrl;
   qrCodeImg.alt = 'QR Code';
-  
+
   const qrContainer = document.getElementById('paymentQR');
   if (qrContainer) {
     qrContainer.innerHTML = '';
@@ -50,11 +49,11 @@ const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefine
 // Connection status element to show to users
 const createConnectionStatusElement = () => {
   if (!isBrowser) return null;
-  
+
   // Check if element already exists
   let statusEl = document.getElementById('connection-status');
   if (statusEl) return statusEl;
-  
+
   // Create new element if it doesn't exist
   statusEl = document.createElement('div');
   statusEl.id = 'connection-status';
@@ -66,7 +65,7 @@ const createConnectionStatusElement = () => {
   statusEl.style.zIndex = '9999';
   statusEl.style.transition = 'all 0.3s ease';
   statusEl.style.display = 'none';
-  
+
   // Add to body if it exists
   if (document.body) {
     document.body.appendChild(statusEl);
@@ -75,7 +74,7 @@ const createConnectionStatusElement = () => {
       document.body.appendChild(statusEl);
     });
   }
-  
+
   return statusEl;
 };
 
@@ -83,19 +82,19 @@ const connectionStatus = isBrowser ? createConnectionStatusElement() : null;
 
 const updateConnectionStatus = (status, message) => {
   if (!connectionStatus || !isBrowser) return;
-  
+
   try {
     // Ensure the element is in the DOM
     if (!document.body.contains(connectionStatus) && document.body) {
       document.body.appendChild(connectionStatus);
     }
-    
+
     connectionStatus.textContent = message;
     connectionStatus.style.display = 'block';
-    
+
     // Clear previous classes
     connectionStatus.className = '';
-    
+
     switch(status) {
       case 'connected':
         connectionStatus.style.backgroundColor = '#4CAF50';
@@ -263,41 +262,20 @@ function refreshOrderJSLogic() {
         }
         if ($('#addItemToOrderModal').length) {
             const addItemToOrderModal = document.getElementById('addItemToOrderModal');
-            const modalInstance = initAccessibleModal(addItemToOrderModal);
-            
-            if (modalInstance) {
-                // Add custom show handler for this specific modal
-                addItemToOrderModal.addEventListener('show.bs.modal', function(event) {
-                    const button = event.relatedTarget;
-                    // Update modal content
-                    const ordrId = button.getAttribute('data-bs-ordr_id');
-                    const menuItemId = button.getAttribute('data-bs-menuitem_id');
-                    const menuItemName = button.getAttribute('data-bs-menuitem_name');
-                    const menuItemPrice = parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2);
-                    const menuItemDesc = button.getAttribute('data-bs-menuitem_description');
-                    
-                    $('#a2o_ordr_id').text(ordrId);
-                    $('#a2o_menuitem_id').text(menuItemId);
-                    $('#a2o_menuitem_name').text(menuItemName);
-                    $('#a2o_menuitem_price').text(menuItemPrice);
-                    $('#a2o_menuitem_description').text(menuItemDesc);
-                    
-                    // Handle image loading
-                    const img = addItemToOrderModal.querySelector('#a2o_menuitem_image');
-                    if (img) {
-                        img.style.opacity = 0;
-                        img.onload = function() {
-                            const spinner = document.getElementById('spinner');
-                            const placeholder = document.getElementById('placeholder');
-                            if (spinner) spinner.style.display = 'none';
-                            if (placeholder) placeholder.style.display = 'none';
-                            this.style.opacity = 1;
-                        };
-                        img.src = button.getAttribute('data-bs-menuitem_image');
-                        img.alt = menuItemName;
-                    }
-                });
-            }
+            addItemToOrderModal.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget
+                $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id'));
+                $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
+                $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
+                $('#a2o_menuitem_price').text(parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2));
+                $('#a2o_menuitem_description').text(button.getAttribute('data-bs-menuitem_description'));
+                try {
+                    addItemToOrderModal.querySelector('#a2o_menuitem_image').src = button.getAttribute('data-bs-menuitem_image');
+                    addItemToOrderModal.querySelector('#a2o_menuitem_image').alt = button.getAttribute('data-bs-menuitem_name');
+                } catch( err ) {
+                    // swallow error
+                }
+            });
             $( "#addItemToOrderButton" ).on( "click", function() {
                 let ordritem = {
                     'ordritem': {
@@ -459,17 +437,17 @@ function refreshOrderJSLogic() {
 // Initialize the order channel subscription
 function initializeOrderChannel() {
   if (!isBrowser || !document.body) return null;
-  
+
   const orderId = document.body.dataset.smartmenuId;
   if (!orderId) return null;
-  
+
   let subscription = null;
-  
+
   const subscribeToChannel = () => {
     if (subscription) {
       subscription.unsubscribe();
     }
-    
+
     subscription = consumer.subscriptions.create(
       { channel: "OrdrChannel", order_id: orderId },
       {
@@ -477,52 +455,54 @@ function initializeOrderChannel() {
           console.log('Connected to OrdrChannel');
           updateConnectionStatus('connected', 'Connected');
         },
-        
+
         disconnected() {
           console.log('Disconnected from OrdrChannel');
           updateConnectionStatus('disconnected', 'Disconnected');
         },
-        
+
         rejected() {
           console.error('Connection to OrdrChannel was rejected');
           updateConnectionStatus('error', 'Connection rejected');
         },
-        
+
         received(data) {
+          console.log('Received WebSocket message with keys:', Object.keys(data));
+
           try {
             // Map WebSocket data keys to their corresponding DOM selectors
             const partialsToUpdate = [
               { key: 'context', selector: '#contextContainer' },
               { key: 'modals', selector: '#modalsContainer' },
-              { 
-                key: 'menuContentStaff', 
+              {
+                key: 'menuContentStaff',
                 selector: '#menuContentContainer',
                 // For staff content, we need to check if we're in staff mode
                 shouldUpdate: () => document.getElementById('menuu') !== null
               },
-              { 
-                key: 'menuContentCustomer', 
+              {
+                key: 'menuContentCustomer',
                 selector: '#menuContentContainer',
                 // For customer content, we check if we're in customer mode
                 shouldUpdate: () => document.getElementById('menuc') !== null
               },
-              { 
-                key: 'orderCustomer', 
+              {
+                key: 'orderCustomer',
                 selector: '#openOrderContainer',
                 shouldUpdate: () => document.getElementById('menuc') !== null
               },
-              { 
-                key: 'orderStaff', 
+              {
+                key: 'orderStaff',
                 selector: '#openOrderContainer',
                 shouldUpdate: () => document.getElementById('menuu') !== null
               },
-              { 
-                key: 'tableLocaleSelectorStaff', 
+              {
+                key: 'tableLocaleSelectorStaff',
                 selector: '#tableLocaleSelectorContainer',
                 shouldUpdate: () => document.getElementById('menuu') !== null
               },
-              { 
-                key: 'tableLocaleSelectorCustomer', 
+              {
+                key: 'tableLocaleSelectorCustomer',
                 selector: '#tableLocaleSelectorContainer',
                 shouldUpdate: () => document.getElementById('menuc') !== null
               }
@@ -534,13 +514,14 @@ function initializeOrderChannel() {
               if (!data[key] || (shouldUpdate && !shouldUpdate())) {
                 return;
               }
-              
+
+              console.log(`Updating partial: ${key}`);
               const element = document.querySelector(selector);
-              
+
               if (element) {
                 try {
                   const decompressed = decompressPartial(data[key]);
-                  
+
                   // Special handling for menu content to replace the entire container
                   if (key === 'menuContentStaff' || key === 'menuContentCustomer') {
                     element.innerHTML = decompressed;
@@ -548,6 +529,8 @@ function initializeOrderChannel() {
                     // For other elements, replace the content
                     element.innerHTML = decompressed;
                   }
+
+                  console.log(`Updated ${key} with ${decompressed.length} characters`);
                 } catch (error) {
                   console.error(`Error processing ${key}:`, error);
                 }

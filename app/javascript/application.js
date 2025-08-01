@@ -1,23 +1,14 @@
-// Entry point for the application
+// Entry point for esbuild
 import '@hotwired/turbo-rails'
-
-// Import and configure jQuery
 import jquery from 'jquery'
+import * as bootstrap from 'bootstrap'
+
+// Make jQuery and Bootstrap available globally
 window.jQuery = window.$ = jquery
+window.bootstrap = bootstrap
 
-// Import other libraries
+// Import and configure local-time
 import localTime from 'local-time'
-import { TabulatorFull as Tabulator } from 'tabulator-tables'
-import TomSelect from 'tom-select'
-import { DateTime } from 'luxon'
-import '@rails/request.js'
-
-// Make libraries available globally
-window.Tabulator = Tabulator
-window.TomSelect = TomSelect
-window.DateTime = DateTime
-
-// Configure local-time
 localTime.start()
 
 // Import application channels
@@ -26,114 +17,37 @@ import './channels'
 // Import and configure Stimulus controllers
 import { application } from './controllers/application'
 
-// Import other JavaScript files
+// Import Tabulator
+import { TabulatorFull as Tabulator } from 'tabulator-tables'
+window.Tabulator = Tabulator
+
+// Import TomSelect
+import TomSelect from 'tom-select'
+window.TomSelect = TomSelect
+
+// Initialize Bootstrap tooltips and popovers on turbo:load
+document.addEventListener('turbo:load', () => {
+  // Initialize tooltips
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  tooltipTriggerList.forEach(tooltipTriggerEl => {
+    new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+
+  // Initialize popovers
+  const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  popoverTriggerList.forEach(popoverTriggerEl => {
+    new bootstrap.Popover(popoverTriggerEl)
+  })
+})
+window.bootstrap = bootstrap
+import {DateTime} from 'luxon'
+
+window.DateTime = DateTime
+import '@rails/request.js'
 import './add_jquery'
+
 import './allergyns'
 import './employees'
-
-// Wait for Bootstrap to be loaded before initializing UI components
-function initializeUI() {
-  // Use the bootstrapLoaded promise to ensure Bootstrap is available
-  window.bootstrapLoaded.then(bootstrap => {
-    if (!bootstrap) {
-      console.warn('Bootstrap not available during UI initialization');
-      return;
-    }
-
-    // Initialize tooltips
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    tooltipTriggerList.forEach(tooltipTriggerEl => {
-      try {
-        // Destroy existing tooltip if it exists
-        const existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-        if (existingTooltip) existingTooltip.dispose();
-        
-        // Initialize new tooltip
-        if (bootstrap.Tooltip) {
-          new bootstrap.Tooltip(tooltipTriggerEl);
-        }
-      } catch (e) {
-        console.error('Error initializing tooltip:', e);
-      }
-    });
-    
-    // Initialize popovers
-    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-    popoverTriggerList.forEach(popoverTriggerEl => {
-      try {
-        // Destroy existing popover if it exists
-        const existingPopover = bootstrap.Popover.getInstance(popoverTriggerEl);
-        if (existingPopover) existingPopover.dispose();
-        
-        // Initialize new popover
-        if (bootstrap.Popover) {
-          new bootstrap.Popover(popoverTriggerEl);
-        }
-      } catch (e) {
-        console.error('Error initializing popover:', e);
-      }
-    });
-
-    // Initialize modals
-    initAccessibleModal();
-  }).catch(error => {
-    console.error('Error during UI initialization:', error);
-  });
-}
-
-// Initialize modals
-function initAccessibleModal() {
-  window.bootstrapLoaded.then(bootstrap => {
-    if (!bootstrap || !bootstrap.Modal) {
-      console.warn('Bootstrap Modal not available');
-      return;
-    }
-
-    // Initialize modals with data-bs-toggle="modal"
-    const modalElements = document.querySelectorAll('[data-bs-toggle="modal"]');
-    modalElements.forEach(modalEl => {
-      try {
-        const target = modalEl.dataset.bsTarget;
-        if (target) {
-          const modal = document.querySelector(target);
-          if (modal) {
-            // Initialize the modal
-            const bsModal = new bootstrap.Modal(modal);
-            
-            // Handle modal show/hide events
-            modal.addEventListener('show.bs.modal', function (e) {
-              // Add any additional show logic here
-            });
-            
-            modal.addEventListener('hidden.bs.modal', function (e) {
-              // Add any additional hide logic here
-            });
-          }
-        }
-      } catch (e) {
-        console.error('Error initializing modal:', e);
-      }
-    });
-  });
-}
-
-// Make initAccessibleModal available globally
-window.initAccessibleModal = initAccessibleModal;
-
-// Initialize UI when the page loads
-document.addEventListener('DOMContentLoaded', initializeUI);
-// Re-initialize UI after Turbo navigation
-document.addEventListener('turbo:load', initializeUI);
-
-// Initialize TomSelect for plan selector
-function initializeTomSelect() {
-  if ($("#user_plan").length && !$("#user_plan").hasClass('tomselected')) {
-    new TomSelect("#user_plan", {});
-  }
-}
-
-document.addEventListener('turbo:load', initializeTomSelect);
-document.addEventListener('DOMContentLoaded', initializeTomSelect);
 import './menuitems'
 import './menus'
 import './smartmenus'
