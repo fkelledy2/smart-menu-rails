@@ -1,19 +1,54 @@
-document.addEventListener("turbo:load", () => {
+// Only run on pages that have the metrics container
+const loadMetrics = () => {
+  // Check if we're on a page that needs metrics
+  if ($('#metrics-table').length === 0) return;
 
-    $.get( "/metrics.json", function(data) {
-      var currentMetrics = data[0];
-      var numberOfRestaurants = currentMetrics.numberOfRestaurants;
-      if( numberOfRestaurants > 100 ) {
-          $('#metrics-numberOfRestaurants').html(numberOfRestaurants);
-          var numberOfMenus = currentMetrics.numberOfMenus;
-          $('#metrics-numberOfMenus').html(numberOfMenus);
-          var numberOfOrders = currentMetrics.numberOfOrders;
-          $('#metrics-numberOfOrders').html(numberOfOrders);
-          var totalOrderValue = currentMetrics.totalOrderValue;
-          $('#metrics-totalOrderValue').html(parseFloat(totalOrderValue).toFixed(0));
+  // Only load metrics once per page load
+  if (window.metricsLoaded) return;
+  
+  // Set a flag to prevent multiple loads
+  window.metricsLoaded = true;
+
+  // Add loading state
+  $('#metrics-table').addClass('loading');
+
+  $.get("/metrics.json")
+    .done(function(data) {
+      if (!data || !data[0]) return;
+      
+      const currentMetrics = data[0];
+      const numberOfRestaurants = currentMetrics.numberOfRestaurants;
+      
+      if (numberOfRestaurants > 100) {
+        // Update all metrics at once to reduce reflows
+        const metrics = [
+          { id: 'metrics-numberOfRestaurants', value: numberOfRestaurants },
+          { id: 'metrics-numberOfMenus', value: currentMetrics.numberOfMenus },
+          { id: 'metrics-numberOfOrders', value: currentMetrics.numberOfOrders },
+          { id: 'metrics-totalOrderValue', value: parseFloat(currentMetrics.totalOrderValue).toFixed(0) }
+        ];
+        
+        metrics.forEach(metric => {
+          const element = document.getElementById(metric.id);
+          if (element) element.textContent = metric.value;
+        });
+        
+        $('#metrics-table').show();
       } else {
-          $('#metrics-table').hide();
-//          $('#testimonials').hide();
+        $('#metrics-table').hide();
       }
+    })
+    .fail(function() {
+      console.error('Failed to load metrics');
+      $('#metrics-table').hide();
+    })
+    .always(function() {
+      $('#metrics-table').removeClass('loading');
     });
-})
+};
+
+// Run on initial page load
+document.addEventListener('turbo:load', loadMetrics);
+
+// Also run when navigating with Turbo
+document.addEventListener('turbo:render', loadMetrics);

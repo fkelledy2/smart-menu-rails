@@ -344,7 +344,6 @@ document.addEventListener("turbo:load", () => {
             });
         }
     }
-    refreshOrderJSLogic();
 
     function post( url, body ) {
         fetch(url, {
@@ -381,58 +380,71 @@ document.addEventListener("turbo:load", () => {
                   "Content-Type": "application/json",
                   "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
             }
-        }).then(response => {
-        }).catch(function(err) {
+        }).then(response => response.json())
+        .catch(function(err) {
             console.info(err + " url: " + url);
         });
     }
 
-    if ($("#restaurantTabs").is(':visible')) {
-        function linkOrdr(cell, formatterParams){
-            var id = cell.getValue();
-            var name = cell.getRow();
-            var rowData = cell.getRow().getData("data").id;
-            return "<a class='link-dark' href='/ordrs/"+id+"'>"+rowData+"</a>";
+    // Only initialize the table if we're on the restaurant orders page
+    const restaurantTableEl = document.getElementById('restaurant-ordr-table');
+    if (restaurantTableEl && !restaurantTableEl._tabulator) {
+        const restaurantId = restaurantTableEl.getAttribute('data-bs-restaurant_id');
+        if (!restaurantId) return;
+        refreshOrderJSLogic();        
+        // Mark as initialized
+        restaurantTableEl._tabulator = true;
+        
+        // Add formatter functions
+        function linkOrdr(cell, formatterParams) {
+            const id = cell.getValue();
+            const rowData = cell.getRow().getData("data")?.ordrDate || '';
+            return `<a class='link-dark' href="/ordrs/${id}">${id}</a>`;
         }
-        function linkMenu(cell, formatterParams){
-            var id = cell.getValue();
-            var name = cell.getRow();
-            var rowData = cell.getRow().getData("data").menu.name;
+        
+        function linkMenu(cell, formatterParams) {
+            const rowData = cell.getRow().getData("data")?.menu?.name || '';
             return rowData;
         }
-        function linkTablesetting(cell, formatterParams){
-            var id = cell.getValue();
-            var name = cell.getRow();
-            var rowData = cell.getRow().getData("data").tablesetting.name;
+        
+        function linkTablesetting(cell, formatterParams) {
+            const rowData = cell.getRow().getData("data")?.tablesetting?.name || '';
             return rowData;
         }
-        const restaurantId = document.getElementById('restaurant-ordr-table').getAttribute('data-bs-restaurant_id');
+        
+        // Initialize Tabulator with the table element
         var restaurantOrdrTable = new Tabulator("#restaurant-ordr-table", {
-          pagination:true, //enable.
-          paginationSize:10, // this option can take any positive integer value
-          dataLoader: false,
-          maxHeight:"100%",
-          responsiveLayout:true,
-          layout:"fitColumns",
-          ajaxURL: '/restaurants/'+restaurantId+'/ordrs.json',
-          initialSort:[
-            {column:"ordrDate", dir:"desc"},
-            {column:"id", dir:"desc"},
-          ],
-          columns: [
-           {title:"Id", field:"id", formatter:linkOrdr, frozen:true, responsive:0, hozAlign:"left"},
-           {title:"Menu", field:"menu.id", formatter:linkMenu, responsive:0,  hozAlign:"left"},
-           {title:"Table", field:"tablesetting.id", formatter:linkTablesetting, responsive:4, hozAlign:"left"},
-           {title:"Status", field:"status", responsive:4, hozAlign:"left"},
-           {title:"Nett", field:"nett", formatter:"money", hozAlign:"right", responsive:5, headerHozAlign:"right",
-            formatterParams:{
-               decimal:".",
-               thousand:",",
-               symbol:restaurantCurrencySymbol,
-               negativeSign:true,
-               precision:2,
-            }
-           },
+            pagination: true,
+            paginationSize: 10,
+            dataLoader: false,
+            maxHeight: "100%",
+            responsiveLayout: true,
+            layout: "fitColumns",
+            ajaxURL: `/restaurants/${restaurantId}/ordrs.json`,
+            initialSort: [
+                {column: "ordrDate", dir: "desc"},
+                {column: "id", dir: "desc"}
+            ],
+            columns: [
+                {title: "Id", field: "id", formatter: linkOrdr, frozen: true, responsive: 0, hozAlign: "left"},
+                {title: "Menu", field: "menu.id", formatter: linkMenu, responsive: 0, hozAlign: "left"},
+                {title: "Table", field: "tablesetting.id", formatter: linkTablesetting, responsive: 4, hozAlign: "left"},
+                {title: "Status", field: "status", responsive: 4, hozAlign: "left"},
+                {
+                    title: "Nett",
+                    field: "nett",
+                    formatter: "money",
+                    hozAlign: "right",
+                    responsive: 5,
+                    headerHozAlign: "right",
+                    formatterParams: {
+                        decimal: ".",
+                        thousand: ",",
+                        symbol: restaurantCurrencySymbol,
+                        negativeSign: true,
+                        precision: 2,
+                    }
+                },
            {title:"Service", field:"service", formatter:"money", hozAlign:"right", responsive:5, headerHozAlign:"right",
             formatterParams:{
                decimal:".",
