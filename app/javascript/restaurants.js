@@ -1,11 +1,16 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
+
 document.addEventListener("turbo:load", () => {
+
+    const element = document.querySelector("#restaurant-table");
+    if (!element || element.dataset.initialized) return;
+    element.dataset.initialized = "true";
 
     $(document).on("keydown", "form", function(event) {
         return event.key != "Enter";
     });
 
-    $(".qrSlug").each(function(){
+    $(".qrSlug").each(function() {
         var qrSlug = $(this).text();
         var qrCode = new QRCodeStyling({
            "type":"canvas",
