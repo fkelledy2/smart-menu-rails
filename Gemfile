@@ -129,3 +129,5 @@ gem 'jquery-rails'
 gem 'gmaps-autocomplete-rails'
 gem "rqrcode", "~> 2.2"
 gem "fastimage"
+gem "identity_cache"
+gem "cityhash"
