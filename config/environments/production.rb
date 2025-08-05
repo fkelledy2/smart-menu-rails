@@ -116,11 +116,16 @@ Rails.application.configure do
   #     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE } }
 
   config.cache_store = :redis_store, {
-      url: ENV.fetch("REDIS_URL"),
-      ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
-      namespace: 'cache',
-      expires_in: 12.hours
+    url: ENV.fetch("REDIS_URL", "redis://localhost:6379/0"),
+    namespace: 'cache',
+    expires_in: 12.hours
   }
+#   config.cache_store = :redis_store, {
+#       url: ENV.fetch("REDIS_URL"),
+#       ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
+#       namespace: 'cache',
+#       expires_in: 12.hours
+#   }
 
   config.public_file_server.headers = {
     'Cache-Control' => 'public, max-age=31536000',
