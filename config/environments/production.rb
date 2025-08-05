@@ -126,4 +126,6 @@ Rails.application.configure do
     'Cache-Control' => 'public, max-age=31536000',
     'Expires' => 1.year.from_now.to_formatted_s(:rfc822)
   }
+  config.active_record.cache_versioning = false
+
 end
