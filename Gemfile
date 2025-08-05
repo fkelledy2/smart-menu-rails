@@ -131,3 +131,6 @@ gem "rqrcode", "~> 2.2"
 gem "fastimage"
 gem "identity_cache"
 gem "cityhash"
+gem "redis-store"
+gem "redis-activesupport"  # Required to hook into Rails cache store
+

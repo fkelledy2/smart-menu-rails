@@ -111,7 +111,16 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'], ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE } }
+  #   config.cache_store = :redis_cache_store, {
+  #     url: ENV['REDIS_URL'],
+  #     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE } }
+
+  config.cache_store = :redis_store, {
+      url: ENV.fetch("REDIS_URL"),
+      ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
+      namespace: 'cache',
+      expires_in: 12.hours
+  }
 
   config.public_file_server.headers = {
     'Cache-Control' => 'public, max-age=31536000',
