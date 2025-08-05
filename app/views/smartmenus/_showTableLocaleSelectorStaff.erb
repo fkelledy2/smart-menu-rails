@@ -11,7 +11,7 @@
                 <% Smartmenu.where( restaurant_id: restaurant.id, menu_id: menu.id ).includes([:tablesetting]).order('id ASC').each do |smartmenu| %>
                     <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
                         <li>
-                            <%= link_to smartmenu_path(smartmenu.slug), class: "dropdown-item" do %>
+                            <%= link_to smartmenu_path(smartmenu.slug), data: { turbo: false }, class: "dropdown-item" do %>
                                 <%= smartmenu.tablesetting.name %>
                             <% end %>
                         </li>

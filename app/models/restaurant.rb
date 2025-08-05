@@ -1,7 +1,10 @@
 class Restaurant < ApplicationRecord
   include ImageUploader::Attachment(:image)
+  include IdentityCache
+  
+  # Standard ActiveRecord associations
   belongs_to :user
-
+  
   has_many :tablesettings, dependent: :delete_all
   has_many :menus, dependent: :delete_all
   has_many :employees, dependent: :delete_all
@@ -13,6 +16,20 @@ class Restaurant < ApplicationRecord
   has_one  :genimage, dependent: :destroy
   has_many :tracks, dependent: :delete_all
   has_many :restaurantlocales, dependent: :delete_all
+  
+  # IdentityCache configuration
+  cache_index :id
+  cache_index :user_id
+  
+  # Cache associations - must be defined after the actual associations
+  cache_has_many :menus, embed: :ids
+  cache_has_many :tablesettings, embed: :ids
+  cache_has_many :employees, embed: :ids
+  cache_has_many :taxes, embed: :ids
+  cache_has_many :tips, embed: :ids
+  cache_has_many :restaurantavailabilities, embed: :ids
+  cache_has_many :restaurantlocales, embed: :ids
+  cache_has_one :genimage, embed: :id
 
   # Returns all locale codes for this restaurant
   def locales

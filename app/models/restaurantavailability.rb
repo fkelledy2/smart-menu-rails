@@ -1,6 +1,10 @@
 class Restaurantavailability < ApplicationRecord
+  include IdentityCache
+  
+  # Standard ActiveRecord associations
   belongs_to :restaurant
 
+  # Enums
   enum dayofweek: {
     sunday: 0,
     monday: 1,
@@ -15,4 +19,11 @@ class Restaurantavailability < ApplicationRecord
     open: 0,
     closed: 1
   }
+  
+  # IdentityCache configuration
+  cache_index :id
+  cache_index :restaurant_id
+  
+  # Cache associations
+  cache_belongs_to :restaurant
 end

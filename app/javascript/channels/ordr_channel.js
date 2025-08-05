@@ -163,276 +163,276 @@ function closeAllModals() {
 }
 
 function refreshOrderJSLogic() {
-        if ($("#smartmenu").is(':visible')) {
-            var date = new Date;
-            var minutes = date.getMinutes();
-            var hour = date.getHours();
-            var sectionFromOffset = parseInt($("#sectionFromOffset").html());
-            var sectionToOffset = parseInt($("#sectionToOffset").html());
-            var currentOffset = (hour*60)+minutes;
-            $( ".addItemToOrder" ).each(function() {
-                const fromOffeset = $(this).data('bs-menusection_from_offset');
-                const toOffeset = $(this).data('bs-menusection_to_offset');
-                if( currentOffset >= fromOffeset && currentOffset <= toOffeset ) {
-                } else {
-                    $(this).attr("disabled","disabled");
-                }
-            });
-        }
-        $('#toggleFilters').click (function () {
-          $(':checkbox').prop('checked', this.checked);
+    if ($("#smartmenu").is(':visible')) {
+        var date = new Date;
+        var minutes = date.getMinutes();
+        var hour = date.getHours();
+        var sectionFromOffset = parseInt($("#sectionFromOffset").html());
+        var sectionToOffset = parseInt($("#sectionToOffset").html());
+        var currentOffset = (hour*60)+minutes;
+        $( ".addItemToOrder" ).each(function() {
+            const fromOffeset = $(this).data('bs-menusection_from_offset');
+            const toOffeset = $(this).data('bs-menusection_to_offset');
+            if( currentOffset >= fromOffeset && currentOffset <= toOffeset ) {
+            } else {
+                $(this).attr("disabled","disabled");
+            }
         });
-        $(".tipPreset").click(function() {
-            let presetTipPercentage = parseFloat($(this).text());
-            let gross = parseFloat($("#orderGross").text());
-            let tip = ((gross / 100) * presetTipPercentage).toFixed(2);
-            $("#tipNumberField").val(tip);
-            let total = parseFloat(parseFloat(tip)+parseFloat(gross)).toFixed(2);
-            $("#orderGrandTotal").text($('#restaurantCurrency').text()+parseFloat(total).toFixed(2));
-            $("#paymentAmount").val((parseFloat(total).toFixed(2)*100));
-            $("#paymentlink").text('');
-            $("#paymentAnchor").prop("href", '');
-            $("#paymentQR").html('');
-            $("#paymentQR").text('');
+    }
+    $('#toggleFilters').click (function () {
+      $(':checkbox').prop('checked', this.checked);
+    });
+    $(".tipPreset").click(function() {
+        let presetTipPercentage = parseFloat($(this).text());
+        let gross = parseFloat($("#orderGross").text());
+        let tip = ((gross / 100) * presetTipPercentage).toFixed(2);
+        $("#tipNumberField").val(tip);
+        let total = parseFloat(parseFloat(tip)+parseFloat(gross)).toFixed(2);
+        $("#orderGrandTotal").text($('#restaurantCurrency').text()+parseFloat(total).toFixed(2));
+        $("#paymentAmount").val((parseFloat(total).toFixed(2)*100));
+        $("#paymentlink").text('');
+        $("#paymentAnchor").prop("href", '');
+        $("#paymentQR").html('');
+        $("#paymentQR").text('');
+    });
+    $("#tipNumberField").change(function() {
+        $(this).val(parseFloat($(this).val()).toFixed(2));
+        let gross = parseFloat($("#orderGross").text());
+        let tip = parseFloat($(this).val());
+        let total = tip+gross;
+        $("#orderGrandTotal").text($('#restaurantCurrency').text()+parseFloat(total).toFixed(2));
+    });
+    if ($('#restaurantCurrency').length) {
+        restaurantCurrencySymbol = $('#restaurantCurrency').text();
+    }
+    if ($('#addNameToParticipantModal').length) {
+        const addNameToParticipantModal = document.getElementById('addNameToParticipantModal');
+        addNameToParticipantModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget
         });
-        $("#tipNumberField").change(function() {
-            $(this).val(parseFloat($(this).val()).toFixed(2));
-            let gross = parseFloat($("#orderGross").text());
-            let tip = parseFloat($(this).val());
-            let total = tip+gross;
-            $("#orderGrandTotal").text($('#restaurantCurrency').text()+parseFloat(total).toFixed(2));
-        });
-        if ($('#restaurantCurrency').length) {
-            restaurantCurrencySymbol = $('#restaurantCurrency').text();
-        }
-        if ($('#addNameToParticipantModal').length) {
-            const addNameToParticipantModal = document.getElementById('addNameToParticipantModal');
-            addNameToParticipantModal.addEventListener('show.bs.modal', event => {
-                const button = event.relatedTarget
-            });
-            $( "#addNameToParticipantButton" ).on( "click", function(event) {
-               let ordrparticipant = {
-                'ordrparticipant': {
-                    'name': addNameToParticipantModal.querySelector('#name').value,
-                }
-               };
-               patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant );
-               event.preventDefault();
-            });
-        }
-        $( ".setparticipantlocale" ).on( "click", function(event) {
-           var locale = $(this).data('locale')
-           if( $('#currentParticipant').text() ) {
-               let ordrparticipant = {
-                     'ordrparticipant': {
-                         'preferredlocale': locale
-                     }
-               };
-               patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant);
-           }
-           if( $('#menuParticipant').text() ) {
-               let menuparticipant = {
-                     'menuparticipant': {
-                         'preferredlocale': locale
-                     }
-                };
-               patch( '/menuparticipants/'+$('#menuParticipant').text(), menuparticipant);
-           }
+        $( "#addNameToParticipantButton" ).on( "click", function(event) {
+           let ordrparticipant = {
+            'ordrparticipant': {
+                'name': addNameToParticipantModal.querySelector('#name').value,
+            }
+           };
+           patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant );
            event.preventDefault();
         });
-        $( ".removeItemFromOrderButton" ).on( "click", function(event) {
-           var ordrItemId = $(this).attr('data-bs-ordritem_id');
-           let ordritem = {
-             'ordritem': {
-                 'status': ORDRITEM_REMOVED,
-                 'ordritemprice': 0
-             }
+    }
+    $( ".setparticipantlocale" ).on( "click", function(event) {
+       var locale = $(this).data('locale')
+       if( $('#currentParticipant').text() ) {
+           let ordrparticipant = {
+                 'ordrparticipant': {
+                     'preferredlocale': locale
+                 }
            };
-           patch( '/ordritems/'+ordrItemId, ordritem);
-           $('#confirm-order').click();
-           return true;
+           patch( '/ordrparticipants/'+$('#currentParticipant').text(), ordrparticipant);
+       }
+       if( $('#menuParticipant').text() ) {
+           let menuparticipant = {
+                 'menuparticipant': {
+                     'preferredlocale': locale
+                 }
+            };
+           patch( '/menuparticipants/'+$('#menuParticipant').text(), menuparticipant);
+       }
+       event.preventDefault();
+    });
+    $( ".removeItemFromOrderButton" ).on( "click", function(event) {
+       var ordrItemId = $(this).attr('data-bs-ordritem_id');
+       let ordritem = {
+         'ordritem': {
+             'status': ORDRITEM_REMOVED,
+             'ordritemprice': 0
+         }
+       };
+       patch( '/ordritems/'+ordrItemId, ordritem);
+       $('#confirm-order').click();
+       return true;
+    });
+    var a2oMenuitemImage = document.getElementById("a2o_menuitem_image");
+    if( a2oMenuitemImage ) {
+        a2oMenuitemImage.addEventListener('load', function () {
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('placeholder').style.display = 'none';
+            this.style.opacity = 1;
         });
-        var a2oMenuitemImage = document.getElementById("a2o_menuitem_image");
-        if( a2oMenuitemImage ) {
-            a2oMenuitemImage.addEventListener('load', function () {
-                document.getElementById('spinner').style.display = 'none';
-                document.getElementById('placeholder').style.display = 'none';
-                this.style.opacity = 1;
-            });
-        }
-        if ($('#addItemToOrderModal').length) {
-            const addItemToOrderModal = document.getElementById('addItemToOrderModal');
-            addItemToOrderModal.addEventListener('show.bs.modal', event => {
-                const button = event.relatedTarget
-                $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id'));
-                $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
-                $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
-                $('#a2o_menuitem_price').text(parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2));
-                $('#a2o_menuitem_description').text(button.getAttribute('data-bs-menuitem_description'));
-                try {
-                    addItemToOrderModal.querySelector('#a2o_menuitem_image').src = button.getAttribute('data-bs-menuitem_image');
-                    addItemToOrderModal.querySelector('#a2o_menuitem_image').alt = button.getAttribute('data-bs-menuitem_name');
-                } catch( err ) {
-                    // swallow error
+    }
+    if ($('#addItemToOrderModal').length) {
+        const addItemToOrderModal = document.getElementById('addItemToOrderModal');
+        addItemToOrderModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget
+            $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id'));
+            $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
+            $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
+            $('#a2o_menuitem_price').text(parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2));
+            $('#a2o_menuitem_description').text(button.getAttribute('data-bs-menuitem_description'));
+            try {
+                addItemToOrderModal.querySelector('#a2o_menuitem_image').src = button.getAttribute('data-bs-menuitem_image');
+                addItemToOrderModal.querySelector('#a2o_menuitem_image').alt = button.getAttribute('data-bs-menuitem_name');
+            } catch( err ) {
+                // swallow error
+            }
+        });
+        $( "#addItemToOrderButton" ).on( "click", function() {
+            let ordritem = {
+                'ordritem': {
+                    'ordr_id': $('#a2o_ordr_id').text(),
+                    'menuitem_id': $('#a2o_menuitem_id').text(),
+                    'status': ORDRITEM_ADDED,
+                    'ordritemprice': $('#a2o_menuitem_price').text()
                 }
-            });
-            $( "#addItemToOrderButton" ).on( "click", function() {
-                let ordritem = {
-                    'ordritem': {
-                        'ordr_id': $('#a2o_ordr_id').text(),
-                        'menuitem_id': $('#a2o_menuitem_id').text(),
-                        'status': ORDRITEM_ADDED,
-                        'ordritemprice': $('#a2o_menuitem_price').text()
+            };
+            post( '/ordritems', ordritem, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+            return true;
+        });
+    }
+    if ($('#start-order').length) {
+       $( "#start-order" ).on( "click", function() {
+            const ordercapacity = document.getElementById('orderCapacity').value;
+            if ($('#currentEmployee').length) {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'employee_id': $('#currentEmployee').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'ordercapacity': ordercapacity,
+                      'status' : ORDR_OPENED
                     }
                 };
-                post( '/ordritems', ordritem, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
-                return true;
-            });
-        }
-        if ($('#start-order').length) {
-           $( "#start-order" ).on( "click", function() {
-                const ordercapacity = document.getElementById('orderCapacity').value;
-                if ($('#currentEmployee').length) {
-                    let ordr = {
-                        'ordr': {
-                          'tablesetting_id': $('#currentTable').text(),
-                          'employee_id': $('#currentEmployee').text(),
-                          'restaurant_id': $('#currentRestaurant').text(),
-                          'menu_id': $('#currentMenu').text(),
-                          'ordercapacity': ordercapacity,
-                          'status' : ORDR_OPENED
-                        }
-                    };
-                    post( '/ordrs', ordr );
-                } else {
-                    let ordr = {
-                        'ordr': {
-                          'tablesetting_id': $('#currentTable').text(),
-                          'restaurant_id': $('#currentRestaurant').text(),
-                          'menu_id': $('#currentMenu').text(),
-                          'ordercapacity': ordercapacity,
-                          'status' : ORDR_OPENED
-                        }
-                    };
-                    post( '/ordrs', ordr );
-                }
-           });
-        }
-        if ($('#confirm-order').length) {
-           $( "#confirm-order" ).on( "click", function() {
-                if ($('#currentEmployee').length) {
-                    let ordr = {
-                        'ordr': {
-                          'tablesetting_id': $('#currentTable').text(),
-                          'employee_id': $('#currentEmployee').text(),
-                          'restaurant_id': $('#currentRestaurant').text(),
-                          'menu_id': $('#currentMenu').text(),
-                          'status' : ORDR_ORDERED
-                        }
-                    };
-                    patch( '/ordrs/'+$('#currentOrder').text(), ordr );
-                } else {
-                    let ordr = {
-                        'ordr': {
-                          'tablesetting_id': $('#currentTable').text(),
-                          'restaurant_id': $('#currentRestaurant').text(),
-                          'menu_id': $('#currentMenu').text(),
-                          'status' : ORDR_ORDERED
-                        }
-                    };
-                    patch( '/ordrs/'+$('#currentOrder').text(), ordr );
-                }
-           });
-        }
-        if ($('#request-bill').length) {
-           $( "#request-bill" ).on( "click", function() {
-                if ($('#currentEmployee').length) {
-                    let ordr = {
-                        'ordr': {
-                          'tablesetting_id': $('#currentTable').text(),
-                          'employee_id': $('#currentEmployee').text(),
-                          'restaurant_id': $('#currentRestaurant').text(),
-                          'menu_id': $('#currentMenu').text(),
-                          'status' : ORDR_BILLREQUESTED
-                        }
-                    };
-                    patch( '/ordrs/'+$('#currentOrder').text(), ordr );
-                } else {
-                    let ordr = {
-                        'ordr': {
-                          'tablesetting_id': $('#currentTable').text(),
-                          'restaurant_id': $('#currentRestaurant').text(),
-                          'menu_id': $('#currentMenu').text(),
-                          'status' : ORDR_BILLREQUESTED
-                        }
-                    };
-                    patch( '/ordrs/'+$('#currentOrder').text(), ordr );
-                }
-           });
-        }
-        if ($('#pay-order').length) {
-            if( document.getElementById("refreshPaymentLink") ) {
-              document.getElementById("refreshPaymentLink").addEventListener("click", async () => {
-                const amount = document.getElementById("paymentAmount").value;
-                const currency = document.getElementById("paymentCurrency").value;
-                const restaurantName = document.getElementById("paymentRestaurantName").value;
-                const restaurantId = document.getElementById("paymentRestaurantId").value;
-                const openOrderId = document.getElementById("openOrderId").value;
-                try {
-                  const response = await fetch("/create_payment_link", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      "Accept": "application/json"
-                    },
-                    body: JSON.stringify({ openOrderId, amount, currency, restaurantName, restaurantId })
-                  });
-                  const data = await response.json();
-                  if (data.payment_link) {
-                    $("#paymentlink").text(data.payment_link);
-                    $("#paymentAnchor").prop("href", data.payment_link);
-                    fetchQR(data.payment_link)
-                  } else {
-                    alert("Failed to generate payment link.");
-                  }
-                } catch (error) {
-                  console.error("Error:", error);
-                  alert("Something went wrong.");
-                }
-              });
+                post( '/ordrs', ordr );
+            } else {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'ordercapacity': ordercapacity,
+                      'status' : ORDR_OPENED
+                    }
+                };
+                post( '/ordrs', ordr );
             }
-            $( "#pay-order" ).on( "click", function() {
-                let tip = 0;
-                if( $('#tipNumberField').length > 0 ) {
-                    tip = $('#tipNumberField').val()
-                }
-                if ($('#currentEmployee').length) {
-                    let ordr = {
-                        'ordr': {
-                          'tablesetting_id': $('#currentTable').text(),
-                          'employee_id': $('#currentEmployee').text(),
-                          'restaurant_id': $('#currentRestaurant').text(),
-                          'tip': tip,
-                          'menu_id': $('#currentMenu').text(),
-                          'status' :  ORDR_CLOSED
-                        }
-                    };
-                    patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
-                } else {
-                    let ordr = {
-                        'ordr': {
-                          'tablesetting_id': $('#currentTable').text(),
-                          'restaurant_id': $('#currentRestaurant').text(),
-                          'tip': tip,
-                          'menu_id': $('#currentMenu').text(),
-                          'status' :  ORDR_CLOSED
-                        }
-                    };
-                    patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
-                }
-            });
-        }
+       });
     }
+    if ($('#confirm-order').length) {
+       $( "#confirm-order" ).on( "click", function() {
+            if ($('#currentEmployee').length) {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'employee_id': $('#currentEmployee').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : ORDR_ORDERED
+                    }
+                };
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+            } else {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : ORDR_ORDERED
+                    }
+                };
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+            }
+       });
+    }
+    if ($('#request-bill').length) {
+       $( "#request-bill" ).on( "click", function() {
+            if ($('#currentEmployee').length) {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'employee_id': $('#currentEmployee').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : ORDR_BILLREQUESTED
+                    }
+                };
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+            } else {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'menu_id': $('#currentMenu').text(),
+                      'status' : ORDR_BILLREQUESTED
+                    }
+                };
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+            }
+       });
+    }
+    if ($('#pay-order').length) {
+        if( document.getElementById("refreshPaymentLink") ) {
+          document.getElementById("refreshPaymentLink").addEventListener("click", async () => {
+            const amount = document.getElementById("paymentAmount").value;
+            const currency = document.getElementById("paymentCurrency").value;
+            const restaurantName = document.getElementById("paymentRestaurantName").value;
+            const restaurantId = document.getElementById("paymentRestaurantId").value;
+            const openOrderId = document.getElementById("openOrderId").value;
+            try {
+              const response = await fetch("/create_payment_link", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Accept": "application/json"
+                },
+                body: JSON.stringify({ openOrderId, amount, currency, restaurantName, restaurantId })
+              });
+              const data = await response.json();
+              if (data.payment_link) {
+                $("#paymentlink").text(data.payment_link);
+                $("#paymentAnchor").prop("href", data.payment_link);
+                fetchQR(data.payment_link)
+              } else {
+                alert("Failed to generate payment link.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Something went wrong.");
+            }
+          });
+        }
+        $( "#pay-order" ).on( "click", function() {
+            let tip = 0;
+            if( $('#tipNumberField').length > 0 ) {
+                tip = $('#tipNumberField').val()
+            }
+            if ($('#currentEmployee').length) {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'employee_id': $('#currentEmployee').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'tip': tip,
+                      'menu_id': $('#currentMenu').text(),
+                      'status' :  ORDR_CLOSED
+                    }
+                };
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
+            } else {
+                let ordr = {
+                    'ordr': {
+                      'tablesetting_id': $('#currentTable').text(),
+                      'restaurant_id': $('#currentRestaurant').text(),
+                      'tip': tip,
+                      'menu_id': $('#currentMenu').text(),
+                      'status' :  ORDR_CLOSED
+                    }
+                };
+                patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
+            }
+        });
+    }
+}
 
 // Initialize the order channel subscription
 function initializeOrderChannel() {

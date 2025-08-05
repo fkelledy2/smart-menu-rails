@@ -1,5 +1,6 @@
 class Ordr < ApplicationRecord
   include AASM
+  include IdentityCache
 
   aasm :column => 'status' do
     state :opened, initial:true
@@ -26,6 +27,7 @@ class Ordr < ApplicationRecord
     end
   end
 
+  # Standard ActiveRecord associations
   belongs_to :employee, optional: true
   belongs_to :tablesetting
   belongs_to :menu
@@ -34,6 +36,22 @@ class Ordr < ApplicationRecord
   has_many :ordritems, dependent: :destroy
   has_many :ordrparticipants, dependent: :destroy
   has_many :ordractions, dependent: :destroy
+  
+  # IdentityCache configuration
+  cache_index :id
+  cache_index :restaurant_id
+  cache_index :tablesetting_id
+  cache_index :menu_id
+  cache_index :employee_id
+  
+  # Cache associations
+  cache_belongs_to :restaurant
+  cache_belongs_to :tablesetting
+  cache_belongs_to :menu
+  cache_belongs_to :employee
+  cache_has_many :ordritems, embed: :ids
+  cache_has_many :ordrparticipants, embed: :ids
+  cache_has_many :ordractions, embed: :ids
 
   enum status: {
     opened: 0,

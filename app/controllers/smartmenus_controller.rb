@@ -57,6 +57,16 @@ class SmartmenusController < ApplicationController
       mp.smartmenu = @smartmenu
     end
     @menuparticipant.update(smartmenu: @smartmenu) unless @menuparticipant.smartmenu == @smartmenu
+
+    full_refresh = true
+
+    partials = {
+      fullPageRefresh: { refresh: full_refresh }
+    }
+    puts 'xxx broadcast '
+    puts partials
+    ActionCable.server.broadcast("ordr_#{@smartmenu.slug}_channel", partials)
+
   end
 
   # GET /smartmenus/new

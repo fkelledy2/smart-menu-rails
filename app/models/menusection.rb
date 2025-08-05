@@ -1,4 +1,18 @@
 class Menusection < ApplicationRecord
+  include IdentityCache
+  
+  # Standard ActiveRecord associations
+  belongs_to :menu
+  has_many :menuitems, dependent: :destroy
+  
+  # IdentityCache configuration
+  cache_index :id
+  cache_index :menu_id
+  
+  # Cache associations
+  cache_belongs_to :menu
+  cache_has_many :menuitems, embed: :ids
+  
   # Responsive image helpers
   def image_url_or_fallback(size = nil)
     if image_attacher.derivatives&.key?(size)

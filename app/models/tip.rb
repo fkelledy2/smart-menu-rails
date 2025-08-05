@@ -1,11 +1,23 @@
 class Tip < ApplicationRecord
+  include IdentityCache
+  
+  # Standard ActiveRecord associations
   belongs_to :restaurant
 
+  # Enums
   enum status: {
     inactive: 0,
     active: 1,
     archived: 2
   }
 
-  validates :percentage, :presence => true, :numericality => {:only_float => true}
+  # Validations
+  validates :percentage, presence: true, numericality: { only_float: true }
+  
+  # IdentityCache configuration
+  cache_index :id
+  cache_index :restaurant_id
+  
+  # Cache associations
+  cache_belongs_to :restaurant
 end

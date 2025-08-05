@@ -46,10 +46,15 @@ class RestaurantsController < ApplicationController
         expires_at: Time.now.to_i + auth_data["expires_in"]
       }
       if session[:spotify_restaurant_id]
-        @restaurant = Restaurant.find(session[:spotify_restaurant_id])
-        @restaurant.spotifyaccesstoken = auth_data["access_token"];
-        @restaurant.spotifyrefreshtoken = auth_data["refresh_token"];
+        # Use fetch with cache
+        @restaurant = Restaurant.fetch(session[:spotify_restaurant_id])
+        @restaurant.spotifyaccesstoken = auth_data["access_token"]
+        @restaurant.spotifyrefreshtoken = auth_data["refresh_token"]
         @restaurant.save
+        
+        # Expire the cache for this restaurant
+        @restaurant.expire_restaurant_cache if @restaurant.respond_to?(:expire_restaurant_cache)
+        
         puts @restaurant.name
         puts @restaurant.id
         puts edit_restaurant_path(@restaurant)
@@ -68,11 +73,14 @@ class RestaurantsController < ApplicationController
   # GET /restaurants or /restaurants.json
   def index
     if current_user && current_user.plan
-        @restaurants = Restaurant.where( user: current_user, archived: false)
+        # Use fetch_by_user_id which is automatically provided by identity_cache
+        @restaurants = Restaurant.fetch_by_user_id(current_user.id).reject { |r| r.archived? }
+        
         Analytics.track(
             user_id: current_user.id,
             event: 'restaurants.index'
         )
+        
         if @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
            @canAddRestaurant = true
         else
@@ -87,6 +95,13 @@ class RestaurantsController < ApplicationController
   def show
     if current_user
         if params[:restaurant_id] && params[:id]
+            # Use fetch to get the restaurant with caching
+            @restaurant = Restaurant.fetch(params[:id])
+            
+            # Preload associations that will be used in the view
+            @restaurant.fetch_menus if @restaurant.respond_to?(:fetch_menus)
+            @restaurant.fetch_tablesettings if @restaurant.respond_to?(:fetch_tablesettings)
+            
             Analytics.track(
                 user_id: current_user.id,
                 event: 'restaurants.show',
@@ -167,6 +182,9 @@ class RestaurantsController < ApplicationController
     if current_user
         respond_to do |format|
           if @restaurant.update(restaurant_params)
+            # Expire the cache for this restaurant
+            @restaurant.expire_restaurant_cache if @restaurant.respond_to?(:expire_restaurant_cache)
+            
             puts 'SmartMenuSyncJob.start'
             SmartMenuSyncJob.perform_sync(@restaurant.id)
             puts 'SmartMenuSyncJob.end'
@@ -204,64 +222,97 @@ class RestaurantsController < ApplicationController
   # DELETE /restaurants/1 or /restaurants/1.json
   def destroy
     if current_user
-        @restaurant.update( archived: true )
-            Analytics.track(
-                user_id: current_user.id,
-                event: 'restaurants.destroy',
-                properties: {
-                  restaurant_id: params[:id]
-                }
-            )
-        respond_to do |format|
-          format.html { redirect_to restaurants_url, notice: "Restaurant was successfully destroyed." }
-          format.json { head :no_content }
-        end
+      # Get the user_id before destroying for cache invalidation
+      user_id = @restaurant.user_id
+      
+      @restaurant.update(archived: true)
+      
+      # Expire the user's restaurant list cache
+      Restaurant.expire_user_id(user_id) if Restaurant.respond_to?(:expire_user_id)
+      
+      Analytics.track(
+        user_id: current_user.id,
+        event: 'restaurants.destroy',
+        properties: {
+          restaurant_id: params[:id]
+        }
+      )
+      
+      respond_to do |format|
+        format.html { redirect_to restaurants_url, notice: "Restaurant was successfully archived." }
+        format.json { head :no_content }
+      end
     else
-        redirect_to root_url
+      redirect_to root_url
     end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_restaurant
-        begin
-            if current_user
-                if params[:restaurant_id]
-                    @restaurant = Restaurant.find(params[:restaurant_id])
-                else
-                    @restaurant = Restaurant.find(params[:id])
-                end
-                if( @restaurant == nil or @restaurant.user != current_user )
-                    redirect_to root_url
-                end
-            else
-                if params[:restaurant_id]
-                    @restaurant = Restaurant.find(params[:restaurant_id])
-                else
-                    @restaurant = Restaurant.find(params[:id])
-                end
-            end
-            @canAddMenu = false
-            if @restaurant && current_user
-                @menuCount = Menu.where( restaurant: @restaurant, status: 'active', archived: false).count
-                if @menuCount < current_user.plan.menusperlocation || current_user.plan.menusperlocation == -1
-                    @canAddMenu = true
-                end
-            end
-
-        rescue ActiveRecord::RecordNotFound => e
-            redirect_to root_url
+      begin
+        if current_user
+          # Use fetch_by_id with cache for authenticated users
+          @restaurant = if params[:restaurant_id]
+            result = Restaurant.fetch_by_id(params[:restaurant_id])
+            Rails.logger.debug "Fetched restaurant with id #{params[:restaurant_id]}: #{result.inspect}, class: #{result.class}"
+            result
+          else
+            result = Restaurant.fetch_by_id(params[:id])
+            Rails.logger.debug "Fetched restaurant with id #{params[:id]}: #{result.inspect}, class: #{result.class}"
+            result
+          end
+          
+          # Debug the actual value and type of @restaurant
+          Rails.logger.debug "@restaurant value: #{@restaurant.inspect}, class: #{@restaurant.class}"
+          
+          # Handle case where @restaurant is an array
+          if @restaurant.is_a?(Array)
+            Rails.logger.warn "Unexpected array received from fetch_by_id, taking first element"
+            @restaurant = @restaurant.first
+          end
+          
+          # Redirect if restaurant not found or doesn't belong to current user
+          if @restaurant.nil? || !@restaurant.respond_to?(:user) || @restaurant.user != current_user
+            Rails.logger.warn "Restaurant not found, not a valid restaurant, or doesn't belong to current user"
+            redirect_to root_url and return
+          end
+        else
+          # For unauthenticated requests, use regular find
+          @restaurant = if params[:restaurant_id]
+            Restaurant.find(params[:restaurant_id])
+          else
+            Restaurant.find(params[:id])
+          end
         end
+        
+        # Check if user can add more menus
+        @canAddMenu = false
+        if @restaurant && current_user
+          # Use cached count if available, otherwise fallback to query
+          @menuCount = if @restaurant.respond_to?(:fetch_menus)
+            @restaurant.fetch_menus.count { |m| m.status == 'active' && !m.archived? }
+          else
+            Menu.where(restaurant: @restaurant, status: 'active', archived: false).count
+          end
+          
+          @canAddMenu = @menuCount < current_user.plan.menusperlocation || current_user.plan.menusperlocation == -1
+        end
+        
+      rescue ActiveRecord::RecordNotFound => e
+        redirect_to root_url
+      end
     end
 
     def set_currency
       if params[:id]
-          @restaurant = Restaurant.find(params[:id])
-          if @restaurant.currency
-            @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
-          else
-            @restaurantCurrency = ISO4217::Currency.from_code('USD')
-          end
+        # Use fetch with cache for currency lookup
+        @restaurant = Restaurant.fetch(params[:id])
+        if @restaurant&.currency.present?
+          @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
+        else
+          @restaurantCurrency = ISO4217::Currency.from_code('USD')
+        end
       else
         @restaurantCurrency = ISO4217::Currency.from_code('USD')
       end
