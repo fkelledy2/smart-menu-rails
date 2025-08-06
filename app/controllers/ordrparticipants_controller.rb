@@ -44,7 +44,7 @@ class OrdrparticipantsController < ApplicationController
         respond_to do |format|
           if @ordrparticipant.save
             @tablesetting = Tablesetting.find_by_id(@ordrparticipant.ordr.tablesetting.id)
-            broadcastPartials( @ordrparticipant.ordr, @tablesetting, @ordrparticipant )
+            broadcast_partials( @ordrparticipant.ordr, @tablesetting, @ordrparticipant )
             format.json { render :show, status: :ok, location: @ordrparticipant.ordr }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -59,7 +59,7 @@ class OrdrparticipantsController < ApplicationController
           if @ordrparticipant.update(ordrparticipant_params)
             # Find all entries for participant with same sessionid and order_id and update the name.
             @tablesetting = Tablesetting.find_by_id(@ordrparticipant.ordr.tablesetting.id)
-            broadcastPartials( @ordrparticipant.ordr, @tablesetting, @ordrparticipant )
+            broadcast_partials( @ordrparticipant.ordr, @tablesetting, @ordrparticipant )
             format.json { render :show, status: :ok, location: @ordrparticipant.ordr }
           else
             format.html { render :edit, status: :unprocessable_entity }
