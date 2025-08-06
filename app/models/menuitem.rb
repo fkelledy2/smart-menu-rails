@@ -1,9 +1,18 @@
 class Menuitem < ApplicationRecord
+  include IdentityCache
   include ImageUploader::Attachment(:image)
 
+  # Standard ActiveRecord associations
   has_many :menuitemlocales
-
   belongs_to :menusection
+  
+  # IdentityCache configuration
+  cache_index :id
+  cache_index :menusection_id
+  
+  # Cache associations
+  cache_belongs_to :menusection
+  cache_has_many :menuitemlocales, embed: :ids
 
   def localised_name(locale)
       mil = Menuitemlocale.where(menuitem_id: id, locale: locale).first
