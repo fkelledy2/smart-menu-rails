@@ -158,16 +158,25 @@ class OrdrsController < ApplicationController
           participant.ordr = ordr
         end
       else
-        participant = ordr.ordrparticipants.find_or_create_by!(
+        # First ensure the participant is created and saved
+        participant = ordr.ordrparticipants.find_or_initialize_by(
           role: 0,
           sessionid: session.id.to_s
-        ) do |p|
-          p.ordr = ordr
-        end
-        ordr.ordractions.create!(
-          ordrparticipant: participant,
-          action: ordr.status == 'closed' ? 5 : 1
         )
+        
+        # Set order if this is a new record
+        participant.ordr = ordr if participant.new_record?
+        
+        # Save the participant first to get an ID
+        if participant.save!
+          # Now create the ordraction with the saved participant
+          ordr.ordractions.create!(
+            ordrparticipant_id: participant.id,
+            ordr_id: ordr.id,
+            action: ordr.status == 'closed' ? 5 : 1
+          )
+        end
+        
         participant
       end
     end
