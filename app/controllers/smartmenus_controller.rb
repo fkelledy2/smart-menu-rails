@@ -13,12 +13,13 @@ class SmartmenusController < ApplicationController
 
   # GET /smartmenus/1 or /smartmenus/1.json
   def show
-    if @menu.restaurant != @restaurant
-      redirect_to root_url and return
-    end
 
     # Eager load associations if used in view (add more as needed)
     @menu = Menu.includes(:menusections, :menuavailabilities).find(@menu.id) if @menu && !@menu.association(:menusections).loaded?
+
+    if @menu.restaurant != @restaurant
+      redirect_to root_url and return
+    end
 
     @allergyns = Allergyn.where(restaurant_id: @menu.restaurant_id)
 
@@ -44,11 +45,15 @@ class SmartmenusController < ApplicationController
             role: 0,
             sessionid: session.id.to_s
           )
+          @ordrparticipant.save
           @menuparticipant = Menuparticipant.find_by(sessionid: session.id.to_s)
           if @menuparticipant
             @ordrparticipant.update(preferredlocale: @menuparticipant.preferredlocale)
+             @ordrparticipant.save
           end
-          Ordraction.create(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 0)
+          if @ordrparticipant.id
+              Ordraction.create(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 0)
+          end
         end
       end
     end

@@ -35,21 +35,6 @@ class Menu < ApplicationRecord
       end
   end
 
-  private
-  def pdf_menu_scan_format
-    return unless pdf_menu_scan.attached?
-    if !pdf_menu_scan.content_type.in?(%w(application/pdf))
-      errors.add(:pdf_menu_scan, 'must be a PDF file')
-    end
-  end
-
-  belongs_to :restaurant
-  has_many :menusections
-  has_many :menuavailabilities
-  has_many :menuitems, through: :menusections
-  has_many :menulocales
-  has_one :genimage, dependent: :destroy
-
   def localised_name(locale)
       mil = Menulocale.where(menu_id: id, locale: locale).first
       rl = Restaurantlocale.where(restaurant_id: self.restaurant.id, locale: locale).first
@@ -77,6 +62,21 @@ class Menu < ApplicationRecord
           end
       end
   end
+
+  private
+  def pdf_menu_scan_format
+    return unless pdf_menu_scan.attached?
+    if !pdf_menu_scan.content_type.in?(%w(application/pdf))
+      errors.add(:pdf_menu_scan, 'must be a PDF file')
+    end
+  end
+
+  belongs_to :restaurant
+  has_many :menusections
+  has_many :menuavailabilities
+  has_many :menuitems, through: :menusections
+  has_many :menulocales
+  has_one :genimage, dependent: :destroy
 
   enum status: {
     inactive: 0,
