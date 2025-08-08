@@ -59,9 +59,9 @@ class OrdrparticipantsController < ApplicationController
           if @ordrparticipant.update(ordrparticipant_params)
             # Find all entries for participant with same sessionid and order_id and update the name.
             @tablesetting = Tablesetting.find_by_id(@ordrparticipant.ordr.tablesetting.id)
-            broadcast_partials( @ordrparticipant.ordr, @tablesetting, @ordrparticipant )
             menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
-            format.html { redirect_to menuparticipant.smartmenu, notice: "Smartmenu was successfully created." }
+            broadcast_partials( @ordrparticipant.ordr, @tablesetting, @ordrparticipant )
+#             format.html { redirect_to menuparticipant.smartmenu, notice: "Smartmenu was successfully created." }
             format.json { render :show, status: :ok, location: @ordrparticipant.ordr }
           else
             format.html { render :edit, status: :unprocessable_entity }
