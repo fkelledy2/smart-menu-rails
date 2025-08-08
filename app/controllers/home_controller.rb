@@ -3,6 +3,9 @@ class HomeController < ApplicationController
 
   def index
     begin
+      # Force HTML format for all requests
+      request.format = :html
+      
       # Track analytics if session exists
       if session[:session_id]
         Analytics.track(
@@ -28,11 +31,8 @@ class HomeController < ApplicationController
       @page_title = 'Mellow Menu - Digital Menu Solution for Restaurants'
       @page_description = 'Create beautiful digital menus, enable online ordering, and provide contactless payment options for your restaurant.'
       
-      # Explicitly render the template
-      respond_to do |format|
-        format.html { render :index, status: :ok }
-        format.json { render json: { status: 'success', message: 'Welcome to Mellow Menu API' } }
-      end
+      # Render the HTML template
+      render :index, status: :ok
       
     rescue => e
       logger.error "Error in HomeController#index: #{e.message}\n#{e.backtrace.join("\n")}"
