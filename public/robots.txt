@@ -1,1 +1,50 @@
-# See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+# https://www.robotstxt.org/robotstxt.html
+# Allow all web crawlers to access all pages
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.mellow.menu/sitemap.xml.gz
+
+# Crawl-delay: 10
+
+# Block specific paths that don't need to be indexed
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /users/*
+Disallow: /account/*
+Disallow: /billing
+Disallow: /billing/*
+Disallow: /api/*
+Disallow: /rails/*
+Disallow: /assets/*
+Disallow: /uploads/*
+Disallow: /*?*
+Disallow: /*? 
+Disallow: /*& 
+
+# Allow all web crawlers to access all pages (explicitly state this)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# For GPTBot (OpenAI's web crawler)
+User-agent: GPTBot
+Allow: /
+
+# For CCBot (Common Crawl)
+User-agent: CCBot
+Allow: /
+
+# For Facebook's crawler
+User-agent: facebookexternalhit
+Allow: /
+
+# For Twitter's crawler
+User-agent: Twitterbot
+Allow: /
