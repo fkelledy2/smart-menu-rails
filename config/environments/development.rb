@@ -33,8 +33,16 @@ Rails.application.configure do
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  config.log_level = :info # Suppress SQL query logs; change to :debug for verbose output
+  config.log_level = :debug # Enable debug logging for development
+  config.log_formatter = ::Logger::Formatter.new
+  config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
+  config.log_tags = [ :request_id ]
   config.enable_reloading = true
+  
+  # Log to STDOUT for better visibility in development
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
+  end
 
   # Do not eager load code on boot.
   config.eager_load = false
