@@ -10,7 +10,7 @@
                                     <% end %>
                                 </div>
                         </span>
-                        <% if order && order.status != 'billrequested' %>
+                        <% if order && ( order.status != 'billrequested' && order.status != 'closed' ) %>
                             <span class="float-end">
                                 <div class="btn-group btn-group-sm btn-order-group-custom-rounded" role="group" aria-label="Order">
                                     <% if ordrparticipant && ordrparticipant.preferredlocale %>

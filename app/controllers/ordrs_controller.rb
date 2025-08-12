@@ -116,7 +116,7 @@ class OrdrsController < ApplicationController
         @tablesetting = @ordr.tablesetting
         @ordrparticipant = find_or_create_ordr_participant(@ordr)
         full_refresh = @ordr.status == 'closed'
-  
+        full_refresh = false
         respond_to do |format|
           format.json { render :show, status: :ok, location: @ordr }
           broadcast_partials(@ordr, @tablesetting, @ordrparticipant, full_refresh)

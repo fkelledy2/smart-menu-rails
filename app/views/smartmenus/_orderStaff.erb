@@ -67,6 +67,13 @@
                                             <%= t(".takePayment") %> <i class="bi bi-credit-card"></i>
                                         </button>
                                 <% end %>
+                                <% if order.status == 'closed' %>
+                                    <% if menu.allowOrdering == true && menu.restaurant.allowOrdering == true %>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#openOrderModal">
+                                            <%= t(".startOrder") %> <i class="bi bi-plus-circle"></i>
+                                        </button>
+                                    <% end %>
+                                <% end %>
                         <% else %>
                             <% if menu.allowOrdering == true && menu.restaurant.allowOrdering == true %>
                                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#openOrderModal">
