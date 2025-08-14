@@ -41,7 +41,7 @@
                                 <% end %>
                             <% end %>
                                 <% if order.status == 'ordered' %>
-                                    <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#requestBillModal">
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#requestBillModal">
                                         <%= t(".bill") %> <i class="bi bi-receipt"></i></i>
                                     </button>
                                     <% if order.addedCount > 0 %>
