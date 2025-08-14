@@ -105,13 +105,15 @@ class OrdrsController < ApplicationController
   # PATCH/PUT /ordrs/1 or /ordrs/1.json
   def update
     ActiveRecord::Base.transaction do
+
       @ordr.assign_attributes(ordr_params)
       calculate_order_totals(@ordr)
       
       if @ordr.status_changed?
         handle_status_change(@ordr, ordr_params[:status])
       end
-  
+      @ordr.ordritems.added.update_all(status: 20) # Batch update
+
       if @ordr.save
         @tablesetting = @ordr.tablesetting
         @ordrparticipant = find_or_create_ordr_participant(@ordr)
@@ -211,7 +213,6 @@ class OrdrsController < ApplicationController
         ordr.orderedAt = Time.current
       when 20 # ordered
         ordr.orderedAt = Time.current
-        ordr.ordritems.added.update_all(status: 20) # Batch update
       when 30 # bill requested
         ordr.billRequestedAt = Time.current
       when 40 # paid
