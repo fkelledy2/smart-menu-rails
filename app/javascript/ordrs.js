@@ -349,6 +349,9 @@ function refreshOrderJSLogic() {
     refreshOrderJSLogic();
 
     function post( url, body ) {
+      $('#orderCart').hide();
+      $('#orderCartSpinner').show();      
+
         fetch(url, {
             method: 'POST',
             headers:  {
@@ -363,6 +366,8 @@ function refreshOrderJSLogic() {
         return false;
     }
     function patch( url, body ) {
+      $('#orderCart').hide();
+      $('#orderCartSpinner').show();      
         fetch(url, {
             method: 'PATCH',
             headers:  {
@@ -377,6 +382,9 @@ function refreshOrderJSLogic() {
         return false;
     }
     function del( url ) {
+      alert('del');
+      $('#orderCart').hide();
+      $('#orderCartSpinner').show();      
         fetch(url, {
             method: 'DELETE',
             headers:  {

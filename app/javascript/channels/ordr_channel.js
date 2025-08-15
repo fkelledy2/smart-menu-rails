@@ -2,6 +2,8 @@ import consumer from "./consumer"
 import pako from 'pako';
 
     function post( url, body ) {
+      $('#orderCart').hide();
+      $('#orderCartSpinner').show();      
         fetch(url, {
             method: 'POST',
             headers:  {
@@ -16,6 +18,8 @@ import pako from 'pako';
         return false;
     }
     function patch( url, body ) {
+      $('#orderCart').hide();
+      $('#orderCartSpinner').show();      
         fetch(url, {
             method: 'PATCH',
             headers:  {
