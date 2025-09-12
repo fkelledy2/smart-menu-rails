@@ -277,7 +277,7 @@ function refreshOrderJSLogic() {
                 addItemToOrderModal.querySelector('#a2o_menuitem_image').src = button.getAttribute('data-bs-menuitem_image');
                 addItemToOrderModal.querySelector('#a2o_menuitem_image').alt = button.getAttribute('data-bs-menuitem_name');
             } catch( err ) {
-                // swallow error
+                alert( err );
             }
         });
         $( "#addItemToOrderButton" ).on( "click", function() {

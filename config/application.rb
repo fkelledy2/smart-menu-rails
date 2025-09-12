@@ -40,7 +40,7 @@ module SmartMenu
 
     config.middleware.insert_before 0, UaLogger
 
-    RSpotify::authenticate(Rails.application.credentials.spotify_key, Rails.application.credentials.spotify_secret)
+    # RSpotify::authenticate(Rails.application.credentials.spotify_key, Rails.application.credentials.spotify_secret)
 
     Dotenv.load
 

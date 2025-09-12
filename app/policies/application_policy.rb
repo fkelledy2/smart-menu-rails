@@ -4,7 +4,7 @@ class ApplicationPolicy
   attr_reader :user, :record
 
   def initialize(user, record)
-    @user = user
+    @user = user || User.new # Guest user (no admin privileges)
     @record = record
   end
 

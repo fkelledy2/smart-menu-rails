@@ -182,9 +182,10 @@ function refreshOrderJSLogic() {
             $('#a2o_menuitem_description').text(button.getAttribute('data-bs-menuitem_description'));
             try {
                 addItemToOrderModal.querySelector('#a2o_menuitem_image').src = button.getAttribute('data-bs-menuitem_image');
+                console.log(addItemToOrderModal.querySelector('#a2o_menuitem_image').src);
                 addItemToOrderModal.querySelector('#a2o_menuitem_image').alt = button.getAttribute('data-bs-menuitem_name');
             } catch( err ) {
-                // swallow error
+                console.log(err);
             }
         });
         $( "#addItemToOrderButton" ).on( "click", function() {

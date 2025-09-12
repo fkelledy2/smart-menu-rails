@@ -1,6 +1,6 @@
 class Ordr < ApplicationRecord
   include AASM
-  include IdentityCache
+  include IdentityCache unless included_modules.include?(IdentityCache)
 
   aasm :column => 'status' do
     state :opened, initial:true

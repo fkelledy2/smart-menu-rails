@@ -36,7 +36,7 @@
                                                 data-bs-menuitem_name="<%= mi.localised_name(menuparticipant.preferredlocale) %>"
                                                 data-bs-menuitem_description="<%= mi.localised_description(menuparticipant.preferredlocale) %>"
                                                 data-bs-menuitem_price="<%= mi.price %>"
-                                                data-bs-menuitem_image="<%= mi.image_url %>">
+                                                data-bs-menuitem_image="<%= mi.medium_url %>">
                                                 <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
                                                 <i class="bi bi-plus"></i>
                                             </button>
@@ -49,7 +49,7 @@
                                                 data-bs-menuitem_name="<%= mi.name %>"
                                                 data-bs-menuitem_description="<%= mi.description %>"
                                                 data-bs-menuitem_price="<%= mi.price %>"
-                                                data-bs-menuitem_image="<%= mi.image_url %>">
+                                                data-bs-menuitem_image="<%= mi.medium_url %>">
                                                 <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
                                                 <i class="bi bi-plus"></i>
                                             </button>

@@ -11,4 +11,5 @@ class User < ApplicationRecord
   has_many :services
 
   belongs_to :plan
+  has_many :restaurants, dependent: :destroy
 end
