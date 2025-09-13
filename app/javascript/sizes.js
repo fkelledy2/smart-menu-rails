@@ -1,4 +1,4 @@
-document.addEventListener("turbo:load", () => {
+export function initSizes() {
     if ($("#size-table").is(':visible')) {
         // Sizes
         function status(cell, formatterParams){
@@ -95,15 +95,5 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-        function patch( url, body ) {
-            fetch(url, {
-                method: 'PATCH',
-                headers:  {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                },
-                body: JSON.stringify(body)
-            });
-        }
     }
-})
+}

@@ -1,5 +1,4 @@
-document.addEventListener("turbo:load", () => {
-
+export function initTracks() {
 //        window.onSpotifyWebPlaybackSDKReady = () => {
 //            const token = $('#spotifyAccessToken').text();
 //            const player = new Spotify.Player({
@@ -303,4 +302,5 @@ document.addEventListener("turbo:load", () => {
                 });
         }
     }
-})
+}
+

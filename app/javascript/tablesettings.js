@@ -1,6 +1,6 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
-document.addEventListener("turbo:load", () => {
 
+export function initTablesettings() {
     if ($("#tablesetting_tabletype").is(':visible')) {
       initTomSelectIfNeeded("#tablesetting_tabletype",{
       });
@@ -117,15 +117,5 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-        function patch( url, body ) {
-                fetch(url, {
-                    method: 'PATCH',
-                    headers:  {
-                      "Content-Type": "application/json",
-                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                    },
-                    body: JSON.stringify(body)
-                });
-        }
     }
-})
+}

@@ -1,5 +1,4 @@
-document.addEventListener("turbo:load", () => {
-
+export function initOrdritems() {
     let restaurantCurrencySymbol = '$';
     if ($('#restaurantCurrency').length) {
         restaurantCurrencySymbol = $('#restaurantCurrency').text();
@@ -53,4 +52,5 @@ document.addEventListener("turbo:load", () => {
         orderItemTable.on("rowClick", function(e, row){
         });
     }
-})
+}
+

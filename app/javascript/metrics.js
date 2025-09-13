@@ -1,5 +1,5 @@
 // Only run on pages that have the metrics container
-const loadMetrics = () => {
+export function initMetrics() {
   // Check if we're on a page that needs metrics
   if ($('#metrics-table').length === 0) return;
 
@@ -46,9 +46,3 @@ const loadMetrics = () => {
       $('#metrics-table').removeClass('loading');
     });
 };
-
-// Run on initial page load
-document.addEventListener('turbo:load', loadMetrics);
-
-// Also run when navigating with Turbo
-document.addEventListener('turbo:render', loadMetrics);

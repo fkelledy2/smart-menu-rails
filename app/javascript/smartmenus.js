@@ -1,5 +1,4 @@
-document.addEventListener("turbo:load", () => {
-
+export function initSmartmenus() {
     function smlink(cell, formatterParams){
         var id = cell.getValue();
         var name = cell.getRow();
@@ -45,4 +44,4 @@ document.addEventListener("turbo:load", () => {
           ]
         });
     }
-})
+}

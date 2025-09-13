@@ -1,6 +1,6 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
-document.addEventListener("turbo:load", () => {
 
+export function initRestaurantlocales() {
     if ($("#restaurantlocale_restaurant_id").is(':visible')) {
       initTomSelectIfNeeded("#restaurantlocale_restaurant_id",{
       });
@@ -128,24 +128,6 @@ document.addEventListener("turbo:load", () => {
                 del( rows[i].url.replace('.json', '') );
             }
         });
-        function patch( url, body ) {
-                fetch(url, {
-                    method: 'PATCH',
-                    headers:  {
-                      "Content-Type": "application/json",
-                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                    },
-                    body: JSON.stringify(body)
-                });
-        }
-        function del( url ) {
-                fetch(url, {
-                    method: 'DELETE',
-                    headers:  {
-                      "Content-Type": "application/json",
-                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                    }
-                });
-        }
     }
-})
+}
+

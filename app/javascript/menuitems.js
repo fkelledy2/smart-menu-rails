@@ -1,7 +1,6 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
 
-document.addEventListener("turbo:load", () => {
-
+export function initMenuitems() {
     if ($("#menuitem_menusection_id").is(':visible')) {
       initTomSelectIfNeeded("#menuitem_menusection_id",{
       });
@@ -149,20 +148,5 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-        function patch( url, body ) {
-            fetch(url, {
-                method: 'PATCH',
-                headers:  {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                },
-                body: JSON.stringify(body)
-            });
-        }
     }
-    if (document.getElementById("generate-menuitem-image") != null) {
-        document.getElementById("generate-menuitem-image").addEventListener("click", function(){
-            alert('MenuItem: Down the Witches Road!');
-        });
-    }
-})
+}

@@ -1,4 +1,5 @@
-document.addEventListener("turbo:load", () => {
+
+export function initOrders() {
 
     let locationReload = false;
 
@@ -351,7 +352,7 @@ function refreshOrderJSLogic() {
 
     function post( url, body ) {
       $('#orderCart').hide();
-      $('#orderCartSpinner').show();      
+      $('#orderCartSpinner').show();
 
         fetch(url, {
             method: 'POST',
@@ -368,7 +369,7 @@ function refreshOrderJSLogic() {
     }
     function patch( url, body ) {
       $('#orderCart').hide();
-      $('#orderCartSpinner').show();      
+      $('#orderCartSpinner').show();
         fetch(url, {
             method: 'PATCH',
             headers:  {
@@ -385,7 +386,7 @@ function refreshOrderJSLogic() {
     function del( url ) {
       alert('del');
       $('#orderCart').hide();
-      $('#orderCartSpinner').show();      
+      $('#orderCartSpinner').show();
         fetch(url, {
             method: 'DELETE',
             headers:  {
@@ -653,7 +654,4 @@ function refreshOrderJSLogic() {
       movableColumns: true
     });
   }
-
-
-
-})
+}

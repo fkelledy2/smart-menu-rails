@@ -1,15 +1,6 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
 
-document.addEventListener("turbo:load", () => {
-
-    const element = document.querySelector("#restaurant-table");
-    if (!element || element.dataset.initialized) return;
-    element.dataset.initialized = "true";
-
-    $(document).on("keydown", "form", function(event) {
-        return event.key != "Enter";
-    });
-
+export function initialiseSlugs() {
     $(".qrSlug").each(function() {
         var qrSlug = $(this).text();
         var qrCode = new QRCodeStyling({
@@ -199,12 +190,14 @@ document.addEventListener("turbo:load", () => {
         document.getElementById(qrSlug).innerHTML = '';
         qrCode.append(document.getElementById(qrSlug));
     });
+}
 
-
-
+export function initRestaurants() {
+    $(document).on("keydown", "form", function(event) {
+        return event.key != "Enter";
+    });
     if (($("#restaurantTabs").is(':visible') || $("#newRestaurant").is(':visible')) && window.google && window.google.maps && window.google.maps.places) {
       const addressInput = document.getElementById("restaurant_address1");
-      
       // Create the AutocompleteElement
       const autocomplete = new google.maps.places.PlaceAutocompleteElement({
         inputElement: addressInput,
@@ -218,12 +211,12 @@ document.addEventListener("turbo:load", () => {
         if (place) {
           // Update the address field with the formatted address
           $('#restaurant_address1').val(place.formatted_address || '');
-          
+
           // Process address components
           if (place.address_components) {
             for (let i = 0; i < place.address_components.length; i++) {
               const component = place.address_components[i];
-              
+
               if (component.types.includes('country')) {
                 $("#restaurant_country").val(component.short_name).change();
               }
@@ -243,7 +236,7 @@ document.addEventListener("turbo:load", () => {
           }
         }
       });
-      
+
       // Make the autocomplete element available globally if needed elsewhere
       window.restaurantAutocomplete = autocomplete;
     }
@@ -309,11 +302,6 @@ document.addEventListener("turbo:load", () => {
     if (inventoryTrackingEl) {
       initTomSelectIfNeeded(inventoryTrackingEl,{});
     }
-
-//    if (document.getElementById("restaurant_country") != null) {
-//      new TomSelect("#restaurant_country",{
-//      });
-//    }
 
     if ($("#restaurant-table").is(':visible')) {
         // Restaurants
@@ -401,16 +389,6 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-        function patch( url, body ) {
-                fetch(url, {
-                    method: 'PATCH',
-                    headers:  {
-                      "Content-Type": "application/json",
-                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                    },
-                    body: JSON.stringify(body)
-                });
-        }
     }
     if (document.getElementById("generate-restaurant-image") != null) {
         document.getElementById("generate-restaurant-image").addEventListener("click", function(){
@@ -429,4 +407,4 @@ document.addEventListener("turbo:load", () => {
                 });
         });
     }
-})
+}

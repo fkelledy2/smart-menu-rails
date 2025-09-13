@@ -1,4 +1,4 @@
-document.addEventListener("turbo:load", () => {
+export function initIngredients() {
     if ($("#ingredient-table").is(':visible')) {
         var sizeTable = new Tabulator("#ingredient-table", {
           dataLoader: false,
@@ -23,4 +23,4 @@ document.addEventListener("turbo:load", () => {
           ]
         });
     }
-})
+}

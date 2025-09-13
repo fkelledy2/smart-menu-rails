@@ -1,6 +1,6 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
-document.addEventListener("turbo:load", () => {
 
+export function initMenus() {
     $(window).on('activate.bs.scrollspy', function () {
         clearTimeout($.data(this, 'scrollTimer'));
         $.data(this, 'scrollTimer', setTimeout(function() {
@@ -180,16 +180,6 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-        function patch( url, body ) {
-                fetch(url, {
-                    method: 'PATCH',
-                    headers:  {
-                      "Content-Type": "application/json",
-                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                    },
-                    body: JSON.stringify(body)
-                });
-        }
     }
 
     if ($("#restaurantTabs").is(':visible')) {
@@ -290,23 +280,5 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-        function patch( url, body ) {
-                fetch(url, {
-                    method: 'PATCH',
-                    headers:  {
-                      "Content-Type": "application/json",
-                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                    },
-                    body: JSON.stringify(body)
-                });
-        }
     }
-    if (document.getElementById("generate-menu-image") != null) {
-        document.getElementById("generate-menu-image").addEventListener("click", function(){
-            alert('Menu: Down the Witches Road!');
-        });
-    }
-
-
-
-})
+}

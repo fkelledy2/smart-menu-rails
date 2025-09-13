@@ -1,4 +1,4 @@
-document.addEventListener("turbo:load", () => {
+export function initAllergyns() {
     if ($("#restaurantTabs").is(':visible')) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
@@ -106,17 +106,5 @@ document.addEventListener("turbo:load", () => {
                 patch( rows[i].url, r );
             }
         });
-        function patch( url, body ) {
-                fetch(url, {
-                    method: 'PATCH',
-                    headers:  {
-                      "Content-Type": "application/json",
-                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                    },
-                    body: JSON.stringify(body)
-                });
-        }
-
-
     }
-})
+}

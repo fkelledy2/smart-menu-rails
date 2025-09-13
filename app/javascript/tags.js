@@ -1,4 +1,4 @@
-document.addEventListener("turbo:load", () => {
+export function initTags() {
     if ($("#tag-table").is(':visible')) {
         var tagTable = new Tabulator("#tag-table", {
           dataLoader: false,
@@ -22,4 +22,4 @@ document.addEventListener("turbo:load", () => {
           ],
         });
     }
-})
+}

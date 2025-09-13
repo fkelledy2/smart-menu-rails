@@ -1,5 +1,4 @@
-document.addEventListener("turbo:load", () => {
-
+export function initDW() {
   const tableElement = document.getElementById('dw-orders-mv-table');
   const loadingElement = document.getElementById('tabulator-loading');
   if (!tableElement || !loadingElement) return;
@@ -22,7 +21,7 @@ document.addEventListener("turbo:load", () => {
            negativeSign:true,
            precision:2,
         }
-      },      
+      },
       {title: "Tax", field:"tax_amount", formatter:"money", hozAlign:"right", headerHozAlign:"right", responsive:4, widthGrow: 0,
         formatterParams:{
            decimal:".",
@@ -91,4 +90,4 @@ document.addEventListener("turbo:load", () => {
       virtualDomHoz: true,
     });
   }
-});
+}

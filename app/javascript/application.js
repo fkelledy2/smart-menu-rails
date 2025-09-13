@@ -46,29 +46,39 @@ window.DateTime = DateTime
 import '@rails/request.js'
 import './add_jquery'
 
-import './allergyns'
-import './employees'
-import './menuitems'
-import './menus'
-import './smartmenus'
-import './menusections'
-import './restaurants'
-import './tablesettings'
-import './tags'
-import './tips'
-import './taxes'
-import './sizes'
-import './ingredients'
-import './inventories'
-import './ordrs'
-import './ordritems'
-import './restaurantavailabilities'
-import './menuavailabilities'
-import './metrics'
-//import './tracks'
-import './restaurantlocales'
-import './testimonials'
-import './dw_orders_mv'
+import { initTomSelectIfNeeded } from './tomselect_helper';
+
+import { initialiseSlugs } from './restaurants';
+import { initRestaurants } from './restaurants';
+import { initTips } from './tips';
+import { initTestimonials } from './testimonials';
+import { initTaxes } from './taxes';
+import { initTablesettings } from './tablesettings';
+import { initSizes } from './sizes';
+import { initRestaurantlocales } from './restaurantlocales';
+import { initRestaurantavailabilities } from './restaurantavailabilities';
+import { initOrders } from './ordrs'; // More to do there...
+import { initOrdritems } from './ordritems';
+import { initMetrics } from './metrics';
+import { initMenusections } from './menusections';
+import { initMenus } from './menus';
+import { initMenuitems } from './menuitems';
+import { initMenuavailabilities } from './menuavailabilities';
+import { initiInventories } from './inventories';
+import { initIngredients } from './ingredients';
+import { initEmployees} from './employees';
+import { initDW } from './dw_orders_mv';
+import { initAllergyns } from './allergyns';
+import { initSmartmenus } from './smartmenus';
+import { initTags } from './tags';
+//import { initTracks } from './tracks';
+import "./channels"
+
+// Run on initial page load
+//document.addEventListener('turbo:load', loadMetrics);
+
+// Also run when navigating with Turbo
+//document.addEventListener('turbo:render', loadMetrics);
 
 document.addEventListener("turbo:load", () => {
 
@@ -86,22 +96,6 @@ document.addEventListener("turbo:load", () => {
         return new bootstrap.Popover(popoverTriggerEl)
     })
 
-})
-
-function patch(url, body) {
-    fetch(url, {
-        method: 'PATCH',
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-        },
-        body: JSON.stringify(body)
-    });
-}
-
-import "./channels"
-
-document.addEventListener("turbo:load", () => {
     $(document).ready(function () {
         window.setTimeout(function () {
             $(".alert").fadeTo(1000, 0).slideUp(1000, function () {
@@ -109,9 +103,53 @@ document.addEventListener("turbo:load", () => {
             });
         }, 5000);
     });
-});
 
-function validateIntegerInput(input) {
+    console.log( 'init' );
+
+    initialiseSlugs();
+    initRestaurants();
+    initTips();
+    initTestimonials();
+    initTaxes();
+    initTablesettings();
+    initSizes();
+    initRestaurantlocales();
+    initRestaurantavailabilities();
+    initOrders();
+    initOrdritems();
+    initMetrics();
+    initMenusections();
+    initMenus();
+    initMenuitems();
+    initMenuavailabilities();
+    initiInventories();
+    initIngredients();
+    initEmployees();
+    initDW();
+    initAllergyns();
+})
+
+export function patch( url, body ) {
+    fetch(url, {
+        method: 'PATCH',
+        headers:  {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+        },
+        body: JSON.stringify(body)
+    });
+}
+export function del( url ) {
+    fetch(url, {
+        method: 'DELETE',
+        headers:  {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+        }
+    });
+}
+
+export function validateIntegerInput(input) {
     input.value = input.value.replace(/[^0-9]/g, '');
 }
 
