@@ -40,7 +40,7 @@ export function initMenusections() {
         getPillId();
     }
 
-    if ($("#menuTabs").length) {
+    if ($("#menu-menusection-table").length) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }

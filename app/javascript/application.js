@@ -50,8 +50,8 @@ import { initMenusections } from './menusections';
 import { initMenus } from './menus';
 import { initMenuitems } from './menuitems';
 import { initMenuavailabilities } from './menuavailabilities';
-import { initiInventories } from './inventories';
-import { initIngredients } from './ingredients';
+//import { initiInventories } from './inventories';
+//import { initIngredients } from './ingredients';
 import { initEmployees} from './employees';
 import { initDW } from './dw_orders_mv';
 import { initAllergyns } from './allergyns';
@@ -99,34 +99,33 @@ function initializeComponents() {
     initMenus();
     initMenuitems();
     initMenuavailabilities();
-    initiInventories();
-    initIngredients();
+//    initiInventories();
+//    initIngredients();
     initEmployees();
     initDW();
     initAllergyns();
 }
 
-// Handle Turbo events
-function handleTurboLoad() {
-//  // If there are no turbo frames, initialize immediately
-//  if (document.querySelectorAll('turbo-frame').length === 0) {
-//    initializeComponents();
-//    return;
-//  }
-  // Otherwise, wait for all frames to load
-  const checkFrames = setInterval(() => {
-    if (allFramesLoaded()) {
-      clearInterval(checkFrames);
-      initializeComponents();
-    }
-  }, 100); // Check every 100ms
-}
+// Enhanced turbo:load event listener with detailed logging
+let turboLoadCount = 0;
+const turboLoadHandler = (event) => {
+  turboLoadCount++;
+  console.group(`turbo:load #${turboLoadCount}`);
+//  console.log('Event details:', event);
+//  console.log('Document URL:', document.URL);
+//  console.log('Document title:', document.title);
+//  console.log('Active element:', document.activeElement);
+//  console.trace('Stack trace for turbo:load');
+  // Call the original initializeComponents
+  initializeComponents();
+  console.groupEnd();
+};
 
-// Listen for turbo:load event
-document.addEventListener('turbo:load', handleTurboLoad);
+// Add the event listener
+document.addEventListener('turbo:load', turboLoadHandler);
 
-// Also listen for turbo:frame-load which fires when individual frames load
-document.addEventListener('turbo:frame-load', handleTurboLoad);
+// Log when the script first loads
+console.log('Application JavaScript loaded. Waiting for turbo:load events...');
 
 export function patch( url, body ) {
     fetch(url, {

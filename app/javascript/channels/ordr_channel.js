@@ -206,6 +206,7 @@ function refreshOrderJSLogic() {
         let total = tip+gross;
         $("#orderGrandTotal").text($('#restaurantCurrency').text()+parseFloat(total).toFixed(2));
     });
+    let restaurantCurrencySymbol = '$';
     if ($('#restaurantCurrency').length) {
         restaurantCurrencySymbol = $('#restaurantCurrency').text();
     }

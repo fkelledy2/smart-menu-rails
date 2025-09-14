@@ -6,7 +6,7 @@ export function initiInventories() {
       });
     }
 
-    if ($("#sectionTabs").length) {
+    if ($("#menusection-inventory-table").length) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }

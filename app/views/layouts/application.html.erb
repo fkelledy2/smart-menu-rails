@@ -35,7 +35,6 @@
     <%= Sentry.get_trace_propagation_meta.html_safe %>
     <%= tag.link rel: "manifest", href: "/manifest.json" %>
     <%= javascript_importmap_tags %>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
   <body style='overflow-x: hidden;' class="d-flex flex-column min-vh-100" data-session-id="<%= session.id %>">
