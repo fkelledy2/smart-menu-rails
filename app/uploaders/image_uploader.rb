@@ -1,7 +1,6 @@
 class ImageUploader < Shrine
   plugin :backgrounding
   plugin :derivatives
-  plugin :processing
   plugin :validation_helpers
   plugin :store_dimensions
   plugin :determine_mime_type
@@ -11,11 +10,11 @@ class ImageUploader < Shrine
     validate_max_size  10*1024*1024
   end
 
-  Attacher.promote_block do
-    GenerateImageDerivativesJob.perform_later(record.class.name, record.id)
+  Attacher.promote_block do |attacher|
+    GenerateImageDerivativesJob.perform_later(attacher.record.class.name, attacher.record.id)
   end
 
-  Attacher.derivatives_processor do |original|
+  Attacher.derivatives do |original|
     magick = ImageProcessing::MiniMagick.source(original)
     {
       thumb: magick.resize_to_limit!(200, 200),

@@ -7,7 +7,7 @@ pin "bootstrap", to: "https://ga.jspm.io/npm:bootstrap@5.3.0/dist/js/bootstrap.e
 pin "@popperjs/core", to: "https://ga.jspm.io/npm:@popperjs/core@2.11.8/dist/esm/index.js"
 pin "@hotwired/turbo-rails", to: "https://ga.jspm.io/npm:@hotwired/turbo-rails@8.0.0-rc.2/app/javascript/turbo/index.js"
 pin "@hotwired/stimulus", to: "https://ga.jspm.io/npm:@hotwired/stimulus@3.2.2/dist/stimulus.js"
-pin "@hotwired/stimulus-loading", to: "app/javascript/stimulus-loading.js"
+# pin "@hotwired/stimulus-loading", to: "app/javascript/stimulus-loading.js"
 pin "@rails/actioncable", to: "https://cdn.jsdelivr.net/npm/@rails/actioncable@7.1.3-2/app/assets/javascripts/actioncable.esm.js"
 pin "@rails/actiontext", to: "https://cdn.jsdelivr.net/npm/@rails/actiontext@7.1.3-2/app/assets/javascripts/actiontext.js"
 pin "trix"

@@ -33,10 +33,15 @@ Rails.application.configure do
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  config.log_level = :debug # Enable debug logging for development
+  # Only show warnings and above in the logs
+  config.log_level = :info
+  
+  # Use the standard formatter
   config.log_formatter = ::Logger::Formatter.new
   config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
-  config.log_tags = [ :request_id ]
+  
+  # Remove request_id from logs to reduce noise
+  config.log_tags = []
   config.enable_reloading = true
   
   # Log to STDOUT for better visibility in development
@@ -89,11 +94,11 @@ Rails.application.configure do
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
 
-  # Highlight code that triggered database queries in logs.
-  config.active_record.verbose_query_logs = true
+  # Disable verbose query logging
+  config.active_record.verbose_query_logs = false
 
-  # Highlight code that enqueued background job in logs.
-  config.active_job.verbose_enqueue_logs = true
+  # Disable verbose job logging
+  config.active_job.verbose_enqueue_logs = false
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
