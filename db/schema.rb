@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_14_153926) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -153,7 +153,45 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
     t.boolean "archived", default: false
     t.integer "status", default: 0
     t.integer "sequence"
+    t.index ["archived"], name: "index_inventories_on_archived"
     t.index ["menuitem_id"], name: "index_inventories_on_menuitem_id"
+    t.index ["status"], name: "index_inventories_on_status"
+  end
+
+  create_table "menu_imports", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.bigint "user_id", null: false
+    t.string "status", default: "pending", null: false
+    t.text "error_message"
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_menu_imports_on_created_at"
+    t.index ["restaurant_id"], name: "index_menu_imports_on_restaurant_id"
+    t.index ["status"], name: "index_menu_imports_on_status"
+    t.index ["user_id"], name: "index_menu_imports_on_user_id"
+  end
+
+  create_table "menu_items", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.decimal "price"
+    t.bigint "menu_section_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "position"
+    t.jsonb "metadata"
+    t.index ["menu_section_id"], name: "index_menu_items_on_menu_section_id"
+  end
+
+  create_table "menu_sections", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "position"
+    t.bigint "menu_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id"], name: "index_menu_sections_on_menu_id"
   end
 
   create_table "menuavailabilities", force: :cascade do |t|
@@ -168,6 +206,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
     t.integer "status"
     t.integer "sequence"
     t.boolean "archived", default: false
+    t.index ["menu_id", "dayofweek"], name: "index_menuavailabilities_on_menu_and_dayofweek", unique: true
     t.index ["menu_id"], name: "index_menuavailabilities_on_menu_id"
   end
 
@@ -235,7 +274,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
     t.integer "itemtype", default: 0
     t.boolean "sizesupport", default: false
     t.float "unitcost", default: 0.0
+    t.index "lower((name)::text) varchar_pattern_ops", name: "index_menuitems_on_lower_name"
+    t.index ["archived"], name: "index_menuitems_on_archived"
     t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
+    t.index ["sequence"], name: "index_menuitems_on_sequence"
+    t.index ["status"], name: "index_menuitems_on_status"
   end
 
   create_table "menulocales", force: :cascade do |t|
@@ -274,7 +317,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
     t.string "imagecontext"
     t.boolean "displayImagesInPopup", default: false
     t.float "covercharge", default: 0.0
+    t.bigint "menu_import_id"
+    t.index ["archived"], name: "index_menus_on_archived"
+    t.index ["menu_import_id"], name: "index_menus_on_menu_import_id"
     t.index ["restaurant_id"], name: "index_menus_on_restaurant_id"
+    t.index ["status"], name: "index_menus_on_status"
   end
 
   create_table "menusectionlocales", force: :cascade do |t|
@@ -285,6 +332,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
     t.bigint "menusection_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["menusection_id", "locale"], name: "index_menusectionlocales_on_menusection_and_locale", unique: true
     t.index ["menusection_id"], name: "index_menusectionlocales_on_menusection_id"
   end
 
@@ -370,6 +418,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
     t.integer "status", default: 0
     t.index ["menuitem_id"], name: "index_ordritems_on_menuitem_id"
     t.index ["ordr_id"], name: "index_ordritems_on_ordr_id"
+    t.index ["status"], name: "index_ordritems_on_status"
   end
 
   create_table "ordrparticipant_allergyn_filters", force: :cascade do |t|
@@ -396,7 +445,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
     t.index ["ordritem_id"], name: "index_ordrparticipants_on_ordritem_id"
   end
 
-  create_table "ordrs", force: :cascade do |t|
+  create_table "ordrs", id: :serial, force: :cascade do |t|
     t.datetime "orderedAt", precision: nil
     t.datetime "deliveredAt", precision: nil
     t.datetime "paidAt", precision: nil
@@ -409,17 +458,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
     t.bigint "tablesetting_id", null: false
     t.bigint "menu_id", null: false
     t.bigint "restaurant_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "status"
     t.datetime "billRequestedAt"
     t.integer "ordercapacity", default: 0
     t.float "covercharge", default: 0.0
     t.string "paymentlink"
     t.integer "paymentstatus", default: 0
+    t.index ["created_at"], name: "index_ordrs_on_created_at"
     t.index ["employee_id"], name: "index_ordrs_on_employee_id"
     t.index ["menu_id"], name: "index_ordrs_on_menu_id"
+    t.index ["restaurant_id", "status", "created_at"], name: "index_ordrs_on_restaurant_status_created"
     t.index ["restaurant_id"], name: "index_ordrs_on_restaurant_id"
+    t.index ["status"], name: "index_ordrs_on_status"
     t.index ["tablesetting_id"], name: "index_ordrs_on_tablesetting_id"
   end
 
@@ -539,6 +591,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
     t.integer "languages", default: 0
     t.integer "locations", default: 0
     t.integer "menusperlocation", default: 0
+  end
+
+  create_table "restaurant_onboardings", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.integer "status", default: 0
+    t.jsonb "progress_steps", default: {}
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_restaurant_onboardings_on_restaurant_id"
   end
 
   create_table "restaurantavailabilities", force: :cascade do |t|
@@ -739,6 +801,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "plan_id"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["plan_id"], name: "index_users_on_plan_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -756,6 +823,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
   add_foreign_key "genimages", "menusections"
   add_foreign_key "genimages", "restaurants"
   add_foreign_key "inventories", "menuitems"
+  add_foreign_key "menu_imports", "restaurants"
+  add_foreign_key "menu_imports", "users"
+  add_foreign_key "menu_items", "menu_sections"
+  add_foreign_key "menu_sections", "menus"
   add_foreign_key "menuavailabilities", "menus"
   add_foreign_key "menuitem_allergyn_mappings", "allergyns"
   add_foreign_key "menuitem_allergyn_mappings", "menuitems"
@@ -769,20 +840,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
   add_foreign_key "menuitems", "menusections"
   add_foreign_key "menulocales", "menus"
   add_foreign_key "menuparticipants", "smartmenus"
+  add_foreign_key "menus", "menu_imports"
   add_foreign_key "menus", "restaurants"
   add_foreign_key "menusectionlocales", "menusections"
   add_foreign_key "menusections", "menus"
   add_foreign_key "ordractions", "ordritems"
   add_foreign_key "ordractions", "ordrparticipants"
-  add_foreign_key "ordractions", "ordrs"
   add_foreign_key "ordritemnotes", "ordritems"
   add_foreign_key "ordritems", "menuitems"
-  add_foreign_key "ordritems", "ordrs"
   add_foreign_key "ordrparticipant_allergyn_filters", "allergyns"
   add_foreign_key "ordrparticipant_allergyn_filters", "ordrparticipants"
   add_foreign_key "ordrparticipants", "employees"
   add_foreign_key "ordrparticipants", "ordritems"
-  add_foreign_key "ordrparticipants", "ordrs"
   add_foreign_key "ordrs", "employees"
   add_foreign_key "ordrs", "menus"
   add_foreign_key "ordrs", "restaurants"
@@ -791,6 +860,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_06_143650) do
   add_foreign_key "pay_charges", "pay_subscriptions", column: "subscription_id"
   add_foreign_key "pay_payment_methods", "pay_customers", column: "customer_id"
   add_foreign_key "pay_subscriptions", "pay_customers", column: "customer_id"
+  add_foreign_key "restaurant_onboardings", "restaurants"
   add_foreign_key "restaurantavailabilities", "restaurants"
   add_foreign_key "restaurantlocales", "restaurants"
   add_foreign_key "restaurants", "users"
