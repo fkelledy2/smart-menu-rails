@@ -75,13 +75,36 @@ export function initMenusections() {
           {title: 'Restricted', field: 'restricted', hozAlign:"right", headerHozAlign:"right" },
           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
           ],
-          locale:true,
-          langs:{
-            "it":{
-                "columns":{
-                    "id":"Nome", //replace the title of column name with the value "Name"
-                    "status":"Stato", //replace the title of column name with the value "Name"
-                }
+          locale: true,
+          langs: {
+            "en": {
+              "pagination": {
+                "first": "First",
+                "first_title": "First Page",
+                "last": "Last",
+                "last_title": "Last Page",
+                "prev": "Prev",
+                "prev_title": "Previous Page",
+                "next": "Next",
+                "next_title": "Next Page"
+              },
+              "headerFilters": {
+                "default": "filter column..."
+              },
+              "columns": {
+                "id": "Name",
+                "status": "Status",
+                "fromhour": "Available",
+                "restricted": "Restricted"
+              }
+            },
+            "it": {
+              "columns": {
+                "id": "Nome",
+                "status": "Stato",
+                "fromhour": "Disponibile",
+                "restricted": "Limitato"
+              }
             }
           }
         });

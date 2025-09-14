@@ -48,14 +48,36 @@ export function initMenuavailabilities() {
           {title: 'Available', field: 'starthour', mutator: (value, data) => String(data.starthour).padStart(2, '0') + ':' + String(data.startmin).padStart(2, '0')+' - '+String(data.endhour).padStart(2, '0') + ':' + String(data.endmin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
           {title:"Status", field:"status", formatter:status, width:150, responsive:0, hozAlign:"right", headerHozAlign:"right" }
           ],
-          locale:true,
-          langs:{
-            "it":{
-                "columns":{
-                    "id":"Giorno", //replace the title of column name with the value "Name"
-                    "starthour":"Di partenza", //replace the title of column name with the value "Name"
-                    "status":"Stato", //replace the title of column name with the value "Name"
-                }
+          locale: true,
+          langs: {
+            "en": {
+              "pagination": {
+                "first": "First",
+                "first_title": "First Page",
+                "last": "Last",
+                "last_title": "Last Page",
+                "prev": "Prev",
+                "prev_title": "Previous Page",
+                "next": "Next",
+                "next_title": "Next Page"
+              },
+              "headerFilters": {
+                "default": "filter column..."
+              },
+              "columns": {
+                "id": "Day",
+                "starthour": "Available",
+                "status": "Status",
+                "dayofweek": "Day of Week"
+              }
+            },
+            "it": {
+              "columns": {
+                "id": "Giorno",
+                "starthour": "Di partenza",
+                "status": "Stato",
+                "dayofweek": "Giorno della settimana"
+              }
             }
           }
         });

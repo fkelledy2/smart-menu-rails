@@ -25,20 +25,6 @@ window.Tabulator = Tabulator
 import TomSelect from 'tom-select'
 window.TomSelect = TomSelect
 
-// Initialize Bootstrap tooltips and popovers on turbo:load
-document.addEventListener('turbo:load', () => {
-  // Initialize tooltips
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-  tooltipTriggerList.forEach(tooltipTriggerEl => {
-    new bootstrap.Tooltip(tooltipTriggerEl)
-  })
-
-  // Initialize popovers
-  const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-  popoverTriggerList.forEach(popoverTriggerEl => {
-    new bootstrap.Popover(popoverTriggerEl)
-  })
-})
 window.bootstrap = bootstrap
 import {DateTime} from 'luxon'
 
@@ -74,38 +60,29 @@ import { initTags } from './tags';
 //import { initTracks } from './tracks';
 import "./channels"
 
-// Run on initial page load
-//document.addEventListener('turbo:load', loadMetrics);
+// Function to check if all turbo frames are loaded
+function allFramesLoaded() {
+  const frames = document.querySelectorAll('turbo-frame');
+  return Array.from(frames).every(frame => frame.loaded);
+}
 
-// Also run when navigating with Turbo
-//document.addEventListener('turbo:render', loadMetrics);
-
-document.addEventListener("turbo:load", () => {
-
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/service-worker.js");
-    }
-
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-
-    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl)
-    })
-
-    $(document).ready(function () {
-        window.setTimeout(function () {
-            $(".alert").fadeTo(1000, 0).slideUp(1000, function () {
-                $(this).remove();
-            });
-        }, 5000);
+// Function to initialize components (singleton wrapper)
+function initializeComponents() {
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(tooltipTriggerEl => {
+      new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    console.log( 'init' );
+    // Initialize popovers
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    popoverTriggerList.forEach(popoverTriggerEl => {
+      new bootstrap.Popover(popoverTriggerEl);
+    });
 
+    console.log('init');
+
+    // Initialize all components
     initialiseSlugs();
     initRestaurants();
     initTips();
@@ -127,7 +104,29 @@ document.addEventListener("turbo:load", () => {
     initEmployees();
     initDW();
     initAllergyns();
-})
+}
+
+// Handle Turbo events
+function handleTurboLoad() {
+//  // If there are no turbo frames, initialize immediately
+//  if (document.querySelectorAll('turbo-frame').length === 0) {
+//    initializeComponents();
+//    return;
+//  }
+  // Otherwise, wait for all frames to load
+  const checkFrames = setInterval(() => {
+    if (allFramesLoaded()) {
+      clearInterval(checkFrames);
+      initializeComponents();
+    }
+  }, 100); // Check every 100ms
+}
+
+// Listen for turbo:load event
+document.addEventListener('turbo:load', handleTurboLoad);
+
+// Also listen for turbo:frame-load which fires when individual frames load
+document.addEventListener('turbo:frame-load', handleTurboLoad);
 
 export function patch( url, body ) {
     fetch(url, {

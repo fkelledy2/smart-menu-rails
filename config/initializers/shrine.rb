@@ -8,12 +8,12 @@ if Rails.env.test?
     cache: Shrine::Storage::Memory.new,
     store: Shrine::Storage::Memory.new,
   }
-elsif Rails.env.development? || !Rails.application.credentials.dig(:aws, :bucket).present?
-  # Use file system in development if S3 is not configured
-  Shrine.storages = {
-    cache: Shrine::Storage::FileSystem.new("public", prefix: "uploads/cache"),
-    store: Shrine::Storage::FileSystem.new("public", prefix: "uploads"),
-  }
+# elsif Rails.env.development? || !Rails.application.credentials.dig(:aws, :bucket).present?
+#   # Use file system in development if S3 is not configured
+#   Shrine.storages = {
+#     cache: Shrine::Storage::FileSystem.new("public", prefix: "uploads/cache"),
+#     store: Shrine::Storage::FileSystem.new("public", prefix: "uploads"),
+#   }
 else
   # Use S3 in production or if explicitly configured in development
   require "shrine/storage/s3"
