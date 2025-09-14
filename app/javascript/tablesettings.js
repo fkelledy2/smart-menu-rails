@@ -1,22 +1,22 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
 
 export function initTablesettings() {
-    if ($("#tablesetting_tabletype").is(':visible')) {
+    if ($("#tablesetting_tabletype").length) {
       initTomSelectIfNeeded("#tablesetting_tabletype",{
       });
     }
 
-    if ($("#tablesetting_status").is(':visible')) {
+    if ($("#tablesetting_status").length) {
       initTomSelectIfNeeded("#tablesetting_status",{
       });
     }
 
-    if ($("#tablesetting_restaurant_id").is(':visible')) {
+    if ($("#tablesetting_restaurant_id").length) {
       initTomSelectIfNeeded("#tablesetting_restaurant_id",{
       });
     }
 
-    if ($("#restaurantTabs").is(':visible')) {
+    if ($("#restaurantTabs").length) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }

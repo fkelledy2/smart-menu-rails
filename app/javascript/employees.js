@@ -1,27 +1,27 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
 
 export function initEmployees() {
-    if ($("#employee_status").is(':visible')) {
+    if ($("#employee_status").length) {
       initTomSelectIfNeeded("#employee_status",{
       });
     }
 
-    if ($("#employee_role").is(':visible')) {
+    if ($("#employee_role").length) {
       initTomSelectIfNeeded("#employee_role",{
       });
     }
 
-    if ($("#employee_restaurant_id").is(':visible')) {
+    if ($("#employee_restaurant_id").length) {
       initTomSelectIfNeeded("#employee_restaurant_id",{
       });
     }
 
-    if ($("#employee_user_id").is(':visible')) {
+    if ($("#employee_user_id").length) {
       initTomSelectIfNeeded("#employee_user_id",{
       });
     }
 
-    if ($("#restaurantTabs").is(':visible')) {
+    if ($("#restaurantTabs").length) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }

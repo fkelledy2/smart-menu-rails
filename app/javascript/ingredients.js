@@ -1,5 +1,5 @@
 export function initIngredients() {
-    if ($("#ingredient-table").is(':visible')) {
+    if ($("#ingredient-table").length) {
         var sizeTable = new Tabulator("#ingredient-table", {
           dataLoader: false,
           maxHeight:"100%",

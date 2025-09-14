@@ -1,5 +1,5 @@
 export function initTags() {
-    if ($("#tag-table").is(':visible')) {
+    if ($("#tag-table").length) {
         var tagTable = new Tabulator("#tag-table", {
           dataLoader: false,
           maxHeight:"100%",

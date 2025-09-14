@@ -3,7 +3,7 @@ require 'rspotify'
 class RestaurantsController < ApplicationController
   before_action :set_restaurant, only: %i[ show edit update destroy ]
   before_action :set_currency, only: %i[ show index ]
-
+  before_action :disable_turbo, only: [:edit]
 
   require 'rspotify'
 
@@ -248,6 +248,11 @@ class RestaurantsController < ApplicationController
   end
 
   private
+
+    def disable_turbo
+      @disable_turbo = true
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_restaurant
       begin

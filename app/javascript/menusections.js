@@ -2,16 +2,16 @@ import { initTomSelectIfNeeded } from './tomselect_helper';
 
 export function initMenusections() {
 
-    if ($("#menusection_menu_id").is(':visible')) {
+    if ($("#menusection_menu_id").length) {
       initTomSelectIfNeeded("#menusection_menu_id",{
       });
     }
-    if ($("#menusection_restricted").is(':visible')) {
+    if ($("#menusection_restricted").length) {
       initTomSelectIfNeeded("#menusection_restricted",{
       });
     }
 
-    if ($("#sectionTabs").is(':visible')) {
+    if ($("#sectionTabs").length) {
         const pillsTab = document.querySelector('#sectionTabs');
         const pills = pillsTab.querySelectorAll('button[data-bs-toggle="tab"]');
 
@@ -40,7 +40,7 @@ export function initMenusections() {
         getPillId();
     }
 
-    if ($("#menuTabs").is(':visible')) {
+    if ($("#menuTabs").length) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }

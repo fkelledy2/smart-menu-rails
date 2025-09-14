@@ -7,7 +7,7 @@ export function initSmartmenus() {
     }
     const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
-    if ($("#smartmenu-table").is(':visible')) {
+    if ($("#smartmenu-table").length) {
         var smartmenuTable = new Tabulator("#smartmenu-table", {
           pagination:"local",
           paginationSize:20,

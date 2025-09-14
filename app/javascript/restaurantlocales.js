@@ -1,12 +1,12 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
 
 export function initRestaurantlocales() {
-    if ($("#restaurantlocale_restaurant_id").is(':visible')) {
+    if ($("#restaurantlocale_restaurant_id").length) {
       initTomSelectIfNeeded("#restaurantlocale_restaurant_id",{
       });
     }
 
-    if ($("#restaurantTabs").is(':visible')) {
+    if ($("#restaurantTabs").length) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }

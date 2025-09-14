@@ -196,7 +196,7 @@ export function initRestaurants() {
     $(document).on("keydown", "form", function(event) {
         return event.key != "Enter";
     });
-    if (($("#restaurantTabs").is(':visible') || $("#newRestaurant").is(':visible')) && window.google && window.google.maps && window.google.maps.places) {
+    if (($("#restaurantTabs").length || $("#newRestaurant").length) && window.google && window.google.maps && window.google.maps.places) {
       const addressInput = document.getElementById("restaurant_address1");
       // Create the AutocompleteElement
       const autocomplete = new google.maps.places.PlaceAutocompleteElement({
@@ -241,7 +241,7 @@ export function initRestaurants() {
       window.restaurantAutocomplete = autocomplete;
     }
 
-    if ($("#restaurantTabs").is(':visible')) {
+    if ($("#restaurantTabs").length) {
         const pillsTab = document.querySelector('#restaurantTabs');
         const pills = pillsTab.querySelectorAll('button[data-bs-toggle="tab"]');
 
@@ -303,7 +303,7 @@ export function initRestaurants() {
       initTomSelectIfNeeded(inventoryTrackingEl,{});
     }
 
-    if ($("#restaurant-table").is(':visible')) {
+    if ($("#restaurant-table").length) {
         // Restaurants
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();

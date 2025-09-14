@@ -1,5 +1,5 @@
 export function initTestimonials() {
-    if ($("#testimonial-table").is(':visible')) {
+    if ($("#testimonial-table").length) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }

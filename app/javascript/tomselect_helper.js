@@ -5,3 +5,7 @@ export function initTomSelectIfNeeded(selector, options = {}) {
     new TomSelect(el, options);
   }
 }
+export function whenElementExists(selector, callback) {
+  const el = document.querySelector(selector);
+  if (el) callback(el);
+}

@@ -156,7 +156,7 @@ window.fadeIn = function(obj) {
     $(obj).fadeIn(1000);
 }
 
-if ($("#user_plan").is(':visible')) {
+if ($("#user_plan").length) {
     new TomSelect("#user_plan",{
     });
 }

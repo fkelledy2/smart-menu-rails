@@ -75,7 +75,7 @@ export function initOrders() {
     }
 
 function refreshOrderJSLogic() {
-    if ($("#smartmenu").is(':visible')) {
+    if ($("#smartmenu").length) {
         var date = new Date;
         var minutes = date.getMinutes();
         var hour = date.getHours();
@@ -399,7 +399,7 @@ function refreshOrderJSLogic() {
         });
     }
 
-    if ($("#restaurantTabs").is(':visible')) {
+    if ($("#restaurantTabs").length) {
         function linkOrdr(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();

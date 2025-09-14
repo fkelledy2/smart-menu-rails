@@ -14,54 +14,54 @@ export function initMenus() {
 
     $(".sectionnav").on("click",function(event){
         event.preventDefault();
-        if ($("#menuu").is(':visible')) {
+        if ($("#menuu").length) {
             $('html, body').animate({
                 scrollTop: $($.attr(this, 'href')).offset().top - $("#menuu").height()
             }, 100);
         }
-        if ($("#menuc").is(':visible')) {
+        if ($("#menuc").length) {
             $('html, body').animate({
                 scrollTop: $($.attr(this, 'href')).offset().top - $("#menuc").height()
             }, 100);
         }
     });
 
-    if ($("#size_size").is(':visible')) {
+    if ($("#size_size").length) {
         initTomSelectIfNeeded("#size_size",{
         });
     }
 
-    if ($("#menu_status").is(':visible')) {
+    if ($("#menu_status").length) {
         initTomSelectIfNeeded("#menu_status",{
         });
     }
 
-    if ($("#menu_displayImages").is(':visible')) {
+    if ($("#menu_displayImages").length) {
         initTomSelectIfNeeded("#menu_displayImages",{
         });
     }
 
-    if ($("#menu_displayImagesInPopup").is(':visible')) {
+    if ($("#menu_displayImagesInPopup").length) {
         initTomSelectIfNeeded("#menu_displayImagesInPopup",{
         });
     }
 
-    if ($("#menu_allowOrdering").is(':visible')) {
+    if ($("#menu_allowOrdering").length) {
         initTomSelectIfNeeded("#menu_allowOrdering",{
         });
     }
 
-    if ($("#menu_inventoryTracking").is(':visible')) {
+    if ($("#menu_inventoryTracking").length) {
         initTomSelectIfNeeded("#menu_inventoryTracking",{
         });
     }
 
-    if ($("#menu_restaurant_id").is(':visible')) {
+    if ($("#menu_restaurant_id").length) {
         initTomSelectIfNeeded("#menu_restaurant_id",{
         });
     }
 
-    if ($("#menuTabs").is(':visible')) {
+    if ($("#menuTabs").length) {
         const pillsTab = document.querySelector('#menuTabs');
         const pills = pillsTab.querySelectorAll('button[data-bs-toggle="tab"]');
 
@@ -91,7 +91,7 @@ export function initMenus() {
     }
 
 
-    if ($("#menu-table").is(':visible')) {
+    if ($("#menu-table").length) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }
@@ -182,7 +182,7 @@ export function initMenus() {
         });
     }
 
-    if ($("#restaurantTabs").is(':visible')) {
+    if ($("#restaurantTabs").length) {
         function link(cell, formatterParams){
             var id = cell.getValue();
             var name = cell.getRow();

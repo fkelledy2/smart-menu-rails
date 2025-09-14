@@ -167,7 +167,7 @@ function closeAllModals() {
 }
 
 function refreshOrderJSLogic() {
-    if ($("#smartmenu").is(':visible')) {
+    if ($("#smartmenu").length) {
         var date = new Date;
         var minutes = date.getMinutes();
         var hour = date.getHours();

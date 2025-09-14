@@ -1,5 +1,5 @@
 export function initSizes() {
-    if ($("#size-table").is(':visible')) {
+    if ($("#size-table").length) {
         // Sizes
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
@@ -35,11 +35,18 @@ export function initSizes() {
           ],
           locale:true,
           langs:{
+            "en": {
+                "columns": {
+                    "id": "Size",
+                    "name": "Name",
+                    "status": "Status"
+                }
+            },
             "it":{
                 "columns":{
-                    "id":"Misurare", //replace the title of column name with the value "Name"
-                    "name":"Nome", //replace the title of column name with the value "Name"
-                    "status":"Stato", //replace the title of column name with the value "Name"
+                    "id":"Misurare",
+                    "name":"Nome",
+                    "status":"Stato"
                 }
             }
           }

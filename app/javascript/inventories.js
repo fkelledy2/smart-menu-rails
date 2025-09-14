@@ -1,12 +1,12 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
 
 export function initiInventories() {
-    if ($("#inventory_menuitem_id").is(':visible')) {
+    if ($("#inventory_menuitem_id").length) {
       initTomSelectIfNeeded("#inventory_menuitem_id",{
       });
     }
 
-    if ($("#sectionTabs").is(':visible')) {
+    if ($("#sectionTabs").length) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }

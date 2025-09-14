@@ -1,21 +1,21 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
 
 export function initMenuitems() {
-    if ($("#menuitem_menusection_id").is(':visible')) {
+    if ($("#menuitem_menusection_id").length) {
       initTomSelectIfNeeded("#menuitem_menusection_id",{
       });
     }
 
-    if ($("#menuitem_status").is(':visible')) {
+    if ($("#menuitem_status").length) {
       initTomSelectIfNeeded("#menuitem_status",{
       });
     }
 
-    if ($("#menuitem_itemtype").is(':visible')) {
+    if ($("#menuitem_itemtype").length) {
       initTomSelectIfNeeded("#menuitem_itemtype",{
       });
     }
-    if ($("#menuitem_sizesupport").is(':visible')) {
+    if ($("#menuitem_sizesupport").length) {
       initTomSelectIfNeeded("#menuitem_sizesupport",{
       });
     }
@@ -24,7 +24,7 @@ export function initMenuitems() {
         restaurantCurrencySymbol = $('#restaurantCurrency').text();
     }
 
-    if ($("#sectionTabs").is(':visible')) {
+    if ($("#sectionTabs").length) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }

@@ -1,22 +1,22 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
 
 export function initRestaurantavailabilities() {
-    if ($("#restaurantavailability_dayofweek").is(':visible')) {
+    if ($("#restaurantavailability_dayofweek").length) {
       initTomSelectIfNeeded("#restaurantavailability_dayofweek",{
       });
     }
 
-    if ($("#restaurantavailability_status").is(':visible')) {
+    if ($("#restaurantavailability_status").length) {
       initTomSelectIfNeeded("#restaurantavailability_status",{
       });
     }
 
-    if ($("#restaurantavailability_restaurant_id").is(':visible')) {
+    if ($("#restaurantavailability_restaurant_id").length) {
       initTomSelectIfNeeded("#restaurantavailability_restaurant_id",{
       });
     }
 
-    if ($("#restaurantTabs").is(':visible')) {
+    if ($("#restaurantTabs").length) {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }
