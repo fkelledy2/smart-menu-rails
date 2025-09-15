@@ -167,6 +167,34 @@ function closeAllModals() {
 }
 
 function refreshOrderJSLogic() {
+
+    const searchInput = document.getElementById("menu-item-search");
+    if (!searchInput) return;
+
+    searchInput.addEventListener("input", function() {
+        const term = searchInput.value.trim().toLowerCase();
+        if (term.length === 0) {
+          // If search is empty, show all items
+          document.querySelectorAll(".menu-item-card").forEach(card => card.style.display = "");
+          return;
+        }
+
+        document.querySelectorAll(".menu-item-card").forEach(function(card) {
+          // Search in data attributes (original English text)
+          const name = card.getAttribute("data-name") || "";
+          const desc = card.getAttribute("data-description") || "";
+
+          // Search in visible text content (localized text)
+          const cardText = card.textContent.toLowerCase();
+
+          if (name.includes(term) || desc.includes(term) || cardText.includes(term)) {
+            card.style.display = "";
+          } else {
+            card.style.display = "none";
+          }
+        });
+    });
+
     if ($("#smartmenu").length) {
         var date = new Date;
         var minutes = date.getMinutes();

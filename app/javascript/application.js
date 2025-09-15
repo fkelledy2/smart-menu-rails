@@ -104,6 +104,7 @@ function initializeComponents() {
     initEmployees();
     initDW();
     initAllergyns();
+    initSmartmenus();
 }
 
 // Enhanced turbo:load event listener with detailed logging

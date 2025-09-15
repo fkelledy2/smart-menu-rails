@@ -1,6 +1,6 @@
 json.slug smartmenu.slug
-json.restaurant smartmenu.restaurant.id
-json.menu smartmenu.menu.id
+json.restaurant smartmenu.restaurant
+json.menu smartmenu.menu
 json.tablesetting smartmenu.tablesetting
 json.created_at smartmenu.created_at
 json.updated_at smartmenu.updated_at
