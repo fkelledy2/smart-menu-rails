@@ -1,4 +1,4 @@
-namespace :menu_items do
+namespace :menuitems do
   desc "Iterate through all menu items and save them (useful for triggering callbacks)"
   task reprocess: :environment do
     puts "Starting to process all menu items..."
@@ -7,7 +7,7 @@ namespace :menu_items do
     success_count = 0
     error_count = 0
     
-    MenuItem.find_each.with_index do |menu_item, index|
+    MenuItem.find_each.with_index do |menuitem, index|
       begin
         if( menuitem.genimage == nil)
           @genimage = Genimage.new
@@ -27,8 +27,8 @@ namespace :menu_items do
       # Print progress every 100 records
       puts "Progress: #{index + 1}/#{total} (#{((index + 1).to_f / total * 100).round(2)}%)" if (index + 1) % 100 == 0
     end
-    
-    puts "\nProcessing complete!"
+    puts ""
+    puts "Processing complete!"
     puts "Total processed: #{total}"
     puts "Successfully saved: #{success_count}"
     puts "Errors: #{error_count}"
