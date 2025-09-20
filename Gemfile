@@ -92,6 +92,7 @@ gem 'tabulator-rails'
 gem 'requestjs-rails'
 gem 'rqrcode-rails3'
 gem 'mini_magick'
+gem 'pdf-reader'
 gem 'seed_dump'
 gem 'squasher'
 gem 'allow_numeric'
@@ -104,7 +105,7 @@ gem 'shrine', '~> 3.3'
 gem 'image_processing', '~> 1.12', '>= 1.12.1'
 gem 'cropper_rails'
 gem 'httparty'
-gem 'chatgpt-ruby'
+gem 'ruby-openai'
 gem "aws-sdk-s3", require: false
 gem 'analytics-ruby', '~> 2.4.0', :require => 'segment/analytics'
 gem 'simplecov', require: false, group: :test
@@ -133,4 +134,4 @@ gem "identity_cache"
 gem "cityhash"
 gem "redis-store"
 gem "redis-activesupport"  # Required to hook into Rails cache store
-
+gem "openai", "~> 0.25.0"

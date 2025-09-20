@@ -1,0 +1,525 @@
+<div class="container py-4" data-controller="menu-import">
+  <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap">
+    <div class="mb-3 mb-md-0">
+      <h1 class="h2 mb-2">
+        <%= @ocr_menu_import.name.presence || "Menu Import ##{@ocr_menu_import.id}" %>
+      </h1>
+      <div class="d-flex flex-wrap gap-3 text-muted small">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-calendar3 me-1"></i>
+          <span>Imported <%= time_ago_in_words(@ocr_menu_import.created_at) %> ago</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <i class="bi bi-clock-history me-1"></i>
+          <span>Updated <%= @ocr_menu_import.updated_at.strftime('%B %d, %Y at %I:%M %p') %></span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex gap-2">
+      <% if @ocr_menu_import.may_process? %>
+        <%= button_to process_pdf_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), 
+            method: :post, 
+            class: 'btn btn-primary',
+            form: { data: { turbo_confirm: 'Start processing this PDF now?' } } do %>
+          <i class="bi bi-gear me-1"></i> Process PDF
+        <% end %>
+      <% end %>
+      
+      <% if @ocr_menu_import.completed? && @ocr_menu_import.ocr_menu_sections.any? %>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal">
+          <i class="bi bi-check-circle me-1"></i> Create Menu
+        </button>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <% steps = [
+          # Upload is active when the import is pending; once it moves past pending, mark as complete
+          { name: 'Upload', status: (@ocr_menu_import.pending? ? 'active' : (@ocr_menu_import.processing? || @ocr_menu_import.completed? ? 'complete' : '')) },
+          # Processing is active when processing; once completed, mark as complete
+          { name: 'Processing', status: (@ocr_menu_import.processing? ? 'active' : (@ocr_menu_import.completed? ? 'complete' : '')) },
+          # Review becomes active when the import has completed and is ready to review
+          { name: 'Review', status: (@ocr_menu_import.completed? ? 'active' : '') },
+          # Complete is marked complete once the import is completed
+          { name: 'Complete', status: (@ocr_menu_import.completed? ? 'complete' : '') }
+        ] %>
+        
+        <% steps.each_with_index do |step, index| %>
+          <div class="d-flex flex-column align-items-center" style="flex: 1;">
+            <div class="d-flex align-items-center w-100">
+              <% if index > 0 %>
+                <div class="progress flex-grow-1 me-1" style="height: 3px;">
+                  <div class="progress-bar <%= step[:status].present? ? 'bg-success' : 'bg-light' %>" 
+                       role="progressbar" style="width: 100%;">
+                  </div>
+                </div>
+              <% else %>
+                <div class="flex-grow-1 me-1"></div>
+              <% end %>
+              
+              <div class="d-flex flex-column align-items-center position-relative">
+                <span class="d-flex align-items-center justify-content-center rounded-circle <%= step[:status] == 'complete' ? 'bg-success text-white' : (step[:status] == 'active' ? 'bg-primary text-white' : 'bg-light text-muted') %>" 
+                      style="width: 36px; height: 36px; z-index: 1;">
+                  <% if step[:status] == 'complete' %>
+                    <i class="bi bi-check-lg"></i>
+                  <% else %>
+                    <%= index + 1 %>
+                  <% end %>
+                </span>
+                <span class="small mt-1 <%= step[:status] == 'active' ? 'fw-bold text-primary' : 'text-muted' %>">
+                  <%= step[:name] %>
+                </span>
+              </div>
+              
+              <% if index < steps.size - 1 %>
+                <div class="progress flex-grow-1 ms-1" style="height: 3px;">
+                  <div class="progress-bar <%= steps[index+1][:status].present? ? 'bg-success' : 'bg-light' %>" 
+                       role="progressbar" style="width: 100%;">
+                  </div>
+                </div>
+              <% else %>
+                <div class="flex-grow-1 ms-1"></div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3 class="h5 mb-0">Import Details</h3>
+      <p class="mb-0">
+        Status: <%= status_badge(@ocr_menu_import.status) %>
+        <% if @ocr_menu_import.processing? && @ocr_menu_import.progress.present? %>
+          <span class="ms-2">(<%= @ocr_menu_import.progress %>%)</span>
+        <% end %>
+      </p>
+    </div>
+    
+    <div class="card-body">
+      <% if @ocr_menu_import.processing? %>
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary mb-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="text-muted mb-2">Processing your menu. This may take a few minutes...</p>
+          <p class="text-muted small mb-4">Page <%= @ocr_menu_import.current_page || 1 %> of <%= @ocr_menu_import.total_pages || '?' %></p>
+          
+          <div class="progress mb-2" style="height: 10px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                 role="progressbar" 
+                 style="width: <%= @ocr_menu_import.progress || 0 %>%" 
+                 aria-valuenow="<%= @ocr_menu_import.progress || 0 %>" 
+                 aria-valuemin="0" 
+                 aria-valuemax="100">
+            </div>
+          </div>
+          <p class="text-muted small"><%= @ocr_menu_import.progress || 0 %>% complete</p>
+        </div>
+        
+        <%= turbo_stream_from @ocr_menu_import %>
+          <div id="<%= dom_id(@ocr_menu_import) %>_status">
+            <!-- Turbo will update this when the status changes -->
+          </div>
+        <% elsif @ocr_menu_import.failed? %>
+          <div class="alert alert-danger">
+            <div class="d-flex">
+              <div class="flex-shrink-0 me-3">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+              </div>
+              <div>
+                <h5 class="alert-heading">Processing failed</h5>
+                <p class="mb-0"><%= @ocr_menu_import.error_message %></p>
+                <div class="mt-3">
+                  <%= button_to 'Try Again', 
+                      process_pdf_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), 
+                      method: :post, 
+                      class: 'btn btn-outline-danger btn-sm' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% elsif @ocr_menu_import.completed? && @ocr_menu_import.ocr_menu_sections.none? %>
+          <div class="alert alert-warning">
+            <div class="d-flex">
+              <div class="flex-shrink-0 me-3">
+                <i class="bi bi-info-circle-fill"></i>
+              </div>
+              <div>
+                <h5 class="alert-heading">No menu items were parsed</h5>
+                <p class="mb-2">We couldn't detect any sections/items from this PDF.</p>
+                <ul class="mb-3">
+                  <li>PDF may contain no extractable text and OCR produced no text. Verify Google Cloud Vision credentials are configured.</li>
+                  <li>OpenAI API key may be missing or returned invalid output. Add <code>openai_api_key</code> to Rails credentials.</li>
+                  <li>The response formatting may have been invalid. We've hardened parsing, but re-running might help.</li>
+                </ul>
+                <div class="d-flex gap-2">
+                  <% if @ocr_menu_import.may_process? %>
+                    <%= button_to 'Try Again', 
+                        process_pdf_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), 
+                        method: :post, 
+                        class: 'btn btn-outline-primary btn-sm' %>
+                  <% end %>
+                  <%= link_to 'Upload a clearer PDF', new_restaurant_ocr_menu_import_path(@restaurant), class: 'btn btn-outline-secondary btn-sm' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% elsif @ocr_menu_import.completed? && @ocr_menu_import.ocr_menu_sections.any? %>
+          <div class="mb-4">
+            <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-4">
+              <div class="mb-3 mb-md-0">
+                <h2 class="h4 mb-1">Imported Menu</h2>
+                <p class="text-muted mb-0">
+                  Review and confirm the extracted menu items below. You can edit any item before creating the final menu.
+                </p>
+              </div>
+              <div>
+                <button type="button" 
+                        class="btn btn-primary" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#confirmModal">
+                  <i class="bi bi-check-circle me-1"></i> Import
+                </button>
+              </div>
+            </div>
+
+            <div class="border-top pt-4">
+              <div id="sections-sortable"
+                   class="vstack gap-1"
+                   data-reorder-url="<%= reorder_sections_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>">
+                <% @ocr_menu_import.ocr_menu_sections.ordered.each do |section| %>
+                  <div class="section-container sortable-section card mb-3"
+                       data-controller="menu-section"
+                       data-menu-section-section-id="<%= section.id %>"
+                       data-section-id="<%= section.id %>"
+                       draggable="true">
+                    <div class="card-header d-flex justify-content-between align-items-start"
+                         role="button"
+                         data-bs-toggle="collapse"
+                         data-bs-target="#section-<%= section.id %>-items"
+                         aria-expanded="false"
+                         aria-controls="section-<%= section.id %>-items">
+                      <div class="flex-grow-1 d-flex align-items-center gap-2">
+                        <span class="text-muted small"><i class="bi bi-grip-vertical"></i></span>
+                        <h3 class="h5 mb-0"><%= section.name %></h3>
+                      </div>
+                      <span class="btn btn-sm btn-outline-secondary px-2 py-1">
+                        <i class="bi bi-chevron-down"></i>
+                      </span>
+                    </div>
+
+                    <% if section.respond_to?(:description) && section.description.present? %>
+                      <div class="px-3 pt-2 text-muted small"><%= section.description %></div>
+                    <% end %>
+
+                    <div class="collapse" id="section-<%= section.id %>-items" data-menu-section-target="content">
+                      <div class="card-body">
+                        <div class="vstack gap-3">
+                          <% section.ocr_menu_items.ordered.each do |item| %>
+                            <div class="p-0">
+                              <div class="d-flex justify-content-between align-items-start mb-1">
+                                <div class="me-3 fw-semibold"><%= item.name %></div>
+                                <div class="text-nowrap fw-semibold">
+                                    <%= number_to_currency(item.price) %>
+                                  <a href="#"
+                                     class="btn btn-sm btn-outline-secondary"
+                                     data-bs-toggle="modal"
+                                     data-bs-target="#editItemModal"
+                                     data-item-id="<%= item.id %>"
+                                     data-item-name="<%= item.name %>"
+                                     data-item-description="<%= item.description.to_s %>"
+                                     data-item-price="<%= item.price %>"
+                                     data-item-allergens='<%= (item.allergens || []).to_json %>'
+                                     data-item-section="<%= section.id %>"
+                                     data-item-position="<%= item.sequence %>"
+                                     data-item-dietary-restrictions='[
+                                       <%= (item.respond_to?(:is_vegetarian) && item.is_vegetarian) ? '"vegetarian"' : nil %>
+                                       <%= (item.respond_to?(:is_vegan) && item.is_vegan) ? ', "vegan"' : nil %>
+                                       <%= (item.respond_to?(:is_gluten_free) && item.is_gluten_free) ? ', "gluten_free"' : nil %>
+                                       <%= (item.respond_to?(:is_dairy_free) && item.is_dairy_free) ? ', "dairy_free"' : nil %>
+                                       <%= (item.respond_to?(:is_nut_free) && item.is_nut_free) ? ', "nut_free"' : nil %>
+                                     ]'
+                                     data-action="click->menu-import#showEditItemModal">
+                                    <i class="bi bi-pencil"></i>
+                                    <span class="visually-hidden">Edit</span>
+                                  </a>
+                                </div>
+                              </div>
+                              <% if item.description.present? %>
+                                <div class="text-muted small mb-2"><%= item.description %></div>
+                              <% end %>
+                              <% if item.allergens.any? %>
+                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                  <% item.allergens.each do |allergen| %>
+                                    <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
+                                      <%= allergen.to_s.titleize %>
+                                    </span>
+                                  <% end %>
+                                </div>
+                              <% end %>
+                              <% if [
+                                    (item.respond_to?(:is_vegetarian) && item.is_vegetarian),
+                                    (item.respond_to?(:is_vegan) && item.is_vegan),
+                                    (item.respond_to?(:is_gluten_free) && item.is_gluten_free),
+                                    (item.respond_to?(:is_dairy_free) && item.is_dairy_free)
+                                  ].any? %>
+                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                  <% if item.respond_to?(:is_vegetarian) && item.is_vegetarian %>
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                      <i class="bi bi-egg-fried me-1"></i> Vegetarian
+                                    </span>
+                                  <% end %>
+                                  <% if item.respond_to?(:is_vegan) && item.is_vegan %>
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                      <i class="bi bi-flower1 me-1"></i> Vegan
+                                    </span>
+                                  <% end %>
+                                  <% if item.respond_to?(:is_gluten_free) && item.is_gluten_free %>
+                                    <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25">
+                                      <i class="bi bi-x-circle me-1"></i> Gluten Free
+                                    </span>
+                                  <% end %>
+                                  <% if item.respond_to?(:is_dairy_free) && item.is_dairy_free %>
+                                    <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25">
+                                      <i class="bi bi-droplet me-1"></i> Dairy Free
+                                    </span>
+                                  <% end %>
+                                </div>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" data-bs-backdrop="static" data-menu-import-target="confirmModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center p-4">
+        <div class="d-flex justify-content-center mb-3">
+          <div class="bg-success bg-opacity-10 rounded-circle p-3">
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 2rem;"></i>
+          </div>
+        </div>
+        <h5 class="modal-title mb-3" id="confirmModalLabel">Create Menu</h5>
+        <p class="text-muted mb-4">
+          Are you sure you want to create a new menu from this import? This action cannot be undone.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+          <%= button_to 'Create Menu', 
+              confirm_import_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), 
+              method: :post, 
+              class: 'btn btn-primary',
+              form: { class: 'mb-0', data: { turbo: false } } %>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Item Modal -->
+<div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true" data-bs-backdrop="static" data-menu-import-target="editItemModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editItemModalLabel">Edit Menu Item</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="editItemForm" data-menu-import-target="editItemForm">
+        <input type="hidden" name="item_id" data-menu-import-target="editItemId">
+        
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="item_name" class="form-label">Item Name</label>
+            <input type="text" class="form-control" id="item_name" name="item_name" data-menu-import-target="editItemName">
+          </div>
+          
+          <div class="mb-3">
+            <label for="item_description" class="form-label">Description</label>
+            <textarea class="form-control" id="item_description" name="item_description" rows="3" data-menu-import-target="editItemDescription"></textarea>
+          </div>
+          
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label for="item_price" class="form-label">Price</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="text" class="form-control" id="item_price" name="item_price" placeholder="0.00" data-menu-import-target="editItemPrice">
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <label for="item_section" class="form-label">Section</label>
+              <select class="form-select" id="item_section" name="item_section" data-menu-import-target="editItemSection">
+                <% @ocr_menu_import.ocr_menu_sections.ordered.each do |section| %>
+                  <option value="<%= section.id %>"><%= section.name %></option>
+                <% end %>
+              </select>
+            </div>
+            
+            <div class="col-md-4">
+              <label for="item_position" class="form-label">Position</label>
+              <input type="number" class="form-control" id="item_position" name="item_position" data-menu-import-target="editItemPosition">
+            </div>
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Dietary Information</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="item_vegetarian" name="item_vegetarian" data-menu-import-target="editItemVegetarian">
+                <label class="form-check-label" for="item_vegetarian">
+                  Vegetarian
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="item_vegan" name="item_vegan" data-menu-import-target="editItemVegan">
+                <label class="form-check-label" for="item_vegan">
+                  Vegan
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="item_gluten_free" name="item_gluten_free" data-menu-import-target="editItemGlutenFree">
+                <label class="form-check-label" for="item_gluten_free">
+                  Gluten Free
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="item_dairy_free" name="item_dairy_free" data-menu-import-target="editItemDairyFree">
+                <label class="form-check-label" for="item_dairy_free">
+                  Dairy Free
+                </label>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="item_allergens" class="form-label">Allergens</label>
+              <% default_allergens = %w[gluten dairy egg peanut tree_nut soy shellfish fish sesame mustard celery sulphites lupin mollusc garlic onion] %>
+              <% existing_allergens = @ocr_menu_import.ocr_menu_items.flat_map { |i| i.allergens || [] } %>
+              <% allergen_options = (default_allergens + existing_allergens).compact.map { |a| a.to_s.strip.downcase }.reject(&:blank?).uniq %>
+              <select class="form-select" id="item_allergens" name="item_allergens[]" multiple data-menu-import-target="editItemAllergens">
+                <% allergen_options.each do |allergen| %>
+                  <option value="<%= allergen %>"><%= allergen.titleize %></option>
+                <% end %>
+              </select>
+              <div class="form-text">Hold Ctrl/Cmd to select multiple</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger me-auto" data-action="click->menu-import#deleteItem">
+            <i class="bi bi-trash me-1"></i> Delete
+          </button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" data-action="click->menu-import#saveItem">
+            <i class="bi bi-save me-1"></i> Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%= javascript_tag nonce: true do %>
+  function initAllergensTomSelect() {
+    var el = document.getElementById('item_allergens');
+    if (!el || typeof TomSelect === 'undefined') return;
+    if (el.tomselect) {
+      el.tomselect.destroy();
+    }
+    new TomSelect(el, {
+      plugins: ['remove_button'],
+      maxItems: null,
+      create: false,
+      closeAfterSelect: false,
+      placeholder: 'Select allergens',
+      render: {
+        option: function(data, escape) { return '<div>' + escape(data.text) + '</div>'; },
+        item: function(data, escape) { return '<div>' + escape(data.text) + '</div>'; }
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    initAllergensTomSelect();
+  });
+
+  // Re-init on Turbo updates to the DOM
+  document.addEventListener('turbo:before-stream-render', function() {
+    initAllergensTomSelect();
+  });
+
+  // Fallback: populate Edit Item modal on show from triggering button data attributes
+  document.addEventListener('turbo:load', function() {
+    var modalEl = document.getElementById('editItemModal');
+    if (!modalEl) return;
+    modalEl.addEventListener('show.bs.modal', function (event) {
+      var trigger = event.relatedTarget;
+      if (!trigger) return;
+      // Basic fields
+      var idInput = document.querySelector('[data-menu-import-target="editItemId"]');
+      var nameInput = document.getElementById('item_name');
+      var descInput = document.getElementById('item_description');
+      var priceInput = document.getElementById('item_price');
+      var sectionSelect = document.getElementById('item_section');
+      var positionInput = document.getElementById('item_position');
+      if (idInput) idInput.value = trigger.getAttribute('data-item-id') || '';
+      if (nameInput) nameInput.value = trigger.getAttribute('data-item-name') || '';
+      if (descInput) descInput.value = trigger.getAttribute('data-item-description') || '';
+      if (priceInput) priceInput.value = trigger.getAttribute('data-item-price') || '';
+      if (sectionSelect) sectionSelect.value = trigger.getAttribute('data-item-section') || '';
+      if (positionInput) positionInput.value = trigger.getAttribute('data-item-position') || '';
+
+      // Allergens (TomSelect if present)
+      var allergensData = [];
+      try { allergensData = JSON.parse(trigger.getAttribute('data-item-allergens') || '[]'); } catch(e) { allergensData = []; }
+      var allergensSelect = document.getElementById('item_allergens');
+      if (allergensSelect) {
+        if (allergensSelect.tomselect) {
+          try { allergensSelect.tomselect.setValue(allergensData, true); } catch(_) {}
+        } else if (window.$) {
+          try { $(allergensSelect).val(allergensData).trigger('change'); } catch(_) {}
+        } else {
+          Array.from(allergensSelect.options).forEach(function(opt){ opt.selected = allergensData.includes(opt.value); });
+        }
+      }
+
+      // Dietary checkboxes
+      var diet = [];
+      try { diet = JSON.parse(trigger.getAttribute('data-item-dietary-restrictions') || '[]'); } catch(e) { diet = []; }
+      var setChecked = function(id, key) {
+        var el = document.getElementById(id);
+        if (el) el.checked = diet.includes(key);
+      };
+      setChecked('item_vegetarian', 'vegetarian');
+      setChecked('item_vegan', 'vegan');
+      setChecked('item_gluten_free', 'gluten_free');
+      setChecked('item_dairy_free', 'dairy_free');
+    });
+  });
+<% end %>

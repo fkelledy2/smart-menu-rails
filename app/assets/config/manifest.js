@@ -1,6 +1,7 @@
 //= link_tree ../builds
 //= link_tree ../images
 //= link controllers/application.js
+//= link controllers/menu_import_controller.js
 //= link allergyns.js
 //= link employees.js
 //= link metrics.js

@@ -1,4 +1,4 @@
-require 'chatgpt/client'
+# OpenAI integration is handled elsewhere; legacy chatgpt-ruby removed
 
 class GenimagesController < ApplicationController
   before_action :set_genimage, only: %i[ show edit update destroy ]
@@ -44,7 +44,6 @@ class GenimagesController < ApplicationController
   def update
     if current_user
         respond_to do |format|
-          chatGPTclient = ChatGPT::Client.new(Rails.application.credentials.openai_api_key)
           if @genimage.menuitem.itemtype != 'wine'
               GenerateImageJob.perform_sync(@genimage.id)
           end

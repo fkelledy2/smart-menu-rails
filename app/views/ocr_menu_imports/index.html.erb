@@ -1,0 +1,27 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Menu Imports</h1>
+    <%= link_to 'New Menu Import', new_restaurant_ocr_menu_import_path(@restaurant), class: 'btn btn-primary' %>
+  </div>
+
+  <% if @ocr_menu_imports.any? %>
+    <div class="card">
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+          <%= render partial: 'import_item', collection: @ocr_menu_imports, as: :import %>
+        </ul>
+      </div>
+    </div>
+  <% else %>
+    <div class="card text-center py-5">
+      <div class="card-body">
+        <i class="bi bi-file-earmark-text text-muted" style="font-size: 3rem;"></i>
+        <h3 class="h5 mt-3">No menu imports</h3>
+        <p class="text-muted">Get started by uploading a new menu PDF.</p>
+        <div class="mt-4">
+          <%= link_to 'New Menu Import', new_restaurant_ocr_menu_import_path(@restaurant), class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -17,6 +17,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    Ascii85 (2.0.1)
     aasm (5.5.0)
       concurrent-ruby (~> 1.0)
     actioncable (7.1.5)
@@ -103,6 +104,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+    afm (1.0.0)
     allow_numeric (0.1.0)
     analytics-ruby (2.4.0)
     ar_transaction_changes (1.1.9)
@@ -145,8 +147,6 @@ GEM
       xpath (~> 3.2)
     case_transform (0.2)
       activesupport
-    chatgpt-ruby (2.0.0)
-      rest-client
     childprocess (5.1.0)
       logger (~> 1.5)
     chronic (0.10.2)
@@ -190,10 +190,13 @@ GEM
       addressable (~> 2.8)
     drb (2.2.1)
     erubi (1.13.1)
+    event_stream_parser (1.0.0)
     faraday (2.12.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
+    faraday-multipart (1.1.1)
+      multipart-post (~> 2.0)
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
     faraday-retry (2.3.2)
@@ -285,6 +288,7 @@ GEM
     grpc (1.73.0-x86_64-linux)
       google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
+    hashery (2.1.2)
     hashie (5.0.0)
     http-cookie (1.0.7)
       domain_name (~> 0.5)
@@ -358,6 +362,7 @@ GEM
     multi_json (1.17.0)
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
+    multipart-post (2.4.1)
     mutex_m (0.3.0)
     net-http (0.5.0)
       uri
@@ -424,12 +429,20 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
+    openai (0.25.0)
+      connection_pool
     orm_adapter (0.5.0)
     os (1.1.4)
     pagy (9.3.1)
     pay (8.3.0)
       rails (>= 6.0.0)
     pdf-core (0.10.0)
+    pdf-reader (2.15.0)
+      Ascii85 (>= 1.0, < 3.0, != 2.0.0)
+      afm (>= 0.2.1, < 2)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
     pg (1.5.9)
     pp (0.6.2)
       prettyprint
@@ -526,6 +539,11 @@ GEM
       omniauth-oauth2 (>= 1.6)
       rest-client (~> 2.0.2)
     ruby-limiter (2.3.0)
+    ruby-openai (8.3.0)
+      event_stream_parser (>= 0.3.0, < 2.0.0)
+      faraday (>= 1)
+      faraday-multipart (>= 1)
+    ruby-rc4 (0.1.5)
     ruby-vips (2.2.2)
       ffi (~> 1.12)
       logger
@@ -632,7 +650,6 @@ DEPENDENCIES
   bootsnap
   bullet
   capybara
-  chatgpt-ruby
   cityhash
   connection_pool
   country_select (~> 8.0)
@@ -668,7 +685,9 @@ DEPENDENCIES
   omniauth-rails_csrf_protection
   omniauth-spotify
   omniauth-twitter (~> 1.4)
+  openai (~> 0.25.0)
   pay (~> 8.0)
+  pdf-reader
   pg (~> 1.1)
   pretender (~> 0.3.4)
   puma (>= 5.0)
@@ -684,6 +703,7 @@ DEPENDENCIES
   rqrcode-rails3
   rspotify
   ruby-limiter
+  ruby-openai
   seed_dump
   selenium-webdriver
   sentry-rails

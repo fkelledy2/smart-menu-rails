@@ -1,0 +1,78 @@
+# == Schema Information
+#
+# Table name: ocr_menu_imports
+#
+#  id               :bigint           not null, primary key
+#  restaurant_id    :bigint           not null
+#  name             :string           not null
+#  status           :string           default("pending"), not null
+#  error_message    :text
+#  total_pages      :integer
+#  processed_pages  :integer          default(0)
+#  metadata         :jsonb            default({})
+#  menu_id          :bigint
+#  completed_at     :datetime
+#  failed_at        :datetime
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
+# Sample pending import
+pending_import:
+  restaurant: one
+  name: "Lunch Menu Import"
+  status: "pending"
+  total_pages: 5
+  processed_pages: 0
+  metadata: {}
+  created_at: <%= 1.hour.ago %>
+  updated_at: <%= 1.hour.ago %>
+
+# Sample processing import
+processing_import:
+  restaurant: one
+  name: "Dinner Menu Import"
+  status: "processing"
+  total_pages: 3
+  processed_pages: 1
+  metadata: {source: "upload", file_name: "dinner_menu.pdf"}
+  created_at: <%= 30.minutes.ago %>
+  updated_at: <%= 5.minutes.ago %>
+
+# Sample completed import
+completed_import:
+  restaurant: one
+  name: "Brunch Menu Import"
+  status: "completed"
+  total_pages: 4
+  processed_pages: 4
+  completed_at: <%= 1.day.ago + 1.hour %>
+  metadata: {source: "upload", file_name: "brunch_menu.pdf", sections_imported: 5, items_imported: 24}
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago + 1.hour %>
+
+# Sample failed import
+failed_import:
+  restaurant: one
+  name: "Failed Import"
+  status: "failed"
+  error_message: "Failed to process pages: 2, 3"
+  total_pages: 3
+  processed_pages: 1
+  failed_at: <%= 2.days.ago + 2.hours %>
+  metadata: {source: "upload", file_name: "failed_menu.pdf", error_details: "Invalid PDF format"}
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago + 2.hours %>
+
+# Sample import with menu association
+import_with_menu:
+  restaurant: one
+  menu: one
+  name: "Menu Update Import"
+  status: "completed"
+  total_pages: 2
+  processed_pages: 2
+  completed_at: <%= 3.days.ago + 30.minutes %>
+  metadata: {source: "upload", file_name: "menu_update.pdf", updated_items: 12}
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 3.days.ago + 30.minutes %>

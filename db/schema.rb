@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_14_153926) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_20_104530) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -387,6 +387,68 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_14_153926) do
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_noticed_notifications_on_event_id"
     t.index ["recipient_type", "recipient_id"], name: "index_noticed_notifications_on_recipient"
+  end
+
+  create_table "ocr_menu_imports", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.string "name", null: false
+    t.string "status", default: "pending", null: false
+    t.text "error_message"
+    t.integer "total_pages"
+    t.integer "processed_pages", default: 0
+    t.jsonb "metadata", default: {}
+    t.bigint "menu_id"
+    t.datetime "completed_at"
+    t.datetime "failed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id"], name: "index_ocr_menu_imports_on_menu_id"
+    t.index ["restaurant_id"], name: "index_ocr_menu_imports_on_restaurant_id"
+    t.index ["status"], name: "index_ocr_menu_imports_on_status"
+  end
+
+  create_table "ocr_menu_items", force: :cascade do |t|
+    t.bigint "ocr_menu_section_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.decimal "price", precision: 10, scale: 2
+    t.text "allergens", default: [], array: true
+    t.integer "sequence", default: 0, null: false
+    t.boolean "is_confirmed", default: false
+    t.boolean "is_vegetarian", default: false
+    t.boolean "is_vegan", default: false
+    t.boolean "is_gluten_free", default: false
+    t.jsonb "metadata", default: {}
+    t.string "page_reference"
+    t.bigint "menu_item_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "is_dairy_free", default: false, null: false
+    t.index ["allergens"], name: "index_ocr_menu_items_on_allergens", using: :gin
+    t.index ["is_confirmed"], name: "index_ocr_menu_items_on_is_confirmed"
+    t.index ["is_gluten_free"], name: "index_ocr_menu_items_on_is_gluten_free"
+    t.index ["is_vegan"], name: "index_ocr_menu_items_on_is_vegan"
+    t.index ["is_vegetarian"], name: "index_ocr_menu_items_on_is_vegetarian"
+    t.index ["menu_item_id"], name: "index_ocr_menu_items_on_menu_item_id"
+    t.index ["ocr_menu_section_id"], name: "index_ocr_menu_items_on_ocr_menu_section_id"
+    t.index ["sequence"], name: "index_ocr_menu_items_on_sequence"
+  end
+
+  create_table "ocr_menu_sections", force: :cascade do |t|
+    t.bigint "ocr_menu_import_id", null: false
+    t.string "name", null: false
+    t.integer "sequence", default: 0, null: false
+    t.jsonb "metadata", default: {}
+    t.boolean "is_confirmed", default: false
+    t.string "page_reference"
+    t.bigint "menu_section_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "description"
+    t.index ["is_confirmed"], name: "index_ocr_menu_sections_on_is_confirmed"
+    t.index ["menu_section_id"], name: "index_ocr_menu_sections_on_menu_section_id"
+    t.index ["ocr_menu_import_id"], name: "index_ocr_menu_sections_on_ocr_menu_import_id"
+    t.index ["sequence"], name: "index_ocr_menu_sections_on_sequence"
   end
 
   create_table "ordractions", force: :cascade do |t|
@@ -844,6 +906,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_14_153926) do
   add_foreign_key "menus", "restaurants"
   add_foreign_key "menusectionlocales", "menusections"
   add_foreign_key "menusections", "menus"
+  add_foreign_key "ocr_menu_imports", "menus"
+  add_foreign_key "ocr_menu_imports", "restaurants"
+  add_foreign_key "ocr_menu_items", "menu_items"
+  add_foreign_key "ocr_menu_items", "ocr_menu_sections"
+  add_foreign_key "ocr_menu_sections", "menu_sections"
+  add_foreign_key "ocr_menu_sections", "ocr_menu_imports"
   add_foreign_key "ordractions", "ordritems"
   add_foreign_key "ordractions", "ordrparticipants"
   add_foreign_key "ordritemnotes", "ordritems"

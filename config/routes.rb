@@ -59,6 +59,13 @@ Rails.application.routes.draw do
     resources :ordrs, controller: 'ordrs', only: [:index]
     resources :allergyns, controller: 'allergyns', only: [:index]
     resources :tracks, controller: 'tracks', only: [:index]
+    resources :ocr_menu_imports, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
+      member do
+        post :process_pdf
+        post :confirm_import
+        patch :reorder_sections
+      end
+    end
   end
   resources :menus, controller: 'menus' do
       resources :menusections, controller: 'menusections', only: [:index,:show, :edit]
@@ -109,3 +116,4 @@ end
   # Defines the root path route ("/")
   # root "posts#index"
 end
+

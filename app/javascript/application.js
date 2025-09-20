@@ -16,6 +16,9 @@ import './channels'
 
 // Import and configure Stimulus controllers
 import { application } from './controllers/application'
+import './controllers'
+import MenuImportController from './controllers/menu_import_controller.js'
+application.register('menu-import', MenuImportController)
 
 // Import Tabulator
 import { TabulatorFull as Tabulator } from 'tabulator-tables'

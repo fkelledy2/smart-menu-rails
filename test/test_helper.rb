@@ -13,9 +13,14 @@ module ActiveSupport
     fixtures :all
 
     # Add more helper methods to be used by all tests here...
+    
+    # Load all test helpers from test/support/**/*.rb
+    Dir[Rails.root.join('test/support/**/*.rb')].each { |f| require f }
 
+    # Include test helpers
     include Devise::Test::IntegrationHelpers
     include Warden::Test::Helpers
+    include ActionDispatch::TestProcess::FixtureFile
 
     def log_in( user )
         if integration_test?

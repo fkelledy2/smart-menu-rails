@@ -1,0 +1,28 @@
+<li class="list-group-item">
+  <%= link_to restaurant_ocr_menu_import_path(@restaurant, import), class: 'text-decoration-none text-reset d-block' do %>
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="mb-0 text-primary text-truncate" style="max-width: 70%;">
+        <%= import.name.presence || "Menu Import ##{import.id}" %>
+      </h5>
+      <span class="badge <%= status_badge_classes(import.status) %>">
+        <%= import.status.titleize %>
+      </span>
+    </div>
+    
+    <div class="row mt-2">
+      <div class="col-md-6">
+        <p class="mb-0 text-muted">
+          <i class="bi bi-collection me-1"></i>
+          <%= pluralize(import.ocr_menu_sections.count, 'section') %>, 
+          <%= pluralize(import.ocr_menu_items.count, 'item') %>
+        </p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <small class="text-muted">
+          <i class="bi bi-calendar3 me-1"></i>
+          Imported <time datetime="<%= import.created_at.iso8601 %>"><%= time_ago_in_words(import.created_at) %> ago</time>
+        </small>
+      </div>
+    </div>
+  <% end %>
+</li>

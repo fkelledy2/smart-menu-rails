@@ -1,0 +1,110 @@
+# == Schema Information
+#
+# Table name: ocr_menu_items
+#
+#  id                  :bigint           not null, primary key
+#  ocr_menu_section_id :bigint           not null
+#  name                :string           not null
+#  description         :text
+#  price               :decimal(10, 2)
+#  allergens           :string           default([]), is an Array
+#  sequence           :integer          default(0), not null
+#  is_confirmed       :boolean          default(FALSE)
+#  is_vegetarian      :boolean          default(FALSE)
+#  is_vegan           :boolean          default(FALSE)
+#  is_gluten_free     :boolean          default(FALSE)
+#  metadata           :jsonb            default({})
+#  page_reference     :string
+#  menu_item_id       :bigint
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
+
+# Starters section items
+bruschetta:
+  ocr_menu_section: starters_section
+  name: "Bruschetta"
+  description: "Toasted bread with tomatoes, garlic and basil"
+  price: 8.99
+  allergens: ["gluten"]
+  is_vegetarian: true
+  is_confirmed: true
+  sequence: 1
+  metadata: {confidence: 0.95, page: 1}
+  created_at: 2025-01-01T10:00:00Z
+  updated_at: 2025-01-01T12:00:00Z
+
+calamari:
+  ocr_menu_section: starters_section
+  name: "Calamari"
+  description: "Fried squid with marinara sauce"
+  price: 12.99
+  allergens: ["shellfish", "gluten"]
+  is_confirmed: true
+  sequence: 2
+  metadata: {confidence: 0.92, page: 1}
+  created_at: 2025-01-01T10:00:00Z
+  updated_at: 2025-01-01T12:00:00Z
+
+# Mains section items
+carbonara:
+  ocr_menu_section: mains_section
+  name: "Spaghetti Carbonara"
+  description: "Classic pasta with eggs, cheese, and pancetta"
+  price: 16.99
+  allergens: ["gluten", "dairy", "eggs"]
+  is_confirmed: false
+  sequence: 1
+  metadata: {confidence: 0.90, page: 2}
+  created_at: 2025-01-01T10:05:00Z
+  updated_at: 2025-01-01T10:05:00Z
+
+salmon:
+  ocr_menu_section: mains_section
+  name: "Grilled Salmon"
+  description: "Fresh salmon with lemon butter sauce and vegetables"
+  price: 22.99
+  allergens: ["fish"]
+  is_gluten_free: true
+  is_confirmed: true
+  sequence: 2
+  metadata: {confidence: 0.94, page: 2}
+  created_at: 2025-01-01T10:05:00Z
+  updated_at: 2025-01-01T12:00:00Z
+
+# Pending items (not yet confirmed)
+pending_item:
+  ocr_menu_section: pending_section
+  name: "New Pasta Dish"
+  description: "Chef's special pasta of the day"
+  price: 15.99
+  allergens: ["gluten"]
+  is_vegetarian: true
+  is_confirmed: false
+  sequence: 1
+  metadata: {confidence: 0.85, page: 3, needs_review: true}
+  created_at: 2025-01-02T10:00:00Z
+  updated_at: 2025-01-02T10:00:00Z
+
+# Vegan item
+vegan_item:
+  ocr_menu_section: pending_section
+  name: "Vegan Burger"
+  description: "Plant-based burger with all the fixings"
+  price: 14.99
+  is_vegan: true
+  is_gluten_free: true
+  is_confirmed: true
+  sequence: 2
+  metadata: {page: 3}
+  created_at: 2025-01-02T11:00:00Z
+  updated_at: 2025-01-02T11:30:00Z
+
+# Failed section item
+failed_item:
+  ocr_menu_section: failed_section
+  name: "Failed Item"
+  description: "This item failed to process"
+  is_confirmed: false
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago + 1.hour %>

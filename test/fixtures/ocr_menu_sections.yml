@@ -1,0 +1,65 @@
+# == Schema Information
+#
+# Table name: ocr_menu_sections
+#
+#  id                :bigint           not null, primary key
+#  ocr_menu_import_id :bigint           not null
+#  name              :string           not null
+#  sequence         :integer          default(0), not null
+#  metadata         :jsonb            default({})
+#  is_confirmed     :boolean          default(FALSE)
+#  page_reference   :string
+#  menu_section_id  :bigint
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
+# Starters section for completed import
+starters_section:
+  ocr_menu_import: completed_import
+  name: "Starters"
+  sequence: 1
+  is_confirmed: true
+  metadata: {page: 1, confidence: 0.97, description: "Delicious starters to begin your meal"}
+  created_at: 2025-01-01T10:00:00Z
+  updated_at: 2025-01-01T12:00:00Z
+
+# Mains section for completed import
+mains_section:
+  ocr_menu_import: completed_import
+  name: "Main Courses"
+  sequence: 2
+  is_confirmed: true
+  metadata: {page: 2, confidence: 0.96, description: "Hearty main dishes"}
+  created_at: 2025-01-01T10:00:00Z
+  updated_at: 2025-01-01T12:00:00Z
+
+# Pending section (not yet confirmed)
+pending_section:
+  ocr_menu_import: pending_import
+  name: "Specials"
+  sequence: 1
+  is_confirmed: false
+  metadata: {page: 1, confidence: 0.90, needs_review: true, description: "Today's specials"}
+  created_at: 2025-01-02T10:00:00Z
+  updated_at: 2025-01-02T10:00:00Z
+
+# Section for processing import
+processing_section:
+  ocr_menu_import: processing_import
+  name: "Appetizers"
+  sequence: 1
+  is_confirmed: false
+  metadata: {page: 1, confidence: 0.95, description: "Light bites to start"}
+  created_at: 2025-01-02T10:00:00Z
+  updated_at: 2025-01-02T10:00:00Z
+
+# Section for failed import
+failed_section:
+  ocr_menu_import: failed_import
+  name: "Desserts"
+  sequence: 3
+  is_confirmed: false
+  metadata: {error: "Low confidence in OCR results", page: 3, description: "Sweet treats to finish your meal"}
+  created_at: 2025-01-02T11:00:00Z
+  updated_at: 2025-01-02T11:05:00Z

@@ -6,13 +6,37 @@ require "google/cloud/vision"
 # Initialize the Vision client with credentials from environment variables
 Google::Cloud::Vision.configure do |config|
   # Path to the service account JSON key file
-  config.credentials = if Rails.application.credentials.gcp_vision_credentials.present?
-    Rails.application.credentials.gcp_vision_credentials
+  creds = nil
+
+  # 1) Prefer Rails encrypted credentials if present (can be a Hash or JSON string)
+  rails_creds = Rails.application.credentials.gcp_vision_credentials
+  if rails_creds.present?
+    creds = rails_creds
   else
-    # Fallback to environment variable or default credentials
-    ENV["GOOGLE_APPLICATION_CREDENTIALS"] || 
-    Rails.root.join("config/credentials/gcp_vision.json").to_s
+    # 2) Allow inline JSON via env var (useful for CI/hosted environments)
+    inline_json = ENV["GOOGLE_APPLICATION_CREDENTIALS_JSON"]
+    if inline_json.present?
+      begin
+        creds = JSON.parse(inline_json)
+      rescue JSON::ParserError
+        Rails.logger.error "GOOGLE_APPLICATION_CREDENTIALS_JSON is not valid JSON"
+      end
+    end
+
+    # 3) Otherwise use a file path from env var or a default local path
+    creds ||= ENV["GOOGLE_APPLICATION_CREDENTIALS"] || Rails.root.join("config/credentials/gcp_vision.json").to_s
   end
+
+  # In development, provide a helpful warning if a file path is configured but missing
+  if Rails.env.development? && creds.is_a?(String)
+    unless File.file?(creds)
+      Rails.logger.warn "Google Cloud Vision credentials file not found at: #{creds}. " \
+                        "Set Rails.credentials.gcp_vision_credentials, " \
+                        "GOOGLE_APPLICATION_CREDENTIALS_JSON, or place the JSON at config/credentials/gcp_vision.json"
+    end
+  end
+
+  config.credentials = creds
   
   # Optional: Set the project ID if not using default credentials
   # config.project_id = ENV["GOOGLE_CLOUD_PROJECT"]
