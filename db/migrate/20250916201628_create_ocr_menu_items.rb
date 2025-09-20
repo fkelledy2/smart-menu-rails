@@ -13,7 +13,9 @@ class CreateOcrMenuItems < ActiveRecord::Migration[7.1]
       t.boolean :is_gluten_free, default: false
       t.jsonb :metadata, default: {}
       t.string :page_reference
-      t.references :menu_item, foreign_key: { to_table: :menu_items }
+      # In this app, the base table is named 'menuitems' (singular model Menuitem)
+      # not the conventional 'menu_items'. Point the FK to the correct table.
+      t.references :menu_item, foreign_key: { to_table: :menuitems }
 
       t.timestamps
     end

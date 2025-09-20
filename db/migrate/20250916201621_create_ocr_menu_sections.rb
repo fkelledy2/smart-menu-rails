@@ -7,7 +7,9 @@ class CreateOcrMenuSections < ActiveRecord::Migration[7.1]
       t.jsonb :metadata, default: {}
       t.boolean :is_confirmed, default: false
       t.string :page_reference
-      t.references :menu_section, foreign_key: { to_table: :menu_sections }
+      # In this app, the base table is named 'menusections' (singular model Menusection)
+      # not the conventional 'menu_sections'. Point the FK to the correct table.
+      t.references :menu_section, foreign_key: { to_table: :menusections }
 
       t.timestamps
     end
