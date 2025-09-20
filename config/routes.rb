@@ -64,6 +64,7 @@ Rails.application.routes.draw do
         post :process_pdf
         post :confirm_import
         patch :reorder_sections
+        patch :reorder_items
       end
     end
   end

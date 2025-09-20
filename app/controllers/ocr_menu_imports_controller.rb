@@ -1,6 +1,9 @@
 class OcrMenuImportsController < ApplicationController
+  skip_before_action :set_current_employee, only: [:reorder_sections, :reorder_items]
+  skip_before_action :set_permissions, only: [:reorder_sections, :reorder_items]
+  skip_forgery_protection only: [:reorder_sections, :reorder_items]
   before_action :set_restaurant
-  before_action :set_ocr_menu_import, only: [:show, :edit, :update, :destroy, :process_pdf, :confirm_import]
+  before_action :set_ocr_menu_import, only: [:show, :edit, :update, :destroy, :process_pdf, :confirm_import, :reorder_sections, :reorder_items]
   before_action :authorize_restaurant_owner
   
   # GET /restaurants/:restaurant_id/ocr_menu_imports
@@ -94,21 +97,54 @@ class OcrMenuImportsController < ApplicationController
   
   # PATCH /restaurants/:restaurant_id/ocr_menu_imports/:id/reorder_sections
   def reorder_sections
-    section_ids = Array(params[:section_ids]).map(&:to_i)
-    return head :bad_request if section_ids.blank?
+    section_ids = Array(params[:section_ids]).reject(&:blank?).map(&:to_i)
+    Rails.logger.warn("[reorder_sections] raw=#{params[:section_ids].inspect} parsed=#{section_ids.inspect}")
+    return render(json: { error: 'section_ids required' }, status: :bad_request) if section_ids.blank?
 
-    # Ensure all sections belong to this import for safety
+    # Ensure all sections belong to this import for safety and in given order
     sections = @ocr_menu_import.ocr_menu_sections.where(id: section_ids)
-    return head :unprocessable_entity if sections.size != section_ids.size
+    Rails.logger.warn("[reorder_sections] found #{sections.size} matching sections for ids #{section_ids.inspect} (expected #{section_ids.size})")
+    return render(json: { error: 'sections mismatch' }, status: :unprocessable_entity) if sections.size != section_ids.size
 
     OcrMenuSection.transaction do
       section_ids.each_with_index do |sid, idx|
-        OcrMenuSection.where(id: sid, ocr_menu_import_id: @ocr_menu_import.id)
-                       .update_all(sequence: idx + 1, updated_at: Time.current)
+        section = @ocr_menu_import.ocr_menu_sections.find_by(id: sid)
+        return render(json: { error: 'section not found' }, status: :unprocessable_entity) unless section
+        Rails.logger.warn("[reorder_sections] updating section ##{sid} -> sequence #{idx + 1}")
+        section.update!(sequence: idx + 1)
       end
     end
 
-    head :ok
+    render json: { ok: true, section_ids: section_ids }
+  end
+
+  # PATCH /restaurants/:restaurant_id/ocr_menu_imports/:id/reorder_items
+  # Params: section_id: Integer, item_ids: [Integer]
+  def reorder_items
+    section_id = params[:section_id].to_i
+    item_ids = Array(params[:item_ids]).reject(&:blank?).map(&:to_i)
+    Rails.logger.warn("[reorder_items] section_id raw=#{params[:section_id].inspect} parsed=#{section_id} item_ids raw=#{params[:item_ids].inspect} parsed=#{item_ids.inspect}")
+    return render(json: { error: 'section_id and item_ids required' }, status: :bad_request) if section_id.zero? || item_ids.blank?
+
+    # Ensure section belongs to this import
+    section = @ocr_menu_import.ocr_menu_sections.find_by(id: section_id)
+    return render(json: { error: 'section not found' }, status: :unprocessable_entity) unless section
+
+    # Ensure all items belong to this section for safety
+    items = section.ocr_menu_items.where(id: item_ids)
+    Rails.logger.warn("[reorder_items] found #{items.size} matching items for ids #{item_ids.inspect} (expected #{item_ids.size}) in section #{section.id}")
+    return render(json: { error: 'items mismatch' }, status: :unprocessable_entity) if items.size != item_ids.size
+
+    OcrMenuItem.transaction do
+      item_ids.each_with_index do |iid, idx|
+        item = section.ocr_menu_items.find_by(id: iid)
+        return head :unprocessable_entity unless item
+        Rails.logger.warn("[reorder_items] updating item ##{iid} -> sequence #{idx + 1}")
+        item.update!(sequence: idx + 1)
+      end
+    end
+
+    render json: { ok: true, section_id: section.id, item_ids: item_ids }
   end
 
   # DELETE /restaurants/:restaurant_id/ocr_menu_imports/:id

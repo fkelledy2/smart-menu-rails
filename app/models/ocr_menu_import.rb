@@ -119,4 +119,46 @@ class OcrMenuImport < ApplicationRecord
   def attach_pdf(file)
     pdf_file.attach(file)
   end
+
+  # Reorder sections given an ordered array of section IDs
+  # Returns true if successful, otherwise raises
+  def reorder_sections!(ordered_section_ids)
+    ids = Array(ordered_section_ids).reject(&:blank?).map(&:to_i)
+    raise ArgumentError, 'section_ids required' if ids.blank?
+
+    sections = ocr_menu_sections.where(id: ids)
+    raise ActiveRecord::RecordInvalid.new(self) if sections.size != ids.size
+
+    OcrMenuSection.transaction do
+      ids.each_with_index do |sid, idx|
+        section = ocr_menu_sections.find_by(id: sid)
+        raise ActiveRecord::RecordNotFound, 'section not found' unless section
+        section.update!(sequence: idx + 1)
+      end
+    end
+    true
+  end
+
+  # Reorder items within a specific section
+  # section_id: Integer, ordered_item_ids: [Integer]
+  def reorder_items!(section_id, ordered_item_ids)
+    sid = section_id.to_i
+    ids = Array(ordered_item_ids).reject(&:blank?).map(&:to_i)
+    raise ArgumentError, 'section_id and item_ids required' if sid.zero? || ids.blank?
+
+    section = ocr_menu_sections.find_by(id: sid)
+    raise ActiveRecord::RecordNotFound, 'section not found' unless section
+
+    items = section.ocr_menu_items.where(id: ids)
+    raise ActiveRecord::RecordInvalid.new(section) if items.size != ids.size
+
+    OcrMenuItem.transaction do
+      ids.each_with_index do |iid, idx|
+        item = section.ocr_menu_items.find_by(id: iid)
+        raise ActiveRecord::RecordNotFound, 'item not found' unless item
+        item.update!(sequence: idx + 1)
+      end
+    end
+    true
+  end
 end

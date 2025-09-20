@@ -3,6 +3,9 @@ class OcrMenuItem < ApplicationRecord
   belongs_to :ocr_menu_section
   belongs_to :menu_item, optional: true
   
+  # Backward compatibility: some tests refer to `position`
+  alias_attribute :position, :sequence
+
   # Validations
   validates :name, presence: true
   validates :sequence, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }

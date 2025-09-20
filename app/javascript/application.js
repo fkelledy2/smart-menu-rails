@@ -63,6 +63,9 @@ import { initTags } from './tags';
 //import { initTracks } from './tracks';
 import "./channels"
 
+// OCR Imports DnD module (sections/items ordering)
+import { initOCRMenuImportDnD } from './ocr_menu_imports';
+
 // Function to check if all turbo frames are loaded
 function allFramesLoaded() {
   const frames = document.querySelectorAll('turbo-frame');
@@ -108,6 +111,13 @@ function initializeComponents() {
     initDW();
     initAllergyns();
     initSmartmenus();
+
+    // Initialize OCR Menu Import Drag-and-Drop (no-op on pages without OCR UI)
+    try {
+      initOCRMenuImportDnD();
+    } catch (e) {
+      console.warn('[OCR DnD] init failed', e);
+    }
 }
 
 // Enhanced turbo:load event listener with detailed logging
