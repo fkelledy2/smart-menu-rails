@@ -207,16 +207,16 @@
                          aria-expanded="false"
                          aria-controls="section-<%= section.id %>-items">
                       <div class="flex-grow-1 d-flex align-items-center gap-2">
-                        <span class="text-muted small section-drag-handle" title="Drag to reorder section"><i class="bi bi-grip-vertical"></i></span>
                         <h3 class="h5 mb-0"><%= section.name %></h3>
                       </div>
                       <span class="btn btn-sm btn-outline-secondary px-2 py-1">
                         <i class="bi bi-chevron-down"></i>
+                        <i class="section-drag-handle bi bi-grip-vertical"></i>
                       </span>
                     </div>
 
                     <% if section.respond_to?(:description) && section.description.present? %>
-                      <div class="px-3 pt-2 text-muted small"><%= section.description %></div>
+                      <div class="py-2 px-3 text-muted"><%= section.description %></div>
                     <% end %>
 
                     <div class="collapse" id="section-<%= section.id %>-items" data-menu-section-target="content">
@@ -226,34 +226,34 @@
                             <div class="p-0 item-row" data-item-id="<%= item.id %>">
                               <div class="d-flex justify-content-between align-items-start mb-1">
                                 <div class="me-3 fw-semibold d-flex align-items-center gap-2">
-                                  <span class="text-muted small item-drag-handle" title="Drag to reorder item"><i class="bi bi-grip-vertical"></i></span>
                                   <span><%= item.name %></span>
                                 </div>
-                                <div class="text-nowrap fw-semibold">
+                                <span class="text-nowrap px-0 py-1">
                                     <%= number_to_currency(item.price) %>
-                                  <a href="#"
-                                     class="btn btn-sm btn-outline-secondary"
-                                     data-bs-toggle="modal"
-                                     data-bs-target="#editItemModal"
-                                     data-item-id="<%= item.id %>"
-                                     data-item-name="<%= item.name %>"
-                                     data-item-description="<%= item.description.to_s %>"
-                                     data-item-price="<%= item.price %>"
-                                     data-item-allergens='<%= (item.allergens || []).to_json %>'
-                                     data-item-section="<%= section.id %>"
-                                     data-item-position="<%= item.sequence %>"
-                                     data-item-dietary-restrictions='[
-                                       <%= (item.respond_to?(:is_vegetarian) && item.is_vegetarian) ? '"vegetarian"' : nil %>
-                                       <%= (item.respond_to?(:is_vegan) && item.is_vegan) ? ', "vegan"' : nil %>
-                                       <%= (item.respond_to?(:is_gluten_free) && item.is_gluten_free) ? ', "gluten_free"' : nil %>
-                                       <%= (item.respond_to?(:is_dairy_free) && item.is_dairy_free) ? ', "dairy_free"' : nil %>
-                                       <%= (item.respond_to?(:is_nut_free) && item.is_nut_free) ? ', "nut_free"' : nil %>
-                                     ]'
-                                     data-action="click->menu-import#showEditItemModal">
-                                    <i class="bi bi-pencil"></i>
-                                    <span class="visually-hidden">Edit</span>
-                                  </a>
-                                </div>
+                                    &nbsp;
+                                    <span class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-pencil"
+                                         data-bs-toggle="modal"
+                                         data-bs-target="#editItemModal"
+                                         data-item-id="<%= item.id %>"
+                                         data-item-name="<%= item.name %>"
+                                         data-item-description="<%= item.description.to_s %>"
+                                         data-item-price="<%= item.price %>"
+                                         data-item-allergens='<%= (item.allergens || []).to_json %>'
+                                         data-item-section="<%= section.id %>"
+                                         data-item-position="<%= item.sequence %>"
+                                         data-item-dietary-restrictions='[
+                                           <%= (item.respond_to?(:is_vegetarian) && item.is_vegetarian) ? '"vegetarian"' : nil %>
+                                           <%= (item.respond_to?(:is_vegan) && item.is_vegan) ? ', "vegan"' : nil %>
+                                           <%= (item.respond_to?(:is_gluten_free) && item.is_gluten_free) ? ', "gluten_free"' : nil %>
+                                           <%= (item.respond_to?(:is_dairy_free) && item.is_dairy_free) ? ', "dairy_free"' : nil %>
+                                           <%= (item.respond_to?(:is_nut_free) && item.is_nut_free) ? ', "nut_free"' : nil %>
+                                         ]'
+                                         data-action="click->menu-import#showEditItemModal">
+                                        </i>
+                                        <i class="bi bi-grip-vertical"></i>
+                                    </span>
+                                </span>
                               </div>
                               <% if item.description.present? %>
                                 <div class="text-muted small mb-2"><%= item.description %></div>
@@ -375,11 +375,12 @@
             
             <div class="col-md-4">
               <label for="item_section" class="form-label">Section</label>
-              <select class="form-select" id="item_section" name="item_section" data-menu-import-target="editItemSection">
+              <select class="form-select" id="item_section" name="item_section" data-menu-import-target="editItemSection" disabled title="Section cannot be changed here">
                 <% @ocr_menu_import.ocr_menu_sections.ordered.each do |section| %>
                   <option value="<%= section.id %>"><%= section.name %></option>
                 <% end %>
               </select>
+              <div class="form-text text-muted">Section is determined by the parent group. Reorder items within their section only.</div>
             </div>
             
             <div class="col-md-4">
@@ -497,8 +498,6 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 6px 10px;
-        margin-right: 4px;
       }
       .item-drag-handle i { pointer-events: none; }
       .section-container.dragging, .item-row.dragging {
@@ -850,7 +849,11 @@
       if (nameInput) nameInput.value = trigger.getAttribute('data-item-name') || '';
       if (descInput) descInput.value = trigger.getAttribute('data-item-description') || '';
       if (priceInput) priceInput.value = trigger.getAttribute('data-item-price') || '';
-      if (sectionSelect) sectionSelect.value = trigger.getAttribute('data-item-section') || '';
+      if (sectionSelect) {
+        sectionSelect.value = trigger.getAttribute('data-item-section') || '';
+        sectionSelect.setAttribute('disabled', 'disabled');
+        sectionSelect.title = 'Section cannot be changed here.';
+      }
       if (positionInput) positionInput.value = trigger.getAttribute('data-item-position') || '';
 
       // Allergens (TomSelect if present)
