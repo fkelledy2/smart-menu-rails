@@ -52,8 +52,18 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for Apache
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
-  # Store uploaded files on the local file system (see config/storage.yml for options).
+  # Store uploaded files on S3 in production (see config/storage.yml)
   config.active_storage.service = :amazon
+
+  # Use libvips for ActiveStorage variants to reduce memory usage
+  config.active_storage.variant_processor = :vips
+
+  # Narrow analyzers to the vips image analyzer to avoid heavy analyzers unless required
+  if defined?(ActiveStorage::Analyzer::ImageAnalyzer::Vips)
+    config.active_storage.analyzers = [ActiveStorage::Analyzer::ImageAnalyzer::Vips]
+  end
+  # Optionally disable previewers if you don't generate PDF/video previews
+  # config.active_storage.previewers = []
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -80,8 +90,19 @@ Rails.application.configure do
   # want to log everything, set the level to "debug".
   config.log_level = :info # Suppress SQL query logs; change to :debug for verbose output
 
-  # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  # Use MemCachier (memcached) if available for IdentityCache CAS support; otherwise fall back to Redis
+  if ENV["MEMCACHIER_SERVERS"].present?
+    config.cache_store = :mem_cache_store,
+      ENV['MEMCACHIER_SERVERS'],
+      { username: ENV['MEMCACHIER_USERNAME'], password: ENV['MEMCACHIER_PASSWORD'] }
+  else
+    # Fallback: Redis cache store
+    config.cache_store = :redis_store, {
+      url: ENV.fetch("REDIS_URL", "redis://localhost:6379/0"),
+      namespace: 'cache',
+      expires_in: 12.hours
+    }
+  end
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
@@ -110,22 +131,6 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-
-  #   config.cache_store = :redis_cache_store, {
-  #     url: ENV['REDIS_URL'],
-  #     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE } }
-
-  config.cache_store = :redis_store, {
-    url: ENV.fetch("REDIS_URL", "redis://localhost:6379/0"),
-    namespace: 'cache',
-    expires_in: 12.hours
-  }
-#   config.cache_store = :redis_store, {
-#       url: ENV.fetch("REDIS_URL"),
-#       ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
-#       namespace: 'cache',
-#       expires_in: 12.hours
-#   }
 
   config.public_file_server.headers = {
     'Cache-Control' => 'public, max-age=31536000',
