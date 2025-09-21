@@ -42,10 +42,20 @@ class OcrMenuImportsController < ApplicationController
   # PATCH/PUT /restaurants/:restaurant_id/ocr_menu_imports/:id
   def update
     if @ocr_menu_import.update(ocr_menu_import_params)
-      redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
-                  notice: 'Menu import was successfully updated.'
+      respond_to do |format|
+        format.html do
+          redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
+                      notice: 'Menu import was successfully updated.'
+        end
+        format.json do
+          render json: { ok: true, import: { id: @ocr_menu_import.id, name: @ocr_menu_import.name } }
+        end
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: { ok: false, errors: @ocr_menu_import.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
   

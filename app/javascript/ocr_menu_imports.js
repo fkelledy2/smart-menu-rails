@@ -1,24 +1,11 @@
-// OCR Menu Imports DnD module
-// This module initializes section and item drag-and-drop and logs to console for debugging.
-
-let ocrDnDInitialized = false;
+// OCR Menu Imports module: initializes DnD where present and wires inline editors
 
 export function initOCRMenuImportDnD() {
   const container = document.getElementById('sections-sortable');
-  if (!container) {
-    // Not on OCR imports page
-    return;
-  }
+  // Do not return early here; we still want inline editing (e.g., import title) to work
 
-  if (ocrDnDInitialized) {
-    console.log('[OCR DnD] Already initialized, skipping');
-    return;
-  }
-
-  ocrDnDInitialized = true;
-  // Set global flag so inline view JS can skip its own DnD init
+  // Set global flag so inline view JS can skip its own DnD init (harmless if repeated)
   try { window.OCR_DND_ACTIVE = true; } catch (_) {}
-  console.log('[OCR DnD] Initializing drag-and-drop');
 
   // Inject minimal styles previously defined inline in the view
   (function injectStyles(){
@@ -30,10 +17,10 @@ export function initOCRMenuImportDnD() {
       .section-drag-handle, .item-drag-handle { cursor: grab; opacity: 0.6; transition: opacity 0.2s; user-select: none; touch-action: none; }
       .section-drag-handle:hover, .item-drag-handle:hover { opacity: 1; }
       .section-container.dragging, .item-row.dragging { opacity: 0.5; background: #f8f9fa; border-radius: 4px; }
-      /* Inline section title edit affordance */
-      .section-title-editable { cursor: text; position: relative; }
-      .section-title-editable .edit-indicator { opacity: 0; transition: opacity .15s; font-size: .9em; }
-      .section-title-editable:hover .edit-indicator { opacity: .75; }
+      /* Inline title edit affordances */
+      .section-title-editable, .import-title-editable { cursor: text; position: relative; }
+      .section-title-editable .edit-indicator, .import-title-editable .edit-indicator { opacity: 0; transition: opacity .15s; font-size: .9em; }
+      .section-title-editable:hover .edit-indicator, .import-title-editable:hover .edit-indicator { opacity: .75; }
     `;
     document.head.appendChild(style);
   })();
@@ -53,9 +40,6 @@ export function initOCRMenuImportDnD() {
         const icon = document.createElement('span');
         icon.className = 'edit-indicator text-secondary ms-2';
         icon.innerHTML = '<i class="bi bi-pencil"></i>';
-        icon.setAttribute('title', 'Click to edit');
-        icon.setAttribute('data-bs-toggle', 'tooltip');
-        icon.setAttribute('data-bs-placement', 'top');
         descEl.classList.add('section-title-editable');
         descEl.appendChild(icon);
         try { if (window.bootstrap?.Tooltip) new bootstrap.Tooltip(icon); } catch (_) {}
@@ -468,8 +452,140 @@ export function initOCRMenuImportDnD() {
     document.head.appendChild(script);
   }
 
-  // Kick off initialization ordering
-  ensureSortableThenInit();
+  // Kick off DnD initialization only when the sections container exists on the page
+  if (container && !container.dataset.ocrDndAttached) {
+    container.dataset.ocrDndAttached = 'true';
+    ensureSortableThenInit();
+  }
+
+  // Inline edit for import title (H1)
+  (function initInlineImportTitleEdit(){
+    const titleEl = document.querySelector('.import-title-editable');
+    if (!titleEl) return;
+    if (titleEl.dataset.inlineBound === 'true') return; // idempotent binding
+    titleEl.dataset.inlineBound = 'true';
+    const updateUrl = titleEl.getAttribute('data-update-url');
+    if (!updateUrl) return;
+
+    // Ensure tooltip is active on the indicator if present
+    try {
+      const icon = titleEl.querySelector('.edit-indicator');
+      if (icon && window.bootstrap?.Tooltip) new bootstrap.Tooltip(icon);
+    } catch (_) {}
+
+    // Accessibility: make the title focusable/interactive
+    try { titleEl.setAttribute('role', 'button'); titleEl.setAttribute('tabindex', '0'); } catch(_) {}
+
+    const onClickTitle = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Avoid multiple editors
+      if (titleEl.querySelector('input[data-role="import-title-input"]')) return;
+
+      const originalText = (titleEl.childNodes[0]?.textContent || titleEl.textContent || '').replace(/\s*$/, '').trim();
+
+      // Build editor
+      const wrapper = document.createElement('div');
+      wrapper.className = 'd-flex align-items-center gap-2 w-100';
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'form-control form-control-sm';
+      input.value = originalText;
+      input.setAttribute('data-role', 'import-title-input');
+      input.style.maxWidth = '520px';
+
+      const saveBtn = document.createElement('button');
+      saveBtn.type = 'button';
+      saveBtn.className = 'btn btn-sm btn-primary';
+      saveBtn.innerHTML = '<i class="bi bi-save"></i>';
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.type = 'button';
+      cancelBtn.className = 'btn btn-sm btn-outline-secondary';
+      cancelBtn.innerHTML = '<i class="bi bi-x"></i>';
+
+      // Replace title content with editor
+      const parent = titleEl.parentNode;
+      const placeholder = document.createElement(titleEl.tagName.toLowerCase());
+      placeholder.className = titleEl.className;
+      parent.replaceChild(placeholder, titleEl);
+      placeholder.appendChild(wrapper);
+      wrapper.appendChild(input);
+      const btnGroup = document.createElement('div');
+      btnGroup.className = 'btn-group btn-group-sm';
+      btnGroup.setAttribute('role', 'group');
+      btnGroup.appendChild(saveBtn);
+      btnGroup.appendChild(cancelBtn);
+      wrapper.appendChild(btnGroup);
+      input.focus();
+
+      const showInlineError = (msg) => {
+        let errEl = wrapper.querySelector('[data-role="import-title-error"]');
+        if (!errEl) {
+          errEl = document.createElement('div');
+          errEl.setAttribute('data-role', 'import-title-error');
+          errEl.className = 'text-danger small';
+          wrapper.appendChild(errEl);
+        }
+        errEl.textContent = msg;
+      };
+
+      const restore = (text) => {
+        const newTitle = document.createElement(placeholder.tagName.toLowerCase());
+        newTitle.className = placeholder.className;
+        newTitle.textContent = text;
+        const icon = document.createElement('span');
+        icon.className = 'edit-indicator text-secondary ms-2';
+        icon.innerHTML = '<i class="bi bi-pencil"></i>';
+        newTitle.appendChild(icon);
+        parent.replaceChild(newTitle, placeholder);
+        newTitle.addEventListener('click', onClickTitle);
+        try { if (window.bootstrap?.Tooltip) new bootstrap.Tooltip(icon); } catch (_) {}
+      };
+
+      const persist = () => {
+        const newName = input.value.trim();
+        if (!newName) { showInlineError('Please enter a name.'); input.focus(); return; }
+        if (newName === originalText) { restore(originalText); return; }
+        saveBtn.disabled = true; cancelBtn.disabled = true; input.disabled = true;
+        const csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
+        fetch(updateUrl, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-Token': csrf },
+          body: JSON.stringify({ ocr_menu_import: { name: newName } }),
+          credentials: 'same-origin'
+        }).then(resp => {
+          if (!resp.ok) return resp.text().then(t => { throw new Error(t || `HTTP ${resp.status}`); });
+          return resp.json().catch(() => ({}));
+        }).then(() => {
+          restore(newName);
+        }).catch(err => {
+          console.warn('[OCR InlineEdit][import-title] Failed to save title', err);
+          showInlineError('Unable to save. Please try again.');
+          saveBtn.disabled = false; cancelBtn.disabled = false; input.disabled = false;
+          input.focus();
+        });
+      };
+
+      saveBtn.addEventListener('click', (ev) => { ev.stopPropagation(); persist(); });
+      cancelBtn.addEventListener('click', (ev) => { ev.stopPropagation(); restore(originalText); });
+      input.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter') { ev.preventDefault(); persist(); }
+        if (ev.key === 'Escape') { ev.preventDefault(); restore(originalText); }
+      });
+    };
+
+    // Bind click on the title and the pencil icon
+    titleEl.addEventListener('click', onClickTitle);
+    const pencil = titleEl.querySelector('.edit-indicator');
+    if (pencil) pencil.addEventListener('click', onClickTitle);
+    // Keyboard support
+    titleEl.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter') { ev.preventDefault(); onClickTitle(ev); }
+    });
+  })();
 
   // Inline edit for section titles
   (function initInlineSectionTitleEdit(){
@@ -558,9 +674,6 @@ export function initOCRMenuImportDnD() {
           const icon = document.createElement('span');
           icon.className = 'edit-indicator text-secondary ms-2';
           icon.innerHTML = '<i class="bi bi-pencil"></i>';
-          icon.setAttribute('title', 'Click to edit');
-          icon.setAttribute('data-bs-toggle', 'tooltip');
-          icon.setAttribute('data-bs-placement', 'top');
           newTitle.appendChild(icon);
           // replace editor with new title and rebind click handler
           headerGrow.replaceChild(newTitle, wrapper);
