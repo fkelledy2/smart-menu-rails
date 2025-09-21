@@ -120,6 +120,9 @@ export default class extends Controller {
     this.setDietaryRestrictionCheckbox('dairy_free', dietaryRestrictions)
     this.setDietaryRestrictionCheckbox('nut_free', dietaryRestrictions)
     
+    // Store id on modal dataset for save fallback
+    try { this.editItemModalTarget.dataset.itemId = itemId } catch (_) {}
+
     // Show the modal
     this.editItemModal.show()
   }
@@ -139,61 +142,227 @@ export default class extends Controller {
   }
   
   saveItem(event) {
-    if (!this.hasEditItemFormTarget) return
-    
+    console.debug('[menu-import#saveItem] click received')
+    if (!this.hasEditItemFormTarget) {
+      console.warn('[menu-import#saveItem] No editItemFormTarget found')
+      return
+    }
+
     const form = this.editItemFormTarget
     const formData = new FormData(form)
-    const itemId = formData.get('item_id')
-    
-    // Get selected allergens (handled by Select2)
-    const allergens = $(this.editItemAllergensTarget).val() || []
-    
+    let itemId = formData.get('item_id')
+    if (!itemId) {
+      // fallback: try read from modal dataset if available
+      const modal = this.hasEditItemModalTarget ? this.editItemModalTarget : document.getElementById('editItemModal')
+      if (modal && modal.dataset.itemId) itemId = modal.dataset.itemId
+    }
+    if (!itemId) {
+      console.error('[menu-import#saveItem] Missing item_id in form')
+      alert('Unable to save: missing item id.')
+      return
+    }
+
+    // Visual feedback during save
+    const btn = event?.currentTarget
+    let origHtml
+    if (btn) {
+      origHtml = btn.innerHTML
+      btn.disabled = true
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Saving…'
+    }
+
+    // Get selected allergens (TomSelect if present, else jQuery/native)
+    let allergens = []
+    if (this.hasEditItemAllergensTarget) {
+      const el = this.editItemAllergensTarget
+      if (el && el.tomselect) {
+        try { allergens = el.tomselect.getValue() || [] } catch (_) { allergens = [] }
+      } else if (window.$ && typeof $(el).val === 'function') {
+        try { allergens = $(el).val() || [] } catch (_) { allergens = [] }
+      } else {
+        allergens = Array.from(el?.selectedOptions || []).map(o => o.value)
+      }
+    }
+
     // Get selected dietary restrictions from checkboxes
     const dietaryRestrictions = []
-    if (this.editItemVegetarianTarget.checked) dietaryRestrictions.push('vegetarian')
-    if (this.editItemVeganTarget.checked) dietaryRestrictions.push('vegan')
-    if (this.editItemGlutenFreeTarget.checked) dietaryRestrictions.push('gluten_free')
-    if (this.editItemDairyFreeTarget.checked) dietaryRestrictions.push('dairy_free')
-    if (this.editItemNutFreeTarget.checked) dietaryRestrictions.push('nut_free')
-    
-    // Add allergens and dietary_restrictions to form data
-    formData.set('allergens', JSON.stringify(allergens))
-    formData.set('dietary_restrictions', JSON.stringify(dietaryRestrictions))
-    
+    if (this.hasEditItemVegetarianTarget && this.editItemVegetarianTarget.checked) dietaryRestrictions.push('vegetarian')
+    if (this.hasEditItemVeganTarget && this.editItemVeganTarget.checked) dietaryRestrictions.push('vegan')
+    if (this.hasEditItemGlutenFreeTarget && this.editItemGlutenFreeTarget.checked) dietaryRestrictions.push('gluten_free')
+    if (this.hasEditItemDairyFreeTarget && this.editItemDairyFreeTarget.checked) dietaryRestrictions.push('dairy_free')
+    if (this.hasEditItemNutFreeTarget && this.editItemNutFreeTarget.checked) dietaryRestrictions.push('nut_free')
+
+    const payload = {
+      ocr_menu_item: {
+        name: formData.get('item_name'),
+        description: formData.get('item_description'),
+        price: parseFloat(formData.get('item_price')) || 0,
+        allergens: allergens,
+        dietary_restrictions: dietaryRestrictions
+      }
+    }
+    console.debug('[menu-import#saveItem] PATCH /ocr_menu_items/' + itemId, payload)
+
     // Submit the form via fetch
     fetch(`/ocr_menu_items/${itemId}`, {
       method: 'PATCH',
       headers: {
-        'X-CSRF-Token': document.querySelector("[name='csrf-token']").content,
+        'X-CSRF-Token': (document.querySelector("meta[name='csrf-token']") || document.querySelector("[name='csrf-token']")).content,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        ocr_menu_item: {
-          name: formData.get('item_name'),
-          description: formData.get('item_description'),
-          price: parseFloat(formData.get('item_price')) || 0,
-          allergens: allergens,
-          dietary_restrictions: dietaryRestrictions
-        }
-      }),
+      body: JSON.stringify(payload),
       credentials: 'same-origin'
     })
     .then(response => {
-      if (!response.ok) throw new Error('Network response was not ok')
+      if (!response.ok) {
+        return response.text().then(text => { throw new Error(`HTTP ${response.status}: ${text}`) })
+      }
       return response.json()
     })
     .then(data => {
-      // Close the modal
+      // Update DOM in-place without reload
+      try {
+        const item = data.item || {}
+        const id = String(item.id || '')
+        const row = document.querySelector(`.item-row[data-item-id="${id}"]`)
+        if (row) {
+          // Update name
+          const nameSpan = row.querySelector('.fw-semibold span')
+          if (nameSpan && item.name != null) nameSpan.textContent = item.name
+
+          // Update description block
+          let descEl = row.querySelector('.text-muted.small.mb-2')
+          const newDesc = item.description || ''
+          if (newDesc && !descEl) {
+            descEl = document.createElement('div')
+            descEl.className = 'text-muted small mb-2'
+            // insert after header block
+            const header = row.querySelector('.d-flex.justify-content-between')
+            if (header && header.parentNode) header.parentNode.insertBefore(descEl, header.nextSibling)
+          }
+          if (descEl) {
+            if (newDesc) {
+              descEl.textContent = newDesc
+            } else {
+              descEl.remove()
+            }
+          }
+
+          // Update price text node inside the price container (first child text before buttons)
+          const priceWrap = row.querySelector('.text-nowrap')
+          if (priceWrap && item.price != null) {
+            const price = Number(item.price)
+            let formatted = ''
+            if (!isNaN(price)) {
+              // Try to reuse existing currency symbol if present
+              let existing = ''
+              if (priceWrap.firstChild && priceWrap.firstChild.nodeType === Node.TEXT_NODE) {
+                existing = (priceWrap.firstChild.nodeValue || '').trim()
+              }
+              const symbolMatch = existing.match(/^[^\d\-\.,]+/)
+              const symbol = symbolMatch ? symbolMatch[0] : ''
+              const amount = price.toFixed(2)
+              formatted = symbol ? `${symbol}${amount}` : new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(price)
+            }
+            if (!priceWrap.firstChild) priceWrap.appendChild(document.createTextNode(''))
+            priceWrap.firstChild.nodeValue = (formatted ? formatted + ' ' : '')
+          }
+
+          // Update dietary badges (create or refresh)
+          const existingBadges = row.querySelector('.item-dietary-badges')
+          const dietFlags = {
+            vegetarian: !!item.is_vegetarian,
+            vegan: !!item.is_vegan,
+            gluten_free: !!item.is_gluten_free,
+            dairy_free: !!item.is_dairy_free,
+            nut_free: !!item.is_nut_free
+          }
+          const labels = {
+            vegetarian: 'Vegetarian',
+            vegan: 'Vegan',
+            gluten_free: 'Gluten Free',
+            dairy_free: 'Dairy Free',
+            nut_free: 'Nut Free'
+          }
+          const activeKeys = Object.keys(dietFlags).filter(k => dietFlags[k])
+          let badgeWrap = existingBadges
+          if (!badgeWrap && activeKeys.length) {
+            badgeWrap = document.createElement('div')
+            badgeWrap.className = 'item-dietary-badges mt-1'
+            // insert after description if present, else after header
+            const descEl2 = row.querySelector('.text-muted.small.mb-2')
+            const header = row.querySelector('.d-flex.justify-content-between')
+            const anchor = descEl2 || header
+            if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(badgeWrap, anchor.nextSibling)
+          }
+          if (badgeWrap) {
+            badgeWrap.innerHTML = activeKeys.map(k => `<span class="badge bg-success-subtle text-success border border-success-subtle me-1">${labels[k]}</span>`).join('')
+            if (!activeKeys.length) badgeWrap.remove()
+          }
+
+          // Update edit trigger data attributes for next open
+          const editIcon = row.querySelector('.bi.bi-pencil')
+          if (editIcon) {
+            editIcon.dataset.itemName = item.name || ''
+            editIcon.dataset.itemDescription = item.description || ''
+            editIcon.dataset.itemPrice = item.price || ''
+            editIcon.dataset.itemAllergens = JSON.stringify(item.allergens || [])
+            const diet = []
+            if (item.is_vegetarian) diet.push('vegetarian')
+            if (item.is_vegan) diet.push('vegan')
+            if (item.is_gluten_free) diet.push('gluten_free')
+            if (item.is_dairy_free) diet.push('dairy_free')
+            if (item.is_nut_free) diet.push('nut_free')
+            editIcon.dataset.itemDietaryRestrictions = JSON.stringify(diet)
+          }
+        }
+      } catch (e) {
+        console.warn('DOM update after save failed:', e)
+      }
+
+      // Close the modal after updating
       this.hideEditItemModal()
-      
-      // Reload the page to show updated data
-      // In a real app, you might want to update the DOM directly instead
-      window.location.reload()
     })
-    .catch(error => {
+    .catch(async error => {
       console.error('Error updating menu item:', error)
-      alert('There was an error updating the menu item. Please try again.')
+      // Try to parse error response JSON with errors array
+      let serverErrors = null
+      try {
+        if (error.message && error.message.includes('HTTP')) {
+          const parts = error.message.split(':')
+          const body = parts.slice(1).join(':').trim()
+          serverErrors = JSON.parse(body)
+        }
+      } catch (_) { serverErrors = null }
+
+      const messages = []
+      if (serverErrors && Array.isArray(serverErrors.errors)) {
+        serverErrors.errors.forEach(e => messages.push(String(e)))
+      }
+      if (!messages.length) messages.push(error && error.message ? error.message : 'There was an error updating the menu item.')
+
+      // Render inline error in modal
+      const body = this.hasEditItemFormTarget ? this.editItemFormTarget.closest('.modal-content') : null
+      if (body) {
+        let alert = body.querySelector('.alert.alert-danger[data-role="item-save-errors"]')
+        if (!alert) {
+          alert = document.createElement('div')
+          alert.className = 'alert alert-danger'
+          alert.setAttribute('data-role', 'item-save-errors')
+          const container = body.querySelector('.modal-body') || body
+          container.insertBefore(alert, container.firstChild)
+        }
+        alert.innerHTML = `<strong>Unable to save:</strong><ul>${messages.map(m => `<li>${m}</li>`).join('')}</ul>`
+      } else {
+        alert(messages.join('\n'))
+      }
+    })
+    .finally(() => {
+      if (btn) {
+        btn.disabled = false
+        btn.innerHTML = origHtml || 'Save Changes'
+      }
     })
   }
   

@@ -39,6 +39,9 @@ Rails.application.routes.draw do
 
   resources :dw_orders_mv, only: [:index, :show]
 
+  # Endpoint to update OCR menu items from modal
+  resources :ocr_menu_items, only: [:update]
+
   # Google Vision API endpoints
   namespace :api do
     namespace :v1 do

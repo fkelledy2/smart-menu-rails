@@ -315,7 +315,7 @@
 </div>
 
 <!-- Confirmation Modal -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" data-bs-backdrop="static" data-menu-import-target="confirmModal">
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" data-bs-backdrop="static" data-controller="menu-import" data-menu-import-target="confirmModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body text-center p-4">
@@ -344,7 +344,7 @@
 </div>
 
 <!-- Edit Item Modal -->
-<div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true" data-bs-backdrop="static" data-menu-import-target="editItemModal">
+<div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true" data-bs-backdrop="static" data-controller="menu-import" data-menu-import-target="editItemModal">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -381,9 +381,8 @@
                   <option value="<%= section.id %>"><%= section.name %></option>
                 <% end %>
               </select>
-              <div class="form-text text-muted">Section is determined by the parent group. Reorder items within their section only.</div>
+              <div class="form-text text-muted">Reorder items within this section only.</div>
             </div>
-            
             <div class="col-md-4">
               <label for="item_position" class="form-label">Position</label>
               <input type="number" class="form-control" id="item_position" name="item_position" data-menu-import-target="editItemPosition">
@@ -418,7 +417,7 @@
                 </label>
               </div>
             </div>
-            
+
             <div class="col-md-6">
               <label for="item_allergens" class="form-label">Allergens</label>
               <% default_allergens = %w[gluten dairy egg peanut tree_nut soy shellfish fish sesame mustard celery sulphites lupin mollusc garlic onion] %>
