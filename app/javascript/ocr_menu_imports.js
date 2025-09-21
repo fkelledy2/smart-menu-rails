@@ -480,10 +480,13 @@ export function initOCRMenuImportDnD() {
       e.preventDefault();
       e.stopPropagation();
 
-      // Avoid multiple editors
-      if (titleEl.querySelector('input[data-role="import-title-input"]')) return;
+      // Operate on the element that was clicked (works after restore)
+      const host = (e.currentTarget?.closest?.('.import-title-editable')) || e.currentTarget || titleEl;
 
-      const originalText = (titleEl.childNodes[0]?.textContent || titleEl.textContent || '').replace(/\s*$/, '').trim();
+      // Avoid multiple editors
+      if (host.querySelector('input[data-role="import-title-input"]')) return;
+
+      const originalText = (host.childNodes[0]?.textContent || host.textContent || '').replace(/\s*$/, '').trim();
 
       // Build editor
       const wrapper = document.createElement('div');
@@ -507,10 +510,10 @@ export function initOCRMenuImportDnD() {
       cancelBtn.innerHTML = '<i class="bi bi-x"></i>';
 
       // Replace title content with editor
-      const parent = titleEl.parentNode;
-      const placeholder = document.createElement(titleEl.tagName.toLowerCase());
-      placeholder.className = titleEl.className;
-      parent.replaceChild(placeholder, titleEl);
+      const parent = host.parentNode;
+      const placeholder = document.createElement(host.tagName.toLowerCase());
+      placeholder.className = host.className;
+      parent.replaceChild(placeholder, host);
       placeholder.appendChild(wrapper);
       wrapper.appendChild(input);
       const btnGroup = document.createElement('div');
@@ -541,7 +544,9 @@ export function initOCRMenuImportDnD() {
         icon.innerHTML = '<i class="bi bi-pencil"></i>';
         newTitle.appendChild(icon);
         parent.replaceChild(newTitle, placeholder);
+        // Re-bind handlers to allow re-edit without full refresh
         newTitle.addEventListener('click', onClickTitle);
+        icon.addEventListener('click', onClickTitle);
         try { if (window.bootstrap?.Tooltip) new bootstrap.Tooltip(icon); } catch (_) {}
       };
 
