@@ -1,0 +1,10 @@
+# System packages for Heroku (heroku-community/apt buildpack)
+# Minimum for MiniMagick/ImageProcessing
+imagemagick
+
+# Helpful for PDF to image conversions and fonts (optional but recommended)
+ghostscript
+poppler-utils
+
+# Optional: high-performance image processing (if you switch to libvips backend)
+libvips
