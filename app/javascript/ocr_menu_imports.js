@@ -353,9 +353,9 @@ export function initOCRMenuImportDnD() {
         const urlMeta = document.querySelector('meta[name="ocr-items-reorder-url"]');
         return urlMeta ? urlMeta.content : null;
       })();
-    // If no explicit meta/url found, we will fall back to the inline fetch in the view code for items; skip here
+    // If no explicit meta/url found, rely on inline per-section code
     if (!itemReorderUrl) {
-      console.log('[OCR DnD][items] No global reorder URL meta found; relying on inline per-section code');
+      // no-op
     }
 
     document.querySelectorAll('[id^="section-"][id$="-items"]').forEach(el => {
@@ -363,19 +363,10 @@ export function initOCRMenuImportDnD() {
       const itemContainer = el.querySelector('.vstack');
       if (!itemContainer) return;
 
-      // Diagnostics: count handles per section
+      // Prevent click toggles on the handle after drag
       const handles = itemContainer.querySelectorAll('.item-drag-handle');
-      console.log('[OCR DnD][items] Section', sectionId, 'handle count=', handles.length);
-      handles.forEach((h, idx) => {
-        // Let Sortable receive events: do NOT stop propagation here
-        ['pointerdown','mousedown','touchstart'].forEach(evt => {
-          h.addEventListener(evt, e => {
-            console.log(`[OCR DnD][items] handle ${evt} section=${sectionId} idx=${idx}`);
-          }, { passive: true });
-        });
-        // Prevent click toggles on the handle after drag
+      handles.forEach((h) => {
         h.addEventListener('click', e => {
-          console.log(`[OCR DnD][items] handle click section=${sectionId} idx=${idx}`);
           try { e.preventDefault(); } catch (_) {}
         }, { passive: false });
       });
@@ -385,16 +376,12 @@ export function initOCRMenuImportDnD() {
           .map(el => parseInt(el.getAttribute('data-item-id'), 10))
           .filter(n => !isNaN(n));
         const url = itemReorderUrl || (document.querySelector('meta[name="ocr-items-reorder-url"]') || {}).content;
-        if (!url) {
-          console.log('[OCR DnD][items] Persist via inline view handler will handle this');
-          return;
-        }
+        if (!url) { return; }
         persist(url, { section_id: sectionId, item_ids: itemIds }, `items(section:${sectionId})`);
       }
 
       if (typeof Sortable !== 'undefined') {
         try {
-          console.log('[OCR DnD][items] Initializing SortableJS for section', sectionId);
           // Remove native draggable attributes set by any fallback/inline code
           itemContainer.querySelectorAll('.item-row').forEach(r => r.removeAttribute('draggable'));
           new Sortable(itemContainer, {
@@ -414,23 +401,12 @@ export function initOCRMenuImportDnD() {
             setData: (dataTransfer, dragEl) => {
               try { dataTransfer.setData('text', dragEl.dataset.itemId || ''); } catch (_) {}
             },
-            onFilter: (evt) => {
-              console.log('[OCR DnD][items] onFilter prevented drag from interactive element', evt.target);
-            },
-            onChoose: (evt) => {
-              console.log('[OCR DnD][items] onChoose index=', evt.oldIndex, 'itemId=', evt.item?.dataset?.itemId, 'section=', sectionId);
-            },
-            onStart: (evt) => {
-              console.log('[OCR DnD][items] onStart index=', evt.oldIndex, 'itemId=', evt.item?.dataset?.itemId, 'section=', sectionId);
-            },
-            onMove: (evt) => {
-              // console.debug('[OCR DnD][items] onMove newIndex=', evt.newIndex, 'section=', sectionId);
-            },
-            onUnchoose: (evt) => {
-              console.log('[OCR DnD][items] onUnchoose index=', evt.oldIndex, 'itemId=', evt.item?.dataset?.itemId, 'section=', sectionId);
-            },
+            onFilter: (evt) => {},
+            onChoose: (evt) => {},
+            onStart: (evt) => {},
+            onMove: (evt) => {},
+            onUnchoose: (evt) => {},
             onEnd: () => {
-              console.log('[OCR DnD][items] onEnd persist section', sectionId);
               persistItems();
             }
           });
@@ -449,7 +425,6 @@ export function initOCRMenuImportDnD() {
           if (!e.target.closest('.item-drag-handle')) { e.preventDefault(); return; }
           e.dataTransfer.effectAllowed = 'move';
           row.classList.add('dragging');
-          console.log('[OCR DnD][items] dragstart', row.dataset.itemId);
         });
         row.addEventListener('dragend', () => {
           row.classList.remove('dragging');
