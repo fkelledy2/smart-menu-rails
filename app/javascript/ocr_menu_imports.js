@@ -53,8 +53,12 @@ export function initOCRMenuImportDnD() {
         const icon = document.createElement('span');
         icon.className = 'edit-indicator text-secondary ms-2';
         icon.innerHTML = '<i class="bi bi-pencil"></i>';
+        icon.setAttribute('title', 'Click to edit');
+        icon.setAttribute('data-bs-toggle', 'tooltip');
+        icon.setAttribute('data-bs-placement', 'top');
         descEl.classList.add('section-title-editable');
         descEl.appendChild(icon);
+        try { if (window.bootstrap?.Tooltip) new bootstrap.Tooltip(icon); } catch (_) {}
       }
 
       const onClickDesc = (e) => {
@@ -74,8 +78,9 @@ export function initOCRMenuImportDnD() {
         textarea.className = 'form-control form-control-sm';
         textarea.rows = 1;
         textarea.value = originalText;
+        if (!originalText) textarea.placeholder = 'Add a section description';
         textarea.setAttribute('data-role', 'section-desc-input');
-        textarea.style.maxWidth = '400px';
+        textarea.style.maxWidth = '560px';
 
         const saveBtn = document.createElement('button');
         saveBtn.type = 'button';
@@ -108,6 +113,7 @@ export function initOCRMenuImportDnD() {
           newDesc.appendChild(icon);
           wrapper.parentNode.replaceChild(newDesc, wrapper);
           newDesc.addEventListener('click', onClickDesc);
+          try { if (window.bootstrap?.Tooltip) new bootstrap.Tooltip(icon); } catch (_) {}
         };
 
         const showInlineError = (msg) => {
@@ -121,7 +127,10 @@ export function initOCRMenuImportDnD() {
           errEl.textContent = msg;
         };
 
+        let saving = false;
         const persist = () => {
+          if (saving) return;
+          saving = true;
           const newVal = textarea.value.trim();
           if (newVal === originalText) { restore(originalText); return; }
           saveBtn.disabled = true; cancelBtn.disabled = true; textarea.disabled = true;
@@ -141,6 +150,7 @@ export function initOCRMenuImportDnD() {
             console.warn('[OCR InlineEdit][section-desc] Failed to save description', err);
             showInlineError('Unable to save. Please try again.');
             saveBtn.disabled = false; cancelBtn.disabled = false; textarea.disabled = false;
+            saving = false;
             textarea.focus();
           });
         };
@@ -150,6 +160,12 @@ export function initOCRMenuImportDnD() {
         textarea.addEventListener('keydown', (ev) => {
           if (ev.key === 'Enter' && (ev.metaKey || ev.ctrlKey)) { ev.preventDefault(); persist(); }
           if (ev.key === 'Escape') { ev.preventDefault(); restore(originalText); }
+        });
+        // Save on blur for description
+        textarea.addEventListener('blur', () => {
+          // If cancel/save just clicked, wrapper might be removed; guard by presence
+          if (!document.body.contains(textarea)) return;
+          persist();
         });
       };
 
@@ -498,6 +514,7 @@ export function initOCRMenuImportDnD() {
         icon.innerHTML = '<i class="bi bi-pencil"></i>';
         titleEl.classList.add('section-title-editable');
         titleEl.appendChild(icon);
+        try { if (window.bootstrap?.Tooltip) new bootstrap.Tooltip(icon); } catch (_) {}
       }
 
       const onClickTitle = (e) => {
@@ -543,6 +560,21 @@ export function initOCRMenuImportDnD() {
         wrapper.appendChild(btnGroupTitle);
         input.focus();
 
+        // Also open description editor for this section (even if blank)
+        try {
+          const descEl = section.querySelector('.py-2.px-3.text-muted');
+          const alreadyEditing = section.querySelector('textarea[data-role="section-desc-input"]');
+          if (descEl && !alreadyEditing) {
+            // If description text is blank, ensure the upcoming textarea shows placeholder
+            if (!descEl.textContent || !descEl.textContent.trim()) {
+              // dispatch click; handler will set placeholder
+              descEl.dispatchEvent(new Event('click', { bubbles: true }));
+            } else {
+              descEl.dispatchEvent(new Event('click', { bubbles: true }));
+            }
+          }
+        } catch (_) {}
+
         const restore = (text) => {
           const newTitle = document.createElement('h3');
           newTitle.className = 'h5 mb-0 section-title-editable';
@@ -551,10 +583,14 @@ export function initOCRMenuImportDnD() {
           const icon = document.createElement('span');
           icon.className = 'edit-indicator text-secondary ms-2';
           icon.innerHTML = '<i class="bi bi-pencil"></i>';
+          icon.setAttribute('title', 'Click to edit');
+          icon.setAttribute('data-bs-toggle', 'tooltip');
+          icon.setAttribute('data-bs-placement', 'top');
           newTitle.appendChild(icon);
           // replace editor with new title and rebind click handler
           headerGrow.replaceChild(newTitle, wrapper);
           newTitle.addEventListener('click', onClickTitle);
+          try { if (window.bootstrap?.Tooltip) new bootstrap.Tooltip(icon); } catch (_) {}
         };
 
         const showInlineError = (msg) => {

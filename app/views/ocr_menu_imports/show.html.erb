@@ -218,6 +218,8 @@
 
                     <% if section.respond_to?(:description) && section.description.present? %>
                       <div class="py-2 px-3 text-muted"><%= section.description %></div>
+                    <% else %>
+                      <div class="py-2 px-3 text-muted">Click to add description.</div>
                     <% end %>
 
                     <div class="collapse" id="section-<%= section.id %>-items" data-menu-section-target="content">
