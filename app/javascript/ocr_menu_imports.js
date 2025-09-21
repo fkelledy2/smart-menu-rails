@@ -20,6 +20,93 @@ export function initOCRMenuImportDnD() {
   try { window.OCR_DND_ACTIVE = true; } catch (_) {}
   console.log('[OCR DnD] Initializing drag-and-drop');
 
+  // Inject minimal styles previously defined inline in the view
+  (function injectStyles(){
+    const id = 'ocr-menu-imports-dnd-styles';
+    if (document.getElementById(id)) return;
+    const style = document.createElement('style');
+    style.id = id;
+    style.textContent = `
+      .section-drag-handle, .item-drag-handle { cursor: grab; opacity: 0.6; transition: opacity 0.2s; user-select: none; touch-action: none; }
+      .section-drag-handle:hover, .item-drag-handle:hover { opacity: 1; }
+      .section-container.dragging, .item-row.dragging { opacity: 0.5; background: #f8f9fa; border-radius: 4px; }
+    `;
+    document.head.appendChild(style);
+  })();
+
+  // Initialize TomSelect for allergens (was previously inline)
+  function initAllergensTomSelect(){
+    const el = document.getElementById('item_allergens');
+    if (!el) return;
+    if (el.tomselect) {
+      try { el.tomselect.destroy(); } catch(_) {}
+    }
+    if (typeof TomSelect === 'undefined') return;
+    new TomSelect(el, {
+      plugins: ['remove_button'],
+      maxItems: null,
+      create: false,
+      closeAfterSelect: false,
+      placeholder: 'Select allergens',
+      render: {
+        option: function(data, escape) { return '<div>' + escape(data.text) + '</div>'; },
+        item: function(data, escape) { return '<div>' + escape(data.text) + '</div>'; }
+      }
+    });
+  }
+
+  // Wire up Edit Item modal population (was previously inline)
+  function initEditItemModal(){
+    const editItemModal = document.getElementById('editItemModal');
+    if (!editItemModal) return;
+    editItemModal.addEventListener('show.bs.modal', function(event){
+      const trigger = event.relatedTarget;
+      if (!trigger) return;
+      const idInput = document.querySelector('[data-menu-import-target="editItemId"]');
+      const nameInput = document.getElementById('item_name');
+      const descInput = document.getElementById('item_description');
+      const priceInput = document.getElementById('item_price');
+      const sectionSelect = document.getElementById('item_section');
+      const positionInput = document.getElementById('item_position');
+      if (idInput) idInput.value = trigger.getAttribute('data-item-id') || '';
+      if (nameInput) nameInput.value = trigger.getAttribute('data-item-name') || '';
+      if (descInput) descInput.value = trigger.getAttribute('data-item-description') || '';
+      if (priceInput) priceInput.value = trigger.getAttribute('data-item-price') || '';
+      if (sectionSelect) {
+        sectionSelect.value = trigger.getAttribute('data-item-section') || '';
+        sectionSelect.setAttribute('disabled', 'disabled');
+        sectionSelect.title = 'Section cannot be changed here.';
+      }
+      if (positionInput) positionInput.value = trigger.getAttribute('data-item-position') || '';
+      // Allergens populate
+      let allergensData = [];
+      try { allergensData = JSON.parse(trigger.getAttribute('data-item-allergens') || '[]'); } catch(_) { allergensData = []; }
+      const allergensSelect = document.getElementById('item_allergens');
+      if (allergensSelect) {
+        if (allergensSelect.tomselect) {
+          try { allergensSelect.tomselect.setValue(allergensData, true); } catch(_) {}
+        } else if (window.$) {
+          try { window.$(allergensSelect).val(allergensData).trigger('change'); } catch(_) {}
+        } else {
+          Array.from(allergensSelect.options).forEach(function(opt){ opt.selected = allergensData.includes(opt.value); });
+        }
+      }
+      // Dietary checkboxes
+      let diet = [];
+      try { diet = JSON.parse(trigger.getAttribute('data-item-dietary-restrictions') || '[]'); } catch(_) { diet = []; }
+      function setChecked(id, key){ const el = document.getElementById(id); if (el) el.checked = diet.includes(key); }
+      setChecked('item_vegetarian', 'vegetarian');
+      setChecked('item_vegan', 'vegan');
+      setChecked('item_gluten_free', 'gluten_free');
+      setChecked('item_dairy_free', 'dairy_free');
+    });
+  }
+
+  // Initialize helpers
+  initAllergensTomSelect();
+  document.addEventListener('turbo:before-stream-render', initAllergensTomSelect);
+  initEditItemModal();
+
   // Helpers
   function persist(url, payload, label) {
     console.log(`[OCR DnD] Persist ${label}`, payload);
@@ -37,7 +124,7 @@ export function initOCRMenuImportDnD() {
   }
 
   // Sections via SortableJS if available; fallback to HTML5 DnD
-  (function initSections() {
+  function initSections() {
     const reorderUrl = container.getAttribute('data-reorder-url');
     if (!reorderUrl) {
       console.warn('[OCR DnD][sections] Missing data-reorder-url');
@@ -117,10 +204,10 @@ export function initOCRMenuImportDnD() {
     }
     // Fallback
     initFallback();
-  })();
+  }
 
   // Items per section
-  (function initItems() {
+  function initItems() {
     const itemReorderUrl = container.getAttribute('data-reorder-items-url') ||
       (function(){
         // We will infer from the DOM by picking any section id; but better to use a fixed URL in the view
@@ -172,8 +259,8 @@ export function initOCRMenuImportDnD() {
           // Remove native draggable attributes set by any fallback/inline code
           itemContainer.querySelectorAll('.item-row').forEach(r => r.removeAttribute('draggable'));
           new Sortable(itemContainer, {
-            // Allow grabbing either the grip or anywhere on the row
-            handle: '.item-drag-handle, .item-row',
+            // Only allow dragging when grabbing the explicit handle
+            handle: '.item-drag-handle',
             draggable: '.item-row',
             animation: 150,
             ghostClass: 'dragging',
@@ -183,7 +270,7 @@ export function initOCRMenuImportDnD() {
             touchStartThreshold: 0,
             dragoverBubble: true,
             // Do not start drag from interactive elements
-            filter: 'a, button, .btn, input, select, textarea, [data-bs-toggle]',
+            filter: 'input, select, textarea',
             preventOnFilter: true,
             setData: (dataTransfer, dragEl) => {
               try { dataTransfer.setData('text', dragEl.dataset.itemId || ''); } catch (_) {}
@@ -244,5 +331,29 @@ export function initOCRMenuImportDnD() {
         if (closest.el) itemContainer.insertBefore(dragging, closest.el); else itemContainer.appendChild(dragging);
       });
     });
-  })();
+  }
+
+  // Ensure Sortable is loaded, then initialize DnD
+  function ensureSortableThenInit() {
+    if (typeof Sortable !== 'undefined') {
+      initSections();
+      initItems();
+      return;
+    }
+    const existing = document.querySelector('script[data-ocr-sortable]');
+    if (existing) {
+      existing.addEventListener('load', () => { initSections(); initItems(); }, { once: true });
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js';
+    script.async = true;
+    script.defer = true;
+    script.setAttribute('data-ocr-sortable', 'true');
+    script.onload = function() { initSections(); initItems(); };
+    document.head.appendChild(script);
+  }
+
+  // Kick off initialization ordering
+  ensureSortableThenInit();
 }
