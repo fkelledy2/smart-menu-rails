@@ -169,6 +169,7 @@ GEM
     currency_select (8.0.0)
       actionview (>= 7.0.0, < 8.1)
       money (~> 6.0)
+    dalli (3.2.8)
     date (3.4.0)
     debug (1.9.2)
       irb (~> 1.10)
@@ -657,6 +658,7 @@ DEPENDENCIES
   cssbundling-rails
   currencies
   currency_select
+  dalli (~> 3.2)
   debug
   deepl-rb
   devise (~> 4.9)
