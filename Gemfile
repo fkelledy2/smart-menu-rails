@@ -135,3 +135,6 @@ gem "cityhash"
 gem "redis-store"
 gem "redis-activesupport"  # Required to hook into Rails cache store
 gem "openai", "~> 0.25.0"
+
+# Memcached client for Rails cache store (used with MemCachier) for IdentityCache CAS support
+gem "dalli", "~> 3.2"
