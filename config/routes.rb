@@ -42,6 +42,9 @@ Rails.application.routes.draw do
   # Endpoint to update OCR menu items from modal
   resources :ocr_menu_items, only: [:update]
 
+  # Endpoint to update OCR menu sections (inline title editing)
+  resources :ocr_menu_sections, only: [:update]
+
   # Google Vision API endpoints
   namespace :api do
     namespace :v1 do

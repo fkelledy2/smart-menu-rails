@@ -30,8 +30,131 @@ export function initOCRMenuImportDnD() {
       .section-drag-handle, .item-drag-handle { cursor: grab; opacity: 0.6; transition: opacity 0.2s; user-select: none; touch-action: none; }
       .section-drag-handle:hover, .item-drag-handle:hover { opacity: 1; }
       .section-container.dragging, .item-row.dragging { opacity: 0.5; background: #f8f9fa; border-radius: 4px; }
+      /* Inline section title edit affordance */
+      .section-title-editable { cursor: text; position: relative; }
+      .section-title-editable .edit-indicator { opacity: 0; transition: opacity .15s; font-size: .9em; }
+      .section-title-editable:hover .edit-indicator { opacity: .75; }
     `;
     document.head.appendChild(style);
+  })();
+
+  // Inline edit for section descriptions
+  (function initInlineSectionDescriptionEdit(){
+    const sections = document.querySelectorAll('.section-container');
+    sections.forEach(section => {
+      const sectionId = section.getAttribute('data-menu-section-section-id');
+      if (!sectionId) return;
+      // Expect a section description element with these classes (unique vs item descriptions)
+      const descEl = section.querySelector('.py-2.px-3.text-muted');
+      if (!descEl) return;
+
+      // Add hover edit indicator once
+      if (!descEl.querySelector('.edit-indicator')) {
+        const icon = document.createElement('span');
+        icon.className = 'edit-indicator text-secondary ms-2';
+        icon.innerHTML = '<i class="bi bi-pencil"></i>';
+        descEl.classList.add('section-title-editable');
+        descEl.appendChild(icon);
+      }
+
+      const onClickDesc = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // If already editing, ignore
+        if (section.querySelector('textarea[data-role="section-desc-input"]')) return;
+
+        const currentDesc = e.currentTarget;
+        const originalText = (currentDesc.textContent || '').trim();
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'd-flex align-items-start px-2 py-2 gap-2 w-100';
+
+        const textarea = document.createElement('textarea');
+        textarea.className = 'form-control form-control-sm';
+        textarea.rows = 1;
+        textarea.value = originalText;
+        textarea.setAttribute('data-role', 'section-desc-input');
+        textarea.style.maxWidth = '400px';
+
+        const saveBtn = document.createElement('button');
+        saveBtn.type = 'button';
+        saveBtn.className = 'btn btn-sm btn-primary';
+        saveBtn.innerHTML = '<i class="bi bi-save"></i>';
+        const cancelBtn = document.createElement('button');
+        cancelBtn.type = 'button';
+        cancelBtn.className = 'btn btn-sm btn-outline-secondary';
+        cancelBtn.innerHTML = '<i class="bi bi-x"></i>';
+
+        // Replace with editor
+        currentDesc.parentNode.replaceChild(wrapper, currentDesc);
+        wrapper.appendChild(textarea);
+        // Create a single button group for actions
+        const btnGroupDesc = document.createElement('div');
+        btnGroupDesc.className = 'btn-group btn-group-sm';
+        btnGroupDesc.setAttribute('role', 'group');
+        btnGroupDesc.appendChild(saveBtn);
+        btnGroupDesc.appendChild(cancelBtn);
+        wrapper.appendChild(btnGroupDesc);
+        textarea.focus();
+
+        const restore = (text) => {
+          const newDesc = document.createElement('div');
+          newDesc.className = 'py-2 px-3 text-muted section-title-editable';
+          newDesc.textContent = text;
+          const icon = document.createElement('span');
+          icon.className = 'edit-indicator text-secondary ms-2';
+          icon.innerHTML = '<i class="bi bi-pencil"></i>';
+          newDesc.appendChild(icon);
+          wrapper.parentNode.replaceChild(newDesc, wrapper);
+          newDesc.addEventListener('click', onClickDesc);
+        };
+
+        const showInlineError = (msg) => {
+          let errEl = section.querySelector('[data-role="section-desc-error"]');
+          if (!errEl) {
+            errEl = document.createElement('div');
+            errEl.setAttribute('data-role', 'section-desc-error');
+            errEl.className = 'text-danger small mt-1';
+            wrapper.appendChild(errEl);
+          }
+          errEl.textContent = msg;
+        };
+
+        const persist = () => {
+          const newVal = textarea.value.trim();
+          if (newVal === originalText) { restore(originalText); return; }
+          saveBtn.disabled = true; cancelBtn.disabled = true; textarea.disabled = true;
+          const payload = { ocr_menu_section: { description: newVal } };
+          const csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
+          fetch(`/ocr_menu_sections/${sectionId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-Token': csrf },
+            body: JSON.stringify(payload),
+            credentials: 'same-origin'
+          }).then(resp => {
+            if (!resp.ok) return resp.text().then(t => { throw new Error(t || `HTTP ${resp.status}`); });
+            return resp.json().catch(() => ({}));
+          }).then(() => {
+            restore(newVal);
+          }).catch(err => {
+            console.warn('[OCR InlineEdit][section-desc] Failed to save description', err);
+            showInlineError('Unable to save. Please try again.');
+            saveBtn.disabled = false; cancelBtn.disabled = false; textarea.disabled = false;
+            textarea.focus();
+          });
+        };
+
+        saveBtn.addEventListener('click', (ev) => { ev.stopPropagation(); persist(); });
+        cancelBtn.addEventListener('click', (ev) => { ev.stopPropagation(); restore(originalText); });
+        textarea.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter' && (ev.metaKey || ev.ctrlKey)) { ev.preventDefault(); persist(); }
+          if (ev.key === 'Escape') { ev.preventDefault(); restore(originalText); }
+        });
+      };
+
+      descEl.addEventListener('click', onClickDesc);
+    });
   })();
 
   // Initialize TomSelect for allergens (was previously inline)
@@ -356,4 +479,137 @@ export function initOCRMenuImportDnD() {
 
   // Kick off initialization ordering
   ensureSortableThenInit();
+
+  // Inline edit for section titles
+  (function initInlineSectionTitleEdit(){
+    const sections = document.querySelectorAll('.section-container');
+    sections.forEach(section => {
+      const sectionId = section.getAttribute('data-menu-section-section-id');
+      const headerGrow = section.querySelector('.card-header .flex-grow-1');
+      const titleEl = headerGrow ? headerGrow.querySelector('h3.h5') : null;
+      if (!sectionId || !titleEl) return;
+
+      // Bind click handler (we'll reattach after editing too)
+
+      // Add edit indicator
+      if (!titleEl.querySelector('.edit-indicator')) {
+        const icon = document.createElement('span');
+        icon.className = 'edit-indicator text-secondary ms-2';
+        icon.innerHTML = '<i class="bi bi-pencil"></i>';
+        titleEl.classList.add('section-title-editable');
+        titleEl.appendChild(icon);
+      }
+
+      const onClickTitle = (e) => {
+        e.preventDefault();
+        e.stopPropagation(); // don't toggle collapse
+
+        // If already editing, ignore
+        if (headerGrow.querySelector('input[data-role="section-title-input"]')) return;
+
+        const currentTitle = e.currentTarget;
+        const originalText = (currentTitle.textContent || '').replace(/\s*$/, '').trim();
+
+        // Build editor
+        const wrapper = document.createElement('div');
+        wrapper.className = 'd-flex align-items-center gap-2 w-100';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'form-control form-control-sm';
+        input.value = originalText;
+        input.setAttribute('data-role', 'section-title-input');
+        input.style.maxWidth = '420px';
+
+        const saveBtn = document.createElement('button');
+        saveBtn.type = 'button';
+        saveBtn.className = 'btn btn-sm btn-primary';
+        saveBtn.innerHTML = '<i class="bi bi-save"></i>';
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.type = 'button';
+        cancelBtn.className = 'btn btn-sm btn-outline-secondary';
+        cancelBtn.innerHTML = '<i class="bi bi-x"></i>';
+
+        // Replace the clicked title with editor
+        headerGrow.replaceChild(wrapper, currentTitle);
+        wrapper.appendChild(input);
+        // Create a single button group for actions
+        const btnGroupTitle = document.createElement('div');
+        btnGroupTitle.className = 'btn-group btn-group-sm';
+        btnGroupTitle.setAttribute('role', 'group');
+        btnGroupTitle.appendChild(saveBtn);
+        btnGroupTitle.appendChild(cancelBtn);
+        wrapper.appendChild(btnGroupTitle);
+        input.focus();
+
+        const restore = (text) => {
+          const newTitle = document.createElement('h3');
+          newTitle.className = 'h5 mb-0 section-title-editable';
+          newTitle.textContent = text;
+          // attach edit indicator
+          const icon = document.createElement('span');
+          icon.className = 'edit-indicator text-secondary ms-2';
+          icon.innerHTML = '<i class="bi bi-pencil"></i>';
+          newTitle.appendChild(icon);
+          // replace editor with new title and rebind click handler
+          headerGrow.replaceChild(newTitle, wrapper);
+          newTitle.addEventListener('click', onClickTitle);
+        };
+
+        const showInlineError = (msg) => {
+          let errEl = headerGrow.querySelector('[data-role="section-title-error"]');
+          if (!errEl) {
+            errEl = document.createElement('div');
+            errEl.setAttribute('data-role', 'section-title-error');
+            errEl.className = 'text-danger small';
+            wrapper.appendChild(errEl);
+          }
+          errEl.textContent = msg;
+        };
+
+        const persist = () => {
+          const newName = input.value.trim();
+          if (!newName) { showInlineError('Please enter a name.'); input.focus(); return; }
+          if (newName === originalText) { restore(originalText); return; }
+          saveBtn.disabled = true; cancelBtn.disabled = true; input.disabled = true;
+          const payload = { ocr_menu_section: { name: newName } };
+          const csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
+          fetch(`/ocr_menu_sections/${sectionId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-Token': csrf },
+            body: JSON.stringify(payload),
+            credentials: 'same-origin'
+          }).then(resp => {
+            if (!resp.ok) return resp.text().then(t => { throw new Error(t || `HTTP ${resp.status}`); });
+            return resp.json().catch(() => ({}));
+          }).then(() => {
+            restore(newName);
+          }).catch(err => {
+            console.warn('[OCR InlineEdit][section] Failed to save title', err);
+            // Show a small inline error and re-enable inputs
+            let errEl = headerGrow.querySelector('[data-role="section-title-error"]');
+            if (!errEl) {
+              errEl = document.createElement('div');
+              errEl.setAttribute('data-role', 'section-title-error');
+              errEl.className = 'text-danger small';
+              wrapper.appendChild(errEl);
+            }
+            errEl.textContent = 'Unable to save. Please try again.';
+            saveBtn.disabled = false; cancelBtn.disabled = false; input.disabled = false;
+            input.focus();
+          });
+        };
+
+        saveBtn.addEventListener('click', (ev) => { ev.stopPropagation(); persist(); });
+        cancelBtn.addEventListener('click', (ev) => { ev.stopPropagation(); restore(originalText); });
+        input.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter') { ev.preventDefault(); persist(); }
+          if (ev.key === 'Escape') { ev.preventDefault(); restore(originalText); }
+        });
+      };
+
+      titleEl.addEventListener('click', onClickTitle);
+    });
+  })();
 }
