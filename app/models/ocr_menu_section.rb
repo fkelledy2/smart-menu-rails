@@ -2,6 +2,7 @@ class OcrMenuSection < ApplicationRecord
   # Associations
   belongs_to :ocr_menu_import
   belongs_to :menu_section, optional: true
+  belongs_to :menusection, class_name: 'Menusection', foreign_key: :menusection_id, optional: true
   has_many :ocr_menu_items, dependent: :destroy
   
   # Backward compatibility: some tests refer to `position`

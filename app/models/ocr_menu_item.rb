@@ -2,6 +2,7 @@ class OcrMenuItem < ApplicationRecord
   # Associations
   belongs_to :ocr_menu_section
   belongs_to :menu_item, optional: true
+  belongs_to :menuitem, class_name: 'Menuitem', foreign_key: :menuitem_id, optional: true
   
   # Backward compatibility: some tests refer to `position`
   alias_attribute :position, :sequence

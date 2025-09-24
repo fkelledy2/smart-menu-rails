@@ -71,6 +71,8 @@ Rails.application.routes.draw do
         post :confirm_import
         patch :reorder_sections
         patch :reorder_items
+        patch :toggle_section_confirmation
+        patch :toggle_all_confirmation
       end
     end
   end
@@ -79,6 +81,9 @@ Rails.application.routes.draw do
       resources :menuavailabilities, controller: 'menuavailabilities', only: [:index,:show, :edit]
       resources :tablesettings, controller: 'menus', only: [:show]
       resources :menuitems, controller: 'menuitems', only: [:index,:show, :edit]
+      member do
+        post :regenerate_images
+      end
   end
   resources :menusections, controller: 'menusections' do
     resources :menuitems, controller: 'menuitems', only: [:index,:show, :edit]

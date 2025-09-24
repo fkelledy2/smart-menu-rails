@@ -138,3 +138,8 @@ gem "openai", "~> 0.25.0"
 
 # Memcached client for Rails cache store (used with MemCachier) for IdentityCache CAS support
 gem "dalli", "~> 3.2"
+
+group :development, :test do
+  gem "rspec-rails", "~> 6.1"
+  gem "factory_bot_rails", "~> 6.4"
+end

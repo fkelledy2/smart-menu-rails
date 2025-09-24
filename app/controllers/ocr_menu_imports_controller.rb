@@ -3,23 +3,57 @@ class OcrMenuImportsController < ApplicationController
   skip_before_action :set_permissions, only: [:reorder_sections, :reorder_items]
   skip_forgery_protection only: [:reorder_sections, :reorder_items]
   before_action :set_restaurant
-  before_action :set_ocr_menu_import, only: [:show, :edit, :update, :destroy, :process_pdf, :confirm_import, :reorder_sections, :reorder_items]
+  before_action :set_ocr_menu_import, only: [:show, :edit, :update, :destroy, :process_pdf, :confirm_import, :reorder_sections, :reorder_items, :toggle_section_confirmation, :toggle_all_confirmation]
   before_action :authorize_restaurant_owner
   
   # GET /restaurants/:restaurant_id/ocr_menu_imports
   def index
     @ocr_menu_imports = @restaurant.ocr_menu_imports.recent
+    @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
+  end
+
+  # PATCH /restaurants/:restaurant_id/ocr_menu_imports/:id/toggle_section_confirmation
+  def toggle_section_confirmation
+    section_id = params[:section_id].to_i
+    confirmed = ActiveModel::Type::Boolean.new.cast(params[:confirmed])
+    section = @ocr_menu_import.ocr_menu_sections.find_by(id: section_id)
+    return render json: { ok: false, error: 'section not found' }, status: :not_found unless section
+
+    OcrMenuSection.transaction do
+      section.update!(is_confirmed: confirmed)
+      section.ocr_menu_items.update_all(is_confirmed: confirmed)
+    end
+
+    render json: { ok: true, section_id: section.id, confirmed: confirmed }
+  rescue => e
+    Rails.logger.error("toggle_section_confirmation error: #{e.class}: #{e.message}")
+    render json: { ok: false, error: 'unable to update section' }, status: :unprocessable_entity
+  end
+
+  # PATCH /restaurants/:restaurant_id/ocr_menu_imports/:id/toggle_all_confirmation
+  def toggle_all_confirmation
+    confirmed = ActiveModel::Type::Boolean.new.cast(params[:confirmed])
+    OcrMenuSection.transaction do
+      @ocr_menu_import.ocr_menu_sections.update_all(is_confirmed: confirmed)
+      @ocr_menu_import.ocr_menu_items.update_all(is_confirmed: confirmed)
+    end
+    render json: { ok: true, confirmed: confirmed }
+  rescue => e
+    Rails.logger.error("toggle_all_confirmation error: #{e.class}: #{e.message}")
+    render json: { ok: false, error: 'unable to update all' }, status: :unprocessable_entity
   end
   
   # GET /restaurants/:restaurant_id/ocr_menu_imports/new
   def new
     @ocr_menu_import = @restaurant.ocr_menu_imports.new
+    @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
   end
   
   # POST /restaurants/:restaurant_id/ocr_menu_imports
   def create
     @ocr_menu_import = @restaurant.ocr_menu_imports.new(ocr_menu_import_params)
-    
+    @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
+
     if @ocr_menu_import.save
       if @ocr_menu_import.pdf_file.attached?
         @ocr_menu_import.process_pdf_async
@@ -37,6 +71,7 @@ class OcrMenuImportsController < ApplicationController
   # GET /restaurants/:restaurant_id/ocr_menu_imports/:id/edit
   def edit
     @ocr_menu_sections = @ocr_menu_import.ocr_menu_sections.ordered.includes(:ocr_menu_items)
+    @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
   end
   
   # PATCH/PUT /restaurants/:restaurant_id/ocr_menu_imports/:id
@@ -62,7 +97,8 @@ class OcrMenuImportsController < ApplicationController
   # GET /restaurants/:restaurant_id/ocr_menu_imports/:id
   def show
     @ocr_menu_sections = @ocr_menu_import.ocr_menu_sections.ordered.includes(:ocr_menu_items)
-    
+    @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
+
     respond_to do |format|
       format.html
       format.json { render json: @ocr_menu_import }
@@ -89,19 +125,30 @@ class OcrMenuImportsController < ApplicationController
   
   # POST /restaurants/:restaurant_id/ocr_menu_imports/:id/confirm_import
   def confirm_import
-    if @ocr_menu_import.completed? && @ocr_menu_import.ocr_menu_sections.confirmed.any?
-      menu = create_menu_from_import
-      if menu.persisted?
-        @ocr_menu_import.update(menu: menu)
-        redirect_to restaurant_menu_path(@restaurant, menu), 
-                    notice: 'Menu has been successfully imported!'
+    unless @ocr_menu_import.completed? && @ocr_menu_import.ocr_menu_sections.confirmed.any?
+      return redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
+                        alert: 'Please confirm at least one section before importing.'
+    end
+
+    begin
+      service = ImportToMenu.new(restaurant: @restaurant, import: @ocr_menu_import)
+      if @ocr_menu_import.menu_id.present?
+        # Republish into existing menu: update existing and add new confirmed content
+        sync = ActiveModel::Type::Boolean.new.cast(params[:sync])
+        menu, stats = service.upsert_into_menu(@ocr_menu_import.menu, sync: sync)
+        notice = 'Menu has been republished with confirmed changes.'
+        if stats.present?
+          notice << " (sections: +#{stats[:sections_created]}/~#{stats[:sections_updated]}#{sync ? ", -#{stats[:sections_archived]}" : ''}, items: +#{stats[:items_created]}/~#{stats[:items_updated]}#{sync ? ", -#{stats[:items_archived]}" : ''})"
+        end
+        redirect_to restaurant_menu_path(@restaurant, menu), notice: notice
       else
-        redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), 
-                    alert: 'Failed to create menu: ' + menu.errors.full_messages.join(', ')
+        # First-time publish: create a new menu from confirmed content
+        menu = service.call
+        redirect_to restaurant_menu_path(@restaurant, menu), notice: 'Menu has been successfully published!'
       end
-    else
-      redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), 
-                  alert: 'Please confirm at least one section before importing.'
+    rescue => e
+      Rails.logger.error("Error creating menu from import ##{@ocr_menu_import.id}: #{e.class}: #{e.message}")
+      redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), alert: "Failed to create menu: #{e.message}"
     end
   end
   
@@ -183,42 +230,4 @@ class OcrMenuImportsController < ApplicationController
       redirect_to root_path, alert: 'You are not authorized to perform this action.'
     end
   end
-  
-  def create_menu_from_import
-    Menu.transaction do
-      menu = @restaurant.menus.create!(
-        name: @ocr_menu_import.name,
-        description: "Imported from PDF on #{Time.current.strftime('%B %d, %Y')}",
-        active: true
-      )
-      
-      @ocr_menu_import.ocr_menu_sections.confirmed.ordered.each do |section|
-        menu_section = menu.menusections.create!(
-          name: section.name,
-          sequence: section.sequence,
-          active: true
-        )
-        
-        section.ocr_menu_items.ordered.each do |item|
-          menu_section.menuitems.create!(
-            name: item.name,
-            description: item.description,
-            price: item.price,
-            sequence: item.sequence,
-            active: true,
-            vegetarian: item.is_vegetarian,
-            vegan: item.is_vegan,
-            gluten_free: item.is_gluten_free,
-            allergens: item.allergens.join(', ')
-          )
-        end
-      end
-      
-      menu
-    end
-  rescue StandardError => e
-    Rails.logger.error "Error creating menu from import: #{e.message}"
-    Menu.new # Return an unsaved menu to handle errors
-  end
 end
-

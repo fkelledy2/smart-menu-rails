@@ -1,7 +1,7 @@
 require "rqrcode"
 
 class MenusController < ApplicationController
-  before_action :set_menu, only: %i[ show edit update destroy ]
+  before_action :set_menu, only: %i[ show edit update destroy regenerate_images ]
 
   # GET	/restaurants/:restaurant_id/menus
   # GET /menus or /menus.json
@@ -39,6 +39,25 @@ class MenusController < ApplicationController
             )
         end
     end
+  end
+
+  # POST /menus/:id/regenerate_images
+  def regenerate_images
+    if @menu.nil?
+      redirect_to root_url and return
+    end
+
+    scope = Genimage.where(menu_id: @menu.id)
+    queued = 0
+    scope.find_each do |genimage|
+      next if genimage.menuitem&.itemtype == 'wine'
+      # Prefer async to avoid blocking the request
+      GenerateImageJob.perform_async(genimage.id)
+      queued += 1
+    end
+
+    flash[:notice] = "Queued image regeneration for #{queued} items on this menu."
+    redirect_to edit_menu_path(@menu)
   end
 
   # GET	/restaurants/:restaurant_id/menus/:menu_id/tablesettings/:id(.:format)	menus#show

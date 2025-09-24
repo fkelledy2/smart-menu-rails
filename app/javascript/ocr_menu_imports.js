@@ -25,6 +25,102 @@ export function initOCRMenuImportDnD() {
     document.head.appendChild(style);
   })();
 
+  // Confirmation toggles (sections + master) — top-level, not per-section
+  function initConfirmationToggles() {
+    const csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
+
+    const sectionsContainer = document.getElementById('sections-sortable');
+    if (!sectionsContainer) return;
+
+    const master = document.querySelector('input[data-role="confirm-all-sections"]');
+    const getSectionCheckboxes = () => Array.from(sectionsContainer.querySelectorAll('input.form-check-input[data-section-id]'));
+
+    // Enable controls (disabled by default in HTML)
+    if (master) master.disabled = false;
+    getSectionCheckboxes().forEach(cb => { cb.disabled = false; });
+
+    // Helper: compute master state from children
+    const refreshMasterState = () => {
+      if (!master) return;
+      const cbs = getSectionCheckboxes();
+      const total = cbs.length;
+      const checked = cbs.filter(cb => cb.checked).length;
+      master.indeterminate = checked > 0 && checked < total;
+      master.checked = total > 0 && checked === total;
+    };
+
+    refreshMasterState();
+
+    // Per-section change -> PATCH toggle_section_confirmation
+    getSectionCheckboxes().forEach(cb => {
+      cb.addEventListener('change', () => {
+        const sectionId = cb.getAttribute('data-section-id');
+        const url = cb.getAttribute('data-toggle-url');
+        const confirmed = cb.checked;
+        cb.disabled = true;
+        fetch(url, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-Token': csrf
+          },
+          body: JSON.stringify({ section_id: sectionId, confirmed })
+        }).then(r => {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        }).then(() => {
+          refreshMasterState();
+        }).catch(() => {
+          // Revert on error
+          cb.checked = !confirmed;
+        }).finally(() => {
+          cb.disabled = false;
+        });
+      });
+    });
+
+    // Master change -> PATCH toggle_all_confirmation
+    if (master) {
+      master.addEventListener('change', () => {
+        const url = master.getAttribute('data-toggle-all-url');
+        const confirmed = master.checked;
+        master.disabled = true;
+        // Optimistically update all section checkboxes immediately
+        const cbs = getSectionCheckboxes();
+        cbs.forEach(cb => { cb.checked = confirmed; });
+        refreshMasterState();
+        fetch(url, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-Token': csrf
+          },
+          body: JSON.stringify({ confirmed })
+        }).then(r => {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        }).then(() => {
+          refreshMasterState();
+        }).catch(() => {
+          // Revert on error
+          master.checked = !confirmed;
+          const cbs2 = getSectionCheckboxes();
+          cbs2.forEach(cb => { cb.checked = !confirmed; });
+          refreshMasterState();
+        }).finally(() => {
+          master.disabled = false;
+        });
+      });
+    }
+  }
+
+  // Run once now and again on Turbo navigations
+  try { initConfirmationToggles(); } catch(_) {}
+  document.addEventListener('turbo:load', () => { try { initConfirmationToggles(); } catch(_) {} });
+  document.addEventListener('DOMContentLoaded', () => { try { initConfirmationToggles(); } catch(_) {} });
+
   // Inline edit for section descriptions
   (function initInlineSectionDescriptionEdit(){
     const sections = document.querySelectorAll('.section-container');

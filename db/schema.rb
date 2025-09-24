@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_20_104530) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_24_181009) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -424,12 +424,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_20_104530) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_dairy_free", default: false, null: false
+    t.bigint "menuitem_id"
     t.index ["allergens"], name: "index_ocr_menu_items_on_allergens", using: :gin
     t.index ["is_confirmed"], name: "index_ocr_menu_items_on_is_confirmed"
     t.index ["is_gluten_free"], name: "index_ocr_menu_items_on_is_gluten_free"
     t.index ["is_vegan"], name: "index_ocr_menu_items_on_is_vegan"
     t.index ["is_vegetarian"], name: "index_ocr_menu_items_on_is_vegetarian"
     t.index ["menu_item_id"], name: "index_ocr_menu_items_on_menu_item_id"
+    t.index ["menuitem_id"], name: "index_ocr_menu_items_on_menuitem_id"
     t.index ["ocr_menu_section_id"], name: "index_ocr_menu_items_on_ocr_menu_section_id"
     t.index ["sequence"], name: "index_ocr_menu_items_on_sequence"
   end
@@ -445,8 +447,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_20_104530) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "description"
+    t.bigint "menusection_id"
     t.index ["is_confirmed"], name: "index_ocr_menu_sections_on_is_confirmed"
     t.index ["menu_section_id"], name: "index_ocr_menu_sections_on_menu_section_id"
+    t.index ["menusection_id"], name: "index_ocr_menu_sections_on_menusection_id"
     t.index ["ocr_menu_import_id"], name: "index_ocr_menu_sections_on_ocr_menu_import_id"
     t.index ["sequence"], name: "index_ocr_menu_sections_on_sequence"
   end
@@ -723,6 +727,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_20_104530) do
     t.string "spotifyaccesstoken"
     t.string "spotifyrefreshtoken"
     t.boolean "displayImagesInPopup", default: false
+    t.text "image_style_profile"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 
@@ -909,8 +914,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_20_104530) do
   add_foreign_key "ocr_menu_imports", "menus"
   add_foreign_key "ocr_menu_imports", "restaurants"
   add_foreign_key "ocr_menu_items", "menu_items"
+  add_foreign_key "ocr_menu_items", "menuitems"
   add_foreign_key "ocr_menu_items", "ocr_menu_sections"
   add_foreign_key "ocr_menu_sections", "menu_sections"
+  add_foreign_key "ocr_menu_sections", "menusections"
   add_foreign_key "ocr_menu_sections", "ocr_menu_imports"
   add_foreign_key "ordractions", "ordritems"
   add_foreign_key "ordractions", "ordrparticipants"

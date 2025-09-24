@@ -256,41 +256,15 @@ class RestaurantsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_restaurant
       begin
+        id_param = params[:restaurant_id] || params[:id]
+
         if current_user
-          # Use fetch_by_id with cache for authenticated users
-          @restaurant = if params[:restaurant_id]
-            result = Restaurant.fetch_by_id(params[:restaurant_id])
-            Rails.logger.debug "Fetched restaurant with id #{params[:restaurant_id]}: #{result.inspect}, class: #{result.class}"
-            result
-          else
-            result = Restaurant.fetch_by_id(params[:id])
-            Rails.logger.debug "Fetched restaurant with id #{params[:id]}: #{result.inspect}, class: #{result.class}"
-            result
-          end
-          
-          # Debug the actual value and type of @restaurant
-          Rails.logger.debug "@restaurant value: #{@restaurant.inspect}, class: #{@restaurant.class}"
-          
-          # Handle case where @restaurant is an array
-          if @restaurant.is_a?(Array)
-            Rails.logger.warn "Unexpected array received from fetch_by_id, taking first element"
-            @restaurant = @restaurant.first
-          end
-          
-          # Redirect if restaurant not found or doesn't belong to current user
-          if @restaurant.nil? || !@restaurant.respond_to?(:user) || @restaurant.user != current_user
-            Rails.logger.warn "Restaurant not found, not a valid restaurant, or doesn't belong to current user"
-            redirect_to root_url and return
-          end
+          # Always scope by current_user to guarantee ownership and avoid IdentityCache read-only records
+          @restaurant = current_user.restaurants.find(id_param)
         else
-          # For unauthenticated requests, use regular find
-          @restaurant = if params[:restaurant_id]
-            Restaurant.find(params[:restaurant_id])
-          else
-            Restaurant.find(params[:id])
-          end
+          @restaurant = Restaurant.find(id_param)
         end
-        
+
         # Check if user can add more menus
         @canAddMenu = false
         if @restaurant && current_user
@@ -300,11 +274,12 @@ class RestaurantsController < ApplicationController
           else
             Menu.where(restaurant: @restaurant, status: 'active', archived: false).count
           end
-          
+
           @canAddMenu = @menuCount < current_user.plan.menusperlocation || current_user.plan.menusperlocation == -1
         end
-        
-      rescue ActiveRecord::RecordNotFound => e
+
+      rescue ActiveRecord::RecordNotFound
+        Rails.logger.warn "Restaurant not found for id=#{id_param} or does not belong to current_user"
         redirect_to root_url
       end
     end
@@ -325,6 +300,6 @@ class RestaurantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def restaurant_params
-      params.require(:restaurant).permit(:name, :description, :address1, :address2, :state, :city, :postcode, :country, :image, :remove_image, :status, :sequence, :capacity, :user_id, :displayImages, :displayImagesInPopup, :allowOrdering, :inventoryTracking, :currency, :genid, :latitude, :longitude, :imagecontext, :wifissid, :wifiEncryptionType, :wifiPassword, :wifiHidden, :spotifyuserid )
+      params.require(:restaurant).permit(:name, :description, :address1, :address2, :state, :city, :postcode, :country, :image, :remove_image, :status, :sequence, :capacity, :user_id, :displayImages, :displayImagesInPopup, :allowOrdering, :inventoryTracking, :currency, :genid, :latitude, :longitude, :imagecontext, :image_style_profile, :wifissid, :wifiEncryptionType, :wifiPassword, :wifiHidden, :spotifyuserid )
     end
 end

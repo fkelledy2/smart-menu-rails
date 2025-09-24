@@ -1,18 +1,20 @@
     <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4 menu-item-card" data-name="<%= mi.name.to_s.downcase %>" data-description="<%= mi.description.to_s.downcase %>">
         <div class="card">
-            <div style='padding:5px' class="card-header">
-                        <span>
-                            <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                                <%= mi.localised_name(ordrparticipant.preferredlocale) %>
+            <% if mi.description? %>
+                <div style='padding:5px' class="card-header">
+                    <span>
+                        <% if ordrparticipant && ordrparticipant.preferredlocale %>
+                            <%= mi.localised_name(ordrparticipant.preferredlocale) %>
+                        <% else %>
+                            <% if menuparticipant && menuparticipant.preferredlocale %>
+                                <%= mi.localised_name(menuparticipant.preferredlocale) %>
                             <% else %>
-                                <% if menuparticipant && menuparticipant.preferredlocale %>
-                                    <%= mi.localised_name(menuparticipant.preferredlocale) %>
-                                <% else %>
-                                    <%= mi.name %>
-                                <% end %>
+                                <%= mi.name %>
                             <% end %>
-                        </span>
-            </div>
+                        <% end %>
+                    </span>
+                </div>
+            <% end %>
             <% if menu.displayImages == true && menu.restaurant.displayImages == true && mi.image %>
                 <div class="row">
                     <div class="col-5">
@@ -31,9 +33,17 @@
                                 <small><%= mi.localised_description(ordrparticipant.preferredlocale) %></small>
                             <% else %>
                                 <% if menuparticipant && menuparticipant.preferredlocale %>
-                                    <small><%= mi.localised_description(menuparticipant.preferredlocale) %></small>
+                                    <% if mi.description? %>
+                                        <small><%= mi.localised_description(menuparticipant.preferredlocale) %></small>
+                                    <% else %>
+                                        <small><%= mi.localised_name(menuparticipant.preferredlocale) %></small>
+                                    <% end %>
                                 <% else %>
-                                    <small><%= mi.description %></small>
+                                    <% if mi.description? %>
+                                        <small><%= mi.description %></small>
+                                    <% else %>
+                                        <small><%= mi.name %></small>
+                                    <% end %>
                                 <% end %>
                             <% end %>
                         </h6>

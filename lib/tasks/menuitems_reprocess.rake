@@ -3,11 +3,11 @@ namespace :menuitems do
   task reprocess: :environment do
     puts "Starting to process all menu items..."
     
-    total = MenuItem.count
+    total = Menuitem.count
     success_count = 0
     error_count = 0
     
-    MenuItem.find_each.with_index do |menuitem, index|
+    Menuitem.find_each.with_index do |menuitem, index|
       begin
         if( menuitem.genimage == nil)
           @genimage = Genimage.new
@@ -17,15 +17,19 @@ namespace :menuitems do
           @genimage.menuitem = menuitem
           @genimage.created_at = DateTime.current
           @genimage.updated_at = DateTime.current
-          @genimage.save
-      end
+          @genimage.save!
+        end
+        success_count += 1
       rescue => e
         error_count += 1
-        puts "[#{index + 1}/#{total}] Exception processing menu item ##{menu_item.id}: #{e.message}"
+        puts "[#{index + 1}/#{total}] Exception processing menu item ##{menuitem.id}: #{e.message}"
       end
       
       # Print progress every 100 records
-      puts "Progress: #{index + 1}/#{total} (#{((index + 1).to_f / total * 100).round(2)}%)" if (index + 1) % 100 == 0
+      if total > 0 && (index + 1) % 100 == 0
+        pct = ((index + 1).to_f / total * 100).round(2)
+        puts "Progress: #{index + 1}/#{total} (#{pct}%)"
+      end
     end
     puts ""
     puts "Processing complete!"
