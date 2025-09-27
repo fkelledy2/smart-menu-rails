@@ -6,11 +6,11 @@
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
       <div class="btn-group" role="group">
         <button id="inventory-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
-          <%=t(".activate")%>
+          <%= t('common.actions') %>
         </button>
         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
-          <li><a id="activate-inventory" class="dropdown-item" href="#"><%=t(".activate")%></a></li>
-          <li><a id="deactivate-inventory" class="dropdown-item" href="#"><%=t(".deactivate")%></a></li>
+          <li><a id="activate-inventory" class="dropdown-item" href="#"><%= t('common.activate') %></a></li>
+          <li><a id="deactivate-inventory" class="dropdown-item" href="#"><%= t('common.deactivate') %></a></li>
           <li><a id="reset-inventory" class="dropdown-item" href="#"><%=t(".reset")%></a></li>
         </ul>
       </div>

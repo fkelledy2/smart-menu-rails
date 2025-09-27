@@ -8,8 +8,8 @@
         <i class="bi bi-chevron-left"></i>
       <% end %>
     <% end %>
-    <button id="activate-row" class='btn btn-sm btn-success' disabled><%=t(".activate")%></button>
-    <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%=t(".deactivate")%></button>
+    <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t('common.activate') %></button>
+    <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t('common.deactivate') %></button>
     <%= link_to new_employee_path, class: 'btn btn-sm btn-dark' do %>
         <i class="bi bi-plus"></i> <%=t(".employee")%>
     <% end %>

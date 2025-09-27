@@ -6,8 +6,8 @@
         <h1><%= t(".menus") %></h1>
       </div>
           <div class="col-6 text-end">
-            <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t(".activate") %></button>
-            <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t(".deactivate") %></button>
+            <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t('common.activate') %></button>
+            <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t('common.deactivate') %></button>
             <%= link_to new_menu_path, class: 'btn btn-sm btn-dark' do %>
               <i class="bi bi-plus"></i> <%= t(".menu") %>
             <% end %>

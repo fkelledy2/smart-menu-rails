@@ -49,3 +49,10 @@ it:
       actions: "Azioni"
       activate: "Attiva"
       deactivate: "Disattiva"
+    showLocales:
+      menus: "Menu"
+      actions: "Azioni"
+      activate: "Attiva"
+      default: "Predefinita"
+      deactivate: "Disattiva"
+      delete: "Elimina"

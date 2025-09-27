@@ -88,3 +88,7 @@ it:
       restaurant: "Ristorante:"
       menu: "Menu:"
       tablesetting: "Tavolo:"
+    showAllergyns:
+      allergyns: "Allergeni"
+    showMenuBanner:
+      allergyns: "Allergeni"

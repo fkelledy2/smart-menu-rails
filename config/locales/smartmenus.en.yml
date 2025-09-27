@@ -58,6 +58,10 @@ en:
       restaurant: "Restaurant:"
       menu: "Menu:"
       tablesetting: "Tablesetting:"
+    showAllergyns:
+      allergyns: "Allergens"
+    showMenuBanner:
+      allergyns: "Allergens"
     showMenuitem:
       loading: "Loading..."
       allergyns: "Allergens"

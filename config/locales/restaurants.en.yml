@@ -49,3 +49,10 @@ en:
       actions: "Actions"
       activate: "Activate"
       deactivate: "Deactivate"
+    showLocales:
+      menus: "Menus"
+      actions: "Actions"
+      activate: "Activate"
+      default: "Default"
+      deactivate: "Deactivate"
+      delete: "Delete"
