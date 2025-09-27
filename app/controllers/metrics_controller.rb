@@ -25,7 +25,8 @@ class MetricsController < ApplicationController
 
     respond_to do |format|
       if @metric.save
-        format.html { redirect_to metric_url(@metric), notice: t('metrics.controller.created') }
+        format_html = t('common.flash.created', resource: t('activerecord.models.metric'))
+        format.html { redirect_to metric_url(@metric), notice: format_html }
         format.json { render :show, status: :created, location: @metric }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +39,7 @@ class MetricsController < ApplicationController
   def update
     respond_to do |format|
       if @metric.update(metric_params)
-        format.html { redirect_to metric_url(@metric), notice: t('metrics.controller.updated') }
+        format.html { redirect_to metric_url(@metric), notice: t('common.flash.updated', resource: t('activerecord.models.metric')) }
         format.json { render :show, status: :ok, location: @metric }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,7 +53,7 @@ class MetricsController < ApplicationController
     @metric.destroy!
 
     respond_to do |format|
-      format.html { redirect_to metrics_url, notice: t('metrics.controller.deleted') }
+      format.html { redirect_to metrics_url, notice: t('common.flash.deleted', resource: t('activerecord.models.metric')) }
       format.json { head :no_content }
     end
   end

@@ -29,7 +29,7 @@ class UserplansController < ApplicationController
         @user = User.where( id: @userplan.user.id).first
         @user.plan = @userplan.plan
         @user.save
-        format.html { redirect_to root_path, notice: t('userplans.controller.created') }
+        format.html { redirect_to root_path, notice: t('common.flash.created', resource: t('activerecord.models.userplan')) }
         format.json { render :show, status: :created, location: @userplan }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -45,7 +45,7 @@ class UserplansController < ApplicationController
         @user = User.where( id: @userplan.user.id).first
         @user.plan = @userplan.plan
         @user.save
-        format.html { redirect_to @userplan, notice: t('userplans.controller.updated') }
+        format.html { redirect_to @userplan, notice: t('common.flash.updated', resource: t('activerecord.models.userplan')) }
         format.json { render :show, status: :ok, location: @userplan }
       else
         @plans = Plan.all
@@ -60,7 +60,7 @@ class UserplansController < ApplicationController
     @userplan.destroy!
 
     respond_to do |format|
-      format.html { redirect_to userplans_path, status: :see_other, notice: t('userplans.controller.deleted') }
+      format.html { redirect_to userplans_path, status: :see_other, notice: t('common.flash.deleted', resource: t('activerecord.models.userplan')) }
       format.json { head :no_content }
     end
   end

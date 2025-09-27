@@ -89,7 +89,7 @@ class OrdrsController < ApplicationController
         end
         
         respond_to do |format|
-          format.html { redirect_to ordr_url(@ordr), notice: t('ordrs.controller.created') }
+          format.html { redirect_to ordr_url(@ordr), notice: t('common.flash.created', resource: t('activerecord.models.ordr')) }
           format.json { render :show, status: :created, location: @ordr }
         end
       else
@@ -137,13 +137,13 @@ class OrdrsController < ApplicationController
     ActiveRecord::Base.transaction do
       @ordr.destroy!
       respond_to do |format|
-        format.html { redirect_to ordrs_url, notice: t('ordrs.controller.deleted') }
+        format.html { redirect_to ordrs_url, notice: t('common.flash.deleted', resource: t('activerecord.models.ordr')) }
         format.json { head :no_content }
       end
     end
   rescue ActiveRecord::RecordNotDestroyed => e
     respond_to do |format|
-      format.html { redirect_to ordrs_url, alert: t('ordrs.controller.could_not_delete', error: e.message) }
+      format.html { redirect_to ordrs_url, alert: t('common.flash.action_failed', error: e.message) }
       format.json { render json: { error: e.message }, status: :unprocessable_entity }
     end
   end
