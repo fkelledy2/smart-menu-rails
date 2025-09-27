@@ -1,0 +1,19 @@
+base_locale: en
+locales:
+  - en
+  - it
+search:
+  paths:
+    - app
+    - config
+    - lib
+data:
+  read:
+    - config/locales/**/*.%{locale}.yml
+  write:
+    - config/locales/%{locale}.yml
+ignore_missing:
+  - 'activerecord.attributes.*.*'
+  - 'datetime.*'
+  - 'date.*'
+

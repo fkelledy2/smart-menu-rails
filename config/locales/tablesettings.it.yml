@@ -1,5 +1,9 @@
 it:
   tablesettings:
+    controller:
+      created: "Impostazione tavolo creata con successo."
+      updated: "Impostazione tavolo aggiornata con successo."
+      deleted: "Impostazione tavolo eliminata con successo."
     index:
       table_settings: "Impostazioni tavoli"
       table_setting: "Impostazione tavolo"
@@ -9,6 +13,7 @@ it:
       seats: "Posti:"
     show:
       show_table_setting: "Dettagli impostazione tavolo"
+      selectRestaurant: "Seleziona un ristorante"
       available_menus: "Menu disponibili"
     tablesetting:
       name: "Nome:"
@@ -16,3 +21,7 @@ it:
       status: "Stato:"
       capacity: "Capienza:"
       restaurant: "Ristorante:"
+    edit:
+      tablesetting: "Impostazione tavolo"
+    new:
+      tablesetting: "Impostazione tavolo"

@@ -1,5 +1,23 @@
 en:
   restaurants:
+    index:
+      restaurants: "Restaurants"
+    new:
+      restaurants: "Restaurants"
+      restaurant: "Restaurant"
+    edit:
+      restaurantTab: "Restaurant"
+      menuTab: "Menus"
+      tableTab: "Tables"
+      smartQRTab: "SmartQRs"
+      employeesTab: "Employees"
+      localesTab: "Locales"
+      openingsTab: "Opening Hours"
+      taxesTab: "Taxes"
+      tipsTab: "Tips"
+      sizesTab: "Sizes"
+      ordersTab: "Orders"
+      tracksTab: "Tracks"
     controller:
       created: "Restaurant was successfully created."
       updated: "Restaurant was successfully updated."
@@ -18,6 +36,16 @@ en:
       capacity: "Capacity:"
       user: "User:"
     form:
+      details: "Details"
+      address: "Address"
+      imageSettings: "Image Settings"
+      settings: "Settings"
+      music: "Music"
+      spotify: "Spotify"
+      wifi: "WiFi"
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"
       image_style_profile_label: "Image style profile"
       image_style_profile_placeholder: "e.g., Realistic studio food photography; shallow depth of field; soft natural light; matte stoneware; rustic wooden table; minimal props"
       image_style_profile_hint: "Used to keep all generated menu item images consistent across this restaurant."
@@ -41,6 +69,7 @@ en:
     showSmartMenus:
       wifi: "WiFi"
       scan_to_join: "Scan to Join"
+      smartQRs: "SmartQRs"
     showTrack:
       loading: "Loading..."
     showTips:
@@ -63,3 +92,10 @@ en:
     showMenus:
       add_new_menu: "Add New Menu"
       import_menu_from_pdf: "Import Menu from PDF"
+      menus: "Menus"
+    showTableSettings:
+      tableSettings: "Table Settings"
+    showTaxes:
+      taxes: "Taxes"
+    showTracks:
+      tracks: "Tracks"

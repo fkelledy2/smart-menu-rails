@@ -20,3 +20,4 @@ it:
       archived: "%{resource} archiviato con successo."
       processing_restarted: "L'elaborazione è stata (ri)avviata."
       action_failed: "Azione non riuscita: %{error}"
+    loading: "Caricamento..."

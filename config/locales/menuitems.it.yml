@@ -1,3 +1,12 @@
+    index:
+      menuItems: "Voci di menu"
+      menuItem: "Voce di menu"
+    new:
+      menuItem: "Voce di menu"
+      cancel: "Annulla"
+    show:
+      menuItem: "Voce di menu"
+      selectMenuSection: "Seleziona sezione menu"
 it:
   menuitems:
     controller:

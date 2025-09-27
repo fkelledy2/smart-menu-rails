@@ -1,5 +1,10 @@
 en:
   smartmenus:
+    index:
+      smartmenus: "Smartmenus"
+    showCoverCharge:
+      covercharge: "Cover Charge"
+      coverchargeUnit: "Cover Charge Unit"
     controller:
       created: "Smartmenu was successfully created."
       updated: "Smartmenu was successfully updated."
@@ -44,6 +49,10 @@ en:
       items_in_cart: "items in cart"
     orderStaff:
       items_in_cart: "items in cart"
+      bill: "Bill"
+      order: "Order"
+      startOrder: "Start Order"
+      takePayment: "Take Payment"
     showMenuitemHorizontalActionBar:
       allergyns: "Allergens"
       order: "Order"

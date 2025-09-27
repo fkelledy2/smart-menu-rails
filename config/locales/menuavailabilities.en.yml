@@ -4,3 +4,16 @@ en:
       created: "Menu availability was successfully created."
       updated: "Menu availability was successfully updated."
       deleted: "Menu availability was successfully deleted."
+    index:
+      menuAvailabilities: "Menu Availabilities"
+      menuAvailability: "Menu Availability"
+    new:
+      menuAvailability: "Menu Availability"
+      cancel: "Cancel"
+    show:
+      menuAvailability: "Menu Availability"
+      selectMenu: "Select Menu"
+    form:
+      selectMenu: "Select Menu"
+      save: "Save"
+      sure: "Are you sure?"

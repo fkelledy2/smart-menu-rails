@@ -18,6 +18,16 @@ it:
       capacity: "Capienza:"
       user: "Utente:"
     form:
+      details: "Dettagli"
+      address: "Indirizzo"
+      imageSettings: "Impostazioni immagine"
+      settings: "Impostazioni"
+      music: "Musica"
+      spotify: "Spotify"
+      wifi: "WiFi"
+      save: "Salva"
+      delete: "Elimina"
+      sure: "Sei sicuro?"
       image_style_profile_label: "Profilo stile immagine"
       image_style_profile_placeholder: "es. Fotografia gastronomica realistica; profondità di campo ridotta; luce naturale morbida; stoviglie in gres; tavolo in legno rustico; pochi oggetti"
       image_style_profile_hint: "Usato per mantenere coerenti le immagini generate degli articoli di questo ristorante."
@@ -41,6 +51,11 @@ it:
     showSmartMenus:
       wifi: "WiFi"
       scan_to_join: "Scansiona per connetterti"
+      smartQRs: "SmartQR"
+    showMenus:
+      menus: "Menu"
+      add_new_menu: "Aggiungi nuovo menu"
+      import_menu_from_pdf: "Importa menu da PDF"
     showTrack:
       loading: "Caricamento..."
     showTips:
@@ -60,3 +75,35 @@ it:
       default: "Predefinita"
       deactivate: "Disattiva"
       delete: "Elimina"
+    index:
+      restaurants: "Ristoranti"
+    new:
+      restaurants: "Ristoranti"
+      restaurant: "Ristorante"
+    showTableSettings:
+      tableSettings: "Impostazioni tavoli"
+    showTaxes:
+      taxes: "Tasse"
+    showTracks:
+      tracks: "Brani"
+    showOrdrs:
+      ordrs: "Ordini"
+    showEmployees:
+      employees: "Dipendenti"
+    showSizes:
+      sizes: "Taglie"
+    showAllergyns:
+      allergyns: "Allergeni"
+    edit:
+      restaurantTab: "Ristorante"
+      menuTab: "Menu"
+      tableTab: "Tavoli"
+      smartQRTab: "SmartQR"
+      employeesTab: "Dipendenti"
+      localesTab: "Lingue"
+      openingsTab: "Orari di apertura"
+      taxesTab: "Tasse"
+      tipsTab: "Mance"
+      sizesTab: "Taglie"
+      ordersTab: "Ordini"
+      tracksTab: "Brani"

@@ -18,6 +18,8 @@ it:
       allergyn: "Allergene"
       ordr: "Ordine"
       metric: "Metrica"
+      smartmenu: "Smartmenu"
+      testimonial: "Testimonianza"
     attributes:
       restaurant:
         name: "Nome"

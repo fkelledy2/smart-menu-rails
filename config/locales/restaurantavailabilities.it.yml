@@ -4,3 +4,17 @@ it:
       created: "Disponibilità ristorante creata con successo."
       updated: "Disponibilità ristorante aggiornata con successo."
       deleted: "Disponibilità ristorante eliminata con successo."
+    show:
+      restaurantavailability: "Disponibilità ristorante"
+      selectRestaurant: "Seleziona ristorante"
+    edit:
+      restaurantavailability: "Disponibilità ristorante"
+    index:
+      restaurantavailabilities: "Disponibilità ristorante"
+      restaurantavailability: "Disponibilità ristorante"
+    new:
+      restaurantavailability: "Disponibilità ristorante"
+    form:
+      save: "Salva"
+      delete: "Elimina"
+      sure: "Sei sicuro?"

@@ -1,3 +1,13 @@
+    index:
+      menus: "Menus"
+      menu: "Menu"
+      unavailable: "Unavailable"
+    new:
+      menu: "Menu"
+    showMenuavailabilities:
+      availabilities: "Availabilities"
+    showMenusections:
+      sections: "Sections"
 en:
   menus:
     controller:
@@ -6,6 +16,9 @@ en:
       deleted: "Menu was successfully deleted."
       image_regeneration_queued: "Queued image regeneration for %{count} items on this menu."
     edit:
+      menu: "Menu"
+      sections: "Sections"
+      availabilities: "Availabilities"
       regenerate_images: "Regenerate images for this menu"
       regenerate_images_hint: "This triggers background jobs to rebuild all generated images for items on this menu using the latest prompt logic and style profile."
       regenerate_images_confirm: "This will queue image regeneration jobs for all non-wine items in this menu. Continue?"

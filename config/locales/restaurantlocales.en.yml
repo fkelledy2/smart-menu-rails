@@ -5,3 +5,9 @@ en:
       updated: "Restaurant Locale was successfully updated."
       deleted: "Locale was deleted."
       active_not_deleted: "Active Locale was not deleted."
+    new:
+      restaurantlocale: "Restaurant Locale"
+    form:
+      save: "Save"
+      delete: "Delete"
+      sure: "Are you sure?"

@@ -1,3 +1,12 @@
+    index:
+      menuItems: "Menu Items"
+      menuItem: "Menu Item"
+    new:
+      menuItem: "Menu Item"
+      cancel: "Cancel"
+    show:
+      menuItem: "Menu Item"
+      selectMenuSection: "Select Menu Section"
 en:
   menuitems:
     controller:

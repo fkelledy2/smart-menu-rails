@@ -4,3 +4,16 @@ it:
       created: "Disponibilità menu creata con successo."
       updated: "Disponibilità menu aggiornata con successo."
       deleted: "Disponibilità menu eliminata con successo."
+    index:
+      menuAvailabilities: "Disponibilità menu"
+      menuAvailability: "Disponibilità menu"
+    new:
+      menuAvailability: "Disponibilità menu"
+      cancel: "Annulla"
+    show:
+      menuAvailability: "Disponibilità menu"
+      selectMenu: "Seleziona menu"
+    form:
+      selectMenu: "Seleziona menu"
+      save: "Salva"
+      sure: "Sei sicuro?"

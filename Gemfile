@@ -142,4 +142,5 @@ gem "dalli", "~> 3.2"
 group :development, :test do
   gem "rspec-rails", "~> 6.1"
   gem "factory_bot_rails", "~> 6.4"
+  gem 'i18n-tasks', '~> 1.0'
 end

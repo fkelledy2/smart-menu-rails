@@ -1,45 +1,186 @@
+---
 en:
-  testimonials:
-    index:
-      testimonials: Testimonials
-      actions: Actions
-      approve: Aprove
-      unapprove: Unapprove
-  userplans:
+  activerecord:
+    attributes:
+      allergyn:
+        description: Description
+        name: Name
+        symbol: Symbol
+      employee:
+        eid: ID
+        image: Image URL
+        name: Name
+        restaurant: Restaurant
+        role: Role
+        status: Status
+        user: User
+      inventory:
+        currentInventory: Ending
+        menuItem: Item
+        resetHour: Resets at
+        startingInventory: Starting
+      menu:
+        allowOrdering: Ordering
+        covercharge: Cover Charge
+        description: Description
+        displayImages: Images
+        displayImagesInPopup: Images (in popup)
+        image: Image
+        imagecontext: Context
+        inventoryTracking: Tracking
+        name: Name
+        pdf_menu_scan: Original PDF
+        restaurant: Restaurant
+        sequence: Display Order
+        status: Status
+      menuavailability:
+        dayofweek: Day
+        endhour: Closing
+        endmin: Close Mn
+        menu: Menu
+        starthour: Opening
+        startmin: Open Mn
+        status: Status
+      menuitem:
+        allergyns: Allergyns
+        calories: Calories
+        description: Description
+        image: Image
+        ingredients: Ingredients
+        menusection_id: Section
+        name: Name
+        preptime: Prep Mn
+        price: Price
+        sequence: Display Order
+        sizes: Variants
+        sizesupport: Sizes
+        status: Status
+        tags: Tags
+        unitcost: Unit Cost
+        variantPricing: Variant Pricing
+      menusection:
+        description: Description
+        image: Image
+        menu: Menu
+        name: Name
+        sequence: Display Order
+        status: Status
+      restaurant:
+        address1: Address Line 1
+        address2: Address Line 2
+        allowOrdering: Ordering
+        capacity: Capacity
+        city: City
+        country: Country
+        currency: Currency
+        description: Description
+        displayImages: Images
+        displayImagesInPopup: Images (in popup)
+        genid: Gen Id
+        image: Image
+        imagecontext: Context
+        inventoryTracking: Inventory
+        music: Music
+        name: Name
+        postcode: Post Code
+        spotifyaccesstoken: Access Token
+        spotifyrefreshtoken: Refresh Token
+        spotifyuserid: Spotify ID
+        state: State
+        status: Status
+        tips: Tips
+        wifiEncryptionType: Encryption
+        wifiHidden: Hidden
+        wifiPassword: Password
+        wifissid: SSID
+      restaurantavailability:
+        dayofweek: Day
+        endhour: Closing
+        endmin: Closing
+        restaurant: Restaurant
+        sequence: Sequence
+        starthour: Opening
+        startmin: Opening
+        status: Status
+      restaurantlocale:
+        dfault: Default
+        locale: Locale
+      size:
+        description: Description
+        name: Name
+        size: Size
+      tax:
+        name: Name
+        restaurant: Restaurant
+        taxPercentage: Percentage
+        taxType: Type
+  allergyns:
     edit:
-      selectPlan: Choose Plan
-      saveChanges: Update
+      allergyn: Edit Allergen
+    form:
+      delete: Delete
+      save: Save
+      sure: Are you sure?
+    index:
+      activate: Activate
+      allergyn: Allergen
+      allergyns: Allergens
+      deactivate: Deactivate
+    new:
+      allergyn: New Allergen
+      cancel: Cancel
+    show:
+      allergyn: View Allergen
   devise:
-    shared:
-      links:
-        forgotYourPassword: Forgot your password?
-        didntReceiverEmailConfirmation: Didn't receive your email confirmation?
-        didntReceiverUnlockInstructions: Didn't receive unlock instructions?
     registrations:
       edit:
-        selectPlan: Select Plan
+        account: Account
         billing: Billing
-        currentPasswordHelp: We need your current password to confirm your changes
-        password: Password
-        passwordHelp: Leave password blank if you don't want to change it
         confirmPassword: Confirm password
         currentPassword: Current password
-        account: Account
-        saveChanges: Save Changes
+        currentPasswordHelp: We need your current password to confirm your changes
         deactivateMyAccount: Deactivate my account
         deactivateMyAccountAreYouSure: Are you sure? You cannot undo this.
-      new:
-        signUp: Sign Up
-        fullName: Full name
-        emailAddress: Email Address
         password: Password
+        passwordHelp: Leave password blank if you don't want to change it
+        saveChanges: Save Changes
+        selectPlan: Select Plan
+      new:
         confirmPassword: Confirm Password
+        emailAddress: Email Address
+        fullName: Full name
+        password: Password
+        signUp: Sign Up
     sessions:
       new:
-        login: Login
         emailAddress: Email Address
+        login: Login
         password: Password
         rememberMe: Remember me
+    shared:
+      links:
+        didntReceiverEmailConfirmation: Didn't receive your email confirmation?
+        didntReceiverUnlockInstructions: Didn't receive unlock instructions?
+        forgotYourPassword: Forgot your password?
+  employees:
+    edit:
+      employee: Edit Employee
+    form:
+      delete: Delete
+      errors: Errors
+      save: Save
+      selectRestaurant: Select a Restaurant ...
+      sure: Are you sure?
+    index:
+      activate: Activate
+      deactivate: Deactivate
+      employee: Employee
+      employees: Employees
+    new:
+      cancel: Cancel
+      employee: New Employee
+    show:
+      employee: View Employee
   feature1:
     key: Smart Menus
   feature2:
@@ -52,716 +193,596 @@ en:
     key: AI Menu translations
   feature6:
     key: AI Menu image generation
-  plan:
-    starter:
-      greeting: "Hello, <strong>%{name}</strong>! Welcome to %{company}."
-      key: "Starter"
-      attribute1: "<li><i class='bi bi-check-lg'></i> For small cafes</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> Restaurant</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong> menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong> dishes / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> language</li><li><i class='bi bi-check-lg'></i> Staff ordering</li><li><i class='bi bi-check-lg'></i> Email support</li><li>&nbsp;</li>"
-      attribute4: ""
-      attribute5: ""
-      attribut6: ""
-    pro:
-      key: "Pro"
-      attribute1: "<li><i class='bi bi-check-lg'></i> For growing restaurants</li></li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{locations}</strong> Restaurants</li></li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong> menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong> dishes / menu</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{languages}</strong> languages</li><li><i class='bi bi-check-lg'></i> Staff & customer ordering</li><li><i class='bi bi-check-lg'></i> AI menu item images</li><li><i class='bi bi-check-lg'></i> Priority email support</li>"
-      attribute4: ""
-      attribute5: ""
-      attribut6: ""
-    business:
-      key: "Business"
-      attribute1: "<li><i class='bi bi-check-lg'></i> For multi-location venues</li></li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{locations}</strong> Restaurants</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong> menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong> dishes / menu</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{languages}</strong> languages</li><li><i class='bi bi-check-lg'></i> Inventory management</li><li><i class='bi bi-check-lg'></i> AI assisted branding</li><li><i class='bi bi-check-lg'></i> Priority email support</li>"
-      attribute4: ""
-      attribute5: ""
-      attribut6: ""
-    enterprise:
-      key: "Enterprise"
-      attribute1: "<li><i class='bi bi-check-lg'></i> For large restaurant chains</li></li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> Restaurants</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menus / restaurant</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong> dishes / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> languages</li><li><i class='bi bi-check-lg'></i> Data insights & analytics</li><li><i class='bi bi-check-lg'></i> Dedicated account manager</li><li><i class='bi bi-check-lg'></i> Priority email support</li>"
-      attribute4: ""
-      attribute5: ""
-      attribut6: ""
-    register: "Register"
-    call: "Contact Us"
   home:
     index:
+      actions: Actions
+      activate: Activate
+      browse: Browse Our Live Smart Menus
+      contactUs: Contact Us
+      ctaBody1: Run a smarter restaurant with digital tools that work as hard as your
+        team. From kitchen to customer, our smart menus and ordering systems free
+        up your staff to focus on what matters most—exceptional service.
+      ctaBody2: Do more with less—our digital menus and smart ordering tools free
+        up your team to focus on delivering great service, not juggling orders.
+      ctaTitle1: Streamline Service. Elevate Experience.
+      ctaTitle2: Smarter Restaurants Start Here
+      deactivate: Deactivate
+      demoMenu: Our Smart Menus
+      demoMenuTag: "<strong>SCAN</strong> or <strong>TAP</strong> the QR to test-drive
+        a smarter way to serve."
       demoMenuTagBrowse: or
-      welcome: Welcome!
-      selectPlan: Please <strong>select a plan</strong> to proceed.
+      emailAddress: Email Address
+      emailAddressTag: We'll never share your email with anyone else.
+      featureDescription1: Prioritize guest safety with a fully touch-free experience.
+        Guests scan a QR code to browse, order, and pay—no printed menus, no terminals,
+        no hassle.
+      featureDescription2: Say goodbye to slow table turnover. With self-service ordering,
+        guests control the pace—speeding up service, reducing wait times, and keeping
+        your team focused on hospitality, not logistics.
+      featureDescription3: Minimize errors with direct-to-kitchen digital orders.
+        No more misheard specials or scribbled tickets—just precise, streamlined communication
+        between diner and chef.
+      featureDescription4: Turn your menu into a visual experience. Enticing photos,
+        descriptions, and smart upsells guide guests to higher-margin items—effortlessly
+        boosting check averages.
+      featureDescription5: Cut the clutter and reduce paper waste. Our digital menus
+        support your eco-conscious brand while offering a sleek, modern dining experience.
+      featureDescription6: Get instant access to what’s hot (and what’s not). Track
+        top-selling items, dining trends, and guest preferences to refine your menu
+        and optimize operations.
+      featureTitle1: Contactless Convenience
+      featureTitle2: Faster Turnarounds, Happier Tables
+      featureTitle3: Order Accuracy, Every Time
+      featureTitle4: Menus That Sell Themselves
+      featureTitle5: Sustainable Service
+      featureTitle6: Real Data, Smarter Decisions
+      features: Our Features
+      menus: Menus
+      message: Message
+      next: Next
+      numbers: Numbers
+      numbersTag: 'Our stats, restaurants, menus, orders & value under management:'
+      orderValue: Order Value
+      orders: Orders
+      previous: Previous
+      pricing: Our Pricing
+      pricingTag: 'Choose from our flexible pricing plans:'
+      restaurants: Restaurants
       saveChanges: Save
-      ctaTitle1: "Streamline Service. Elevate Experience."
-      ctaBody1: "Run a smarter restaurant with digital tools that work as hard as your team. From kitchen to customer, our smart menus and ordering systems free up your staff to focus on what matters most—exceptional service."
-      ctaTitle2: "Smarter Restaurants Start Here"
-      ctaBody2: "Do more with less—our digital menus and smart ordering tools free up your team to focus on delivering great service, not juggling orders."
-      contactUs: "Contact Us"
-      signup: "Signup"
-      previous: "Previous"
-      next: "Next"
-      browse: "Browse Our Live Smart Menus"
-      featureTitle1: "Contactless Convenience"
-      featureDescription1: "Prioritize guest safety with a fully touch-free experience. Guests scan a QR code to browse, order, and pay—no printed menus, no terminals, no hassle."
-      featureTitle2: "Faster Turnarounds, Happier Tables"
-      featureDescription2: "Say goodbye to slow table turnover. With self-service ordering, guests control the pace—speeding up service, reducing wait times, and keeping your team focused on hospitality, not logistics."
-      featureTitle3: "Order Accuracy, Every Time"
-      featureDescription3: "Minimize errors with direct-to-kitchen digital orders. No more misheard specials or scribbled tickets—just precise, streamlined communication between diner and chef."
-      featureTitle4: "Menus That Sell Themselves"
-      featureDescription4: "Turn your menu into a visual experience. Enticing photos, descriptions, and smart upsells guide guests to higher-margin items—effortlessly boosting check averages."
-      featureTitle5: "Sustainable Service"
-      featureDescription5: "Cut the clutter and reduce paper waste. Our digital menus support your eco-conscious brand while offering a sleek, modern dining experience."
-      featureTitle6: "Real Data, Smarter Decisions"
-      featureDescription6: "Get instant access to what’s hot (and what’s not). Track top-selling items, dining trends, and guest preferences to refine your menu and optimize operations."
-      demoMenu: "Our Smart Menus"
-      demoMenuTag: "<strong>SCAN</strong> or <strong>TAP</strong> the QR to test-drive a smarter way to serve."
-      numbers: "Numbers"
-      numbersTag: "Our stats, restaurants, menus, orders & value under management:"
-      restaurants: "Restaurants"
-      menus: "Menus"
-      orders: "Orders"
-      orderValue: "Order Value"
-      testimonials: "Testimonials"
-      testimonialsTag: "A few words from our happy clients:"
-      pricing: "Our Pricing"
-      pricingTag: "Choose from our flexible pricing plans:"
-      emailAddress: "Email Address"
-      emailAddressTag: "We'll never share your email with anyone else."
-      message: "Message"
-      submit: "Submit"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-      signUp: "Sign Up"
-      features: "Our Features"
-  shared:
-    navbar:
-      restaurants: "Restaurants"
-      testimonials: "Testimonials"
-      employees: "Employees"
-      taxes: "Taxes"
-      openingHours: "Openings"
-      menus: "Menus"
-      menuSections: "Menu Sections"
-      menuItems: "Menu Items"
-      allergyns: "Allergyns"
-      menuAvailability: "Menu Availability"
-      sizes: "Sizes"
-      inventories: "Inventories"
-      tableSettings: "Table Settings"
-      orders: "Orders"
-      orderItems: "Order Items"
-      logout: "Logout"
-      signUp: "Sign Up"
-      login: "Login"
-      settings: "Settings"
-      billing: "Billing"
-      whatsNew: "What's New"
-      adminArea: "Admin Area"
-    footer:
-      terms: "Terms"
-      privacy: "Privacy"
-
-  restaurants:
-    index:
-      restaurants: "Restaurants"
-      restaurant: "Restaurant"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    show:
-      restaurant: "View Restaurant"
-      details: "Details"
-      address: "Address"
-      imageSettings: "Image Settings"
-      pdfSettings: "PDF Settings"
-      settings: "Settings"
-      name: "Name"
-      description: "Description"
-      currency: "Currency"
-      address1: "Address Line 1"
-      address2: "Address Line 2"
-      city: "City"
-      state: "State"
-      postcode: "Post Code"
-    showEmployees:
-      employees: "Employees"
-      employee: "Employee"
-      name: "Name"
-      role: "Role"
-      id: "ID"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showMenus:
-      menus: "Menus"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showOpeningHours:
-      openings: "Openings"
-      openingHours: "Openings"
-      openingHour: "Opening Hour"
-      dayOfWeek: "Day Of Week"
-      opening: "Opening Time"
-      closing: "Closing Time"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showTableSettings:
-      tableSettings: "Tables"
-      tableSetting: "Table"
-      name: "Name"
-      type: "Type"
-      capacity: "Capacity"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showTaxes:
-      taxes: "Taxes"
-      tax: "Tax"
-      name: "Name"
-      type: "Type"
-      percentage: "Percentage"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showSmartMenus:
-      smartQRs: "QRs"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showTips:
-      tips: "Tips"
-      tip: "Tip"
-      percentage: "Percentage"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showLocales:
-      menus: "Locales"
-      actions: "Actions"
-      activate: "Activate"
-      default: "Set Default"
-      deactivate: "Deactivate"
-      delete: "Delete"
-    showOrdrs:
-      ordrs: "Orders"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showTracks:
-      tracks: "Playlist"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showAllergyns:
-      allergyns: "Allergyns"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showSizes:
-      sizes: "Sizes"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    edit:
-      restaurant: "Edit Restaurant"
-      smartQRTab: "QRs"
-      restaurantTab: "Restaurant"
-      localesTab: "Locales"
-      menuTab: "Menus"
-      tableTab: "Tables"
-      employeesTab: "Employees"
-      tipsTab: "Tips"
-      taxesTab: "Taxes"
-      openingsTab: "Openings"
-      allergynsTab: "Allergyns"
-      sizesTab: "Sizes"
-      ordersTab: "Orders"
-      tracksTab: "Playlist"
-
-    new:
-      restaurants: "Restaurants"
-      restaurant: "New Restaurant"
-      cancel: "Cancel"
-    form:
-      spotify: "Spotify"
-      details: "Details"
-      address: "Address"
-      imageSettings: "Image Settings"
-      pdfSettings: "PDF Settings"
-      settings: "Settings"
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-      errors: "Errors"
-      generateImage: "Generate Image"
-      wifi: "WiFi"
-      music: "Music"
-  restaurantlocales:
-    new:
-      restaurantlocale: "New Locale"
-    form:
-      save: "Save"
-
-  employees:
-    index:
-      employees: "Employees"
-      employee: "Employee"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    show:
-      employee: "View Employee"
-    edit:
-      employee: "Edit Employee"
-    new:
-      employee: "New Employee"
-      cancel: "Cancel"
-    form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-      selectRestaurant: "Select a Restaurant ..."
-      errors: "Errors"
-
-  tips:
-    index:
-      tips: "Tips"
-      tip: "Tip"
-    show:
-      tip: "View Tip"
-    edit:
-      tip: "Edit Tip"
-    new:
-      tip: "New Tip"
-      cancel: "Cancel"
-    form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-      selectRestaurant: "Select a Restaurant ..."
-      errors: "Errors"
-
-  taxes:
-    index:
-      taxes: "Taxes"
-      tax: "Tax"
-    show:
-      tax: "View Tax"
-    edit:
-      tax: "Edit Tax"
-    new:
-      tax: "New Tax"
-      cancel: "Cancel"
-    form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-      selectRestaurant: "Select a Restaurant ..."
-      errors: "Errors"
-
-  tablesettings:
-    index:
-      tablesettings: "Tables"
-      tablesetting: "Table"
-    show:
-      tablesetting: "Table"
-    edit:
-      tablesetting: "Edit Table"
-    new:
-      tablesetting: "New Table"
-      cancel: "Cancel"
-    form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-      selectRestaurant: "Select a Restaurant ..."
-      errors: "Errors"
-
-  restaurantavailabilities:
-    index:
-      restaurantavailabilities: "Openings"
-      restaurantavailability: "Openings"
-      activate: "Open"
-      deactivate: "Close"
-    show:
-      restaurantavailability: "View Openings"
-    edit:
-      restaurantavailability: "Edit Openings"
-    new:
-      restaurantavailability: "New Openings"
-      cancel: "Cancel"
-    form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-      selectRestaurant: "Select a Restaurant ..."
-      errors: "Errors"
-
-  menus:
-    index:
-      menus: "Menus"
-      menu: "Menu"
-      activate: "Activate"
-      deactivate: "Deactivate"
-      unavailable: "Menu is currently unavailable."
-    show:
-      menu: "Menu"
-      table: "Table"
-    edit:
-      menu: "Menu"
-      sections: "Sections"
-      availabilities: "Availabilities"
-    showMenusections:
-      sections: "Sections"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showMenuavailabilities:
-      availabilities: "Availabilities"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    new:
-      menu: "New Menu"
-      cancel: "Cancel"
-    form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-      selectRestaurant: "Select a Restaurant ..."
-      errors: "Errors"
-      details: "Details"
-      preview: "Preview"
-      imageSettings: "Image Settings"
-      pdfSettings: "PDF Settings"
-      pdfMenuScan: "Original PDF"
-      settings: "Settings"
-    showMenuBanner:
-      table: "Table"
-
-  smartmenus:
-    showCoverCharge:
-      covercharge: "Cover charge"
-      coverchargeUnit: "per person"
-    showAllergyns:
-      allergyns: "Allergens"
-    showModals:
-      yourOrder: "Your Order"
-      menuItem: "Menu Item"
-      price: "Price"
-      total: "Total"
-      addToOrder: "Add to order"
-      cancel: "Cancel"
-      start: "Start Order"
-      startOrder: "Start a new Order"
-      submit: "Submit Order"
-      requestBill: "Request Bill"
-      confirmPayment: "Confirm Payment"
-      filterBy: "Filter by"
-      noneAll: "None / all"
-      filterAllergyns: "Filter Allergens"
-      customiseOrderWithName: "Personalise your order"
-      add: "Add Name"
-    index:
-      smartmenus: "Smart Menus"
-      menus: "Menus"
-      menu: "Menu"
-      activate: "Activate"
-      deactivate: "Deactivate"
-      unavailable: "Menu is currently unavailable."
-    show:
-      menu: "View Menu"
-      table: "Table"
-    edit:
-      menu: "Edit Menu"
-    new:
-      menu: "New Menu"
-      cancel: "Cancel"
-    form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-      selectRestaurant: "Select a Restaurant ..."
-      errors: "Errors"
-      details: "Details"
-      preview: "Preview"
-    showMenuBanner:
-      table: "Table"
-      allergyns: "Allergens"
-
-    showTableLocaleSelectorStaff:
-      table: "Table"
-    showTableLocaleSelectorCustomer:
-      table: "Table"
-    orderStaff:
-      staffAlerted: "Staff Notified"
-      takePayment: "Take Payment"
-      startOrder: "Start Order"
-      bill: "Get Bill"
-      order: "Order"
-    orderCustomer:
-      staffAlerted: "Staff Notified"
-      takePayment: "Take Payment"
-      startOrder: "Start Order"
-      bill: "Get Bill"
-      order: "Order"
-  menusections:
-    index:
-      menuSections: "Menu Sections"
-      menuSection: "Menu Section"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    show:
-      menuSection: "Menu Section"
-    edit:
-      section: "Section"
-      menuSection: "Menu Section"
-      items: "Items"
-      inventories: "Inventories"
-    new:
-      menuSection: "New Menu Section"
-      cancel: "Cancel"
-    showMenuitems:
-      menuItems: "Itmes"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-      genimage: "Generate Image"
-    showInventories:
-      inventories: "Inventories"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-      reset: "Reset"
-    form:
-      details: "Details"
-      imageSettings: "Image Settings"
-      settings: "Settings"
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-      selectMenu: "Select a Menu ..."
-      errors: "Errors"
-
-  menuitems:
-    index:
-      menuItems: "Menu Items"
-      menuItem: "Menu Item"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    show:
-      menuItem: "View Menu Item"
-    edit:
-      menuItem: "Edit Menu Item"
-    new:
-      menuItem: "New Menu Item"
-      cancel: "Cancel"
-    form:
-      imageSettings: "Image Settings"
-      settings: "Settings"
-      details: "Details"
-      sizes: "Sizes"
-      save: "Save"
-      update: "Update"
-      delete: "Delete"
-      sure: "Are you sure?"
-      selectMenuSection: "Select a Menu Section ..."
-      errors: "Errors"
-
-  allergyns:
-    index:
-      allergyns: "Allergens"
-      allergyn: "Allergen"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    show:
-      allergyn: "View Allergen"
-    edit:
-      allergyn: "Edit Allergen"
-    new:
-      allergyn: "New Allergen"
-      cancel: "Cancel"
-    form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-
-  sizes:
-    index:
-      sizes: "Sizes"
-      size: "Size"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    show:
-      size: "View Size"
-    edit:
-      size: "Edit Size"
-    new:
-      size: "New Size"
-      cancel: "Cancel"
-    form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-
+      selectPlan: Please <strong>select a plan</strong> to proceed.
+      signUp: Sign Up
+      signup: Signup
+      submit: Submit
+      testimonials: Testimonials
+      testimonialsTag: 'A few words from our happy clients:'
+      welcome: Welcome!
   inventories:
-    index:
-      inventories: "Inventories"
-      inventory: "Inventory"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    show:
-      inventory: "View Inventory"
     edit:
-      inventory: "Edit Inventory"
-    new:
-      inventory: "New inventory"
-      cancel: "Cancel"
+      inventory: Edit Inventory
     form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-
+      delete: Delete
+      save: Save
+      sure: Are you sure?
+    index:
+      activate: Activate
+      deactivate: Deactivate
+      inventories: Inventories
+      inventory: Inventory
+    new:
+      cancel: Cancel
+      inventory: New inventory
+    show:
+      inventory: View Inventory
   menuavailabilities:
-    index:
-      menuAvailabilities: "Availabilities"
-      menuAvailability: "Availability"
-      activate: "Open"
-      deactivate: "Close"
-    show:
-      menuAvailability: "View Availability"
     edit:
-      menuAvailability: "Edit Availability"
-    new:
-      menuAvailability: "New Availability"
-      cancel: "Cancel"
+      menuAvailability: Edit Availability
     form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-      selectMenu: "Select a Menu ..."
-      errors: "Errors"
+      delete: Delete
+      errors: Errors
+      save: Save
+      selectMenu: Select a Menu ...
+      sure: Are you sure?
+    index:
+      activate: Open
+      deactivate: Close
+      menuAvailabilities: Availabilities
+      menuAvailability: Availability
+    new:
+      cancel: Cancel
+      menuAvailability: New Availability
+    show:
+      menuAvailability: View Availability
+  menuitems:
+    edit:
+      menuItem: Edit Menu Item
+    form:
+      delete: Delete
+      details: Details
+      errors: Errors
+      imageSettings: Image Settings
+      save: Save
+      selectMenuSection: Select a Menu Section ...
+      settings: Settings
+      sizes: Sizes
+      sure: Are you sure?
+      update: Update
+    index:
+      activate: Activate
+      deactivate: Deactivate
+      menuItem: Menu Item
+      menuItems: Menu Items
+    new:
+      cancel: Cancel
+      menuItem: New Menu Item
+    show:
+      menuItem: View Menu Item
+  menus:
+    edit:
+      availabilities: Availabilities
+      menu: Menu
+      sections: Sections
+    form:
+      delete: Delete
+      details: Details
+      errors: Errors
+      imageSettings: Image Settings
+      pdfMenuScan: Original PDF
+      pdfSettings: PDF Settings
+      preview: Preview
+      save: Save
+      selectRestaurant: Select a Restaurant ...
+      settings: Settings
+      sure: Are you sure?
+    index:
+      activate: Activate
+      deactivate: Deactivate
+      menu: Menu
+      menus: Menus
+      unavailable: Menu is currently unavailable.
+    new:
+      cancel: Cancel
+      menu: New Menu
+    show:
+      menu: Menu
+      table: Table
+    showMenuBanner:
+      table: Table
+    showMenuavailabilities:
+      actions: Actions
+      activate: Activate
+      availabilities: Availabilities
+      deactivate: Deactivate
+    showMenusections:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      sections: Sections
+  menusections:
+    edit:
+      inventories: Inventories
+      items: Items
+      menuSection: Menu Section
+      section: Section
+    form:
+      delete: Delete
+      details: Details
+      errors: Errors
+      imageSettings: Image Settings
+      save: Save
+      selectMenu: Select a Menu ...
+      settings: Settings
+      sure: Are you sure?
+    index:
+      activate: Activate
+      deactivate: Deactivate
+      menuSection: Menu Section
+      menuSections: Menu Sections
+    new:
+      cancel: Cancel
+      menuSection: New Menu Section
+    show:
+      menuSection: Menu Section
+    showInventories:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      inventories: Inventories
+      reset: Reset
+    showMenuitems:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      genimage: Generate Image
+      menuItems: Itmes
+  plan:
+    business:
+      attribut6: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> For multi-location venues</li></li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{locations}</strong>
+        Restaurants</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong>
+        menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong>
+        dishes / menu</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{languages}</strong>
+        languages</li><li><i class='bi bi-check-lg'></i> Inventory management</li><li><i
+        class='bi bi-check-lg'></i> AI assisted branding</li><li><i class='bi bi-check-lg'></i>
+        Priority email support</li>"
+      attribute4: ''
+      attribute5: ''
+      key: Business
+    call: Contact Us
+    enterprise:
+      attribut6: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> For large restaurant chains</li></li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
+        Restaurants</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menus
+        / restaurant</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong>
+        dishes / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
+        languages</li><li><i class='bi bi-check-lg'></i> Data insights & analytics</li><li><i
+        class='bi bi-check-lg'></i> Dedicated account manager</li><li><i class='bi
+        bi-check-lg'></i> Priority email support</li>"
+      attribute4: ''
+      attribute5: ''
+      key: Enterprise
+    pro:
+      attribut6: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> For growing restaurants</li></li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{locations}</strong>
+        Restaurants</li></li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong>
+        menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong>
+        dishes / menu</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{languages}</strong>
+        languages</li><li><i class='bi bi-check-lg'></i> Staff & customer ordering</li><li><i
+        class='bi bi-check-lg'></i> AI menu item images</li><li><i class='bi bi-check-lg'></i>
+        Priority email support</li>"
+      attribute4: ''
+      attribute5: ''
+      key: Pro
+    register: Register
+    starter:
+      attribut6: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> For small cafes</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
+        Restaurant</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong>
+        menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong>
+        dishes / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
+        language</li><li><i class='bi bi-check-lg'></i> Staff ordering</li><li><i
+        class='bi bi-check-lg'></i> Email support</li><li>&nbsp;</li>"
+      attribute4: ''
+      attribute5: ''
+      greeting: Hello, <strong>%{name}</strong>! Welcome to %{company}.
+      key: Starter
+  restaurantavailabilities:
+    edit:
+      restaurantavailability: Edit Openings
+    form:
+      delete: Delete
+      errors: Errors
+      save: Save
+      selectRestaurant: Select a Restaurant ...
+      sure: Are you sure?
+    index:
+      activate: Open
+      deactivate: Close
+      restaurantavailabilities: Openings
+      restaurantavailability: Openings
+    new:
+      cancel: Cancel
+      restaurantavailability: New Openings
+    show:
+      restaurantavailability: View Openings
+  restaurantlocales:
+    form:
+      save: Save
+    new:
+      restaurantlocale: New Locale
+  restaurants:
+    edit:
+      allergynsTab: Allergyns
+      employeesTab: Employees
+      localesTab: Locales
+      menuTab: Menus
+      openingsTab: Openings
+      ordersTab: Orders
+      restaurant: Edit Restaurant
+      restaurantTab: Restaurant
+      sizesTab: Sizes
+      smartQRTab: QRs
+      tableTab: Tables
+      taxesTab: Taxes
+      tipsTab: Tips
+      tracksTab: Playlist
+    form:
+      address: Address
+      delete: Delete
+      details: Details
+      errors: Errors
+      generateImage: Generate Image
+      imageSettings: Image Settings
+      music: Music
+      pdfSettings: PDF Settings
+      save: Save
+      settings: Settings
+      spotify: Spotify
+      sure: Are you sure?
+      wifi: WiFi
+    index:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      restaurant: Restaurant
+      restaurants: Restaurants
+    new:
+      cancel: Cancel
+      restaurant: New Restaurant
+      restaurants: Restaurants
+    show:
+      address: Address
+      address1: Address Line 1
+      address2: Address Line 2
+      city: City
+      currency: Currency
+      description: Description
+      details: Details
+      imageSettings: Image Settings
+      name: Name
+      pdfSettings: PDF Settings
+      postcode: Post Code
+      restaurant: View Restaurant
+      settings: Settings
+      state: State
+    showAllergyns:
+      actions: Actions
+      activate: Activate
+      allergyns: Allergyns
+      deactivate: Deactivate
+    showEmployees:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      employee: Employee
+      employees: Employees
+      id: ID
+      name: Name
+      role: Role
+    showLocales:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      default: Set Default
+      delete: Delete
+      menus: Locales
+    showMenus:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      menus: Menus
+    showOpeningHours:
+      actions: Actions
+      activate: Activate
+      closing: Closing Time
+      dayOfWeek: Day Of Week
+      deactivate: Deactivate
+      opening: Opening Time
+      openingHour: Opening Hour
+      openingHours: Openings
+      openings: Openings
+    showOrdrs:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      ordrs: Orders
+    showSizes:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      sizes: Sizes
+    showSmartMenus:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      smartQRs: QRs
+    showTableSettings:
+      actions: Actions
+      activate: Activate
+      capacity: Capacity
+      deactivate: Deactivate
+      name: Name
+      tableSetting: Table
+      tableSettings: Tables
+      type: Type
+    showTaxes:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      name: Name
+      percentage: Percentage
+      tax: Tax
+      taxes: Taxes
+      type: Type
+    showTips:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      percentage: Percentage
+      tip: Tip
+      tips: Tips
+    showTracks:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      tracks: Playlist
+  shared:
+    footer:
+      privacy: Privacy
+      terms: Terms
+    navbar:
+      adminArea: Admin Area
+      allergyns: Allergyns
+      billing: Billing
+      employees: Employees
+      inventories: Inventories
+      login: Login
+      logout: Logout
+      menuAvailability: Menu Availability
+      menuItems: Menu Items
+      menuSections: Menu Sections
+      menus: Menus
+      openingHours: Openings
+      orderItems: Order Items
+      orders: Orders
+      restaurants: Restaurants
+      settings: Settings
+      signUp: Sign Up
+      sizes: Sizes
+      tableSettings: Table Settings
+      taxes: Taxes
+      testimonials: Testimonials
+      whatsNew: What's New
+  sizes:
+    edit:
+      size: Edit Size
+    form:
+      delete: Delete
+      save: Save
+      sure: Are you sure?
+    index:
+      activate: Activate
+      deactivate: Deactivate
+      size: Size
+      sizes: Sizes
+    new:
+      cancel: Cancel
+      size: New Size
+    show:
+      size: View Size
+  smartmenus:
+    edit:
+      menu: Edit Menu
+    form:
+      delete: Delete
+      details: Details
+      errors: Errors
+      preview: Preview
+      save: Save
+      selectRestaurant: Select a Restaurant ...
+      sure: Are you sure?
+    index:
+      activate: Activate
+      deactivate: Deactivate
+      menu: Menu
+      menus: Menus
+      smartmenus: Smart Menus
+      unavailable: Menu is currently unavailable.
+    new:
+      cancel: Cancel
+      menu: New Menu
+    orderCustomer:
+      bill: Get Bill
+      order: Order
+      staffAlerted: Staff Notified
+      startOrder: Start Order
+      takePayment: Take Payment
+    orderStaff:
+      bill: Get Bill
+      order: Order
+      staffAlerted: Staff Notified
+      startOrder: Start Order
+      takePayment: Take Payment
+    show:
+      menu: View Menu
+      table: Table
+    showAllergyns:
+      allergyns: Allergens
+    showCoverCharge:
+      covercharge: Cover charge
+      coverchargeUnit: per person
+    showMenuBanner:
+      allergyns: Allergens
+      table: Table
+    showModals:
+      add: Add Name
+      addToOrder: Add to order
+      cancel: Cancel
+      confirmPayment: Confirm Payment
+      customiseOrderWithName: Personalise your order
+      filterAllergyns: Filter Allergens
+      filterBy: Filter by
+      menuItem: Menu Item
+      noneAll: None / all
+      price: Price
+      requestBill: Request Bill
+      start: Start Order
+      startOrder: Start a new Order
+      submit: Submit Order
+      total: Total
+      yourOrder: Your Order
+    showTableLocaleSelectorCustomer:
+      table: Table
+    showTableLocaleSelectorStaff:
+      table: Table
+  tablesettings:
+    edit:
+      tablesetting: Edit Table
+    form:
+      delete: Delete
+      errors: Errors
+      save: Save
+      selectRestaurant: Select a Restaurant ...
+      sure: Are you sure?
+    index:
+      tablesetting: Table
+      tablesettings: Tables
+    new:
+      cancel: Cancel
+      tablesetting: New Table
+    show:
+      tablesetting: Table
+  taxes:
+    edit:
+      tax: Edit Tax
+    form:
+      delete: Delete
+      errors: Errors
+      save: Save
+      selectRestaurant: Select a Restaurant ...
+      sure: Are you sure?
+    index:
+      tax: Tax
+      taxes: Taxes
+    new:
+      cancel: Cancel
+      tax: New Tax
+    show:
+      tax: View Tax
+  testimonials:
+    index:
+      actions: Actions
+      approve: Aprove
+      testimonials: Testimonials
+      unapprove: Unapprove
+  tips:
+    edit:
+      tip: Edit Tip
+    form:
+      delete: Delete
+      errors: Errors
+      save: Save
+      selectRestaurant: Select a Restaurant ...
+      sure: Are you sure?
+    index:
+      tip: Tip
+      tips: Tips
+    new:
+      cancel: Cancel
+      tip: New Tip
+    show:
+      tip: View Tip
   tracks:
     index:
-      tracks: "Playlist"
-
-  activerecord:
-    attributes:
-      restaurant:
-        name: "Name"
-        description: "Description"
-        address1: "Address Line 1"
-        address2: "Address Line 2"
-        state: "State"
-        city: "City"
-        postcode: "Post Code"
-        country: "Country"
-        image: "Image"
-        imagecontext: "Context"
-        genid: "Gen Id"
-        status: "Status"
-        displayImages: "Images"
-        displayImagesInPopup: "Images (in popup)"
-        allowOrdering: "Ordering"
-        inventoryTracking: "Inventory"
-        capacity: "Capacity"
-        currency: "Currency"
-        tips: "Tips"
-        wifissid: "SSID"
-        wifiEncryptionType: "Encryption"
-        wifiPassword: "Password"
-        wifiHidden: "Hidden"
-        music: "Music"
-        spotifyuserid: "Spotify ID"
-        spotifyaccesstoken: "Access Token"
-        spotifyrefreshtoken: "Refresh Token"
-
-      restaurantlocale:
-        locale: "Locale"
-        dfault: "Default"
-
-      employee:
-        name: "Name"
-        eid: "ID"
-        user: "User"
-        image: "Image URL"
-        role: "Role"
-        status: "Status"
-        restaurant: "Restaurant"
-      tax:
-        name: "Name"
-        taxType: "Type"
-        taxPercentage: "Percentage"
-        restaurant: "Restaurant"
-      restaurantavailability:
-        dayofweek: "Day"
-        starthour: "Opening"
-        startmin: "Opening"
-        endhour: "Closing"
-        endmin: "Closing"
-        sequence: "Sequence"
-        status: "Status"
-        restaurant: "Restaurant"
-      menu:
-        name: "Name"
-        description: "Description"
-        image: "Image"
-        imagecontext: "Context"
-        status: "Status"
-        displayImages: "Images"
-        displayImagesInPopup: "Images (in popup)"
-        allowOrdering: "Ordering"
-        inventoryTracking: "Tracking"
-        sequence: "Display Order"
-        restaurant: "Restaurant"
-        covercharge: "Cover Charge"
-        pdf_menu_scan: "Original PDF"
-      menusection:
-        name: "Name"
-        description: "Description"
-        image: "Image"
-        status: "Status"
-        sequence: "Display Order"
-        menu: "Menu"
-      menuitem:
-        menusection_id: "Section"
-        name: "Name"
-        description: "Description"
-        image: "Image"
-        status: "Status"
-        sequence: "Display Order"
-        calories: "Calories"
-        unitcost: "Unit Cost"
-        price: "Price"
-        preptime: "Prep Mn"
-        allergyns: "Allergyns"
-        tags: "Tags"
-        sizes: "Variants"
-        variantPricing: "Variant Pricing"
-        sizesupport: "Sizes"
-        ingredients: "Ingredients"
-      allergyn:
-        name: "Name"
-        description: "Description"
-        symbol: "Symbol"
-      size:
-        size: "Size"
-        name: "Name"
-        description: "Description"
-      inventory:
-        menuItem: "Item"
-        startingInventory: "Starting"
-        currentInventory: "Ending"
-        resetHour: "Resets at"
-      menuavailability:
-        dayofweek: "Day"
-        starthour: "Opening"
-        startmin: "Open Mn"
-        endhour: "Closing"
-        endmin: "Close Mn"
-        status: "Status"
-        menu: "Menu"
+      tracks: Playlist
+  userplans:
+    edit:
+      saveChanges: Update
+      selectPlan: Choose Plan

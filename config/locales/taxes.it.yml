@@ -1,5 +1,9 @@
 it:
   taxes:
+    controller:
+      created: "Tassa creata con successo."
+      updated: "Tassa aggiornata con successo."
+      deleted: "Tassa eliminata con successo."
     index:
       taxes: "Tasse"
       tax: "Tassa"

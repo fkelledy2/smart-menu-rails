@@ -4,38 +4,8 @@ it:
       created: "Smartmenu creato con successo."
       updated: "Smartmenu aggiornato con successo."
       deleted: "Smartmenu eliminato con successo."
-    show_menu_content_customer:
-      search_placeholder: "Cerca articoli del menu..."
     showMenuContentCustomer:
       search_placeholder: "Cerca articoli del menu..."
-    show_modals:
-      startOrder: "Inizia ordine"
-      cancel: "Annulla"
-      start: "Avvia"
-      addToOrder: "Aggiungi all'ordine"
-      filterAllergyns: "Filtra allergeni"
-      noneAll: "Nessuno / Tutti"
-      filterBy: "Filtra"
-      yourOrder: "Il tuo ordine"
-      price: "Prezzo"
-      selected: "Selezionati"
-      submitted: "Inviati"
-      item: "Articolo"
-      cover_charge: "Coperto"
-      nett: "Netto"
-      service: "Servizio"
-      tax: "Tassa"
-      total: "Totale"
-      excluding_tip: "escl. mancia"
-      including_tip: "incl. mancia"
-      requestBill: "Richiedi conto"
-      payBill: "Paga conto"
-      confirmPayment: "Conferma pagamento"
-      payment_link: "Link di pagamento"
-      bill_prefix: "Conto:"
-      customiseOrderWithName: "Aggiungi il tuo nome all'ordine"
-      add: "Aggiungi"
-      name_label: "Nome:"
     showModals:
       startOrder: "Inizia ordine"
       cancel: "Annulla"
@@ -66,14 +36,17 @@ it:
       customiseOrderWithName: "Aggiungi il tuo nome all'ordine"
       add: "Aggiungi"
       name_label: "Nome:"
+      submit: "Invia"
     orderCustomer:
       order: "Ordine"
       bill: "Conto"
       staffAlerted: "Personale avvisato"
       startOrder: "Inizia ordine"
       items_in_cart: "articoli nel carrello"
-    orderStaff:
-      items_in_cart: "articoli nel carrello"
+    showTableLocaleSelectorStaff:
+      table: "Tavolo"
+    showTableLocaleSelectorCustomer:
+      table: "Tavolo"
     showMenuitemHorizontalActionBar:
       allergyns: "Allergeni"
       order: "Ordine"
@@ -98,3 +71,18 @@ it:
       allergyns: "Allergeni"
     showMenuBanner:
       allergyns: "Allergeni"
+    showMenuitem:
+      loading: "Caricamento..."
+      allergyns: "Allergeni"
+      add_to_order: "Aggiungi all'ordine"
+    index:
+      smartmenus: "Smartmenu"
+    orderStaff:
+      items_in_cart: "articoli nel carrello"
+      bill: "Conto"
+      order: "Ordine"
+      startOrder: "Inizia ordine"
+      takePayment: "Incassa pagamento"
+    showCoverCharge:
+      covercharge: "Coperto"
+      coverchargeUnit: "Unità coperto"

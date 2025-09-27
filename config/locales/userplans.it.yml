@@ -4,3 +4,6 @@ it:
       created: "Piano utente creato con successo."
       updated: "Piano utente aggiornato con successo."
       deleted: "Piano utente eliminato con successo."
+    edit:
+      saveChanges: "Aggiorna"
+      selectPlan: "Scegli piano"
