@@ -202,7 +202,7 @@ class MenusController < ApplicationController
         puts 'SmartMenuSyncJob.start'
         SmartMenuSyncJob.perform_sync(@menu.restaurant.id)
         puts 'SmartMenuSyncJob.end'
-        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: t('menus.controller.created') }
+        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: t('common.flash.created', resource: t('activerecord.models.menu')) }
         format.json { render :show, status: :created, location: @menu }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -238,7 +238,7 @@ class MenusController < ApplicationController
         puts 'SmartMenuSyncJob.start'
         SmartMenuSyncJob.perform_sync(@menu.restaurant.id)
         puts 'SmartMenuSyncJob.end'
-        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: t('menus.controller.updated') }
+        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: t('common.flash.updated', resource: t('activerecord.models.menu')) }
         format.json { render :show, status: :ok, location: @menu }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -260,7 +260,7 @@ class MenusController < ApplicationController
             }
         )
         respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: t('menus.controller.deleted') }
+          format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: t('common.flash.deleted', resource: t('activerecord.models.menu')) }
           format.json { head :no_content }
         end
     else

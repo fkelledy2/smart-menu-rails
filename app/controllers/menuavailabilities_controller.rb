@@ -49,7 +49,7 @@ class MenuavailabilitiesController < ApplicationController
         @menuavailability = Menuavailability.new(menuavailability_params)
         respond_to do |format|
           if @menuavailability.save
-            format.html { redirect_to edit_menu_url(@menuavailability.menu), notice: t('menuavailabilities.controller.created') }
+            format.html { redirect_to edit_menu_url(@menuavailability.menu), notice: t('common.flash.created', resource: t('activerecord.models.menuavailability')) }
             format.json { render :show, status: :created, location: @menuavailability }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -66,7 +66,7 @@ class MenuavailabilitiesController < ApplicationController
     if current_user
         respond_to do |format|
           if @menuavailability.update(menuavailability_params)
-            format.html { redirect_to edit_menu_url(@menuavailability.menu), notice: t('menuavailabilities.controller.updated') }
+            format.html { redirect_to edit_menu_url(@menuavailability.menu), notice: t('common.flash.updated', resource: t('activerecord.models.menuavailability')) }
             format.json { render :show, status: :ok, location: @menuavailability }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -83,7 +83,7 @@ class MenuavailabilitiesController < ApplicationController
     if current_user
         @menuavailability.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to edit_menu_url(@menuavailability.menu), notice: t('menuavailabilities.controller.deleted') }
+          format.html { redirect_to edit_menu_url(@menuavailability.menu), notice: t('common.flash.deleted', resource: t('activerecord.models.menuavailability')) }
           format.json { head :no_content }
         end
     else

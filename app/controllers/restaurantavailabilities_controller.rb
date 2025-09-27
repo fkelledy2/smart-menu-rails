@@ -50,7 +50,7 @@ class RestaurantavailabilitiesController < ApplicationController
         @restaurantavailability = Restaurantavailability.new(restaurantavailability_params)
         respond_to do |format|
           if @restaurantavailability.save
-            format.html { redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id), notice: t('restaurantavailabilities.controller.created') }
+            format.html { redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id), notice: t('common.flash.created', resource: t('activerecord.models.restaurantavailability')) }
             format.json { render :show, status: :created, location: @restaurantavailability }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -67,7 +67,7 @@ class RestaurantavailabilitiesController < ApplicationController
     if current_user
         respond_to do |format|
           if @restaurantavailability.update(restaurantavailability_params)
-            format.html { redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id), notice: t('restaurantavailabilities.controller.updated') }
+            format.html { redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id), notice: t('common.flash.updated', resource: t('activerecord.models.restaurantavailability')) }
             format.json { render :show, status: :ok, location: @restaurantavailability }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -84,7 +84,7 @@ class RestaurantavailabilitiesController < ApplicationController
     if current_user
         @restaurantavailability.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id), notice: t('restaurantavailabilities.controller.deleted') }
+          format.html { redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id), notice: t('common.flash.deleted', resource: t('activerecord.models.restaurantavailability')) }
           format.json { head :no_content }
         end
     else

@@ -52,7 +52,7 @@ class TracksController < ApplicationController
         @track = Track.new(track_params)
         respond_to do |format|
           if @track.save
-            format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: t('tracks.controller.created') }
+            format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: t('common.flash.created', resource: t('activerecord.models.track')) }
             format.json { render :show, status: :created, location: @track }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -69,7 +69,7 @@ class TracksController < ApplicationController
     if current_user
         respond_to do |format|
           if @track.update(track_params)
-            format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: t('tracks.controller.updated') }
+            format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: t('common.flash.updated', resource: t('activerecord.models.track')) }
             format.json { render :show, status: :ok, location: @track }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -86,7 +86,7 @@ class TracksController < ApplicationController
     if current_user
         @track.destroy!
         respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: t('tracks.controller.deleted') }
+          format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: t('common.flash.deleted', resource: t('activerecord.models.track')) }
           format.json { head :no_content }
         end
     else

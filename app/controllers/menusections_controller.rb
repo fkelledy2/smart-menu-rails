@@ -60,7 +60,7 @@ class MenusectionsController < ApplicationController
                 @genimage.updated_at = DateTime.current
                 @genimage.save
             end
-            format.html { redirect_to edit_menu_url(@menusection.menu), notice: t('menusections.controller.created') }
+            format.html { redirect_to edit_menu_url(@menusection.menu), notice: t('common.flash.created', resource: t('activerecord.models.menusection')) }
             format.json { render :show, status: :created, location: @menusection }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -86,7 +86,7 @@ class MenusectionsController < ApplicationController
                 @genimage.updated_at = DateTime.current
                 @genimage.save
             end
-            format.html { redirect_to edit_menu_path(@menusection.menu), notice: t('menusections.controller.updated') }
+            format.html { redirect_to edit_menu_path(@menusection.menu), notice: t('common.flash.updated', resource: t('activerecord.models.menusection')) }
             format.json { render :show, status: :ok, location: @menusection }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -103,7 +103,7 @@ class MenusectionsController < ApplicationController
     if current_user
         @menusection.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to edit_menu_path(@menusection.menu), notice: t('menusections.controller.deleted') }
+          format.html { redirect_to edit_menu_path(@menusection.menu), notice: t('common.flash.deleted', resource: t('activerecord.models.menusection')) }
           format.json { head :no_content }
         end
     else

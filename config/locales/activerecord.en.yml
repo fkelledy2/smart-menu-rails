@@ -10,6 +10,16 @@ en:
       tag: "Tag"
       size: "Size"
       inventory: "Inventory"
+      menuavailability: "Menu Availability"
+      restaurantavailability: "Restaurant Availability"
+      track: "Track"
+      userplan: "User Plan"
+      genimage: "Generated Image"
+      allergyn: "Allergen"
+      ordr: "Order"
+      metric: "Metric"
+      smartmenu: "Smartmenu"
+      testimonial: "Testimonial"
     attributes:
       restaurant:
         name: "Name"

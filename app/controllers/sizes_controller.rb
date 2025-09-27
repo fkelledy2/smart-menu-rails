@@ -50,7 +50,7 @@ class SizesController < ApplicationController
         @size = Size.new(size_params)
         respond_to do |format|
           if @size.save
-            format.html { redirect_to edit_restaurant_path(@size.restaurant_id), notice: t('sizes.controller.created') }
+            format.html { redirect_to edit_restaurant_path(@size.restaurant_id), notice: t('common.flash.created', resource: t('activerecord.models.size')) }
             format.json { render :show, status: :created, location: @size }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -67,7 +67,7 @@ class SizesController < ApplicationController
     if current_user
         respond_to do |format|
           if @size.update(size_params)
-            format.html { redirect_to edit_restaurant_path(@size.restaurant), notice: t('sizes.controller.updated') }
+            format.html { redirect_to edit_restaurant_path(@size.restaurant), notice: t('common.flash.updated', resource: t('activerecord.models.size')) }
             format.json { render :show, status: :ok, location: @size }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -84,7 +84,7 @@ class SizesController < ApplicationController
     if current_user
         @size.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(@size.restaurant), notice: t('sizes.controller.deleted') }
+          format.html { redirect_to edit_restaurant_path(@size.restaurant), notice: t('common.flash.deleted', resource: t('activerecord.models.size')) }
           format.json { head :no_content }
         end
     else

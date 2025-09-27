@@ -79,7 +79,7 @@ class SmartmenusController < ApplicationController
 
     respond_to do |format|
       if @smartmenu.save
-        format.html { redirect_to @smartmenu, notice: t('smartmenus.controller.created') }
+        format.html { redirect_to @smartmenu, notice: t('common.flash.created', resource: t('activerecord.models.smartmenu')) }
         format.json { render :show, status: :created, location: @smartmenu }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -92,7 +92,7 @@ class SmartmenusController < ApplicationController
   def update
     respond_to do |format|
       if @smartmenu.update(smartmenu_params)
-        format.html { redirect_to @smartmenu, notice: t('smartmenus.controller.updated') }
+        format.html { redirect_to @smartmenu, notice: t('common.flash.updated', resource: t('activerecord.models.smartmenu')) }
         format.json { render :show, status: :ok, location: @smartmenu }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -106,7 +106,7 @@ class SmartmenusController < ApplicationController
     @smartmenu.destroy!
 
     respond_to do |format|
-      format.html { redirect_to smartmenus_path, status: :see_other, notice: t('smartmenus.controller.deleted') }
+      format.html { redirect_to smartmenus_path, status: :see_other, notice: t('common.flash.deleted', resource: t('activerecord.models.smartmenu')) }
       format.json { head :no_content }
     end
   end

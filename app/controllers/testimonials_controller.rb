@@ -29,7 +29,7 @@ class TestimonialsController < ApplicationController
 
     respond_to do |format|
       if @testimonial.save
-        format.html { redirect_to @testimonial, notice: t('testimonials.controller.created') }
+        format.html { redirect_to @testimonial, notice: t('common.flash.created', resource: t('activerecord.models.testimonial')) }
         format.json { render :show, status: :created, location: @testimonial }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -42,7 +42,7 @@ class TestimonialsController < ApplicationController
   def update
     respond_to do |format|
       if @testimonial.update(testimonial_params)
-        format.html { redirect_to @testimonial, notice: t('testimonials.controller.updated') }
+        format.html { redirect_to @testimonial, notice: t('common.flash.updated', resource: t('activerecord.models.testimonial')) }
         format.json { render :show, status: :ok, location: @testimonial }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -56,7 +56,7 @@ class TestimonialsController < ApplicationController
     @testimonial.destroy!
 
     respond_to do |format|
-      format.html { redirect_to testimonials_path, status: :see_other, notice: t('testimonials.controller.deleted') }
+      format.html { redirect_to testimonials_path, status: :see_other, notice: t('common.flash.deleted', resource: t('activerecord.models.testimonial')) }
       format.json { head :no_content }
     end
   end

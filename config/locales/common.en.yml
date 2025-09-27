@@ -14,3 +14,10 @@ en:
     close: "Close"
     loading: "Loading..."
     errors: "Errors"
+    flash:
+      created: "%{resource} was successfully created."
+      updated: "%{resource} was successfully updated."
+      deleted: "%{resource} was successfully deleted."
+      archived: "%{resource} was successfully archived."
+      processing_restarted: "Processing has been (re)started."
+      action_failed: "Action failed: %{error}"

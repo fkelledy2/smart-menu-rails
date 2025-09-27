@@ -165,7 +165,7 @@ class RestaurantsController < ApplicationController
                 @restaurant.genimage.updated_at = DateTime.current
                 @restaurant.genimage.save
             end
-            format.html { redirect_to restaurants_path, notice: t('restaurants.controller.created') }
+            format.html { redirect_to restaurants_path, notice: t('common.flash.created', resource: t('activerecord.models.restaurant')) }
             format.json { render :show, status: :created, location: @restaurant }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -207,7 +207,7 @@ class RestaurantsController < ApplicationController
                 @restaurant.genimage.updated_at = DateTime.current
                 @restaurant.genimage.save
             end
-            format.html { redirect_to edit_restaurant_path(@restaurant), notice: t('restaurants.controller.updated') }
+            format.html { redirect_to edit_restaurant_path(@restaurant), notice: t('common.flash.updated', resource: t('activerecord.models.restaurant')) }
             format.json { render :edit, status: :ok, location: @restaurant }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -239,7 +239,7 @@ class RestaurantsController < ApplicationController
       )
       
       respond_to do |format|
-        format.html { redirect_to restaurants_url, notice: t('restaurants.controller.archived') }
+        format.html { redirect_to restaurants_url, notice: t('common.flash.archived', resource: t('activerecord.models.restaurant')) }
         format.json { head :no_content }
       end
     else

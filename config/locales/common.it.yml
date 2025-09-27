@@ -13,3 +13,10 @@ it:
     create: "Crea"
     close: "Chiudi"
     errors: "Errori"
+    flash:
+      created: "%{resource} creato con successo."
+      updated: "%{resource} aggiornato con successo."
+      deleted: "%{resource} eliminato con successo."
+      archived: "%{resource} archiviato con successo."
+      processing_restarted: "L'elaborazione è stata (ri)avviata."
+      action_failed: "Azione non riuscita: %{error}"

@@ -10,6 +10,14 @@ it:
       tag: "Tag"
       size: "Taglia"
       inventory: "Inventario"
+      menuavailability: "Disponibilità menu"
+      restaurantavailability: "Disponibilità ristorante"
+      track: "Brano"
+      userplan: "Piano utente"
+      genimage: "Immagine generata"
+      allergyn: "Allergene"
+      ordr: "Ordine"
+      metric: "Metrica"
     attributes:
       restaurant:
         name: "Nome"
