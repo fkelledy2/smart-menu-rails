@@ -1,0 +1,73 @@
+it:
+  activerecord:
+    models:
+      restaurant: "Ristorante"
+      menu: "Menu"
+      menusection: "Sezione menu"
+      menuitem: "Voce di menu"
+      tablesetting: "Impostazione tavolo"
+      ingredient: "Ingrediente"
+      tag: "Tag"
+      size: "Taglia"
+      inventory: "Inventario"
+    attributes:
+      restaurant:
+        name: "Nome"
+        description: "Descrizione"
+        address1: "Indirizzo (linea 1)"
+        address2: "Indirizzo (linea 2)"
+        city: "Città"
+        state: "Provincia"
+        postcode: "CAP"
+        country: "Paese"
+        status: "Stato"
+      menu:
+        name: "Nome"
+        description: "Descrizione"
+        status: "Stato"
+      menusection:
+        name: "Nome"
+        description: "Descrizione"
+        status: "Stato"
+      menuitem:
+        name: "Nome"
+        description: "Descrizione"
+        price: "Prezzo"
+        calories: "Calorie"
+        status: "Stato"
+      tablesetting:
+        name: "Nome"
+        description: "Descrizione"
+        capacity: "Capacità"
+        status: "Stato"
+      ingredient:
+        name: "Nome"
+        description: "Descrizione"
+      tag:
+        name: "Nome"
+        description: "Descrizione"
+      size:
+        name: "Nome"
+        size: "Codice taglia"
+        description: "Descrizione"
+      inventory:
+        startinginventory: "Inventario iniziale"
+        currentinventory: "Inventario attuale"
+        resethour: "Ora di reset"
+    errors:
+      format: "%{attribute} %{message}"
+      messages:
+        blank: "non può essere vuoto"
+        taken: "è già stato utilizzato"
+        invalid: "non è valido"
+        not_a_number: "non è un numero"
+        greater_than: "deve essere maggiore di %{count}"
+        greater_than_or_equal_to: "deve essere maggiore o uguale a %{count}"
+        less_than: "deve essere minore di %{count}"
+        less_than_or_equal_to: "deve essere minore o uguale a %{count}"
+        too_short:
+          one: "è troppo corto (minimo 1 carattere)"
+          other: "è troppo corto (minimo %{count} caratteri)"
+        too_long:
+          one: "è troppo lungo (massimo 1 carattere)"
+          other: "è troppo lungo (massimo %{count} caratteri)"

@@ -1,0 +1,5 @@
+en:
+  omniauth:
+    failure: "Something went wrong"
+    connected: "Your %{kind} account was connected."
+    email_exists: "An account with this email already exists. Please sign in with that account before connecting your %{provider} account."

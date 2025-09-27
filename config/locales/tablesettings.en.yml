@@ -1,5 +1,9 @@
 en:
   tablesettings:
+    controller:
+      created: "Table setting was successfully created."
+      updated: "Table setting was successfully updated."
+      deleted: "Table setting was successfully deleted."
     index:
       table_settings: "Table Settings"
       table_setting: "Table Setting"

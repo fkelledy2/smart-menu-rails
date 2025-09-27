@@ -1,0 +1,6 @@
+it:
+  ordrs:
+    controller:
+      created: "Ordine creato con successo."
+      deleted: "Ordine eliminato con successo."
+      could_not_delete: "Impossibile eliminare l'ordine: %{error}"

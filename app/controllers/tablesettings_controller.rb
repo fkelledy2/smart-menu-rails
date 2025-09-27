@@ -55,7 +55,7 @@ class TablesettingsController < ApplicationController
         @tablesetting = Tablesetting.new(tablesetting_params)
         respond_to do |format|
           if @tablesetting.save
-            format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: "Tablesetting was successfully created." }
+            format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: t('tablesettings.controller.created') }
             # format.html { redirect_to tablesetting_url(@tablesetting), notice: "Tablesetting was successfully created." }
             format.json { render :show, status: :created, location: @tablesetting }
           else
@@ -73,7 +73,7 @@ class TablesettingsController < ApplicationController
     if current_user
         respond_to do |format|
           if @tablesetting.update(tablesetting_params)
-            format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: "Tablesetting was successfully updated." }
+            format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: t('tablesettings.controller.updated') }
             format.json { render :show, status: :ok, location: @tablesetting }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -90,7 +90,7 @@ class TablesettingsController < ApplicationController
     if current_user
         @tablesetting.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: "Tablesetting was successfully deleted." }
+          format.html { redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id), notice: t('tablesettings.controller.deleted') }
           format.json { head :no_content }
         end
     else

@@ -41,7 +41,7 @@ class IngredientsController < ApplicationController
         @ingredient = Ingredient.new(ingredient_params)
         respond_to do |format|
           if @ingredient.save
-            format.html { redirect_to ingredient_url(@ingredient), notice: "Ingredient was successfully created." }
+            format.html { redirect_to ingredient_url(@ingredient), notice: t('ingredients.controller.created') }
             format.json { render :show, status: :created, location: @ingredient }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -58,7 +58,7 @@ class IngredientsController < ApplicationController
     if current_user
         respond_to do |format|
           if @ingredient.update(ingredient_params)
-            format.html { redirect_to ingredient_url(@ingredient), notice: "Ingredient was successfully updated." }
+            format.html { redirect_to ingredient_url(@ingredient), notice: t('ingredients.controller.updated') }
             format.json { render :show, status: :ok, location: @ingredient }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -75,7 +75,7 @@ class IngredientsController < ApplicationController
     if current_user
         @ingredient.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to ingredients_url, notice: "Ingredient was successfully destroyed." }
+          format.html { redirect_to ingredients_url, notice: t('ingredients.controller.deleted') }
           format.json { head :no_content }
         end
     else

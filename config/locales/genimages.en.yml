@@ -1,0 +1,5 @@
+en:
+  genimages:
+    controller:
+      updated: "Image was successfully regenerated."
+      deleted: "Generated image was successfully deleted."

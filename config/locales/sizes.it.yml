@@ -1,5 +1,9 @@
 it:
   sizes:
+    controller:
+      created: "Taglia creata con successo."
+      updated: "Taglia aggiornata con successo."
+      deleted: "Taglia eliminata con successo."
     index:
       sizes: "Taglie"
       size: "Taglia"

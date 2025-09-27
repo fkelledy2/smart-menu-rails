@@ -47,7 +47,7 @@ class GenimagesController < ApplicationController
           if @genimage.menuitem.itemtype != 'wine'
               GenerateImageJob.perform_sync(@genimage.id)
           end
-          format.html { redirect_to edit_menuitem_path(@genimage.menuitem), notice: "Menuitem was successfully updated." }
+          format.html { redirect_to edit_menuitem_path(@genimage.menuitem), notice: t('genimages.controller.updated') }
           format.json { render :show, status: :ok, location: @genimage }
         end
     else
@@ -60,7 +60,7 @@ class GenimagesController < ApplicationController
     if current_user
         @genimage.destroy!
         respond_to do |format|
-          format.html { redirect_to genimages_path, status: :see_other, notice: "Genimage was successfully destroyed." }
+          format.html { redirect_to genimages_path, status: :see_other, notice: t('genimages.controller.deleted') }
           format.json { head :no_content }
         end
     else

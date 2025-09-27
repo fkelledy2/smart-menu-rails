@@ -1,5 +1,9 @@
 it:
   smartmenus:
+    controller:
+      created: "Smartmenu creato con successo."
+      updated: "Smartmenu aggiornato con successo."
+      deleted: "Smartmenu eliminato con successo."
     show_menu_content_customer:
       search_placeholder: "Cerca articoli del menu..."
     showMenuContentCustomer:

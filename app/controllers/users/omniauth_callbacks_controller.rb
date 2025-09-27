@@ -6,7 +6,7 @@ module Users
     attr_reader :service, :user
 
     def failure
-      redirect_to root_path, alert: "Something went wrong"
+      redirect_to root_path, alert: t('omniauth.failure')
     end
 
     def facebook
@@ -31,7 +31,7 @@ module Users
       end
 
       if user_signed_in?
-        flash[:notice] = "Your #{kind} account was connected."
+        flash[:notice] = t('omniauth.connected', kind: kind)
         redirect_to edit_user_registration_path
       else
         sign_in_and_redirect user, event: :authentication
@@ -54,7 +54,7 @@ module Users
         @user = service.user
       elsif User.where(email: auth.info.email).any?
         # 5. User is logged out and they login to a new account which doesn't match their old one
-        flash[:alert] = "An account with this email already exists. Please sign in with that account before connecting your #{auth.provider.titleize} account."
+        flash[:alert] = t('omniauth.email_exists', provider: auth.provider.titleize)
         redirect_to new_user_session_path
       else
         @user = create_user

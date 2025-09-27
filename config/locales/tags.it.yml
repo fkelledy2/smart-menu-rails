@@ -1,5 +1,9 @@
 it:
   tags:
+    controller:
+      created: "Tag creato con successo."
+      updated: "Tag aggiornato con successo."
+      deleted: "Tag eliminato con successo."
     index:
       tags: "Tag"
       tag: "Tag"

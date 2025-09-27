@@ -1,5 +1,9 @@
 en:
   restaurants:
+    controller:
+      created: "Restaurant was successfully created."
+      updated: "Restaurant was successfully updated."
+      archived: "Restaurant was successfully archived."
     restaurant:
       name: "Name:"
       description: "Description:"

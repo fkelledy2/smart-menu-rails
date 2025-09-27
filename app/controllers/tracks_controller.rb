@@ -52,11 +52,11 @@ class TracksController < ApplicationController
         @track = Track.new(track_params)
         respond_to do |format|
           if @track.save
-            format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: "Track was successfully created." }
+            format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: t('tracks.controller.created') }
             format.json { render :show, status: :created, location: @track }
           else
             format.html { render :new, status: :unprocessable_entity }
-            format.json { render json: @tip.errors, status: :unprocessable_entity }
+            format.json { render json: @track.errors, status: :unprocessable_entity }
           end
         end
     else
@@ -69,11 +69,11 @@ class TracksController < ApplicationController
     if current_user
         respond_to do |format|
           if @track.update(track_params)
-            format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: "Track was successfully updated." }
+            format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: t('tracks.controller.updated') }
             format.json { render :show, status: :ok, location: @track }
           else
             format.html { render :edit, status: :unprocessable_entity }
-            format.json { render json: @tip.errors, status: :unprocessable_entity }
+            format.json { render json: @track.errors, status: :unprocessable_entity }
           end
         end
     else
@@ -86,7 +86,7 @@ class TracksController < ApplicationController
     if current_user
         @track.destroy!
         respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: "Track was successfully deleted." }
+          format.html { redirect_to edit_restaurant_path(id: @track.restaurant.id), notice: t('tracks.controller.deleted') }
           format.json { head :no_content }
         end
     else

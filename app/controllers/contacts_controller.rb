@@ -8,7 +8,7 @@ class ContactsController < ApplicationController
     if @contact.save
       ContactMailer.receipt(@contact).deliver_now
       ContactMailer.notification(@contact).deliver_now
-      flash[:notice] = "Thank you for your message! We'll get back to you soon."
+      flash[:notice] = t('contacts.controller.thanks')
       redirect_to root_url
     else
       render :new

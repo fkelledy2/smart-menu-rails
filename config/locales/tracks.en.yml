@@ -1,0 +1,6 @@
+en:
+  tracks:
+    controller:
+      created: "Track was successfully created."
+      updated: "Track was successfully updated."
+      deleted: "Track was successfully deleted."

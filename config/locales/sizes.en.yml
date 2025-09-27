@@ -1,5 +1,9 @@
 en:
   sizes:
+    controller:
+      created: "Size was successfully created."
+      updated: "Size was successfully updated."
+      deleted: "Size was successfully deleted."
     index:
       sizes: "Sizes"
       size: "Size"

@@ -1,0 +1,73 @@
+en:
+  activerecord:
+    models:
+      restaurant: "Restaurant"
+      menu: "Menu"
+      menusection: "Menu Section"
+      menuitem: "Menu Item"
+      tablesetting: "Table Setting"
+      ingredient: "Ingredient"
+      tag: "Tag"
+      size: "Size"
+      inventory: "Inventory"
+    attributes:
+      restaurant:
+        name: "Name"
+        description: "Description"
+        address1: "Address line 1"
+        address2: "Address line 2"
+        city: "City"
+        state: "State/Province"
+        postcode: "Postcode/ZIP"
+        country: "Country"
+        status: "Status"
+      menu:
+        name: "Name"
+        description: "Description"
+        status: "Status"
+      menusection:
+        name: "Name"
+        description: "Description"
+        status: "Status"
+      menuitem:
+        name: "Name"
+        description: "Description"
+        price: "Price"
+        calories: "Calories"
+        status: "Status"
+      tablesetting:
+        name: "Name"
+        description: "Description"
+        capacity: "Capacity"
+        status: "Status"
+      ingredient:
+        name: "Name"
+        description: "Description"
+      tag:
+        name: "Name"
+        description: "Description"
+      size:
+        name: "Name"
+        size: "Size Code"
+        description: "Description"
+      inventory:
+        startinginventory: "Starting inventory"
+        currentinventory: "Current inventory"
+        resethour: "Reset hour"
+    errors:
+      format: "%{attribute} %{message}"
+      messages:
+        blank: "can't be blank"
+        taken: "has already been taken"
+        invalid: "is invalid"
+        not_a_number: "is not a number"
+        greater_than: "must be greater than %{count}"
+        greater_than_or_equal_to: "must be greater than or equal to %{count}"
+        less_than: "must be less than %{count}"
+        less_than_or_equal_to: "must be less than or equal to %{count}"
+        too_short:
+          one: "is too short (minimum is 1 character)"
+          other: "is too short (minimum is %{count} characters)"
+        too_long:
+          one: "is too long (maximum is 1 character)"
+          other: "is too long (maximum is %{count} characters)"

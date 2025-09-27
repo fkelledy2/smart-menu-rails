@@ -1,0 +1,6 @@
+it:
+  metrics:
+    controller:
+      created: "Metrica creata con successo."
+      updated: "Metrica aggiornata con successo."
+      deleted: "Metrica eliminata con successo."

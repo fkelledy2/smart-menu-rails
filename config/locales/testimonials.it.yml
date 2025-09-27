@@ -1,5 +1,9 @@
 it:
   testimonials:
+    controller:
+      created: "Testimonianza creata con successo."
+      updated: "Testimonianza aggiornata con successo."
+      deleted: "Testimonianza eliminata con successo."
     index:
       testimonials: "Testimonianze"
       actions: "Azioni"

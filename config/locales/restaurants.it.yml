@@ -1,5 +1,9 @@
 it:
   restaurants:
+    controller:
+      created: "Ristorante creato con successo."
+      updated: "Ristorante aggiornato con successo."
+      archived: "Ristorante archiviato con successo."
     restaurant:
       name: "Nome:"
       description: "Descrizione:"
