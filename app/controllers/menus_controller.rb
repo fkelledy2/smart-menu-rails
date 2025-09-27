@@ -199,6 +199,9 @@ class MenusController < ApplicationController
             @genimage.updated_at = DateTime.current
             @genimage.save
         end
+        puts 'SmartMenuSyncJob.start'
+        SmartMenuSyncJob.perform_sync(@menu.restaurant.id)
+        puts 'SmartMenuSyncJob.end'
         format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully created." }
         format.json { render :show, status: :created, location: @menu }
       else
@@ -232,6 +235,9 @@ class MenusController < ApplicationController
             @genimage.updated_at = DateTime.current
             @genimage.save
         end
+        puts 'SmartMenuSyncJob.start'
+        SmartMenuSyncJob.perform_sync(@menu.restaurant.id)
+        puts 'SmartMenuSyncJob.end'
         format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully updated." }
         format.json { render :show, status: :ok, location: @menu }
       else

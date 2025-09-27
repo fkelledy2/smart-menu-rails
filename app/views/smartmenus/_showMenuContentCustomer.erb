@@ -46,6 +46,13 @@
                                     <% end %>
                                 </span>
                             </div>
+                            <% if menusection.description? %>
+                            <div class="col-12">
+                                <span class='h6'>
+                                    <%= menusection.description %>
+                                </span>
+                            </div>
+                            <% end %>
                         </div>
                     <% end %>
                 <% else %>
