@@ -1,0 +1,51 @@
+it:
+  smartmenus:
+    show_menu_content_customer:
+      search_placeholder: "Cerca articoli del menu..."
+    show_modals:
+      startOrder: "Inizia ordine"
+      cancel: "Annulla"
+      start: "Avvia"
+      addToOrder: "Aggiungi all'ordine"
+      filterAllergyns: "Filtra allergeni"
+      noneAll: "Nessuno / Tutti"
+      filterBy: "Filtra"
+      yourOrder: "Il tuo ordine"
+      price: "Prezzo"
+      selected: "Selezionati"
+      submitted: "Inviati"
+      item: "Articolo"
+      cover_charge: "Coperto"
+      nett: "Netto"
+      service: "Servizio"
+      tax: "Tassa"
+      total: "Totale"
+      excluding_tip: "escl. mancia"
+      including_tip: "incl. mancia"
+      requestBill: "Richiedi conto"
+      payBill: "Paga conto"
+      confirmPayment: "Conferma pagamento"
+      payment_link: "Link di pagamento"
+      bill_prefix: "Conto:"
+      customiseOrderWithName: "Aggiungi il tuo nome all'ordine"
+      add: "Aggiungi"
+      name_label: "Nome:"
+    orderCustomer:
+      order: "Ordine"
+      bill: "Conto"
+      staffAlerted: "Personale avvisato"
+      startOrder: "Inizia ordine"
+      items_in_cart: "articoli nel carrello"
+    orderStaff:
+      items_in_cart: "articoli nel carrello"
+    showMenuitemHorizontalActionBar:
+      allergyns: "Allergeni"
+      order: "Ordine"
+      toggle_dropdown: "Apri/Chiudi menu"
+    showMenuitemHorizontal:
+      loading: "Caricamento..."
+    smartmenu:
+      slug: "Slug:"
+      restaurant: "Ristorante:"
+      menu: "Menu:"
+      tablesetting: "Tavolo:"

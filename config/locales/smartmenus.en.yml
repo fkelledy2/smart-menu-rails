@@ -1,0 +1,55 @@
+en:
+  smartmenus:
+    showMenuContentCustomer:
+      search_placeholder: "Search menu items..."
+    showModals:
+      startOrder: "Start Order"
+      cancel: "Cancel"
+      start: "Start"
+      addToOrder: "Add to Order"
+      filterAllergyns: "Filter Allergens"
+      noneAll: "None / All"
+      filterBy: "Filter"
+      yourOrder: "Your Order"
+      price: "Price"
+      selected: "Selected"
+      submitted: "Submitted"
+      item: "Item"
+      cover_charge: "Cover Charge"
+      nett: "Nett"
+      service: "Service"
+      tax: "Tax"
+      total: "Total"
+      excluding_tip: "excl. tip"
+      including_tip: "incl. tip"
+      requestBill: "Request Bill"
+      payBill: "Pay Bill"
+      confirmPayment: "Confirm Payment"
+      payment_link: "Payment Link"
+      bill_prefix: "Bill:"
+      customiseOrderWithName: "Add your name to the order"
+      add: "Add"
+      name_label: "Name:"
+    orderCustomer:
+      order: "Order"
+      bill: "Bill"
+      staffAlerted: "Staff alerted"
+      startOrder: "Start Order"
+      items_in_cart: "items in cart"
+    orderStaff:
+      items_in_cart: "items in cart"
+    showMenuitemHorizontalActionBar:
+      allergyns: "Allergens"
+      order: "Order"
+      toggle_dropdown: "Toggle Dropdown"
+    showMenuitemHorizontal:
+      loading: "Loading..."
+    smartmenu:
+      slug: "Slug:"
+      restaurant: "Restaurant:"
+      menu: "Menu:"
+      tablesetting: "Tablesetting:"
+    showMenuitem:
+      loading: "Loading..."
+      allergyns: "Allergens"
+      add_to_order: "Add to Order"

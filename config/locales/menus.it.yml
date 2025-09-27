@@ -1,0 +1,6 @@
+it:
+  menus:
+    edit:
+      regenerate_images: "Rigenera le immagini per questo menu"
+      regenerate_images_hint: "Avvia job in background per ricreare le immagini degli articoli usando l'ultimo prompt e lo stile predefinito."
+      regenerate_images_confirm: "Verranno accodati job per tutti gli articoli non-vino di questo menu. Continuare?"

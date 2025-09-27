@@ -1,0 +1,14 @@
+en:
+  common:
+    save: "Save"
+    cancel: "Cancel"
+    delete: "Delete"
+    actions: "Actions"
+    activate: "Activate"
+    deactivate: "Deactivate"
+    confirm: "Confirm"
+    back: "Back"
+    edit: "Edit"
+    update: "Update"
+    create: "Create"
+    close: "Close"

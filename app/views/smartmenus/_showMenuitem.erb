@@ -7,7 +7,7 @@
                             <div class="ratio ratio-1x1">
                                 <div class="d-flex justify-content-center align-items-center">
                                     <div class="m-5" role="status">
-                                        <span class="visually-hidden">Loading...</span>
+                                        <span class="visually-hidden"><%= t('.loading') %></span>
                                     </div>
                                 </div>
                                 <img class="card-img-top img-fluid" style="-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));display:none;"
@@ -30,7 +30,7 @@
                                 <div class="col-12">
                                     <h6 class="card-title"><strong><%= menuitem.name %></strong></h6>
                                     <span style="position:relative;top:-100px" class="float-end">
-                                        <div class="btn-group" role="group" aria-label="Allergyns">
+                                        <div class="btn-group" role="group" aria-label="<%= t('.allergyns') %>">
                                             <% menuitem.allergyns.each do |allergyn| %>
                                                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
                                                     <%= allergyn.symbol %>
@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="col-3">
                                     <span class="float-end">
-                                        <div class="btn-group" role="group" aria-label="Allergyns">
+                                        <div class="btn-group" role="group" aria-label="<%= t('.allergyns') %>">
                                             <% menuitem.allergyns.each do |allergyn| %>
                                                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
                                                     <%= allergyn.symbol %>
@@ -78,7 +78,7 @@
                                             data-bs-menuitem_price="<%= menuitem.price %>"
                                             data-bs-menuitem_description="<%= menuitem.description %>"
                                             data-bs-menuitem_image="<%= menuitem.image_url %>"
-                                            title="Add to Order">
+                                            title="<%= t('.add_to_order') %>">
                                         <i class="bi bi-plus"></i>
                                     </button>
                                 <% end %>

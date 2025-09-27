@@ -1,0 +1,41 @@
+en:
+  restaurants:
+    restaurant:
+      name: "Name:"
+      description: "Description:"
+      address1: "Address1:"
+      address2: "Address2:"
+      state: "State:"
+      city: "City:"
+      postcode: "Postcode:"
+      country: "Country:"
+      image: "Image:"
+      status: "Status:"
+      capacity: "Capacity:"
+      user: "User:"
+    form:
+      image_style_profile_label: "Image style profile"
+      image_style_profile_placeholder: "e.g., Realistic studio food photography; shallow depth of field; soft natural light; matte stoneware; rustic wooden table; minimal props"
+      image_style_profile_hint: "Used to keep all generated menu item images consistent across this restaurant."
+      connect: "Connect"
+    show:
+      tab_restaurant: "Restaurant"
+      tab_menus: "Menus"
+      tab_employees: "Employees"
+      tab_tables: "Tables"
+      tab_tips: "Tips"
+      tab_taxes: "Taxes"
+      tab_openinghours: "Opening Hours"
+      tab_billing: "Billing"
+      details: "Details"
+      address: "Address"
+      imageSettings: "Image Settings"
+      settings: "Settings"
+      switch_on: "on"
+      switch_off: "off"
+      billing_content: "Billing configuration will appear here."
+    showSmartMenus:
+      wifi: "WiFi"
+      scan_to_join: "Scan to Join"
+    showTrack:
+      loading: "Loading..."

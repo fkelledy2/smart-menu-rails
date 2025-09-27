@@ -16,29 +16,29 @@
 
 <ul class="nav nav-tabs" id="restaurantTabs" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark active" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true">Restaurant</button>
+    <button class="nav-link link-dark active" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true"><%= t('.tab_restaurant') %></button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menusConfig" aria-selected="false">Menus</button>
+    <button class="nav-link link-dark" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menusConfig" aria-selected="false"><%= t('.tab_menus') %></button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="employees-tab" data-bs-toggle="tab" data-bs-target="#employee" type="button" role="tab" aria-controls="employeesConfig" aria-selected="false">Employees</button>
+    <button class="nav-link link-dark" id="employees-tab" data-bs-toggle="tab" data-bs-target="#employee" type="button" role="tab" aria-controls="employeesConfig" aria-selected="false"><%= t('.tab_employees') %></button>
   </li>
   <% if @current_employee && @current_employee.role == 'manager' %>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="tables-tab" data-bs-toggle="tab" data-bs-target="#table" type="button" role="tab" aria-controls="tablesConfig" aria-selected="false">Tables</button>
+        <button class="nav-link link-dark" id="tables-tab" data-bs-toggle="tab" data-bs-target="#table" type="button" role="tab" aria-controls="tablesConfig" aria-selected="false"><%= t('.tab_tables') %></button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="tips-tab" data-bs-toggle="tab" data-bs-target="#tip" type="button" role="tab" aria-controls="tipsConfig" aria-selected="false">Tips</button>
+        <button class="nav-link link-dark" id="tips-tab" data-bs-toggle="tab" data-bs-target="#tip" type="button" role="tab" aria-controls="tipsConfig" aria-selected="false"><%= t('.tab_tips') %></button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="taxes-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab" aria-controls="taxesConfig" aria-selected="false">Taxes</button>
+        <button class="nav-link link-dark" id="taxes-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab" aria-controls="taxesConfig" aria-selected="false"><%= t('.tab_taxes') %></button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="openinghours-tab" data-bs-toggle="tab" data-bs-target="#openinghour" type="button" role="tab" aria-controls="openinghoursConfig" aria-selected="false">Openings/button>
+        <button class="nav-link link-dark" id="openinghours-tab" data-bs-toggle="tab" data-bs-target="#openinghour" type="button" role="tab" aria-controls="openinghoursConfig" aria-selected="false"><%= t('.tab_openinghours') %></button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="billing-tab" data-bs-toggle="tab" data-bs-target="#billing" type="button" role="tab" aria-controls="billingsConfig" aria-selected="false">Billing</button>
+        <button class="nav-link link-dark" id="billing-tab" data-bs-toggle="tab" data-bs-target="#billing" type="button" role="tab" aria-controls="billingsConfig" aria-selected="false"><%= t('.tab_billing') %></button>
       </li>
   <% end %>
 </ul>
@@ -175,7 +175,7 @@
                     <span class="float-md-end"><%= form.label :displayImages, class: 'col-form-label' %> :</span>
                 </div>
                 <div class="col-9">
-                  <%= form.select :displayImages, [['on', true], ['off', false]], {}, disabled: 'disabled' %>
+                  <%= form.select :displayImages, [[t('.switch_on'), true], [t('.switch_off'), false]], {}, disabled: 'disabled' %>
                 </div>
               </div>
               <div style='height:4px'></div>
@@ -184,7 +184,7 @@
                     <span class="float-md-end"><%= form.label :allowOrdering, class: 'col-form-label' %> :</span>
                 </div>
                 <div class="col-9">
-                  <%= form.select :allowOrdering, [['on', true], ['off', false]], {}, disabled: 'disabled' %>
+                  <%= form.select :allowOrdering, [[t('.switch_on'), true], [t('.switch_off'), false]], {}, disabled: 'disabled' %>
                 </div>
               </div>
               <div style='height:4px'></div>
@@ -193,7 +193,7 @@
                     <span class="float-md-end"><%= form.label :inventoryTracking, class: 'col-form-label' %> :</span>
                 </div>
                 <div class="col-9">
-                  <%= form.select :inventoryTracking, [['on', true], ['off', false]], {}, disabled: 'disabled' %>
+                  <%= form.select :inventoryTracking, [[t('.switch_on'), true], [t('.switch_off'), false]], {}, disabled: 'disabled' %>
                 </div>
               </div>
             <% end %>
@@ -233,7 +233,7 @@
       </div>
       <div class="tab-content" id="billingsConfig">
         <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
-            Billing Stuff!!! STRIPE!
+            <%= t('.billing_content') %>
         </div>
       </div>
   <% end %>

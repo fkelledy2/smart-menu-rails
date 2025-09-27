@@ -147,7 +147,7 @@
                 <% if order && order.addedCount > 0 %>
                     <div class="row">
                         <div class="col-2">
-                            <p>Selected</p>
+                            <p><%= t('.selected') %></p>
                         </div>
                         <div class="col-10">
                             <hr>
@@ -194,7 +194,7 @@
                 <% if order && order.orderedCount > 0 %>
                     <div class="row">
                         <div class="col-2">
-                            <p>Submitted</p>
+                            <p><%= t('.submitted') %></p>
                         </div>
                         <div class="col-10">
                             <hr>
@@ -276,18 +276,18 @@
                 <% if order %>
                     <div class="row">
                         <div class="col-10">
-                            <b>Item</b>
+                            <b><%= t('.item') %></b>
                         </div>
                         <div class="col-2">
                           <span class="float-end">
-                            <b>Price</b>
+                            <b><%= t('.price') %></b>
                           </span>
                         </div>
                     </div>
                     <% if order.covercharge > 0 %>
                         <div class="row">
                             <div class="col-10">
-                                Cover Charge
+                                <%= t('.cover_charge') %>
                             </div>
                             <div class="col-2">
                               <span class="float-end">
@@ -298,7 +298,7 @@
                     <% end %>
                     <div class="row">
                         <div class="col-10">
-                            Nett
+                            <%= t('.nett') %>
                         </div>
                         <div class="col-2">
                           <span class="float-end">
@@ -310,7 +310,7 @@
                     <% if order.service > 0 %>
                         <div class="row">
                             <div class="col-10">
-                                Service
+                                <%= t('.service') %>
                             </div>
                             <div class="col-2">
                               <span class="float-end">
@@ -322,7 +322,7 @@
                     <% if order.tax > 0 %>
                         <div class="row">
                             <div class="col-10">
-                                Tax
+                                <%= t('.tax') %>
                             </div>
                             <div class="col-2">
                               <span class="float-end">
@@ -340,7 +340,7 @@
                     </div>
                     <div class="row">
                         <div class="col-10">
-                            <b>Total</b> <i>(excl. tip)</i>
+                            <b><%= t('.total') %></b> <i>(<%= t('.excluding_tip') %>)</i>
                         </div>
                         <div class="col-2">
                           <span class="float-end">
@@ -370,7 +370,7 @@
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="payOrderModalLabel">Pay Bill</h5>
+                    <h5 class="modal-title" id="payOrderModalLabel"><%= t('.payBill') %></h5>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -378,18 +378,18 @@
                             <% if order %>
                                 <div class="row">
                                     <div class="col-9">
-                                        <b>Item</b>
+                                        <b><%= t('.item') %></b>
                                     </div>
                                     <div class="col-3">
                                         <span class="float-end">
-                                            <b>Price</b>
+                                            <b><%= t('.price') %></b>
                                         </span>
                                     </div>
                                 </div>
                                 <% if order.covercharge > 0 %>
                                     <div class="row">
                                         <div class="col-10">
-                                            Cover Charge
+                                            <%= t('.cover_charge') %>
                                         </div>
                                         <div class="col-2">
                                           <span class="float-end">
@@ -400,7 +400,7 @@
                                 <% end %>
                                 <div class="row">
                                     <div class="col-9">
-                                        Nett
+                                        <%= t('.nett') %>
                                     </div>
                                     <div class="col-3">
                                         <span class="float-end">
@@ -411,7 +411,7 @@
                                 <% if order.service > 0 %>
                                     <div class="row">
                                         <div class="col-9">
-                                            Service
+                                            <%= t('.service') %>
                                         </div>
                                         <div class="col-3">
                                             <span class="float-end">
@@ -423,7 +423,7 @@
                                 <% if order.tax > 0 %>
                                     <div class="row">
                                         <div class="col-9">
-                                            Tax
+                                            <%= t('.tax') %>
                                         </div>
                                         <div class="col-3">
                                             <span class="float-end">
@@ -441,7 +441,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-9">
-                                        <b>Total</b> <i>(excl. tip)</i>
+                                        <b><%= t('.total') %></b> <i>(<%= t('.excluding_tip') %>)</i>
                                     </div>
                                     <div class="col-3">
                                         <span class="float-end">
@@ -472,7 +472,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-9">
-                                        <b>Total</b> <i>(incl. tip)</i>
+                                        <b><%= t('.total') %></b> <i>(<%= t('.including_tip') %>)</i>
                                     </div>
                                     <div class="col-3">
                                         <span class="float-end">
@@ -482,7 +482,7 @@
                                 </div>
                                 <div class="row">
                                     <div style='display: flex;justify-content: center;' class="col-12">
-                                        <button id="refreshPaymentLink" type="button" style='width:200px' class="btn btn-dark">Payment Link</button>
+                                        <button id="refreshPaymentLink" type="button" style='width:200px' class="btn btn-dark"><%= t('.payment_link') %></button>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -490,7 +490,7 @@
                                         <input type="hidden" id="openOrderId" value="<%= order.id %>">
                                         <input type="hidden" id="paymentAmount" value="<%= order.grossInCents %>">
                                         <input type="hidden" id="paymentCurrency" value="<%= restaurantCurrency.code %>">
-                                        <input type="hidden" id="paymentRestaurantName" value="Bill: <%= order.restaurant.name %>">
+                                        <input type="hidden" id="paymentRestaurantName" value="<%= t('.bill_prefix') %> <%= order.restaurant.name %>">
                                         <input type="hidden" id="paymentRestaurantId" value="<%= order.restaurant.id %>">
                                         <span style='display:none' id="qrIcon"><%= image_url('qr-icon.svg') %></span>
                                         <span style='display:none' id="paymentlink"></span>
@@ -530,7 +530,7 @@
                         <input type="hidden" class="form-control" id="ordr_id">
                           <div class="form-group row">
                             <div class="col-3">
-                            <label for="name" class="form-label">Name:</label>
+                            <label for="name" class="form-label"><%= t('.name_label') %></label>
                             </div>
                             <div class="col-9">
                             <input type="text" class="form-control" id="name">

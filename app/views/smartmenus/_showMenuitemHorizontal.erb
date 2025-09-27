@@ -21,7 +21,7 @@
                         <div class="ratio ratio-1x1">
                             <div class="d-flex justify-content-center align-items-center">
                                 <div class="m-5" role="status">
-                                    <span class="visually-hidden">Loading...</span>
+                                    <span class="visually-hidden"><%= t('.loading') %></span>
                                 </div>
                             </div>
                             <%= render "smartmenus/showImage", src: mi.medium_url, alt: mi.name, srcset: mi.image_srcset, sizes: mi.image_sizes, cached: true, loading: "lazy", class: "img-fluid" %>

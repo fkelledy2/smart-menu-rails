@@ -1,16 +1,16 @@
 <li class="list-group-item">
   <div class="d-flex justify-content-between align-items-center">
     <h5 class="mb-0 text-truncate" style="max-width: 60%;">
-      <%= link_to (import.name.presence || "Menu Import ##{import.id}"), restaurant_ocr_menu_import_path(@restaurant, import), class: 'text-decoration-none text-primary' %>
+      <%= link_to (import.name.presence || t('.default_title', id: import.id)), restaurant_ocr_menu_import_path(@restaurant, import), class: 'text-decoration-none text-primary' %>
     </h5>
     <div class="d-flex align-items-center gap-2">
       <span class="badge <%= status_badge_classes(import.status) %>"><%= import.status.titleize %></span>
       <div class="btn-group btn-group-sm" role="group">
         <%= button_to restaurant_ocr_menu_import_path(@restaurant, import),
             method: :delete,
-            form: { data: { turbo_confirm: 'Delete this import? This cannot be undone.' } },
+            form: { data: { turbo_confirm: t('.delete_confirm') } },
             class: 'btn btn-sm btn-danger',
-            title: 'Delete import',
+            title: t('.delete_title'),
             form_class: 'd-inline' do %>
           <i class="bi bi-trash"></i>
         <% end %>
@@ -22,14 +22,14 @@
     <div class="col-md-6">
       <p class="mb-0 text-muted">
         <i class="bi bi-collection me-1"></i>
-        <%= pluralize(import.ocr_menu_sections.count, 'section') %>, 
-        <%= pluralize(import.ocr_menu_items.count, 'item') %>
+        <%= pluralize(import.ocr_menu_sections.count, t('.section_label')) %>, 
+        <%= pluralize(import.ocr_menu_items.count, t('.item_label')) %>
       </p>
     </div>
     <div class="col-md-6 text-md-end">
       <small class="text-muted">
         <i class="bi bi-calendar3 me-1"></i>
-        Imported <time datetime="<%= import.created_at.iso8601 %>"><%= time_ago_in_words(import.created_at) %> ago</time>
+        <time datetime="<%= import.created_at.iso8601 %>"><%= t('.imported_ago', time: time_ago_in_words(import.created_at)) %></time>
       </small>
     </div>
   </div>

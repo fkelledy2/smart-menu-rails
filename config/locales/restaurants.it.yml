@@ -1,0 +1,41 @@
+it:
+  restaurants:
+    restaurant:
+      name: "Nome:"
+      description: "Descrizione:"
+      address1: "Indirizzo 1:"
+      address2: "Indirizzo 2:"
+      state: "Provincia:"
+      city: "Città:"
+      postcode: "CAP:"
+      country: "Paese:"
+      image: "Immagine:"
+      status: "Stato:"
+      capacity: "Capienza:"
+      user: "Utente:"
+    form:
+      image_style_profile_label: "Profilo stile immagine"
+      image_style_profile_placeholder: "es. Fotografia gastronomica realistica; profondità di campo ridotta; luce naturale morbida; stoviglie in gres; tavolo in legno rustico; pochi oggetti"
+      image_style_profile_hint: "Usato per mantenere coerenti le immagini generate degli articoli di questo ristorante."
+      connect: "Collega"
+    show:
+      tab_restaurant: "Ristorante"
+      tab_menus: "Menu"
+      tab_employees: "Dipendenti"
+      tab_tables: "Tavoli"
+      tab_tips: "Mance"
+      tab_taxes: "Tasse"
+      tab_openinghours: "Orari di apertura"
+      tab_billing: "Fatturazione"
+      details: "Dettagli"
+      address: "Indirizzo"
+      imageSettings: "Impostazioni immagine"
+      settings: "Impostazioni"
+      switch_on: "on"
+      switch_off: "off"
+      billing_content: "La configurazione di fatturazione verrà visualizzata qui."
+    showSmartMenus:
+      wifi: "WiFi"
+      scan_to_join: "Scansiona per connetterti"
+    showTrack:
+      loading: "Caricamento..."

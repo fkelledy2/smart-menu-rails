@@ -2,7 +2,7 @@
                 <div class="row">
                     <div class="col-12">
                         <span class="float-start">
-                                <div class="btn-group btn-allergyn-group-custom-rounded" role="group" aria-label="Allergyns">
+                                <div class="btn-group btn-allergyn-group-custom-rounded" role="group" aria-label="<%= t('.allergyns') %>">
                                     <% mi.allergyns.each do |allergyn| %>
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                             <small><small><%= allergyn.symbol %></small></small>
@@ -12,7 +12,7 @@
                         </span>
                         <% if order && ( order.status != 'billrequested' && order.status != 'closed' ) %>
                             <span class="float-end">
-                                <div class="btn-group btn-group-sm btn-order-group-custom-rounded" role="group" aria-label="Order">
+                                <div class="btn-group btn-group-sm btn-order-group-custom-rounded" role="group" aria-label="<%= t('.order') %>">
                                     <% if ordrparticipant && ordrparticipant.preferredlocale %>
                                         <button type="button" class="addItemToOrder btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                             data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
@@ -59,7 +59,7 @@
                                         <button type="button" style='border-top-right-radius: 0px;border-bottom-right-radius: 5px;max-width:50px' class="addItemToOrder btn btn-sm btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                                                             data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                             data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>">
-                                            <span class="visually-hidden">Toggle Dropdown</span>
+                                            <span class="visually-hidden"><%= t('.toggle_dropdown') %></span>
                                         </button>
                                         <ul style="--bs-dropdown-padding-y: 0.0rem;--bs-dropdown-min-width:0em" class="dropdown-menu dropdown-menu-danger" class="dropdown-menu">
                                             <% mi.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
