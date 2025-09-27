@@ -1,0 +1,22 @@
+en:
+  taxes:
+    index:
+      taxes: "Taxes"
+      tax: "Tax"
+    new:
+      tax: "Tax"
+    edit:
+      tax: "Tax"
+    show:
+      tax: "Tax"
+      selectRestaurant: "Select a restaurant"
+    tax:
+      name: "Name:"
+      taxtype: "Tax type:"
+      taxpercentage: "Tax percentage:"
+      restaurant: "Restaurant:"
+    form:
+      delete: "Delete"
+      sure: "Are you sure?"
+      save: "Save"
+      errors: "Errors"

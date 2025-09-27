@@ -18,7 +18,7 @@
     <div class="page-header">
       <div class="row">
         <div class="col-sm-10">
-              <h1>Show Table Setting</h1>
+              <h1><%= t('.show_table_setting') %></h1>
         </div>
         <div class="col-sm-2">
             <span class="float-end">
@@ -83,7 +83,7 @@
     <%= format('%02d',@currentDay) %> - <%= format('%02d',@currentHour) %>:<%= format('%02d',@currentMin) %>
     <div class="row" style="padding-bottom:20px">
         <div class="col-12">
-            <span class="h1 text-center"><%= @restaurant.name %>: Available Menus</span>
+            <span class="h1 text-center"><%= @restaurant.name %>: <%= t('.available_menus') %></span>
         </div>
     </div>
     <div class="row">

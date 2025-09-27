@@ -10,7 +10,7 @@
       <button type="button" 
               data-action="menu-section#toggleItems"
               class="text-sm font-medium text-blue-600 hover:text-blue-500 focus:outline-none">
-        <span data-menu-section-target="toggleText">Hide</span> items
+        <span data-menu-section-target="toggleText"><%= t('.hide') %></span> <%= t('.items') %>
       </button>
     </div>
   </div>
@@ -64,7 +64,7 @@
                         data-item-price="<%= item.price %>"
                         data-item-allergens="<%= item.allergens.to_json %>"
                         data-item-dietary-restrictions="<%= item.dietary_restrictions.to_json %>">
-                  Edit
+                  <%= t('.edit') %>
                 </button>
               </div>
             </div>

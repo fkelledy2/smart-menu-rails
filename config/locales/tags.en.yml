@@ -1,0 +1,21 @@
+en:
+  tags:
+    index:
+      tags: "Tags"
+      tag: "Tag"
+    new:
+      title: "New Tag"
+      cancel: "Cancel"
+    edit:
+      title: "Edit Tag"
+    show:
+      show_tag: "Show Tag"
+    tag:
+      name: "Name:"
+      description: "Description:"
+      menuitem: "Menu item:"
+    form:
+      delete: "Delete"
+      sure: "Are you sure?"
+      save: "Save"
+      errors: "Errors"

@@ -49,16 +49,16 @@
   <div class="mb-3">
     <% if genimage.persisted? %>
       <div class="float-end">
-        <%= link_to 'Destroy', genimage, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+        <%= link_to t('common.delete'), genimage, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
       </div>
     <% end %>
 
-    <%= form.submit class: 'btn btn-dark' %>
+    <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if genimage.persisted? %>
-      <%= link_to "Cancel", genimage, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), genimage, class: "btn btn-link" %>
     <% else %>
-      <%= link_to "Cancel", genimages_path, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), genimages_path, class: "btn btn-link" %>
     <% end %>
   </div>
 <% end %>

@@ -1,0 +1,23 @@
+it:
+  inventories:
+    index:
+      inventories: "Inventari"
+      inventory: "Inventario"
+    new:
+      inventory: "Inventario"
+    edit:
+      inventory: "Inventario"
+    show:
+      inventory: "Inventario"
+      select_menu_item: "Seleziona un piatto..."
+    inventory:
+      startinginventory: "Inventario iniziale:"
+      currentinventory: "Inventario attuale:"
+      resethour: "Ora di reset:"
+      menuitem: "Voce di menu:"
+    form:
+      select_menu_item: "Seleziona un piatto..."
+      delete: "Elimina"
+      sure: "Sei sicuro?"
+      save: "Salva"
+      errors: "Errori"

@@ -1,0 +1,21 @@
+en:
+  sizes:
+    index:
+      sizes: "Sizes"
+      size: "Size"
+    new:
+      size: "Size"
+    edit:
+      size: "Size"
+    show:
+      size: "Size"
+    size:
+      size: "Size:"
+      name: "Name:"
+      description: "Description:"
+    form:
+      delete: "Delete"
+      sure: "Are you sure?"
+      save: "Save"
+      errors: "Errors"
+

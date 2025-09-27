@@ -1,0 +1,18 @@
+it:
+  tablesettings:
+    index:
+      table_settings: "Impostazioni tavoli"
+      table_setting: "Impostazione tavolo"
+      unarchive: "Ripristina"
+      archive: "Archivia"
+      seating_plan: "Piantina posti"
+      seats: "Posti:"
+    show:
+      show_table_setting: "Dettagli impostazione tavolo"
+      available_menus: "Menu disponibili"
+    tablesetting:
+      name: "Nome:"
+      description: "Descrizione:"
+      status: "Stato:"
+      capacity: "Capienza:"
+      restaurant: "Ristorante:"

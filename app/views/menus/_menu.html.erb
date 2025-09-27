@@ -1,38 +1,38 @@
 <div id="<%= dom_id menu %>">
   <p>
-    <strong>Name:</strong>
+    <strong><%= t('.name') %></strong>
     <%= menu.name %>
   </p>
 
   <p>
-    <strong>Description:</strong>
+    <strong><%= t('.description') %></strong>
     <%= menu.description %>
   </p>
 
   <p>
-    <strong>Image:</strong>
+    <strong><%= t('.image') %></strong>
     <%= menu.image %>
   </p>
 
   <% if menu.pdf_menu_scan.attached? %>
     <p>
-      <strong>PDF Menu Scan:</strong>
+      <strong><%= t('.pdf_menu_scan') %></strong>
       <%= link_to menu.pdf_menu_scan.filename, rails_blob_path(menu.pdf_menu_scan, disposition: "attachment"), target: "_blank" %>
     </p>
   <% end %>
 
   <p>
-    <strong>Status:</strong>
+    <strong><%= t('.status') %></strong>
     <%= menu.status %>
   </p>
 
   <p>
-    <strong>Sequence:</strong>
+    <strong><%= t('.sequence') %></strong>
     <%= menu.sequence %>
   </p>
 
   <p>
-    <strong>Restaurant:</strong>
+    <strong><%= t('.restaurant') %></strong>
     <%= menu.restaurant_id %>
   </p>
 

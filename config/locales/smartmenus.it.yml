@@ -44,6 +44,15 @@ it:
       toggle_dropdown: "Apri/Chiudi menu"
     showMenuitemHorizontal:
       loading: "Caricamento..."
+    edit:
+      title: "Modifica Smartmenu"
+    new:
+      title: "Nuovo Smartmenu"
+    form:
+      destroy: "Elimina"
+      sure: "Sei sicuro?"
+      save: "Salva"
+      cancel: "Annulla"
     smartmenu:
       slug: "Slug:"
       restaurant: "Ristorante:"

@@ -20,17 +20,17 @@
         <span class="float-end">
         <% if tag.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to 'Delete', tag, method: :delete, class: "text-white text-decoration-none", data: { confirm: 'Are you sure?' } %>
+            <%= link_to t('common.delete'), tag, method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
-        <%= form.submit value: 'Save', class: 'btn btn-dark' %>
+        <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
         </span>
     </div>
   </div>
   <% if tag.errors.any? %>
   <div class="row">
     <div class="col-2">
-        Errors
+        <%= t('common.errors') %>
     </div>
     <div class="col-10">
       <ul>

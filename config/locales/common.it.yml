@@ -1,0 +1,15 @@
+it:
+  common:
+    save: "Salva"
+    cancel: "Annulla"
+    delete: "Elimina"
+    actions: "Azioni"
+    activate: "Attiva"
+    deactivate: "Disattiva"
+    confirm: "Conferma"
+    back: "Indietro"
+    edit: "Modifica"
+    update: "Aggiorna"
+    create: "Crea"
+    close: "Chiudi"
+    errors: "Errori"

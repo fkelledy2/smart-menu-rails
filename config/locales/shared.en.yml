@@ -1,0 +1,15 @@
+en:
+  shared:
+    navbar:
+      impersonated_as: "You're logged in as"
+      restaurants: "Restaurants"
+      settings: "Settings"
+      billing: "Billing"
+      testimonials: "Testimonials"
+      adminArea: "Admin"
+      logout: "Logout"
+      signUp: "Sign up"
+      login: "Log in"
+    footer:
+      terms: "Terms"
+      privacy: "Privacy"

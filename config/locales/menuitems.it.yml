@@ -1,0 +1,18 @@
+it:
+  menuitems:
+    edit:
+      tab_item: "Articolo"
+    form:
+      details: "Dettagli"
+      imageSettings: "Impostazioni immagine"
+      settings: "Impostazioni"
+      actions: "Azioni"
+      generateImage: "Genera immagine"
+      true: "true"
+      false: "false"
+      delete: "Elimina"
+      sure: "Sei sicuro?"
+      save: "Salva"
+      errors: "Errori"
+      variantPricing: "Prezzi varianti"
+      update: "Aggiorna"

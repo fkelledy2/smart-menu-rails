@@ -1,0 +1,20 @@
+it:
+  sizes:
+    index:
+      sizes: "Taglie"
+      size: "Taglia"
+    new:
+      size: "Taglia"
+    edit:
+      size: "Taglia"
+    show:
+      size: "Taglia"
+    size:
+      size: "Taglia:"
+      name: "Nome:"
+      description: "Descrizione:"
+    form:
+      delete: "Elimina"
+      sure: "Sei sicuro?"
+      save: "Salva"
+      errors: "Errori"

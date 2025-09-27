@@ -12,3 +12,5 @@ en:
     update: "Update"
     create: "Create"
     close: "Close"
+    loading: "Loading..."
+    errors: "Errors"

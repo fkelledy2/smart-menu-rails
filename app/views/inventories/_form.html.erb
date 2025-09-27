@@ -4,7 +4,7 @@
       <span class="float-md-end"><%= form.label :menuItem, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.collection_select :menuitem_id, Menuitem.all ,:id, :name, options = {:prompt => 'Select a Menu Item...'}%>
+      <%= form.collection_select :menuitem_id, Menuitem.all ,:id, :name, options = {:prompt => t('.select_menu_item')}%>
     </div>
   </div>
   <div style='height:4px'></div>
@@ -42,17 +42,17 @@
         <span class="float-end">
         <% if inventory.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t(".delete"), inventory, method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
+            <%= link_to t('common.delete'), inventory, method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
-        <%= form.submit value: t(".save"), class: 'btn btn-dark' %>
+        <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
         </span>
     </div>
   </div>
   <% if inventory.errors.any? %>
   <div class="row">
     <div class="col-2">
-        <%= t(".errors") %>
+        <%= t('common.errors') %>
     </div>
     <div class="col-10">
       <ul>

@@ -56,10 +56,10 @@
         <span class="float-end">
         <% if tablesetting.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t(".delete"), tablesetting, method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
+            <%= link_to t('common.delete'), tablesetting, method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
-        <%= form.submit value: t(".save"), class: 'btn btn-dark' %>
+        <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
         </span>
     </div>
   </div>
@@ -67,7 +67,7 @@
   <% if tablesetting.errors.any? %>
   <div class="row">
     <div class="col-3">
-      <span class="float-md-end"><%= t(".errors") %></span>
+      <span class="float-md-end"><%= t('common.errors') %></span>
     </div>
     <div class="col-9">
       <ul>

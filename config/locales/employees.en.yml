@@ -1,0 +1,27 @@
+en:
+  employees:
+    index:
+      employees: "Employees"
+      employee: "Employee"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    new:
+      employee: "Employee"
+    edit:
+      employee: "Employee"
+    show:
+      employee: "Employee"
+      selectUser: "Select a user"
+      selectRestaurant: "Select a restaurant"
+    employee:
+      name: "Name:"
+      eid: "Employee ID:"
+      image: "Image:"
+      status: "Status:"
+      restaurant: "Restaurant:"
+    form:
+      delete: "Delete"
+      sure: "Are you sure?"
+      save: "Save"
+      errors: "Errors"
+      selectUser: "Select a user"

@@ -1,0 +1,23 @@
+en:
+  inventories:
+    index:
+      inventories: "Inventories"
+      inventory: "Inventory"
+    new:
+      inventory: "Inventory"
+    edit:
+      inventory: "Inventory"
+    show:
+      inventory: "Inventory"
+      select_menu_item: "Select a Menu Item..."
+    inventory:
+      startinginventory: "Starting inventory:"
+      currentinventory: "Current inventory:"
+      resethour: "Reset hour:"
+      menuitem: "Menu item:"
+    form:
+      select_menu_item: "Select a Menu Item..."
+      delete: "Delete"
+      sure: "Are you sure?"
+      save: "Save"
+      errors: "Errors"

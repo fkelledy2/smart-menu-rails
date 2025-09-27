@@ -24,16 +24,16 @@
   <div class="mb-3">
     <% if ordritem.persisted? %>
       <div class="float-end">
-        <%= link_to 'Destroy', ordritem, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+        <%= link_to t('common.delete'), ordritem, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
       </div>
     <% end %>
 
-    <%= form.submit class: 'btn btn-dark' %>
+    <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if ordritem.persisted? %>
-      <%= link_to "Cancel", ordritem, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), ordritem, class: "btn btn-link" %>
     <% else %>
-      <%= link_to "Cancel", ordritems_path, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), ordritems_path, class: "btn btn-link" %>
     <% end %>
   </div>
 <% end %>

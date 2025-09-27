@@ -71,7 +71,7 @@
           <div class="float-end btn-group" role="group" aria-label="Button group with nested dropdown">
             <div class="btn-group" role="group">
               <button id="menuitem-image-actions" type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                Actions
+                <%= t('.actions') %>
               </button>
               <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="allergyn-actions">
                 <li>
@@ -176,7 +176,7 @@
       <span class="float-md-end"><%= form.label :sizesupport, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :sizesupport, [['true', true], ['false', false]], {} %>
+      <%= form.select :sizesupport, [[t('.true'), true], [t('.false'), false]], {} %>
     </div>
   </div>
   <% if menuitem.sizesupport && Size.where( restaurant_id: menuitem.menusection.menu.restaurant.id ).count > 0 %>
@@ -209,17 +209,17 @@
         <span class="float-end">
         <% if menuitem.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t(".delete"), menuitem, method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
+            <%= link_to t('common.delete'), menuitem, method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
-        <%= form.submit value: t(".save"), class: 'btn btn-dark' %>
+        <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
         </span>
     </div>
   </div>
   <% if menuitem.errors.any? %>
   <div class="row">
     <div class="col-3">
-      <span class="float-md-end"><%=t(".errors")%></span>
+      <span class="float-md-end"><%= t('common.errors') %></span>
     </div>
     <div class="col-9">
       <ul>
@@ -250,7 +250,7 @@
             </div>
             <div class="col-4">
                 <span class="float-end">
-                    <%= menuitemSizeMappingForm.submit value: t(".update"), class: 'btn btn-sm btn-dark' %>
+                    <%= menuitemSizeMappingForm.submit value: t('common.update'), class: 'btn btn-sm btn-dark' %>
                 </span>
             </div>
         </div>

@@ -1,0 +1,21 @@
+en:
+  testimonials:
+    index:
+      testimonials: "Testimonials"
+      actions: "Actions"
+      approve: "Approve"
+      unapprove: "Unapprove"
+    new:
+      title: "New Testimonial"
+      cancel: "Cancel"
+    edit:
+      title: "Edit Testimonial"
+    form:
+      destroy: "Destroy"
+      sure: "Are you sure?"
+      save: "Save"
+      cancel: "Cancel"
+    testimonial:
+      testimonial: "Testimonial:"
+      user: "User:"
+      restaurant: "Restaurant:"

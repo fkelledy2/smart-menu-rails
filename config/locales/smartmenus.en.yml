@@ -44,6 +44,15 @@ en:
       toggle_dropdown: "Toggle Dropdown"
     showMenuitemHorizontal:
       loading: "Loading..."
+    edit:
+      title: "Edit Smartmenu"
+    new:
+      title: "New Smartmenu"
+    form:
+      destroy: "Destroy"
+      sure: "Are you sure?"
+      save: "Save"
+      cancel: "Cancel"
     smartmenu:
       slug: "Slug:"
       restaurant: "Restaurant:"

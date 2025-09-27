@@ -33,7 +33,7 @@
                                     <% end %>
                                 <% end %>
                                 <% if @tablesetting %>
-                                    <span style="display:none" id="orderUpdatedSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="left" title="Order Updated!">
+                                    <span style="display:none" id="orderUpdatedSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="left" title="<%= t('.order_updated') %>">
                                         <button id="orderUpdatedButton" type="button" class="btn btn-sm btn-danger">
                                             <i class="bi bi-arrow-clockwise"></i>
                                         </button>
@@ -77,19 +77,19 @@
                             <% if @openOrder.status == 'opened' %>
                                 <span id="viewOrderSpan">
                                     <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
-                                        Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                        <%= t('.order') %> <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                                     </button>
                                 </span>
                             <% end %>
                             <% if @openOrder.status == 'ordered' %>
                                 <span id="requestBillSpan">
                                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#requestBillModal">
-                                    Bill <i class="bi bi-receipt"></i></i>
+                                    <%= t('.bill') %> <i class="bi bi-receipt"></i></i>
                                 </button>
                                 </span>
                                 <span id="viewOrderSpan">
                                     <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#viewOrderModal">
-                                        Order <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                        <%= t('.order') %> <i class="bi bi-cart"></i>:<%= number_to_currency(@openOrder.runningTotal, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
                                     </button>
                                 </span>
                             <% end %>
@@ -97,13 +97,13 @@
                                 <% if current_user %>
                                     <span id="takePaymentSpan">
                                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#payOrderModal">
-                                            Take Payment <i class="bi bi-credit-card"></i>
+                                            <%= t('.take_payment') %> <i class="bi bi-credit-card"></i>
                                         </button>
                                     </span>
                                 <% else %>
                                     <span id="staffAlertedSpan">
                                         <button type="button" class="btn btn-sm btn-danger">
-                                            Staff Alerted <i class="bi bi-receipt"></i></i>
+                                            <%= t('.staff_alerted') %> <i class="bi bi-receipt"></i></i>
                                         </button>
                                     </span>
                                 <% end %>
@@ -111,7 +111,7 @@
                         <% else %>
                             <% if @menu.allowOrdering == true && @menu.restaurant.allowOrdering == true %>
                                     <span id="startOrderSpan">
-                                        <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal">Start Order <i class="bi bi-plus-circle"></i></button>
+                                        <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#openOrderModal"><%= t('.start_order') %> <i class="bi bi-plus-circle"></i></button>
                                     </span>
                             <% end %>
                         <% end %>
@@ -125,7 +125,7 @@
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
                       <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>
                 <% end %>
-                    <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-danger text-nowrap" href="#menusection_allergyns">Allergens</a>
+                    <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-danger text-nowrap" href="#menusection_allergyns"><%= t('.allergens') %></a>
               </ul>
             </nav>
         </div>
@@ -162,7 +162,7 @@
                                 <div class="ratio ratio-1x1">
                                     <div class="d-flex justify-content-center align-items-center">
                                       <div class="spinner-border m-5" role="status">
-                                        <span class="visually-hidden">Loading...</span>
+                                        <span class="visually-hidden"><%= t('.loading') %></span>
                                       </div>
                                     </div>
                                   <img class="img-thumbnail card-img-bottom" style="display:none;" onload="fadeIn(this)" src="<%= menuitem.image_url %>" alt="<%= menuitem.name %>">
@@ -192,7 +192,7 @@
                                                         data-bs-menuitem_price="<%= menuitem.price %>"
                                                         data-bs-menuitem_description="<%= menuitem.description %>"
                                                         data-bs-menuitem_image="<%= menuitem.image %>"
-                                                        title="Add to Order">
+                                                        title="<%= t('.add_to_order') %>">
                                                         <i class="bi bi-plus"></i>
                                                     </button>
                                                 <% else %>
@@ -222,15 +222,15 @@
                                         </h6>
                                         <% if @menu.restaurant.allowOrdering == true && @menu.inventoryTracking == true && menuitem.inventory %>
                                             <% if menuitem.inventory.currentinventory == 0 %>
-                                                <i>Not available.</i>
+                                                <i><%= t('.not_available') %></i>
                                             <% else %>
-                                                <small><i><b><%= menuitem.inventory.currentinventory %></b> remaining.</i></small>
+                                                <small><i><b><%= menuitem.inventory.currentinventory %></b> <%= t('.remaining', count: menuitem.inventory.currentinventory) %></i></small>
                                             <% end %>
                                         <% end %>
                                         <div class="row">
                                             <div class="col-12">
                                                 <span class="float-end">
-                                                    <div class="btn-group" role="group" aria-label="Allergyns">
+                                                    <div class="btn-group" role="group" aria-label="<%= t('.allergyns') %>">
                                                         <% menuitem.allergyns.each do |allergyn| %>
                                                             <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
                                                                 <%= allergyn.symbol %>
@@ -255,7 +255,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="mx-auto text-center text-danger col-12">
-                        <h2>Allergens</h2>
+                        <h2><%= t('.allergens') %></h2>
                         &nbsp;&nbsp;|&nbsp;&nbsp;
                         <% @allergyns.each do |allergyn| %>
                             <b><%= allergyn.symbol %></b> - <%= allergyn.name %>&nbsp;&nbsp;|&nbsp;&nbsp;

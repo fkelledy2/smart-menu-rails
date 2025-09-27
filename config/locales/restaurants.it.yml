@@ -39,3 +39,13 @@ it:
       scan_to_join: "Scansiona per connetterti"
     showTrack:
       loading: "Caricamento..."
+    showTips:
+      tips: "Mance"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"
+    showOpeningHours:
+      openings: "Orari di apertura"
+      actions: "Azioni"
+      activate: "Attiva"
+      deactivate: "Disattiva"

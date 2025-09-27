@@ -79,3 +79,7 @@ en:
       section_label: "section"
       item_label: "item"
       imported_ago: "Imported %{time} ago"
+    menu_section:
+      hide: "Hide"
+      items: "items"
+      edit: "Edit"

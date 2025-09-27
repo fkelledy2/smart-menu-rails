@@ -1,0 +1,18 @@
+en:
+  tablesettings:
+    index:
+      table_settings: "Table Settings"
+      table_setting: "Table Setting"
+      unarchive: "Unarchive"
+      archive: "Archive"
+      seating_plan: "Seating Plan"
+      seats: "Seats:"
+    show:
+      show_table_setting: "Show Table Setting"
+      available_menus: "Available Menus"
+    tablesetting:
+      name: "Name:"
+      description: "Description:"
+      status: "Status:"
+      capacity: "Capacity:"
+      restaurant: "Restaurant:"

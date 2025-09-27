@@ -1,0 +1,9 @@
+it:
+  menusections:
+    menusection:
+      name: "Nome:"
+      description: "Descrizione:"
+      image: "Immagine:"
+      status: "Stato:"
+      sequence: "Sequenza:"
+      menu: "Menu:"

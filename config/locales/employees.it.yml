@@ -1,0 +1,27 @@
+it:
+  employees:
+    index:
+      employees: "Dipendenti"
+      employee: "Dipendente"
+      activate: "Attiva"
+      deactivate: "Disattiva"
+    new:
+      employee: "Dipendente"
+    edit:
+      employee: "Dipendente"
+    show:
+      employee: "Dipendente"
+      selectUser: "Seleziona un utente"
+      selectRestaurant: "Seleziona un ristorante"
+    employee:
+      name: "Nome:"
+      eid: "ID dipendente:"
+      image: "Immagine:"
+      status: "Stato:"
+      restaurant: "Ristorante:"
+    form:
+      delete: "Elimina"
+      sure: "Sei sicuro?"
+      save: "Salva"
+      errors: "Errori"
+      selectUser: "Seleziona un utente"

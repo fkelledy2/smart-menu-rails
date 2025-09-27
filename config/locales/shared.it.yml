@@ -1,0 +1,15 @@
+it:
+  shared:
+    navbar:
+      impersonated_as: "Accesso come"
+      restaurants: "Ristoranti"
+      settings: "Impostazioni"
+      billing: "Fatturazione"
+      testimonials: "Testimonianze"
+      adminArea: "Admin"
+      logout: "Logout"
+      signUp: "Registrati"
+      login: "Accedi"
+    footer:
+      terms: "Termini"
+      privacy: "Privacy"

@@ -1,0 +1,21 @@
+it:
+  tags:
+    index:
+      tags: "Tag"
+      tag: "Tag"
+    new:
+      title: "Nuovo Tag"
+      cancel: "Annulla"
+    edit:
+      title: "Modifica Tag"
+    show:
+      show_tag: "Dettagli Tag"
+    tag:
+      name: "Nome:"
+      description: "Descrizione:"
+      menuitem: "Voce di menu:"
+    form:
+      delete: "Elimina"
+      sure: "Sei sicuro?"
+      save: "Salva"
+      errors: "Errori"

@@ -39,3 +39,13 @@ en:
       scan_to_join: "Scan to Join"
     showTrack:
       loading: "Loading..."
+    showTips:
+      tips: "Tips"
+      actions: "Actions"
+      activate: "Activate"
+      deactivate: "Deactivate"
+    showOpeningHours:
+      openings: "Opening Hours"
+      actions: "Actions"
+      activate: "Activate"
+      deactivate: "Deactivate"

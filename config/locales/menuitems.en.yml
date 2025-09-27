@@ -1,0 +1,18 @@
+en:
+  menuitems:
+    edit:
+      tab_item: "Item"
+    form:
+      details: "Details"
+      imageSettings: "Image Settings"
+      settings: "Settings"
+      actions: "Actions"
+      generateImage: "Generate Image"
+      true: "true"
+      false: "false"
+      delete: "Delete"
+      sure: "Are you sure?"
+      save: "Save"
+      errors: "Errors"
+      variantPricing: "Variant Pricing"
+      update: "Update"

@@ -55,10 +55,10 @@
       <%= form.file_field :pdf_menu_scan, class: 'form-control', accept: 'application/pdf' %>
       <% if menu.pdf_menu_scan.attached? %>
         <div class="mt-2">
-          <strong>Current PDF:</strong>
+          <strong><%= t('.current_pdf') %></strong>
           <%= link_to menu.pdf_menu_scan.filename, rails_blob_path(menu.pdf_menu_scan, disposition: "attachment"), target: "_blank" %>
           <span class="float-end">
-            <%= check_box_tag 'menu[remove_pdf_menu_scan]', '1', false %> Remove
+            <%= check_box_tag 'menu[remove_pdf_menu_scan]', '1', false %> <%= t('.remove') %>
           </span>
         </div>
       <% end %>
@@ -126,7 +126,7 @@
       <span class="float-md-end"><%= form.label :displayImages, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :displayImages, [['on', true], ['off', false]], {} %>
+      <%= form.select :displayImages, [[t('.on'), true], [t('.off'), false]], {} %>
     </div>
   </div>
   <div style='height:4px'></div>
@@ -135,7 +135,7 @@
       <span class="float-md-end"><%= form.label :displayImagesInPopup, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :displayImagesInPopup, [['on', true], ['off', false]], {} %>
+      <%= form.select :displayImagesInPopup, [[t('.on'), true], [t('.off'), false]], {} %>
     </div>
   </div>
   <div class="form-group row">
@@ -143,7 +143,7 @@
       <span class="float-md-end"><%= form.label :allowOrdering, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :allowOrdering, [['on', true], ['off', false]], {} %>
+      <%= form.select :allowOrdering, [[t('.on'), true], [t('.off'), false]], {} %>
     </div>
   </div>
   <div class="form-group row">
@@ -151,7 +151,7 @@
       <span class="float-md-end"><%= form.label :inventoryTracking, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :inventoryTracking, [['on', true], ['off', false]], {} %>
+      <%= form.select :inventoryTracking, [[t('.on'), true], [t('.off'), false]], {} %>
     </div>
   </div>
   <div style='height:4px'></div>
@@ -176,10 +176,10 @@
         <span class="float-end">
         <% if menu.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t(".delete"), menu, method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
+            <%= link_to t('common.delete'), menu, method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
-        <%= form.submit value: t(".save"), class: 'btn btn-dark' %>
+        <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
         </span>
     </div>
   </div>
@@ -187,7 +187,7 @@
   <% if menu.errors.any? %>
     <div class="row">
     <div class="col-3">
-      <span class="float-md-end"><%=t(".errors")%></span>
+      <span class="float-md-end"><%= t('common.errors') %></span>
     </div>
     <div class="col-9">
       <ul>

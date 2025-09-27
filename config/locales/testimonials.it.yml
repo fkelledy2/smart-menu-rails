@@ -1,0 +1,21 @@
+it:
+  testimonials:
+    index:
+      testimonials: "Testimonianze"
+      actions: "Azioni"
+      approve: "Approva"
+      unapprove: "Revoca approvazione"
+    new:
+      title: "Nuova testimonianza"
+      cancel: "Annulla"
+    edit:
+      title: "Modifica testimonianza"
+    form:
+      destroy: "Elimina"
+      sure: "Sei sicuro?"
+      save: "Salva"
+      cancel: "Annulla"
+    testimonial:
+      testimonial: "Testimonianza:"
+      user: "Utente:"
+      restaurant: "Ristorante:"

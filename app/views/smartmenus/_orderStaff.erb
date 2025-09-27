@@ -57,7 +57,7 @@
                                             <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm float-right" role="status"></div>
                                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
                                                 <%= order.totalItemsCount %>
-                                                <span class="visually-hidden">items in cart</span>
+                                                <span class="visually-hidden"><%= t('.items_in_cart') %></span>
                                             </span>
                                         </button>
                                     <% else %>
@@ -67,7 +67,7 @@
                                             <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm float-right" role="status"></div>
                                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
                                                 <%= order.totalItemsCount %>
-                                                <span class="visually-hidden">items in cart</span>
+                                                <span class="visually-hidden"><%= t('.items_in_cart') %></span>
                                             </span>
                                         </button>
                                     <% end %>

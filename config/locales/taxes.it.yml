@@ -1,0 +1,22 @@
+it:
+  taxes:
+    index:
+      taxes: "Tasse"
+      tax: "Tassa"
+    new:
+      tax: "Tassa"
+    edit:
+      tax: "Tassa"
+    show:
+      tax: "Tassa"
+      selectRestaurant: "Seleziona un ristorante"
+    tax:
+      name: "Nome:"
+      taxtype: "Tipo di tassa:"
+      taxpercentage: "Percentuale di tassa:"
+      restaurant: "Ristorante:"
+    form:
+      delete: "Elimina"
+      sure: "Sei sicuro?"
+      save: "Salva"
+      errors: "Errori"
