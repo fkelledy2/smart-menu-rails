@@ -56,3 +56,6 @@ en:
       default: "Default"
       deactivate: "Deactivate"
       delete: "Delete"
+    showMenus:
+      add_new_menu: "Add New Menu"
+      import_menu_from_pdf: "Import Menu from PDF"

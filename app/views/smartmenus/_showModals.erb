@@ -13,8 +13,8 @@
                 </div>
                 <div style='border-top:0px;padding:0px' class="modal-footer">
                     <span class="float-end">
-                        <div style='position:relative;right:-5px;bottom:-5px;' class="btn-group btn-group-lg btn-order-group-custom-rounded" role="group" aria-label="Order">
-                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close"><%= t(".cancel") %></button>
+                        <div style='position:relative;right:-5px;bottom:-5px;' class="btn-group btn-group-lg btn-order-group-custom-rounded" role="group" aria-label="<%= t('.order_aria') %>">
+                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
                             <button id="start-order" type="button" data-bs-dismiss="modal" class="btn btn-danger"><%= t(".start") %></button>
                          </div>
                     </span>
@@ -71,8 +71,8 @@
           </div>
           <div style='border-top:0px;padding:0px' class="modal-footer">
             <span class="float-end">
-                <div style='position:relative;right:-5px;bottom:-5px;' class="btn-group btn-group-lg btn-order-group-custom-rounded" role="group" aria-label="Order">
-                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close"><%= t(".cancel") %></button>
+                <div style='position:relative;right:-5px;bottom:-5px;' class="btn-group btn-group-lg btn-order-group-custom-rounded" role="group" aria-label="<%= t('.order_aria') %>">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
                     <button id="addItemToOrderButton" type="button" class="btn btn-danger" data-bs-dismiss="modal">
                         <%= restaurantCurrency.symbol ? restaurantCurrency.symbol : "" %><span id="a2o_menuitem_price"></span>
                         <i class="bi bi-plus"></i>
@@ -252,8 +252,8 @@
           </div>
           <div style='border-top:0px;padding:0px' class="modal-footer">
             <span class="float-end">
-                <div style='position:relative;right:-5px;bottom:-5px;' class="btn-group btn-group-lg btn-order-group-custom-rounded" role="group" aria-label="Order">
-                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close"><%= t(".cancel") %></button>
+                <div style='position:relative;right:-5px;bottom:-5px;' class="btn-group btn-group-lg btn-order-group-custom-rounded" role="group" aria-label="<%= t('.order_aria') %>">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
                     <% if order && order.addedCount > 0 %>
                         <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-danger"><%= t(".submit") %></button>
                     <% else %>
@@ -452,7 +452,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <span class="float-end">
-                                            <div style="position:relative;left:15px" class="btn-toolbar btn-toolbar-sm mb-3" role="toolbar" aria-label="Tip Options">
+                                            <div style="position:relative;left:15px" class="btn-toolbar btn-toolbar-sm mb-3" role="toolbar" aria-label="<%= t('.tip_options') %>">
                                                 <div class="btn-group btn-group-sm mr-2" role="group" aria-label="First group">
                                                     <% order.menu.restaurant.tips.sort_by(&:percentage).each do |tip| %>
                                                         <button type="button" class="btn btn-sm btn-secondary"><span class="tipPreset"><%= tip.percentage %></span>%</button>

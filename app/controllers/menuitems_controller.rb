@@ -72,7 +72,7 @@ class MenuitemsController < ApplicationController
                 @genimage.updated_at = DateTime.current
                 @genimage.save
             end
-            format.html { redirect_to edit_menuitem_url(@menuitem), notice: "Menuitem was successfully created." }
+            format.html { redirect_to edit_menuitem_url(@menuitem), notice: t('menuitems.controller.created') }
             format.json { render :show, status: :created, location: @menuitem }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -104,7 +104,7 @@ class MenuitemsController < ApplicationController
                 @menuitem.image = nil
                 @menuitem.save
             end
-            format.html { redirect_to edit_menuitem_url(@menuitem), notice: "Menuitem was successfully created." }
+            format.html { redirect_to edit_menuitem_url(@menuitem), notice: t('menuitems.controller.updated') }
             format.json { render :show, status: :ok, location: @menuitem }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -121,7 +121,7 @@ class MenuitemsController < ApplicationController
     if current_user
         @menuitem.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to edit_menusection_path(@menuitem.menusection), notice: "Menuitem was successfully deleted." }
+          format.html { redirect_to edit_menusection_path(@menuitem.menusection), notice: t('menuitems.controller.deleted') }
           format.json { head :no_content }
         end
     else

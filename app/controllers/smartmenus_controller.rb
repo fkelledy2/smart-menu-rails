@@ -79,7 +79,7 @@ class SmartmenusController < ApplicationController
 
     respond_to do |format|
       if @smartmenu.save
-        format.html { redirect_to @smartmenu, notice: "Smartmenu was successfully created." }
+        format.html { redirect_to @smartmenu, notice: t('smartmenus.controller.created') }
         format.json { render :show, status: :created, location: @smartmenu }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -92,7 +92,7 @@ class SmartmenusController < ApplicationController
   def update
     respond_to do |format|
       if @smartmenu.update(smartmenu_params)
-        format.html { redirect_to @smartmenu, notice: "Smartmenu was successfully updated." }
+        format.html { redirect_to @smartmenu, notice: t('smartmenus.controller.updated') }
         format.json { render :show, status: :ok, location: @smartmenu }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -106,7 +106,7 @@ class SmartmenusController < ApplicationController
     @smartmenu.destroy!
 
     respond_to do |format|
-      format.html { redirect_to smartmenus_path, status: :see_other, notice: "Smartmenu was successfully destroyed." }
+      format.html { redirect_to smartmenus_path, status: :see_other, notice: t('smartmenus.controller.deleted') }
       format.json { head :no_content }
     end
   end

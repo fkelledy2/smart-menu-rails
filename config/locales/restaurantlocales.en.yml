@@ -1,0 +1,7 @@
+en:
+  restaurantlocales:
+    controller:
+      created: "Restaurant Locale was successfully created."
+      updated: "Restaurant Locale was successfully updated."
+      deleted: "Locale was deleted."
+      active_not_deleted: "Active Locale was not deleted."

@@ -15,7 +15,7 @@ class MenusectionlocalesController < ApplicationController
   def create
     @menusectionlocale = Menusectionlocale.new(menusectionlocale_params)
     if @menusectionlocale.save
-      redirect_to menusectionlocale_url(@menusectionlocale), notice: 'Menusectionlocale was successfully created.'
+      redirect_to menusectionlocale_url(@menusectionlocale), notice: t('menusectionlocales.controller.created')
     else
       render :new, status: :unprocessable_entity
     end
@@ -26,7 +26,7 @@ class MenusectionlocalesController < ApplicationController
 
   def update
     if @menusectionlocale.update(menusectionlocale_params)
-      redirect_to menusectionlocale_url(@menusectionlocale), notice: 'Menusectionlocale was successfully updated.'
+      redirect_to menusectionlocale_url(@menusectionlocale), notice: t('menusectionlocales.controller.updated')
     else
       render :edit, status: :unprocessable_entity
     end
@@ -34,7 +34,7 @@ class MenusectionlocalesController < ApplicationController
 
   def destroy
     @menusectionlocale.destroy
-    redirect_to menusectionlocales_url, notice: 'Menusectionlocale was successfully destroyed.'
+    redirect_to menusectionlocales_url, notice: t('menusectionlocales.controller.destroyed')
   end
 
   private

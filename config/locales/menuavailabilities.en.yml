@@ -1,0 +1,6 @@
+en:
+  menuavailabilities:
+    controller:
+      created: "Menu availability was successfully created."
+      updated: "Menu availability was successfully updated."
+      deleted: "Menu availability was successfully deleted."

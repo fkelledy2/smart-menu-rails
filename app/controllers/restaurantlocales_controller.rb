@@ -77,7 +77,7 @@ class RestaurantlocalesController < ApplicationController
           end
         end
         TranslateMenuJob.perform_async(@restaurantlocale.id)
-        format.html { redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), notice: "Restaurant Locale was successfully created." }
+        format.html { redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), notice: t('restaurantlocales.controller.created') }
         format.json { render :show, status: :created, location: @restaurantlocale }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -96,7 +96,7 @@ class RestaurantlocalesController < ApplicationController
           end
       end
       if @restaurantlocale.update(restaurantlocale_params)
-        format.html { redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), notice: "Restaurant Locale was successfully updated." }
+        format.html { redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), notice: t('restaurantlocales.controller.updated') }
         format.json { render :show, status: :ok, location: @restaurantlocale }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -111,12 +111,12 @@ class RestaurantlocalesController < ApplicationController
         if @restaurantlocale.inactive?
             @restaurantlocale.destroy!
             respond_to do |format|
-              format.html { redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), notice: "Locale was deleted." }
+              format.html { redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), notice: t('restaurantlocales.controller.deleted') }
               format.json { head :no_content }
             end
         else
             respond_to do |format|
-              format.html { redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), notice: "Active Locale was not deleted." }
+              format.html { redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id), notice: t('restaurantlocales.controller.active_not_deleted') }
               format.json { head :no_content }
             end
         end

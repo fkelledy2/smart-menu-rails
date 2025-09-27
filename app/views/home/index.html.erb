@@ -172,7 +172,7 @@
               <div class="embed-responsive embed-responsive-16by9">
                     <video width="100%" loop muted playsinline autoplay>
                       <source src="<%= asset_path('smart-menu.mp4') %>" type="video/mp4">
-                      Your browser does not support the video tag.
+                      <%= t('.video_unsupported') %>
                     </video>
               </div>
             </div>
@@ -305,7 +305,7 @@
     <% end %>
    </div>
 
-   <h2 style='display:none' class="pb-2">Compare plans</h2>
+   <h2 style='display:none' class="pb-2"><%= t('.compare_plans') %></h2>
    <div style='display:none' class="table-responsive">
       <table class="table text-center">
         <thead>
@@ -375,11 +375,11 @@
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+                <span class="visually-hidden"><%= t('.previous') %></span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+                <span class="visually-hidden"><%= t('.next') %></span>
             </button>
         </div>
       </div>

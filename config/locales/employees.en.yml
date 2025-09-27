@@ -1,5 +1,9 @@
 en:
   employees:
+    controller:
+      created: "Employee was successfully created."
+      updated: "Employee was successfully updated."
+      deleted: "Employee was successfully deleted."
     index:
       employees: "Employees"
       employee: "Employee"

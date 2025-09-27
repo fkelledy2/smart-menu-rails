@@ -1,5 +1,9 @@
 it:
   employees:
+    controller:
+      created: "Dipendente creato con successo."
+      updated: "Dipendente aggiornato con successo."
+      deleted: "Dipendente eliminato con successo."
     index:
       employees: "Dipendenti"
       employee: "Dipendente"

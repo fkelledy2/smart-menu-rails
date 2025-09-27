@@ -1,0 +1,6 @@
+it:
+  tips:
+    controller:
+      created: "Mancia creata con successo."
+      updated: "Mancia aggiornata con successo."
+      deleted: "Mancia eliminata con successo."

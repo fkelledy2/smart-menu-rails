@@ -56,7 +56,7 @@ class MenusController < ApplicationController
       queued += 1
     end
 
-    flash[:notice] = "Queued image regeneration for #{queued} items on this menu."
+    flash[:notice] = t('menus.controller.image_regeneration_queued', count: queued)
     redirect_to edit_menu_path(@menu)
   end
 
@@ -202,7 +202,7 @@ class MenusController < ApplicationController
         puts 'SmartMenuSyncJob.start'
         SmartMenuSyncJob.perform_sync(@menu.restaurant.id)
         puts 'SmartMenuSyncJob.end'
-        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully created." }
+        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: t('menus.controller.created') }
         format.json { render :show, status: :created, location: @menu }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -238,7 +238,7 @@ class MenusController < ApplicationController
         puts 'SmartMenuSyncJob.start'
         SmartMenuSyncJob.perform_sync(@menu.restaurant.id)
         puts 'SmartMenuSyncJob.end'
-        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully updated." }
+        format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: t('menus.controller.updated') }
         format.json { render :show, status: :ok, location: @menu }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -260,7 +260,7 @@ class MenusController < ApplicationController
             }
         )
         respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: "Menu was successfully deleted." }
+          format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: t('menus.controller.deleted') }
           format.json { head :no_content }
         end
     else

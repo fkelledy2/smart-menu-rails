@@ -17,12 +17,12 @@
           </div>
           <% if @canAddMenu %>
               <button type="button" class="btn btn-dark">
-                <%= link_to new_menu_path(restaurant_id: @restaurant.id), class: 'link-light', title: 'Add New Menu' do %>
+                <%= link_to new_menu_path(restaurant_id: @restaurant.id), class: 'link-light', title: t('.add_new_menu') do %>
                   <i class="bi bi-plus"></i>
                 <% end %>
               </button>
               <button type="button" class="btn btn-dark">
-                <%= link_to restaurant_ocr_menu_imports_path(@restaurant), class: 'link-light', title: 'Import Menu from PDF' do %>
+                <%= link_to restaurant_ocr_menu_imports_path(@restaurant), class: 'link-light', title: t('.import_menu_from_pdf') do %>
                   <i class="bi bi-file-earmark-pdf"></i>
                 <% end %>
               </button>

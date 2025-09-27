@@ -1,5 +1,17 @@
 it:
   ocr_menu_imports:
+    controller:
+      queued: "L'importazione del menu è stata messa in coda per l'elaborazione."
+      attach_pdf: "Allega un file PDF."
+      updated: "L'importazione del menu è stata aggiornata con successo."
+      processing_restarted: "L'elaborazione è stata (ri)avviata."
+      unable_restart: "Impossibile (ri)avviare l'elaborazione dallo stato: %{status}."
+      confirm_section: "Conferma almeno una sezione prima di importare."
+      republished: "Il menu è stato ripubblicato con le modifiche confermate."
+      published: "Il menu è stato pubblicato con successo!"
+      fail_create: "Impossibile creare il menu: %{error}"
+      deleted: "L'importazione del menu è stata eliminata con successo."
+      unauthorized: "Non sei autorizzato a eseguire questa azione."
     index:
       title: "Importazioni menu"
       new_import: "Nuova importazione menu"
@@ -52,6 +64,11 @@ it:
       approve_sections_items: "Approva sezioni e articoli"
       click_to_add_description: "Clicca per aggiungere una descrizione."
       cancel: "Annulla"
+      steps:
+        upload: "Caricamento"
+        processing: "Elaborazione"
+        review: "Revisione"
+        complete: "Completato"
     import_item:
       delete_confirm: "Eliminare questa importazione? Operazione irreversibile."
       delete_title: "Elimina importazione"

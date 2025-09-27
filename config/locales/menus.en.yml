@@ -1,5 +1,10 @@
 en:
   menus:
+    controller:
+      created: "Menu was successfully created."
+      updated: "Menu was successfully updated."
+      deleted: "Menu was successfully deleted."
+      image_regeneration_queued: "Queued image regeneration for %{count} items on this menu."
     edit:
       regenerate_images: "Regenerate images for this menu"
       regenerate_images_hint: "This triggers background jobs to rebuild all generated images for items on this menu using the latest prompt logic and style profile."

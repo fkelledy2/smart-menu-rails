@@ -1,5 +1,9 @@
 en:
   taxes:
+    controller:
+      created: "Tax was successfully created."
+      updated: "Tax was successfully updated."
+      deleted: "Tax was successfully deleted."
     index:
       taxes: "Taxes"
       tax: "Tax"

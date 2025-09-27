@@ -58,10 +58,10 @@ class OcrMenuImportsController < ApplicationController
       if @ocr_menu_import.pdf_file.attached?
         @ocr_menu_import.process_pdf_async
         redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), 
-                    notice: 'Menu import has been queued for processing.'
+                    notice: t('ocr_menu_imports.controller.queued')
       else
         redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), 
-                    alert: 'Please attach a PDF file.'
+                    alert: t('ocr_menu_imports.controller.attach_pdf')
       end
     else
       render :new, status: :unprocessable_entity
@@ -80,7 +80,7 @@ class OcrMenuImportsController < ApplicationController
       respond_to do |format|
         format.html do
           redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
-                      notice: 'Menu import was successfully updated.'
+                      notice: t('ocr_menu_imports.controller.updated')
         end
         format.json do
           render json: { ok: true, import: { id: @ocr_menu_import.id, name: @ocr_menu_import.name } }
@@ -116,10 +116,10 @@ class OcrMenuImportsController < ApplicationController
       end
       @ocr_menu_import.process_pdf_async
       redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
-                  notice: 'Processing has been (re)started.'
+                  notice: t('ocr_menu_imports.controller.processing_restarted')
     else
       redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
-                  alert: "Unable to (re)start processing from status: #{@ocr_menu_import.status}."
+                  alert: t('ocr_menu_imports.controller.unable_restart', status: @ocr_menu_import.status)
     end
   end
   
@@ -127,7 +127,7 @@ class OcrMenuImportsController < ApplicationController
   def confirm_import
     unless @ocr_menu_import.completed? && @ocr_menu_import.ocr_menu_sections.confirmed.any?
       return redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
-                        alert: 'Please confirm at least one section before importing.'
+                        alert: t('ocr_menu_imports.controller.confirm_section')
     end
 
     begin
@@ -136,7 +136,7 @@ class OcrMenuImportsController < ApplicationController
         # Republish into existing menu: update existing and add new confirmed content
         sync = ActiveModel::Type::Boolean.new.cast(params[:sync])
         menu, stats = service.upsert_into_menu(@ocr_menu_import.menu, sync: sync)
-        notice = 'Menu has been republished with confirmed changes.'
+        notice = t('ocr_menu_imports.controller.republished')
         if stats.present?
           notice << " (sections: +#{stats[:sections_created]}/~#{stats[:sections_updated]}#{sync ? ", -#{stats[:sections_archived]}" : ''}, items: +#{stats[:items_created]}/~#{stats[:items_updated]}#{sync ? ", -#{stats[:items_archived]}" : ''})"
         end
@@ -144,11 +144,11 @@ class OcrMenuImportsController < ApplicationController
       else
         # First-time publish: create a new menu from confirmed content
         menu = service.call
-        redirect_to restaurant_menu_path(@restaurant, menu), notice: 'Menu has been successfully published!'
+        redirect_to restaurant_menu_path(@restaurant, menu), notice: t('ocr_menu_imports.controller.published')
       end
     rescue => e
       Rails.logger.error("Error creating menu from import ##{@ocr_menu_import.id}: #{e.class}: #{e.message}")
-      redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), alert: "Failed to create menu: #{e.message}"
+      redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), alert: t('ocr_menu_imports.controller.fail_create', error: e.message)
     end
   end
   
@@ -208,7 +208,7 @@ class OcrMenuImportsController < ApplicationController
   def destroy
     @ocr_menu_import.destroy
     redirect_to restaurant_ocr_menu_imports_path(@restaurant), 
-                notice: 'Menu import was successfully deleted.'
+                notice: t('ocr_menu_imports.controller.deleted')
   end
   
   private
@@ -227,7 +227,7 @@ class OcrMenuImportsController < ApplicationController
   
   def authorize_restaurant_owner
     unless current_user && @restaurant.user == current_user
-      redirect_to root_path, alert: 'You are not authorized to perform this action.'
+      redirect_to root_path, alert: t('ocr_menu_imports.controller.unauthorized')
     end
   end
 end

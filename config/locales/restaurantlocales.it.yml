@@ -1,0 +1,7 @@
+it:
+  restaurantlocales:
+    controller:
+      created: "Lingua ristorante creata con successo."
+      updated: "Lingua ristorante aggiornata con successo."
+      deleted: "Lingua eliminata."
+      active_not_deleted: "La lingua attiva non è stata eliminata."

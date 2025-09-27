@@ -1,0 +1,6 @@
+en:
+  restaurantavailabilities:
+    controller:
+      created: "Restaurant availability was successfully created."
+      updated: "Restaurant availability was successfully updated."
+      deleted: "Restaurant availability was successfully deleted."

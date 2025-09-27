@@ -1,5 +1,9 @@
 it:
   menuitems:
+    controller:
+      created: "Voce di menu creata con successo."
+      updated: "Voce di menu aggiornata con successo."
+      deleted: "Voce di menu eliminata con successo."
     edit:
       tab_item: "Articolo"
     form:

@@ -1,0 +1,6 @@
+en:
+  allergyns:
+    controller:
+      created: "Allergen was successfully created."
+      updated: "Allergen was successfully updated."
+      deleted: "Allergen was successfully deleted."

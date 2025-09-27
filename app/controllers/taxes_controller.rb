@@ -52,7 +52,7 @@ class TaxesController < ApplicationController
         @tax = Tax.new(tax_params)
         respond_to do |format|
           if @tax.save
-            format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully created." }
+            format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: t('taxes.controller.created') }
             # format.html { redirect_to @return_url, notice: "Tax was successfully created." }
             format.json { render :show, status: :created, location: @tax }
           else
@@ -70,7 +70,7 @@ class TaxesController < ApplicationController
     if current_user
         respond_to do |format|
           if @tax.update(tax_params)
-            format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully updated." }
+            format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: t('taxes.controller.updated') }
             # format.html { redirect_to tax_url(@tax), notice: "Tax was successfully updated." }
             format.json { render :show, status: :ok, location: @tax }
           else
@@ -88,7 +88,7 @@ class TaxesController < ApplicationController
     if current_user
         @tax.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: "Tax was successfully deleted." }
+          format.html { redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: t('taxes.controller.deleted') }
           format.json { head :no_content }
         end
     else

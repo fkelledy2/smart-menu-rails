@@ -1,5 +1,10 @@
 it:
   menus:
+    controller:
+      created: "Menu creato con successo."
+      updated: "Menu aggiornato con successo."
+      deleted: "Menu eliminato con successo."
+      image_regeneration_queued: "Rigenerazione delle immagini in coda per %{count} elementi di questo menu."
     edit:
       regenerate_images: "Rigenera le immagini per questo menu"
       regenerate_images_hint: "Avvia job in background per ricreare le immagini degli articoli usando l'ultimo prompt e lo stile predefinito."

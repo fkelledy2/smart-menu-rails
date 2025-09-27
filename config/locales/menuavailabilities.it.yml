@@ -1,0 +1,6 @@
+it:
+  menuavailabilities:
+    controller:
+      created: "Disponibilità menu creata con successo."
+      updated: "Disponibilità menu aggiornata con successo."
+      deleted: "Disponibilità menu eliminata con successo."

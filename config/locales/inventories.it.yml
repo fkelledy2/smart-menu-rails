@@ -1,5 +1,9 @@
 it:
   inventories:
+    controller:
+      created: "Inventario creato con successo."
+      updated: "Inventario aggiornato con successo."
+      deleted: "Inventario eliminato con successo."
     index:
       inventories: "Inventari"
       inventory: "Inventario"

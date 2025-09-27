@@ -1,0 +1,6 @@
+it:
+  restaurantavailabilities:
+    controller:
+      created: "Disponibilità ristorante creata con successo."
+      updated: "Disponibilità ristorante aggiornata con successo."
+      deleted: "Disponibilità ristorante eliminata con successo."

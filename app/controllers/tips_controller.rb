@@ -51,7 +51,7 @@ class TipsController < ApplicationController
         @tip = Tip.new(tip_params)
         respond_to do |format|
           if @tip.save
-            format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: "Tip was successfully created." }
+            format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.created') }
             format.json { render :show, status: :created, location: @tip }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -68,7 +68,7 @@ class TipsController < ApplicationController
     if current_user
         respond_to do |format|
           if @tip.update(tip_params)
-            format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: "Tip was successfully updated." }
+            format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.updated') }
             # format.html { redirect_to tip_url(@tip), notice: "Tip was successfully updated." }
             format.json { render :show, status: :ok, location: @tip }
           else
@@ -86,7 +86,7 @@ class TipsController < ApplicationController
     if current_user
         @tip.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: "Tip was successfully deleted." }
+          format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.deleted') }
           format.json { head :no_content }
         end
     else

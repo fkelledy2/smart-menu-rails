@@ -7,6 +7,8 @@ en:
       cancel: "Cancel"
       start: "Start"
       addToOrder: "Add to Order"
+      order_aria: "Order"
+      tip_options: "Tip Options"
       filterAllergyns: "Filter Allergens"
       noneAll: "None / All"
       filterBy: "Filter"

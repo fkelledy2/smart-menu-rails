@@ -1,5 +1,9 @@
 en:
   menuitems:
+    controller:
+      created: "Menu item was successfully created."
+      updated: "Menu item was successfully updated."
+      deleted: "Menu item was successfully deleted."
     edit:
       tab_item: "Item"
     form:

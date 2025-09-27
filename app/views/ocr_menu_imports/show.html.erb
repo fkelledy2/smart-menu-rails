@@ -44,13 +44,13 @@
       <div class="d-flex justify-content-between align-items-center mb-2">
         <% steps = [
           # Upload is active when the import is pending; once it moves past pending, mark as complete
-          { name: 'Upload', status: (@ocr_menu_import.pending? ? 'active' : (@ocr_menu_import.processing? || @ocr_menu_import.completed? ? 'complete' : '')) },
+          { name: t('.steps.upload'), status: (@ocr_menu_import.pending? ? 'active' : (@ocr_menu_import.processing? || @ocr_menu_import.completed? ? 'complete' : '')) },
           # Processing is active when processing; once completed, mark as complete
-          { name: 'Processing', status: (@ocr_menu_import.processing? ? 'active' : (@ocr_menu_import.completed? ? 'complete' : '')) },
+          { name: t('.steps.processing'), status: (@ocr_menu_import.processing? ? 'active' : (@ocr_menu_import.completed? ? 'complete' : '')) },
           # Review becomes active when the import has completed and is ready to review
-          { name: 'Review', status: (@ocr_menu_import.completed? ? 'active' : '') },
+          { name: t('.steps.review'), status: (@ocr_menu_import.completed? ? 'active' : '') },
           # Complete is marked complete once the import is completed
-          { name: 'Complete', status: (@ocr_menu_import.completed? ? 'complete' : '') }
+          { name: t('.steps.complete'), status: (@ocr_menu_import.completed? ? 'complete' : '') }
         ] %>
         
         <% steps.each_with_index do |step, index| %>
@@ -382,7 +382,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="editItemModalLabel"><%= t('.edit_item_modal_title') %></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"></button>
       </div>
       <form id="editItemForm" data-menu-import-target="editItemForm">
         <input type="hidden" name="item_id" data-menu-import-target="editItemId">

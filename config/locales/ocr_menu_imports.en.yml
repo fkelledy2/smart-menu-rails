@@ -1,5 +1,17 @@
 en:
   ocr_menu_imports:
+    controller:
+      queued: "Menu import has been queued for processing."
+      attach_pdf: "Please attach a PDF file."
+      updated: "Menu import was successfully updated."
+      processing_restarted: "Processing has been (re)started."
+      unable_restart: "Unable to (re)start processing from status: %{status}."
+      confirm_section: "Please confirm at least one section before importing."
+      republished: "Menu has been republished with confirmed changes."
+      published: "Menu has been successfully published!"
+      fail_create: "Failed to create menu: %{error}"
+      deleted: "Menu import was successfully deleted."
+      unauthorized: "You are not authorized to perform this action."
     index:
       title: "Menu Imports"
       new_import: "New Menu Import"
@@ -69,6 +81,11 @@ en:
       hold_multi_select: "Hold Ctrl/Cmd to select multiple"
       delete: "Delete"
       save_changes: "Save Changes"
+      steps:
+        upload: "Upload"
+        processing: "Processing"
+        review: "Review"
+        complete: "Complete"
       vegetarian: "Vegetarian"
       vegan: "Vegan"
       gluten_free: "Gluten Free"

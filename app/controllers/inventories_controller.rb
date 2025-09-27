@@ -49,7 +49,7 @@ class InventoriesController < ApplicationController
         @inventory = Inventory.new(inventory_params)
         respond_to do |format|
           if @inventory.save
-            format.html { redirect_to edit_menusection_path(@inventory.menuitem.menusection), notice: "Inventory was successfully created." }
+            format.html { redirect_to edit_menusection_path(@inventory.menuitem.menusection), notice: t('inventories.controller.created') }
             format.json { render :show, status: :created, location: @inventory }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -70,7 +70,7 @@ class InventoriesController < ApplicationController
                 @inventory.currentinventory = @inventory.startinginventory
                 @inventory.save
             end
-            format.html { redirect_to edit_menusection_path(@inventory.menuitem.menusection), notice: "Inventory was successfully updated." }
+            format.html { redirect_to edit_menusection_path(@inventory.menuitem.menusection), notice: t('inventories.controller.updated') }
             format.json { render :show, status: :ok, location: @inventory }
           else
             format.html { render :edit, status: :unprocessable_entity }
@@ -87,7 +87,7 @@ class InventoriesController < ApplicationController
     if current_user
         @inventory.update( archived: true )
         respond_to do |format|
-          format.html { redirect_to edit_menusection_path(@inventory.menuitem.menusection), notice: "Inventory was successfully deleted." }
+          format.html { redirect_to edit_menusection_path(@inventory.menuitem.menusection), notice: t('inventories.controller.deleted') }
           format.json { head :no_content }
         end
     else

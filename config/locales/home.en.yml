@@ -1,0 +1,7 @@
+en:
+  home:
+    index:
+      video_unsupported: "Your browser does not support the video tag."
+      compare_plans: "Compare plans"
+      previous: "Previous"
+      next: "Next"

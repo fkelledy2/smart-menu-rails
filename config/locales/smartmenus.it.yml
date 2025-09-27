@@ -37,6 +37,8 @@ it:
       cancel: "Annulla"
       start: "Avvia"
       addToOrder: "Aggiungi all'ordine"
+      order_aria: "Ordine"
+      tip_options: "Opzioni mancia"
       filterAllergyns: "Filtra allergeni"
       noneAll: "Nessuno / Tutti"
       filterBy: "Filtra"
