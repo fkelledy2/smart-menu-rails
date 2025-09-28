@@ -58,13 +58,4 @@ Rails.application.configure do
   end
 end
 
-# Configure Sentry logging if available
-if defined?(Sentry) && Rails.env.production?
-  Sentry.configure do |config|
-    # Capture all log messages at error level and above
-    config.breadcrumbs_logger = [:active_support_logger]
-    
-    # Set log level for Sentry
-    config.logger.level = Logger::WARN
-  end
-end
+# Sentry logging configuration is handled in config/initializers/sentry.rb
