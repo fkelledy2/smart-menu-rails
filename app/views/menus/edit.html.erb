@@ -65,14 +65,3 @@
     </div>
   </div>
 </div>
-
-<div class="row mt-3">
-  <div class="col-12">
-    <%= button_to t('.regenerate_images'), regenerate_images_menu_path(@menu), method: :post, class: 'btn btn-danger', data: { turbo: false, confirm: t('.regenerate_images_confirm') } %>
-  </div>
-  <div class="col-12 mt-2">
-    <small class="text-muted"><%= t('.regenerate_images_hint') %></small>
-  </div>
-  
-</div>
-

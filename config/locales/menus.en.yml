@@ -10,13 +10,11 @@ en:
     edit:
       availabilities: Availabilities
       menu: Menu
-      regenerate_images: Regenerate images for this menu
-      regenerate_images_confirm: This will queue image regeneration jobs for all non-wine
+      regenerate_images_confirm: This will queue image regeneration jobs for all 
         items in this menu. Continue?
-      regenerate_images_hint: This triggers background jobs to rebuild all generated
-        images for items on this menu using the latest prompt logic and style profile.
       sections: Sections
     form:
+      regenerate_images: Regenerate images
       current_pdf: 'Current PDF:'
       delete: Delete
       details: Details

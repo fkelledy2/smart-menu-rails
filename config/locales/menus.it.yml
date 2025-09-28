@@ -10,13 +10,11 @@ it:
     edit:
       availabilities: Disponibilità
       menu: Menu
-      regenerate_images: Rigenera le immagini per questo menu
-      regenerate_images_confirm: Verranno accodati job per tutti gli articoli non-vino
+      regenerate_images_confirm: Verranno accodati job per tutti gli articoli 
         di questo menu. Continuare?
-      regenerate_images_hint: Avvia job in background per ricreare le immagini degli
-        articoli usando l'ultimo prompt e lo stile predefinito.
       sections: Sezioni
     form:
+      regenerate_images: Rigenera le immagini
       current_pdf: 'PDF corrente:'
       delete: Elimina
       details: Dettagli

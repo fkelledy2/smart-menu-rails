@@ -21,8 +21,10 @@ it:
         startingInventory: Iniziale
       menu:
         allowOrdering: Ordini
+        covercharge: Coperto
         description: Descrizione
         displayImages: Immagini
+        displayImagesInPopup: Immagini (in popup)
         image: Immagine
         imagecontext: Contesto
         inventoryTracking: Monitoraggio Inventario
