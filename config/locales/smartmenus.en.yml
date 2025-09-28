@@ -72,16 +72,16 @@ en:
       service: Service
       start: Start
       startOrder: Start Order
+      submit: Submit Order
       submitted: Submitted
       tax: Tax
       tip_options: Tip Options
       total: Total
       yourOrder: Your Order
-      submit: Submit Order
     showTableLocaleSelectorCustomer:
-      table: "Table"
+      table: Table
     showTableLocaleSelectorStaff:
-      table: "Table"
+      table: Table
     smartmenu:
       menu: 'Menu:'
       restaurant: 'Restaurant:'

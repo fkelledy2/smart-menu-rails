@@ -14,7 +14,7 @@ it:
       unauthorized: Non sei autorizzato a eseguire questa azione.
       updated: L'importazione del menu è stata aggiornata con successo.
     import_item:
-      default_title: "Elemento importato"
+      default_title: Elemento importato
       delete_confirm: Eliminare questa importazione? Operazione irreversibile.
       delete_title: Elimina importazione
       imported_ago: Importato %{time} fa

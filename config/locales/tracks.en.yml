@@ -2,8 +2,8 @@
 en:
   tracks:
     controller:
-      created: "Track was successfully created."
-      updated: "Track was successfully updated."
-      deleted: "Track was successfully deleted."
+      created: Track was successfully created.
+      deleted: Track was successfully deleted.
+      updated: Track was successfully updated.
     index:
-      tracks: "Tracks"
+      tracks: Tracks

@@ -22,8 +22,8 @@ en:
       resethour: 'Reset hour:'
       startinginventory: 'Starting inventory:'
     new:
-      inventory: Inventory
       cancel: Cancel
+      inventory: Inventory
     show:
       inventory: Inventory
       select_menu_item: Select a Menu Item...

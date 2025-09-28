@@ -45,6 +45,22 @@ en:
     registrations:
       destroyed: Bye! Your account has been successfully cancelled. We hope to see
         you again soon.
+      edit:
+        account: Account
+        confirmPassword: Confirm password
+        currentPassword: Current password
+        currentPasswordHelp: We need your current password to confirm your changes
+        deactivateMyAccount: Deactivate my account
+        deactivateMyAccountAreYouSure: Are you sure you want to deactivate your account?
+        emailAddress: Email address
+        fullName: Full name
+        saveChanges: Save changes
+      new:
+        confirmPassword: Confirm password
+        emailAddress: Email address
+        fullName: Full name
+        password: Password
+        signUp: Sign up
       signed_up: Welcome! You have signed up successfully.
       signed_up_but_inactive: You have signed up successfully. However, we could not
         sign you in because your account is not yet activated.
@@ -58,36 +74,20 @@ en:
       updated: Your account has been updated successfully.
       updated_but_not_signed_in: Your account has been updated successfully, but since
         your password was changed, you need to sign in again.
-      edit:
-        account: "Account"
-        fullName: "Full name"
-        emailAddress: "Email address"
-        currentPassword: "Current password"
-        currentPasswordHelp: "We need your current password to confirm your changes"
-        confirmPassword: "Confirm password"
-        saveChanges: "Save changes"
-        deactivateMyAccount: "Deactivate my account"
-        deactivateMyAccountAreYouSure: "Are you sure you want to deactivate your account?"
-      new:
-        fullName: "Full name"
-        emailAddress: "Email address"
-        password: "Password"
-        confirmPassword: "Confirm password"
-        signUp: "Sign up"
     sessions:
       already_signed_out: Signed out successfully.
+      new:
+        emailAddress: Email address
+        login: Log in
+        password: Password
+        rememberMe: Remember me
       signed_in: Signed in successfully.
       signed_out: Signed out successfully.
-      new:
-        login: "Log in"
-        emailAddress: "Email address"
-        password: "Password"
-        rememberMe: "Remember me"
     shared:
       links:
-        forgotYourPassword: "Forgot your password?"
-        didntReceiverEmailConfirmation: "Didn't receive confirmation instructions?"
-        didntReceiverUnlockInstructions: "Didn't receive unlock instructions?"
+        didntReceiverEmailConfirmation: Didn't receive confirmation instructions?
+        didntReceiverUnlockInstructions: Didn't receive unlock instructions?
+        forgotYourPassword: Forgot your password?
     unlocks:
       send_instructions: You will receive an email with instructions for how to unlock
         your account in a few minutes.

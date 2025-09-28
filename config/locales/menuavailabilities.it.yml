@@ -6,9 +6,9 @@ it:
       deleted: Disponibilità menu eliminata con successo.
       updated: Disponibilità menu aggiornata con successo.
     form:
+      delete: Elimina
       save: Salva
       selectMenu: Seleziona menu
-      delete: Elimina
       sure: Sei sicuro?
     index:
       menuAvailabilities: Disponibilità menu

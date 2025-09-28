@@ -71,6 +71,10 @@ en:
       tab_tables: Tables
       tab_taxes: Taxes
       tab_tips: Tips
+    showAllergyns:
+      allergyns: Allergens
+    showEmployees:
+      employees: Employees
     showLocales:
       actions: Actions
       activate: Activate
@@ -78,23 +82,19 @@ en:
       default: Default
       delete: Delete
       menus: Menus
-    showAllergyns:
-      allergyns: "Allergens"
-    showEmployees:
-      employees: "Employees"
     showMenus:
       add_new_menu: Add New Menu
       import_menu_from_pdf: Import Menu from PDF
       menus: Menus
-    showOrdrs:
-      ordrs: "Orders"
-    showSizes:
-      sizes: "Sizes"
     showOpeningHours:
       actions: Actions
       activate: Activate
       deactivate: Deactivate
       openings: Opening Hours
+    showOrdrs:
+      ordrs: Orders
+    showSizes:
+      sizes: Sizes
     showSmartMenus:
       scan_to_join: Scan to Join
       smartQRs: SmartQRs

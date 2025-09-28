@@ -22,8 +22,8 @@ it:
       resethour: 'Ora di reset:'
       startinginventory: 'Inventario iniziale:'
     new:
-      inventory: Inventario
       cancel: Annulla
+      inventory: Inventario
     show:
       inventory: Inventario
       select_menu_item: Seleziona un piatto...

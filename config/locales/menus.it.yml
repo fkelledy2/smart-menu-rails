@@ -10,25 +10,26 @@ it:
     edit:
       availabilities: Disponibilità
       menu: Menu
-      regenerate_images_confirm: Verranno accodati job per tutti gli articoli 
-        di questo menu. Continuare?
+      regenerate_images_confirm: Verranno accodati job per tutti gli articoli di questo
+        menu. Continuare?
       sections: Sezioni
     form:
-      regenerate_images: Rigenera le immagini
+      regenerate_images_confirm: Verranno accodati job per la rigenerazione delle immagini per tutti gli articoli di questo menu. Continuare?
       current_pdf: 'PDF corrente:'
       delete: Elimina
       details: Dettagli
       errors: Errori
       'false': Disattivo
-      "off": Disattivo
       imageSettings: Impostazioni immagine
+      'off': Disattivo
+      'on': Attivo
       pdfSettings: Impostazioni PDF
+      regenerate_images: Rigenera le immagini
       remove: Rimuovi
       save: Salva
       settings: Impostazioni
       sure: Sei sicuro?
       'true': Attivo
-      "on": Attivo
     index:
       menu: Menu
       menus: Menu

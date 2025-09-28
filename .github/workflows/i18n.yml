@@ -1,0 +1,33 @@
+name: i18n checks
+
+on:
+  pull_request:
+    branches: [ "**" ]
+  push:
+    branches: [ main, master ]
+
+jobs:
+  i18n:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '.ruby-version'
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: |
+          bundle install --jobs 4 --retry 3
+
+      - name: Normalize locale files (fail if changes needed)
+        run: |
+          bundle exec i18n-tasks normalize --fail-on-changes
+
+      - name: Check for missing translations (fail on warnings)
+        run: |
+          bundle exec i18n-tasks missing --fail-on-warn

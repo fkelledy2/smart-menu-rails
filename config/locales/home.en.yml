@@ -2,43 +2,43 @@
 en:
   home:
     index:
+      browse: Browse
       compare_plans: Compare plans
+      contactUs: Contact Us
+      ctaBody1: Create beautiful digital menus and streamline ordering.
+      ctaBody2: Translations, images, availability, ordering and more.
+      ctaTitle1: Grow your restaurant with Smartmenu
+      ctaTitle2: Powerful features
+      demoMenu: Demo Menu
+      demoMenuTag: Preview
+      demoMenuTagBrowse: Browse
+      emailAddressTag: Email address
+      featureDescription2: Serve guests in their own language with one click.
+      featureDescription3: Generate consistent, on-brand dish photos.
+      featureDescription4: Control what customers can see and order.
+      featureDescription5: Let guests order from the table and pay easily.
+      featureDescription6: Understand trends to improve your menu.
+      featureTitle2: Translate instantly
+      featureTitle3: AI Images
+      featureTitle4: Inventory & Availability
+      featureTitle5: Smart Ordering
+      featureTitle6: Analytics
+      features: Features
+      menus: Menus
       next: Next
+      numbers: Numbers
+      numbersTag: At a glance
+      orderValue: Avg. order value
+      orders: Orders
       previous: Previous
+      pricing: Pricing
+      pricingTag: Plans
+      restaurants: Restaurants
+      saveChanges: Save Changes
+      selectPlan: Select Plan
+      signUp: Sign up
+      submit: Submit
+      testimonials: Testimonials
+      testimonialsTag: What our customers say
       video_unsupported: Your browser does not support the video tag.
-      welcome: "Welcome"
-      selectPlan: "Select Plan"
-      saveChanges: "Save Changes"
-      ctaTitle1: "Grow your restaurant with Smartmenu"
-      ctaBody1: "Create beautiful digital menus and streamline ordering."
-      ctaTitle2: "Powerful features"
-      ctaBody2: "Translations, images, availability, ordering and more."
-      contactUs: "Contact Us"
-      browse: "Browse"
-      demoMenu: "Demo Menu"
-      demoMenuTag: "Preview"
-      demoMenuTagBrowse: "Browse"
-      menus: "Menus"
-      restaurants: "Restaurants"
-      testimonials: "Testimonials"
-      testimonialsTag: "What our customers say"
-      numbers: "Numbers"
-      numbersTag: "At a glance"
-      orders: "Orders"
-      orderValue: "Avg. order value"
-      pricing: "Pricing"
-      pricingTag: "Plans"
-      signUp: "Sign up"
-      submit: "Submit"
-      emailAddressTag: "Email address"
-      features: "Features"
-      featureTitle2: "Translate instantly"
-      featureTitle3: "AI Images"
-      featureTitle4: "Inventory & Availability"
-      featureTitle5: "Smart Ordering"
-      featureTitle6: "Analytics"
-      featureDescription2: "Serve guests in their own language with one click."
-      featureDescription3: "Generate consistent, on-brand dish photos."
-      featureDescription4: "Control what customers can see and order."
-      featureDescription5: "Let guests order from the table and pay easily."
-      featureDescription6: "Understand trends to improve your menu."
+      welcome: Welcome

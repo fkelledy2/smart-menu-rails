@@ -6,4 +6,4 @@ en:
       created: Order was successfully created.
       deleted: Order was successfully deleted.
     index:
-      orders: "Orders"
+      orders: Orders

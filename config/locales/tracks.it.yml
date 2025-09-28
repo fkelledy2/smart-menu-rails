@@ -2,8 +2,8 @@
 it:
   tracks:
     controller:
-      created: "Brano creato con successo."
-      updated: "Brano aggiornato con successo."
-      deleted: "Brano eliminato con successo."
+      created: Brano creato con successo.
+      deleted: Brano eliminato con successo.
+      updated: Brano aggiornato con successo.
     index:
-      tracks: "Brani"
+      tracks: Brani

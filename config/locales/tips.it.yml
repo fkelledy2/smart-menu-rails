@@ -5,15 +5,15 @@ it:
       created: Mancia creata con successo.
       deleted: Mancia eliminata con successo.
       updated: Mancia aggiornata con successo.
-    index:
-      tips: "Mance"
-    new:
-      tip: "Mancia"
-    show:
-      tip: "Mancia"
     edit:
-      tip: "Mancia"
+      tip: Mancia
     form:
-      save: "Salva"
-      delete: "Elimina"
-      sure: "Sei sicuro?"
+      delete: Elimina
+      save: Salva
+      sure: Sei sicuro?
+    index:
+      tips: Mance
+    new:
+      tip: Mancia
+    show:
+      tip: Mancia

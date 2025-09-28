@@ -5,16 +5,16 @@ it:
       created: Allergene creato con successo.
       deleted: Allergene eliminato con successo.
       updated: Allergene aggiornato con successo.
-    index:
-      allergyns: "Allergeni"
-      allergyn: "Allergene"
-    new:
-      allergyn: "Allergene"
     edit:
-      allergyn: "Allergene"
-    show:
-      allergyn: "Allergene"
+      allergyn: Allergene
     form:
-      save: "Salva"
-      delete: "Elimina"
-      sure: "Sei sicuro?"
+      delete: Elimina
+      save: Salva
+      sure: Sei sicuro?
+    index:
+      allergyn: Allergene
+      allergyns: Allergeni
+    new:
+      allergyn: Allergene
+    show:
+      allergyn: Allergene

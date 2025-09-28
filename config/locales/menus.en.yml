@@ -10,25 +10,26 @@ en:
     edit:
       availabilities: Availabilities
       menu: Menu
-      regenerate_images_confirm: This will queue image regeneration jobs for all 
-        items in this menu. Continue?
+      regenerate_images_confirm: This will queue image regeneration jobs for all items
+        in this menu. Continue?
       sections: Sections
     form:
-      regenerate_images: Regenerate images
+      regenerate_images_confirm: This will queue image regeneration jobs for all items in this menu. Continue?
       current_pdf: 'Current PDF:'
       delete: Delete
       details: Details
       errors: Errors
       'false': 'off'
-      "off": "off"
       imageSettings: Image Settings
+      'off': 'off'
+      'on': 'on'
       pdfSettings: PDF Settings
+      regenerate_images: Regenerate images
       remove: Remove
       save: Save
       settings: Settings
       sure: Are you sure?
       'true': 'on'
-      "on": "on"
     index:
       menu: Menu
       menus: Menus

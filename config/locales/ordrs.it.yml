@@ -6,4 +6,4 @@ it:
       created: Ordine creato con successo.
       deleted: Ordine eliminato con successo.
     index:
-      orders: "Ordini"
+      orders: Ordini

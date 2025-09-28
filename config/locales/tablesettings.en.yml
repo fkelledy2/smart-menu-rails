@@ -5,6 +5,8 @@ en:
       created: Table setting was successfully created.
       deleted: Table setting was successfully deleted.
       updated: Table setting was successfully updated.
+    edit:
+      tablesetting: Table Setting
     index:
       archive: Archive
       seating_plan: Seating Plan
@@ -12,15 +14,13 @@ en:
       table_setting: Table Setting
       table_settings: Table Settings
       unarchive: Unarchive
+    new:
+      status: 'Status:'
+      tablesetting: Table Setting
     show:
       available_menus: Available Menus
       selectRestaurant: Select Restaurant
       show_table_setting: Show Table Setting
-    edit:
-      tablesetting: Table Setting
-    new:
-      tablesetting: Table Setting
-      status: 'Status:'
     tablesetting:
       capacity: 'Capacity:'
       description: 'Description:'

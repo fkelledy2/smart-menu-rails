@@ -1,31 +1,32 @@
+---
 it:
   menuitems:
-    index:
-      menuItems: "Voci di menu"
-      menuItem: "Voce di menu"
-    new:
-      menuItem: "Voce di menu"
-      cancel: "Annulla"
-    show:
-      menuItem: "Voce di menu"
-      selectMenuSection: "Seleziona sezione menu"
     controller:
-      created: "Voce di menu creata con successo."
-      updated: "Voce di menu aggiornata con successo."
-      deleted: "Voce di menu eliminata con successo."
+      created: Voce di menu creata con successo.
+      deleted: Voce di menu eliminata con successo.
+      updated: Voce di menu aggiornata con successo.
     edit:
-      tab_item: "Articolo"
+      tab_item: Articolo
     form:
-      details: "Dettagli"
-      imageSettings: "Impostazioni immagine"
-      settings: "Impostazioni"
-      actions: "Azioni"
-      generateImage: "Genera immagine"
-      true: "true"
-      false: "false"
-      delete: "Elimina"
-      sure: "Sei sicuro?"
-      save: "Salva"
-      errors: "Errori"
-      variantPricing: "Prezzi varianti"
-      update: "Aggiorna"
+      actions: Azioni
+      delete: Elimina
+      details: Dettagli
+      errors: Errori
+      'false': 'false'
+      generateImage: Genera immagine
+      imageSettings: Impostazioni immagine
+      save: Salva
+      settings: Impostazioni
+      sure: Sei sicuro?
+      'true': 'true'
+      update: Aggiorna
+      variantPricing: Prezzi varianti
+    index:
+      menuItem: Voce di menu
+      menuItems: Voci di menu
+    new:
+      cancel: Annulla
+      menuItem: Voce di menu
+    show:
+      menuItem: Voce di menu
+      selectMenuSection: Seleziona sezione menu

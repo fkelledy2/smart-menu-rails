@@ -6,6 +6,6 @@ it:
       deleted: Piano utente eliminato con successo.
       updated: Piano utente aggiornato con successo.
     edit:
-      saveChanges: "Aggiorna"
-      selectPlan: "Scegli piano"
-      contactUs: "Contattaci"
+      contactUs: Contattaci
+      saveChanges: Aggiorna
+      selectPlan: Scegli piano

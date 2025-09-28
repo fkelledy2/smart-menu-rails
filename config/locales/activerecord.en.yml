@@ -2,49 +2,173 @@
 en:
   activerecord:
     attributes:
+      allergyn:
+        description: Description
+        name: Name
+        symbol: Symbol
+      employee:
+        eid: Employee ID
+        name: Name
+        role: Role
+        status: Status
+        user_id: User
       ingredient:
         description: Description
         name: Name
       inventory:
+        currentInventory: Current inventory
         currentinventory: Current inventory
+        menuItem: Menu Item
+        resetHour: Reset hour
         resethour: Reset hour
+        startingInventory: Starting inventory
         startinginventory: Starting inventory
       menu:
+        allowOrdering: Allow Ordering
+        covercharge: Cover Charge
         description: Description
+        displayImages: Display Images
+        displayImagesInPopup: Display Images in Popup
+        image: Image
+        imagecontext: Image Context
+        inventoryTracking: Inventory Tracking
         name: Name
+        pdf_menu_scan: PDF Menu
+        status: Status
+      menuavailability:
+        dayofweek: Day of Week
+        endhour: End Hour
+        menu_id: Menu
+        starthour: Start Hour
         status: Status
       menuitem:
+        allergyns: Allergens
         calories: Calories
         description: Description
+        image: Image
+        itemtype: Item Type
         name: Name
+        preptime: Prep Time
         price: Price
+        sizes: Sizes
+        sizesupport: Size Support
         status: Status
+        unitcost: Unit Cost
+      menuparticipant:
+        preferredlocale: Preferred Locale
+        sessionid: Session ID
+        smartmenu_id: Smartmenu
       menusection:
         description: Description
+        endhour: End Hour
+        image: Image
+        menu_id: Menu
         name: Name
+        restricted: Restricted
+        starthour: Start Hour
         status: Status
-      restaurant:
-        address1: Address line 1
-        address2: Address line 2
-        city: City
-        country: Country
+      metric:
         description: Description
         name: Name
+      ordr:
+        employee_id: Employee
+        menu_id: Menu
+        restaurant_id: Restaurant
+        tablesetting_id: Table Setting
+      ordraction:
+        action: Action
+        employee_id: Employee
+        ordr_id: Order
+        ordritem_id: Order Item
+        ordrparticipant_id: Order Participant
+        sessionid: Session ID
+      ordritem:
+        menuitem_id: Menu Item
+        ordr_id: Order
+      ordritemnote:
+        note: Note
+        ordritem_id: Order Item
+      ordrparticipant:
+        action: Action
+        employee_id: Employee
+        ordr_id: Order
+        ordritem_id: Order Item
+        role: Role
+        sessionid: Session ID
+      restaurant:
+        address: Address
+        address1: Address line 1
+        address2: Address line 2
+        allowOrdering: Allow Ordering
+        city: City
+        country: Country
+        currency: Currency
+        description: Description
+        displayImages: Display Images
+        displayImagesInPopup: Display Images in Popup
+        genid: Generation ID
+        image: Image
+        image_style_profile: Image Style Profile
+        imagecontext: Image Context
+        inventoryTracking: Inventory Tracking
+        name: Name
         postcode: Postcode/ZIP
+        spotifyaccesstoken: Spotify Access Token
+        spotifyrefreshtoken: Spotify Refresh Token
+        spotifyuserid: Spotify User ID
         state: State/Province
         status: Status
+        wifiEncryptionType: WiFi Encryption Type
+        wifiHidden: WiFi Hidden
+        wifiPassword: WiFi Password
+        wifissid: WiFi SSID
+      restaurantavailability:
+        dayofweek: Day of Week
+        endhour: End Hour
+        starthour: Start Hour
+        status: Status
+      restaurantlocale:
+        dfault: Default
+        locale: Locale
       size:
         description: Description
         name: Name
         size: Size Code
+      smartmenu:
+        menu_id: Menu
+        restaurant_id: Restaurant
+        slug: Slug
+        tablesetting_id: Table Setting
       tablesetting:
         capacity: Capacity
         description: Description
         name: Name
         status: Status
+        tabletype: Table Type
       tag:
         description: Description
         name: Name
+      tax:
+        name: Name
+        taxPercentage: Tax Percentage
+        taxType: Tax Type
+        taxpercentage: Tax Percentage
+        taxtype: Tax Type
+      testimonial:
+        restaurant_id: Restaurant
+        testimonial: Testimonial
+        user_id: User
+      tip:
+        percentage: Percentage
+      track:
+        description: Description
+        externalid: External ID
+        image: Image
+        name: Name
+        restaurant_id: Restaurant
+        sequence: Sequence
+      userplan:
+        plan_id: Plan
     errors:
       format: "%{attribute} %{message}"
       messages:

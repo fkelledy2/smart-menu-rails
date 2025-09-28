@@ -15,8 +15,8 @@ it:
       table_settings: Impostazioni tavoli
       unarchive: Ripristina
     new:
-      tablesetting: "Impostazione tavolo"
-      status: "Stato:"
+      status: 'Stato:'
+      tablesetting: Impostazione tavolo
     show:
       available_menus: Menu disponibili
       selectRestaurant: Seleziona un ristorante

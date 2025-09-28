@@ -1,31 +1,32 @@
+---
 en:
   menuitems:
-    index:
-      menuItems: "Menu Items"
-      menuItem: "Menu Item"
-    new:
-      menuItem: "Menu Item"
-      cancel: "Cancel"
-    show:
-      menuItem: "Menu Item"
-      selectMenuSection: "Select Menu Section"
     controller:
-      created: "Menu item was successfully created."
-      updated: "Menu item was successfully updated."
-      deleted: "Menu item was successfully deleted."
+      created: Menu item was successfully created.
+      deleted: Menu item was successfully deleted.
+      updated: Menu item was successfully updated.
     edit:
-      tab_item: "Item"
+      tab_item: Item
     form:
-      details: "Details"
-      imageSettings: "Image Settings"
-      settings: "Settings"
-      actions: "Actions"
-      generateImage: "Generate Image"
-      true: "true"
-      false: "false"
-      delete: "Delete"
-      sure: "Are you sure?"
-      save: "Save"
-      errors: "Errors"
-      variantPricing: "Variant Pricing"
-      update: "Update"
+      actions: Actions
+      delete: Delete
+      details: Details
+      errors: Errors
+      'false': 'false'
+      generateImage: Generate Image
+      imageSettings: Image Settings
+      save: Save
+      settings: Settings
+      sure: Are you sure?
+      'true': 'true'
+      update: Update
+      variantPricing: Variant Pricing
+    index:
+      menuItem: Menu Item
+      menuItems: Menu Items
+    new:
+      cancel: Cancel
+      menuItem: Menu Item
+    show:
+      menuItem: Menu Item
+      selectMenuSection: Select Menu Section

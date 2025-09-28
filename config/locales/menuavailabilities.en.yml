@@ -6,9 +6,9 @@ en:
       deleted: Menu availability was successfully deleted.
       updated: Menu availability was successfully updated.
     form:
+      delete: Delete
       save: Save
       selectMenu: Select Menu
-      delete: Delete
       sure: Are you sure?
     index:
       menuAvailabilities: Menu Availabilities

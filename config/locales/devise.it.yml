@@ -43,6 +43,23 @@ it:
     registrations:
       destroyed: Ciao! Il tuo account è stato cancellato con successo. Speriamo di
         rivederti presto.
+      edit:
+        account: Account
+        confirmPassword: Conferma password
+        currentPassword: Password attuale
+        currentPasswordHelp: Abbiamo bisogno della password attuale per confermare
+          le modifiche
+        deactivateMyAccount: Disattiva il mio account
+        deactivateMyAccountAreYouSure: Sei sicuro di voler disattivare il tuo account?
+        emailAddress: Indirizzo email
+        fullName: Nome completo
+        saveChanges: Salva modifiche
+      new:
+        confirmPassword: Conferma password
+        emailAddress: Indirizzo email
+        fullName: Nome completo
+        password: Password
+        signUp: Registrati
       signed_up: Benvenuto! Registrazione effettuata con successo.
       signed_up_but_inactive: Registrazione effettuata con successo. Tuttavia, non
         possiamo farti accedere perché il tuo account non è ancora attivato.
@@ -55,36 +72,20 @@ it:
       updated: Il tuo account è stato aggiornato con successo.
       updated_but_not_signed_in: Il tuo account è stato aggiornato con successo, ma
         poiché la password è stata cambiata, devi effettuare nuovamente l'accesso.
-      edit:
-        account: "Account"
-        fullName: "Nome completo"
-        emailAddress: "Indirizzo email"
-        currentPassword: "Password attuale"
-        currentPasswordHelp: "Abbiamo bisogno della password attuale per confermare le modifiche"
-        confirmPassword: "Conferma password"
-        saveChanges: "Salva modifiche"
-        deactivateMyAccount: "Disattiva il mio account"
-        deactivateMyAccountAreYouSure: "Sei sicuro di voler disattivare il tuo account?"
-      new:
-        fullName: "Nome completo"
-        emailAddress: "Indirizzo email"
-        password: "Password"
-        confirmPassword: "Conferma password"
-        signUp: "Registrati"
     sessions:
       already_signed_out: Disconnessione effettuata con successo.
+      new:
+        emailAddress: Indirizzo email
+        login: Accedi
+        password: Password
+        rememberMe: Ricordami
       signed_in: Accesso effettuato con successo.
       signed_out: Disconnessione effettuata con successo.
-      new:
-        login: "Accedi"
-        emailAddress: "Indirizzo email"
-        password: "Password"
-        rememberMe: "Ricordami"
     shared:
       links:
-        forgotYourPassword: "Hai dimenticato la password?"
-        didntReceiverEmailConfirmation: "Non hai ricevuto le istruzioni di conferma?"
-        didntReceiverUnlockInstructions: "Non hai ricevuto le istruzioni di sblocco?"
+        didntReceiverEmailConfirmation: Non hai ricevuto le istruzioni di conferma?
+        didntReceiverUnlockInstructions: Non hai ricevuto le istruzioni di sblocco?
+        forgotYourPassword: Hai dimenticato la password?
     unlocks:
       send_instructions: Riceverai un'email con le istruzioni per sbloccare il tuo
         account tra pochi minuti.
