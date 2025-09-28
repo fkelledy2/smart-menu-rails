@@ -1,7 +1,7 @@
 class ContactsController < ApplicationController
   # Public contact form - no authentication required
   after_action :verify_authorized
-  
+
   def new
     @contact = Contact.new
     authorize @contact

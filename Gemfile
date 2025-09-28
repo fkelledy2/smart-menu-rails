@@ -1,12 +1,12 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-ruby "3.3.0"
+ruby '3.3.0'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.1.3", ">= 7.1.3.2"
+gem 'rails', '~> 7.1.3', '>= 7.1.3.2'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
-gem "sprockets-rails"
+gem 'sprockets-rails'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.1'
@@ -15,19 +15,19 @@ gem 'pg', '~> 1.1'
 gem 'connection_pool'
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", ">= 5.0"
+gem 'puma', '>= 5.0'
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
+gem 'importmap-rails'
 
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem "turbo-rails"
+gem 'turbo-rails'
 
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-gem "stimulus-rails"
+gem 'stimulus-rails'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
-gem "jbuilder"
+gem 'jbuilder'
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
@@ -39,25 +39,25 @@ gem "jbuilder"
 # gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem 'tzinfo-data', platforms: %i[windows jruby]
 
-gem "google-cloud-vision", "~> 2.0.2"
+gem 'google-cloud-vision', '~> 2.0.2'
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
+gem 'bootsnap', require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ]
+  gem 'debug', platforms: %i[mri windows]
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
-  gem "web-console"
-  gem "letter_opener"
+  gem 'letter_opener'
+  gem 'web-console'
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
@@ -68,79 +68,87 @@ end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  gem "capybara"
-  gem "selenium-webdriver"
+  gem 'capybara'
+  gem 'selenium-webdriver'
 end
-gem "cssbundling-rails"
-gem "devise", "~> 4.9"
-gem "friendly_id", "~> 5.4"
-gem "jsbundling-rails"
-gem "madmin"
-gem "name_of_person", github: "basecamp/name_of_person"
-gem "noticed", "~> 2.0"
-gem "omniauth-facebook", "~> 8.0"
-gem "omniauth-github", "~> 2.0"
-gem "omniauth-twitter", "~> 1.4"
-gem "pretender", "~> 0.3.4"
-gem "pundit", "~> 2.1"
-gem "sidekiq", "~> 6.2"
-gem "sitemap_generator", "~> 6.1"
-gem "whenever", require: false
-gem "responders", github: "heartcombo/responders", branch: "main"
-gem 'country_select', '~> 8.0'
-gem 'tabulator-rails'
-gem 'requestjs-rails'
-gem 'rqrcode-rails3'
-gem 'mini_magick'
-gem 'pdf-reader'
-gem 'seed_dump'
-gem 'squasher'
-gem 'allow_numeric'
 gem 'aasm'
-gem "tom-select-rails", "~> 2.3"
-gem 'currency_select'
-gem 'currencies'
-gem 'nokogiri'
-gem 'shrine', '~> 3.3'
-gem 'image_processing', '~> 1.12', '>= 1.12.1'
-gem 'cropper_rails'
-gem 'httparty'
-gem 'ruby-openai'
-gem "aws-sdk-s3", require: false
-gem 'analytics-ruby', '~> 2.4.0', :require => 'segment/analytics'
-gem 'simplecov', require: false, group: :test
-gem "pay", "~> 8.0"
-gem "stripe", "~> 13.0"
-gem "receipts", "~> 2.0"
-gem "ruby-limiter"
-gem "stackprof"
-gem "sentry-ruby"
-gem "sentry-rails"
-gem 'http_accept_language'
 gem 'active_model_serializers'
-gem 'rspotify'
-gem 'omniauth'
-gem 'omniauth-spotify'
-gem 'omniauth-rails_csrf_protection'
-gem 'rack-cors'
-gem 'dotenv-rails'
+gem 'allow_numeric'
+gem 'analytics-ruby', '~> 2.4.0', require: 'segment/analytics'
+gem 'aws-sdk-s3', require: false
+gem 'bullet', group: %i[development test]
+gem 'cityhash'
+gem 'country_select', '~> 8.0'
+gem 'cropper_rails'
+gem 'cssbundling-rails'
+gem 'currencies'
+gem 'currency_select'
 gem 'deepl-rb', require: 'deepl'
-gem 'bullet', group: 'development'
-gem 'jquery-rails'
+gem 'devise', '~> 4.9'
+gem 'dotenv-rails'
+gem 'fastimage'
+gem 'friendly_id', '~> 5.4'
 gem 'gmaps-autocomplete-rails'
-gem "rqrcode", "~> 2.2"
-gem "fastimage"
-gem "identity_cache"
-gem "cityhash"
-gem "redis-store"
-gem "redis-activesupport"  # Required to hook into Rails cache store
-gem "openai", "~> 0.25.0"
+gem 'http_accept_language'
+gem 'httparty'
+gem 'identity_cache'
+gem 'image_processing', '~> 1.12', '>= 1.12.1'
+gem 'jquery-rails'
+gem 'jsbundling-rails'
+gem 'madmin'
+gem 'mini_magick'
+gem 'name_of_person', github: 'basecamp/name_of_person'
+gem 'nokogiri'
+gem 'noticed', '~> 2.0'
+gem 'omniauth'
+gem 'omniauth-facebook', '~> 8.0'
+gem 'omniauth-github', '~> 2.0'
+gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-spotify'
+gem 'omniauth-twitter', '~> 1.4'
+gem 'openai', '~> 0.25.0'
+gem 'pay', '~> 8.0'
+gem 'pdf-reader'
+gem 'pretender', '~> 0.3.4'
+gem 'pundit', '~> 2.1'
+gem 'rack-cors'
+gem 'receipts', '~> 2.0'
+gem 'redis-activesupport' # Required to hook into Rails cache store
+gem 'redis-store'
+gem 'requestjs-rails'
+gem 'responders', github: 'heartcombo/responders', branch: 'main'
+gem 'rqrcode', '~> 2.2'
+gem 'rqrcode-rails3'
+gem 'rspotify'
+gem 'ruby-limiter'
+gem 'ruby-openai'
+gem 'seed_dump'
+gem 'sentry-rails'
+gem 'sentry-ruby'
+gem 'shrine', '~> 3.3'
+gem 'sidekiq', '~> 6.2'
+gem 'simplecov', require: false, group: :test
+gem 'sitemap_generator', '~> 6.1'
+gem 'squasher'
+gem 'stackprof'
+gem 'stripe', '~> 13.0'
+gem 'tabulator-rails'
+gem 'tom-select-rails', '~> 2.3'
+gem 'whenever', require: false
 
 # Memcached client for Rails cache store (used with MemCachier) for IdentityCache CAS support
-gem "dalli", "~> 3.2"
+gem 'dalli', '~> 3.2'
 
 group :development, :test do
-  gem "rspec-rails", "~> 6.1"
-  gem "factory_bot_rails", "~> 6.4"
+  gem 'factory_bot_rails', '~> 6.4'
   gem 'i18n-tasks', '~> 1.0'
+  gem 'rspec-rails', '~> 6.1'
+
+  # CI/CD and Code Quality Tools
+  gem 'brakeman', '~> 6.0', require: false
+  gem 'bundler-audit', '~> 0.9', require: false
+  gem 'rubocop', '~> 1.57', require: false
+  gem 'rubocop-performance', '~> 1.19', require: false
+  gem 'rubocop-rails', '~> 2.22', require: false
+  gem 'rubocop-rspec', '~> 2.25', require: false
 end

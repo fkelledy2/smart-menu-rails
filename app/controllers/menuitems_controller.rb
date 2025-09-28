@@ -1,8 +1,8 @@
 class MenuitemsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_menuitem, only: %i[ show edit update destroy ]
+  before_action :set_menuitem, only: %i[show edit update destroy]
   before_action :set_currency
-  
+
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
@@ -10,9 +10,10 @@ class MenuitemsController < ApplicationController
   # GET /menuitems or /menuitems.json
   def index
     @menuitems = []
-    if params[:menusection_id]
-      menusection = Menusection.find_by_id(params[:menusection_id])
-      @menuitems += policy_scope(Menuitem).where( menusection: menusection, archived: false)
+    return unless params[:menusection_id]
+
+    menusection = Menusection.find_by(id: params[:menusection_id])
+    @menuitems += policy_scope(Menuitem).where(menusection: menusection, archived: false)
       .includes([:genimage])
       .includes([:menusection])
       .includes([:inventory])
@@ -21,7 +22,6 @@ class MenuitemsController < ApplicationController
       .includes([:tags])
       .includes([:ingredients])
       .all
-    end
   end
 
   # GET /menuitems/1 or /menuitems/1.json
@@ -33,7 +33,7 @@ class MenuitemsController < ApplicationController
   def new
     @menuitem = Menuitem.new
     if params[:menusection_id]
-      @futureParentMenuSection = Menusection.find_by_id(params[:menusection_id])
+      @futureParentMenuSection = Menusection.find_by(id: params[:menusection_id])
       @menuitem.menusection = @futureParentMenuSection
       @menuitem.sequence = 999
       @menuitem.calories = 0
@@ -52,100 +52,106 @@ class MenuitemsController < ApplicationController
   def create
     @menuitem = Menuitem.new(menuitem_params)
     authorize @menuitem
-    
+
     respond_to do |format|
-          if @menuitem.save
-            if( @menuitem.genimage == nil)
-                @genimage = Genimage.new
-                @genimage.restaurant = @menuitem.menusection.menu.restaurant
-                @genimage.menu = @menuitem.menusection.menu
-                @genimage.menusection = @menuitem.menusection
-                @genimage.menuitem = @menuitem
-                @genimage.created_at = DateTime.current
-                @genimage.updated_at = DateTime.current
-                @genimage.save
-            end
-            format.html { redirect_to edit_menuitem_url(@menuitem), notice: t('common.flash.created', resource: t('activerecord.models.menuitem')) }
-            format.json { render :show, status: :created, location: @menuitem }
-          else
-            format.html { render :new, status: :unprocessable_entity }
-            format.json { render json: @menuitem.errors, status: :unprocessable_entity }
-          end
+      if @menuitem.save
+        if @menuitem.genimage.nil?
+          @genimage = Genimage.new
+          @genimage.restaurant = @menuitem.menusection.menu.restaurant
+          @genimage.menu = @menuitem.menusection.menu
+          @genimage.menusection = @menuitem.menusection
+          @genimage.menuitem = @menuitem
+          @genimage.created_at = DateTime.current
+          @genimage.updated_at = DateTime.current
+          @genimage.save
         end
+        format.html do
+          redirect_to edit_menuitem_url(@menuitem),
+                      notice: t('common.flash.created', resource: t('activerecord.models.menuitem'))
+        end
+        format.json { render :show, status: :created, location: @menuitem }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @menuitem.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # PATCH/PUT /menuitems/1 or /menuitems/1.json
   def update
     authorize @menuitem
-    
+
     respond_to do |format|
-          @menuitem = Menuitem.find(params[:id])
-          if @menuitem.update(menuitem_params)
-            if( @menuitem.genimage == nil)
-                @genimage = Genimage.new
-                @genimage.restaurant = @menuitem.menusection.menu.restaurant
-                @genimage.menu = @menuitem.menusection.menu
-                @genimage.menusection = @menuitem.menusection
-                @genimage.menuitem = @menuitem
-                @genimage.created_at = DateTime.current
-                @genimage.updated_at = DateTime.current
-                @genimage.save
-            end
-            if params[:remove_image]
-                @menuitem.image = nil
-                @menuitem.save
-            end
-            format.html { redirect_to edit_menuitem_url(@menuitem), notice: t('common.flash.updated', resource: t('activerecord.models.menuitem')) }
-            format.json { render :show, status: :ok, location: @menuitem }
-          else
-            format.html { render :edit, status: :unprocessable_entity }
-            format.json { render json: @menuitem.errors, status: :unprocessable_entity }
-          end
+      @menuitem = Menuitem.find(params[:id])
+      if @menuitem.update(menuitem_params)
+        if @menuitem.genimage.nil?
+          @genimage = Genimage.new
+          @genimage.restaurant = @menuitem.menusection.menu.restaurant
+          @genimage.menu = @menuitem.menusection.menu
+          @genimage.menusection = @menuitem.menusection
+          @genimage.menuitem = @menuitem
+          @genimage.created_at = DateTime.current
+          @genimage.updated_at = DateTime.current
+          @genimage.save
         end
+        if params[:remove_image]
+          @menuitem.image = nil
+          @menuitem.save
+        end
+        format.html do
+          redirect_to edit_menuitem_url(@menuitem),
+                      notice: t('common.flash.updated', resource: t('activerecord.models.menuitem'))
+        end
+        format.json { render :show, status: :ok, location: @menuitem }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @menuitem.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # DELETE /menuitems/1 or /menuitems/1.json
   def destroy
     authorize @menuitem
-    
-    @menuitem.update( archived: true )
+
+    @menuitem.update(archived: true)
     respond_to do |format|
-      format.html { redirect_to edit_menusection_path(@menuitem.menusection), notice: t('common.flash.deleted', resource: t('activerecord.models.menuitem')) }
+      format.html do
+        redirect_to edit_menusection_path(@menuitem.menusection),
+                    notice: t('common.flash.deleted', resource: t('activerecord.models.menuitem'))
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_menuitem
-        begin
-            if current_user
-                @menuitem = Menuitem.find(params[:id])
-                if( @menuitem == nil or @menuitem.menusection.menu.restaurant.user != current_user )
-                    redirect_to root_url
-                end
-            else
-                redirect_to root_url
-            end
-        rescue ActiveRecord::RecordNotFound => e
-            redirect_to root_url
-        end
-    end
-    def set_currency
-      if params[:id]
-          @menuitem = Menuitem.find(params[:id])
-          if @menuitem.menusection.menu.restaurant.currency
-            @restaurantCurrency = ISO4217::Currency.from_code(@menuitem.menusection.menu.restaurant.currency)
-          else
-            @restaurantCurrency = ISO4217::Currency.from_code('USD')
-          end
-      else
-        @restaurantCurrency = ISO4217::Currency.from_code('USD')
-      end
-    end
 
-    # Only allow a list of trusted parameters through.
-    def menuitem_params
-      params.require(:menuitem).permit(:name, :description, :itemtype, :sizesupport, :image, :status, :remove_image, :calories, :sequence, :unitcost, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: [])
+  # Use callbacks to share common setup or constraints between actions.
+  def set_menuitem
+    if current_user
+      @menuitem = Menuitem.find(params[:id])
+      if @menuitem.nil? || (@menuitem.menusection.menu.restaurant.user != current_user)
+        redirect_to root_url
+      end
+    else
+      redirect_to root_url
     end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to root_url
+  end
+
+  def set_currency
+    if params[:id]
+      @menuitem = Menuitem.find(params[:id])
+      @restaurantCurrency = ISO4217::Currency.from_code(@menuitem.menusection.menu.restaurant.currency || 'USD')
+    else
+      @restaurantCurrency = ISO4217::Currency.from_code('USD')
+    end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def menuitem_params
+    params.require(:menuitem).permit(:name, :description, :itemtype, :sizesupport, :image, :status, :remove_image,
+                                     :calories, :sequence, :unitcost, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: [],)
+  end
 end

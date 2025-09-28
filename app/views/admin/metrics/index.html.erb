@@ -1,0 +1,212 @@
+<% content_for :title, "Application Metrics Dashboard" %>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="h2 mb-4">📊 Application Metrics Dashboard</h1>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <h5 class="card-title">Total Requests</h5>
+          <h2 class="card-text"><%= @metrics_summary[:http_requests][:total] %></h2>
+          <small>All time</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <h5 class="card-title">Avg Response Time</h5>
+          <h2 class="card-text"><%= (@metrics_summary[:avg_response_time] * 1000).round(0) %>ms</h2>
+          <small>Current average</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card bg-<%= @metrics_summary[:error_rate] > 5 ? 'danger' : 'warning' %> text-white">
+        <div class="card-body">
+          <h5 class="card-title">Error Rate</h5>
+          <h2 class="card-text"><%= @metrics_summary[:error_rate] %>%</h2>
+          <small>Current error rate</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card bg-info text-white">
+        <div class="card-body">
+          <h5 class="card-title">Total Users</h5>
+          <h2 class="card-text"><%= @metrics_summary[:user_registrations][:total] %></h2>
+          <small>All time registrations</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Business Metrics -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">🏪 Business Metrics</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <strong>Restaurants Created:</strong><br>
+              <span class="h4 text-primary"><%= @metrics_summary[:restaurant_creations][:total] %></span>
+            </div>
+            <div class="col-6">
+              <strong>Menu Imports:</strong><br>
+              <span class="h4 text-success"><%= @metrics_summary[:menu_imports][:total] %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">🖥️ System Metrics</h5>
+        </div>
+        <div class="card-body">
+          <% if @system_metrics[:memory_usage] %>
+            <div class="mb-2">
+              <strong>Memory Usage:</strong> 
+              <%= number_to_human_size(@system_metrics[:memory_usage][:value]) %>
+            </div>
+          <% end %>
+          
+          <% if @system_metrics[:db_pool_size] %>
+            <div class="mb-2">
+              <strong>DB Pool:</strong> 
+              <%= @system_metrics[:db_pool_checked_out]&.dig(:value) || 0 %> / 
+              <%= @system_metrics[:db_pool_size][:value] %> connections
+            </div>
+          <% end %>
+          
+          <% if @system_metrics[:active_users] %>
+            <div class="mb-2">
+              <strong>Active Users:</strong> 
+              <%= @system_metrics[:active_users][:value] %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">📈 Recent Metrics (Last Hour)</h5>
+          <div>
+            <%= link_to "Export JSON", admin_metrics_path(format: :json), class: "btn btn-sm btn-outline-primary" %>
+            <%= link_to "Export CSV", admin_metrics_path(format: :csv), class: "btn btn-sm btn-outline-secondary" %>
+          </div>
+        </div>
+        <div class="card-body">
+          <% if @recent_metrics.any? %>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Metric</th>
+                    <th>Type</th>
+                    <th>Value</th>
+                    <th>Last Updated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @recent_metrics.first(20).each do |metric_key, metric_data| %>
+                    <tr>
+                      <td>
+                        <%= link_to metric_key, admin_metric_path(metric_key.split('{').first), 
+                            class: "text-decoration-none" %>
+                      </td>
+                      <td>
+                        <span class="badge bg-secondary"><%= metric_data[:type] %></span>
+                      </td>
+                      <td>
+                        <% case metric_data[:type] %>
+                        <% when :counter, :gauge %>
+                          <%= metric_data[:value] %>
+                        <% when :histogram %>
+                          <%= metric_data[:values]&.size || 0 %> samples
+                        <% end %>
+                      </td>
+                      <td>
+                        <small class="text-muted">
+                          <%= time_ago_in_words(metric_data[:last_updated]) %> ago
+                        </small>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+            
+            <% if @recent_metrics.size > 20 %>
+              <p class="text-muted text-center mt-3">
+                Showing 20 of <%= @recent_metrics.size %> recent metrics
+              </p>
+            <% end %>
+          <% else %>
+            <div class="text-center text-muted py-4">
+              <p>No recent metrics available</p>
+              <small>Metrics will appear here as the application is used</small>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card border-info">
+        <div class="card-header bg-info text-white">
+          <h6 class="card-title mb-0">ℹ️ About Metrics</h6>
+        </div>
+        <div class="card-body">
+          <p class="mb-2">
+            This dashboard shows real-time application metrics collected automatically as users interact with the system.
+          </p>
+          <ul class="mb-0">
+            <li><strong>Counters:</strong> Cumulative values that only increase (e.g., total requests)</li>
+            <li><strong>Gauges:</strong> Current values that can go up or down (e.g., active users)</li>
+            <li><strong>Histograms:</strong> Collections of measurements (e.g., response times)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.table th {
+  border-top: none;
+  font-weight: 600;
+}
+</style>

@@ -17,12 +17,12 @@ module Api
             is_vegan: @item.try(:is_vegan) || false,
             is_gluten_free: @item.try(:is_gluten_free) || false,
             is_dairy_free: @item.try(:is_dairy_free) || false,
-            is_nut_free: @item.try(:is_nut_free) || false
+            is_nut_free: @item.try(:is_nut_free) || false,
           },
           sequence: @item.sequence,
           is_confirmed: @item.is_confirmed,
           created_at: @item.created_at&.iso8601,
-          updated_at: @item.updated_at&.iso8601
+          updated_at: @item.updated_at&.iso8601,
         }
       end
 

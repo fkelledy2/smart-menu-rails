@@ -1,8 +1,8 @@
 class OrdritemsController < ApplicationController
-  before_action :authenticate_user!, except: [:create, :update, :destroy] # Allow customers to manage order items
-  before_action :set_ordritem, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, except: %i[create update destroy] # Allow customers to manage order items
+  before_action :set_ordritem, only: %i[show edit update destroy]
   before_action :set_currency
-  
+
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
@@ -40,7 +40,9 @@ class OrdritemsController < ApplicationController
           Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
           update_ordr(@ordritem.ordr)
           broadcast_partials(@ordritem.ordr, @ordritem.ordr.tablesetting, @ordrparticipant)
-          format.html { redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: "Ordritem was successfully created." }
+          format.html do
+            redirect_to restaurant_ordrs_path(@ordritem.ordr.restaurant), notice: 'Ordritem was successfully created.'
+          end
           format.json { render :show, status: :created, location: @ordritem }
         else
           format.html { render :new, status: :unprocessable_entity }
@@ -50,11 +52,10 @@ class OrdritemsController < ApplicationController
     end
   end
 
-
   # PATCH/PUT /ordritems/1 or /ordritems/1.json
   def update
     authorize @ordritem if current_user
-    
+
     respond_to do |format|
       ActiveRecord::Base.transaction do
         old_ordritem = @ordritem.dup
@@ -75,11 +76,10 @@ class OrdritemsController < ApplicationController
     end
   end
 
-
   # DELETE /ordritems/1 or /ordritems/1.json
   def destroy
     authorize @ordritem if current_user
-    
+
     ActiveRecord::Base.transaction do
       adjust_inventory(@ordritem.menuitem&.inventory, 1)
       order = @ordritem.ordr
@@ -89,7 +89,7 @@ class OrdritemsController < ApplicationController
       Ordraction.create!(ordrparticipant: ordrparticipant, ordr: order, ordritem: @ordritem, action: 3)
       broadcast_partials(order, order.tablesetting, ordrparticipant)
       respond_to do |format|
-        format.html { redirect_to ordritems_url, notice: "Ordritem was successfully destroyed." }
+        format.html { redirect_to ordritems_url, notice: 'Ordritem was successfully destroyed.' }
         format.json { head :no_content }
       end
     end
@@ -99,9 +99,10 @@ class OrdritemsController < ApplicationController
 
   def adjust_inventory(inventory, delta)
     return unless inventory
+
     inventory.with_lock do
       inventory.currentinventory += delta
-      inventory.currentinventory = 0 if inventory.currentinventory < 0
+      inventory.currentinventory = 0 if inventory.currentinventory.negative?
       inventory.currentinventory = inventory.startinginventory if inventory.currentinventory > inventory.startinginventory
       inventory.save!
     end
@@ -109,7 +110,8 @@ class OrdritemsController < ApplicationController
 
   def find_or_create_participant(ordr)
     if current_user
-      Ordrparticipant.where(ordr: ordr, employee: @current_employee, role: 1, sessionid: session.id.to_s).first_or_create do |participant|
+      Ordrparticipant.where(ordr: ordr, employee: @current_employee, role: 1,
+                            sessionid: session.id.to_s,).first_or_create do |participant|
         participant.ordr = ordr
         participant.employee = @current_employee
         participant.role = 1
@@ -126,7 +128,7 @@ class OrdritemsController < ApplicationController
 
   def broadcast_partials(ordr, tablesetting, ordrparticipant)
     # Eager load all associations needed by partials to prevent N+1 queries
-    ordr = Ordr.includes(menu: [:restaurant, :menusections, :menuavailabilities]).find(ordr.id)
+    ordr = Ordr.includes(menu: %i[restaurant menusections menuavailabilities]).find(ordr.id)
     menu = ordr.menu
     restaurant = menu.restaurant
     menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
@@ -145,9 +147,9 @@ class OrdritemsController < ApplicationController
             ordrparticipant: ordrparticipant,
             tablesetting: tablesetting,
             menuparticipant: menuparticipant,
-            current_employee: @current_employee
-          }
-        )
+            current_employee: @current_employee,
+          },
+        ),
       ),
       modals: compress_string(
         Rails.cache.fetch([
@@ -157,7 +159,7 @@ class OrdritemsController < ApplicationController
           tablesetting.try(:id),
           menuparticipant.try(:id),
           restaurant_currency.code,
-          @current_employee.try(:id)
+          @current_employee.try(:id),
         ]) do
           ApplicationController.renderer.render(
             partial: 'smartmenus/showModals',
@@ -168,10 +170,10 @@ class OrdritemsController < ApplicationController
               tablesetting: tablesetting,
               menuparticipant: menuparticipant,
               restaurantCurrency: restaurant_currency,
-              current_employee: @current_employee
-            }
+              current_employee: @current_employee,
+            },
           )
-        end
+        end,
       ),
       menuContentStaff: compress_string(
         Rails.cache.fetch([
@@ -181,7 +183,7 @@ class OrdritemsController < ApplicationController
           allergyns.maximum(:updated_at),
           restaurant_currency.code,
           ordrparticipant.try(:id),
-          menuparticipant.try(:id)
+          menuparticipant.try(:id),
         ]) do
           ApplicationController.renderer.render(
             partial: 'smartmenus/showMenuContentStaff',
@@ -191,10 +193,10 @@ class OrdritemsController < ApplicationController
               allergyns: allergyns,
               restaurantCurrency: restaurant_currency,
               ordrparticipant: ordrparticipant,
-              menuparticipant: menuparticipant
-            }
+              menuparticipant: menuparticipant,
+            },
           )
-        end
+        end,
       ),
       menuContentCustomer: compress_string(
         Rails.cache.fetch([
@@ -204,7 +206,7 @@ class OrdritemsController < ApplicationController
           allergyns.maximum(:updated_at),
           restaurant_currency.code,
           ordrparticipant.try(:id),
-          menuparticipant.try(:id)
+          menuparticipant.try(:id),
         ]) do
           ApplicationController.renderer.render(
             partial: 'smartmenus/showMenuContentCustomer',
@@ -214,10 +216,10 @@ class OrdritemsController < ApplicationController
               allergyns: allergyns,
               restaurantCurrency: restaurant_currency,
               ordrparticipant: ordrparticipant,
-              menuparticipant: menuparticipant
-            }
+              menuparticipant: menuparticipant,
+            },
           )
-        end
+        end,
       ),
       orderCustomer: compress_string(
         ApplicationController.renderer.render(
@@ -227,9 +229,9 @@ class OrdritemsController < ApplicationController
             menu: menu,
             restaurant: restaurant,
             tablesetting: tablesetting,
-            ordrparticipant: ordrparticipant
-          }
-        )
+            ordrparticipant: ordrparticipant,
+          },
+        ),
       ),
       orderStaff: compress_string(
         ApplicationController.renderer.render(
@@ -239,9 +241,9 @@ class OrdritemsController < ApplicationController
             menu: menu,
             restaurant: restaurant,
             tablesetting: tablesetting,
-            ordrparticipant: ordrparticipant
-          }
-        )
+            ordrparticipant: ordrparticipant,
+          },
+        ),
       ),
       tableLocaleSelectorStaff: compress_string(
         ApplicationController.renderer.render(
@@ -251,9 +253,9 @@ class OrdritemsController < ApplicationController
             restaurant: restaurant,
             tablesetting: tablesetting,
             ordrparticipant: ordrparticipant,
-            menuparticipant: menuparticipant
-          }
-        )
+            menuparticipant: menuparticipant,
+          },
+        ),
       ),
       tableLocaleSelectorCustomer: compress_string(
         ApplicationController.renderer.render(
@@ -263,11 +265,11 @@ class OrdritemsController < ApplicationController
             restaurant: restaurant,
             tablesetting: tablesetting,
             ordrparticipant: ordrparticipant,
-            menuparticipant: menuparticipant
-          }
-        )
+            menuparticipant: menuparticipant,
+          },
+        ),
       ),
-      fullPageRefresh: { refresh: full_refresh }
+      fullPageRefresh: { refresh: full_refresh },
     }
     ActionCable.server.broadcast("ordr_#{menuparticipant.smartmenu.slug}_channel", partials)
   end
@@ -278,45 +280,40 @@ class OrdritemsController < ApplicationController
     Base64.strict_encode64(Zlib::Deflate.deflate(str))
   end
 
+  # Use callbacks to share common setup or constraints between actions.
+  def set_ordritem
+    @ordritem = Ordritem.find(params[:id])
+  end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_ordritem
-      @ordritem = Ordritem.find(params[:id])
-    end
-
-    def update_ordr( ordr )
-        ordr.nett = ordr.runningTotal
-        taxes = Tax.where(restaurant_id: ordr.restaurant.id).order(sequence: :asc)
-        totalTax = 0
-        totalService = 0
-        for tax in taxes do
-            if tax.taxtype == 'service'
-                totalService += ((tax.taxpercentage * ordr.nett)/100)
-            else
-                totalTax += ((tax.taxpercentage * ordr.nett)/100)
-            end
-        end
-        ordr.tax = totalTax
-        ordr.service = totalService
-        ordr.gross = ordr.nett + ordr.tip + ordr.service + ordr.tax
-        ordr.save
-    end
-
-    def set_currency
-      if params[:id]
-          @ordritem = Ordritem.find(params[:id])
-          if @ordritem.ordr.restaurant.currency
-            @restaurantCurrency = ISO4217::Currency.from_code(@ordritem.ordr.restaurant.currency)
-          else
-            @restaurantCurrency = ISO4217::Currency.from_code('USD')
-          end
+  def update_ordr(ordr)
+    ordr.nett = ordr.runningTotal
+    taxes = Tax.where(restaurant_id: ordr.restaurant.id).order(sequence: :asc)
+    totalTax = 0
+    totalService = 0
+    taxes.each do |tax|
+      if tax.taxtype == 'service'
+        totalService += ((tax.taxpercentage * ordr.nett) / 100)
       else
-        @restaurantCurrency = ISO4217::Currency.from_code('USD')
+        totalTax += ((tax.taxpercentage * ordr.nett) / 100)
       end
     end
+    ordr.tax = totalTax
+    ordr.service = totalService
+    ordr.gross = ordr.nett + ordr.tip + ordr.service + ordr.tax
+    ordr.save
+  end
 
-    # Only allow a list of trusted parameters through.
-    def ordritem_params
-      params.require(:ordritem).permit(:ordr_id, :menuitem_id, :ordritemprice, :status)
+  def set_currency
+    if params[:id]
+      @ordritem = Ordritem.find(params[:id])
+      @restaurantCurrency = ISO4217::Currency.from_code(@ordritem.ordr.restaurant.currency || 'USD')
+    else
+      @restaurantCurrency = ISO4217::Currency.from_code('USD')
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def ordritem_params
+    params.require(:ordritem).permit(:ordr_id, :menuitem_id, :ordritemprice, :status)
+  end
 end

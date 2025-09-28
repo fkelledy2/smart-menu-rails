@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class SmartmenusControllerTest < ActionDispatch::IntegrationTest
   setup do
@@ -7,9 +7,8 @@ class SmartmenusControllerTest < ActionDispatch::IntegrationTest
     @smartmenu.restaurant = @restaurant
   end
 
-  test "should show smartmenu" do
+  test 'should show smartmenu' do
     get smartmenu_url(@smartmenu.slug)
     assert_response :success
   end
-
 end

@@ -1,0 +1,176 @@
+# RuboCop configuration for Smart Menu Rails application
+# This configuration balances code quality with practical development needs
+
+require:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-performance
+
+AllCops:
+  TargetRubyVersion: 3.3
+  NewCops: enable
+  Exclude:
+    - 'vendor/**/*'
+    - 'db/schema.rb'
+    - 'db/migrate/*'
+    - 'bin/*'
+    - 'config/boot.rb'
+    - 'config/environment.rb'
+    - 'config/application.rb'
+    - 'config/environments/*'
+    - 'config/initializers/*'
+    - 'config/puma.rb'
+    - 'config/routes.rb'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'log/**/*'
+    - 'public/**/*'
+    - 'storage/**/*'
+
+# Layout and Formatting
+Layout/LineLength:
+  Max: 120
+  AllowedPatterns: ['\A\s*#'] # Allow long comments
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+# Style
+Style/Documentation:
+  Enabled: false # Disable mandatory class documentation
+
+Style/FrozenStringLiteralComment:
+  Enabled: false # Don't require frozen string literals
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+  ConsistentQuotesInMultiline: true
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/ClassAndModuleChildren:
+  Enabled: false # Allow compact module/class definitions
+
+Style/GuardClause:
+  MinBodyLength: 3
+
+Style/IfUnlessModifier:
+  Enabled: false # Allow if/unless at end of line
+
+Style/NumericLiterals:
+  MinDigits: 6 # Only add underscores to numbers with 6+ digits
+
+# Metrics
+Metrics/MethodLength:
+  Max: 25
+  CountAsOne: ['array', 'hash', 'heredoc']
+
+Metrics/ClassLength:
+  Max: 150
+  CountAsOne: ['array', 'hash', 'heredoc']
+
+Metrics/ModuleLength:
+  Max: 150
+  CountAsOne: ['array', 'hash', 'heredoc']
+
+Metrics/BlockLength:
+  Max: 30
+  CountAsOne: ['array', 'hash', 'heredoc']
+  AllowedMethods: ['describe', 'context', 'it', 'specify', 'example', 'scenario']
+  Exclude:
+    - 'spec/**/*'
+    - 'config/routes.rb'
+    - 'db/seeds.rb'
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/CyclomaticComplexity:
+  Max: 8
+
+Metrics/PerceivedComplexity:
+  Max: 8
+
+# Naming
+Naming/VariableNumber:
+  EnforcedStyle: snake_case
+
+Naming/PredicateName:
+  ForbiddenPrefixes: ['is_']
+  AllowedMethods: ['is_a?']
+
+# Rails specific
+Rails/FilePath:
+  EnforcedStyle: arguments
+
+Rails/HasAndBelongsToMany:
+  Enabled: false # Allow has_and_belongs_to_many
+
+Rails/SkipsModelValidations:
+  AllowedMethods: ['touch', 'update_column', 'update_columns', 'update_all', 'delete_all']
+
+Rails/BulkChangeTable:
+  Enabled: false # Allow separate change_table calls
+
+Rails/CreateTableWithTimestamps:
+  Enabled: false # Don't require timestamps on all tables
+
+Rails/ThreeStateBooleanColumn:
+  Enabled: false # Allow nullable boolean columns
+
+# RSpec specific
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/NestedGroups:
+  Max: 4
+
+RSpec/DescribeClass:
+  Enabled: false # Allow describe without class
+
+RSpec/FilePath:
+  Enabled: false # Don't enforce file path matching
+
+# Performance
+Performance/StringReplacement:
+  Enabled: true
+
+Performance/RedundantMerge:
+  Enabled: true
+
+Performance/FlatMap:
+  Enabled: true
+
+# Lint
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*'
+
+Lint/MissingSuper:
+  Enabled: false # Don't require super calls
+
+# Security
+Security/Open:
+  Enabled: true
+
+Security/Eval:
+  Enabled: true
+
+Security/YAMLLoad:
+  Enabled: true

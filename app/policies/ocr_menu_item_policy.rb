@@ -11,6 +11,7 @@ class OcrMenuItemPolicy < ApplicationPolicy
 
   def owner?
     return false unless user && record.respond_to?(:ocr_menu_section)
+
     section = record.ocr_menu_section
     import = section&.ocr_menu_import
     restaurant = import&.restaurant

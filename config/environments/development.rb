@@ -2,21 +2,35 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
 
-#   config.after_initialize do
-#     Bullet.enable        = true
-#     Bullet.alert         = true
-#     Bullet.bullet_logger = true
-#     Bullet.console       = true
-#     Bullet.rails_logger  = true
-#     Bullet.add_footer    = true
-#     Bullet.counter_cache_enable = false
-#   end
+  # Bullet gem configuration for N+1 query detection
+  config.after_initialize do
+    if defined?(Bullet)
+      Bullet.enable        = true
+      Bullet.alert         = false  # Disable JavaScript alerts
+      Bullet.bullet_logger = true  # Log to bullet.log file
+      Bullet.console       = true  # Log to console
+      Bullet.rails_logger  = true  # Log to Rails logger
+      Bullet.add_footer    = true  # Add HTML footer (non-intrusive)
+
+      # Additional Bullet configurations for better detection
+      Bullet.counter_cache_enable = false
+      Bullet.unused_eager_loading_enable = true
+      Bullet.stacktrace_includes = [ 'app' ]
+      Bullet.stacktrace_excludes = [ 'vendor', 'lib', 'gems' ]
+
+      # Skip certain paths that might have intentional N+1 queries
+      Bullet.skip_html_injection = false
+
+      # Bullet will automatically log to log/bullet.log when bullet_logger = true
+      
+      # Note: Bullet logs to Rails.logger by default when bullet_logger = true
+    end
+  end
 
   # config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
       address:              'smtp.gmail.com',

@@ -7,7 +7,7 @@ class ImageUploader < Shrine
 
   Attacher.validate do
     validate_mime_type %w[image/jpeg image/png image/webp]
-    validate_max_size  10*1024*1024
+    validate_max_size  10 * 1024 * 1024
   end
 
   Attacher.promote_block do |attacher|
@@ -19,7 +19,7 @@ class ImageUploader < Shrine
     {
       thumb: magick.resize_to_limit!(200, 200),
       medium: magick.resize_to_limit!(600, 480),
-      large: magick.resize_to_limit!(1000, 800)
+      large: magick.resize_to_limit!(1000, 800),
     }
   end
 end

@@ -1,1 +1,1 @@
-json.array! @ordractions, partial: "ordractions/ordraction", as: :ordraction
+json.array! @ordractions, partial: 'ordractions/ordraction', as: :ordraction

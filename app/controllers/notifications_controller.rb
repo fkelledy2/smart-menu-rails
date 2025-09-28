@@ -1,6 +1,6 @@
 class NotificationsController < ApplicationController
   before_action :authenticate_user!
-  
+
   # Pundit authorization
   after_action :verify_policy_scoped, only: [:index]
 

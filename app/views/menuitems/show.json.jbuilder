@@ -1,1 +1,1 @@
-json.partial! "menuitems/menuitem", menuitem: @menuitem
+json.partial! 'menuitems/menuitem', menuitem: @menuitem

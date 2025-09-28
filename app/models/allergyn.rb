@@ -1,6 +1,6 @@
 class Allergyn < ApplicationRecord
   include IdentityCache
-  
+
   # Standard ActiveRecord associations
   belongs_to :restaurant
   has_many :menuitem_allergyn_mappings, dependent: :destroy
@@ -9,20 +9,20 @@ class Allergyn < ApplicationRecord
   has_many :ordrparticipants, through: :ordrparticipant_allergyn_filters
 
   # Enums
-  enum status: {
+  enum :status, {
     inactive: 0,
     active: 1,
-    archived: 2
+    archived: 2,
   }
 
   # Validations
   validates :name, presence: true
   validates :symbol, presence: true
-  
+
   # IdentityCache configuration
   cache_index :id
   cache_index :restaurant_id
-  
+
   # Cache associations
   cache_belongs_to :restaurant
   cache_has_many :menuitem_allergyn_mappings, embed: :ids

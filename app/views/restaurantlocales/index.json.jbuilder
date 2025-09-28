@@ -1,1 +1,1 @@
-json.array! @restaurantlocales, partial: "restaurantlocales/restaurantlocale", as: :restaurantlocale
+json.array! @restaurantlocales, partial: 'restaurantlocales/restaurantlocale', as: :restaurantlocale

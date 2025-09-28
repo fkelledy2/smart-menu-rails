@@ -1,0 +1,145 @@
+# Brakeman configuration for Smart Menu Rails application
+# Security analysis configuration
+
+# Application path (default is current directory)
+app_path: "."
+
+# Output format (:to_s, :to_tabs, :to_csv, :to_html, :to_json, :to_markdown, :to_codeclimate)
+output_format: :to_s
+
+# Specify the Rails version (if not detected correctly)
+rails_version: "7.1"
+
+# Minimum confidence level (High, Medium, Weak)
+# High = more certain, fewer false positives
+# Medium = balanced approach  
+# Weak = catch more potential issues, more false positives
+min_confidence: 2  # Medium confidence
+
+# Exit with error code if warnings found
+exit_on_warn: true
+
+# Exit with error code if errors occur during analysis
+exit_on_error: true
+
+# Suppress informational warnings
+quiet: false
+
+# Additional checks to run
+run_checks:
+  - BasicAuth
+  - BasicAuthTimingAttack
+  - ContentTag
+  - CreateWith
+  - CrossSiteScripting
+  - DefaultRoutes
+  - Deserialize
+  - DetailedExceptions
+  - DigestDoS
+  - DivideByZero
+  - DynamicFinders
+  - EscapeFunction
+  - Evaluation
+  - Execute
+  - FileAccess
+  - FileDisclosure
+  - FilterSkipping
+  - ForgerySetting
+  - HeaderDoS
+  - I18nXSS
+  - JRubyXML
+  - JSONEncoding
+  - JSONParsing
+  - LinkTo
+  - LinkToHref
+  - MailTo
+  - MassAssignment
+  - MimeTypeDoS
+  - ModelAttrAccessible
+  - ModelAttributes
+  - ModelSerialize
+  - NestedAttributes
+  - NestedAttributesBypass
+  - NumberToCurrency
+  - PermitAttributes
+  - QuoteTableName
+  - Redirect
+  - Regex
+  - Render
+  - RenderDoS
+  - RenderInline
+  - ResponseSplitting
+  - RouteDoS
+  - SQL
+  - SQLCVEs
+  - SSLVerify
+  - SafeBufferManipulation
+  - SanitizeMethods
+  - SelectTag
+  - SelectVulnerability
+  - Send
+  - SendFile
+  - SessionManipulation
+  - SessionSettings
+  - SimpleFormat
+  - SingleQuotes
+  - SkipBeforeFilter
+  - SprocketsPathTraversal
+  - StripTags
+  - SymbolDoSCVE
+  - TranslateBug
+  - UnsafeReflection
+  - UnscopedFind
+  - ValidationRegex
+  - WithoutProtection
+  - XMLDoS
+  - YAMLParsing
+
+# Skip certain checks (if needed)
+skip_checks: []
+
+# Skip certain files
+skip_files:
+  - "lib/tasks/*.rake"
+  - "config/deploy.rb"
+  - "config/deploy/*.rb"
+
+# Ignore warnings in these directories
+ignore_paths:
+  - "vendor"
+  - "node_modules"
+  - "tmp"
+  - "log"
+  - "public"
+
+# Specific warnings to ignore (add fingerprints of false positives)
+ignore_warnings: []
+
+# Additional options
+options:
+  # Assume all controller methods are actions (default: false)
+  assume_all_routes: false
+  
+  # Collapse mass assignment warnings (default: false)
+  collapse_mass_assignment: false
+  
+  # Highlight user input in warnings (default: true)
+  highlight_user_input: true
+  
+  # Show relative paths in output (default: false)
+  relative_paths: true
+  
+  # Summary at end of report (default: true)
+  summary: true
+  
+  # Show progress while running (default: true)
+  progress: true
+  
+  # Enable debug output (default: false)
+  debug: false
+  
+  # Interprocedural analysis (default: false, can be slow)
+  interprocedural: false
+  
+  # Limit number of warnings per check (default: no limit)
+  # limit: 100

@@ -9,7 +9,7 @@ class OcrMenuSectionPolicy < ApplicationPolicy
         scope.all
       else
         # Limit to sections belonging to restaurants owned by the user
-        scope.joins(:ocr_menu_import => :restaurant).where(restaurants: { user_id: user.id })
+        scope.joins(ocr_menu_import: :restaurant).where(restaurants: { user_id: user.id })
       end
     end
 
@@ -28,6 +28,7 @@ class OcrMenuSectionPolicy < ApplicationPolicy
 
   def owner?
     return false unless user && record.respond_to?(:ocr_menu_import)
+
     restaurant = record.ocr_menu_import&.restaurant
     restaurant && restaurant.user_id == user.id
   end

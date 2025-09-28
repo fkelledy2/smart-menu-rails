@@ -1,1 +1,1 @@
-json.partial! "menuavailabilities/menuavailability", menuavailability: @menuavailability
+json.partial! 'menuavailabilities/menuavailability', menuavailability: @menuavailability

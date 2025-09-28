@@ -5,12 +5,13 @@ class MenusectionlocalesController < ApplicationController
     @menusectionlocales = Menusectionlocale.limit(100) # Use limit for memory safety, since pagination gem is not installed
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @menusectionlocale = Menusectionlocale.new
   end
+
+  def edit; end
 
   def create
     @menusectionlocale = Menusectionlocale.new(menusectionlocale_params)
@@ -19,9 +20,6 @@ class MenusectionlocalesController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
-  end
-
-  def edit
   end
 
   def update
@@ -38,11 +36,12 @@ class MenusectionlocalesController < ApplicationController
   end
 
   private
-    def set_menusectionlocale
-      @menusectionlocale = Menusectionlocale.find(params[:id])
-    end
 
-    def menusectionlocale_params
-      params.require(:menusectionlocale).permit(:locale, :status, :name, :description, :menusection_id)
-    end
+  def set_menusectionlocale
+    @menusectionlocale = Menusectionlocale.find(params[:id])
+  end
+
+  def menusectionlocale_params
+    params.require(:menusectionlocale).permit(:locale, :status, :name, :description, :menusection_id)
+  end
 end

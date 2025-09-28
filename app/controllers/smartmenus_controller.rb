@@ -1,34 +1,32 @@
 class SmartmenusController < ApplicationController
-  layout "smartmenu", :only => [ :show ]
-  before_action :authenticate_user!, except: [:index, :show] # Public menu viewing
-  before_action :set_smartmenu, only: %i[ show edit update destroy ]
-  
+  layout 'smartmenu', only: [:show]
+  before_action :authenticate_user!, except: %i[index show] # Public menu viewing
+  before_action :set_smartmenu, only: %i[show edit update destroy]
+
   # Pundit authorization
-  after_action :verify_authorized, except: [:index, :show]
+  after_action :verify_authorized, except: %i[index show]
   after_action :verify_policy_scoped, only: [:index]
 
   # GET /smartmenus or /smartmenus.json
   def index
-    if current_user
-      @smartmenus = policy_scope(Smartmenu)
-          .includes(:menu, :restaurant, :tablesetting)
-          .joins(:menu)
-          .where(tablesetting_id: nil, menus: { status: 'active' })
-          .limit(100)
-    else
-      @smartmenus = Smartmenu
-          .includes(:menu, :restaurant, :tablesetting)
-          .joins(:menu)
-          .where(tablesetting_id: nil, menus: { status: 'active' })
-          .limit(100)
-    end
+    @smartmenus = if current_user
+                    policy_scope(Smartmenu)
+                      .includes(:menu, :restaurant, :tablesetting)
+                      .joins(:menu)
+                      .where(tablesetting_id: nil, menus: { status: 'active' })
+                      .limit(100)
+                  else
+                    Smartmenu
+                      .includes(:menu, :restaurant, :tablesetting)
+                      .joins(:menu)
+                      .where(tablesetting_id: nil, menus: { status: 'active' })
+                      .limit(100)
+                  end
   end
 
   # GET /smartmenus/1 or /smartmenus/1.json
   def show
-
-    # Eager load associations if used in view (add more as needed)
-    @menu = Menu.includes(:menusections, :menuavailabilities).find(@menu.id) if @menu && !@menu.association(:menusections).loaded?
+    load_menu_associations_for_show
 
     if @menu.restaurant != @restaurant
       redirect_to root_url and return
@@ -41,7 +39,7 @@ class SmartmenusController < ApplicationController
         menu_id: @menu.id,
         tablesetting_id: @tablesetting.id,
         restaurant_id: @tablesetting.restaurant_id,
-        status: [0, 20, 30]
+        status: [0, 20, 30],
       ).first
 
       if @openOrder
@@ -50,22 +48,22 @@ class SmartmenusController < ApplicationController
             ordr: @openOrder,
             employee: @current_employee,
             role: 1,
-            sessionid: session.id.to_s
+            sessionid: session.id.to_s,
           )
         else
           @ordrparticipant = Ordrparticipant.find_or_create_by(
             ordr_id: @openOrder.id,
             role: 0,
-            sessionid: session.id.to_s
+            sessionid: session.id.to_s,
           )
           @ordrparticipant.save
           @menuparticipant = Menuparticipant.find_by(sessionid: session.id.to_s)
           if @menuparticipant
             @ordrparticipant.update(preferredlocale: @menuparticipant.preferredlocale)
-             @ordrparticipant.save
+            @ordrparticipant.save
           end
           if @ordrparticipant.id
-              Ordraction.create(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 0)
+            Ordraction.create(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 0)
           end
         end
       end
@@ -83,8 +81,7 @@ class SmartmenusController < ApplicationController
   end
 
   # GET /smartmenus/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /smartmenus or /smartmenus.json
   def create
@@ -92,7 +89,9 @@ class SmartmenusController < ApplicationController
 
     respond_to do |format|
       if @smartmenu.save
-        format.html { redirect_to @smartmenu, notice: t('common.flash.created', resource: t('activerecord.models.smartmenu')) }
+        format.html do
+          redirect_to @smartmenu, notice: t('common.flash.created', resource: t('activerecord.models.smartmenu'))
+        end
         format.json { render :show, status: :created, location: @smartmenu }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -104,10 +103,12 @@ class SmartmenusController < ApplicationController
   # PATCH/PUT /smartmenus/1 or /smartmenus/1.json
   def update
     authorize @smartmenu
-    
+
     respond_to do |format|
       if @smartmenu.update(smartmenu_params)
-        format.html { redirect_to @smartmenu, notice: t('common.flash.updated', resource: t('activerecord.models.smartmenu')) }
+        format.html do
+          redirect_to @smartmenu, notice: t('common.flash.updated', resource: t('activerecord.models.smartmenu'))
+        end
         format.json { render :show, status: :ok, location: @smartmenu }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -119,49 +120,53 @@ class SmartmenusController < ApplicationController
   # DELETE /smartmenus/1 or /smartmenus/1.json
   def destroy
     authorize @smartmenu
-    
+
     @smartmenu.destroy!
 
     respond_to do |format|
-      format.html { redirect_to smartmenus_path, status: :see_other, notice: t('common.flash.deleted', resource: t('activerecord.models.smartmenu')) }
+      format.html do
+        redirect_to smartmenus_path, status: :see_other,
+                                     notice: t('common.flash.deleted', resource: t('activerecord.models.smartmenu'))
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_smartmenu
-      begin
-          @smartmenu = Smartmenu.where(slug: params[:id]).includes(
-            :restaurant,
-            :tablesetting,
-            menu: [
-              :menusections,
-              { menuitems: [:menuitemlocales, :tags, :sizes, :ingredients, :allergyns, :genimage, :inventory] },
-            ]
-          ).first                     
-          if @smartmenu
-              @restaurant = @smartmenu.restaurant
-              @menu = @smartmenu.menu
-              @tablesetting = @smartmenu.tablesetting
-              if current_user
-                    if( @menu == nil or @menu.restaurant.user != current_user )
-                        redirect_to root_url
-                    end
-              end
-              if @restaurant.currency
-                    @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
-              else
-                    @restaurantCurrency = ISO4217::Currency.from_code('USD')
-              end
-          end
-      rescue ActiveRecord::RecordNotFound => e
-            redirect_to root_url
-      end
-    end
 
-    # Only allow a list of trusted parameters through.
-    def smartmenu_params
-      params.require(:smartmenu).permit(:slug, :restaurant_id, :menu_id, :tablesetting_id)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_smartmenu
+    @smartmenu = Smartmenu.where(slug: params[:id]).includes(
+      :restaurant,
+      :tablesetting,
+      menu: [restaurant: :user],
+    ).first
+    if @smartmenu
+      @restaurant = @smartmenu.restaurant
+      @menu = @smartmenu.menu
+      @tablesetting = @smartmenu.tablesetting
+      if current_user && (@menu.nil? || (@menu.restaurant.user != current_user))
+        redirect_to root_url
+      end
+      @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency || 'USD')
     end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to root_url
+  end
+
+  # Load menu associations specifically needed for the show action
+  def load_menu_associations_for_show
+    return unless @menu
+
+    @menu = Menu.includes(
+      :menusections,
+      :menuavailabilities,
+      menuitems: %i[menuitemlocales tags sizes ingredients allergyns genimage inventory],
+    ).find(@menu.id)
+  end
+
+  # Only allow a list of trusted parameters through.
+  def smartmenu_params
+    params.require(:smartmenu).permit(:slug, :restaurant_id, :menu_id, :tablesetting_id)
+  end
 end

@@ -1,10 +1,10 @@
 class Restaurant < ApplicationRecord
   include ImageUploader::Attachment(:image)
   include IdentityCache
-  
+
   # Standard ActiveRecord associations
   belongs_to :user
-  
+
   has_many :tablesettings, dependent: :delete_all
   has_many :menus, dependent: :delete_all
   has_many :employees, dependent: :delete_all
@@ -17,11 +17,11 @@ class Restaurant < ApplicationRecord
   has_many :tracks, dependent: :delete_all
   has_many :restaurantlocales, dependent: :delete_all
   has_many :ocr_menu_imports, dependent: :destroy
-  
+
   # IdentityCache configuration
   cache_index :id
   cache_index :user_id
-  
+
   # Cache associations - must be defined after the actual associations
   cache_has_many :menus, embed: :ids
   cache_has_many :tablesettings, embed: :ids
@@ -38,67 +38,64 @@ class Restaurant < ApplicationRecord
     restaurantlocales.pluck(:locale)
   end
 
-  enum status: {
+  enum :status, {
     inactive: 0,
     active: 1,
-    archived: 2
+    archived: 2,
   }
 
-  enum wifiEncryptionType: {
+  enum :wifiEncryptionType, {
     WPA: 0,
     WEP: 1,
-    NONE: 2
+    NONE: 2,
   }
 
   def spotifyAuthUrl
-    '/auth/spotify?restaurant_id='+self.id.to_s
+    "/auth/spotify?restaurant_id=#{id}"
   end
 
   def spotifyPlaylistUrl
-    '/restaurants/'+self.id.to_s+'/tracks'
+    "/restaurants/#{id}/tracks"
   end
 
   def gen_image_theme
-      if( genimage )
-          genimage.id
-      end
+    genimage&.id
   end
 
   def total_capacity
-    tablesettings.map(&:capacity).sum
+    tablesettings.sum(&:capacity)
   end
 
   def wifiQRString
     wifiQRString = 'WIFI:S:'
     if wifissid
-        wifiQRString.concat(wifissid+';')
+      wifiQRString.concat("#{wifissid};")
     end
     if wifiEncryptionType
-        wifiQRString.concat('T:'+wifiEncryptionType+';')
+      wifiQRString.concat("T:#{wifiEncryptionType};")
     end
     if wifiPassword
-        wifiQRString.concat('P:'+wifiPassword+';')
+      wifiQRString.concat("P:#{wifiPassword};")
     end
     if wifiHidden
-        wifiQRString.concat('H:true;')
+      wifiQRString.concat('H:true;')
     else
-        wifiQRString.concat('H:false;')
+      wifiQRString.concat('H:false;')
     end
   end
 
   def defaultLocale
-    Restaurantlocale.where(restaurant_id: self.id, status: 'active', dfault: true).first
+    Restaurantlocale.where(restaurant_id: id, status: 'active', dfault: true).first
   end
 
-  def getLocale( locale )
-    Restaurantlocale.where(restaurant_id: self.id, status: 'active', locale: locale).first
+  def getLocale(locale)
+    Restaurantlocale.where(restaurant_id: id, status: 'active', locale: locale).first
   end
 
-  validates :name, :presence => true
-  validates :address1, :presence => false
-  validates :city, :presence => false
-  validates :postcode, :presence => false
-  validates :country, :presence => false
-  validates :status, :presence => true
-  validates :user, :presence => true
+  validates :name, presence: true
+  validates :address1, presence: false
+  validates :city, presence: false
+  validates :postcode, presence: false
+  validates :country, presence: false
+  validates :status, presence: true
 end

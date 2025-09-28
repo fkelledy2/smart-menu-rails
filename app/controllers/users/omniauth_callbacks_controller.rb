@@ -10,15 +10,15 @@ module Users
     end
 
     def facebook
-      handle_auth "Facebook"
+      handle_auth 'Facebook'
     end
 
     def twitter
-      handle_auth "Twitter"
+      handle_auth 'Twitter'
     end
 
     def github
-      handle_auth "Github"
+      handle_auth 'Github'
     end
 
     private
@@ -60,33 +60,32 @@ module Users
         @user = create_user
       end
       Analytics.identify(
-          user_id: @user.id,
-          traits: {
-            name: @user.name,
-            email: @user.email,
-            created_at: DateTime.now
-          }
+        user_id: @user.id,
+        traits: {
+          name: @user.name,
+          email: @user.email,
+          created_at: DateTime.now,
+        },
       )
     end
 
     def service_attrs
-      expires_at = auth.credentials.expires_at.present? ? Time.at(auth.credentials.expires_at) : nil
+      expires_at = auth.credentials.expires_at.present? ? Time.zone.at(auth.credentials.expires_at) : nil
       {
-          provider: auth.provider,
-          uid: auth.uid,
-          expires_at: expires_at,
-          access_token: auth.credentials.token,
-          access_token_secret: auth.credentials.secret,
+        provider: auth.provider,
+        uid: auth.uid,
+        expires_at: expires_at,
+        access_token: auth.credentials.token,
+        access_token_secret: auth.credentials.secret,
       }
     end
 
     def create_user
       User.create(
         email: auth.info.email,
-        #name: auth.info.name,
-        password: Devise.friendly_token[0,20]
+        # name: auth.info.name,
+        password: Devise.friendly_token[0, 20],
       )
     end
-
   end
 end

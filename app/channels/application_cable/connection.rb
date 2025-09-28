@@ -5,17 +5,17 @@ module ApplicationCable
 
     def connect
       self.current_user = find_verified_user
-      if self.current_user
-          logger.add_tags "ActionCable", "User #{current_user.id}"
+      if current_user
+        logger.add_tags 'ActionCable', "User #{current_user.id}"
       end
     end
 
     protected
 
-      def find_verified_user
-        if (current_user = env['warden'].user)
-          current_user
-        end
+    def find_verified_user
+      if (current_user = env['warden'].user)
+        current_user
       end
+    end
   end
 end

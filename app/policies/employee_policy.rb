@@ -29,6 +29,7 @@ class EmployeePolicy < ApplicationPolicy
 
   def owner?
     return false unless user && record.respond_to?(:restaurant)
+
     record.restaurant&.user_id == user.id
   end
 end

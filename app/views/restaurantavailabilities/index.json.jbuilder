@@ -1,1 +1,2 @@
-json.array! @restaurantavailabilities, partial: "restaurantavailabilities/restaurantavailability", as: :restaurantavailability
+json.array! @restaurantavailabilities, partial: 'restaurantavailabilities/restaurantavailability',
+                                       as: :restaurantavailability

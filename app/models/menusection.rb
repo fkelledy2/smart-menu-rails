@@ -1,18 +1,18 @@
 class Menusection < ApplicationRecord
   include IdentityCache
-  
+
   # Standard ActiveRecord associations
   belongs_to :menu
-  has_many :menuitems, dependent: :destroy
-  
+  has_many :menuitems
+
   # IdentityCache configuration
   cache_index :id
   cache_index :menu_id
-  
+
   # Cache associations
   cache_belongs_to :menu
   cache_has_many :menuitems, embed: :ids
-  
+
   # Responsive image helpers
   def image_url_or_fallback(size = nil)
     if image_attacher.derivatives&.key?(size)
@@ -21,6 +21,7 @@ class Menusection < ApplicationRecord
       image_url # fallback to original
     end
   end
+
   def thumb_url
     image_url_or_fallback(:thumb)
   end
@@ -37,7 +38,7 @@ class Menusection < ApplicationRecord
     [
       "#{thumb_url} 200w",
       "#{medium_url} 600w",
-      "#{large_url} 1000w"
+      "#{large_url} 1000w",
     ].join(', ')
   end
 
@@ -46,59 +47,50 @@ class Menusection < ApplicationRecord
   end
   include ImageUploader::Attachment(:image)
 
-  belongs_to :menu
-  has_many :menuitems
   has_many :menusectionlocales
   has_one :genimage, dependent: :destroy
 
   def localised_name(locale)
-      mil = Menusectionlocale.where(menusection_id: id, locale: locale).first
-      rl = Restaurantlocale.where(restaurant_id: self.menu.restaurant.id, locale: locale).first
-      if rl.dfault == true
-        name
-      else
-          if mil
-              mil.name
-          else
-              name
-          end
-      end
+    mil = Menusectionlocale.where(menusection_id: id, locale: locale).first
+    rl = Restaurantlocale.where(restaurant_id: menu.restaurant.id, locale: locale).first
+    if rl.dfault == true
+      name
+    elsif mil
+      mil.name
+    else
+      name
+    end
   end
 
   def localised_description(locale)
-      mil = Menulocale.where(menusection_id: id, locale: locale).first
-      rl = Restaurantlocale.where(restaurant_id: self.menu.restaurant.id, locale: locale).first
-      if rl.dfault == true
-        description
-      else
-          if mil
-              mil.description
-          else
-              description
-          end
-      end
+    mil = Menulocale.where(menusection_id: id, locale: locale).first
+    rl = Restaurantlocale.where(restaurant_id: menu.restaurant.id, locale: locale).first
+    if rl.dfault == true
+      description
+    elsif mil
+      mil.description
+    else
+      description
+    end
   end
 
-  enum status: {
+  enum :status, {
     inactive: 0,
     active: 1,
-    archived: 2
+    archived: 2,
   }
   def gen_image_theme
-      if( genimage )
-          genimage.id
-      end
+    genimage&.id
   end
 
   def fromOffset
-      (fromhour*60)+frommin
+    (fromhour * 60) + frommin
   end
+
   def toOffset
-      (tohour*60)+tomin
+    (tohour * 60) + tomin
   end
 
-
-  validates :name, :presence => true
-  validates :menu, :presence => true
-  validates :status, :presence => true
+  validates :name, presence: true
+  validates :status, presence: true
 end

@@ -29,6 +29,7 @@ class MenusectionPolicy < ApplicationPolicy
 
   def owner?
     return false unless user && record.respond_to?(:menu)
+
     record.menu&.restaurant&.user_id == user.id
   end
 end

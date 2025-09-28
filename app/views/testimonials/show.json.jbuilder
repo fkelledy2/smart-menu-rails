@@ -1,1 +1,1 @@
-json.partial! "testimonials/testimonial", testimonial: @testimonial
+json.partial! 'testimonials/testimonial', testimonial: @testimonial

@@ -1,1 +1,1 @@
-json.partial! "genimages/genimage", genimage: @genimage
+json.partial! 'genimages/genimage', genimage: @genimage

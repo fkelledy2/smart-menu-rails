@@ -1,1 +1,1 @@
-json.partial! "ordritemnotes/ordritemnote", ordritemnote: @ordritemnote
+json.partial! 'ordritemnotes/ordritemnote', ordritemnote: @ordritemnote

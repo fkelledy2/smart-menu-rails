@@ -1,1 +1,1 @@
-json.array! @sizes, partial: "sizes/size", as: :size
+json.array! @sizes, partial: 'sizes/size', as: :size

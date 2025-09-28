@@ -1,1 +1,1 @@
-json.array! @tablesettings, partial: "tablesettings/tablesetting", as: :tablesetting
+json.array! @tablesettings, partial: 'tablesettings/tablesetting', as: :tablesetting

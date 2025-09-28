@@ -1,1 +1,1 @@
-json.array! @menuparticipants, partial: "menuparticipants/menuparticipant", as: :menuparticipant
+json.array! @menuparticipants, partial: 'menuparticipants/menuparticipant', as: :menuparticipant

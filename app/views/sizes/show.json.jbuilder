@@ -1,1 +1,1 @@
-json.partial! "sizes/size", size: @size
+json.partial! 'sizes/size', size: @size

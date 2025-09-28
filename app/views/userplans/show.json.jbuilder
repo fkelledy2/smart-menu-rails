@@ -1,1 +1,1 @@
-json.partial! "userplans/userplan", userplan: @userplan
+json.partial! 'userplans/userplan', userplan: @userplan

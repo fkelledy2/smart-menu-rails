@@ -1,1 +1,1 @@
-json.partial! "ordritems/ordritem", ordritem: @ordritem
+json.partial! 'ordritems/ordritem', ordritem: @ordritem

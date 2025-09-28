@@ -1,1 +1,1 @@
-json.array! @genimages, partial: "genimages/genimage", as: :genimage
+json.array! @genimages, partial: 'genimages/genimage', as: :genimage

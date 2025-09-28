@@ -22,7 +22,7 @@ class MenuitemPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.joins(menusection: { menu: :restaurant })
-           .where(restaurants: { user_id: user.id })
+        .where(restaurants: { user_id: user.id })
     end
   end
 
@@ -30,6 +30,7 @@ class MenuitemPolicy < ApplicationPolicy
 
   def owner?
     return false unless user && record.respond_to?(:menusection)
+
     record.menusection&.menu&.restaurant&.user_id == user.id
   end
 end

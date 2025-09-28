@@ -1,0 +1,135 @@
+#!/usr/bin/env ruby
+# Pre-commit hook for Smart Menu Rails application
+# Runs quality checks before allowing commits
+
+require 'fileutils'
+
+# Colors for output
+class String
+  def red; "\e[31m#{self}\e[0m"; end
+  def green; "\e[32m#{self}\e[0m"; end
+  def yellow; "\e[33m#{self}\e[0m"; end
+  def blue; "\e[34m#{self}\e[0m"; end
+  def bold; "\e[1m#{self}\e[0m"; end
+end
+
+def run_command(command, description)
+  puts "#{description}...".blue
+  success = system(command)
+  
+  if success
+    puts "✅ #{description} passed!".green
+  else
+    puts "❌ #{description} failed!".red
+    return false
+  end
+  
+  true
+end
+
+def main
+  puts "\n🔍 Running pre-commit quality checks...".bold
+  
+  # Check if we're in a Rails app
+  unless File.exist?('Gemfile') && File.exist?('config/application.rb')
+    puts "❌ Not in a Rails application directory".red
+    exit 1
+  end
+  
+  # Get list of changed Ruby files
+  changed_files = `git diff --cached --name-only --diff-filter=ACM | grep -E '\.(rb|rake)$'`.strip.split("\n")
+  
+  if changed_files.empty?
+    puts "ℹ️  No Ruby files changed, skipping quality checks".yellow
+    exit 0
+  end
+  
+  puts "📁 Checking #{changed_files.length} Ruby files...".blue
+  
+  # Run RuboCop on changed files only
+  unless run_command("bundle exec rubocop #{changed_files.join(' ')}", "RuboCop style check")
+    puts "\n💡 Tip: Run 'bundle exec rubocop --autocorrect-all' to fix some issues automatically".yellow
+    exit 1
+  end
+  
+  # Run Brakeman security scan (full scan, but fast)
+  unless run_command('bundle exec brakeman --config-file config/brakeman.yml --quiet', 'Brakeman security scan')
+    puts "\n💡 Tip: Review security issues and add exceptions to config/brakeman.yml if needed".yellow
+    exit 1
+  end
+  
+  # Run Bundler Audit (quick check)
+  unless run_command('bundle exec bundler-audit check', 'Bundler audit vulnerability check')
+    puts "\n💡 Tip: Run 'bundle update' to fix vulnerable dependencies".yellow
+    exit 1
+  end
+  
+  # Run tests related to changed files (if we can determine them)
+  if changed_files.any? { |f| f.include?('app/') }
+    puts "\n🧪 Running related tests...".blue
+    
+    # Try to run tests for changed files
+    test_files = changed_files.map do |file|
+      if file.start_with?('app/models/')
+        file.gsub('app/models/', 'test/models/').gsub('.rb', '_test.rb')
+      elsif file.start_with?('app/controllers/')
+        file.gsub('app/controllers/', 'test/controllers/').gsub('.rb', '_test.rb')
+      elsif file.start_with?('app/services/')
+        file.gsub('app/services/', 'test/services/').gsub('.rb', '_test.rb')
+      end
+    end.compact.select { |f| File.exist?(f) }
+    
+    if test_files.any?
+      unless run_command("bundle exec rails test #{test_files.join(' ')}", "Related tests")
+        puts "\n💡 Tip: Fix failing tests before committing".yellow
+        exit 1
+      end
+    else
+      puts "ℹ️  No specific tests found for changed files".yellow
+    end
+  end
+  
+  puts "\n🎉 All pre-commit checks passed! Ready to commit.".green.bold
+end
+
+# Install the hook if run with --install
+if ARGV.include?('--install')
+  hook_path = '.git/hooks/pre-commit'
+  
+  if File.exist?(hook_path)
+    puts "⚠️  Pre-commit hook already exists. Backing up to pre-commit.backup".yellow
+    FileUtils.cp(hook_path, "#{hook_path}.backup")
+  end
+  
+  FileUtils.cp(__FILE__, hook_path)
+  FileUtils.chmod(0755, hook_path)
+  
+  puts "✅ Pre-commit hook installed successfully!".green
+  puts "💡 The hook will run automatically before each commit.".blue
+  puts "💡 To bypass the hook, use: git commit --no-verify".yellow
+  exit 0
+end
+
+# Show help if requested
+if ARGV.include?('--help') || ARGV.include?('-h')
+  puts <<~HELP
+    Smart Menu Pre-commit Hook
+    
+    Usage:
+      #{$0}           # Run quality checks
+      #{$0} --install # Install as git pre-commit hook
+      #{$0} --help    # Show this help
+    
+    This script runs:
+    - RuboCop style checks on changed Ruby files
+    - Brakeman security scan
+    - Bundler audit vulnerability check
+    - Related tests (if found)
+    
+    To bypass the hook: git commit --no-verify
+  HELP
+  exit 0
+end
+
+# Run the main function
+main if __FILE__ == $0

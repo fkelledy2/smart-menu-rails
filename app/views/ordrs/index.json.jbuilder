@@ -1,1 +1,1 @@
-json.array! @ordrs, partial: "ordrs/ordr", as: :ordr
+json.array! @ordrs, partial: 'ordrs/ordr', as: :ordr

@@ -1,1 +1,1 @@
-json.partial! "tips/tip", tip: @tip
+json.partial! 'tips/tip', tip: @tip

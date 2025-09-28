@@ -1,1 +1,1 @@
-json.array! @menuitems, partial: "menuitems/menuitem", as: :menuitem
+json.array! @menuitems, partial: 'menuitems/menuitem', as: :menuitem

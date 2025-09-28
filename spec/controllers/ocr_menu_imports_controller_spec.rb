@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe OcrMenuImportsController, type: :controller do
+RSpec.describe OcrMenuImportsController do
   render_views false
 
   let!(:plan) { Plan.create!(status: 'active') }
@@ -14,9 +14,8 @@ RSpec.describe OcrMenuImportsController, type: :controller do
     @request.env['devise.mapping'] = Devise.mappings[:user]
     @request.headers['ACCEPT'] = 'text/html'
     # Bypass app-wide filters not under test
-    allow(controller).to receive(:set_current_employee).and_return(true)
-    allow(controller).to receive(:set_permissions).and_return(true)
-    allow(controller).to receive(:verify_authenticity_token).and_return(true)
+    allow(controller).to receive_messages(set_current_employee: true, set_permissions: true,
+                                          verify_authenticity_token: true,)
     # Auth
     sign_in user
   end

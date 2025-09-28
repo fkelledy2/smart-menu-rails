@@ -18,5 +18,5 @@ namespace :madmin do
   namespace :noticed do
     resources :notifications
   end
-  root to: "dashboard#show"
+  root to: 'dashboard#show'
 end

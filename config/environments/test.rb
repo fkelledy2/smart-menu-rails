@@ -7,6 +7,23 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
 
+  # Bullet gem configuration for test environment
+  config.after_initialize do
+    if defined?(Bullet)
+      Bullet.enable = true
+      Bullet.alert = false # No JavaScript alerts in tests
+      Bullet.bullet_logger = true # Log to bullet.log file
+      Bullet.rails_logger = true # Log to Rails logger
+      Bullet.raise = true # Raise errors in tests to catch N+1 queries
+      Bullet.unused_eager_loading_enable = true
+      Bullet.counter_cache_enable = false
+      
+      # Configure stacktrace for better debugging in tests
+      Bullet.stacktrace_includes = [ 'app', 'test' ]
+      Bullet.stacktrace_excludes = [ 'vendor', 'lib', 'gems' ]
+    end
+  end
+
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
    address:              'smtp.gmail.com',

@@ -1,1 +1,1 @@
-json.array! @smartmenus, partial: "smartmenus/smartmenu", as: :smartmenu
+json.array! @smartmenus, partial: 'smartmenus/smartmenu', as: :smartmenu

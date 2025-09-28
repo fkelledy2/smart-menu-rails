@@ -3,6 +3,8 @@ require_relative "boot"
 require "rails/all"
 require 'dotenv'
 require_relative '../app/middleware/ua_logger'
+require_relative '../app/middleware/request_logging_middleware'
+require_relative '../app/middleware/metrics_middleware'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -21,6 +23,8 @@ module SmartMenu
     config.autoload_lib(ignore: %w(assets tasks))
 
     config.middleware.use Rack::Deflater
+    # config.middleware.use MetricsMiddleware # Temporarily disabled
+    # config.middleware.use RequestLoggingMiddleware # Temporarily disabled
 
     config.i18n.load_path += Dir[Rails.root.join("my", "locales", "*.{rb,yml}")]
     config.i18n.default_locale = :en

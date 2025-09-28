@@ -1,7 +1,7 @@
 namespace :images do
-  desc "Regenerate all image derivatives (thumb, medium, large) for Menuitems and Menusections"
+  desc 'Regenerate all image derivatives (thumb, medium, large) for Menuitems and Menusections'
   task regenerate_derivatives: :environment do
-    puts "Regenerating Menuitem image derivatives..."
+    puts 'Regenerating Menuitem image derivatives...'
     Menuitem.find_each do |item|
       if item.image_attacher&.file
         item.image_attacher.atomic_persist do
@@ -12,7 +12,7 @@ namespace :images do
       end
     end
 
-    puts "Regenerating Menusection image derivatives..."
+    puts 'Regenerating Menusection image derivatives...'
     Menusection.find_each do |section|
       if section.image_attacher&.file
         section.image_attacher.atomic_persist do
@@ -23,6 +23,6 @@ namespace :images do
       end
     end
 
-    puts "All derivatives regenerated."
+    puts 'All derivatives regenerated.'
   end
 end

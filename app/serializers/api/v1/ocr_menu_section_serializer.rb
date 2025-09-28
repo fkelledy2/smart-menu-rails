@@ -15,7 +15,7 @@ module Api
           is_confirmed: @section.is_confirmed,
           page_reference: @section.page_reference,
           created_at: @section.created_at&.iso8601,
-          updated_at: @section.updated_at&.iso8601
+          updated_at: @section.updated_at&.iso8601,
         }
 
         if @include_items

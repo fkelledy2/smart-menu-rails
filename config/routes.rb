@@ -14,6 +14,15 @@ Rails.application.routes.draw do
   patch 'smartmenus/:smartmenu_id/locale', to: 'smartmenus_locale#update', as: :smartmenu_locale
   resources :genimages
   resources :metrics
+  
+  # Admin metrics dashboard
+  namespace :admin do
+    resources :metrics, only: [:index, :show] do
+      collection do
+        get :export
+      end
+    end
+  end
   resources :tips
   resources :ordractions
   resources :restaurantavailabilities

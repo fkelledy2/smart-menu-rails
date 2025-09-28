@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class MenusectionsControllerTest < ActionDispatch::IntegrationTest
   setup do
@@ -6,42 +6,44 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     @menusection = menusections(:one)
   end
 
-  test "should get index" do
+  test 'should get index' do
     get menusections_url
     assert_response :success
   end
 
-  test "should get new" do
+  test 'should get new' do
     get new_menusection_url
     assert_response :success
   end
 
-#   test "should create menusection" do
-#     assert_difference("Menusection.count") do
-#       post menusections_url, params: { menusection: { description: @menusection.description, image: @menusection.image, menu_id: @menusection.menu_id, name: @menusection.name, sequence: @menusection.sequence, status: @menusection.status } }
-#     end
-#     assert_redirected_to edit_menu_url(@menusection.menu)
-#   end
+  #   test "should create menusection" do
+  #     assert_difference("Menusection.count") do
+  #       post menusections_url, params: { menusection: { description: @menusection.description, image: @menusection.image, menu_id: @menusection.menu_id, name: @menusection.name, sequence: @menusection.sequence, status: @menusection.status } }
+  #     end
+  #     assert_redirected_to edit_menu_url(@menusection.menu)
+  #   end
 
-  test "should show menusection" do
+  test 'should show menusection' do
     get menusection_url(@menusection)
     assert_response :success
   end
 
-  test "should get edit" do
+  test 'should get edit' do
     get edit_menusection_url(@menusection)
     assert_response :success
   end
 
-  test "should update menusection" do
-    patch menusection_url(@menusection), params: { menusection: { description: @menusection.description, image: @menusection.image, menu_id: @menusection.menu_id, name: @menusection.name, sequence: @menusection.sequence, status: @menusection.status } }
-#     assert_redirected_to edit_menu_url(@menusection.menu)
+  test 'should update menusection' do
+    patch menusection_url(@menusection),
+          params: { menusection: { description: @menusection.description, image: @menusection.image,
+                                   menu_id: @menusection.menu_id, name: @menusection.name, sequence: @menusection.sequence, status: @menusection.status, } }
+    #     assert_redirected_to edit_menu_url(@menusection.menu)
   end
 
-  test "should destroy menusection" do
-    assert_difference("Menusection.count", 0) do
+  test 'should destroy menusection' do
+    assert_difference('Menusection.count', 0) do
       delete menusection_url(@menusection)
     end
-#     assert_redirected_to edit_menu_url(@menusection.menu)
+    #     assert_redirected_to edit_menu_url(@menusection.menu)
   end
 end

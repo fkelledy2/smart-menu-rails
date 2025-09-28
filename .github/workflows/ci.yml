@@ -1,0 +1,245 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  RUBY_VERSION: 3.3.0
+  NODE_VERSION: 18
+  RAILS_ENV: test
+
+jobs:
+  # Security and dependency checks
+  security:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+
+      - name: Run Bundler Audit
+        run: |
+          bundle exec bundler-audit --update
+          bundle exec bundler-audit check
+
+      - name: Run Brakeman security scan
+        run: |
+          bundle exec brakeman --config-file config/brakeman.yml --format json --output tmp/brakeman.json
+          bundle exec brakeman --config-file config/brakeman.yml
+
+      - name: Upload Brakeman results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: brakeman-results
+          path: tmp/brakeman.json
+
+  # Code quality checks
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+
+      - name: Run RuboCop
+        run: |
+          bundle exec rubocop --format json --out tmp/rubocop.json
+          bundle exec rubocop
+
+      - name: Upload RuboCop results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: rubocop-results
+          path: tmp/rubocop.json
+
+  # Test suite
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: smart_menu_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Build assets
+        run: |
+          bundle exec rails assets:precompile
+
+      - name: Set up database
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
+          REDIS_URL: redis://localhost:6379/0
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
+
+      - name: Run tests
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
+          REDIS_URL: redis://localhost:6379/0
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+        run: |
+          bundle exec rails test
+
+      - name: Run RSpec tests (if available)
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
+          REDIS_URL: redis://localhost:6379/0
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+        run: |
+          if bundle show rspec-rails > /dev/null 2>&1; then
+            bundle exec rspec
+          else
+            echo "RSpec not available, skipping"
+          fi
+
+      - name: Generate coverage report
+        if: always()
+        run: |
+          if [ -f coverage/.resultset.json ]; then
+            echo "Coverage report generated"
+          fi
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+
+  # Performance and N+1 query detection
+  performance:
+    name: Performance Analysis
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: smart_menu_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+
+      - name: Set up database
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
+
+      - name: Run Bullet N+1 detection tests
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
+          RAILS_ENV: test
+        run: |
+          # Run specific tests that check for N+1 queries
+          if [ -f test/performance/bullet_test.rb ]; then
+            bundle exec rails test test/performance/bullet_test.rb
+          fi
+
+  # Deployment readiness check
+  deploy-check:
+    name: Deployment Readiness
+    runs-on: ubuntu-latest
+    needs: [security, quality, test, performance]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+
+      - name: Check for pending migrations
+        run: |
+          bundle exec rails db:migrate:status
+
+      - name: Verify credentials
+        run: |
+          bundle exec rails credentials:show > /dev/null
+
+      - name: Check asset compilation
+        run: |
+          bundle exec rails assets:precompile RAILS_ENV=production
+
+      - name: Deployment ready
+        run: |
+          echo "✅ All checks passed - ready for deployment!"

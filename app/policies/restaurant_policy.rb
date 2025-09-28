@@ -37,6 +37,7 @@ class RestaurantPolicy < ApplicationPolicy
 
   def owner?
     return false unless user && record
+
     record.user_id == user.id
   end
 end

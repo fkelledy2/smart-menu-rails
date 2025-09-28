@@ -6,18 +6,21 @@ class OrdrPolicy < ApplicationPolicy
   def show?
     # Allow both staff (owners) and customers to view orders
     return true unless user # Allow anonymous customers
+
     owner?
   end
 
   def new?
     # Allow both staff and customers to create orders
     return true unless user # Allow anonymous customers
+
     user.present?
   end
 
   def create?
     # Allow both staff and customers to create orders
     return true unless user # Allow anonymous customers
+
     user.present?
   end
 
@@ -28,6 +31,7 @@ class OrdrPolicy < ApplicationPolicy
   def update?
     # Allow both staff (owners) and customers to update orders
     return true unless user # Allow anonymous customers
+
     owner?
   end
 
@@ -45,6 +49,7 @@ class OrdrPolicy < ApplicationPolicy
 
   def owner?
     return false unless user && record.respond_to?(:restaurant)
+
     record.restaurant&.user_id == user.id
   end
 end

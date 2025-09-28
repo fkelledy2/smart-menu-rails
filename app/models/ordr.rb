@@ -2,28 +2,24 @@ class Ordr < ApplicationRecord
   include AASM
   include IdentityCache unless included_modules.include?(IdentityCache)
 
-  aasm :column => 'status' do
-    state :opened, initial:true
+  aasm column: 'status' do
+    state :opened, initial: true
     state :ordered, :billrequested, :paid, :closed
 
     event :order do
-        status = :ordered
-        transitions from: :opened, to: :ordered
+      transitions from: :opened, to: :ordered
     end
 
     event :requestbill do
-        status = :billrequested
-        transitions from: [:opened, :ordered], to: :billrequested
+      transitions from: %i[opened ordered], to: :billrequested
     end
 
     event :paybill do
-        status = :billpaid
-        transitions from: [:billrequested], to: :billpaid
+      transitions from: [:billrequested], to: :billpaid
     end
 
     event :close do
-        status = :closed
-        transitions from: [:billpaid], to: :closed
+      transitions from: [:billpaid], to: :closed
     end
   end
 
@@ -36,14 +32,14 @@ class Ordr < ApplicationRecord
   has_many :ordritems, dependent: :destroy
   has_many :ordrparticipants, dependent: :destroy
   has_many :ordractions, dependent: :destroy
-  
+
   # IdentityCache configuration
   cache_index :id
   cache_index :restaurant_id
   cache_index :tablesetting_id
   cache_index :menu_id
   cache_index :employee_id
-  
+
   # Cache associations
   cache_belongs_to :restaurant
   cache_belongs_to :tablesetting
@@ -53,16 +49,16 @@ class Ordr < ApplicationRecord
   cache_has_many :ordrparticipants, embed: :ids
   cache_has_many :ordractions, embed: :ids
 
-  enum status: {
+  enum :status, {
     opened: 0,
     ordered: 20,
     delivered: 25,
     billrequested: 30,
-    closed: 40
+    closed: 40,
   }
 
   def grossInCents
-      gross * 100
+    gross * 100
   end
 
   def orderedItems
@@ -94,27 +90,22 @@ class Ordr < ApplicationRecord
   end
 
   def ordrDate
-      created_at.strftime("%d/%m/%Y")
+    created_at.strftime('%d/%m/%Y')
   end
 
   def diners
-    ordrparticipants.where(role: 0).distinct.pluck("sessionid").count
+    ordrparticipants.where(role: 0).distinct.pluck('sessionid').count
   end
 
   def runningTotal
-    ordritems.pluck("ordritemprice").sum
+    ordritems.pluck('ordritemprice').sum
   end
 
   def orderedCount
-      self.ordractions.joins(:ordritem).where(ordritems: { status: 20 }).count
+    ordractions.joins(:ordritem).where(ordritems: { status: 20 }).count
   end
 
   def addedCount
-      self.ordractions.joins(:ordritem).where(ordritems: { status: 0 }).count
+    ordractions.joins(:ordritem).where(ordritems: { status: 0 }).count
   end
-
-  validates :restaurant, :presence => true
-  validates :menu, :presence => true
-  validates :tablesetting, :presence => true
-
 end

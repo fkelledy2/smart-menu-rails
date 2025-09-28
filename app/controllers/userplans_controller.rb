@@ -1,5 +1,5 @@
 class UserplansController < ApplicationController
-  before_action :set_userplan, only: %i[ show edit update destroy ]
+  before_action :set_userplan, only: %i[show edit update destroy]
 
   # GET /userplans or /userplans.json
   def index
@@ -7,8 +7,7 @@ class UserplansController < ApplicationController
   end
 
   # GET /userplans/1 or /userplans/1.json
-  def show
-  end
+  def show; end
 
   # GET /userplans/new
   def new
@@ -26,10 +25,12 @@ class UserplansController < ApplicationController
 
     respond_to do |format|
       if @userplan.save
-        @user = User.where( id: @userplan.user.id).first
+        @user = User.where(id: @userplan.user.id).first
         @user.plan = @userplan.plan
         @user.save
-        format.html { redirect_to root_path, notice: t('common.flash.created', resource: t('activerecord.models.userplan')) }
+        format.html do
+          redirect_to root_path, notice: t('common.flash.created', resource: t('activerecord.models.userplan'))
+        end
         format.json { render :show, status: :created, location: @userplan }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -42,10 +43,12 @@ class UserplansController < ApplicationController
   def update
     respond_to do |format|
       if @userplan.update(userplan_params)
-        @user = User.where( id: @userplan.user.id).first
+        @user = User.where(id: @userplan.user.id).first
         @user.plan = @userplan.plan
         @user.save
-        format.html { redirect_to @userplan, notice: t('common.flash.updated', resource: t('activerecord.models.userplan')) }
+        format.html do
+          redirect_to @userplan, notice: t('common.flash.updated', resource: t('activerecord.models.userplan'))
+        end
         format.json { render :show, status: :ok, location: @userplan }
       else
         @plans = Plan.all
@@ -60,20 +63,24 @@ class UserplansController < ApplicationController
     @userplan.destroy!
 
     respond_to do |format|
-      format.html { redirect_to userplans_path, status: :see_other, notice: t('common.flash.deleted', resource: t('activerecord.models.userplan')) }
+      format.html do
+        redirect_to userplans_path, status: :see_other,
+                                    notice: t('common.flash.deleted', resource: t('activerecord.models.userplan'))
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_userplan
-      @userplan = Userplan.find(params[:id])
-      @plans = Plan.all
-    end
 
-    # Only allow a list of trusted parameters through.
-    def userplan_params
-      params.require(:userplan).permit(:user_id, :plan_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_userplan
+    @userplan = Userplan.find(params[:id])
+    @plans = Plan.all
+  end
+
+  # Only allow a list of trusted parameters through.
+  def userplan_params
+    params.require(:userplan).permit(:user_id, :plan_id)
+  end
 end

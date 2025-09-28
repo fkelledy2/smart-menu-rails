@@ -3,11 +3,11 @@ class ContactMailer < ApplicationMailer
 
   def notification(contact)
     @contact = contact
-    mail(to: "admin@mellow.menu", subject: "New Contact Form Submission")
+    mail(to: 'admin@mellow.menu', subject: 'New Contact Form Submission')
   end
 
   def receipt(contact)
     @contact = contact
-    mail(to: @contact.email, subject: "Mellow Menu: Thanks for connecting!")
+    mail(to: @contact.email, subject: 'Mellow Menu: Thanks for connecting!')
   end
 end

@@ -14,29 +14,29 @@ class PdfMenuProcessor
     @openai_client = openai_client
     @vision_client = vision_client
   end
-  
+
   def process
     return unless @ocr_menu_import.pdf_file.attached?
-    
+
     begin
       # Extract text from PDF (handles text-based and image-based PDFs)
       pdf_text = extract_text_from_pdf
-      
+
       # Parse menu structure using ChatGPT
       menu_data = parse_menu_with_chatgpt(pdf_text)
-      
+
       # Save parsed data to the database
       save_menu_structure(menu_data)
-      
+
       true
     rescue StandardError => e
       Rails.logger.error "Error in PdfMenuProcessor: #{e.message}\n#{e.backtrace.join("\n")}"
       raise ProcessingError, "Failed to process PDF: #{e.message}"
     end
   end
-  
+
   private
-  
+
   # Extract text from PDF with dual strategy:
   # 1) If the PDF contains selectable text, extract directly.
   # 2) Otherwise, render each page to an image and OCR it with Google Cloud Vision.
@@ -49,7 +49,7 @@ class PdfMenuProcessor
 
     begin
       # Download the PDF to a temp file
-      File.open(tempfile.path, 'wb') { |file| file.write(@ocr_menu_import.pdf_file.download) }
+      File.binwrite(tempfile.path, @ocr_menu_import.pdf_file.download)
       pdf_path = tempfile.path
 
       # First attempt: use PDF::Reader to see if the PDF has extractable text
@@ -59,7 +59,7 @@ class PdfMenuProcessor
 
       extracted_text = []
       empty_text_pages = 0
-      reader.pages.each_with_index do |page, idx|
+      reader.pages.each_with_index do |page, _idx|
         page_text = (page.text || '').to_s.strip
         if page_text.blank? || page_text.gsub(/\s+/, '').length < 10
           empty_text_pages += 1
@@ -94,47 +94,45 @@ class PdfMenuProcessor
       # Render each page to a PNG at good resolution for OCR
       # Using ImageMagick via MiniMagick. Requires ImageMagick installed.
       # Output filenames will be like page-0.png, page-1.png, ...
-       begin
+      begin
         MiniMagick::Tool::Convert.new do |convert|
           convert.density(300)
           convert << pdf_path
           convert.quality(90)
           convert << File.join(dir, 'page-%d.png')
         end
-      rescue => e
+      rescue StandardError => e
         Rails.logger.error "Error rendering PDF to images: #{e.message}"
         raise ProcessingError, "Failed to render PDF pages for OCR: #{e.message}"
       end
 
       # OCR each generated image file using Google Cloud Vision (injectable for tests)
-      image_annotator = (@vision_client || Google::Cloud::Vision.image_annotator)
+      image_annotator = @vision_client || Google::Cloud::Vision.image_annotator
       processed = 0
-      Dir[File.join(dir, 'page-*.png')].sort_by { |p|
+      Dir[File.join(dir, 'page-*.png')].sort_by do |p|
         p[/page-(\d+)\.png/, 1].to_i
-      }.each do |image_path|
-        begin
-          response = image_annotator.text_detection image: image_path
-          annotation = response.responses.first
-          page_text = annotation&.text_annotations&.first&.description.to_s
-          text_pages << page_text
-        rescue => e
-          Rails.logger.error "Error OCR'ing image #{image_path}: #{e.message}"
-          text_pages << ''
-        ensure
-          processed += 1
-          @ocr_menu_import.update!(processed_pages: [processed, total_pages].min)
-        end
+      end.each do |image_path|
+        response = image_annotator.text_detection image: image_path
+        annotation = response.responses.first
+        page_text = annotation&.text_annotations&.first&.description.to_s
+        text_pages << page_text
+      rescue StandardError => e
+        Rails.logger.error "Error OCR'ing image #{image_path}: #{e.message}"
+        text_pages << ''
+      ensure
+        processed += 1
+        @ocr_menu_import.update!(processed_pages: [processed, total_pages].min)
       end
     end
     text_pages
   end
-  
+
   # Ask OpenAI to parse the menu text into a structured JSON format.
   # Returns a Ruby Hash with keys like :sections => [ { name:, items: [ { name:, description:, price:, allergens: [] } ] } ]
   def parse_menu_with_chatgpt(text)
     # If no text was extracted from the PDF, return an empty structure to avoid unnecessary API calls
     if text.to_s.strip.blank?
-      Rails.logger.info "PdfMenuProcessor: No text extracted from PDF; returning empty menu structure"
+      Rails.logger.info 'PdfMenuProcessor: No text extracted from PDF; returning empty menu structure'
       return { sections: [] }
     end
     prompt = <<~PROMPT
@@ -192,7 +190,7 @@ class PdfMenuProcessor
       json_str = begin
         start_idx = normalized.index('{')
         end_idx = normalized.rindex('}')
-        (start_idx && end_idx && end_idx > start_idx) ? normalized[start_idx..end_idx] : nil
+        start_idx && end_idx && end_idx > start_idx ? normalized[start_idx..end_idx] : nil
       rescue StandardError
         nil
       end
@@ -218,24 +216,23 @@ class PdfMenuProcessor
 
     # Fallback when OpenAI key is not configured
     if api_key.blank?
-      Rails.logger.warn "PdfMenuProcessor: openai_api_key missing; using fallback empty menu structure"
+      Rails.logger.warn 'PdfMenuProcessor: openai_api_key missing; using fallback empty menu structure'
       return OpenStruct.new(parsed_response: {
         'choices' => [
-          { 'message' => { 'content' => { sections: [] }.to_json } }
-        ]
+          { 'message' => { 'content' => { sections: [] }.to_json } },
+        ],
       })
     end
 
-    model = (
-      Rails.application.credentials.dig(:openai, :model) ||
-      Rails.application.credentials.openai_model ||
-      ENV['OPENAI_MODEL'] ||
-      'gpt-3.5-turbo'
-    )
+    model = Rails.application.credentials.dig(:openai, :model) ||
+            Rails.application.credentials.openai_model ||
+            ENV['OPENAI_MODEL'] ||
+            'gpt-3.5-turbo'
     # Network robustness: timeouts and limited retries (OpenAI SDK)
     timeout_seconds = (ENV['OPENAI_TIMEOUT'] || 120).to_i
     attempts = 0
-    client = @openai_client || Rails.configuration.x.openai_client || OpenAI::Client.new(access_token: api_key, request_timeout: timeout_seconds)
+    client = @openai_client || Rails.configuration.x.openai_client || OpenAI::Client.new(access_token: api_key,
+                                                                                         request_timeout: timeout_seconds,)
     begin
       attempts += 1
       # Some models support response_format json_object; skip if it raises an error
@@ -244,8 +241,8 @@ class PdfMenuProcessor
         temperature: 0,
         messages: [
           { role: 'system', content: 'You are a helpful assistant that outputs only valid JSON.' },
-          { role: 'user', content: prompt }
-        ]
+          { role: 'user', content: prompt },
+        ],
       }
       begin
         parameters[:response_format] = { type: 'json_object' }
@@ -262,8 +259,8 @@ class PdfMenuProcessor
         Rails.logger.warn "PdfMenuProcessor: OpenAI request failed after retries due to network error: #{e.class} - #{e.message}; using fallback empty menu structure"
         return OpenStruct.new(parsed_response: {
           'choices' => [
-            { 'message' => { 'content' => { sections: [] }.to_json } }
-          ]
+            { 'message' => { 'content' => { sections: [] }.to_json } },
+          ],
         })
       end
     end
@@ -276,11 +273,11 @@ class PdfMenuProcessor
     end
 
     if content.blank?
-      Rails.logger.warn "PdfMenuProcessor: OpenAI returned empty/invalid response; using fallback empty menu structure"
+      Rails.logger.warn 'PdfMenuProcessor: OpenAI returned empty/invalid response; using fallback empty menu structure'
       return OpenStruct.new(parsed_response: {
         'choices' => [
-          { 'message' => { 'content' => { sections: [] }.to_json } }
-        ]
+          { 'message' => { 'content' => { sections: [] }.to_json } },
+        ],
       })
     end
 
@@ -294,9 +291,9 @@ class PdfMenuProcessor
           name: section_data[:name],
           description: section_data[:description],
           sequence: section_index + 1,
-          is_confirmed: false
+          is_confirmed: false,
         )
-        
+
         section_data[:items].each_with_index do |item_data, item_index|
           section.ocr_menu_items.create!(
             name: item_data[:name],
@@ -308,7 +305,7 @@ class PdfMenuProcessor
             is_gluten_free: item_data[:is_gluten_free] || false,
             is_dairy_free: item_data[:is_dairy_free] || false,
             sequence: item_index + 1,
-            is_confirmed: false
+            is_confirmed: false,
           )
         end
       end

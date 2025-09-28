@@ -1,1 +1,1 @@
-json.partial! "allergyns/allergyn", allergyn: @allergyn
+json.partial! 'allergyns/allergyn', allergyn: @allergyn

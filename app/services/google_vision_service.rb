@@ -16,7 +16,7 @@ class GoogleVisionService
   def detect_labels(max_results: 10)
     response = client.label_detection(
       image: image_source,
-      max_results: max_results
+      max_results: max_results,
     )
     process_response(response, :label_annotations)
   rescue Google::Cloud::Error => e
@@ -27,7 +27,7 @@ class GoogleVisionService
   def extract_text
     response = client.text_detection(image: image_source)
     texts = process_response(response, :text_annotations)
-    texts.first&.description || ""
+    texts.first&.description || ''
   rescue Google::Cloud::Error => e
     raise ApiError, "Failed to extract text: #{e.message}"
   end
@@ -44,7 +44,7 @@ class GoogleVisionService
   def detect_objects(max_results: 10)
     response = client.object_localization(
       image: image_source,
-      max_results: max_results
+      max_results: max_results,
     )
     process_response(response, :localized_object_annotations)
   rescue Google::Cloud::Error => e
@@ -69,23 +69,25 @@ class GoogleVisionService
 
   def image_source
     @image_source ||= if image_content.present?
-      image_content
-    elsif image_path.present?
-      { content: File.binread(image_path) }
-    else
-      raise ConfigurationError, "Either image_path or image_content must be provided"
-    end
+                        image_content
+                      elsif image_path.present?
+                        { content: File.binread(image_path) }
+                      else
+                        raise ConfigurationError, 'Either image_path or image_content must be provided'
+                      end
   end
 
   def validate_initialization
     return if image_path.present? || image_content.present?
-    raise ConfigurationError, "Either image_path or image_content must be provided"
+
+    raise ConfigurationError, 'Either image_path or image_content must be provided'
   end
 
   def process_response(response, key)
-    raise ApiError, "Empty response from Google Vision API" if response.responses.empty?
+    raise ApiError, 'Empty response from Google Vision API' if response.responses.empty?
+
     response.responses.flat_map(&key)
   rescue NoMethodError
-    raise ApiError, "Unexpected response format from Google Vision API"
+    raise ApiError, 'Unexpected response format from Google Vision API'
   end
 end

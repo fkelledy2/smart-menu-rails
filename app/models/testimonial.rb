@@ -1,10 +1,10 @@
 class Testimonial < ApplicationRecord
   include IdentityCache
-  
+
   # Enums
-  enum status: {
+  enum :status, {
     unapproved: 0,
-    approved: 1
+    approved: 1,
   }
 
   # Standard ActiveRecord associations
@@ -12,14 +12,12 @@ class Testimonial < ApplicationRecord
   belongs_to :restaurant
 
   # Validations
-  validates :user, presence: true
-  validates :restaurant, presence: true
-  
+
   # IdentityCache configuration
   cache_index :id
   cache_index :user_id
   cache_index :restaurant_id
-  
+
   # Cache associations
   cache_belongs_to :user
   cache_belongs_to :restaurant

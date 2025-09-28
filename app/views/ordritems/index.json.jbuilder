@@ -1,1 +1,1 @@
-json.array! @ordritems, partial: "ordritems/ordritem", as: :ordritem
+json.array! @ordritems, partial: 'ordritems/ordritem', as: :ordritem

@@ -1,1 +1,1 @@
-json.partial! "metrics/metric", metric: @metric
+json.partial! 'metrics/metric', metric: @metric

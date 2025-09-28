@@ -1,1 +1,1 @@
-json.partial! "ordractions/ordraction", ordraction: @ordraction
+json.partial! 'ordractions/ordraction', ordraction: @ordraction

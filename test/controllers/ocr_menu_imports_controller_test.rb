@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
   self.use_transactional_tests = false
@@ -18,7 +18,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
     @salmon = ocr_menu_items(:salmon)
   end
 
-  test "PATCH reorder_sections updates sequence correctly" do
+  test 'PATCH reorder_sections updates sequence correctly' do
     # Reverse order
     patch reorder_sections_restaurant_ocr_menu_import_path(@restaurant, @import, format: :json),
           params: { section_ids: [@mains.id, @starters.id] },
@@ -27,7 +27,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "PATCH reorder_items within section updates sequence correctly" do
+  test 'PATCH reorder_items within section updates sequence correctly' do
     # Reverse the items in starters
     patch reorder_items_restaurant_ocr_menu_import_path(@restaurant, @import, format: :json),
           params: { section_id: @starters.id, item_ids: [@calamari.id, @bruschetta.id] },
@@ -36,7 +36,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "PATCH reorder_items rejects items from other sections" do
+  test 'PATCH reorder_items rejects items from other sections' do
     # Try to mix an item from mains into starters reorder
     patch reorder_items_restaurant_ocr_menu_import_path(@restaurant, @import, format: :json),
           params: { section_id: @starters.id, item_ids: [@calamari.id, @carbonara.id] },
@@ -51,7 +51,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, @carbonara.sequence
   end
 
-  test "PATCH reorder_sections with empty list returns bad_request" do
+  test 'PATCH reorder_sections with empty list returns bad_request' do
     patch reorder_sections_restaurant_ocr_menu_import_path(@restaurant, @import, format: :json),
           params: { section_ids: [] },
           as: :json
@@ -60,7 +60,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "PATCH reorder_items with missing params returns bad_request" do
+  test 'PATCH reorder_items with missing params returns bad_request' do
     # Capture original order for starters
     original_ids = @starters.ocr_menu_items.ordered.pluck(:id)
 

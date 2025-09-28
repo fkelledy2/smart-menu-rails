@@ -1,1 +1,1 @@
-json.partial! "tablesettings/tablesetting", tablesetting: @tablesetting
+json.partial! 'tablesettings/tablesetting', tablesetting: @tablesetting

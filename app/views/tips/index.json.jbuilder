@@ -1,1 +1,1 @@
-json.array! @tips, partial: "tips/tip", as: :tip
+json.array! @tips, partial: 'tips/tip', as: :tip

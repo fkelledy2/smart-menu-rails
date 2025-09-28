@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class OrdrChannelTest < ActionCable::Channel::TestCase
   # test "subscribes" do

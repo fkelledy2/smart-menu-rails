@@ -1,1 +1,1 @@
-json.array! @testimonials, partial: "testimonials/testimonial", as: :testimonial
+json.array! @testimonials, partial: 'testimonials/testimonial', as: :testimonial

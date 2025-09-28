@@ -1,1 +1,1 @@
-json.array! @ordritemnotes, partial: "ordritemnotes/ordritemnote", as: :ordritemnote
+json.array! @ordritemnotes, partial: 'ordritemnotes/ordritemnote', as: :ordritemnote

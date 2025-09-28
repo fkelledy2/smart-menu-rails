@@ -1,1 +1,1 @@
-json.partial! "smartmenus/smartmenu", smartmenu: @smartmenu
+json.partial! 'smartmenus/smartmenu', smartmenu: @smartmenu

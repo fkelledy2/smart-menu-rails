@@ -2,16 +2,16 @@ class OcrMenuSection < ApplicationRecord
   # Associations
   belongs_to :ocr_menu_import
   belongs_to :menu_section, optional: true
-  belongs_to :menusection, class_name: 'Menusection', foreign_key: :menusection_id, optional: true
+  belongs_to :menusection, class_name: 'Menusection', optional: true
   has_many :ocr_menu_items, dependent: :destroy
-  
+
   # Backward compatibility: some tests refer to `position`
   alias_attribute :position, :sequence
-  
+
   # Validations
   validates :name, presence: true
   validates :sequence, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  
+
   # Callbacks
   before_validation :set_default_sequence, on: :create
 
@@ -19,7 +19,7 @@ class OcrMenuSection < ApplicationRecord
   scope :ordered, -> { order(sequence: :asc) }
   scope :confirmed, -> { where(is_confirmed: true) }
   scope :pending_confirmation, -> { where(is_confirmed: false) }
-  
+
   # Instance methods
   def confirm!
     transaction do
@@ -28,16 +28,16 @@ class OcrMenuSection < ApplicationRecord
       ocr_menu_items.update_all(is_confirmed: true)
     end
   end
-  
+
   def unconfirm!
     update!(is_confirmed: false)
   end
-  
+
   # Backward-compatible predicate expected by some tests
   def confirmed?
     is_confirmed?
   end
-  
+
   def to_s
     "#{sequence}. #{name}"
   end
@@ -59,6 +59,7 @@ class OcrMenuSection < ApplicationRecord
 
   def set_default_sequence
     return if sequence.present?
+
     self.sequence = (ocr_menu_import&.ocr_menu_sections&.maximum(:sequence) || 0) + 1
   end
 end

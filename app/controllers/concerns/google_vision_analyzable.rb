@@ -12,10 +12,10 @@ module GoogleVisionAnalyzable
   # @param image_content [String] Raw image content as a string
   # @param features [Array<Symbol>] Features to detect (e.g., [:labels, :text, :web, :objects, :landmarks])
   # @return [Hash] Analysis results
-  def analyze_image(image_path: nil, image_content: nil, features: [:labels, :text])
+  def analyze_image(image_path: nil, image_content: nil, features: %i[labels text])
     vision_service = GoogleVisionService.new(
       image_path: image_path,
-      image_content: image_content
+      image_content: image_content,
     )
 
     results = {}
@@ -40,7 +40,7 @@ module GoogleVisionAnalyzable
   def handle_vision_error(exception)
     Rails.logger.error("Google Vision Error: #{exception.message}")
     Rails.logger.error(exception.backtrace.join("\n"))
-    
+
     error_message = case exception
                     when GoogleVisionService::ConfigurationError
                       "Configuration error: #{exception.message}"
@@ -49,7 +49,7 @@ module GoogleVisionAnalyzable
                     else
                       "Error processing image: #{exception.message}"
                     end
-    
+
     render json: { error: error_message }, status: :unprocessable_entity
   end
 end

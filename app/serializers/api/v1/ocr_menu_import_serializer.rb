@@ -20,13 +20,13 @@ module Api
           created_at: @import.created_at&.iso8601,
           updated_at: @import.updated_at&.iso8601,
           restaurant_id: @import.restaurant_id,
-          menu_id: @import.menu_id
+          menu_id: @import.menu_id,
         }
 
         if @include_sections
           result[:sections] = OcrMenuSectionSerializer.collection(
-            @import.ocr_menu_sections.ordered, 
-            include_items: @include_items
+            @import.ocr_menu_sections.ordered,
+            include_items: @include_items,
           )
         end
 

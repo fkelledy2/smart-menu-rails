@@ -1,19 +1,19 @@
 class Tablesetting < ApplicationRecord
   include IdentityCache
-  
+
   # Standard ActiveRecord associations
   belongs_to :restaurant
-  
+
   # Enums
-  enum status: {
+  enum :status, {
     free: 0,
     occupied: 1,
-    archived: 2
+    archived: 2,
   }
 
-  enum tabletype: {
+  enum :tabletype, {
     indoor: 1,
-    outdoor: 2
+    outdoor: 2,
   }
 
   # Validations
@@ -21,12 +21,11 @@ class Tablesetting < ApplicationRecord
   validates :name, presence: true
   validates :capacity, presence: true, numericality: { only_integer: true }
   validates :status, presence: true
-  validates :restaurant, presence: true
-  
+
   # IdentityCache configuration
   cache_index :id
   cache_index :restaurant_id
-  
+
   # Cache associations
   cache_belongs_to :restaurant
 end

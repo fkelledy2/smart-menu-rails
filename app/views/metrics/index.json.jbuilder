@@ -1,1 +1,1 @@
-json.array! @metrics, partial: "metrics/metric", as: :metric
+json.array! @metrics, partial: 'metrics/metric', as: :metric

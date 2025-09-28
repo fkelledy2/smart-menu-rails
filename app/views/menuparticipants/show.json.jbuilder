@@ -1,1 +1,1 @@
-json.partial! "menuparticipants/menuparticipant", menuparticipant: @menuparticipant
+json.partial! 'menuparticipants/menuparticipant', menuparticipant: @menuparticipant

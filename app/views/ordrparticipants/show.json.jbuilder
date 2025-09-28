@@ -1,1 +1,1 @@
-json.partial! "ordrparticipants/ordrparticipant", ordrparticipant: @ordrparticipant
+json.partial! 'ordrparticipants/ordrparticipant', ordrparticipant: @ordrparticipant

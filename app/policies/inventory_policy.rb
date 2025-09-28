@@ -22,7 +22,7 @@ class InventoryPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.joins(menuitem: { menusection: { menu: :restaurant } })
-           .where(restaurants: { user_id: user.id })
+        .where(restaurants: { user_id: user.id })
     end
   end
 
@@ -30,6 +30,7 @@ class InventoryPolicy < ApplicationPolicy
 
   def owner?
     return false unless user && record.respond_to?(:menuitem)
+
     record.menuitem&.menusection&.menu&.restaurant&.user_id == user.id
   end
 end

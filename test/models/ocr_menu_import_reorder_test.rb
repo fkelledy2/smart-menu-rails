@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class OcrMenuImportReorderTest < ActiveSupport::TestCase
   setup do
@@ -10,7 +10,7 @@ class OcrMenuImportReorderTest < ActiveSupport::TestCase
     @calamari = ocr_menu_items(:calamari)
   end
 
-  test "reorder_sections! updates sequence and ordered scope" do
+  test 'reorder_sections! updates sequence and ordered scope' do
     assert_equal [@starters.id, @mains.id], @import.ocr_menu_sections.ordered.pluck(:id)
 
     @import.reorder_sections!([@mains.id, @starters.id])
@@ -20,7 +20,7 @@ class OcrMenuImportReorderTest < ActiveSupport::TestCase
     assert_equal 1, @mains.reload.sequence
   end
 
-  test "reorder_items! updates sequence within section only" do
+  test 'reorder_items! updates sequence within section only' do
     section = @starters
     assert_equal [@bruschetta.id, @calamari.id], section.ocr_menu_items.ordered.pluck(:id)
 
@@ -31,7 +31,7 @@ class OcrMenuImportReorderTest < ActiveSupport::TestCase
     assert_equal 1, @calamari.reload.sequence
   end
 
-  test "reorder_items! raises when mixing items from other sections" do
+  test 'reorder_items! raises when mixing items from other sections' do
     other_item = ocr_menu_items(:carbonara)
 
     assert_raises ActiveRecord::RecordInvalid do
