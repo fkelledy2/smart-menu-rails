@@ -1,3 +1,5 @@
+en:
+  menuitems:
     index:
       menuItems: "Menu Items"
       menuItem: "Menu Item"
@@ -7,8 +9,6 @@
     show:
       menuItem: "Menu Item"
       selectMenuSection: "Select Menu Section"
-en:
-  menuitems:
     controller:
       created: "Menu item was successfully created."
       updated: "Menu item was successfully updated."

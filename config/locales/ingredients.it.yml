@@ -1,6 +1,7 @@
+---
 it:
   ingredients:
     controller:
-      created: "Ingrediente creato con successo."
-      updated: "Ingrediente aggiornato con successo."
-      deleted: "Ingrediente eliminato con successo."
+      created: Ingrediente creato con successo.
+      deleted: Ingrediente eliminato con successo.
+      updated: Ingrediente aggiornato con successo.

@@ -1,25 +1,26 @@
+---
 it:
   testimonials:
     controller:
-      created: "Testimonianza creata con successo."
-      updated: "Testimonianza aggiornata con successo."
-      deleted: "Testimonianza eliminata con successo."
-    index:
-      testimonials: "Testimonianze"
-      actions: "Azioni"
-      approve: "Approva"
-      unapprove: "Revoca approvazione"
-    new:
-      title: "Nuova testimonianza"
-      cancel: "Annulla"
+      created: Testimonianza creata con successo.
+      deleted: Testimonianza eliminata con successo.
+      updated: Testimonianza aggiornata con successo.
     edit:
-      title: "Modifica testimonianza"
+      title: Modifica testimonianza
     form:
-      destroy: "Elimina"
-      sure: "Sei sicuro?"
-      save: "Salva"
-      cancel: "Annulla"
+      cancel: Annulla
+      destroy: Elimina
+      save: Salva
+      sure: Sei sicuro?
+    index:
+      actions: Azioni
+      approve: Approva
+      testimonials: Testimonianze
+      unapprove: Revoca approvazione
+    new:
+      cancel: Annulla
+      title: Nuova testimonianza
     testimonial:
-      testimonial: "Testimonianza:"
-      user: "Utente:"
-      restaurant: "Ristorante:"
+      restaurant: 'Ristorante:'
+      testimonial: 'Testimonianza:'
+      user: 'Utente:'

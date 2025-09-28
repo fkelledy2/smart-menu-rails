@@ -1,25 +1,26 @@
+---
 it:
   tags:
     controller:
-      created: "Tag creato con successo."
-      updated: "Tag aggiornato con successo."
-      deleted: "Tag eliminato con successo."
-    index:
-      tags: "Tag"
-      tag: "Tag"
-    new:
-      title: "Nuovo Tag"
-      cancel: "Annulla"
+      created: Tag creato con successo.
+      deleted: Tag eliminato con successo.
+      updated: Tag aggiornato con successo.
     edit:
-      title: "Modifica Tag"
-    show:
-      show_tag: "Dettagli Tag"
-    tag:
-      name: "Nome:"
-      description: "Descrizione:"
-      menuitem: "Voce di menu:"
+      title: Modifica Tag
     form:
-      delete: "Elimina"
-      sure: "Sei sicuro?"
-      save: "Salva"
-      errors: "Errori"
+      delete: Elimina
+      errors: Errori
+      save: Salva
+      sure: Sei sicuro?
+    index:
+      tag: Tag
+      tags: Tag
+    new:
+      cancel: Annulla
+      title: Nuovo Tag
+    show:
+      show_tag: Dettagli Tag
+    tag:
+      description: 'Descrizione:'
+      menuitem: 'Voce di menu:'
+      name: 'Nome:'

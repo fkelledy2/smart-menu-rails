@@ -1,6 +1,19 @@
+---
 it:
   tips:
     controller:
-      created: "Mancia creata con successo."
-      updated: "Mancia aggiornata con successo."
-      deleted: "Mancia eliminata con successo."
+      created: Mancia creata con successo.
+      deleted: Mancia eliminata con successo.
+      updated: Mancia aggiornata con successo.
+    index:
+      tips: "Mance"
+    new:
+      tip: "Mancia"
+    show:
+      tip: "Mancia"
+    edit:
+      tip: "Mancia"
+    form:
+      save: "Salva"
+      delete: "Elimina"
+      sure: "Sei sicuro?"

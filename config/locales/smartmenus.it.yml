@@ -1,88 +1,89 @@
+---
 it:
   smartmenus:
     controller:
-      created: "Smartmenu creato con successo."
-      updated: "Smartmenu aggiornato con successo."
-      deleted: "Smartmenu eliminato con successo."
-    showMenuContentCustomer:
-      search_placeholder: "Cerca articoli del menu..."
-    showModals:
-      startOrder: "Inizia ordine"
-      cancel: "Annulla"
-      start: "Avvia"
-      addToOrder: "Aggiungi all'ordine"
-      order_aria: "Ordine"
-      tip_options: "Opzioni mancia"
-      filterAllergyns: "Filtra allergeni"
-      noneAll: "Nessuno / Tutti"
-      filterBy: "Filtra"
-      yourOrder: "Il tuo ordine"
-      price: "Prezzo"
-      selected: "Selezionati"
-      submitted: "Inviati"
-      item: "Articolo"
-      cover_charge: "Coperto"
-      nett: "Netto"
-      service: "Servizio"
-      tax: "Tassa"
-      total: "Totale"
-      excluding_tip: "escl. mancia"
-      including_tip: "incl. mancia"
-      requestBill: "Richiedi conto"
-      payBill: "Paga conto"
-      confirmPayment: "Conferma pagamento"
-      payment_link: "Link di pagamento"
-      bill_prefix: "Conto:"
-      customiseOrderWithName: "Aggiungi il tuo nome all'ordine"
-      add: "Aggiungi"
-      name_label: "Nome:"
-      submit: "Invia"
-    orderCustomer:
-      order: "Ordine"
-      bill: "Conto"
-      staffAlerted: "Personale avvisato"
-      startOrder: "Inizia ordine"
-      items_in_cart: "articoli nel carrello"
-    showTableLocaleSelectorStaff:
-      table: "Tavolo"
-    showTableLocaleSelectorCustomer:
-      table: "Tavolo"
-    showMenuitemHorizontalActionBar:
-      allergyns: "Allergeni"
-      order: "Ordine"
-      toggle_dropdown: "Apri/Chiudi menu"
-    showMenuitemHorizontal:
-      loading: "Caricamento..."
+      created: Smartmenu creato con successo.
+      deleted: Smartmenu eliminato con successo.
+      updated: Smartmenu aggiornato con successo.
     edit:
-      title: "Modifica Smartmenu"
-    new:
-      title: "Nuovo Smartmenu"
+      title: Modifica Smartmenu
     form:
-      destroy: "Elimina"
-      sure: "Sei sicuro?"
-      save: "Salva"
-      cancel: "Annulla"
-    smartmenu:
-      slug: "Slug:"
-      restaurant: "Ristorante:"
-      menu: "Menu:"
-      tablesetting: "Tavolo:"
-    showAllergyns:
-      allergyns: "Allergeni"
-    showMenuBanner:
-      allergyns: "Allergeni"
-    showMenuitem:
-      loading: "Caricamento..."
-      allergyns: "Allergeni"
-      add_to_order: "Aggiungi all'ordine"
+      cancel: Annulla
+      destroy: Elimina
+      save: Salva
+      sure: Sei sicuro?
     index:
-      smartmenus: "Smartmenu"
+      smartmenus: Smartmenu
+    new:
+      title: Nuovo Smartmenu
+    orderCustomer:
+      bill: Conto
+      items_in_cart: articoli nel carrello
+      order: Ordine
+      staffAlerted: Personale avvisato
+      startOrder: Inizia ordine
     orderStaff:
-      items_in_cart: "articoli nel carrello"
-      bill: "Conto"
-      order: "Ordine"
-      startOrder: "Inizia ordine"
-      takePayment: "Incassa pagamento"
+      bill: Conto
+      items_in_cart: articoli nel carrello
+      order: Ordine
+      startOrder: Inizia ordine
+      takePayment: Incassa pagamento
+    showAllergyns:
+      allergyns: Allergeni
     showCoverCharge:
-      covercharge: "Coperto"
-      coverchargeUnit: "Unità coperto"
+      covercharge: Coperto
+      coverchargeUnit: Unità coperto
+    showMenuBanner:
+      allergyns: Allergeni
+    showMenuContentCustomer:
+      search_placeholder: Cerca articoli del menu...
+    showMenuitem:
+      add_to_order: Aggiungi all'ordine
+      allergyns: Allergeni
+      loading: Caricamento...
+    showMenuitemHorizontal:
+      loading: Caricamento...
+    showMenuitemHorizontalActionBar:
+      allergyns: Allergeni
+      order: Ordine
+      toggle_dropdown: Apri/Chiudi menu
+    showModals:
+      add: Aggiungi
+      addToOrder: Aggiungi all'ordine
+      bill_prefix: 'Conto:'
+      cancel: Annulla
+      confirmPayment: Conferma pagamento
+      cover_charge: Coperto
+      customiseOrderWithName: Aggiungi il tuo nome all'ordine
+      excluding_tip: escl. mancia
+      filterAllergyns: Filtra allergeni
+      filterBy: Filtra
+      including_tip: incl. mancia
+      item: Articolo
+      name_label: 'Nome:'
+      nett: Netto
+      noneAll: Nessuno / Tutti
+      order_aria: Ordine
+      payBill: Paga conto
+      payment_link: Link di pagamento
+      price: Prezzo
+      requestBill: Richiedi conto
+      selected: Selezionati
+      service: Servizio
+      start: Avvia
+      startOrder: Inizia ordine
+      submit: Invia
+      submitted: Inviati
+      tax: Tassa
+      tip_options: Opzioni mancia
+      total: Totale
+      yourOrder: Il tuo ordine
+    showTableLocaleSelectorCustomer:
+      table: Tavolo
+    showTableLocaleSelectorStaff:
+      table: Tavolo
+    smartmenu:
+      menu: 'Menu:'
+      restaurant: 'Ristorante:'
+      slug: 'Slug:'
+      tablesetting: 'Tavolo:'

@@ -1,101 +1,114 @@
+---
 en:
   restaurants:
-    index:
-      restaurants: "Restaurants"
-    new:
-      restaurants: "Restaurants"
-      restaurant: "Restaurant"
-    edit:
-      restaurantTab: "Restaurant"
-      menuTab: "Menus"
-      tableTab: "Tables"
-      smartQRTab: "SmartQRs"
-      employeesTab: "Employees"
-      localesTab: "Locales"
-      openingsTab: "Opening Hours"
-      taxesTab: "Taxes"
-      tipsTab: "Tips"
-      sizesTab: "Sizes"
-      ordersTab: "Orders"
-      tracksTab: "Tracks"
     controller:
-      created: "Restaurant was successfully created."
-      updated: "Restaurant was successfully updated."
-      archived: "Restaurant was successfully archived."
-    restaurant:
-      name: "Name:"
-      description: "Description:"
-      address1: "Address1:"
-      address2: "Address2:"
-      state: "State:"
-      city: "City:"
-      postcode: "Postcode:"
-      country: "Country:"
-      image: "Image:"
-      status: "Status:"
-      capacity: "Capacity:"
-      user: "User:"
+      archived: Restaurant was successfully archived.
+      created: Restaurant was successfully created.
+      updated: Restaurant was successfully updated.
+    edit:
+      allergynsTab: Allergens
+      employeesTab: Employees
+      localesTab: Locales
+      menuTab: Menus
+      openingsTab: Opening Hours
+      ordersTab: Orders
+      restaurantTab: Restaurant
+      sizesTab: Sizes
+      smartQRTab: SmartQRs
+      tableTab: Tables
+      taxesTab: Taxes
+      tipsTab: Tips
+      tracksTab: Tracks
     form:
-      details: "Details"
-      address: "Address"
-      imageSettings: "Image Settings"
-      settings: "Settings"
-      music: "Music"
-      spotify: "Spotify"
-      wifi: "WiFi"
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
-      image_style_profile_label: "Image style profile"
-      image_style_profile_placeholder: "e.g., Realistic studio food photography; shallow depth of field; soft natural light; matte stoneware; rustic wooden table; minimal props"
-      image_style_profile_hint: "Used to keep all generated menu item images consistent across this restaurant."
-      connect: "Connect"
+      address: Address
+      connect: Connect
+      delete: Delete
+      details: Details
+      imageSettings: Image Settings
+      image_style_profile_hint: Used to keep all generated menu item images consistent
+        across this restaurant.
+      image_style_profile_label: Image style profile
+      image_style_profile_placeholder: e.g., Realistic studio food photography; shallow
+        depth of field; soft natural light; matte stoneware; rustic wooden table;
+        minimal props
+      music: Music
+      save: Save
+      settings: Settings
+      spotify: Spotify
+      sure: Are you sure?
+      wifi: WiFi
+    index:
+      restaurants: Restaurants
+    new:
+      restaurant: Restaurant
+      restaurants: Restaurants
+    restaurant:
+      address1: 'Address1:'
+      address2: 'Address2:'
+      capacity: 'Capacity:'
+      city: 'City:'
+      country: 'Country:'
+      description: 'Description:'
+      image: 'Image:'
+      name: 'Name:'
+      postcode: 'Postcode:'
+      state: 'State:'
+      status: 'Status:'
+      user: 'User:'
     show:
-      tab_restaurant: "Restaurant"
-      tab_menus: "Menus"
-      tab_employees: "Employees"
-      tab_tables: "Tables"
-      tab_tips: "Tips"
-      tab_taxes: "Taxes"
-      tab_openinghours: "Opening Hours"
-      tab_billing: "Billing"
-      details: "Details"
-      address: "Address"
-      imageSettings: "Image Settings"
-      settings: "Settings"
-      switch_on: "on"
-      switch_off: "off"
-      billing_content: "Billing configuration will appear here."
-    showSmartMenus:
-      wifi: "WiFi"
-      scan_to_join: "Scan to Join"
-      smartQRs: "SmartQRs"
-    showTrack:
-      loading: "Loading..."
-    showTips:
-      tips: "Tips"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    showOpeningHours:
-      openings: "Opening Hours"
-      actions: "Actions"
-      activate: "Activate"
-      deactivate: "Deactivate"
+      address: Address
+      billing_content: Billing configuration will appear here.
+      details: Details
+      imageSettings: Image Settings
+      settings: Settings
+      switch_off: 'off'
+      switch_on: 'on'
+      tab_billing: Billing
+      tab_employees: Employees
+      tab_menus: Menus
+      tab_openinghours: Opening Hours
+      tab_restaurant: Restaurant
+      tab_tables: Tables
+      tab_taxes: Taxes
+      tab_tips: Tips
     showLocales:
-      menus: "Menus"
-      actions: "Actions"
-      activate: "Activate"
-      default: "Default"
-      deactivate: "Deactivate"
-      delete: "Delete"
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      default: Default
+      delete: Delete
+      menus: Menus
+    showAllergyns:
+      allergyns: "Allergens"
+    showEmployees:
+      employees: "Employees"
     showMenus:
-      add_new_menu: "Add New Menu"
-      import_menu_from_pdf: "Import Menu from PDF"
-      menus: "Menus"
+      add_new_menu: Add New Menu
+      import_menu_from_pdf: Import Menu from PDF
+      menus: Menus
+    showOrdrs:
+      ordrs: "Orders"
+    showSizes:
+      sizes: "Sizes"
+    showOpeningHours:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      openings: Opening Hours
+    showSmartMenus:
+      scan_to_join: Scan to Join
+      smartQRs: SmartQRs
+      wifi: WiFi
     showTableSettings:
-      tableSettings: "Table Settings"
+      tableSettings: Table Settings
     showTaxes:
-      taxes: "Taxes"
+      taxes: Taxes
+    showTips:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      tips: Tips
+    showTrack:
+      loading: Loading...
     showTracks:
-      tracks: "Tracks"
+      tracks: Tracks

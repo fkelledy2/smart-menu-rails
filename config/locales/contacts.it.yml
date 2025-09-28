@@ -1,4 +1,5 @@
+---
 it:
   contacts:
     controller:
-      thanks: "Grazie per il tuo messaggio! Ti risponderemo al più presto."
+      thanks: Grazie per il tuo messaggio! Ti risponderemo al più presto.

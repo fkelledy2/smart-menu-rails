@@ -1,24 +1,25 @@
+---
 it:
   sizes:
     controller:
-      created: "Taglia creata con successo."
-      updated: "Taglia aggiornata con successo."
-      deleted: "Taglia eliminata con successo."
-    index:
-      sizes: "Taglie"
-      size: "Taglia"
-    new:
-      size: "Taglia"
+      created: Taglia creata con successo.
+      deleted: Taglia eliminata con successo.
+      updated: Taglia aggiornata con successo.
     edit:
-      size: "Taglia"
-    show:
-      size: "Taglia"
-    size:
-      size: "Taglia:"
-      name: "Nome:"
-      description: "Descrizione:"
+      size: Taglia
     form:
-      delete: "Elimina"
-      sure: "Sei sicuro?"
-      save: "Salva"
-      errors: "Errori"
+      delete: Elimina
+      errors: Errori
+      save: Salva
+      sure: Sei sicuro?
+    index:
+      size: Taglia
+      sizes: Taglie
+    new:
+      size: Taglia
+    show:
+      size: Taglia
+    size:
+      description: 'Descrizione:'
+      name: 'Nome:'
+      size: 'Taglia:'

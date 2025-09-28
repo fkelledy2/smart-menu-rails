@@ -1,19 +1,20 @@
+---
 en:
   shared:
-    navbar:
-      impersonated_as: "You're logged in as"
-      restaurants: "Restaurants"
-      settings: "Settings"
-      billing: "Billing"
-      testimonials: "Testimonials"
-      adminArea: "Admin"
-      logout: "Logout"
-      signUp: "Sign up"
-      login: "Log in"
     footer:
-      terms: "Terms"
-      privacy: "Privacy"
-      facebook: "Facebook"
-      instagram: "Instagram"
-      twitter: "Twitter"
-      linkedin: "LinkedIn"
+      facebook: Facebook
+      instagram: Instagram
+      linkedin: LinkedIn
+      privacy: Privacy
+      terms: Terms
+      twitter: Twitter
+    navbar:
+      adminArea: Admin
+      billing: Billing
+      impersonated_as: You're logged in as
+      login: Log in
+      logout: Logout
+      restaurants: Restaurants
+      settings: Settings
+      signUp: Sign up
+      testimonials: Testimonials

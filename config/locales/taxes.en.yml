@@ -1,26 +1,27 @@
+---
 en:
   taxes:
     controller:
-      created: "Tax was successfully created."
-      updated: "Tax was successfully updated."
-      deleted: "Tax was successfully deleted."
-    index:
-      taxes: "Taxes"
-      tax: "Tax"
-    new:
-      tax: "Tax"
+      created: Tax was successfully created.
+      deleted: Tax was successfully deleted.
+      updated: Tax was successfully updated.
     edit:
-      tax: "Tax"
-    show:
-      tax: "Tax"
-      selectRestaurant: "Select a restaurant"
-    tax:
-      name: "Name:"
-      taxtype: "Tax type:"
-      taxpercentage: "Tax percentage:"
-      restaurant: "Restaurant:"
+      tax: Tax
     form:
-      delete: "Delete"
-      sure: "Are you sure?"
-      save: "Save"
-      errors: "Errors"
+      delete: Delete
+      errors: Errors
+      save: Save
+      sure: Are you sure?
+    index:
+      tax: Tax
+      taxes: Taxes
+    new:
+      tax: Tax
+    show:
+      selectRestaurant: Select a restaurant
+      tax: Tax
+    tax:
+      name: 'Name:'
+      restaurant: 'Restaurant:'
+      taxpercentage: 'Tax percentage:'
+      taxtype: 'Tax type:'

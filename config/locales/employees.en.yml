@@ -1,31 +1,32 @@
+---
 en:
   employees:
     controller:
-      created: "Employee was successfully created."
-      updated: "Employee was successfully updated."
-      deleted: "Employee was successfully deleted."
-    index:
-      employees: "Employees"
-      employee: "Employee"
-      activate: "Activate"
-      deactivate: "Deactivate"
-    new:
-      employee: "Employee"
+      created: Employee was successfully created.
+      deleted: Employee was successfully deleted.
+      updated: Employee was successfully updated.
     edit:
-      employee: "Employee"
-    show:
-      employee: "Employee"
-      selectUser: "Select a user"
-      selectRestaurant: "Select a restaurant"
+      employee: Employee
     employee:
-      name: "Name:"
-      eid: "Employee ID:"
-      image: "Image:"
-      status: "Status:"
-      restaurant: "Restaurant:"
+      eid: 'Employee ID:'
+      image: 'Image:'
+      name: 'Name:'
+      restaurant: 'Restaurant:'
+      status: 'Status:'
     form:
-      delete: "Delete"
-      sure: "Are you sure?"
-      save: "Save"
-      errors: "Errors"
-      selectUser: "Select a user"
+      delete: Delete
+      errors: Errors
+      save: Save
+      selectUser: Select a user
+      sure: Are you sure?
+    index:
+      activate: Activate
+      deactivate: Deactivate
+      employee: Employee
+      employees: Employees
+    new:
+      employee: Employee
+    show:
+      employee: Employee
+      selectRestaurant: Select a restaurant
+      selectUser: Select a user

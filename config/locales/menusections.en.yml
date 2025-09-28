@@ -1,9 +1,37 @@
+---
 en:
   menusections:
+    edit:
+      inventories: Inventories
+      items: Items
+      section: Section
+    form:
+      delete: Delete
+      details: Details
+      imageSettings: Image Settings
+      save: Save
+      selectMenu: Select Menu
+      settings: Settings
+      sure: Are you sure?
+    index:
+      menuSection: Menu Section
+      menuSections: Menu Sections
     menusection:
-      name: "Name:"
-      description: "Description:"
-      image: "Image:"
-      status: "Status:"
-      sequence: "Sequence:"
-      menu: "Menu:"
+      description: 'Description:'
+      image: 'Image:'
+      menu: 'Menu:'
+      name: 'Name:'
+      sequence: 'Sequence:'
+      status: 'Status:'
+    new:
+      cancel: Cancel
+      menuSection: Menu Section
+    show:
+      menuSection: Menu Section
+      selectMenu: Select Menu
+    showInventories:
+      inventories: Inventories
+      reset: Reset
+    showMenuitems:
+      genimage: Generate Image
+      menuItems: Menu Items

@@ -1,20 +1,21 @@
+---
 it:
   restaurantavailabilities:
     controller:
-      created: "Disponibilità ristorante creata con successo."
-      updated: "Disponibilità ristorante aggiornata con successo."
-      deleted: "Disponibilità ristorante eliminata con successo."
-    show:
-      restaurantavailability: "Disponibilità ristorante"
-      selectRestaurant: "Seleziona ristorante"
+      created: Disponibilità ristorante creata con successo.
+      deleted: Disponibilità ristorante eliminata con successo.
+      updated: Disponibilità ristorante aggiornata con successo.
     edit:
-      restaurantavailability: "Disponibilità ristorante"
-    index:
-      restaurantavailabilities: "Disponibilità ristorante"
-      restaurantavailability: "Disponibilità ristorante"
-    new:
-      restaurantavailability: "Disponibilità ristorante"
+      restaurantavailability: Disponibilità ristorante
     form:
-      save: "Salva"
-      delete: "Elimina"
-      sure: "Sei sicuro?"
+      delete: Elimina
+      save: Salva
+      sure: Sei sicuro?
+    index:
+      restaurantavailabilities: Disponibilità ristorante
+      restaurantavailability: Disponibilità ristorante
+    new:
+      restaurantavailability: Disponibilità ristorante
+    show:
+      restaurantavailability: Disponibilità ristorante
+      selectRestaurant: Seleziona ristorante

@@ -1,3 +1,5 @@
+it:
+  menuitems:
     index:
       menuItems: "Voci di menu"
       menuItem: "Voce di menu"
@@ -7,8 +9,6 @@
     show:
       menuItem: "Voce di menu"
       selectMenuSection: "Seleziona sezione menu"
-it:
-  menuitems:
     controller:
       created: "Voce di menu creata con successo."
       updated: "Voce di menu aggiornata con successo."

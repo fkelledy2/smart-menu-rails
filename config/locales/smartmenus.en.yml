@@ -1,83 +1,89 @@
+---
 en:
   smartmenus:
-    index:
-      smartmenus: "Smartmenus"
-    showCoverCharge:
-      covercharge: "Cover Charge"
-      coverchargeUnit: "Cover Charge Unit"
     controller:
-      created: "Smartmenu was successfully created."
-      updated: "Smartmenu was successfully updated."
-      deleted: "Smartmenu was successfully deleted."
-    showMenuContentCustomer:
-      search_placeholder: "Search menu items..."
-    showModals:
-      startOrder: "Start Order"
-      cancel: "Cancel"
-      start: "Start"
-      addToOrder: "Add to Order"
-      order_aria: "Order"
-      tip_options: "Tip Options"
-      filterAllergyns: "Filter Allergens"
-      noneAll: "None / All"
-      filterBy: "Filter"
-      yourOrder: "Your Order"
-      price: "Price"
-      selected: "Selected"
-      submitted: "Submitted"
-      item: "Item"
-      cover_charge: "Cover Charge"
-      nett: "Nett"
-      service: "Service"
-      tax: "Tax"
-      total: "Total"
-      excluding_tip: "excl. tip"
-      including_tip: "incl. tip"
-      requestBill: "Request Bill"
-      payBill: "Pay Bill"
-      confirmPayment: "Confirm Payment"
-      payment_link: "Payment Link"
-      bill_prefix: "Bill:"
-      customiseOrderWithName: "Add your name to the order"
-      add: "Add"
-      name_label: "Name:"
-    orderCustomer:
-      order: "Order"
-      bill: "Bill"
-      staffAlerted: "Staff alerted"
-      startOrder: "Start Order"
-      items_in_cart: "items in cart"
-    orderStaff:
-      items_in_cart: "items in cart"
-      bill: "Bill"
-      order: "Order"
-      startOrder: "Start Order"
-      takePayment: "Take Payment"
-    showMenuitemHorizontalActionBar:
-      allergyns: "Allergens"
-      order: "Order"
-      toggle_dropdown: "Toggle Dropdown"
-    showMenuitemHorizontal:
-      loading: "Loading..."
+      created: Smartmenu was successfully created.
+      deleted: Smartmenu was successfully deleted.
+      updated: Smartmenu was successfully updated.
     edit:
-      title: "Edit Smartmenu"
-    new:
-      title: "New Smartmenu"
+      title: Edit Smartmenu
     form:
-      destroy: "Destroy"
-      sure: "Are you sure?"
-      save: "Save"
-      cancel: "Cancel"
-    smartmenu:
-      slug: "Slug:"
-      restaurant: "Restaurant:"
-      menu: "Menu:"
-      tablesetting: "Tablesetting:"
+      cancel: Cancel
+      destroy: Destroy
+      save: Save
+      sure: Are you sure?
+    index:
+      smartmenus: Smartmenus
+    new:
+      title: New Smartmenu
+    orderCustomer:
+      bill: Bill
+      items_in_cart: items in cart
+      order: Order
+      staffAlerted: Staff alerted
+      startOrder: Start Order
+    orderStaff:
+      bill: Bill
+      items_in_cart: items in cart
+      order: Order
+      startOrder: Start Order
+      takePayment: Take Payment
     showAllergyns:
-      allergyns: "Allergens"
+      allergyns: Allergens
+    showCoverCharge:
+      covercharge: Cover Charge
+      coverchargeUnit: Cover Charge Unit
     showMenuBanner:
-      allergyns: "Allergens"
+      allergyns: Allergens
+    showMenuContentCustomer:
+      search_placeholder: Search menu items...
     showMenuitem:
-      loading: "Loading..."
-      allergyns: "Allergens"
-      add_to_order: "Add to Order"
+      add_to_order: Add to Order
+      allergyns: Allergens
+      loading: Loading...
+    showMenuitemHorizontal:
+      loading: Loading...
+    showMenuitemHorizontalActionBar:
+      allergyns: Allergens
+      order: Order
+      toggle_dropdown: Toggle Dropdown
+    showModals:
+      add: Add
+      addToOrder: Add to Order
+      bill_prefix: 'Bill:'
+      cancel: Cancel
+      confirmPayment: Confirm Payment
+      cover_charge: Cover Charge
+      customiseOrderWithName: Add your name to the order
+      excluding_tip: excl. tip
+      filterAllergyns: Filter Allergens
+      filterBy: Filter
+      including_tip: incl. tip
+      item: Item
+      name_label: 'Name:'
+      nett: Nett
+      noneAll: None / All
+      order_aria: Order
+      payBill: Pay Bill
+      payment_link: Payment Link
+      price: Price
+      requestBill: Request Bill
+      selected: Selected
+      service: Service
+      start: Start
+      startOrder: Start Order
+      submitted: Submitted
+      tax: Tax
+      tip_options: Tip Options
+      total: Total
+      yourOrder: Your Order
+      submit: Submit Order
+    showTableLocaleSelectorCustomer:
+      table: "Table"
+    showTableLocaleSelectorStaff:
+      table: "Table"
+    smartmenu:
+      menu: 'Menu:'
+      restaurant: 'Restaurant:'
+      slug: 'Slug:'
+      tablesetting: 'Tablesetting:'

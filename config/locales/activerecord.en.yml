@@ -1,83 +1,84 @@
+---
 en:
   activerecord:
-    models:
-      restaurant: "Restaurant"
-      menu: "Menu"
-      menusection: "Menu Section"
-      menuitem: "Menu Item"
-      tablesetting: "Table Setting"
-      ingredient: "Ingredient"
-      tag: "Tag"
-      size: "Size"
-      inventory: "Inventory"
-      menuavailability: "Menu Availability"
-      restaurantavailability: "Restaurant Availability"
-      track: "Track"
-      userplan: "User Plan"
-      genimage: "Generated Image"
-      allergyn: "Allergen"
-      ordr: "Order"
-      metric: "Metric"
-      smartmenu: "Smartmenu"
-      testimonial: "Testimonial"
     attributes:
-      restaurant:
-        name: "Name"
-        description: "Description"
-        address1: "Address line 1"
-        address2: "Address line 2"
-        city: "City"
-        state: "State/Province"
-        postcode: "Postcode/ZIP"
-        country: "Country"
-        status: "Status"
-      menu:
-        name: "Name"
-        description: "Description"
-        status: "Status"
-      menusection:
-        name: "Name"
-        description: "Description"
-        status: "Status"
-      menuitem:
-        name: "Name"
-        description: "Description"
-        price: "Price"
-        calories: "Calories"
-        status: "Status"
-      tablesetting:
-        name: "Name"
-        description: "Description"
-        capacity: "Capacity"
-        status: "Status"
       ingredient:
-        name: "Name"
-        description: "Description"
-      tag:
-        name: "Name"
-        description: "Description"
-      size:
-        name: "Name"
-        size: "Size Code"
-        description: "Description"
+        description: Description
+        name: Name
       inventory:
-        startinginventory: "Starting inventory"
-        currentinventory: "Current inventory"
-        resethour: "Reset hour"
+        currentinventory: Current inventory
+        resethour: Reset hour
+        startinginventory: Starting inventory
+      menu:
+        description: Description
+        name: Name
+        status: Status
+      menuitem:
+        calories: Calories
+        description: Description
+        name: Name
+        price: Price
+        status: Status
+      menusection:
+        description: Description
+        name: Name
+        status: Status
+      restaurant:
+        address1: Address line 1
+        address2: Address line 2
+        city: City
+        country: Country
+        description: Description
+        name: Name
+        postcode: Postcode/ZIP
+        state: State/Province
+        status: Status
+      size:
+        description: Description
+        name: Name
+        size: Size Code
+      tablesetting:
+        capacity: Capacity
+        description: Description
+        name: Name
+        status: Status
+      tag:
+        description: Description
+        name: Name
     errors:
       format: "%{attribute} %{message}"
       messages:
-        blank: "can't be blank"
-        taken: "has already been taken"
-        invalid: "is invalid"
-        not_a_number: "is not a number"
-        greater_than: "must be greater than %{count}"
-        greater_than_or_equal_to: "must be greater than or equal to %{count}"
-        less_than: "must be less than %{count}"
-        less_than_or_equal_to: "must be less than or equal to %{count}"
-        too_short:
-          one: "is too short (minimum is 1 character)"
-          other: "is too short (minimum is %{count} characters)"
+        blank: can't be blank
+        greater_than: must be greater than %{count}
+        greater_than_or_equal_to: must be greater than or equal to %{count}
+        invalid: is invalid
+        less_than: must be less than %{count}
+        less_than_or_equal_to: must be less than or equal to %{count}
+        not_a_number: is not a number
+        taken: has already been taken
         too_long:
-          one: "is too long (maximum is 1 character)"
-          other: "is too long (maximum is %{count} characters)"
+          one: is too long (maximum is 1 character)
+          other: is too long (maximum is %{count} characters)
+        too_short:
+          one: is too short (minimum is 1 character)
+          other: is too short (minimum is %{count} characters)
+    models:
+      allergyn: Allergen
+      genimage: Generated Image
+      ingredient: Ingredient
+      inventory: Inventory
+      menu: Menu
+      menuavailability: Menu Availability
+      menuitem: Menu Item
+      menusection: Menu Section
+      metric: Metric
+      ordr: Order
+      restaurant: Restaurant
+      restaurantavailability: Restaurant Availability
+      size: Size
+      smartmenu: Smartmenu
+      tablesetting: Table Setting
+      tag: Tag
+      testimonial: Testimonial
+      track: Track
+      userplan: User Plan

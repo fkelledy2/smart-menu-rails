@@ -1,6 +1,9 @@
+---
 en:
   ordrs:
     controller:
-      created: "Order was successfully created."
-      deleted: "Order was successfully deleted."
-      could_not_delete: "Could not delete order: %{error}"
+      could_not_delete: 'Could not delete order: %{error}'
+      created: Order was successfully created.
+      deleted: Order was successfully deleted.
+    index:
+      orders: "Orders"

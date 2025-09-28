@@ -1,25 +1,26 @@
+---
 en:
   testimonials:
     controller:
-      created: "Testimonial was successfully created."
-      updated: "Testimonial was successfully updated."
-      deleted: "Testimonial was successfully deleted."
-    index:
-      testimonials: "Testimonials"
-      actions: "Actions"
-      approve: "Approve"
-      unapprove: "Unapprove"
-    new:
-      title: "New Testimonial"
-      cancel: "Cancel"
+      created: Testimonial was successfully created.
+      deleted: Testimonial was successfully deleted.
+      updated: Testimonial was successfully updated.
     edit:
-      title: "Edit Testimonial"
+      title: Edit Testimonial
     form:
-      destroy: "Destroy"
-      sure: "Are you sure?"
-      save: "Save"
-      cancel: "Cancel"
+      cancel: Cancel
+      destroy: Destroy
+      save: Save
+      sure: Are you sure?
+    index:
+      actions: Actions
+      approve: Approve
+      testimonials: Testimonials
+      unapprove: Unapprove
+    new:
+      cancel: Cancel
+      title: New Testimonial
     testimonial:
-      testimonial: "Testimonial:"
-      user: "User:"
-      restaurant: "Restaurant:"
+      restaurant: 'Restaurant:'
+      testimonial: 'Testimonial:'
+      user: 'User:'

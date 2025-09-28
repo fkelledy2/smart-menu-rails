@@ -1,26 +1,27 @@
+---
 it:
   taxes:
     controller:
-      created: "Tassa creata con successo."
-      updated: "Tassa aggiornata con successo."
-      deleted: "Tassa eliminata con successo."
-    index:
-      taxes: "Tasse"
-      tax: "Tassa"
-    new:
-      tax: "Tassa"
+      created: Tassa creata con successo.
+      deleted: Tassa eliminata con successo.
+      updated: Tassa aggiornata con successo.
     edit:
-      tax: "Tassa"
-    show:
-      tax: "Tassa"
-      selectRestaurant: "Seleziona un ristorante"
-    tax:
-      name: "Nome:"
-      taxtype: "Tipo di tassa:"
-      taxpercentage: "Percentuale di tassa:"
-      restaurant: "Ristorante:"
+      tax: Tassa
     form:
-      delete: "Elimina"
-      sure: "Sei sicuro?"
-      save: "Salva"
-      errors: "Errori"
+      delete: Elimina
+      errors: Errori
+      save: Salva
+      sure: Sei sicuro?
+    index:
+      tax: Tassa
+      taxes: Tasse
+    new:
+      tax: Tassa
+    show:
+      selectRestaurant: Seleziona un ristorante
+      tax: Tassa
+    tax:
+      name: 'Nome:'
+      restaurant: 'Ristorante:'
+      taxpercentage: 'Percentuale di tassa:'
+      taxtype: 'Tipo di tassa:'

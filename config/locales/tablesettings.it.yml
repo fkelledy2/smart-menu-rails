@@ -1,27 +1,29 @@
+---
 it:
   tablesettings:
     controller:
-      created: "Impostazione tavolo creata con successo."
-      updated: "Impostazione tavolo aggiornata con successo."
-      deleted: "Impostazione tavolo eliminata con successo."
-    index:
-      table_settings: "Impostazioni tavoli"
-      table_setting: "Impostazione tavolo"
-      unarchive: "Ripristina"
-      archive: "Archivia"
-      seating_plan: "Piantina posti"
-      seats: "Posti:"
-    show:
-      show_table_setting: "Dettagli impostazione tavolo"
-      selectRestaurant: "Seleziona un ristorante"
-      available_menus: "Menu disponibili"
-    tablesetting:
-      name: "Nome:"
-      description: "Descrizione:"
-      status: "Stato:"
-      capacity: "Capienza:"
-      restaurant: "Ristorante:"
+      created: Impostazione tavolo creata con successo.
+      deleted: Impostazione tavolo eliminata con successo.
+      updated: Impostazione tavolo aggiornata con successo.
     edit:
-      tablesetting: "Impostazione tavolo"
+      tablesetting: Impostazione tavolo
+    index:
+      archive: Archivia
+      seating_plan: Piantina posti
+      seats: 'Posti:'
+      table_setting: Impostazione tavolo
+      table_settings: Impostazioni tavoli
+      unarchive: Ripristina
     new:
       tablesetting: "Impostazione tavolo"
+      status: "Stato:"
+    show:
+      available_menus: Menu disponibili
+      selectRestaurant: Seleziona un ristorante
+      show_table_setting: Dettagli impostazione tavolo
+    tablesetting:
+      capacity: 'Capienza:'
+      description: 'Descrizione:'
+      name: 'Nome:'
+      restaurant: 'Ristorante:'
+      status: 'Stato:'

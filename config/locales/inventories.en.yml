@@ -1,27 +1,29 @@
+---
 en:
   inventories:
     controller:
-      created: "Inventory was successfully created."
-      updated: "Inventory was successfully updated."
-      deleted: "Inventory was successfully deleted."
-    index:
-      inventories: "Inventories"
-      inventory: "Inventory"
-    new:
-      inventory: "Inventory"
+      created: Inventory was successfully created.
+      deleted: Inventory was successfully deleted.
+      updated: Inventory was successfully updated.
     edit:
-      inventory: "Inventory"
-    show:
-      inventory: "Inventory"
-      select_menu_item: "Select a Menu Item..."
-    inventory:
-      startinginventory: "Starting inventory:"
-      currentinventory: "Current inventory:"
-      resethour: "Reset hour:"
-      menuitem: "Menu item:"
+      inventory: Inventory
     form:
-      select_menu_item: "Select a Menu Item..."
-      delete: "Delete"
-      sure: "Are you sure?"
-      save: "Save"
-      errors: "Errors"
+      delete: Delete
+      errors: Errors
+      save: Save
+      select_menu_item: Select a Menu Item...
+      sure: Are you sure?
+    index:
+      inventories: Inventories
+      inventory: Inventory
+    inventory:
+      currentinventory: 'Current inventory:'
+      menuitem: 'Menu item:'
+      resethour: 'Reset hour:'
+      startinginventory: 'Starting inventory:'
+    new:
+      inventory: Inventory
+      cancel: Cancel
+    show:
+      inventory: Inventory
+      select_menu_item: Select a Menu Item...

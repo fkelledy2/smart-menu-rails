@@ -1,27 +1,29 @@
+---
 it:
   inventories:
     controller:
-      created: "Inventario creato con successo."
-      updated: "Inventario aggiornato con successo."
-      deleted: "Inventario eliminato con successo."
-    index:
-      inventories: "Inventari"
-      inventory: "Inventario"
-    new:
-      inventory: "Inventario"
+      created: Inventario creato con successo.
+      deleted: Inventario eliminato con successo.
+      updated: Inventario aggiornato con successo.
     edit:
-      inventory: "Inventario"
-    show:
-      inventory: "Inventario"
-      select_menu_item: "Seleziona un piatto..."
-    inventory:
-      startinginventory: "Inventario iniziale:"
-      currentinventory: "Inventario attuale:"
-      resethour: "Ora di reset:"
-      menuitem: "Voce di menu:"
+      inventory: Inventario
     form:
-      select_menu_item: "Seleziona un piatto..."
-      delete: "Elimina"
-      sure: "Sei sicuro?"
-      save: "Salva"
-      errors: "Errori"
+      delete: Elimina
+      errors: Errori
+      save: Salva
+      select_menu_item: Seleziona un piatto...
+      sure: Sei sicuro?
+    index:
+      inventories: Inventari
+      inventory: Inventario
+    inventory:
+      currentinventory: 'Inventario attuale:'
+      menuitem: 'Voce di menu:'
+      resethour: 'Ora di reset:'
+      startinginventory: 'Inventario iniziale:'
+    new:
+      inventory: Inventario
+      cancel: Annulla
+    show:
+      inventory: Inventario
+      select_menu_item: Seleziona un piatto...

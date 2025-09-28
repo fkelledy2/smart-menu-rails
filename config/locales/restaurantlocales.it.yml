@@ -1,7 +1,14 @@
+---
 it:
   restaurantlocales:
     controller:
-      created: "Lingua ristorante creata con successo."
-      updated: "Lingua ristorante aggiornata con successo."
-      deleted: "Lingua eliminata."
-      active_not_deleted: "La lingua attiva non è stata eliminata."
+      active_not_deleted: La lingua attiva non è stata eliminata.
+      created: Lingua ristorante creata con successo.
+      deleted: Lingua eliminata.
+      updated: Lingua ristorante aggiornata con successo.
+    form:
+      delete: Elimina
+      save: Salva
+      sure: Sei sicuro?
+    new:
+      restaurantlocale: Lingua ristorante

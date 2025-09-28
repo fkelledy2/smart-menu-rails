@@ -1,6 +1,7 @@
+---
 en:
   menusectionlocales:
     controller:
-      created: "Menusectionlocale was successfully created."
-      updated: "Menusectionlocale was successfully updated."
-      destroyed: "Menusectionlocale was successfully destroyed."
+      created: Menusectionlocale was successfully created.
+      destroyed: Menusectionlocale was successfully destroyed.
+      updated: Menusectionlocale was successfully updated.

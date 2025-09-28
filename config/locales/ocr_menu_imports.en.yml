@@ -1,102 +1,112 @@
+---
 en:
   ocr_menu_imports:
     controller:
-      queued: "Menu import has been queued for processing."
-      attach_pdf: "Please attach a PDF file."
-      updated: "Menu import was successfully updated."
-      processing_restarted: "Processing has been (re)started."
-      unable_restart: "Unable to (re)start processing from status: %{status}."
-      confirm_section: "Please confirm at least one section before importing."
-      republished: "Menu has been republished with confirmed changes."
-      published: "Menu has been successfully published!"
-      fail_create: "Failed to create menu: %{error}"
-      deleted: "Menu import was successfully deleted."
-      unauthorized: "You are not authorized to perform this action."
-    index:
-      title: "Menu Imports"
-      new_import: "New Menu Import"
-      empty_title: "No menu imports"
-      empty_hint: "Get started by uploading a new menu PDF."
-    new:
-      title: "Import Menu from PDF"
-      subtitle: "Upload a PDF menu to automatically extract menu items and sections."
-      name_label: "Menu Name"
-      name_placeholder: "e.g., Dinner Menu, Lunch Specials, etc."
-      name_invalid: "Please provide a name for this menu."
-      pdf_label: "PDF File"
-      choose_file: "Choose File"
-      no_file_chosen: "No file chosen"
-      pdf_hint: "PDF up to 10MB"
-      pdf_invalid: "Please select a PDF file to upload."
-      cancel: "Cancel"
-      upload_process: "Upload & Process"
-      tips_title: "Tips for Best Results"
-      tip_file_quality_title: "File Quality"
-      tip_file_quality_text: "Use high-quality PDFs with clear, readable text. Avoid handwritten menus or low-resolution scans."
-      tip_format_title: "Format"
-      tip_format_text: "The system works best with digital PDFs. Scanned documents may have lower accuracy."
-      tip_processing_time_title: "Processing Time"
-      tip_processing_time_text: "Larger files may take several minutes to process. You'll receive an email when processing is complete."
-    show:
-      default_title: "Menu Import #%{id}"
-      imported_ago: "Imported %{time} ago"
-      updated_at: "Updated %{timestamp}"
-      process_confirm: "Start processing this PDF now?"
-      process_pdf: "Process PDF"
-      create_menu: "Create Menu"
-      progress_loading: "Loading..."
-      processing_title: "Processing your menu. This may take a few minutes..."
-      processing_page: "Page %{current} of %{total}"
-      progress_complete: "%{percent}% complete"
-      import_details: "Import Details"
-      status: "Status:"
-      failed_heading: "Processing failed"
-      try_again: "Try Again"
-      no_items_heading: "No menu items were parsed"
-      no_items_explainer: "We couldn't detect any sections/items from this PDF."
-      no_items_tip1: "PDF may contain no extractable text and OCR produced no text. Verify Google Cloud Vision credentials are configured."
-      no_items_tip2: "OpenAI API key may be missing or returned invalid output. Add openai_api_key to Rails credentials."
-      no_items_tip3: "The response formatting may have been invalid. We've hardened parsing, but re-running might help."
-      upload_clearer_pdf: "Upload a clearer PDF"
-      imported_menu_title: "Imported Menu"
-      imported_menu_subtitle: "Review and confirm the extracted menu items below. You can edit any item before creating the final menu."
-      publish: "Publish"
-      approve_sections_items: "Approve Sections and Items"
-      click_to_add_description: "Click to add description."
-      confirm_modal_title: "Publish Menu"
-      confirm_modal_body: "Confirm to publish your menu. You can optionally use Sync publish to archive any existing sections/items not present in this import."
-      sync_publish_label: "Sync publish (archive sections/items not in this import)"
-      publish_menu: "Publish Menu"
-      cancel: "Cancel"
-      edit_item_modal_title: "Edit Menu Item"
-      item_name: "Item Name"
-      description: "Description"
-      price: "Price"
-      section: "Section"
-      section_disabled_title: "Section cannot be changed here"
-      reorder_hint: "Reorder items within this section only."
-      position: "Position"
-      dietary_information: "Dietary Information"
-      allergens: "Allergens"
-      hold_multi_select: "Hold Ctrl/Cmd to select multiple"
-      delete: "Delete"
-      save_changes: "Save Changes"
-      steps:
-        upload: "Upload"
-        processing: "Processing"
-        review: "Review"
-        complete: "Complete"
-      vegetarian: "Vegetarian"
-      vegan: "Vegan"
-      gluten_free: "Gluten Free"
-      dairy_free: "Dairy Free"
+      attach_pdf: Please attach a PDF file.
+      confirm_section: Please confirm at least one section before importing.
+      deleted: Menu import was successfully deleted.
+      fail_create: 'Failed to create menu: %{error}'
+      processing_restarted: Processing has been (re)started.
+      published: Menu has been successfully published!
+      queued: Menu import has been queued for processing.
+      republished: Menu has been republished with confirmed changes.
+      unable_restart: 'Unable to (re)start processing from status: %{status}.'
+      unauthorized: You are not authorized to perform this action.
+      updated: Menu import was successfully updated.
     import_item:
-      delete_confirm: "Delete this import? This cannot be undone."
-      delete_title: "Delete import"
-      section_label: "section"
-      item_label: "item"
-      imported_ago: "Imported %{time} ago"
+      default_title: Import Item
+      delete_confirm: Delete this import? This cannot be undone.
+      delete_title: Delete import
+      imported_ago: Imported %{time} ago
+      item_label: item
+      section_label: section
+    index:
+      empty_hint: Get started by uploading a new menu PDF.
+      empty_title: No menu imports
+      new_import: New Menu Import
+      title: Menu Imports
     menu_section:
-      hide: "Hide"
-      items: "items"
-      edit: "Edit"
+      edit: Edit
+      hide: Hide
+      items: items
+    new:
+      cancel: Cancel
+      choose_file: Choose File
+      name_invalid: Please provide a name for this menu.
+      name_label: Menu Name
+      name_placeholder: e.g., Dinner Menu, Lunch Specials, etc.
+      no_file_chosen: No file chosen
+      pdf_hint: PDF up to 10MB
+      pdf_invalid: Please select a PDF file to upload.
+      pdf_label: PDF File
+      subtitle: Upload a PDF menu to automatically extract menu items and sections.
+      tip_file_quality_text: Use high-quality PDFs with clear, readable text. Avoid
+        handwritten menus or low-resolution scans.
+      tip_file_quality_title: File Quality
+      tip_format_text: The system works best with digital PDFs. Scanned documents
+        may have lower accuracy.
+      tip_format_title: Format
+      tip_processing_time_text: Larger files may take several minutes to process.
+        You'll receive an email when processing is complete.
+      tip_processing_time_title: Processing Time
+      tips_title: Tips for Best Results
+      title: Import Menu from PDF
+      upload_process: Upload & Process
+    show:
+      allergens: Allergens
+      approve_sections_items: Approve Sections and Items
+      cancel: Cancel
+      click_to_add_description: Click to add description.
+      confirm_modal_body: Confirm to publish your menu. You can optionally use Sync
+        publish to archive any existing sections/items not present in this import.
+      confirm_modal_title: Publish Menu
+      create_menu: Create Menu
+      dairy_free: Dairy Free
+      default_title: 'Menu Import #%{id}'
+      delete: Delete
+      description: Description
+      dietary_information: Dietary Information
+      edit_item_modal_title: Edit Menu Item
+      failed_heading: Processing failed
+      gluten_free: Gluten Free
+      hold_multi_select: Hold Ctrl/Cmd to select multiple
+      import_details: Import Details
+      imported_ago: Imported %{time} ago
+      imported_menu_subtitle: Review and confirm the extracted menu items below. You
+        can edit any item before creating the final menu.
+      imported_menu_title: Imported Menu
+      item_name: Item Name
+      no_items_explainer: We couldn't detect any sections/items from this PDF.
+      no_items_heading: No menu items were parsed
+      no_items_tip1: PDF may contain no extractable text and OCR produced no text.
+        Verify Google Cloud Vision credentials are configured.
+      no_items_tip2: OpenAI API key may be missing or returned invalid output. Add
+        openai_api_key to Rails credentials.
+      no_items_tip3: The response formatting may have been invalid. We've hardened
+        parsing, but re-running might help.
+      position: Position
+      price: Price
+      process_confirm: Start processing this PDF now?
+      process_pdf: Process PDF
+      processing_page: Page %{current} of %{total}
+      processing_title: Processing your menu. This may take a few minutes...
+      progress_complete: "%{percent}% complete"
+      progress_loading: Loading...
+      publish: Publish
+      publish_menu: Publish Menu
+      reorder_hint: Reorder items within this section only.
+      save_changes: Save Changes
+      section: Section
+      section_disabled_title: Section cannot be changed here
+      status: 'Status:'
+      steps:
+        complete: Complete
+        processing: Processing
+        review: Review
+        upload: Upload
+      sync_publish_label: Sync publish (archive sections/items not in this import)
+      try_again: Try Again
+      updated_at: Updated %{timestamp}
+      upload_clearer_pdf: Upload a clearer PDF
+      vegan: Vegan
+      vegetarian: Vegetarian

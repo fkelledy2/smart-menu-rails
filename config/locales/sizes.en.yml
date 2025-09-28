@@ -1,25 +1,25 @@
+---
 en:
   sizes:
     controller:
-      created: "Size was successfully created."
-      updated: "Size was successfully updated."
-      deleted: "Size was successfully deleted."
-    index:
-      sizes: "Sizes"
-      size: "Size"
-    new:
-      size: "Size"
+      created: Size was successfully created.
+      deleted: Size was successfully deleted.
+      updated: Size was successfully updated.
     edit:
-      size: "Size"
-    show:
-      size: "Size"
-    size:
-      size: "Size:"
-      name: "Name:"
-      description: "Description:"
+      size: Size
     form:
-      delete: "Delete"
-      sure: "Are you sure?"
-      save: "Save"
-      errors: "Errors"
-
+      delete: Delete
+      errors: Errors
+      save: Save
+      sure: Are you sure?
+    index:
+      size: Size
+      sizes: Sizes
+    new:
+      size: Size
+    show:
+      size: Size
+    size:
+      description: 'Description:'
+      name: 'Name:'
+      size: 'Size:'

@@ -1,9 +1,11 @@
+---
 it:
   userplans:
     controller:
-      created: "Piano utente creato con successo."
-      updated: "Piano utente aggiornato con successo."
-      deleted: "Piano utente eliminato con successo."
+      created: Piano utente creato con successo.
+      deleted: Piano utente eliminato con successo.
+      updated: Piano utente aggiornato con successo.
     edit:
       saveChanges: "Aggiorna"
       selectPlan: "Scegli piano"
+      contactUs: "Contattaci"

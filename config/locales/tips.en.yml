@@ -1,6 +1,19 @@
+---
 en:
   tips:
     controller:
-      created: "Tip was successfully created."
-      updated: "Tip was successfully updated."
-      deleted: "Tip was successfully deleted."
+      created: Tip was successfully created.
+      deleted: Tip was successfully deleted.
+      updated: Tip was successfully updated.
+    edit:
+      tip: Tip
+    form:
+      delete: Delete
+      save: Save
+      sure: Are you sure?
+    index:
+      tips: Tips
+    new:
+      tip: Tip
+    show:
+      tip: Tip

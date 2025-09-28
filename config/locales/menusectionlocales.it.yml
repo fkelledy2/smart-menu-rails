@@ -1,0 +1,7 @@
+---
+it:
+  menusectionlocales:
+    controller:
+      created: Lingua sezione menu creata con successo.
+      destroyed: Lingua sezione menu eliminata con successo.
+      updated: Lingua sezione menu aggiornata con successo.

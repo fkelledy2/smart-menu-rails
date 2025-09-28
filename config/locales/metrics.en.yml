@@ -1,6 +1,7 @@
+---
 en:
   metrics:
     controller:
-      created: "Metric was successfully created."
-      updated: "Metric was successfully updated."
-      deleted: "Metric was successfully deleted."
+      created: Metric was successfully created.
+      deleted: Metric was successfully deleted.
+      updated: Metric was successfully updated.

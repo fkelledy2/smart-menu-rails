@@ -1,23 +1,24 @@
+---
 it:
   common:
-    save: "Salva"
-    cancel: "Annulla"
-    delete: "Elimina"
-    actions: "Azioni"
-    activate: "Attiva"
-    deactivate: "Disattiva"
-    confirm: "Conferma"
-    back: "Indietro"
-    edit: "Modifica"
-    update: "Aggiorna"
-    create: "Crea"
-    close: "Chiudi"
-    errors: "Errori"
+    actions: Azioni
+    activate: Attiva
+    back: Indietro
+    cancel: Annulla
+    close: Chiudi
+    confirm: Conferma
+    create: Crea
+    deactivate: Disattiva
+    delete: Elimina
+    edit: Modifica
+    errors: Errori
     flash:
-      created: "%{resource} creato con successo."
-      updated: "%{resource} aggiornato con successo."
-      deleted: "%{resource} eliminato con successo."
+      action_failed: 'Azione non riuscita: %{error}'
       archived: "%{resource} archiviato con successo."
-      processing_restarted: "L'elaborazione è stata (ri)avviata."
-      action_failed: "Azione non riuscita: %{error}"
-    loading: "Caricamento..."
+      created: "%{resource} creato con successo."
+      deleted: "%{resource} eliminato con successo."
+      processing_restarted: L'elaborazione è stata (ri)avviata.
+      updated: "%{resource} aggiornato con successo."
+    loading: Caricamento...
+    save: Salva
+    update: Aggiorna

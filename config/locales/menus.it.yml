@@ -1,45 +1,64 @@
+---
 it:
   menus:
     controller:
-      created: "Menu creato con successo."
-      updated: "Menu aggiornato con successo."
-      deleted: "Menu eliminato con successo."
-      image_regeneration_queued: "Rigenerazione delle immagini in coda per %{count} elementi di questo menu."
+      created: Menu creato con successo.
+      deleted: Menu eliminato con successo.
+      image_regeneration_queued: Rigenerazione delle immagini in coda per %{count}
+        elementi di questo menu.
+      updated: Menu aggiornato con successo.
     edit:
-      regenerate_images: "Rigenera le immagini per questo menu"
-      regenerate_images_hint: "Avvia job in background per ricreare le immagini degli articoli usando l'ultimo prompt e lo stile predefinito."
-      regenerate_images_confirm: "Verranno accodati job per tutti gli articoli non-vino di questo menu. Continuare?"
-    menu:
-      name: "Nome:"
-      description: "Descrizione:"
-      image: "Immagine:"
-      pdf_menu_scan: "PDF del menu:"
-      status: "Stato:"
-      sequence: "Sequenza:"
-      restaurant: "Ristorante:"
+      availabilities: Disponibilità
+      menu: Menu
+      regenerate_images: Rigenera le immagini per questo menu
+      regenerate_images_confirm: Verranno accodati job per tutti gli articoli non-vino
+        di questo menu. Continuare?
+      regenerate_images_hint: Avvia job in background per ricreare le immagini degli
+        articoli usando l'ultimo prompt e lo stile predefinito.
+      sections: Sezioni
     form:
-      details: "Dettagli"
-      pdfSettings: "Impostazioni PDF"
-      imageSettings: "Impostazioni immagine"
-      settings: "Impostazioni"
-      current_pdf: "PDF corrente:"
-      remove: "Rimuovi"
-      on: "Attivo"
-      off: "Disattivo"
-      delete: "Elimina"
-      sure: "Sei sicuro?"
-      save: "Salva"
-      errors: "Errori"
+      current_pdf: 'PDF corrente:'
+      delete: Elimina
+      details: Dettagli
+      errors: Errori
+      'false': Disattivo
+      "off": Disattivo
+      imageSettings: Impostazioni immagine
+      pdfSettings: Impostazioni PDF
+      remove: Rimuovi
+      save: Salva
+      settings: Impostazioni
+      sure: Sei sicuro?
+      'true': Attivo
+      "on": Attivo
+    index:
+      menu: Menu
+      menus: Menu
+      unavailable: Non disponibile
+    menu:
+      description: 'Descrizione:'
+      image: 'Immagine:'
+      name: 'Nome:'
+      pdf_menu_scan: 'PDF del menu:'
+      restaurant: 'Ristorante:'
+      sequence: 'Sequenza:'
+      status: 'Stato:'
+    new:
+      menu: Menu
     show:
-      loading: "Caricamento..."
-      allergens: "Allergeni"
-      allergyns: "Allergeni"
-      not_available: "Non disponibile."
+      add_to_order: Aggiungi all'ordine
+      allergens: Allergeni
+      allergyns: Allergeni
+      bill: Conto
+      loading: Caricamento...
+      not_available: Non disponibile.
+      order: Ordine
+      order_updated: Ordine aggiornato!
       remaining: "%{count} rimanenti."
-      add_to_order: "Aggiungi all'ordine"
-      start_order: "Inizia ordine"
-      order_updated: "Ordine aggiornato!"
-      order: "Ordine"
-      bill: "Conto"
-      take_payment: "Incassa pagamento"
-      staff_alerted: "Personale avvisato"
+      staff_alerted: Personale avvisato
+      start_order: Inizia ordine
+      take_payment: Incassa pagamento
+    showMenuavailabilities:
+      availabilities: Disponibilità
+    showMenusections:
+      sections: Sezioni

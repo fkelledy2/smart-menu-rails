@@ -1,6 +1,11 @@
+---
 en:
   userplans:
     controller:
       created: "User plan was successfully created."
       updated: "User plan was successfully updated."
       deleted: "User plan was successfully deleted."
+    edit:
+      saveChanges: "Update"
+      selectPlan: "Choose Plan"
+      contactUs: "Contact Us"

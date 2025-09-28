@@ -1,19 +1,20 @@
+---
 it:
   shared:
-    navbar:
-      impersonated_as: "Accesso come"
-      restaurants: "Ristoranti"
-      settings: "Impostazioni"
-      billing: "Fatturazione"
-      testimonials: "Testimonianze"
-      adminArea: "Admin"
-      logout: "Logout"
-      signUp: "Registrati"
-      login: "Accedi"
     footer:
-      terms: "Termini"
-      privacy: "Privacy"
-      facebook: "Facebook"
-      instagram: "Instagram"
-      twitter: "Twitter"
-      linkedin: "LinkedIn"
+      facebook: Facebook
+      instagram: Instagram
+      linkedin: LinkedIn
+      privacy: Privacy
+      terms: Termini
+      twitter: Twitter
+    navbar:
+      adminArea: Admin
+      billing: Fatturazione
+      impersonated_as: Accesso come
+      login: Accedi
+      logout: Logout
+      restaurants: Ristoranti
+      settings: Impostazioni
+      signUp: Registrati
+      testimonials: Testimonianze

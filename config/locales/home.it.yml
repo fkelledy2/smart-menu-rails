@@ -1,7 +1,44 @@
+---
 it:
   home:
     index:
-      video_unsupported: "Il tuo browser non supporta il tag video."
-      compare_plans: "Confronta piani"
-      previous: "Precedente"
-      next: "Successivo"
+      compare_plans: Confronta piani
+      next: Successivo
+      previous: Precedente
+      video_unsupported: Il tuo browser non supporta il tag video.
+      welcome: "Benvenuto"
+      selectPlan: "Seleziona piano"
+      saveChanges: "Salva modifiche"
+      ctaTitle1: "Fai crescere il tuo ristorante con Smartmenu"
+      ctaBody1: "Crea menu digitali splendidi e semplifica gli ordini."
+      ctaTitle2: "Funzionalità potenti"
+      ctaBody2: "Traduzioni, immagini, disponibilità, ordini e altro."
+      contactUs: "Contattaci"
+      browse: "Esplora"
+      demoMenu: "Menu demo"
+      demoMenuTag: "Anteprima"
+      demoMenuTagBrowse: "Esplora"
+      menus: "Menu"
+      restaurants: "Ristoranti"
+      testimonials: "Testimonianze"
+      testimonialsTag: "Cosa dicono i nostri clienti"
+      numbers: "Numeri"
+      numbersTag: "A colpo d'occhio"
+      orders: "Ordini"
+      orderValue: "Valore medio ordine"
+      pricing: "Prezzi"
+      pricingTag: "Piani"
+      signUp: "Registrati"
+      submit: "Invia"
+      emailAddressTag: "Indirizzo email"
+      features: "Funzionalità"
+      featureTitle2: "Traduci all'istante"
+      featureTitle3: "Immagini AI"
+      featureTitle4: "Inventario e disponibilità"
+      featureTitle5: "Ordini smart"
+      featureTitle6: "Analitiche"
+      featureDescription2: "Servi gli ospiti nella loro lingua con un clic."
+      featureDescription3: "Genera foto coerenti e in linea con il brand."
+      featureDescription4: "Controlla cosa i clienti possono vedere e ordinare."
+      featureDescription5: "Permetti ai clienti di ordinare al tavolo e pagare facilmente."
+      featureDescription6: "Comprendi le tendenze per migliorare il menu."

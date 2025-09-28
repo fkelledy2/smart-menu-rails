@@ -1,5 +1,6 @@
+---
 it:
   genimages:
     controller:
-      updated: "Immagine rigenerata con successo."
-      deleted: "Immagine generata eliminata con successo."
+      deleted: Immagine generata eliminata con successo.
+      updated: Immagine rigenerata con successo.

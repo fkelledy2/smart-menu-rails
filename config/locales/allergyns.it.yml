@@ -1,6 +1,20 @@
+---
 it:
   allergyns:
     controller:
-      created: "Allergene creato con successo."
-      updated: "Allergene aggiornato con successo."
-      deleted: "Allergene eliminato con successo."
+      created: Allergene creato con successo.
+      deleted: Allergene eliminato con successo.
+      updated: Allergene aggiornato con successo.
+    index:
+      allergyns: "Allergeni"
+      allergyn: "Allergene"
+    new:
+      allergyn: "Allergene"
+    edit:
+      allergyn: "Allergene"
+    show:
+      allergyn: "Allergene"
+    form:
+      save: "Salva"
+      delete: "Elimina"
+      sure: "Sei sicuro?"

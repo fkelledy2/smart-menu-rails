@@ -1,13 +1,14 @@
+---
 en:
   restaurantlocales:
     controller:
-      created: "Restaurant Locale was successfully created."
-      updated: "Restaurant Locale was successfully updated."
-      deleted: "Locale was deleted."
-      active_not_deleted: "Active Locale was not deleted."
-    new:
-      restaurantlocale: "Restaurant Locale"
+      active_not_deleted: Active Locale was not deleted.
+      created: Restaurant Locale was successfully created.
+      deleted: Locale was deleted.
+      updated: Restaurant Locale was successfully updated.
     form:
-      save: "Save"
-      delete: "Delete"
-      sure: "Are you sure?"
+      delete: Delete
+      save: Save
+      sure: Are you sure?
+    new:
+      restaurantlocale: Restaurant Locale

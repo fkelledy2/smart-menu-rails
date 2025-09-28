@@ -1,19 +1,21 @@
+---
 it:
   menuavailabilities:
     controller:
-      created: "Disponibilità menu creata con successo."
-      updated: "Disponibilità menu aggiornata con successo."
-      deleted: "Disponibilità menu eliminata con successo."
-    index:
-      menuAvailabilities: "Disponibilità menu"
-      menuAvailability: "Disponibilità menu"
-    new:
-      menuAvailability: "Disponibilità menu"
-      cancel: "Annulla"
-    show:
-      menuAvailability: "Disponibilità menu"
-      selectMenu: "Seleziona menu"
+      created: Disponibilità menu creata con successo.
+      deleted: Disponibilità menu eliminata con successo.
+      updated: Disponibilità menu aggiornata con successo.
     form:
-      selectMenu: "Seleziona menu"
-      save: "Salva"
-      sure: "Sei sicuro?"
+      save: Salva
+      selectMenu: Seleziona menu
+      delete: Elimina
+      sure: Sei sicuro?
+    index:
+      menuAvailabilities: Disponibilità menu
+      menuAvailability: Disponibilità menu
+    new:
+      cancel: Annulla
+      menuAvailability: Disponibilità menu
+    show:
+      menuAvailability: Disponibilità menu
+      selectMenu: Seleziona menu
