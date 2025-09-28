@@ -77,11 +77,15 @@ This document outlines a project-wide plan to align the codebase with modern Rai
      - Built admin dashboard for viewing collected metrics
      - Automatic collection of system, database, and performance metrics
 
-8) i18n & a11y (Low/Medium)
-   - Add `i18n-tasks` to CI and ensure translation coverage.
+8) i18n & a11y (Low/Medium) ✅ **COMPLETED**
+   - ✅ **i18n-tasks**: Translation management and coverage validation configured
+   - ✅ **Translation Coverage**: Automated CI checks for missing translations
 
-9) CI/CD & tooling (Medium)
-   - Add RuboCop, Brakeman, Bundler-Audit to CI; upload coverage artifacts.
+9) CI/CD & tooling (Medium) ✅ **COMPLETED**
+   - ✅ **RuboCop**: Code style and quality enforcement configured
+   - ✅ **Brakeman**: Security vulnerability scanning configured  
+   - ✅ **Pre-commit hooks**: Automated code quality checks on commit
+   - ✅ **GitHub Actions**: CI/CD pipeline with automated testing and security scans
 
 ### Security Implementation Status ✅ **COMPLETED**
 
@@ -109,6 +113,247 @@ This document outlines a project-wide plan to align the codebase with modern Rai
 - ✅ API Endpoints: OCR functionality with custom ownership validation - SECURED
 
 **Remaining:** Only madmin admin controllers (non-critical utilities)
+
+## Code Quality & Security Tools
+
+This project uses automated code quality and security tools to maintain high standards and catch issues early.
+
+### RuboCop - Code Style & Quality
+
+RuboCop enforces consistent Ruby code style and catches common issues.
+
+#### Running RuboCop
+
+```bash
+# Check all files
+bundle exec rubocop
+
+# Check specific files
+bundle exec rubocop app/models/user.rb
+
+# Auto-fix safe issues
+bundle exec rubocop -a
+
+# Auto-fix all issues (use with caution)
+bundle exec rubocop -A
+
+# Check only changed files
+bundle exec rubocop $(git diff --name-only --diff-filter=AM HEAD~1 | grep '\.rb$')
+```
+
+#### Configuration
+
+RuboCop configuration is in `.rubocop.yml`. Key settings:
+- **Target Ruby Version**: 3.3.0
+- **Enabled Cops**: Style, Layout, Lint, Metrics, Performance, Security
+- **Custom Rules**: Tailored for Rails applications
+- **Exclusions**: Generated files, vendor code, and migrations
+
+#### Common Commands
+
+```bash
+# Generate TODO file for existing violations
+bundle exec rubocop --auto-gen-config
+
+# Run only specific cops
+bundle exec rubocop --only Style/StringLiterals
+
+# Disable specific cops for a file
+# rubocop:disable Style/Documentation
+class MyClass
+end
+# rubocop:enable Style/Documentation
+```
+
+### Brakeman - Security Scanner
+
+Brakeman scans Ruby on Rails applications for security vulnerabilities.
+
+#### Running Brakeman
+
+```bash
+# Run security scan
+bundle exec brakeman
+
+# Run with detailed output
+bundle exec brakeman -v
+
+# Generate HTML report
+bundle exec brakeman -o brakeman_report.html
+
+# Check only high confidence issues
+bundle exec brakeman --confidence-level 2
+
+# Ignore specific warnings (after review)
+bundle exec brakeman -I
+```
+
+#### Configuration
+
+Brakeman configuration is in `config/brakeman.yml`. Key settings:
+- **Application Path**: Current directory
+- **Rails Version**: Auto-detected
+- **Check Arguments**: Enabled for security
+- **Confidence Levels**: High, Medium, Low
+- **Ignored Warnings**: Reviewed false positives
+
+#### Security Categories Checked
+
+- **SQL Injection**: Unsafe database queries
+- **Cross-Site Scripting (XSS)**: Unescaped output
+- **Command Injection**: Unsafe system commands  
+- **Mass Assignment**: Unprotected attributes
+- **Authentication**: Weak authentication logic
+- **Authorization**: Missing access controls
+- **Session Management**: Insecure session handling
+- **File Access**: Unsafe file operations
+
+### Pre-commit Hooks
+
+Automated checks run before each commit to catch issues early.
+
+#### Setup Pre-commit Hooks
+
+```bash
+# Install the pre-commit hook
+cp bin/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+
+# Or create a symlink (recommended)
+ln -sf ../../bin/pre-commit .git/hooks/pre-commit
+```
+
+#### What the Pre-commit Hook Checks
+
+1. **RuboCop**: Code style and quality
+2. **Brakeman**: Security vulnerabilities  
+3. **Bundle Audit**: Gem security vulnerabilities
+4. **Syntax Check**: Ruby syntax validation
+5. **Test Suite**: Runs relevant tests for changed files
+
+#### Bypassing Pre-commit Hooks
+
+```bash
+# Skip hooks for emergency commits (use sparingly)
+git commit --no-verify -m "Emergency fix"
+
+# Fix issues after commit
+git commit -m "Fix code quality issues" 
+```
+
+### GitHub Actions CI/CD
+
+Automated testing and security scanning on every push and pull request.
+
+#### Workflow Features
+
+- **Multi-Ruby Testing**: Tests against Ruby 3.3.0
+- **Database Testing**: PostgreSQL integration tests
+- **Security Scanning**: Brakeman and bundle-audit
+- **Code Quality**: RuboCop enforcement
+- **Test Coverage**: SimpleCov reporting
+- **Asset Compilation**: Ensures assets build successfully
+- **Dependency Caching**: Faster CI runs
+
+#### Setting Up GitHub Actions
+
+1. **Repository Secrets**
+   ```bash
+   # Required secrets in GitHub repository settings:
+   RAILS_MASTER_KEY=your_master_key_here
+   DATABASE_URL=postgresql://user:pass@localhost/test_db
+   ```
+
+2. **Workflow Configuration**
+   - Main workflow: `.github/workflows/ci.yml`
+   - Runs on: Push to main, pull requests
+   - Parallel jobs for faster execution
+
+#### Viewing CI Results
+
+```bash
+# Check workflow status
+gh workflow list
+
+# View specific run
+gh run view [run-id]
+
+# Download artifacts
+gh run download [run-id]
+```
+
+### Bundle Audit - Gem Security
+
+Checks for known security vulnerabilities in gems.
+
+#### Running Bundle Audit
+
+```bash
+# Check for vulnerabilities
+bundle exec bundle-audit
+
+# Update vulnerability database
+bundle exec bundle-audit update
+
+# Check and update in one command
+bundle exec bundle-audit check --update
+```
+
+### IDE Integration
+
+#### VS Code
+
+Install these extensions for automatic code quality:
+- **Ruby**: Syntax highlighting and IntelliSense
+- **Ruby Solargraph**: Language server
+- **RuboCop**: Automatic linting
+- **Brakeman**: Security scanning
+
+#### RubyMine
+
+Built-in support for:
+- RuboCop integration
+- Code inspections
+- Security analysis
+- Git hooks
+
+### Continuous Improvement
+
+#### Weekly Security Review
+
+```bash
+# Run full security audit
+bundle exec brakeman -v
+bundle exec bundle-audit check --update
+
+# Review and update dependencies
+bundle outdated
+bundle update --conservative
+```
+
+#### Code Quality Metrics
+
+```bash
+# Generate complexity report
+bundle exec flog app/
+
+# Check test coverage
+bundle exec rails test
+open coverage/index.html
+```
+
+#### Performance Monitoring
+
+```bash
+# Check for N+1 queries (in development)
+# Bullet gem will alert automatically
+
+# Profile memory usage
+bundle exec derailed_benchmarks:mem
+
+# Profile load time
+bundle exec derailed_benchmarks:perf:library
+```
 
 ## Google Vision Integration
 
