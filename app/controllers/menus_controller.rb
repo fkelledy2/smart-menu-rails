@@ -1,7 +1,12 @@
 require "rqrcode"
 
 class MenusController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_menu, only: %i[ show edit update destroy regenerate_images ]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET	/restaurants/:restaurant_id/menus
   # GET /menus or /menus.json
@@ -12,12 +17,12 @@ class MenusController < ApplicationController
     if current_user
         if params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, restaurant_id: @restaurant.id, archived: false)
+            @menus = policy_scope(Menu).where(restaurant_id: @restaurant.id, archived: false)
             .includes([:genimage])
             .includes([:menuavailabilities])
             .order('sequence ASC').all
         else
-            @menus = Menu.joins(:restaurant).where(restaurant: {user: current_user}, archived: false).order('sequence ASC')
+            @menus = policy_scope(Menu).where(archived: false).order('sequence ASC')
             .includes([:genimage])
             .includes([:menuavailabilities])
             .all
@@ -43,6 +48,8 @@ class MenusController < ApplicationController
 
   # POST /menus/:id/regenerate_images
   def regenerate_images
+    authorize @menu, :update?
+    
     if @menu.nil?
       redirect_to root_url and return
     end
@@ -64,6 +71,8 @@ class MenusController < ApplicationController
   # GET	/restaurants/:restaurant_id/menus/:id(.:format)	 menus#show
   # GET /menus/1 or /menus/1.json
   def show
+    # Public access for customer viewing, but authorize if user is logged in
+    authorize @menu if current_user
     if params[:menu_id] && params[:id]
         if params[:restaurant_id]
             @restaurant = Restaurant.find_by_id(params[:restaurant_id])
@@ -128,55 +137,53 @@ class MenusController < ApplicationController
 
   # GET /menus/new
   def new
-    if current_user
-        @menu = Menu.new
-        if params[:restaurant_id]
-            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-            @menu.restaurant = @futureParentRestaurant
-            Analytics.track(
-                user_id: current_user.id,
-                event: 'menus.new',
-                properties: {
-                  restaurant_id: @menu.restaurant.id,
-                }
-            )
-        end
-    else
-        redirect_to root_url
+    @menu = Menu.new
+    if params[:restaurant_id]
+        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+        @menu.restaurant = @futureParentRestaurant
     end
+    authorize @menu
+    
+    Analytics.track(
+        user_id: current_user.id,
+        event: 'menus.new',
+        properties: {
+          restaurant_id: @menu.restaurant&.id,
+        }
+    )
   end
 
   # GET /menus/1/edit
   def edit
-    if current_user
-        if params[:menu_id] && params[:id]
-            if params[:restaurant_id]
-                @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-                @menu = Menu.find_by_id(params[:menu_id])
-                if @menu.restaurant != @restaurant
-                    redirect_to root_url
-                end
+    authorize @menu
+    
+    if params[:menu_id] && params[:id]
+        if params[:restaurant_id]
+            @restaurant = Restaurant.find_by_id(params[:restaurant_id])
+            @menu = Menu.find_by_id(params[:menu_id])
+            if @menu.restaurant != @restaurant
+                redirect_to root_url
             end
-            Analytics.track(
-                event: 'menus.edit',
-                properties: {
-                  restaurant_id: @menu.restaurant.id,
-                  menu_id: @menu.id,
-                }
-            )
         end
-        @qrURL = Rails.application.routes.url_helpers.menu_url(@menu, :host => request.host_with_port)
-        @qrURL.sub! 'http', 'https'
-        @qrURL.sub! '/edit', ''
-        @qr = RQRCode::QRCode.new(@qrURL)
-    else
-        redirect_to root_url
+        Analytics.track(
+            event: 'menus.edit',
+            properties: {
+              restaurant_id: @menu.restaurant.id,
+              menu_id: @menu.id,
+            }
+        )
     end
+    @qrURL = Rails.application.routes.url_helpers.menu_url(@menu, :host => request.host_with_port)
+    @qrURL.sub! 'http', 'https'
+    @qrURL.sub! '/edit', ''
+    @qr = RQRCode::QRCode.new(@qrURL)
   end
 
   # POST /menus or /menus.json
   def create
     @menu = Menu.new(menu_params)
+    authorize @menu
+    
     respond_to do |format|
       # Remove PDF if requested
       if params[:menu][:remove_pdf_menu_scan] == '1'
@@ -213,6 +220,8 @@ class MenusController < ApplicationController
 
   # PATCH/PUT /menus/1 or /menus/1.json
   def update
+    authorize @menu
+    
     respond_to do |format|
       # Remove PDF if requested
       if params[:menu][:remove_pdf_menu_scan] == '1'
@@ -249,22 +258,20 @@ class MenusController < ApplicationController
 
   # DELETE /menus/1 or /menus/1.json
   def destroy
-    if current_user
-        @menu.update( archived: true )
-        Analytics.track(
-            user_id: current_user.id,
-            event: 'menus.destroy',
-            properties: {
-              restaurant_id: @menu.restaurant.id,
-              menu_id: @menu.id,
-            }
-        )
-        respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: t('common.flash.deleted', resource: t('activerecord.models.menu')) }
-          format.json { head :no_content }
-        end
-    else
-        redirect_to root_url
+    authorize @menu
+    
+    @menu.update( archived: true )
+    Analytics.track(
+        user_id: current_user.id,
+        event: 'menus.destroy',
+        properties: {
+          restaurant_id: @menu.restaurant.id,
+          menu_id: @menu.id,
+        }
+    )
+    respond_to do |format|
+      format.html { redirect_to edit_restaurant_path(id: @menu.restaurant.id), notice: t('common.flash.deleted', resource: t('activerecord.models.menu')) }
+      format.json { head :no_content }
     end
   end
 

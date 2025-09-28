@@ -1,14 +1,27 @@
 class SmartmenusController < ApplicationController
   layout "smartmenu", :only => [ :show ]
+  before_action :authenticate_user!, except: [:index, :show] # Public menu viewing
   before_action :set_smartmenu, only: %i[ show edit update destroy ]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index, :show]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /smartmenus or /smartmenus.json
   def index
-    @smartmenus = Smartmenu
-        .includes(:menu, :restaurant, :tablesetting)
-        .joins(:menu)
-        .where(tablesetting_id: nil, menus: { status: 'active' })
-        .limit(100)
+    if current_user
+      @smartmenus = policy_scope(Smartmenu)
+          .includes(:menu, :restaurant, :tablesetting)
+          .joins(:menu)
+          .where(tablesetting_id: nil, menus: { status: 'active' })
+          .limit(100)
+    else
+      @smartmenus = Smartmenu
+          .includes(:menu, :restaurant, :tablesetting)
+          .joins(:menu)
+          .where(tablesetting_id: nil, menus: { status: 'active' })
+          .limit(100)
+    end
   end
 
   # GET /smartmenus/1 or /smartmenus/1.json
@@ -90,6 +103,8 @@ class SmartmenusController < ApplicationController
 
   # PATCH/PUT /smartmenus/1 or /smartmenus/1.json
   def update
+    authorize @smartmenu
+    
     respond_to do |format|
       if @smartmenu.update(smartmenu_params)
         format.html { redirect_to @smartmenu, notice: t('common.flash.updated', resource: t('activerecord.models.smartmenu')) }
@@ -103,6 +118,8 @@ class SmartmenusController < ApplicationController
 
   # DELETE /smartmenus/1 or /smartmenus/1.json
   def destroy
+    authorize @smartmenu
+    
     @smartmenu.destroy!
 
     respond_to do |format|

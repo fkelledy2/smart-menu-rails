@@ -1,8 +1,12 @@
 class AnnouncementsController < ApplicationController
+  before_action :authenticate_user!
   before_action :mark_as_read, if: :user_signed_in?
+  
+  # Pundit authorization
+  after_action :verify_policy_scoped, only: [:index]
 
   def index
-    @announcements = Announcement.order(published_at: :desc)
+    @announcements = policy_scope(Announcement).order(published_at: :desc)
   end
 
   private

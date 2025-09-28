@@ -1,10 +1,11 @@
 class OcrMenuImportsController < ApplicationController
+  include Pundit::Authorization
   skip_before_action :set_current_employee, only: [:reorder_sections, :reorder_items]
   skip_before_action :set_permissions, only: [:reorder_sections, :reorder_items]
   skip_forgery_protection only: [:reorder_sections, :reorder_items]
   before_action :set_restaurant
   before_action :set_ocr_menu_import, only: [:show, :edit, :update, :destroy, :process_pdf, :confirm_import, :reorder_sections, :reorder_items, :toggle_section_confirmation, :toggle_all_confirmation]
-  before_action :authorize_restaurant_owner
+  before_action :authorize_import, only: [:show, :edit, :update, :destroy, :process_pdf, :confirm_import, :reorder_sections, :reorder_items, :toggle_section_confirmation, :toggle_all_confirmation]
   
   # GET /restaurants/:restaurant_id/ocr_menu_imports
   def index
@@ -154,6 +155,9 @@ class OcrMenuImportsController < ApplicationController
   
   # PATCH /restaurants/:restaurant_id/ocr_menu_imports/:id/reorder_sections
   def reorder_sections
+    unless current_user && @ocr_menu_import.restaurant.user_id == current_user.id
+      return render(json: { error: { code: 'forbidden', message: t('ocr_menu_imports.controller.unauthorized', default: 'Unauthorized') } }, status: :forbidden)
+    end
     section_ids = Array(params[:section_ids]).reject(&:blank?).map(&:to_i)
     Rails.logger.warn("[reorder_sections] raw=#{params[:section_ids].inspect} parsed=#{section_ids.inspect}")
     return render(json: { error: 'section_ids required' }, status: :bad_request) if section_ids.blank?
@@ -178,6 +182,9 @@ class OcrMenuImportsController < ApplicationController
   # PATCH /restaurants/:restaurant_id/ocr_menu_imports/:id/reorder_items
   # Params: section_id: Integer, item_ids: [Integer]
   def reorder_items
+    unless current_user && @ocr_menu_import.restaurant.user_id == current_user.id
+      return render(json: { error: { code: 'forbidden', message: t('ocr_menu_imports.controller.unauthorized', default: 'Unauthorized') } }, status: :forbidden)
+    end
     section_id = params[:section_id].to_i
     item_ids = Array(params[:item_ids]).reject(&:blank?).map(&:to_i)
     Rails.logger.warn("[reorder_items] section_id raw=#{params[:section_id].inspect} parsed=#{section_id} item_ids raw=#{params[:item_ids].inspect} parsed=#{item_ids.inspect}")
@@ -225,9 +232,13 @@ class OcrMenuImportsController < ApplicationController
     params.require(:ocr_menu_import).permit(:name, :pdf_file)
   end
   
-  def authorize_restaurant_owner
-    unless current_user && @restaurant.user == current_user
-      redirect_to root_path, alert: t('ocr_menu_imports.controller.unauthorized')
+  def authorize_import
+    authorize @ocr_menu_import
+  rescue Pundit::NotAuthorizedError
+    respond_to do |format|
+      format.json { render json: { error: { code: 'forbidden', message: t('ocr_menu_imports.controller.unauthorized', default: 'Unauthorized') } }, status: :forbidden }
+      format.html { redirect_to root_path, alert: t('ocr_menu_imports.controller.unauthorized') }
+      format.any  { head :forbidden }
     end
   end
 end

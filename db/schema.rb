@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_24_181009) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_28_201829) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -395,7 +395,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_24_181009) do
     t.string "status", default: "pending", null: false
     t.text "error_message"
     t.integer "total_pages"
-    t.integer "processed_pages", default: 0
+    t.integer "processed_pages", default: 0, null: false
     t.jsonb "metadata", default: {}
     t.bigint "menu_id"
     t.datetime "completed_at"
@@ -403,6 +403,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_24_181009) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["menu_id"], name: "index_ocr_menu_imports_on_menu_id"
+    t.index ["restaurant_id", "status"], name: "index_ocr_menu_imports_on_restaurant_and_status"
     t.index ["restaurant_id"], name: "index_ocr_menu_imports_on_restaurant_id"
     t.index ["status"], name: "index_ocr_menu_imports_on_status"
   end
@@ -414,7 +415,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_24_181009) do
     t.decimal "price", precision: 10, scale: 2
     t.text "allergens", default: [], array: true
     t.integer "sequence", default: 0, null: false
-    t.boolean "is_confirmed", default: false
+    t.boolean "is_confirmed", default: false, null: false
     t.boolean "is_vegetarian", default: false
     t.boolean "is_vegan", default: false
     t.boolean "is_gluten_free", default: false
@@ -432,6 +433,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_24_181009) do
     t.index ["is_vegetarian"], name: "index_ocr_menu_items_on_is_vegetarian"
     t.index ["menu_item_id"], name: "index_ocr_menu_items_on_menu_item_id"
     t.index ["menuitem_id"], name: "index_ocr_menu_items_on_menuitem_id"
+    t.index ["ocr_menu_section_id", "is_confirmed"], name: "index_ocr_menu_items_on_section_and_confirmed"
     t.index ["ocr_menu_section_id"], name: "index_ocr_menu_items_on_ocr_menu_section_id"
     t.index ["sequence"], name: "index_ocr_menu_items_on_sequence"
   end
@@ -441,7 +443,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_24_181009) do
     t.string "name", null: false
     t.integer "sequence", default: 0, null: false
     t.jsonb "metadata", default: {}
-    t.boolean "is_confirmed", default: false
+    t.boolean "is_confirmed", default: false, null: false
     t.string "page_reference"
     t.bigint "menu_section_id"
     t.datetime "created_at", null: false
@@ -451,6 +453,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_24_181009) do
     t.index ["is_confirmed"], name: "index_ocr_menu_sections_on_is_confirmed"
     t.index ["menu_section_id"], name: "index_ocr_menu_sections_on_menu_section_id"
     t.index ["menusection_id"], name: "index_ocr_menu_sections_on_menusection_id"
+    t.index ["ocr_menu_import_id", "is_confirmed"], name: "index_ocr_menu_sections_on_import_and_confirmed"
     t.index ["ocr_menu_import_id"], name: "index_ocr_menu_sections_on_ocr_menu_import_id"
     t.index ["sequence"], name: "index_ocr_menu_sections_on_sequence"
   end
@@ -864,7 +867,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_24_181009) do
     t.string "first_name"
     t.string "last_name"
     t.datetime "announcements_last_read_at"
-    t.boolean "admin", default: false
+    t.boolean "admin", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "plan_id"

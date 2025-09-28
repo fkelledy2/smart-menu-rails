@@ -1,54 +1,47 @@
 class EmployeesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_employee, only: %i[ show edit update destroy ]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /employees or /employees.json
   def index
-    if current_user
-        if params[:restaurant_id]
-            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-            @employees = Employee.joins(:restaurant).where(restaurant: @futureParentRestaurant, archived: false).all
-        else
-            @employees = Employee.joins(:restaurant).where(restaurant: {user: current_user}, archived: false).all
-        end
+    if params[:restaurant_id]
+        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+        @employees = policy_scope(Employee).where(restaurant: @futureParentRestaurant, archived: false).all
     else
-        redirect_to root_url
+        @employees = policy_scope(Employee).where(archived: false).all
     end
   end
 
   # GET /employees/1 or /employees/1.json
   def show
-    if current_user
-    else
-        redirect_to root_url
-    end
+    authorize @employee
   end
 
   # GET /employees/new
   def new
-    if current_user
-        @employee = Employee.new
-        if params[:restaurant_id]
-            @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-            @employee.restaurant = @futureParentRestaurant
-        end
-    else
-        redirect_to root_url
+    @employee = Employee.new
+    if params[:restaurant_id]
+        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+        @employee.restaurant = @futureParentRestaurant
     end
+    authorize @employee
   end
 
   # GET /employees/1/edit
   def edit
-    if current_user
-    else
-        redirect_to root_url
-    end
+    authorize @employee
   end
 
   # POST /employees or /employees.json
   def create
-    if current_user
-        @employee = Employee.new(employee_params)
-        respond_to do |format|
+    @employee = Employee.new(employee_params)
+    authorize @employee
+    
+    respond_to do |format|
           if @employee.save
             @employee.email = @employee.user.email
             format.html { redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: t('employees.controller.created') }
@@ -58,15 +51,13 @@ class EmployeesController < ApplicationController
             format.json { render json: @employee.errors, status: :unprocessable_entity }
           end
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # PATCH/PUT /employees/1 or /employees/1.json
   def update
-    if current_user
-        respond_to do |format|
+    authorize @employee
+    
+    respond_to do |format|
           if @employee.update(employee_params)
             @employee.email = @employee.user.email
             format.html { redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: t('employees.controller.updated') }
@@ -77,21 +68,16 @@ class EmployeesController < ApplicationController
             format.json { render json: @employee.errors, status: :unprocessable_entity }
           end
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # DELETE /employees/1 or /employees/1.json
   def destroy
-    if current_user
-        @employee.update( archived: true )
-        respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: t('employees.controller.deleted') }
-          format.json { head :no_content }
-        end
-    else
-        redirect_to root_url
+    authorize @employee
+    
+    @employee.update( archived: true )
+    respond_to do |format|
+      format.html { redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: t('employees.controller.deleted') }
+      format.json { head :no_content }
     end
   end
 

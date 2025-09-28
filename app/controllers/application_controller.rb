@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   impersonates :user
   include Pundit::Authorization
   around_action :switch_locale
+  
+  before_action :debug_request_in_test
 
   def switch_locale(&action)
       if request.env["HTTP_ACCEPT_LANGUAGE"] != nil
@@ -44,5 +46,9 @@ class ApplicationController < ActionController::Base
     def configure_permitted_parameters
       devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
       devise_parameter_sanitizer.permit(:account_update, keys: [:name, :avatar])
+    end
+    
+    def debug_request_in_test
+      # Debug logging removed - was for API routing investigation
     end
 end

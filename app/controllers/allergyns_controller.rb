@@ -1,68 +1,66 @@
 class AllergynsController < ApplicationController
+  before_action :authenticate_user!, except: [:index] # Allow public viewing of allergens
   before_action :set_allergyn, only: %i[ show edit update destroy ]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /allergyns or /allergyns.json
   def index
-    if current_user
-        if params[:restaurant_id]
-            @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-            @allergyns = Allergyn.where( restaurant: @restaurant).all
+    if params[:restaurant_id]
+        @restaurant = Restaurant.find_by_id(params[:restaurant_id])
+        if current_user
+            @allergyns = policy_scope(Allergyn).where(restaurant: @restaurant)
+        else
+            @allergyns = Allergyn.where(restaurant: @restaurant)
         end
+    end
+    
+    if current_user
         Analytics.track(
             user_id: current_user.id,
             event: 'allergyns.index',
             properties: {
-              restaurant_id: @restaurant.id,
+              restaurant_id: @restaurant&.id,
             }
         )
     else
-        if params[:restaurant_id]
-            @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-            @allergyns = Allergyn.where( restaurant: @restaurant).all
-            Analytics.track(
-                event: 'allergyns.index',
-                properties: {
-                  restaurant_id: @restaurant.id,
-                }
-            )
-        end
+        Analytics.track(
+            event: 'allergyns.index',
+            properties: {
+              restaurant_id: @restaurant&.id,
+            }
+        )
     end
   end
 
   # GET /allergyns/1 or /allergyns/1.json
   def show
-    if current_user
-    else
-        redirect_to root_url
-    end
+    authorize @allergyn
   end
 
   # GET /allergyns/new
   def new
-    if current_user
-        @allergyn = Allergyn.new
-        if params[:restaurant_id]
-          @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-          @allergyn.restaurant = @futureParentRestaurant
-        end
-    else
-        redirect_to root_url
+    @allergyn = Allergyn.new
+    if params[:restaurant_id]
+      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      @allergyn.restaurant = @futureParentRestaurant
     end
+    authorize @allergyn
   end
 
   # GET /allergyns/1/edit
   def edit
-    if current_user
-    else
-        redirect_to root_url
-    end
+    authorize @allergyn
   end
 
   # POST /allergyns or /allergyns.json
   def create
-    if current_user
-        @allergyn = Allergyn.new(allergyn_params)
-        respond_to do |format|
+    @allergyn = Allergyn.new(allergyn_params)
+    authorize @allergyn
+    
+    respond_to do |format|
           if @allergyn.save
             format.html { redirect_to edit_restaurant_path(id: @allergyn.restaurant.id), notice: t('common.flash.created', resource: t('activerecord.models.allergyn')) }
             format.json { render :show, status: :created, location: @allergyn }
@@ -71,15 +69,13 @@ class AllergynsController < ApplicationController
             format.json { render json: @allergyn.errors, status: :unprocessable_entity }
           end
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # PATCH/PUT /allergyns/1 or /allergyns/1.json
   def update
-    if current_user
-        respond_to do |format|
+    authorize @allergyn
+    
+    respond_to do |format|
           if @allergyn.update(allergyn_params)
             format.html { redirect_to edit_restaurant_path(id: @allergyn.restaurant.id), notice: t('common.flash.updated', resource: t('activerecord.models.allergyn')) }
             format.json { render :show, status: :ok, location: @allergyn }
@@ -88,21 +84,16 @@ class AllergynsController < ApplicationController
             format.json { render json: @allergyn.errors, status: :unprocessable_entity }
           end
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # DELETE /allergyns/1 or /allergyns/1.json
   def destroy
-    if current_user
-        @allergyn.update( archived: true )
-        respond_to do |format|
-          format.html { redirect_to edit_restaurant_path(id: @allergyn.restaurant.id), notice: t('common.flash.deleted', resource: t('activerecord.models.allergyn')) }
-          format.json { head :no_content }
-        end
-    else
-        redirect_to root_url
+    authorize @allergyn
+    
+    @allergyn.update( archived: true )
+    respond_to do |format|
+      format.html { redirect_to edit_restaurant_path(id: @allergyn.restaurant.id), notice: t('common.flash.deleted', resource: t('activerecord.models.allergyn')) }
+      format.json { head :no_content }
     end
   end
 

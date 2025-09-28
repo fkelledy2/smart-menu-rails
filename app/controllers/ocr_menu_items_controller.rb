@@ -1,12 +1,18 @@
 require 'set'
 class OcrMenuItemsController < ApplicationController
+  include Pundit::Authorization
   protect_from_forgery with: :exception
   # Allow JSON API-style updates in tests and clients without CSRF token
   skip_before_action :verify_authenticity_token, only: :update
+  before_action :authenticate_user!
   before_action :set_item
+  before_action :authorize_item
 
   # PATCH /ocr_menu_items/:id
   def update
+    if Rails.env.test?
+      Rails.logger.warn "[TEST DEBUG] HIT OcrMenuItemsController#update (NON-API)"
+    end
     request.format = :json if request.format.html?
     # Accept JSON payload like:
     # {
@@ -78,6 +84,21 @@ class OcrMenuItemsController < ApplicationController
 
   def set_item
     @item = OcrMenuItem.find(params[:id])
+  end
+
+  def authorize_item
+    if Rails.env.test?
+      Rails.logger.warn "[TEST DEBUG] OcrMenuItemsController#authorize_item: about to call authorize"
+    end
+    authorize @item
+    if Rails.env.test?
+      Rails.logger.warn "[TEST DEBUG] OcrMenuItemsController#authorize_item: authorize passed"
+    end
+  rescue Pundit::NotAuthorizedError => e
+    if Rails.env.test?
+      Rails.logger.warn "[TEST DEBUG] OcrMenuItemsController#authorize_item: Pundit::NotAuthorizedError caught"
+    end
+    render json: { ok: false, errors: ["You are not authorized to perform this action"] }, status: :forbidden
   end
 
   def permitted_item_params

@@ -39,19 +39,22 @@ Rails.application.routes.draw do
 
   resources :dw_orders_mv, only: [:index, :show]
 
+  # Google Vision API endpoints - MUST come before non-API routes for proper precedence
+  namespace :api do
+    namespace :v1 do
+      get 'test/ping', to: 'test#ping'
+      post 'vision/analyze', to: 'vision#analyze'
+      post 'vision/detect_menu_items', to: 'vision#detect_menu_items'
+      resources :ocr_menu_items, only: [:update]
+      resources :ocr_menu_sections, only: [:update]
+    end
+  end
+
   # Endpoint to update OCR menu items from modal
   resources :ocr_menu_items, only: [:update]
 
   # Endpoint to update OCR menu sections (inline title editing)
   resources :ocr_menu_sections, only: [:update]
-
-  # Google Vision API endpoints
-  namespace :api do
-    namespace :v1 do
-      post 'vision/analyze', to: 'vision#analyze'
-      post 'vision/detect_menu_items', to: 'vision#detect_menu_items'
-    end
-  end
 
   resources :restaurants do
     resources :restaurantlocales, controller: 'restaurantlocales', only: [:index,:show, :edit, :delete]

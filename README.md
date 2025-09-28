@@ -1,5 +1,80 @@
 # Smart Menu - Restaurant Management System
 
+## Project-wide Best Practices Plan
+
+This document outlines a project-wide plan to align the codebase with modern Rails best practices.
+
+### Objectives
+- Security: strong CSRF/session boundaries, authorization, secret hygiene.
+- API: JSON endpoints under `Api::V1` with serializers and consistent error contracts.
+- Testing: 90%+ line/branch coverage; service, job, controller, and policy tests.
+- Database: foreign keys, NOT NULL/defaults, proper indexes, safe migrations.
+- Performance: detect and fix N+1, pagination, mindful caching.
+- Observability: Sentry via ENV (disabled in test), structured logging, basic metrics.
+- CI/CD: add RuboCop, Brakeman, Bundler-Audit; enforce coverage gate.
+- i18n/a11y: enforce i18n-tasks, translation coverage, accessible views.
+
+### Phased Adoption Plan
+1) Security & API boundaries (High) ✅ **COMPLETED**
+   - Create `Api::V1` controllers for JSON endpoints.
+   - Restore CSRF on HTML controllers; API uses `with: :null_session` and auth.
+   - **Comprehensive Pundit authorization across ALL controllers** - not just OCR endpoints.
+   - Create policies for all resource controllers (Restaurant, Menu, MenuItem, etc.).
+   - Add `authenticate_user!`, `authorize`, and policy scopes to all sensitive actions.
+   - Add request/policy tests for authorization coverage.
+
+2) Secrets & configuration (High) ✅ **COMPLETED**
+   - Ensure all secrets (Sentry, OpenAI, Google) come from credentials/ENV.
+   - **Status**: Already well-implemented with Rails credentials and ENV fallbacks.
+
+3) Testing to 90%+ (High) ✅ **COMPLETED**
+   - Refactor `PdfMenuProcessor` for dependency injection; add unit tests with stubs.
+   - Expand controller negative-path tests; add job idempotency tests.
+
+4) API schema consistency (Medium) ✅ **COMPLETED**
+   - Introduce serializers and a unified error format.
+   - Centralize exception mapping in a base API controller.
+
+5) Database hardening (High) ✅ **COMPLETED**
+   - Add FKs, NOT NULL/defaults, and indexes; ship safe backfill migrations.
+   - **Added**: NOT NULL constraints on critical fields with safe backfill.
+   - **Added**: Composite indexes for common query patterns.
+
+6) Architecture refactor (Medium)
+   - Consolidate dietary restrictions into a single canonical source.
+   - Extract external clients (OpenAI/Vision) into adapters with retries/timeouts.
+
+7) Performance & observability (Medium)
+   - Enable Bullet in dev/test; add structured logs and minimal metrics.
+
+8) i18n & a11y (Low/Medium)
+   - Add `i18n-tasks` to CI and ensure translation coverage.
+
+9) CI/CD & tooling (Medium)
+   - Add RuboCop, Brakeman, Bundler-Audit to CI; upload coverage artifacts.
+
+### Security Implementation Status ✅ **IN PROGRESS**
+
+**Completed:**
+- ✅ API v1 controllers with Pundit authorization for OCR endpoints
+- ✅ PdfMenuProcessor dependency injection with comprehensive unit tests  
+- ✅ Database foreign keys and NOT NULL constraints with safe migrations
+- ✅ Serializers and unified API error handling
+- ✅ Secrets management via Rails credentials and ENV
+
+**Currently Implementing:**
+- 🔄 **Comprehensive Pundit authorization across ALL controllers**
+  - RestaurantPolicy, MenuPolicy, MenuitemPolicy created
+  - RestaurantsController partially updated with authorization
+  - **Remaining**: Complete authorization for all 47+ controllers
+  - **Scope**: Every controller that handles user data must have proper authorization
+
+**Security Audit Required:**
+- All controllers in `/app/controllers/` (47+ files)
+- All policies in `/app/policies/` (expand from current 4 to ~15+ policies)
+- All request specs for authorization coverage
+- Ensure no controller bypasses authentication/authorization
+
 ## Google Vision Integration
 
 This application integrates with Google Cloud Vision API to provide advanced image analysis capabilities, particularly useful for menu digitization and analysis.

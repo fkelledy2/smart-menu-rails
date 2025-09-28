@@ -18,14 +18,13 @@ end
 
 module ActiveSupport
   class TestCase
-    # Run tests in parallel with specified workers
-    parallelize(workers: :number_of_processors)
+    # Run tests in a single process to avoid state bleed in auth/system tests
+    parallelize(workers: 1)
 
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
 
     # Add more helper methods to be used by all tests here...
-    
     # Load all test helpers from test/support/**/*.rb
     Dir[Rails.root.join('test/support/**/*.rb')].each { |f| require f }
 
@@ -40,6 +39,13 @@ module ActiveSupport
         else
             sign_in(user)
         end
+    end
+
+    # Ensure Warden is in test mode and sessions are cleaned between tests
+    Warden.test_mode!
+
+    teardown do
+      Warden.test_reset!
     end
   end
 end

@@ -1,70 +1,63 @@
 # OpenAI integration is handled elsewhere; legacy chatgpt-ruby removed
 
 class GenimagesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_genimage, only: %i[ show edit update destroy ]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /genimages or /genimages.json
   def index
-    if current_user
-        @genimages = Genimage.all
-    else
-        redirect_to root_url
-    end
+    @genimages = policy_scope(Genimage)
   end
 
   # GET /genimages/1 or /genimages/1.json
   def show
+    authorize @genimage
     redirect_to root_url
   end
 
   # GET /genimages/new
   def new
-    if current_user
-        @genimage = Genimage.new
-    else
-        redirect_to root_url
-    end
+    @genimage = Genimage.new
+    authorize @genimage
   end
 
   # GET /genimages/1/edit
   def edit
+    authorize @genimage
     redirect_to root_url
   end
 
   # POST /genimages or /genimages.json
   def create
-    if current_user
-        @genimage = Genimage.new
-    else
-        redirect_to root_url
-    end
+    @genimage = Genimage.new
+    authorize @genimage
   end
 
   # PATCH/PUT /genimages/1 or /genimages/1.json
   def update
-    if current_user
-        respond_to do |format|
+    authorize @genimage
+    
+    respond_to do |format|
           if @genimage.menuitem.itemtype != 'wine'
               GenerateImageJob.perform_sync(@genimage.id)
           end
           format.html { redirect_to edit_menuitem_path(@genimage.menuitem), notice: t('common.flash.updated', resource: t('activerecord.models.genimage')) }
           format.json { render :show, status: :ok, location: @genimage }
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # DELETE /genimages/1 or /genimages/1.json
   def destroy
-    if current_user
-        @genimage.destroy!
-        respond_to do |format|
-          format.html { redirect_to genimages_path, status: :see_other, notice: t('common.flash.deleted', resource: t('activerecord.models.genimage')) }
-          format.json { head :no_content }
-        end
-    else
-        redirect_to root_url
+    authorize @genimage
+    
+    @genimage.destroy!
+    respond_to do |format|
+      format.html { redirect_to genimages_path, status: :see_other, notice: t('common.flash.deleted', resource: t('activerecord.models.genimage')) }
+      format.json { head :no_content }
     end
   end
 

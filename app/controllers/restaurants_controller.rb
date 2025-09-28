@@ -1,9 +1,14 @@
 require 'rspotify'
 
 class RestaurantsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_restaurant, only: %i[ show edit update destroy ]
   before_action :set_currency, only: %i[ show index ]
   before_action :disable_turbo, only: [:edit]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index, :spotify_auth, :spotify_callback]
+  after_action :verify_policy_scoped, only: [:index]
 
   require 'rspotify'
 
@@ -72,9 +77,11 @@ class RestaurantsController < ApplicationController
 
   # GET /restaurants or /restaurants.json
   def index
-    if current_user && current_user.plan
-        # Use fetch_by_user_id which is automatically provided by identity_cache
-        @restaurants = Restaurant.fetch_by_user_id(current_user.id).reject { |r| r.archived? }
+    authorize Restaurant
+    
+    if current_user.plan
+        # Use policy scope for secure filtering
+        @restaurants = policy_scope(Restaurant).where(archived: false)
         
         Analytics.track(
             user_id: current_user.id,
@@ -93,63 +100,59 @@ class RestaurantsController < ApplicationController
 
   # GET /restaurants/1 or /restaurants/1.json
   def show
-    if current_user
-        if params[:restaurant_id] && params[:id]
-            # Use fetch to get the restaurant with caching
-            @restaurant = Restaurant.fetch(params[:id])
-            
-            # Preload associations that will be used in the view
-            @restaurant.fetch_menus if @restaurant.respond_to?(:fetch_menus)
-            @restaurant.fetch_tablesettings if @restaurant.respond_to?(:fetch_tablesettings)
-            
-            Analytics.track(
-                user_id: current_user.id,
-                event: 'restaurants.show',
-                properties: {
-                  restaurant_id: params[:id]
-                }
-            )
-        end
-    else
-        redirect_to root_url
+    authorize @restaurant
+    
+    if params[:restaurant_id] && params[:id]
+        # Use fetch to get the restaurant with caching
+        @restaurant = Restaurant.fetch(params[:id])
+        
+        # Preload associations that will be used in the view
+        @restaurant.fetch_menus if @restaurant.respond_to?(:fetch_menus)
+        @restaurant.fetch_tablesettings if @restaurant.respond_to?(:fetch_tablesettings)
+        
+        Analytics.track(
+            user_id: current_user.id,
+            event: 'restaurants.show',
+            properties: {
+              restaurant_id: params[:id]
+            }
+        )
     end
   end
 
   # GET /restaurants/new
   def new
-    if current_user
-        @restaurant = Restaurant.new
-            Analytics.track(
-                user_id: current_user.id,
-                event: 'restaurants.new'
-            )
-    else
-        redirect_to root_url
-    end
+    @restaurant = Restaurant.new
+    authorize @restaurant
+    
+    Analytics.track(
+        user_id: current_user.id,
+        event: 'restaurants.new'
+    )
   end
 
   # GET /restaurants/1/edit
   def edit
-    if current_user
-        @qrHost = request.host_with_port
+    authorize @restaurant
+    
+    @qrHost = request.host_with_port
 
-        Analytics.track(
-            user_id: current_user.id,
-            event: 'restaurants.edit',
-            properties: {
-                  restaurant_id: params[:id]
-            }
-        )
-    else
-        redirect_to root_url
-    end
+    Analytics.track(
+        user_id: current_user.id,
+        event: 'restaurants.edit',
+        properties: {
+              restaurant_id: params[:id]
+        }
+    )
   end
 
   # POST /restaurants or /restaurants.json
   def create
-    if current_user
-        @restaurant = Restaurant.new(restaurant_params)
-        respond_to do |format|
+    @restaurant = Restaurant.new(restaurant_params)
+    @restaurant.user = current_user
+    authorize @restaurant
+    
+    respond_to do |format|
           if @restaurant.save
             Analytics.track(
                 user_id: current_user.id,
@@ -172,15 +175,13 @@ class RestaurantsController < ApplicationController
             format.json { render json: @restaurant.errors, status: :unprocessable_entity }
           end
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # PATCH/PUT /restaurants/1 or /restaurants/1.json
   def update
-    if current_user
-        respond_to do |format|
+    authorize @restaurant
+    
+    respond_to do |format|
           if @restaurant.update(restaurant_params)
             # Expire the cache for this restaurant
             @restaurant.expire_restaurant_cache if @restaurant.respond_to?(:expire_restaurant_cache)
@@ -214,18 +215,16 @@ class RestaurantsController < ApplicationController
             format.json { render json: @restaurant.errors, status: :unprocessable_entity }
           end
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # DELETE /restaurants/1 or /restaurants/1.json
   def destroy
-    if current_user
-      # Get the user_id before destroying for cache invalidation
-      user_id = @restaurant.user_id
-      
-      @restaurant.update(archived: true)
+    authorize @restaurant
+    
+    # Get the user_id before destroying for cache invalidation
+    user_id = @restaurant.user_id
+    
+    @restaurant.update(archived: true)
       
       # Expire the user's restaurant list cache
       Restaurant.expire_user_id(user_id) if Restaurant.respond_to?(:expire_user_id)
@@ -242,9 +241,6 @@ class RestaurantsController < ApplicationController
         format.html { redirect_to restaurants_url, notice: t('common.flash.archived', resource: t('activerecord.models.restaurant')) }
         format.json { head :no_content }
       end
-    else
-      redirect_to root_url
-    end
   end
 
   private

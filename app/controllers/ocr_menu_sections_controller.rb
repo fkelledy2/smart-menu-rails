@@ -1,7 +1,10 @@
 class OcrMenuSectionsController < ApplicationController
+  include Pundit::Authorization
   # Allow JSON API-style updates without CSRF token
   skip_before_action :verify_authenticity_token, only: :update
+  before_action :authenticate_user!
   before_action :set_section
+  before_action :authorize_section
 
   # PATCH /ocr_menu_sections/:id
   def update
@@ -29,6 +32,12 @@ class OcrMenuSectionsController < ApplicationController
 
   def set_section
     @section = OcrMenuSection.find(params[:id])
+  end
+
+  def authorize_section
+    authorize @section
+  rescue Pundit::NotAuthorizedError
+    render json: { ok: false, errors: ["You are not authorized to perform this action"] }, status: :forbidden
   end
 
   def section_params

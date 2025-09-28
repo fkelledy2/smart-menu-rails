@@ -1,35 +1,37 @@
 class OrdritemsController < ApplicationController
+  before_action :authenticate_user!, except: [:create, :update, :destroy] # Allow customers to manage order items
   before_action :set_ordritem, only: %i[ show edit update destroy ]
   before_action :set_currency
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /ordritems or /ordritems.json
   def index
-    if current_user
-        @ordritems = []
-        Ordr.joins(:restaurant).where(restaurant: {user: current_user}).each do |ordr|
-            @ordritems += Ordritem.where( ordr: ordr).all
-        end
-    else
-        redirect_to root_url
-    end
+    @ordritems = policy_scope(Ordritem)
   end
 
   # GET /ordritems/1 or /ordritems/1.json
   def show
+    authorize @ordritem if current_user
   end
 
   # GET /ordritems/new
   def new
     @ordritem = Ordritem.new
+    authorize @ordritem if current_user
   end
 
   # GET /ordritems/1/edit
   def edit
+    authorize @ordritem if current_user
   end
 
   # POST /ordritems or /ordritems.json
   def create
     @ordritem = Ordritem.new(ordritem_params)
+    authorize @ordritem if current_user
     respond_to do |format|
       ActiveRecord::Base.transaction do
         if @ordritem.save
@@ -51,6 +53,8 @@ class OrdritemsController < ApplicationController
 
   # PATCH/PUT /ordritems/1 or /ordritems/1.json
   def update
+    authorize @ordritem if current_user
+    
     respond_to do |format|
       ActiveRecord::Base.transaction do
         old_ordritem = @ordritem.dup
@@ -74,6 +78,8 @@ class OrdritemsController < ApplicationController
 
   # DELETE /ordritems/1 or /ordritems/1.json
   def destroy
+    authorize @ordritem if current_user
+    
     ActiveRecord::Base.transaction do
       adjust_inventory(@ordritem.menuitem&.inventory, 1)
       order = @ordritem.ordr

@@ -1,55 +1,47 @@
 class MenusectionsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_menusection, only: %i[ show edit update destroy ]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /menusections or /menusections.json
   def index
-    if current_user
-        @menusections = []
-        if params[:menu_id]
-          @menu = Menu.find_by_id(params[:menu_id])
-          @menusections += @menu.menusections
-        end
-    else
-        redirect_to root_url
+    @menusections = []
+    if params[:menu_id]
+      @menu = Menu.find_by_id(params[:menu_id])
+      @menusections += policy_scope(Menusection).where(menu: @menu)
     end
   end
 
   # GET /menusections/1 or /menusections/1.json
   def show
-    if current_user
-    else
-        redirect_to root_url
-    end
+    authorize @menusection
   end
 
   # GET /menusections/new
   def new
-    if current_user
-        @menusection = Menusection.new
-        if params[:menu_id]
-          @futureParentMenu = Menu.find(params[:menu_id])
-          @menusection.menu = @futureParentMenu
-          @menusection.sequence = 1
-        end
-
-    else
-        redirect_to root_url
+    @menusection = Menusection.new
+    if params[:menu_id]
+      @futureParentMenu = Menu.find(params[:menu_id])
+      @menusection.menu = @futureParentMenu
+      @menusection.sequence = 1
     end
+    authorize @menusection
   end
 
   # GET /menusections/1/edit
   def edit
-    if current_user
-    else
-        redirect_to root_url
-    end
+    authorize @menusection
   end
 
   # POST /menusections or /menusections.json
   def create
-    if current_user
-        @menusection = Menusection.new(menusection_params)
-        respond_to do |format|
+    @menusection = Menusection.new(menusection_params)
+    authorize @menusection
+    
+    respond_to do |format|
           if @menusection.save
             if( @menusection.genimage == nil)
                 @genimage = Genimage.new
@@ -67,15 +59,13 @@ class MenusectionsController < ApplicationController
             format.json { render json: @menusection.errors, status: :unprocessable_entity }
           end
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # PATCH/PUT /menusections/1 or /menusections/1.json
   def update
-    if current_user
-        respond_to do |format|
+    authorize @menusection
+    
+    respond_to do |format|
           if @menusection.update(menusection_params)
             if( @menusection.genimage == nil)
                 @genimage = Genimage.new
@@ -93,21 +83,16 @@ class MenusectionsController < ApplicationController
             format.json { render json: @menusection.errors, status: :unprocessable_entity }
           end
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # DELETE /menusections/1 or /menusections/1.json
   def destroy
-    if current_user
-        @menusection.update( archived: true )
-        respond_to do |format|
-          format.html { redirect_to edit_menu_path(@menusection.menu), notice: t('common.flash.deleted', resource: t('activerecord.models.menusection')) }
-          format.json { head :no_content }
-        end
-    else
-        redirect_to root_url
+    authorize @menusection
+    
+    @menusection.update( archived: true )
+    respond_to do |format|
+      format.html { redirect_to edit_menu_path(@menusection.menu), notice: t('common.flash.deleted', resource: t('activerecord.models.menusection')) }
+      format.json { head :no_content }
     end
   end
 

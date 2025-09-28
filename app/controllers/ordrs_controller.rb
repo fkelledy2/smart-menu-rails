@@ -1,16 +1,20 @@
 class OrdrsController < ApplicationController
+  before_action :authenticate_user!, except: [:show, :create, :update] # Allow customers to create/update orders
   before_action :set_ordr, only: %i[ show edit update destroy ]
   before_action :set_currency
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /ordrs or /ordrs.json
   def index
-    if current_user
-        if params[:restaurant_id]
-            @restaurant = Restaurant.find_by_id(params[:restaurant_id])
-            @ordrs = Ordr.joins(:restaurant).where(restaurant_id: @restaurant.id).all
-        else
-            @ordrs = Ordr.joins(:restaurant).where(restaurant: {user: current_user}).all
-        end
+    if params[:restaurant_id]
+        @restaurant = Restaurant.find_by_id(params[:restaurant_id])
+        @ordrs = policy_scope(Ordr).where(restaurant_id: @restaurant.id).all
+    else
+        @ordrs = policy_scope(Ordr).all
+    end
 
         for @ordr in @ordrs do
             remainingItems =  @ordr.orderedItemsCount + @ordr.preparedItemsCount
@@ -32,13 +36,12 @@ class OrdrsController < ApplicationController
             @ordr.service = totalService
             @ordr.gross = @ordr.nett + @ordr.tip + @ordr.service + @ordr.tax
         end
-    else
-        redirect_to root_url
-    end
   end
 
   # GET /ordrs/1 or /ordrs/1.json
   def show
+    # Allow both staff and customers to view orders
+    authorize @ordr if current_user
             @ordr.nett = @ordr.runningTotal
             taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
             totalTax = 0
@@ -59,6 +62,7 @@ class OrdrsController < ApplicationController
   # GET /ordrs/new
   def new
     @ordr = Ordr.new
+    authorize @ordr if current_user
     @ordr.nett = 0
     @ordr.tip = 0
     @ordr.service = 0
@@ -70,6 +74,7 @@ class OrdrsController < ApplicationController
 
   # GET /ordrs/1/edit
   def edit
+    authorize @ordr
   end
 
   # POST /ordrs or /ordrs.json
@@ -77,6 +82,7 @@ class OrdrsController < ApplicationController
     @ordr = Ordr.new(ordr_params.merge(
       nett: 0, tip: 0, service: 0, tax: 0, gross: 0
     ))
+    authorize @ordr if current_user
   
     ActiveRecord::Base.transaction do
       if @ordr.save
@@ -104,6 +110,8 @@ class OrdrsController < ApplicationController
 
   # PATCH/PUT /ordrs/1 or /ordrs/1.json
   def update
+    authorize @ordr if current_user
+    
     ActiveRecord::Base.transaction do
 
       @ordr.assign_attributes(ordr_params)
@@ -134,6 +142,8 @@ class OrdrsController < ApplicationController
 
   # DELETE /ordrs/1 or /ordrs/1.json
   def destroy
+    authorize @ordr
+    
     ActiveRecord::Base.transaction do
       @ordr.destroy!
       respond_to do |format|

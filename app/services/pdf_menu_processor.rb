@@ -8,9 +8,11 @@ require 'openai'
 class PdfMenuProcessor
   class ProcessingError < StandardError; end
 
-  def initialize(ocr_menu_import)
+  def initialize(ocr_menu_import, openai_client: nil, vision_client: nil)
     @ocr_menu_import = ocr_menu_import
     @restaurant = ocr_menu_import.restaurant
+    @openai_client = openai_client
+    @vision_client = vision_client
   end
   
   def process
@@ -104,8 +106,8 @@ class PdfMenuProcessor
         raise ProcessingError, "Failed to render PDF pages for OCR: #{e.message}"
       end
 
-      # OCR each generated image file using Google Cloud Vision
-      image_annotator = Google::Cloud::Vision.image_annotator
+      # OCR each generated image file using Google Cloud Vision (injectable for tests)
+      image_annotator = (@vision_client || Google::Cloud::Vision.image_annotator)
       processed = 0
       Dir[File.join(dir, 'page-*.png')].sort_by { |p|
         p[/page-(\d+)\.png/, 1].to_i
@@ -233,7 +235,7 @@ class PdfMenuProcessor
     # Network robustness: timeouts and limited retries (OpenAI SDK)
     timeout_seconds = (ENV['OPENAI_TIMEOUT'] || 120).to_i
     attempts = 0
-    client = Rails.configuration.x.openai_client || OpenAI::Client.new(access_token: api_key, request_timeout: timeout_seconds)
+    client = @openai_client || Rails.configuration.x.openai_client || OpenAI::Client.new(access_token: api_key, request_timeout: timeout_seconds)
     begin
       attempts += 1
       # Some models support response_format json_object; skip if it raises an error
