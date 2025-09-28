@@ -34,6 +34,7 @@ class OcrMenuImportTest < ActiveSupport::TestCase
     
     # Test state transitions
     assert @ocr_menu_import.may_process?
+    @ocr_menu_import.save!
     @ocr_menu_import.process!
     assert_equal "processing", @ocr_menu_import.status
     

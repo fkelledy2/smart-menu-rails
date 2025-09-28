@@ -2,7 +2,19 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 require 'simplecov'
-SimpleCov.start
+require 'minitest/mock'
+
+# Start SimpleCov with Rails profile and optional coverage minimum for CI
+SimpleCov.start 'rails' do
+  add_filter %w[ bin/ config/ db/ vendor/ app/channels/ app/mailers/ app/jobs/ ]
+  track_files 'app/**/*.rb'
+  enable_coverage :branch
+
+  if ENV['COVERAGE_MIN']
+    minimum_coverage ENV['COVERAGE_MIN'].to_i
+    refuse_coverage_drop
+  end
+end
 
 module ActiveSupport
   class TestCase
