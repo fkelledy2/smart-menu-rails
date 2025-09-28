@@ -1,25 +1,19 @@
-# frozen_string_literal: true
+"""
+Sentry configuration
+ - Disabled in test (and other non-enabled envs) to avoid network calls during CI/tests
+ - DSN pulled from ENV['SENTRY_DSN'] if present
+ - Enabled only for production/staging by default
+"""
 
-# Sentry.init do |config|
-#   config.breadcrumbs_logger = [:active_support_logger]
-#   config.dsn = ENV['SENTRY_DSN']
-#   config.enable_tracing = true
-# end
+if defined?(Sentry)
+  Sentry.init do |config|
+    config.dsn = ENV['SENTRY_DSN']
+    config.enabled_environments = %w[production staging]
+    config.breadcrumbs_logger = [:active_support_logger, :http_logger]
 
-Sentry.init do |config|
-  config.dsn = 'https://c05c8ef1a73fd432a1e5526ac4c1ada4@o4508649141895168.ingest.de.sentry.io/4508649144975440'
-  config.breadcrumbs_logger = [:active_support_logger, :http_logger]
-
-  # Set traces_sample_rate to 1.0 to capture 100%
-  # of transactions for tracing.
-  # We recommend adjusting this value in production.
-  config.traces_sample_rate = 1.0
-  # or
-  config.traces_sampler = lambda do |context|
-    true
+    # Tracing (tune as needed per environment)
+    config.traces_sample_rate = 1.0
+    config.traces_sampler = lambda { |_context| true }
+    config.profiles_sample_rate = 1.0
   end
-  # Set profiles_sample_rate to profile 100%
-  # of sampled transactions.
-  # We recommend adjusting this value in production.
-  config.profiles_sample_rate = 1.0
 end
