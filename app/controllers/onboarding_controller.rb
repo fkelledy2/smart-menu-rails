@@ -1,7 +1,9 @@
 class OnboardingController < ApplicationController
+  skip_around_action :switch_locale
+  
   before_action :authenticate_user!
-  before_action :redirect_if_complete
   before_action :set_onboarding_session
+  before_action :redirect_if_complete
   before_action :set_step
   
   # Pundit authorization
@@ -11,7 +13,7 @@ class OnboardingController < ApplicationController
     authorize @onboarding
     
     @progress = (@step / 5.0 * 100).round
-    @plans = Plan.active if @step == 3
+    @plans = Plan.where(status: :active) if @step == 3
     
     respond_to do |format|
       format.html do
@@ -70,7 +72,9 @@ class OnboardingController < ApplicationController
   end
   
   def redirect_if_complete
-    redirect_to root_path if current_user.onboarding_complete?
+    if current_user.onboarding_complete? && !request.format.json?
+      redirect_to root_path 
+    end
   end
   
   def set_onboarding_session

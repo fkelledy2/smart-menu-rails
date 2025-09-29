@@ -30,6 +30,16 @@ class User < ApplicationRecord
     !onboarding_complete? && restaurants.empty?
   end
   
+  def name
+    "#{first_name} #{last_name}".strip
+  end
+  
+  def name=(full_name)
+    parts = full_name.to_s.split(' ', 2)
+    self.first_name = parts[0]
+    self.last_name = parts[1] if parts.length > 1
+  end
+  
   private
   
   def create_onboarding_session

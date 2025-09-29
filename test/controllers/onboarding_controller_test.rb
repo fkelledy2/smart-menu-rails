@@ -25,6 +25,9 @@ class OnboardingControllerTest < ActionDispatch::IntegrationTest
     )
     
     sign_in @user
+    
+    # Ensure onboarding session exists
+    @user.onboarding_session || @user.create_onboarding_session(status: :started)
   end
 
   test "should get onboarding step 1" do
