@@ -1,7 +1,7 @@
 <div class="wizard-form mx-auto" style="max-width: 1200px;">
   <div class="text-center mb-5">
-    <h1 class="h2 mb-3">Choose your plan</h1>
-    <p class="text-muted">Start with a 14-day free trial. No credit card required!</p>
+    <h1 class="h2 mb-3"><%= t('onboarding.plan_selection.title') %></h1>
+    <p class="text-muted"><%= t('onboarding.plan_selection.subtitle') %></p>
   </div>
 
   <%= form_with url: onboarding_path, method: :patch, local: true, 
@@ -15,7 +15,7 @@
             
             <% if plan.name == 'Professional' %>
               <div class="card-header bg-primary text-white text-center">
-                <small class="fw-bold">MOST POPULAR</small>
+                <small class="fw-bold"><%= t('onboarding.plan_selection.most_popular') %></small>
               </div>
             <% end %>
             
@@ -24,58 +24,58 @@
                 <h5 class="card-title mb-2"><%= plan.name %></h5>
                 <div class="h4 fw-bold text-primary mb-1">
                   $<%= plan.price || 0 %>
-                  <small class="fs-6 text-muted">/mo</small>
+                  <small class="fs-6 text-muted"><%= t('onboarding.plan_selection.per_month') %></small>
                 </div>
                 <% if plan.price && plan.price > 0 %>
-                  <small class="text-success">14-day free trial</small>
+                  <small class="text-success"><%= t('onboarding.plan_selection.free_trial') %></small>
                 <% else %>
-                  <small class="text-muted">Always free</small>
+                  <small class="text-muted"><%= t('onboarding.plan_selection.always_free') %></small>
                 <% end %>
               </div>
               
               <ul class="list-unstyled mb-3 flex-grow-1 small">
                 <li class="mb-1">
                   <i class="fas fa-check text-success me-1"></i>
-                  <%= plan.getLocations %> locations
+                  <%= plan.getLocations %> <%= t('onboarding.plan_selection.features.locations') %>
                 </li>
                 <li class="mb-1">
                   <i class="fas fa-check text-success me-1"></i>
-                  <%= plan.getMenusPerLocation %> menus/location
+                  <%= plan.getMenusPerLocation %> <%= t('onboarding.plan_selection.features.menus_per_location') %>
                 </li>
                 <li class="mb-1">
                   <i class="fas fa-check text-success me-1"></i>
-                  <%= plan.getItemsPerMenu %> items/menu
+                  <%= plan.getItemsPerMenu %> <%= t('onboarding.plan_selection.features.items_per_menu') %>
                 </li>
                 <li class="mb-1">
                   <i class="fas fa-check text-success me-1"></i>
-                  <%= plan.getLanguages %> languages
+                  <%= plan.getLanguages %> <%= t('onboarding.plan_selection.features.languages') %>
                 </li>
                 <li class="mb-1">
                   <i class="fas fa-check text-success me-1"></i>
-                  QR code menus
+                  <%= t('onboarding.plan_selection.features.qr_code_menus') %>
                 </li>
                 <li class="mb-1">
                   <i class="fas fa-check text-success me-1"></i>
-                  Online ordering
+                  <%= t('onboarding.plan_selection.features.online_ordering') %>
                 </li>
                 <% if plan.name != 'Starter' %>
                   <li class="mb-1">
                     <i class="fas fa-check text-success me-1"></i>
-                    Priority support
+                    <%= t('onboarding.plan_selection.features.priority_support') %>
                   </li>
                   <li class="mb-1">
                     <i class="fas fa-check text-success me-1"></i>
-                    Advanced analytics
+                    <%= t('onboarding.plan_selection.features.advanced_analytics') %>
                   </li>
                 <% end %>
                 <% if plan.name == 'Enterprise' %>
                   <li class="mb-1">
                     <i class="fas fa-check text-success me-1"></i>
-                    Custom branding
+                    <%= t('onboarding.plan_selection.features.custom_branding') %>
                   </li>
                   <li class="mb-1">
                     <i class="fas fa-check text-success me-1"></i>
-                    API access
+                    <%= t('onboarding.plan_selection.features.api_access') %>
                   </li>
                 <% end %>
               </ul>
@@ -85,9 +85,9 @@
                         class="btn btn-outline-primary w-100 select-plan-btn"
                         data-plan-id="<%= plan.id %>">
                   <% if plan.price && plan.price > 0 %>
-                    Start Free Trial
+                    <%= t('onboarding.plan_selection.start_free_trial') %>
                   <% else %>
-                    Choose Free Plan
+                    <%= t('onboarding.plan_selection.choose_free_plan') %>
                   <% end %>
                 </button>
               </div>
@@ -102,11 +102,11 @@
     <div class="d-flex justify-content-between align-items-center mt-5">
       <%= link_to onboarding_step_path(2), class: "btn btn-outline-secondary btn-lg btn-wizard" do %>
         <i class="fas fa-arrow-left me-2"></i>
-        Back
+        <%= t('onboarding.plan_selection.back') %>
       <% end %>
       
       <button type="submit" class="btn btn-primary btn-lg btn-wizard" id="continue-btn" disabled>
-        Continue
+        <%= t('onboarding.plan_selection.continue') %>
         <i class="fas fa-arrow-right ms-2"></i>
       </button>
     </div>
@@ -118,18 +118,18 @@
   <div class="row">
     <div class="col-md-4">
       <i class="fas fa-shield-alt text-success fs-1 mb-2"></i>
-      <h6>Secure & Reliable</h6>
-      <small class="text-muted">Bank-level security</small>
+      <h6><%= t('onboarding.plan_selection.trust_indicators.secure_title') %></h6>
+      <small class="text-muted"><%= t('onboarding.plan_selection.trust_indicators.secure_subtitle') %></small>
     </div>
     <div class="col-md-4">
       <i class="fas fa-mobile-alt text-primary fs-1 mb-2"></i>
-      <h6>Mobile Optimized</h6>
-      <small class="text-muted">Perfect on any device</small>
+      <h6><%= t('onboarding.plan_selection.trust_indicators.mobile_title') %></h6>
+      <small class="text-muted"><%= t('onboarding.plan_selection.trust_indicators.mobile_subtitle') %></small>
     </div>
     <div class="col-md-4">
       <i class="fas fa-headset text-info fs-1 mb-2"></i>
-      <h6>24/7 Support</h6>
-      <small class="text-muted">We're here to help</small>
+      <h6><%= t('onboarding.plan_selection.trust_indicators.support_title') %></h6>
+      <small class="text-muted"><%= t('onboarding.plan_selection.trust_indicators.support_subtitle') %></small>
     </div>
   </div>
 </div>
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
       selectButtons.forEach(btn => {
         btn.classList.remove('btn-primary');
         btn.classList.add('btn-outline-primary');
-        btn.textContent = btn.textContent.replace('Selected', btn.textContent.includes('Free') ? 'Choose Free Plan' : 'Start Free Trial');
+        btn.textContent = btn.textContent.replace('<%= j(t('onboarding.plan_selection.selected')) %>', btn.textContent.includes('<%= j(t('onboarding.plan_selection.choose_free_plan')) %>') ? '<%= j(t('onboarding.plan_selection.choose_free_plan')) %>' : '<%= j(t('onboarding.plan_selection.start_free_trial')) %>');
       });
       
       // Add selected state to clicked card
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       this.classList.remove('btn-outline-primary');
       this.classList.add('btn-primary');
-      this.textContent = 'Selected ✓';
+      this.textContent = '<%= j(t('onboarding.plan_selection.selected')) %>';
       
       // Update hidden field and enable continue button
       planIdInput.value = planId;
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!planIdInput.value) {
       event.preventDefault();
       event.stopPropagation();
-      alert('Please select a plan to continue.');
+      alert('<%= j(t('onboarding.plan_selection.select_plan_alert')) %>');
     }
   });
 });

@@ -1,102 +1,102 @@
 <div class="wizard-form mx-auto">
   <div class="text-center mb-5">
-    <h1 class="h2 mb-3">Tell us about your restaurant</h1>
-    <p class="text-muted">Help us customize your experience with some basic information.</p>
+    <h1 class="h2 mb-3"><%= t('onboarding.restaurant_details.title') %></h1>
+    <p class="text-muted"><%= t('onboarding.restaurant_details.subtitle') %></p>
   </div>
 
   <%= form_with model: @onboarding, url: onboarding_path, method: :patch, local: true, 
                 data: { step: 2 }, class: "needs-validation", novalidate: true do |f| %>
     
     <div class="mb-4">
-      <%= f.label :restaurant_name, "Restaurant Name", class: "form-label" %>
+      <%= f.label :restaurant_name, t('onboarding.restaurant_details.restaurant_name_label'), class: "form-label" %>
       <%= f.text_field :restaurant_name, 
           class: "form-control form-control-lg", 
-          placeholder: "Enter your restaurant name",
+          placeholder: t('onboarding.restaurant_details.restaurant_name_placeholder'),
           required: true %>
       <div class="invalid-feedback">
-        Please provide your restaurant name.
+        <%= t('onboarding.restaurant_details.restaurant_name_required') %>
       </div>
     </div>
 
     <div class="row mb-4">
       <div class="col-md-6">
-        <%= f.label :restaurant_type, "Restaurant Type", class: "form-label" %>
+        <%= f.label :restaurant_type, t('onboarding.restaurant_details.restaurant_type_label'), class: "form-label" %>
         <%= f.select :restaurant_type, 
             options_for_select([
-              ['Fine Dining', 'fine_dining'],
-              ['Casual Dining', 'casual_dining'],
-              ['Fast Casual', 'fast_casual'],
-              ['Quick Service', 'quick_service'],
-              ['Cafe', 'cafe'],
-              ['Bar & Grill', 'bar_grill'],
-              ['Food Truck', 'food_truck'],
-              ['Bakery', 'bakery'],
-              ['Other', 'other']
+              [t('onboarding.restaurant_details.restaurant_types.fine_dining'), 'fine_dining'],
+              [t('onboarding.restaurant_details.restaurant_types.casual_dining'), 'casual_dining'],
+              [t('onboarding.restaurant_details.restaurant_types.fast_casual'), 'fast_casual'],
+              [t('onboarding.restaurant_details.restaurant_types.quick_service'), 'quick_service'],
+              [t('onboarding.restaurant_details.restaurant_types.cafe'), 'cafe'],
+              [t('onboarding.restaurant_details.restaurant_types.bar_grill'), 'bar_grill'],
+              [t('onboarding.restaurant_details.restaurant_types.food_truck'), 'food_truck'],
+              [t('onboarding.restaurant_details.restaurant_types.bakery'), 'bakery'],
+              [t('onboarding.restaurant_details.restaurant_types.other'), 'other']
             ], @onboarding&.restaurant_type),
-            { prompt: 'Select type...' },
+            { prompt: t('onboarding.restaurant_details.restaurant_type_prompt') },
             { class: "form-select form-select-lg", required: true } %>
         <div class="invalid-feedback">
-          Please select your restaurant type.
+          <%= t('onboarding.restaurant_details.restaurant_type_required') %>
         </div>
       </div>
       
       <div class="col-md-6">
-        <%= f.label :cuisine_type, "Cuisine Type", class: "form-label" %>
+        <%= f.label :cuisine_type, t('onboarding.restaurant_details.cuisine_type_label'), class: "form-label" %>
         <%= f.select :cuisine_type, 
             options_for_select([
-              ['American', 'american'],
-              ['Italian', 'italian'],
-              ['Mexican', 'mexican'],
-              ['Chinese', 'chinese'],
-              ['Japanese', 'japanese'],
-              ['Indian', 'indian'],
-              ['French', 'french'],
-              ['Mediterranean', 'mediterranean'],
-              ['Thai', 'thai'],
-              ['Greek', 'greek'],
-              ['Spanish', 'spanish'],
-              ['Korean', 'korean'],
-              ['Vietnamese', 'vietnamese'],
-              ['Middle Eastern', 'middle_eastern'],
-              ['Fusion', 'fusion'],
-              ['Other', 'other']
+              [t('onboarding.restaurant_details.cuisine_types.american'), 'american'],
+              [t('onboarding.restaurant_details.cuisine_types.italian'), 'italian'],
+              [t('onboarding.restaurant_details.cuisine_types.mexican'), 'mexican'],
+              [t('onboarding.restaurant_details.cuisine_types.chinese'), 'chinese'],
+              [t('onboarding.restaurant_details.cuisine_types.japanese'), 'japanese'],
+              [t('onboarding.restaurant_details.cuisine_types.indian'), 'indian'],
+              [t('onboarding.restaurant_details.cuisine_types.french'), 'french'],
+              [t('onboarding.restaurant_details.cuisine_types.mediterranean'), 'mediterranean'],
+              [t('onboarding.restaurant_details.cuisine_types.thai'), 'thai'],
+              [t('onboarding.restaurant_details.cuisine_types.greek'), 'greek'],
+              [t('onboarding.restaurant_details.cuisine_types.spanish'), 'spanish'],
+              [t('onboarding.restaurant_details.cuisine_types.korean'), 'korean'],
+              [t('onboarding.restaurant_details.cuisine_types.vietnamese'), 'vietnamese'],
+              [t('onboarding.restaurant_details.cuisine_types.middle_eastern'), 'middle_eastern'],
+              [t('onboarding.restaurant_details.cuisine_types.fusion'), 'fusion'],
+              [t('onboarding.restaurant_details.cuisine_types.other'), 'other']
             ], @onboarding&.cuisine_type),
-            { prompt: 'Select cuisine...' },
+            { prompt: t('onboarding.restaurant_details.cuisine_type_prompt') },
             { class: "form-select form-select-lg", required: true } %>
         <div class="invalid-feedback">
-          Please select your cuisine type.
+          <%= t('onboarding.restaurant_details.cuisine_type_required') %>
         </div>
       </div>
     </div>
 
     <div class="mb-4">
-      <%= f.label :location, "Location", class: "form-label" %>
+      <%= f.label :location, t('onboarding.restaurant_details.location_label'), class: "form-label" %>
       <%= f.text_field :location, 
           class: "form-control form-control-lg", 
-          placeholder: "City, State/Country",
+          placeholder: t('onboarding.restaurant_details.location_placeholder'),
           required: true %>
-      <div class="form-text">This helps us set up currency and timezone defaults.</div>
+      <div class="form-text"><%= t('onboarding.restaurant_details.location_help') %></div>
       <div class="invalid-feedback">
-        Please provide your restaurant location.
+        <%= t('onboarding.restaurant_details.location_required') %>
       </div>
     </div>
 
     <div class="mb-4">
-      <%= f.label :phone, "Phone Number", class: "form-label" %>
+      <%= f.label :phone, t('onboarding.restaurant_details.phone_label'), class: "form-label" %>
       <%= f.telephone_field :phone, 
           class: "form-control form-control-lg", 
-          placeholder: "+1 (555) 123-4567" %>
-      <div class="form-text">Optional - for customer contact and reservations.</div>
+          placeholder: t('onboarding.restaurant_details.phone_placeholder') %>
+      <div class="form-text"><%= t('onboarding.restaurant_details.phone_help') %></div>
     </div>
 
     <div class="d-flex justify-content-between align-items-center mt-5">
       <%= link_to onboarding_step_path(1), class: "btn btn-outline-secondary btn-lg btn-wizard" do %>
         <i class="fas fa-arrow-left me-2"></i>
-        Back
+        <%= t('onboarding.restaurant_details.back') %>
       <% end %>
       
       <button type="submit" class="btn btn-primary btn-lg btn-wizard">
-        Continue
+        <%= t('onboarding.restaurant_details.continue') %>
         <i class="fas fa-arrow-right ms-2"></i>
       </button>
     </div>
@@ -108,12 +108,12 @@
   <div class="alert alert-info">
     <h6 class="alert-heading">
       <i class="fas fa-lightbulb me-2"></i>
-      Pro Tips
+      <%= t('onboarding.restaurant_details.pro_tips.title') %>
     </h6>
     <ul class="mb-0 small">
-      <li>Choose the restaurant type that best matches your service style</li>
-      <li>Cuisine type helps us suggest relevant menu templates</li>
-      <li>Location is used to set up local currency and timezone</li>
+      <li><%= t('onboarding.restaurant_details.pro_tips.tip1') %></li>
+      <li><%= t('onboarding.restaurant_details.pro_tips.tip2') %></li>
+      <li><%= t('onboarding.restaurant_details.pro_tips.tip3') %></li>
     </ul>
   </div>
 </div>
