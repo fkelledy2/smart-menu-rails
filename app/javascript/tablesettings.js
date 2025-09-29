@@ -26,7 +26,9 @@ export function initTablesettings() {
             var rowData = cell.getRow().getData("data").name;
             return "<a class='link-dark' href='/tablesettings/"+id+"/edit'>"+rowData+"</a>";
         }
-        const restaurantId = document.getElementById('restaurant-tablesetting-table').getAttribute('data-bs-restaurant_id');
+        const tableSettingTableElement = document.getElementById('restaurant-tablesetting-table');
+        if (!tableSettingTableElement) return; // Exit if element doesn't exist
+        const restaurantId = tableSettingTableElement.getAttribute('data-bs-restaurant_id');
         var tableSettingTable = new Tabulator("#restaurant-tablesetting-table", {
           dataLoader: false,
           maxHeight:"100%",

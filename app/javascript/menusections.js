@@ -50,7 +50,9 @@ export function initMenusections() {
             var rowData = cell.getRow().getData("data").name;
             return "<a class='link-dark' href='/menusections/"+id+"/edit'>"+rowData+"</a>";
         }
-        const menuId = document.getElementById('menu-menusection-table').getAttribute('data-bs-menu');
+        const menusectionTableElement = document.getElementById('menu-menusection-table');
+        if (!menusectionTableElement) return; // Exit if element doesn't exist
+        const menuId = menusectionTableElement.getAttribute('data-bs-menu');
         var menusectionTable = new Tabulator("#menu-menusection-table", {
           dataLoader: false,
           maxHeight:"100%",

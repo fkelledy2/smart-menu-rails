@@ -25,7 +25,9 @@ export function initMenuavailabilities() {
             var rowData = cell.getRow().getData("data").dayofweek;
             return "<a class='link-dark' href='/menuavailabilities/"+id+"/edit'>"+rowData+"</a>";
         }
-        const menuId = document.getElementById('menu-menusection-table').getAttribute('data-bs-menu');
+        const menuAvailabilityTableElement = document.getElementById('menu-menuavailability-table');
+        if (!menuAvailabilityTableElement) return; // Exit if element doesn't exist
+        const menuId = menuAvailabilityTableElement.getAttribute('data-bs-menu');
         var menuavailabilityTable = new Tabulator("#menu-menuavailability-table", {
           dataLoader: false,
           maxHeight:"100%",

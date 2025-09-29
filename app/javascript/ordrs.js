@@ -448,7 +448,9 @@ function refreshOrderJSLogic() {
             var rowData = cell.getRow().getData("data").tablesetting.name;
             return rowData;
         }
-        const restaurantId = document.getElementById('restaurant-ordr-table').getAttribute('data-bs-restaurant_id');
+        const ordrTableElement = document.getElementById('restaurant-ordr-table');
+        if (!ordrTableElement) return; // Exit if element doesn't exist
+        const restaurantId = ordrTableElement.getAttribute('data-bs-restaurant_id');
         var restaurantOrdrTable = new Tabulator("#restaurant-ordr-table", {
           pagination:true, //enable.
           paginationSize:10, // this option can take any positive integer value

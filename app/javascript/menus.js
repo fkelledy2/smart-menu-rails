@@ -192,7 +192,9 @@ export function initMenus() {
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }
-        const restaurantId = document.getElementById('restaurant-menu-table').getAttribute('data-bs-restaurant_id');
+        const menuTableElement = document.getElementById('restaurant-menu-table');
+        if (!menuTableElement) return; // Exit if element doesn't exist
+        const restaurantId = menuTableElement.getAttribute('data-bs-restaurant_id');
         var restaurantMenuTable = new Tabulator("#restaurant-menu-table", {
           dataLoader: false,
           maxHeight:"100%",

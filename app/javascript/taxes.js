@@ -20,7 +20,9 @@ export function initTaxes() {
             var rowData = cell.getRow().getData("data").name;
             return "<a class='link-dark' href='/taxes/"+id+"/edit'>"+rowData+"</a>";
         }
-        const restaurantId = document.getElementById('restaurant-tax-table').getAttribute('data-bs-restaurant_id');
+        const taxTableElement = document.getElementById('restaurant-tax-table');
+        if (!taxTableElement) return; // Exit if element doesn't exist
+        const restaurantId = taxTableElement.getAttribute('data-bs-restaurant_id');
         var restaurantTaxTable = new Tabulator("#restaurant-tax-table", {
           dataLoader: false,
           maxHeight:"100%",

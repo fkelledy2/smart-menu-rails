@@ -31,7 +31,9 @@ export function initEmployees() {
             var rowData = cell.getRow().getData("data").name;
             return "<a class='link-dark' href='/employees/"+id+"/edit'>"+rowData+"</a>";
         }
-        const restaurantId = document.getElementById('restaurant-employee-table').getAttribute('data-bs-restaurant_id');
+        const employeeTableElement = document.getElementById('restaurant-employee-table');
+        if (!employeeTableElement) return; // Exit if element doesn't exist
+        const restaurantId = employeeTableElement.getAttribute('data-bs-restaurant_id');
         var restaurantEmployeeTable = new Tabulator("#restaurant-employee-table", {
           dataLoader: false,
           maxHeight:"100%",

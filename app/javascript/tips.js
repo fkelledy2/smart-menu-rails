@@ -16,7 +16,9 @@ export function initTips() {
             var rowData = cell.getRow().getData("data").percentage;
             return "<a class='link-dark' href='/tips/"+id+"/edit'>"+rowData+"</a>";
         }
-        const restaurantId = document.getElementById('restaurant-tip-table').getAttribute('data-bs-restaurant_id');
+        const tipTableElement = document.getElementById('restaurant-tip-table');
+        if (!tipTableElement) return; // Exit if element doesn't exist
+        const restaurantId = tipTableElement.getAttribute('data-bs-restaurant_id');
         var restaurantTipTable = new Tabulator("#restaurant-tip-table", {
           dataLoader: false,
           maxHeight:"100%",

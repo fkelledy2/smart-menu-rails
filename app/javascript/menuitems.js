@@ -35,7 +35,9 @@ export function initMenuitems() {
             var rowData = cell.getRow().getData("data").name;
             return "<a class='link-dark' href='/menuitems/"+id+"/edit'>"+rowData+"</a>";
         }
-        const menusectionId = document.getElementById('menusection-menuitem-table').getAttribute('data-bs-menusection');
+        const menuitemTableElement = document.getElementById('menusection-menuitem-table');
+        if (!menuitemTableElement) return; // Exit if element doesn't exist
+        const menusectionId = menuitemTableElement.getAttribute('data-bs-menusection');
         var menuItemTable = new Tabulator("#menusection-menuitem-table", {
           dataLoader: false,
           maxHeight:"100%",

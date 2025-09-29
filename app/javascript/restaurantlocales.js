@@ -23,7 +23,9 @@ export function initRestaurantlocales() {
             var rowData = cell.getRow().getData("data").locale;
             return "<a class='link-dark' href='/restaurantlocales/"+id+"/edit'>"+rowData+"</a>";
         }
-        const restaurantId = document.getElementById('restaurant-locale-table').getAttribute('data-bs-restaurant_id');
+        const localeTableElement = document.getElementById('restaurant-locale-table');
+        if (!localeTableElement) return; // Exit if element doesn't exist
+        const restaurantId = localeTableElement.getAttribute('data-bs-restaurant_id');
         var restaurantLocaleTable = new Tabulator("#restaurant-locale-table", {
           dataLoader: false,
           maxHeight:"100%",

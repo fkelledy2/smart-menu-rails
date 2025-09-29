@@ -10,7 +10,9 @@ export function initAllergyns() {
             var rowData = cell.getRow().getData("data").name;
             return "<a class='link-dark' href='/allergyns/"+id+"/edit'>"+rowData+"</a>";
         }
-        const restaurantId = document.getElementById('allergyn-table').getAttribute('data-bs-restaurant_id');
+        const allergynTableElement = document.getElementById('allergyn-table');
+        if (!allergynTableElement) return; // Exit if element doesn't exist
+        const restaurantId = allergynTableElement.getAttribute('data-bs-restaurant_id');
         var allergynTable = new Tabulator("#allergyn-table", {
           dataLoader: false,
           maxHeight:"100%",

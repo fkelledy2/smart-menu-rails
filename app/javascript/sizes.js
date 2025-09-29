@@ -10,7 +10,9 @@ export function initSizes() {
             var rowData = cell.getRow().getData("data").size;
             return "<a class='link-dark' href='/sizes/"+id+"/edit'>"+rowData+"</a>";
         }
-        const restaurantId = document.getElementById('size-table').getAttribute('data-bs-restaurant_id');
+        const sizeTableElement = document.getElementById('size-table');
+        if (!sizeTableElement) return; // Exit if element doesn't exist
+        const restaurantId = sizeTableElement.getAttribute('data-bs-restaurant_id');
         var sizeTable = new Tabulator("#size-table", {
           dataLoader: false,
           maxHeight:"100%",

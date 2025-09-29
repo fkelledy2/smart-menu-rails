@@ -107,7 +107,9 @@ export function initTracks() {
             var rowData = cell.getRow().getData("data").externalid;
             return "<a class='link-dark' href='/tracks/"+id+"/edit'>"+rowData+"</a>";
         }
-        const restaurantId = document.getElementById('restaurant-tracks-table').getAttribute('data-bs-restaurant_id');
+        const tracksTableElement = document.getElementById('restaurant-tracks-table');
+        if (!tracksTableElement) return; // Exit if element doesn't exist
+        const restaurantId = tracksTableElement.getAttribute('data-bs-restaurant_id');
         var restaurantTracksTable = new Tabulator("#restaurant-tracks-table", {
           height:"400px",
           dataLoader: false,

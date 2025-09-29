@@ -26,7 +26,9 @@ export function initRestaurantavailabilities() {
             var rowData = cell.getRow().getData("data").dayofweek;
             return "<a class='link-dark' href='/restaurantavailabilities/"+id+"/edit'>"+rowData+"</a>";
         }
-        const restaurantId = document.getElementById('restaurant-openinghour-table').getAttribute('data-bs-restaurant_id');
+        const openingHourTableElement = document.getElementById('restaurant-openinghour-table');
+        if (!openingHourTableElement) return; // Exit if element doesn't exist
+        const restaurantId = openingHourTableElement.getAttribute('data-bs-restaurant_id');
         var restaurantOpeningHourTable = new Tabulator("#restaurant-openinghour-table", {
           dataLoader: false,
           maxHeight:"100%",
