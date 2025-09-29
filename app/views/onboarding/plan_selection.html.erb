@@ -1,0 +1,213 @@
+<div class="wizard-form mx-auto" style="max-width: 1200px;">
+  <div class="text-center mb-5">
+    <h1 class="h2 mb-3">Choose your plan</h1>
+    <p class="text-muted">Start with a 14-day free trial. No credit card required!</p>
+  </div>
+
+  <%= form_with url: onboarding_path, method: :patch, local: true, 
+                data: { step: 3 }, class: "needs-validation", novalidate: true do |f| %>
+    
+    <div class="row g-3 mb-5">
+      <% @plans.each do |plan| %>
+        <div class="col-sm-6 col-lg-3">
+          <div class="card plan-card h-100 <%= 'border-primary' if plan.name == 'Professional' %>" 
+               data-plan-id="<%= plan.id %>">
+            
+            <% if plan.name == 'Professional' %>
+              <div class="card-header bg-primary text-white text-center">
+                <small class="fw-bold">MOST POPULAR</small>
+              </div>
+            <% end %>
+            
+            <div class="card-body d-flex flex-column p-3">
+              <div class="text-center mb-3">
+                <h5 class="card-title mb-2"><%= plan.name %></h5>
+                <div class="h4 fw-bold text-primary mb-1">
+                  $<%= plan.price || 0 %>
+                  <small class="fs-6 text-muted">/mo</small>
+                </div>
+                <% if plan.price && plan.price > 0 %>
+                  <small class="text-success">14-day free trial</small>
+                <% else %>
+                  <small class="text-muted">Always free</small>
+                <% end %>
+              </div>
+              
+              <ul class="list-unstyled mb-3 flex-grow-1 small">
+                <li class="mb-1">
+                  <i class="fas fa-check text-success me-1"></i>
+                  <%= plan.getLocations %> locations
+                </li>
+                <li class="mb-1">
+                  <i class="fas fa-check text-success me-1"></i>
+                  <%= plan.getMenusPerLocation %> menus/location
+                </li>
+                <li class="mb-1">
+                  <i class="fas fa-check text-success me-1"></i>
+                  <%= plan.getItemsPerMenu %> items/menu
+                </li>
+                <li class="mb-1">
+                  <i class="fas fa-check text-success me-1"></i>
+                  <%= plan.getLanguages %> languages
+                </li>
+                <li class="mb-1">
+                  <i class="fas fa-check text-success me-1"></i>
+                  QR code menus
+                </li>
+                <li class="mb-1">
+                  <i class="fas fa-check text-success me-1"></i>
+                  Online ordering
+                </li>
+                <% if plan.name != 'Starter' %>
+                  <li class="mb-1">
+                    <i class="fas fa-check text-success me-1"></i>
+                    Priority support
+                  </li>
+                  <li class="mb-1">
+                    <i class="fas fa-check text-success me-1"></i>
+                    Advanced analytics
+                  </li>
+                <% end %>
+                <% if plan.name == 'Enterprise' %>
+                  <li class="mb-1">
+                    <i class="fas fa-check text-success me-1"></i>
+                    Custom branding
+                  </li>
+                  <li class="mb-1">
+                    <i class="fas fa-check text-success me-1"></i>
+                    API access
+                  </li>
+                <% end %>
+              </ul>
+              
+              <div class="mt-auto">
+                <button type="button" 
+                        class="btn btn-outline-primary w-100 select-plan-btn"
+                        data-plan-id="<%= plan.id %>">
+                  <% if plan.price && plan.price > 0 %>
+                    Start Free Trial
+                  <% else %>
+                    Choose Free Plan
+                  <% end %>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <%= hidden_field_tag :plan_id, @onboarding&.selected_plan_id %>
+    
+    <div class="d-flex justify-content-between align-items-center mt-5">
+      <%= link_to onboarding_step_path(2), class: "btn btn-outline-secondary btn-lg btn-wizard" do %>
+        <i class="fas fa-arrow-left me-2"></i>
+        Back
+      <% end %>
+      
+      <button type="submit" class="btn btn-primary btn-lg btn-wizard" id="continue-btn" disabled>
+        Continue
+        <i class="fas fa-arrow-right ms-2"></i>
+      </button>
+    </div>
+  <% end %>
+</div>
+
+<!-- Trust indicators -->
+<div class="text-center mt-5">
+  <div class="row">
+    <div class="col-md-4">
+      <i class="fas fa-shield-alt text-success fs-1 mb-2"></i>
+      <h6>Secure & Reliable</h6>
+      <small class="text-muted">Bank-level security</small>
+    </div>
+    <div class="col-md-4">
+      <i class="fas fa-mobile-alt text-primary fs-1 mb-2"></i>
+      <h6>Mobile Optimized</h6>
+      <small class="text-muted">Perfect on any device</small>
+    </div>
+    <div class="col-md-4">
+      <i class="fas fa-headset text-info fs-1 mb-2"></i>
+      <h6>24/7 Support</h6>
+      <small class="text-muted">We're here to help</small>
+    </div>
+  </div>
+</div>
+
+<style>
+.plan-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid #dee2e6;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.plan-card.selected {
+  border-color: #007bff !important;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.plan-card.selected .select-plan-btn {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const planCards = document.querySelectorAll('.plan-card');
+  const selectButtons = document.querySelectorAll('.select-plan-btn');
+  const planIdInput = document.querySelector('#plan_id');
+  const continueBtn = document.querySelector('#continue-btn');
+  
+  // Handle plan selection
+  selectButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const planId = this.dataset.planId;
+      
+      // Remove selected state from all cards
+      planCards.forEach(card => card.classList.remove('selected'));
+      selectButtons.forEach(btn => {
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-outline-primary');
+        btn.textContent = btn.textContent.replace('Selected', btn.textContent.includes('Free') ? 'Choose Free Plan' : 'Start Free Trial');
+      });
+      
+      // Add selected state to clicked card
+      const selectedCard = document.querySelector(`[data-plan-id="${planId}"]`);
+      selectedCard.classList.add('selected');
+      
+      this.classList.remove('btn-outline-primary');
+      this.classList.add('btn-primary');
+      this.textContent = 'Selected ✓';
+      
+      // Update hidden field and enable continue button
+      planIdInput.value = planId;
+      continueBtn.disabled = false;
+    });
+  });
+  
+  // Pre-select if plan already chosen
+  if (planIdInput.value) {
+    const preselectedBtn = document.querySelector(`[data-plan-id="${planIdInput.value}"]`);
+    if (preselectedBtn) {
+      preselectedBtn.click();
+    }
+  }
+  
+  // Form validation
+  const form = document.querySelector('.needs-validation');
+  form.addEventListener('submit', function(event) {
+    if (!planIdInput.value) {
+      event.preventDefault();
+      event.stopPropagation();
+      alert('Please select a plan to continue.');
+    }
+  });
+});
+</script>

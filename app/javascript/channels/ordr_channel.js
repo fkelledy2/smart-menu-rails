@@ -303,8 +303,11 @@ function refreshOrderJSLogic() {
             $('#a2o_menuitem_price').text(parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2));
             $('#a2o_menuitem_description').text(button.getAttribute('data-bs-menuitem_description'));
             try {
-                addItemToOrderModal.querySelector('#a2o_menuitem_image').src = button.getAttribute('data-bs-menuitem_image');
-                addItemToOrderModal.querySelector('#a2o_menuitem_image').alt = button.getAttribute('data-bs-menuitem_name');
+                const imageElement = addItemToOrderModal.querySelector('#a2o_menuitem_image');
+                if (imageElement) {
+                    imageElement.src = button.getAttribute('data-bs-menuitem_image');
+                    imageElement.alt = button.getAttribute('data-bs-menuitem_name');
+                }
             } catch( err ) {
                 alert( err );
             }

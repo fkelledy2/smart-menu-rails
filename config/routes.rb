@@ -1,6 +1,11 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  # Onboarding wizard
+  get 'onboarding', to: 'onboarding#show'
+  get 'onboarding/step/:step', to: 'onboarding#show', as: :onboarding_step
+  patch 'onboarding', to: 'onboarding#update'
+  post 'onboarding', to: 'onboarding#update'
   resources :testimonials
   resources :userplans
   resources :menuparticipants

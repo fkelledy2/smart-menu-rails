@@ -1,0 +1,323 @@
+<div class="row">
+  <div class="col-lg-6">
+    <div class="wizard-form">
+      <div class="mb-4">
+        <h1 class="h2 mb-3">Create your first menu</h1>
+        <p class="text-muted">Add a few items to get started. You can always add more later!</p>
+      </div>
+
+      <%= form_with model: @onboarding, url: onboarding_path, method: :patch, local: true, 
+                    data: { step: 4, turbo_method: "patch" }, class: "needs-validation", novalidate: true do |f| %>
+        
+        <div class="mb-4">
+          <%= f.label :menu_name, "Menu Name", class: "form-label" %>
+          <%= f.text_field :menu_name, 
+              class: "form-control form-control-lg", 
+              placeholder: "e.g., Main Menu, Lunch Menu, Dinner Menu",
+              value: @onboarding&.menu_name || "Main Menu",
+              required: true %>
+          <div class="invalid-feedback">
+            Please provide a menu name.
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Menu Items</label>
+          <div id="menu-items-container">
+            <!-- Menu items will be added here -->
+          </div>
+          
+          <button type="button" class="btn btn-outline-primary" id="add-item-btn">
+            <i class="fas fa-plus me-2"></i>
+            Add Menu Item
+          </button>
+          
+          <div class="form-text mt-2">
+            Add at least 3 items to continue. Don't worry about perfection - you can edit everything later!
+          </div>
+        </div>
+
+        <!-- Template suggestions -->
+        <div class="mb-4">
+          <label class="form-label">Quick Start Templates</label>
+          <div class="row g-2">
+            <div class="col-6">
+              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn" 
+                      data-template="italian">
+                <i class="fas fa-pizza-slice me-1"></i>
+                Italian
+              </button>
+            </div>
+            <div class="col-6">
+              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn" 
+                      data-template="american">
+                <i class="fas fa-hamburger me-1"></i>
+                American
+              </button>
+            </div>
+            <div class="col-6">
+              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn" 
+                      data-template="mexican">
+                <i class="fas fa-pepper-hot me-1"></i>
+                Mexican
+              </button>
+            </div>
+            <div class="col-6">
+              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn" 
+                      data-template="asian">
+                <i class="fas fa-fish me-1"></i>
+                Asian
+              </button>
+            </div>
+          </div>
+          <div class="form-text">Click a template to add sample items you can customize.</div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-5">
+          <%= link_to onboarding_step_path(3), class: "btn btn-outline-secondary btn-lg btn-wizard" do %>
+            <i class="fas fa-arrow-left me-2"></i>
+            Back
+          <% end %>
+          
+          <button type="submit" class="btn btn-primary btn-lg btn-wizard" id="continue-btn" disabled>
+            Create Menu
+            <i class="fas fa-arrow-right ms-2"></i>
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="col-lg-6">
+    <div class="sticky-top" style="top: 2rem;">
+      <h5 class="mb-3">
+        <i class="fas fa-eye me-2"></i>
+        Live Preview
+      </h5>
+      <div class="menu-preview" id="menu-preview">
+        <div class="text-center text-muted py-5">
+          <i class="fas fa-utensils fs-1 mb-3"></i>
+          <p>Your menu items will appear here as you add them</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Menu item template -->
+<template id="menu-item-template">
+  <div class="menu-item-input" data-item-index="">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+      <h6 class="mb-0">Menu Item</h6>
+      <button type="button" class="btn btn-sm btn-outline-danger remove-item-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="row g-2">
+      <div class="col-md-6">
+        <input type="text" 
+               class="form-control item-name" 
+               placeholder="Item name" 
+               name="onboarding_session[menu_items][][name]"
+               required>
+      </div>
+      <div class="col-md-6">
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input type="number" 
+                 class="form-control item-price" 
+                 placeholder="0.00" 
+                 name="onboarding_session[menu_items][][price]"
+                 step="0.01"
+                 min="0"
+                 required>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-2">
+      <textarea class="form-control item-description" 
+                placeholder="Brief description (optional)"
+                name="onboarding_session[menu_items][][description]"
+                rows="2"></textarea>
+    </div>
+  </div>
+</template>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let itemIndex = 0;
+  const container = document.getElementById('menu-items-container');
+  const addBtn = document.getElementById('add-item-btn');
+  const continueBtn = document.getElementById('continue-btn');
+  const menuPreview = document.getElementById('menu-preview');
+  
+  // Menu templates
+  const templates = {
+    italian: [
+      { name: 'Margherita Pizza', price: '16.99', description: 'Fresh mozzarella, tomato sauce, basil' },
+      { name: 'Spaghetti Carbonara', price: '18.99', description: 'Pasta with eggs, cheese, pancetta, and pepper' },
+      { name: 'Caesar Salad', price: '12.99', description: 'Romaine lettuce, croutons, parmesan, caesar dressing' }
+    ],
+    american: [
+      { name: 'Classic Burger', price: '14.99', description: 'Beef patty, lettuce, tomato, onion, pickles' },
+      { name: 'BBQ Ribs', price: '22.99', description: 'Slow-cooked pork ribs with BBQ sauce' },
+      { name: 'Buffalo Wings', price: '11.99', description: '8 pieces with celery and blue cheese dip' }
+    ],
+    mexican: [
+      { name: 'Chicken Tacos', price: '13.99', description: 'Three soft tacos with grilled chicken and salsa' },
+      { name: 'Beef Burrito', price: '15.99', description: 'Large burrito with seasoned beef, rice, and beans' },
+      { name: 'Guacamole & Chips', price: '8.99', description: 'Fresh guacamole with tortilla chips' }
+    ],
+    asian: [
+      { name: 'Pad Thai', price: '16.99', description: 'Stir-fried rice noodles with shrimp and peanuts' },
+      { name: 'Chicken Teriyaki', price: '18.99', description: 'Grilled chicken with teriyaki sauce and rice' },
+      { name: 'Vegetable Spring Rolls', price: '7.99', description: 'Crispy rolls with sweet and sour sauce' }
+    ]
+  };
+  
+  // Add menu item
+  function addMenuItem(itemData = {}) {
+    const template = document.getElementById('menu-item-template');
+    const clone = template.content.cloneNode(true);
+    
+    // Set index
+    const itemDiv = clone.querySelector('.menu-item-input');
+    itemDiv.dataset.itemIndex = itemIndex;
+    
+    // Fill data if provided
+    if (itemData.name) clone.querySelector('.item-name').value = itemData.name;
+    if (itemData.price) clone.querySelector('.item-price').value = itemData.price;
+    if (itemData.description) clone.querySelector('.item-description').value = itemData.description;
+    
+    // Update name attributes with index
+    clone.querySelectorAll('input, textarea').forEach(input => {
+      input.name = input.name.replace('[]', `[${itemIndex}]`);
+    });
+    
+    // Add remove functionality
+    clone.querySelector('.remove-item-btn').addEventListener('click', function() {
+      itemDiv.remove();
+      updatePreview();
+      updateContinueButton();
+    });
+    
+    // Add input listeners for live preview
+    clone.querySelectorAll('input, textarea').forEach(input => {
+      input.addEventListener('input', updatePreview);
+    });
+    
+    container.appendChild(clone);
+    itemIndex++;
+    
+    updatePreview();
+    updateContinueButton();
+  }
+  
+  // Update menu preview
+  function updatePreview() {
+    const menuName = document.querySelector('#onboarding_session_menu_name').value || 'Menu';
+    const items = Array.from(container.querySelectorAll('.menu-item-input')).map(item => {
+      return {
+        name: item.querySelector('.item-name').value,
+        price: item.querySelector('.item-price').value,
+        description: item.querySelector('.item-description').value
+      };
+    }).filter(item => item.name);
+    
+    let html = `<div class="text-center mb-4">
+                  <h4 class="text-primary">${menuName}</h4>
+                </div>`;
+    
+    if (items.length === 0) {
+      html += `<div class="text-center text-muted py-3">
+                 <i class="fas fa-utensils fs-1 mb-3"></i>
+                 <p>Your menu items will appear here</p>
+               </div>`;
+    } else {
+      items.forEach(item => {
+        html += `<div class="border-bottom pb-3 mb-3">
+                   <div class="d-flex justify-content-between align-items-start">
+                     <div class="flex-grow-1">
+                       <h6 class="mb-1">${item.name}</h6>
+                       ${item.description ? `<small class="text-muted">${item.description}</small>` : ''}
+                     </div>
+                     <div class="text-primary fw-bold ms-3">
+                       ${item.price ? `$${parseFloat(item.price).toFixed(2)}` : ''}
+                     </div>
+                   </div>
+                 </div>`;
+      });
+    }
+    
+    menuPreview.innerHTML = html;
+  }
+  
+  // Update continue button state
+  function updateContinueButton() {
+    const itemCount = container.querySelectorAll('.menu-item-input').length;
+    continueBtn.disabled = itemCount < 3;
+    
+    if (itemCount < 3) {
+      continueBtn.innerHTML = `Need ${3 - itemCount} more items <i class="fas fa-arrow-right ms-2"></i>`;
+    } else {
+      continueBtn.innerHTML = `Create Menu <i class="fas fa-arrow-right ms-2"></i>`;
+    }
+  }
+  
+  // Event listeners
+  addBtn.addEventListener('click', () => addMenuItem());
+  
+  document.querySelector('#onboarding_session_menu_name').addEventListener('input', updatePreview);
+  
+  // Template buttons
+  document.querySelectorAll('.template-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const templateName = this.dataset.template;
+      const templateItems = templates[templateName];
+      
+      // Clear existing items
+      container.innerHTML = '';
+      itemIndex = 0;
+      
+      // Add template items
+      templateItems.forEach(item => addMenuItem(item));
+      
+      // Update button state
+      this.classList.add('btn-success');
+      this.innerHTML = `<i class="fas fa-check me-1"></i> Added!`;
+      
+      setTimeout(() => {
+        this.classList.remove('btn-success');
+        this.innerHTML = this.innerHTML.replace('Added!', templateName.charAt(0).toUpperCase() + templateName.slice(1));
+      }, 2000);
+    });
+  });
+  
+  // Load existing items if any
+  <% if @onboarding&.menu_items&.any? %>
+    <% @onboarding.menu_items.each do |item| %>
+      addMenuItem({
+        name: '<%= j(item["name"]) %>',
+        price: '<%= item["price"] %>',
+        description: '<%= j(item["description"]) %>'
+      });
+    <% end %>
+  <% else %>
+    // Add one empty item to start
+    addMenuItem();
+  <% end %>
+  
+  // Form validation
+  const form = document.querySelector('.needs-validation');
+  form.addEventListener('submit', function(event) {
+    const itemCount = container.querySelectorAll('.menu-item-input').length;
+    if (itemCount < 3) {
+      event.preventDefault();
+      event.stopPropagation();
+      alert('Please add at least 3 menu items to continue.');
+    }
+  });
+});
+</script>

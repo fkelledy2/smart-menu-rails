@@ -134,6 +134,7 @@ class RestaurantsController < ApplicationController
     authorize @restaurant
 
     @qrHost = request.host_with_port
+    @current_employee = @restaurant.employees.find_by(user: current_user)
 
     Analytics.track(
       user_id: current_user.id,

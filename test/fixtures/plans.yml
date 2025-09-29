@@ -1,8 +1,8 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  key: MyString
-  descriptionKey: MyString
+  key: free
+  descriptionKey: Free Plan
   attribute1: MyString
   attribute2: MyString
   attribute3: MyString
@@ -11,13 +11,17 @@ one:
   attribut6: MyString
   status: 1
   favourite: false
-  pricePerMonth: 9.99
-  pricePerYear: 9.99
-  action: 1
+  pricePerMonth: 0
+  pricePerYear: 0
+  action: 0
+  locations: 1
+  menusperlocation: 1
+  itemspermenu: 10
+  languages: 1
 
 two:
-  key: MyString
-  descriptionKey: MyString
+  key: professional
+  descriptionKey: Professional Plan
   attribute1: MyString
   attribute2: MyString
   attribute3: MyString
@@ -25,7 +29,11 @@ two:
   attribute5: MyString
   attribut6: MyString
   status: 1
-  favourite: false
-  pricePerMonth: 9.99
-  pricePerYear: 9.99
-  action: 1
+  favourite: true
+  pricePerMonth: 29.99
+  pricePerYear: 299.99
+  action: 0
+  locations: 5
+  menusperlocation: 5
+  itemspermenu: -1
+  languages: 3

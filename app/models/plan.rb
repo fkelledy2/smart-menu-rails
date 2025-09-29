@@ -8,6 +8,26 @@ class Plan < ApplicationRecord
     register: 0,
     call: 1,
   }
+  
+  # Virtual attribute for name (uses key)
+  def name
+    case key
+    when 'plan.starter.key'
+      'Starter'
+    when 'plan.pro.key'
+      'Professional'
+    when 'plan.business.key'
+      'Business'
+    when 'plan.enterprise.key'
+      'Enterprise'
+    else
+      key&.humanize
+    end
+  end
+  
+  def price
+    pricePerMonth
+  end
 
   def getLanguages
     if languages == -1

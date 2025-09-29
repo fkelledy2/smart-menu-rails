@@ -21,6 +21,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_current_employee
   before_action :set_permissions
+  before_action :redirect_to_onboarding_if_needed
 
   protected
 
@@ -54,5 +55,21 @@ class ApplicationController < ActionController::Base
 
   def debug_request_in_test
     # Debug logging removed - was for API routing investigation
+  end
+  
+  def redirect_to_onboarding_if_needed
+    return unless user_signed_in?
+    return if devise_controller?
+    return if controller_name == 'onboarding'
+    return if request.xhr? # Skip for AJAX requests
+    
+    # Skip for certain controllers that should always be accessible
+    skip_controllers = %w[home sessions registrations passwords confirmations unlocks]
+    return if skip_controllers.include?(controller_name)
+    
+    # Redirect to onboarding if user needs it
+    if current_user.needs_onboarding?
+      redirect_to onboarding_path
+    end
   end
 end

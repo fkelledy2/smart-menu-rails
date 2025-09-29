@@ -10,6 +10,40 @@ class User < ApplicationRecord
   has_many :notification_mentions, as: :record, dependent: :destroy, class_name: 'Noticed::Event'
   has_many :services
 
-  belongs_to :plan
+  belongs_to :plan, optional: true
   has_many :restaurants, dependent: :destroy
+  has_one :onboarding_session, dependent: :destroy
+  
+  after_create :create_onboarding_session
+  before_validation :assign_default_plan, on: :create
+  
+  def onboarding_complete?
+    onboarding_session&.completed?
+  end
+  
+  def onboarding_progress
+    return 0 unless onboarding_session
+    onboarding_session.progress_percentage
+  end
+  
+  def needs_onboarding?
+    !onboarding_complete? && restaurants.empty?
+  end
+  
+  private
+  
+  def create_onboarding_session
+    OnboardingSession.create!(user: self, status: :started)
+  end
+  
+  def assign_default_plan
+    # Assign a default plan if no plan is set
+    return if plan.present?
+    
+    # Try to find the cheapest plan (starter) or fall back to first plan
+    default_plan = Plan.where(key: 'plan.starter.key').first || 
+                   Plan.order(:pricePerMonth).first || 
+                   Plan.first
+    self.plan = default_plan if default_plan
+  end
 end

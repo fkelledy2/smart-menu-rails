@@ -151,6 +151,9 @@ export function patch( url, body ) {
         body: JSON.stringify(body)
     });
 }
+
+// Make patch function available globally
+window.patch = patch;
 export function del( url ) {
     fetch(url, {
         method: 'DELETE',
@@ -160,6 +163,9 @@ export function del( url ) {
         }
     });
 }
+
+// Make del function available globally
+window.del = del;
 
 export function validateIntegerInput(input) {
     input.value = input.value.replace(/[^0-9]/g, '');

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_28_201829) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -456,6 +456,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_28_201829) do
     t.index ["ocr_menu_import_id", "is_confirmed"], name: "index_ocr_menu_sections_on_import_and_confirmed"
     t.index ["ocr_menu_import_id"], name: "index_ocr_menu_sections_on_ocr_menu_import_id"
     t.index ["sequence"], name: "index_ocr_menu_sections_on_sequence"
+  end
+
+  create_table "onboarding_sessions", force: :cascade do |t|
+    t.bigint "user_id"
+    t.integer "status", default: 0, null: false
+    t.text "wizard_data"
+    t.bigint "restaurant_id"
+    t.bigint "menu_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_onboarding_sessions_on_created_at"
+    t.index ["menu_id"], name: "index_onboarding_sessions_on_menu_id"
+    t.index ["restaurant_id"], name: "index_onboarding_sessions_on_restaurant_id"
+    t.index ["status"], name: "index_onboarding_sessions_on_status"
+    t.index ["user_id"], name: "index_onboarding_sessions_on_user_id"
   end
 
   create_table "ordractions", force: :cascade do |t|
@@ -922,6 +937,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_28_201829) do
   add_foreign_key "ocr_menu_sections", "menu_sections"
   add_foreign_key "ocr_menu_sections", "menusections"
   add_foreign_key "ocr_menu_sections", "ocr_menu_imports"
+  add_foreign_key "onboarding_sessions", "menus"
+  add_foreign_key "onboarding_sessions", "restaurants"
+  add_foreign_key "onboarding_sessions", "users"
   add_foreign_key "ordractions", "ordritems"
   add_foreign_key "ordractions", "ordrparticipants"
   add_foreign_key "ordritemnotes", "ordritems"

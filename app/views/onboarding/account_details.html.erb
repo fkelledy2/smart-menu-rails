@@ -1,0 +1,97 @@
+<div class="wizard-form mx-auto">
+  <div class="text-center mb-5">
+    <h1 class="h2 mb-3">Welcome to Smart Menu!</h1>
+    <p class="text-muted">Let's get your account set up. This will only take a moment.</p>
+  </div>
+
+  <%= form_with model: current_user, url: onboarding_path, method: :patch, local: true, 
+                data: { step: 1 }, class: "needs-validation", novalidate: true do |f| %>
+    
+    <div class="mb-4">
+      <%= f.label :name, "Full Name", class: "form-label" %>
+      <%= f.text_field :name, 
+          class: "form-control form-control-lg", 
+          placeholder: "Enter your full name",
+          required: true,
+          value: current_user.name %>
+      <div class="invalid-feedback">
+        Please provide your full name.
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label">Email Address</label>
+      <input type="email" class="form-control form-control-lg" 
+             value="<%= current_user.email %>" 
+             disabled>
+      <div class="form-text">This email is already confirmed and cannot be changed during setup.</div>
+    </div>
+
+    <div class="mb-4">
+      <%= label_tag :restaurant_name_preview, "Restaurant Name (Preview)", class: "form-label" %>
+      <%= text_field_tag :restaurant_name_preview, 
+          @onboarding&.restaurant_name, 
+          class: "form-control form-control-lg", 
+          placeholder: "What's your restaurant called?",
+          data: { preview: true } %>
+      <div class="form-text">Don't worry, you can change this in the next step.</div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-5">
+      <div>
+        <!-- No back button on first step -->
+      </div>
+      
+      <button type="submit" class="btn btn-primary btn-lg btn-wizard">
+        Continue
+        <i class="fas fa-arrow-right ms-2"></i>
+      </button>
+    </div>
+  <% end %>
+</div>
+
+<!-- Stats sidebar content -->
+<div class="row mt-5">
+  <div class="col-md-4">
+    <div class="text-center">
+      <div class="display-6 text-primary fw-bold">1,000+</div>
+      <div class="text-muted">Restaurants Trust Us</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="text-center">
+      <div class="display-6 text-success fw-bold">5 min</div>
+      <div class="text-muted">Average Setup Time</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="text-center">
+      <div class="display-6 text-info fw-bold">98%</div>
+      <div class="text-muted">Customer Satisfaction</div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Form validation
+  const form = document.querySelector('.needs-validation');
+  
+  form.addEventListener('submit', function(event) {
+    if (!form.checkValidity()) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    form.classList.add('was-validated');
+  });
+  
+  // Restaurant name preview
+  const previewInput = document.querySelector('[data-preview="true"]');
+  if (previewInput) {
+    previewInput.addEventListener('input', function() {
+      // Store in session storage for next step
+      sessionStorage.setItem('restaurant_name_preview', this.value);
+    });
+  }
+});
+</script>

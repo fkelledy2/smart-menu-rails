@@ -16,6 +16,8 @@ class Restaurant < ApplicationRecord
   has_one  :genimage, dependent: :destroy
   has_many :tracks, dependent: :delete_all
   has_many :restaurantlocales, dependent: :delete_all
+  has_many :allergyns, dependent: :delete_all
+  has_many :sizes, dependent: :delete_all
   has_many :ocr_menu_imports, dependent: :destroy
 
   # IdentityCache configuration
@@ -31,6 +33,8 @@ class Restaurant < ApplicationRecord
   cache_has_many :tips, embed: :ids
   cache_has_many :restaurantavailabilities, embed: :ids
   cache_has_many :restaurantlocales, embed: :ids
+  cache_has_many :allergyns, embed: :ids
+  cache_has_many :sizes, embed: :ids
   cache_has_one :genimage, embed: :id
 
   # Returns all locale codes for this restaurant

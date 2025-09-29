@@ -210,7 +210,7 @@ class MenusController < ApplicationController
           @genimage.save
         end
         Rails.logger.debug 'SmartMenuSyncJob.start'
-        SmartMenuSyncJob.perform_sync(@menu.restaurant.id)
+        SmartMenuSyncJob.perform_async(@menu.restaurant.id)
         Rails.logger.debug 'SmartMenuSyncJob.end'
         format.html do
           redirect_to edit_restaurant_path(id: @menu.restaurant.id),
@@ -251,7 +251,7 @@ class MenusController < ApplicationController
           @genimage.save
         end
         Rails.logger.debug 'SmartMenuSyncJob.start'
-        SmartMenuSyncJob.perform_sync(@menu.restaurant.id)
+        SmartMenuSyncJob.perform_async(@menu.restaurant.id)
         Rails.logger.debug 'SmartMenuSyncJob.end'
         format.html do
           redirect_to edit_restaurant_path(id: @menu.restaurant.id),
