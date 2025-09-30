@@ -35,13 +35,11 @@ class AnalyticsServiceTest < ActiveSupport::TestCase
   test "should track anonymous events" do
     anonymous_id = 'test-anonymous-id'
     
-    @mock_client.expect :track, nil, [
-      {
-        anonymous_id: anonymous_id,
-        event: 'test_event',
-        properties: Hash
-      }
-    ]
+    @mock_client.expect :track, nil do |args|
+      args[:anonymous_id] == anonymous_id &&
+      args[:event] == 'test_event' &&
+      args[:properties].is_a?(Hash)
+    end
 
     @service.track_anonymous_event(anonymous_id, 'test_event', { test: 'data' })
     
@@ -49,13 +47,11 @@ class AnalyticsServiceTest < ActiveSupport::TestCase
   end
 
   test "should identify users" do
-    @mock_client.expect :identify, nil, [
-      {
-        user_id: @user.id,
-        traits: Hash,
-        context: Hash
-      }
-    ]
+    @mock_client.expect :identify, nil do |args|
+      args[:user_id] == @user.id &&
+      args[:traits].is_a?(Hash) &&
+      args[:context].is_a?(Hash)
+    end
 
     @service.identify_user(@user, { custom_trait: 'value' })
     
@@ -63,14 +59,12 @@ class AnalyticsServiceTest < ActiveSupport::TestCase
   end
 
   test "should track onboarding started" do
-    @mock_client.expect :track, nil, [
-      {
-        user_id: @user.id,
-        event: AnalyticsService::ONBOARDING_STARTED,
-        properties: Hash,
-        context: Hash
-      }
-    ]
+    @mock_client.expect :track, nil do |args|
+      args[:user_id] == @user.id &&
+      args[:event] == AnalyticsService::ONBOARDING_STARTED &&
+      args[:properties].is_a?(Hash) &&
+      args[:context].is_a?(Hash)
+    end
 
     @service.track_onboarding_started(@user, 'homepage')
     
@@ -78,14 +72,12 @@ class AnalyticsServiceTest < ActiveSupport::TestCase
   end
 
   test "should track onboarding step completed" do
-    @mock_client.expect :track, nil, [
-      {
-        user_id: @user.id,
-        event: AnalyticsService::ONBOARDING_STEP_COMPLETED,
-        properties: Hash,
-        context: Hash
-      }
-    ]
+    @mock_client.expect :track, nil do |args|
+      args[:user_id] == @user.id &&
+      args[:event] == AnalyticsService::ONBOARDING_STEP_COMPLETED &&
+      args[:properties].is_a?(Hash) &&
+      args[:context].is_a?(Hash)
+    end
 
     @service.track_onboarding_step_completed(@user, 1, { test_data: 'value' })
     
@@ -102,8 +94,14 @@ class AnalyticsServiceTest < ActiveSupport::TestCase
   end
 
   test "should not track in test environment by default" do
+    # Temporarily remove FORCE_ANALYTICS to test default behavior
+    ENV.delete('FORCE_ANALYTICS')
+    
     # In test environment, should_track? returns false unless FORCE_ANALYTICS is set
     refute @service.send(:should_track?)
+    
+    # Restore FORCE_ANALYTICS for other tests
+    ENV['FORCE_ANALYTICS'] = 'true'
   end
 
   test "should track when FORCE_ANALYTICS is set" do
