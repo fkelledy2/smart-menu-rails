@@ -1,10 +1,13 @@
 class OnboardingController < ApplicationController
+  include AnalyticsTrackable
+  
   skip_around_action :switch_locale
   
   before_action :authenticate_user!
   before_action :set_onboarding_session
   before_action :redirect_if_complete
   before_action :set_step
+  before_action :track_onboarding_start, only: [:show], if: -> { @step == 1 && @onboarding.started? }
   
   # Pundit authorization
   after_action :verify_authorized
@@ -85,8 +88,18 @@ class OnboardingController < ApplicationController
   def handle_account_details
     if current_user.update(account_params)
       @onboarding.account_created!
+      
+      # Track successful step completion
+      AnalyticsService.track_onboarding_step_completed(current_user, 1, {
+        name: current_user.name,
+        email: current_user.email
+      })
+      
       redirect_to onboarding_step_path(2), status: :see_other
     else
+      # Track step failure
+      AnalyticsService.track_onboarding_step_failed(current_user, 1, current_user.errors.full_messages.join(', '))
+      
       @step = 1
       render :account_details
     end
@@ -97,8 +110,21 @@ class OnboardingController < ApplicationController
     
     if @onboarding.step_valid?(2) && @onboarding.save
       @onboarding.restaurant_details!
+      
+      # Track successful step completion
+      AnalyticsService.track_onboarding_step_completed(current_user, 2, {
+        restaurant_name: @onboarding.restaurant_name,
+        restaurant_type: @onboarding.restaurant_type,
+        cuisine_type: @onboarding.cuisine_type,
+        location: @onboarding.location,
+        has_phone: @onboarding.phone.present?
+      })
+      
       redirect_to onboarding_step_path(3), status: :see_other
     else
+      # Track step failure
+      AnalyticsService.track_onboarding_step_failed(current_user, 2, @onboarding.errors.full_messages.join(', '))
+      
       @step = 2
       render :restaurant_details
     end
@@ -113,8 +139,27 @@ class OnboardingController < ApplicationController
       current_user.update!(plan: plan)
       
       @onboarding.plan_selected!
+      
+      # Track successful step completion
+      AnalyticsService.track_onboarding_step_completed(current_user, 3, {
+        selected_plan_id: plan.id,
+        plan_name: plan.name,
+        plan_price: plan.price
+      })
+      
+      # Also track plan selection event
+      AnalyticsService.track_user_event(current_user, AnalyticsService::PLAN_SELECTED, {
+        plan_id: plan.id,
+        plan_name: plan.name,
+        plan_price: plan.price,
+        via_onboarding: true
+      })
+      
       redirect_to onboarding_step_path(4), status: :see_other
     else
+      # Track step failure
+      AnalyticsService.track_onboarding_step_failed(current_user, 3, @onboarding.errors.full_messages.join(', '))
+      
       @step = 3
       @plans = Plan.active
       render :plan_selection
@@ -127,11 +172,23 @@ class OnboardingController < ApplicationController
     if @onboarding.step_valid?(4) && @onboarding.save
       @onboarding.menu_created!
       
+      # Track successful step completion
+      AnalyticsService.track_onboarding_step_completed(current_user, 4, {
+        menu_name: @onboarding.menu_name,
+        menu_items_count: @onboarding.menu_items&.length || 0,
+        menu_items: @onboarding.menu_items&.map { |item| 
+          { name: item['name'], price: item['price'], has_description: item['description'].present? }
+        }
+      })
+      
       # Create restaurant and menu in background
       CreateRestaurantAndMenuJob.perform_later(current_user.id, @onboarding.id)
       
       redirect_to onboarding_step_path(5), status: :see_other
     else
+      # Track step failure
+      AnalyticsService.track_onboarding_step_failed(current_user, 4, @onboarding.errors.full_messages.join(', '))
+      
       @step = 4
       render :menu_creation
     end
@@ -147,5 +204,14 @@ class OnboardingController < ApplicationController
   
   def menu_params
     params.require(:onboarding_session).permit(:menu_name, menu_items: [:name, :price, :description])
+  end
+  
+  def track_onboarding_start
+    AnalyticsService.track_onboarding_started(current_user, params[:source])
+  end
+  
+  # Override from AnalyticsTrackable to skip page tracking for JSON requests
+  def should_track_page_view?
+    super && !request.format.json?
   end
 end

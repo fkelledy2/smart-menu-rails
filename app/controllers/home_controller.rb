@@ -22,6 +22,24 @@ class HomeController < ApplicationController
     @page_title = 'Mellow Menu - Digital Menu Solution for Restaurants'
     @page_description = 'Create beautiful digital menus, enable online ordering, and provide contactless payment options for your restaurant.'
 
+    # Track homepage view
+    if current_user
+      AnalyticsService.track_user_event(current_user, 'homepage_viewed', {
+        has_restaurants: current_user.restaurants.any?,
+        plan_name: current_user.plan&.name,
+        user_type: 'authenticated'
+      })
+    else
+      anonymous_id = session[:session_id] ||= SecureRandom.uuid
+      AnalyticsService.track_anonymous_event(anonymous_id, 'homepage_viewed', {
+        user_type: 'anonymous',
+        referrer: request.referer,
+        utm_source: params[:utm_source],
+        utm_medium: params[:utm_medium],
+        utm_campaign: params[:utm_campaign]
+      })
+    end
+
     # Explicitly render the template with layout
     render :index, layout: 'marketing', content_type: 'text/html'
   rescue StandardError => e
@@ -30,12 +48,11 @@ class HomeController < ApplicationController
   end
 
   def terms
-    if session[:session_id]
-      Analytics.track(
-        anonymous_id: session[:session_id],
-        event: 'home.terms',
-      )
-    end
+    anonymous_id = session[:session_id] ||= SecureRandom.uuid
+    AnalyticsService.track_anonymous_event(anonymous_id, 'terms_viewed', {
+      page: 'terms_of_service',
+      referrer: request.referer
+    })
 
     @page_title = 'Terms of Service - Mellow Menu'
     @page_description = 'Read our Terms of Service to understand the rules and guidelines for using Mellow Menu.'
@@ -50,12 +67,11 @@ class HomeController < ApplicationController
   end
 
   def privacy
-    if session[:session_id]
-      Analytics.track(
-        anonymous_id: session[:session_id],
-        event: 'home.privacy',
-      )
-    end
+    anonymous_id = session[:session_id] ||= SecureRandom.uuid
+    AnalyticsService.track_anonymous_event(anonymous_id, 'privacy_viewed', {
+      page: 'privacy_policy',
+      referrer: request.referer
+    })
 
     @page_title = 'Privacy Policy - Mellow Menu'
     @page_description = 'Learn how Mellow Menu collects, uses, and protects your personal information in our Privacy Policy.'

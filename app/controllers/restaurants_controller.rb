@@ -85,10 +85,10 @@ class RestaurantsController < ApplicationController
       # Use policy scope for secure filtering
       @restaurants = policy_scope(Restaurant).where(archived: false)
 
-      Analytics.track(
-        user_id: current_user.id,
-        event: 'restaurants.index',
-      )
+      AnalyticsService.track_user_event(current_user, 'restaurants_viewed', {
+        restaurants_count: @restaurants.count,
+        has_restaurants: @restaurants.any?
+      })
 
       @canAddRestaurant = @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
     else
@@ -103,19 +103,19 @@ class RestaurantsController < ApplicationController
     return unless params[:restaurant_id] && params[:id]
 
     # Use fetch to get the restaurant with caching
-    @restaurant = Restaurant.fetch(params[:id])
-
     # Preload associations that will be used in the view
     @restaurant.fetch_menus if @restaurant.respond_to?(:fetch_menus)
     @restaurant.fetch_tablesettings if @restaurant.respond_to?(:fetch_tablesettings)
 
-    Analytics.track(
-      user_id: current_user.id,
-      event: 'restaurants.show',
-      properties: {
-        restaurant_id: params[:id],
-      },
-    )
+    AnalyticsService.track_user_event(current_user, AnalyticsService::RESTAURANT_VIEWED, {
+      restaurant_id: @restaurant.id,
+      restaurant_name: @restaurant.name,
+      restaurant_type: @restaurant.restaurant_type,
+      cuisine_type: @restaurant.cuisine_type,
+      has_menus: @restaurant.menus.any?,
+      menus_count: @restaurant.menus.count,
+      employees_count: @restaurant.employees.count
+    })
   end
 
   # GET /restaurants/new
@@ -123,10 +123,10 @@ class RestaurantsController < ApplicationController
     @restaurant = Restaurant.new
     authorize @restaurant
 
-    Analytics.track(
-      user_id: current_user.id,
-      event: 'restaurants.new',
-    )
+    AnalyticsService.track_user_event(current_user, 'restaurant_creation_started', {
+      user_restaurants_count: current_user.restaurants.count,
+      plan_name: current_user.plan&.name
+    })
   end
 
   # GET /restaurants/1/edit
@@ -136,30 +136,22 @@ class RestaurantsController < ApplicationController
     @qrHost = request.host_with_port
     @current_employee = @restaurant.employees.find_by(user: current_user)
 
-    Analytics.track(
-      user_id: current_user.id,
-      event: 'restaurants.edit',
-      properties: {
-        restaurant_id: params[:id],
-      },
-    )
+    AnalyticsService.track_user_event(current_user, 'restaurant_edit_started', {
+      restaurant_id: @restaurant.id,
+      restaurant_name: @restaurant.name,
+      has_employee_role: @current_employee.present?,
+      employee_role: @current_employee&.role
+    })
   end
 
   # POST /restaurants or /restaurants.json
   def create
     @restaurant = Restaurant.new(restaurant_params)
-    @restaurant.user = current_user
     authorize @restaurant
 
     respond_to do |format|
       if @restaurant.save
-        Analytics.track(
-          user_id: current_user.id,
-          event: 'restaurants.save',
-          properties: {
-            restaurant_id: params[:id],
-          },
-        )
+        AnalyticsService.track_restaurant_created(current_user, @restaurant)
         if @restaurant.genimage.nil?
           @genimage = Genimage.new
           @genimage.restaurant = @restaurant
@@ -195,13 +187,11 @@ class RestaurantsController < ApplicationController
         #             SpotifySyncJob.perform_sync(@restaurant.id)
         #             puts 'SpotifySyncJob.end'
 
-        Analytics.track(
-          user_id: current_user.id,
-          event: 'restaurants.update',
-          properties: {
-            restaurant_id: params[:id],
-          },
-        )
+        AnalyticsService.track_user_event(current_user, AnalyticsService::RESTAURANT_UPDATED, {
+          restaurant_id: @restaurant.id,
+          restaurant_name: @restaurant.name,
+          changes_made: @restaurant.previous_changes.keys
+        })
         if @restaurant.genimage.nil?
           @genimage = Genimage.new
           @genimage.restaurant = @restaurant
@@ -233,13 +223,12 @@ class RestaurantsController < ApplicationController
     # Expire the user's restaurant list cache
     Restaurant.expire_user_id(user_id) if Restaurant.respond_to?(:expire_user_id)
 
-    Analytics.track(
-      user_id: current_user.id,
-      event: 'restaurants.destroy',
-      properties: {
-        restaurant_id: params[:id],
-      },
-    )
+    AnalyticsService.track_user_event(current_user, AnalyticsService::RESTAURANT_DELETED, {
+      restaurant_id: @restaurant.id,
+      restaurant_name: @restaurant.name,
+      had_menus: @restaurant.menus.any?,
+      menus_count: @restaurant.menus.count
+    })
 
     respond_to do |format|
       format.html do

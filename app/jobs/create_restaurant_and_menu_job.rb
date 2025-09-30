@@ -19,6 +19,9 @@ class CreateRestaurantAndMenuJob < ApplicationJob
         status: :completed
       )
       
+      # Track analytics events
+      track_completion_analytics(user, restaurant, menu, onboarding)
+      
       # Generate smart menus for the restaurant
       SmartMenuSyncJob.perform_async(restaurant.id)
       
@@ -31,6 +34,33 @@ class CreateRestaurantAndMenuJob < ApplicationJob
   end
   
   private
+  
+  def track_completion_analytics(user, restaurant, menu, onboarding)
+    # Track onboarding completion
+    AnalyticsService.track_onboarding_completed(user, {
+      restaurant_id: restaurant.id,
+      menu_id: menu.id,
+      restaurant_name: restaurant.name,
+      menu_name: menu.name
+    })
+    
+    # Track restaurant creation
+    AnalyticsService.track_restaurant_created(user, restaurant)
+    
+    # Track menu creation
+    AnalyticsService.track_menu_created(user, menu)
+    
+    # Identify user with updated traits
+    AnalyticsService.identify_user(user, {
+      has_restaurant: true,
+      has_menu: true,
+      onboarding_completed: true,
+      onboarding_completed_at: Time.current
+    })
+  rescue StandardError => e
+    Rails.logger.error "Analytics tracking failed in CreateRestaurantAndMenuJob: #{e.message}"
+    # Don't fail the job if analytics fails
+  end
   
   def create_restaurant(user, onboarding)
     restaurant = user.restaurants.create!(

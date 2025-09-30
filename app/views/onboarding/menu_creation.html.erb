@@ -277,6 +277,24 @@ document.addEventListener('DOMContentLoaded', function() {
       const templateName = this.dataset.template;
       const templateItems = templates[templateName];
       
+      // Track template usage
+      fetch('/api/v1/analytics/track', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+          event: 'template_used',
+          properties: {
+            template_type: templateName,
+            template_items_count: templateItems.length,
+            step: 4,
+            step_name: 'menu_creation'
+          }
+        })
+      }).catch(error => console.log('Analytics tracking failed:', error));
+      
       // Clear existing items
       container.innerHTML = '';
       itemIndex = 0;

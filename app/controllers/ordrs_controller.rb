@@ -89,6 +89,25 @@ class OrdrsController < ApplicationController
         @tablesetting = @ordr.tablesetting
         @ordrparticipant = find_or_create_ordr_participant(@ordr)
 
+        # Track order creation
+        if current_user
+          AnalyticsService.track_user_event(current_user, AnalyticsService::ORDER_STARTED, {
+            order_id: @ordr.id,
+            restaurant_id: @ordr.restaurant_id,
+            menu_id: @ordr.menu_id,
+            table_id: @ordr.tablesetting_id,
+            order_status: @ordr.status
+          })
+        else
+          anonymous_id = session[:session_id] ||= SecureRandom.uuid
+          AnalyticsService.track_anonymous_event(anonymous_id, 'order_started_anonymous', {
+            order_id: @ordr.id,
+            restaurant_id: @ordr.restaurant_id,
+            menu_id: @ordr.menu_id,
+            table_id: @ordr.tablesetting_id
+          })
+        end
+
         if ordr_params[:status].to_i.zero?
           update_tablesetting_status(@tablesetting, 0)
           broadcast_partials(@ordr, @tablesetting, @ordrparticipant, false)

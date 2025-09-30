@@ -27,20 +27,21 @@ class MenusController < ApplicationController
           .includes([:menuavailabilities])
           .all
       end
-      Analytics.track(
-        user_id: current_user.id,
-        event: 'menus.index',
-      )
+      AnalyticsService.track_user_event(current_user, 'menus_viewed', {
+        menus_count: @menus.count,
+        restaurant_id: @restaurant&.id,
+        viewing_context: params[:restaurant_id] ? 'restaurant_specific' : 'all_menus'
+      })
     elsif params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
       @menus = Menu.where(restaurant: @restaurant).all
       @tablesettings = @restaurant.tablesettings
-      Analytics.track(
-        event: 'menus.index',
-        properties: {
-          restaurant_id: @menus.restaurant.id,
-        },
-      )
+      anonymous_id = session[:session_id] ||= SecureRandom.uuid
+      AnalyticsService.track_anonymous_event(anonymous_id, 'menus_viewed_anonymous', {
+        menus_count: @menus.count,
+        restaurant_id: @restaurant.id,
+        restaurant_name: @restaurant.name
+      })
     end
   end
 
@@ -79,13 +80,23 @@ class MenusController < ApplicationController
         if @menu.restaurant != @restaurant
           redirect_to root_url
         end
-        Analytics.track(
-          event: 'menus.show',
-          properties: {
+        if current_user
+          AnalyticsService.track_user_event(current_user, AnalyticsService::MENU_VIEWED, {
             restaurant_id: @menu.restaurant.id,
             menu_id: @menu.id,
-          },
-        )
+            menu_name: @menu.name,
+            items_count: @menu.menuitems.count,
+            sections_count: @menu.menusections.count
+          })
+        else
+          anonymous_id = session[:session_id] ||= SecureRandom.uuid
+          AnalyticsService.track_anonymous_event(anonymous_id, 'menu_viewed_anonymous', {
+            restaurant_id: @menu.restaurant.id,
+            menu_id: @menu.id,
+            menu_name: @menu.name,
+            items_count: @menu.menuitems.count
+          })
+        end
       end
       @participantsFirstTime = false
       @tablesetting = Tablesetting.find_by(id: params[:id])

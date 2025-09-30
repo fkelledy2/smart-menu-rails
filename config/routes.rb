@@ -61,6 +61,10 @@ Rails.application.routes.draw do
       post 'vision/detect_menu_items', to: 'vision#detect_menu_items'
       resources :ocr_menu_items, only: [:update]
       resources :ocr_menu_sections, only: [:update]
+      
+      # Analytics tracking endpoints
+      post 'analytics/track', to: 'analytics#track'
+      post 'analytics/track_anonymous', to: 'analytics#track_anonymous'
     end
   end
 
