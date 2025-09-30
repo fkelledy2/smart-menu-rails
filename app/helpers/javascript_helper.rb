@@ -351,7 +351,7 @@ module JavascriptHelper
   # Helper to check if new JS system should be used
   def use_new_js_system?
     # Enable for specific controllers or based on feature flag
-    controller_name.in?(%w[restaurants menus menuitems employees]) ||
+    controller_name.in?(%w[restaurants menus menuitems menusections employees ordrs inventories]) ||
     Rails.application.config.force_new_js_system ||
     params[:new_js] == 'true'
   end
@@ -359,7 +359,9 @@ module JavascriptHelper
   # Helper to conditionally load old or new JS
   def javascript_system_tags
     if use_new_js_system?
-      javascript_importmap_tags
+      # Load new modular system
+      javascript_importmap_tags + 
+      javascript_import_module_tag('application_new')
     else
       # Load old system
       javascript_include_tag 'application'

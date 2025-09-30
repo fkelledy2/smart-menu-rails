@@ -71,8 +71,14 @@ export class TableManager extends ComponentBase {
     }
 
     try {
+      // Check if Tabulator is available
+      if (typeof window.Tabulator !== 'function') {
+        console.warn('Tabulator not yet loaded, skipping initialization for:', element);
+        return null;
+      }
+
       const config = this.buildTableConfig(element, userConfig);
-      const table = new Tabulator(element, config);
+      const table = new window.Tabulator(element, config);
       
       // Track the instance
       this.tables.set(element, table);

@@ -1,4 +1,4 @@
-<%= form_with(model: menu, local: true, html: { id: 'menu-form' }) do |form| %>
+<%= menu_form_with(menu, auto_save: true, validate: true) do |form| %>
   <div class="form-group row">
     <div class="col-12">
         <div class="row">
@@ -77,7 +77,7 @@
     </div>
     <div class="col-9">
       <div class="row">
-            <div class="col-9">
+            <div class="col-10">
               <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
               <%= form.file_field :image, class: 'form-control' %>
             </div>
@@ -117,7 +117,7 @@
       <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :status, options_for_select(Menu.statuses.keys.to_a, form.object.status), {}%>
+      <%= status_select(form, :status) %>
     </div>
   </div>
   <div class="spacing-sm"></div>
@@ -126,7 +126,7 @@
       <span class="float-md-end"><%= form.label :displayImages, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :displayImages, [[t('.on'), true], [t('.off'), false]], {} %>
+      <%= form.select :displayImages, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
   <div class="spacing-sm"></div>
@@ -135,7 +135,7 @@
       <span class="float-md-end"><%= form.label :displayImagesInPopup, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :displayImagesInPopup, [[t('.on'), true], [t('.off'), false]], {} %>
+      <%= form.select :displayImagesInPopup, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
   <div class="form-group row">
@@ -143,7 +143,7 @@
       <span class="float-md-end"><%= form.label :allowOrdering, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :allowOrdering, [[t('.on'), true], [t('.off'), false]], {} %>
+      <%= form.select :allowOrdering, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
   <div class="form-group row">
@@ -151,7 +151,7 @@
       <span class="float-md-end"><%= form.label :inventoryTracking, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :inventoryTracking, [[t('.on'), true], [t('.off'), false]], {} %>
+      <%= form.select :inventoryTracking, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
   <div class="spacing-sm"></div>

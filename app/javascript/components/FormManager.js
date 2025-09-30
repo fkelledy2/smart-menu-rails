@@ -75,8 +75,14 @@ export class FormManager extends ComponentBase {
       // Special handling for different select types
       this.applySelectTypeOptions(element, options);
 
+      // Check if TomSelect is available
+      if (typeof window.TomSelect !== 'function') {
+        console.warn('TomSelect not yet loaded, skipping initialization for:', element);
+        return null;
+      }
+
       // Create TomSelect instance
-      const tomSelect = new TomSelect(element, options);
+      const tomSelect = new window.TomSelect(element, options);
       
       // Track the instance
       this.selects.set(element, tomSelect);

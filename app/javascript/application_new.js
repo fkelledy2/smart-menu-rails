@@ -1,15 +1,15 @@
 // Modern, clean entry point for the Smart Menu application
 // This replaces the monolithic application.js with a modular, maintainable architecture
 
-import '@hotwired/turbo-rails'
+// Note: Turbo is already loaded by the main application.js
+// import '@hotwired/turbo-rails'
 import { Application } from '@hotwired/stimulus'
-import { definitionsFromContext } from '@hotwired/stimulus-webpack-helpers'
 
 // Global dependencies
 import jquery from 'jquery'
 import * as bootstrap from 'bootstrap'
-import { TabulatorFull as Tabulator } from 'tabulator-tables'
-import TomSelect from 'tom-select'
+// import * as TabulatorModule from 'tabulator-tables'
+// import * as TomSelectModule from 'tom-select'
 import localTime from 'local-time'
 
 // Core components
@@ -17,19 +17,33 @@ import { EventBus, AppEvents } from './utils/EventBus.js'
 import { FormManager } from './components/FormManager.js'
 import { TableManager } from './components/TableManager.js'
 
+// Polyfill for Node.js globals that some libraries expect
+window.process = window.process || { env: {} }
+
 // Make libraries globally available
 window.jQuery = window.$ = jquery
 window.bootstrap = bootstrap
-window.Tabulator = Tabulator
-window.TomSelect = TomSelect
+
+// Load libraries via script tags temporarily
+const script1 = document.createElement('script')
+script1.src = 'https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js'
+script1.onload = () => console.log('TomSelect loaded:', typeof window.TomSelect)
+document.head.appendChild(script1)
+
+const script2 = document.createElement('script')
+script2.src = 'https://cdn.jsdelivr.net/npm/tabulator-tables@5.5.2/dist/js/tabulator.min.js'
+script2.onload = () => console.log('Tabulator loaded:', typeof window.Tabulator)
+document.head.appendChild(script2)
 
 // Start local-time
 localTime.start()
 
 // Initialize Stimulus
 const application = Application.start()
-const context = require.context('./controllers', true, /\.js$/)
-application.load(definitionsFromContext(context))
+
+// Register stimulus controllers manually for importmap compatibility
+// Note: Controllers are loaded via importmap's pin_all_from directive
+window.Stimulus = application
 
 /**
  * Application Manager - Handles module loading and lifecycle
@@ -161,6 +175,17 @@ class ApplicationManager {
         case 'menusections':
           const { MenuSectionModule } = await import('./modules/menusections/MenuSectionModule.js')
           module = MenuSectionModule.init()
+          break
+        
+        case 'ordrs':
+        case 'orders':
+          const { OrderModule } = await import('./modules/orders/OrderModule.js')
+          module = OrderModule.init()
+          break
+        
+        case 'inventories':
+          const { InventoryModule } = await import('./modules/inventories/InventoryModule.js')
+          module = InventoryModule.init()
           break
         
         default:

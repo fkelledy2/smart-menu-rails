@@ -1,6 +1,7 @@
 //= link_tree ../builds
 //= link_tree ../images
 //= link controllers/application.js
+//= link application_new.js
 //= link controllers/menu_import_controller.js
 //= link allergyns.js
 //= link employees.js
@@ -28,3 +29,6 @@
 //= link testimonials.js
 //= link controllers/hello_controller.js
 //= link controllers/index.js
+
+// New system entry point
+//= link application_new.js
