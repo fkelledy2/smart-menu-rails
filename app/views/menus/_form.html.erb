@@ -7,7 +7,7 @@
                     <%=t(".details")%>
                     <% if menu.id %>
                     <span class="float-end">
-                    <div style="top:-7px" class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                    <div class="top-neg7 btn-group" role="group" aria-label="Button group with nested dropdown">
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-sm btn-dark">
                                 <%= link_to smartmenu_path(@menu.slug), class: 'text-white text-decoration-none link-light' do %>
@@ -82,7 +82,7 @@
               <%= form.file_field :image, class: 'form-control' %>
             </div>
             <div class="col-2">
-              <span style="position:relative;top:-5px!important;margin-top:5px" class="float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
+              <span class="position-relative-top-neg5 float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
             </div>
       </div>
     </div>

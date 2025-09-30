@@ -28,7 +28,7 @@
 
     <% if restaurant.wifissid != '' %>
         <div class="row">
-            <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
+            <div class="section-spacing-top col-12 col-md-6 col-lg-4">
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
@@ -44,7 +44,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="col-12">
-                                <div style="padding-top:20px;padding-bottom:20px" id="<%= restaurant.wifiQRString %>" class="d-flex justify-content-center">
+                                <div class="section-spacing-vertical" id="<%= restaurant.wifiQRString %>" class="d-flex justify-content-center">
                                 </div>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
     <div class="row">
         <% Smartmenu.where( restaurant_id: @restaurant.id).includes([:menu]).includes([:tablesetting]).each do |smartmenu| %>
             <% if smartmenu.menu != nil && smartmenu.menu.status == 'active' %>
-            <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
+            <div class="section-spacing-top col-12 col-md-6 col-lg-4">
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
@@ -74,7 +74,7 @@
                         <div class="col-12">
                             <div class="col-12">
                                 <%= link_to smartmenu_path(smartmenu.slug) do %>
-                                    <div style="padding-top:20px;padding-bottom:20px" id="<%= smartmenu.slug %>" class="d-flex justify-content-center">
+                                    <div class="section-spacing-vertical" id="<%= smartmenu.slug %>" class="d-flex justify-content-center">
                                     </div>
                                 <% end %>
                             </div>

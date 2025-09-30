@@ -1,10 +1,10 @@
-  <footer style='min-height:60px;' class="container-fluid py-1 my-0 border-top">
+  <footer class="min-height-60 container-fluid py-1 my-0 border-top">
     <div class="row">
         <div class='col-7'>
             <%= link_to root_path, class: "navbar-brand" do %>
                <%= image_tag "qr-icon.svg", height:'48' %>
             <% end %>
-            <span style='max-height:40px'><%= render 'shared/notices' %></span>
+            <span class="max-height-40"><%= render 'shared/notices' %></span>
         </div>
         <div class='col-5'>
            <span class="float-end">

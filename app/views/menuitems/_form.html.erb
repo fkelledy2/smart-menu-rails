@@ -46,7 +46,7 @@
           <%= form.file_field :image, multiple: false, accept:'image/*;capture=camera', class: 'form-control' %>
         </div>
         <div class="col-2">
-          <span style="position:relative;top:-5px!important;margin-top:5px" class="float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
+          <span class="position-relative-top-neg5 float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
         </div>
       </div>
     </div>
@@ -156,7 +156,7 @@
         </div>
         <div class="col-9">
             <div class="form-control">
-                <span style='position:relative;right:25px;'>
+                <span class="position-relative-right-25">
                 <%= form.collection_check_boxes :allergyn_ids, Allergyn.where( restaurant_id: menuitem.menusection.menu.restaurant.id ), :id, :name, { hide_label: true } do |b| %>
                     <div class="form-check">
                       <%= b.check_box %>
@@ -187,7 +187,7 @@
         </div>
         <div class="col-9">
             <div class="form-control">
-                <span style='position:relative;right:25px;'>
+                <span class="position-relative-right-25">
                 <%= form.collection_check_boxes :size_ids, Size.where( restaurant_id: menuitem.menusection.menu.restaurant.id ), :id, :name, { hide_label: true } do |size| %>
                     <div class="form-check">
                       <%= size.check_box %>

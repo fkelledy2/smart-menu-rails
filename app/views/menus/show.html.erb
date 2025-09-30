@@ -1,14 +1,14 @@
 <%= render 'shared/currency' %>
 <% if current_user %>
-<div id="menuu" style="padding-bottom:10px;box-shadow: 0 4px 2px -2px gray;" class="sticky-top bg-white">
+<div id="menuu" class="menu-sticky-header">
 <% else %>
-<div id="menuc" style="padding-bottom:10px;box-shadow: 0 4px 2px -2px gray;" class="sticky-top bg-white">
+<div id="menuc" class="menu-sticky-header">
 <% end %>
     <div class="row">
       <div class="col-12 col-md-12 col-lg-12">
         <div class="row">
             <div class="col-12">
-                    <div style="padding-top:5px" class="row">
+                    <div class="padding-top-xs row">
                         <div class="col-7">
                             <h2>
                                 <%= @menu.restaurant.name %>
@@ -119,9 +119,9 @@
                 </span>
             </div>
         </div>
-        <div style="height:40px"class="container-fluid">
-            <nav id="navbar-example2" style="position:relative; left:-10px" class="nav flex-nowrap overflow-auto">
-              <ul style="position:relative; left:-37px" class="d-flex">
+        <div class="height-40"class="container-fluid">
+            <nav id="navbar-example2" class="position-relative-left-neg10 nav flex-nowrap overflow-auto">
+              <ul class="position-relative-left-neg37 d-flex">
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
                       <a class="m-1 sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>
                 <% end %>
@@ -136,11 +136,11 @@
 <div class="row">
   <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
     <% @menu.menusections.order(:sequence).each do |menusection| %>
-        <div style="padding-top:20px" id="menusection_<%= menusection.id %>"></div>
+        <div class="section-spacing-top" id="menusection_<%= menusection.id %>"></div>
         <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
             <% if menusection.image %>
                 <div class="card border-light text-bg-dark">
-                  <img src="<%= menusection.image_url %>" style="height: 150px" class="card-img" alt="<%= menusection.name %>">
+                  <img src="<%= menusection.image_url %>" class="height-150 card-img" alt="<%= menusection.name %>">
                   <div class="card-img-overlay">
                     <h3 class="card-title"><%= menusection.name %></h3>
                     <p class="card-text"><%= menusection.description %></p>
@@ -155,7 +155,7 @@
         <div class="row">
             <% menusection.menuitems.order(:sequence).each do |menuitem| %>
                 <% if @ordrparticipant == nil || @ordrparticipant && (@ordrparticipant.allergyns & menuitem.allergyns).empty? %>
-                    <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
+                    <div class="section-spacing-top col-12 col-md-6 col-lg-4">
                         <div class="card">
                           <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
                             <% if menuitem.image %>
@@ -178,7 +178,7 @@
                                                     <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
                                                 </div>
                                                 <div class="col-3">
-                                                    <h5 style="margin-top:5px" class="float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %></span></h5>
+                                                    <h5 class="item-spacing float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %></span></h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -209,7 +209,7 @@
                                                     <h5 class="card-title"><%= menuitem.name %> <span class="float-end"></span></h5>
                                                 </div>
                                                 <div class="col-3">
-                                                    <h5 style="margin-top:5px" class="float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol) %></span></h5>
+                                                    <h5 class="item-spacing float-end card-title"><%= number_to_currency(menuitem.price, unit: @restaurantCurrency.symbol) %></span></h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -250,7 +250,7 @@
         </div>
     <%end %>
     <% if @allergyns && @allergyns.length > 0 %>
-        <div style="padding-top:20px" id="menusection_allergyns"></div>
+        <div class="section-spacing-top" id="menusection_allergyns"></div>
         <div class="card">
             <div class="card-body">
                 <div class="row">

@@ -54,12 +54,12 @@
         ] %>
         
         <% steps.each_with_index do |step, index| %>
-          <div class="d-flex flex-column align-items-center" style="flex: 1;">
+          <div class="d-flex flex-column align-items-center flex-1">
             <div class="d-flex align-items-center w-100">
               <% if index > 0 %>
-                <div class="progress flex-grow-1 me-1" style="height: 3px;">
+                <div class="progress flex-grow-1 me-1 height-3px">
                   <div class="progress-bar <%= step[:status].present? ? 'bg-success' : 'bg-light' %>" 
-                       role="progressbar" style="width: 100%;">
+                       role="progressbar" class="full-width">
                   </div>
                 </div>
               <% else %>
@@ -68,7 +68,7 @@
               
               <div class="d-flex flex-column align-items-center position-relative">
                 <span class="d-flex align-items-center justify-content-center rounded-circle <%= step[:status] == 'complete' ? 'bg-success text-white' : (step[:status] == 'active' ? 'bg-primary text-white' : 'bg-light text-muted') %>" 
-                      style="width: 36px; height: 36px; z-index: 1;">
+                      class="icon-size-36">
                   <% if step[:status] == 'complete' %>
                     <i class="bi bi-check-lg"></i>
                   <% else %>
@@ -81,9 +81,9 @@
               </div>
               
               <% if index < steps.size - 1 %>
-                <div class="progress flex-grow-1 ms-1" style="height: 3px;">
+                <div class="progress flex-grow-1 ms-1 height-3px">
                   <div class="progress-bar <%= steps[index+1][:status].present? ? 'bg-success' : 'bg-light' %>" 
-                       role="progressbar" style="width: 100%;">
+                       role="progressbar" class="full-width">
                   </div>
                 </div>
               <% else %>
@@ -116,7 +116,7 @@
           <p class="text-muted mb-2"><%= t('.processing_title') %></p>
           <p class="text-muted small mb-4"><%= t('.processing_page', current: (@ocr_menu_import.current_page || 1), total: (@ocr_menu_import.total_pages || '?')) %></p>
           
-          <div class="progress mb-2" style="height: 10px;">
+          <div class="progress mb-2 progress-bar-10">
             <div class="progress-bar progress-bar-striped progress-bar-animated" 
                  role="progressbar" 
                  style="width: <%= @ocr_menu_import.progress || 0 %>%" 
@@ -354,7 +354,7 @@
       <div class="modal-body text-center p-4">
         <div class="d-flex justify-content-center mb-3">
           <div class="bg-success bg-opacity-10 rounded-circle p-3">
-            <i class="bi bi-check-circle-fill text-success" style="font-size: 2rem;"></i>
+            <i class="bi bi-check-circle-fill text-success text-2rem"></i>
           </div>
         </div>
         <h5 class="modal-title mb-3" id="confirmModalLabel">Publish Menu</h5>

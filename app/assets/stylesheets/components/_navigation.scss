@@ -50,6 +50,24 @@
   top: -43px;
 }
 
+// Generic navigation tabs with fade effect (for all edit pages)
+.edit-tabs-main {
+  position: relative;
+  top: -43px;
+  left: 50px;
+  height: 43px;
+  overflow-y: hidden;
+  width: 95%;
+  mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%);
+  -webkit-mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%);
+}
+
+// Generic edit content positioning
+.edit-content-positioned {
+  position: relative;
+  top: -43px;
+}
+
 // Scrollable navigation with gradient fade
 .nav-scrollable-gradient {
   overflow-x: auto;

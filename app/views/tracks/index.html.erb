@@ -1,7 +1,7 @@
 <span class="display-none" id='spotifyAccessToken'><%= @restaurant.spotifyaccesstoken %></span>
 <span class="display-none" id='spotifyRefreshToken'><%= @restaurant.spotifyrefreshtoken %></span>
 <div class="row bg-light">
-  <div style='padding-bottom:5px;' class="col-12 text-end">
+  <div class="padding-bottom-xs col-12 text-end">
     <span id="mellowMenuPlaylist" class='float-start h2'><%= t('.tracks') %></span>
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
       <div class="btn-group" role="group">
@@ -15,7 +15,7 @@
     </div>
   </div>
 </div>
-<div style='height:90vh;overflow:scroll 'class="row">
+<div class="height-90vh-scroll"class="row">
     <% @tracks.each do |track| %>
         <%= render "showTrack", track: track %>
     <% end %>

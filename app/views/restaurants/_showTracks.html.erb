@@ -4,7 +4,7 @@
 <p>
 <div class="row">
   <div class="col-12 text-end">
-    <span style='padding-top:5px' class='float-start h4'><%= t('.tracks') %></span>
+    <span class="padding-top-xs float-start h4"><%= t('.tracks') %></span>
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
       <div class="btn-group" role="group">
         <%= link_to @restaurant.spotifyAuthUrl, id: 'spotifyConnect', class: 'btn btn-dark', data: { turbo: false } do %>
@@ -20,5 +20,5 @@
     </div>
   </div>
 </div>
-<div style="padding-top:10px" class="table-borderless" id="restaurant-tracks-table" data-bs-restaurant_id="<%= @restaurant.id %>">
+<div class="table-container-spacing table-borderless" id="restaurant-tracks-table" data-bs-restaurant_id="<%= @restaurant.id %>">
 </div>

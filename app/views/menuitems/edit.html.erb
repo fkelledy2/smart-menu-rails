@@ -21,7 +21,7 @@
   </div>
 </div>
 
-<ul style="height:43px;overflow-y:hidden;" class="nav nav-tabs overflow-auto flex-nowrap" id="itemTabsBack" role="tablist">
+<ul class="nav-tabs-height nav nav-tabs overflow-auto flex-nowrap" id="itemTabsBack" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark">
       <%= link_to edit_menusection_path(@menuitem.menusection), class: "link-dark" do %>
@@ -30,13 +30,13 @@
     </button>
   </li>
 </ul>
-<ul style="position:relative;top:-43px;left:50px;height:43px;overflow-y:hidden;width:85%;mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%" class="nav nav-tabs overflow-auto flex-nowrap" id="itemTabs" role="tablist">
+<ul class="nav nav-tabs overflow-auto flex-nowrap edit-tabs-main" id="itemTabs" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark active" id="item-tab" data-bs-toggle="tab" data-bs-target="#item" type="button" role="tab" aria-controls="itemConfig" aria-selected="true"><%= t('.tab_item') %></button>
   </li>
 </ul>
 
-<div style="position:relative;top:-43px;" class="tab-content" id="itemConfig">
+<div class="menu-content-positioned tab-content" id="itemConfig">
   <div class="tab-pane fade show active" id="item" role="tabpanel" aria-labelledby="home-tab">
     <p>
     <div class="row">

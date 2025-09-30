@@ -81,7 +81,7 @@
           <%= form.file_field :image, class: 'form-control' %>
         </div>
         <div class="col-2">
-          <span style="position:relative;top:5px!important;margin-top:5px" class="float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
+          <span class="position-relative-top5 float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
         </div>
       </div>
       <%= image_tag menusection.image_url, :class => "img-fluid" if menusection.image %>

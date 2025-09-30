@@ -19,7 +19,7 @@
           <div class="row align-items-center">
             <div class="col-md-6">
               <div class="qr-code-placeholder bg-light d-flex align-items-center justify-content-center" 
-                   style="height: 200px; border-radius: 8px;">
+                   class="qr-placeholder">
                 <div class="text-center">
                   <div class="spinner-border text-primary mb-3" role="status">
                     <span class="visually-hidden"><%= t('onboarding.completion.generating_qr') %></span>
@@ -171,12 +171,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const qrPlaceholder = document.querySelector('.qr-code-placeholder');
     if (data.qr_code_url) {
       qrPlaceholder.innerHTML = `
-        <img src="${data.qr_code_url}" alt="QR Code" class="img-fluid" style="max-width: 180px;">
+        <img src="${data.qr_code_url}" alt="QR Code" class="img-fluid max-width-180">
       `;
     } else {
       qrPlaceholder.innerHTML = `
         <div class="text-center">
-          <i class="fas fa-qrcode text-success" style="font-size: 4rem;"></i>
+          <i class="fas fa-qrcode text-success text-extra-large"></i>
           <p class="mb-0 text-success mt-2"><%= j(t('onboarding.completion.qr_code_ready')) %></p>
         </div>
       `;
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const qrPlaceholder = document.querySelector('.qr-code-placeholder');
     qrPlaceholder.innerHTML = `
       <div class="text-center">
-        <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+        <i class="fas fa-exclamation-triangle text-warning text-large"></i>
         <p class="mb-0 text-warning mt-2"><%= j(t('onboarding.completion.setup_timeout')) %></p>
         <small class="text-muted"><%= j(t('onboarding.completion.setup_timeout_help')) %></small>
       </div>

@@ -16,11 +16,11 @@
         <% end %>
       </div>
     </div>
-    <div style="padding-top:10px" class="table-borderless" id="tablesetting-table">
+    <div class="table-container-spacing table-borderless" id="tablesetting-table">
     </div>
 <% else %>
     <%= format('%02d',@currentDay) %> - <%= format('%02d',@currentHour) %>:<%= format('%02d',@currentMin) %>
-    <div class="row" style="padding-bottom:20px">
+    <div class="row section-spacing-bottom">
         <div class="col-12">
             <span class="h1 text-center"><%= @restaurant.name %>: <%= t('.seating_plan') %></span>
         </div>
@@ -44,7 +44,7 @@
                                 <h2><%= tablesetting.name %></h2>
                             <% end %>
                         <% end %>
-                        <span style="padding-top:7px" class="float-end"><%= t('.seats') %> <%= tablesetting.capacity %></span>
+                        <span class="padding-top-7px float-end"><%= t('.seats') %> <%= tablesetting.capacity %></span>
                     </h2>
                     <div class="row">
                         <div class="col-12">

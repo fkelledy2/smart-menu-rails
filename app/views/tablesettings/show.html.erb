@@ -81,7 +81,7 @@
     </p>
 <% else %>
     <%= format('%02d',@currentDay) %> - <%= format('%02d',@currentHour) %>:<%= format('%02d',@currentMin) %>
-    <div class="row" style="padding-bottom:20px">
+    <div class="row section-spacing-bottom">
         <div class="col-12">
             <span class="h1 text-center"><%= @restaurant.name %>: <%= t('.available_menus') %></span>
         </div>
@@ -91,7 +91,7 @@
             <div class="col-6">
                 <div class="card text-white bg-success mb-3">
                   <div class="card-body">
-                    <span style="padding-top:50px;padding-bottom:50px;display:flex;justify-content: center;align-items: center;">
+                    <span class="hero-section">
                             <%= link_to menu_tablesetting_path(menu, @tablesetting), class: 'btn btn-lg btn-success' do %>
                                 <h2 class="h3"><%= menu.name %></h2>
                             <% end %>
