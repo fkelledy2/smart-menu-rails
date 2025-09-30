@@ -1,0 +1,146 @@
+// Table Components
+// Styles for tables, Tabulator, and data display components
+
+// Table container
+.table-container {
+  padding-top: 10px;
+}
+
+.table-borderless {
+  // Custom borderless table styling
+  border: none;
+  
+  th, td {
+    border: none;
+  }
+}
+
+// Tabulator customizations
+.tabulator-row-odd {
+  background-color: #ffffff !important;
+}
+
+.tabulator-row-even {
+  background-color: #ffffff !important;
+}
+
+.tabulator-header {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.tabulator-col-title {
+  font-weight: 600;
+  color: #495057;
+}
+
+// Table spacing
+.table-spacing-sm {
+  margin-bottom: 1rem;
+}
+
+.table-spacing-md {
+  margin-bottom: 1.5rem;
+}
+
+.table-spacing-lg {
+  margin-bottom: 2rem;
+}
+
+// Table row actions
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.table-actions .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+// Responsive table wrapper
+.table-responsive-custom {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// Table status indicators
+.table-status-active {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.table-status-inactive {
+  color: #6c757d;
+  font-weight: 600;
+}
+
+.table-status-pending {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+// Data table enhancements
+.data-table {
+  .table {
+    margin-bottom: 0;
+  }
+  
+  .table th {
+    background-color: #f8f9fa;
+    border-top: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+  }
+  
+  .table td {
+    vertical-align: middle;
+    padding: 0.75rem;
+  }
+}
+
+// Table filters and search
+.table-filters {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.table-search {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.table-search input {
+  padding-left: 2.5rem;
+}
+
+.table-search .search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+}
+
+// Mobile table adjustments
+@media (max-width: 768px) {
+  .table-responsive-custom {
+    font-size: 0.875rem;
+  }
+  
+  .table-actions {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .data-table .table th,
+  .data-table .table td {
+    padding: 0.5rem 0.25rem;
+  }
+}

@@ -1,0 +1,330 @@
+// Onboarding Pages Styles
+// Styles for the onboarding wizard and setup flow
+
+// Wizard container
+.wizard-form {
+  max-width: 1200px;
+}
+
+.wizard-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+// Progress indicators
+.progress-custom {
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-custom {
+  background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+  transition: width 0.3s ease;
+}
+
+// Step indicators
+.step-indicator {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.step-item {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.step-item::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #e9ecef;
+  z-index: 1;
+}
+
+.step-item:last-child::before {
+  display: none;
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin: 0 auto 8px;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.step-item.active .step-number {
+  background: #007bff;
+  color: white;
+}
+
+.step-item.completed .step-number {
+  background: #28a745;
+  color: white;
+}
+
+.step-title {
+  font-size: 0.875rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.step-item.active .step-title {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.step-item.completed .step-title {
+  color: #28a745;
+}
+
+// Plan selection
+.plan-card {
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  height: 100%;
+}
+
+.plan-card:hover {
+  border-color: #007bff;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,123,255,0.15);
+}
+
+.plan-card.selected {
+  border-color: #007bff;
+  background: linear-gradient(135deg, #f8f9ff 0%, #e6f3ff 100%);
+}
+
+.plan-price {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #007bff;
+  margin: 1rem 0;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.plan-features li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.plan-features li:last-child {
+  border-bottom: none;
+}
+
+.plan-features .feature-included {
+  color: #28a745;
+}
+
+.plan-features .feature-excluded {
+  color: #6c757d;
+  text-decoration: line-through;
+}
+
+// Menu creation
+.menu-builder {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.menu-preview {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 2rem;
+}
+
+.menu-item-builder {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+.menu-section-header {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px 8px 0 0;
+  margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+}
+
+// Completion page
+.completion-container {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.completion-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  color: white;
+  font-size: 2rem;
+}
+
+.qr-code-container {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin: 2rem 0;
+}
+
+.qr-code-placeholder {
+  height: 200px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border: 2px dashed #dee2e6;
+}
+
+.qr-code-image {
+  max-width: 180px;
+  border-radius: 8px;
+}
+
+// Loading states
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Form enhancements for onboarding
+.onboarding-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.onboarding-form .form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.onboarding-form .form-control {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  padding: 0.75rem 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.onboarding-form .form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+// Navigation buttons
+.wizard-navigation {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem 0;
+  border-top: 1px solid #e9ecef;
+  margin-top: 2rem;
+}
+
+.wizard-navigation .btn {
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .wizard-form {
+    max-width: 100%;
+    margin: 0 1rem;
+  }
+  
+  .plan-card {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .plan-price {
+    font-size: 2.5rem;
+  }
+  
+  .menu-preview {
+    position: static;
+    margin-top: 2rem;
+  }
+  
+  .wizard-navigation {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .step-indicator {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .step-item {
+    flex: none;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 576px) {
+  .completion-container {
+    padding: 2rem 0;
+  }
+  
+  .completion-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+  
+  .qr-code-container {
+    padding: 1.5rem;
+  }
+}

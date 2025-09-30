@@ -1,0 +1,163 @@
+// Navigation Components
+// Styles for navigation tabs, menus, and navigation-specific layouts
+
+// Navigation-specific styles
+// Fixed height nav tabs with scrolling
+.nav-tabs-fixed-height {
+  height: 43px;
+  overflow-y: hidden;
+}
+
+// Restaurant tabs with back navigation
+.restaurant-tabs-back {
+  height: 43px;
+  overflow-y: hidden;
+}
+
+// Restaurant tabs with fade effect
+.restaurant-tabs-main {
+  position: relative;
+  top: -43px;
+  left: 50px;
+  height: 43px;
+  overflow-y: hidden;
+  width: 95%;
+  mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%);
+  -webkit-mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%);
+}
+
+// Menu tabs with back navigation
+.menu-tabs-back {
+  height: 43px;
+  overflow-y: hidden;
+}
+
+// Menu tabs with fade effect
+.menu-tabs-main {
+  position: relative;
+  top: -43px;
+  left: 50px;
+  height: 43px;
+  overflow-y: hidden;
+  width: 95%;
+  mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%);
+  -webkit-mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%);
+}
+
+// Menu content positioning
+.menu-content-positioned {
+  position: relative;
+  top: -43px;
+}
+
+// Scrollable navigation with gradient fade
+.nav-scrollable-gradient {
+  overflow-x: auto;
+  background: linear-gradient(to right, transparent, rgba(0,0,0,0.1) 10%, rgba(0,0,0,0.1) 90%, transparent);
+}
+
+// Navbar customizations
+.navbar-custom {
+  padding: 0px !important;
+}
+
+.navbar-dropdown {
+  z-index: 1070;
+}
+
+// Sticky navigation
+.sticky-nav {
+  padding-bottom: 10px;
+  box-shadow: 0 4px 2px -2px gray;
+}
+
+// Navigation list positioning
+.nav-list-offset {
+  position: relative;
+  left: -10px;
+}
+
+.nav-list-items {
+  position: relative;
+  left: -37px;
+}
+
+// Navigation item spacing
+.nav-item-spacing {
+  margin: 5px;
+}
+
+// Breadcrumb styling
+.breadcrumb-custom {
+  background: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+// Side navigation
+.side-nav {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.side-nav.open {
+  left: 0;
+}
+
+.side-nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+  display: none;
+}
+
+.side-nav-overlay.show {
+  display: block;
+}
+
+// Mobile navigation
+@media (max-width: 768px) {
+  .nav-tabs-scrollable {
+    width: 100%;
+    left: 0;
+    mask-image: none;
+  }
+  
+  .nav-tabs-fixed-height {
+    height: auto;
+    overflow-y: visible;
+  }
+  
+  .tab-content-offset {
+    top: 0;
+  }
+}
+
+// Navigation hover effects
+.nav-link {
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+// Active navigation states
+.nav-link.active {
+  font-weight: 600;
+}
+
+.nav-tabs .nav-link.active {
+  border-bottom: 2px solid #007bff;
+}

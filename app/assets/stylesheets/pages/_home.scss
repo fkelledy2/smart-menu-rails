@@ -1,0 +1,220 @@
+// Home Page Styles
+// Styles specific to the homepage and marketing pages
+
+// Hero carousel
+.hero-carousel {
+  overflow-x: hidden;
+  width: calc(100% + 50px);
+  margin-left: -25px;
+  margin-right: -25px;
+  background: url(asset-path('table-setting.png')) no-repeat center center;
+  background-size: cover;
+}
+
+// Hero overlay
+.hero-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.32);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-caption {
+  left: 5%;
+  right: 5%;
+}
+
+.hero-cta-btn {
+  z-index: 10000;
+}
+
+// Feature cards
+.feature-card {
+  padding-left: 15px;
+}
+
+.feature-description {
+  padding-right: 10px;
+  min-height: 120px;
+  text-align: justify;
+}
+
+.feature-icon {
+  color: green;
+}
+
+// Metrics cards
+.metrics-card {
+  transition: transform 0.2s ease;
+}
+
+.metrics-card:hover {
+  transform: translateY(-2px);
+}
+
+.metrics-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: green;
+}
+
+// Pricing cards
+.pricing-card {
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+  border-color: #007bff;
+  box-shadow: 0 8px 25px rgba(0,123,255,0.15);
+}
+
+.pricing-card.featured {
+  border-color: #007bff;
+  position: relative;
+  transform: scale(1.05);
+}
+
+.pricing-card.featured::before {
+  content: 'Most Popular';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #007bff;
+  color: white;
+  padding: 4px 16px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+// Demo section
+.demo-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 4rem 0;
+}
+
+.demo-video {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+// QR code section
+.qr-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+// Testimonials
+.testimonial-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  height: 100%;
+}
+
+.testimonial-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.testimonial-rating {
+  color: #ffc107;
+}
+
+// Call-to-action sections
+.cta-section {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  padding: 4rem 0;
+}
+
+.cta-section .btn {
+  background: white;
+  color: #007bff;
+  border: none;
+  padding: 12px 32px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.cta-section .btn:hover {
+  background: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+// Footer enhancements
+.footer-custom {
+  min-height: 60px;
+  background: #343a40;
+  color: #fff;
+}
+
+.footer-links a {
+  color: #adb5bd;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #fff;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .hero-carousel {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .hero-caption {
+    left: 10px;
+    right: 10px;
+  }
+  
+  .feature-card {
+    padding-left: 0;
+    margin-bottom: 2rem;
+  }
+  
+  .feature-description {
+    min-height: auto;
+    padding-right: 0;
+  }
+  
+  .pricing-card.featured {
+    transform: none;
+    margin-bottom: 2rem;
+  }
+  
+  .metrics-value {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .demo-section {
+    padding: 2rem 0;
+  }
+  
+  .cta-section {
+    padding: 2rem 0;
+  }
+  
+  .testimonial-card {
+    padding: 1.5rem;
+  }
+}

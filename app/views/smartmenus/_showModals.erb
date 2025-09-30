@@ -8,12 +8,12 @@
                 </div>
                 <div class="modal-body">
                     <% if tablesetting %>
-                        Would you like to start an order for <input style='width:50px' type="number" id="orderCapacity" value=<%= tablesetting.capacity%> oninput="validateIntegerInput(this)"> at this table?
+                        Would you like to start an order for <input class="modal-input-width" type="number" id="orderCapacity" value=<%= tablesetting.capacity%> oninput="validateIntegerInput(this)"> at this table?
                     <% end %>
                 </div>
-                <div style='border-top:0px;padding:0px' class="modal-footer">
+                <div class="modal-footer modal-footer-custom">
                     <span class="float-end">
-                        <div style='position:relative;right:-5px;bottom:-5px;' class="btn-group btn-group-lg btn-order-group-custom-rounded" role="group" aria-label="<%= t('.order_aria') %>">
+                        <div class="btn-group btn-group-lg btn-order-group-custom-rounded modal-btn-group-position" role="group" aria-label="<%= t('.order_aria') %>">
                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
                             <button id="start-order" type="button" data-bs-dismiss="modal" class="btn btn-danger"><%= t(".start") %></button>
                          </div>
@@ -33,7 +33,7 @@
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="addItemToOrderModalLabel"><%= t(".addToOrder") %></h1>
           </div>
-          <div style="padding:0px" class="modal-body">
+          <div class="modal-body modal-body-no-padding">
                 <% if (menu.displayImages == true && menu.restaurant.displayImages == true) || (menu.displayImagesInPopup == true && menu.restaurant.displayImagesInPopup == true) %>
                     <div class="row">
                         <div class="col-12">

@@ -1,5 +1,5 @@
 <%= form_with(model: employee) do |form| %>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %></span>
@@ -8,7 +8,7 @@
       <%= form.text_field :name, class: 'form-control' %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :eid, class: 'col-form-label' %></span>
@@ -17,7 +17,7 @@
       <%= form.text_field :eid, class: 'form-control' %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :user_id, class: 'col-form-label' %></span>
@@ -26,7 +26,7 @@
       <%= form.collection_select :user_id, User.all ,:id, :email, options = {:prompt => t(".selectUser")}%>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :role, class: 'col-form-label' %></span>
@@ -35,7 +35,7 @@
       <%= form.select :role, options_for_select(Employee.roles.keys.to_a, form.object.role), {} %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %></span>
@@ -49,7 +49,7 @@
   <% else %>
       <%= form.hidden_field :restaurant_id %>
   <% end %>
-  <div style='height:8px'></div>
+  <div class="spacing-md"></div>
   <div class="row">
     <div class="col-3">
     </div>
@@ -64,7 +64,7 @@
         </span>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <% if employee.errors.any? %>
   <div class="row">
     <div class="col-3">

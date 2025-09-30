@@ -30,7 +30,7 @@
       <%= form.text_field :name, class: 'form-control' %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :description, class: 'col-form-label' %></span>
@@ -46,7 +46,7 @@
         <h4><%=t(".pdfSettings")%></h4>
     </div>
   </div>
-  <div style='height:8px'></div>
+  <div class="spacing-md"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :pdf_menu_scan, class: 'col-form-label' %></span>
@@ -94,7 +94,7 @@
       <%= image_tag menu.image_url, :class => "img-thumbnail rounded mx-auto d-block" if menu.image %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :imagecontext, class: 'col-form-label' %></span>
@@ -105,13 +105,13 @@
   </div>
 
 
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-12">
       <h4><%=t(".settings")%></h4>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %></span>
@@ -120,7 +120,7 @@
       <%= form.select :status, options_for_select(Menu.statuses.keys.to_a, form.object.status), {}%>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :displayImages, class: 'col-form-label' %></span>
@@ -129,7 +129,7 @@
       <%= form.select :displayImages, [[t('.on'), true], [t('.off'), false]], {} %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :displayImagesInPopup, class: 'col-form-label' %></span>
@@ -154,7 +154,7 @@
       <%= form.select :inventoryTracking, [[t('.on'), true], [t('.off'), false]], {} %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :covercharge, class: 'col-form-label' %></span>
@@ -163,14 +163,14 @@
       <%= form.text_field :covercharge, class: 'form-control' %>
     </div>
   </div>
-  <div style='display:none'>
+  <div class="display-none">
   <% if @futureParentRestaurant %>
       <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
   <% else %>
       <%= form.hidden_field :restaurant_id %>
   <% end %>
   </div>
-  <div style='height:8px'></div>
+  <div class="spacing-md"></div>
   <div class="row">
     <div class="col-3">
     </div>
@@ -185,7 +185,7 @@
         </span>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <% if menu.errors.any? %>
     <div class="row">
     <div class="col-3">
@@ -201,7 +201,7 @@
   </div>
   <% end %>
 <% end %>
-  <div style='height:8px'></div>
+  <div class="spacing-md"></div>
   <div class="row">
     <div class="col-3">
     </div>

@@ -1,0 +1,108 @@
+// Bootstrap Theme Variables
+// Override Bootstrap default variables here before importing Bootstrap
+
+// Brand Colors - Customize these for your theme
+$primary: #007bff;
+$secondary: #6c757d;
+$success: #28a745;
+$info: #17a2b8;
+$warning: #ffc107;
+$danger: #dc3545;
+$light: #f8f9fa;
+$dark: #343a40;
+
+// Gray colors
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+
+// Typography
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-size-base: 1rem;
+$font-size-sm: 0.875rem;
+$font-size-lg: 1.125rem;
+$line-height-base: 1.5;
+
+// Font weights
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+// Spacing
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * .25,
+  2: $spacer * .5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+);
+
+// Border radius
+$border-radius: .375rem;
+$border-radius-sm: .25rem;
+$border-radius-lg: .5rem;
+$border-radius-xl: 1rem;
+
+// Shadows
+$box-shadow-sm: 0 .125rem .25rem rgba(0, 0, 0, .075);
+$box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+$box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, .175);
+
+// Component specific variables
+$navbar-padding-y: .5rem;
+$navbar-padding-x: 1rem;
+$navbar-brand-font-size: 1.25rem;
+
+$card-border-radius: $border-radius;
+$card-box-shadow: $box-shadow-sm;
+
+$btn-border-radius: $border-radius;
+$btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 1px rgba(0, 0, 0, .075);
+
+// Form controls
+$input-border-radius: $border-radius;
+$input-focus-border-color: lighten($primary, 25%);
+$input-focus-box-shadow: 0 0 0 .2rem rgba($primary, .25);
+
+// Tables
+$table-striped-bg: rgba(0, 0, 0, .05);
+$table-hover-bg: rgba(0, 0, 0, .075);
+
+// Example theme variations (uncomment to use)
+
+// Material Design inspired theme
+// $primary: #2196F3;
+// $secondary: #757575;
+// $success: #4CAF50;
+// $border-radius: 4px;
+// $box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+// Corporate theme
+// $primary: #1f4e79;
+// $secondary: #5a6c7d;
+// $success: #2d7d32;
+// $border-radius: 2px;
+// $font-family-sans-serif: "Roboto", sans-serif;
+
+// Modern/Minimal theme
+// $primary: #6366f1;
+// $secondary: #64748b;
+// $success: #10b981;
+// $border-radius: 8px;
+// $box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+// Dark theme variables (uncomment for dark mode)
+// $body-bg: #1a1a1a;
+// $body-color: #ffffff;
+// $primary: #0d6efd;
+// $secondary: #6c757d;
+// $dark: #ffffff;
+// $light: #2d3748;

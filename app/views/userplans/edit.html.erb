@@ -20,7 +20,7 @@
                     <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i><small class="text-body-secondary fw-light"></small></h1>
                 <% end %>
             </div>
-            <div style='display:none'>
+            <div class="display-none">
                 <% if plan.pricePerYear %>
                     <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerYear, precision: 0) %><small class="text-body-secondary fw-light">/yr</small></h1>
                 <% else %>

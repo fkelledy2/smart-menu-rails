@@ -76,30 +76,30 @@
             </div>
           </div>
         </div>
-        <div style="padding-top:10px" class="table-borderless" id="restaurant-table">
+        <div class="table-container table-borderless" id="restaurant-table">
         </div>
       <% end %>
 <% else %>
-  <div id="myCarousel" class="carousel" data-bs-ride="carousel" style="overflow-x: hidden;width: calc(100% + 50px);margin-left: -25px;margin-right: -25px; background: url('<%= asset_path('table-setting.png') %>') no-repeat center center;background-size: cover;">
+  <div id="myCarousel" class="carousel hero-carousel" data-bs-ride="carousel">
     <div class="carousel-inner">
       <div class="carousel-item justify-content-center active position-relative">
   <!-- Subtle overlay for text readability -->
-  <div class="hero-overlay position-absolute w-100 h-100" style="top:0;left:0;background:rgba(0,0,0,0.32);z-index:1;pointer-events:none;"></div>
+  <div class="hero-overlay position-absolute w-100 h-100"></div>
         <%= image_tag "https://placehold.co/1x500/transparent/transparent", class: "img-responsive bg-item parallax img-fluid" %>
         <div class="container">
-          <div style='left:5%;right:5%;' class="carousel-caption text-start">
+          <div class="hero-caption carousel-caption text-start">
             <h1><%=t(".ctaTitle1")%></h1>
             <p><strong><%=t(".ctaBody1")%></strong></p>
-            <p style="z-index:+10000;"><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger hero-cta-btn" %></p>
+            <p class="hero-cta-btn"><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
           </div>
         </div>
       </div>
       <div class="carousel-item justify-content-center position-relative">
   <!-- Subtle overlay for text readability -->
-  <div class="hero-overlay position-absolute w-100 h-100" style="top:0;left:0;background:rgba(0,0,0,0.32);z-index:1;pointer-events:none;"></div>
+  <div class="hero-overlay position-absolute w-100 h-100"></div>
         <%= image_tag "https://placehold.co/1x500/transparent/transparent", class: "img-responsive bg-item parallax img-fluid" %>
         <div class="container">
-          <div style='left:5%;right:5%;' class="carousel-caption text-start">
+          <div class="hero-caption carousel-caption text-start">
             <h1><%=t(".ctaTitle2")%></h1>
             <p><strong><%=t(".ctaBody2")%></strong></p>
             <p><a class="btn btn-danger" href="#contact_us"><%=t(".contactUs")%></a></p>
@@ -113,61 +113,61 @@
   <div class="container px-1 py-2">
     <h2 class="pb-2 border-bottom"><%=t(".features")%></h2>
     <div class="row g-4 py-3 row-cols-1 row-cols-lg-3">
-      <div style='padding-left:15px;' class="col d-flex align-items-start feature-card">
+      <div class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i style="color:green;" class="bi bi-activity"></i></h2>
+            <h2><i class="feature-icon bi bi-activity"></i></h2>
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle2").html_safe %></h3>
-          <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription2").html_safe %></p>
+          <p class="feature-description"><%=t(".featureDescription2").html_safe %></p>
         </div>
       </div>
-      <div style='padding-left:15px;' class="col d-flex align-items-start feature-card">
+      <div class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i style="color:green;" class="bi bi-bullseye"></i></h2>
+            <h2><i class="feature-icon bi bi-bullseye"></i></h2>
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle3").html_safe %></h3>
-          <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription3").html_safe %></p>
+          <p class="feature-description"><%=t(".featureDescription3").html_safe %></p>
         </div>
       </div>
-      <div style='padding-left:15px;' class="col d-flex align-items-start feature-card">
+      <div class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i style="color:green;" class="bi bi-emoji-heart-eyes"></i></h2>
+            <h2><i class="feature-icon bi bi-emoji-heart-eyes"></i></h2>
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle4").html_safe %></h3>
-          <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription4").html_safe %></p>
+          <p class="feature-description"><%=t(".featureDescription4").html_safe %></p>
         </div>
       </div>
-      <div style='padding-left:15px;' class="col d-flex align-items-start feature-card">
+      <div class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i style="color:green;" class="bi bi-graph-up-arrow"></i></h2>
+            <h2><i class="feature-icon bi bi-graph-up-arrow"></i></h2>
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle6").html_safe %></h3>
-          <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription6").html_safe %></p>
+          <p class="feature-description"><%=t(".featureDescription6").html_safe %></p>
         </div>
       </div>
-      <div style='padding-left:15px;' class="col d-flex align-items-start feature-card">
+      <div class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i style="color:green;" class="bi bi-tree"></i></h2>
+            <h2><i class="feature-icon bi bi-tree"></i></h2>
         </div>
         <div>
           <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle5").html_safe %></h3>
-          <p style='padding-right:10px;min-height:120px;text-align:justify'><%=t(".featureDescription5").html_safe %></p>
+          <p class="feature-description"><%=t(".featureDescription5").html_safe %></p>
         </div>
       </div>
     </div>
   </div>
 
   <% if @demoMenu %>
-    <span style='display:none' id="qrIcon"><%= image_url('qr-icon.svg') %></span>
-    <span style='display:none' id="qrHost"><%= @qrHost %></span>
+    <span class="display-none" id="qrIcon"><%= image_url('qr-icon.svg') %></span>
+    <span class="display-none" id="qrHost"><%= @qrHost %></span>
     <div id="demo-table" class="container px-1 py-2">
       <h2 class="pb-2"><%=t(".demoMenu")%></h2>
       <div class="row g-4 py-2 row-cols-12 row-cols-12 row-cols-lg-12 align-items-center">
-            <span style='display:none' class="qrSlug"><%= @demoMenu.slug %></span>
+            <span class="display-none qrSlug"><%= @demoMenu.slug %></span>
             <div style="padding-left: 0;padding-right: 0;" class="col-sm-12 col-md-12 col-lg-8">
               <div class="embed-responsive embed-responsive-16by9">
                     <video width="100%" loop muted playsinline autoplay>
@@ -200,42 +200,42 @@
     <p style='text-align:justify;'><%=t(".numbersTag")%></p>
     <div class="row g-4 py-5 row-cols-2 row-cols-2 row-cols-lg-4">
       <div class="col d-flex align-items-start">
-        <div class="card text-center" style="width:100%">
+        <div class="card text-center width-full">
           <div class="card-header">
             <h4 class="card-title"><%=t(".restaurants")%></h4>
           </div>
           <div class="card-body">
-            <h1 style="color:green;" id="metrics-numberOfRestaurants"></h1>
+            <h1 class="feature-icon" id="metrics-numberOfRestaurants"></h1>
           </div>
         </div>
       </div>
       <div class="col d-flex align-items-start">
-        <div class="card text-center" style="width:100%">
+        <div class="card text-center width-full">
           <div class="card-header">
             <h4 class="card-title"><%=t(".menus")%></h4>
           </div>
           <div class="card-body">
-            <h1 style="color:green;" id="metrics-numberOfMenus"></h1>
+            <h1 class="feature-icon" id="metrics-numberOfMenus"></h1>
           </div>
         </div>
       </div>
       <div class="col d-flex align-items-start">
-        <div class="card text-center" style="width:100%">
+        <div class="card text-center width-full">
           <div class="card-header">
             <h4 class="card-title"><%=t(".orders")%></h4>
           </div>
           <div class="card-body">
-            <h1 style="color:green;" id="metrics-numberOfOrders"></h1>
+            <h1 class="feature-icon" id="metrics-numberOfOrders"></h1>
           </div>
         </div>
       </div>
       <div class="col d-flex align-items-start">
-        <div class="card text-center" style="width:100%">
+        <div class="card text-center width-full">
           <div class="card-header">
             <h4 class="card-title"><%=t(".orderValue")%></h4>
           </div>
           <div class="card-body">
-            <h1 style="color:green;">
+            <h1 class="feature-icon">
                 $<span id="metrics-totalOrderValue"></span>
             </h1>
           </div>
@@ -267,7 +267,7 @@
                     <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i><small class="text-body-secondary fw-light"></small></h1>
                 <% end %>
             </div>
-            <div style='display:none'>
+            <div class="display-none">
                 <% if plan.pricePerYear %>
                     <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerYear, precision: 0) %><small class="text-body-secondary fw-light">/yr</small></h1>
                 <% else %>
@@ -305,8 +305,8 @@
     <% end %>
    </div>
 
-   <h2 style='display:none' class="pb-2"><%= t('.compare_plans') %></h2>
-   <div style='display:none' class="table-responsive">
+   <h2 class="display-none pb-2"><%= t('.compare_plans') %></h2>
+   <div class="display-none table-responsive">
       <table class="table text-center">
         <thead>
           <tr>

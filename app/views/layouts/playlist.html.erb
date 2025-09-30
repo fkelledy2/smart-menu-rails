@@ -1,40 +1,13 @@
 
 <!DOCTYPE html>
 <html class="h-100">
-<style>
-    ::-webkit-scrollbar {
-        height: 0px;
-        width: 4px;
-        border: 1px solid #d5d5d5;
-    }
-    .form-control:disabled {
-        background-color: #fafafa;
-        opacity: 1;
-    }
-    .tabulator-row-odd {
-        background-color: #ffffff !important;
-    }
-    .tabulator-row-even {
-        background-color: #ffffff !important;
-    }
-    .disabled .ts-control {
-        opacity: 1.0;
-        background-color: #fafafa;
-    }
-    .ts-dropdown, .ts-control, .ts-control input {
-        color: #000000;
-        padding-left:12px;
-        font-size: 16px;
-        line-height: 18px;
-    }
-</style>
 
   <head>
     <%= render 'shared/head' %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
   <body class="d-flex flex-column min-vh-100">
-    <div style="display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;">
+    <div class="layout-container">
         <main class="flex-wrapper">
           <% if current_user %>
               <%= render "shared/navbar" %>

@@ -1,0 +1,121 @@
+// Scrollbar Components
+// Custom scrollbar styling for webkit browsers
+
+// Custom scrollbar styling (from inline styles)
+::-webkit-scrollbar {
+  height: 0px;
+  width: 4px;
+  border: 1px solid #d5d5d5;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+// Thin scrollbar variant
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+// Hidden scrollbar variant
+.scrollbar-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+// Custom scrollable containers
+.scroll-container {
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.scroll-container-sm {
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.scroll-container-lg {
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+// Horizontal scroll containers
+.scroll-horizontal {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.scroll-horizontal::-webkit-scrollbar {
+  height: 4px;
+  width: auto;
+}
+
+// Scroll shadows (visual indicators)
+.scroll-shadow-top {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, transparent 100%);
+  height: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.scroll-shadow-bottom {
+  background: linear-gradient(to top, rgba(0,0,0,0.1) 0%, transparent 100%);
+  height: 10px;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+}
+
+// Smooth scrolling behavior
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+// Custom scroll indicators
+.scroll-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, #007bff 0%, #007bff var(--scroll-progress, 0%), transparent var(--scroll-progress, 0%));
+  z-index: 1000;
+}
+
+// Mobile scroll adjustments
+@media (max-width: 768px) {
+  .scroll-container {
+    max-height: 300px;
+  }
+  
+  .scroll-container-lg {
+    max-height: 400px;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+}

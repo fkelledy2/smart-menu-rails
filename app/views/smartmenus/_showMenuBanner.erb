@@ -44,10 +44,12 @@
             <nav id="navbar-example2" style="position:relative; left:-10px;width:106%;mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 140%" class="nav flex-nowrap overflow-auto">
               <ul style="position:relative; left:-37px;top:5px;" class="menu_sections_tab d-flex">
                 <% if current_user %>
+                    <input style='position:relative;top:5px;left:5px;margin-right:2px;margin:0px;width:120px;height:31px;' type="text" id="menu-item-search" class="" placeholder="Filter...">&nbsp;
                     <a style='margin:5px' class="sectionnav btn btn-sm btn-warning text-nowrap" href="#menusection_allergyns"><%= t(".allergyns") %></a>
                 <% else %>
                 <div class="btn-group" role="group">
                     <% if @ordrparticipant %>
+                        <input style='position:relative;top:5px;left:5px;margin-right:2px;margin:0px;width:120px;height:31px;' type="text" id="menu-item-search" class="" placeholder="Filter...">&nbsp;
                         <button style='margin:5px;margin-right:0px' type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#filterOrderModal">
                             <i class="bi bi-filter"></i>
                             <% if @ordrparticipant.allergyns.size > 0 %>

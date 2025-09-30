@@ -7,7 +7,7 @@
       <%= form.select :locale, [['English', 'EN'], ['French', 'FR'], ['Italian', 'IT'], ['Spanish', 'ES']], {}, {class: "form-control"} %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :dfault, class: 'col-form-label' %></span>
@@ -22,7 +22,7 @@
       <%= form.hidden_field :restaurant_id %>
   <% end %>
   <%= form.hidden_field :status, value: 'active' %>
-  <div style='height:8px'></div>
+  <div class="spacing-md"></div>
   <div class="row">
     <div class="col-12">
         <span class="float-end">

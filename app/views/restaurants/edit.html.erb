@@ -10,7 +10,7 @@
     </div>
   </div>
 </div>
-<ul style="height:43px;overflow-y:hidden;" class="nav nav-tabs overflow-auto flex-nowrap" id="restaurantTabsBack" role="tablist">
+<ul class="nav nav-tabs overflow-auto flex-nowrap restaurant-tabs-back" id="restaurantTabsBack" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark">
       <%= link_to restaurants_path(), class: "link-dark" do %>
@@ -19,7 +19,7 @@
     </button>
   </li>
 </ul>
-<ul style="position:relative;top:-43px;left:50px;height:43px;overflow-y:hidden;width:85%;mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%" class="nav nav-tabs overflow-auto flex-nowrap" id="restaurantTabs" role="tablist">
+<ul class="nav nav-tabs overflow-auto flex-nowrap restaurant-tabs-main" id="restaurantTabs" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark active" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true"><%= t(".restaurantTab")%></button>
   </li>

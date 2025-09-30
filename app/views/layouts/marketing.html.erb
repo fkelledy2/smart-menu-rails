@@ -1,45 +1,16 @@
-
 <!DOCTYPE html>
-<html style='max-width: 100%;' class="h-100">
-<style>
-    ::-webkit-scrollbar {
-        height: 0px;
-        width: 4px;
-        border: 1px solid #d5d5d5;
-    }
-    .form-control:disabled {
-        background-color: #fafafa;
-        opacity: 1;
-    }
-    .tabulator-row-odd {
-        background-color: #ffffff !important;
-    }
-    .tabulator-row-even {
-        background-color: #ffffff !important;
-    }
-    .disabled .ts-control {
-        opacity: 1.0;
-        background-color: #fafafa;
-    }
-    .ts-dropdown, .ts-control, .ts-control input {
-        color: #000000;
-        padding-left:12px;
-        font-size: 16px;
-        line-height: 18px;
-    }
-</style>
+<html class="html-full-width h-100">
 
   <head>
     <%= render 'shared/head' %>
     <%= javascript_importmap_tags %>
   </head>
-
-  <body style='overflow-x: hidden;' class="d-flex flex-column min-vh-100">
-    <div style='overflow-x: hidden;display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;'>
+  <body class="layout-body d-flex flex-column min-vh-100">
+    <div class="layout-container-marketing">
         <main>
           <%= render 'shared/navbar' %>
-          <div style='overflow-x: hidden;' class="container-fluid mx-auto">
-                <div style="height:5px"></div>
+          <div class="layout-content-marketing container-fluid mx-auto">
+                <div class="spacing-xs"></div>
                 <%= yield %>
           </div>
         </main>

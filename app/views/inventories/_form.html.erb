@@ -7,7 +7,7 @@
       <%= form.collection_select :menuitem_id, Menuitem.all ,:id, :name, options = {:prompt => t('.select_menu_item')}%>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
     <div class="form-group row">
       <div class="col-3">
         <span class="float-md-end"><%= form.label :startingInventory, class: 'col-form-label' %></span>
@@ -16,7 +16,7 @@
         <%= form.text_field :startinginventory, data: { numeric: true }, class: 'form-control' %>
       </div>
     </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :currentInventory, class: 'col-form-label' %></span>
@@ -25,7 +25,7 @@
       <%= form.text_field :currentinventory, data: { numeric: true }, class: 'form-control' %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :resetHour, class: 'col-form-label' %></span>
@@ -34,7 +34,7 @@
       <%= form.text_field :resethour, data: { numeric: true }, class: 'form-control' %>
     </div>
   </div>
-  <div style='height:8px'></div>
+  <div class="spacing-md"></div>
   <div class="row">
     <div class="col-2">
     </div>

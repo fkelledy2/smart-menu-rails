@@ -39,21 +39,21 @@
       <%= form.text_field :name, class: 'form-control', disabled: 'disabled' %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :taxType, class: 'col-2 col-form-label' %>
     <div class="col-10">
         <%= form.select :taxtype, options_for_select(Tax.taxtypes.keys.to_a, form.object.taxtype), {}, disabled: 'disabled' %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :taxPercentage, class: 'col-2 col-form-label' %>
     <div class="col-10">
         <%= form.text_field :taxpercentage, class: 'form-control', disabled: 'disabled' %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :restaurant, class: 'col-2 col-form-label' %>
     <div class="col-10">

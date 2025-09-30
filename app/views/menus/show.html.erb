@@ -33,7 +33,7 @@
                                     <% end %>
                                 <% end %>
                                 <% if @tablesetting %>
-                                    <span style="display:none" id="orderUpdatedSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="left" title="<%= t('.order_updated') %>">
+                                    <span class="display-none" id="orderUpdatedSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="left" title="<%= t('.order_updated') %>">
                                         <button id="orderUpdatedButton" type="button" class="btn btn-sm btn-danger">
                                             <i class="bi bi-arrow-clockwise"></i>
                                         </button>
@@ -123,9 +123,9 @@
             <nav id="navbar-example2" style="position:relative; left:-10px" class="nav flex-nowrap overflow-auto">
               <ul style="position:relative; left:-37px" class="d-flex">
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
-                      <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>
+                      <a class="m-1 sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>
                 <% end %>
-                    <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-danger text-nowrap" href="#menusection_allergyns"><%= t('.allergens') %></a>
+                    <a class="m-1 sectionnav btn btn-sm btn-outline-danger text-nowrap" href="#menusection_allergyns"><%= t('.allergens') %></a>
               </ul>
             </nav>
         </div>
@@ -165,7 +165,7 @@
                                         <span class="visually-hidden"><%= t('.loading') %></span>
                                       </div>
                                     </div>
-                                  <img class="img-thumbnail card-img-bottom" style="display:none;" onload="fadeIn(this)" src="<%= menuitem.image_url %>" alt="<%= menuitem.name %>">
+                                  <img class="img-thumbnail card-img-bottom display-none" onload="fadeIn(this)" src="<%= menuitem.image_url %>" alt="<%= menuitem.name %>">
                                 </div>
                             <% end %>
                           <% end %>

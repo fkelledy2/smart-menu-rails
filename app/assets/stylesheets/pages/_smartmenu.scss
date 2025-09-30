@@ -1,0 +1,418 @@
+// Smart Menu Pages Styles
+// Styles for menu display, ordering interface, and menu management
+
+// Menu display container
+.menu-container {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+// Menu header with sticky navigation
+.menu-header {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.menu-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.menu-subtitle {
+  font-size: 1.125rem;
+  opacity: 0.9;
+}
+
+// Menu navigation
+.menu-nav {
+  background: white;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.menu-nav-list {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 0 1rem;
+  margin: 0;
+  list-style: none;
+}
+
+.menu-nav-item {
+  flex-shrink: 0;
+}
+
+.menu-nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  background: #f8f9fa;
+  color: #495057;
+  text-decoration: none;
+  border-radius: 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.menu-nav-link:hover,
+.menu-nav-link.active {
+  background: #007bff;
+  color: white;
+  transform: translateY(-2px);
+}
+
+// Menu sections
+.menu-section {
+  padding: 2rem 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.menu-section:last-child {
+  border-bottom: none;
+}
+
+.menu-section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.menu-section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #343a40;
+  margin-bottom: 0.5rem;
+}
+
+.menu-section-description {
+  color: #6c757d;
+  font-size: 1.125rem;
+}
+
+.menu-section-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+// Menu items
+.menu-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 0 1rem;
+}
+
+.menu-item {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.menu-item-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.menu-item-content {
+  padding: 1.5rem;
+}
+
+.menu-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.menu-item-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #343a40;
+  margin: 0;
+}
+
+.menu-item-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #007bff;
+  margin-left: 1rem;
+}
+
+.menu-item-description {
+  color: #6c757d;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.menu-item-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.menu-item-tag {
+  background: #e9ecef;
+  color: #495057;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.menu-item-tag.allergen {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.menu-item-tag.dietary {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+// Menu item actions
+.menu-item-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantity-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #dee2e6;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.quantity-display {
+  min-width: 40px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.add-to-cart-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+// Cart sidebar
+.cart-sidebar {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background: white;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.cart-sidebar.open {
+  right: 0;
+}
+
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.cart-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cart-header {
+  background: #007bff;
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cart-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.cart-content {
+  padding: 1.5rem;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.cart-item-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cart-item-details {
+  flex: 1;
+}
+
+.cart-item-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.cart-item-price {
+  color: #007bff;
+  font-weight: 600;
+}
+
+// Order summary
+.order-summary {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #007bff;
+  padding-top: 1rem;
+  border-top: 2px solid #dee2e6;
+}
+
+.checkout-btn {
+  width: 100%;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.checkout-btn:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .menu-title {
+    font-size: 2rem;
+  }
+  
+  .menu-items-grid {
+    grid-template-columns: 1fr;
+    padding: 0 0.5rem;
+  }
+  
+  .menu-item-content {
+    padding: 1rem;
+  }
+  
+  .cart-sidebar {
+    width: 100vw;
+    right: -100vw;
+  }
+  
+  .menu-nav-list {
+    padding: 0 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .menu-section {
+    padding: 1.5rem 0;
+  }
+  
+  .menu-section-title {
+    font-size: 1.5rem;
+  }
+  
+  .menu-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .menu-item-price {
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+}

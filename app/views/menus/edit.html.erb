@@ -12,7 +12,7 @@
     </div>
   </div>
 </div>
-<ul style="height:43px;overflow-y:hidden;" class="nav nav-tabs overflow-auto flex-nowrap" id="menuTabsBack" role="tablist">
+<ul class="nav nav-tabs overflow-auto flex-nowrap menu-tabs-back" id="menuTabsBack" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark">
       <%= link_to edit_restaurant_path(@menu.restaurant), class: "link-dark" do %>
@@ -21,7 +21,7 @@
     </button>
   </li>
 </ul>
-<ul style="position:relative;top:-43px;left:50px;height:43px;overflow-y:hidden;width:85%;mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%" class="nav nav-tabs overflow-auto flex-nowrap" id="menuTabs" role="tablist">
+<ul class="nav nav-tabs overflow-auto flex-nowrap menu-tabs-main" id="menuTabs" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark active" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menuConfig" aria-selected="true"><%=t(".menu")%></button>
   </li>
@@ -33,7 +33,7 @@
   </li>
 </ul>
 
-<div style="position:relative;top:-43px;">
+<div class="menu-content-positioned">
   <div class="tab-content" id="menuConfig">
     <div class="tab-pane fade show active" id="menu" role="tabpanel" aria-labelledby="home-tab">
       <p>

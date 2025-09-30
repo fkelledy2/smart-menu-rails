@@ -18,7 +18,7 @@
       <%= form.text_field :name, class: 'form-control' %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :description, class: 'col-form-label' %></span>
@@ -28,7 +28,7 @@
     </div>
   </div>
   <% if menuitem.itemtype != 'wine' %>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-12">
         <p>
@@ -51,7 +51,7 @@
       </div>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="row">
         <div class="col-3">
         </div>
@@ -59,7 +59,7 @@
           <%= image_tag menuitem.image_url, :class => "img-thumbnail" if menuitem.image %>
         </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
     </div>
@@ -95,7 +95,7 @@
       <h4><%=t(".settings")%></h4>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %></span>
@@ -104,7 +104,7 @@
       <%= form.select :status, options_for_select(Menuitem.statuses.keys.to_a, form.object.status), {}%>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :itemtype, class: 'col-form-label' %></span>
@@ -113,7 +113,7 @@
       <%= form.select :itemtype, options_for_select(Menuitem.itemtypes.keys.to_a, form.object.itemtype), {}%>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :calories, class: 'col-form-label' %></span>
@@ -122,7 +122,7 @@
       <%= form.text_field :calories, class: 'form-control' %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :unitcost, class: 'col-form-label' %></span>
@@ -139,7 +139,7 @@
       <%= form.text_field :price, class: 'form-control' %>
     </div>
   </div>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :preptime, class: 'col-form-label' %></span>
@@ -149,7 +149,7 @@
     </div>
   </div>
   <% if Allergyn.where( restaurant: menuitem.menusection.menu.restaurant ).count > 0 %>
-      <div style='height:4px'></div>
+      <div class="spacing-sm"></div>
       <div class="form-group row">
         <div class="col-3">
           <span class="float-md-end"><%= form.label :allergyns, class: 'col-form-label' %></span>
@@ -170,7 +170,7 @@
         </div>
       </div>
   <% end %>
-  <div style='height:4px'></div>
+  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :sizesupport, class: 'col-form-label' %></span>
@@ -180,7 +180,7 @@
     </div>
   </div>
   <% if menuitem.sizesupport && Size.where( restaurant_id: menuitem.menusection.menu.restaurant.id ).count > 0 %>
-      <div style='height:4px'></div>
+      <div class="spacing-sm"></div>
       <div class="form-group row">
         <div class="col-3">
           <span class="float-md-end"><%= form.label :sizes, class: 'col-form-label' %></span>
@@ -201,7 +201,7 @@
         </div>
       </div>
   <% end %>
-  <div style='height:8px'></div>
+  <div class="spacing-md"></div>
   <div class="row">
     <div class="col-3">
     </div>
@@ -240,7 +240,7 @@
   <% end %>
   <% menuitem.menuitem_size_mappings.each do |menuitemSizeMapping| %>
     <%= form_with(model: menuitemSizeMapping) do |menuitemSizeMappingForm| %>
-        <div style='height:4px'></div>
+        <div class="spacing-sm"></div>
         <div class="form-group row">
             <div class="col-4">
                 <span class="float-md-end"><%= menuitemSizeMapping.sizeName %></span>

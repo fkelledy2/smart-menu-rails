@@ -1,33 +1,6 @@
 
 <!DOCTYPE html>
 <html class="h-100">
-<style>
-    ::-webkit-scrollbar {
-        height: 0px;
-        width: 4px;
-        border: 1px solid #d5d5d5;
-    }
-    .form-control:disabled {
-        background-color: #fafafa;
-        opacity: 1;
-    }
-    .tabulator-row-odd {
-        background-color: #ffffff !important;
-    }
-    .tabulator-row-even {
-        background-color: #ffffff !important;
-    }
-    .disabled .ts-control {
-        opacity: 1.0;
-        background-color: #fafafa;
-    }
-    .ts-dropdown, .ts-control, .ts-control input {
-        color: #000000;
-        padding-left:12px;
-        font-size: 16px;
-        line-height: 18px;
-    }
-</style>
   <head>
     <%= render 'shared/head' %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
@@ -36,7 +9,7 @@
   <body class="d-flex flex-column min-vh-100"
       data-smartmenu-id="<%= @smartmenu.slug %>"
       data-page="<%= controller.controller_name %><%= "-#{controller.action_name}" if controller.action_name.present? %>">
-    <div id="backgroundContent" style="display: flex;min-height: 100vh;flex-direction: column;justify-content: space-between;">
+    <div id="backgroundContent" class="layout-container">
         <main class="flex-wrapper">
           <% if current_user %>
               <%= render "shared/navbar" %>
@@ -44,7 +17,7 @@
               <%= render "shared/smartmenunavbar" %>
           <% end %>
           <div class="container-fluid mx-auto">
-                <div style="height:5px"></div>
+                <div class="spacing-xs"></div>
                 <%= yield %>
           </div>
         </main>

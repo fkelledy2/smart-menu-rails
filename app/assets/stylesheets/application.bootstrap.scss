@@ -2,10 +2,29 @@
  *= require cropper
  */
 
+// Theme variables (customize Bootstrap before importing)
+@import "themes/variables";
+
+// Bootstrap core
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
 @import "jumpstart/announcements";
 
+// Third-party libraries
 @import 'tabulator-tables/dist/css/tabulator_bootstrap5.min';
-
 @import "tom-select/dist/scss/tom-select";
+
+// Theme overrides (after Bootstrap)
+@import "themes/component-overrides";
+
+// Component styles
+@import "components/utilities";
+@import "components/forms";
+@import "components/navigation";
+@import "components/tables";
+@import "components/scrollbars";
+
+// Page-specific styles
+@import "pages/home";
+@import "pages/onboarding";
+@import "pages/smartmenu";

@@ -1,0 +1,114 @@
+// Component Overrides
+// Custom styling for specific components after Bootstrap is loaded
+
+// Navigation enhancements
+.navbar {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  
+  .navbar-brand {
+    font-weight: 600;
+  }
+  
+  .nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+    
+    &:hover {
+      color: $primary !important;
+    }
+  }
+}
+
+// Card enhancements
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+  
+  .card-header {
+    background: $primary;
+    color: white;
+    font-weight: 600;
+  }
+}
+
+// Button enhancements
+.btn {
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+// Form enhancements
+.form-control {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+// Table enhancements
+.table {
+  th {
+    font-weight: 600;
+    background-color: $light;
+    border-bottom: 2px solid $primary;
+  }
+  
+  tbody tr {
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: rgba($primary, 0.05);
+    }
+  }
+}
+
+// Alert enhancements
+.alert {
+  border: none;
+  border-left: 4px solid;
+  
+  &.alert-primary {
+    border-left-color: $primary;
+  }
+  
+  &.alert-success {
+    border-left-color: $success;
+  }
+  
+  &.alert-warning {
+    border-left-color: $warning;
+  }
+  
+  &.alert-danger {
+    border-left-color: $danger;
+  }
+}
+
+// Modal enhancements
+.modal-content {
+  border: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  
+  .modal-header {
+    background: $light;
+    color: $dark;
+    border-bottom: 1px solid $gray-300;
+    
+    .modal-title {
+      font-weight: 600;
+    }
+    
+    .btn-close {
+      filter: none;
+    }
+  }
+}
