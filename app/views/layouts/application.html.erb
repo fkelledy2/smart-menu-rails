@@ -7,10 +7,12 @@
     <%= tag.meta name: 'current-locale', content: I18n.locale %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
     <%= tag.link rel: "manifest", href: "/manifest.json" %>
-    <%= javascript_importmap_tags %>
+    <%= javascript_system_tags %>
   </head>
 
-  <body class="layout-body d-flex flex-column min-vh-100" data-session-id="<%= session.id %>">
+  <body class="layout-body d-flex flex-column min-vh-100" 
+        data-session-id="<%= session.id %>" 
+        data-modules="<%= page_modules %>">
     <div class="layout-container">
       <div class="layout-content container-fluid">
         <main class="flex-wrapper">

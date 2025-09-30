@@ -1,4 +1,4 @@
-  <%= form_with(model: restaurant) do |form| %>
+  <%= restaurant_form_with(restaurant, auto_save: true, validate: true) do |form| %>
   <div class="form-group row">
     <div class="col-12">
         <h4><%=t(".details")%></h4>
@@ -27,7 +27,7 @@
         <span class="float-md-end"><%= form.label :currency, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.currency_select(:currency, ["USD", "EUR", "CAD"], {}, {class: "form-control"}) %>
+      <%= currency_select(form, :currency) %>
     </div>
   </div>
   <div class="form-group row">
@@ -122,7 +122,7 @@
         <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :status, options_for_select(Restaurant.statuses.keys.to_a, form.object.status), {} %>
+      <%= status_select(form, :status) %>
     </div>
   </div>
   <div class="spacing-sm"></div>
@@ -131,7 +131,7 @@
         <span class="float-md-end"><%= form.label :displayImages, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :displayImages, [['on', true], ['off', false]], {} %>
+      <%= form.select :displayImages, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
   <div class="spacing-sm"></div>
@@ -140,7 +140,7 @@
         <span class="float-md-end"><%= form.label :displayImagesInPopup, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :displayImagesInPopup, [['on', true], ['off', false]], {} %>
+      <%= form.select :displayImagesInPopup, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
   <div class="spacing-sm"></div>
@@ -149,7 +149,7 @@
         <span class="float-md-end"><%= form.label :allowOrdering, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :allowOrdering, [['on', true], ['off', false]], {} %>
+      <%= form.select :allowOrdering, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
   <div class="spacing-sm"></div>
@@ -158,7 +158,7 @@
         <span class="float-md-end"><%= form.label :inventoryTracking, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :inventoryTracking, [['on', true], ['off', false]], {} %>
+      <%= form.select :inventoryTracking, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
 
@@ -182,7 +182,7 @@
         <span class="float-md-end"><%= form.label :wifiEncryptionType, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :wifiEncryptionType, options_for_select(Restaurant.wifiEncryptionTypes.keys.to_a, form.object.wifiEncryptionType), {} %>
+      <%= form.select :wifiEncryptionType, options_for_select(Restaurant.wifiEncryptionTypes.keys.to_a, form.object.wifiEncryptionType), { prompt: 'Select encryption...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
   <div class="spacing-sm"></div>
@@ -200,7 +200,7 @@
         <span class="float-md-end"><%= form.label :wifiHidden, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.select :wifiHidden, [['true', true], ['false', false]], {} %>
+      <%= form.select :wifiHidden, [['Yes', true], ['No', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
 
