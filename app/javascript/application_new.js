@@ -16,6 +16,7 @@ import localTime from 'local-time'
 import { EventBus, AppEvents } from './utils/EventBus.js'
 import { FormManager } from './components/FormManager.js'
 import { TableManager } from './components/TableManager.js'
+import { performanceMonitor } from './utils/performance.js'
 
 // Polyfill for Node.js globals that some libraries expect
 window.process = window.process || { env: {} }
@@ -64,6 +65,9 @@ class ApplicationManager {
 
     console.log('[SmartMenu] Initializing application...')
 
+    // Initialize performance monitoring
+    performanceMonitor.init()
+
     // Set up global event listeners
     this.setupGlobalEvents()
 
@@ -76,7 +80,9 @@ class ApplicationManager {
     this.isInitialized = true
     EventBus.emit(AppEvents.APP_READY)
 
-    console.log('[SmartMenu] Application initialized successfully')
+    // Log performance summary
+    const summary = performanceMonitor.getSummary()
+    console.log('[SmartMenu] Application initialized successfully', summary)
   }
 
   /**
@@ -150,48 +156,59 @@ class ApplicationManager {
     try {
       console.log(`[SmartMenu] Loading module: ${moduleName}`)
       
-      let module
-      switch (moduleName) {
+      let module = await performanceMonitor.measureAsync(`load-${moduleName}`, async () => {
+        let moduleInstance = null;
+        
+        switch (moduleName) {
         case 'restaurants':
           const { RestaurantModule } = await import('./modules/restaurants/RestaurantModule.js')
-          module = RestaurantModule.init()
+          moduleInstance = RestaurantModule.init()
           break
         
         case 'menus':
           const { MenuModule } = await import('./modules/menus/MenuModule.js')
-          module = MenuModule.init()
+          moduleInstance = MenuModule.init()
           break
         
         case 'employees':
           const { EmployeeModule } = await import('./modules/employees/EmployeeModule.js')
-          module = EmployeeModule.init()
+          moduleInstance = EmployeeModule.init()
           break
         
         case 'menuitems':
           const { MenuItemModule } = await import('./modules/menuitems/MenuItemModule.js')
-          module = MenuItemModule.init()
+          moduleInstance = MenuItemModule.init()
           break
         
         case 'menusections':
           const { MenuSectionModule } = await import('./modules/menusections/MenuSectionModule.js')
-          module = MenuSectionModule.init()
+          moduleInstance = MenuSectionModule.init()
           break
         
         case 'ordrs':
         case 'orders':
           const { OrderModule } = await import('./modules/orders/OrderModule.js')
-          module = OrderModule.init()
+          moduleInstance = OrderModule.init()
           break
         
         case 'inventories':
           const { InventoryModule } = await import('./modules/inventories/InventoryModule.js')
-          module = InventoryModule.init()
+          moduleInstance = InventoryModule.init()
+          break
+        
+        case 'ocr_menu_imports':
+        case 'ocr':
+          const { OcrMenuImportModule } = await import('./modules/ocr/OcrMenuImportModule.js')
+          moduleInstance = OcrMenuImportModule.init()
           break
         
         default:
           console.warn(`[SmartMenu] Unknown module: ${moduleName}`)
           return null
-      }
+        }
+        
+        return moduleInstance;
+      })
 
       if (module) {
         this.modules.set(moduleName, module)
@@ -229,6 +246,10 @@ class ApplicationManager {
       { 
         selector: '#order-table, .order-form', 
         module: 'orders' 
+      },
+      { 
+        selector: '#sections-sortable, .ocr-import-form', 
+        module: 'ocr' 
       }
     ]
 
