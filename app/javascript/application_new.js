@@ -533,8 +533,24 @@ document.addEventListener('turbo:load', async () => {
           const isAlreadyInitialized = 
             element.hasAttribute('data-tom-select-initialized') ||
             element.parentNode.classList.contains('ts-wrapper') ||
+            element.classList.contains('tomselected') ||
+            element.classList.contains('ts-hidden-accessible') ||
             element.tomSelect ||
-            element.style.display === 'none' // TomSelect hides original element
+            element.style.display === 'none' || // TomSelect hides original element
+            element.hasAttribute('tabindex') && element.getAttribute('tabindex') === '-1' // TomSelect sets tabindex to -1
+          
+          // Debug logging to understand the state
+          console.log('[SmartMenu] Checking TomSelect element:', {
+            element: element,
+            hasInitializedAttr: element.hasAttribute('data-tom-select-initialized'),
+            hasWrapperParent: element.parentNode.classList.contains('ts-wrapper'),
+            hasTomSelectedClass: element.classList.contains('tomselected'),
+            hasHiddenClass: element.classList.contains('ts-hidden-accessible'),
+            hasTomSelectProperty: !!element.tomSelect,
+            isHidden: element.style.display === 'none',
+            tabIndex: element.getAttribute('tabindex'),
+            isAlreadyInitialized: isAlreadyInitialized
+          })
           
           if (!isAlreadyInitialized) {
             const options = {
