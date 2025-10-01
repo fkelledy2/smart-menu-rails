@@ -352,7 +352,7 @@ module JavascriptHelper
   def use_new_js_system?
     # Enable for specific controllers or based on feature flag
     controller_name.in?(%w[restaurants menus menuitems menusections employees ordrs inventories]) ||
-    Rails.application.config.force_new_js_system ||
+    Rails.application.config.respond_to?(:force_new_js_system) && Rails.application.config.force_new_js_system ||
     params[:new_js] == 'true'
   end
 
