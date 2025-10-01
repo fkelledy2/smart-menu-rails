@@ -359,10 +359,16 @@ module JavascriptHelper
   # Helper to conditionally load old or new JS
   def javascript_system_tags
     if use_new_js_system?
+      # Add meta tag to signal new system should run
+      content_for :head, tag.meta(name: 'js-system', content: 'new')
+      
       # Load new modular system
       javascript_importmap_tags + 
       javascript_import_module_tag('application_new')
     else
+      # Add meta tag to signal old system
+      content_for :head, tag.meta(name: 'js-system', content: 'old')
+      
       # Load old system
       javascript_include_tag 'application'
     end

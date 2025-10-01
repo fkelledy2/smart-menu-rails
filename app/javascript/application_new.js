@@ -15,22 +15,20 @@ import localTime from 'local-time'
 // Core components will be loaded dynamically to avoid asset pipeline issues
 // import { EventBus, AppEvents } from './utils/EventBus.js'
 // import { FormManager } from './components/FormManager.js'
-// import { TableManager } from './components/TableManager.js'
 // import { performanceMonitor } from './utils/performance.js'
 
 // Polyfill for Node.js globals that some libraries expect
 window.process = window.process || { env: {} }
 
-// Make libraries globally available
-window.jQuery = window.$ = jquery
+// Make libraries available globally
+window.$ = window.jQuery = jquery
 window.bootstrap = bootstrap
 
-// Load libraries via script tags temporarily
+// Load external libraries via script tags temporarily
 const script1 = document.createElement('script')
 script1.src = 'https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js'
 script1.onload = () => console.log('TomSelect loaded:', typeof window.TomSelect)
 document.head.appendChild(script1)
-
 const script2 = document.createElement('script')
 script2.src = 'https://cdn.jsdelivr.net/npm/tabulator-tables@5.5.2/dist/js/tabulator.min.js'
 script2.onload = () => console.log('Tabulator loaded:', typeof window.Tabulator)
@@ -511,71 +509,162 @@ const app = new ApplicationManager()
 
 // Enhanced Turbo event handling
 document.addEventListener('turbo:load', async () => {
-  console.log('[SmartMenu] Page loaded')
+  console.log('[SmartMenu] New system page loaded')
 
-  // Initialize Bootstrap components
-  const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  // Check if this page should use the new system by looking for the new system marker
+  const newSystemMeta = document.querySelector('meta[name="js-system"][content="new"]')
+  const oldSystemMeta = document.querySelector('meta[name="js-system"][content="old"]')
+  const shouldUseNewSystem = newSystemMeta || 
+                            document.body.dataset.modules ||
+                            window.location.search.includes('new_js=true')
+  
+  console.log('[SmartMenu] System detection:', {
+    newSystemMeta: !!newSystemMeta,
+    oldSystemMeta: !!oldSystemMeta,
+    shouldUseNewSystem: shouldUseNewSystem,
+    currentPath: window.location.pathname,
+    allMetaTags: Array.from(document.querySelectorAll('meta')).map(m => `${m.name}=${m.content}`)
+  })
+  
+  // TEMPORARY: Force new system to run for debugging
+  console.log('[SmartMenu] FORCING new system to run for debugging')
+  
+  // if (!shouldUseNewSystem) {
+  //   console.log('[SmartMenu] Page not configured for new system, skipping initialization')
+  //   return
+  // }
+
+  // Initialize Bootstrap dropdowns since we're the active system
+  console.log('[SmartMenu] Initializing Bootstrap components')
+  
+  // Check if Bootstrap is available
+  if (typeof bootstrap === 'undefined') {
+    console.error('[SmartMenu] Bootstrap is not available!')
+    return
+  }
+  
+  // Initialize dropdowns
+  const dropdowns = document.querySelectorAll('[data-bs-toggle="dropdown"]')
+  console.log(`[SmartMenu] Found ${dropdowns.length} dropdown elements`)
+  
+  dropdowns.forEach(el => {
+    if (!el.hasAttribute('data-bs-dropdown-initialized')) {
+      try {
+        // Create dropdown instance and store reference
+        const dropdownInstance = new bootstrap.Dropdown(el)
+        el.setAttribute('data-bs-dropdown-initialized', 'true')
+        el._dropdownInstance = dropdownInstance
+        
+        console.log('[SmartMenu] Bootstrap dropdown initialized on:', el.id || el.className)
+        
+        // Test if dropdown is working by adding click listener
+        el.addEventListener('click', (e) => {
+          e.preventDefault()
+          console.log('[SmartMenu] Dropdown clicked, toggling...')
+          
+          // Get the dropdown menu
+          const dropdownMenu = document.getElementById(el.getAttribute('data-target')) || 
+                              el.nextElementSibling
+          
+          console.log('[SmartMenu] Dropdown menu element:', dropdownMenu)
+          console.log('[SmartMenu] Dropdown menu classes before toggle:', dropdownMenu?.className)
+          
+          dropdownInstance.toggle()
+          
+          setTimeout(() => {
+            console.log('[SmartMenu] Dropdown menu classes after toggle:', dropdownMenu?.className)
+          }, 100)
+        })
+        
+      } catch (error) {
+        console.error('[SmartMenu] Failed to initialize dropdown:', error, el)
+      }
+    } else {
+      console.log('[SmartMenu] Dropdown already initialized:', el.id || el.className)
+      
+      // If already initialized but not working, try to fix it
+      if (!el._dropdownInstance) {
+        try {
+          const dropdownInstance = new bootstrap.Dropdown(el)
+          el._dropdownInstance = dropdownInstance
+          
+          el.addEventListener('click', (e) => {
+            e.preventDefault()
+            console.log('[SmartMenu] Dropdown clicked (re-initialized), toggling...')
+            
+            // Get the dropdown menu
+            const dropdownMenu = document.getElementById(el.getAttribute('data-target')) || 
+                                el.nextElementSibling
+            
+            console.log('[SmartMenu] Dropdown menu element (re-init):', dropdownMenu)
+            console.log('[SmartMenu] Dropdown menu classes before toggle (re-init):', dropdownMenu?.className)
+            
+            dropdownInstance.toggle()
+            
+            setTimeout(() => {
+              console.log('[SmartMenu] Dropdown menu classes after toggle (re-init):', dropdownMenu?.className)
+            }, 100)
+          })
+          
+          console.log('[SmartMenu] Re-initialized dropdown:', el.id || el.className)
+        } catch (error) {
+          console.error('[SmartMenu] Failed to re-initialize dropdown:', error, el)
+        }
+      }
+    }
+  })
+  
+  // Initialize tooltips
+  const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]:not([data-bs-original-title])')
   tooltips.forEach(el => new bootstrap.Tooltip(el))
   
-  const popovers = document.querySelectorAll('[data-bs-toggle="popover"]')
+  // Initialize popovers
+  const popovers = document.querySelectorAll('[data-bs-toggle="popover"]:not([data-bs-original-title])')
   popovers.forEach(el => new bootstrap.Popover(el))
 
   // Initialize application
   await app.init()
 
-  // Basic TomSelect initialization for enhanced selects
+  // Conservative TomSelect initialization - only for elements that are clearly uninitialized
   setTimeout(() => {
     if (window.TomSelect) {
-      const selectElements = document.querySelectorAll('[data-tom-select="true"]')
-      selectElements.forEach(element => {
+      // Only select elements that have no signs of TomSelect initialization
+      const uninitializedSelects = document.querySelectorAll(
+        '[data-tom-select="true"]:not(.tomselected):not(.ts-hidden-accessible):not([data-tom-select-initialized])'
+      )
+      
+      console.log(`[SmartMenu] Found ${uninitializedSelects.length} uninitialized TomSelect elements`)
+      
+      uninitializedSelects.forEach(element => {
         try {
-          // Multiple checks to prevent double initialization
-          const isAlreadyInitialized = 
-            element.hasAttribute('data-tom-select-initialized') ||
-            element.parentNode.classList.contains('ts-wrapper') ||
-            element.classList.contains('tomselected') ||
-            element.classList.contains('ts-hidden-accessible') ||
-            element.tomSelect ||
-            element.style.display === 'none' || // TomSelect hides original element
-            element.hasAttribute('tabindex') && element.getAttribute('tabindex') === '-1' // TomSelect sets tabindex to -1
-          
-          // Debug logging to understand the state
-          console.log('[SmartMenu] Checking TomSelect element:', {
-            element: element,
-            hasInitializedAttr: element.hasAttribute('data-tom-select-initialized'),
-            hasWrapperParent: element.parentNode.classList.contains('ts-wrapper'),
-            hasTomSelectedClass: element.classList.contains('tomselected'),
-            hasHiddenClass: element.classList.contains('ts-hidden-accessible'),
-            hasTomSelectProperty: !!element.tomSelect,
-            isHidden: element.style.display === 'none',
-            tabIndex: element.getAttribute('tabindex'),
-            isAlreadyInitialized: isAlreadyInitialized
-          })
-          
-          if (!isAlreadyInitialized) {
-            const options = {
-              plugins: ['remove_button'],
-              create: element.dataset.creatable === 'true'
-            }
-            
-            // Parse additional options from data attribute
-            if (element.dataset.tomSelectOptions) {
-              try {
-                const additionalOptions = JSON.parse(element.dataset.tomSelectOptions)
-                Object.assign(options, additionalOptions)
-              } catch (e) {
-                console.warn('Invalid TomSelect options JSON:', element.dataset.tomSelectOptions)
-              }
-            }
-            
-            const tomSelectInstance = new window.TomSelect(element, options)
-            element.setAttribute('data-tom-select-initialized', 'true')
-            element.tomSelect = tomSelectInstance
-            
-            console.log('[SmartMenu] TomSelect initialized on:', element)
-          } else {
-            console.log('[SmartMenu] TomSelect already initialized on:', element)
+          // Final safety check
+          if (element.classList.contains('tomselected') || 
+              element.classList.contains('ts-hidden-accessible') ||
+              element.hasAttribute('data-tom-select-initialized')) {
+            console.log('[SmartMenu] Element became initialized, skipping:', element)
+            return
           }
+          
+          const options = {
+            plugins: ['remove_button'],
+            create: element.dataset.creatable === 'true'
+          }
+          
+          // Parse additional options from data attribute
+          if (element.dataset.tomSelectOptions) {
+            try {
+              const additionalOptions = JSON.parse(element.dataset.tomSelectOptions)
+              Object.assign(options, additionalOptions)
+            } catch (e) {
+              console.warn('Invalid TomSelect options JSON:', element.dataset.tomSelectOptions)
+            }
+          }
+          
+          const tomSelectInstance = new window.TomSelect(element, options)
+          element.setAttribute('data-tom-select-initialized', 'true')
+          element.tomSelect = tomSelectInstance
+          
+          console.log('[SmartMenu] TomSelect initialized on:', element)
         } catch (error) {
           console.warn('Failed to initialize TomSelect:', error)
         }
@@ -583,7 +672,7 @@ document.addEventListener('turbo:load', async () => {
     } else {
       console.warn('[SmartMenu] TomSelect not available')
     }
-  }, 500)
+  }, 1000) // Increased delay to let old system finish first
 
   if (app.EventBus && app.AppEvents) {
     app.EventBus.emit(app.AppEvents.PAGE_LOAD)
@@ -651,3 +740,6 @@ setTimeout(() => {
 }, 1000)
 
 console.log('[SmartMenu] Application script loaded')
+console.log('[SmartMenu] Current URL:', window.location.href)
+console.log('[SmartMenu] Bootstrap available:', typeof bootstrap !== 'undefined')
+console.log('[SmartMenu] jQuery available:', typeof $ !== 'undefined')
