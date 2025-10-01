@@ -28,15 +28,12 @@ Rails.application.routes.draw do
       end
     end
   end
-  resources :tips
   resources :ordractions
   resources :restaurantavailabilities
   resources :menuavailabilities
   resources :ordrparticipants
   resources :inventories
   resources :ingredients
-  resources :sizes
-  resources :taxes
   resources :ordritemnotes
   resources :ordritems
   resources :ordrs
@@ -45,9 +42,7 @@ Rails.application.routes.draw do
   resources :allergyns
   resources :menuitems
   resources :menusections
-  resources :menuitemlocales
   resources :menusectionlocales
-  resources :menulocales
   resources :tablesettings
   resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
 
@@ -78,9 +73,9 @@ Rails.application.routes.draw do
     resources :restaurantlocales, controller: 'restaurantlocales', only: [:index,:show, :edit, :delete]
     resources :menus, controller: 'menus', only: [:index,:show, :edit]
     resources :tablesettings, controller: 'tablesettings', only: [:index,:show, :edit]
-    resources :taxes, controller: 'taxes', only: [:index,:show, :edit]
-    resources :sizes, controller: 'sizes', only: [:index,:show, :edit]
-    resources :tips, controller: 'tips', only: [:index,:show, :edit]
+    resources :taxes, controller: 'taxes'
+    resources :sizes, controller: 'sizes'
+    resources :tips, controller: 'tips'
     resources :employees, controller: 'employees', only: [:index,:show, :edit]
     resources :restaurantavailabilities, controller: 'restaurantavailabilities', only: [:index,:show, :edit]
     resources :ordrs, controller: 'ordrs', only: [:index]

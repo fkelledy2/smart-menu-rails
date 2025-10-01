@@ -13,13 +13,13 @@ pin '@rails/actiontext', to: 'https://cdn.jsdelivr.net/npm/@rails/actiontext@7.1
 pin 'trix'
 pin '@rails/activestorage', to: 'https://cdn.jsdelivr.net/npm/@rails/activestorage@7.1.3-2/app/assets/javascripts/activestorage.esm.js'
 
-# Pin external dependencies for new system (optimized CDN strategy)
-pin 'tom-select', to: 'https://ga.jspm.io/npm:tom-select@2.3.1/dist/js/tom-select.complete.min.js', preload: true
-pin 'tabulator-tables', to: 'https://ga.jspm.io/npm:tabulator-tables@5.5.2/dist/js/tabulator.min.js', preload: true
-pin 'local-time', to: 'https://ga.jspm.io/npm:local-time@2.1.0/app/assets/javascripts/local-time.js', preload: true
+# Pin external dependencies for new system (reliable CDN strategy)
+pin 'tom-select', to: 'https://cdn.skypack.dev/tom-select', preload: true
+pin 'tabulator-tables', to: 'https://cdn.skypack.dev/tabulator-tables', preload: true
+pin 'local-time', to: 'https://cdn.skypack.dev/local-time', preload: true
+pin 'luxon', to: 'https://cdn.skypack.dev/luxon', preload: true
 
-# Pin application JavaScript
-pin 'application', preload: true
+# Pin application JavaScript - NEW SYSTEM ONLY
 pin 'application_new', preload: true, to: 'application_new.js'
 pin_all_from 'app/javascript/controllers', under: 'controllers'
 pin_all_from 'app/javascript/channels', under: 'channels'

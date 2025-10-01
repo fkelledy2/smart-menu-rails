@@ -5,10 +5,10 @@
     </div>
     <div class="col-2">
         <span class="float-end">
-          <%= link_to sizes_path, class: 'btn btn-light' do %>
+          <%= link_to restaurant_sizes_path(@size.restaurant), class: 'btn btn-light' do %>
             <i class="bi bi-chevron-left"></i>
           <% end %>
-          <%= link_to edit_size_path(@size), class: 'btn btn-dark' do %>
+          <%= link_to edit_restaurant_size_path(@size.restaurant, @size), class: 'btn btn-dark' do %>
             <i class="bi bi-pencil-fill"></i>
           <% end %>
         </span>
@@ -16,7 +16,7 @@
   </div>
 </div>
 
-<%= form_with(model: @size) do |form| %>
+<%= form_with(model: [@size.restaurant, @size]) do |form| %>
   <div class="form-group row">
     <%= form.label :size, class: 'col-2 col-form-label' %>
     <div class="col-10">

@@ -1,15 +1,15 @@
 // Modern, clean entry point for the Smart Menu application
 // This replaces the monolithic application.js with a modular, maintainable architecture
 
-// Note: Turbo is already loaded by the main application.js
-// import '@hotwired/turbo-rails'
+// Import Turbo since this is now the only system
+import '@hotwired/turbo-rails'
 import { Application } from '@hotwired/stimulus'
 
 // Global dependencies
 import jquery from 'jquery'
 import * as bootstrap from 'bootstrap'
-// import * as TabulatorModule from 'tabulator-tables'
-// import * as TomSelectModule from 'tom-select'
+import { TabulatorFull as Tabulator } from 'tabulator-tables'
+import TomSelect from 'tom-select'
 import localTime from 'local-time'
 
 // Import all the initialization functions like the old system
@@ -51,16 +51,10 @@ window.process = window.process || { env: {} }
 // Make libraries available globally
 window.$ = window.jQuery = jquery
 window.bootstrap = bootstrap
+window.Tabulator = Tabulator
+window.TomSelect = TomSelect
 
-// Load external libraries via script tags temporarily
-const script1 = document.createElement('script')
-script1.src = 'https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js'
-script1.onload = () => console.log('TomSelect loaded:', typeof window.TomSelect)
-document.head.appendChild(script1)
-const script2 = document.createElement('script')
-script2.src = 'https://cdn.jsdelivr.net/npm/tabulator-tables@5.5.2/dist/js/tabulator.min.js'
-script2.onload = () => console.log('Tabulator loaded:', typeof window.Tabulator)
-document.head.appendChild(script2)
+console.log('[SmartMenu] Libraries loaded - TomSelect:', typeof window.TomSelect, 'Tabulator:', typeof window.Tabulator)
 
 // Start local-time
 localTime.start()
