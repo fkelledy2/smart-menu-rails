@@ -12,10 +12,38 @@ import * as bootstrap from 'bootstrap'
 // import * as TomSelectModule from 'tom-select'
 import localTime from 'local-time'
 
-// Core components will be loaded dynamically to avoid asset pipeline issues
-// import { EventBus, AppEvents } from './utils/EventBus.js'
-// import { FormManager } from './components/FormManager.js'
-// import { performanceMonitor } from './utils/performance.js'
+// Import all the initialization functions like the old system
+import { initTomSelectIfNeeded } from './tomselect_helper'
+import { initialiseSlugs, initRestaurants } from './restaurants'
+import { initTips } from './tips'
+import { initTestimonials } from './testimonials'
+import { initTaxes } from './taxes'
+import { initTablesettings } from './tablesettings'
+import { initSizes } from './sizes'
+import { initRestaurantlocales } from './restaurantlocales'
+import { initRestaurantavailabilities } from './restaurantavailabilities'
+import { initOrders } from './ordrs'
+import { initOrdritems } from './ordritems'
+import { initMetrics } from './metrics'
+import { initMenusections } from './menusections'
+import { initMenus } from './menus'
+import { initMenuitems } from './menuitems'
+import { initMenuavailabilities } from './menuavailabilities'
+import { initEmployees } from './employees'
+import { initDW } from './dw_orders_mv'
+import { initAllergyns } from './allergyns'
+import { initSmartmenus } from './smartmenus'
+import { initTags } from './tags'
+import { initOCRMenuImportDnD } from './ocr_menu_imports'
+
+// Import additional dependencies
+import { DateTime } from 'luxon'
+import '@rails/request.js'
+import './add_jquery'
+import './channels'
+
+// Make additional libraries available globally
+window.DateTime = DateTime
 
 // Polyfill for Node.js globals that some libraries expect
 window.process = window.process || { env: {} }
@@ -39,6 +67,11 @@ localTime.start()
 
 // Initialize Stimulus
 const application = Application.start()
+
+// Import and register Stimulus controllers like the old system
+import './controllers'
+import MenuImportController from './controllers/menu_import_controller.js'
+application.register('menu-import', MenuImportController)
 
 // Register stimulus controllers manually for importmap compatibility
 // Note: Controllers are loaded via importmap's pin_all_from directive
@@ -622,6 +655,43 @@ document.addEventListener('turbo:load', async () => {
   const popovers = document.querySelectorAll('[data-bs-toggle="popover"]:not([data-bs-original-title])')
   popovers.forEach(el => new bootstrap.Popover(el))
 
+  // Initialize all components like the old system
+  console.log('init')
+  
+  // Initialize all components in the same order as application.js
+  try {
+    initialiseSlugs()
+    initRestaurants()
+    initTips()
+    initTestimonials()
+    initTaxes()
+    initTablesettings()
+    initSizes()
+    initRestaurantlocales()
+    initRestaurantavailabilities()
+    initOrders()
+    initOrdritems()
+    initMetrics()
+    initMenusections()  // This initializes Tabulator tables!
+    initMenus()
+    initMenuitems()
+    initMenuavailabilities()
+    initEmployees()
+    initDW()
+    initAllergyns()
+    initSmartmenus()
+    initTags()
+    
+    // Initialize OCR Menu Import Drag-and-Drop (no-op on pages without OCR UI)
+    try {
+      initOCRMenuImportDnD()
+    } catch (e) {
+      console.warn('[OCR DnD] init failed', e)
+    }
+  } catch (e) {
+    console.warn('[SmartMenu] Some initialization functions failed:', e)
+  }
+
   // Initialize application
   await app.init()
 
@@ -678,6 +748,51 @@ document.addEventListener('turbo:load', async () => {
     app.EventBus.emit(app.AppEvents.PAGE_LOAD)
   }
 })
+
+// Add the missing utility functions from application.js
+export function patch(url, body) {
+  fetch(url, {
+    method: 'PATCH',
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+    },
+    body: JSON.stringify(body)
+  })
+}
+
+// Make patch function available globally
+window.patch = patch
+
+export function del(url) {
+  fetch(url, {
+    method: 'DELETE',
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+    }
+  })
+}
+
+// Make del function available globally
+window.del = del
+
+export function validateIntegerInput(input) {
+  input.value = input.value.replace(/[^0-9]/g, '')
+}
+
+window.fadeIn = function(obj) {
+  $(obj).fadeIn(1000)
+}
+
+// Initialize TomSelect on user_plan if it exists (like in application.js)
+if ($("#user_plan").length) {
+  setTimeout(() => {
+    if (window.TomSelect) {
+      new window.TomSelect("#user_plan", {})
+    }
+  }, 1500) // After other TomSelect initialization
+}
 
 // Cleanup on navigation
 document.addEventListener('turbo:before-cache', () => {
@@ -739,7 +854,99 @@ setTimeout(() => {
   }
 }, 1000)
 
+// Enhanced turbo:load event listener with detailed logging (like application.js)
+let turboLoadCount = 0
+const turboLoadHandler = async (event) => {
+  turboLoadCount++
+  console.group(`turbo:load #${turboLoadCount}`)
+  
+  // Wait for libraries to load
+  let attempts = 0
+  while ((!window.Tabulator || !window.TomSelect) && attempts < 50) {
+    await new Promise(resolve => setTimeout(resolve, 100))
+    attempts++
+  }
+  
+  // Call the page initialization function that was defined above
+  const initializePageFunction = async () => {
+    // Initialize Bootstrap dropdowns since we're the active system
+    console.log('[SmartMenu] Initializing Bootstrap components')
+    
+    // Initialize dropdowns
+    const dropdowns = document.querySelectorAll('[data-bs-toggle="dropdown"]')
+    console.log(`[SmartMenu] Found ${dropdowns.length} dropdown elements`)
+    
+    dropdowns.forEach(el => {
+      if (!el.hasAttribute('data-bs-dropdown-initialized')) {
+        try {
+          const dropdownInstance = new bootstrap.Dropdown(el)
+          el.setAttribute('data-bs-dropdown-initialized', 'true')
+          console.log('[SmartMenu] Bootstrap dropdown initialized on:', el.id || el.className)
+        } catch (error) {
+          console.error('[SmartMenu] Failed to initialize dropdown:', error, el)
+        }
+      }
+    })
+    
+    // Initialize tooltips
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]:not([data-bs-original-title])')
+    tooltips.forEach(el => new bootstrap.Tooltip(el))
+    
+    // Initialize popovers
+    const popovers = document.querySelectorAll('[data-bs-toggle="popover"]:not([data-bs-original-title])')
+    popovers.forEach(el => new bootstrap.Popover(el))
+
+    // Initialize all components like the old system
+    console.log('init')
+    
+    // Initialize all components in the same order as application.js
+    try {
+      initialiseSlugs()
+      initRestaurants()
+      initTips()
+      initTestimonials()
+      initTaxes()
+      initTablesettings()
+      initSizes()
+      initRestaurantlocales()
+      initRestaurantavailabilities()
+      initOrders()
+      initOrdritems()
+      initMetrics()
+      initMenusections()  // This initializes Tabulator tables!
+      initMenus()
+      initMenuitems()
+      initMenuavailabilities()
+      initEmployees()
+      initDW()
+      initAllergyns()
+      initSmartmenus()
+      initTags()
+      
+      // Initialize OCR Menu Import Drag-and-Drop
+      try {
+        initOCRMenuImportDnD()
+      } catch (e) {
+        console.warn('[OCR DnD] init failed', e)
+      }
+    } catch (e) {
+      console.warn('[SmartMenu] Some initialization functions failed:', e)
+    }
+
+    // Initialize application manager
+    await app.init()
+  }
+  
+  await initializePageFunction()
+  console.groupEnd()
+}
+
+// Add the event listener
+document.addEventListener('turbo:load', turboLoadHandler)
+
+// Log when the script first loads
+console.log('Application JavaScript loaded. Waiting for turbo:load events...')
 console.log('[SmartMenu] Application script loaded')
 console.log('[SmartMenu] Current URL:', window.location.href)
-console.log('[SmartMenu] Bootstrap available:', typeof bootstrap !== 'undefined')
-console.log('[SmartMenu] jQuery available:', typeof $ !== 'undefined')
+console.log('[SmartMenu] Bootstrap available:', typeof window.bootstrap !== 'undefined')
+console.log('[SmartMenu] jQuery available:', typeof window.$ !== 'undefined')

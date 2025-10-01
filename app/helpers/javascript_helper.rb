@@ -351,7 +351,16 @@ module JavascriptHelper
   # Helper to check if new JS system should be used
   def use_new_js_system?
     # Enable for specific controllers or based on feature flag
-    controller_name.in?(%w[restaurants menus menuitems menusections employees ordrs inventories]) ||
+    controller_name.in?(%w[
+      restaurants menus menuitems menusections employees ordrs inventories
+      allergyns announcements contacts dw_orders_mv features genimages home
+      ingredients metrics notifications ocr_menu_imports ocr_menu_items ocr_menu_sections
+      onboarding payments plans sessions sizes smartmenus tablesettings
+      tags taxes testimonials tips tracks userplans
+      features_plans menuavailabilities menuitemsizemappings menuparticipants
+      menusectionlocales ordractions ordritemnotes ordritems ordrparticipants
+      restaurantavailabilities restaurantlocales smartmenus_locale
+    ]) ||
     Rails.application.config.respond_to?(:force_new_js_system) && Rails.application.config.force_new_js_system ||
     params[:new_js] == 'true'
   end
