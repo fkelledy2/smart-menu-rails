@@ -8,16 +8,10 @@ Rails.application.routes.draw do
   post 'onboarding', to: 'onboarding#update'
   resources :testimonials
   resources :userplans
-  resources :menuparticipants
   resources :contacts, only: [:new, :create]
   resources :features_plans
   resources :features
   resources :plans
-  resources :restaurantlocales
-  resources :tracks
-  resources :smartmenus
-  patch 'smartmenus/:smartmenu_id/locale', to: 'smartmenus_locale#update', as: :smartmenu_locale
-  resources :genimages
   resources :metrics
   
   # Admin metrics dashboard
@@ -29,12 +23,18 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :smartmenus
+  patch 'smartmenus/:smartmenu_id/locale', to: 'smartmenus_locale#update', as: :smartmenu_locale
+
+  resources :genimages
+  resources :menuparticipants
   resources :menuavailabilities
   resources :menuitems
   resources :menusections
   resources :menusectionlocales
-  resources :ingredients
   resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
+
+  resources :ingredients
 
   resources :dw_orders_mv, only: [:index, :show]
 
@@ -60,7 +60,7 @@ Rails.application.routes.draw do
   resources :ocr_menu_sections, only: [:update]
 
   resources :restaurants do
-    resources :restaurantlocales, controller: 'restaurantlocales', only: [:index,:show, :edit, :delete]
+    resources :restaurantlocales, controller: 'restaurantlocales'
     resources :menus, controller: 'menus', only: [:index,:show, :edit]
     resources :tablesettings, controller: 'tablesettings'
     resources :taxes, controller: 'taxes'
@@ -76,7 +76,7 @@ Rails.application.routes.draw do
     resources :ordritemnotes, controller: 'ordritemnotes'
     resources :ordrparticipants, controller: 'ordrparticipants'
     resources :ordractions, controller: 'ordractions'
-    resources :tracks, controller: 'tracks', only: [:index]
+    resources :tracks, controller: 'tracks'
     resources :ocr_menu_imports, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
       member do
         post :process_pdf

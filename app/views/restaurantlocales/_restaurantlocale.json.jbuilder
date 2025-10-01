@@ -5,4 +5,4 @@ json.status restaurantlocale.status
 json.restaurant restaurantlocale.restaurant.id
 json.created_at restaurantlocale.created_at
 json.updated_at restaurantlocale.updated_at
-json.url restaurantlocale_url(restaurantlocale, format: :json)
+json.url restaurant_restaurantlocale_url(restaurantlocale.restaurant, restaurantlocale, format: :json)

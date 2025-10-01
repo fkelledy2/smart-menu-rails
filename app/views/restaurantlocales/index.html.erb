@@ -7,7 +7,11 @@
   </div>
 
   <div class="col-sm-6 text-end">
-  <%= link_to new_restaurantlocale_path, class: 'btn btn-dark' do %>
+  <% if @futureParentRestaurant %>
+    <%= link_to new_restaurant_restaurantlocale_path(@futureParentRestaurant), class: 'btn btn-dark' do %>
+  <% else %>
+    <%= link_to new_restaurant_restaurantlocale_path(current_user.restaurants.first), class: 'btn btn-dark' do %>
+  <% end %>
     Add New Restaurantlocale
   <% end %>
   </div>

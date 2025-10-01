@@ -53,7 +53,7 @@
     <% if track.persisted? %>
       <%= link_to t('common.cancel'), track, class: "btn btn-link" %>
     <% else %>
-      <%= link_to t('common.cancel'), tracks_path, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), restaurant_tracks_path(track.restaurant || current_user.restaurants.first), class: "btn btn-link" %>
     <% end %>
   </div>
 <% end %>
