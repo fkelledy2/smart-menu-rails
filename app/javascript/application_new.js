@@ -526,11 +526,17 @@ document.addEventListener('turbo:load', async () => {
   // Basic TomSelect initialization for enhanced selects
   setTimeout(() => {
     if (window.TomSelect) {
-      const selectElements = document.querySelectorAll('[data-tom-select="true"]:not([data-tom-select-initialized])')
+      const selectElements = document.querySelectorAll('[data-tom-select="true"]')
       selectElements.forEach(element => {
         try {
-          // Check if already initialized by looking for the TomSelect wrapper
-          if (!element.parentNode.classList.contains('ts-wrapper')) {
+          // Multiple checks to prevent double initialization
+          const isAlreadyInitialized = 
+            element.hasAttribute('data-tom-select-initialized') ||
+            element.parentNode.classList.contains('ts-wrapper') ||
+            element.tomSelect ||
+            element.style.display === 'none' // TomSelect hides original element
+          
+          if (!isAlreadyInitialized) {
             const options = {
               plugins: ['remove_button'],
               create: element.dataset.creatable === 'true'
@@ -546,13 +552,20 @@ document.addEventListener('turbo:load', async () => {
               }
             }
             
-            new window.TomSelect(element, options)
+            const tomSelectInstance = new window.TomSelect(element, options)
             element.setAttribute('data-tom-select-initialized', 'true')
+            element.tomSelect = tomSelectInstance
+            
+            console.log('[SmartMenu] TomSelect initialized on:', element)
+          } else {
+            console.log('[SmartMenu] TomSelect already initialized on:', element)
           }
         } catch (error) {
           console.warn('Failed to initialize TomSelect:', error)
         }
       })
+    } else {
+      console.warn('[SmartMenu] TomSelect not available')
     }
   }, 500)
 
@@ -567,6 +580,20 @@ document.addEventListener('turbo:before-cache', () => {
 
   // Destroy tooltips and popovers
   document.querySelectorAll('.tooltip, .popover').forEach(el => el.remove())
+
+  // Cleanup TomSelect instances
+  document.querySelectorAll('[data-tom-select-initialized="true"]').forEach(element => {
+    if (element.tomSelect && typeof element.tomSelect.destroy === 'function') {
+      try {
+        element.tomSelect.destroy()
+        element.removeAttribute('data-tom-select-initialized')
+        delete element.tomSelect
+        console.log('[SmartMenu] TomSelect cleaned up on:', element)
+      } catch (error) {
+        console.warn('Failed to cleanup TomSelect:', error)
+      }
+    }
+  })
 
   // Refresh modules instead of destroying (for better performance)
   app.refresh()
