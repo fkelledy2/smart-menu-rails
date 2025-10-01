@@ -332,6 +332,16 @@ class ApplicationManager {
         case 'ocr_menu_imports':
         case 'ocr':
           return new BasicModule('OcrMenuImport')
+        case 'analytics':
+          return new BasicModule('Analytics')
+        case 'notifications':
+          return new BasicModule('Notifications')
+        case 'tracks':
+          return new BasicModule('Tracks')
+        case 'smartmenus':
+          return new BasicModule('SmartMenus')
+        case 'onboarding':
+          return new BasicModule('Onboarding')
         default:
           console.warn(`[SmartMenu] Unknown module: ${moduleName}`)
           return null
@@ -516,17 +526,31 @@ document.addEventListener('turbo:load', async () => {
   // Basic TomSelect initialization for enhanced selects
   setTimeout(() => {
     if (window.TomSelect) {
-      const selectElements = document.querySelectorAll('[data-tom-select="true"]')
+      const selectElements = document.querySelectorAll('[data-tom-select="true"]:not([data-tom-select-initialized])')
       selectElements.forEach(element => {
-        if (!element.tomSelect) {
-          try {
-            new window.TomSelect(element, {
+        try {
+          // Check if already initialized by looking for the TomSelect wrapper
+          if (!element.parentNode.classList.contains('ts-wrapper')) {
+            const options = {
               plugins: ['remove_button'],
               create: element.dataset.creatable === 'true'
-            })
-          } catch (error) {
-            console.warn('Failed to initialize TomSelect:', error)
+            }
+            
+            // Parse additional options from data attribute
+            if (element.dataset.tomSelectOptions) {
+              try {
+                const additionalOptions = JSON.parse(element.dataset.tomSelectOptions)
+                Object.assign(options, additionalOptions)
+              } catch (e) {
+                console.warn('Invalid TomSelect options JSON:', element.dataset.tomSelectOptions)
+              }
+            }
+            
+            new window.TomSelect(element, options)
+            element.setAttribute('data-tom-select-initialized', 'true')
           }
+        } catch (error) {
+          console.warn('Failed to initialize TomSelect:', error)
         }
       })
     }
