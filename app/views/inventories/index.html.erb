@@ -3,10 +3,13 @@
     <h1><%=t(".inventories")%></h1>
   </div>
   <div class="col-6 text-end">
-  <%= link_to new_inventory_path, class: 'btn btn-sm btn-dark' do %>
+    <% if @futureParentRestaurant %>
+      <%= link_to new_restaurant_inventory_path(@futureParentRestaurant), class: 'btn btn-sm btn-dark' do %>
+    <% else %>
+      <%= link_to new_restaurant_inventory_path(current_user.restaurants.first), class: 'btn btn-sm btn-dark' do %>
+    <% end %>
     <i class="bi bi-plus"></i> <%=t(".inventory")%>
   <% end %>
   </div>
 </div>
 <div class="table-container-spacing table-borderless" id="inventory-table">
-</div>

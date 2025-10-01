@@ -28,19 +28,16 @@ Rails.application.routes.draw do
       end
     end
   end
-  resources :ordractions
-  resources :restaurantavailabilities
-  resources :menuavailabilities
-  resources :ordrparticipants
-  resources :inventories
-  resources :ingredients
-  resources :ordritemnotes
-  resources :ordritems
   resources :ordrs
+  resources :ordritems
+  resources :ordritemnotes
+  resources :ordrparticipants
+  resources :ordractions
+
+  resources :menuavailabilities
   resources :menuitems
   resources :menusections
   resources :menusectionlocales
-  resources :tablesettings
   resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
 
   resources :dw_orders_mv, only: [:index, :show]
@@ -69,14 +66,16 @@ Rails.application.routes.draw do
   resources :restaurants do
     resources :restaurantlocales, controller: 'restaurantlocales', only: [:index,:show, :edit, :delete]
     resources :menus, controller: 'menus', only: [:index,:show, :edit]
-    resources :tablesettings, controller: 'tablesettings', only: [:index,:show, :edit]
+    resources :tablesettings, controller: 'tablesettings'
     resources :taxes, controller: 'taxes'
     resources :sizes, controller: 'sizes'
     resources :tips, controller: 'tips'
     resources :employees, controller: 'employees'
     resources :tags, controller: 'tags'
     resources :allergyns, controller: 'allergyns'
-    resources :restaurantavailabilities, controller: 'restaurantavailabilities', only: [:index,:show, :edit]
+    resources :restaurantavailabilities, controller: 'restaurantavailabilities'
+    resources :inventories, controller: 'inventories'
+    resources :ingredients, controller: 'ingredients'
     resources :ordrs, controller: 'ordrs', only: [:index]
     resources :tracks, controller: 'tracks', only: [:index]
     resources :ocr_menu_imports, only: [:index, :new, :create, :show, :edit, :update, :destroy] do

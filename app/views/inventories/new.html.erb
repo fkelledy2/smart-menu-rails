@@ -10,7 +10,7 @@
         <% if @futureParentRestaurant %>
           <%= link_to t('.cancel'), edit_restaurant_path(id: @futureParentRestaurant.id), class: "float-end btn btn-light" %>
         <% else %>
-          <%= link_to t('.cancel'), inventories_path, class: "float-end btn btn-light" %>
+          <%= link_to t('.cancel'), restaurant_inventories_path(current_user.restaurants.first), class: "float-end btn btn-light" %>
         <% end %>
       <% end %>
     </div>
