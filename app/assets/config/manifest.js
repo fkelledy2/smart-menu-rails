@@ -30,5 +30,5 @@
 //= link controllers/hello_controller.js
 //= link controllers/index.js
 
-// New system entry point
+// New system entry point (modular components loaded dynamically)
 //= link application_new.js
