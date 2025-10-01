@@ -8,4 +8,4 @@ json.capacity tablesetting.capacity
 json.restaurant tablesetting.restaurant.id
 json.created_at tablesetting.created_at
 json.updated_at tablesetting.updated_at
-json.url tablesetting_url(tablesetting, format: :json)
+json.url restaurant_tablesetting_url(tablesetting.restaurant, tablesetting, format: :json)

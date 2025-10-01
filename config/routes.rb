@@ -28,16 +28,12 @@ Rails.application.routes.draw do
       end
     end
   end
-  resources :ordrs
-  resources :ordritems
-  resources :ordritemnotes
-  resources :ordrparticipants
-  resources :ordractions
 
   resources :menuavailabilities
   resources :menuitems
   resources :menusections
   resources :menusectionlocales
+  resources :ingredients
   resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
 
   resources :dw_orders_mv, only: [:index, :show]
@@ -75,8 +71,11 @@ Rails.application.routes.draw do
     resources :allergyns, controller: 'allergyns'
     resources :restaurantavailabilities, controller: 'restaurantavailabilities'
     resources :inventories, controller: 'inventories'
-    resources :ingredients, controller: 'ingredients'
-    resources :ordrs, controller: 'ordrs', only: [:index]
+    resources :ordrs, controller: 'ordrs'
+    resources :ordritems, controller: 'ordritems'
+    resources :ordritemnotes, controller: 'ordritemnotes'
+    resources :ordrparticipants, controller: 'ordrparticipants'
+    resources :ordractions, controller: 'ordractions'
     resources :tracks, controller: 'tracks', only: [:index]
     resources :ocr_menu_imports, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
       member do

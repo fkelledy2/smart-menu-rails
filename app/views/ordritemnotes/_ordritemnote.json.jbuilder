@@ -1,2 +1,2 @@
 json.extract! ordritemnote, :id, :note, :ordritem_id, :created_at, :updated_at
-json.url ordritemnote_url(ordritemnote, format: :json)
+json.url restaurant_ordritemnote_url(ordritemnote.ordritem.ordr.restaurant, ordritemnote, format: :json)

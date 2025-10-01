@@ -31,7 +31,7 @@
     <% if ordr.persisted? %>
       <%= link_to t('common.cancel'), ordr, class: "btn btn-link" %>
     <% else %>
-      <%= link_to t('common.cancel'), ordrs_path, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), restaurant_ordrs_path(ordr.restaurant || current_user.restaurants.first), class: "btn btn-link" %>
     <% end %>
   </div>
 <% end %>

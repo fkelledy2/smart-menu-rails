@@ -32,4 +32,4 @@ end
 json.ordrDate ordr.ordrDate
 json.created_at ordr.created_at
 json.updated_at ordr.updated_at
-json.url ordr_url(ordr, format: :json)
+json.url restaurant_ordr_url(ordr.restaurant, ordr, format: :json)
