@@ -9,4 +9,4 @@ json.sequence employee.sequence
 json.restaurant employee.restaurant.id
 json.created_at employee.created_at
 json.updated_at employee.updated_at
-json.url employee_url(employee, format: :json)
+json.url restaurant_employee_url(employee.restaurant, employee, format: :json)

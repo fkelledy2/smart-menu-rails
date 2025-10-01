@@ -8,7 +8,7 @@
           <%= link_to restaurant_path(id: @employee.restaurant.id), class: 'btn btn-sm btn-light' do %>
             <i class="bi bi-chevron-left"></i>
           <% end %>
-          <%= link_to edit_employee_path(@employee), class: 'btn btn-sm btn-dark' do %>
+          <%= link_to edit_restaurant_employee_path(@employee.restaurant, @employee), class: 'btn btn-sm btn-dark' do %>
             <i class="bi bi-pencil-fill"></i>
           <% end %>
         </span>
@@ -16,7 +16,7 @@
   </div>
 </div>
 
-<%= form_with(model: @employee) do |form| %>
+<%= form_with(model: [@employee.restaurant, @employee]) do |form| %>
   <div class="form-group row">
     <%= form.label :name, class: 'col-2 col-form-label' %>
     <div class="col-10">

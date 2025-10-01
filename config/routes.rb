@@ -37,9 +37,6 @@ Rails.application.routes.draw do
   resources :ordritemnotes
   resources :ordritems
   resources :ordrs
-  resources :employees
-  resources :tags
-  resources :allergyns
   resources :menuitems
   resources :menusections
   resources :menusectionlocales
@@ -76,10 +73,11 @@ Rails.application.routes.draw do
     resources :taxes, controller: 'taxes'
     resources :sizes, controller: 'sizes'
     resources :tips, controller: 'tips'
-    resources :employees, controller: 'employees', only: [:index,:show, :edit]
+    resources :employees, controller: 'employees'
+    resources :tags, controller: 'tags'
+    resources :allergyns, controller: 'allergyns'
     resources :restaurantavailabilities, controller: 'restaurantavailabilities', only: [:index,:show, :edit]
     resources :ordrs, controller: 'ordrs', only: [:index]
-    resources :allergyns, controller: 'allergyns', only: [:index]
     resources :tracks, controller: 'tracks', only: [:index]
     resources :ocr_menu_imports, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
       member do
