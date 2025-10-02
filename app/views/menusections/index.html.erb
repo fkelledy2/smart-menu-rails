@@ -5,7 +5,11 @@
   <div class="col-6 text-end">
     <button id="activate-row" class='btn btn-sm btn-dark' disabled><%= t('common.activate') %></button>
     <button id="deactivate-row"class='btn btn-sm btn-dark' disabled><%= t('common.deactivate') %></button>
-    <%= link_to new_menusection_path, class: 'btn btn-sm btn-dark' do %>
+    <% if @menu %>
+      <%= link_to new_menu_menusection_path(@menu), class: 'btn btn-sm btn-dark' do %>
+    <% else %>
+      <%= link_to '#', class: 'btn btn-sm btn-dark disabled' do %>
+    <% end %>
       <i class="bi bi-plus"></i> <%= t(".menuSection") %>
     <% end %>
   </div>

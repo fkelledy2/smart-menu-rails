@@ -8,9 +8,28 @@ export const TableFormatters = {
   editLink: (cell) => {
     const id = cell.getValue();
     const rowData = cell.getRow().getData();
-    const entityName = cell.getTable().element.dataset.entity || 'items';
+    const tableElement = cell.getTable().element;
+    const entityName = tableElement.dataset.entity || 'items';
     const name = rowData.name || rowData.title || id;
-    return `<a class='link-dark' href='/${entityName}/${id}/edit'>${name}</a>`;
+    
+    // Check for nested route data attributes
+    const menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
+    const menusectionId = tableElement.dataset.menusection || tableElement.dataset.bsMenusection;
+    const restaurantId = tableElement.dataset.restaurant || tableElement.dataset.bsRestaurant;
+    
+    // Build nested route URLs
+    if (menusectionId && entityName === 'menuitems') {
+      // Menuitems use menusection-based nested routes
+      return `<a class='link-dark' href='/menusections/${menusectionId}/${entityName}/${id}/edit'>${name}</a>`;
+    } else if (menuId && ['menusections', 'menuavailabilities', 'menuparticipants'].includes(entityName)) {
+      // Other menu resources use menu-based nested routes
+      return `<a class='link-dark' href='/menus/${menuId}/${entityName}/${id}/edit'>${name}</a>`;
+    } else if (restaurantId && ['employees', 'taxes', 'tips', 'sizes', 'allergyns', 'tablesettings', 'restaurantlocales', 'restaurantavailabilities', 'inventories', 'ordrs'].includes(entityName)) {
+      return `<a class='link-dark' href='/restaurants/${restaurantId}/${entityName}/${id}/edit'>${name}</a>`;
+    } else {
+      // Fallback to old route format
+      return `<a class='link-dark' href='/${entityName}/${id}/edit'>${name}</a>`;
+    }
   },
   
   status: (cell) => {
@@ -54,11 +73,32 @@ export const TableFormatters = {
     const rowData = cell.getRow().getData();
     const id = rowData.id;
     const actions = formatterParams.actions || ['edit', 'delete'];
+    const tableElement = cell.getTable().element;
+    const entityName = formatterParams.entity || 'items';
+    
+    // Check for nested route data attributes
+    const menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
+    const menusectionId = tableElement.dataset.menusection || tableElement.dataset.bsMenusection;
+    const restaurantId = tableElement.dataset.restaurant || tableElement.dataset.bsRestaurant;
     
     let html = '<div class="btn-group btn-group-sm">';
     
     if (actions.includes('edit')) {
-      html += `<a href="/${formatterParams.entity || 'items'}/${id}/edit" class="btn btn-outline-primary btn-sm">Edit</a>`;
+      let editUrl;
+      // Build nested route URLs
+      if (menusectionId && entityName === 'menuitems') {
+        // Menuitems use menusection-based nested routes
+        editUrl = `/menusections/${menusectionId}/${entityName}/${id}/edit`;
+      } else if (menuId && ['menusections', 'menuavailabilities', 'menuparticipants'].includes(entityName)) {
+        // Other menu resources use menu-based nested routes
+        editUrl = `/menus/${menuId}/${entityName}/${id}/edit`;
+      } else if (restaurantId && ['employees', 'taxes', 'tips', 'sizes', 'allergyns', 'tablesettings', 'restaurantlocales', 'restaurantavailabilities', 'inventories', 'ordrs'].includes(entityName)) {
+        editUrl = `/restaurants/${restaurantId}/${entityName}/${id}/edit`;
+      } else {
+        // Fallback to old route format
+        editUrl = `/${entityName}/${id}/edit`;
+      }
+      html += `<a href="${editUrl}" class="btn btn-outline-primary btn-sm">Edit</a>`;
     }
     
     if (actions.includes('delete')) {

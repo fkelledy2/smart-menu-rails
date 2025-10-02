@@ -6,13 +6,22 @@ class MenuparticipantsController < ApplicationController
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
 
-  # GET /menuparticipants or /menuparticipants.json
+  # GET /menus/:menu_id/menuparticipants or /menus/:menu_id/menuparticipants.json
   def index
-    @menuparticipants = if current_user
-                          policy_scope(Menuparticipant).limit(100)
-                        else
-                          Menuparticipant.limit(100)
-                        end
+    if params[:menu_id]
+      @menu = Menu.find(params[:menu_id])
+      @menuparticipants = if current_user
+                            policy_scope(Menuparticipant).where(menu: @menu).limit(100)
+                          else
+                            Menuparticipant.where(menu: @menu).limit(100)
+                          end
+    else
+      @menuparticipants = if current_user
+                            policy_scope(Menuparticipant).limit(100)
+                          else
+                            Menuparticipant.limit(100)
+                          end
+    end
   end
 
   # GET /menuparticipants/1 or /menuparticipants/1.json
@@ -20,9 +29,13 @@ class MenuparticipantsController < ApplicationController
     authorize @menuparticipant if current_user
   end
 
-  # GET /menuparticipants/new
+  # GET /menus/:menu_id/menuparticipants/new
   def new
     @menuparticipant = Menuparticipant.new
+    if params[:menu_id]
+      @menu = Menu.find(params[:menu_id])
+      @menuparticipant.menu = @menu
+    end
     authorize @menuparticipant if current_user
   end
 

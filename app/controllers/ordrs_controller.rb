@@ -22,7 +22,7 @@ class OrdrsController < ApplicationController
         ordr.status = 25
       end
       ordr.nett = ordr.runningTotal
-      taxes = Tax.where(restaurant_id: ordr.restaurant.id).includes([:restaurant]).order(sequence: :asc)
+      taxes = Tax.where(restaurant_id: ordr.restaurant.id).order(sequence: :asc)
       totalTax = 0
       totalService = 0
       taxes.each do |tax|

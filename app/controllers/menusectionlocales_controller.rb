@@ -2,13 +2,22 @@ class MenusectionlocalesController < ApplicationController
   before_action :set_menusectionlocale, only: %i[show edit update destroy]
 
   def index
-    @menusectionlocales = Menusectionlocale.limit(100) # Use limit for memory safety, since pagination gem is not installed
+    if params[:menu_id]
+      @menu = Menu.find(params[:menu_id])
+      @menusectionlocales = Menusectionlocale.joins(:menusection)
+        .where(menusections: { menu: @menu }).limit(100)
+    else
+      @menusectionlocales = Menusectionlocale.limit(100) # Use limit for memory safety, since pagination gem is not installed
+    end
   end
 
   def show; end
 
   def new
     @menusectionlocale = Menusectionlocale.new
+    if params[:menu_id]
+      @menu = Menu.find(params[:menu_id])
+    end
   end
 
   def edit; end

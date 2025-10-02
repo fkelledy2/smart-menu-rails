@@ -18,9 +18,12 @@ class InventoriesController < ApplicationController
     authorize @inventory
   end
 
-  # GET /inventories/new
+  # GET /restaurants/:restaurant_id/inventories/new
   def new
     @inventory = Inventory.new
+    if params[:restaurant_id]
+      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+    end
     authorize @inventory
   end
 

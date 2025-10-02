@@ -7,21 +7,34 @@ class MenuitemsController < ApplicationController
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
 
-  # GET /menuitems or /menuitems.json
+  # GET /menus/:menu_id/menuitems or /menuitems.json
   def index
     @menuitems = []
-    return unless params[:menusection_id]
-
-    menusection = Menusection.find_by(id: params[:menusection_id])
-    @menuitems += policy_scope(Menuitem).where(menusection: menusection, archived: false)
-      .includes([:genimage])
-      .includes([:menusection])
-      .includes([:inventory])
-      .includes([:allergyns])
-      .includes([:sizes])
-      .includes([:tags])
-      .includes([:ingredients])
-      .all
+    
+    if params[:menu_id]
+      @menu = Menu.find(params[:menu_id])
+      @menuitems += policy_scope(Menuitem).joins(:menusection)
+        .where(menusections: { menu: @menu }, archived: false)
+        .includes([:genimage])
+        .includes([:menusection])
+        .includes([:inventory])
+        .includes([:allergyns])
+        .includes([:sizes])
+        .includes([:tags])
+        .includes([:ingredients])
+        .all
+    elsif params[:menusection_id]
+      menusection = Menusection.find_by(id: params[:menusection_id])
+      @menuitems += policy_scope(Menuitem).where(menusection: menusection, archived: false)
+        .includes([:genimage])
+        .includes([:menusection])
+        .includes([:inventory])
+        .includes([:allergyns])
+        .includes([:sizes])
+        .includes([:tags])
+        .includes([:ingredients])
+        .all
+    end
   end
 
   # GET /menuitems/1 or /menuitems/1.json
@@ -29,10 +42,17 @@ class MenuitemsController < ApplicationController
     authorize @menuitem
   end
 
-  # GET /menuitems/new
+  # GET /menus/:menu_id/menuitems/new
   def new
     @menuitem = Menuitem.new
-    if params[:menusection_id]
+    if params[:menu_id]
+      @menu = Menu.find(params[:menu_id])
+      # Set default values
+      @menuitem.sequence = 999
+      @menuitem.calories = 0
+      @menuitem.price = 0
+      @menuitem.sizesupport = false
+    elsif params[:menusection_id]
       @futureParentMenuSection = Menusection.find_by(id: params[:menusection_id])
       @menuitem.menusection = @futureParentMenuSection
       @menuitem.sequence = 999

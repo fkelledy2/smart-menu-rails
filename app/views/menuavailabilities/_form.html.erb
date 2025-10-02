@@ -1,4 +1,9 @@
-<%= form_with(model: menuavailability) do |form| %>
+<% 
+  # Determine the menu for nested routing
+  menu = menuavailability.menu || @futureParentMenu
+  raise "No menu context available for menuavailability form" unless menu
+%>
+<%= form_with(model: [menu, menuavailability]) do |form| %>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :dayofweek, class: 'col-form-label' %></span>
@@ -65,7 +70,7 @@
         <span class="float-end">
         <% if menuavailability.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t(".delete"), menuavailability, method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
+            <%= link_to t(".delete"), menu_menuavailability_path(menuavailability.menu, menuavailability), method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
           </div>
         <% end %>
         <%= form.submit value: t(".save"), class: 'btn btn-dark' %>

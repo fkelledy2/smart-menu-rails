@@ -20,9 +20,18 @@ export function initOrdritems() {
             }
            },
            {
-            title:"Menu Item", field:"menuitem.id", responsive:0, formatter:"link", formatterParams: {
-                labelField:"menuitem.name",
-                urlPrefix:"/menuitems/",
+            title:"Menu Item", field:"menuitem.id", responsive:0, formatter: function(cell, formatterParams) {
+                const menuitemId = cell.getValue();
+                const rowData = cell.getRow().getData();
+                const menuitemName = rowData.menuitem?.name || menuitemId;
+                const menusectionId = rowData.menuitem?.menusection;
+                
+                if (menusectionId) {
+                    return `<a class='link-dark' href='/menusections/${menusectionId}/menuitems/${menuitemId}/edit'>${menuitemName}</a>`;
+                } else {
+                    // Fallback to old route if menusection ID not available
+                    return `<a class='link-dark' href='/menuitems/${menuitemId}/edit'>${menuitemName}</a>`;
+                }
             }
            },
            {title:"Price", field:"menuitem.price", formatter:"money", width: 200, hozAlign:"right", headerHozAlign:"right", bottomCalc:"sum", bottomCalcParams:{precision:2},

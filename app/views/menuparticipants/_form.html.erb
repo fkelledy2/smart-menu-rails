@@ -1,4 +1,4 @@
-<%= form_with(model: menuparticipant, local: true) do |form| %>
+<%= form_with(model: [menuparticipant.menu, menuparticipant], local: true) do |form| %>
   <% if menuparticipant.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(menuparticipant.errors.count, "error") %> prohibited this menuparticipant from being saved:</h2>

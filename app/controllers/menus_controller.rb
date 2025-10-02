@@ -18,12 +18,10 @@ class MenusController < ApplicationController
       if params[:restaurant_id]
         @restaurant = Restaurant.find_by(id: params[:restaurant_id])
         @menus = policy_scope(Menu).where(restaurant_id: @restaurant.id, archived: false)
-          .includes([:genimage])
           .includes([:menuavailabilities])
           .order(:sequence).all
       else
         @menus = policy_scope(Menu).where(archived: false).order(:sequence)
-          .includes([:genimage])
           .includes([:menuavailabilities])
           .all
       end

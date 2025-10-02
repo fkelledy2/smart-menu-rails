@@ -33,7 +33,17 @@ export function initMenuitems() {
             var id = cell.getValue();
             var name = cell.getRow();
             var rowData = cell.getRow().getData("data").name;
-            return "<a class='link-dark' href='/menuitems/"+id+"/edit'>"+rowData+"</a>";
+            
+            // Get menusection ID from table element for nested routes
+            var tableElement = cell.getTable().element;
+            var menusectionId = tableElement.dataset.menusection || tableElement.dataset.bsMenusection;
+            
+            if (menusectionId) {
+                return "<a class='link-dark' href='/menusections/"+menusectionId+"/menuitems/"+id+"/edit'>"+rowData+"</a>";
+            } else {
+                // Fallback to old route if menusection ID not available
+                return "<a class='link-dark' href='/menuitems/"+id+"/edit'>"+rowData+"</a>";
+            }
         }
         const menuitemTableElement = document.getElementById('menusection-menuitem-table');
         if (!menuitemTableElement) return; // Exit if element doesn't exist

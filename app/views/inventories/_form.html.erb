@@ -1,4 +1,14 @@
-<%= form_with(model: inventory) do |form| %>
+<% 
+  # Determine the restaurant for nested routing
+  restaurant = if inventory.menuitem&.menusection&.menu&.restaurant
+                 inventory.menuitem.menusection.menu.restaurant
+               elsif @futureParentRestaurant
+                 @futureParentRestaurant
+               else
+                 raise "No restaurant context available for inventory form"
+               end
+%>
+<%= form_with(model: [restaurant, inventory]) do |form| %>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :menuItem, class: 'col-form-label' %></span>
@@ -42,7 +52,7 @@
         <span class="float-end">
         <% if inventory.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t('common.delete'), inventory, method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
+            <%= link_to t('common.delete'), restaurant_inventory_path(restaurant, inventory), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
         <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>

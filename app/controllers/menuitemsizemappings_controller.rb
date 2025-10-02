@@ -8,7 +8,11 @@ class MenuitemsizemappingsController < ApplicationController
         @menuItemSizeMapping = MenuitemSizeMapping.find(params[:id])
         if @menuItemSizeMapping.update(params.require(:menuitem_size_mapping).permit(:size_id, :menuitem_id, :price))
           format.html do
-            redirect_to edit_menuitem_url(@menuItemSizeMapping.menuitem), notice: 'Menuitem was successfully created.'
+            if params[:menu_id]
+              redirect_to edit_menu_menuitem_url(@menuItemSizeMapping.menuitem.menusection.menu, @menuItemSizeMapping.menuitem), notice: 'Menuitem was successfully updated.'
+            else
+              redirect_to edit_menuitem_url(@menuItemSizeMapping.menuitem), notice: 'Menuitem was successfully updated.'
+            end
           end
           format.json { render :show, status: :ok, location: @menuitem }
         else

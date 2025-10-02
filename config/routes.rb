@@ -27,12 +27,6 @@ Rails.application.routes.draw do
   patch 'smartmenus/:smartmenu_id/locale', to: 'smartmenus_locale#update', as: :smartmenu_locale
 
   resources :genimages
-  resources :menuparticipants
-  resources :menuavailabilities
-  resources :menuitems
-  resources :menusections
-  resources :menusectionlocales
-  resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
 
   resources :ingredients
 
@@ -89,10 +83,13 @@ Rails.application.routes.draw do
     end
   end
   resources :menus, controller: 'menus' do
-      resources :menusections, controller: 'menusections', only: [:index,:show, :edit]
-      resources :menuavailabilities, controller: 'menuavailabilities', only: [:index,:show, :edit]
+      resources :menuparticipants, controller: 'menuparticipants'
+      resources :menuavailabilities, controller: 'menuavailabilities'
+      resources :menuitems, controller: 'menuitems'
+      resources :menusections, controller: 'menusections'
+      resources :menusectionlocales, controller: 'menusectionlocales'
+      resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
       resources :tablesettings, controller: 'menus', only: [:show]
-      resources :menuitems, controller: 'menuitems', only: [:index,:show, :edit]
       member do
         post :regenerate_images
       end

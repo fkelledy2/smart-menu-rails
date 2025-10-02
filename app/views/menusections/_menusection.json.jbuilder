@@ -15,4 +15,4 @@ json.menuitems menusection.menuitems do |menuitem|
 end
 json.created_at menusection.created_at
 json.updated_at menusection.updated_at
-json.url menusection_url(menusection, format: :json)
+json.url menu_menusection_url(menusection.menu, menusection, format: :json)

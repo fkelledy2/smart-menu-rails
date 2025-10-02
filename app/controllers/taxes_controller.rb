@@ -30,7 +30,6 @@ class TaxesController < ApplicationController
         @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
         @tax.restaurant = @futureParentRestaurant
       end
-      authorize @tax
     else
       redirect_to root_url
     end
@@ -38,7 +37,6 @@ class TaxesController < ApplicationController
 
   # GET /taxes/1/edit
   def edit
-    authorize @tax
     unless current_user
       redirect_to root_url
     end
@@ -48,7 +46,6 @@ class TaxesController < ApplicationController
   def create
     if current_user
       @tax = Tax.new(tax_params)
-      authorize @tax
       respond_to do |format|
         if @tax.save
           format.html do
@@ -68,7 +65,6 @@ class TaxesController < ApplicationController
 
   # PATCH/PUT /taxes/1 or /taxes/1.json
   def update
-    authorize @tax
     if current_user
       respond_to do |format|
         if @tax.update(tax_params)
@@ -89,7 +85,6 @@ class TaxesController < ApplicationController
 
   # DELETE /taxes/1 or /taxes/1.json
   def destroy
-    authorize @tax
     if current_user
       @tax.update(archived: true)
       respond_to do |format|
