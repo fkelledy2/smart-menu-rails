@@ -137,7 +137,7 @@ class MenuitemsController < ApplicationController
     @menuitem.update(archived: true)
     respond_to do |format|
       format.html do
-        redirect_to edit_menusection_path(@menuitem.menusection),
+        redirect_to edit_menu_menusection_path(@menuitem.menusection.menu, @menuitem.menusection),
                     notice: t('common.flash.deleted', resource: t('activerecord.models.menuitem'))
       end
       format.json { head :no_content }

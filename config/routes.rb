@@ -54,23 +54,23 @@ Rails.application.routes.draw do
   resources :ocr_menu_sections, only: [:update]
 
   resources :restaurants do
-    resources :restaurantlocales, controller: 'restaurantlocales'
-    resources :menus, controller: 'menus', only: [:index,:show, :edit]
-    resources :tablesettings, controller: 'tablesettings'
-    resources :taxes, controller: 'taxes'
-    resources :sizes, controller: 'sizes'
-    resources :tips, controller: 'tips'
-    resources :employees, controller: 'employees'
-    resources :tags, controller: 'tags'
-    resources :allergyns, controller: 'allergyns'
-    resources :restaurantavailabilities, controller: 'restaurantavailabilities'
-    resources :inventories, controller: 'inventories'
-    resources :ordrs, controller: 'ordrs'
-    resources :ordritems, controller: 'ordritems'
-    resources :ordritemnotes, controller: 'ordritemnotes'
-    resources :ordrparticipants, controller: 'ordrparticipants'
-    resources :ordractions, controller: 'ordractions'
-    resources :tracks, controller: 'tracks'
+    resources :restaurantlocales
+    resources :menus, only: [:index, :show, :edit]
+    resources :tablesettings
+    resources :taxes
+    resources :sizes
+    resources :tips
+    resources :employees
+    resources :tags
+    resources :allergyns
+    resources :restaurantavailabilities
+    resources :inventories
+    resources :ordrs
+    resources :ordritems
+    resources :ordritemnotes
+    resources :ordrparticipants
+    resources :ordractions
+    resources :tracks
     resources :ocr_menu_imports, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
       member do
         post :process_pdf
@@ -82,20 +82,22 @@ Rails.application.routes.draw do
       end
     end
   end
-  resources :menus, controller: 'menus' do
-      resources :menuparticipants, controller: 'menuparticipants'
-      resources :menuavailabilities, controller: 'menuavailabilities'
-      resources :menuitems, controller: 'menuitems'
-      resources :menusections, controller: 'menusections'
-      resources :menusectionlocales, controller: 'menusectionlocales'
-      resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
-      resources :tablesettings, controller: 'menus', only: [:show]
-      member do
-        post :regenerate_images
-      end
-  end
-  resources :menusections, controller: 'menusections' do
-    resources :menuitems, controller: 'menuitems', only: [:index,:show, :edit]
+  resources :menus do
+    resources :menuparticipants
+    resources :menuavailabilities
+    resources :menusections do
+      resources :menuitems  # Full CRUD including index for menusection-specific menuitems
+    end
+    resources :menusectionlocales
+    resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
+    
+    # Menu-level menuitems for bulk operations (index only)
+    resources :menuitems, only: [:index]
+    
+    member do
+      post :regenerate_images
+      get :tablesettings, to: 'menus#show'  # More explicit than nested resource
+    end
   end
   post "/create_payment_link", to: "payments#create_payment_link"
   post "/generate_qr", to: "payments#generate_qr"

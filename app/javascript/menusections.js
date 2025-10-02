@@ -48,7 +48,17 @@ export function initMenusections() {
             var id = cell.getValue();
             var name = cell.getRow();
             var rowData = cell.getRow().getData("data").name;
-            return "<a class='link-dark' href='/menusections/"+id+"/edit'>"+rowData+"</a>";
+            
+            // Get menu ID from table element for nested routes
+            var tableElement = cell.getTable().element;
+            var menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
+            
+            if (menuId) {
+                return "<a class='link-dark' href='/menus/"+menuId+"/menusections/"+id+"/edit'>"+rowData+"</a>";
+            } else {
+                // Fallback to old route if menu ID not available
+                return "<a class='link-dark' href='/menusections/"+id+"/edit'>"+rowData+"</a>";
+            }
         }
         const menusectionTableElement = document.getElementById('menu-menusection-table');
         if (!menusectionTableElement) return; // Exit if element doesn't exist

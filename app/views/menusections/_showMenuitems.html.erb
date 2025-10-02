@@ -17,7 +17,7 @@
       </div>
       <% if @canAddMenuItem %>
           <button type="button" class="btn btn-dark">
-            <%= link_to new_menu_menuitem_path(@menusection.menu), class: 'link-light' do %>
+            <%= link_to new_menu_menusection_menuitem_path(@menusection.menu, @menusection), class: 'link-light' do %>
               <i class="bi bi-plus"></i>
             <% end %>
           </button>

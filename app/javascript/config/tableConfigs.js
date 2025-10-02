@@ -18,9 +18,9 @@ export const TableFormatters = {
     const restaurantId = tableElement.dataset.restaurant || tableElement.dataset.bsRestaurant;
     
     // Build nested route URLs
-    if (menusectionId && entityName === 'menuitems') {
-      // Menuitems use menusection-based nested routes
-      return `<a class='link-dark' href='/menusections/${menusectionId}/${entityName}/${id}/edit'>${name}</a>`;
+    if (menuId && menusectionId && entityName === 'menuitems') {
+      // Menuitems use full nested routes: menus > menusections > menuitems
+      return `<a class='link-dark' href='/menus/${menuId}/menusections/${menusectionId}/${entityName}/${id}/edit'>${name}</a>`;
     } else if (menuId && ['menusections', 'menuavailabilities', 'menuparticipants'].includes(entityName)) {
       // Other menu resources use menu-based nested routes
       return `<a class='link-dark' href='/menus/${menuId}/${entityName}/${id}/edit'>${name}</a>`;
@@ -86,9 +86,9 @@ export const TableFormatters = {
     if (actions.includes('edit')) {
       let editUrl;
       // Build nested route URLs
-      if (menusectionId && entityName === 'menuitems') {
-        // Menuitems use menusection-based nested routes
-        editUrl = `/menusections/${menusectionId}/${entityName}/${id}/edit`;
+      if (menuId && menusectionId && entityName === 'menuitems') {
+        // Menuitems use full nested routes: menus > menusections > menuitems
+        editUrl = `/menus/${menuId}/menusections/${menusectionId}/${entityName}/${id}/edit`;
       } else if (menuId && ['menusections', 'menuavailabilities', 'menuparticipants'].includes(entityName)) {
         // Other menu resources use menu-based nested routes
         editUrl = `/menus/${menuId}/${entityName}/${id}/edit`;

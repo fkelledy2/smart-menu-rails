@@ -34,26 +34,28 @@ export function initMenuitems() {
             var name = cell.getRow();
             var rowData = cell.getRow().getData("data").name;
             
-            // Get menusection ID from table element for nested routes
+            // Get menu and menusection IDs from table element for nested routes
             var tableElement = cell.getTable().element;
+            var menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
             var menusectionId = tableElement.dataset.menusection || tableElement.dataset.bsMenusection;
             
-            if (menusectionId) {
-                return "<a class='link-dark' href='/menusections/"+menusectionId+"/menuitems/"+id+"/edit'>"+rowData+"</a>";
+            if (menuId && menusectionId) {
+                return "<a class='link-dark' href='/menus/"+menuId+"/menusections/"+menusectionId+"/menuitems/"+id+"/edit'>"+rowData+"</a>";
             } else {
-                // Fallback to old route if menusection ID not available
+                // Fallback to old route if context not available
                 return "<a class='link-dark' href='/menuitems/"+id+"/edit'>"+rowData+"</a>";
             }
         }
         const menuitemTableElement = document.getElementById('menusection-menuitem-table');
         if (!menuitemTableElement) return; // Exit if element doesn't exist
         const menusectionId = menuitemTableElement.getAttribute('data-bs-menusection');
+        const menuId = menuitemTableElement.getAttribute('data-bs-menu');
         var menuItemTable = new Tabulator("#menusection-menuitem-table", {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
-          ajaxURL: '/menusections/'+menusectionId+'/menuitems.json',
+          ajaxURL: '/menus/'+menuId+'/menusections/'+menusectionId+'/menuitems.json',
           initialSort:[
             {column:"sequence", dir:"asc"}
           ],

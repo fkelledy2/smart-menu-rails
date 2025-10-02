@@ -1,5 +1,5 @@
 <% 
-  # Determine the menu for nested routing
+  # Determine the menu and menusection for nested routing
   menu = if menuitem.menusection&.menu
            menuitem.menusection.menu
          elsif @futureParentMenuSection&.menu
@@ -10,8 +10,18 @@
            # This shouldn't happen in normal flow - all menuitem routes should have menu context
            raise "No menu context available for menuitem form"
          end
+         
+  # Determine the menusection for nested routing
+  menusection = if menuitem.menusection
+                  menuitem.menusection
+                elsif @futureParentMenuSection
+                  @futureParentMenuSection
+                else
+                  # This shouldn't happen in normal flow - all menuitem routes should have menusection context
+                  raise "No menusection context available for menuitem form"
+                end
 %>
-<%= form_with(model: [menu, menuitem]) do |form| %>
+<%= form_with(model: [menu, menusection, menuitem]) do |form| %>
 
   <% if @futureParentMenuSection %>
       <%= form.hidden_field :menusection_id, value: @futureParentMenuSection.id %>
@@ -222,7 +232,7 @@
         <span class="float-end">
         <% if menuitem.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t('common.delete'), menu_menuitem_path(menu, menuitem), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
+            <%= link_to t('common.delete'), menu_menusection_menuitem_path(menu, menuitem.menusection, menuitem), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
         <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>

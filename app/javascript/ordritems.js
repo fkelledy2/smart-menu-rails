@@ -25,11 +25,12 @@ export function initOrdritems() {
                 const rowData = cell.getRow().getData();
                 const menuitemName = rowData.menuitem?.name || menuitemId;
                 const menusectionId = rowData.menuitem?.menusection;
+                const menuId = rowData.menuitem?.menu; // Assuming menu ID is available in menuitem data
                 
-                if (menusectionId) {
-                    return `<a class='link-dark' href='/menusections/${menusectionId}/menuitems/${menuitemId}/edit'>${menuitemName}</a>`;
+                if (menuId && menusectionId) {
+                    return `<a class='link-dark' href='/menus/${menuId}/menusections/${menusectionId}/menuitems/${menuitemId}/edit'>${menuitemName}</a>`;
                 } else {
-                    // Fallback to old route if menusection ID not available
+                    // Fallback to old route if context not available
                     return `<a class='link-dark' href='/menuitems/${menuitemId}/edit'>${menuitemName}</a>`;
                 }
             }

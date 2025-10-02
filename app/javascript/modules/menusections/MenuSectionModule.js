@@ -285,7 +285,17 @@ export class MenuSectionModule extends ComponentBase {
     const id = cell.getValue();
     const rowData = cell.getRow().getData("data");
     const name = rowData?.name || id;
-    return `<a class='link-dark' href='/menusections/${id}/edit'>${name}</a>`;
+    
+    // Get menu ID from table element for nested routes
+    const tableElement = cell.getTable().element;
+    const menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
+    
+    if (menuId) {
+      return `<a class='link-dark' href='/menus/${menuId}/menusections/${id}/edit'>${name}</a>`;
+    } else {
+      // Fallback to old route if menu ID not available
+      return `<a class='link-dark' href='/menusections/${id}/edit'>${name}</a>`;
+    }
   }
 
   /**

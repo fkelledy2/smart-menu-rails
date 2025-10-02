@@ -88,9 +88,10 @@ export class MenuItemModule extends ComponentBase {
     const menuItemTable = this.find('#menusection-menuitem-table');
     if (menuItemTable) {
       const menusectionId = menuItemTable.dataset.menusection;
-      if (menusectionId) {
+      const menuId = menuItemTable.dataset.menu;
+      if (menusectionId && menuId) {
         const table = this.tableManager.initializeTable(menuItemTable, {
-          ajaxURL: `/menusections/${menusectionId}/menuitems.json`,
+          ajaxURL: `/menus/${menuId}/menusections/${menusectionId}/menuitems.json`,
           movableRows: true,
           initialSort: [{ column: "sequence", dir: "asc" }],
           columns: [
@@ -284,14 +285,15 @@ export class MenuItemModule extends ComponentBase {
     const rowData = cell.getRow().getData("data");
     const name = rowData?.name || id;
     
-    // Get menusection ID from table element for nested routes
+    // Get menu and menusection IDs from table element for nested routes
     const tableElement = cell.getTable().element;
+    const menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
     const menusectionId = tableElement.dataset.menusection || tableElement.dataset.bsMenusection;
     
-    if (menusectionId) {
-      return `<a class='link-dark' href='/menusections/${menusectionId}/menuitems/${id}/edit'>${name}</a>`;
+    if (menuId && menusectionId) {
+      return `<a class='link-dark' href='/menus/${menuId}/menusections/${menusectionId}/menuitems/${id}/edit'>${name}</a>`;
     } else {
-      // Fallback to old route if menusection ID not available
+      // Fallback to old route if context not available
       return `<a class='link-dark' href='/menuitems/${id}/edit'>${name}</a>`;
     }
   }

@@ -40,7 +40,7 @@ class InventoriesController < ApplicationController
     respond_to do |format|
       if @inventory.save
         format.html do
-          redirect_to edit_menusection_path(@inventory.menuitem.menusection),
+          redirect_to edit_menu_menusection_path(@inventory.menuitem.menusection.menu, @inventory.menuitem.menusection),
                       notice: t('common.flash.created', resource: t('activerecord.models.inventory'))
         end
         format.json { render :show, status: :created, location: @inventory }
@@ -62,7 +62,7 @@ class InventoriesController < ApplicationController
           @inventory.save
         end
         format.html do
-          redirect_to edit_menusection_path(@inventory.menuitem.menusection),
+          redirect_to edit_menu_menusection_path(@inventory.menuitem.menusection.menu, @inventory.menuitem.menusection),
                       notice: t('common.flash.updated', resource: t('activerecord.models.inventory'))
         end
         format.json { render :show, status: :ok, location: @inventory }
@@ -80,7 +80,7 @@ class InventoriesController < ApplicationController
     @inventory.update(archived: true)
     respond_to do |format|
       format.html do
-        redirect_to edit_menusection_path(@inventory.menuitem.menusection),
+        redirect_to edit_menu_menusection_path(@inventory.menuitem.menusection.menu, @inventory.menuitem.menusection),
                     notice: t('common.flash.deleted', resource: t('activerecord.models.inventory'))
       end
       format.json { head :no_content }
