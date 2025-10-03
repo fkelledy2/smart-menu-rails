@@ -27,6 +27,31 @@ module JavascriptHelper
       modules << 'smartmenus'
     when 'onboarding'
       modules << 'onboarding'
+    when 'metrics'
+      modules << 'analytics'
+    when 'payments'
+      modules << 'payments'
+    when 'plans', 'userplans'
+      modules << 'plans'
+    end
+    
+    # Add modules based on controller path
+    if controller_path.start_with?('admin/')
+      modules << 'admin'
+      modules << 'analytics' # Admin likely needs analytics
+    end
+    
+    if controller_path.start_with?('api/')
+      modules << 'api'
+    end
+    
+    if controller_path.start_with?('madmin/')
+      modules << 'admin'
+      modules << 'madmin'
+    end
+    
+    if controller_path.start_with?('users/')
+      modules << 'authentication'
     end
     
     # Add modules based on page content
@@ -350,7 +375,7 @@ module JavascriptHelper
 
   # Helper to check if new JS system should be used
   def use_new_js_system?
-    # Enable for specific controllers or based on feature flag
+    # Enable for ALL controllers - complete migration to new JS system
     controller_name.in?(%w[
       restaurants menus menuitems menusections employees ordrs inventories
       allergyns announcements contacts dw_orders_mv features genimages home
@@ -361,6 +386,17 @@ module JavascriptHelper
       menusectionlocales ordractions ordritemnotes ordritems ordrparticipants
       restaurantavailabilities restaurantlocales smartmenus_locale
     ]) ||
+    # Admin controllers
+    controller_path.start_with?('admin/') ||
+    # API controllers  
+    controller_path.start_with?('api/') ||
+    # Madmin (admin interface) controllers
+    controller_path.start_with?('madmin/') ||
+    # User authentication controllers
+    controller_path.start_with?('users/') ||
+    # Devise controllers (if any custom ones exist)
+    controller_name.in?(%w[registrations sessions passwords confirmations unlocks]) ||
+    # Any other controllers not explicitly listed above
     Rails.application.config.respond_to?(:force_new_js_system) && Rails.application.config.force_new_js_system ||
     params[:new_js] == 'true'
   end

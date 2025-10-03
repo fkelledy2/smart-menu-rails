@@ -14,17 +14,42 @@
 @import 'tabulator-tables/dist/css/tabulator_bootstrap5.min';
 @import "tom-select/dist/scss/tom-select";
 
-// Theme overrides (after Bootstrap)
-@import "themes/component-overrides";
 
-// Component styles
-@import "components/utilities";
-@import "components/forms";
-@import "components/navigation";
-@import "components/tables";
-@import "components/scrollbars";
+// Import custom styles (only existing files)
+@import 'components/utilities';
+@import 'components/navigation';
+@import 'components/forms';
+@import 'components/tables';
+@import 'components/scrollbars';
 
-// Page-specific styles
-@import "pages/home";
-@import "pages/onboarding";
-@import "pages/smartmenu";
+// Import page-specific styles
+@import 'pages/home';
+@import 'pages/smartmenu';
+@import 'pages/onboarding';
+
+// Import utility styles
+@import 'utility';
+
+// Fix for dropdown button clickability issues
+.dropdown-toggle {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+.dropdown-menu {
+  z-index: 1070 !important;
+}
+
+// Ensure button groups don't interfere with clicks
+.btn-group {
+  position: relative;
+  z-index: 1;
+}
+
+// Fix for any overlay issues
+.btn-group .dropdown-toggle {
+  position: relative;
+  z-index: 2;
+}

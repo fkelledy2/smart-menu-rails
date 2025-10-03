@@ -4,7 +4,7 @@
   <head>
     <%= render 'shared/head' %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
-    <%= javascript_importmap_tags %>
+    <%= javascript_system_tags %>
   </head>
   <body class="d-flex flex-column min-vh-100"
       data-smartmenu-id="<%= @smartmenu.slug %>"

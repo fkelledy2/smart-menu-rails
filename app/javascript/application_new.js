@@ -534,214 +534,7 @@ class ApplicationManager {
 // Create global application instance
 const app = new ApplicationManager()
 
-// Enhanced Turbo event handling
-document.addEventListener('turbo:load', async () => {
-  console.log('[SmartMenu] New system page loaded')
-
-  // Check if this page should use the new system by looking for the new system marker
-  const newSystemMeta = document.querySelector('meta[name="js-system"][content="new"]')
-  const oldSystemMeta = document.querySelector('meta[name="js-system"][content="old"]')
-  const shouldUseNewSystem = newSystemMeta || 
-                            document.body.dataset.modules ||
-                            window.location.search.includes('new_js=true')
-  
-  console.log('[SmartMenu] System detection:', {
-    newSystemMeta: !!newSystemMeta,
-    oldSystemMeta: !!oldSystemMeta,
-    shouldUseNewSystem: shouldUseNewSystem,
-    currentPath: window.location.pathname,
-    allMetaTags: Array.from(document.querySelectorAll('meta')).map(m => `${m.name}=${m.content}`)
-  })
-  
-  // TEMPORARY: Force new system to run for debugging
-  console.log('[SmartMenu] FORCING new system to run for debugging')
-  
-  // if (!shouldUseNewSystem) {
-  //   console.log('[SmartMenu] Page not configured for new system, skipping initialization')
-  //   return
-  // }
-
-  // Initialize Bootstrap dropdowns since we're the active system
-  console.log('[SmartMenu] Initializing Bootstrap components')
-  
-  // Check if Bootstrap is available
-  if (typeof bootstrap === 'undefined') {
-    console.error('[SmartMenu] Bootstrap is not available!')
-    return
-  }
-  
-  // Initialize dropdowns
-  const dropdowns = document.querySelectorAll('[data-bs-toggle="dropdown"]')
-  console.log(`[SmartMenu] Found ${dropdowns.length} dropdown elements`)
-  
-  dropdowns.forEach(el => {
-    if (!el.hasAttribute('data-bs-dropdown-initialized')) {
-      try {
-        // Create dropdown instance and store reference
-        const dropdownInstance = new bootstrap.Dropdown(el)
-        el.setAttribute('data-bs-dropdown-initialized', 'true')
-        el._dropdownInstance = dropdownInstance
-        
-        console.log('[SmartMenu] Bootstrap dropdown initialized on:', el.id || el.className)
-        
-        // Test if dropdown is working by adding click listener
-        el.addEventListener('click', (e) => {
-          e.preventDefault()
-          console.log('[SmartMenu] Dropdown clicked, toggling...')
-          
-          // Get the dropdown menu
-          const dropdownMenu = document.getElementById(el.getAttribute('data-target')) || 
-                              el.nextElementSibling
-          
-          console.log('[SmartMenu] Dropdown menu element:', dropdownMenu)
-          console.log('[SmartMenu] Dropdown menu classes before toggle:', dropdownMenu?.className)
-          
-          dropdownInstance.toggle()
-          
-          setTimeout(() => {
-            console.log('[SmartMenu] Dropdown menu classes after toggle:', dropdownMenu?.className)
-          }, 100)
-        })
-        
-      } catch (error) {
-        console.error('[SmartMenu] Failed to initialize dropdown:', error, el)
-      }
-    } else {
-      console.log('[SmartMenu] Dropdown already initialized:', el.id || el.className)
-      
-      // If already initialized but not working, try to fix it
-      if (!el._dropdownInstance) {
-        try {
-          const dropdownInstance = new bootstrap.Dropdown(el)
-          el._dropdownInstance = dropdownInstance
-          
-          el.addEventListener('click', (e) => {
-            e.preventDefault()
-            console.log('[SmartMenu] Dropdown clicked (re-initialized), toggling...')
-            
-            // Get the dropdown menu
-            const dropdownMenu = document.getElementById(el.getAttribute('data-target')) || 
-                                el.nextElementSibling
-            
-            console.log('[SmartMenu] Dropdown menu element (re-init):', dropdownMenu)
-            console.log('[SmartMenu] Dropdown menu classes before toggle (re-init):', dropdownMenu?.className)
-            
-            dropdownInstance.toggle()
-            
-            setTimeout(() => {
-              console.log('[SmartMenu] Dropdown menu classes after toggle (re-init):', dropdownMenu?.className)
-            }, 100)
-          })
-          
-          console.log('[SmartMenu] Re-initialized dropdown:', el.id || el.className)
-        } catch (error) {
-          console.error('[SmartMenu] Failed to re-initialize dropdown:', error, el)
-        }
-      }
-    }
-  })
-  
-  // Initialize tooltips
-  const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]:not([data-bs-original-title])')
-  tooltips.forEach(el => new bootstrap.Tooltip(el))
-  
-  // Initialize popovers
-  const popovers = document.querySelectorAll('[data-bs-toggle="popover"]:not([data-bs-original-title])')
-  popovers.forEach(el => new bootstrap.Popover(el))
-
-  // Initialize all components like the old system
-  console.log('init')
-  
-  // Initialize all components in the same order as application.js
-  try {
-    initialiseSlugs()
-    initRestaurants()
-    initTips()
-    initTestimonials()
-    initTaxes()
-    initTablesettings()
-    initSizes()
-    initRestaurantlocales()
-    initRestaurantavailabilities()
-    initOrders()
-    initOrdritems()
-    initMetrics()
-    initMenusections()  // This initializes Tabulator tables!
-    initMenus()
-    initMenuitems()
-    initMenuavailabilities()
-    initEmployees()
-    initDW()
-    initAllergyns()
-    initSmartmenus()
-    initTags()
-    
-    // Initialize OCR Menu Import Drag-and-Drop (no-op on pages without OCR UI)
-    try {
-      initOCRMenuImportDnD()
-    } catch (e) {
-      console.warn('[OCR DnD] init failed', e)
-    }
-  } catch (e) {
-    console.warn('[SmartMenu] Some initialization functions failed:', e)
-  }
-
-  // Initialize application
-  await app.init()
-
-  // Conservative TomSelect initialization - only for elements that are clearly uninitialized
-  setTimeout(() => {
-    if (window.TomSelect) {
-      // Only select elements that have no signs of TomSelect initialization
-      const uninitializedSelects = document.querySelectorAll(
-        '[data-tom-select="true"]:not(.tomselected):not(.ts-hidden-accessible):not([data-tom-select-initialized])'
-      )
-      
-      console.log(`[SmartMenu] Found ${uninitializedSelects.length} uninitialized TomSelect elements`)
-      
-      uninitializedSelects.forEach(element => {
-        try {
-          // Final safety check
-          if (element.classList.contains('tomselected') || 
-              element.classList.contains('ts-hidden-accessible') ||
-              element.hasAttribute('data-tom-select-initialized')) {
-            console.log('[SmartMenu] Element became initialized, skipping:', element)
-            return
-          }
-          
-          const options = {
-            plugins: ['remove_button'],
-            create: element.dataset.creatable === 'true'
-          }
-          
-          // Parse additional options from data attribute
-          if (element.dataset.tomSelectOptions) {
-            try {
-              const additionalOptions = JSON.parse(element.dataset.tomSelectOptions)
-              Object.assign(options, additionalOptions)
-            } catch (e) {
-              console.warn('Invalid TomSelect options JSON:', element.dataset.tomSelectOptions)
-            }
-          }
-          
-          const tomSelectInstance = new window.TomSelect(element, options)
-          element.setAttribute('data-tom-select-initialized', 'true')
-          element.tomSelect = tomSelectInstance
-          
-          console.log('[SmartMenu] TomSelect initialized on:', element)
-        } catch (error) {
-          console.warn('Failed to initialize TomSelect:', error)
-        }
-      })
-    } else {
-      console.warn('[SmartMenu] TomSelect not available')
-    }
-  }, 1000) // Increased delay to let old system finish first
-
-  if (app.EventBus && app.AppEvents) {
-    app.EventBus.emit(app.AppEvents.PAGE_LOAD)
-  }
-})
+// Note: Turbo event handling is done in the main turboLoadHandler below
 
 // Add the missing utility functions from application.js
 export function patch(url, body) {
@@ -873,12 +666,28 @@ const turboLoadHandler = async (event) => {
     dropdowns.forEach(el => {
       if (!el.hasAttribute('data-bs-dropdown-initialized')) {
         try {
+          // Ensure the element is visible and not disabled
+          if (el.offsetParent === null) {
+            console.warn('[SmartMenu] Dropdown element is hidden, skipping:', el.id || el.className)
+            return
+          }
+          
+          // Check if element has proper structure
+          const dropdownMenu = el.nextElementSibling
+          if (!dropdownMenu || !dropdownMenu.classList.contains('dropdown-menu')) {
+            console.warn('[SmartMenu] Dropdown missing dropdown-menu sibling:', el.id || el.className)
+          }
+          
           const dropdownInstance = new bootstrap.Dropdown(el)
           el.setAttribute('data-bs-dropdown-initialized', 'true')
+          el._dropdownInstance = dropdownInstance
+          
           console.log('[SmartMenu] Bootstrap dropdown initialized on:', el.id || el.className)
         } catch (error) {
           console.error('[SmartMenu] Failed to initialize dropdown:', error, el)
         }
+      } else {
+        console.log('[SmartMenu] Dropdown already initialized:', el.id || el.className)
       }
     })
     

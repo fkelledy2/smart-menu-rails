@@ -1,6 +1,3 @@
-import { application } from "./application"
-import controllers from './**/*_controller.js'
-controllers.forEach((controller) => {
-  application.register(controller.name, controller.module.default)
-})
+// Controllers are automatically loaded via importmap's pin_all_from directive
+// No manual imports needed - importmap handles controller loading
 
