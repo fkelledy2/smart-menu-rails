@@ -304,6 +304,30 @@ export function initRestaurants() {
     }
 
     if ($("#restaurant-table").length) {
+        // Check if user is authenticated before loading restaurant data - multiple checks
+        const csrfToken = document.querySelector("meta[name='csrf-token']");
+        const isHomePage = window.location.pathname === '/';
+        const hasUserMenu = document.querySelector('.navbar .dropdown-toggle'); // User dropdown in navbar
+        const hasLoginForm = document.querySelector('form[action*="sign_in"]'); // Login form present
+        
+        // If we're on the home page and there's no user menu, user is likely logged out
+        if (isHomePage && !hasUserMenu) {
+            console.log('[Restaurants] User appears to be logged out (home page, no user menu), skipping restaurant table initialization');
+            return;
+        }
+        
+        // If there's a login form, user is definitely logged out
+        if (hasLoginForm) {
+            console.log('[Restaurants] Login form detected, user not authenticated, skipping restaurant table initialization');
+            return;
+        }
+        
+        // If no CSRF token, definitely not authenticated
+        if (!csrfToken) {
+            console.log('[Restaurants] No CSRF token, user not authenticated, skipping restaurant table initialization');
+            return;
+        }
+
         // Restaurants
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();

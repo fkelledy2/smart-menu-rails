@@ -3,6 +3,30 @@ export function initMetrics() {
   // Check if we're on a page that needs metrics
   if ($('#metrics-table').length === 0) return;
 
+  // Check if user is authenticated - multiple checks for reliability
+  const csrfToken = document.querySelector("meta[name='csrf-token']");
+  const isHomePage = window.location.pathname === '/';
+  const hasUserMenu = document.querySelector('.navbar .dropdown-toggle'); // User dropdown in navbar
+  const hasLoginForm = document.querySelector('form[action*="sign_in"]'); // Login form present
+  
+  // If we're on the home page and there's no user menu, user is likely logged out
+  if (isHomePage && !hasUserMenu) {
+    console.log('[Metrics] User appears to be logged out (home page, no user menu), skipping metrics load');
+    return;
+  }
+  
+  // If there's a login form, user is definitely logged out
+  if (hasLoginForm) {
+    console.log('[Metrics] Login form detected, user not authenticated, skipping metrics load');
+    return;
+  }
+  
+  // If no CSRF token, definitely not authenticated
+  if (!csrfToken) {
+    console.log('[Metrics] No CSRF token, user not authenticated, skipping metrics load');
+    return;
+  }
+
   // Only load metrics once per page load
   if (window.metricsLoaded) return;
   

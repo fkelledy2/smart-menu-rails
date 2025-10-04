@@ -21,6 +21,8 @@ pin 'luxon', to: 'https://cdn.skypack.dev/luxon', preload: true
 
 # Pin application JavaScript - NEW SYSTEM ONLY
 pin 'application_new', preload: true, to: 'application_new.js'
+# Redirect any 'application' imports to the new system
+pin 'application', to: 'application_new.js'
 pin_all_from 'app/javascript/controllers', under: 'controllers'
 pin_all_from 'app/javascript/channels', under: 'channels'
 
