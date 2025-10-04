@@ -1,21 +1,11 @@
 # frozen_string_literal: true
 
+# Start SimpleCov BEFORE loading any application code
+require 'simplecov'
+# SimpleCov configuration is loaded from .simplecov file
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
-
-# Configure SimpleCov for RSpec (must be before Rails environment)
-require 'simplecov'
-SimpleCov.start 'rails' do
-  add_filter %w[bin/ config/ db/ vendor/ app/channels/ app/mailers/ app/jobs/]
-  track_files 'app/**/*.rb'
-  enable_coverage :branch
-  
-  # Don't enforce coverage minimum for RSpec - let Rails tests handle that
-  # if ENV['COVERAGE_MIN']
-  #   minimum_coverage ENV['COVERAGE_MIN'].to_i
-  #   refuse_coverage_drop
-  # end
-end
 # Resolve to project_root/config/environment.rb (spec folder is directly under project root)
 require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
