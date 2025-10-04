@@ -8,10 +8,11 @@ pin '@popperjs/core', to: 'https://ga.jspm.io/npm:@popperjs/core@2.11.8/dist/esm
 pin '@hotwired/turbo-rails', to: 'https://cdn.skypack.dev/@hotwired/turbo-rails'
 pin '@hotwired/stimulus', to: 'https://ga.jspm.io/npm:@hotwired/stimulus@3.2.2/dist/stimulus.js'
 # pin "@hotwired/stimulus-loading", to: "app/javascript/stimulus-loading.js"
-pin '@rails/actioncable', to: 'https://cdn.jsdelivr.net/npm/@rails/actioncable@7.1.3-2/app/assets/javascripts/actioncable.esm.js'
-pin '@rails/actiontext', to: 'https://cdn.jsdelivr.net/npm/@rails/actiontext@7.1.3-2/app/assets/javascripts/actiontext.js'
-pin 'trix'
-pin '@rails/activestorage', to: 'https://cdn.jsdelivr.net/npm/@rails/activestorage@7.1.3-2/app/assets/javascripts/activestorage.esm.js'
+# Rails libraries - using local asset pipeline to avoid CDN version issues
+pin "@rails/actioncable", to: "actioncable.esm.js", preload: true
+pin "@rails/actiontext", to: "actiontext.js", preload: true  
+pin "trix", preload: true
+pin "@rails/activestorage", to: "activestorage.esm.js", preload: true
 
 # Pin external dependencies for new system (reliable CDN strategy)
 pin 'tom-select', to: 'https://cdn.skypack.dev/tom-select', preload: true

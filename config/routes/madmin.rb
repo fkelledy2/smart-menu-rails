@@ -15,6 +15,9 @@ namespace :madmin do
     resources :events
   end
   resources :users
+  resources :ocr_menu_imports
+  resources :ocr_menu_sections
+  resources :ocr_menu_items
   namespace :noticed do
     resources :notifications
   end

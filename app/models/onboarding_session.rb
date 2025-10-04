@@ -4,7 +4,7 @@ class OnboardingSession < ApplicationRecord
   belongs_to :menu, optional: true
   
   # Track completion state
-  enum status: {
+  enum :status, {
     started: 0,
     account_created: 1, 
     restaurant_details: 2,
