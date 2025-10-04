@@ -90,7 +90,7 @@
           <div class="hero-caption carousel-caption text-start">
             <h1><%=t(".ctaTitle1")%></h1>
             <p><strong><%=t(".ctaBody1")%></strong></p>
-            <p class="hero-cta-btn"><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
+            <p><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
           </div>
         </div>
       </div>
@@ -112,7 +112,7 @@
 
   <div class="container px-1 py-2">
     <h2 class="pb-2 border-bottom"><%=t(".features")%></h2>
-    <div class="row g-4 py-3 row-cols-1 row-cols-lg-3">
+    <div class="row g-4 py-3 px-3 row-cols-1 row-cols-lg-3">
       <div class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i class="feature-icon bi bi-activity"></i></h2>
@@ -195,7 +195,7 @@
     </div>
   <% end %>
 
-  <div id="metrics-table" class="container px-1 py-2">
+  <div id="metrics-table" class="display-none container px-1 py-2">
     <h2 class="pb-2 border-bottom"><%=t(".numbers")%></h2>
     <p class="text-justify"><%=t(".numbersTag")%></p>
     <div class="row g-4 py-5 row-cols-2 row-cols-2 row-cols-lg-4">

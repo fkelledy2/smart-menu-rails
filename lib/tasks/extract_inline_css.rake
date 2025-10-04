@@ -72,7 +72,7 @@ namespace :css do
       'style="left:5%;right:5%;"' => 'class="hero-caption"',
       
       # Carousel styles
-      'style="overflow-x: hidden;width: calc(100% + 50px);margin-left: -25px;margin-right: -25px; background: url(\'<%= asset_path(\'table-setting.png\') %>\') no-repeat center center;background-size: cover;"' => 'class="hero-carousel"',
+      'style="overflow-x: hidden;width: calc(100% + 50px);margin-left: -25px;margin-right: -25px; background: url(\'/table-setting.png\') no-repeat center center;background-size: cover;"' => 'class="hero-carousel"',
       
       # Feature card styles
       'style=\'padding-right:10px;min-height:120px;text-align:justify\'' => 'class="feature-description"',
