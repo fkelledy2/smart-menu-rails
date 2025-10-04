@@ -84,11 +84,6 @@ namespace :css do
       
       # Additional common patterns from remaining styles
       'style=\'padding-left:15px;\' class="col d-flex align-items-start feature-card"' => 'class="col d-flex align-items-start feature-card padding-left-md"',
-      'style="z-index:+10000;"' => 'class="z-index-10000"',
-      'style=\'z-index:+10000;\'' => 'class="z-index-10000"',
-      
-      # Complex hero carousel style
-      'style="overflow-x: hidden;width: calc(100% + 50px);margin-left: -25px;margin-right: -25px; background: url(\'<%= asset_path(\'table-setting.png\') %>\') no-repeat center center;background-size: cover;"' => 'class="hero-carousel"',
       
       # Font sizes
       'style="font-size: 3rem;"' => 'class="display-4"',
