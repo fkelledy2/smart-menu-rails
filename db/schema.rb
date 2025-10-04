@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,6 +52,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.integer "status", default: 0
     t.integer "sequence"
     t.bigint "restaurant_id"
+    t.index ["restaurant_id", "status"], name: "index_allergyns_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id"], name: "index_allergyns_on_restaurant_id"
   end
 
@@ -84,6 +85,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.bigint "user_id", null: false
     t.boolean "archived", default: false
     t.integer "sequence"
+    t.index ["restaurant_id", "role", "status"], name: "index_employees_on_restaurant_role_status", where: "(archived = false)"
+    t.index ["restaurant_id", "status"], name: "index_employees_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id"], name: "index_employees_on_restaurant_id"
     t.index ["user_id"], name: "index_employees_on_user_id"
   end
@@ -132,6 +135,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.index ["menu_id"], name: "index_genimages_on_menu_id"
     t.index ["menuitem_id"], name: "index_genimages_on_menuitem_id"
     t.index ["menusection_id"], name: "index_genimages_on_menusection_id"
+    t.index ["restaurant_id", "menu_id", "menuitem_id"], name: "index_genimages_on_restaurant_menu_item"
     t.index ["restaurant_id"], name: "index_genimages_on_restaurant_id"
   end
 
@@ -154,6 +158,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.integer "status", default: 0
     t.integer "sequence"
     t.index ["archived"], name: "index_inventories_on_archived"
+    t.index ["menuitem_id", "status"], name: "index_inventories_on_menuitem_status_active", where: "(archived = false)"
     t.index ["menuitem_id"], name: "index_inventories_on_menuitem_id"
     t.index ["status"], name: "index_inventories_on_status"
   end
@@ -206,6 +211,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.integer "status"
     t.integer "sequence"
     t.boolean "archived", default: false
+    t.index ["menu_id", "dayofweek", "starthour"], name: "index_menuavailabilities_on_menu_day_time", where: "(archived = false)"
     t.index ["menu_id", "dayofweek"], name: "index_menuavailabilities_on_menu_and_dayofweek", unique: true
     t.index ["menu_id"], name: "index_menuavailabilities_on_menu_id"
   end
@@ -215,6 +221,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.bigint "allergyn_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["allergyn_id", "menuitem_id"], name: "index_menuitem_allergyn_on_allergyn_menuitem"
     t.index ["allergyn_id"], name: "index_menuitem_allergyn_mappings_on_allergyn_id"
     t.index ["menuitem_id"], name: "index_menuitem_allergyn_mappings_on_menuitem_id"
   end
@@ -224,6 +231,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.bigint "ingredient_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["ingredient_id", "menuitem_id"], name: "index_menuitem_ingredient_on_ingredient_menuitem"
     t.index ["ingredient_id"], name: "index_menuitem_ingredient_mappings_on_ingredient_id"
     t.index ["menuitem_id"], name: "index_menuitem_ingredient_mappings_on_menuitem_id"
   end
@@ -235,6 +243,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.datetime "updated_at", null: false
     t.float "price", default: 0.0
     t.index ["menuitem_id"], name: "index_menuitem_size_mappings_on_menuitem_id"
+    t.index ["size_id", "menuitem_id"], name: "index_menuitem_size_on_size_menuitem"
     t.index ["size_id"], name: "index_menuitem_size_mappings_on_size_id"
   end
 
@@ -244,6 +253,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["menuitem_id"], name: "index_menuitem_tag_mappings_on_menuitem_id"
+    t.index ["tag_id", "menuitem_id"], name: "index_menuitem_tag_on_tag_menuitem"
     t.index ["tag_id"], name: "index_menuitem_tag_mappings_on_tag_id"
   end
 
@@ -255,6 +265,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.bigint "menuitem_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["menuitem_id", "locale"], name: "index_menuitemlocales_on_menuitem_locale"
     t.index ["menuitem_id"], name: "index_menuitemlocales_on_menuitem_id"
   end
 
@@ -276,6 +287,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.float "unitcost", default: 0.0
     t.index "lower((name)::text) varchar_pattern_ops", name: "index_menuitems_on_lower_name"
     t.index ["archived"], name: "index_menuitems_on_archived"
+    t.index ["menusection_id", "status", "sequence"], name: "index_menuitems_on_section_status_sequence", where: "(archived = false)"
+    t.index ["menusection_id", "status"], name: "index_menuitems_on_section_status_active", where: "(archived = false)"
     t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
     t.index ["sequence"], name: "index_menuitems_on_sequence"
     t.index ["status"], name: "index_menuitems_on_status"
@@ -289,6 +302,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.bigint "menu_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["menu_id", "locale"], name: "index_menulocales_on_menu_locale"
     t.index ["menu_id"], name: "index_menulocales_on_menu_id"
   end
 
@@ -298,6 +312,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.bigint "smartmenu_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["sessionid", "preferredlocale"], name: "index_menuparticipants_on_session_locale"
     t.index ["smartmenu_id"], name: "index_menuparticipants_on_smartmenu_id"
   end
 
@@ -320,6 +335,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.bigint "menu_import_id"
     t.index ["archived"], name: "index_menus_on_archived"
     t.index ["menu_import_id"], name: "index_menus_on_menu_import_id"
+    t.index ["restaurant_id", "status"], name: "index_menus_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id"], name: "index_menus_on_restaurant_id"
     t.index ["status"], name: "index_menus_on_status"
   end
@@ -352,6 +368,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.integer "tohour", default: 23
     t.integer "tomin", default: 59
     t.boolean "restricted", default: false
+    t.index ["menu_id", "status", "sequence"], name: "index_menusections_on_menu_status_sequence", where: "(archived = false)"
     t.index ["menu_id"], name: "index_menusections_on_menu_id"
   end
 
@@ -403,6 +420,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["menu_id"], name: "index_ocr_menu_imports_on_menu_id"
+    t.index ["restaurant_id", "status", "created_at"], name: "index_ocr_imports_on_restaurant_status_created"
     t.index ["restaurant_id", "status"], name: "index_ocr_menu_imports_on_restaurant_and_status"
     t.index ["restaurant_id"], name: "index_ocr_menu_imports_on_restaurant_id"
     t.index ["status"], name: "index_ocr_menu_imports_on_status"
@@ -501,6 +519,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.float "ordritemprice", default: 0.0
     t.integer "status", default: 0
     t.index ["menuitem_id"], name: "index_ordritems_on_menuitem_id"
+    t.index ["ordr_id", "status"], name: "index_ordritems_on_ordr_status"
     t.index ["ordr_id"], name: "index_ordritems_on_ordr_id"
     t.index ["status"], name: "index_ordritems_on_status"
   end
@@ -511,6 +530,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["allergyn_id"], name: "index_ordrparticipant_allergyn_filters_on_allergyn_id"
+    t.index ["ordrparticipant_id", "allergyn_id"], name: "index_ordrparticipant_allergyn_on_participant_allergyn"
     t.index ["ordrparticipant_id"], name: "index_ordrparticipant_allergyn_filters_on_ordrparticipant_id"
   end
 
@@ -527,6 +547,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.index ["employee_id"], name: "index_ordrparticipants_on_employee_id"
     t.index ["ordr_id"], name: "index_ordrparticipants_on_ordr_id"
     t.index ["ordritem_id"], name: "index_ordrparticipants_on_ordritem_id"
+    t.index ["sessionid", "preferredlocale"], name: "index_ordrparticipants_on_session_locale"
   end
 
   create_table "ordrs", id: :serial, force: :cascade do |t|
@@ -553,9 +574,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.index ["created_at"], name: "index_ordrs_on_created_at"
     t.index ["employee_id"], name: "index_ordrs_on_employee_id"
     t.index ["menu_id"], name: "index_ordrs_on_menu_id"
+    t.index ["restaurant_id", "created_at", "status"], name: "index_ordrs_on_restaurant_created_status"
     t.index ["restaurant_id", "status", "created_at"], name: "index_ordrs_on_restaurant_status_created"
+    t.index ["restaurant_id", "status"], name: "index_ordrs_on_restaurant_status"
     t.index ["restaurant_id"], name: "index_ordrs_on_restaurant_id"
     t.index ["status"], name: "index_ordrs_on_status"
+    t.index ["tablesetting_id", "status", "created_at"], name: "index_ordrs_on_table_status_created"
     t.index ["tablesetting_id"], name: "index_ordrs_on_tablesetting_id"
   end
 
@@ -709,6 +733,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "dfault"
+    t.index ["restaurant_id", "locale"], name: "index_restaurantlocales_on_restaurant_locale"
+    t.index ["restaurant_id", "status", "dfault"], name: "index_restaurantlocales_on_restaurant_status_default"
     t.index ["restaurant_id"], name: "index_restaurantlocales_on_restaurant_id"
   end
 
@@ -746,6 +772,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.string "spotifyrefreshtoken"
     t.boolean "displayImagesInPopup", default: false
     t.text "image_style_profile"
+    t.index ["user_id", "status"], name: "index_restaurants_on_user_status_active", where: "(archived = false)"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 
@@ -773,6 +800,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.integer "status", default: 0
     t.integer "sequence"
     t.bigint "restaurant_id"
+    t.index ["restaurant_id", "status"], name: "index_sizes_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id"], name: "index_sizes_on_restaurant_id"
   end
 
@@ -784,6 +812,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["menu_id"], name: "index_smartmenus_on_menu_id"
+    t.index ["restaurant_id", "slug"], name: "index_smartmenus_on_restaurant_slug"
     t.index ["restaurant_id"], name: "index_smartmenus_on_restaurant_id"
     t.index ["slug"], name: "index_smartmenus_on_slug"
     t.index ["tablesetting_id"], name: "index_smartmenus_on_tablesetting_id"
@@ -800,6 +829,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.integer "tabletype"
     t.boolean "archived", default: false
     t.integer "sequence"
+    t.index ["restaurant_id", "status"], name: "index_tablesettings_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id"], name: "index_tablesettings_on_restaurant_id"
   end
 
@@ -822,6 +852,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.integer "sequence"
     t.boolean "archived", default: false
     t.integer "status", default: 0
+    t.index ["restaurant_id", "status"], name: "index_taxes_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id"], name: "index_taxes_on_restaurant_id"
   end
 
@@ -845,6 +876,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.boolean "archived", default: false
     t.integer "sequence"
     t.integer "status", default: 0
+    t.index ["restaurant_id", "status"], name: "index_tips_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id"], name: "index_tips_on_restaurant_id"
   end
 
@@ -892,6 +924,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_29_172225) do
     t.string "unconfirmed_email"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["plan_id", "admin"], name: "index_users_on_plan_admin"
     t.index ["plan_id"], name: "index_users_on_plan_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
