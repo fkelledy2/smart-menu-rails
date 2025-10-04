@@ -232,7 +232,7 @@
         <span class="float-end">
         <% if menuitem.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t('common.delete'), menu_menusection_menuitem_path(menu, menuitem.menusection, menuitem), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
+            <%= link_to t('common.delete'), restaurant_menu_menusection_menuitem_path(menuitem.menusection.menu.restaurant, menuitem.menusection.menu, menuitem.menusection, menuitem), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
         <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>

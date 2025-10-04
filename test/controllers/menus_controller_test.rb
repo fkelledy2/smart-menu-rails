@@ -8,27 +8,27 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get menus_url
+    get restaurant_menus_url(@restaurant)
     assert_response :success
   end
 
   test 'should get new' do
-    get new_menu_url, params: { restaurant_id: @restaurant.id }
+    get new_restaurant_menu_url(@restaurant)
     assert_response :success
   end
 
   test 'should show menu' do
-    get menu_url(@menu)
+    get restaurant_menu_url(@restaurant, @menu)
     assert_response :success
   end
 
   test 'should get edit' do
-    get edit_menu_url(@menu)
+    get edit_restaurant_menu_url(@restaurant, @menu)
     assert_response :success
   end
 
   test 'should update menu' do
-    patch menu_url(@menu), params: { menu: {
+    patch restaurant_menu_url(@restaurant, @menu), params: { menu: {
       name: @menu.name,
       description: @menu.description,
       status: @menu.status,
@@ -44,7 +44,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'should destroy menu' do
     assert_difference('Menu.count', 0) do
-      delete menu_url(@menu)
+      delete restaurant_menu_url(@restaurant, @menu)
     end
     #     assert_redirected_to edit_restaurant_url(@menu.restaurant)
   end

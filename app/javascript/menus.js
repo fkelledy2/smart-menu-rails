@@ -100,7 +100,9 @@ export function initMenus() {
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
-          ajaxURL: '/menus.json',
+          ajaxURL: window.location.pathname.includes('/restaurants/') ? 
+                    `/restaurants/${window.location.pathname.split('/')[2]}/menus.json` : 
+                    '/menus.json',
           initialSort:[
             {column:"sequence", dir:"asc"},
           ],
@@ -122,7 +124,9 @@ export function initMenus() {
           {
             title:"Name", field:"id", responsive:0, formatter:"link", formatterParams: {
                 labelField:"name",
-                urlPrefix:"/menus/",
+                urlPrefix: window.location.pathname.includes('/restaurants/') ? 
+                          `/restaurants/${window.location.pathname.split('/')[2]}/menus/` : 
+                          "/menus/",
             }
            },
           {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
@@ -187,7 +191,10 @@ export function initMenus() {
             var id = cell.getValue();
             var name = cell.getRow();
             var rowData = cell.getRow().getData("data").name;
-            return "<a class='link-dark' href='/menus/"+id+"/edit'>"+rowData+"</a>";
+            const restaurantId = window.location.pathname.includes('/restaurants/') ? 
+                       window.location.pathname.split('/')[2] : 
+                       cell.getRow().getData("data").restaurant.id;
+            return `<a class='link-dark' href='/restaurants/${restaurantId}/menus/${id}/edit'>${rowData}</a>`;
         }
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();

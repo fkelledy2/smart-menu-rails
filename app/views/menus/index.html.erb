@@ -8,7 +8,7 @@
           <div class="col-6 text-end">
             <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t('common.activate') %></button>
             <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t('common.deactivate') %></button>
-            <%= link_to new_menu_path, class: 'btn btn-sm btn-dark' do %>
+            <%= link_to new_restaurant_menu_path(@restaurant), class: 'btn btn-sm btn-dark' do %>
               <i class="bi bi-plus"></i> <%= t(".menu") %>
             <% end %>
           </div>
@@ -31,17 +31,17 @@
                         <% @tablesettings.each do |tablesetting| %>
                             <%= tablesetting.status %>
                             <% if tablesetting.status == 'free' %>
-                                <%= link_to menu_tablesetting_path(menu, tablesetting), class: 'btn btn-success' do %>
+                                <%= link_to restaurant_menu_tablesetting_path(menu.restaurant, menu, tablesetting), class: 'btn btn-success' do %>
                                     <%= tablesetting.name %>
                                 <% end %>
                             <% end %>
                             <% if tablesetting.status == 'archived' %>
-                                <%= link_to menu_tablesetting_path(menu, tablesetting), class: 'btn btn-light disabled' do %>
+                                <%= link_to restaurant_menu_tablesetting_path(menu.restaurant, menu, tablesetting), class: 'btn btn-light disabled' do %>
                                     <%= tablesetting.name %>
                                 <% end %>
                             <% end %>
                             <% if tablesetting.status == 'occupied' %>
-                                <%= link_to menu_tablesetting_path(menu, tablesetting), class: 'btn btn-danger' do %>
+                                <%= link_to restaurant_menu_tablesetting_path(menu.restaurant, menu, tablesetting), class: 'btn btn-danger' do %>
                                     <%= tablesetting.name %>
                                 <% end %>
                             <% end %>

@@ -15,7 +15,7 @@
             </ul>
           </div>
           <button type="button" class="btn btn-dark" disabled>
-            <%= link_to new_menu_path(restaurant_id: @restaurant.id), class: 'link-light' do %>
+            <%= link_to new_restaurant_menu_path(@restaurant), class: 'link-light' do %>
               <i class="bi bi-plus"></i>
             <% end %>
           </button>

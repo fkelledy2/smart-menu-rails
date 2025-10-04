@@ -17,7 +17,7 @@
       </div>
       <% if @canAddMenuItem %>
           <button type="button" class="btn btn-dark">
-            <%= link_to new_menu_menusection_menuitem_path(@menusection.menu, @menusection), class: 'link-light' do %>
+            <%= link_to new_restaurant_menu_menusection_menuitem_path(@menusection.menu.restaurant, @menusection.menu, @menusection), class: 'link-light' do %>
               <i class="bi bi-plus"></i>
             <% end %>
           </button>
@@ -26,4 +26,4 @@
   </div>
 </div>
 <%= render 'shared/currency' %>
-<div class="table-container-spacing table-borderless" id="menusection-menuitem-table" data-bs-menusection="<%= menusection.id %>" data-bs-menu="<%= menusection.menu.id %>">
+<div class="table-container-spacing table-borderless" id="menusection-menuitem-table" data-bs-menusection="<%= menusection.id %>" data-bs-menu="<%= menusection.menu.id %>" data-bs-restaurant="<%= menusection.menu.restaurant.id %>">

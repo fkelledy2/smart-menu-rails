@@ -175,7 +175,7 @@ module JavascriptHelper
   # Helper for menu table
   def menu_table_tag(restaurant_id = nil, options = {})
     default_options = {
-      ajax_url: restaurant_id ? restaurant_menus_path(restaurant_id, format: :json) : menus_path(format: :json),
+      ajax_url: restaurant_id ? restaurant_menus_path(restaurant_id, format: :json) : '/menus.json',
       pagination_size: 15
     }
     
@@ -227,6 +227,16 @@ module JavascriptHelper
     }
     
     attributes = form_data_attributes('menu', form_options)
+    
+    # Handle nested route for menus under restaurants
+    if model.persisted?
+      # For existing menus, use the nested route
+      options[:url] ||= restaurant_menu_path(model.restaurant, model)
+    else
+      # For new menus, we need the restaurant context
+      restaurant = options.delete(:restaurant) || @restaurant
+      options[:url] ||= restaurant_menus_path(restaurant) if restaurant
+    end
     
     form_with model: model, **options.merge(data: attributes), &block
   end

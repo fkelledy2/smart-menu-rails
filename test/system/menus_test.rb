@@ -6,12 +6,12 @@ class MenusTest < ApplicationSystemTestCase
   end
 
   test 'visiting the index' do
-    visit menus_url
+    visit restaurant_menus_url(@menu.restaurant)
     assert_selector 'h1', text: 'Menus'
   end
 
   test 'should create menu' do
-    visit menus_url
+    visit restaurant_menus_url(@menu.restaurant)
     click_on 'New menu'
 
     fill_in 'Description', with: @menu.description
@@ -27,7 +27,7 @@ class MenusTest < ApplicationSystemTestCase
   end
 
   test 'should update Menu' do
-    visit menu_url(@menu)
+    visit restaurant_menu_url(@menu.restaurant, @menu)
     click_on 'Edit this menu', match: :first
 
     fill_in 'Description', with: @menu.description
@@ -43,7 +43,7 @@ class MenusTest < ApplicationSystemTestCase
   end
 
   test 'should destroy Menu' do
-    visit menu_url(@menu)
+    visit restaurant_menu_url(@menu.restaurant, @menu)
     click_on 'Destroy this menu', match: :first
 
     assert_text 'Menu was successfully destroyed'

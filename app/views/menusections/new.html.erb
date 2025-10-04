@@ -5,10 +5,10 @@
     </div>
     <div class="col-2">
       <% if @menusection.persisted? %>
-        <%= link_to t('.cancel'), edit_menu_path(id: @menusection.menu.id), class: "float-end btn btn-light" %>
+        <%= link_to t('.cancel'), edit_restaurant_menu_path(@menusection.menu.restaurant, @menusection.menu), class: "float-end btn btn-light" %>
       <% else %>
         <% if @futureParentMenu %>
-          <%= link_to t('.cancel'), edit_menu_path(id: @futureParentMenu.id), class: "float-end btn btn-light" %>
+          <%= link_to t('.cancel'), edit_restaurant_menu_path(@futureParentMenu.restaurant, @futureParentMenu), class: "float-end btn btn-light" %>
         <% else %>
           <%= link_to t('.cancel'), menuavailabilities_path, class: "float-end btn btn-light" %>
         <% end %>

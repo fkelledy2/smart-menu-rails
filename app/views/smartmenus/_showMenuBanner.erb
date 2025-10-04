@@ -5,7 +5,7 @@
                 <div style="padding-top:5px" class="row">
                     <div class="col-12">
                         <% if current_user %>
-                           <%= link_to edit_menu_path(@menu), class: 'link-dark' do %>
+                           <%= link_to edit_restaurant_menu_path(@menu.restaurant, @menu), class: 'link-dark' do %>
                                <span class="h5"><%= @menu.restaurant.name %></span>
                            <% end %>
                         <% else %>

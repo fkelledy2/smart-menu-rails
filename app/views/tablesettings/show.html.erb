@@ -92,7 +92,7 @@
                 <div class="card text-white bg-success mb-3">
                   <div class="card-body">
                     <span class="hero-section">
-                            <%= link_to menu_tablesetting_path(menu, @tablesetting), class: 'btn btn-lg btn-success' do %>
+                            <%= link_to restaurant_menu_tablesetting_path(menu.restaurant, menu, @tablesetting), class: 'btn btn-lg btn-success' do %>
                                 <h2 class="h3"><%= menu.name %></h2>
                             <% end %>
                     </span>

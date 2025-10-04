@@ -17,7 +17,7 @@
           </div>
           <% if @canAddMenu %>
               <button type="button" class="btn btn-dark">
-                <%= link_to new_menu_path(restaurant_id: @restaurant.id), class: 'link-light', title: t('.add_new_menu') do %>
+                <%= link_to new_restaurant_menu_path(@restaurant), class: 'link-light', title: t('.add_new_menu') do %>
                   <i class="bi bi-plus"></i>
                 <% end %>
               </button>

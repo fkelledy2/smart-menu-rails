@@ -99,8 +99,28 @@ Rails.application.routes.draw do
     # Music/Entertainment
     resources :tracks
     
-    # Menu management (limited to restaurant context)
-    resources :menus, only: [:index, :show, :edit]
+    # Menu management (full operations within restaurant context)
+    resources :menus do
+      # Menu configuration
+      resources :menuparticipants
+      resources :menuavailabilities
+      resources :menusectionlocales
+      
+      # Menu structure and content
+      resources :menusections do
+        resources :menuitems  # Full CRUD for menusection-specific menuitems
+      end
+      
+      # Menu-level menuitem operations
+      resources :menuitems, only: [:index]  # Bulk operations across all menusections
+      resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
+      
+      # Menu actions
+      member do
+        post :regenerate_images
+        get :tablesettings, to: 'menus#show'
+      end
+    end
     
     # OCR menu import functionality
     resources :ocr_menu_imports, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
@@ -115,30 +135,6 @@ Rails.application.routes.draw do
     end
   end
   
-  # ============================================================================
-  # MENU MANAGEMENT (Full Menu Operations)
-  # ============================================================================
-  resources :menus do
-    # Menu configuration
-    resources :menuparticipants
-    resources :menuavailabilities
-    resources :menusectionlocales
-    
-    # Menu structure and content
-    resources :menusections do
-      resources :menuitems  # Full CRUD for menusection-specific menuitems
-    end
-    
-    # Menu-level menuitem operations
-    resources :menuitems, only: [:index]  # Bulk operations across all menusections
-    resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
-    
-    # Menu actions
-    member do
-      post :regenerate_images
-      get :tablesettings, to: 'menus#show'
-    end
-  end
   
   # ============================================================================
   # GLOBAL RESOURCES

@@ -1,27 +1,20 @@
 class MenuparticipantsController < ApplicationController
   # Allow customers to interact with menus without authentication
+  before_action :set_restaurant
+  before_action :set_menu
   before_action :set_menuparticipant, only: %i[show edit update destroy]
 
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
 
-  # GET /menus/:menu_id/menuparticipants or /menus/:menu_id/menuparticipants.json
+  # GET /restaurants/:restaurant_id/menus/:menu_id/menuparticipants
   def index
-    if params[:menu_id]
-      @menu = Menu.find(params[:menu_id])
-      @menuparticipants = if current_user
-                            policy_scope(Menuparticipant).where(menu: @menu).limit(100)
-                          else
-                            Menuparticipant.where(menu: @menu).limit(100)
-                          end
-    else
-      @menuparticipants = if current_user
-                            policy_scope(Menuparticipant).limit(100)
-                          else
-                            Menuparticipant.limit(100)
-                          end
-    end
+    @menuparticipants = if current_user
+                          policy_scope(Menuparticipant).where(menu: @menu).limit(100)
+                        else
+                          Menuparticipant.where(menu: @menu).limit(100)
+                        end
   end
 
   # GET /menuparticipants/1 or /menuparticipants/1.json
@@ -86,13 +79,27 @@ class MenuparticipantsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to menuparticipants_path, status: :see_other, notice: 'Menuparticipant was successfully destroyed.'
+        redirect_to restaurant_menu_menuparticipants_path(@restaurant || @menu.restaurant, @menu), status: :see_other, notice: 'Menuparticipant was successfully destroyed.'
       end
       format.json { head :no_content }
     end
   end
 
   private
+
+  # Set restaurant from nested route parameter
+  def set_restaurant
+    @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
+  end
+
+  # Set menu from nested route parameter
+  def set_menu
+    if @restaurant
+      @menu = @restaurant.menus.find(params[:menu_id])
+    else
+      @menu = Menu.find(params[:menu_id])
+    end
+  end
 
   def broadcastPartials
     menuparticipant = Menuparticipant.includes(smartmenu: [:menu,

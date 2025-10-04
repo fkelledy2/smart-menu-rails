@@ -2,6 +2,7 @@ require 'rqrcode'
 
 class MenusController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
+  before_action :set_restaurant
   before_action :set_menu, only: %i[show edit update destroy regenerate_images]
 
   # Pundit authorization
@@ -15,8 +16,7 @@ class MenusController < ApplicationController
     @currentHour = Time.now.strftime('%H').to_i
     @currentMin = Time.now.strftime('%M').to_i
     if current_user
-      if params[:restaurant_id]
-        @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+      if @restaurant
         @menus = policy_scope(Menu).where(restaurant_id: @restaurant.id, archived: false)
           .includes([:menuavailabilities])
           .order(:sequence).all
@@ -62,7 +62,7 @@ class MenusController < ApplicationController
     end
 
     flash[:notice] = t('menus.controller.image_regeneration_queued', count: queued)
-    redirect_to edit_menu_path(@menu)
+    redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu)
   end
 
   # GET	/restaurants/:restaurant_id/menus/:menu_id/tablesettings/:id(.:format)	menus#show
@@ -185,7 +185,7 @@ class MenusController < ApplicationController
         },
       )
     end
-    @qrURL = Rails.application.routes.url_helpers.menu_url(@menu, host: request.host_with_port)
+    @qrURL = Rails.application.routes.url_helpers.restaurant_menu_url(@restaurant || @menu.restaurant, @menu, host: request.host_with_port)
     @qrURL.sub! 'http', 'https'
     @qrURL.sub! '/edit', ''
     @qr = RQRCode::QRCode.new(@qrURL)
@@ -193,7 +193,7 @@ class MenusController < ApplicationController
 
   # POST /menus or /menus.json
   def create
-    @menu = Menu.new(menu_params)
+    @menu = (@restaurant || Restaurant.find(menu_params[:restaurant_id])).menus.build(menu_params)
     authorize @menu
 
     respond_to do |format|
@@ -225,7 +225,7 @@ class MenusController < ApplicationController
           redirect_to edit_restaurant_path(id: @menu.restaurant.id),
                       notice: t('common.flash.created', resource: t('activerecord.models.menu'))
         end
-        format.json { render :show, status: :created, location: @menu }
+        format.json { render :show, status: :created, location: restaurant_menu_url(@restaurant || @menu.restaurant, @menu) }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @menu.errors, status: :unprocessable_entity }
@@ -266,7 +266,7 @@ class MenusController < ApplicationController
           redirect_to edit_restaurant_path(id: @menu.restaurant.id),
                       notice: t('common.flash.updated', resource: t('activerecord.models.menu'))
         end
-        format.json { render :show, status: :ok, location: @menu }
+        format.json { render :show, status: :ok, location: restaurant_menu_url(@restaurant || @menu.restaurant, @menu) }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menu.errors, status: :unprocessable_entity }
@@ -298,9 +298,18 @@ class MenusController < ApplicationController
 
   private
 
+  # Set restaurant from nested route parameter
+  def set_restaurant
+    @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
+  end
+
   # Use callbacks to share common setup or constraints between actions.
   def set_menu
-    @menu = Menu.find(params[:menu_id] || params[:id])
+    if @restaurant
+      @menu = @restaurant.menus.find(params[:menu_id] || params[:id])
+    else
+      @menu = Menu.find(params[:menu_id] || params[:id])
+    end
     if current_user && (@menu.nil? || (@menu.restaurant.user != current_user))
       redirect_to root_url
     end

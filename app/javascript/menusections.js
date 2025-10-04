@@ -49,26 +49,28 @@ export function initMenusections() {
             var name = cell.getRow();
             var rowData = cell.getRow().getData("data").name;
             
-            // Get menu ID from table element for nested routes
+            // Get menu and restaurant ID from table element for nested routes
             var tableElement = cell.getTable().element;
             var menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
+            var restaurantId = tableElement.dataset.restaurant || tableElement.dataset.bsRestaurant;
             
-            if (menuId) {
-                return "<a class='link-dark' href='/menus/"+menuId+"/menusections/"+id+"/edit'>"+rowData+"</a>";
+            if (menuId && restaurantId) {
+                return "<a class='link-dark' href='/restaurants/"+restaurantId+"/menus/"+menuId+"/menusections/"+id+"/edit'>"+rowData+"</a>";
             } else {
-                // Fallback to old route if menu ID not available
+                // Fallback to old route if context not available
                 return "<a class='link-dark' href='/menusections/"+id+"/edit'>"+rowData+"</a>";
             }
         }
         const menusectionTableElement = document.getElementById('menu-menusection-table');
         if (!menusectionTableElement) return; // Exit if element doesn't exist
         const menuId = menusectionTableElement.getAttribute('data-bs-menu');
+        const restaurantId = menusectionTableElement.getAttribute('data-bs-restaurant');
         var menusectionTable = new Tabulator("#menu-menusection-table", {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitColumns",
-          ajaxURL: '/menus/'+menuId+'/menusections.json',
+          ajaxURL: '/restaurants/'+restaurantId+'/menus/'+menuId+'/menusections.json',
           initialSort:[
             {column:"sequence", dir:"asc"},
           ],

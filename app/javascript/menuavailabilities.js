@@ -23,17 +23,29 @@ export function initMenuavailabilities() {
             var id = cell.getValue();
             var name = cell.getRow();
             var rowData = cell.getRow().getData("data").dayofweek;
-            return "<a class='link-dark' href='/menuavailabilities/"+id+"/edit'>"+rowData+"</a>";
+            
+            // Get menu and restaurant ID from table element for nested routes
+            var tableElement = cell.getTable().element;
+            var menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
+            var restaurantId = tableElement.dataset.restaurant || tableElement.dataset.bsRestaurant;
+            
+            if (menuId && restaurantId) {
+                return "<a class='link-dark' href='/restaurants/"+restaurantId+"/menus/"+menuId+"/menuavailabilities/"+id+"/edit'>"+rowData+"</a>";
+            } else {
+                // Fallback to old route if context not available
+                return "<a class='link-dark' href='/menuavailabilities/"+id+"/edit'>"+rowData+"</a>";
+            }
         }
         const menuAvailabilityTableElement = document.getElementById('menu-menuavailability-table');
         if (!menuAvailabilityTableElement) return; // Exit if element doesn't exist
         const menuId = menuAvailabilityTableElement.getAttribute('data-bs-menu');
+        const restaurantId = menuAvailabilityTableElement.getAttribute('data-bs-restaurant');
         var menuavailabilityTable = new Tabulator("#menu-menuavailability-table", {
           dataLoader: false,
           maxHeight:"100%",
           responsiveLayout:true,
           layout:"fitDataStretch",
-          ajaxURL: '/menus/'+menuId+'/menuavailabilities.json',
+          ajaxURL: '/restaurants/'+restaurantId+'/menus/'+menuId+'/menuavailabilities.json',
           initialSort:[
               {column:"sequence", dir:"asc"},
           ],

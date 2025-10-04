@@ -178,7 +178,7 @@
         <span class="float-end">
         <% if menu.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t('common.delete'), menu, method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
+            <%= link_to t('common.delete'), restaurant_menu_path(menu.restaurant, menu), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
         <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
@@ -208,7 +208,7 @@
     <div class="col-9">
         <span class="float-end">
         <% if menu.persisted? %>
-            <%= button_to t('.regenerate_images'), regenerate_images_menu_path(@menu), method: :post, class: 'btn btn-sm btn-dark', data: { turbo: false, confirm: t('.regenerate_images_confirm') } %>
+            <%= button_to t('.regenerate_images'), regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), method: :post, class: 'btn btn-sm btn-dark', data: { turbo: false, confirm: t('.regenerate_images_confirm') } %>
         <% end %>
         </span>
     </div>

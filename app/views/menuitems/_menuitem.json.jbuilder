@@ -25,4 +25,4 @@ json.ingredients menuitem.ingredients do |ingredient|
 end
 json.created_at menuitem.created_at
 json.updated_at menuitem.updated_at
-json.url menu_menusection_menuitem_url(menuitem.menusection.menu, menuitem.menusection, menuitem, format: :json)
+json.url restaurant_menu_menusection_menuitem_url(menuitem.menusection.menu.restaurant, menuitem.menusection.menu, menuitem.menusection, menuitem, format: :json)

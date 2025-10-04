@@ -9,4 +9,4 @@ json.sequence menuavailability.sequence
 json.menu menuavailability.menu.id
 json.created_at menuavailability.created_at
 json.updated_at menuavailability.updated_at
-json.url menu_menuavailability_url(menuavailability.menu, menuavailability, format: :json)
+json.url restaurant_menu_menuavailability_url(menuavailability.menu.restaurant, menuavailability.menu, menuavailability, format: :json)
