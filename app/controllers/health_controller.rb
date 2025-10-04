@@ -2,8 +2,8 @@
 
 # Health check controller for monitoring system status
 class HealthController < ApplicationController
-  # Skip authentication for health checks
-  skip_before_action :authenticate_user!, only: [:index, :redis_check, :database_check]
+  # Health endpoints are publicly accessible - no authentication required
+  # All actions (index, redis_check, database_check, full_check, cache_stats) are public
   
   # Basic health check
   def index
