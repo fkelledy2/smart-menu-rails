@@ -1,4 +1,4 @@
-<%= form_with(model: ordrparticipant) do |form| %>
+<%= form_with(model: [@restaurant, ordrparticipant]) do |form| %>
   <% if ordrparticipant.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(ordrparticipant.errors.count, "error") %> prohibited this ordrparticipant from being saved:</h2>
@@ -44,16 +44,16 @@
   <div class="mb-3">
     <% if ordrparticipant.persisted? %>
       <div class="float-end">
-        <%= link_to t('common.delete'), ordrparticipant, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
+        <%= link_to t('common.delete'), [@restaurant, ordrparticipant], method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
       </div>
     <% end %>
 
     <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if ordrparticipant.persisted? %>
-      <%= link_to t('common.cancel'), ordrparticipant, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), [@restaurant, ordrparticipant], class: "btn btn-link" %>
     <% else %>
-      <%= link_to t('common.cancel'), ordrparticipants_path, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), restaurant_ordrparticipants_path(@restaurant), class: "btn btn-link" %>
     <% end %>
   </div>
 <% end %>

@@ -1,5 +1,6 @@
 class OrdrsController < ApplicationController
   before_action :authenticate_user!, except: %i[show create update] # Allow customers to create/update orders
+  before_action :set_restaurant
   before_action :set_ordr, only: %i[show edit update destroy]
   before_action :set_currency
 
@@ -9,9 +10,8 @@ class OrdrsController < ApplicationController
 
   # GET /ordrs or /ordrs.json
   def index
-    if params[:restaurant_id]
-      @restaurant = Restaurant.find_by(id: params[:restaurant_id])
-        @ordrs = policy_scope(Ordr).where(restaurant_id: @restaurant.id).all
+    if @restaurant
+      @ordrs = policy_scope(Ordr).where(restaurant_id: @restaurant.id).all
     else
       @ordrs = policy_scope(Ordr).all
     end
@@ -79,7 +79,10 @@ class OrdrsController < ApplicationController
 
   # POST /ordrs or /ordrs.json
   def create
+    # Ensure restaurant_id is set from nested route
+    restaurant_id = @restaurant&.id || ordr_params[:restaurant_id]
     @ordr = Ordr.new(ordr_params.merge(
+                       restaurant_id: restaurant_id,
                        nett: 0, tip: 0, service: 0, tax: 0, gross: 0,
     ))
     authorize @ordr if current_user
@@ -115,8 +118,8 @@ class OrdrsController < ApplicationController
 
         respond_to do |format|
           format.html {
- redirect_to ordr_url(@ordr), notice: t('common.flash.created', resource: t('activerecord.models.ordr')) }
-          format.json { render :show, status: :created, location: @ordr }
+ redirect_to restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr), notice: t('common.flash.created', resource: t('activerecord.models.ordr')) }
+          format.json { render :show, status: :created, location: restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr) }
         end
       else
         respond_to do |format|
@@ -147,7 +150,7 @@ class OrdrsController < ApplicationController
         @ordr.status == 'closed'
         full_refresh = false
         respond_to do |format|
-          format.json { render :show, status: :ok, location: @ordr }
+          format.json { render :show, status: :ok, location: restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr) }
           broadcast_partials(@ordr, @tablesetting, @ordrparticipant, full_refresh)
         end
       else
@@ -167,18 +170,23 @@ class OrdrsController < ApplicationController
       @ordr.destroy!
       respond_to do |format|
         format.html {
- redirect_to ordrs_url, notice: t('common.flash.deleted', resource: t('activerecord.models.ordr')) }
+ redirect_to restaurant_ordrs_url(@restaurant), notice: t('common.flash.deleted', resource: t('activerecord.models.ordr')) }
         format.json { head :no_content }
       end
     end
   rescue ActiveRecord::RecordNotDestroyed => e
     respond_to do |format|
-      format.html { redirect_to ordrs_url, alert: t('common.flash.action_failed', error: e.message) }
+      format.html { redirect_to restaurant_ordrs_url(@restaurant), alert: t('common.flash.action_failed', error: e.message) }
       format.json { render json: { error: e.message }, status: :unprocessable_entity }
     end
   end
 
   private
+
+  # Set restaurant from nested route parameter
+  def set_restaurant
+    @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
+  end
 
   def find_or_create_ordr_participant(ordr)
     if current_user

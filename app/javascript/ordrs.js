@@ -1,6 +1,89 @@
 
 export function initOrders() {
 
+    // Define utility functions first
+    function post( url, body ) {
+      $('#orderCart').hide();
+      $('#orderCartSpinner').show();
+
+        fetch(url, {
+            method: 'POST',
+            headers:  {
+                  "Content-Type": "application/json",
+                  "Accept": "application/json",
+                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+            },
+            body: JSON.stringify(body)
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        }).then(data => {
+            console.log('Success:', data);
+            $('#orderCartSpinner').hide();
+            $('#orderCart').show();
+            // Handle success response
+        }).catch(error => {
+            console.error('Error:', error);
+            $('#orderCartSpinner').hide();
+            $('#orderCart').show();
+            // Handle error
+        });
+    }
+
+    function patch( url, body ) {
+      $('#orderCart').hide();
+      $('#orderCartSpinner').show();
+        fetch(url, {
+            method: 'PATCH',
+            headers:  {
+                  "Content-Type": "application/json",
+                  "Accept": "application/json",
+                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+            },
+            body: JSON.stringify(body)
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        }).then(data => {
+            console.log('PATCH Success:', data);
+            $('#orderCartSpinner').hide();
+            $('#orderCart').show();
+        }).catch(error => {
+            console.error('PATCH Error:', error);
+            $('#orderCartSpinner').hide();
+            $('#orderCart').show();
+        });
+    }
+
+    function del( url ) {
+      $('#orderCart').hide();
+      $('#orderCartSpinner').show();
+        fetch(url, {
+            method: 'DELETE',
+            headers:  {
+                  "Content-Type": "application/json",
+                  "Accept": "application/json",
+                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+            }
+        }).then(response => {
+            if (response.ok) {
+                console.log('DELETE Success');
+            } else {
+                throw new Error('Network response was not ok.');
+            }
+            $('#orderCartSpinner').hide();
+            $('#orderCart').show();
+        }).catch(error => {
+            console.error('DELETE Error:', error);
+            $('#orderCartSpinner').hide();
+            $('#orderCart').show();
+        });
+    }
+
     let locationReload = false;
 
     let ORDR_OPENED=0;
@@ -220,15 +303,37 @@ function refreshOrderJSLogic() {
             }
         });
         $( "#addItemToOrderButton" ).on( "click", function() {
+            // Debug: Check if required elements exist
+            const ordrId = $('#a2o_ordr_id').text();
+            const menuitemId = $('#a2o_menuitem_id').text();
+            const price = $('#a2o_menuitem_price').text();
+            const restaurantId = $('#currentRestaurant').text();
+            
+            console.log('Order Item Debug:', {
+                ordrId: ordrId,
+                menuitemId: menuitemId,
+                price: price,
+                restaurantId: restaurantId,
+                status: ORDRITEM_ADDED
+            });
+            
+            // Check for missing required data
+            if (!ordrId || !menuitemId || !restaurantId) {
+                console.error('Missing required data for order item creation');
+                return false;
+            }
+            
             let ordritem = {
                 'ordritem': {
-                    'ordr_id': $('#a2o_ordr_id').text(),
-                    'menuitem_id': $('#a2o_menuitem_id').text(),
+                    'ordr_id': ordrId,
+                    'menuitem_id': menuitemId,
                     'status': ORDRITEM_ADDED,
-                    'ordritemprice': $('#a2o_menuitem_price').text()
+                    'ordritemprice': price
                 }
             };
-            post( '/ordritems', ordritem, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+            
+            console.log('Sending order item:', ordritem);
+            post( `/restaurants/${restaurantId}/ordritems`, ordritem );
             return true;
         });
     }
@@ -246,7 +351,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_OPENED
                     }
                 };
-                post( '/ordrs', ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                post( `/restaurants/${restaurantId}/ordrs`, ordr );
             } else {
                 let ordr = {
                     'ordr': {
@@ -257,7 +363,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_OPENED
                     }
                 };
-                post( '/ordrs', ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                post( `/restaurants/${restaurantId}/ordrs`, ordr );
             }
        });
     }
@@ -379,55 +486,6 @@ function refreshOrderJSLogic() {
 
 
     refreshOrderJSLogic();
-
-    function post( url, body ) {
-      $('#orderCart').hide();
-      $('#orderCartSpinner').show();
-
-        fetch(url, {
-            method: 'POST',
-            headers:  {
-                  "Content-Type": "application/json",
-                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-            },
-            body: JSON.stringify(body)
-        }).then(response => {
-        }).catch(function(err) {
-            console.info(err + " url: " + url);
-        });
-        return false;
-    }
-    function patch( url, body ) {
-      $('#orderCart').hide();
-      $('#orderCartSpinner').show();
-        fetch(url, {
-            method: 'PATCH',
-            headers:  {
-                  "Content-Type": "application/json",
-                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-            },
-            body: JSON.stringify(body)
-        }).then(response => {
-        }).catch(function(err) {
-            console.info(err + " url: " + url);
-        });
-        return false;
-    }
-    function del( url ) {
-      alert('del');
-      $('#orderCart').hide();
-      $('#orderCartSpinner').show();
-        fetch(url, {
-            method: 'DELETE',
-            headers:  {
-                  "Content-Type": "application/json",
-                  "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-            }
-        }).then(response => {
-        }).catch(function(err) {
-            console.info(err + " url: " + url);
-        });
-    }
 
     if ($("#restaurantTabs").length) {
         function linkOrdr(cell, formatterParams){

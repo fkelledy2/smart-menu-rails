@@ -1,4 +1,5 @@
 class OrdrparticipantsController < ApplicationController
+  before_action :set_restaurant
   before_action :set_ordrparticipant, only: %i[show edit update destroy]
 
   # GET /ordrparticipants or /ordrparticipants.json
@@ -235,6 +236,13 @@ class OrdrparticipantsController < ApplicationController
     require 'zlib'
     require 'base64'
     Base64.strict_encode64(Zlib::Deflate.deflate(str))
+  end
+
+  private
+
+  # Set restaurant from nested route parameter
+  def set_restaurant
+    @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
   end
 
   # Use callbacks to share common setup or constraints between actions.

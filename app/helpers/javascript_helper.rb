@@ -373,50 +373,20 @@ module JavascriptHelper
                 style: 'z-index: 1055;'
   end
 
-  # Helper to check if new JS system should be used
+  # Legacy method - kept for backward compatibility but always returns true
+  # since ALL controllers now use the new JavaScript system
   def use_new_js_system?
-    # Enable for ALL controllers - complete migration to new JS system
-    controller_name.in?(%w[
-      restaurants menus menuitems menusections employees ordrs inventories
-      allergyns announcements contacts dw_orders_mv features genimages home
-      ingredients metrics notifications ocr_menu_imports ocr_menu_items ocr_menu_sections
-      onboarding payments plans sessions sizes smartmenus tablesettings
-      tags taxes testimonials tips tracks userplans
-      features_plans menuavailabilities menuitemsizemappings menuparticipants
-      menusectionlocales ordractions ordritemnotes ordritems ordrparticipants
-      restaurantavailabilities restaurantlocales smartmenus_locale
-    ]) ||
-    # Admin controllers
-    controller_path.start_with?('admin/') ||
-    # API controllers  
-    controller_path.start_with?('api/') ||
-    # Madmin (admin interface) controllers
-    controller_path.start_with?('madmin/') ||
-    # User authentication controllers
-    controller_path.start_with?('users/') ||
-    # Devise controllers (if any custom ones exist)
-    controller_name.in?(%w[registrations sessions passwords confirmations unlocks]) ||
-    # Any other controllers not explicitly listed above
-    Rails.application.config.respond_to?(:force_new_js_system) && Rails.application.config.force_new_js_system ||
-    params[:new_js] == 'true'
+    true # 100% migration complete - all controllers use new system
   end
 
-  # Helper to conditionally load old or new JS
+  # Helper to load the new JavaScript system (old system completely removed)
   def javascript_system_tags
-    if use_new_js_system?
-      # Add meta tag to signal new system should run
-      content_for :head, tag.meta(name: 'js-system', content: 'new')
-      
-      # Load new modular system
-      javascript_importmap_tags + 
-      javascript_import_module_tag('application_new')
-    else
-      # Add meta tag to signal old system
-      content_for :head, tag.meta(name: 'js-system', content: 'old')
-      
-      # Load old system
-      javascript_include_tag 'application'
-    end
+    # Add meta tag to signal new system should run
+    content_for :head, tag.meta(name: 'js-system', content: 'new')
+    
+    # Load new modular system - now used by ALL controllers
+    javascript_importmap_tags + 
+    javascript_import_module_tag('application_new')
   end
 
   # Helper for progressive enhancement

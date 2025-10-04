@@ -24,6 +24,7 @@ import pako from 'pako';
             method: 'PATCH',
             headers:  {
                   "Content-Type": "application/json",
+                  "Accept": "application/json",
                   "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
             },
             body: JSON.stringify(body)
@@ -366,7 +367,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_ORDERED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr );
             } else {
                 let ordr = {
                     'ordr': {
@@ -376,7 +378,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_ORDERED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr );
             }
        });
     }
@@ -392,7 +395,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_BILLREQUESTED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr );
             } else {
                 let ordr = {
                     'ordr': {
@@ -402,7 +406,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_BILLREQUESTED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr );
             }
        });
     }
@@ -453,7 +458,8 @@ function refreshOrderJSLogic() {
                       'status' :  ORDR_CLOSED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr, false );
             } else {
                 let ordr = {
                     'ordr': {
@@ -464,7 +470,8 @@ function refreshOrderJSLogic() {
                       'status' :  ORDR_CLOSED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr, false );
             }
         });
     }
