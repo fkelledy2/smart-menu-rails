@@ -189,13 +189,15 @@ class AnalyticsService
   end
 
   def track_restaurant_created(user, restaurant)
+    onboarding = user.onboarding_session
+    
     track_user_event(user, RESTAURANT_CREATED, {
       restaurant_id: restaurant.id,
       restaurant_name: restaurant.name,
-      restaurant_type: restaurant.restaurant_type,
-      cuisine_type: restaurant.cuisine_type,
+      restaurant_type: onboarding&.restaurant_type,
+      cuisine_type: onboarding&.cuisine_type,
       location: restaurant.address1,
-      phone: restaurant.phone.present?,
+      phone: restaurant.respond_to?(:phone) ? restaurant.phone.present? : false,
       via_onboarding: true # Always true when called from onboarding
     })
   end

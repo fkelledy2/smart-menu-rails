@@ -15,11 +15,11 @@ class Ordr < ApplicationRecord
     end
 
     event :paybill do
-      transitions from: [:billrequested], to: :billpaid
+      transitions from: [:billrequested], to: :paid
     end
 
     event :close do
-      transitions from: [:billpaid], to: :closed
+      transitions from: [:paid], to: :closed
     end
   end
 
@@ -54,6 +54,7 @@ class Ordr < ApplicationRecord
     ordered: 20,
     delivered: 25,
     billrequested: 30,
+    paid: 35,
     closed: 40,
   }
 
