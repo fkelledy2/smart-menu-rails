@@ -389,14 +389,14 @@ module JavascriptHelper
     true # 100% migration complete - all controllers use new system
   end
 
-  # Helper to load the new JavaScript system (old system completely removed)
+  # Helper to load the JavaScript system
   def javascript_system_tags
     # Add meta tag to signal new system should run
     content_for :head, tag.meta(name: 'js-system', content: 'new')
     
-    # Load new modular system - now used by ALL controllers
+    # Load modular system - used by ALL controllers
     javascript_importmap_tags + 
-    javascript_import_module_tag('application_new')
+    javascript_import_module_tag('application')
   end
 
   # Helper for progressive enhancement

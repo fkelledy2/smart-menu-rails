@@ -18,7 +18,7 @@ import { setTimeout } from "timers/promises"
 
 const clients = []
 const entryPoints = [
-  "application_new.js"
+  "application.js"
 ]
 const watchDirectories = [
   "./app/javascript/**/*.js",

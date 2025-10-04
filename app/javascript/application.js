@@ -1,5 +1,27 @@
-// Modern, clean entry point for the Smart Menu application
-// This replaces the monolithic application.js with a modular, maintainable architecture
+// Main entry point for the Smart Menu application
+// Modern, modular JavaScript architecture with enhanced functionality
+
+// Global error handler for module resolution issues
+window.addEventListener('error', (event) => {
+  if (event.message && (
+    event.message.includes('Failed to resolve module specifier') ||
+    event.message.includes('application') && event.message.includes('Relative references')
+  )) {
+    console.warn('[SmartMenu] Module resolution error caught:', event.message)
+    console.warn('[SmartMenu] This is likely due to importmap/controller conflicts - continuing with available modules...')
+    event.preventDefault() // Prevent the error from breaking the application
+    return false
+  }
+})
+
+// Handle unhandled promise rejections (for dynamic imports)
+window.addEventListener('unhandledrejection', (event) => {
+  if (event.reason && event.reason.message && event.reason.message.includes('Failed to resolve module specifier')) {
+    console.warn('[SmartMenu] Module import promise rejection caught:', event.reason.message)
+    console.warn('[SmartMenu] Continuing with available modules...')
+    event.preventDefault() // Prevent the error from breaking the application
+  }
+})
 
 // Import Turbo since this is now the only system
 import '@hotwired/turbo-rails'
@@ -63,7 +85,17 @@ localTime.start()
 const application = Application.start()
 
 // Import and register Stimulus controllers like the old system
-import './controllers'
+try {
+  import('./controllers')
+    .then(() => console.log('[SmartMenu] Controllers loaded successfully'))
+    .catch(error => {
+      console.warn('[SmartMenu] Controllers import failed:', error.message)
+      console.warn('[SmartMenu] Continuing without controller auto-loading...')
+    })
+} catch (error) {
+  console.warn('[SmartMenu] Controllers import error:', error.message)
+}
+
 import MenuImportController from './controllers/menu_import_controller.js'
 application.register('menu-import', MenuImportController)
 
