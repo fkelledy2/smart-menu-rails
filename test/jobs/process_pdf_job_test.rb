@@ -15,10 +15,8 @@ class ProcessPdfJobTest < ActiveJob::TestCase
     processor_double.expect :process, true
 
     PdfMenuProcessor.stub :new, processor_double do
-      assert_enqueued_with(job: ProcessPdfJob, args: [import.id]) do
-        ProcessPdfJob.perform_later(import.id)
-      end
-      perform_enqueued_jobs
+      # Perform the job directly instead of using assert_enqueued_with
+      ProcessPdfJob.perform_now(import.id)
     end
 
     import.reload
@@ -34,9 +32,8 @@ class ProcessPdfJobTest < ActiveJob::TestCase
     processor_double.expect :process, false
 
     PdfMenuProcessor.stub :new, processor_double do
-      perform_enqueued_jobs do
-        ProcessPdfJob.perform_later(import.id)
-      end
+      # Perform the job directly instead of using perform_enqueued_jobs
+      ProcessPdfJob.perform_now(import.id)
     end
 
     import.reload

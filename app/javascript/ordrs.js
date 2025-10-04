@@ -271,7 +271,8 @@ function refreshOrderJSLogic() {
              'ordritemprice': 0
          }
        };
-       patch( '/ordritems/'+ordrItemId, ordritem);
+       const restaurantId = $('#currentRestaurant').text();
+       patch( `/restaurants/${restaurantId}/ordritems/${ordrItemId}`, ordritem);
        $('#confirm-order').click();
        return true;
     });

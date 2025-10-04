@@ -85,16 +85,14 @@ class TaxesController < ApplicationController
 
   # DELETE /taxes/1 or /taxes/1.json
   def destroy
-    if current_user
-      @tax.update(archived: true)
-      respond_to do |format|
-        format.html do
-          redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: t('taxes.controller.deleted')
-        end
-        format.json { head :no_content }
+    authorize @tax
+    
+    @tax.update(archived: true)
+    respond_to do |format|
+      format.html do
+        redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: t('taxes.controller.deleted')
       end
-    else
-      redirect_to root_url
+      format.json { head :no_content }
     end
   end
 

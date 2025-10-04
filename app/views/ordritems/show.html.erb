@@ -1,8 +1,8 @@
 <div class="page-header">
-  <%= link_to ordritems_path, class: 'btn btn-default' do %>
+  <%= link_to restaurant_ordritems_path(@restaurant), class: 'btn btn-default' do %>
     All Ordritems
   <% end %>
-  <%= link_to edit_ordritem_path(@ordritem), class: 'btn btn-dark' do %>
+  <%= link_to edit_restaurant_ordritem_path(@restaurant, @ordritem), class: 'btn btn-dark' do %>
     Edit
   <% end %>
   <h1>Show ordritem</h1>

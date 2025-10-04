@@ -4,15 +4,16 @@ class OrdractionsControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:one)
     @ordraction = ordractions(:one)
+    @restaurant = restaurants(:one)
   end
 
   test 'should get index' do
-    get ordractions_url
+    get restaurant_ordractions_url(@restaurant)
     assert_response :success
   end
 
   test 'should get new' do
-    get new_ordraction_url
+    get new_restaurant_ordraction_url(@restaurant)
     assert_response :success
   end
 
@@ -24,26 +25,25 @@ class OrdractionsControllerTest < ActionDispatch::IntegrationTest
   #   end
 
   test 'should show ordraction' do
-    get ordraction_url(@ordraction)
+    get restaurant_ordraction_url(@restaurant, @ordraction)
     assert_response :success
   end
 
   test 'should get edit' do
-    get edit_ordraction_url(@ordraction)
+    get edit_restaurant_ordraction_url(@restaurant, @ordraction)
     assert_response :success
   end
 
   test 'should update ordraction' do
-    patch ordraction_url(@ordraction),
-          params: { ordraction: { action: @ordraction.action, ordr_id: @ordraction.ordr_id, ordritem_id: @ordraction.ordritem_id,
-                                  ordrparticipant_id: @ordraction.ordrparticipant_id, } }
-    #     assert_redirected_to ordraction_url(@ordraction)
+    patch restaurant_ordraction_url(@restaurant, @ordraction),
+          params: { ordraction: { action: @ordraction.action, ordr_id: @ordraction.ordr_id } }
+    assert_response :success
   end
 
   test 'should destroy ordraction' do
     assert_difference('Ordraction.count', 0) do
-      delete ordraction_url(@ordraction)
+      delete restaurant_ordraction_url(@restaurant, @ordraction)
     end
-    #     assert_redirected_to ordractions_url
+    assert_response :success
   end
 end

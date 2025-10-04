@@ -37,7 +37,7 @@
                                     <div class="alert alert-danger" role="alert">
                                         <%= ordritem.menuitem.name %> (<%= ordritem.menuitem.preptime %>)
                                         <span class="float-end">
-                                            <%= form_with(model: ordritem) do |form| %>
+                                            <%= form_with(model: [@restaurant, ordritem]) do |form| %>
                                                 <%= form.hidden_field :status, value: 'prepared' %>
                                                 <%= button_tag( :class => "btn btn-sm btn-danger") do %>
                                                   <i class="bi bi-chevron-right"></i>
@@ -61,7 +61,7 @@
                                     <div class="alert alert-warning" role="alert">
                                         <%= ordritem.menuitem.name %>
                                         <span class="float-end">
-                                            <%= form_with(model: ordritem) do |form| %>
+                                            <%= form_with(model: [@restaurant, ordritem]) do |form| %>
                                                 <%= form.hidden_field :status, value: 'delivered' %>
                                                 <%= button_tag( :class => "btn btn-sm btn-warning") do %>
                                                   <i class="bi bi-chevron-right"></i>

@@ -39,7 +39,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
       inventoryTracking: @menu.inventoryTracking,
       imagecontext: @menu.imagecontext,
     } }
-    #     assert_redirected_to edit_restaurant_url(@menu.restaurant)
+    assert_response :success
   end
 
   test 'should destroy menu' do

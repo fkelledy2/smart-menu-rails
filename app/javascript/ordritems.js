@@ -4,6 +4,8 @@ export function initOrdritems() {
         restaurantCurrencySymbol = $('#restaurantCurrency').text();
     }
     if ($("#orderitem-table").length) {
+        const ordrTableElement = document.getElementById('orderitem-table');
+        const restaurantId = ordrTableElement.getAttribute('data-bs-restaurant_id');
         var orderItemTable = new Tabulator("#orderitem-table", {
           dataLoader: false,
           maxHeight:"100%",
@@ -11,7 +13,7 @@ export function initOrdritems() {
           responsiveLayout:true,
           layout:"fitDataFill",
           groupBy:"ordr.id",
-          ajaxURL: '/ordritems.json',
+          ajaxURL: `/restaurants/${restaurantId}/ordritems.json`,
           columns: [
            {
             title:"Order", field:"ordr.id", frozen:true, width: 200,  responsive:0, formatter:"link", formatterParams: {

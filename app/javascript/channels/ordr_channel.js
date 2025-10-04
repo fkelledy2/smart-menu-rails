@@ -282,7 +282,8 @@ function refreshOrderJSLogic() {
              'ordritemprice': 0
          }
        };
-       patch( '/ordritems/'+ordrItemId, ordritem);
+       const restaurantId = $('#currentRestaurant').text();
+       patch( `/restaurants/${restaurantId}/ordritems/${ordrItemId}`, ordritem);
        $('#confirm-order').click();
        return true;
     });
@@ -322,7 +323,8 @@ function refreshOrderJSLogic() {
                     'ordritemprice': $('#a2o_menuitem_price').text()
                 }
             };
-            post( '/ordritems', ordritem, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+            const restaurantId = $('#currentRestaurant').text();
+            post( `/restaurants/${restaurantId}/ordritems`, ordritem, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
             return true;
         });
     }

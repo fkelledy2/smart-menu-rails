@@ -2,16 +2,18 @@ require 'test_helper'
 
 class TracksControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:one)
     @track = tracks(:one)
+    @restaurant = restaurants(:one)
   end
 
   test 'should get index' do
-    get tracks_url
+    get restaurant_tracks_url(@restaurant)
     assert_response :success
   end
 
   test 'should get new' do
-    get new_track_url
+    get new_restaurant_track_url(@restaurant)
     assert_response :success
   end
 
@@ -23,12 +25,12 @@ class TracksControllerTest < ActionDispatch::IntegrationTest
   #   end
 
   test 'should show track' do
-    get track_url(@track)
+    get restaurant_track_url(@restaurant, @track)
     assert_response :success
   end
 
   test 'should get edit' do
-    get edit_track_url(@track)
+    get edit_restaurant_track_url(@restaurant, @track)
     assert_response :success
   end
 end

@@ -8,12 +8,12 @@ class TipsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get tips_url
+    get restaurant_tips_url(@restaurant)
     assert_response :success
   end
 
   test 'should get new' do
-    get new_tip_url, params: { restaurant_id: @restaurant.id }
+    get new_restaurant_tip_url(@restaurant)
     assert_response :success
   end
 
@@ -25,24 +25,25 @@ class TipsControllerTest < ActionDispatch::IntegrationTest
   #   end
 
   test 'should show tip' do
-    get tip_url(@tip)
+    get restaurant_tip_url(@restaurant, @tip)
     assert_response :success
   end
 
   test 'should get edit' do
-    get edit_tip_url(@tip)
+    get edit_restaurant_tip_url(@restaurant, @tip)
     assert_response :success
   end
 
   test 'should update tip' do
-    patch tip_url(@tip), params: { tip: { percentage: @tip.percentage, restaurant_id: @tip.restaurant_id } }
-    #     assert_redirected_to edit_restaurant_url(@tip.restaurant)
+    patch restaurant_tip_url(@restaurant, @tip),
+          params: { tip: { percentage: @tip.percentage, restaurant_id: @tip.restaurant_id } }
+    assert_response :success
   end
 
   test 'should destroy tip' do
     assert_difference('Tip.count', 0) do
-      delete tip_url(@tip)
+      delete restaurant_tip_url(@restaurant, @tip)
     end
-    #     assert_redirected_to edit_restaurant_url(@tip.restaurant)
+    assert_response :success
   end
 end

@@ -37,7 +37,7 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_url(@restaurant),
           params: { restaurant: { address1: @restaurant.address1, address2: @restaurant.address2, capacity: @restaurant.capacity,
                                   city: @restaurant.city, country: @restaurant.country, description: @restaurant.description, image: @restaurant.image, name: @restaurant.name, postcode: @restaurant.postcode, state: @restaurant.state, status: @restaurant.status, user_id: @restaurant.user_id, } }
-    #     assert_redirected_to restaurants_url
+    assert_response :success
   end
 
   test 'should destroy restaurant' do

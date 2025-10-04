@@ -1,4 +1,4 @@
-<%= form_with(model: ordritem) do |form| %>
+<%= form_with(model: [@restaurant, ordritem]) do |form| %>
   <% if ordritem.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(ordritem.errors.count, "error") %> prohibited this ordritem from being saved:</h2>
@@ -24,16 +24,16 @@
   <div class="mb-3">
     <% if ordritem.persisted? %>
       <div class="float-end">
-        <%= link_to t('common.delete'), ordritem, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
+        <%= link_to t('common.delete'), restaurant_ordritem_path(@restaurant, ordritem), method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
       </div>
     <% end %>
 
     <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if ordritem.persisted? %>
-      <%= link_to t('common.cancel'), ordritem, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), restaurant_ordritem_path(@restaurant, ordritem), class: "btn btn-link" %>
     <% else %>
-      <%= link_to t('common.cancel'), ordritems_path, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), restaurant_ordritems_path(@restaurant), class: "btn btn-link" %>
     <% end %>
   </div>
 <% end %>

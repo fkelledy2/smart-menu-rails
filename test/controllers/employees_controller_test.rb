@@ -9,12 +9,12 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get employees_url
+    get restaurant_employees_url(@restaurant)
     assert_response :success
   end
 
   test 'should get new' do
-    get new_employee_url, params: { restaurant_id: @restaurant.id }
+    get new_restaurant_employee_url(@restaurant)
     assert_response :success
   end
 
@@ -26,26 +26,26 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
   #   end
 
   test 'should show employee' do
-    get employee_url(@employee)
+    get restaurant_employee_url(@restaurant, @employee)
     assert_response :success
   end
 
   test 'should get edit' do
-    get edit_employee_url(@employee)
+    get edit_restaurant_employee_url(@restaurant, @employee)
     assert_response :success
   end
 
   test 'should update employee' do
-    patch employee_url(@employee),
+    patch restaurant_employee_url(@restaurant, @employee),
           params: { employee: { eid: @employee.eid, image: @employee.image, name: @employee.name,
-                                restaurant_id: @employee.restaurant_id, status: @employee.status, } }
-    #     assert_redirected_to edit_restaurant_url(@employee.restaurant)
+                                restaurant_id: @employee.restaurant_id, role: @employee.role, status: @employee.status, user_id: @employee.user.id, } }
+    assert_response :success
   end
 
   test 'should destroy employee' do
     assert_difference('Employee.count', 0) do
-      delete employee_url(@employee)
+      delete restaurant_employee_url(@restaurant, @employee)
     end
-    #     assert_redirected_to edit_restaurant_url(@employee.restaurant)
+    assert_response :success
   end
 end

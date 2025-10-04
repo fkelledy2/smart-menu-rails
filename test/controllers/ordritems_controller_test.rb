@@ -4,15 +4,16 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:one)
     @ordritem = ordritems(:one)
+    @restaurant = restaurants(:one)
   end
 
   test 'should get index' do
-    get ordritems_url
+    get restaurant_ordritems_url(@restaurant)
     assert_response :success
   end
 
   test 'should get new' do
-    get new_ordritem_url
+    get new_restaurant_ordritem_url(@restaurant)
     assert_response :success
   end
 
@@ -24,19 +25,19 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
   #   end
 
   test 'should show ordritem' do
-    get ordritem_url(@ordritem)
+    get restaurant_ordritem_url(@restaurant, @ordritem)
     assert_response :success
   end
 
   test 'should get edit' do
-    get edit_ordritem_url(@ordritem)
+    get edit_restaurant_ordritem_url(@restaurant, @ordritem)
     assert_response :success
   end
 
   test 'should update ordritem' do
-    patch ordritem_url(@ordritem),
+    patch restaurant_ordritem_url(@restaurant, @ordritem),
           params: { ordritem: { menuitem_id: @ordritem.menuitem_id, ordr_id: @ordritem.ordr_id } }
-    #     assert_redirected_to restaurant_ordrs_path(@ordritem.ordr.restaurant)
+    assert_response :success
   end
 
   #   test "should destroy ordritem" do

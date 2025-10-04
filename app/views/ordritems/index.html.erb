@@ -3,11 +3,11 @@
     <h1>Order Items</h1>
   </div>
   <div class="col-6 text-end">
-    <%= link_to new_ordritem_path, class: 'btn btn-sm btn-dark' do %>
+    <%= link_to new_restaurant_ordritem_path(@restaurant), class: 'btn btn-sm btn-dark' do %>
       <i class="bi bi-plus"></i> Order Item
     <% end %>
   </div>
 </div>
 <%= render 'shared/currency' %>
-<div class="table-container-spacing table-borderless" id="orderitem-table">
+<div class="table-container-spacing table-borderless" id="orderitem-table" data-bs-restaurant_id="<%= @restaurant.id %>">
 </div>

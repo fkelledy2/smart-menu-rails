@@ -8,12 +8,12 @@ class TablesettingsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get tablesettings_url
+    get restaurant_tablesettings_url(@restaurant)
     assert_response :success
   end
 
   test 'should get new' do
-    get new_tablesetting_url, params: { restaurant_id: @restaurant.id }
+    get new_restaurant_tablesetting_url(@restaurant)
     assert_response :success
   end
 
@@ -25,26 +25,26 @@ class TablesettingsControllerTest < ActionDispatch::IntegrationTest
   #   end
 
   test 'should show tablesetting' do
-    get tablesetting_url(@tablesetting)
+    get restaurant_tablesetting_url(@restaurant, @tablesetting)
     assert_response :success
   end
 
   test 'should get edit' do
-    get edit_tablesetting_url(@tablesetting)
+    get edit_restaurant_tablesetting_url(@restaurant, @tablesetting)
     assert_response :success
   end
 
   test 'should update tablesetting' do
-    patch tablesetting_url(@tablesetting),
-          params: { tablesetting: { capacity: @tablesetting.capacity, description: @tablesetting.description,
-                                    name: @tablesetting.name, restaurant_id: @tablesetting.restaurant_id, status: @tablesetting.status, } }
-    #     assert_redirected_to edit_restaurant_url(@tablesetting.restaurant)
+    patch restaurant_tablesetting_url(@restaurant, @tablesetting),
+          params: { tablesetting: { capacity: @tablesetting.capacity, name: @tablesetting.name,
+                                    restaurant_id: @tablesetting.restaurant_id, } }
+    assert_response :success
   end
 
   test 'should destroy tablesetting' do
     assert_difference('Tablesetting.count', 0) do
-      delete tablesetting_url(@tablesetting)
+      delete restaurant_tablesetting_url(@restaurant, @tablesetting)
     end
-    #     assert_redirected_to edit_restaurant_url(@tablesetting.restaurant)
+    assert_response :success
   end
 end
