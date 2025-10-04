@@ -1,8 +1,8 @@
 # config/initializers/cache_store.rb
-# Unified cache-store setup with safe fallbacks and environment flags.
+# Unified cache-store setup optimized for Heroku Redis deployment
 
 Rails.application.config.to_prepare do
-  # Feature flag: allow quick rollback to Rails’ native store if needed
+  # Feature flag: allow quick rollback to Rails' native store if needed
   use_redis_store = ENV.fetch("USE_REDIS_STORE", "true") == "true"
 
   # Build a per-environment Redis URL with sensible defaults
@@ -19,21 +19,37 @@ Rails.application.config.to_prepare do
   # Namespacing prevents collisions across apps/environments
   namespace = ENV.fetch("CACHE_NAMESPACE", "#{Rails.application.class.module_parent_name.downcase}:#{Rails.env}:cache")
 
-  # Common options
+  # Heroku-optimized Redis options
   redis_options = {
-    url:        redis_url,
-    namespace:  namespace,
-    expires_in: ENV.fetch("CACHE_EXPIRES_IN", "43200").to_i, # 12 hours default
-    # timeouts (be conservative for web requests)
-    connect_timeout: ENV.fetch("CACHE_CONNECT_TIMEOUT", "1").to_f,   # seconds
-    read_timeout:    ENV.fetch("CACHE_READ_TIMEOUT", "1.5").to_f,
-    write_timeout:   ENV.fetch("CACHE_WRITE_TIMEOUT", "1.5").to_f,
-    reconnect_attempts: ENV.fetch("CACHE_RECONNECT_ATTEMPTS", "1").to_i
+    url: redis_url,
+    namespace: namespace,
+    expires_in: ENV.fetch("CACHE_EXPIRES_IN", "21600").to_i, # 6 hours default (reduced from 12)
+    
+    # Optimized timeouts for Heroku Redis network latency
+    connect_timeout: ENV.fetch("CACHE_CONNECT_TIMEOUT", "2.0").to_f,   # Increased for Heroku
+    read_timeout:    ENV.fetch("CACHE_READ_TIMEOUT", "3.0").to_f,      # More generous
+    write_timeout:   ENV.fetch("CACHE_WRITE_TIMEOUT", "3.0").to_f,     # Allow large writes
+    
+    # Enhanced reconnection strategy for network hiccups
+    reconnect_attempts: ENV.fetch("CACHE_RECONNECT_ATTEMPTS", "3").to_i,
+    reconnect_delay: 0.1,
+    reconnect_delay_max: 1.0,
+    
+    # Connection pooling for high concurrency (Heroku dynos)
+    pool_size: ENV.fetch("REDIS_POOL_SIZE", "25").to_i,
+    pool_timeout: 5,
+    
+    # Compression for memory efficiency
+    compress: true,
+    compression_threshold: 1024, # Compress objects >1KB
   }
 
-  # SSL if your Redis requires it (e.g., managed services)
-  if ENV["REDIS_SSL"] == "true" && redis_url.start_with?("rediss://")
-    redis_options[:ssl_params] = { verify_mode: OpenSSL::SSL::VERIFY_NONE } unless ENV["REDIS_VERIFY_SSL"] == "true"
+  # SSL configuration for Heroku Redis (rediss:// URLs)
+  if redis_url.start_with?("rediss://")
+    redis_options[:ssl_params] = { 
+      verify_mode: ENV.fetch("REDIS_VERIFY_SSL", "true") == "true" ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
+    }
+    Rails.logger.info("[cache] SSL enabled for Redis connection")
   end
 
   begin

@@ -16,9 +16,10 @@ export function initOrdritems() {
           ajaxURL: `/restaurants/${restaurantId}/ordritems.json`,
           columns: [
            {
-            title:"Order", field:"ordr.id", frozen:true, width: 200,  responsive:0, formatter:"link", formatterParams: {
-                labelField:"ordr.id",
-                urlPrefix:"/ordrs/",
+            title:"Order", field:"ordr.id", frozen:true, width: 200,  responsive:0, formatter:function(cell, formatterParams){
+                const id = cell.getValue();
+                const restaurantId = $('#currentRestaurant').text();
+                return `<a href='/restaurants/${restaurantId}/ordrs/${id}'>${id}</a>`;
             }
            },
            {

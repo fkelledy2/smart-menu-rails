@@ -381,7 +381,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_ORDERED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr );
             } else {
                 let ordr = {
                     'ordr': {
@@ -391,7 +392,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_ORDERED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr );
             }
        });
     }
@@ -407,7 +409,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_BILLREQUESTED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr );
             } else {
                 let ordr = {
                     'ordr': {
@@ -417,7 +420,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_BILLREQUESTED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr );
             }
        });
     }
@@ -468,7 +472,8 @@ function refreshOrderJSLogic() {
                       'status' :  ORDR_CLOSED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr, false );
             } else {
                 let ordr = {
                     'ordr': {
@@ -479,7 +484,8 @@ function refreshOrderJSLogic() {
                       'status' :  ORDR_CLOSED
                     }
                 };
-                patch( '/ordrs/'+$('#currentOrder').text(), ordr, false );
+                const restaurantId = $('#currentRestaurant').text();
+                patch( `/restaurants/${restaurantId}/ordrs/`+$('#currentOrder').text(), ordr, false );
             }
         });
     }
@@ -493,7 +499,8 @@ function refreshOrderJSLogic() {
             var id = cell.getValue();
             var name = cell.getRow();
             var rowData = cell.getRow().getData("data").id;
-            return "<a class='link-dark' href='/ordrs/"+id+"'>"+rowData+"</a>";
+            const restaurantId = $('#currentRestaurant').text();
+            return "<a class='link-dark' href='/restaurants/"+restaurantId+"/ordrs/"+id+"'>"+rowData+"</a>";
         }
         function linkMenu(cell, formatterParams){
             var id = cell.getValue();

@@ -90,19 +90,8 @@ Rails.application.configure do
   # want to log everything, set the level to "debug".
   config.log_level = :info # Suppress SQL query logs; change to :debug for verbose output
 
-  # Use MemCachier (memcached) if available for IdentityCache CAS support; otherwise fall back to Redis
-  if ENV["MEMCACHIER_SERVERS"].present?
-    config.cache_store = :mem_cache_store,
-      ENV['MEMCACHIER_SERVERS'],
-      { username: ENV['MEMCACHIER_USERNAME'], password: ENV['MEMCACHIER_PASSWORD'] }
-  else
-    # Fallback: Redis cache store
-    config.cache_store = :redis_store, {
-      url: ENV.fetch("REDIS_URL", "redis://localhost:6379/0"),
-      namespace: 'cache',
-      expires_in: 12.hours
-    }
-  end
+  # Cache store configuration moved to config/initializers/cache_store.rb
+  # This ensures unified cache configuration across all environments
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque

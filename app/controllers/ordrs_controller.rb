@@ -283,15 +283,16 @@ class OrdrsController < ApplicationController
         ),
       ),
       modals: compress_string(
-        Rails.cache.fetch([
-          :show_modals,
-          ordr.cache_key_with_version,
-          menu.cache_key_with_version,
-          tablesetting.try(:id),
-          menuparticipant.try(:id),
-          restaurant_currency.code,
-          @current_employee.try(:id),
-        ]) do
+        Rails.cache.fetch(
+          CacheKeyService.modal_content_key(
+            ordr: ordr,
+            menu: menu,
+            tablesetting: tablesetting,
+            participant: menuparticipant,
+            currency: restaurant_currency
+          ),
+          expires_in: 30.minutes
+        ) do
           ApplicationController.renderer.render(
             partial: 'smartmenus/showModals',
             locals: {
@@ -307,15 +308,16 @@ class OrdrsController < ApplicationController
         end,
       ),
       menuContentStaff: compress_string(
-        Rails.cache.fetch([
-          :menu_content_staff,
-          ordr.cache_key_with_version,
-          menu.cache_key_with_version,
-          allergyns.maximum(:updated_at),
-          restaurant_currency.code,
-          ordrparticipant.try(:id),
-          menuparticipant.try(:id),
-        ]) do
+        Rails.cache.fetch(
+          CacheKeyService.menu_content_key(
+            ordr: ordr,
+            menu: menu,
+            participant: ordrparticipant,
+            currency: restaurant_currency,
+            allergyns_updated_at: allergyns.maximum(:updated_at)
+          ),
+          expires_in: 30.minutes
+        ) do
           ApplicationController.renderer.render(
             partial: 'smartmenus/showMenuContentStaff',
             locals: {

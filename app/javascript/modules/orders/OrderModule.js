@@ -223,7 +223,9 @@ export class OrderModule extends ComponentBase {
    */
   orderLinkFormatter(cell) {
     const id = cell.getValue();
-    return `<a class='link-primary' href='/ordrs/${id}'>#${id}</a>`;
+    const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
+                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+    return `<a class='link-primary' href='/restaurants/${restaurantId}/ordrs/${id}'>#${id}</a>`;
   }
 
   /**
@@ -388,7 +390,9 @@ export class OrderModule extends ComponentBase {
     if (!currentOrderId) return;
 
     try {
-      await patch(`/ordrs/${currentOrderId}`, {
+      const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
+                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+      await patch(`/restaurants/${restaurantId}/ordrs/${currentOrderId}`, {
         ordr: { status: this.ORDER_STATUS.CLOSED }
       });
       
@@ -426,7 +430,9 @@ export class OrderModule extends ComponentBase {
         }
       };
 
-      await patch(`/ordrs/${currentOrderId}`, orderData);
+      const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
+                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+      await patch(`/restaurants/${restaurantId}/ordrs/${currentOrderId}`, orderData);
       
       this.showNotification('Bill requested successfully', 'success');
       this.refreshOrderTable();
@@ -454,7 +460,9 @@ export class OrderModule extends ComponentBase {
         }
       };
 
-      await patch(`/ordrs/${currentOrderId}`, paymentData);
+      const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
+                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+      await patch(`/restaurants/${restaurantId}/ordrs/${currentOrderId}`, paymentData);
       
       this.showNotification('Payment processed successfully', 'success');
       this.refreshOrderTable();
@@ -520,14 +528,18 @@ export class OrderModule extends ComponentBase {
    */
   viewOrder(orderId) {
     // Open order details modal or navigate to order page
-    window.open(`/ordrs/${orderId}`, '_blank');
+    const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
+                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+    window.open(`/restaurants/${restaurantId}/ordrs/${orderId}`, '_blank');
   }
 
   /**
    * Edit order
    */
   editOrder(orderId) {
-    window.location.href = `/ordrs/${orderId}/edit`;
+    const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
+                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+    window.location.href = `/restaurants/${restaurantId}/ordrs/${orderId}/edit`;
   }
 
   /**
@@ -539,7 +551,9 @@ export class OrderModule extends ComponentBase {
     }
 
     try {
-      await fetch(`/ordrs/${orderId}`, {
+      const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
+                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+      await fetch(`/restaurants/${restaurantId}/ordrs/${orderId}`, {
         method: 'DELETE',
         headers: {
           'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content

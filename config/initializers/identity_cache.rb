@@ -1,4 +1,4 @@
-# Configure IdentityCache
+# Configure IdentityCache with optimized settings
 IdentityCache.cache_backend = Rails.cache
 
 # Set the logger and silence delete warnings in development
@@ -13,16 +13,28 @@ else
   IdentityCache.logger = Rails.logger
 end
 
-# Enable/disable cache based on environment
+# Enhanced IdentityCache configuration for performance
 if defined?(IdentityCache::WithGlobalConfiguration)
   # For newer versions of identity_cache
   IdentityCache.configure do |config|
     config.enabled = Rails.env.production? || Rails.env.staging?
-    # Silence delete warnings in development
-    config.on_error = ->(error, operation, _data) do
-      next if error.is_a?(IdentityCache::UnsupportedOperation) && operation == :delete
+    
+    # Performance optimizations
+    config.cache_namespace = "smartmenu:#{Rails.env}:identity"
+    config.fetch_read_only_records = true if config.respond_to?(:fetch_read_only_records=)
+    
+    # Enhanced error handling for Redis connectivity issues
+    config.on_error = ->(error, operation, data) do
+      # Silence delete warnings in development
+      if Rails.env.development? || Rails.env.test?
+        next if error.is_a?(IdentityCache::UnsupportedOperation) && operation == :delete
+      end
+      
       Rails.logger.error("IdentityCache #{operation} failed: #{error.message}")
-    end if Rails.env.development? || Rails.env.test?
+      
+      # Don't raise in production to maintain availability during Redis issues
+      raise error unless Rails.env.production?
+    end
   end
 else
   # Fallback for older versions

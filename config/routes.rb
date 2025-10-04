@@ -19,6 +19,13 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
   get '/.well-known/appspecific/com.chrome.devtools.json', to: proc { [204, {}, ['']] }
   
+  # Cache and system health checks
+  get '/health', to: 'health#index'
+  get '/health/redis', to: 'health#redis_check'
+  get '/health/database', to: 'health#database_check'
+  get '/health/full', to: 'health#full_check'
+  get '/health/cache-stats', to: 'health#cache_stats'
+  
   # ============================================================================
   # API ENDPOINTS
   # ============================================================================
