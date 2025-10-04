@@ -62,9 +62,11 @@ Rails.application.routes.draw do
   resources :userplans
   resources :testimonials
   
-  # Payment endpoints
-  post "/create_payment_link", to: "payments#create_payment_link"
-  post "/generate_qr", to: "payments#generate_qr"
+  # Payment processing (secure namespace)
+  namespace :payments do
+    post :create_payment_link, controller: 'base'
+    post :generate_qr, controller: 'base'
+  end
   
   # ============================================================================
   # RESTAURANT MANAGEMENT (Main Business Logic)

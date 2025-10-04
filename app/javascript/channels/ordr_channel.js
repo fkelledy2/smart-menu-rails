@@ -420,7 +420,7 @@ function refreshOrderJSLogic() {
             const restaurantId = document.getElementById("paymentRestaurantId").value;
             const openOrderId = document.getElementById("openOrderId").value;
             try {
-              const response = await fetch("/create_payment_link", {
+              const response = await fetch("/payments/create_payment_link", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

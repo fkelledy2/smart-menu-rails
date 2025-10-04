@@ -1,4 +1,4 @@
-class PaymentsController < ApplicationController
+class Payments::BaseController < ApplicationController
   require 'stripe'
   skip_before_action :verify_authenticity_token, only: [:create_payment_link]
 
@@ -31,5 +31,12 @@ class PaymentsController < ApplicationController
       @openOrdr.save
     end
     render json: { payment_link: payment_link.url }
+  end
+
+  def generate_qr
+    # Placeholder for QR generation functionality
+    # Add implementation as needed
+    authorize current_user # Basic authorization for now
+    render json: { message: "QR generation endpoint ready" }
   end
 end

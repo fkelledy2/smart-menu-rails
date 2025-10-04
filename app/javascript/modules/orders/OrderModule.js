@@ -485,7 +485,7 @@ export class OrderModule extends ComponentBase {
     }
 
     try {
-      const response = await post('/create_payment_link', {
+      const response = await post('/payments/create_payment_link', {
         openOrderId,
         amount,
         currency,
