@@ -14,7 +14,6 @@ it:
         menu. Continuare?
       sections: Sezioni
     form:
-      regenerate_images_confirm: Verranno accodati job per la rigenerazione delle immagini per tutti gli articoli di questo menu. Continuare?
       current_pdf: 'PDF corrente:'
       delete: Elimina
       details: Dettagli
@@ -25,6 +24,8 @@ it:
       'on': Attivo
       pdfSettings: Impostazioni PDF
       regenerate_images: Rigenera le immagini
+      regenerate_images_confirm: Verranno accodati job per la rigenerazione delle
+        immagini per tutti gli articoli di questo menu. Continuare?
       remove: Rimuovi
       save: Salva
       settings: Impostazioni

@@ -14,7 +14,6 @@ en:
         in this menu. Continue?
       sections: Sections
     form:
-      regenerate_images_confirm: This will queue image regeneration jobs for all items in this menu. Continue?
       current_pdf: 'Current PDF:'
       delete: Delete
       details: Details
@@ -25,6 +24,8 @@ en:
       'on': 'on'
       pdfSettings: PDF Settings
       regenerate_images: Regenerate images
+      regenerate_images_confirm: This will queue image regeneration jobs for all items
+        in this menu. Continue?
       remove: Remove
       save: Save
       settings: Settings

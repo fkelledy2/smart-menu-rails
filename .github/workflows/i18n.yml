@@ -24,10 +24,10 @@ jobs:
         run: |
           bundle install --jobs 4 --retry 3
 
-      - name: Normalize locale files (fail if changes needed)
+      - name: Check if locale files are normalized
         run: |
-          bundle exec i18n-tasks normalize --fail-on-changes
+          bundle exec i18n-tasks check-normalized
 
-      - name: Check for missing translations (fail on warnings)
+      - name: Check for missing translations
         run: |
-          bundle exec i18n-tasks missing --fail-on-warn
+          bundle exec i18n-tasks missing
