@@ -28,42 +28,32 @@ default: &default
     statement_timeout: 5000  # 5 seconds
 
 development:
-  <<: *default
-  database: smart_menu_development
-
-  # The specified database role being used to connect to PostgreSQL.
-  # To create additional roles in PostgreSQL see `$ createuser --help`.
-  # When left blank, PostgreSQL will use the default role. This is
-  # the same name as the operating system user running Rails.
-  #username: smart_menu
-
-  # The password associated with the PostgreSQL role (username).
-  #password:
-
-  # Connect on a TCP socket. Omitted by default since the client uses a
-  # domain socket that doesn't need configuration. Windows does not have
-  # domain sockets, so uncomment these lines.
-  #host: localhost
-
-  # The TCP port the server listens on. Defaults to 5432.
-  # If your server runs on a different port number, change accordingly.
-  #port: 5432
-
-  # Schema search path. The server defaults to $user,public
-  #schema_search_path: myapp,sharedapp,public
-
-  # Minimum log levels, in increasing order:
-  #   debug5, debug4, debug3, debug2, debug1,
-  #   log, notice, warning, error, fatal, and panic
-  # Defaults to warning.
-  #min_messages: notice
+  primary:
+    <<: *default
+    database: smart_menu_development
+  
+  # Read replica configuration for development (optional)
+  # In development, this can point to the same database or a separate replica
+  replica:
+    <<: *default
+    database: smart_menu_development
+    # For development, use same DB unless REPLICA_DB_HOST is set
+    host: <%= ENV['REPLICA_DB_HOST'] || ENV['DB_HOST'] || 'localhost' %>
+    replica: true
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: smart_menu_test
+  primary:
+    <<: *default
+    database: smart_menu_test
+  
+  # Test environment uses same database for both primary and replica
+  replica:
+    <<: *default
+    database: smart_menu_test
+    replica: true
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -86,7 +76,35 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  database: smart_menu_production
-  username: smart_menu
-  password: <%= ENV["SMART_MENU_DATABASE_PASSWORD"] %>
+  primary:
+    # Heroku uses DATABASE_URL, fallback to individual settings
+    url: <%= ENV['DATABASE_URL'] %>
+    adapter: postgresql
+    encoding: unicode
+    database: smart_menu_production
+    username: smart_menu
+    password: <%= ENV["SMART_MENU_DATABASE_PASSWORD"] %>
+    host: <%= ENV['PRIMARY_DB_HOST'] || ENV['DB_HOST'] || 'localhost' %>
+    pool: <%= ENV.fetch("DB_POOL_SIZE", 5).to_i %>
+    checkout_timeout: 30
+    prepared_statements: true
+    variables:
+      statement_timeout: 5000
+  
+  # Read replica configuration for production
+  replica:
+    # Use REPLICA_DATABASE_URL if available, otherwise fallback to individual settings
+    url: <%= ENV['REPLICA_DATABASE_URL'] %>
+    adapter: postgresql
+    encoding: unicode
+    database: smart_menu_production
+    username: <%= ENV['REPLICA_DB_USER'] || 'smart_menu' %>
+    password: <%= ENV["REPLICA_DATABASE_PASSWORD"] || ENV["SMART_MENU_DATABASE_PASSWORD"] %>
+    host: <%= ENV['REPLICA_DB_HOST'] || ENV['PRIMARY_DB_HOST'] || ENV['DB_HOST'] || 'localhost' %>
+    replica: true
+    pool: <%= ENV.fetch("REPLICA_DB_POOL_SIZE", 15).to_i %>
+    checkout_timeout: 30
+    prepared_statements: true
+    variables:
+      statement_timeout: 15000  # 15 seconds for longer analytics queries
+      lock_timeout: 5000        # 5 seconds for lock timeout

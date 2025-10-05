@@ -151,7 +151,8 @@ end
 ```yaml
 # config/database.yml - Production optimizations
 production:
-  <<: *default
+  adapter: postgresql
+  encoding: unicode
   pool: <%= ENV.fetch("DB_POOL_SIZE", 25).to_i %>
   checkout_timeout: 30
   prepared_statements: true
@@ -171,22 +172,26 @@ production:
 
 **Database Configuration:**
 
-```yaml
+```ruby
 # config/database.yml
 production:
   primary:
-    <<: *default
+    adapter: postgresql
+    encoding: unicode
     database: smart_menu_production
     username: smart_menu
     password: <%= ENV["SMART_MENU_DATABASE_PASSWORD"] %>
+    pool: <%= ENV.fetch("DB_POOL_SIZE", 5).to_i %>
     
   primary_replica:
-    <<: *default
+    adapter: postgresql
+    encoding: unicode
     database: smart_menu_production
     username: smart_menu_readonly
     password: <%= ENV["SMART_MENU_REPLICA_PASSWORD"] %>
     host: <%= ENV["SMART_MENU_REPLICA_HOST"] %>
     replica: true
+    pool: <%= ENV.fetch("DB_POOL_SIZE", 5).to_i %>
 ```
 
 **Application Configuration:**

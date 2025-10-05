@@ -144,39 +144,64 @@ namespace :db do
     task connection_pool: :environment do
       puts "📊 Connection Pool Statistics:"
       
-      pool = ActiveRecord::Base.connection_pool
-      puts "  Total connections: #{pool.size}"
-      
-      # Use stat method for Rails 7+ compatibility
-      if pool.respond_to?(:stat)
-        stat = pool.stat
-        puts "  Active connections: #{stat[:busy]}"
-        puts "  Available connections: #{stat[:size] - stat[:busy]}"
-        puts "  Waiting: #{stat[:waiting]}"
-        puts "  Utilization: #{((stat[:busy].to_f / stat[:size]) * 100).round(2)}%"
-        
-        if stat[:busy].to_f / stat[:size] > 0.8
-          puts "⚠️  Warning: Connection pool utilization is high (>80%)"
-        else
-          puts "✅ Connection pool utilization is healthy"
-        end
-      else
-        # Fallback for older Rails versions
-        begin
-          active_connections = pool.connections.count(&:in_use?)
-          puts "  Active connections: #{active_connections}"
-          puts "  Available connections: #{pool.size - active_connections}"
-          puts "  Utilization: #{((active_connections.to_f / pool.size) * 100).round(2)}%"
+      # Get stats from DatabaseRoutingService if available
+      begin
+        if defined?(DatabaseRoutingService)
+          stats = DatabaseRoutingService.connection_stats
           
-          if active_connections.to_f / pool.size > 0.8
-            puts "⚠️  Warning: Connection pool utilization is high (>80%)"
-          else
-            puts "✅ Connection pool utilization is healthy"
+          if stats[:primary] && !stats[:primary][:error]
+            puts "\n🔵 Primary Database:"
+            puts "  Total connections: #{stats[:primary][:size]}"
+            puts "  Active connections: #{stats[:primary][:busy]}"
+            puts "  Available connections: #{stats[:primary][:available]}"
+            puts "  Utilization: #{stats[:primary][:utilization]}%"
+            
+            if stats[:primary][:utilization] > 80
+              puts "  ⚠️  Warning: Primary pool utilization is high (>80%)"
+            else
+              puts "  ✅ Primary pool utilization is healthy"
+            end
           end
-        rescue => e
-          puts "❌ Error retrieving connection pool stats: #{e.message}"
+          
+          if stats[:replica] && !stats[:replica][:error]
+            puts "\n🟢 Read Replica:"
+            puts "  Total connections: #{stats[:replica][:size]}"
+            puts "  Active connections: #{stats[:replica][:busy]}"
+            puts "  Available connections: #{stats[:replica][:available]}"
+            puts "  Utilization: #{stats[:replica][:utilization]}%"
+            
+            if stats[:replica][:utilization] > 80
+              puts "  ⚠️  Warning: Replica pool utilization is high (>80%)"
+            else
+              puts "  ✅ Replica pool utilization is healthy"
+            end
+          end
+          
+          puts "\n📡 Replica Status:"
+          puts "  Replica healthy: #{stats[:replica_healthy] ? '✅ Yes' : '❌ No'}"
+          if stats[:replica_lag] && stats[:replica_lag] != Float::INFINITY
+            puts "  Replica lag: #{stats[:replica_lag].round(3)} seconds"
+            if stats[:replica_lag] > 1.0
+              puts "  ⚠️  Warning: Replica lag is high (>1s)"
+            end
+          else
+            puts "  Replica lag: ❌ Unable to determine"
+          end
+        else
+          # Fallback to basic connection pool stats
+          pool = ActiveRecord::Base.connection_pool
           puts "  Total connections: #{pool.size}"
+          
+          if pool.respond_to?(:stat)
+            stat = pool.stat
+            puts "  Active connections: #{stat[:busy]}"
+            puts "  Available connections: #{stat[:size] - stat[:busy]}"
+            puts "  Utilization: #{((stat[:busy].to_f / stat[:size]) * 100).round(2)}%"
+          end
         end
+        
+      rescue => e
+        puts "❌ Error retrieving connection pool stats: #{e.message}"
       end
     end
     
