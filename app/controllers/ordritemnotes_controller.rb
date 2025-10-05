@@ -1,94 +1,80 @@
 class OrdritemnotesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_ordritemnote, only: %i[show edit update destroy]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /ordritemnotes or /ordritemnotes.json
   def index
-    if current_user
-      @ordritemnotes = []
-      Restaurant.where(user: current_user).find_each do |restaurant|
-        Ordr.where(restaurant: restaurant).find_each do |ordr|
-          Ordritem.where(ordr: ordr).find_each do |ordritem|
-            @ordritemnotes += Ordritemnote.where(ordritem: ordritem).all
-          end
-        end
-      end
-    else
-      redirect_to root_url
-    end
+    @ordritemnotes = policy_scope(Ordritemnote)
   end
 
   # GET /ordritemnotes/1 or /ordritemnotes/1.json
   def show
-    unless current_user
-      redirect_to root_url
-    end
+    authorize @ordritemnote
   end
 
   # GET /ordritemnotes/new
   def new
-    if current_user
-      @ordritemnote = Ordritemnote.new
-    else
-      redirect_to root_url
-    end
+    @ordritemnote = Ordritemnote.new
+    authorize @ordritemnote
   end
 
   # GET /ordritemnotes/1/edit
   def edit
-    unless current_user
-      redirect_to root_url
-    end
+    authorize @ordritemnote
   end
 
   # POST /ordritemnotes or /ordritemnotes.json
   def create
-    if current_user
-      @ordritemnote = Ordritemnote.new(ordritemnote_params)
-      respond_to do |format|
-        if @ordritemnote.save
-          format.html do
-            redirect_to ordritemnote_url(@ordritemnote), notice: 'Ordritemnote was successfully created.'
-          end
-          format.json { render :show, status: :created, location: @ordritemnote }
-        else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @ordritemnote.errors, status: :unprocessable_entity }
+    @ordritemnote = Ordritemnote.new(ordritemnote_params)
+    authorize @ordritemnote
+    
+    respond_to do |format|
+      if @ordritemnote.save
+        format.html do
+          redirect_to ordritemnote_url(@ordritemnote), 
+                      notice: t('common.flash.created', resource: t('activerecord.models.ordritemnote'))
         end
+        format.json { render :show, status: :created, location: @ordritemnote }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @ordritemnote.errors, status: :unprocessable_entity }
       end
-    else
-      redirect_to root_url
     end
   end
 
   # PATCH/PUT /ordritemnotes/1 or /ordritemnotes/1.json
   def update
-    if current_user
-      respond_to do |format|
-        if @ordritemnote.update(ordritemnote_params)
-          format.html do
-            redirect_to ordritemnote_url(@ordritemnote), notice: 'Ordritemnote was successfully updated.'
-          end
-          format.json { render :show, status: :ok, location: @ordritemnote }
-        else
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @ordritemnote.errors, status: :unprocessable_entity }
+    authorize @ordritemnote
+    
+    respond_to do |format|
+      if @ordritemnote.update(ordritemnote_params)
+        format.html do
+          redirect_to ordritemnote_url(@ordritemnote), 
+                      notice: t('common.flash.updated', resource: t('activerecord.models.ordritemnote'))
         end
+        format.json { render :show, status: :ok, location: @ordritemnote }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @ordritemnote.errors, status: :unprocessable_entity }
       end
-    else
-      redirect_to root_url
     end
   end
 
   # DELETE /ordritemnotes/1 or /ordritemnotes/1.json
   def destroy
-    if current_user
-      @ordritemnote.destroy!
-      respond_to do |format|
-        format.html { redirect_to ordritemnotes_url, notice: 'Ordritemnote was successfully destroyed.' }
-        format.json { head :no_content }
+    authorize @ordritemnote
+    
+    @ordritemnote.destroy!
+    respond_to do |format|
+      format.html do
+        redirect_to ordritemnotes_url, 
+                    notice: t('common.flash.deleted', resource: t('activerecord.models.ordritemnote'))
       end
-    else
-      redirect_to root_url
+      format.json { head :no_content }
     end
   end
 
@@ -96,16 +82,7 @@ class OrdritemnotesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_ordritemnote
-    if current_user
-      @ordritemnote = Ordritemnote.find(params[:id])
-      if @ordritemnote.nil? || (@ordritemnote.ordr.restaurant.user != current_user)
-        redirect_to root_url
-      end
-    else
-      redirect_to root_url
-    end
-  rescue ActiveRecord::RecordNotFound
-    redirect_to root_url
+    @ordritemnote = Ordritemnote.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.

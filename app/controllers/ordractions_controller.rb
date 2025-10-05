@@ -1,83 +1,80 @@
 class OrdractionsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_ordraction, only: %i[show edit update destroy]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /ordractions or /ordractions.json
   def index
-    if current_user
-      @ordractions = Ordraction.all
-    else
-      redirect_to root_url
-    end
+    @ordractions = policy_scope(Ordraction)
   end
 
   # GET /ordractions/1 or /ordractions/1.json
   def show
-    unless current_user
-      redirect_to root_url
-    end
+    authorize @ordraction
   end
 
   # GET /ordractions/new
   def new
-    if current_user
-      @ordraction = Ordraction.new
-    else
-      redirect_to root_url
-    end
+    @ordraction = Ordraction.new
+    authorize @ordraction
   end
 
   # GET /ordractions/1/edit
   def edit
-    unless current_user
-      redirect_to root_url
-    end
+    authorize @ordraction
   end
 
   # POST /ordractions or /ordractions.json
   def create
-    if current_user
-      @ordraction = Ordraction.new(ordraction_params)
-      respond_to do |format|
-        if @ordraction.save
-          format.html { redirect_to ordraction_url(@ordraction), notice: 'Ordraction was successfully created.' }
-          format.json { render :show, status: :created, location: @ordraction }
-        else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @ordraction.errors, status: :unprocessable_entity }
+    @ordraction = Ordraction.new(ordraction_params)
+    authorize @ordraction
+    
+    respond_to do |format|
+      if @ordraction.save
+        format.html do
+          redirect_to ordraction_url(@ordraction), 
+                      notice: t('common.flash.created', resource: t('activerecord.models.ordraction'))
         end
+        format.json { render :show, status: :created, location: @ordraction }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @ordraction.errors, status: :unprocessable_entity }
       end
-    else
-      redirect_to root_url
     end
   end
 
   # PATCH/PUT /ordractions/1 or /ordractions/1.json
   def update
-    if current_user
-      respond_to do |format|
-        if @ordraction.update(ordraction_params)
-          format.html { redirect_to ordraction_url(@ordraction), notice: 'Ordraction was successfully updated.' }
-          format.json { render :show, status: :ok, location: @ordraction }
-        else
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @ordraction.errors, status: :unprocessable_entity }
+    authorize @ordraction
+    
+    respond_to do |format|
+      if @ordraction.update(ordraction_params)
+        format.html do
+          redirect_to ordraction_url(@ordraction), 
+                      notice: t('common.flash.updated', resource: t('activerecord.models.ordraction'))
         end
+        format.json { render :show, status: :ok, location: @ordraction }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @ordraction.errors, status: :unprocessable_entity }
       end
-    else
-      redirect_to root_url
     end
   end
 
   # DELETE /ordractions/1 or /ordractions/1.json
   def destroy
-    if current_user
-      @ordraction.destroy!
-      respond_to do |format|
-        format.html { redirect_to ordractions_url, notice: 'Ordraction was successfully destroyed.' }
-        format.json { head :no_content }
+    authorize @ordraction
+    
+    @ordraction.destroy!
+    respond_to do |format|
+      format.html do
+        redirect_to ordractions_url, 
+                    notice: t('common.flash.deleted', resource: t('activerecord.models.ordraction'))
       end
-    else
-      redirect_to root_url
+      format.json { head :no_content }
     end
   end
 
