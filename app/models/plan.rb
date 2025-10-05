@@ -1,4 +1,12 @@
 class Plan < ApplicationRecord
+  include IdentityCache
+  
+  # Associations
+  has_many :users, dependent: :nullify
+  has_many :userplans, dependent: :destroy
+  has_many :features_plans, dependent: :destroy
+  has_many :features, through: :features_plans
+  
   enum :status, {
     inactive: 0,
     active: 1,
@@ -8,6 +16,17 @@ class Plan < ApplicationRecord
     register: 0,
     call: 1,
   }
+  
+  # IdentityCache configuration
+  cache_index :id
+  cache_index :key, unique: true
+  cache_index :status
+  cache_index :action
+  
+  # Cache associations
+  cache_has_many :users, embed: :ids
+  cache_has_many :userplans, embed: :ids
+  cache_has_many :features_plans, embed: :ids
   
   # Virtual attribute for name (uses key)
   def name

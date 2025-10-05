@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include IdentityCache
+  
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :omniauthable
@@ -9,10 +11,28 @@ class User < ApplicationRecord
   has_many :notifications, as: :recipient, dependent: :destroy, class_name: 'Noticed::Notification'
   has_many :notification_mentions, as: :record, dependent: :destroy, class_name: 'Noticed::Event'
   has_many :services
+  has_many :userplans, dependent: :destroy
+  has_many :testimonials, dependent: :destroy
+  has_many :employees, dependent: :destroy
 
   belongs_to :plan, optional: true
   has_many :restaurants, dependent: :destroy
   has_one :onboarding_session, dependent: :destroy
+  
+  # IdentityCache configuration
+  cache_index :id
+  cache_index :email, unique: true
+  cache_index :confirmation_token, unique: true
+  cache_index :reset_password_token, unique: true
+  cache_index :plan_id
+  
+  # Cache associations
+  cache_has_many :restaurants, embed: :ids
+  cache_has_many :userplans, embed: :ids
+  cache_has_many :testimonials, embed: :ids
+  cache_has_many :employees, embed: :ids
+  cache_has_one :onboarding_session, embed: :id
+  cache_belongs_to :plan
   
   after_create :create_onboarding_session
   before_validation :assign_default_plan, on: :create

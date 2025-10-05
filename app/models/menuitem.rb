@@ -5,14 +5,35 @@ class Menuitem < ApplicationRecord
   # Standard ActiveRecord associations
   has_many :menuitemlocales
   belongs_to :menusection
+  has_many :menuitem_allergyn_mappings, dependent: :destroy
+  has_many :allergyns, through: :menuitem_allergyn_mappings
+  has_many :menuitem_tag_mappings, dependent: :destroy
+  has_many :tags, through: :menuitem_tag_mappings
+  has_many :menuitem_size_mappings, dependent: :destroy
+  has_many :sizes, through: :menuitem_size_mappings
+  has_many :menuitem_ingredient_mappings, dependent: :destroy
+  has_many :ingredients, through: :menuitem_ingredient_mappings
+  has_many :ordritems, dependent: :destroy
+  has_one :inventory, dependent: :destroy
+  has_one :genimage, dependent: :destroy
 
   # IdentityCache configuration
   cache_index :id
   cache_index :menusection_id
+  cache_index :status
+  cache_index :menusection_id, :status
+  cache_index :menusection_id, :sequence
 
   # Cache associations
   cache_belongs_to :menusection
   cache_has_many :menuitemlocales, embed: :ids
+  cache_has_many :menuitem_allergyn_mappings, embed: :ids
+  cache_has_many :menuitem_size_mappings, embed: :ids
+  cache_has_many :menuitem_ingredient_mappings, embed: :ids
+  cache_has_many :menuitem_tag_mappings, embed: :ids
+  cache_has_many :ordritems, embed: :ids
+  cache_has_one :inventory, embed: :id
+  cache_has_one :genimage, embed: :id
 
   def localised_name(locale)
     mil = Menuitemlocale.where(menuitem_id: id, locale: locale).first
@@ -38,20 +59,6 @@ class Menuitem < ApplicationRecord
     end
   end
 
-  has_many :menuitem_allergyn_mappings, dependent: :destroy
-  has_many :allergyns, through: :menuitem_allergyn_mappings
-
-  has_many :menuitem_tag_mappings, dependent: :destroy
-  has_many :tags, through: :menuitem_tag_mappings
-
-  has_many :menuitem_size_mappings, dependent: :destroy
-  has_many :sizes, through: :menuitem_size_mappings
-
-  has_many :menuitem_ingredient_mappings, dependent: :destroy
-  has_many :ingredients, through: :menuitem_ingredient_mappings
-
-  has_one :inventory, dependent: :destroy
-  has_one :genimage, dependent: :destroy
 
   enum :status, {
     inactive: 0,

@@ -1,7 +1,19 @@
 class OnboardingSession < ApplicationRecord
+  include IdentityCache
+  
   belongs_to :user, optional: true
   belongs_to :restaurant, optional: true
   belongs_to :menu, optional: true
+  
+  # IdentityCache configuration
+  cache_index :id
+  cache_index :user_id
+  cache_index :status
+  
+  # Cache associations
+  cache_belongs_to :user
+  cache_belongs_to :restaurant
+  cache_belongs_to :menu
   
   # Track completion state
   enum :status, {
