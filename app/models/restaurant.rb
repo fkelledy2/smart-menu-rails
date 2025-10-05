@@ -8,6 +8,7 @@ class Restaurant < ApplicationRecord
   has_many :tablesettings, dependent: :delete_all
   has_many :menus, dependent: :delete_all
   has_many :employees, dependent: :delete_all
+  has_many :ordrs, dependent: :delete_all
   has_many :taxes, dependent: :delete_all
   has_many :tips, dependent: :delete_all
   has_many :restaurantavailabilities, dependent: :delete_all
@@ -28,6 +29,7 @@ class Restaurant < ApplicationRecord
   cache_has_many :menus, embed: :ids
   cache_has_many :tablesettings, embed: :ids
   cache_has_many :employees, embed: :ids
+  cache_has_many :ordrs, embed: :ids
   cache_has_many :taxes, embed: :ids
   cache_has_many :ocr_menu_imports, embed: :ids
   cache_has_many :tips, embed: :ids

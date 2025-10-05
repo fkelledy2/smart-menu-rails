@@ -24,6 +24,10 @@ class RestaurantTest < ActiveSupport::TestCase
     assert_respond_to @restaurant, :employees
   end
 
+  test "should have many ordrs" do
+    assert_respond_to @restaurant, :ordrs
+  end
+
   test "should have many taxes" do
     assert_respond_to @restaurant, :taxes
   end

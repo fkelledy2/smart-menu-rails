@@ -17,6 +17,10 @@ class Employee < ApplicationRecord
   cache_belongs_to :user
   cache_belongs_to :restaurant
 
+  # Cache invalidation hooks
+  after_update :invalidate_employee_caches
+  after_destroy :invalidate_employee_caches
+
   enum :status, {
     inactive: 0,
     active: 1,
@@ -31,4 +35,12 @@ class Employee < ApplicationRecord
   validates :eid, presence: true
   validates :role, presence: true
   validates :status, presence: true
+
+  private
+
+  def invalidate_employee_caches
+    AdvancedCacheService.invalidate_employee_caches(self.id)
+    AdvancedCacheService.invalidate_restaurant_caches(self.restaurant_id)
+    AdvancedCacheService.invalidate_user_caches(self.restaurant.user_id) if self.restaurant.user_id
+  end
 end

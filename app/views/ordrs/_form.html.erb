@@ -1,4 +1,4 @@
-<%= form_with(model: ordr) do |form| %>
+<%= form_with(model: [ordr.restaurant || @restaurant, ordr]) do |form| %>
   <div class="mb-3">
     <%= form.label :employee_id, class: 'form-label' %>
       <%= form.text_field :employee_id, class: 'form-control' %>

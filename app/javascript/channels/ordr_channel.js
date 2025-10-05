@@ -324,7 +324,7 @@ function refreshOrderJSLogic() {
                 }
             };
             const restaurantId = $('#currentRestaurant').text();
-            post( `/restaurants/${restaurantId}/ordritems`, ordritem, '/menus/'+$('#currentMenu').text()+'/tablesettings/'+$('#currentTable').text() );
+            post( `/restaurants/${restaurantId}/ordritems`, ordritem );
             return true;
         });
     }
@@ -342,7 +342,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_OPENED
                     }
                 };
-                post( '/ordrs', ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                post( `/restaurants/${restaurantId}/ordrs`, ordr );
             } else {
                 let ordr = {
                     'ordr': {
@@ -353,7 +354,8 @@ function refreshOrderJSLogic() {
                       'status' : ORDR_OPENED
                     }
                 };
-                post( '/ordrs', ordr );
+                const restaurantId = $('#currentRestaurant').text();
+                post( `/restaurants/${restaurantId}/ordrs`, ordr );
             }
        });
     }

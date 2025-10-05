@@ -35,6 +35,10 @@ class Menuitem < ApplicationRecord
   cache_has_one :inventory, embed: :id
   cache_has_one :genimage, embed: :id
 
+  # Cache invalidation hooks
+  after_update :invalidate_menuitem_caches
+  after_destroy :invalidate_menuitem_caches
+
   def localised_name(locale)
     mil = Menuitemlocale.where(menuitem_id: id, locale: locale).first
     rl = Restaurantlocale.where(restaurant_id: menusection.menu.restaurant.id, locale: locale).first
@@ -121,4 +125,12 @@ class Menuitem < ApplicationRecord
   validates :preptime, presence: true, numericality: { only_integer: true }
   validates :price, presence: true, numericality: { only_float: true }
   validates :calories, presence: true, numericality: { only_integer: true }
+
+  private
+
+  def invalidate_menuitem_caches
+    AdvancedCacheService.invalidate_menuitem_caches(self.id)
+    AdvancedCacheService.invalidate_menu_caches(self.menusection.menu.id)
+    AdvancedCacheService.invalidate_restaurant_caches(self.menusection.menu.restaurant.id)
+  end
 end

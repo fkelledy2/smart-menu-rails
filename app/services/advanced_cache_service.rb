@@ -1,6 +1,83 @@
 # Advanced caching service for complex queries and data structures
 class AdvancedCacheService
+  # Cache performance monitoring
+  CACHE_METRICS = {
+    hits: 0,
+    misses: 0,
+    writes: 0,
+    deletes: 0,
+    errors: 0
+  }.freeze
+
   class << self
+    # Cache performance monitoring methods
+    def cache_stats
+      {
+        hits: Rails.cache.read('cache_metrics:hits') || 0,
+        misses: Rails.cache.read('cache_metrics:misses') || 0,
+        writes: Rails.cache.read('cache_metrics:writes') || 0,
+        deletes: Rails.cache.read('cache_metrics:deletes') || 0,
+        errors: Rails.cache.read('cache_metrics:errors') || 0,
+        hit_rate: calculate_hit_rate,
+        total_operations: calculate_total_operations,
+        last_reset: Rails.cache.read('cache_metrics:last_reset') || Time.current.iso8601
+      }
+    end
+
+    def reset_cache_stats
+      CACHE_METRICS.keys.each do |metric|
+        Rails.cache.write("cache_metrics:#{metric}", 0, expires_in: 1.week)
+      end
+      Rails.cache.write('cache_metrics:last_reset', Time.current.iso8601, expires_in: 1.week)
+      Rails.logger.info("[AdvancedCacheService] Cache statistics reset")
+    end
+
+    def increment_metric(metric)
+      current_value = Rails.cache.read("cache_metrics:#{metric}") || 0
+      Rails.cache.write("cache_metrics:#{metric}", current_value + 1, expires_in: 1.week)
+    rescue => e
+      Rails.logger.error("[AdvancedCacheService] Failed to increment metric #{metric}: #{e.message}")
+    end
+
+    def monitored_cache_fetch(cache_key, options = {}, &block)
+      start_time = Time.current
+      
+      begin
+        result = Rails.cache.fetch(cache_key, options) do
+          increment_metric(:misses)
+          increment_metric(:writes)
+          Rails.logger.debug("[AdvancedCacheService] Cache MISS: #{cache_key}")
+          yield
+        end
+        
+        # If we got here without calling the block, it was a cache hit
+        if Rails.cache.exist?(cache_key)
+          increment_metric(:hits)
+          Rails.logger.debug("[AdvancedCacheService] Cache HIT: #{cache_key}")
+        end
+        
+        duration = ((Time.current - start_time) * 1000).round(2)
+        Rails.logger.debug("[AdvancedCacheService] Cache operation completed in #{duration}ms")
+        
+        result
+      rescue => e
+        increment_metric(:errors)
+        Rails.logger.error("[AdvancedCacheService] Cache error for #{cache_key}: #{e.message}")
+        # Return the block result directly if cache fails
+        yield
+      end
+    end
+
+    def cache_info
+      {
+        service_version: "1.0.0",
+        total_methods: count_cache_methods,
+        active_keys: estimate_active_keys,
+        memory_usage: estimate_memory_usage,
+        performance: cache_stats
+      }
+    end
+
     # Cache complex menu queries with localization
     def cached_menu_with_items(menu_id, locale: 'en', include_inactive: false)
       cache_key = "menu_full:#{menu_id}:#{locale}:#{include_inactive}"
@@ -71,7 +148,7 @@ class AdvancedCacheService
                          end
         
         # Calculate analytics
-        total_revenue = orders_in_range.sum { |o| o.total_amount || 0 }
+        total_revenue = orders_in_range.sum { |o| o.gross || 0 }
         order_count = orders_in_range.count
         
         {
@@ -116,9 +193,9 @@ class AdvancedCacheService
           period_days: days,
           performance: {
             total_orders: menu_orders.count,
-            total_revenue: menu_orders.sum { |o| o.total_amount || 0 },
-            items_ordered: menu_orders.sum { |o| o.fetch_ordritems.sum(&:quantity) },
-            unique_customers: menu_orders.map(&:customer_email).compact.uniq.count
+            total_revenue: menu_orders.sum { |o| o.gross || 0 },
+            items_ordered: menu_orders.sum { |o| o.respond_to?(:fetch_ordritems) ? o.fetch_ordritems.count : o.ordritems.count },
+            unique_customers: menu_orders.map { |o| o.respond_to?(:customer_email) ? o.customer_email : nil }.compact.uniq.count
           },
           item_analysis: item_performance,
           recommendations: generate_menu_recommendations(item_performance)
@@ -147,7 +224,7 @@ class AdvancedCacheService
             restaurant: serialize_restaurant_basic(restaurant),
             orders_count: recent_orders.count,
             menu_updates_count: recent_menu_updates.count,
-            revenue: recent_orders.sum { |o| o.total_amount || 0 }
+            revenue: recent_orders.sum { |o| o.gross || 0 }
           }
         end
         
@@ -165,7 +242,774 @@ class AdvancedCacheService
       end
     end
 
-    # Invalidate related caches when data changes
+    # Cache menu items with comprehensive details
+    def cached_menu_items_with_details(menu_id, include_analytics: false)
+      cache_key = "menu_items:#{menu_id}:#{include_analytics}"
+      
+      Rails.cache.fetch(cache_key, expires_in: 20.minutes) do
+        menu = Menu.find(menu_id)
+        
+        items = menu.menusections.includes(:menuitems).flat_map do |section|
+          section.menuitems.where(archived: false).map do |item|
+            item_data = {
+              id: item.id,
+              name: item.name,
+              description: item.description,
+              price: item.price,
+              status: item.status,
+              sequence: item.sequence,
+              section: {
+                id: section.id,
+                name: section.name
+              }
+            }
+            
+            if include_analytics
+              # Add basic analytics data
+              item_data[:analytics] = {
+                views_count: 0, # Placeholder - would need actual analytics
+                orders_count: 0, # Placeholder - would need order data
+                revenue: 0 # Placeholder - would need order data
+              }
+            end
+            
+            item_data
+          end
+        end
+        
+        {
+          menu: serialize_menu_basic(menu),
+          items: items,
+          metadata: {
+            total_items: items.count,
+            active_items: items.select { |i| i[:status] == 'active' }.count,
+            cached_at: Time.current.iso8601
+          }
+        }
+      end
+    end
+
+    # Cache section items with details
+    def cached_section_items_with_details(menusection_id)
+      Rails.cache.fetch("section_items:#{menusection_id}", expires_in: 15.minutes) do
+        menusection = Menusection.find(menusection_id)
+        
+        items = menusection.menuitems.where(archived: false).map do |item|
+          {
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            price: item.price,
+            status: item.status,
+            sequence: item.sequence,
+            calories: item.calories,
+            has_image: item.image.present?
+          }
+        end
+        
+        {
+          section: {
+            id: menusection.id,
+            name: menusection.name,
+            menu_id: menusection.menu.id
+          },
+          items: items,
+          metadata: {
+            total_items: items.count,
+            active_items: items.select { |i| i[:status] == 'active' }.count,
+            cached_at: Time.current.iso8601
+          }
+        }
+      end
+    end
+
+    # Cache individual menuitem with analytics
+    def cached_menuitem_with_analytics(menuitem_id)
+      Rails.cache.fetch("menuitem_analytics:#{menuitem_id}", expires_in: 30.minutes) do
+        menuitem = Menuitem.find(menuitem_id)
+        
+        {
+          menuitem: {
+            id: menuitem.id,
+            name: menuitem.name,
+            description: menuitem.description,
+            price: menuitem.price,
+            status: menuitem.status,
+            calories: menuitem.calories,
+            has_image: menuitem.image.present?
+          },
+          section: {
+            id: menuitem.menusection.id,
+            name: menuitem.menusection.name
+          },
+          menu: {
+            id: menuitem.menusection.menu.id,
+            name: menuitem.menusection.menu.name
+          },
+          restaurant: serialize_restaurant_basic(menuitem.menusection.menu.restaurant),
+          analytics: {
+            # Placeholder analytics - would need actual order data
+            total_orders: 0,
+            total_revenue: 0,
+            average_rating: 0,
+            last_ordered: nil
+          },
+          cached_at: Time.current.iso8601
+        }
+      end
+    end
+
+    # Cache menuitem performance analytics
+    def cached_menuitem_performance(menuitem_id, days: 30)
+      cache_key = "menuitem_performance:#{menuitem_id}:#{days}days"
+      
+      Rails.cache.fetch(cache_key, expires_in: 2.hours) do
+        menuitem = Menuitem.find(menuitem_id)
+        restaurant = menuitem.menusection.menu.restaurant
+        
+        # Get orders for this menuitem in the specified period
+        since_date = days.days.ago
+        # Note: This would need actual order item data structure
+        menuitem_orders = []
+        
+        {
+          menuitem: {
+            id: menuitem.id,
+            name: menuitem.name,
+            price: menuitem.price
+          },
+          period_days: days,
+          performance: {
+            total_orders: menuitem_orders.count,
+            total_revenue: menuitem_orders.sum { |o| menuitem.price },
+            average_orders_per_day: menuitem_orders.count / days.to_f,
+            popularity_rank: 0 # Would need comparison with other items
+          },
+          trends: {
+            # Placeholder for trend analysis
+            weekly_orders: [],
+            peak_hours: [],
+            seasonal_patterns: {}
+          },
+          recommendations: [
+            # Placeholder recommendations
+            "Consider promotional pricing during slow periods",
+            "Item performs well - maintain current strategy"
+          ]
+        }
+      end
+    end
+
+    # Cache restaurant orders with comprehensive data
+    def cached_restaurant_orders(restaurant_id, include_calculations: false)
+      cache_key = "restaurant_orders:#{restaurant_id}:#{include_calculations}"
+      
+      Rails.cache.fetch(cache_key, expires_in: 10.minutes) do
+        restaurant = Restaurant.find(restaurant_id)
+        
+        orders = if restaurant.respond_to?(:ordrs)
+                  restaurant.ordrs.includes(:ordritems, :tablesetting, :menu).order(created_at: :desc).limit(100)
+                else
+                  []
+                end
+        
+        orders_data = orders.map do |order|
+          order_data = {
+            id: order.id,
+            status: order.status,
+            created_at: order.created_at.iso8601,
+            table_number: order.tablesetting&.name,
+            menu_name: order.menu&.name,
+            items_count: order.ordritems.count
+          }
+          
+          if include_calculations
+            # Add tax calculations
+            taxes = restaurant.taxes.order(:sequence)
+            nett = order.respond_to?(:runningTotal) ? order.runningTotal : 0
+            total_tax = 0
+            total_service = 0
+            
+            taxes.each do |tax|
+              if tax.taxtype == 'service'
+                total_service += ((tax.taxpercentage * nett) / 100)
+              else
+                total_tax += ((tax.taxpercentage * nett) / 100)
+              end
+            end
+            
+            covercharge = (order.respond_to?(:ordercapacity) && order.menu) ? 
+                         order.ordercapacity * (order.menu.covercharge || 0) : 0
+            
+            order_data[:calculations] = {
+              nett: nett,
+              tax: total_tax,
+              service: total_service,
+              covercharge: covercharge,
+              tip: order.tip || 0,
+              gross: nett + covercharge + (order.tip || 0) + total_service + total_tax
+            }
+          end
+          
+          order_data
+        end
+        
+        {
+          restaurant: serialize_restaurant_basic(restaurant),
+          orders: orders_data,
+          metadata: {
+            total_orders: orders_data.count,
+            active_orders: orders_data.select { |o| o[:status] != 'closed' }.count,
+            cached_at: Time.current.iso8601
+          }
+        }
+      end
+    end
+
+    # Cache user's all orders across restaurants
+    def cached_user_all_orders(user_id)
+      Rails.cache.fetch("user_orders:#{user_id}", expires_in: 15.minutes) do
+        user = User.find(user_id)
+        all_orders = []
+        restaurants_count = 0
+        
+        user.restaurants.each do |restaurant|
+          restaurants_count += 1
+          if restaurant.respond_to?(:ordrs)
+            restaurant_orders = restaurant.ordrs.includes(:tablesetting, :menu)
+                                             .order(created_at: :desc).limit(50)
+            
+            restaurant_orders.each do |order|
+              all_orders << {
+                id: order.id,
+                status: order.status,
+                created_at: order.created_at.iso8601,
+                restaurant_name: restaurant.name,
+                restaurant_id: restaurant.id,
+                table_number: order.tablesetting&.name,
+                menu_name: order.menu&.name,
+                items_count: order.ordritems.count
+              }
+            end
+          end
+        end
+        
+        # Sort all orders by creation date
+        all_orders.sort_by! { |o| o[:created_at] }.reverse!
+        
+        {
+          user: serialize_user_basic(user),
+          orders: all_orders,
+          metadata: {
+            restaurants_count: restaurants_count,
+            total_orders: all_orders.count,
+            cached_at: Time.current.iso8601
+          }
+        }
+      end
+    end
+
+    # Cache individual order with comprehensive details and calculations
+    def cached_order_with_details(order_id)
+      Rails.cache.fetch("order_full:#{order_id}", expires_in: 30.minutes) do
+        order = if defined?(Ordr)
+                  Ordr.find(order_id)
+                else
+                  # Fallback if Ordr model doesn't exist
+                  nil
+                end
+        
+        return { error: "Order not found" } unless order
+        
+        restaurant = order.restaurant
+        taxes = restaurant.taxes.order(:sequence)
+        
+        # Calculate order totals
+        nett = order.respond_to?(:runningTotal) ? order.runningTotal : 0
+        total_tax = 0
+        total_service = 0
+        
+        taxes.each do |tax|
+          if tax.taxtype == 'service'
+            total_service += ((tax.taxpercentage * nett) / 100)
+          else
+            total_tax += ((tax.taxpercentage * nett) / 100)
+          end
+        end
+        
+        covercharge = (order.respond_to?(:ordercapacity) && order.menu) ? 
+                     order.ordercapacity * (order.menu.covercharge || 0) : 0
+        tip = order.tip || 0
+        gross = nett + covercharge + tip + total_service + total_tax
+        
+        {
+          order: {
+            id: order.id,
+            status: order.status,
+            created_at: order.created_at.iso8601,
+            updated_at: order.updated_at.iso8601
+          },
+          restaurant: serialize_restaurant_basic(restaurant),
+          calculations: {
+            nett: nett,
+            tax: total_tax,
+            service: total_service,
+            covercharge: covercharge,
+            tip: tip,
+            gross: gross
+          },
+          items: order.ordritems.map do |item|
+            {
+              id: item.id,
+              name: item.menuitem&.name || 'Unknown Item',
+              quantity: 1, # Ordritem doesn't have quantity field, assume 1
+              price: item.respond_to?(:ordritemprice) ? item.ordritemprice || 0 : 0,
+              status: item.status
+            }
+          end,
+          cached_at: Time.current.iso8601
+        }
+      end
+    end
+
+    # Cache order analytics and similar orders
+    def cached_order_analytics(order_id, days: 7)
+      cache_key = "order_analytics:#{order_id}:#{days}days"
+      
+      Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+        order = if defined?(Ordr)
+                  Ordr.find(order_id)
+                else
+                  nil
+                end
+        
+        return { error: "Order not found" } unless order
+        
+        restaurant = order.restaurant
+        since_date = days.days.ago
+        
+        # Get similar orders in the period
+        similar_orders = if restaurant.respond_to?(:ordrs)
+                          restaurant.ordrs.where('created_at >= ?', since_date)
+                        else
+                          []
+                        end
+        
+        {
+          order: {
+            id: order.id,
+            status: order.status,
+            created_at: order.created_at.iso8601
+          },
+          period_days: days,
+          analytics: {
+            similar_orders_count: similar_orders.count,
+            average_order_value: similar_orders.any? ? 
+              similar_orders.sum { |o| o.respond_to?(:runningTotal) ? o.runningTotal : 0 } / similar_orders.count : 0,
+            popular_items: [], # Placeholder - would need order items analysis
+            peak_hours: [] # Placeholder - would need time analysis
+          },
+          recommendations: [
+            "Order placed during #{order.created_at.strftime('%A')} - typical for this restaurant",
+            "Similar orders in the last #{days} days: #{similar_orders.count}"
+          ]
+        }
+      end
+    end
+
+    # Cache restaurant order summary
+    def cached_restaurant_order_summary(restaurant_id, days: 30)
+      cache_key = "order_summary:#{restaurant_id}:#{days}days"
+      
+      Rails.cache.fetch(cache_key, expires_in: 2.hours) do
+        restaurant = Restaurant.find(restaurant_id)
+        since_date = days.days.ago
+        
+        orders = if restaurant.respond_to?(:ordrs)
+                  restaurant.ordrs.where('created_at >= ?', since_date)
+                else
+                  []
+                end
+        
+        total_revenue = orders.sum { |o| o.respond_to?(:runningTotal) ? o.runningTotal : 0 }
+        
+        {
+          restaurant: serialize_restaurant_basic(restaurant),
+          period_days: days,
+          summary: {
+            total_orders: orders.count,
+            total_revenue: total_revenue,
+            average_order_value: orders.any? ? total_revenue / orders.count : 0,
+            orders_per_day: orders.count / days.to_f
+          },
+          trends: {
+            daily_orders: calculate_daily_order_breakdown(orders),
+            status_distribution: calculate_order_status_distribution(orders),
+            peak_hours: calculate_order_peak_hours(orders)
+          },
+          cached_at: Time.current.iso8601
+        }
+      end
+    end
+
+    # Cache restaurant employees with comprehensive data
+    def cached_restaurant_employees(restaurant_id, include_analytics: false)
+      cache_key = "restaurant_employees:#{restaurant_id}:#{include_analytics}"
+      
+      Rails.cache.fetch(cache_key, expires_in: 15.minutes) do
+        restaurant = Restaurant.find(restaurant_id)
+        
+        employees = if restaurant.respond_to?(:employees)
+                     restaurant.employees.where(archived: false).includes(:user)
+                   else
+                     []
+                   end
+        
+        employees_data = employees.map do |employee|
+          employee_data = {
+            id: employee.id,
+            name: employee.name,
+            eid: employee.eid,
+            role: employee.role,
+            status: employee.status,
+            sequence: employee.sequence,
+            email: employee.user&.email,
+            created_at: employee.created_at.iso8601
+          }
+          
+          if include_analytics
+            # Add basic analytics data (placeholder for future order/activity data)
+            employee_data[:analytics] = {
+              orders_handled: 0, # Placeholder - would need actual order data
+              active_days: 0, # Placeholder - would need activity tracking
+              performance_score: 0 # Placeholder - would need performance metrics
+            }
+          end
+          
+          employee_data
+        end
+        
+        {
+          restaurant: serialize_restaurant_basic(restaurant),
+          employees: employees_data,
+          metadata: {
+            total_employees: employees_data.count,
+            active_employees: employees_data.select { |e| e[:status] == 'active' }.count,
+            roles_distribution: employees_data.group_by { |e| e[:role] }.transform_values(&:count),
+            cached_at: Time.current.iso8601
+          }
+        }
+      end
+    end
+
+    # Cache user's all employees across restaurants
+    def cached_user_all_employees(user_id)
+      Rails.cache.fetch("user_employees:#{user_id}", expires_in: 20.minutes) do
+        user = User.find(user_id)
+        all_employees = []
+        restaurants_count = 0
+        
+        user.restaurants.each do |restaurant|
+          restaurants_count += 1
+          if restaurant.respond_to?(:employees)
+            restaurant_employees = restaurant.employees.where(archived: false).includes(:user)
+            
+            restaurant_employees.each do |employee|
+              all_employees << {
+                id: employee.id,
+                name: employee.name,
+                eid: employee.eid,
+                role: employee.role,
+                status: employee.status,
+                email: employee.user&.email,
+                restaurant_name: restaurant.name,
+                restaurant_id: restaurant.id,
+                created_at: employee.created_at.iso8601
+              }
+            end
+          end
+        end
+        
+        # Sort all employees by creation date
+        all_employees.sort_by! { |e| e[:created_at] }.reverse!
+        
+        {
+          user: serialize_user_basic(user),
+          employees: all_employees,
+          metadata: {
+            restaurants_count: restaurants_count,
+            total_employees: all_employees.count,
+            active_employees: all_employees.select { |e| e[:status] == 'active' }.count,
+            cached_at: Time.current.iso8601
+          }
+        }
+      end
+    end
+
+    # Cache individual employee with comprehensive details
+    def cached_employee_with_details(employee_id)
+      Rails.cache.fetch("employee_full:#{employee_id}", expires_in: 30.minutes) do
+        employee = if defined?(Employee)
+                    Employee.find(employee_id)
+                  else
+                    nil
+                  end
+        
+        return { error: "Employee not found" } unless employee
+        
+        restaurant = employee.restaurant
+        
+        {
+          employee: {
+            id: employee.id,
+            name: employee.name,
+            eid: employee.eid,
+            role: employee.role,
+            status: employee.status,
+            sequence: employee.sequence,
+            email: employee.user&.email,
+            created_at: employee.created_at.iso8601,
+            updated_at: employee.updated_at.iso8601
+          },
+          restaurant: serialize_restaurant_basic(restaurant),
+          user: employee.user ? serialize_user_basic(employee.user) : nil,
+          permissions: {
+            can_take_orders: employee.role.in?(['manager', 'waiter']),
+            can_manage_kitchen: employee.role.in?(['manager', 'chef']),
+            can_manage_staff: employee.role == 'manager'
+          },
+          activity: {
+            # Placeholder for activity tracking
+            last_login: nil,
+            orders_today: 0,
+            shifts_this_week: 0
+          },
+          cached_at: Time.current.iso8601
+        }
+      end
+    end
+
+    # Cache employee performance analytics
+    def cached_employee_performance(employee_id, days: 30)
+      cache_key = "employee_performance:#{employee_id}:#{days}days"
+      
+      Rails.cache.fetch(cache_key, expires_in: 2.hours) do
+        employee = if defined?(Employee)
+                    Employee.find(employee_id)
+                  else
+                    nil
+                  end
+        
+        return { error: "Employee not found" } unless employee
+        
+        restaurant = employee.restaurant
+        since_date = days.days.ago
+        
+        # Get employee-related orders in the period (placeholder logic)
+        employee_orders = if restaurant.respond_to?(:ordrs)
+                           # This would need proper employee-order association
+                           restaurant.ordrs.where('created_at >= ?', since_date).limit(100)
+                         else
+                           []
+                         end
+        
+        {
+          employee: {
+            id: employee.id,
+            name: employee.name,
+            role: employee.role,
+            status: employee.status
+          },
+          period_days: days,
+          performance: {
+            orders_handled: employee_orders.count, # Placeholder
+            average_order_time: 0, # Placeholder - would need timing data
+            customer_satisfaction: 0, # Placeholder - would need feedback data
+            efficiency_score: 0 # Placeholder - would need performance metrics
+          },
+          trends: {
+            daily_orders: calculate_daily_employee_orders(employee_orders),
+            peak_hours: calculate_employee_peak_hours(employee_orders),
+            performance_trend: [] # Placeholder for trend analysis
+          },
+          recommendations: [
+            "Employee performance within normal range for #{employee.role}",
+            "Consider additional training for peak hour efficiency"
+          ]
+        }
+      end
+    end
+
+    # Cache restaurant employee summary
+    def cached_restaurant_employee_summary(restaurant_id, days: 30)
+      cache_key = "employee_summary:#{restaurant_id}:#{days}days"
+      
+      Rails.cache.fetch(cache_key, expires_in: 2.hours) do
+        restaurant = Restaurant.find(restaurant_id)
+        since_date = days.days.ago
+        
+        employees = if restaurant.respond_to?(:employees)
+                     restaurant.employees.where(archived: false)
+                   else
+                     []
+                   end
+        
+        # Get orders for analysis (placeholder logic)
+        orders = if restaurant.respond_to?(:ordrs)
+                  restaurant.ordrs.where('created_at >= ?', since_date)
+                else
+                  []
+                end
+        
+        {
+          restaurant: serialize_restaurant_basic(restaurant),
+          period_days: days,
+          summary: {
+            total_employees: employees.count,
+            active_employees: employees.where(status: 'active').count,
+            roles_breakdown: employees.group(:role).count,
+            average_tenure: calculate_average_employee_tenure(employees)
+          },
+          performance: {
+            total_orders_handled: orders.count, # Placeholder
+            orders_per_employee: employees.any? ? orders.count / employees.count.to_f : 0,
+            efficiency_metrics: calculate_employee_efficiency_metrics(employees, orders)
+          },
+          trends: {
+            hiring_trend: calculate_employee_hiring_trend(employees, days),
+            turnover_rate: calculate_employee_turnover_rate(employees, days),
+            performance_distribution: calculate_employee_performance_distribution(employees)
+          },
+          cached_at: Time.current.iso8601
+        }
+      end
+    end
+
+    # Cache warming strategies for critical data
+    def warm_critical_caches(restaurant_id = nil)
+      start_time = Time.current
+      warmed_count = 0
+      
+      Rails.logger.info("[AdvancedCacheService] Starting cache warming#{restaurant_id ? " for restaurant #{restaurant_id}" : " for all restaurants"}")
+      
+      begin
+        if restaurant_id
+          warm_restaurant_caches(restaurant_id)
+          warmed_count += 1
+        else
+          Restaurant.limit(10).find_each do |restaurant|
+            warm_restaurant_caches(restaurant.id)
+            warmed_count += 1
+          end
+        end
+        
+        duration = ((Time.current - start_time) * 1000).round(2)
+        Rails.logger.info("[AdvancedCacheService] Cache warming completed: #{warmed_count} restaurants in #{duration}ms")
+        
+        { success: true, restaurants_warmed: warmed_count, duration_ms: duration }
+      rescue => e
+        Rails.logger.error("[AdvancedCacheService] Cache warming failed: #{e.message}")
+        { success: false, error: e.message, restaurants_warmed: warmed_count }
+      end
+    end
+
+    def warm_restaurant_caches(restaurant_id)
+      restaurant = Restaurant.find(restaurant_id)
+      
+      # Warm restaurant dashboard
+      cached_restaurant_dashboard(restaurant_id)
+      
+      # Warm recent orders
+      cached_restaurant_orders(restaurant_id, include_calculations: true) if restaurant.respond_to?(:ordrs)
+      
+      # Warm employees
+      cached_restaurant_employees(restaurant_id, include_analytics: true) if restaurant.respond_to?(:employees)
+      
+      # Warm menus
+      restaurant.menus.limit(5).each do |menu|
+        cached_menu_with_items(menu.id)
+        cached_menu_performance(menu.id) if menu.respond_to?(:menusections)
+      end
+      
+      Rails.logger.debug("[AdvancedCacheService] Warmed caches for restaurant #{restaurant_id}")
+    end
+
+    # Cache administration and debugging tools
+    def clear_all_caches
+      patterns = [
+        'restaurant_*', 'menu_*', 'menuitem_*', 'order_*', 'employee_*',
+        'user_*', 'section_*', 'analytics_*', 'performance_*'
+      ]
+      
+      cleared_count = 0
+      patterns.each do |pattern|
+        keys = Rails.cache.delete_matched(pattern)
+        cleared_count += keys.is_a?(Integer) ? keys : 0
+      end
+      
+      Rails.logger.info("[AdvancedCacheService] Cleared #{cleared_count} cache entries")
+      { cleared_count: cleared_count, patterns: patterns }
+    end
+
+    def cache_health_check
+      start_time = Time.current
+      
+      begin
+        # Test basic cache operations
+        test_key = "health_check:#{SecureRandom.hex(8)}"
+        test_value = { timestamp: Time.current.to_i, test: true }
+        
+        # Write test
+        Rails.cache.write(test_key, test_value, expires_in: 1.minute)
+        
+        # Read test
+        cached_value = Rails.cache.read(test_key)
+        read_success = cached_value == test_value
+        
+        # Delete test
+        Rails.cache.delete(test_key)
+        delete_success = !Rails.cache.exist?(test_key)
+        
+        duration = ((Time.current - start_time) * 1000).round(2)
+        
+        {
+          healthy: read_success && delete_success,
+          operations: {
+            write: true,
+            read: read_success,
+            delete: delete_success
+          },
+          response_time_ms: duration,
+          timestamp: Time.current.iso8601
+        }
+      rescue => e
+        {
+          healthy: false,
+          error: e.message,
+          response_time_ms: ((Time.current - start_time) * 1000).round(2),
+          timestamp: Time.current.iso8601
+        }
+      end
+    end
+
+    def list_cache_keys(pattern = '*', limit: 100)
+      # Note: This is a simplified version - Redis would need SCAN command
+      # For development/debugging purposes
+      begin
+        if Rails.cache.respond_to?(:redis)
+          # Redis implementation
+          Rails.cache.redis.scan_each(match: pattern).first(limit)
+        else
+          # Memory store or other - limited functionality
+          ["Cache key listing not available for #{Rails.cache.class}"]
+        end
+      rescue => e
+        Rails.logger.error("[AdvancedCacheService] Failed to list cache keys: #{e.message}")
+        []
+      end
+    end
+
+    # Public invalidation methods (called by model hooks)
     def invalidate_restaurant_caches(restaurant_id)
       Rails.cache.delete("restaurant_dashboard:#{restaurant_id}")
       Rails.cache.delete_matched("order_analytics:#{restaurant_id}:*")
@@ -176,7 +1020,7 @@ class AdvancedCacheService
         restaurant = Restaurant.find(restaurant_id)
         Rails.cache.delete_matched("user_activity:#{restaurant.user_id}:*") if restaurant.user_id
       rescue ActiveRecord::RecordNotFound
-        Rails.logger.warn("Restaurant #{restaurant_id} not found for cache invalidation")
+        Rails.logger.warn("Restaurant #{restaurant_id} not found during cache invalidation")
       end
       
       Rails.logger.info("Invalidated caches for restaurant #{restaurant_id}")
@@ -185,8 +1029,37 @@ class AdvancedCacheService
     def invalidate_menu_caches(menu_id)
       Rails.cache.delete_matched("menu_full:#{menu_id}:*")
       Rails.cache.delete_matched("menu_performance:#{menu_id}:*")
+      Rails.cache.delete_matched("menu_analytics:#{menu_id}:*")
       
       Rails.logger.info("Invalidated caches for menu #{menu_id}")
+    end
+
+    def invalidate_menuitem_caches(menuitem_id)
+      Rails.cache.delete_matched("menuitem_full:#{menuitem_id}:*")
+      Rails.cache.delete_matched("menuitem_performance:#{menuitem_id}:*")
+      Rails.cache.delete_matched("menuitem_analytics:#{menuitem_id}:*")
+      
+      Rails.logger.info("Invalidated caches for menuitem #{menuitem_id}")
+    end
+
+    def invalidate_order_caches(order_id)
+      Rails.cache.delete_matched("order_full:#{order_id}:*")
+      Rails.cache.delete_matched("order_analytics:#{order_id}:*")
+      Rails.cache.delete_matched("restaurant_orders:*")
+      Rails.cache.delete_matched("user_orders:*")
+      Rails.cache.delete_matched("order_summary:*")
+      
+      Rails.logger.info("Invalidated caches for order #{order_id}")
+    end
+
+    def invalidate_employee_caches(employee_id)
+      Rails.cache.delete_matched("employee_full:#{employee_id}:*")
+      Rails.cache.delete_matched("employee_performance:#{employee_id}:*")
+      Rails.cache.delete_matched("restaurant_employees:*")
+      Rails.cache.delete_matched("user_employees:*")
+      Rails.cache.delete_matched("employee_summary:*")
+      
+      Rails.logger.info("Invalidated caches for employee #{employee_id}")
     end
 
     def invalidate_user_caches(user_id)
@@ -199,13 +1072,84 @@ class AdvancedCacheService
           invalidate_restaurant_caches(restaurant.id)
         end
       rescue ActiveRecord::RecordNotFound
-        Rails.logger.warn("User #{user_id} not found for cache invalidation")
+        Rails.logger.warn("User #{user_id} not found during cache invalidation")
       end
       
       Rails.logger.info("Invalidated caches for user #{user_id}")
     end
 
     private
+
+    def calculate_hit_rate
+      hits = Rails.cache.read('cache_metrics:hits') || 0
+      misses = Rails.cache.read('cache_metrics:misses') || 0
+      total = hits + misses
+      
+      return 0.0 if total.zero?
+      ((hits.to_f / total) * 100).round(2)
+    end
+
+    def calculate_total_operations
+      CACHE_METRICS.keys.sum do |metric|
+        Rails.cache.read("cache_metrics:#{metric}") || 0
+      end
+    end
+
+    def count_cache_methods
+      # Count methods that start with 'cached_'
+      self.methods.grep(/^cached_/).count
+    end
+
+    def estimate_active_keys
+      # This is an approximation - would need Redis DBSIZE for accurate count
+      patterns = ['restaurant_*', 'menu_*', 'menuitem_*', 'order_*', 'employee_*', 'user_*']
+      estimated_keys = patterns.count * 50 # Rough estimate
+      estimated_keys
+    end
+
+    def estimate_memory_usage
+      # Placeholder - would need Redis MEMORY USAGE command for accurate measurement
+      {
+        estimated_mb: estimate_active_keys * 0.1, # Rough estimate: 0.1MB per key
+        note: "Estimation only - use Redis MEMORY commands for accurate measurement"
+      }
+    end
+
+    private
+
+    # Safe localization and data access helpers
+    def get_localized_item_name(item, locale)
+      return item.name unless item.respond_to?(:localised_name)
+      
+      begin
+        item.localised_name(locale)
+      rescue => e
+        Rails.logger.warn("[AdvancedCacheService] Localization error for item #{item.id}: #{e.message}")
+        item.name
+      end
+    end
+
+    def get_item_allergens(item)
+      return [] unless item.respond_to?(:menuitem_allergyn_mappings)
+      
+      begin
+        item.menuitem_allergyn_mappings.includes(:allergyn).map { |m| m.allergyn&.symbol }.compact
+      rescue => e
+        Rails.logger.warn("[AdvancedCacheService] Allergen mapping error for item #{item.id}: #{e.message}")
+        []
+      end
+    end
+
+    def get_item_sizes(item)
+      return [] unless item.respond_to?(:menuitem_size_mappings)
+      
+      begin
+        item.menuitem_size_mappings.includes(:size).map { |m| m.size&.name }.compact
+      rescue => e
+        Rails.logger.warn("[AdvancedCacheService] Size mapping error for item #{item.id}: #{e.message}")
+        []
+      end
+    end
 
     # Serialization methods for consistent cache data
     def serialize_restaurant_basic(restaurant)
@@ -220,10 +1164,14 @@ class AdvancedCacheService
     def serialize_restaurant_full(restaurant)
       serialize_restaurant_basic(restaurant).merge(
         description: restaurant.description,
-        address: restaurant.address,
-        phone: restaurant.phone,
-        email: restaurant.email,
-        website: restaurant.website,
+        address1: restaurant.address1,
+        address2: restaurant.address2,
+        city: restaurant.city,
+        state: restaurant.state,
+        postcode: restaurant.postcode,
+        country: restaurant.country,
+        capacity: restaurant.capacity,
+        currency: restaurant.currency,
         updated_at: restaurant.updated_at.iso8601
       )
     end
@@ -250,9 +1198,9 @@ class AdvancedCacheService
       {
         id: order.id,
         status: order.status,
-        total_amount: order.total_amount,
+        total_amount: order.gross || 0,
         created_at: order.created_at.iso8601,
-        items_count: order.fetch_ordritems.count
+        items_count: order.respond_to?(:fetch_ordritems) ? order.fetch_ordritems.count : order.ordritems.count
       }
     end
 
@@ -280,17 +1228,99 @@ class AdvancedCacheService
           items: items.map do |item|
             {
               id: item.id,
-              name: item.respond_to?(:localised_name) ? item.localised_name(locale) : item.name,
+              name: get_localized_item_name(item, locale),
               description: item.description,
               price: item.price,
               status: item.status,
               position: item.sequence,
-              allergens: item.menuitem_allergyn_mappings.includes(:allergyn).map { |m| m.allergyn.symbol },
-              sizes: item.menuitem_size_mappings.includes(:size).map { |m| m.size.name }
+              allergens: get_item_allergens(item),
+              sizes: get_item_sizes(item)
             }
           end
         }
       end
+    end
+
+    def calculate_daily_order_breakdown(orders)
+      return {} if orders.empty?
+      
+      daily_orders = orders.group_by { |o| o.created_at.to_date }
+      daily_orders.transform_values(&:count)
+    end
+
+    def calculate_order_status_distribution(orders)
+      return {} if orders.empty?
+      
+      orders.group_by(&:status).transform_values(&:count)
+    end
+
+    def calculate_order_peak_hours(orders)
+      return [] if orders.empty?
+      
+      hourly_orders = orders.group_by { |o| o.created_at.hour }
+      hourly_orders.map { |hour, orders| { hour: hour, count: orders.count } }
+                   .sort_by { |h| h[:count] }.reverse.first(3)
+    end
+
+    def calculate_daily_employee_orders(orders)
+      return {} if orders.empty?
+      
+      daily_orders = orders.group_by { |o| o.created_at.to_date }
+      daily_orders.transform_values(&:count)
+    end
+
+    def calculate_employee_peak_hours(orders)
+      return [] if orders.empty?
+      
+      hourly_orders = orders.group_by { |o| o.created_at.hour }
+      hourly_orders.map { |hour, orders| { hour: hour, count: orders.count } }
+                   .sort_by { |h| h[:count] }.reverse.first(3)
+    end
+
+    def calculate_average_employee_tenure(employees)
+      return 0 if employees.empty?
+      
+      total_days = employees.sum { |e| (Time.current - e.created_at) / 1.day }
+      (total_days / employees.count).round(1)
+    end
+
+    def calculate_employee_efficiency_metrics(employees, orders)
+      return {} if employees.empty? || orders.empty?
+      
+      {
+        orders_per_day: orders.count / 30.0, # Assuming 30-day period
+        average_response_time: 0, # Placeholder - would need timing data
+        task_completion_rate: 100 # Placeholder - would need task tracking
+      }
+    end
+
+    def calculate_employee_hiring_trend(employees, days)
+      return [] if employees.empty?
+      
+      since_date = days.days.ago
+      recent_hires = employees.where('created_at >= ?', since_date)
+      
+      daily_hires = recent_hires.group_by { |e| e.created_at.to_date }
+      daily_hires.transform_values(&:count)
+    end
+
+    def calculate_employee_turnover_rate(employees, days)
+      # Placeholder calculation - would need actual turnover tracking
+      return 0 if employees.empty?
+      
+      # Simple approximation based on archived employees
+      total_employees = employees.count
+      archived_employees = 0 # Would need to track archived employees in period
+      
+      return 0 if total_employees.zero?
+      (archived_employees / total_employees.to_f * 100).round(2)
+    end
+
+    def calculate_employee_performance_distribution(employees)
+      return {} if employees.empty?
+      
+      # Placeholder distribution based on roles
+      employees.group_by(&:role).transform_values(&:count)
     end
 
     def calculate_order_trends(orders)
@@ -298,7 +1328,7 @@ class AdvancedCacheService
       
       # Group by day for trend analysis
       daily_orders = orders.group_by { |o| o.created_at.to_date }
-      daily_revenue = daily_orders.transform_values { |day_orders| day_orders.sum { |o| o.total_amount || 0 } }
+      daily_revenue = daily_orders.transform_values { |day_orders| day_orders.sum { |o| o.gross || 0 } }
       
       {
         daily_orders: daily_orders.transform_values(&:count),
@@ -313,10 +1343,13 @@ class AdvancedCacheService
       item_revenue = Hash.new(0)
       
       orders.each do |order|
-        order.fetch_ordritems.each do |item|
-          menuitem = item.fetch_menuitem
-          item_counts[menuitem.name] += item.quantity
-          item_revenue[menuitem.name] += (item.price || 0) * item.quantity
+        ordritems = order.respond_to?(:fetch_ordritems) ? order.fetch_ordritems : order.ordritems
+        ordritems.each do |item|
+          menuitem = item.respond_to?(:fetch_menuitem) ? item.fetch_menuitem : item.menuitem
+          next unless menuitem
+          
+          item_counts[menuitem.name] += 1 # Assume quantity 1
+          item_revenue[menuitem.name] += item.respond_to?(:ordritemprice) ? (item.ordritemprice || 0) : 0
         end
       end
       
@@ -339,8 +1372,8 @@ class AdvancedCacheService
       orders.each do |order|
         date = order.created_at.to_date
         daily_data[date][:orders] += 1
-        daily_data[date][:revenue] += order.total_amount || 0
-        daily_data[date][:items] += order.fetch_ordritems.sum(&:quantity)
+        daily_data[date][:revenue] += order.gross || 0
+        daily_data[date][:items] += order.respond_to?(:fetch_ordritems) ? order.fetch_ordritems.count : order.ordritems.count
       end
       
       daily_data
@@ -350,11 +1383,13 @@ class AdvancedCacheService
       item_stats = {}
       
       menu.fetch_menusections.each do |section|
-        section.fetch_menuitems.each do |item|
-          item_orders = orders.flat_map(&:fetch_ordritems).select { |oi| oi.menuitem_id == item.id }
+        menuitems = section.respond_to?(:fetch_menuitems) ? section.fetch_menuitems : section.menuitems
+        menuitems.each do |item|
+          all_ordritems = orders.flat_map { |o| o.respond_to?(:fetch_ordritems) ? o.fetch_ordritems : o.ordritems }
+          item_orders = all_ordritems.select { |oi| oi.menuitem_id == item.id }
           
-          total_quantity = item_orders.sum(&:quantity)
-          total_revenue = item_orders.sum { |oi| (oi.price || 0) * oi.quantity }
+          total_quantity = item_orders.count # Assume quantity 1 per order item
+          total_revenue = item_orders.sum { |oi| oi.respond_to?(:ordritemprice) ? (oi.ordritemprice || 0) : 0 }
           
           item_stats[item.id] = {
             name: item.name,

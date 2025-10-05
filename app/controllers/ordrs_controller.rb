@@ -1,7 +1,7 @@
 class OrdrsController < ApplicationController
   before_action :authenticate_user!, except: %i[show create update] # Allow customers to create/update orders
   before_action :set_restaurant
-  before_action :set_ordr, only: %i[show edit update destroy]
+  before_action :set_ordr, only: %i[show edit update destroy analytics]
   before_action :set_currency
 
   # Pundit authorization
@@ -10,31 +10,56 @@ class OrdrsController < ApplicationController
 
   # GET /ordrs or /ordrs.json
   def index
-    if @restaurant
-      @ordrs = policy_scope(Ordr).where(restaurant_id: @restaurant.id).all
-    else
-      @ordrs = policy_scope(Ordr).all
-    end
-
-    @ordrs.each do |ordr|
-      remainingItems = ordr.orderedItemsCount + ordr.preparedItemsCount
-      if remainingItems.zero?
-        ordr.status = 25
-      end
-      ordr.nett = ordr.runningTotal
-      taxes = Tax.where(restaurant_id: ordr.restaurant.id).order(sequence: :asc)
-      totalTax = 0
-      totalService = 0
-      taxes.each do |tax|
-        if tax.taxtype == 'service'
-          totalService += ((tax.taxpercentage * ordr.nett) / 100)
+    respond_to do |format|
+      format.html do
+        if @restaurant
+          # Apply policy scoping for restaurant orders
+          scoped_orders = policy_scope(@restaurant.ordrs)
+          
+          # Use AdvancedCacheService for restaurant orders with comprehensive data
+          @orders_data = AdvancedCacheService.cached_restaurant_orders(@restaurant.id, include_calculations: true)
+          @ordrs = @orders_data[:orders]
+          
+          # Track restaurant orders view
+          AnalyticsService.track_user_event(current_user, 'restaurant_orders_viewed', {
+            restaurant_id: @restaurant.id,
+            restaurant_name: @restaurant.name,
+            orders_count: @ordrs.count,
+            viewing_context: 'restaurant_management'
+          })
         else
-          totalTax += ((tax.taxpercentage * ordr.nett) / 100)
+          # Apply policy scoping for user's orders across all restaurants
+          scoped_orders = policy_scope(Ordr)
+          
+          # Use AdvancedCacheService for user's all orders across restaurants
+          @all_orders_data = AdvancedCacheService.cached_user_all_orders(current_user.id)
+          @ordrs = @all_orders_data[:orders]
+          
+          # Track all orders view
+          AnalyticsService.track_user_event(current_user, 'all_orders_viewed', {
+            user_id: current_user.id,
+            restaurants_count: @all_orders_data[:metadata][:restaurants_count],
+            total_orders: @ordrs.count
+          })
         end
       end
-      ordr.tax = totalTax
-      ordr.service = totalService
-      ordr.gross = ordr.nett + ordr.tip + ordr.service + ordr.tax
+      
+      format.json do
+        # For JSON requests, use actual ActiveRecord objects
+        # Ensure user is authenticated for sensitive order data
+        if !current_user
+          head :unauthorized
+          return
+        end
+        
+        if @restaurant
+          @ordrs = policy_scope(@restaurant.ordrs.includes(:ordritems, :tablesetting, :menu, :employee, :ordrparticipants))
+        else
+          # Get orders from all user's restaurants
+          restaurant_ids = current_user.restaurants.pluck(:id)
+          @ordrs = policy_scope(Ordr.where(restaurant_id: restaurant_ids).includes(:ordritems, :tablesetting, :menu, :employee, :ordrparticipants))
+        end
+      end
     end
   end
 
@@ -42,21 +67,84 @@ class OrdrsController < ApplicationController
   def show
     # Allow both staff and customers to view orders
     authorize @ordr if current_user
-    @ordr.nett = @ordr.runningTotal
-    taxes = Tax.where(restaurant_id: @ordr.restaurant.id).order(sequence: :asc)
-    totalTax = 0
-    totalService = 0
-    taxes.each do |tax|
-      if tax.taxtype == 'service'
-            totalService += ((tax.taxpercentage * @ordr.nett) / 100)
-        else
-            totalTax += ((tax.taxpercentage * @ordr.nett) / 100)
-        end
+    
+    respond_to do |format|
+      format.html do
+        # Use AdvancedCacheService for comprehensive order data with calculations
+        @order_data = AdvancedCacheService.cached_order_with_details(@ordr.id)
+        
+        # Apply cached calculations to the order object for backward compatibility
+        @ordr.nett = @order_data[:calculations][:nett]
+        @ordr.tax = @order_data[:calculations][:tax]
+        @ordr.service = @order_data[:calculations][:service]
+        @ordr.covercharge = @order_data[:calculations][:covercharge]
+        @ordr.gross = @order_data[:calculations][:gross]
+      end
+      
+      format.json do
+        # For JSON requests, @ordr is already set by before_action and is an ActiveRecord object
+        # No additional setup needed - the JSON view will work with the ActiveRecord object
+      end
     end
-    @ordr.covercharge = @ordr.ordercapacity * @ordr.menu.covercharge
-    @ordr.tax = totalTax
-    @ordr.service = totalService
-    @ordr.gross = @ordr.nett + @ordr.covercharge + @ordr.tip + @ordr.service + @ordr.tax
+    
+    # Track order view
+    if current_user
+      AnalyticsService.track_user_event(current_user, 'order_viewed', {
+        order_id: @ordr.id,
+        restaurant_id: @ordr.restaurant_id,
+        order_status: @ordr.status,
+        order_total: @ordr.gross,
+        viewing_context: current_user.admin? ? 'staff_view' : 'customer_view'
+      })
+    end
+  end
+
+  # GET /ordrs/1/analytics
+  def analytics
+    authorize @ordr, :show?
+    
+    # Get analytics period from params or default to 7 days for order context
+    days = params[:days]&.to_i || 7
+    
+    # Use AdvancedCacheService for order analytics and similar orders
+    @analytics_data = AdvancedCacheService.cached_order_analytics(@ordr.id, days: days)
+    
+    # Track analytics view
+    AnalyticsService.track_user_event(current_user, 'order_analytics_viewed', {
+      order_id: @ordr.id,
+      restaurant_id: @ordr.restaurant_id,
+      period_days: days,
+      order_total: @ordr.gross
+    })
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: @analytics_data }
+    end
+  end
+
+  # GET /restaurants/:restaurant_id/ordrs/summary
+  def summary
+    authorize Ordr.new(restaurant: @restaurant), :index?
+    
+    # Get summary period from params or default to 30 days
+    days = params[:days]&.to_i || 30
+    
+    # Use AdvancedCacheService for restaurant order summary
+    @summary_data = AdvancedCacheService.cached_restaurant_order_summary(@restaurant.id, days: days)
+    
+    # Track summary view
+    AnalyticsService.track_user_event(current_user, 'restaurant_order_summary_viewed', {
+      restaurant_id: @restaurant.id,
+      period_days: days,
+      total_orders: @summary_data[:summary][:total_orders],
+      total_revenue: @summary_data[:summary][:total_revenue]
+    })
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: @summary_data }
+    end
   end
 
   # GET /ordrs/new
@@ -145,6 +233,11 @@ class OrdrsController < ApplicationController
       @ordr.ordritems.added.update_all(status: 20) # Batch update
 
       if @ordr.save
+        # Invalidate AdvancedCacheService caches for this order
+        AdvancedCacheService.invalidate_order_caches(@ordr.id)
+        AdvancedCacheService.invalidate_restaurant_caches(@ordr.restaurant_id)
+        AdvancedCacheService.invalidate_user_caches(@ordr.restaurant.user_id) if @ordr.restaurant.user_id
+        
         @tablesetting = @ordr.tablesetting
         @ordrparticipant = find_or_create_ordr_participant(@ordr)
         @ordr.status == 'closed'
@@ -167,7 +260,17 @@ class OrdrsController < ApplicationController
     authorize @ordr
 
     ActiveRecord::Base.transaction do
+      # Store data for cache invalidation before destroying
+      restaurant_id = @ordr.restaurant_id
+      user_id = @ordr.restaurant.user_id
+      
       @ordr.destroy!
+      
+      # Invalidate AdvancedCacheService caches for this order
+      AdvancedCacheService.invalidate_order_caches(@ordr.id)
+      AdvancedCacheService.invalidate_restaurant_caches(restaurant_id)
+      AdvancedCacheService.invalidate_user_caches(user_id) if user_id
+      
       respond_to do |format|
         format.html {
  redirect_to restaurant_ordrs_url(@restaurant), notice: t('common.flash.deleted', resource: t('activerecord.models.ordr')) }

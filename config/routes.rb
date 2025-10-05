@@ -76,7 +76,7 @@ Rails.application.routes.draw do
   end
   
   # ============================================================================
-  # RESTAURANT MANAGEMENT (Main Business Logic)
+  # RESTAURANT MANAGEMENT
   # ============================================================================
   resources :restaurants do
     # Restaurant configuration
@@ -93,13 +93,21 @@ Rails.application.routes.draw do
     resources :genimages
     
     # Staff management
-    resources :employees
+    resources :employees do
+      member do
+        get :analytics
+      end
+    end
     
     # Inventory management
     resources :inventories
     
     # Order management
-    resources :ordrs
+    resources :ordrs do
+      member do
+        get :analytics
+      end
+    end
     resources :ordritems
     resources :ordritemnotes
     resources :ordrparticipants
@@ -108,26 +116,43 @@ Rails.application.routes.draw do
     # Music/Entertainment
     resources :tracks
     
+    # Restaurant analytics endpoints
+    member do
+      get :analytics
+      get :performance
+    end
+    
+    # Restaurant summary endpoints
+    collection do
+      get 'employees/summary', to: 'employees#summary'
+      get 'orders/summary', to: 'ordrs#summary'
+    end
+    
     # Menu management (full operations within restaurant context)
     resources :menus do
       # Menu configuration
       resources :menuparticipants
       resources :menuavailabilities
-      resources :menusectionlocales
       
       # Menu structure and content
       resources :menusections do
-        resources :menuitems  # Full CRUD for menusection-specific menuitems
+        resources :menuitems do  # Full CRUD for menusection-specific menuitems
+          member do
+            get :analytics
+          end
+        end
       end
       
       # Menu-level menuitem operations
       resources :menuitems, only: [:index]  # Bulk operations across all menusections
       resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
       
-      # Menu actions
+      # Menu actions and analytics
       member do
         post :regenerate_images
         get :tablesettings, to: 'menus#show'
+        get :analytics
+        get :performance
       end
     end
     
@@ -168,6 +193,13 @@ Rails.application.routes.draw do
   resources :metrics
   resources :dw_orders_mv, only: [:index, :show]
   
+  # Global menuitem analytics (direct access)
+  resources :menuitems, only: [] do
+    member do
+      get :analytics
+    end
+  end
+  
   # Admin analytics dashboard
   namespace :admin do
     resources :metrics, only: [:index, :show] do
@@ -197,6 +229,20 @@ Rails.application.routes.draw do
       resources :impersonates do
         post :impersonate, on: :member
         post :stop_impersonating, on: :collection
+      end
+    end
+    
+    # Cache administration
+    namespace :admin do
+      resources :cache, only: [:index] do
+        collection do
+          get :stats
+          post :warm
+          delete :clear
+          post :reset_stats
+          get :health
+          get :keys
+        end
       end
     end
   end

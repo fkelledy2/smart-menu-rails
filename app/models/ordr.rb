@@ -49,6 +49,10 @@ class Ordr < ApplicationRecord
   cache_has_many :ordrparticipants, embed: :ids
   cache_has_many :ordractions, embed: :ids
 
+  # Cache invalidation hooks
+  after_update :invalidate_order_caches
+  after_destroy :invalidate_order_caches
+
   enum :status, {
     opened: 0,
     ordered: 20,
@@ -108,5 +112,13 @@ class Ordr < ApplicationRecord
 
   def addedCount
     ordractions.joins(:ordritem).where(ordritems: { status: 0 }).count
+  end
+
+  private
+
+  def invalidate_order_caches
+    AdvancedCacheService.invalidate_order_caches(self.id)
+    AdvancedCacheService.invalidate_restaurant_caches(self.restaurant_id)
+    AdvancedCacheService.invalidate_user_caches(self.restaurant.user_id) if self.restaurant.user_id
   end
 end
