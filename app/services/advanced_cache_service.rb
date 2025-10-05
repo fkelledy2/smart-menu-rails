@@ -6,17 +6,17 @@ class AdvancedCacheService
       cache_key = "menu_full:#{menu_id}:#{locale}:#{include_inactive}"
       
       Rails.cache.fetch(cache_key, expires_in: 30.minutes) do
-        menu = Menu.fetch(menu_id)
-        restaurant = menu.fetch_restaurant
+        menu = Menu.find(menu_id)
+        restaurant = menu.restaurant
         
         {
           menu: serialize_menu(menu),
           restaurant: serialize_restaurant_basic(restaurant),
           sections: build_menu_sections(menu, locale, include_inactive),
           metadata: {
-            total_items: menu.fetch_menusections.sum { |s| s.fetch_menuitems.count },
-            active_items: menu.fetch_menusections.sum { |s| s.fetch_menuitems.select { |i| i.status == 'active' }.count },
-            locales: restaurant.fetch_restaurantlocales.map(&:locale),
+            total_items: menu.menusections.sum { |s| s.menuitems.count },
+            active_items: menu.menusections.sum { |s| s.menuitems.where(status: 'active').count },
+            locales: restaurant.restaurantlocales.pluck(:locale),
             cached_at: Time.current.iso8601
           }
         }
@@ -26,23 +26,23 @@ class AdvancedCacheService
     # Cache restaurant dashboard data
     def cached_restaurant_dashboard(restaurant_id)
       Rails.cache.fetch("restaurant_dashboard:#{restaurant_id}", expires_in: 15.minutes) do
-        restaurant = Restaurant.fetch(restaurant_id)
+        restaurant = Restaurant.find(restaurant_id)
         
-        # Use cached associations for better performance
-        active_menus = restaurant.fetch_menus.select { |m| m.status == 'active' }
-        recent_orders = restaurant.fetch_ordrs.select { |o| o.created_at > 24.hours.ago }
-        staff = restaurant.fetch_employees
-        tables = restaurant.fetch_tablesettings
+        # Use associations with fallback to regular queries
+        active_menus = restaurant.menus.where(status: 'active')
+        recent_orders = restaurant.respond_to?(:ordrs) ? restaurant.ordrs.where('created_at > ?', 24.hours.ago) : []
+        staff = restaurant.employees
+        tables = restaurant.tablesettings
         
         {
           restaurant: serialize_restaurant_full(restaurant),
           stats: {
             active_menus_count: active_menus.count,
-            total_menus_count: restaurant.fetch_menus.count,
+            total_menus_count: restaurant.menus.count,
             recent_orders_count: recent_orders.count,
             staff_count: staff.count,
             table_count: tables.count,
-            active_tables_count: tables.select { |t| t.status == 'active' }.count
+            active_tables_count: tables.where(status: 'active').count
           },
           recent_activity: {
             recent_orders: recent_orders.first(5).map { |o| serialize_order_basic(o) },
@@ -61,11 +61,14 @@ class AdvancedCacheService
       cache_key = "order_analytics:#{restaurant_id}:#{date_range.begin.to_date}:#{date_range.end.to_date}"
       
       Rails.cache.fetch(cache_key, expires_in: 1.hour) do
-        restaurant = Restaurant.fetch(restaurant_id)
+        restaurant = Restaurant.find(restaurant_id)
         
-        # Filter orders by date range using cached data
-        all_orders = restaurant.fetch_ordrs
-        orders_in_range = all_orders.select { |o| date_range.cover?(o.created_at) }
+        # Filter orders by date range using regular queries
+        orders_in_range = if restaurant.respond_to?(:ordrs)
+                           restaurant.ordrs.where(created_at: date_range)
+                         else
+                           []
+                         end
         
         # Calculate analytics
         total_revenue = orders_in_range.sum { |o| o.total_amount || 0 }
@@ -94,14 +97,16 @@ class AdvancedCacheService
       cache_key = "menu_performance:#{menu_id}:#{days}days"
       
       Rails.cache.fetch(cache_key, expires_in: 2.hours) do
-        menu = Menu.fetch(menu_id)
-        restaurant = menu.fetch_restaurant
+        menu = Menu.find(menu_id)
+        restaurant = menu.restaurant
         
         # Get orders for this menu in the specified period
         since_date = days.days.ago
-        menu_orders = restaurant.fetch_ordrs.select do |order|
-          order.menu_id == menu.id && order.created_at >= since_date
-        end
+        menu_orders = if restaurant.respond_to?(:ordrs)
+                       restaurant.ordrs.where(menu_id: menu.id).where('created_at >= ?', since_date)
+                     else
+                       []
+                     end
         
         # Analyze menu item performance
         item_performance = analyze_menu_item_performance(menu, menu_orders)
@@ -124,19 +129,19 @@ class AdvancedCacheService
     # Cache user activity summary
     def cached_user_activity(user_id, days: 7)
       Rails.cache.fetch("user_activity:#{user_id}:#{days}days", expires_in: 1.hour) do
-        user = User.fetch(user_id)
+        user = User.find(user_id)
         since_date = days.days.ago
         
         # Get user's restaurants and their recent activity
-        restaurants = user.fetch_restaurants
+        restaurants = user.restaurants
         recent_activity = []
         
         restaurants.each do |restaurant|
           # Recent orders
-          recent_orders = restaurant.fetch_ordrs.select { |o| o.created_at >= since_date }
+          recent_orders = restaurant.respond_to?(:ordrs) ? restaurant.ordrs.where('created_at >= ?', since_date) : []
           
           # Recent menu updates
-          recent_menu_updates = restaurant.fetch_menus.select { |m| m.updated_at >= since_date }
+          recent_menu_updates = restaurant.menus.where('updated_at >= ?', since_date)
           
           recent_activity << {
             restaurant: serialize_restaurant_basic(restaurant),
@@ -167,8 +172,12 @@ class AdvancedCacheService
       Rails.cache.delete_matched("menu_performance:*")
       
       # Invalidate user activity caches for restaurant owner
-      restaurant = Restaurant.fetch(restaurant_id)
-      Rails.cache.delete_matched("user_activity:#{restaurant.user_id}:*")
+      begin
+        restaurant = Restaurant.find(restaurant_id)
+        Rails.cache.delete_matched("user_activity:#{restaurant.user_id}:*") if restaurant.user_id
+      rescue ActiveRecord::RecordNotFound
+        Rails.logger.warn("Restaurant #{restaurant_id} not found for cache invalidation")
+      end
       
       Rails.logger.info("Invalidated caches for restaurant #{restaurant_id}")
     end
@@ -184,9 +193,13 @@ class AdvancedCacheService
       Rails.cache.delete_matched("user_activity:#{user_id}:*")
       
       # Also invalidate restaurant caches for user's restaurants
-      user = User.fetch(user_id)
-      user.fetch_restaurants.each do |restaurant|
-        invalidate_restaurant_caches(restaurant.id)
+      begin
+        user = User.find(user_id)
+        user.restaurants.each do |restaurant|
+          invalidate_restaurant_caches(restaurant.id)
+        end
+      rescue ActiveRecord::RecordNotFound
+        Rails.logger.warn("User #{user_id} not found for cache invalidation")
       end
       
       Rails.logger.info("Invalidated caches for user #{user_id}")
@@ -254,27 +267,26 @@ class AdvancedCacheService
 
     # Analysis methods
     def build_menu_sections(menu, locale, include_inactive)
-      menu.fetch_menusections.map do |section|
-        items = section.fetch_menuitems
-        items = items.select { |item| item.status == 'active' } unless include_inactive
+      menu.menusections.map do |section|
+        items = include_inactive ? section.menuitems : section.menuitems.where(status: 'active')
         
         {
           section: {
             id: section.id,
             name: section.name,
-            position: section.position,
+            position: section.sequence,
             status: section.status
           },
           items: items.map do |item|
             {
               id: item.id,
-              name: item.localised_name(locale),
+              name: item.respond_to?(:localised_name) ? item.localised_name(locale) : item.name,
               description: item.description,
               price: item.price,
               status: item.status,
-              position: item.position,
-              allergens: item.fetch_menuitem_allergyn_mappings.map { |m| m.fetch_allergyn.symbol },
-              sizes: item.fetch_menuitem_size_mappings.map { |m| m.fetch_size.name }
+              position: item.sequence,
+              allergens: item.menuitem_allergyn_mappings.includes(:allergyn).map { |m| m.allergyn.symbol },
+              sizes: item.menuitem_size_mappings.includes(:size).map { |m| m.size.name }
             }
           end
         }

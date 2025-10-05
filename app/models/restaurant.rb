@@ -37,6 +37,10 @@ class Restaurant < ApplicationRecord
   cache_has_many :sizes, embed: :ids
   cache_has_one :genimage, embed: :id
 
+  # Cache invalidation hooks
+  after_update :invalidate_restaurant_caches
+  after_destroy :invalidate_restaurant_caches
+
   # Returns all locale codes for this restaurant
   def locales
     restaurantlocales.pluck(:locale)
@@ -102,4 +106,10 @@ class Restaurant < ApplicationRecord
   validates :postcode, presence: false
   validates :country, presence: false
   validates :status, presence: true
+
+  private
+
+  def invalidate_restaurant_caches
+    AdvancedCacheService.invalidate_restaurant_caches(self.id)
+  end
 end

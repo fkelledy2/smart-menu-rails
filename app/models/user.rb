@@ -34,6 +34,9 @@ class User < ApplicationRecord
   cache_has_one :onboarding_session, embed: :id
   cache_belongs_to :plan
   
+  # Cache invalidation hooks
+  after_update :invalidate_user_caches
+  
   after_create :create_onboarding_session
   before_validation :assign_default_plan, on: :create
   
@@ -75,5 +78,9 @@ class User < ApplicationRecord
                    Plan.order(:pricePerMonth).first || 
                    Plan.first
     self.plan = default_plan if default_plan
+  end
+
+  def invalidate_user_caches
+    AdvancedCacheService.invalidate_user_caches(self.id)
   end
 end

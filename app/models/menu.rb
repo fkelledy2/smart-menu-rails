@@ -27,6 +27,10 @@ class Menu < ApplicationRecord
   cache_has_one :genimage, embed: :id
   cache_belongs_to :restaurant
 
+  # Cache invalidation hooks
+  after_update :invalidate_menu_caches
+  after_destroy :invalidate_menu_caches
+
   def slug
     if Smartmenu.where(restaurant: restaurant, menu: self).first
       Smartmenu.where(restaurant: restaurant, menu: self).first.slug
@@ -81,4 +85,11 @@ class Menu < ApplicationRecord
 
   validates :name, presence: true
   validates :status, presence: true
+
+  private
+
+  def invalidate_menu_caches
+    AdvancedCacheService.invalidate_menu_caches(self.id)
+    AdvancedCacheService.invalidate_restaurant_caches(self.restaurant_id)
+  end
 end

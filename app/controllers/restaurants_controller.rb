@@ -102,20 +102,59 @@ class RestaurantsController < ApplicationController
 
     return unless params[:restaurant_id] && params[:id]
 
-    # Use fetch to get the restaurant with caching
-    # Preload associations that will be used in the view
-    @restaurant.fetch_menus if @restaurant.respond_to?(:fetch_menus)
-    @restaurant.fetch_tablesettings if @restaurant.respond_to?(:fetch_tablesettings)
+    # Use AdvancedCacheService for comprehensive dashboard data
+    @dashboard_data = AdvancedCacheService.cached_restaurant_dashboard(@restaurant.id)
 
     AnalyticsService.track_user_event(current_user, AnalyticsService::RESTAURANT_VIEWED, {
       restaurant_id: @restaurant.id,
       restaurant_name: @restaurant.name,
       restaurant_type: @restaurant.restaurant_type,
       cuisine_type: @restaurant.cuisine_type,
-      has_menus: @restaurant.menus.any?,
-      menus_count: @restaurant.menus.count,
-      employees_count: @restaurant.employees.count
+      has_menus: @dashboard_data[:stats][:total_menus_count] > 0,
+      menus_count: @dashboard_data[:stats][:total_menus_count],
+      employees_count: @dashboard_data[:stats][:staff_count]
     })
+  end
+
+  # GET /restaurants/1/analytics
+  def analytics
+    authorize @restaurant
+    
+    # Get date range from params or default to last 30 days
+    date_range = if params[:start_date] && params[:end_date]
+                   Date.parse(params[:start_date])..Date.parse(params[:end_date])
+                 else
+                   30.days.ago..Time.current
+                 end
+    
+    # Use AdvancedCacheService for analytics data
+    @analytics_data = AdvancedCacheService.cached_order_analytics(@restaurant.id, date_range)
+    
+    # Track analytics view
+    AnalyticsService.track_user_event(current_user, 'restaurant_analytics_viewed', {
+      restaurant_id: @restaurant.id,
+      date_range_days: @analytics_data[:period][:days],
+      total_orders: @analytics_data[:totals][:orders],
+      total_revenue: @analytics_data[:totals][:revenue]
+    })
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: @analytics_data }
+    end
+  end
+
+  # GET /restaurants/1/user_activity
+  def user_activity
+    authorize @restaurant
+    
+    days = params[:days]&.to_i || 7
+    @activity_data = AdvancedCacheService.cached_user_activity(current_user.id, days: days)
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: @activity_data }
+    end
   end
 
   # GET /restaurants/new
@@ -176,8 +215,8 @@ class RestaurantsController < ApplicationController
 
     respond_to do |format|
       if @restaurant.update(restaurant_params)
-        # Expire the cache for this restaurant
-        @restaurant.expire_restaurant_cache if @restaurant.respond_to?(:expire_restaurant_cache)
+        # Invalidate AdvancedCacheService caches for this restaurant
+        AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id)
 
         Rails.logger.debug 'SmartMenuSyncJob.start'
         SmartMenuSyncJob.perform_sync(@restaurant.id)
@@ -220,8 +259,9 @@ class RestaurantsController < ApplicationController
 
     @restaurant.update(archived: true)
 
-    # Expire the user's restaurant list cache
-    Restaurant.expire_user_id(user_id) if Restaurant.respond_to?(:expire_user_id)
+    # Invalidate AdvancedCacheService caches for this restaurant and user
+    AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id)
+    AdvancedCacheService.invalidate_user_caches(user_id)
 
     AnalyticsService.track_user_event(current_user, AnalyticsService::RESTAURANT_DELETED, {
       restaurant_id: @restaurant.id,

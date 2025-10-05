@@ -78,13 +78,18 @@ class MenusController < ApplicationController
         if @menu.restaurant != @restaurant
           redirect_to root_url
         end
+        
+        # Use AdvancedCacheService for comprehensive menu data with localization
+        locale = params[:locale] || 'en'
+        @menu_data = AdvancedCacheService.cached_menu_with_items(@menu.id, locale: locale, include_inactive: false)
+        
         if current_user
           AnalyticsService.track_user_event(current_user, AnalyticsService::MENU_VIEWED, {
             restaurant_id: @menu.restaurant.id,
             menu_id: @menu.id,
             menu_name: @menu.name,
-            items_count: @menu.menuitems.count,
-            sections_count: @menu.menusections.count
+            items_count: @menu_data[:metadata][:active_items],
+            sections_count: @menu_data[:sections].count
           })
         else
           anonymous_id = session[:session_id] ||= SecureRandom.uuid
@@ -92,7 +97,7 @@ class MenusController < ApplicationController
             restaurant_id: @menu.restaurant.id,
             menu_id: @menu.id,
             menu_name: @menu.name,
-            items_count: @menu.menuitems.count
+            items_count: @menu_data[:metadata][:active_items]
           })
         end
       end
@@ -243,6 +248,10 @@ class MenusController < ApplicationController
         @menu.pdf_menu_scan.purge
       end
       if @menu.update(menu_params)
+        # Invalidate AdvancedCacheService caches for this menu
+        AdvancedCacheService.invalidate_menu_caches(@menu.id)
+        AdvancedCacheService.invalidate_restaurant_caches(@menu.restaurant.id)
+        
         Analytics.track(
           user_id: current_user.id,
           event: 'menus.update',
@@ -279,6 +288,11 @@ class MenusController < ApplicationController
     authorize @menu
 
     @menu.update(archived: true)
+    
+    # Invalidate AdvancedCacheService caches for this menu
+    AdvancedCacheService.invalidate_menu_caches(@menu.id)
+    AdvancedCacheService.invalidate_restaurant_caches(@menu.restaurant.id)
+    
     Analytics.track(
       user_id: current_user.id,
       event: 'menus.destroy',
@@ -293,6 +307,32 @@ class MenusController < ApplicationController
                     notice: t('common.flash.deleted', resource: t('activerecord.models.menu'))
       end
       format.json { head :no_content }
+    end
+  end
+
+  # GET /menus/1/performance
+  def performance
+    authorize @menu, :show?
+    
+    # Get performance period from params or default to 30 days
+    days = params[:days]&.to_i || 30
+    
+    # Use AdvancedCacheService for menu performance analytics
+    @performance_data = AdvancedCacheService.cached_menu_performance(@menu.id, days: days)
+    
+    # Track performance view
+    AnalyticsService.track_user_event(current_user, 'menu_performance_viewed', {
+      restaurant_id: @menu.restaurant.id,
+      menu_id: @menu.id,
+      menu_name: @menu.name,
+      period_days: days,
+      total_orders: @performance_data[:performance][:total_orders],
+      total_revenue: @performance_data[:performance][:total_revenue]
+    })
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: @performance_data }
     end
   end
 
