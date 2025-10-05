@@ -13,12 +13,13 @@ class OrdrsController < ApplicationController
     respond_to do |format|
       format.html do
         if @restaurant
-          # Apply policy scoping for restaurant orders
-          scoped_orders = policy_scope(@restaurant.ordrs)
+          # Use enhanced cache service that returns model instances
+          cached_result = AdvancedCacheServiceV2.cached_restaurant_orders_with_models(@restaurant.id, include_calculations: true)
           
-          # Use AdvancedCacheService for restaurant orders with comprehensive data
-          @orders_data = AdvancedCacheService.cached_restaurant_orders(@restaurant.id, include_calculations: true)
-          @ordrs = @orders_data[:orders]
+          # Apply policy scoping to the model instances
+          @ordrs = policy_scope(cached_result[:orders])
+          @orders_data = cached_result # Contains both models and cached calculations
+          @cached_calculations = cached_result[:cached_calculations] # Hash data for complex calculations
           
           # Track restaurant orders view
           AnalyticsService.track_user_event(current_user, 'restaurant_orders_viewed', {
@@ -28,12 +29,12 @@ class OrdrsController < ApplicationController
             viewing_context: 'restaurant_management'
           })
         else
-          # Apply policy scoping for user's orders across all restaurants
-          scoped_orders = policy_scope(Ordr)
+          # Use enhanced cache service that returns model instances
+          cached_result = AdvancedCacheServiceV2.cached_user_all_orders_with_models(current_user.id)
           
-          # Use AdvancedCacheService for user's all orders across restaurants
-          @all_orders_data = AdvancedCacheService.cached_user_all_orders(current_user.id)
-          @ordrs = @all_orders_data[:orders]
+          # Apply policy scoping to the model instances
+          @ordrs = policy_scope(cached_result[:orders])
+          @all_orders_data = cached_result # Contains both models and cached data
           
           # Track all orders view
           AnalyticsService.track_user_event(current_user, 'all_orders_viewed', {

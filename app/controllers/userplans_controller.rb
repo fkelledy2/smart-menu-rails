@@ -1,27 +1,37 @@
 class UserplansController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_userplan, only: %i[show edit update destroy]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /userplans or /userplans.json
   def index
-    @userplans = Userplan.limit(100) # Use limit for memory safety, since pagination gem is not installed
+    @userplans = policy_scope(Userplan).limit(100) # Use limit for memory safety, since pagination gem is not installed
   end
 
   # GET /userplans/1 or /userplans/1.json
-  def show; end
+  def show
+    authorize @userplan
+  end
 
   # GET /userplans/new
   def new
     @userplan = Userplan.new
+    authorize @userplan
   end
 
   # GET /userplans/1/edit
   def edit
+    authorize @userplan
     @plans = Plan.all
   end
 
   # POST /userplans or /userplans.json
   def create
     @userplan = Userplan.new(userplan_params)
+    authorize @userplan
 
     respond_to do |format|
       if @userplan.save
@@ -41,6 +51,8 @@ class UserplansController < ApplicationController
 
   # PATCH/PUT /userplans/1 or /userplans/1.json
   def update
+    authorize @userplan
+    
     respond_to do |format|
       if @userplan.update(userplan_params)
         @user = User.where(id: @userplan.user.id).first
@@ -60,6 +72,7 @@ class UserplansController < ApplicationController
 
   # DELETE /userplans/1 or /userplans/1.json
   def destroy
+    authorize @userplan
     @userplan.destroy!
 
     respond_to do |format|

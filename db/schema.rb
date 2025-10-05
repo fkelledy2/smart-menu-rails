@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_05_181034) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -70,6 +70,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.text "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_contacts_on_created_at"
+    t.index ["email"], name: "index_contacts_on_email"
   end
 
   create_table "employees", force: :cascade do |t|
@@ -85,6 +87,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.bigint "user_id", null: false
     t.boolean "archived", default: false
     t.integer "sequence"
+    t.index ["email"], name: "index_employees_on_email"
+    t.index ["restaurant_id", "created_at"], name: "index_employees_on_restaurant_created_at"
     t.index ["restaurant_id", "role", "status"], name: "index_employees_on_restaurant_role_status", where: "(archived = false)"
     t.index ["restaurant_id", "status"], name: "index_employees_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id"], name: "index_employees_on_restaurant_id"
@@ -159,6 +163,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.integer "sequence"
     t.index ["archived"], name: "index_inventories_on_archived"
     t.index ["menuitem_id", "status"], name: "index_inventories_on_menuitem_status_active", where: "(archived = false)"
+    t.index ["menuitem_id", "updated_at"], name: "index_inventories_on_menuitem_updated_at"
     t.index ["menuitem_id"], name: "index_inventories_on_menuitem_id"
     t.index ["status"], name: "index_inventories_on_status"
   end
@@ -265,6 +270,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.bigint "menuitem_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["menuitem_id", "locale", "status"], name: "index_menuitemlocales_on_menuitem_locale_status"
     t.index ["menuitem_id", "locale"], name: "index_menuitemlocales_on_menuitem_locale"
     t.index ["menuitem_id"], name: "index_menuitemlocales_on_menuitem_id"
   end
@@ -287,11 +293,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.float "unitcost", default: 0.0
     t.index "lower((name)::text) varchar_pattern_ops", name: "index_menuitems_on_lower_name"
     t.index ["archived"], name: "index_menuitems_on_archived"
+    t.index ["created_at"], name: "index_menuitems_on_created_at"
+    t.index ["menusection_id", "sequence"], name: "index_menuitems_on_menusection_sequence"
     t.index ["menusection_id", "status", "sequence"], name: "index_menuitems_on_section_status_sequence", where: "(archived = false)"
+    t.index ["menusection_id", "status"], name: "index_menuitems_on_menusection_status"
     t.index ["menusection_id", "status"], name: "index_menuitems_on_section_status_active", where: "(archived = false)"
     t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
     t.index ["sequence"], name: "index_menuitems_on_sequence"
     t.index ["status"], name: "index_menuitems_on_status"
+    t.index ["updated_at"], name: "index_menuitems_on_updated_at"
   end
 
   create_table "menulocales", force: :cascade do |t|
@@ -335,7 +345,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.bigint "menu_import_id"
     t.index ["archived"], name: "index_menus_on_archived"
     t.index ["menu_import_id"], name: "index_menus_on_menu_import_id"
+    t.index ["restaurant_id", "created_at"], name: "index_menus_on_restaurant_created_at"
     t.index ["restaurant_id", "status"], name: "index_menus_on_restaurant_status_active", where: "(archived = false)"
+    t.index ["restaurant_id", "updated_at"], name: "index_menus_on_restaurant_updated_at"
     t.index ["restaurant_id"], name: "index_menus_on_restaurant_id"
     t.index ["status"], name: "index_menus_on_status"
   end
@@ -349,6 +361,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["menusection_id", "locale"], name: "index_menusectionlocales_on_menusection_and_locale", unique: true
+    t.index ["menusection_id", "status"], name: "index_menusectionlocales_on_menusection_status"
     t.index ["menusection_id"], name: "index_menusectionlocales_on_menusection_id"
   end
 
@@ -380,6 +393,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.float "totalOrderValue"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_metrics_on_created_at"
   end
 
   create_table "noticed_events", force: :cascade do |t|
@@ -518,7 +532,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.datetime "updated_at", null: false
     t.float "ordritemprice", default: 0.0
     t.integer "status", default: 0
+    t.index ["created_at"], name: "index_ordritems_on_created_at"
+    t.index ["menuitem_id", "status"], name: "index_ordritems_on_menuitem_status"
     t.index ["menuitem_id"], name: "index_ordritems_on_menuitem_id"
+    t.index ["ordr_id", "created_at"], name: "index_ordritems_on_ordr_created_at"
     t.index ["ordr_id", "status"], name: "index_ordritems_on_ordr_status"
     t.index ["ordr_id"], name: "index_ordritems_on_ordr_id"
     t.index ["status"], name: "index_ordritems_on_status"
@@ -572,8 +589,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.string "paymentlink"
     t.integer "paymentstatus", default: 0
     t.index ["created_at"], name: "index_ordrs_on_created_at"
+    t.index ["employee_id", "created_at"], name: "index_ordrs_on_employee_created_at"
     t.index ["employee_id"], name: "index_ordrs_on_employee_id"
     t.index ["menu_id"], name: "index_ordrs_on_menu_id"
+    t.index ["restaurant_id", "created_at", "gross"], name: "index_ordrs_on_restaurant_created_gross"
     t.index ["restaurant_id", "created_at", "status"], name: "index_ordrs_on_restaurant_created_status"
     t.index ["restaurant_id", "status", "created_at"], name: "index_ordrs_on_restaurant_status_created"
     t.index ["restaurant_id", "status"], name: "index_ordrs_on_restaurant_status"
@@ -581,6 +600,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.index ["status"], name: "index_ordrs_on_status"
     t.index ["tablesetting_id", "status", "created_at"], name: "index_ordrs_on_table_status_created"
     t.index ["tablesetting_id"], name: "index_ordrs_on_tablesetting_id"
+    t.index ["updated_at"], name: "index_ordrs_on_updated_at"
   end
 
   create_table "pay_charges", force: :cascade do |t|
@@ -829,6 +849,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_222429) do
     t.integer "tabletype"
     t.boolean "archived", default: false
     t.integer "sequence"
+    t.index ["restaurant_id", "created_at"], name: "index_tablesettings_on_restaurant_created_at"
     t.index ["restaurant_id", "status"], name: "index_tablesettings_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id"], name: "index_tablesettings_on_restaurant_id"
   end
