@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class OrdritemnotePol icy < ApplicationPolicy
+class OrdritemlnotePolicy < ApplicationPolicy
   # Order item notes are sensitive business data - only restaurant owners can access
   
   def index?
