@@ -4,3 +4,13 @@
 require_relative 'config/application'
 
 Rails.application.load_tasks
+
+# Load rswag rake tasks in development and test environments
+if Rails.env.development? || Rails.env.test?
+  begin
+    require 'rswag/specs/rake_task'
+    RSwag::Specs::RakeTask.new
+  rescue LoadError
+    # rswag not available
+  end
+end

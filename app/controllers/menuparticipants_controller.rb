@@ -19,7 +19,8 @@ class MenuparticipantsController < ApplicationController
 
   # GET /menuparticipants/1 or /menuparticipants/1.json
   def show
-    authorize @menuparticipant if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @menuparticipant
   end
 
   # GET /menus/:menu_id/menuparticipants/new
@@ -29,18 +30,21 @@ class MenuparticipantsController < ApplicationController
       @menu = Menu.find(params[:menu_id])
       @menuparticipant.menu = @menu
     end
-    authorize @menuparticipant if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @menuparticipant
   end
 
   # GET /menuparticipants/1/edit
   def edit
-    authorize @menuparticipant if current_user
+    # Always authorize - editing requires authentication
+    authorize @menuparticipant
   end
 
   # POST /menuparticipants or /menuparticipants.json
   def create
     @menuparticipant = Menuparticipant.new(menuparticipant_params)
-    authorize @menuparticipant if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @menuparticipant
 
     respond_to do |format|
       if @menuparticipant.save
@@ -56,7 +60,8 @@ class MenuparticipantsController < ApplicationController
 
   # PATCH/PUT /menuparticipants/1 or /menuparticipants/1.json
   def update
-    authorize @menuparticipant if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @menuparticipant
 
     respond_to do |format|
       if @menuparticipant.update(menuparticipant_params)

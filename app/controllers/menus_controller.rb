@@ -69,8 +69,8 @@ class MenusController < ApplicationController
   # GET	/restaurants/:restaurant_id/menus/:id(.:format)	 menus#show
   # GET /menus/1 or /menus/1.json
   def show
-    # Public access for customer viewing, but authorize if user is logged in
-    authorize @menu if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @menu
     if params[:menu_id] && params[:id]
       if params[:restaurant_id]
         @restaurant = Restaurant.find_by(id: params[:restaurant_id])

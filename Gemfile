@@ -71,6 +71,16 @@ group :test do
   gem 'capybara'
   gem 'selenium-webdriver'
 end
+
+group :development, :test do
+  # API documentation with OpenAPI/Swagger
+  gem 'rswag-api'
+  gem 'rswag-ui'
+end
+
+group :test do
+  gem 'rswag-specs'
+end
 gem 'aasm'
 gem 'active_model_serializers'
 gem 'allow_numeric'

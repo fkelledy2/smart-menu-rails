@@ -1,0 +1,320 @@
+<% content_for :title, "Performance Monitoring" %>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Performance Monitoring</h1>
+        <div>
+          <%= link_to "Reset Metrics", admin_performance_reset_path, 
+                      method: :post, 
+                      class: "btn btn-outline-warning me-2",
+                      confirm: "Are you sure you want to reset all performance metrics?" %>
+          <%= link_to "Export Data", admin_performance_export_path(format: :json), 
+                      class: "btn btn-outline-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title"><%= @metrics[:summary][:total_requests] %></h4>
+              <p class="card-text">Total Requests</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-chart-line fa-2x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title"><%= @request_stats[:avg_response_time] || 0 %>ms</h4>
+              <p class="card-text">Avg Response Time</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-tachometer-alt fa-2x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card bg-info text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title"><%= @metrics[:cache_stats][:hit_rate] %>%</h4>
+              <p class="card-text">Cache Hit Rate</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-database fa-2x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card bg-warning text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title"><%= @metrics[:summary][:slow_requests] %></h4>
+              <p class="card-text">Slow Requests</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-exclamation-triangle fa-2x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <ul class="nav nav-tabs mb-4" id="performanceTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+        Overview
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="requests-tab" data-bs-toggle="tab" data-bs-target="#requests" type="button" role="tab">
+        Requests
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="queries-tab" data-bs-toggle="tab" data-bs-target="#queries" type="button" role="tab">
+        Database
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="cache-tab" data-bs-toggle="tab" data-bs-target="#cache" type="button" role="tab">
+        Cache
+      </button>
+    </li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content" id="performanceTabContent">
+    <!-- Overview Tab -->
+    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Request Statistics</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <td>Total Requests</td>
+                    <td><%= @request_stats[:total_requests] || 0 %></td>
+                  </tr>
+                  <tr>
+                    <td>Average Response Time</td>
+                    <td><%= @request_stats[:avg_response_time] || 0 %>ms</td>
+                  </tr>
+                  <tr>
+                    <td>Median Response Time</td>
+                    <td><%= @request_stats[:median_response_time] || 0 %>ms</td>
+                  </tr>
+                  <tr>
+                    <td>95th Percentile</td>
+                    <td><%= @request_stats[:p95_response_time] || 0 %>ms</td>
+                  </tr>
+                  <tr>
+                    <td>99th Percentile</td>
+                    <td><%= @request_stats[:p99_response_time] || 0 %>ms</td>
+                  </tr>
+                  <tr>
+                    <td>Slow Requests</td>
+                    <td>
+                      <%= @request_stats[:slow_requests_count] || 0 %> 
+                      (<%= @request_stats[:slow_requests_percentage] || 0 %>%)
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">System Information</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <td>Uptime</td>
+                    <td><%= time_ago_in_words(@metrics[:uptime].seconds.ago) %></td>
+                  </tr>
+                  <tr>
+                    <td>Total Queries</td>
+                    <td><%= @metrics[:summary][:total_queries] %></td>
+                  </tr>
+                  <tr>
+                    <td>Slow Queries</td>
+                    <td><%= @metrics[:summary][:slow_queries] %></td>
+                  </tr>
+                  <tr>
+                    <td>Cache Hits</td>
+                    <td><%= @metrics[:cache_stats][:hits] %></td>
+                  </tr>
+                  <tr>
+                    <td>Cache Misses</td>
+                    <td><%= @metrics[:cache_stats][:misses] %></td>
+                  </tr>
+                  <tr>
+                    <td>Environment</td>
+                    <td><%= Rails.env.capitalize %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Requests Tab -->
+    <div class="tab-pane fade" id="requests" role="tabpanel">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Recent Requests</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Controller</th>
+                  <th>Action</th>
+                  <th>Method</th>
+                  <th>Duration</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @metrics[:requests].reverse.each do |request| %>
+                  <tr class="<%= 'table-warning' if request[:slow] %>">
+                    <td><%= request[:timestamp].strftime('%H:%M:%S') %></td>
+                    <td><%= request[:controller] %></td>
+                    <td><%= request[:action] %></td>
+                    <td><%= request[:method] %></td>
+                    <td>
+                      <%= request[:duration] %>ms
+                      <% if request[:slow] %>
+                        <i class="fas fa-exclamation-triangle text-warning" title="Slow request"></i>
+                      <% end %>
+                    </td>
+                    <td>
+                      <span class="badge bg-<%= request[:status] < 400 ? 'success' : 'danger' %>">
+                        <%= request[:status] %>
+                      </span>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Queries Tab -->
+    <div class="tab-pane fade" id="queries" role="tabpanel">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Slow Queries</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Query</th>
+                  <th>Count</th>
+                  <th>Avg Duration</th>
+                  <th>Max Duration</th>
+                  <th>Last Seen</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @slow_queries.each do |query| %>
+                  <tr>
+                    <td>
+                      <code class="small"><%= truncate(query[:query], length: 80) %></code>
+                    </td>
+                    <td><%= query[:count] %></td>
+                    <td><%= query[:avg_duration] %>ms</td>
+                    <td><%= query[:max_duration] %>ms</td>
+                    <td><%= time_ago_in_words(query[:last_seen]) %> ago</td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cache Tab -->
+    <div class="tab-pane fade" id="cache" role="tabpanel">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Cache Statistics</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <td>Cache Hits</td>
+                    <td><%= @metrics[:cache_stats][:hits] %></td>
+                  </tr>
+                  <tr>
+                    <td>Cache Misses</td>
+                    <td><%= @metrics[:cache_stats][:misses] %></td>
+                  </tr>
+                  <tr>
+                    <td>Hit Rate</td>
+                    <td><%= @metrics[:cache_stats][:hit_rate] %>%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Auto-refresh every 30 seconds
+setInterval(function() {
+  if (document.visibilityState === 'visible') {
+    location.reload();
+  }
+}, 30000);
+</script>

@@ -66,8 +66,8 @@ class OrdrsController < ApplicationController
 
   # GET /ordrs/1 or /ordrs/1.json
   def show
-    # Allow both staff and customers to view orders
-    authorize @ordr if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @ordr
     
     respond_to do |format|
       format.html do
@@ -151,7 +151,8 @@ class OrdrsController < ApplicationController
   # GET /ordrs/new
   def new
     @ordr = Ordr.new
-    authorize @ordr if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @ordr
     @ordr.nett = 0
     @ordr.tip = 0
     @ordr.service = 0
@@ -174,7 +175,8 @@ class OrdrsController < ApplicationController
                        restaurant_id: restaurant_id,
                        nett: 0, tip: 0, service: 0, tax: 0, gross: 0,
     ))
-    authorize @ordr if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @ordr
 
     ActiveRecord::Base.transaction do
       if @ordr.save
@@ -222,7 +224,8 @@ class OrdrsController < ApplicationController
 
   # PATCH/PUT /ordrs/1 or /ordrs/1.json
   def update
-    authorize @ordr if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @ordr
 
     ActiveRecord::Base.transaction do
       @ordr.assign_attributes(ordr_params)

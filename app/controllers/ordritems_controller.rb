@@ -15,24 +15,28 @@ class OrdritemsController < ApplicationController
 
   # GET /ordritems/1 or /ordritems/1.json
   def show
-    authorize @ordritem if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @ordritem
   end
 
   # GET /ordritems/new
   def new
     @ordritem = Ordritem.new
-    authorize @ordritem if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @ordritem
   end
 
   # GET /ordritems/1/edit
   def edit
-    authorize @ordritem if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @ordritem
   end
 
   # POST /ordritems or /ordritems.json
   def create
     @ordritem = Ordritem.new(ordritem_params)
-    authorize @ordritem if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @ordritem
     
     respond_to do |format|
       begin
@@ -62,7 +66,8 @@ class OrdritemsController < ApplicationController
 
   # PATCH/PUT /ordritems/1 or /ordritems/1.json
   def update
-    authorize @ordritem if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @ordritem
 
     respond_to do |format|
       ActiveRecord::Base.transaction do
@@ -86,7 +91,8 @@ class OrdritemsController < ApplicationController
 
   # DELETE /ordritems/1 or /ordritems/1.json
   def destroy
-    authorize @ordritem if current_user
+    # Always authorize - policy handles public vs private access
+    authorize @ordritem
 
     ActiveRecord::Base.transaction do
       adjust_inventory(@ordritem.menuitem&.inventory, 1)

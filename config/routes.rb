@@ -27,12 +27,36 @@ Rails.application.routes.draw do
   get '/health/cache-stats', to: 'health#cache_stats'
   
   # ============================================================================
+  # API DOCUMENTATION
+  # ============================================================================
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
+  
+  # ============================================================================
   # API ENDPOINTS
   # ============================================================================
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       # Test endpoints
       get 'test/ping', to: 'test#ping'
+      
+      # Restaurant Management API
+      resources :restaurants, only: [:index, :show, :create, :update, :destroy] do
+        # Restaurant-specific menus
+        resources :menus, only: [:index, :create]
+        
+        # Restaurant-specific orders
+        resources :orders, only: [:index, :create]
+      end
+      
+      # Menu Management API
+      resources :menus, only: [:show, :update, :destroy] do
+        # Menu items
+        resources :items, only: [:index], controller: 'menu_items'
+      end
+      
+      # Order Management API
+      resources :orders, only: [:show, :update, :destroy]
       
       # Google Vision API endpoints
       post 'vision/analyze', to: 'vision#analyze'
@@ -204,6 +228,18 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :metrics, only: [:index, :show] do
       collection do
+        get :export
+      end
+    end
+    
+    # Performance monitoring
+    resources :performance, only: [:index] do
+      collection do
+        get :requests
+        get :queries
+        get :cache
+        get :memory
+        post :reset
         get :export
       end
     end
