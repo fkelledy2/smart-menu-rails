@@ -24,4 +24,4 @@ two:
   country: AnotherCountry
   status: 1
   capacity: 2
-  user: one
+  user: two

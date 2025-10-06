@@ -16,7 +16,7 @@ two:
   description: AnotherText
   status: 1
   sequence: 2
-  restaurant: one
+  restaurant: two
   displayImages: true
   allowOrdering: true
   inventoryTracking: true

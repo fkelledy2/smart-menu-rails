@@ -11,3 +11,10 @@ two:
   first_name: Test
   last_name: User Two
   plan: two
+
+admin:
+  email: admin@gmail.com
+  first_name: Admin
+  last_name: User
+  admin: true
+  plan: one

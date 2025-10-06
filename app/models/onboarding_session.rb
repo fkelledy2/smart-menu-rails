@@ -95,7 +95,8 @@ class OnboardingSession < ApplicationRecord
   
   # Progress calculation
   def progress_percentage
-    (status_before_type_cast + 1) * 20 # 20% per step
+    status_value = self.class.statuses[status] || 0
+    (status_value + 1) * 20 # 20% per step
   end
   
   # Validation helpers

@@ -73,4 +73,12 @@ class ApplicationController < ActionController::Base
       redirect_to onboarding_path
     end
   end
+
+  # Admin authorization helper
+  def ensure_admin!
+    unless current_user&.admin?
+      flash[:alert] = "Access denied. Admin privileges required."
+      redirect_to root_path
+    end
+  end
 end
