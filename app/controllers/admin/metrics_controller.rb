@@ -1,20 +1,30 @@
 # Admin controller for viewing application metrics
 class Admin::MetricsController < ApplicationController
-  before_action :authenticate_admin!
+  before_action :authenticate_user!
+  before_action :ensure_admin!
+  
+  # Pundit authorization
+  after_action :verify_authorized
 
   def index
+    authorize [:admin, :metrics]
+    
     @metrics_summary = build_metrics_summary
     @system_metrics = collect_system_metrics
     @recent_metrics = collect_recent_metrics
   end
 
   def show
+    authorize [:admin, :metrics]
+    
     @metric_name = params[:id]
     @metric_data = MetricsCollector.get_metrics.select { |k, _| k.include?(@metric_name) }
     @metric_summary = build_metric_summary(@metric_name)
   end
 
   def export
+    authorize [:admin, :metrics]
+    
     metrics = MetricsCollector.get_metrics
 
     respond_to do |format|

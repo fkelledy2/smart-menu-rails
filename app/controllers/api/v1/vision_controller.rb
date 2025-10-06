@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class VisionController < ApplicationController
+    class VisionController < BaseController
       include GoogleVisionAnalyzable
 
       # POST /api/v1/vision/analyze

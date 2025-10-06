@@ -1,45 +1,38 @@
 class OrdrparticipantsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_restaurant
   before_action :set_ordrparticipant, only: %i[show edit update destroy]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /ordrparticipants or /ordrparticipants.json
   def index
-    if current_user
-      @ordrparticipants = []
-      Ordr.joins(:restaurant).where(restaurant: { user: current_user }).find_each do |ordr|
-        @ordrparticipants += Ordrparticipant.where(ordr: ordr).all
-      end
-    else
-      redirect_to root_url
-    end
+    @ordrparticipants = policy_scope(Ordrparticipant)
   end
 
   # GET /ordrparticipants/1 or /ordrparticipants/1.json
   def show
-    unless current_user
-      redirect_to root_url
-    end
+    authorize @ordrparticipant
   end
 
   # GET /ordrparticipants/new
   def new
-    if current_user
-      @ordrparticipant = Ordrparticipant.new
-    else
-      redirect_to root_url
-    end
+    @ordrparticipant = Ordrparticipant.new
+    authorize @ordrparticipant
   end
 
   # GET /ordrparticipants/1/edit
   def edit
-    unless current_user
-      redirect_to root_url
-    end
+    authorize @ordrparticipant
   end
 
   # POST /ordrparticipants or /ordrparticipants.json
   def create
     @ordrparticipant = Ordrparticipant.new(ordrparticipant_params)
+    authorize @ordrparticipant
+    
     respond_to do |format|
       if @ordrparticipant.save
         @tablesetting = Tablesetting.find_by(id: @ordrparticipant.ordr.tablesetting.id)
@@ -54,13 +47,14 @@ class OrdrparticipantsController < ApplicationController
 
   # PATCH/PUT /ordrparticipants/1 or /ordrparticipants/1.json
   def update
+    authorize @ordrparticipant
+    
     respond_to do |format|
       if @ordrparticipant.update(ordrparticipant_params)
         # Find all entries for participant with same sessionid and order_id and update the name.
         @tablesetting = Tablesetting.find_by(id: @ordrparticipant.ordr.tablesetting.id)
         Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
         broadcast_partials(@ordrparticipant.ordr, @tablesetting, @ordrparticipant)
-        #             format.html { redirect_to menuparticipant.smartmenu, notice: "Smartmenu was successfully created." }
         format.json { render :show, status: :ok, location: @ordrparticipant.ordr }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -71,14 +65,15 @@ class OrdrparticipantsController < ApplicationController
 
   # DELETE /ordrparticipants/1 or /ordrparticipants/1.json
   def destroy
-    if current_user
-      @ordrparticipant.destroy!
-      respond_to do |format|
-        format.html { redirect_to ordrparticipants_url, notice: 'Ordrparticipant was successfully destroyed.' }
-        format.json { head :no_content }
+    authorize @ordrparticipant
+    
+    @ordrparticipant.destroy!
+    respond_to do |format|
+      format.html do
+        redirect_to ordrparticipants_url, 
+                    notice: t('common.flash.deleted', resource: t('activerecord.models.ordrparticipant'))
       end
-    else
-      redirect_to root_url
+      format.json { head :no_content }
     end
   end
 

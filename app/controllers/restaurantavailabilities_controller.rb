@@ -1,101 +1,89 @@
 class RestaurantavailabilitiesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_restaurantavailability, only: %i[show edit update destroy]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET /restaurantavailabilities or /restaurantavailabilities.json
   def index
-    if current_user
-      if params[:restaurant_id]
-        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-        @restaurantavailabilities = Restaurantavailability.joins(:restaurant).where(restaurant: @futureParentRestaurant).all
-      else
-        @restaurantavailabilities = Restaurantavailability.joins(:restaurant).where(restaurant: { user: current_user }).all
-      end
+    if params[:restaurant_id]
+      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      @restaurantavailabilities = policy_scope(Restaurantavailability).where(restaurant: @futureParentRestaurant)
     else
-      redirect_to root_url
+      @restaurantavailabilities = policy_scope(Restaurantavailability)
     end
   end
 
   # GET /restaurantavailabilities/1 or /restaurantavailabilities/1.json
   def show
-    unless current_user
-      redirect_to root_url
-    end
+    authorize @restaurantavailability
   end
 
   # GET /restaurantavailabilities/new
   def new
-    if current_user
-      @restaurantavailability = Restaurantavailability.new
-      if params[:restaurant_id]
-        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-        @restaurantavailability.restaurant = @futureParentRestaurant
-      end
-    else
-      redirect_to root_url
+    @restaurantavailability = Restaurantavailability.new
+    if params[:restaurant_id]
+      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      @restaurantavailability.restaurant = @futureParentRestaurant
     end
+    authorize @restaurantavailability
   end
 
   # GET /restaurantavailabilities/1/edit
   def edit
-    unless current_user
-      redirect_to root_url
-    end
+    authorize @restaurantavailability
   end
 
   # POST /restaurantavailabilities or /restaurantavailabilities.json
   def create
-    if current_user
-      @restaurantavailability = Restaurantavailability.new(restaurantavailability_params)
-      respond_to do |format|
-        if @restaurantavailability.save
-          format.html do
-            redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id),
-                        notice: t('common.flash.created', resource: t('activerecord.models.restaurantavailability'))
-          end
-          format.json { render :show, status: :created, location: @restaurantavailability }
-        else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @restaurantavailability.errors, status: :unprocessable_entity }
+    @restaurantavailability = Restaurantavailability.new(restaurantavailability_params)
+    authorize @restaurantavailability
+    
+    respond_to do |format|
+      if @restaurantavailability.save
+        format.html do
+          redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id),
+                      notice: t('common.flash.created', resource: t('activerecord.models.restaurantavailability'))
         end
+        format.json { render :show, status: :created, location: @restaurantavailability }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @restaurantavailability.errors, status: :unprocessable_entity }
       end
-    else
-      redirect_to root_url
     end
   end
 
   # PATCH/PUT /restaurantavailabilities/1 or /restaurantavailabilities/1.json
   def update
-    if current_user
-      respond_to do |format|
-        if @restaurantavailability.update(restaurantavailability_params)
-          format.html do
-            redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id),
-                        notice: t('common.flash.updated', resource: t('activerecord.models.restaurantavailability'))
-          end
-          format.json { render :show, status: :ok, location: @restaurantavailability }
-        else
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @restaurantavailability.errors, status: :unprocessable_entity }
+    authorize @restaurantavailability
+    
+    respond_to do |format|
+      if @restaurantavailability.update(restaurantavailability_params)
+        format.html do
+          redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id),
+                      notice: t('common.flash.updated', resource: t('activerecord.models.restaurantavailability'))
         end
+        format.json { render :show, status: :ok, location: @restaurantavailability }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @restaurantavailability.errors, status: :unprocessable_entity }
       end
-    else
-      redirect_to root_url
     end
   end
 
   # DELETE /restaurantavailabilities/1 or /restaurantavailabilities/1.json
   def destroy
-    if current_user
-      @restaurantavailability.update(archived: true)
-      respond_to do |format|
-        format.html do
-          redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id),
-                      notice: t('common.flash.deleted', resource: t('activerecord.models.restaurantavailability'))
-        end
-        format.json { head :no_content }
+    authorize @restaurantavailability
+    
+    @restaurantavailability.update(archived: true)
+    respond_to do |format|
+      format.html do
+        redirect_to edit_restaurant_path(id: @restaurantavailability.restaurant.id),
+                    notice: t('common.flash.deleted', resource: t('activerecord.models.restaurantavailability'))
       end
-    else
-      redirect_to root_url
+      format.json { head :no_content }
     end
   end
 
@@ -103,16 +91,7 @@ class RestaurantavailabilitiesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_restaurantavailability
-    if current_user
-      @restaurantavailability = Restaurantavailability.find(params[:id])
-      if @restaurantavailability.nil? || (@restaurantavailability.restaurant.user != current_user)
-        redirect_to root_url
-      end
-    else
-      redirect_to root_url
-    end
-  rescue ActiveRecord::RecordNotFound
-    redirect_to root_url
+    @restaurantavailability = Restaurantavailability.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.

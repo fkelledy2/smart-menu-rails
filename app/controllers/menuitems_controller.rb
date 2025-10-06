@@ -205,16 +205,7 @@ class MenuitemsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_menuitem
-    if current_user
-      @menuitem = Menuitem.find(params[:id])
-      if @menuitem.nil? || (@menuitem.menusection.menu.restaurant.user != current_user)
-        redirect_to root_url
-      end
-    else
-      redirect_to root_url
-    end
-  rescue ActiveRecord::RecordNotFound
-    redirect_to root_url
+    @menuitem = Menuitem.find(params[:id])
   end
 
   def set_currency

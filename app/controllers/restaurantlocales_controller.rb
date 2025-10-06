@@ -1,20 +1,19 @@
 class RestaurantlocalesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_restaurantlocale, only: %i[show edit update destroy]
+  
+  # Pundit authorization
+  after_action :verify_authorized, except: [:index]
+  after_action :verify_policy_scoped, only: [:index]
 
   # GET	/restaurants/:restaurant_id/menus
   # GET /menus or /menus.json
   def index
-    return unless current_user
-
     if params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
-      @restaurantlocales = Restaurantlocale.joins(:restaurant).where(restaurant: { user: current_user },
-                                                                     restaurant_id: @restaurant.id,)
-        .order(:locale).all
+      @restaurantlocales = policy_scope(Restaurantlocale).where(restaurant_id: @restaurant.id).order(:locale)
     else
-      @restaurantlocales = Restaurantlocale.joins(:restaurant).where(restaurant: { user: current_user },
-                                                                     archived: false,).order(:locale)
-        .all
+      @restaurantlocales = policy_scope(Restaurantlocale).where(archived: false).order(:locale)
     end
   end
 
@@ -22,50 +21,28 @@ class RestaurantlocalesController < ApplicationController
   # GET	/restaurants/:restaurant_id/restaurantlocales/:id(.:format)	 restaurantlocales#show
   # GET /restaurantlocales/1 or /restaurantlocales/1.json
   def show
-    if params[:id]
-      if params[:restaurant_id]
-        @restaurant = Restaurant.find_by(id: params[:restaurant_id])
-        @restaurantlocale = Restaurantlocale.find_by(id: params[:id])
-        if @restaurantlocale.restaurant != @restaurant
-          redirect_to root_url
-        end
-      end
-    else
-      @restaurantlocale = Restaurantlocale.find_by(id: params[:id])
-    end
+    authorize @restaurantlocale
   end
 
   # GET /menus/new
   def new
-    if current_user
-      @restaurantlocale = Restaurantlocale.new
-      if params[:restaurant_id]
-        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-        @restaurantlocale.restaurant = @futureParentRestaurant
-      end
-    else
-      redirect_to root_url
+    @restaurantlocale = Restaurantlocale.new
+    if params[:restaurant_id]
+      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      @restaurantlocale.restaurant = @futureParentRestaurant
     end
+    authorize @restaurantlocale
   end
 
   # GET /restaurantlocales/1/edit
   def edit
-    if current_user
-      if params[:id] && params[:restaurant_id]
-        @restaurant = Restaurant.find_by(id: params[:restaurant_id])
-        @restaurantlocale = Restaurantlocale.find_by(id: params[:id])
-        if @restaurantlocale.restaurant != @restaurant
-          redirect_to root_url
-        end
-      end
-    else
-      redirect_to root_url
-    end
+    authorize @restaurantlocale
   end
 
   # POST /restaurantlocales or /restaurantlocales.json
   def create
     @restaurantlocale = Restaurantlocale.new(restaurantlocale_params)
+    authorize @restaurantlocale
     respond_to do |format|
       if @restaurantlocale.save
         if @restaurantlocale.dfault == true
@@ -83,14 +60,14 @@ class RestaurantlocalesController < ApplicationController
         end
         format.json { render :show, status: :created, location: @restaurantlocale }
       else
-        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @menu.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /restaurantlocale/1 or /restaurantlocale/1.json
+  # PATCH/PUT /restaurantlocales/1 or / restaurantlocales/1.json
   def update
+    authorize @restaurantlocale
     respond_to do |format|
       Restaurantlocale.where(restaurant_id: @restaurantlocale.restaurant_id).find_each do |rl|
         if rl.id != @restaurantlocale.id
@@ -113,27 +90,25 @@ class RestaurantlocalesController < ApplicationController
 
   # DELETE /restaurantlocales/1 or /restaurantlocales/1.json
   def destroy
-    if current_user
-      if @restaurantlocale.inactive?
-        @restaurantlocale.destroy!
-        respond_to do |format|
-          format.html do
-            redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id),
-                        notice: t('restaurantlocales.controller.deleted')
-          end
-          format.json { head :no_content }
+    authorize @restaurantlocale
+    
+    if @restaurantlocale.inactive?
+      @restaurantlocale.destroy!
+      respond_to do |format|
+        format.html do
+          redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id),
+                      notice: t('restaurantlocales.controller.deleted')
         end
-      else
-        respond_to do |format|
-          format.html do
-            redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id),
-                        notice: t('restaurantlocales.controller.active_not_deleted')
-          end
-          format.json { head :no_content }
-        end
+        format.json { head :no_content }
       end
     else
-      redirect_to root_url
+      respond_to do |format|
+        format.html do
+          redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id),
+                      notice: t('restaurantlocales.controller.active_not_deleted')
+        end
+        format.json { head :no_content }
+      end
     end
   end
 

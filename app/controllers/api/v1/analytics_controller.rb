@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::AnalyticsController < ApplicationController
+class Api::V1::AnalyticsController < Api::V1::BaseController
   include AnalyticsTrackable
   
   skip_before_action :verify_authenticity_token

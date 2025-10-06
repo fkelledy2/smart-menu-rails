@@ -104,16 +104,7 @@ class TaxesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_tax
-    if current_user
-      @tax = Tax.find(params[:id])
-      if @tax.nil? || (@tax.restaurant.user != current_user)
-        redirect_to root_url
-      end
-    else
-      redirect_to root_url
-    end
-  rescue ActiveRecord::RecordNotFound
-    redirect_to root_url
+    @tax = Tax.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.

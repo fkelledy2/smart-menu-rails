@@ -1,9 +1,14 @@
 class Admin::CacheController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin!
+  
+  # Pundit authorization
+  after_action :verify_authorized
 
   # GET /admin/cache
   def index
+    authorize [:admin, :cache]
+    
     @cache_info = AdvancedCacheService.cache_info
     @cache_stats = AdvancedCacheService.cache_stats
     @health_check = AdvancedCacheService.cache_health_check
@@ -11,6 +16,8 @@ class Admin::CacheController < ApplicationController
 
   # GET /admin/cache/stats
   def stats
+    authorize [:admin, :cache], :stats?
+    
     respond_to do |format|
       format.json { render json: AdvancedCacheService.cache_stats }
       format.html { redirect_to admin_cache_index_path }
@@ -19,8 +26,9 @@ class Admin::CacheController < ApplicationController
 
   # POST /admin/cache/warm
   def warm
-    restaurant_id = params[:restaurant_id]
+    authorize [:admin, :cache], :warm?
     
+    restaurant_id = params[:restaurant_id]
     result = AdvancedCacheService.warm_critical_caches(restaurant_id)
     
     if result[:success]
@@ -37,8 +45,9 @@ class Admin::CacheController < ApplicationController
 
   # DELETE /admin/cache/clear
   def clear
-    result = AdvancedCacheService.clear_all_caches
+    authorize [:admin, :cache], :clear?
     
+    result = AdvancedCacheService.clear_all_caches
     flash[:notice] = "Cleared #{result[:cleared_count]} cache entries"
     
     respond_to do |format|
@@ -49,8 +58,9 @@ class Admin::CacheController < ApplicationController
 
   # POST /admin/cache/reset_stats
   def reset_stats
-    AdvancedCacheService.reset_cache_stats
+    authorize [:admin, :cache], :reset_stats?
     
+    AdvancedCacheService.reset_cache_stats
     flash[:notice] = "Cache statistics have been reset"
     
     respond_to do |format|
@@ -61,6 +71,8 @@ class Admin::CacheController < ApplicationController
 
   # GET /admin/cache/health
   def health
+    authorize [:admin, :cache], :health?
+    
     health_check = AdvancedCacheService.cache_health_check
     
     respond_to do |format|
@@ -71,6 +83,8 @@ class Admin::CacheController < ApplicationController
 
   # GET /admin/cache/keys
   def keys
+    authorize [:admin, :cache], :keys?
+    
     pattern = params[:pattern] || '*'
     limit = params[:limit]&.to_i || 100
     
