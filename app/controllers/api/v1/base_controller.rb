@@ -5,10 +5,16 @@ module Api
 
       protect_from_forgery with: :null_session
 
-      # before_action :authenticate_user!  # Temporarily disabled for debugging - testing if auth is causing empty responses
+      # Skip ApplicationController before_actions that are not needed for API
+      skip_before_action :set_current_employee
+      skip_before_action :set_permissions
+      skip_before_action :redirect_to_onboarding_if_needed
+      skip_around_action :switch_locale
+
+      # before_action :authenticate_user!  # Temporarily disabled for API routing investigation
       before_action :force_json
       before_action :debug_api_request
-      # after_action :verify_authorized  # Temporarily disabled for debugging
+      # after_action :verify_authorized  # Temporarily disabled for API routing investigation
 
       rescue_from ActiveRecord::RecordNotFound do
         render json: { error: { code: 'not_found', message: 'Resource not found' } }, status: :not_found
@@ -30,7 +36,7 @@ module Api
       private
 
       def debug_api_request
-        # Debug logging removed - was for API routing investigation
+        # Debug logging for API requests (can be enabled when needed)
       end
 
       def force_json

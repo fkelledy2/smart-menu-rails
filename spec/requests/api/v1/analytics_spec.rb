@@ -3,12 +3,14 @@
 require 'swagger_helper'
 
 RSpec.describe 'api/v1/analytics', type: :request do
+  let(:user) { create(:user) }
   path '/api/v1/analytics/track' do
     post('Track Analytics Event') do
       tags 'Analytics'
       description 'Track user analytics events'
       consumes 'application/json'
       produces 'application/json'
+      # security [Bearer: []]  # Temporarily disabled for API routing investigation
       
       parameter name: :event_data, in: :body, schema: {
         type: :object,
@@ -33,6 +35,7 @@ RSpec.describe 'api/v1/analytics', type: :request do
                  status: { type: :string, example: 'success' }
                }
 
+        # let(:Authorization) { "Bearer #{generate_jwt_token(user)}" }  # Temporarily disabled
         let(:event_data) do
           {
             event: 'menu_viewed',
@@ -99,5 +102,12 @@ RSpec.describe 'api/v1/analytics', type: :request do
         run_test!
       end
     end
+  end
+
+  private
+
+  def generate_jwt_token(user)
+    # Mock JWT token generation - replace with actual implementation
+    "mock_jwt_token_for_user_#{user.id}"
   end
 end

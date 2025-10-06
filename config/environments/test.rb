@@ -99,4 +99,7 @@ Rails.application.configure do
 
   config.log_level = :debug
 
+  # Allow all hosts in test environment to prevent blocked host errors
+  config.hosts.clear
+
 end
