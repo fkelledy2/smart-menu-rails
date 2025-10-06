@@ -1,6 +1,6 @@
 module Api
   module V1
-    class TestController < ApplicationController
+    class TestController < BaseController
       def ping
         if Rails.env.test?
           Rails.logger.warn '[TEST DEBUG] HIT Api::V1::TestController#ping - DIRECT LOG'

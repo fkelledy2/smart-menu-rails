@@ -135,8 +135,11 @@ class JavascriptHelperTest < ActionView::TestCase
   end
 
   test "should include analytics for admin users" do
-    # Skip this test as it requires complex mocking
-    skip "Requires admin? method mocking"
+    # Mock admin user
+    @current_user.define_singleton_method(:admin?) { true }
+    
+    modules = page_modules.split(',')
+    assert_includes modules, 'analytics'
   end
 
   test "should include notifications for signed in users" do
@@ -360,8 +363,8 @@ class JavascriptHelperTest < ActionView::TestCase
   end
 
   test "should generate javascript system tags" do
-    # Skip complex mocking test
-    skip "Requires complex Rails helper mocking"
+    # Skip - requires Rails importmap helpers that aren't available in test context
+    skip "Requires Rails importmap helpers not available in test context"
   end
 
   # Progressive enhancement tests

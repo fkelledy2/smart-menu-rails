@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   # ============================================================================
   # API ENDPOINTS
   # ============================================================================
-  namespace :api do
+  namespace :api, defaults: { format: :json } do
     namespace :v1 do
       # Test endpoints
       get 'test/ping', to: 'test#ping'
