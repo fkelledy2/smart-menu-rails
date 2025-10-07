@@ -370,7 +370,7 @@ module JavascriptHelper
   # Helper to include QR code data
   def qr_code_data(restaurant)
     {
-      'data-qr-slug' => restaurant.slug,
+      'data-qr-slug' => restaurant.respond_to?(:slug) ? restaurant.slug : restaurant.id.to_s,
       'data-qr-host' => request.host,
       'data-qr-icon' => asset_path('qr-icon.png')
     }

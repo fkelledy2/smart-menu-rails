@@ -3,6 +3,7 @@ class OcrMenuImportsController < ApplicationController
 
   skip_before_action :set_current_employee, only: %i[reorder_sections reorder_items]
   skip_before_action :set_permissions, only: %i[reorder_sections reorder_items]
+  skip_before_action :redirect_to_onboarding_if_needed, only: %i[reorder_sections reorder_items]
   skip_forgery_protection only: %i[reorder_sections reorder_items]
   before_action :set_restaurant
   before_action :set_ocr_menu_import,
@@ -248,6 +249,16 @@ class OcrMenuImportsController < ApplicationController
 
   def set_restaurant
     @restaurant = Restaurant.find(params[:restaurant_id])
+    authorize @restaurant
+  rescue Pundit::NotAuthorizedError
+    respond_to do |format|
+      format.json do
+        render json: { error: { code: 'forbidden', message: 'Unauthorized access to restaurant' } },
+               status: :forbidden
+      end
+      format.html { redirect_to root_path, alert: 'Unauthorized access to restaurant' }
+      format.any { head :forbidden }
+    end
   end
 
   def set_ocr_menu_import

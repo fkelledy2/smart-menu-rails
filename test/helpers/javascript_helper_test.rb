@@ -335,18 +335,15 @@ class JavascriptHelperTest < ActionView::TestCase
 
   # QR code helper tests
   test "should generate qr code data" do
-    restaurant = restaurants(:one)
+    @restaurant = restaurants(:one)
     
-    # Skip if restaurant doesn't have slug method
-    if restaurant.respond_to?(:slug)
-      data = qr_code_data(restaurant)
-      
-      assert data['data-qr-slug']
-      assert_equal 'localhost', data['data-qr-host']
-      assert_equal '/assets/qr-icon.png', data['data-qr-icon']
-    else
-      skip "Restaurant model doesn't have slug method"
-    end
+    data = qr_code_data(@restaurant)
+    
+    # Should use slug if available, otherwise restaurant ID
+    expected_slug = @restaurant.respond_to?(:slug) ? @restaurant.slug : @restaurant.id.to_s
+    assert_equal expected_slug, data['data-qr-slug']
+    assert_equal 'test.host', data['data-qr-host']  # Test environment uses test.host
+    assert_equal '/assets/qr-icon.png', data['data-qr-icon']
   end
 
   # Notification helper tests
@@ -363,8 +360,16 @@ class JavascriptHelperTest < ActionView::TestCase
   end
 
   test "should generate javascript system tags" do
-    # Skip - requires Rails importmap helpers that aren't available in test context
-    skip "Requires Rails importmap helpers not available in test context"
+    # Test basic JavaScript system functionality without importmap dependency
+    # This tests that the helper methods exist and return reasonable values
+    
+    # Test that we can generate basic script tags
+    assert_respond_to self, :javascript_include_tag
+    
+    # Test basic JavaScript tag generation
+    tag = javascript_include_tag("application")
+    assert_includes tag, 'script'
+    assert_includes tag, 'application'
   end
 
   # Progressive enhancement tests

@@ -23,9 +23,20 @@ class OcrMenuImportsAuthorizationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  # Disabled due to API routing issue affecting JSON requests
-  def test_non_owner_forbidden_when_reordering_sections
-    skip 'API routing issue: JSON requests return empty HTML instead of reaching controllers'
+  test 'non_owner forbidden when reordering sections' do
+    # Create a restaurant owned by @other to test cross-restaurant access
+    other_restaurant = restaurants(:two)  # This should be owned by user: two
+    
+    sign_out(:user)
+    sign_in(@other)
+
+    # Try to access @restaurant (owned by user: one) while signed in as user: two
+    patch reorder_sections_restaurant_ocr_menu_import_path(@restaurant, @import),
+          params: { section_ids: [@section2.id, @section1.id] },
+          as: :json
+
+    # Should be forbidden since @other doesn't own @restaurant
+    assert_response :forbidden
   end
 
   test 'owner can reorder items within a section' do
@@ -39,8 +50,14 @@ class OcrMenuImportsAuthorizationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  # Disabled due to API routing issue affecting JSON requests
-  def test_non_owner_forbidden_when_reordering_items
-    skip 'API routing issue: JSON requests return empty HTML instead of reaching controllers'
+  test 'non_owner forbidden when reordering items' do
+    sign_out(:user)
+    sign_in(@other)
+
+    patch reorder_items_restaurant_ocr_menu_import_path(@restaurant, @import),
+          params: { section_id: @section1.id, item_ids: [@item2.id, @item1.id] },
+          as: :json
+
+    assert_response :forbidden
   end
 end

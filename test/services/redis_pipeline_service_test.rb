@@ -134,24 +134,17 @@ class RedisPipelineServiceTest < ActiveSupport::TestCase
   end
 
   test "should handle Redis connection errors gracefully" do
-    # Skip this test if Redis is not available for pipelining
-    unless Rails.cache.respond_to?(:redis)
-      skip "Redis not available in test environment"
-    end
-    
-    # This test is complex to mock properly, so we'll just verify the service handles errors
+    # Test that the service handles errors gracefully regardless of cache backend
     assert_nothing_raised do
       RedisPipelineService.bulk_cache_write({"test_key" => "test_value"})
     end
+    
+    # Verify the data was written
+    assert_equal "test_value", Rails.cache.read("test_key")
   end
 
   test "should invalidate cache patterns" do
-    # Skip this test if Redis is not available for pattern matching
-    unless Rails.cache.respond_to?(:redis)
-      skip "Redis pattern matching not available in test environment"
-    end
-    
-    # Write test data with pattern
+    # Test pattern invalidation - behavior depends on cache backend
     pattern_data = {
       "pattern:test:1" => "value1",
       "pattern:test:2" => "value2",
@@ -165,12 +158,25 @@ class RedisPipelineServiceTest < ActiveSupport::TestCase
     # Invalidate pattern (will use fallback if Redis not available)
     deleted_count = RedisPipelineService.bulk_invalidate_patterns(["pattern:test:*"])
     
-    # Verify pattern keys were deleted but others remain
-    assert_not Rails.cache.exist?("pattern:test:1"), "Expected pattern:test:1 to be deleted"
-    assert_not Rails.cache.exist?("pattern:test:2"), "Expected pattern:test:2 to be deleted"
-    assert Rails.cache.exist?("other:key"), "Expected other:key to remain"
+    if Rails.cache.respond_to?(:redis)
+      # Redis backend - should actually delete matching keys
+      assert_not Rails.cache.exist?("pattern:test:1"), "Expected pattern:test:1 to be deleted"
+      assert_not Rails.cache.exist?("pattern:test:2"), "Expected pattern:test:2 to be deleted"
+      assert Rails.cache.exist?("other:key"), "Expected other:key to remain"
+      assert deleted_count > 0, "Expected some keys to be deleted"
+    else
+      # Memory store or other backend - pattern deletion not supported
+      # Just verify the method doesn't crash and returns 0
+      assert_equal 0, deleted_count, "Expected 0 deleted keys for non-Redis backend"
+      # Keys should still exist since pattern deletion isn't supported
+      assert Rails.cache.exist?("pattern:test:1"), "Expected pattern:test:1 to still exist"
+      assert Rails.cache.exist?("pattern:test:2"), "Expected pattern:test:2 to still exist"
+      assert Rails.cache.exist?("other:key"), "Expected other:key to still exist"
+    end
     
     # Clean up
+    Rails.cache.delete("pattern:test:1")
+    Rails.cache.delete("pattern:test:2")
     Rails.cache.delete("other:key")
   end
 
