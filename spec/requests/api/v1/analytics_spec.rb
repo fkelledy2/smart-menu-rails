@@ -10,7 +10,7 @@ RSpec.describe 'api/v1/analytics', type: :request do
       description 'Track user analytics events'
       consumes 'application/json'
       produces 'application/json'
-      # security [Bearer: []]  # Temporarily disabled for API routing investigation
+      security [Bearer: []]
       
       parameter name: :event_data, in: :body, schema: {
         type: :object,
@@ -35,7 +35,7 @@ RSpec.describe 'api/v1/analytics', type: :request do
                  status: { type: :string, example: 'success' }
                }
 
-        # let(:Authorization) { "Bearer #{generate_jwt_token(user)}" }  # Temporarily disabled
+        let(:Authorization) { "Bearer #{generate_jwt_token(user)}" }
         let(:event_data) do
           {
             event: 'menu_viewed',
@@ -55,6 +55,7 @@ RSpec.describe 'api/v1/analytics', type: :request do
       response(400, 'bad request') do
         schema '$ref' => '#/components/schemas/Error'
 
+        let(:Authorization) { "Bearer #{generate_jwt_token(user)}" }
         let(:event_data) { { invalid: 'data' } }
         run_test!
       end
@@ -107,7 +108,6 @@ RSpec.describe 'api/v1/analytics', type: :request do
   private
 
   def generate_jwt_token(user)
-    # Mock JWT token generation - replace with actual implementation
-    "mock_jwt_token_for_user_#{user.id}"
+    JwtService.generate_token_for_user(user)
   end
 end

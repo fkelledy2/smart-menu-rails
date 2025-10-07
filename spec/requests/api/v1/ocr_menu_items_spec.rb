@@ -6,7 +6,8 @@ RSpec.describe 'api/v1/ocr_menu_items', type: :request do
   let(:user) { create(:user) }
   let(:restaurant) { create(:restaurant, user: user) }
   let(:ocr_import) { create(:ocr_menu_import, restaurant: restaurant) }
-  let(:ocr_item) { create(:ocr_menu_item, ocr_menu_import: ocr_import) }
+  let(:ocr_section) { create(:ocr_menu_section, ocr_menu_import: ocr_import) }
+  let(:ocr_item) { create(:ocr_menu_item, ocr_menu_section: ocr_section) }
 
   path '/api/v1/ocr_menu_items/{id}' do
     parameter name: 'id', in: :path, type: :string, description: 'OCR Menu Item ID'
@@ -62,8 +63,9 @@ RSpec.describe 'api/v1/ocr_menu_items', type: :request do
 
         run_test! do |response|
           data = JSON.parse(response.body)
-          expect(data['name']).to eq('Updated Pizza Name')
-          expect(data['price']).to eq('15.99')
+          expect(data['success']).to be true
+          expect(data['data']['item']['name']).to eq('Updated Pizza Name')
+          expect(data['data']['item']['price']).to eq(15.99)
         end
       end
 
@@ -108,7 +110,6 @@ RSpec.describe 'api/v1/ocr_menu_items', type: :request do
   private
 
   def generate_jwt_token(user)
-    # Mock JWT token generation - replace with actual implementation
-    "mock_jwt_token_for_user_#{user.id}"
+    JwtService.generate_token_for_user(user)
   end
 end

@@ -4,30 +4,40 @@ class Api::V1::AnalyticsController < Api::V1::BaseController
   include AnalyticsTrackable
   
   skip_before_action :verify_authenticity_token
-  # skip_before_action :authenticate_user!, only: [:track_anonymous]  # Handled by base controller
+  skip_before_action :authenticate_api_user!, only: [:track_anonymous]
+  skip_after_action :verify_authorized, only: [:track_anonymous]
   
   def track
-    # Skip authorization for API routing investigation
-    # authorize :analytics, :track?
+    authorize :analytics, :track?
     
     event = params[:event]
     properties = params[:properties] || {}
     
-    # For API routing investigation, always return success
-    render json: { status: 'success' }
+    # Validate required parameters
+    if event.blank?
+      return render json: error_response('bad_request', 'Event parameter is required'), 
+                    status: :bad_request
+    end
+    
+    if user_signed_in?
+      AnalyticsService.track_user_event(current_user, event, properties)
+      render json: { status: 'success' }
+    else
+      render json: { status: 'error', message: 'User not authenticated' }, status: :unauthorized
+    end
   rescue StandardError => e
     Rails.logger.error "Analytics API tracking failed: #{e.message}"
     render json: { status: 'error', message: 'Tracking failed' }, status: :internal_server_error
   end
   
   def track_anonymous
-    # Skip authorization for API routing investigation
-    # authorize :analytics, :track_anonymous?
+    # No authorization needed for anonymous tracking
     
     event = params[:event]
     properties = params[:properties] || {}
+    anonymous_id = session[:session_id] ||= SecureRandom.uuid
     
-    # For API routing investigation, always return success
+    AnalyticsService.track_anonymous_event(anonymous_id, event, properties)
     render json: { status: 'success' }
   rescue StandardError => e
     Rails.logger.error "Anonymous analytics API tracking failed: #{e.message}"

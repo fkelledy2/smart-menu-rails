@@ -11,10 +11,10 @@ module Api
       skip_before_action :redirect_to_onboarding_if_needed
       skip_around_action :switch_locale
 
-      # before_action :authenticate_user!  # Temporarily disabled for API routing investigation
+      before_action :authenticate_api_user!
       before_action :force_json
       before_action :debug_api_request
-      # after_action :verify_authorized  # Temporarily disabled for API routing investigation
+      after_action :verify_authorized
 
       rescue_from ActiveRecord::RecordNotFound do
         render json: { error: { code: 'not_found', message: 'Resource not found' } }, status: :not_found
@@ -34,6 +34,31 @@ module Api
       end
 
       private
+
+      def authenticate_api_user!
+        token = extract_token_from_header
+        @current_user = JwtService.user_from_token(token)
+        
+        unless @current_user
+          render json: error_response('unauthorized', 'Invalid or missing authentication token'), 
+                 status: :unauthorized
+        end
+      end
+
+      def current_user
+        @current_user
+      end
+
+      def user_signed_in?
+        @current_user.present?
+      end
+
+      def extract_token_from_header
+        auth_header = request.headers['Authorization']
+        return nil unless auth_header&.start_with?('Bearer ')
+        
+        auth_header.split(' ').last
+      end
 
       def debug_api_request
         # Debug logging for API requests (can be enabled when needed)

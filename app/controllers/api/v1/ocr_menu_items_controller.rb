@@ -27,7 +27,9 @@ module Api
                         status: :forbidden
         end
 
-        attrs = params.require(:ocr_menu_item).permit(:name, :description, :price, allergens: [],
+        # Handle both parameter formats for backward compatibility
+        param_key = params.key?(:ocr_menu_item) ? :ocr_menu_item : :item_data
+        attrs = params.require(param_key).permit(:name, :description, :price, :category, allergens: [],
                                                                                    dietary_restrictions: [],)
 
         # Normalize price
