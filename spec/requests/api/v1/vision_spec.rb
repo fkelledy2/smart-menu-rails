@@ -3,12 +3,15 @@
 require 'swagger_helper'
 
 RSpec.describe 'api/v1/vision', type: :request do
+  let(:user) { create(:user) }
+  let(:Authorization) { "Bearer #{generate_jwt_token(user)}" }
   path '/api/v1/vision/analyze' do
     post('Analyze Image with Google Vision API') do
       tags 'Vision AI'
       description 'Analyze uploaded images using Google Vision API for menu processing'
       consumes 'multipart/form-data'
       produces 'application/json'
+      security [Bearer: []]
       
       parameter name: :image, in: :formData, type: :file, required: true,
                 description: 'Image file to analyze (JPEG, PNG, GIF, BMP, WEBP, RAW, ICO, PDF, TIFF)'
@@ -50,12 +53,16 @@ RSpec.describe 'api/v1/vision', type: :request do
         let(:image) { fixture_file_upload('test_menu.jpg', 'image/jpeg') }
         
         before do
-          allow_any_instance_of(GoogleVisionAnalyzable).to receive(:analyze_image_with_vision)
+          allow_any_instance_of(GoogleVisionAnalyzable).to receive(:analyze_image)
             .and_raise(StandardError.new('Vision API error'))
         end
 
         run_test!
       end
     end
+  end
+
+  def generate_jwt_token(user)
+    JwtService.generate_token_for_user(user)
   end
 end

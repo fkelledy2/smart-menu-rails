@@ -72,6 +72,7 @@ RSpec.describe 'api/v1/ocr_menu_items', type: :request do
       response(401, 'unauthorized') do
         schema '$ref' => '#/components/schemas/Error'
 
+        let(:Authorization) { nil }
         let(:id) { ocr_item.id }
         let(:item_data) { { name: 'Test' } }
         run_test!

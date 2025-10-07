@@ -32,12 +32,13 @@ module Api
         attrs = params.require(param_key).permit(:name, :description, :price, :category, allergens: [],
                                                                                    dietary_restrictions: [],)
 
-        # Normalize price
+        # Validate and normalize price
         if attrs.key?(:price)
-          attrs[:price] = begin
-            BigDecimal(attrs[:price].to_s)
-          rescue StandardError
-            0
+          begin
+            attrs[:price] = BigDecimal(attrs[:price].to_s)
+          rescue ArgumentError, TypeError
+            return render json: error_response('invalid_price', 'Price must be a valid number'), 
+                          status: :unprocessable_entity
           end
         end
 

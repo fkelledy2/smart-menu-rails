@@ -28,17 +28,32 @@ module Api
       #   }
       def analyze
         unless params[:image].respond_to?(:tempfile)
-          return render json: { error: 'Image parameter is required' }, status: :bad_request
+          skip_authorization
+          return render json: error_response('bad_request', 'Image parameter is required'), status: :bad_request
         end
+        
+        # Validate image format
+        unless valid_image_format?(params[:image])
+          skip_authorization
+          return render json: error_response('invalid_format', 'Invalid image format. Supported formats: JPEG, PNG, GIF, BMP, WEBP'), 
+                        status: :unprocessable_entity
+        end
+        
+        authorize :vision, :analyze?
 
         features = params[:features]&.split(',')&.map(&:strip)&.map(&:to_sym) || %i[labels text]
 
-        results = analyze_image(
-          image_path: params[:image].tempfile.path,
-          features: features,
-        )
-
-        render json: results
+        begin
+          results = analyze_image(
+            image_path: params[:image].tempfile.path,
+            features: features,
+          )
+          render json: results
+        rescue StandardError => e
+          Rails.logger.error("Vision API Error: #{e.message}")
+          render json: error_response('vision_error', 'Error processing image with Vision API'), 
+                 status: :internal_server_error
+        end
       end
 
       # POST /api/v1/vision/detect_menu_items
@@ -54,7 +69,7 @@ module Api
       #   Body: { image: [binary image data] }
       def detect_menu_items
         unless params[:image].respond_to?(:tempfile)
-          return render json: { error: 'Image parameter is required' }, status: :bad_request
+          return render json: error_response('bad_request', 'Image parameter is required'), status: :bad_request
         end
 
         # First, extract text from the image
@@ -70,6 +85,18 @@ module Api
       end
 
       private
+
+      # Validate if uploaded file is a valid image format
+      def valid_image_format?(uploaded_file)
+        return false unless uploaded_file.respond_to?(:content_type)
+        
+        valid_types = %w[
+          image/jpeg image/jpg image/png image/gif 
+          image/bmp image/webp image/tiff image/svg+xml
+        ]
+        
+        valid_types.include?(uploaded_file.content_type&.downcase)
+      end
 
       # Process extracted text to identify menu items and prices
       def process_menu_text(text, min_confidence)

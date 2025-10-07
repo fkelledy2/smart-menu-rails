@@ -40,6 +40,37 @@ if Rails.env.test?
   Object.send(:remove_const, :GoogleVisionService) if defined?(GoogleVisionService)
   
   class GoogleVisionService
+    class Error < StandardError; end
+    class ConfigurationError < Error; end
+    class ApiError < Error; end
+
+    def initialize(image_path: nil, image_content: nil)
+      @image_path = image_path
+      @image_content = image_content
+    end
+
+    # Instance methods that match the concern's expectations
+    def detect_labels
+      MockGoogleVisionService.detect_labels(@image_path)
+    end
+
+    def extract_text
+      MockGoogleVisionService.detect_text(@image_path)
+    end
+
+    def detect_web
+      MockGoogleVisionService.detect_web_entities(@image_path)
+    end
+
+    def detect_objects
+      MockGoogleVisionService.detect_objects(@image_path)
+    end
+
+    def detect_landmarks
+      MockGoogleVisionService.detect_landmarks(@image_path)
+    end
+
+    # Class methods for backward compatibility
     def self.detect_labels(image_path)
       MockGoogleVisionService.detect_labels(image_path)
     end
