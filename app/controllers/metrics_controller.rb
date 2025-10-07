@@ -1,4 +1,6 @@
 class MetricsController < ApplicationController
+  include QueryCacheable
+  
   before_action :authenticate_user!
   before_action :set_metric, only: %i[edit update destroy]
 
@@ -8,13 +10,19 @@ class MetricsController < ApplicationController
 
   # GET /metrics or /metrics.json
   def index
-    @metrics = policy_scope(Metric).limit(100)
+    # Cache user-scoped metrics list
+    @metrics = cache_query(cache_type: :user_analytics, key_parts: ['metrics_list'], force_refresh: force_cache_refresh?) do
+      policy_scope(Metric).limit(100).to_a
+    end
   end
 
   # GET /metrics/1 or /metrics/1.json
   def show
-    @metric = Metric.find(params[:id])
-    authorize @metric
+    @metric = cache_query(cache_type: :user_analytics, key_parts: ['metric_show', params[:id]], force_refresh: force_cache_refresh?) do
+      metric = Metric.find(params[:id])
+      authorize metric
+      metric
+    end
   end
 
   # GET /metrics/new

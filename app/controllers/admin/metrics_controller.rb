@@ -1,5 +1,7 @@
 # Admin controller for viewing application metrics
 class Admin::MetricsController < ApplicationController
+  include QueryCacheable
+  
   before_action :authenticate_user!
   before_action :ensure_admin!
   
@@ -9,23 +11,47 @@ class Admin::MetricsController < ApplicationController
   def index
     authorize [:admin, :metrics]
     
-    @metrics_summary = build_metrics_summary
-    @system_metrics = collect_system_metrics
-    @recent_metrics = collect_recent_metrics
+    # Cache expensive metrics calculations
+    @metrics_summary = cache_metrics('admin_summary', user_scope: false, force_refresh: force_cache_refresh?) do
+      build_metrics_summary
+    end
+    
+    @system_metrics = cache_query(cache_type: :system_metrics, key_parts: ['admin_system'], force_refresh: force_cache_refresh?) do
+      collect_system_metrics
+    end
+    
+    @recent_metrics = cache_query(cache_type: :recent_metrics, key_parts: ['admin_recent'], force_refresh: force_cache_refresh?) do
+      collect_recent_metrics
+    end
+    
+    # Add cache debugging headers in development
+    if Rails.env.development?
+      add_cache_headers(cache_hit: !force_cache_refresh?, cache_key: 'admin_metrics_index')
+    end
   end
 
   def show
     authorize [:admin, :metrics]
     
     @metric_name = params[:id]
-    @metric_data = MetricsCollector.get_metrics.select { |k, _| k.include?(@metric_name) }
-    @metric_summary = build_metric_summary(@metric_name)
+    
+    # Cache individual metric data
+    @metric_data = cache_query(cache_type: :metrics_summary, key_parts: ['metric_data', @metric_name], force_refresh: force_cache_refresh?) do
+      MetricsCollector.get_metrics.select { |k, _| k.include?(@metric_name) }
+    end
+    
+    @metric_summary = cache_query(cache_type: :metrics_summary, key_parts: ['metric_summary', @metric_name], force_refresh: force_cache_refresh?) do
+      build_metric_summary(@metric_name)
+    end
   end
 
   def export
     authorize [:admin, :metrics]
     
-    metrics = MetricsCollector.get_metrics
+    # Cache metrics for export (shorter TTL since exports might be frequent)
+    metrics = cache_query(cache_type: :recent_metrics, key_parts: ['export_data'], force_refresh: force_cache_refresh?) do
+      MetricsCollector.get_metrics
+    end
 
     respond_to do |format|
       format.json { render json: metrics }

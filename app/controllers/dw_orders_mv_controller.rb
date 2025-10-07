@@ -1,4 +1,6 @@
 class DwOrdersMvController < ApplicationController
+  include QueryCacheable
+  
   before_action :authenticate_user!
   before_action :set_dw_order_mv, only: [:show]
   
@@ -11,7 +13,12 @@ class DwOrdersMvController < ApplicationController
     respond_to do |format|
       format.html # renders index.html.erb
       format.json do
-        render json: policy_scope(DwOrdersMv).limit(1000)
+        # Cache order analytics data with user scoping
+        orders_data = cache_order_analytics('dw_orders_index', force_refresh: force_cache_refresh?) do
+          policy_scope(DwOrdersMv).limit(1000).to_a
+        end
+        
+        render json: orders_data
       end
     end
   end
@@ -19,7 +26,13 @@ class DwOrdersMvController < ApplicationController
   # GET /dw_orders_mv/:id
   def show
     authorize @dw_order_mv
-    render json: @dw_order_mv
+    
+    # Cache individual order data
+    order_data = cache_query(cache_type: :order_analytics, key_parts: ['dw_order', params[:id]], force_refresh: force_cache_refresh?) do
+      @dw_order_mv.as_json
+    end
+    
+    render json: order_data
   end
 
   # Prevent modification actions
