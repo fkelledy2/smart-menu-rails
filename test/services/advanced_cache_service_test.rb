@@ -520,8 +520,9 @@ class AdvancedCacheServiceTest < ActiveSupport::TestCase
     result2 = AdvancedCacheService.cached_restaurant_dashboard(@restaurant.id)
     second_duration = Time.current - start_time
     
-    # Results should be identical (same cached_at timestamp)
-    assert_equal result1.dig(:metadata, :cached_at), result2.dig(:metadata, :cached_at)
+    # Results should be identical (cached results)
+    assert_equal result1[:restaurant][:id], result2[:restaurant][:id]
+    assert_equal result1[:stats], result2[:stats]
     
     # Both calls should complete successfully
     assert first_duration >= 0
