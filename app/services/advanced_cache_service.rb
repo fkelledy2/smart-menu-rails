@@ -572,8 +572,8 @@ class AdvancedCacheService
       end
     end
 
-    # Cache order analytics and similar orders
-    def cached_order_analytics(order_id, days: 7)
+    # Cache individual order analytics and similar orders
+    def cached_individual_order_analytics(order_id, days: 7)
       cache_key = "order_analytics:#{order_id}:#{days}days"
       
       Rails.cache.fetch(cache_key, expires_in: 1.hour) do
@@ -1347,6 +1347,10 @@ class AdvancedCacheService
         ordritems.each do |item|
           menuitem = item.respond_to?(:fetch_menuitem) ? item.fetch_menuitem : item.menuitem
           next unless menuitem
+          
+          # Handle case where menuitem might be an array (take first element)
+          menuitem = menuitem.first if menuitem.is_a?(Array)
+          next unless menuitem&.respond_to?(:name)
           
           item_counts[menuitem.name] += 1 # Assume quantity 1
           item_revenue[menuitem.name] += item.respond_to?(:ordritemprice) ? (item.ordritemprice || 0) : 0

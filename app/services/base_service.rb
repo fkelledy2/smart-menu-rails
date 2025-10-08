@@ -40,6 +40,8 @@ class BaseService
     # @return [Result] Service result object
     def call(**params)
       new(**params).call
+    rescue ValidationError => e
+      Result.new(success: false, errors: e.message)
     end
 
     # Call the service and raise on failure
@@ -63,7 +65,7 @@ class BaseService
   # Execute the service
   # @return [Result] Service result
   def call
-    logger.info 'Service starting', service: self.class.name, params: sanitized_params
+    logger.info('Service starting', service: self.class.name, params: sanitized_params)
 
     begin
       data = perform
@@ -75,11 +77,18 @@ class BaseService
     rescue ProcessingError => e
       logger.error 'Service processing failed', service: self.class.name, error: e.message
       failure(e.message)
+    rescue NotImplementedError => e
+      logger.error 'Service not implemented', service: self.class.name, error: e.message
+      failure("An unexpected error occurred: #{e.message}")
     rescue StandardError => e
-      logger.error 'Service unexpected error',
-                   service: self.class.name,
-                   error: e.message,
-                   backtrace: e.backtrace.first(10)
+      begin
+        logger.error 'Service unexpected error',
+                     service: self.class.name,
+                     error: e.message,
+                     backtrace: e.backtrace.first(10)
+      rescue => logger_error
+        # If logging fails, continue without logging
+      end
       failure("An unexpected error occurred: #{e.message}")
     end
   end
@@ -121,8 +130,14 @@ class BaseService
   # @raise [ValidationError] If required parameters are missing
   def require_params!(*required_keys)
     missing_keys = required_keys - params.keys
+    nil_keys = required_keys.select { |key| params[key].nil? }
+    
     if missing_keys.any?
       raise ValidationError, "Missing required parameters: #{missing_keys.join(', ')}"
+    end
+    
+    if nil_keys.any?
+      raise ValidationError, "Required parameters cannot be nil: #{nil_keys.join(', ')}"
     end
   end
 

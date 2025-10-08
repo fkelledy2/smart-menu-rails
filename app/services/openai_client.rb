@@ -4,6 +4,7 @@ class OpenaiClient < ExternalApiClient
   class ImageGenerationError < ApiError; end
   class InvalidPromptError < Error; end
   class ModelNotFoundError < Error; end
+  class QuotaExceededError < RateLimitError; end
 
   # Image generation models
   IMAGE_MODELS = {

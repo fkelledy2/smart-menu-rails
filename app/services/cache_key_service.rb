@@ -2,9 +2,10 @@
 
 # Service for generating optimized cache keys and managing cache operations
 class CacheKeyService
+  # Maximum Redis key length to avoid issues
+  MAX_KEY_LENGTH = 250
+  
   class << self
-    # Maximum Redis key length to avoid issues
-    MAX_KEY_LENGTH = 250
     
     # Generate optimized cache key for menu content
     def menu_content_key(ordr:, menu:, participant: nil, **options)

@@ -124,51 +124,65 @@ class AnalyticsReportingService
   end
   
   def calculate_average_order_value(orders_query)
-    # This would need to be implemented based on your order total calculation
-    # For now, return a placeholder
-    orders_query.joins(:ordritems)
-                .group('ordrs.id')
-                .sum('ordritems.quantity * ordritems.unit_price')
-                .values
-                .sum.to_f / orders_query.count
+    # Calculate average order value using ordritemprice
+    result = orders_query.joins(:ordritems)
+                         .group('ordrs.id')
+                         .sum('ordritems.ordritemprice')
+    
+    # Handle both Hash (real query) and Numeric (mock) results
+    total_value = if result.respond_to?(:values)
+                    result.values.sum.to_f
+                  else
+                    result.to_f
+                  end
+    
+    order_count = orders_query.count
+    return 0.0 if order_count.zero?
+    
+    total_value / order_count
   rescue ZeroDivisionError
     0.0
   end
   
   def orders_by_day(orders_query)
-    orders_query.group_by_day(:created_at, time_zone: Time.zone).count
+    orders_query.group("DATE(ordrs.created_at)").count
   end
   
   def orders_by_hour(orders_query)
-    orders_query.group_by_hour_of_day(:created_at, time_zone: Time.zone).count
+    orders_query.group("EXTRACT(hour FROM ordrs.created_at)").count
   end
   
-  def popular_menu_items(restaurant_id, date_range)
-    Ordritem.joins(ordr: :restaurant)
+  def popular_items(restaurant_id, date_range)
+    Ordritem.joins(:ordr)
             .joins(:menuitem)
             .where(ordrs: { restaurant_id: restaurant_id, created_at: date_range })
             .group('menuitems.name')
-            .sum(:quantity)
-            .sort_by { |_, quantity| -quantity }
+            .count # Count ordritems instead of sum quantity
+            .sort_by { |_, count| -count }
             .first(10)
             .to_h
+  end
+
+  # Alias for test compatibility
+  def popular_menu_items(restaurant_id, date_range)
+    popular_items(restaurant_id, date_range)
   end
   
   def calculate_total_revenue(orders_query)
     orders_query.joins(:ordritems)
-                .sum('ordritems.quantity * ordritems.unit_price')
+                .sum('ordritems.ordritemprice')
   end
   
   def revenue_by_day(orders_query)
     orders_query.joins(:ordritems)
-                .group_by_day('ordrs.created_at', time_zone: Time.zone)
-                .sum('ordritems.quantity * ordritems.unit_price')
+                .group("DATE(ordrs.created_at)")
+                .sum('ordritems.ordritemprice')
   end
   
   def revenue_by_month(orders_query)
     orders_query.joins(:ordritems)
-                .group_by_month('ordrs.created_at', time_zone: Time.zone)
-                .sum('ordritems.quantity * ordritems.unit_price')
+                .group("DATE_TRUNC('month', ordrs.created_at)")
+                .sum('ordritems.ordritemprice')
   end
   
   def calculate_average_daily_revenue(orders_query, date_range)
@@ -224,16 +238,17 @@ class AnalyticsReportingService
   end
   
   def unique_customers_count(restaurant_id, date_range)
-    # This assumes you have customer tracking via sessions or user accounts
+    # Since we don't have session_id, we'll use a combination of table and time as proxy
+    # This is a simplified approach - in reality you'd want proper customer tracking
     Ordr.where(restaurant_id: restaurant_id, created_at: date_range)
         .distinct
-        .count(:session_id) # or :user_id if you track users
+        .count(:tablesetting_id)
   end
   
   def repeat_customers_count(restaurant_id, date_range)
-    # Count customers who made more than one order
+    # Count tables that had more than one order (simplified customer tracking)
     Ordr.where(restaurant_id: restaurant_id, created_at: date_range)
-        .group(:session_id) # or :user_id
+        .group(:tablesetting_id)
         .having('COUNT(*) > 1')
         .count
         .size
@@ -241,7 +256,7 @@ class AnalyticsReportingService
   
   def customer_frequency_distribution(restaurant_id, date_range)
     frequency_data = Ordr.where(restaurant_id: restaurant_id, created_at: date_range)
-                         .group(:session_id)
+                         .group(:tablesetting_id)
                          .count
     
     frequency_distribution = frequency_data.values.group_by(&:itself).transform_values(&:count)
@@ -256,7 +271,7 @@ class AnalyticsReportingService
   
   def peak_hours_analysis(restaurant_id, date_range)
     Ordr.where(restaurant_id: restaurant_id, created_at: date_range)
-        .group_by_hour_of_day(:created_at, time_zone: Time.zone)
+        .group("EXTRACT(hour FROM ordrs.created_at)")
         .count
         .sort_by { |_, count| -count }
         .first(3)
@@ -266,7 +281,7 @@ class AnalyticsReportingService
   def system_revenue(date_range)
     Ordr.joins(:ordritems)
         .where(created_at: date_range, status: 'completed')
-        .sum('ordritems.quantity * ordritems.unit_price')
+        .sum('ordritems.ordritemprice')
   end
   
   def active_restaurants_count(date_range)
@@ -286,14 +301,14 @@ class AnalyticsReportingService
       csv << ['Order ID', 'Date', 'Status', 'Total Items', 'Total Value', 'Customer Session']
       
       orders.each do |order|
-        total_value = order.ordritems.sum { |item| item.quantity * item.unit_price }
+        total_value = order.ordritems.sum { |item| item.ordritemprice || 0 }
         csv << [
           order.id,
           order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
           order.status,
-          order.ordritems.sum(:quantity),
+          order.ordritems.count, # Count items instead of sum quantity
           total_value,
-          order.session_id
+          order.tablesetting_id # Use table ID instead of session_id
         ]
       end
     end
