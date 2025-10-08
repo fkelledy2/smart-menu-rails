@@ -5,6 +5,14 @@ class HealthController < ApplicationController
   # Health endpoints are publicly accessible - no authentication required
   # All actions (index, redis_check, database_check, full_check, cache_stats) are public
   
+  # Skip all authentication and authorization for health checks
+  skip_before_action :set_current_employee
+  skip_before_action :set_permissions
+  skip_before_action :redirect_to_onboarding_if_needed
+  skip_before_action :configure_permitted_parameters
+  skip_before_action :debug_request_in_test
+  skip_around_action :switch_locale
+  
   # Basic health check
   def index
     render json: {
