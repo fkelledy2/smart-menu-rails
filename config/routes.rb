@@ -27,10 +27,12 @@ Rails.application.routes.draw do
   get '/health/cache-stats', to: 'health#cache_stats'
   
   # ============================================================================
-  # API DOCUMENTATION
+  # API DOCUMENTATION (Development/Test only)
   # ============================================================================
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
+  if Rails.env.development? || Rails.env.test?
+    mount Rswag::Ui::Engine => '/api-docs'
+    mount Rswag::Api::Engine => '/api-docs'
+  end
   
   # ============================================================================
   # API ENDPOINTS
