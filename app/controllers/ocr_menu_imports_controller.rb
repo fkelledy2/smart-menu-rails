@@ -249,7 +249,7 @@ class OcrMenuImportsController < ApplicationController
 
   def set_restaurant
     @restaurant = Restaurant.find(params[:restaurant_id])
-    authorize @restaurant
+    authorize @restaurant, :show?
   rescue Pundit::NotAuthorizedError
     respond_to do |format|
       format.json do
