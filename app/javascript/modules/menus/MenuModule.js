@@ -123,11 +123,7 @@ export class MenuModule extends ComponentBase {
             title: "Name", 
             field: "id", 
             responsive: 0, 
-            formatter: "link", 
-            formatterParams: {
-              labelField: "name",
-              urlPrefix: "/menus/"
-            }
+            formatter: this.linkFormatter
           },
           {
             title: "Status", 
@@ -392,7 +388,14 @@ export class MenuModule extends ComponentBase {
     const id = cell.getValue();
     const rowData = cell.getRow().getData("data");
     const name = rowData?.name || id;
-    return `<a class='link-dark' href='/menus/${id}/edit'>${name}</a>`;
+    const restaurantId = rowData?.restaurant?.id || this.getRestaurantId();
+    
+    if (restaurantId) {
+      return `<a class='link-dark' href='/restaurants/${restaurantId}/menus/${id}/edit'>${name}</a>`;
+    } else {
+      // Fallback to old route if restaurant ID not available
+      return `<a class='link-dark' href='/menus/${id}/edit'>${name}</a>`;
+    }
   }
 
   /**
@@ -520,7 +523,12 @@ export class MenuModule extends ComponentBase {
     const breadcrumbElements = this.findAll('.menu-breadcrumb');
     breadcrumbElements.forEach(el => {
       el.textContent = menu.name;
-      el.href = `/menus/${menu.id}`;
+      const restaurantId = menu.restaurant?.id || this.getRestaurantId();
+      if (restaurantId) {
+        el.href = `/restaurants/${restaurantId}/menus/${menu.id}`;
+      } else {
+        el.href = `/menus/${menu.id}`;
+      }
     });
   }
 
@@ -576,6 +584,30 @@ export class MenuModule extends ComponentBase {
     
     // Restore active tab
     this.restoreActiveTab();
+  }
+
+  /**
+   * Get restaurant ID from various sources
+   */
+  getRestaurantId() {
+    // Try to get from URL path
+    const pathMatch = window.location.pathname.match(/\/restaurants\/(\d+)/);
+    if (pathMatch) {
+      return pathMatch[1];
+    }
+    
+    // Try to get from data attributes
+    const restaurantElement = this.find('[data-restaurant-id]');
+    if (restaurantElement) {
+      return restaurantElement.dataset.restaurantId;
+    }
+    
+    // Try to get from global context
+    if (window.currentRestaurant) {
+      return window.currentRestaurant.id;
+    }
+    
+    return null;
   }
 
   /**

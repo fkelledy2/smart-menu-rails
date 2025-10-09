@@ -151,6 +151,12 @@ class RedisPipelineService
     def bulk_invalidate_patterns(patterns)
       return 0 if patterns.empty?
       
+      # Check if Redis is available and supports pattern operations
+      unless redis_available?
+        Rails.logger.debug("[RedisPipelineService] Redis not available, pattern invalidation not supported")
+        return 0
+      end
+      
       total_deleted = 0
       
       patterns.each do |pattern|

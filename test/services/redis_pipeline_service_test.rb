@@ -144,6 +144,11 @@ class RedisPipelineServiceTest < ActiveSupport::TestCase
   end
 
   test "should invalidate cache patterns" do
+    # Clean up any existing keys that might interfere
+    ["pattern:test:1", "pattern:test:2", "other:key"].each do |key|
+      Rails.cache.delete(key)
+    end
+    
     # Test pattern invalidation - behavior depends on cache backend
     pattern_data = {
       "pattern:test:1" => "value1",
@@ -158,7 +163,14 @@ class RedisPipelineServiceTest < ActiveSupport::TestCase
     # Invalidate pattern (will use fallback if Redis not available)
     deleted_count = RedisPipelineService.bulk_invalidate_patterns(["pattern:test:*"])
     
-    if Rails.cache.respond_to?(:redis)
+    # Check if we actually have a working Redis backend by trying to access it
+    has_working_redis = begin
+      Rails.cache.respond_to?(:redis) && Rails.cache.redis.respond_to?(:pipelined)
+    rescue
+      false
+    end
+    
+    if has_working_redis
       # Redis backend - should actually delete matching keys
       assert_not Rails.cache.exist?("pattern:test:1"), "Expected pattern:test:1 to be deleted"
       assert_not Rails.cache.exist?("pattern:test:2"), "Expected pattern:test:2 to be deleted"

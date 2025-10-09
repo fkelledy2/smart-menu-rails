@@ -79,8 +79,13 @@ export class MenuSectionModule extends ComponentBase {
     if (menusectionTable) {
       const menuId = menusectionTable.dataset.menu;
       if (menuId) {
+        const restaurantId = this.getRestaurantId();
+        const ajaxURL = restaurantId ? 
+          `/restaurants/${restaurantId}/menus/${menuId}/menusections.json` :
+          `/menus/${menuId}/menusections.json`;
+        
         const table = this.tableManager.initializeTable(menusectionTable, {
-          ajaxURL: `/menus/${menuId}/menusections.json`,
+          ajaxURL: ajaxURL,
           layout: "fitColumns",
           movableRows: true,
           initialSort: [{ column: "sequence", dir: "asc" }],
@@ -290,7 +295,11 @@ export class MenuSectionModule extends ComponentBase {
     const tableElement = cell.getTable().element;
     const menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
     
-    if (menuId) {
+    const restaurantId = this.getRestaurantId();
+    
+    if (restaurantId && menuId) {
+      return `<a class='link-dark' href='/restaurants/${restaurantId}/menus/${menuId}/menusections/${id}/edit'>${name}</a>`;
+    } else if (menuId) {
       return `<a class='link-dark' href='/menus/${menuId}/menusections/${id}/edit'>${name}</a>`;
     } else {
       // Fallback to old route if menu ID not available
@@ -321,7 +330,10 @@ export class MenuSectionModule extends ComponentBase {
     // Update any dependent tables
     const menusectionTable = this.tableManager.getTable('#menu-menusection-table');
     if (menusectionTable) {
-      const newUrl = `/menus/${menuId}/menusections.json`;
+      const restaurantId = this.getRestaurantId();
+      const newUrl = restaurantId ? 
+        `/restaurants/${restaurantId}/menus/${menuId}/menusections.json` :
+        `/menus/${menuId}/menusections.json`;
       menusectionTable.setData(newUrl);
     }
   }
@@ -472,6 +484,30 @@ export class MenuSectionModule extends ComponentBase {
     
     // Restore active tab
     this.restoreActiveTab();
+  }
+
+  /**
+   * Get restaurant ID from various sources
+   */
+  getRestaurantId() {
+    // Try to get from URL path
+    const pathMatch = window.location.pathname.match(/\/restaurants\/(\d+)/);
+    if (pathMatch) {
+      return pathMatch[1];
+    }
+    
+    // Try to get from data attributes
+    const restaurantElement = this.find('[data-restaurant-id]');
+    if (restaurantElement) {
+      return restaurantElement.dataset.restaurantId;
+    }
+    
+    // Try to get from global context
+    if (window.currentRestaurant) {
+      return window.currentRestaurant.id;
+    }
+    
+    return null;
   }
 
   /**

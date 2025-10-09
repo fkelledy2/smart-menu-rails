@@ -17,12 +17,18 @@ export const TableFormatters = {
     const menusectionId = tableElement.dataset.menusection || tableElement.dataset.bsMenusection;
     const restaurantId = tableElement.dataset.restaurant || tableElement.dataset.bsRestaurant;
     
-    // Build nested route URLs
-    if (menuId && menusectionId && entityName === 'menuitems') {
-      // Menuitems use full nested routes: menus > menusections > menuitems
+    // Build nested route URLs with restaurant context
+    if (restaurantId && menuId && menusectionId && entityName === 'menuitems') {
+      // Menuitems use full nested routes: restaurants > menus > menusections > menuitems
+      return `<a class='link-dark' href='/restaurants/${restaurantId}/menus/${menuId}/menusections/${menusectionId}/${entityName}/${id}/edit'>${name}</a>`;
+    } else if (restaurantId && menuId && ['menusections', 'menuavailabilities', 'menuparticipants'].includes(entityName)) {
+      // Other menu resources use restaurant > menu nested routes
+      return `<a class='link-dark' href='/restaurants/${restaurantId}/menus/${menuId}/${entityName}/${id}/edit'>${name}</a>`;
+    } else if (menuId && menusectionId && entityName === 'menuitems') {
+      // Fallback to menu-based nested routes if no restaurant ID
       return `<a class='link-dark' href='/menus/${menuId}/menusections/${menusectionId}/${entityName}/${id}/edit'>${name}</a>`;
     } else if (menuId && ['menusections', 'menuavailabilities', 'menuparticipants'].includes(entityName)) {
-      // Other menu resources use menu-based nested routes
+      // Fallback to menu-based nested routes if no restaurant ID
       return `<a class='link-dark' href='/menus/${menuId}/${entityName}/${id}/edit'>${name}</a>`;
     } else if (restaurantId && ['employees', 'taxes', 'tips', 'sizes', 'allergyns', 'tablesettings', 'restaurantlocales', 'restaurantavailabilities', 'inventories', 'ordrs'].includes(entityName)) {
       return `<a class='link-dark' href='/restaurants/${restaurantId}/${entityName}/${id}/edit'>${name}</a>`;
@@ -85,12 +91,18 @@ export const TableFormatters = {
     
     if (actions.includes('edit')) {
       let editUrl;
-      // Build nested route URLs
-      if (menuId && menusectionId && entityName === 'menuitems') {
-        // Menuitems use full nested routes: menus > menusections > menuitems
+      // Build nested route URLs with restaurant context
+      if (restaurantId && menuId && menusectionId && entityName === 'menuitems') {
+        // Menuitems use full nested routes: restaurants > menus > menusections > menuitems
+        editUrl = `/restaurants/${restaurantId}/menus/${menuId}/menusections/${menusectionId}/${entityName}/${id}/edit`;
+      } else if (restaurantId && menuId && ['menusections', 'menuavailabilities', 'menuparticipants'].includes(entityName)) {
+        // Other menu resources use restaurant > menu nested routes
+        editUrl = `/restaurants/${restaurantId}/menus/${menuId}/${entityName}/${id}/edit`;
+      } else if (menuId && menusectionId && entityName === 'menuitems') {
+        // Fallback to menu-based nested routes if no restaurant ID
         editUrl = `/menus/${menuId}/menusections/${menusectionId}/${entityName}/${id}/edit`;
       } else if (menuId && ['menusections', 'menuavailabilities', 'menuparticipants'].includes(entityName)) {
-        // Other menu resources use menu-based nested routes
+        // Fallback to menu-based nested routes if no restaurant ID
         editUrl = `/menus/${menuId}/${entityName}/${id}/edit`;
       } else if (restaurantId && ['employees', 'taxes', 'tips', 'sizes', 'allergyns', 'tablesettings', 'restaurantlocales', 'restaurantavailabilities', 'inventories', 'ordrs'].includes(entityName)) {
         editUrl = `/restaurants/${restaurantId}/${entityName}/${id}/edit`;

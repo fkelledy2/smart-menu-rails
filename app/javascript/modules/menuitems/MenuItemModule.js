@@ -90,8 +90,13 @@ export class MenuItemModule extends ComponentBase {
       const menusectionId = menuItemTable.dataset.menusection;
       const menuId = menuItemTable.dataset.menu;
       if (menusectionId && menuId) {
+        const restaurantId = this.getRestaurantId();
+        const ajaxURL = restaurantId ? 
+          `/restaurants/${restaurantId}/menus/${menuId}/menusections/${menusectionId}/menuitems.json` :
+          `/menus/${menuId}/menusections/${menusectionId}/menuitems.json`;
+        
         const table = this.tableManager.initializeTable(menuItemTable, {
-          ajaxURL: `/menus/${menuId}/menusections/${menusectionId}/menuitems.json`,
+          ajaxURL: ajaxURL,
           movableRows: true,
           initialSort: [{ column: "sequence", dir: "asc" }],
           columns: [
@@ -290,7 +295,11 @@ export class MenuItemModule extends ComponentBase {
     const menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
     const menusectionId = tableElement.dataset.menusection || tableElement.dataset.bsMenusection;
     
-    if (menuId && menusectionId) {
+    const restaurantId = this.getRestaurantId();
+    
+    if (restaurantId && menuId && menusectionId) {
+      return `<a class='link-dark' href='/restaurants/${restaurantId}/menus/${menuId}/menusections/${menusectionId}/menuitems/${id}/edit'>${name}</a>`;
+    } else if (menuId && menusectionId) {
       return `<a class='link-dark' href='/menus/${menuId}/menusections/${menusectionId}/menuitems/${id}/edit'>${name}</a>`;
     } else {
       // Fallback to old route if context not available
@@ -529,6 +538,30 @@ export class MenuItemModule extends ComponentBase {
     
     // Update currency symbol
     this.initializeCurrency();
+  }
+
+  /**
+   * Get restaurant ID from various sources
+   */
+  getRestaurantId() {
+    // Try to get from URL path
+    const pathMatch = window.location.pathname.match(/\/restaurants\/(\d+)/);
+    if (pathMatch) {
+      return pathMatch[1];
+    }
+    
+    // Try to get from data attributes
+    const restaurantElement = this.find('[data-restaurant-id]');
+    if (restaurantElement) {
+      return restaurantElement.dataset.restaurantId;
+    }
+    
+    // Try to get from global context
+    if (window.currentRestaurant) {
+      return window.currentRestaurant.id;
+    }
+    
+    return null;
   }
 
   /**
