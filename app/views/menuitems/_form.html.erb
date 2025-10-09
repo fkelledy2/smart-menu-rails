@@ -21,7 +21,7 @@
                   raise "No menusection context available for menuitem form"
                 end
 %>
-<%= form_with(model: [menu, menusection, menuitem]) do |form| %>
+<%= form_with(model: [menu.restaurant, menu, menusection, menuitem]) do |form| %>
 
   <% if @futureParentMenuSection %>
       <%= form.hidden_field :menusection_id, value: @futureParentMenuSection.id %>
@@ -262,7 +262,7 @@
       </div>
   <% end %>
   <% menuitem.menuitem_size_mappings.each do |menuitemSizeMapping| %>
-    <%= form_with(model: [menu, menuitemSizeMapping]) do |menuitemSizeMappingForm| %>
+    <%= form_with(model: [menu.restaurant, menu, menuitemSizeMapping]) do |menuitemSizeMappingForm| %>
         <div class="spacing-sm"></div>
         <div class="form-group row">
             <div class="col-4">

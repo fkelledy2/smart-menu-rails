@@ -5,10 +5,10 @@
     </div>
     <div class="col-2">
         <span class="float-end">
-          <%= link_to edit_menu_path(@menusection.menu), class: 'btn btn-sm btn-light' do %>
+          <%= link_to edit_restaurant_menu_path(@menusection.menu.restaurant, @menusection.menu), class: 'btn btn-sm btn-light' do %>
             <i class="bi bi-chevron-left"></i>
           <% end %>
-          <%= link_to edit_menu_menusection_path(@menusection.menu, @menusection), class: 'btn btn-sm btn-dark' do %>
+          <%= link_to edit_restaurant_menu_menusection_path(@menusection.menu.restaurant, @menusection.menu, @menusection), class: 'btn btn-sm btn-dark' do %>
             <i class="bi bi-pencil-fill"></i>
           <% end %>
         </span>
@@ -16,7 +16,7 @@
   </div>
 </div>
 
-<%= form_with(model: [@menusection.menu, @menusection]) do |form| %>
+<%= form_with(model: [@menusection.menu.restaurant, @menusection.menu, @menusection]) do |form| %>
   <div class="form-group row">
     <%= form.label :name, class: 'col-2 col-form-label' %>
     <div class="col-10">

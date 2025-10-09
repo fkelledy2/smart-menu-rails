@@ -27,6 +27,9 @@ window.addEventListener('unhandledrejection', (event) => {
 import '@hotwired/turbo-rails'
 import { Application } from '@hotwired/stimulus'
 
+// Import enhanced restaurant context system
+import RestaurantContext from './utils/RestaurantContext.js'
+
 // Global dependencies
 import jquery from 'jquery'
 import * as bootstrap from 'bootstrap'

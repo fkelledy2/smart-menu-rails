@@ -487,22 +487,25 @@ export class MenuSectionModule extends ComponentBase {
   }
 
   /**
-   * Get restaurant ID from various sources
+   * Get restaurant ID using smart detection system
    */
   getRestaurantId() {
-    // Try to get from URL path
+    // Use the enhanced restaurant context system if available
+    if (window.RestaurantContext) {
+      return window.RestaurantContext.getRestaurantId(this.container);
+    }
+    
+    // Fallback to basic detection for backward compatibility
     const pathMatch = window.location.pathname.match(/\/restaurants\/(\d+)/);
     if (pathMatch) {
       return pathMatch[1];
     }
     
-    // Try to get from data attributes
     const restaurantElement = this.find('[data-restaurant-id]');
     if (restaurantElement) {
       return restaurantElement.dataset.restaurantId;
     }
     
-    // Try to get from global context
     if (window.currentRestaurant) {
       return window.currentRestaurant.id;
     }

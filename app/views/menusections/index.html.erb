@@ -6,7 +6,7 @@
     <button id="activate-row" class='btn btn-sm btn-dark' disabled><%= t('common.activate') %></button>
     <button id="deactivate-row"class='btn btn-sm btn-dark' disabled><%= t('common.deactivate') %></button>
     <% if @menu %>
-      <%= link_to new_menu_menusection_path(@menu), class: 'btn btn-sm btn-dark' do %>
+      <%= link_to new_restaurant_menu_menusection_path(@menu.restaurant, @menu), class: 'btn btn-sm btn-dark' do %>
     <% else %>
       <%= link_to '#', class: 'btn btn-sm btn-dark disabled' do %>
     <% end %>
