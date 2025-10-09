@@ -49,9 +49,9 @@ class Ordr < ApplicationRecord
   cache_has_many :ordrparticipants, embed: :ids
   cache_has_many :ordractions, embed: :ids
 
-  # Cache invalidation hooks
-  after_update :invalidate_order_caches
-  after_destroy :invalidate_order_caches
+  # Cache invalidation hooks - DISABLED in favor of background jobs
+  # after_update :invalidate_order_caches
+  # after_destroy :invalidate_order_caches
 
   enum :status, {
     opened: 0,

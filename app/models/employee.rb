@@ -17,9 +17,9 @@ class Employee < ApplicationRecord
   cache_belongs_to :user
   cache_belongs_to :restaurant
 
-  # Cache invalidation hooks
-  after_update :invalidate_employee_caches
-  after_destroy :invalidate_employee_caches
+  # Cache invalidation hooks - DISABLED in favor of background jobs for performance
+  # after_update :invalidate_employee_caches
+  # after_destroy :invalidate_employee_caches
 
   enum :status, {
     inactive: 0,
