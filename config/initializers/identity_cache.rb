@@ -25,15 +25,30 @@ if defined?(IdentityCache::WithGlobalConfiguration)
     
     # Enhanced error handling for Redis connectivity issues
     config.on_error = ->(error, operation, data) do
-      # Silence delete warnings in development
+      # Silence delete warnings in development and test
       if Rails.env.development? || Rails.env.test?
         next if error.is_a?(IdentityCache::UnsupportedOperation) && operation == :delete
       end
       
-      Rails.logger.error("IdentityCache #{operation} failed: #{error.message}")
+      # In production, log errors but don't raise to maintain availability
+      if Rails.env.production?
+        case operation
+        when :delete
+          # Log delete failures but don't raise - cache inconsistency is better than downtime
+          Rails.logger.warn("[IdentityCache] Delete operation failed (non-critical): #{error.message}")
+        when :read, :write
+          # Read/write failures are more critical but still shouldn't break the app
+          Rails.logger.error("[IdentityCache] #{operation.capitalize} operation failed: #{error.message}")
+        else
+          Rails.logger.error("[IdentityCache] #{operation} failed: #{error.message}")
+        end
+        
+        # Never raise in production - graceful degradation
+        return
+      end
       
-      # Don't raise in production to maintain availability during Redis issues
-      raise error unless Rails.env.production?
+      # In non-production environments, raise the error for debugging
+      raise error
     end
   end
 else

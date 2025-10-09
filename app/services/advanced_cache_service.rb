@@ -1062,20 +1062,44 @@ class AdvancedCacheService
       Rails.logger.info("Invalidated caches for employee #{employee_id}")
     end
 
-    def invalidate_user_caches(user_id)
+    def invalidate_user_caches(user_id, skip_restaurant_cascade: false)
       Rails.cache.delete_matched("user_activity:#{user_id}:*")
       
-      # Also invalidate restaurant caches for user's restaurants
-      begin
-        user = User.find(user_id)
-        user.restaurants.each do |restaurant|
-          invalidate_restaurant_caches(restaurant.id)
+      # Only cascade to restaurant caches if explicitly requested
+      # This prevents the excessive cascade invalidation seen in production logs
+      unless skip_restaurant_cascade
+        begin
+          # Use pluck to avoid loading full objects
+          restaurant_ids = User.where(id: user_id).joins(:restaurants).pluck('restaurants.id')
+          restaurant_ids.each do |restaurant_id|
+            # Use selective invalidation instead of full restaurant cache clear
+            invalidate_restaurant_caches_selectively(restaurant_id)
+          end
+        rescue => e
+          Rails.logger.warn("Failed to cascade restaurant cache invalidation for user #{user_id}: #{e.message}")
         end
-      rescue ActiveRecord::RecordNotFound
-        Rails.logger.warn("User #{user_id} not found during cache invalidation")
       end
       
-      Rails.logger.info("Invalidated caches for user #{user_id}")
+      Rails.logger.info("Invalidated caches for user #{user_id} (cascade: #{!skip_restaurant_cascade})")
+    end
+
+    def invalidate_restaurant_caches_selectively(restaurant_id)
+      # More targeted invalidation - only clear specific cache patterns
+      selective_keys = [
+        "restaurant_dashboard:#{restaurant_id}",
+        "restaurant_orders:#{restaurant_id}:recent",
+        "restaurant_employees:#{restaurant_id}:active"
+      ]
+      
+      selective_keys.each { |key| Rails.cache.delete(key) }
+      
+      # Only clear analytics caches if they exist (check first to avoid unnecessary work)
+      analytics_pattern = "order_analytics:#{restaurant_id}:*"
+      if Rails.cache.exist?("order_analytics:#{restaurant_id}:7")
+        Rails.cache.delete_matched(analytics_pattern)
+      end
+      
+      Rails.logger.info("Selectively invalidated caches for restaurant #{restaurant_id}")
     end
 
     private

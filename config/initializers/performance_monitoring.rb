@@ -1,43 +1,38 @@
 # frozen_string_literal: true
 
-# Performance monitoring is temporarily disabled to fix loading issues
-# TODO: Re-enable after fixing autoloading conflicts
-
-# Only initialize performance monitoring in development and production
-# if Rails.env.development? || Rails.env.production?
-#   Rails.application.configure do
-#     # Initialize after Rails is ready
-#     config.after_initialize do
-#       # Load and initialize performance monitoring if classes are available
-#       begin
-#         require Rails.root.join('app/services/performance_monitoring_service')
-#         require Rails.root.join('app/middleware/performance_monitoring_middleware')
-#         
-#         # Add middleware dynamically (this won't work but keeping for reference)
-#         # Rails.application.config.middleware.use PerformanceMonitoringMiddleware
-#         
-#         # Initialize performance monitoring service
-#         PerformanceMonitoringService.instance
-#         Rails.logger.info "[PERFORMANCE] Performance monitoring initialized"
-#       rescue => e
-#         Rails.logger.warn "[PERFORMANCE] Failed to initialize performance monitoring: #{e.message}"
-#       end
-#     end
-#     
-#     # Load query monitoring concern
-#     config.to_prepare do
-#       # Load query monitoring concern if ApplicationRecord exists
-#       if defined?(ApplicationRecord)
-#         begin
-#           require Rails.root.join('app/models/concerns/query_monitoring')
-#           ApplicationRecord.include QueryMonitoring unless ApplicationRecord.included_modules.include?(QueryMonitoring)
-#           Rails.logger.info "[PERFORMANCE] Query monitoring included in ApplicationRecord"
-#         rescue => e
-#           Rails.logger.warn "[PERFORMANCE] Failed to load query monitoring: #{e.message}"
-#         end
-#       end
-#     end
-#   end
-# end
-
-Rails.logger.info "[PERFORMANCE] Performance monitoring is temporarily disabled"
+# Performance monitoring for production sluggishness issues
+Rails.application.configure do
+  # Monitor slow requests in production
+  if Rails.env.production?
+    config.after_initialize do
+      # Log slow requests (over 2 seconds)
+      ActiveSupport::Notifications.subscribe "process_action.action_controller" do |name, started, finished, unique_id, data|
+        duration = finished - started
+        if duration > 2.0  # 2 seconds threshold
+          Rails.logger.warn "[SLOW REQUEST] #{data[:controller]}##{data[:action]} took #{(duration * 1000).round(2)}ms"
+          Rails.logger.warn "[SLOW REQUEST] DB: #{data[:db_runtime]&.round(2)}ms (#{data[:db_query_count]} queries)"
+          Rails.logger.warn "[SLOW REQUEST] View: #{data[:view_runtime]&.round(2)}ms"
+        end
+      end
+      
+      # Monitor N+1 queries
+      ActiveSupport::Notifications.subscribe "sql.active_record" do |name, started, finished, unique_id, data|
+        # Track query patterns that might indicate N+1 problems
+        if data[:sql] =~ /SELECT.*FROM.*WHERE.*id.*IN/i
+          Rails.logger.debug "[N+1 POTENTIAL] #{data[:sql].truncate(100)}"
+        end
+      end
+      
+      Rails.logger.info "[PERFORMANCE] Production performance monitoring enabled"
+    end
+  end
+  
+  # Cache performance monitoring
+  config.to_prepare do
+    if defined?(AdvancedCacheService)
+      # Monitor cache hit rates
+      Rails.application.config.cache_store_logger = Rails.logger
+      Rails.logger.info "[PERFORMANCE] Cache monitoring enabled"
+    end
+  end
+end

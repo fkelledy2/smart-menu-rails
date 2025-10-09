@@ -237,10 +237,12 @@ class OrdrsController < ApplicationController
       @ordr.ordritems.added.update_all(status: 20) # Batch update
 
       if @ordr.save
-        # Invalidate AdvancedCacheService caches for this order
-        AdvancedCacheService.invalidate_order_caches(@ordr.id)
-        AdvancedCacheService.invalidate_restaurant_caches(@ordr.restaurant_id)
-        AdvancedCacheService.invalidate_user_caches(@ordr.restaurant.user_id) if @ordr.restaurant.user_id
+        # Move cache invalidation to background job to improve response time
+        CacheInvalidationJob.perform_later(
+          order_id: @ordr.id,
+          restaurant_id: @ordr.restaurant_id,
+          user_id: @ordr.restaurant.user_id
+        )
         
         @tablesetting = @ordr.tablesetting
         @ordrparticipant = find_or_create_ordr_participant(@ordr)
@@ -270,10 +272,12 @@ class OrdrsController < ApplicationController
       
       @ordr.destroy!
       
-      # Invalidate AdvancedCacheService caches for this order
-      AdvancedCacheService.invalidate_order_caches(@ordr.id)
-      AdvancedCacheService.invalidate_restaurant_caches(restaurant_id)
-      AdvancedCacheService.invalidate_user_caches(user_id) if user_id
+      # Move cache invalidation to background job
+      CacheInvalidationJob.perform_later(
+        order_id: @ordr.id,
+        restaurant_id: restaurant_id,
+        user_id: user_id
+      )
       
       respond_to do |format|
         format.html {
@@ -332,14 +336,22 @@ class OrdrsController < ApplicationController
     ordr.nett = ordr.runningTotal
     ordr.covercharge = ordr.ordercapacity * ordr.menu.covercharge
 
-    taxes = Tax.where(restaurant_id: ordr.restaurant_id).order(:sequence)
+    # Use Rails.cache to avoid repeated tax queries for the same restaurant
+    cache_key = "restaurant_taxes:#{ordr.restaurant_id}:#{Date.current}"
+    taxes = Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+      Tax.where(restaurant_id: ordr.restaurant_id)
+         .order(:sequence)
+         .pluck(:taxpercentage, :taxtype)
+    end
+
     total_tax = 0
     total_service = 0
     taxable_amount = ordr.nett + ordr.covercharge
 
-    taxes.each do |tax|
-      amount = (tax.taxpercentage * taxable_amount) / 100
-      tax.taxtype == 'service' ? total_service += amount : total_tax += amount
+    # Process cached tax data instead of ActiveRecord objects
+    taxes.each do |tax_percentage, tax_type|
+      amount = (tax_percentage * taxable_amount) / 100
+      tax_type == 'service' ? total_service += amount : total_tax += amount
     end
 
     ordr.tip ||= 0
@@ -366,12 +378,33 @@ class OrdrsController < ApplicationController
   end
 
   def broadcast_partials(ordr, tablesetting, ordrparticipant, full_refresh)
-    # Eager load all associations needed by partials to prevent N+1 queries
-    ordr = Ordr.includes(menu: %i[restaurant menusections menuavailabilities]).find(ordr.id)
+    # Comprehensive eager loading to prevent N+1 queries
+    ordr = Ordr.includes(
+      :ordritems, :ordrparticipants, :ordractions, :employee,
+      menu: [
+        :restaurant, :menusections, :menuavailabilities, :menulocales,
+        menusections: [
+          :menuitems, :menusectionlocales,
+          menuitems: [
+            :menuitemlocales, :allergyns, :ingredients, :sizes,
+            :menuitem_allergyn_mappings, :menuitem_ingredient_mappings
+          ]
+        ]
+      ],
+      tablesetting: [:restaurant],
+      restaurant: [:restaurantlocales, :taxes, :allergyns]
+    ).find(ordr.id)
+    
     menu = ordr.menu
     restaurant = menu.restaurant
-    menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
-    allergyns = Allergyn.where(restaurant_id: restaurant.id)
+    
+    # Use single query with includes instead of separate find_by
+    menuparticipant = Menuparticipant.includes(:smartmenu)
+                                    .where(sessionid: session.id.to_s)
+                                    .first
+    
+    # Allergyns already loaded via restaurant association
+    allergyns = restaurant.allergyns
     restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
     ordrparticipant.preferredlocale = menuparticipant.preferredlocale if menuparticipant
 
