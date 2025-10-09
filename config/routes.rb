@@ -199,6 +199,9 @@ Rails.application.routes.draw do
   # ============================================================================
   resources :ingredients  # Global ingredient catalog shared across all restaurants
   
+  # Direct ordrparticipant updates (for frontend compatibility)
+  resources :ordrparticipants, only: [:update]
+  
   # ============================================================================
   # SMART MENU SYSTEM
   # ============================================================================

@@ -1,10 +1,11 @@
 class OrdrparticipantsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_restaurant
+  before_action :authenticate_user!, except: [:update]  # Allow unauthenticated updates for smart menu
+  before_action :set_restaurant, except: [:update]  # Allow direct updates without restaurant context
   before_action :set_ordrparticipant, only: %i[show edit update destroy]
+  before_action :set_ordrparticipant_for_direct_update, only: [:update], if: -> { params[:restaurant_id].blank? }
   
   # Pundit authorization
-  after_action :verify_authorized, except: [:index]
+  after_action :verify_authorized, except: [:index, :update]  # Skip authorization for direct updates
   after_action :verify_policy_scoped, only: [:index]
 
   # GET /ordrparticipants or /ordrparticipants.json
@@ -47,7 +48,8 @@ class OrdrparticipantsController < ApplicationController
 
   # PATCH/PUT /ordrparticipants/1 or /ordrparticipants/1.json
   def update
-    authorize @ordrparticipant
+    # Only authorize if user is authenticated (nested route)
+    authorize @ordrparticipant if current_user
     
     respond_to do |format|
       if @ordrparticipant.update(ordrparticipant_params)
@@ -248,6 +250,13 @@ class OrdrparticipantsController < ApplicationController
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to root_url
+  end
+
+  # Set ordrparticipant for direct updates (unauthenticated smart menu interface)
+  def set_ordrparticipant_for_direct_update
+    @ordrparticipant = Ordrparticipant.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Ordrparticipant not found' }, status: :not_found
   end
 
   # Only allow a list of trusted parameters through.
