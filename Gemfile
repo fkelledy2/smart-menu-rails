@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '3.3.0'
+ruby '3.3.9'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem 'rails', '~> 7.2.2', '>= 7.2.2.2'
@@ -15,7 +15,7 @@ gem 'pg', '~> 1.1'
 gem 'connection_pool'
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem 'puma', '~> 6.4'
+gem 'puma', '~> 7.0.3'
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem 'importmap-rails'
