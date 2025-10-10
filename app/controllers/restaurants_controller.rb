@@ -624,24 +624,32 @@ class RestaurantsController < ApplicationController
     period_start = days.days.ago
     orders = @restaurant.ordrs.where(created_at: period_start..Time.current)
     
-    # Get unique customers (use email where available, otherwise use order count as proxy)
-    orders_with_email = orders.where.not(email: [nil, ''])
-    total_customers = orders_with_email.distinct.count(:email)
+    # Get unique customers using sessionid from ordrparticipants
+    participants = Ordrparticipant.joins(:ordr)
+                                  .where(ordrs: { restaurant_id: @restaurant.id, created_at: period_start..Time.current })
+                                  .where.not(sessionid: [nil, ''])
     
-    # If no emails, use unique order count as a proxy for customers
+    total_customers = participants.distinct.count(:sessionid)
+    
+    # If no participants with sessionid, use unique table settings as proxy for customers
     if total_customers == 0
-      total_customers = orders.count
+      total_customers = orders.distinct.count(:tablesetting_id)
     end
     
     # Simple new vs returning logic (customers who had orders before this period)
-    if orders_with_email.any?
-      existing_customer_emails = @restaurant.ordrs.where('created_at < ?', period_start)
-                                                  .where.not(email: [nil, ''])
-                                                  .distinct.pluck(:email)
-      new_customers = orders_with_email.where.not(email: existing_customer_emails).distinct.count(:email)
+    if participants.any?
+      existing_customer_sessions = Ordrparticipant.joins(:ordr)
+                                                  .where(ordrs: { restaurant_id: @restaurant.id })
+                                                  .where('ordrs.created_at < ?', period_start)
+                                                  .where.not(sessionid: [nil, ''])
+                                                  .distinct.pluck(:sessionid)
+      
+      current_period_sessions = participants.distinct.pluck(:sessionid)
+      new_customer_sessions = current_period_sessions - existing_customer_sessions
+      new_customers = new_customer_sessions.count
       returning_customers = total_customers - new_customers
     else
-      # Fallback: assume 70% new, 30% returning for orders without email data
+      # Fallback: assume 70% new, 30% returning for orders without session data
       new_customers = (total_customers * 0.7).round
       returning_customers = total_customers - new_customers
     end
@@ -654,6 +662,7 @@ class RestaurantsController < ApplicationController
     }
   rescue => e
     Rails.logger.error("[RestaurantsController] Customer analytics data collection failed: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
     { total: 0, new: 0, returning: 0, daily_data: [] }
   end
 
@@ -747,9 +756,19 @@ class RestaurantsController < ApplicationController
     (0...days).map do |i|
       date = i.days.ago.to_date
       daily_orders = orders.where(created_at: date.beginning_of_day..date.end_of_day)
-      # Try to count by email, fallback to order count if no emails
-      customers = daily_orders.where.not(email: [nil, '']).distinct.count(:email)
-      customers = daily_orders.count if customers == 0 && daily_orders.any?
+      
+      # Count unique customers using sessionid from ordrparticipants
+      daily_participants = Ordrparticipant.joins(:ordr)
+                                          .where(ordrs: { id: daily_orders.select(:id) })
+                                          .where.not(sessionid: [nil, ''])
+      
+      customers = daily_participants.distinct.count(:sessionid)
+      
+      # Fallback to unique table settings if no participants with sessionid
+      if customers == 0 && daily_orders.any?
+        customers = daily_orders.distinct.count(:tablesetting_id)
+      end
+      
       { date: date.strftime('%Y-%m-%d'), value: customers }
     end.reverse
   end
@@ -764,14 +783,17 @@ class RestaurantsController < ApplicationController
   def get_top_selling_items(days)
     period_start = days.days.ago
     
-    Ordritem.joins(:ordr, :menuitem)
-            .where(ordrs: { restaurant_id: @restaurant.id, created_at: period_start..Time.current })
-            .group('menuitems.name')
-            .sum(:quantity)
-            .sort_by { |_, quantity| -quantity }
-            .first(5)
-            .map { |name, quantity| { name: name, quantity: quantity } }
-  rescue
+    # Count order items (each ordritem represents one item ordered)
+    item_counts = Ordritem.joins(:ordr, :menuitem)
+                          .where(ordrs: { restaurant_id: @restaurant.id, created_at: period_start..Time.current })
+                          .group('menuitems.name')
+                          .count
+    
+    item_counts.sort_by { |_, count| -count }
+               .first(5)
+               .map { |name, count| { name: name, quantity: count } }
+  rescue => e
+    Rails.logger.error("[RestaurantsController] Top selling items collection failed: #{e.message}")
     []
   end
 

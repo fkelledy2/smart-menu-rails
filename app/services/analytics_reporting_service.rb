@@ -221,7 +221,7 @@ class AnalyticsReportingService
             .joins(:menuitem)
             .where(ordrs: { restaurant_id: restaurant_id, created_at: date_range, status: 'completed' })
             .group('menuitems.name')
-            .sum('ordritems.quantity * ordritems.unit_price')
+            .sum('ordritems.ordritemprice')
             .sort_by { |_, revenue| -revenue }
             .first(10)
             .to_h
@@ -232,7 +232,7 @@ class AnalyticsReportingService
             .joins(menuitem: :menusection)
             .where(ordrs: { restaurant_id: restaurant_id, created_at: date_range, status: 'completed' })
             .group('menusections.name')
-            .sum('ordritems.quantity * ordritems.unit_price')
+            .sum('ordritems.ordritemprice')
             .sort_by { |_, revenue| -revenue }
             .to_h
   end
