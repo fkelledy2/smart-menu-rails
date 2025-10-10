@@ -31,13 +31,19 @@
         </div>
         
         <% if show_period_selector && defined?(base_path) %>
-          <div class="btn-group" role="group">
-            <%= link_to "7 Days", "#{base_path}?days=7", 
-                        class: "btn #{'btn-primary' if params[:days] == '7'} #{'btn-outline-primary' if params[:days] != '7'}" %>
-            <%= link_to "30 Days", "#{base_path}?days=30", 
-                        class: "btn #{'btn-primary' if params[:days].blank? || params[:days] == '30'} #{'btn-outline-primary' if params[:days] != '30' && params[:days].present?}" %>
-            <%= link_to "90 Days", "#{base_path}?days=90", 
-                        class: "btn #{'btn-primary' if params[:days] == '90'} #{'btn-outline-primary' if params[:days] != '90'}" %>
+          <div class="btn-group" role="group" id="analytics-period-selector">
+            <button type="button" data-days="7" data-url="<%= base_path %>?days=7" 
+                    class="btn analytics-period-btn #{'btn-primary' if params[:days] == '7'} #{'btn-outline-primary' if params[:days] != '7'}">
+              7 Days
+            </button>
+            <button type="button" data-days="30" data-url="<%= base_path %>?days=30"
+                    class="btn analytics-period-btn #{'btn-primary' if params[:days].blank? || params[:days] == '30'} #{'btn-outline-primary' if params[:days] != '30' && params[:days].present?}">
+              30 Days
+            </button>
+            <button type="button" data-days="90" data-url="<%= base_path %>?days=90"
+                    class="btn analytics-period-btn #{'btn-primary' if params[:days] == '90'} #{'btn-outline-primary' if params[:days] != '90'}">
+              90 Days
+            </button>
           </div>
         <% end %>
       </div>
@@ -287,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Orders Chart
   const ordersCtx = document.getElementById('ordersChart').getContext('2d');
-  new Chart(ordersCtx, {
+  const ordersChart = new Chart(ordersCtx, {
     type: 'line',
     data: {
       labels: <%= raw analytics_data[:orders][:daily_data].map { |d| d[:date] }.to_json %>,
@@ -316,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Revenue Chart
   const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-  new Chart(revenueCtx, {
+  const revenueChart = new Chart(revenueCtx, {
     type: 'bar',
     data: {
       labels: <%= raw analytics_data[:revenue][:daily_data].map { |d| d[:date] }.to_json %>,
@@ -349,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Customers Chart
   const customersCtx = document.getElementById('customersChart').getContext('2d');
-  new Chart(customersCtx, {
+  const customersChart = new Chart(customersCtx, {
     type: 'line',
     data: {
       labels: <%= raw analytics_data[:customers][:daily_data].map { |d| d[:date] }.to_json %>,
@@ -378,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Peak Hours Chart
   const peakHoursCtx = document.getElementById('peakHoursChart').getContext('2d');
-  new Chart(peakHoursCtx, {
+  const peakHoursChart = new Chart(peakHoursCtx, {
     type: 'bar',
     data: {
       labels: <%= raw analytics_data[:trends][:peak_hours].map { |h| "#{h[:hour]}:00" }.to_json %>,
@@ -406,7 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Order Status Pie Chart
   const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
-  new Chart(orderStatusCtx, {
+  const orderStatusChart = new Chart(orderStatusCtx, {
     type: 'doughnut',
     data: {
       labels: ['Completed', 'Pending', 'Cancelled'],
@@ -437,5 +443,170 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
+
+  // Analytics Period Selector AJAX handling
+  const periodButtons = document.querySelectorAll('.analytics-period-btn');
+  let charts = {}; // Store chart instances for updates
+  
+  // Store initial chart instances
+  charts.orders = ordersChart;
+  charts.revenue = revenueChart;  
+  charts.customers = customersChart;
+  charts.peakHours = peakHoursChart;
+  charts.orderStatus = orderStatusChart;
+  
+  periodButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const url = this.dataset.url;
+      const days = this.dataset.days;
+      
+      // Update button states
+      periodButtons.forEach(btn => {
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-outline-primary');
+      });
+      this.classList.remove('btn-outline-primary');
+      this.classList.add('btn-primary');
+      
+      // Show loading state
+      document.body.style.cursor = 'wait';
+      this.disabled = true;
+      this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
+      
+      // Fetch new analytics data
+      fetch(url + '.json', {
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        updateAnalyticsDashboard(data);
+        
+        // Update URL without page reload
+        window.history.pushState({}, '', url);
+      })
+      .catch(error => {
+        console.error('Error fetching analytics data:', error);
+        alert('Error loading analytics data. Please try again.');
+      })
+      .finally(() => {
+        // Reset button state
+        document.body.style.cursor = 'default';
+        this.disabled = false;
+        this.innerHTML = days + ' Days';
+      });
+    });
+  });
+  
+  function updateAnalyticsDashboard(data) {
+    // Update metrics cards
+    updateMetricsCards(data);
+    
+    // Update charts
+    updateCharts(data);
+    
+    // Update period info
+    updatePeriodInfo(data);
+    
+    // Update top selling items table
+    updateTopSellingItems(data);
+  }
+  
+  function updateMetricsCards(data) {
+    // Update orders card
+    const ordersTotal = document.querySelector('.card.bg-primary h2');
+    const ordersCompleted = document.querySelector('.card.bg-primary small');
+    if (ordersTotal) ordersTotal.textContent = data.orders.total;
+    if (ordersCompleted) ordersCompleted.innerHTML = `<i class="fas fa-check-circle me-1"></i>${data.orders.completed} completed`;
+    
+    // Update revenue card
+    const revenueTotal = document.querySelector('.card.bg-success h2');
+    const revenueAvg = document.querySelector('.card.bg-success small');
+    if (revenueTotal) revenueTotal.textContent = '$' + Math.round(data.revenue.total);
+    if (revenueAvg) revenueAvg.innerHTML = `<i class="fas fa-chart-line me-1"></i>$${data.revenue.average_order} avg order`;
+    
+    // Update customers card
+    const customersTotal = document.querySelector('.card.bg-info h2');
+    const customersNew = document.querySelector('.card.bg-info small');
+    if (customersTotal) customersTotal.textContent = data.customers.total;
+    if (customersNew) customersNew.innerHTML = `<i class="fas fa-user-plus me-1"></i>${data.customers.new} new customers`;
+    
+    // Update growth rate card
+    const growthRate = document.querySelector('.card.bg-warning h2');
+    if (growthRate) growthRate.textContent = data.trends.growth_rate + '%';
+  }
+  
+  function updateCharts(data) {
+    // Update Orders Chart
+    if (charts.orders) {
+      charts.orders.data.labels = data.orders.daily_data.map(d => d.date);
+      charts.orders.data.datasets[0].data = data.orders.daily_data.map(d => d.value);
+      charts.orders.update();
+    }
+    
+    // Update Revenue Chart
+    if (charts.revenue) {
+      charts.revenue.data.labels = data.revenue.daily_data.map(d => d.date);
+      charts.revenue.data.datasets[0].data = data.revenue.daily_data.map(d => d.value);
+      charts.revenue.update();
+    }
+    
+    // Update Customers Chart
+    if (charts.customers) {
+      charts.customers.data.labels = data.customers.daily_data.map(d => d.date);
+      charts.customers.data.datasets[0].data = data.customers.daily_data.map(d => d.value);
+      charts.customers.update();
+    }
+    
+    // Update Peak Hours Chart
+    if (charts.peakHours) {
+      charts.peakHours.data.labels = data.trends.peak_hours.map(h => h.hour + ':00');
+      charts.peakHours.data.datasets[0].data = data.trends.peak_hours.map(h => h.orders);
+      charts.peakHours.update();
+    }
+    
+    // Update Order Status Chart
+    if (charts.orderStatus) {
+      charts.orderStatus.data.datasets[0].data = [
+        data.orders.completed,
+        data.orders.pending,
+        data.orders.cancelled
+      ];
+      charts.orderStatus.update();
+    }
+  }
+  
+  function updatePeriodInfo(data) {
+    const periodInfo = document.querySelector('.text-muted');
+    if (periodInfo) {
+      periodInfo.innerHTML = `${data.restaurant.name} • ${data.period.start_date} to ${data.period.end_date} (${data.period.days} days)`;
+    }
+  }
+  
+  function updateTopSellingItems(data) {
+    const tableBody = document.querySelector('.table tbody');
+    if (tableBody && data.revenue.top_items) {
+      tableBody.innerHTML = '';
+      
+      if (data.revenue.top_items.length > 0) {
+        data.revenue.top_items.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${item.name}</td>
+            <td class="text-end">${item.quantity}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } else {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="2" class="text-muted">No sales data available for this period.</td>';
+        tableBody.appendChild(row);
+      }
+    }
+  }
 });
 </script>
