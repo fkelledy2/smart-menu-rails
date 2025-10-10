@@ -1,6 +1,8 @@
 require 'rqrcode'
 
 class MenusController < ApplicationController
+  include CachePerformanceMonitoring
+  
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_restaurant
   before_action :set_menu, only: %i[show edit update destroy regenerate_images]
@@ -82,6 +84,9 @@ class MenusController < ApplicationController
         # Use AdvancedCacheService for comprehensive menu data with localization
         locale = params[:locale] || 'en'
         @menu_data = AdvancedCacheService.cached_menu_with_items(@menu.id, locale: locale, include_inactive: false)
+        
+        # Trigger strategic cache warming for menu and restaurant data
+        trigger_strategic_cache_warming
         
         if current_user
           AnalyticsService.track_user_event(current_user, AnalyticsService::MENU_VIEWED, {

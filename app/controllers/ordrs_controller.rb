@@ -1,4 +1,6 @@
 class OrdrsController < ApplicationController
+  include CachePerformanceMonitoring
+  
   before_action :authenticate_user!, except: %i[show create update] # Allow customers to create/update orders
   before_action :set_restaurant
   before_action :set_ordr, only: %i[show edit update destroy analytics]

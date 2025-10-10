@@ -81,4 +81,79 @@ class ApplicationController < ActionController::Base
       redirect_to root_path
     end
   end
+
+  # Cache warming helpers for controllers
+  protected
+
+  # Warm cache for user's restaurants and related data
+  def warm_user_cache_async
+    return unless current_user
+
+    CacheWarmingJob.perform_later(
+      user_id: current_user.id,
+      warm_type: 'user_restaurants'
+    )
+  end
+
+  # Warm cache for specific restaurant and its data
+  def warm_restaurant_cache_async(restaurant_id)
+    CacheWarmingJob.perform_later(
+      restaurant_id: restaurant_id,
+      warm_type: 'restaurant_full'
+    )
+  end
+
+  # Warm cache for menu and its items
+  def warm_menu_cache_async(menu_id)
+    CacheWarmingJob.perform_later(
+      menu_id: menu_id,
+      warm_type: 'menu_full'
+    )
+  end
+
+  # Warm cache for active orders (kitchen/management view)
+  def warm_active_orders_cache_async(restaurant_id)
+    CacheWarmingJob.perform_later(
+      restaurant_id: restaurant_id,
+      warm_type: 'active_orders'
+    )
+  end
+
+  # Check if cache warming should be triggered (avoid excessive warming)
+  def should_warm_cache?
+    # Only warm cache for authenticated users
+    return false unless current_user
+    
+    # Don't warm cache for AJAX requests
+    return false if request.xhr?
+    
+    # Don't warm cache too frequently (check session timestamp)
+    last_warm = session[:last_cache_warm]
+    return false if last_warm && Time.parse(last_warm) > 5.minutes.ago
+    
+    # Update session timestamp
+    session[:last_cache_warm] = Time.current.iso8601
+    true
+  rescue
+    # If there's any error with session handling, default to not warming
+    false
+  end
+
+  # Trigger strategic cache warming based on user activity
+  def trigger_strategic_cache_warming
+    return unless should_warm_cache?
+
+    # Warm user's restaurant data in background
+    warm_user_cache_async
+
+    # If viewing a specific restaurant, warm its data
+    if params[:restaurant_id]
+      warm_restaurant_cache_async(params[:restaurant_id])
+    end
+
+    # If viewing a specific menu, warm its data
+    if params[:menu_id]
+      warm_menu_cache_async(params[:menu_id])
+    end
+  end
 end

@@ -1,6 +1,8 @@
 require 'rspotify'
 
 class RestaurantsController < ApplicationController
+  include CachePerformanceMonitoring
+  
   before_action :authenticate_user!
   before_action :set_restaurant, only: %i[show edit update destroy]
   before_action :set_currency, only: %i[show index]
@@ -104,6 +106,9 @@ class RestaurantsController < ApplicationController
 
     # Use AdvancedCacheService for comprehensive dashboard data
     @dashboard_data = AdvancedCacheService.cached_restaurant_dashboard(@restaurant.id)
+
+    # Trigger strategic cache warming for related data
+    trigger_strategic_cache_warming
 
     AnalyticsService.track_user_event(current_user, AnalyticsService::RESTAURANT_VIEWED, {
       restaurant_id: @restaurant.id,
