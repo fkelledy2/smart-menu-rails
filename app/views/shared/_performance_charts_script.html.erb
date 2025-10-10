@@ -1,0 +1,261 @@
+<%# Chart.js Integration Script Component %>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Performance data from Rails
+  const performanceData = <%= raw performance_data.to_json %>;
+  
+  // Chart.js default configuration
+  Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+  Chart.defaults.color = '#6c757d';
+  
+  // Common chart options
+  const commonOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          padding: 20,
+          usePointStyle: true
+        }
+      }
+    }
+  };
+
+  // Helper function to safely get nested values
+  function safeGet(obj, path, defaultValue = 0) {
+    return path.split('.').reduce((current, key) => {
+      return current && current[key] !== undefined ? current[key] : defaultValue;
+    }, obj);
+  }
+
+  // Cache Performance Doughnut Chart
+  const cacheCtx = document.getElementById('cachePerformanceChart');
+  if (cacheCtx) {
+    new Chart(cacheCtx.getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Cache Hits', 'Cache Misses'],
+        datasets: [{
+          data: [
+            safeGet(performanceData, 'cache_performance.total_hits'),
+            safeGet(performanceData, 'cache_performance.total_misses')
+          ],
+          backgroundColor: ['#198754', '#dc3545'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: {
+          ...commonOptions.plugins,
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 20,
+              usePointStyle: true
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Database Queries Bar Chart
+  const dbCtx = document.getElementById('databaseQueriesChart');
+  if (dbCtx) {
+    new Chart(dbCtx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Primary Database', 'Replica Database'],
+        datasets: [{
+          label: 'Query Count',
+          data: [
+            safeGet(performanceData, 'database_performance.primary_queries'),
+            safeGet(performanceData, 'database_performance.replica_queries')
+          ],
+          backgroundColor: ['#0d6efd', '#20c997'],
+          borderRadius: 6,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: '#f8f9fa'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Response Time Metrics
+  const responseCtx = document.getElementById('responseTimeChart');
+  if (responseCtx) {
+    new Chart(responseCtx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Average Response', 'Maximum Response'],
+        datasets: [{
+          label: 'Response Time (ms)',
+          data: [
+            safeGet(performanceData, 'response_times.average') * 1000,
+            safeGet(performanceData, 'response_times.maximum') * 1000
+          ],
+          backgroundColor: ['#17a2b8', '#fd7e14'],
+          borderRadius: 6,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: '#f8f9fa'
+            },
+            title: {
+              display: true,
+              text: 'Milliseconds'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // User Activity Radar Chart
+  const activityCtx = document.getElementById('userActivityChart');
+  if (activityCtx) {
+    new Chart(activityCtx.getContext('2d'), {
+      type: 'radar',
+      data: {
+        labels: ['Sessions', 'Visitors', 'Page Views', 'Avg Duration', 'Engagement'],
+        datasets: [{
+          label: 'User Activity',
+          data: [
+            Math.min(safeGet(performanceData, 'user_activity.total_sessions'), 100),
+            Math.min(safeGet(performanceData, 'user_activity.unique_visitors'), 100),
+            Math.min(safeGet(performanceData, 'user_activity.page_views') / 10, 100), // Scale down for visualization
+            Math.min(safeGet(performanceData, 'user_activity.average_session_duration') / 60, 100), // Convert to minutes
+            Math.min(100 - safeGet(performanceData, 'user_activity.bounce_rate'), 100) // Invert bounce rate
+          ],
+          backgroundColor: 'rgba(255, 193, 7, 0.2)',
+          borderColor: '#ffc107',
+          borderWidth: 2,
+          pointBackgroundColor: '#ffc107'
+        }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 100,
+            grid: {
+              color: '#f8f9fa'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // System Metrics Line Chart
+  const systemCtx = document.getElementById('systemMetricsChart');
+  if (systemCtx) {
+    new Chart(systemCtx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: ['Memory (MB)', 'CPU (%)', 'Disk (%)', 'Connections', 'Jobs'],
+        datasets: [{
+          label: 'System Usage',
+          data: [
+            safeGet(performanceData, 'system_metrics.memory_usage'),
+            safeGet(performanceData, 'system_metrics.cpu_usage'),
+            safeGet(performanceData, 'system_metrics.disk_usage'),
+            safeGet(performanceData, 'system_metrics.active_connections'),
+            safeGet(performanceData, 'system_metrics.background_jobs')
+          ],
+          backgroundColor: 'rgba(220, 53, 69, 0.1)',
+          borderColor: '#dc3545',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#dc3545',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 6
+        }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: '#f8f9fa'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Auto-refresh functionality (optional)
+  const autoRefresh = document.querySelector('[data-auto-refresh]');
+  if (autoRefresh) {
+    const refreshInterval = parseInt(autoRefresh.dataset.autoRefresh) * 1000;
+    if (refreshInterval > 0) {
+      setInterval(() => {
+        // Refresh the page to get updated data
+        window.location.reload();
+      }, refreshInterval);
+    }
+  }
+});
+</script>

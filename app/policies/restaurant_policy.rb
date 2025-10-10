@@ -19,6 +19,18 @@ class RestaurantPolicy < ApplicationPolicy
     owner?
   end
 
+  def analytics?
+    owner?
+  end
+
+  def performance?
+    owner?
+  end
+
+  def user_activity?
+    owner?
+  end
+
   def spotify_auth?
     owner?
   end

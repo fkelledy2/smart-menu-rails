@@ -45,13 +45,17 @@ gem 'google-cloud-vision', '~> 2.0.2'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '~> 1.18', require: false
-
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem 'debug', platforms: %i[mri windows]
+  gem 'debug', platforms: %i[mri mingw x64_mingw]
+  gem 'rspec-rails', '~> 6.1'
+  gem 'factory_bot_rails', '~> 6.4'
+  gem 'rails-controller-testing'
+  gem 'rswag-api'
+  gem 'rswag-ui'
 end
 
 group :development do
@@ -61,7 +65,6 @@ group :development do
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
-
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 end
@@ -70,15 +73,6 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
   gem 'selenium-webdriver'
-end
-
-group :development, :test do
-  # API documentation with OpenAPI/Swagger
-  gem 'rswag-api'
-  gem 'rswag-ui'
-end
-
-group :test do
   gem 'rswag-specs'
 end
 gem 'aasm'
@@ -150,9 +144,7 @@ gem 'whenever', require: false
 gem 'dalli', '~> 3.2'
 
 group :development, :test do
-  gem 'factory_bot_rails', '~> 6.4'
   gem 'i18n-tasks', '~> 1.0'
-  gem 'rspec-rails', '~> 6.1'
 
   # CI/CD and Code Quality Tools
   gem 'brakeman', '~> 6.0', require: false

@@ -1,0 +1,38 @@
+<% if @analytics_data&.dig(:restaurant, :name) %>
+  <% content_for :title, "#{@analytics_data[:restaurant][:name]} - Analytics Dashboard" %>
+<% else %>
+  <% content_for :title, "Restaurant Analytics Dashboard" %>
+<% end %>
+
+<% if @analytics_data %>
+  <%= render 'shared/analytics_dashboard', 
+      title: "Restaurant Analytics Dashboard", 
+      subtitle: "#{@analytics_data[:restaurant][:name]}",
+      analytics_data: @analytics_data,
+      base_path: analytics_restaurant_path(@restaurant),
+      icon: "fas fa-chart-line" %>
+<% else %>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+          <h4 class="alert-heading">Analytics Data Not Available</h4>
+          <p>Unable to load analytics data for this restaurant. This could be due to:</p>
+          <ul>
+            <li>Restaurant not found or access denied</li>
+            <li>Insufficient permissions</li>
+            <li>System error during data collection</li>
+          </ul>
+          <hr>
+          <p class="mb-0">
+            <% if @restaurant %>
+              <%= link_to "Back to Restaurant", restaurant_path(@restaurant), class: "btn btn-primary" %>
+            <% else %>
+              <%= link_to "Back to Restaurants", restaurants_path, class: "btn btn-primary" %>
+            <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

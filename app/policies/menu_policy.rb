@@ -26,6 +26,14 @@ class MenuPolicy < ApplicationPolicy
     owner?
   end
 
+  def analytics?
+    owner?
+  end
+
+  def performance?
+    owner?
+  end
+
   class Scope < Scope
     def resolve
       scope.joins(:restaurant).where(restaurants: { user_id: user.id })

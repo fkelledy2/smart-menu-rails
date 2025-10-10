@@ -1,0 +1,153 @@
+<%# Performance Details Table Component %>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white border-0 pb-0">
+    <h5 class="card-title mb-0">
+      <i class="fas fa-table text-secondary me-2"></i>
+      Performance Details
+    </h5>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>Metric</th>
+            <th>Current Value</th>
+            <th>Status</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Cache Hit Rate</strong></td>
+            <td><%= number_to_percentage(performance_data.dig(:cache_performance, :hit_rate) || 0, precision: 2) %></td>
+            <td>
+              <% hit_rate = performance_data.dig(:cache_performance, :hit_rate) || 0 %>
+              <% if hit_rate >= 90 %>
+                <span class="badge bg-success">Excellent</span>
+              <% elsif hit_rate >= 75 %>
+                <span class="badge bg-warning">Good</span>
+              <% else %>
+                <span class="badge bg-danger">Needs Improvement</span>
+              <% end %>
+            </td>
+            <td>Percentage of requests served from cache</td>
+          </tr>
+          <tr>
+            <td><strong>Average Response Time</strong></td>
+            <td><%= number_with_precision((performance_data.dig(:response_times, :average) || 0) * 1000, precision: 0) %>ms</td>
+            <td>
+              <% avg_time = performance_data.dig(:response_times, :average) || 0 %>
+              <% if avg_time <= 0.5 %>
+                <span class="badge bg-success">Excellent</span>
+              <% elsif avg_time <= 1.0 %>
+                <span class="badge bg-warning">Good</span>
+              <% else %>
+                <span class="badge bg-danger">Slow</span>
+              <% end %>
+            </td>
+            <td>Average time to process requests</td>
+          </tr>
+          <tr>
+            <td><strong>Database Replica Usage</strong></td>
+            <td>
+              <% 
+                replica_queries = performance_data.dig(:database_performance, :replica_queries) || 0
+                primary_queries = performance_data.dig(:database_performance, :primary_queries) || 0
+                total_queries = replica_queries + primary_queries
+                replica_percentage = total_queries > 0 ? (replica_queries.to_f / total_queries) * 100 : 0
+              %>
+              <%= number_to_percentage(replica_percentage, precision: 1) %>
+            </td>
+            <td>
+              <% if replica_percentage >= 60 %>
+                <span class="badge bg-success">Optimal</span>
+              <% elsif replica_percentage >= 30 %>
+                <span class="badge bg-warning">Moderate</span>
+              <% else %>
+                <span class="badge bg-info">Low Usage</span>
+              <% end %>
+            </td>
+            <td>Percentage of read queries using replica database</td>
+          </tr>
+          <tr>
+            <td><strong>Connection Pool Usage</strong></td>
+            <td><%= number_to_percentage(performance_data.dig(:database_performance, :connection_pool_usage) || 0, precision: 1) %></td>
+            <td>
+              <% pool_usage = performance_data.dig(:database_performance, :connection_pool_usage) || 0 %>
+              <% if pool_usage <= 70 %>
+                <span class="badge bg-success">Healthy</span>
+              <% elsif pool_usage <= 85 %>
+                <span class="badge bg-warning">Monitor</span>
+              <% else %>
+                <span class="badge bg-danger">Critical</span>
+              <% end %>
+            </td>
+            <td>Database connection pool utilization</td>
+          </tr>
+          <tr>
+            <td><strong>Replica Lag</strong></td>
+            <td><%= performance_data.dig(:database_performance, :replica_lag) || 0 %>ms</td>
+            <td>
+              <% replica_lag = performance_data.dig(:database_performance, :replica_lag) || 0 %>
+              <% if replica_lag <= 100 %>
+                <span class="badge bg-success">Excellent</span>
+              <% elsif replica_lag <= 500 %>
+                <span class="badge bg-warning">Acceptable</span>
+              <% else %>
+                <span class="badge bg-danger">High Lag</span>
+              <% end %>
+            </td>
+            <td>Replication delay between primary and replica</td>
+          </tr>
+          <tr>
+            <td><strong>Total Cache Operations</strong></td>
+            <td><%= number_with_delimiter(performance_data.dig(:cache_performance, :total_operations) || 0) %></td>
+            <td>
+              <% total_ops = performance_data.dig(:cache_performance, :total_operations) || 0 %>
+              <% if total_ops > 1000 %>
+                <span class="badge bg-success">Active</span>
+              <% elsif total_ops > 100 %>
+                <span class="badge bg-info">Moderate</span>
+              <% else %>
+                <span class="badge bg-secondary">Low Activity</span>
+              <% end %>
+            </td>
+            <td>Total cache read/write operations</td>
+          </tr>
+          <tr>
+            <td><strong>Request Count</strong></td>
+            <td><%= number_with_delimiter(performance_data.dig(:response_times, :request_count) || 0) %></td>
+            <td>
+              <% request_count = performance_data.dig(:response_times, :request_count) || 0 %>
+              <% if request_count > 500 %>
+                <span class="badge bg-success">High Traffic</span>
+              <% elsif request_count > 100 %>
+                <span class="badge bg-info">Moderate Traffic</span>
+              <% else %>
+                <span class="badge bg-secondary">Low Traffic</span>
+              <% end %>
+            </td>
+            <td>Total requests processed in the period</td>
+          </tr>
+          <tr>
+            <td><strong>Page Views</strong></td>
+            <td><%= number_with_delimiter(performance_data.dig(:user_activity, :page_views) || 0) %></td>
+            <td>
+              <% page_views = performance_data.dig(:user_activity, :page_views) || 0 %>
+              <% if page_views > 1000 %>
+                <span class="badge bg-success">High Engagement</span>
+              <% elsif page_views > 200 %>
+                <span class="badge bg-info">Good Engagement</span>
+              <% else %>
+                <span class="badge bg-secondary">Low Engagement</span>
+              <% end %>
+            </td>
+            <td>Total page views from users</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

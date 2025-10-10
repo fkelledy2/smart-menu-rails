@@ -1,0 +1,38 @@
+<% if @performance_data&.dig(:menu, :name) %>
+  <% content_for :title, "#{@performance_data[:menu][:name]} - Menu Performance Dashboard" %>
+<% else %>
+  <% content_for :title, "Menu Performance Dashboard" %>
+<% end %>
+
+<% if @performance_data %>
+  <%= render 'shared/performance_dashboard', 
+      title: "Menu Performance Dashboard", 
+      subtitle: "#{@performance_data[:menu][:name]} (#{@performance_data[:menu][:restaurant_name]})",
+      performance_data: @performance_data,
+      base_path: performance_restaurant_menu_path(@restaurant, @menu),
+      icon: "fas fa-utensils" %>
+<% else %>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+          <h4 class="alert-heading">Performance Data Not Available</h4>
+          <p>Unable to load performance data for this menu. This could be due to:</p>
+          <ul>
+            <li>Menu not found or access denied</li>
+            <li>Insufficient permissions</li>
+            <li>System error during data collection</li>
+          </ul>
+          <hr>
+          <p class="mb-0">
+            <% if @restaurant %>
+              <%= link_to "Back to Menus", restaurant_menus_path(@restaurant), class: "btn btn-primary" %>
+            <% else %>
+              <%= link_to "Back to Restaurants", restaurants_path, class: "btn btn-primary" %>
+            <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

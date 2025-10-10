@@ -1,0 +1,441 @@
+<%
+  # Set defaults
+  title ||= "Analytics Dashboard"
+  subtitle ||= ""
+  analytics_data ||= {}
+  base_path ||= ""
+  icon ||= "fas fa-chart-line"
+  show_period_selector = true
+%>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container-fluid">
+  <!-- Header Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="h3 mb-0">
+            <i class="<%= icon %> text-primary me-2"></i>
+            <%= title %>
+          </h1>
+          <% if subtitle.present? %>
+            <p class="text-muted mb-0">
+              <%= subtitle %> • 
+              <%= analytics_data[:period][:start_date] %> to <%= analytics_data[:period][:end_date] %>
+              (<%= analytics_data[:period][:days] %> days)
+            </p>
+          <% end %>
+        </div>
+        
+        <% if show_period_selector && defined?(base_path) %>
+          <div class="btn-group" role="group">
+            <%= link_to "7 Days", "#{base_path}?days=7", 
+                        class: "btn #{'btn-primary' if params[:days] == '7'} #{'btn-outline-primary' if params[:days] != '7'}" %>
+            <%= link_to "30 Days", "#{base_path}?days=30", 
+                        class: "btn #{'btn-primary' if params[:days].blank? || params[:days] == '30'} #{'btn-outline-primary' if params[:days] != '30' && params[:days].present?}" %>
+            <%= link_to "90 Days", "#{base_path}?days=90", 
+                        class: "btn #{'btn-primary' if params[:days] == '90'} #{'btn-outline-primary' if params[:days] != '90'}" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Metrics Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3 mb-3">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title mb-0">Total Orders</h6>
+              <h2 class="mb-0"><%= analytics_data[:orders][:total] %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-shopping-cart fa-2x opacity-75"></i>
+            </div>
+          </div>
+          <small class="opacity-75">
+            <i class="fas fa-check-circle me-1"></i>
+            <%= analytics_data[:orders][:completed] %> completed
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title mb-0">Total Revenue</h6>
+              <h2 class="mb-0">$<%= number_with_precision(analytics_data[:revenue][:total], precision: 0) %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-dollar-sign fa-2x opacity-75"></i>
+            </div>
+          </div>
+          <small class="opacity-75">
+            <i class="fas fa-chart-line me-1"></i>
+            $<%= analytics_data[:revenue][:average_order] %> avg order
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card bg-info text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title mb-0">Customers</h6>
+              <h2 class="mb-0"><%= analytics_data[:customers][:total] %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-users fa-2x opacity-75"></i>
+            </div>
+          </div>
+          <small class="opacity-75">
+            <i class="fas fa-user-plus me-1"></i>
+            <%= analytics_data[:customers][:new] %> new customers
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card bg-warning text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title mb-0">Growth Rate</h6>
+              <h2 class="mb-0"><%= analytics_data[:trends][:growth_rate] %>%</h2>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-trending-up fa-2x opacity-75"></i>
+            </div>
+          </div>
+          <small class="opacity-75">
+            <i class="fas fa-calendar me-1"></i>
+            vs previous period
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row mb-4">
+    <!-- Orders Chart -->
+    <div class="col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-chart-line me-2 text-primary"></i>
+            Daily Orders
+          </h5>
+        </div>
+        <div class="card-body">
+          <canvas id="ordersChart" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue Chart -->
+    <div class="col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-dollar-sign me-2 text-success"></i>
+            Daily Revenue
+          </h5>
+        </div>
+        <div class="card-body">
+          <canvas id="revenueChart" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second Charts Row -->
+  <div class="row mb-4">
+    <!-- Customer Chart -->
+    <div class="col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-users me-2 text-info"></i>
+            Daily Customers
+          </h5>
+        </div>
+        <div class="card-body">
+          <canvas id="customersChart" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Peak Hours Chart -->
+    <div class="col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-clock me-2 text-warning"></i>
+            Peak Hours
+          </h5>
+        </div>
+        <div class="card-body">
+          <canvas id="peakHoursChart" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Tables Row -->
+  <div class="row mb-4">
+    <!-- Top Selling Items -->
+    <div class="col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-star me-2 text-warning"></i>
+            Top Selling Items
+          </h5>
+        </div>
+        <div class="card-body">
+          <% if analytics_data[:revenue][:top_items].any? %>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th class="text-end">Quantity Sold</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% analytics_data[:revenue][:top_items].each do |item| %>
+                    <tr>
+                      <td><%= item[:name] %></td>
+                      <td class="text-end"><%= item[:quantity] %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">No sales data available for this period.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Status Breakdown -->
+    <div class="col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-chart-pie me-2 text-primary"></i>
+            Order Status Breakdown
+          </h5>
+        </div>
+        <div class="card-body">
+          <canvas id="orderStatusChart" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Traffic Analytics -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-globe me-2 text-info"></i>
+            Traffic Analytics
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 text-center">
+              <h3 class="text-primary"><%= analytics_data[:traffic][:page_views] %></h3>
+              <p class="text-muted mb-0">Page Views</p>
+            </div>
+            <div class="col-md-4 text-center">
+              <h3 class="text-success"><%= analytics_data[:traffic][:unique_visitors] %></h3>
+              <p class="text-muted mb-0">Unique Visitors</p>
+            </div>
+            <div class="col-md-4 text-center">
+              <h3 class="text-warning"><%= analytics_data[:traffic][:bounce_rate] %>%</h3>
+              <p class="text-muted mb-0">Bounce Rate</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js Configuration -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Chart.js default configuration
+  Chart.defaults.responsive = true;
+  Chart.defaults.maintainAspectRatio = false;
+
+  // Orders Chart
+  const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+  new Chart(ordersCtx, {
+    type: 'line',
+    data: {
+      labels: <%= raw analytics_data[:orders][:daily_data].map { |d| d[:date] }.to_json %>,
+      datasets: [{
+        label: 'Orders',
+        data: <%= raw analytics_data[:orders][:daily_data].map { |d| d[:value] }.to_json %>,
+        borderColor: 'rgb(54, 162, 235)',
+        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    }
+  });
+
+  // Revenue Chart
+  const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+  new Chart(revenueCtx, {
+    type: 'bar',
+    data: {
+      labels: <%= raw analytics_data[:revenue][:daily_data].map { |d| d[:date] }.to_json %>,
+      datasets: [{
+        label: 'Revenue ($)',
+        data: <%= raw analytics_data[:revenue][:daily_data].map { |d| d[:value] }.to_json %>,
+        backgroundColor: 'rgba(40, 167, 69, 0.8)',
+        borderColor: 'rgb(40, 167, 69)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return '$' + value;
+            }
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    }
+  });
+
+  // Customers Chart
+  const customersCtx = document.getElementById('customersChart').getContext('2d');
+  new Chart(customersCtx, {
+    type: 'line',
+    data: {
+      labels: <%= raw analytics_data[:customers][:daily_data].map { |d| d[:date] }.to_json %>,
+      datasets: [{
+        label: 'Customers',
+        data: <%= raw analytics_data[:customers][:daily_data].map { |d| d[:value] }.to_json %>,
+        borderColor: 'rgb(23, 162, 184)',
+        backgroundColor: 'rgba(23, 162, 184, 0.1)',
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    }
+  });
+
+  // Peak Hours Chart
+  const peakHoursCtx = document.getElementById('peakHoursChart').getContext('2d');
+  new Chart(peakHoursCtx, {
+    type: 'bar',
+    data: {
+      labels: <%= raw analytics_data[:trends][:peak_hours].map { |h| "#{h[:hour]}:00" }.to_json %>,
+      datasets: [{
+        label: 'Orders',
+        data: <%= raw analytics_data[:trends][:peak_hours].map { |h| h[:orders] }.to_json %>,
+        backgroundColor: 'rgba(255, 193, 7, 0.8)',
+        borderColor: 'rgb(255, 193, 7)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    }
+  });
+
+  // Order Status Pie Chart
+  const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
+  new Chart(orderStatusCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Completed', 'Pending', 'Cancelled'],
+      datasets: [{
+        data: [
+          <%= analytics_data[:orders][:completed] %>,
+          <%= analytics_data[:orders][:pending] %>,
+          <%= analytics_data[:orders][:cancelled] %>
+        ],
+        backgroundColor: [
+          'rgba(40, 167, 69, 0.8)',
+          'rgba(255, 193, 7, 0.8)',
+          'rgba(220, 53, 69, 0.8)'
+        ],
+        borderColor: [
+          'rgb(40, 167, 69)',
+          'rgb(255, 193, 7)',
+          'rgb(220, 53, 69)'
+        ],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+});
+</script>

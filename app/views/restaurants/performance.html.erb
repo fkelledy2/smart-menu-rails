@@ -1,0 +1,8 @@
+<% content_for :title, "#{@restaurant.name} - Performance Dashboard" %>
+
+<%= render 'shared/performance_dashboard',
+    title: "Restaurant Performance Dashboard",
+    subtitle: @restaurant.name,
+    performance_data: @performance_data,
+    base_path: performance_restaurant_path(@restaurant),
+    icon: "fas fa-store" %>
