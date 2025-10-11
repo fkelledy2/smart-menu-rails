@@ -35,7 +35,7 @@ class User < ApplicationRecord
   cache_belongs_to :plan
 
   before_validation :assign_default_plan, on: :create
-  after_create :create_onboarding_session
+  after_create :setup_onboarding_session
   # Cache invalidation hooks
   after_update :invalidate_user_caches
 
@@ -65,7 +65,7 @@ class User < ApplicationRecord
 
   private
 
-  def create_onboarding_session
+  def setup_onboarding_session
     OnboardingSession.create!(user: self, status: :started)
   end
 

@@ -82,7 +82,7 @@ class OnboardingController < ApplicationController
 
   def set_onboarding_session
     @onboarding = current_user.onboarding_session
-    @set_onboarding_session ||= current_user.create_onboarding_session(status: :started)
+    @onboarding ||= current_user.create_onboarding_session(status: :started)
   end
 
   def handle_account_details
