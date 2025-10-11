@@ -25,8 +25,8 @@ Based on analysis of testing documentation, here are the remaining testing and q
 - [x] **EmployeesController test coverage** - Added 84 comprehensive test methods covering employee management, advanced caching integration, analytics tracking, authorization patterns, JSON API support, business logic workflows, and error handling (+78 tests, +92 assertions)
 - [x] **MenuItemsController test coverage** - Added 95 comprehensive test methods covering menu item management, advanced caching integration, analytics tracking, authorization patterns, JSON API support, business logic workflows, complex routing scenarios, and error handling (+89 tests, +109 assertions)
 - [x] **OnboardingController test coverage** - Added 87 comprehensive test methods covering multi-step onboarding workflow, analytics integration, background job coordination, authorization patterns, JSON API support, state management, and error handling (+81 tests, +145 assertions)
-- [ ] **Continue expanding to 95%+ line coverage** - Target additional high-impact controllers (Health controllers, Smartmenus controllers)
-- [ ] **Improve branch coverage from 33.46% to 90%+** - Cover all conditional logic paths
+- [x] **Continue expanding to 95%+ line coverage** - Target additional high-impact controllers (Health controllers, Smartmenus controllers) - Added comprehensive test coverage for HealthController (25 new test methods) and SmartmenusController (40 new test methods)
+- [ ] **Improve branch coverage from 35.41% to 90%+** - Cover all conditional logic paths
 - [ ] **Implement model validation tests** - Complete model behavior coverage
 
 #### **3. Test Infrastructure Enhancement**
