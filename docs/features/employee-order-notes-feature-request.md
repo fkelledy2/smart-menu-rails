@@ -2,11 +2,11 @@
 
 ## 📋 **Feature Overview**
 
-**Feature Name**: Employee Order Notes and Special Instructions  
-**Request Type**: New Feature Enhancement  
-**Priority**: Medium-High  
-**Requested By**: Restaurant Operations Team  
-**Date**: October 11, 2025  
+**Feature Name**: Employee Order Notes and Special Instructions
+**Request Type**: New Feature Enhancement
+**Priority**: Medium-High
+**Requested By**: Restaurant Operations Team
+**Date**: October 11, 2025
 
 ## 🎯 **User Story**
 
@@ -94,7 +94,7 @@ end
 class OrderNote < ApplicationRecord
   belongs_to :ordr
   belongs_to :employee
-  
+
   enum :category, {
     dietary: 0,
     preparation: 1,
@@ -102,27 +102,27 @@ class OrderNote < ApplicationRecord
     customer_service: 3,
     operational: 4
   }
-  
+
   enum :priority, {
     low: 0,
     medium: 1,
     high: 2,
     urgent: 3
   }
-  
+
   validates :content, presence: true, length: { minimum: 3, maximum: 500 }
   validates :category, presence: true
   validates :priority, presence: true
-  
+
   scope :active, -> { where('expires_at IS NULL OR expires_at > ?', Time.current) }
   scope :for_kitchen, -> { where(visible_to_kitchen: true) }
   scope :for_servers, -> { where(visible_to_servers: true) }
   scope :by_priority, -> { order(priority: :desc, created_at: :desc) }
-  
+
   def expired?
     expires_at.present? && expires_at < Time.current
   end
-  
+
   def high_priority?
     urgent? || high?
   end
@@ -136,7 +136,7 @@ class Ordr < ApplicationRecord
   has_many :urgent_notes, -> { where(priority: [:high, :urgent]).active }, class_name: 'OrderNote'
 end
 
-# Update app/models/employee.rb  
+# Update app/models/employee.rb
 class Employee < ApplicationRecord
   has_many :order_notes, dependent: :destroy
 end
@@ -150,68 +150,68 @@ class OrderNotesController < ApplicationController
   before_action :set_restaurant
   before_action :set_order
   before_action :set_order_note, only: [:show, :edit, :update, :destroy]
-  
+
   after_action :verify_authorized
   after_action :verify_policy_scoped, only: [:index]
-  
+
   def index
     @order_notes = policy_scope(@order.order_notes.includes(:employee)).by_priority
   end
-  
+
   def create
     @order_note = @order.order_notes.build(order_note_params)
     @order_note.employee = current_employee
     authorize @order_note
-    
+
     if @order_note.save
       broadcast_order_note_created
-      redirect_to restaurant_ordr_path(@restaurant, @order), 
+      redirect_to restaurant_ordr_path(@restaurant, @order),
                   notice: 'Order note added successfully.'
     else
       render :new, status: :unprocessable_entity
     end
   end
-  
+
   def update
     authorize @order_note
-    
+
     if @order_note.update(order_note_params)
       broadcast_order_note_updated
-      redirect_to restaurant_ordr_path(@restaurant, @order), 
+      redirect_to restaurant_ordr_path(@restaurant, @order),
                   notice: 'Order note updated successfully.'
     else
       render :edit, status: :unprocessable_entity
     end
   end
-  
+
   def destroy
     authorize @order_note
     @order_note.destroy
     broadcast_order_note_deleted
-    redirect_to restaurant_ordr_path(@restaurant, @order), 
+    redirect_to restaurant_ordr_path(@restaurant, @order),
                 notice: 'Order note removed successfully.'
   end
-  
+
   private
-  
+
   def set_order
     @order = @restaurant.ordrs.find(params[:ordr_id])
   end
-  
+
   def set_order_note
     @order_note = @order.order_notes.find(params[:id])
   end
-  
+
   def order_note_params
-    params.require(:order_note).permit(:content, :category, :priority, 
-                                       :visible_to_kitchen, :visible_to_servers, 
+    params.require(:order_note).permit(:content, :category, :priority,
+                                       :visible_to_kitchen, :visible_to_servers,
                                        :visible_to_customers, :expires_at)
   end
-  
+
   def current_employee
     @restaurant.employees.find_by(user: current_user)
   end
-  
+
   def broadcast_order_note_created
     OrderNotesChannel.broadcast_to(@order, {
       action: 'note_created',
@@ -230,9 +230,9 @@ class OrderNotesChannel < ApplicationCable::Channel
     order = Ordr.find(params[:order_id])
     stream_for order if can_access_order?(order)
   end
-  
+
   private
-  
+
   def can_access_order?(order)
     current_user.restaurants.include?(order.restaurant)
   end
@@ -251,7 +251,7 @@ end
       <i class="fas fa-plus"></i> Add Note
     </button>
   </div>
-  
+
   <div class="notes-list">
     <% @order.active_order_notes.by_priority.each do |note| %>
       <div class="note-card priority-<%= note.priority %> category-<%= note.category %>">
@@ -286,28 +286,28 @@ end
 <div class="modal fade" id="addNoteModal">
   <div class="modal-dialog">
     <div class="modal-content">
-      <%= form_with model: [@restaurant, @order, OrderNote.new], 
+      <%= form_with model: [@restaurant, @order, OrderNote.new],
                     local: true, class: "modal-form" do |form| %>
         <div class="modal-header">
           <h5 class="modal-title">Add Order Note</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        
+
         <div class="modal-body">
           <div class="mb-3">
             <%= form.label :category, class: "form-label" %>
-            <%= form.select :category, 
+            <%= form.select :category,
                 options_for_select([
                   ['🚨 Dietary Restrictions', 'dietary'],
                   ['👨‍🍳 Preparation Instructions', 'preparation'],
                   ['⏰ Timing Instructions', 'timing'],
                   ['💬 Customer Service', 'customer_service'],
                   ['🔧 Operational Notes', 'operational']
-                ]), 
-                { prompt: 'Select note type...' }, 
+                ]),
+                { prompt: 'Select note type...' },
                 { class: "form-select" } %>
           </div>
-          
+
           <div class="mb-3">
             <%= form.label :priority, class: "form-label" %>
             <%= form.select :priority,
@@ -320,15 +320,15 @@ end
                 { selected: 'medium' },
                 { class: "form-select" } %>
           </div>
-          
+
           <div class="mb-3">
             <%= form.label :content, "Note Content", class: "form-label" %>
-            <%= form.text_area :content, 
-                class: "form-control", 
-                rows: 4, 
+            <%= form.text_area :content,
+                class: "form-control",
+                rows: 4,
                 placeholder: "Enter special instructions, dietary restrictions, or other important notes..." %>
           </div>
-          
+
           <div class="row">
             <div class="col-md-4">
               <div class="form-check">
@@ -350,7 +350,7 @@ end
             </div>
           </div>
         </div>
-        
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           <%= form.submit "Add Note", class: "btn btn-primary" %>
@@ -384,25 +384,25 @@ class OrderNotePolicy < ApplicationPolicy
   def index?
     user_is_restaurant_employee?
   end
-  
+
   def create?
     user_is_restaurant_employee?
   end
-  
+
   def update?
     user_is_restaurant_employee? && (record.employee.user == user || user_is_manager?)
   end
-  
+
   def destroy?
     user_is_restaurant_employee? && (record.employee.user == user || user_is_manager?)
   end
-  
+
   private
-  
+
   def user_is_restaurant_employee?
     record.ordr.restaurant.employees.exists?(user: user)
   end
-  
+
   def user_is_manager?
     employee = record.ordr.restaurant.employees.find_by(user: user)
     employee&.manager? || employee&.admin?

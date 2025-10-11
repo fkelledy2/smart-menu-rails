@@ -2,11 +2,11 @@
 
 ## 📋 **Feature Overview**
 
-**Feature Name**: Customer Review System (Restaurant & Staff Reviews)  
-**Request Type**: New Feature Enhancement  
-**Priority**: High  
-**Requested By**: Customer Experience & Marketing Team  
-**Date**: October 11, 2025  
+**Feature Name**: Customer Review System (Restaurant & Staff Reviews)
+**Request Type**: New Feature Enhancement
+**Priority**: High
+**Requested By**: Customer Experience & Marketing Team
+**Date**: October 11, 2025
 
 ## 🎯 **User Story**
 
@@ -65,7 +65,7 @@ class CreateRestaurantReviews < ActiveRecord::Migration[7.2]
       t.references :restaurant, null: false, foreign_key: true
       t.references :user, null: true, foreign_key: true # null for anonymous
       t.references :ordr, null: true, foreign_key: true # link to specific order
-      
+
       # Rating categories (1-5 scale)
       t.integer :overall_rating, null: false
       t.integer :food_quality_rating, null: false
@@ -73,18 +73,18 @@ class CreateRestaurantReviews < ActiveRecord::Migration[7.2]
       t.integer :ambiance_rating, null: false
       t.integer :value_rating, null: false
       t.integer :cleanliness_rating, null: false
-      
+
       # Review content
       t.text :review_text, null: true
       t.boolean :would_recommend, default: true
       t.boolean :anonymous, default: false
-      
+
       # Metadata
       t.string :customer_name, null: true # for anonymous reviews
       t.datetime :visit_date
       t.boolean :verified_visit, default: false
       t.string :status, default: 'pending' # pending, approved, rejected
-      
+
       t.timestamps
     end
 
@@ -103,24 +103,24 @@ class CreateStaffReviews < ActiveRecord::Migration[7.2]
       t.references :user, null: true, foreign_key: true # null for anonymous
       t.references :ordr, null: true, foreign_key: true
       t.references :restaurant_review, null: true, foreign_key: true
-      
+
       # Rating categories (1-5 scale)
       t.integer :overall_rating, null: false
       t.integer :friendliness_rating, null: false
       t.integer :knowledge_rating, null: false
       t.integer :efficiency_rating, null: false
       t.integer :professionalism_rating, null: false
-      
+
       # Review content
       t.text :review_text, null: true
       t.boolean :exceptional_service, default: false
       t.boolean :anonymous, default: false
-      
+
       # Metadata
       t.string :customer_name, null: true
       t.datetime :visit_date
       t.string :status, default: 'pending'
-      
+
       t.timestamps
     end
 
@@ -139,30 +139,30 @@ class RestaurantReview < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :ordr, optional: true
   has_many :staff_reviews, dependent: :destroy
-  
+
   enum :status, { pending: 0, approved: 1, rejected: 2, flagged: 3 }
-  
+
   validates :overall_rating, :food_quality_rating, :service_rating,
             :ambiance_rating, :value_rating, :cleanliness_rating,
             presence: true, inclusion: { in: 1..5 }
-  
+
   validates :review_text, length: { maximum: 500 }, allow_blank: true
   validates :customer_name, presence: true, if: :anonymous?
-  
+
   scope :approved, -> { where(status: :approved) }
   scope :recent, -> { order(created_at: :desc) }
   scope :high_rated, -> { where('overall_rating >= ?', 4) }
   scope :low_rated, -> { where('overall_rating <= ?', 2) }
-  
+
   def average_rating
-    [overall_rating, food_quality_rating, service_rating, 
+    [overall_rating, food_quality_rating, service_rating,
      ambiance_rating, value_rating, cleanliness_rating].sum / 6.0
   end
-  
+
   def reviewer_name
     anonymous? ? (customer_name || 'Anonymous') : user&.name
   end
-  
+
   def verified?
     ordr.present? && verified_visit?
   end
@@ -175,25 +175,25 @@ class StaffReview < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :ordr, optional: true
   belongs_to :restaurant_review, optional: true
-  
+
   enum :status, { pending: 0, approved: 1, rejected: 2, flagged: 3 }
-  
+
   validates :overall_rating, :friendliness_rating, :knowledge_rating,
             :efficiency_rating, :professionalism_rating,
             presence: true, inclusion: { in: 1..5 }
-  
+
   validates :review_text, length: { maximum: 300 }, allow_blank: true
   validates :customer_name, presence: true, if: :anonymous?
-  
+
   scope :approved, -> { where(status: :approved) }
   scope :recent, -> { order(created_at: :desc) }
   scope :exceptional, -> { where(exceptional_service: true) }
-  
+
   def average_rating
     [overall_rating, friendliness_rating, knowledge_rating,
      efficiency_rating, professionalism_rating].sum / 5.0
   end
-  
+
   def reviewer_name
     anonymous? ? (customer_name || 'Anonymous') : user&.name
   end
@@ -203,15 +203,15 @@ end
 class Restaurant < ApplicationRecord
   has_many :restaurant_reviews, dependent: :destroy
   has_many :approved_reviews, -> { approved }, class_name: 'RestaurantReview'
-  
+
   def average_rating
     approved_reviews.average(:overall_rating) || 0
   end
-  
+
   def total_reviews_count
     approved_reviews.count
   end
-  
+
   def rating_distribution
     approved_reviews.group(:overall_rating).count
   end
@@ -220,11 +220,11 @@ end
 class Employee < ApplicationRecord
   has_many :staff_reviews, dependent: :destroy
   has_many :approved_staff_reviews, -> { approved }, class_name: 'StaffReview'
-  
+
   def average_rating
     approved_staff_reviews.average(:overall_rating) || 0
   end
-  
+
   def exceptional_service_count
     approved_staff_reviews.where(exceptional_service: true).count
   end
@@ -237,39 +237,39 @@ end
 class RestaurantReviewsController < ApplicationController
   before_action :set_restaurant
   before_action :set_review, only: [:show, :edit, :update, :destroy]
-  
+
   def index
     @reviews = @restaurant.approved_reviews.recent.includes(:user)
     @average_rating = @restaurant.average_rating
     @total_reviews = @restaurant.total_reviews_count
     @rating_distribution = @restaurant.rating_distribution
   end
-  
+
   def new
     @review = @restaurant.restaurant_reviews.build
     @order = current_user&.ordrs&.find(params[:order_id]) if params[:order_id]
     @staff_members = @restaurant.employees.active
   end
-  
+
   def create
     @review = @restaurant.restaurant_reviews.build(review_params)
     @review.user = current_user unless @review.anonymous?
     @review.visit_date = Date.current
     @review.verified_visit = @review.ordr.present?
-    
+
     if @review.save
       create_staff_reviews if staff_review_params.present?
       send_review_notifications
-      redirect_to restaurant_path(@restaurant), 
+      redirect_to restaurant_path(@restaurant),
                   notice: 'Thank you for your review! It will be published after moderation.'
     else
       @staff_members = @restaurant.employees.active
       render :new, status: :unprocessable_entity
     end
   end
-  
+
   private
-  
+
   def review_params
     params.require(:restaurant_review).permit(
       :overall_rating, :food_quality_rating, :service_rating,
@@ -277,15 +277,15 @@ class RestaurantReviewsController < ApplicationController
       :review_text, :would_recommend, :anonymous, :customer_name, :ordr_id
     )
   end
-  
+
   def staff_review_params
     params.permit(staff_reviews: {})[:staff_reviews] || {}
   end
-  
+
   def create_staff_reviews
     staff_review_params.each do |employee_id, staff_data|
       next if staff_data[:overall_rating].blank?
-      
+
       @restaurant.staff_reviews.create!(
         employee_id: employee_id,
         user: @review.anonymous? ? nil : current_user,
@@ -304,7 +304,7 @@ class RestaurantReviewsController < ApplicationController
       )
     end
   end
-  
+
   def send_review_notifications
     ReviewNotificationJob.perform_later(@review)
   end
@@ -323,11 +323,11 @@ end
   </div>
 
   <%= form_with model: [@restaurant, @review], local: true, class: "review-form" do |form| %>
-    
+
     <!-- Restaurant Rating Section -->
     <div class="restaurant-rating-section">
       <h4>Rate Your Experience</h4>
-      
+
       <div class="rating-categories">
         <div class="rating-item">
           <label>Overall Experience</label>
@@ -338,7 +338,7 @@ end
           </div>
           <%= form.hidden_field :overall_rating %>
         </div>
-        
+
         <div class="rating-item">
           <label>Food Quality</label>
           <div class="star-rating" data-controller="star-rating" data-field="food_quality_rating">
@@ -348,56 +348,56 @@ end
           </div>
           <%= form.hidden_field :food_quality_rating %>
         </div>
-        
+
         <!-- Similar for service_rating, ambiance_rating, value_rating, cleanliness_rating -->
       </div>
     </div>
-    
+
     <!-- Written Review Section -->
     <div class="written-review-section">
       <h4>Tell Us More (Optional)</h4>
-      <%= form.text_area :review_text, 
-          class: "form-control", 
-          rows: 4, 
+      <%= form.text_area :review_text,
+          class: "form-control",
+          rows: 4,
           placeholder: "Share details about your experience...",
           maxlength: 500 %>
       <small class="text-muted">Maximum 500 characters</small>
     </div>
-    
+
     <!-- Staff Reviews Section -->
     <div class="staff-reviews-section">
       <h4>Rate Our Staff (Optional)</h4>
       <p class="text-muted">Help us recognize exceptional service</p>
-      
+
       <% @staff_members.each do |employee| %>
         <div class="staff-review-card">
           <div class="staff-info">
-            <img src="<%= employee.image.present? ? employee.image : '/default-avatar.png' %>" 
+            <img src="<%= employee.image.present? ? employee.image : '/default-avatar.png' %>"
                  alt="<%= employee.name %>" class="staff-avatar">
             <div class="staff-details">
               <h6><%= employee.name %></h6>
               <span class="staff-role"><%= employee.role.humanize %></span>
             </div>
           </div>
-          
+
           <div class="staff-rating">
-            <div class="star-rating" data-controller="star-rating" 
+            <div class="star-rating" data-controller="star-rating"
                  data-field="staff_reviews[<%= employee.id %>][overall_rating]">
               <% (1..5).each do |rating| %>
                 <i class="far fa-star" data-rating="<%= rating %>"></i>
               <% end %>
             </div>
-            
+
             <div class="exceptional-service">
-              <input type="checkbox" 
-                     name="staff_reviews[<%= employee.id %>][exceptional_service]" 
-                     value="1" 
+              <input type="checkbox"
+                     name="staff_reviews[<%= employee.id %>][exceptional_service]"
+                     value="1"
                      id="exceptional_<%= employee.id %>">
               <label for="exceptional_<%= employee.id %>">
                 <i class="fas fa-star text-warning"></i> Exceptional Service
               </label>
             </div>
-            
+
             <textarea name="staff_reviews[<%= employee.id %>][review_text]"
                       class="form-control mt-2"
                       placeholder="Specific feedback for <%= employee.name %>..."
@@ -406,30 +406,30 @@ end
         </div>
       <% end %>
     </div>
-    
+
     <!-- Review Options -->
     <div class="review-options">
       <div class="form-check">
         <%= form.check_box :would_recommend, class: "form-check-input" %>
-        <%= form.label :would_recommend, "I would recommend this restaurant to others", 
+        <%= form.label :would_recommend, "I would recommend this restaurant to others",
                        class: "form-check-label" %>
       </div>
-      
+
       <div class="form-check">
         <%= form.check_box :anonymous, class: "form-check-input" %>
         <%= form.label :anonymous, "Submit anonymously", class: "form-check-label" %>
       </div>
-      
+
       <div class="anonymous-name" style="display: none;">
-        <%= form.text_field :customer_name, 
-            class: "form-control", 
+        <%= form.text_field :customer_name,
+            class: "form-control",
             placeholder: "Your name (for anonymous review)" %>
       </div>
     </div>
-    
+
     <!-- Hidden fields -->
     <%= form.hidden_field :ordr_id, value: @order&.id %>
-    
+
     <div class="form-actions">
       <button type="button" class="btn btn-secondary">Cancel</button>
       <%= form.submit "Submit Review", class: "btn btn-primary" %>
@@ -456,13 +456,13 @@ end
         </div>
         <p><%= @total_reviews %> reviews</p>
       </div>
-      
+
       <div class="rating-breakdown">
         <% (1..5).reverse_each do |rating| %>
           <div class="rating-bar">
             <span><%= rating %> star</span>
             <div class="progress">
-              <div class="progress-bar" 
+              <div class="progress-bar"
                    style="width: <%= (@rating_distribution[rating] || 0) * 100 / @total_reviews %>%"></div>
             </div>
             <span><%= @rating_distribution[rating] || 0 %></span>
@@ -471,7 +471,7 @@ end
       </div>
     </div>
   </div>
-  
+
   <div class="reviews-list">
     <% @reviews.each do |review| %>
       <div class="review-card">
@@ -492,19 +492,19 @@ end
             <small class="text-muted"><%= time_ago_in_words(review.created_at) %> ago</small>
           </div>
         </div>
-        
+
         <div class="review-content">
           <% if review.review_text.present? %>
             <p><%= simple_format(review.review_text) %></p>
           <% end %>
-          
+
           <div class="review-categories">
             <span class="category-rating">Food: <%= review.food_quality_rating %>/5</span>
             <span class="category-rating">Service: <%= review.service_rating %>/5</span>
             <span class="category-rating">Ambiance: <%= review.ambiance_rating %>/5</span>
             <span class="category-rating">Value: <%= review.value_rating %>/5</span>
           </div>
-          
+
           <% if review.would_recommend? %>
             <div class="recommendation">
               <i class="fas fa-thumbs-up text-success"></i>
@@ -512,7 +512,7 @@ end
             </div>
           <% end %>
         </div>
-        
+
         <!-- Staff Reviews for this visit -->
         <% if review.staff_reviews.approved.any? %>
           <div class="staff-reviews-summary">
@@ -607,23 +607,23 @@ class ReviewModerator
       review.update(status: :approved)
       return
     end
-    
+
     # Flag potentially problematic content
     if contains_inappropriate_content?(review.review_text)
       review.update(status: :flagged)
       ReviewModerationJob.perform_later(review)
       return
     end
-    
+
     # Default to pending for manual review
     review.update(status: :pending)
   end
-  
+
   private
-  
+
   def self.contains_inappropriate_content?(text)
     return false if text.blank?
-    
+
     inappropriate_words = Rails.application.config.inappropriate_words
     text.downcase.split.any? { |word| inappropriate_words.include?(word) }
   end
@@ -645,13 +645,13 @@ class Analytics::ReviewAnalytics
       staff_performance: staff_ratings(restaurant)
     }
   end
-  
+
   def self.monthly_rating_trend(restaurant)
     restaurant.approved_reviews
               .group_by_month(:created_at, last: 12)
               .average(:overall_rating)
   end
-  
+
   def self.category_ratings(restaurant)
     reviews = restaurant.approved_reviews
     {
@@ -662,7 +662,7 @@ class Analytics::ReviewAnalytics
       cleanliness: reviews.average(:cleanliness_rating)
     }
   end
-  
+
   def self.staff_ratings(restaurant)
     restaurant.employees.includes(:approved_staff_reviews)
               .map do |employee|
@@ -692,10 +692,10 @@ class RestaurantReviewTest < ActiveSupport::TestCase
       value_rating: 5,
       cleanliness_rating: 4
     )
-    
+
     assert_equal 4.5, review.average_rating
   end
-  
+
   test "should require customer name for anonymous reviews" do
     review = RestaurantReview.new(anonymous: true)
     assert_not review.valid?

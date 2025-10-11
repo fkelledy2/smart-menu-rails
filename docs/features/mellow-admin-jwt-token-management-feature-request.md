@@ -2,17 +2,17 @@
 
 ## 📋 **Feature Overview**
 
-**Feature Name**: Mellow Admin JWT Access Token Management System  
-**Priority**: High  
-**Category**: Authentication & Authorization  
-**Estimated Effort**: Large (8-12 weeks)  
-**Target Release**: Q1 2026  
+**Feature Name**: Mellow Admin JWT Access Token Management System
+**Priority**: High
+**Category**: Authentication & Authorization
+**Estimated Effort**: Large (8-12 weeks)
+**Target Release**: Q1 2026
 
 ## 🎯 **User Story**
 
-**As a** mellow menu admin user (someone who has an @mellow.menu email address)  
-**I want to** be able to configure and send a JWT access token to a restaurant manager  
-**So that** the restaurant can access mellow.menu via the exposed SWAGGER-based REST APIs  
+**As a** mellow menu admin user (someone who has an @mellow.menu email address)
+**I want to** be able to configure and send a JWT access token to a restaurant manager
+**So that** the restaurant can access mellow.menu via the exposed SWAGGER-based REST APIs
 
 ## 📖 **Detailed Requirements**
 
@@ -77,7 +77,7 @@ CREATE TABLE admin_jwt_tokens (
   usage_count INTEGER DEFAULT 0,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL,
-  
+
   FOREIGN KEY (admin_user_id) REFERENCES users(id),
   FOREIGN KEY (restaurant_id) REFERENCES restaurants(id),
   INDEX idx_token_hash (token_hash),
@@ -95,7 +95,7 @@ CREATE TABLE jwt_token_usage_logs (
   user_agent TEXT,
   response_status INTEGER,
   created_at TIMESTAMP NOT NULL,
-  
+
   FOREIGN KEY (jwt_token_id) REFERENCES admin_jwt_tokens(id),
   INDEX idx_jwt_token_id (jwt_token_id),
   INDEX idx_created_at (created_at)
@@ -399,8 +399,8 @@ GET    /api/v1/restaurants/:id/analytics/menu_performance
 
 ---
 
-**Created**: October 11, 2025  
-**Last Updated**: October 11, 2025  
-**Status**: Draft  
-**Assigned To**: TBD  
+**Created**: October 11, 2025
+**Last Updated**: October 11, 2025
+**Status**: Draft
+**Assigned To**: TBD
 **Review Date**: TBD

@@ -2,11 +2,11 @@
 
 ## 📋 **Feature Overview**
 
-**Feature Name**: Order Item Quantity Selection  
-**Request Type**: User Experience Enhancement  
-**Priority**: High  
-**Requested By**: Customer Experience & Operations Team  
-**Date**: October 11, 2025  
+**Feature Name**: Order Item Quantity Selection
+**Request Type**: User Experience Enhancement
+**Priority**: High
+**Requested By**: Customer Experience & Operations Team
+**Date**: October 11, 2025
 
 ## 🎯 **User Story**
 
@@ -58,14 +58,14 @@ class AddQuantityToOrderItems < ActiveRecord::Migration[7.2]
   def change
     add_column :order_items, :quantity, :integer, default: 1, null: false
     add_column :order_items, :unit_price, :decimal, precision: 8, scale: 2
-    
+
     # Update existing records
     OrderItem.update_all(quantity: 1)
-    
+
     # Add constraints
     add_check_constraint :order_items, "quantity > 0", name: "quantity_positive"
     add_check_constraint :order_items, "quantity <= 99", name: "quantity_reasonable"
-    
+
     add_index :order_items, [:ordr_id, :menu_item_id, :quantity]
   end
 end
@@ -77,31 +77,31 @@ end
 class OrderItem < ApplicationRecord
   belongs_to :ordr
   belongs_to :menu_item
-  
-  validates :quantity, presence: true, 
-                      numericality: { 
-                        greater_than: 0, 
+
+  validates :quantity, presence: true,
+                      numericality: {
+                        greater_than: 0,
                         less_than_or_equal_to: 99,
-                        only_integer: true 
+                        only_integer: true
                       }
   validates :unit_price, presence: true, numericality: { greater_than: 0 }
-  
+
   before_validation :set_unit_price, on: :create
   before_save :calculate_total_price
-  
+
   scope :by_quantity, ->(qty) { where(quantity: qty) }
   scope :high_quantity, -> { where('quantity >= ?', 5) }
-  
+
   def total_price
     (unit_price || 0) * (quantity || 1)
   end
-  
+
   def increase_quantity(amount = 1)
     self.quantity += amount
     calculate_total_price
     save
   end
-  
+
   def decrease_quantity(amount = 1)
     new_quantity = quantity - amount
     if new_quantity <= 0
@@ -112,13 +112,13 @@ class OrderItem < ApplicationRecord
       save
     end
   end
-  
+
   private
-  
+
   def set_unit_price
     self.unit_price = menu_item.price if menu_item
   end
-  
+
   def calculate_total_price
     self.price = total_price
   end
@@ -127,18 +127,18 @@ end
 # app/models/ordr.rb - Update existing model
 class Ordr < ApplicationRecord
   has_many :order_items, dependent: :destroy
-  
+
   def total_items_count
     order_items.sum(:quantity)
   end
-  
+
   def total_price_with_quantities
     order_items.sum { |item| item.total_price }
   end
-  
+
   def add_item_with_quantity(menu_item, quantity = 1)
     existing_item = order_items.find_by(menu_item: menu_item)
-    
+
     if existing_item
       existing_item.increase_quantity(quantity)
     else
@@ -158,20 +158,20 @@ end
 class OrderItemsController < ApplicationController
   before_action :set_order_item, only: [:show, :update, :destroy]
   before_action :set_order, only: [:create, :update_quantity]
-  
+
   def create
     @order_item = @order.order_items.build(order_item_params)
-    
+
     # Check for existing item and merge quantities
     existing_item = @order.order_items.find_by(menu_item: @order_item.menu_item)
-    
+
     if existing_item
       existing_item.increase_quantity(@order_item.quantity)
       @order_item = existing_item
     else
       @order_item.save
     end
-    
+
     respond_to do |format|
       if @order_item.persisted?
         format.json { render json: order_response_data, status: :created }
@@ -182,11 +182,11 @@ class OrderItemsController < ApplicationController
       end
     end
   end
-  
+
   def update_quantity
     @order_item = @order.order_items.find(params[:id])
     new_quantity = params[:quantity].to_i
-    
+
     if new_quantity <= 0
       @order_item.destroy
       message = 'Item removed from order.'
@@ -194,19 +194,19 @@ class OrderItemsController < ApplicationController
       @order_item.update(quantity: new_quantity)
       message = 'Quantity updated successfully.'
     end
-    
+
     respond_to do |format|
       format.json { render json: order_response_data }
       format.html { redirect_to @order, notice: message }
     end
   end
-  
+
   private
-  
+
   def order_item_params
     params.require(:order_item).permit(:menu_item_id, :quantity, :special_instructions)
   end
-  
+
   def order_response_data
     {
       order_item: @order_item,
@@ -228,34 +228,34 @@ end
     <p class="description"><%= menu_item.description %></p>
     <div class="price">$<%= menu_item.price %></div>
   </div>
-  
+
   <div class="quantity-controls">
     <label class="form-label">Quantity:</label>
     <div class="quantity-input-group">
-      <button type="button" class="btn btn-outline-secondary btn-sm" 
+      <button type="button" class="btn btn-outline-secondary btn-sm"
               data-action="click->quantity-selector#decrease">
         <i class="fas fa-minus"></i>
       </button>
-      
-      <input type="number" 
-             class="form-control quantity-input" 
-             value="1" 
-             min="1" 
+
+      <input type="number"
+             class="form-control quantity-input"
+             value="1"
+             min="1"
              max="99"
              data-quantity-selector-target="input"
              data-action="change->quantity-selector#updateTotal">
-      
+
       <button type="button" class="btn btn-outline-secondary btn-sm"
               data-action="click->quantity-selector#increase">
         <i class="fas fa-plus"></i>
       </button>
     </div>
-    
+
     <div class="item-total">
       Total: $<span data-quantity-selector-target="total"><%= menu_item.price %></span>
     </div>
   </div>
-  
+
   <button class="btn btn-primary add-to-order-btn"
           data-action="click->quantity-selector#addToOrder">
     Add to Order
@@ -273,27 +273,27 @@ end
         <h6><%= item.menu_item.name %></h6>
         <div class="unit-price">$<%= item.unit_price %> each</div>
       </div>
-      
+
       <div class="quantity-controls">
         <button type="button" class="btn btn-sm btn-outline-secondary"
                 data-action="click->cart-manager#decreaseQuantity"
                 data-item-id="<%= item.id %>">
           <i class="fas fa-minus"></i>
         </button>
-        
+
         <span class="quantity-display"><%= item.quantity %></span>
-        
+
         <button type="button" class="btn btn-sm btn-outline-secondary"
                 data-action="click->cart-manager#increaseQuantity"
                 data-item-id="<%= item.id %>">
           <i class="fas fa-plus"></i>
         </button>
       </div>
-      
+
       <div class="line-total">
         $<span data-cart-manager-target="lineTotal"><%= item.total_price %></span>
       </div>
-      
+
       <button type="button" class="btn btn-sm btn-outline-danger"
               data-action="click->cart-manager#removeItem"
               data-item-id="<%= item.id %>">
@@ -301,7 +301,7 @@ end
       </button>
     </div>
   <% end %>
-  
+
   <div class="cart-summary">
     <div class="total-items">
       Total Items: <span data-cart-manager-target="totalItems"><%= @order.total_items_count %></span>
@@ -322,9 +322,9 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["input", "total"]
-  static values = { 
+  static values = {
     unitPrice: Number,
-    menuItemId: Number 
+    menuItemId: Number
   }
 
   connect() {
@@ -355,7 +355,7 @@ export default class extends Controller {
 
   async addToOrder() {
     const quantity = parseInt(this.inputTarget.value)
-    
+
     try {
       const response = await fetch('/order_items', {
         method: 'POST',
@@ -370,7 +370,7 @@ export default class extends Controller {
           }
         })
       })
-      
+
       if (response.ok) {
         const data = await response.json()
         this.updateCartDisplay(data)
@@ -393,7 +393,7 @@ export default class extends Controller {
     if (cartCounter) {
       cartCounter.textContent = data.items_count
     }
-    
+
     const orderTotal = document.querySelector('.order-total')
     if (orderTotal) {
       orderTotal.textContent = `$${data.order_total}`
@@ -448,14 +448,14 @@ export default class extends Controller {
 
       if (response.ok) {
         const data = await response.json()
-        
+
         if (newQuantity <= 0) {
           itemElement.remove()
         } else {
           quantityDisplay.textContent = newQuantity
           this.updateLineTotal(itemElement, data.order_item)
         }
-        
+
         this.updateOrderTotals(data)
       }
     } catch (error) {
@@ -487,7 +487,7 @@ export default class extends Controller {
 # app/models/order_item.rb - Enhanced validations
 class OrderItem < ApplicationRecord
   validates :quantity, presence: true,
-                      numericality: { 
+                      numericality: {
                         greater_than: 0,
                         less_than_or_equal_to: 99,
                         only_integer: true
@@ -577,7 +577,7 @@ class OrderItemTest < ActiveSupport::TestCase
     item = order_items(:one)
     original_quantity = item.quantity
     item.increase_quantity(2)
-    
+
     assert_equal original_quantity + 2, item.quantity
     assert_equal item.unit_price * item.quantity, item.price
   end
@@ -590,16 +590,16 @@ end
 class QuantitySelectionTest < ActionDispatch::IntegrationTest
   test "customer can add multiple items with quantity" do
     menu_item = menu_items(:pasta)
-    
+
     post order_items_path, params: {
       order_item: {
         menu_item_id: menu_item.id,
         quantity: 3
       }
     }, as: :json
-    
+
     assert_response :created
-    
+
     response_data = JSON.parse(response.body)
     assert_equal 3, response_data['order_item']['quantity']
     assert_equal menu_item.price * 3, response_data['order_item']['price']
