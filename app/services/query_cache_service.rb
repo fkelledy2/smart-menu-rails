@@ -16,7 +16,7 @@ class QueryCacheService
     daily_stats: 6.hours,
     monthly_reports: 24.hours,
     user_analytics: 30.minutes,
-    restaurant_analytics: 20.minutes
+    restaurant_analytics: 20.minutes,
   }.freeze
 
   class << self
@@ -29,7 +29,7 @@ class QueryCacheService
   # @param force_refresh [Boolean] Force cache refresh
   # @param &block [Block] Block to execute if cache miss
   # @return [Object] Cached or computed result
-  def fetch(cache_key, cache_type: :default, force_refresh: false, &block)
+  def fetch(cache_key, cache_type: :default, force_refresh: false)
     full_key = build_cache_key(cache_key, cache_type)
     ttl = CACHE_DURATIONS[cache_type] || 5.minutes
 
@@ -39,19 +39,19 @@ class QueryCacheService
 
     Rails.cache.fetch(full_key, expires_in: ttl) do
       Rails.logger.info "[QueryCache] Cache miss for #{full_key}, executing query"
-      
+
       start_time = Time.current
-      result = block.call
+      result = yield
       execution_time = Time.current - start_time
-      
+
       Rails.logger.info "[QueryCache] Query executed in #{execution_time.round(3)}s, cached for #{ttl}"
-      
+
       # Track cache performance
       track_cache_performance(cache_type, execution_time, :miss)
-      
+
       result
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "[QueryCache] Error executing query for #{full_key}: #{e.message}"
     track_cache_performance(cache_type, 0, :error)
     raise
@@ -81,16 +81,14 @@ class QueryCacheService
   # @param cache_configs [Array<Hash>] Array of cache configurations
   def warm_cache(cache_configs = [])
     Rails.logger.info "[QueryCache] Starting cache warming for #{cache_configs.size} entries"
-    
+
     cache_configs.each do |config|
-      begin
-        fetch(config[:key], cache_type: config[:type], &config[:block])
-      rescue => e
-        Rails.logger.error "[QueryCache] Failed to warm cache for #{config[:key]}: #{e.message}"
-      end
+      fetch(config[:key], cache_type: config[:type], &config[:block])
+    rescue StandardError => e
+      Rails.logger.error "[QueryCache] Failed to warm cache for #{config[:key]}: #{e.message}"
     end
-    
-    Rails.logger.info "[QueryCache] Cache warming completed"
+
+    Rails.logger.info '[QueryCache] Cache warming completed'
   end
 
   # Get cache statistics
@@ -103,7 +101,7 @@ class QueryCacheService
       cache_misses: cache_performance_data[:cache_misses],
       errors: cache_performance_data[:errors],
       average_query_time: calculate_average_query_time,
-      cache_size_estimate: estimate_cache_size
+      cache_size_estimate: estimate_cache_size,
     }
   end
 
@@ -123,14 +121,14 @@ class QueryCacheService
   # @param result_type [Symbol] :hit, :miss, or :error
   def track_cache_performance(cache_type, execution_time, result_type)
     performance_data = cache_performance_data
-    
+
     performance_data[:total_requests] += 1
     performance_data[:"cache_#{result_type}s"] += 1
     performance_data[:total_query_time] += execution_time
     performance_data[:by_type][cache_type] ||= { requests: 0, total_time: 0 }
     performance_data[:by_type][cache_type][:requests] += 1
     performance_data[:by_type][cache_type][:total_time] += execution_time
-    
+
     # Store updated performance data
     Rails.cache.write('query_cache:performance', performance_data, expires_in: 1.hour)
   end
@@ -145,7 +143,7 @@ class QueryCacheService
         cache_misses: 0,
         errors: 0,
         total_query_time: 0.0,
-        by_type: {}
+        by_type: {},
       }
     end
   end
@@ -156,7 +154,7 @@ class QueryCacheService
     data = cache_performance_data
     total = data[:cache_hits] + data[:cache_misses]
     return 0.0 if total.zero?
-    
+
     (data[:cache_hits].to_f / total * 100).round(2)
   end
 
@@ -165,7 +163,7 @@ class QueryCacheService
   def calculate_average_query_time
     data = cache_performance_data
     return 0.0 if data[:cache_misses].zero?
-    
+
     (data[:total_query_time] / data[:cache_misses]).round(4)
   end
 

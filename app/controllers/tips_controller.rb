@@ -2,7 +2,7 @@ class TipsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_tip, only: %i[show edit update destroy]
   before_action :return_url
-  
+
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
@@ -41,23 +41,23 @@ class TipsController < ApplicationController
   def create
     @tip = Tip.new(tip_params)
     authorize @tip
-      respond_to do |format|
-        if @tip.save
-          format.html do
-            redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.created')
-          end
-          format.json { render :show, status: :created, location: @tip }
-        else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @tip.errors, status: :unprocessable_entity }
+    respond_to do |format|
+      if @tip.save
+        format.html do
+          redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.created')
         end
+        format.json { render :show, status: :created, location: @tip }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @tip.errors, status: :unprocessable_entity }
       end
+    end
   end
 
   # PATCH/PUT /tips/1 or /tips/1.json
   def update
     authorize @tip
-    
+
     respond_to do |format|
       if @tip.update(tip_params)
         format.html do
@@ -74,7 +74,7 @@ class TipsController < ApplicationController
   # DELETE /tips/1 or /tips/1.json
   def destroy
     authorize @tip
-    
+
     @tip.update(archived: true)
     respond_to do |format|
       format.html { redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.deleted') }

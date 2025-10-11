@@ -11,17 +11,17 @@ SimpleCov.start 'rails' do
   add_filter '/test/'
   add_filter '/spec/'
   add_filter '/lib/tasks/'
-  
+
   # Track all Ruby files in app directory
   track_files 'app/**/*.rb'
-  
+
   # Enable branch coverage for more detailed analysis
   enable_coverage :branch
-  
+
   # Merge results from different test runs (RSpec + Minitest)
   use_merging true
   merge_timeout 3600 # 1 hour
-  
+
   # Coverage groups for better organization
   add_group 'Controllers', 'app/controllers'
   add_group 'Models', 'app/models'
@@ -29,7 +29,7 @@ SimpleCov.start 'rails' do
   add_group 'Helpers', 'app/helpers'
   add_group 'Views', 'app/views'
   add_group 'Policies', 'app/policies'
-  
+
   # Minimum coverage thresholds
   if ENV['COVERAGE_MIN']
     minimum_coverage ENV['COVERAGE_MIN'].to_i

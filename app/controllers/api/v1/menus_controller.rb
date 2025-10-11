@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
 class Api::V1::MenusController < Api::V1::BaseController
-  before_action :set_restaurant, only: [:index, :create]
-  before_action :set_menu, only: [:show, :update, :destroy]
-  before_action :authenticate_user!, except: [:show, :index]
+  before_action :set_restaurant, only: %i[index create]
+  before_action :set_menu, only: %i[show update destroy]
+  before_action :authenticate_user!, except: %i[show index]
 
   # GET /api/v1/restaurants/:restaurant_id/menus
   def index
     @menus = @restaurant.menus.includes(:menusections)
-    
+
     render json: @menus.map { |menu| menu_json(menu) }
   end
 
   # GET /api/v1/menus/:id
   def show
     authorize @menu if current_user
-    
+
     render json: menu_with_items_json(@menu)
   end
 
@@ -27,7 +27,8 @@ class Api::V1::MenusController < Api::V1::BaseController
     if @menu.save
       render json: menu_json(@menu), status: :created
     else
-      render json: { error: { code: 'VALIDATION_ERROR', message: @menu.errors.full_messages.join(', ') } }, status: :unprocessable_entity
+      render json: { error: { code: 'VALIDATION_ERROR', message: @menu.errors.full_messages.join(', ') } },
+             status: :unprocessable_entity
     end
   end
 
@@ -38,7 +39,8 @@ class Api::V1::MenusController < Api::V1::BaseController
     if @menu.update(menu_params)
       render json: menu_json(@menu)
     else
-      render json: { error: { code: 'VALIDATION_ERROR', message: @menu.errors.full_messages.join(', ') } }, status: :unprocessable_entity
+      render json: { error: { code: 'VALIDATION_ERROR', message: @menu.errors.full_messages.join(', ') } },
+             status: :unprocessable_entity
     end
   end
 
@@ -75,7 +77,7 @@ class Api::V1::MenusController < Api::V1::BaseController
       restaurant_id: menu.restaurant_id,
       active: menu.active?,
       created_at: menu.created_at,
-      updated_at: menu.updated_at
+      updated_at: menu.updated_at,
     }
   end
 
@@ -99,12 +101,12 @@ class Api::V1::MenusController < Api::V1::BaseController
             dietary_info: {
               vegetarian: item.vegetarian?,
               vegan: item.vegan?,
-              gluten_free: item.gluten_free?
+              gluten_free: item.gluten_free?,
             },
             created_at: item.created_at,
-            updated_at: item.updated_at
+            updated_at: item.updated_at,
           }
-        end
+        end,
       }
     end
     menu_data

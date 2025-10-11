@@ -57,17 +57,17 @@ class ApplicationController < ActionController::Base
   def debug_request_in_test
     # Debug logging removed - was for API routing investigation
   end
-  
+
   def redirect_to_onboarding_if_needed
     return unless user_signed_in?
     return if devise_controller?
     return if controller_name == 'onboarding'
     return if request.xhr? # Skip for AJAX requests
-    
+
     # Skip for certain controllers that should always be accessible
     skip_controllers = %w[home sessions registrations passwords confirmations unlocks]
     return if skip_controllers.include?(controller_name)
-    
+
     # Redirect to onboarding if user needs it
     if current_user.needs_onboarding?
       redirect_to onboarding_path
@@ -77,13 +77,12 @@ class ApplicationController < ActionController::Base
   # Admin authorization helper
   def ensure_admin!
     unless current_user&.admin?
-      flash[:alert] = "Access denied. Admin privileges required."
+      flash[:alert] = 'Access denied. Admin privileges required.'
       redirect_to root_path
     end
   end
 
   # Cache warming helpers for controllers
-  protected
 
   # Warm cache for user's restaurants and related data
   def warm_user_cache_async
@@ -91,7 +90,7 @@ class ApplicationController < ActionController::Base
 
     CacheWarmingJob.perform_later(
       user_id: current_user.id,
-      warm_type: 'user_restaurants'
+      warm_type: 'user_restaurants',
     )
   end
 
@@ -99,7 +98,7 @@ class ApplicationController < ActionController::Base
   def warm_restaurant_cache_async(restaurant_id)
     CacheWarmingJob.perform_later(
       restaurant_id: restaurant_id,
-      warm_type: 'restaurant_full'
+      warm_type: 'restaurant_full',
     )
   end
 
@@ -107,7 +106,7 @@ class ApplicationController < ActionController::Base
   def warm_menu_cache_async(menu_id)
     CacheWarmingJob.perform_later(
       menu_id: menu_id,
-      warm_type: 'menu_full'
+      warm_type: 'menu_full',
     )
   end
 
@@ -115,7 +114,7 @@ class ApplicationController < ActionController::Base
   def warm_active_orders_cache_async(restaurant_id)
     CacheWarmingJob.perform_later(
       restaurant_id: restaurant_id,
-      warm_type: 'active_orders'
+      warm_type: 'active_orders',
     )
   end
 
@@ -123,18 +122,18 @@ class ApplicationController < ActionController::Base
   def should_warm_cache?
     # Only warm cache for authenticated users
     return false unless current_user
-    
+
     # Don't warm cache for AJAX requests
     return false if request.xhr?
-    
+
     # Don't warm cache too frequently (check session timestamp)
     last_warm = session[:last_cache_warm]
-    return false if last_warm && Time.parse(last_warm) > 5.minutes.ago
-    
+    return false if last_warm && Time.zone.parse(last_warm) > 5.minutes.ago
+
     # Update session timestamp
     session[:last_cache_warm] = Time.current.iso8601
     true
-  rescue
+  rescue StandardError
     # If there's any error with session handling, default to not warming
     false
   end

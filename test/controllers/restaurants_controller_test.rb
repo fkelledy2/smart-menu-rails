@@ -29,8 +29,8 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should create restaurant' do
-    post restaurants_url, params: { 
-      restaurant: { 
+    post restaurants_url, params: {
+      restaurant: {
         name: 'Test Restaurant',
         description: 'Test Description',
         address1: '123 Test St',
@@ -40,19 +40,19 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
         country: 'Test Country',
         capacity: 50,
         status: 'active',
-        user_id: @user.id
-      } 
+        user_id: @user.id,
+      },
     }
     assert_response :success
   end
 
   test 'should handle create with invalid data' do
     assert_no_difference('Restaurant.count') do
-      post restaurants_url, params: { 
-        restaurant: { 
+      post restaurants_url, params: {
+        restaurant: {
           name: '', # Invalid - name is required
-          description: 'Test Description'
-        } 
+          description: 'Test Description',
+        },
       }
     end
     assert_response :success
@@ -75,18 +75,18 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should update restaurant' do
     patch restaurant_url(@restaurant),
-          params: { restaurant: { 
+          params: { restaurant: {
             name: 'Updated Restaurant Name',
             description: 'Updated Description',
-            address1: @restaurant.address1, 
-            address2: @restaurant.address2, 
+            address1: @restaurant.address1,
+            address2: @restaurant.address2,
             capacity: @restaurant.capacity,
-            city: @restaurant.city, 
-            country: @restaurant.country, 
-            postcode: @restaurant.postcode, 
-            state: @restaurant.state, 
-            status: @restaurant.status, 
-            user_id: @restaurant.user_id 
+            city: @restaurant.city,
+            country: @restaurant.country,
+            postcode: @restaurant.postcode,
+            state: @restaurant.state,
+            status: @restaurant.status,
+            user_id: @restaurant.user_id,
           } }
     assert_response :success
   end
@@ -117,9 +117,9 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get analytics with date range' do
-    get analytics_restaurant_url(@restaurant), params: { 
+    get analytics_restaurant_url(@restaurant), params: {
       start_date: 7.days.ago.to_date.to_s,
-      end_date: Date.current.to_s
+      end_date: Date.current.to_s,
     }
     assert_response :success
   end
@@ -160,21 +160,21 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
 
   # JSON Format Tests
   test 'should handle json format for create' do
-    post restaurants_url, params: { 
-      restaurant: { 
+    post restaurants_url, params: {
+      restaurant: {
         name: 'JSON Test Restaurant',
         description: 'JSON Test Description',
         address1: '123 JSON St',
         city: 'JSON City',
-        user_id: @user.id
-      } 
+        user_id: @user.id,
+      },
     }, as: :json
     assert_response :success
   end
 
   test 'should handle json format for update' do
-    patch restaurant_url(@restaurant), params: { 
-      restaurant: { name: 'JSON Updated Name' } 
+    patch restaurant_url(@restaurant), params: {
+      restaurant: { name: 'JSON Updated Name' },
     }, as: :json
     assert_response :success
   end
@@ -193,13 +193,13 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
 
   # Parameter Handling Tests
   test 'should filter restaurant parameters correctly' do
-    post restaurants_url, params: { 
-      restaurant: { 
+    post restaurants_url, params: {
+      restaurant: {
         name: 'Param Test Restaurant',
         description: 'Test Description',
-        user_id: @user.id
+        user_id: @user.id,
       },
-      malicious_param: 'should_be_filtered'
+      malicious_param: 'should_be_filtered',
     }
     assert_response :success
   end
@@ -233,15 +233,15 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   test 'should handle cache warming' do
     get restaurant_url(@restaurant)
     assert_response :success
-    
+
     # Second request should use cache
     get restaurant_url(@restaurant)
     assert_response :success
   end
 
   test 'should invalidate cache on update' do
-    patch restaurant_url(@restaurant), params: { 
-      restaurant: { name: 'Cache Test Update' } 
+    patch restaurant_url(@restaurant), params: {
+      restaurant: { name: 'Cache Test Update' },
     }
     assert_response :success
   end
@@ -249,25 +249,25 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   # Complex Workflow Tests
   test 'should handle complete restaurant lifecycle' do
     # Create
-    post restaurants_url, params: { 
-      restaurant: { 
+    post restaurants_url, params: {
+      restaurant: {
         name: 'Lifecycle Test Restaurant',
         description: 'Test Description',
-        user_id: @user.id
-      } 
+        user_id: @user.id,
+      },
     }
     assert_response :success
-    
+
     # Read
     get restaurant_url(@restaurant)
     assert_response :success
-    
+
     # Update
-    patch restaurant_url(@restaurant), params: { 
-      restaurant: { name: 'Updated Lifecycle Restaurant' } 
+    patch restaurant_url(@restaurant), params: {
+      restaurant: { name: 'Updated Lifecycle Restaurant' },
     }
     assert_response :success
-    
+
     # Archive (destroy)
     delete restaurant_url(@restaurant)
     assert_response :success

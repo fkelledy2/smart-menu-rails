@@ -21,7 +21,7 @@ class PerformanceMonitoringService
       cache_hits: 0,
       cache_misses: 0,
       memory_usage: [],
-      started_at: Time.current
+      started_at: Time.current,
     }
     @mutex = Mutex.new
   end
@@ -37,7 +37,7 @@ class PerformanceMonitoringService
         method: method,
         path: path,
         timestamp: Time.current,
-        slow: duration > SLOW_REQUEST_THRESHOLD
+        slow: duration > SLOW_REQUEST_THRESHOLD,
       }
 
       # Keep only last 1000 requests to prevent memory bloat
@@ -58,7 +58,7 @@ class PerformanceMonitoringService
         duration: duration.round(2),
         name: name,
         timestamp: Time.current,
-        slow: duration > SLOW_QUERY_THRESHOLD
+        slow: duration > SLOW_QUERY_THRESHOLD,
       }
 
       # Keep only last 500 queries
@@ -85,11 +85,11 @@ class PerformanceMonitoringService
     return unless defined?(GC)
 
     memory_mb = (GC.stat[:heap_allocated_pages] * GC::INTERNAL_CONSTANTS[:HEAP_PAGE_SIZE]) / (1024 * 1024)
-    
+
     @mutex.synchronize do
       @metrics[:memory_usage] << {
         memory_mb: memory_mb.round(2),
-        timestamp: Time.current
+        timestamp: Time.current,
       }
 
       # Keep only last 100 memory samples
@@ -114,10 +114,10 @@ class PerformanceMonitoringService
         cache_stats: {
           hits: @metrics[:cache_hits],
           misses: @metrics[:cache_misses],
-          hit_rate: cache_hit_rate
+          hit_rate: cache_hit_rate,
         },
         memory_usage: @metrics[:memory_usage].last(20),
-        uptime: Time.current - @metrics[:started_at]
+        uptime: Time.current - @metrics[:started_at],
       }
     end
   end
@@ -134,7 +134,7 @@ class PerformanceMonitoringService
             count: instances.size,
             avg_duration: (instances.sum { |i| i[:duration] } / instances.size).round(2),
             max_duration: instances.map { |i| i[:duration] }.max,
-            last_seen: instances.map { |i| i[:timestamp] }.max
+            last_seen: instances.map { |i| i[:timestamp] }.max,
           }
         end
         .sort_by { |q| -q[:avg_duration] }
@@ -148,7 +148,7 @@ class PerformanceMonitoringService
       return {} if @metrics[:requests].empty?
 
       durations = @metrics[:requests].map { |r| r[:duration] }
-      
+
       {
         total_requests: @metrics[:requests].size,
         avg_response_time: (durations.sum / durations.size).round(2),
@@ -156,7 +156,9 @@ class PerformanceMonitoringService
         p95_response_time: calculate_percentile(durations, 95),
         p99_response_time: calculate_percentile(durations, 99),
         slow_requests_count: @metrics[:requests].count { |r| r[:slow] },
-        slow_requests_percentage: ((@metrics[:requests].count { |r| r[:slow] }.to_f / @metrics[:requests].size) * 100).round(2)
+        slow_requests_percentage: ((@metrics[:requests].count do |r|
+          r[:slow]
+        end.to_f / @metrics[:requests].size) * 100).round(2),
       }
     end
   end
@@ -170,7 +172,7 @@ class PerformanceMonitoringService
         cache_hits: 0,
         cache_misses: 0,
         memory_usage: [],
-        started_at: Time.current
+        started_at: Time.current,
       }
     end
   end
@@ -184,23 +186,23 @@ class PerformanceMonitoringService
       slow_requests: @metrics[:requests].count { |r| r[:slow] },
       slow_queries: @metrics[:queries].count { |q| q[:slow] },
       cache_hit_rate: cache_hit_rate,
-      uptime_hours: ((Time.current - @metrics[:started_at]) / 1.hour).round(2)
+      uptime_hours: ((Time.current - @metrics[:started_at]) / 1.hour).round(2),
     }
   end
 
   def cache_hit_rate
     total = @metrics[:cache_hits] + @metrics[:cache_misses]
     return 0.0 if total.zero?
-    
+
     ((@metrics[:cache_hits].to_f / total) * 100).round(2)
   end
 
   def calculate_median(array)
     return 0 if array.empty?
-    
+
     sorted = array.sort
     mid = sorted.length / 2
-    
+
     if sorted.length.odd?
       sorted[mid]
     else
@@ -210,7 +212,7 @@ class PerformanceMonitoringService
 
   def calculate_percentile(array, percentile)
     return 0 if array.empty?
-    
+
     sorted = array.sort
     index = (percentile / 100.0 * (sorted.length - 1)).round
     sorted[index]

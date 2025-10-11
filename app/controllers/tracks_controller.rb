@@ -1,9 +1,9 @@
 class TracksController < ApplicationController
   layout 'playlist', only: [:index]
   before_action :authenticate_user!
-  before_action :set_restaurant, only: [:index, :new, :create]
+  before_action :set_restaurant, only: %i[index new create]
   before_action :set_track, only: %i[show edit update destroy]
-  
+
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
@@ -40,7 +40,7 @@ class TracksController < ApplicationController
   def create
     @track = Track.new(track_params)
     authorize @track
-    
+
     respond_to do |format|
       if @track.save
         format.html do
@@ -58,7 +58,7 @@ class TracksController < ApplicationController
   # PATCH/PUT /tracks/1 or /tracks/1.json
   def update
     authorize @track
-    
+
     respond_to do |format|
       if @track.update(track_params)
         format.html do
@@ -77,7 +77,7 @@ class TracksController < ApplicationController
   def destroy
     authorize @track
     @track.destroy!
-    
+
     respond_to do |format|
       format.html do
         redirect_to restaurant_tracks_path(@track.restaurant),
@@ -93,7 +93,7 @@ class TracksController < ApplicationController
   def set_track
     @track = Track.find(params[:id])
   end
-  
+
   def set_restaurant
     @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
   end

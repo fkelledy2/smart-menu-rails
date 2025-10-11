@@ -37,6 +37,6 @@ class Payments::BaseController < ApplicationController
     # Placeholder for QR generation functionality
     # Add implementation as needed
     authorize current_user # Basic authorization for now
-    render json: { message: "QR generation endpoint ready" }
+    render json: { message: 'QR generation endpoint ready' }
   end
 end

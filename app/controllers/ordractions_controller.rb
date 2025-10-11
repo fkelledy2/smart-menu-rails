@@ -1,7 +1,7 @@
 class OrdractionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_ordraction, only: %i[show edit update destroy]
-  
+
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
@@ -31,11 +31,11 @@ class OrdractionsController < ApplicationController
   def create
     @ordraction = Ordraction.new(ordraction_params)
     authorize @ordraction
-    
+
     respond_to do |format|
       if @ordraction.save
         format.html do
-          redirect_to ordraction_url(@ordraction), 
+          redirect_to ordraction_url(@ordraction),
                       notice: t('common.flash.created', resource: t('activerecord.models.ordraction'))
         end
         format.json { render :show, status: :created, location: @ordraction }
@@ -49,11 +49,11 @@ class OrdractionsController < ApplicationController
   # PATCH/PUT /ordractions/1 or /ordractions/1.json
   def update
     authorize @ordraction
-    
+
     respond_to do |format|
       if @ordraction.update(ordraction_params)
         format.html do
-          redirect_to ordraction_url(@ordraction), 
+          redirect_to ordraction_url(@ordraction),
                       notice: t('common.flash.updated', resource: t('activerecord.models.ordraction'))
         end
         format.json { render :show, status: :ok, location: @ordraction }
@@ -67,11 +67,11 @@ class OrdractionsController < ApplicationController
   # DELETE /ordractions/1 or /ordractions/1.json
   def destroy
     authorize @ordraction
-    
+
     @ordraction.destroy!
     respond_to do |format|
       format.html do
-        redirect_to ordractions_url, 
+        redirect_to ordractions_url,
                     notice: t('common.flash.deleted', resource: t('activerecord.models.ordraction'))
       end
       format.json { head :no_content }

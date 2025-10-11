@@ -11,35 +11,35 @@ class MenuitemsController < ApplicationController
   def index
     if params[:menu_id]
       @menu = Menu.find(params[:menu_id])
-      
+
       # Use AdvancedCacheService for comprehensive menu items data
       @menu_items_data = AdvancedCacheService.cached_menu_items_with_details(@menu.id, include_analytics: true)
       @menuitems = @menu_items_data[:items]
-      
+
       # Track menu items view
       AnalyticsService.track_user_event(current_user, 'menu_items_viewed', {
         menu_id: @menu.id,
         menu_name: @menu.name,
         restaurant_id: @menu.restaurant.id,
         items_count: @menuitems.count,
-        viewing_context: 'menu_management'
-      })
-      
+        viewing_context: 'menu_management',
+      },)
+
     elsif params[:menusection_id]
       menusection = Menusection.find_by(id: params[:menusection_id])
-      
+
       # Use AdvancedCacheService for section-specific items
       @section_items_data = AdvancedCacheService.cached_section_items_with_details(menusection.id)
       @menuitems = @section_items_data[:items]
-      
+
       # Track section items view
       AnalyticsService.track_user_event(current_user, 'section_items_viewed', {
         menusection_id: menusection.id,
         menusection_name: menusection.name,
         menu_id: menusection.menu.id,
         restaurant_id: menusection.menu.restaurant.id,
-        items_count: @menuitems.count
-      })
+        items_count: @menuitems.count,
+      },)
     else
       @menuitems = []
     end
@@ -48,10 +48,10 @@ class MenuitemsController < ApplicationController
   # GET /menuitems/1 or /menuitems/1.json
   def show
     authorize @menuitem
-    
+
     # Use AdvancedCacheService for comprehensive menuitem data
     @menuitem_data = AdvancedCacheService.cached_menuitem_with_analytics(@menuitem.id)
-    
+
     # Track menuitem view
     AnalyticsService.track_user_event(current_user, 'menuitem_viewed', {
       menuitem_id: @menuitem.id,
@@ -59,29 +59,29 @@ class MenuitemsController < ApplicationController
       menu_id: @menuitem.menusection.menu.id,
       restaurant_id: @menuitem.menusection.menu.restaurant.id,
       price: @menuitem.price,
-      has_image: @menuitem.image.present?
-    })
+      has_image: @menuitem.image.present?,
+    },)
   end
 
   # GET /menuitems/1/analytics
   def analytics
     authorize @menuitem, :show?
-    
+
     # Get analytics period from params or default to 30 days
     days = params[:days]&.to_i || 30
-    
+
     # Use AdvancedCacheService for menuitem performance analytics
     @analytics_data = AdvancedCacheService.cached_menuitem_performance(@menuitem.id, days: days)
-    
+
     # Track analytics view
     AnalyticsService.track_user_event(current_user, 'menuitem_analytics_viewed', {
       menuitem_id: @menuitem.id,
       menuitem_name: @menuitem.name,
       period_days: days,
       total_orders: @analytics_data[:performance][:total_orders],
-      total_revenue: @analytics_data[:performance][:total_revenue]
-    })
-    
+      total_revenue: @analytics_data[:performance][:total_revenue],
+    },)
+
     respond_to do |format|
       format.html
       format.json { render json: @analytics_data }
@@ -154,7 +154,7 @@ class MenuitemsController < ApplicationController
         AdvancedCacheService.invalidate_menuitem_caches(@menuitem.id)
         AdvancedCacheService.invalidate_menu_caches(@menuitem.menusection.menu.id)
         AdvancedCacheService.invalidate_restaurant_caches(@menuitem.menusection.menu.restaurant.id)
-        
+
         if @menuitem.genimage.nil?
           @genimage = Genimage.new
           @genimage.restaurant = @menuitem.menusection.menu.restaurant
@@ -186,12 +186,12 @@ class MenuitemsController < ApplicationController
     authorize @menuitem
 
     @menuitem.update(archived: true)
-    
+
     # Invalidate AdvancedCacheService caches for this menuitem
     AdvancedCacheService.invalidate_menuitem_caches(@menuitem.id)
     AdvancedCacheService.invalidate_menu_caches(@menuitem.menusection.menu.id)
     AdvancedCacheService.invalidate_restaurant_caches(@menuitem.menusection.menu.restaurant.id)
-    
+
     respond_to do |format|
       format.html do
         redirect_to edit_menu_menusection_path(@menuitem.menusection.menu, @menuitem.menusection),

@@ -3,15 +3,15 @@
 class DwOrdersMvPolicy < ApplicationPolicy
   # Analytics data should only be accessible to authenticated users
   # and should be scoped to their own restaurant data
-  
+
   def index?
     user.present?
   end
-  
+
   def show?
     user.present? && owns_order_data?
   end
-  
+
   class Scope < Scope
     def resolve
       if user.present?
@@ -30,9 +30,9 @@ class DwOrdersMvPolicy < ApplicationPolicy
       end
     end
   end
-  
+
   private
-  
+
   def owns_order_data?
     # If the record has restaurant_id, check ownership
     if record.respond_to?(:restaurant_id) && record.restaurant_id

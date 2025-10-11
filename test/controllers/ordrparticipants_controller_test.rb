@@ -38,8 +38,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         employee_id: @employee.id,
         role: 1,
         sessionid: 'test_session_123',
-        name: 'Test Participant'
-      }
+        name: 'Test Participant',
+      },
     }
     assert_response :success
   end
@@ -57,8 +57,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
               ordr_id: @ordrparticipant.ordr_id,
               role: @ordrparticipant.role,
               sessionid: @ordrparticipant.sessionid,
-              name: 'Updated Participant Name'
-            }
+              name: 'Updated Participant Name',
+            },
           }
     assert_response :success
   end
@@ -85,8 +85,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
           params: {
             ordrparticipant: {
               name: 'Anonymous Update',
-              sessionid: 'anonymous_session_456'
-            }
+              sessionid: 'anonymous_session_456',
+            },
           },
           as: :json
     assert_response :success
@@ -97,8 +97,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              name: 'Authenticated Update'
-            }
+              name: 'Authenticated Update',
+            },
           }
     assert_response :success
   end
@@ -113,8 +113,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch ordrparticipant_url(@ordrparticipant),
           params: {
             ordrparticipant: {
-              name: 'Direct Update'
-            }
+              name: 'Direct Update',
+            },
           },
           as: :json
     assert_response :success
@@ -144,8 +144,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         role: 0,
         sessionid: 'test_session_id',
-        name: 'Session Participant'
-      }
+        name: 'Session Participant',
+      },
     }
     assert_response :success
   end
@@ -154,8 +154,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              sessionid: 'validated_session_789'
-            }
+              sessionid: 'validated_session_789',
+            },
           }
     assert_response :success
   end
@@ -172,8 +172,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
       ordrparticipant: {
         ordr_id: @order.id,
         role: 0,
-        name: 'No Session Participant'
-      }
+        name: 'No Session Participant',
+      },
     }
     assert_response :success
   end
@@ -183,8 +183,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              preferredlocale: 'en'
-            }
+              preferredlocale: 'en',
+            },
           }
     assert_response :success
   end
@@ -196,8 +196,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         role: 1,
         employee_id: @employee.id,
-        sessionid: 'identification_session'
-      }
+        sessionid: 'identification_session',
+      },
     }
     assert_response :success
   end
@@ -209,8 +209,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         role: 0,
         sessionid: 'broadcast_session',
-        name: 'Broadcast Participant'
-      }
+        name: 'Broadcast Participant',
+      },
     }
     assert_response :success
   end
@@ -219,8 +219,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              name: 'Updated for Broadcast'
-            }
+              name: 'Updated for Broadcast',
+            },
           }
     assert_response :success
   end
@@ -232,8 +232,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         role: 1,
         employee_id: @employee.id,
-        sessionid: 'cache_session'
-      }
+        sessionid: 'cache_session',
+      },
     }
     assert_response :success
   end
@@ -245,8 +245,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         role: 0,
         sessionid: 'partials_session',
-        name: 'Partials Test'
-      }
+        name: 'Partials Test',
+      },
     }
     assert_response :success
   end
@@ -256,8 +256,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              name: 'Compression Test'
-            }
+              name: 'Compression Test',
+            },
           }
     assert_response :success
   end
@@ -268,8 +268,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
       ordrparticipant: {
         ordr_id: @order.id,
         role: 0,
-        sessionid: 'error_session'
-      }
+        sessionid: 'error_session',
+      },
     }
     assert_response :success
   end
@@ -279,8 +279,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              name: 'N+1 Optimization Test'
-            }
+              name: 'N+1 Optimization Test',
+            },
           }
     assert_response :success
   end
@@ -292,8 +292,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         role: 1,
         employee_id: @employee.id,
-        sessionid: 'refresh_session'
-      }
+        sessionid: 'refresh_session',
+      },
     }
     assert_response :success
   end
@@ -306,8 +306,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         role: 1,
         employee_id: @employee.id,
-        sessionid: 'staff_session'
-      }
+        sessionid: 'staff_session',
+      },
     }
     assert_response :success
   end
@@ -319,8 +319,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         role: 0,
         sessionid: 'customer_session',
-        name: 'Customer Participant'
-      }
+        name: 'Customer Participant',
+      },
     }
     assert_response :success
   end
@@ -330,8 +330,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              preferredlocale: 'es'
-            }
+              preferredlocale: 'es',
+            },
           }
     assert_response :success
   end
@@ -341,8 +341,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              preferredlocale: 'fr'
-            }
+              preferredlocale: 'fr',
+            },
           }
     assert_response :success
   end
@@ -352,8 +352,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              name: 'Updated Participant Name'
-            }
+              name: 'Updated Participant Name',
+            },
           }
     assert_response :success
   end
@@ -363,8 +363,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              allergyn_ids: [allergyns(:one).id]
-            }
+              allergyn_ids: [allergyns(:one).id],
+            },
           }
     assert_response :success
   end
@@ -375,8 +375,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
       ordrparticipant: {
         ordr_id: @order.id,
         role: 0,
-        sessionid: 'relationship_session'
-      }
+        sessionid: 'relationship_session',
+      },
     }
     assert_response :success
   end
@@ -387,8 +387,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
       ordrparticipant: {
         ordr_id: @order.id,
         role: 0,
-        sessionid: 'tablesetting_session'
-      }
+        sessionid: 'tablesetting_session',
+      },
     }
     assert_response :success
   end
@@ -401,8 +401,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
              ordr_id: @order.id,
              role: 0,
              sessionid: 'json_create_session',
-             name: 'JSON Participant'
-           }
+             name: 'JSON Participant',
+           },
          },
          as: :json
     assert_response :success
@@ -412,8 +412,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              name: 'JSON Updated Name'
-            }
+              name: 'JSON Updated Name',
+            },
           },
           as: :json
     assert_response :success
@@ -435,8 +435,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
          params: {
            ordrparticipant: {
              ordr_id: nil, # Invalid
-             role: 0
-           }
+             role: 0,
+           },
          },
          as: :json
     assert_response :success
@@ -453,8 +453,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_ordrparticipants_url(@restaurant), params: {
       ordrparticipant: {
         ordr_id: nil, # Invalid
-        role: 0
-      }
+        role: 0,
+      },
     }
     assert_response :success
   end
@@ -463,8 +463,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              ordr_id: nil # Invalid
-            }
+              ordr_id: nil, # Invalid
+            },
           }
     assert_response :success
   end
@@ -475,8 +475,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
       ordrparticipant: {
         ordr_id: 99999, # Non-existent
         role: 0,
-        sessionid: 'missing_order_session'
-      }
+        sessionid: 'missing_order_session',
+      },
     }
     assert_response :success
   end
@@ -488,8 +488,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         employee_id: 99999, # Non-existent
         role: 1,
-        sessionid: 'missing_employee_session'
-      }
+        sessionid: 'missing_employee_session',
+      },
     }
     assert_response :success
   end
@@ -500,8 +500,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch ordrparticipant_url(99999), # Non-existent
           params: {
             ordrparticipant: {
-              name: 'Not Found Test'
-            }
+              name: 'Not Found Test',
+            },
           },
           as: :json
     assert_response :success
@@ -513,8 +513,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
       ordrparticipant: {
         ordr_id: @order.id,
         role: 0,
-        sessionid: 'broadcast_fail_session'
-      }
+        sessionid: 'broadcast_fail_session',
+      },
     }
     assert_response :success
   end
@@ -525,8 +525,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
       ordrparticipant: {
         ordr_id: @order.id,
         role: 0,
-        sessionid: '' # Invalid
-      }
+        sessionid: '', # Invalid
+      },
     }
     assert_response :success
   end
@@ -545,8 +545,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         role: 1,
         employee_id: @employee.id,
-        sessionid: 'optimization_session'
-      }
+        sessionid: 'optimization_session',
+      },
     }
     assert_response :success
   end
@@ -556,8 +556,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              name: 'Caching Test'
-            }
+              name: 'Caching Test',
+            },
           }
     assert_response :success
   end
@@ -573,8 +573,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
-              name: 'Cache Key Test'
-            }
+              name: 'Cache Key Test',
+            },
           }
     assert_response :success
   end
@@ -595,8 +595,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         sessionid: 'complex_performance_session',
         name: 'Complex Performance Test',
         preferredlocale: 'en',
-        allergyn_ids: [allergyns(:one).id]
-      }
+        allergyn_ids: [allergyns(:one).id],
+      },
     }
     assert_response :success
   end
@@ -609,21 +609,21 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         role: 0,
         sessionid: 'lifecycle_session',
-        name: 'Lifecycle Participant'
-      }
+        name: 'Lifecycle Participant',
+      },
     }
     assert_response :success
-    
+
     # Update participant
     patch restaurant_ordrparticipant_url(@restaurant, @ordrparticipant),
           params: {
             ordrparticipant: {
               name: 'Updated Lifecycle Participant',
-              preferredlocale: 'es'
-            }
+              preferredlocale: 'es',
+            },
           }
     assert_response :success
-    
+
     # Delete participant
     delete restaurant_ordrparticipant_url(@restaurant, @ordrparticipant)
     assert_response :success

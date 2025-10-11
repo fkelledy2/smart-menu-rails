@@ -6,7 +6,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     @employee = employees(:one)
     @restaurant = restaurants(:one)
     sign_in @user
-    
+
     # Ensure proper associations for nested routes
     @restaurant.update!(user: @user) if @restaurant.user != @user
     @employee.update!(restaurant: @restaurant) if @employee.restaurant != @restaurant
@@ -46,8 +46,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
         role: 'server',
         user_id: @user.id,
         status: 'active',
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response :success
   end
@@ -62,8 +62,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
           params: {
             employee: {
               name: 'Updated Employee',
-              status: 'active'
-            }
+              status: 'active',
+            },
           }
     assert_response :success
   end
@@ -73,7 +73,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
       delete restaurant_employee_url(@restaurant, @employee)
     end
     assert_response :success
-    # Note: The controller attempts archiving but may not work correctly due to enum usage
+    # NOTE: The controller attempts archiving but may not work correctly due to enum usage
     # This test verifies the controller responds successfully to destroy requests
   end
 
@@ -108,8 +108,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_employee_url(@restaurant, @employee),
           params: {
             employee: {
-              name: 'Cache Test Employee'
-            }
+              name: 'Cache Test Employee',
+            },
           }
     assert_response :success
   end
@@ -118,8 +118,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_employee_url(@restaurant, @employee),
           params: {
             employee: {
-              status: 'inactive'
-            }
+              status: 'inactive',
+            },
           }
     assert_response :success
   end
@@ -128,8 +128,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_employee_url(@restaurant, @employee),
           params: {
             employee: {
-              role: 'manager'
-            }
+              role: 'manager',
+            },
           }
     assert_response :success
   end
@@ -188,8 +188,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
         eid: 'ANALYTICS123',
         role: 'server',
         user_id: @user.id,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response :success
   end
@@ -259,8 +259,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
              eid: 'JSON123',
              role: 'server',
              user_id: @user.id,
-             restaurant_id: @restaurant.id
-           }
+             restaurant_id: @restaurant.id,
+           },
          },
          as: :json
     assert_response :success
@@ -270,8 +270,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_employee_url(@restaurant, @employee),
           params: {
             employee: {
-              name: 'JSON Updated Employee'
-            }
+              name: 'JSON Updated Employee',
+            },
           },
           as: :json
     assert_response :success
@@ -288,8 +288,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
            employee: {
              name: '', # Invalid - required field
              eid: '', # Invalid - required field
-             restaurant_id: @restaurant.id
-           }
+             restaurant_id: @restaurant.id,
+           },
          },
          as: :json
     # Controller should handle invalid JSON data (may return success or error)
@@ -314,8 +314,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
         eid: 'ASSOC123',
         role: 'server',
         user_id: @user.id,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response :success
   end
@@ -332,8 +332,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_employee_url(@restaurant, @employee),
           params: {
             employee: {
-              name: 'Email Sync Test'
-            }
+              name: 'Email Sync Test',
+            },
           }
     assert_response :success
   end
@@ -346,8 +346,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
         role: 'server',
         user_id: @user.id,
         restaurant_id: @restaurant.id,
-        sequence: 10
-      }
+        sequence: 10,
+      },
     }
     assert_response :success
   end
@@ -356,8 +356,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_employee_url(@restaurant, @employee),
           params: {
             employee: {
-              status: 'inactive'
-            }
+              status: 'inactive',
+            },
           }
     assert_response :success
   end
@@ -366,8 +366,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_employee_url(@restaurant, @employee),
           params: {
             employee: {
-              role: 'manager'
-            }
+              role: 'manager',
+            },
           }
     assert_response :success
   end
@@ -376,8 +376,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_employee_url(@restaurant, @employee),
           params: {
             employee: {
-              user_id: @user.id
-            }
+              user_id: @user.id,
+            },
           }
     assert_response :success
   end
@@ -386,8 +386,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_employee_url(@restaurant, @employee),
           params: {
             employee: {
-              image: 'test_image.jpg'
-            }
+              image: 'test_image.jpg',
+            },
           }
     assert_response :success
   end
@@ -399,8 +399,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
         eid: 'UNIQUE123',
         role: 'server',
         user_id: @user.id,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response :success
   end
@@ -413,17 +413,17 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
         eid: 'WORKFLOW123',
         role: 'server',
         user_id: @user.id,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response :success
-    
+
     # Update employee
     patch restaurant_employee_url(@restaurant, @employee),
           params: {
             employee: {
-              status: 'active'
-            }
+              status: 'active',
+            },
           }
     assert_response :success
   end
@@ -496,8 +496,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
       employee: {
         name: '', # Invalid - required field
         eid: '', # Invalid - required field
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     # Controller should handle invalid data (may return success or error)
     assert_response_in [200, 422]
@@ -508,8 +508,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
           params: {
             employee: {
               name: '', # Invalid - required field
-              eid: '' # Invalid - required field
-            }
+              eid: '', # Invalid - required field
+            },
           }
     # Controller should handle invalid data (may return success or error)
     assert_response_in [200, 422]
@@ -551,8 +551,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
       employee: {
         name: '', # Invalid - required field
         eid: '', # Invalid - required field
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     # Controller should handle constraint violations (may return success or error)
     assert_response_in [200, 422]
@@ -578,8 +578,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_employee_url(@restaurant, @employee),
           params: {
             employee: {
-              name: 'Concurrent Test'
-            }
+              name: 'Concurrent Test',
+            },
           }
     assert_response :success
   end
@@ -592,8 +592,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
         role: 'server',
         user_id: @user.id,
         restaurant_id: @restaurant.id,
-        unauthorized_param: 'should_be_filtered'
-      }
+        unauthorized_param: 'should_be_filtered',
+      },
     }
     assert_response :success
   end
@@ -603,8 +603,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     post restaurant_employees_url(@restaurant), params: {
       employee: {
         name: 'Edge Case Employee',
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response :success
   end
@@ -630,8 +630,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
         user_id: @user.id,
         restaurant_id: @restaurant.id,
         status: 'active',
-        sequence: 5
-      }
+        sequence: 5,
+      },
     }
     assert_response :success
   end
@@ -643,8 +643,8 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
             employee: {
               name: 'Cache Invalidation Test',
               status: 'inactive',
-              role: 'manager'
-            }
+              role: 'manager',
+            },
           }
     assert_response :success
   end
@@ -653,7 +653,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     # Test complete archiving workflow
     delete restaurant_employee_url(@restaurant, @employee)
     assert_response :success
-    
+
     @employee.reload
     # Verify employee still exists (soft delete)
     assert_not @employee.destroyed?
@@ -663,7 +663,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     # Test HTML request
     get restaurant_employee_url(@restaurant, @employee)
     assert_response :success
-    
+
     # Test JSON request
     get restaurant_employee_url(@restaurant, @employee), as: :json
     assert_response :success
@@ -672,7 +672,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
   private
 
   def assert_response_in(expected_codes)
-    assert_includes expected_codes, response.status, 
-                   "Expected response to be one of #{expected_codes}, but was #{response.status}"
+    assert_includes expected_codes, response.status,
+                    "Expected response to be one of #{expected_codes}, but was #{response.status}"
   end
 end

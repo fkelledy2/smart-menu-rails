@@ -3,27 +3,27 @@
 class OrdractionPolicy < ApplicationPolicy
   # Order actions are sensitive - only authenticated users can access
   # and should be scoped to their own restaurant's orders
-  
+
   def index?
     user.present?
   end
-  
+
   def show?
     user.present? && owns_order_action?
   end
-  
+
   def create?
     user.present?
   end
-  
+
   def update?
     user.present? && owns_order_action?
   end
-  
+
   def destroy?
     user.present? && owns_order_action?
   end
-  
+
   class Scope < Scope
     def resolve
       if user.present?
@@ -35,12 +35,12 @@ class OrdractionPolicy < ApplicationPolicy
       end
     end
   end
-  
+
   private
-  
+
   def owns_order_action?
     return false unless user && record.ordr
-    
+
     # Check if user owns the restaurant that the order belongs to
     user.restaurants.exists?(id: record.ordr.restaurant_id)
   end

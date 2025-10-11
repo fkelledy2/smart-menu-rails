@@ -37,8 +37,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
         ordritemprice: 10.50,
-        status: 'pending'
-      }
+        status: 'pending',
+      },
     }
     assert_response :success
   end
@@ -54,8 +54,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: @ordritem.menuitem_id,
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 15.00
-            }
+              ordritemprice: 15.00,
+            },
           }
     assert_response :success
   end
@@ -87,8 +87,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -116,8 +116,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -128,8 +128,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: @ordritem.menuitem_id,
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 15.00
-            }
+              ordritemprice: 15.00,
+            },
           }
     assert_response :success
   end
@@ -145,8 +145,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -157,8 +157,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -171,8 +171,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: new_menuitem.id,
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 15.00
-            }
+              ordritemprice: 15.00,
+            },
           }
     assert_response :success
   end
@@ -183,8 +183,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -195,8 +195,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -208,8 +208,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: @ordritem.menuitem_id,
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 25.00
-            }
+              ordritemprice: 25.00,
+            },
           }
     assert_response :success
   end
@@ -220,8 +220,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 20.00
-      }
+        ordritemprice: 20.00,
+      },
     }
     assert_response :success
   end
@@ -232,8 +232,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 30.00
-      }
+        ordritemprice: 30.00,
+      },
     }
     assert_response :success
   end
@@ -245,8 +245,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: @ordritem.menuitem_id,
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 50.00
-            }
+              ordritemprice: 50.00,
+            },
           }
     assert_response :success
   end
@@ -258,8 +258,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: @ordritem.menuitem_id,
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 40.00
-            }
+              ordritemprice: 40.00,
+            },
           }
     assert_response :success
   end
@@ -270,8 +270,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 35.00
-      }
+        ordritemprice: 35.00,
+      },
     }
     assert_response :success
   end
@@ -282,8 +282,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -294,8 +294,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -306,8 +306,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -318,8 +318,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -330,8 +330,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -342,8 +342,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -355,8 +355,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -368,8 +368,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: @ordritem.menuitem_id,
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 15.00
-            }
+              ordritemprice: 15.00,
+            },
           }
     assert_response :success
   end
@@ -386,8 +386,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -398,8 +398,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -410,8 +410,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -423,8 +423,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: nil, # Invalid to trigger failure
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -436,8 +436,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: nil, # Invalid to trigger failure
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 15.00
-            }
+              ordritemprice: 15.00,
+            },
           }
     assert_response :success
   end
@@ -454,8 +454,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -466,8 +466,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -478,8 +478,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -491,8 +491,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
            ordritem: {
              ordr_id: @order.id,
              menuitem_id: @menuitem.id,
-             ordritemprice: 10.50
-           }
+             ordritemprice: 10.50,
+           },
          },
          as: :json
     assert_response :success
@@ -504,8 +504,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: @ordritem.menuitem_id,
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 15.00
-            }
+              ordritemprice: 15.00,
+            },
           },
           as: :json
     assert_response :success
@@ -528,8 +528,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
            ordritem: {
              ordr_id: nil, # Invalid
              menuitem_id: @menuitem.id,
-             ordritemprice: 10.50
-           }
+             ordritemprice: 10.50,
+           },
          },
          as: :json
     assert_response :success
@@ -547,8 +547,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: nil, # Invalid
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -559,8 +559,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: nil, # Invalid
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 15.00
-            }
+              ordritemprice: 15.00,
+            },
           }
     assert_response :success
   end
@@ -571,8 +571,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: 99999, # Non-existent
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -583,8 +583,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: 99999, # Non-existent
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -595,8 +595,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -608,8 +608,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: @ordritem.menuitem_id,
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 15.00
-            }
+              ordritemprice: 15.00,
+            },
           }
     assert_response :success
   end
@@ -620,8 +620,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -632,8 +632,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -651,8 +651,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: @ordritem.menuitem_id,
               ordr_id: @ordritem.ordr_id,
-              status: 'completed'
-            }
+              status: 'completed',
+            },
           }
     assert_response :success
   end
@@ -664,8 +664,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
             ordritem: {
               menuitem_id: @ordritem.menuitem_id,
               ordr_id: @ordritem.ordr_id,
-              ordritemprice: 25.00
-            }
+              ordritemprice: 25.00,
+            },
           }
     assert_response :success
   end
@@ -682,8 +682,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -694,8 +694,8 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
       ordritem: {
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
-        ordritemprice: 10.50
-      }
+        ordritemprice: 10.50,
+      },
     }
     assert_response :success
   end
@@ -708,11 +708,11 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
         ordr_id: @order.id,
         menuitem_id: @menuitem.id,
         ordritemprice: 10.50,
-        status: 'pending'
-      }
+        status: 'pending',
+      },
     }
     assert_response :success
-    
+
     # Update order item
     patch restaurant_ordritem_url(@restaurant, @ordritem),
           params: {
@@ -720,11 +720,11 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
               menuitem_id: @ordritem.menuitem_id,
               ordr_id: @ordritem.ordr_id,
               ordritemprice: 15.00,
-              status: 'confirmed'
-            }
+              status: 'confirmed',
+            },
           }
     assert_response :success
-    
+
     # Delete order item
     delete restaurant_ordritem_url(@restaurant, @ordritem)
     assert_response :success

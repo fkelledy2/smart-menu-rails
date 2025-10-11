@@ -33,9 +33,7 @@ class StructuredLogger
   end
 
   # Use Rails.logger dynamically to support test logger swapping
-  def logger
-    Rails.logger
-  end
+  delegate :logger, to: :Rails
 
   # Log methods for each level
   LEVELS.each do |level|

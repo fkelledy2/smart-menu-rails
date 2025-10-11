@@ -23,36 +23,36 @@ RSpec.configure do |config|
         description: 'Smart Menu Restaurant Management System API',
         contact: {
           name: 'Smart Menu Support',
-          email: 'support@smartmenu.com'
+          email: 'support@smartmenu.com',
         },
         license: {
           name: 'MIT',
-          url: 'https://opensource.org/licenses/MIT'
-        }
+          url: 'https://opensource.org/licenses/MIT',
+        },
       },
       paths: {},
       servers: [
         {
           url: 'https://smartmenu.herokuapp.com',
-          description: 'Production server'
+          description: 'Production server',
         },
         {
           url: 'http://localhost:3000',
-          description: 'Development server'
-        }
+          description: 'Development server',
+        },
       ],
       components: {
         securitySchemes: {
           Bearer: {
             type: :http,
             scheme: :bearer,
-            bearerFormat: 'JWT'
+            bearerFormat: 'JWT',
           },
           ApiKey: {
             type: :apiKey,
             in: :header,
-            name: 'X-API-Key'
-          }
+            name: 'X-API-Key',
+          },
         },
         schemas: {
           Error: {
@@ -63,12 +63,12 @@ RSpec.configure do |config|
                 properties: {
                   code: { type: :string },
                   message: { type: :string },
-                  details: { type: :object }
+                  details: { type: :object },
                 },
-                required: [:code, :message]
-              }
+                required: %i[code message],
+              },
             },
-            required: [:error]
+            required: [:error],
           },
           Restaurant: {
             type: :object,
@@ -83,9 +83,9 @@ RSpec.configure do |config|
               currency: { type: :string },
               timezone: { type: :string },
               created_at: { type: :string, format: :datetime },
-              updated_at: { type: :string, format: :datetime }
+              updated_at: { type: :string, format: :datetime },
             },
-            required: [:id, :name]
+            required: %i[id name],
           },
           Menu: {
             type: :object,
@@ -96,9 +96,9 @@ RSpec.configure do |config|
               restaurant_id: { type: :integer },
               active: { type: :boolean },
               created_at: { type: :string, format: :datetime },
-              updated_at: { type: :string, format: :datetime }
+              updated_at: { type: :string, format: :datetime },
             },
-            required: [:id, :name, :restaurant_id]
+            required: %i[id name restaurant_id],
           },
           MenuItem: {
             type: :object,
@@ -111,9 +111,9 @@ RSpec.configure do |config|
               active: { type: :boolean },
               allergens: { type: :array, items: { type: :string } },
               created_at: { type: :string, format: :datetime },
-              updated_at: { type: :string, format: :datetime }
+              updated_at: { type: :string, format: :datetime },
             },
-            required: [:id, :name, :price, :menu_section_id]
+            required: %i[id name price menu_section_id],
           },
           Order: {
             type: :object,
@@ -121,14 +121,14 @@ RSpec.configure do |config|
               id: { type: :integer },
               restaurant_id: { type: :integer },
               table_number: { type: :string },
-              status: { type: :string, enum: ['pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'] },
+              status: { type: :string, enum: %w[pending confirmed preparing ready delivered cancelled] },
               total: { type: :number, format: :decimal },
               tax: { type: :number, format: :decimal },
               service_charge: { type: :number, format: :decimal },
               created_at: { type: :string, format: :datetime },
-              updated_at: { type: :string, format: :datetime }
+              updated_at: { type: :string, format: :datetime },
             },
-            required: [:id, :restaurant_id, :status]
+            required: %i[id restaurant_id status],
           },
           OrderItem: {
             type: :object,
@@ -141,18 +141,18 @@ RSpec.configure do |config|
               total_price: { type: :number, format: :decimal },
               special_instructions: { type: :string },
               created_at: { type: :string, format: :datetime },
-              updated_at: { type: :string, format: :datetime }
+              updated_at: { type: :string, format: :datetime },
             },
-            required: [:id, :order_id, :menu_item_id, :quantity, :unit_price]
+            required: %i[id order_id menu_item_id quantity unit_price],
           },
           AnalyticsEvent: {
             type: :object,
             properties: {
               event: { type: :string },
               properties: { type: :object },
-              timestamp: { type: :string, format: :datetime }
+              timestamp: { type: :string, format: :datetime },
             },
-            required: [:event]
+            required: [:event],
           },
           VisionAnalysis: {
             type: :object,
@@ -163,18 +163,18 @@ RSpec.configure do |config|
                   type: :object,
                   properties: {
                     description: { type: :string },
-                    score: { type: :number, format: :float }
-                  }
-                }
+                    score: { type: :number, format: :float },
+                  },
+                },
               },
               text: { type: :string },
               web: { type: :object },
-              objects: { type: :array, items: { type: :object } }
-            }
-          }
-        }
-      }
-    }
+              objects: { type: :array, items: { type: :object } },
+            },
+          },
+        },
+      },
+    },
   }
 
   # Specify the format of the output OpenAPI file when running 'rswag:specs:swaggerize'.

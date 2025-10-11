@@ -1,29 +1,31 @@
 # Admin controller for viewing application metrics
 class Admin::MetricsController < ApplicationController
   include QueryCacheable
-  
+
   before_action :authenticate_user!
   before_action :ensure_admin!
-  
+
   # Pundit authorization
   after_action :verify_authorized
 
   def index
-    authorize [:admin, :metrics]
-    
+    authorize %i[admin metrics]
+
     # Cache expensive metrics calculations
     @metrics_summary = cache_metrics('admin_summary', user_scope: false, force_refresh: force_cache_refresh?) do
       build_metrics_summary
     end
-    
-    @system_metrics = cache_query(cache_type: :system_metrics, key_parts: ['admin_system'], force_refresh: force_cache_refresh?) do
+
+    @system_metrics = cache_query(cache_type: :system_metrics, key_parts: ['admin_system'],
+                                  force_refresh: force_cache_refresh?,) do
       collect_system_metrics
     end
-    
-    @recent_metrics = cache_query(cache_type: :recent_metrics, key_parts: ['admin_recent'], force_refresh: force_cache_refresh?) do
+
+    @recent_metrics = cache_query(cache_type: :recent_metrics, key_parts: ['admin_recent'],
+                                  force_refresh: force_cache_refresh?,) do
       collect_recent_metrics
     end
-    
+
     # Add cache debugging headers in development
     if Rails.env.development?
       add_cache_headers(cache_hit: !force_cache_refresh?, cache_key: 'admin_metrics_index')
@@ -31,25 +33,28 @@ class Admin::MetricsController < ApplicationController
   end
 
   def show
-    authorize [:admin, :metrics]
-    
+    authorize %i[admin metrics]
+
     @metric_name = params[:id]
-    
+
     # Cache individual metric data
-    @metric_data = cache_query(cache_type: :metrics_summary, key_parts: ['metric_data', @metric_name], force_refresh: force_cache_refresh?) do
+    @metric_data = cache_query(cache_type: :metrics_summary, key_parts: ['metric_data', @metric_name],
+                               force_refresh: force_cache_refresh?,) do
       MetricsCollector.get_metrics.select { |k, _| k.include?(@metric_name) }
     end
-    
-    @metric_summary = cache_query(cache_type: :metrics_summary, key_parts: ['metric_summary', @metric_name], force_refresh: force_cache_refresh?) do
+
+    @metric_summary = cache_query(cache_type: :metrics_summary, key_parts: ['metric_summary', @metric_name],
+                                  force_refresh: force_cache_refresh?,) do
       build_metric_summary(@metric_name)
     end
   end
 
   def export
-    authorize [:admin, :metrics]
-    
+    authorize %i[admin metrics]
+
     # Cache metrics for export (shorter TTL since exports might be frequent)
-    metrics = cache_query(cache_type: :recent_metrics, key_parts: ['export_data'], force_refresh: force_cache_refresh?) do
+    metrics = cache_query(cache_type: :recent_metrics, key_parts: ['export_data'],
+                          force_refresh: force_cache_refresh?,) do
       MetricsCollector.get_metrics
     end
 

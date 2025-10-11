@@ -1,7 +1,7 @@
 class RestaurantlocalesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_restaurantlocale, only: %i[show edit update destroy]
-  
+
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
@@ -91,7 +91,7 @@ class RestaurantlocalesController < ApplicationController
   # DELETE /restaurantlocales/1 or /restaurantlocales/1.json
   def destroy
     authorize @restaurantlocale
-    
+
     if @restaurantlocale.inactive?
       @restaurantlocale.destroy!
       respond_to do |format|

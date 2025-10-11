@@ -2,27 +2,27 @@
 
 class MenuavailabilityPolicy < ApplicationPolicy
   # Menu availability settings are business-critical - only restaurant owners can manage
-  
+
   def index?
     user.present?
   end
-  
+
   def show?
     user.present? && owns_menu_availability?
   end
-  
+
   def create?
     user.present?
   end
-  
+
   def update?
     user.present? && owns_menu_availability?
   end
-  
+
   def destroy?
     user.present? && owns_menu_availability?
   end
-  
+
   class Scope < Scope
     def resolve
       if user.present?
@@ -34,12 +34,12 @@ class MenuavailabilityPolicy < ApplicationPolicy
       end
     end
   end
-  
+
   private
-  
+
   def owns_menu_availability?
     return false unless user && record.menu&.restaurant
-    
+
     # Check if user owns the restaurant that the menu belongs to
     user.restaurants.exists?(id: record.menu.restaurant_id)
   end

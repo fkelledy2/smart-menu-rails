@@ -15,7 +15,7 @@ RSpec.describe OcrMenuImportsController do
     @request.headers['ACCEPT'] = 'text/html'
     # Bypass app-wide filters not under test
     allow(controller).to receive_messages(set_current_employee: true, set_permissions: true,
-                                          verify_authenticity_token: true)
+                                          verify_authenticity_token: true,)
     # Mock authorization to always pass
     allow(controller).to receive(:authorize).and_return(true)
     # Auth
@@ -28,7 +28,7 @@ RSpec.describe OcrMenuImportsController do
       import.ocr_menu_sections.create!(name: 'Starters', sequence: 1, is_confirmed: true)
 
       post :confirm_import, params: { restaurant_id: restaurant.id, id: import.id }
-      
+
       expect(response).to have_http_status(:success)
     end
 

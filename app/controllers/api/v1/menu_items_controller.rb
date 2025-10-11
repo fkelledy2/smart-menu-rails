@@ -6,7 +6,7 @@ class Api::V1::MenuItemsController < Api::V1::BaseController
   # GET /api/v1/menus/:menu_id/items
   def index
     @menu_items = @menu.menuitems.includes(:menusection)
-    
+
     render json: @menu_items.map { |item| menu_item_json(item) }
   end
 
@@ -30,10 +30,10 @@ class Api::V1::MenuItemsController < Api::V1::BaseController
       dietary_info: {
         vegetarian: item.vegetarian?,
         vegan: item.vegan?,
-        gluten_free: item.gluten_free?
+        gluten_free: item.gluten_free?,
       },
       created_at: item.created_at,
-      updated_at: item.updated_at
+      updated_at: item.updated_at,
     }
   end
 end

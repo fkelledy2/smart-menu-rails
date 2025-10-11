@@ -31,14 +31,14 @@ module Api
           skip_authorization
           return render json: error_response('bad_request', 'Image parameter is required'), status: :bad_request
         end
-        
+
         # Validate image format
         unless valid_image_format?(params[:image])
           skip_authorization
-          return render json: error_response('invalid_format', 'Invalid image format. Supported formats: JPEG, PNG, GIF, BMP, WEBP'), 
+          return render json: error_response('invalid_format', 'Invalid image format. Supported formats: JPEG, PNG, GIF, BMP, WEBP'),
                         status: :unprocessable_entity
         end
-        
+
         authorize :vision, :analyze?
 
         features = params[:features]&.split(',')&.map(&:strip)&.map(&:to_sym) || %i[labels text]
@@ -51,7 +51,7 @@ module Api
           render json: results
         rescue StandardError => e
           Rails.logger.error("Vision API Error: #{e.message}")
-          render json: error_response('vision_error', 'Error processing image with Vision API'), 
+          render json: error_response('vision_error', 'Error processing image with Vision API'),
                  status: :internal_server_error
         end
       end
@@ -89,12 +89,12 @@ module Api
       # Validate if uploaded file is a valid image format
       def valid_image_format?(uploaded_file)
         return false unless uploaded_file.respond_to?(:content_type)
-        
+
         valid_types = %w[
-          image/jpeg image/jpg image/png image/gif 
+          image/jpeg image/jpg image/png image/gif
           image/bmp image/webp image/tiff image/svg+xml
         ]
-        
+
         valid_types.include?(uploaded_file.content_type&.downcase)
       end
 

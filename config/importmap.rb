@@ -9,10 +9,10 @@ pin '@hotwired/turbo-rails', to: 'https://cdn.skypack.dev/@hotwired/turbo-rails'
 pin '@hotwired/stimulus', to: 'https://ga.jspm.io/npm:@hotwired/stimulus@3.2.2/dist/stimulus.js'
 # pin "@hotwired/stimulus-loading", to: "app/javascript/stimulus-loading.js"
 # Rails libraries - using local asset pipeline to avoid CDN version issues
-pin "@rails/actioncable", to: "actioncable.esm.js", preload: true
-pin "@rails/actiontext", to: "actiontext.js", preload: true  
-pin "trix", preload: true
-pin "@rails/activestorage", to: "activestorage.esm.js", preload: true
+pin '@rails/actioncable', to: 'actioncable.esm.js', preload: true
+pin '@rails/actiontext', to: 'actiontext.js', preload: true
+pin 'trix', preload: true
+pin '@rails/activestorage', to: 'activestorage.esm.js', preload: true
 
 # Pin external dependencies for new system (reliable CDN strategy)
 pin 'tom-select', to: 'https://cdn.skypack.dev/tom-select', preload: true
@@ -27,4 +27,3 @@ pin_all_from 'app/javascript/channels', under: 'channels'
 
 # Pin local JavaScript files
 pin_all_from 'app/javascript/custom', under: 'custom'
-

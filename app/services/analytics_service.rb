@@ -65,14 +65,14 @@ class AnalyticsService
     base_properties = {
       timestamp: Time.current,
       user_agent: current_user_agent,
-      ip: current_ip_address
+      ip: current_ip_address,
     }
 
     @client.track(
       user_id: user.id,
       event: event,
       properties: base_properties.merge(properties),
-      context: user_context(user)
+      context: user_context(user),
     )
   rescue StandardError => e
     Rails.logger.error "Analytics tracking failed: #{e.message}"
@@ -85,13 +85,13 @@ class AnalyticsService
     base_properties = {
       timestamp: Time.current,
       user_agent: current_user_agent,
-      ip: current_ip_address
+      ip: current_ip_address,
     }
 
     @client.track(
       anonymous_id: anonymous_id,
       event: event,
-      properties: base_properties.merge(properties)
+      properties: base_properties.merge(properties),
     )
   rescue StandardError => e
     Rails.logger.error "Analytics tracking failed: #{e.message}"
@@ -107,13 +107,13 @@ class AnalyticsService
       created_at: user.created_at,
       updated_at: user.updated_at,
       restaurants_count: user.restaurants.count,
-      locale: I18n.locale
+      locale: I18n.locale,
     }
 
     @client.identify(
       user_id: user.id,
       traits: default_traits.merge(traits),
-      context: user_context(user)
+      context: user_context(user),
     )
   rescue StandardError => e
     Rails.logger.error "Analytics identification failed: #{e.message}"
@@ -128,7 +128,7 @@ class AnalyticsService
       user_agent: current_user_agent,
       ip: current_ip_address,
       path: current_path,
-      referrer: current_referrer
+      referrer: current_referrer,
     }
 
     if user_or_anonymous_id.is_a?(User)
@@ -136,13 +136,13 @@ class AnalyticsService
         user_id: user_or_anonymous_id.id,
         name: page_name,
         properties: base_properties.merge(properties),
-        context: user_context(user_or_anonymous_id)
+        context: user_context(user_or_anonymous_id),
       )
     else
       @client.page(
         anonymous_id: user_or_anonymous_id,
         name: page_name,
-        properties: base_properties.merge(properties)
+        properties: base_properties.merge(properties),
       )
     end
   rescue StandardError => e
@@ -153,8 +153,8 @@ class AnalyticsService
   def track_onboarding_started(user, source = nil)
     track_user_event(user, ONBOARDING_STARTED, {
       source: source,
-      user_created_at: user.created_at
-    })
+      user_created_at: user.created_at,
+    },)
   end
 
   def track_onboarding_step_completed(user, step, step_data = {})
@@ -162,8 +162,8 @@ class AnalyticsService
       step: step,
       step_name: step_name_for(step),
       time_on_step: calculate_step_time(user, step),
-      total_progress: calculate_progress_percentage(step)
-    }.merge(step_data))
+      total_progress: calculate_progress_percentage(step),
+    }.merge(step_data),)
   end
 
   def track_onboarding_step_failed(user, step, error_message = nil)
@@ -171,26 +171,26 @@ class AnalyticsService
       step: step,
       step_name: step_name_for(step),
       error_message: error_message,
-      time_on_step: calculate_step_time(user, step)
-    })
+      time_on_step: calculate_step_time(user, step),
+    },)
   end
 
   def track_onboarding_completed(user, completion_data = {})
     onboarding = user.onboarding_session
-    
+
     track_user_event(user, ONBOARDING_COMPLETED, {
       total_time: calculate_total_onboarding_time(user),
       restaurant_type: onboarding&.restaurant_type,
       cuisine_type: onboarding&.cuisine_type,
       menu_items_count: onboarding&.menu_items&.length || 0,
       selected_plan: onboarding&.selected_plan_id,
-      completion_rate: 100
-    }.merge(completion_data))
+      completion_rate: 100,
+    }.merge(completion_data),)
   end
 
   def track_restaurant_created(user, restaurant)
     onboarding = user.onboarding_session
-    
+
     track_user_event(user, RESTAURANT_CREATED, {
       restaurant_id: restaurant.id,
       restaurant_name: restaurant.name,
@@ -198,8 +198,8 @@ class AnalyticsService
       cuisine_type: onboarding&.cuisine_type,
       location: restaurant.address1,
       phone: restaurant.respond_to?(:phone) ? restaurant.phone.present? : false,
-      via_onboarding: true # Always true when called from onboarding
-    })
+      via_onboarding: true, # Always true when called from onboarding
+    },)
   end
 
   def track_menu_created(user, menu)
@@ -209,22 +209,22 @@ class AnalyticsService
       restaurant_id: menu.restaurant_id,
       items_count: menu.menuitems.count,
       sections_count: menu.menusections.count,
-      via_onboarding: true # Always true when called from onboarding
-    })
+      via_onboarding: true, # Always true when called from onboarding
+    },)
   end
 
   def track_feature_usage(user, feature_name, feature_data = {})
     track_user_event(user, FEATURE_USED, {
       feature: feature_name,
-      restaurant_id: current_restaurant_id
-    }.merge(feature_data))
+      restaurant_id: current_restaurant_id,
+    }.merge(feature_data),)
   end
 
   def track_template_usage(user, template_type, template_data = {})
     track_user_event(user, TEMPLATE_USED, {
       template_type: template_type,
-      restaurant_id: current_restaurant_id
-    }.merge(template_data))
+      restaurant_id: current_restaurant_id,
+    }.merge(template_data),)
   end
 
   private
@@ -233,12 +233,12 @@ class AnalyticsService
     Rails.env.production? || Rails.env.staging? || ENV['FORCE_ANALYTICS'] == 'true'
   end
 
-  def user_context(user)
+  def user_context(_user)
     {
       locale: I18n.locale,
       timezone: Time.zone.name,
       user_agent: current_user_agent,
-      ip: current_ip_address
+      ip: current_ip_address,
     }
   end
 
@@ -253,7 +253,7 @@ class AnalyticsService
     end
   end
 
-  def calculate_step_time(user, step)
+  def calculate_step_time(_user, _step)
     # This would need to be implemented based on session tracking
     # For now, return nil
     nil

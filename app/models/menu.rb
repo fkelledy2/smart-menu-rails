@@ -86,10 +86,8 @@ class Menu < ApplicationRecord
   validates :name, presence: true
   validates :status, presence: true
 
-  private
-
   def invalidate_menu_caches
-    AdvancedCacheService.invalidate_menu_caches(self.id)
-    AdvancedCacheService.invalidate_restaurant_caches(self.restaurant_id)
+    AdvancedCacheService.invalidate_menu_caches(id)
+    AdvancedCacheService.invalidate_restaurant_caches(restaurant_id)
   end
 end

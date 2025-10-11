@@ -9,10 +9,13 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     @restaurant = restaurants(:one)
     @menu = menus(:one)
     @smartmenu = smartmenus(:one)
-    
+
     # Ensure proper associations for nested routes
     @menu.update!(restaurant: @restaurant) if @menu.restaurant != @restaurant
-    @smartmenu.update!(menu: @menu, restaurant: @restaurant) if @smartmenu.menu != @menu || @smartmenu.restaurant != @restaurant
+    if @smartmenu.menu != @menu || @smartmenu.restaurant != @restaurant
+      @smartmenu.update!(menu: @menu,
+                         restaurant: @restaurant,)
+    end
     @menuparticipant.update!(smartmenu: @smartmenu) if @menuparticipant.smartmenu != @smartmenu
   end
 
@@ -41,8 +44,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
       menuparticipant: {
         sessionid: 'test_session_123',
         preferredlocale: 'en',
-        smartmenu_id: @smartmenu.id
-      }
+        smartmenu_id: @smartmenu.id,
+      },
     }
     assert_response :success
   end
@@ -57,8 +60,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
           params: {
             menuparticipant: {
               preferredlocale: 'es',
-              smartmenu_id: @smartmenu.id
-            }
+              smartmenu_id: @smartmenu.id,
+            },
           }
     assert_response :success
   end
@@ -124,8 +127,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
         sessionid: 'session_tracking_123',
-        preferredlocale: 'en'
-      }
+        preferredlocale: 'en',
+      },
     }
     assert_response :success
   end
@@ -134,8 +137,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              sessionid: 'validated_session_456'
-            }
+              sessionid: 'validated_session_456',
+            },
           }
     assert_response :success
   end
@@ -150,8 +153,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     # Test handling of missing session
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
-        preferredlocale: 'en'
-      }
+        preferredlocale: 'en',
+      },
     }
     assert_response :success
   end
@@ -161,8 +164,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
         sessionid: 'identification_session',
-        smartmenu_id: @smartmenu.id
-      }
+        smartmenu_id: @smartmenu.id,
+      },
     }
     assert_response :success
   end
@@ -172,8 +175,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              sessionid: 'coordinated_session'
-            }
+              sessionid: 'coordinated_session',
+            },
           }
     assert_response :success
   end
@@ -183,8 +186,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
         sessionid: 'broadcast_create_session',
-        preferredlocale: 'en'
-      }
+        preferredlocale: 'en',
+      },
     }
     assert_response :success
   end
@@ -193,8 +196,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              preferredlocale: 'fr'
-            }
+              preferredlocale: 'fr',
+            },
           }
     assert_response :success
   end
@@ -204,8 +207,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
         sessionid: 'cache_broadcast_session',
-        smartmenu_id: @smartmenu.id
-      }
+        smartmenu_id: @smartmenu.id,
+      },
     }
     assert_response :success
   end
@@ -215,8 +218,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              preferredlocale: 'de'
-            }
+              preferredlocale: 'de',
+            },
           }
     assert_response :success
   end
@@ -225,8 +228,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     # Test broadcast data compression
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
-        sessionid: 'compression_session'
-      }
+        sessionid: 'compression_session',
+      },
     }
     assert_response :success
   end
@@ -236,8 +239,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              preferredlocale: 'it'
-            }
+              preferredlocale: 'it',
+            },
           }
     assert_response :success
   end
@@ -246,8 +249,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     # Test N+1 query optimization
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
-        sessionid: 'n1_optimization_session'
-      }
+        sessionid: 'n1_optimization_session',
+      },
     }
     assert_response :success
   end
@@ -257,8 +260,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              preferredlocale: 'pt'
-            }
+              preferredlocale: 'pt',
+            },
           }
     assert_response :success
   end
@@ -269,8 +272,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              smartmenu_id: @smartmenu.id
-            }
+              smartmenu_id: @smartmenu.id,
+            },
           }
     assert_response :success
   end
@@ -280,8 +283,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              preferredlocale: 'ja'
-            }
+              preferredlocale: 'ja',
+            },
           }
     assert_response :success
   end
@@ -302,8 +305,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     # Test participant-menu relationship validation
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
-        sessionid: 'relationship_session'
-      }
+        sessionid: 'relationship_session',
+      },
     }
     assert_response :success
   end
@@ -313,8 +316,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
         sessionid: 'tablesetting_session',
-        smartmenu_id: @smartmenu.id
-      }
+        smartmenu_id: @smartmenu.id,
+      },
     }
     assert_response :success
   end
@@ -323,8 +326,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     # Test participant lifecycle management
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
-        sessionid: 'lifecycle_session'
-      }
+        sessionid: 'lifecycle_session',
+      },
     }
     assert_response :success
   end
@@ -335,8 +338,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
           params: {
             menuparticipant: {
               preferredlocale: 'zh',
-              smartmenu_id: @smartmenu.id
-            }
+              smartmenu_id: @smartmenu.id,
+            },
           }
     assert_response :success
   end
@@ -347,8 +350,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
          params: {
            menuparticipant: {
              sessionid: 'json_create_session',
-             preferredlocale: 'en'
-           }
+             preferredlocale: 'en',
+           },
          },
          as: :json
     assert_response :success
@@ -358,8 +361,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              preferredlocale: 'ko'
-            }
+              preferredlocale: 'ko',
+            },
           },
           as: :json
     assert_response :success
@@ -380,8 +383,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menu_menuparticipants_url(@restaurant, @menu),
          params: {
            menuparticipant: {
-             sessionid: 'error_session'
-           }
+             sessionid: 'error_session',
+           },
          },
          as: :json
     assert_response :success
@@ -397,8 +400,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
   test 'should handle invalid participant creation' do
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
-        sessionid: 'invalid_session'
-      }
+        sessionid: 'invalid_session',
+      },
     }
     assert_response :success
   end
@@ -407,8 +410,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              preferredlocale: 'invalid_locale'
-            }
+              preferredlocale: 'invalid_locale',
+            },
           }
     assert_response :success
   end
@@ -417,8 +420,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     # Test missing menu references - this will use existing menu
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
-        sessionid: 'missing_menu_session'
-      }
+        sessionid: 'missing_menu_session',
+      },
     }
     assert_response :success
   end
@@ -428,8 +431,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              smartmenu_id: 99999 # Non-existent
-            }
+              smartmenu_id: 99999, # Non-existent
+            },
           }
     assert_response :success
   end
@@ -444,8 +447,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     # Test broadcasting failure handling
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
-        sessionid: 'broadcast_fail_session'
-      }
+        sessionid: 'broadcast_fail_session',
+      },
     }
     assert_response :success
   end
@@ -454,8 +457,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     # Test session validation error handling
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
-        sessionid: '' # Invalid
-      }
+        sessionid: '', # Invalid
+      },
     }
     assert_response :success
   end
@@ -472,8 +475,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
         sessionid: 'optimization_session',
-        smartmenu_id: @smartmenu.id
-      }
+        smartmenu_id: @smartmenu.id,
+      },
     }
     assert_response :success
   end
@@ -483,8 +486,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              preferredlocale: 'ru'
-            }
+              preferredlocale: 'ru',
+            },
           }
     assert_response :success
   end
@@ -500,8 +503,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
-              preferredlocale: 'ar'
-            }
+              preferredlocale: 'ar',
+            },
           }
     assert_response :success
   end
@@ -518,8 +521,8 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
       menuparticipant: {
         sessionid: 'complex_performance_session',
         preferredlocale: 'hi',
-        smartmenu_id: @smartmenu.id
-      }
+        smartmenu_id: @smartmenu.id,
+      },
     }
     assert_response :success
   end
@@ -547,7 +550,7 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     # Test context switching between restaurant and menu
     get restaurant_menu_menuparticipants_url(@restaurant, @menu)
     assert_response :success
-    
+
     get new_restaurant_menu_menuparticipant_url(@restaurant, @menu)
     assert_response :success
   end
@@ -570,21 +573,21 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
         sessionid: 'complete_lifecycle_session',
-        preferredlocale: 'en'
-      }
+        preferredlocale: 'en',
+      },
     }
     assert_response :success
-    
+
     # Update participant with smartmenu
     patch restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant),
           params: {
             menuparticipant: {
               preferredlocale: 'es',
-              smartmenu_id: @smartmenu.id
-            }
+              smartmenu_id: @smartmenu.id,
+            },
           }
     assert_response :success
-    
+
     # Delete participant
     delete restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant)
     assert_response :success
@@ -594,11 +597,11 @@ class MenuparticipantsControllerTest < ActionDispatch::IntegrationTest
     # Test authenticated user scenario
     post restaurant_menu_menuparticipants_url(@restaurant, @menu), params: {
       menuparticipant: {
-        sessionid: 'authenticated_session'
-      }
+        sessionid: 'authenticated_session',
+      },
     }
     assert_response :success
-    
+
     # Test unauthenticated user scenario
     sign_out @user
     get restaurant_menu_menuparticipants_url(@restaurant, @menu)

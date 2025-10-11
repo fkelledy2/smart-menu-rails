@@ -827,9 +827,12 @@ DEPENDENCIES
   rswag-specs
   rswag-ui
   rubocop (~> 1.57)
+  rubocop-capybara
+  rubocop-factory_bot
   rubocop-performance (~> 1.19)
   rubocop-rails (~> 2.22)
   rubocop-rspec (~> 2.25)
+  rubocop-rspec_rails
   ruby-limiter
   ruby-openai
   seed_dump

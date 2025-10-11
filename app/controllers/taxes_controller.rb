@@ -86,7 +86,7 @@ class TaxesController < ApplicationController
   # DELETE /taxes/1 or /taxes/1.json
   def destroy
     authorize @tax
-    
+
     @tax.update(archived: true)
     respond_to do |format|
       format.html do

@@ -1,6 +1,6 @@
 class OrdrsController < ApplicationController
   include CachePerformanceMonitoring
-  
+
   before_action :authenticate_user!, except: %i[show create update] # Allow customers to create/update orders
   before_action :set_restaurant
   before_action :set_ordr, only: %i[show edit update destroy analytics]
@@ -16,51 +16,54 @@ class OrdrsController < ApplicationController
       format.html do
         if @restaurant
           # Use enhanced cache service that returns model instances
-          cached_result = AdvancedCacheServiceV2.cached_restaurant_orders_with_models(@restaurant.id, include_calculations: true)
-          
+          cached_result = AdvancedCacheServiceV2.cached_restaurant_orders_with_models(@restaurant.id,
+                                                                                      include_calculations: true,)
+
           # Apply policy scoping to the model instances
           @ordrs = policy_scope(cached_result[:orders])
           @orders_data = cached_result # Contains both models and cached calculations
           @cached_calculations = cached_result[:cached_calculations] # Hash data for complex calculations
-          
+
           # Track restaurant orders view
           AnalyticsService.track_user_event(current_user, 'restaurant_orders_viewed', {
             restaurant_id: @restaurant.id,
             restaurant_name: @restaurant.name,
             orders_count: @ordrs.count,
-            viewing_context: 'restaurant_management'
-          })
+            viewing_context: 'restaurant_management',
+          },)
         else
           # Use enhanced cache service that returns model instances
           cached_result = AdvancedCacheServiceV2.cached_user_all_orders_with_models(current_user.id)
-          
+
           # Apply policy scoping to the model instances
           @ordrs = policy_scope(cached_result[:orders])
           @all_orders_data = cached_result # Contains both models and cached data
-          
+
           # Track all orders view
           AnalyticsService.track_user_event(current_user, 'all_orders_viewed', {
             user_id: current_user.id,
             restaurants_count: @all_orders_data[:metadata][:restaurants_count],
-            total_orders: @ordrs.count
-          })
+            total_orders: @ordrs.count,
+          },)
         end
       end
-      
+
       format.json do
         # For JSON requests, use actual ActiveRecord objects
         # Ensure user is authenticated for sensitive order data
-        if !current_user
+        unless current_user
           head :unauthorized
           return
         end
-        
+
         if @restaurant
-          @ordrs = policy_scope(@restaurant.ordrs.includes(:ordritems, :tablesetting, :menu, :employee, :ordrparticipants))
+          @ordrs = policy_scope(@restaurant.ordrs.includes(:ordritems, :tablesetting, :menu, :employee,
+                                                           :ordrparticipants,))
         else
           # Get orders from all user's restaurants
           restaurant_ids = current_user.restaurants.pluck(:id)
-          @ordrs = policy_scope(Ordr.where(restaurant_id: restaurant_ids).includes(:ordritems, :tablesetting, :menu, :employee, :ordrparticipants))
+          @ordrs = policy_scope(Ordr.where(restaurant_id: restaurant_ids).includes(:ordritems, :tablesetting, :menu,
+                                                                                   :employee, :ordrparticipants,))
         end
       end
     end
@@ -70,12 +73,12 @@ class OrdrsController < ApplicationController
   def show
     # Always authorize - policy handles public vs private access
     authorize @ordr
-    
+
     respond_to do |format|
       format.html do
         # Use AdvancedCacheService for comprehensive order data with calculations
         @order_data = AdvancedCacheService.cached_order_with_details(@ordr.id)
-        
+
         # Apply cached calculations to the order object for backward compatibility
         @ordr.nett = @order_data[:calculations][:nett]
         @ordr.tax = @order_data[:calculations][:tax]
@@ -83,43 +86,43 @@ class OrdrsController < ApplicationController
         @ordr.covercharge = @order_data[:calculations][:covercharge]
         @ordr.gross = @order_data[:calculations][:gross]
       end
-      
+
       format.json do
         # For JSON requests, @ordr is already set by before_action and is an ActiveRecord object
         # No additional setup needed - the JSON view will work with the ActiveRecord object
       end
     end
-    
+
     # Track order view
-    if current_user
-      AnalyticsService.track_user_event(current_user, 'order_viewed', {
-        order_id: @ordr.id,
-        restaurant_id: @ordr.restaurant_id,
-        order_status: @ordr.status,
-        order_total: @ordr.gross,
-        viewing_context: current_user.admin? ? 'staff_view' : 'customer_view'
-      })
-    end
+    return unless current_user
+
+    AnalyticsService.track_user_event(current_user, 'order_viewed', {
+      order_id: @ordr.id,
+      restaurant_id: @ordr.restaurant_id,
+      order_status: @ordr.status,
+      order_total: @ordr.gross,
+      viewing_context: current_user.admin? ? 'staff_view' : 'customer_view',
+    },)
   end
 
   # GET /ordrs/1/analytics
   def analytics
     authorize @ordr, :show?
-    
+
     # Get analytics period from params or default to 7 days for order context
     days = params[:days]&.to_i || 7
-    
+
     # Use AdvancedCacheService for order analytics and similar orders
     @analytics_data = AdvancedCacheService.cached_order_analytics(@ordr.id, days: days)
-    
+
     # Track analytics view
     AnalyticsService.track_user_event(current_user, 'order_analytics_viewed', {
       order_id: @ordr.id,
       restaurant_id: @ordr.restaurant_id,
       period_days: days,
-      order_total: @ordr.gross
-    })
-    
+      order_total: @ordr.gross,
+    },)
+
     respond_to do |format|
       format.html
       format.json { render json: @analytics_data }
@@ -129,21 +132,21 @@ class OrdrsController < ApplicationController
   # GET /restaurants/:restaurant_id/ordrs/summary
   def summary
     authorize Ordr.new(restaurant: @restaurant), :index?
-    
+
     # Get summary period from params or default to 30 days
     days = params[:days]&.to_i || 30
-    
+
     # Use AdvancedCacheService for restaurant order summary
     @summary_data = AdvancedCacheService.cached_restaurant_order_summary(@restaurant.id, days: days)
-    
+
     # Track summary view
     AnalyticsService.track_user_event(current_user, 'restaurant_order_summary_viewed', {
       restaurant_id: @restaurant.id,
       period_days: days,
       total_orders: @summary_data[:summary][:total_orders],
-      total_revenue: @summary_data[:summary][:total_revenue]
-    })
-    
+      total_revenue: @summary_data[:summary][:total_revenue],
+    },)
+
     respond_to do |format|
       format.html
       format.json { render json: @summary_data }
@@ -176,7 +179,7 @@ class OrdrsController < ApplicationController
     @ordr = Ordr.new(ordr_params.merge(
                        restaurant_id: restaurant_id,
                        nett: 0, tip: 0, service: 0, tax: 0, gross: 0,
-    ))
+                     ))
     # Always authorize - policy handles public vs private access
     authorize @ordr
 
@@ -192,16 +195,16 @@ class OrdrsController < ApplicationController
             restaurant_id: @ordr.restaurant_id,
             menu_id: @ordr.menu_id,
             table_id: @ordr.tablesetting_id,
-            order_status: @ordr.status
-          })
+            order_status: @ordr.status,
+          },)
         else
           anonymous_id = session[:session_id] ||= SecureRandom.uuid
           AnalyticsService.track_anonymous_event(anonymous_id, 'order_started_anonymous', {
             order_id: @ordr.id,
             restaurant_id: @ordr.restaurant_id,
             menu_id: @ordr.menu_id,
-            table_id: @ordr.tablesetting_id
-          })
+            table_id: @ordr.tablesetting_id,
+          },)
         end
 
         if ordr_params[:status].to_i.zero?
@@ -210,9 +213,13 @@ class OrdrsController < ApplicationController
         end
 
         respond_to do |format|
-          format.html {
- redirect_to restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr), notice: t('common.flash.created', resource: t('activerecord.models.ordr')) }
-          format.json { render :show, status: :created, location: restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr) }
+          format.html do
+            redirect_to restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr),
+                        notice: t('common.flash.created', resource: t('activerecord.models.ordr'))
+          end
+          format.json do
+            render :show, status: :created, location: restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr)
+          end
         end
       else
         respond_to do |format|
@@ -243,15 +250,17 @@ class OrdrsController < ApplicationController
         CacheInvalidationJob.perform_later(
           order_id: @ordr.id,
           restaurant_id: @ordr.restaurant_id,
-          user_id: @ordr.restaurant.user_id
+          user_id: @ordr.restaurant.user_id,
         )
-        
+
         @tablesetting = @ordr.tablesetting
         @ordrparticipant = find_or_create_ordr_participant(@ordr)
-        @ordr.status == 'closed'
+        @ordr.status
         full_refresh = false
         respond_to do |format|
-          format.json { render :show, status: :ok, location: restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr) }
+          format.json do
+            render :show, status: :ok, location: restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr)
+          end
           broadcast_partials(@ordr, @tablesetting, @ordrparticipant, full_refresh)
         end
       else
@@ -271,25 +280,29 @@ class OrdrsController < ApplicationController
       # Store data for cache invalidation before destroying
       restaurant_id = @ordr.restaurant_id
       user_id = @ordr.restaurant.user_id
-      
+
       @ordr.destroy!
-      
+
       # Move cache invalidation to background job
       CacheInvalidationJob.perform_later(
         order_id: @ordr.id,
         restaurant_id: restaurant_id,
-        user_id: user_id
+        user_id: user_id,
       )
-      
+
       respond_to do |format|
-        format.html {
- redirect_to restaurant_ordrs_url(@restaurant), notice: t('common.flash.deleted', resource: t('activerecord.models.ordr')) }
+        format.html do
+          redirect_to restaurant_ordrs_url(@restaurant),
+                      notice: t('common.flash.deleted', resource: t('activerecord.models.ordr'))
+        end
         format.json { head :no_content }
       end
     end
   rescue ActiveRecord::RecordNotDestroyed => e
     respond_to do |format|
-      format.html { redirect_to restaurant_ordrs_url(@restaurant), alert: t('common.flash.action_failed', error: e.message) }
+      format.html do
+        redirect_to restaurant_ordrs_url(@restaurant), alert: t('common.flash.action_failed', error: e.message)
+      end
       format.json { render json: { error: e.message }, status: :unprocessable_entity }
     end
   end
@@ -342,8 +355,8 @@ class OrdrsController < ApplicationController
     cache_key = "restaurant_taxes:#{ordr.restaurant_id}:#{Date.current}"
     taxes = Rails.cache.fetch(cache_key, expires_in: 1.hour) do
       Tax.where(restaurant_id: ordr.restaurant_id)
-         .order(:sequence)
-         .pluck(:taxpercentage, :taxtype)
+        .order(:sequence)
+        .pluck(:taxpercentage, :taxtype)
     end
 
     total_tax = 0
@@ -385,26 +398,26 @@ class OrdrsController < ApplicationController
       :ordritems, :ordrparticipants, :ordractions, :employee,
       menu: [
         :restaurant, :menusections, :menuavailabilities, :menulocales,
-        menusections: [
+        { menusections: [
           :menuitems, :menusectionlocales,
-          menuitems: [
-            :menuitemlocales, :allergyns, :ingredients, :sizes,
-            :menuitem_allergyn_mappings, :menuitem_ingredient_mappings
-          ]
-        ]
+          { menuitems: %i[
+            menuitemlocales allergyns ingredients sizes
+            menuitem_allergyn_mappings menuitem_ingredient_mappings
+          ] },
+        ] },
       ],
       tablesetting: [:restaurant],
-      restaurant: [:restaurantlocales, :taxes, :allergyns]
+      restaurant: %i[restaurantlocales taxes allergyns],
     ).find(ordr.id)
-    
+
     menu = ordr.menu
     restaurant = menu.restaurant
-    
+
     # Use single query with includes instead of separate find_by
     menuparticipant = Menuparticipant.includes(:smartmenu)
-                                    .where(sessionid: session.id.to_s)
-                                    .first
-    
+      .where(sessionid: session.id.to_s)
+      .first
+
     # Allergyns already loaded via restaurant association
     allergyns = restaurant.allergyns
     restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
@@ -431,9 +444,9 @@ class OrdrsController < ApplicationController
             menu: menu,
             tablesetting: tablesetting,
             participant: menuparticipant,
-            currency: restaurant_currency
+            currency: restaurant_currency,
           ),
-          expires_in: 30.minutes
+          expires_in: 30.minutes,
         ) do
           ApplicationController.renderer.render(
             partial: 'smartmenus/showModals',
@@ -456,9 +469,9 @@ class OrdrsController < ApplicationController
             menu: menu,
             participant: ordrparticipant,
             currency: restaurant_currency,
-            allergyns_updated_at: allergyns.maximum(:updated_at)
+            allergyns_updated_at: allergyns.maximum(:updated_at),
           ),
-          expires_in: 30.minutes
+          expires_in: 30.minutes,
         ) do
           ApplicationController.renderer.render(
             partial: 'smartmenus/showMenuContentStaff',
@@ -549,34 +562,29 @@ class OrdrsController < ApplicationController
     ActionCable.server.broadcast("ordr_#{menuparticipant.smartmenu.slug}_channel", partials)
   end
 
-
   def compress_string(str)
     require 'zlib'
     require 'base64'
     Base64.strict_encode64(Zlib::Deflate.deflate(str))
   end
 
-    # Use callbacks to share common setup or constraints between actions.
+  # Use callbacks to share common setup or constraints between actions.
   def set_ordr
     @ordr = Ordr.find(params[:id])
   end
 
   def set_currency
     if params[:restaurant_id]
-        @restaurant = Restaurant.find(params[:restaurant_id])
-        @restaurantCurrency = if @restaurant.currency
-          ISO4217::Currency.from_code(@restaurant.currency)
-        else
-          ISO4217::Currency.from_code('USD')
-                              end
+      @restaurant = Restaurant.find(params[:restaurant_id])
+      @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency || 'USD')
     else
       @restaurantCurrency = ISO4217::Currency.from_code('USD')
     end
   end
 
-    # Only allow a list of trusted parameters through.
+  # Only allow a list of trusted parameters through.
   def ordr_params
-    params.require(:ordr).permit(:orderedAt, :deliveredAt, :paidAt, :nett, :tip, :service, :tax, :gross, :status, 
-:ordercapacity, :covercharge, :employee_id, :tablesetting_id, :menu_id, :restaurant_id)
+    params.require(:ordr).permit(:orderedAt, :deliveredAt, :paidAt, :nett, :tip, :service, :tax, :gross, :status,
+                                 :ordercapacity, :covercharge, :employee_id, :tablesetting_id, :menu_id, :restaurant_id,)
   end
 end

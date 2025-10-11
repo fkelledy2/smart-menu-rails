@@ -12,14 +12,14 @@ module QueryCacheable
   # @param force_refresh [Boolean] Force cache refresh
   # @param &block [Block] Block to execute if cache miss
   # @return [Object] Cached or computed result
-  def cache_query(cache_type:, key_parts: [], force_refresh: false, &block)
+  def cache_query(cache_type:, key_parts: [], force_refresh: false, &)
     cache_key = build_controller_cache_key(key_parts)
-    
+
     QueryCacheService.fetch(
       cache_key,
       cache_type: cache_type,
       force_refresh: force_refresh,
-      &block
+      &
     )
   end
 
@@ -30,16 +30,16 @@ module QueryCacheable
   # @param force_refresh [Boolean] Force cache refresh
   # @param &block [Block] Block to execute if cache miss
   # @return [Object] Cached or computed result
-  def cache_metrics(metric_name, user_scope: true, restaurant_scope: false, force_refresh: false, &block)
+  def cache_metrics(metric_name, user_scope: true, restaurant_scope: false, force_refresh: false, &)
     key_parts = [metric_name]
     key_parts << "user_#{current_user.id}" if user_scope && current_user
     key_parts << "restaurant_#{params[:restaurant_id]}" if restaurant_scope && params[:restaurant_id]
-    
+
     cache_query(
       cache_type: :metrics_summary,
       key_parts: key_parts,
       force_refresh: force_refresh,
-      &block
+      &
     )
   end
 
@@ -50,15 +50,15 @@ module QueryCacheable
   # @param force_refresh [Boolean] Force cache refresh
   # @param &block [Block] Block to execute if cache miss
   # @return [Object] Cached or computed result
-  def cache_analytics(analytics_type, time_range: 'daily', additional_params: {}, force_refresh: false, &block)
+  def cache_analytics(analytics_type, time_range: 'daily', additional_params: {}, force_refresh: false, &)
     key_parts = [analytics_type, time_range]
     key_parts << "user_#{current_user.id}" if current_user
-    
+
     # Add additional parameters to cache key
     additional_params.each do |key, value|
       key_parts << "#{key}_#{value}" if value.present?
     end
-    
+
     cache_type = case time_range
                  when 'hourly', 'recent'
                    :recent_metrics
@@ -69,12 +69,12 @@ module QueryCacheable
                  else
                    :analytics_dashboard
                  end
-    
+
     cache_query(
       cache_type: cache_type,
       key_parts: key_parts,
       force_refresh: force_refresh,
-      &block
+      &
     )
   end
 
@@ -85,22 +85,22 @@ module QueryCacheable
   # @param force_refresh [Boolean] Force cache refresh
   # @param &block [Block] Block to execute if cache miss
   # @return [Object] Cached or computed result
-  def cache_order_analytics(report_type, restaurant_id: nil, date_range: {}, force_refresh: false, &block)
+  def cache_order_analytics(report_type, restaurant_id: nil, date_range: {}, force_refresh: false, &)
     key_parts = [report_type]
     key_parts << "restaurant_#{restaurant_id}" if restaurant_id
     key_parts << "user_#{current_user.id}" if current_user
-    
+
     # Add date range to cache key
     if date_range.present?
       date_key = "#{date_range[:start]}_to_#{date_range[:end]}"
       key_parts << date_key
     end
-    
+
     cache_query(
       cache_type: :order_analytics,
       key_parts: key_parts,
       force_refresh: force_refresh,
-      &block
+      &
     )
   end
 

@@ -1,32 +1,32 @@
 # frozen_string_literal: true
 
 class Api::V1::OrdersController < Api::V1::BaseController
-  before_action :set_restaurant, only: [:index, :create]
-  before_action :set_order, only: [:show, :update, :destroy]
-  before_action :authenticate_user!, except: [:create, :show]
+  before_action :set_restaurant, only: %i[index create]
+  before_action :set_order, only: %i[show update destroy]
+  before_action :authenticate_user!, except: %i[create show]
 
   # GET /api/v1/restaurants/:restaurant_id/orders
   def index
     authorize @restaurant
-    
+
     @orders = @restaurant.ordrs.includes(:ordritems)
     @orders = @orders.where(status: params[:status]) if params[:status].present?
     @orders = @orders.page(params[:page]).per(20)
-    
+
     render json: @orders.map { |order| order_json(order) }
   end
 
   # GET /api/v1/orders/:id
   def show
     authorize @order if current_user
-    
+
     render json: order_with_items_json(@order)
   end
 
   # POST /api/v1/restaurants/:restaurant_id/orders
   def create
     @order = @restaurant.ordrs.build(order_params)
-    
+
     if @order.save
       # Create order items
       if params[:items].present?
@@ -37,17 +37,18 @@ class Api::V1::OrdersController < Api::V1::BaseController
             quantity: item_params[:quantity],
             unit_price: menu_item.price,
             total_price: menu_item.price * item_params[:quantity].to_i,
-            special_instructions: item_params[:special_instructions]
+            special_instructions: item_params[:special_instructions],
           )
         end
-        
+
         # Update order totals
         @order.calculate_totals!
       end
-      
+
       render json: order_with_items_json(@order), status: :created
     else
-      render json: { error: { code: 'VALIDATION_ERROR', message: @order.errors.full_messages.join(', ') } }, status: :unprocessable_entity
+      render json: { error: { code: 'VALIDATION_ERROR', message: @order.errors.full_messages.join(', ') } },
+             status: :unprocessable_entity
     end
   end
 
@@ -58,7 +59,8 @@ class Api::V1::OrdersController < Api::V1::BaseController
     if @order.update(order_update_params)
       render json: order_json(@order)
     else
-      render json: { error: { code: 'VALIDATION_ERROR', message: @order.errors.full_messages.join(', ') } }, status: :unprocessable_entity
+      render json: { error: { code: 'VALIDATION_ERROR', message: @order.errors.full_messages.join(', ') } },
+             status: :unprocessable_entity
     end
   end
 
@@ -105,7 +107,7 @@ class Api::V1::OrdersController < Api::V1::BaseController
       total: order.total || 0,
       notes: order.notes,
       created_at: order.created_at,
-      updated_at: order.updated_at
+      updated_at: order.updated_at,
     }
   end
 
@@ -122,7 +124,7 @@ class Api::V1::OrdersController < Api::V1::BaseController
         total_price: item.total_price,
         special_instructions: item.special_instructions,
         created_at: item.created_at,
-        updated_at: item.updated_at
+        updated_at: item.updated_at,
       }
     end
     order_data

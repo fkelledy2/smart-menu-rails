@@ -1,7 +1,7 @@
 class MenusectionlocalesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_menusectionlocale, only: %i[show edit update destroy]
-  
+
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
@@ -35,9 +35,9 @@ class MenusectionlocalesController < ApplicationController
   def create
     @menusectionlocale = Menusectionlocale.new(menusectionlocale_params)
     authorize @menusectionlocale
-    
+
     if @menusectionlocale.save
-      redirect_to menusectionlocale_url(@menusectionlocale), 
+      redirect_to menusectionlocale_url(@menusectionlocale),
                   notice: t('common.flash.created', resource: t('activerecord.models.menusectionlocale'))
     else
       render :new, status: :unprocessable_entity
@@ -46,9 +46,9 @@ class MenusectionlocalesController < ApplicationController
 
   def update
     authorize @menusectionlocale
-    
+
     if @menusectionlocale.update(menusectionlocale_params)
-      redirect_to menusectionlocale_url(@menusectionlocale), 
+      redirect_to menusectionlocale_url(@menusectionlocale),
                   notice: t('common.flash.updated', resource: t('activerecord.models.menusectionlocale'))
     else
       render :edit, status: :unprocessable_entity
@@ -57,9 +57,9 @@ class MenusectionlocalesController < ApplicationController
 
   def destroy
     authorize @menusectionlocale
-    
+
     @menusectionlocale.destroy
-    redirect_to menusectionlocales_url, 
+    redirect_to menusectionlocales_url,
                 notice: t('common.flash.deleted', resource: t('activerecord.models.menusectionlocale'))
   end
 

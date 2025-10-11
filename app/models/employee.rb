@@ -39,8 +39,8 @@ class Employee < ApplicationRecord
   private
 
   def invalidate_employee_caches
-    AdvancedCacheService.invalidate_employee_caches(self.id)
-    AdvancedCacheService.invalidate_restaurant_caches(self.restaurant_id)
-    AdvancedCacheService.invalidate_user_caches(self.restaurant.user_id) if self.restaurant.user_id
+    AdvancedCacheService.invalidate_employee_caches(id)
+    AdvancedCacheService.invalidate_restaurant_caches(restaurant_id)
+    AdvancedCacheService.invalidate_user_caches(restaurant.user_id) if restaurant.user_id
   end
 end

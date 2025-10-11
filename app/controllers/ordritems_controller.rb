@@ -37,30 +37,32 @@ class OrdritemsController < ApplicationController
     @ordritem = Ordritem.new(ordritem_params)
     # Always authorize - policy handles public vs private access
     authorize @ordritem
-    
+
     respond_to do |format|
-      begin
-        ActiveRecord::Base.transaction do
-          if @ordritem.save
+      ActiveRecord::Base.transaction do
+        if @ordritem.save
           adjust_inventory(@ordritem.menuitem&.inventory, -1)
           @ordrparticipant = find_or_create_participant(@ordritem.ordr)
           Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
           update_ordr(@ordritem.ordr)
           broadcast_partials(@ordritem.ordr, @ordritem.ordr.tablesetting, @ordrparticipant)
           format.html do
-            redirect_to restaurant_ordrs_path(@restaurant || @ordritem.ordr.restaurant), notice: 'Ordritem was successfully created.'
+            redirect_to restaurant_ordrs_path(@restaurant || @ordritem.ordr.restaurant),
+                        notice: 'Ordritem was successfully created.'
           end
-          format.json { render :show, status: :created, location: restaurant_ordritem_url(@restaurant || @ordritem.ordr.restaurant, @ordritem) }
-          else
-            format.html { render :new, status: :unprocessable_entity }
-            format.json { render json: @ordritem.errors, status: :unprocessable_entity }
+          format.json do
+            render :show, status: :created,
+                          location: restaurant_ordritem_url(@restaurant || @ordritem.ordr.restaurant, @ordritem)
           end
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @ordritem.errors, status: :unprocessable_entity }
         end
-      rescue => e
-        Rails.logger.error "Error creating order item: #{e.message}"
-        Rails.logger.error e.backtrace.join("\n")
-        format.json { render json: { error: e.message }, status: :internal_server_error }
       end
+    rescue StandardError => e
+      Rails.logger.error "Error creating order item: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      format.json { render json: { error: e.message }, status: :internal_server_error }
     end
   end
 
@@ -80,7 +82,10 @@ class OrdritemsController < ApplicationController
           end
           update_ordr(@ordritem.ordr)
           broadcast_partials(@ordritem.ordr, @ordritem.ordr.tablesetting, find_or_create_participant(@ordritem.ordr))
-          format.json { render :show, status: :ok, location: restaurant_ordritem_url(@restaurant || @ordritem.ordr.restaurant, @ordritem) }
+          format.json do
+            render :show, status: :ok,
+                          location: restaurant_ordritem_url(@restaurant || @ordritem.ordr.restaurant, @ordritem)
+          end
         else
           format.html { render :edit, status: :unprocessable_entity }
           format.json { render json: @ordritem.errors, status: :unprocessable_entity }
@@ -103,7 +108,10 @@ class OrdritemsController < ApplicationController
       Ordraction.create!(ordrparticipant: ordrparticipant, ordr: order, ordritem: @ordritem, action: 3)
       broadcast_partials(order, order.tablesetting, ordrparticipant)
       respond_to do |format|
-        format.html { redirect_to restaurant_ordrs_path(@restaurant || order.restaurant), notice: 'Ordritem was successfully destroyed.' }
+        format.html do
+          redirect_to restaurant_ordrs_path(@restaurant || order.restaurant),
+                      notice: 'Ordritem was successfully destroyed.'
+        end
         format.json { head :no_content }
       end
     end

@@ -1,7 +1,7 @@
 class MenuavailabilitiesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_menuavailability, only: %i[show edit update destroy]
-  
+
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
@@ -40,7 +40,7 @@ class MenuavailabilitiesController < ApplicationController
   def create
     @menuavailability = Menuavailability.new(menuavailability_params)
     authorize @menuavailability
-    
+
     respond_to do |format|
       if @menuavailability.save
         format.html do
@@ -58,7 +58,7 @@ class MenuavailabilitiesController < ApplicationController
   # PATCH/PUT /menuavailabilities/1 or /menuavailabilities/1.json
   def update
     authorize @menuavailability
-    
+
     respond_to do |format|
       if @menuavailability.update(menuavailability_params)
         format.html do
@@ -76,7 +76,7 @@ class MenuavailabilitiesController < ApplicationController
   # DELETE /menuavailabilities/1 or /menuavailabilities/1.json
   def destroy
     authorize @menuavailability
-    
+
     @menuavailability.update(archived: true)
     respond_to do |format|
       format.html do

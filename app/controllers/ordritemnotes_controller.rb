@@ -1,7 +1,7 @@
 class OrdritemnotesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_ordritemnote, only: %i[show edit update destroy]
-  
+
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
@@ -31,11 +31,11 @@ class OrdritemnotesController < ApplicationController
   def create
     @ordritemnote = Ordritemnote.new(ordritemnote_params)
     authorize @ordritemnote
-    
+
     respond_to do |format|
       if @ordritemnote.save
         format.html do
-          redirect_to ordritemnote_url(@ordritemnote), 
+          redirect_to ordritemnote_url(@ordritemnote),
                       notice: t('common.flash.created', resource: t('activerecord.models.ordritemnote'))
         end
         format.json { render :show, status: :created, location: @ordritemnote }
@@ -49,11 +49,11 @@ class OrdritemnotesController < ApplicationController
   # PATCH/PUT /ordritemnotes/1 or /ordritemnotes/1.json
   def update
     authorize @ordritemnote
-    
+
     respond_to do |format|
       if @ordritemnote.update(ordritemnote_params)
         format.html do
-          redirect_to ordritemnote_url(@ordritemnote), 
+          redirect_to ordritemnote_url(@ordritemnote),
                       notice: t('common.flash.updated', resource: t('activerecord.models.ordritemnote'))
         end
         format.json { render :show, status: :ok, location: @ordritemnote }
@@ -67,11 +67,11 @@ class OrdritemnotesController < ApplicationController
   # DELETE /ordritemnotes/1 or /ordritemnotes/1.json
   def destroy
     authorize @ordritemnote
-    
+
     @ordritemnote.destroy!
     respond_to do |format|
       format.html do
-        redirect_to ordritemnotes_url, 
+        redirect_to ordritemnotes_url,
                     notice: t('common.flash.deleted', resource: t('activerecord.models.ordritemnote'))
       end
       format.json { head :no_content }

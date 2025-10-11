@@ -117,8 +117,8 @@ class Ordr < ApplicationRecord
   private
 
   def invalidate_order_caches
-    AdvancedCacheService.invalidate_order_caches(self.id)
-    AdvancedCacheService.invalidate_restaurant_caches(self.restaurant_id)
-    AdvancedCacheService.invalidate_user_caches(self.restaurant.user_id) if self.restaurant.user_id
+    AdvancedCacheService.invalidate_order_caches(id)
+    AdvancedCacheService.invalidate_restaurant_caches(restaurant_id)
+    AdvancedCacheService.invalidate_user_caches(restaurant.user_id) if restaurant.user_id
   end
 end

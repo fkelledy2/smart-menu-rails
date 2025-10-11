@@ -20,7 +20,7 @@ module AnalyticsTrackable
 
   def track_page_view
     page_name = "#{controller_name}.#{action_name}"
-    
+
     if user_signed_in?
       AnalyticsService.track_page_view(current_user, page_name, page_properties)
     else
@@ -34,16 +34,16 @@ module AnalyticsTrackable
       controller: controller_name,
       action: action_name,
       restaurant_id: current_restaurant&.id,
-      locale: I18n.locale
+      locale: I18n.locale,
     }
   end
 
   def should_track_page_view?
     # Don't track API endpoints or certain actions
-    !request.xhr? && 
-    !api_request? && 
-    !skip_page_tracking? &&
-    (Rails.env.production? || Rails.env.staging? || ENV['FORCE_ANALYTICS'] == 'true')
+    !request.xhr? &&
+      !api_request? &&
+      !skip_page_tracking? &&
+      (Rails.env.production? || Rails.env.staging? || ENV['FORCE_ANALYTICS'] == 'true')
   end
 
   def api_request?
@@ -56,18 +56,17 @@ module AnalyticsTrackable
   end
 
   def current_restaurant
-    @current_restaurant ||= begin
-      if params[:restaurant_id].present?
-        Restaurant.find_by(id: params[:restaurant_id])
-      elsif instance_variable_defined?(:@restaurant)
-        @restaurant
-      end
-    end
+    @current_restaurant ||= if params[:restaurant_id].present?
+                              Restaurant.find_by(id: params[:restaurant_id])
+                            elsif instance_variable_defined?(:@restaurant)
+                              @restaurant
+                            end
   end
 
   # Helper methods for tracking specific events
   def track_user_event(event, properties = {})
     return unless user_signed_in?
+
     AnalyticsService.track_user_event(current_user, event, properties)
   end
 
@@ -78,6 +77,7 @@ module AnalyticsTrackable
 
   def track_feature_usage(feature_name, feature_data = {})
     return unless user_signed_in?
+
     AnalyticsService.track_feature_usage(current_user, feature_name, feature_data)
   end
 end

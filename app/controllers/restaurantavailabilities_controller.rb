@@ -1,7 +1,7 @@
 class RestaurantavailabilitiesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_restaurantavailability, only: %i[show edit update destroy]
-  
+
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
@@ -40,7 +40,7 @@ class RestaurantavailabilitiesController < ApplicationController
   def create
     @restaurantavailability = Restaurantavailability.new(restaurantavailability_params)
     authorize @restaurantavailability
-    
+
     respond_to do |format|
       if @restaurantavailability.save
         format.html do
@@ -58,7 +58,7 @@ class RestaurantavailabilitiesController < ApplicationController
   # PATCH/PUT /restaurantavailabilities/1 or /restaurantavailabilities/1.json
   def update
     authorize @restaurantavailability
-    
+
     respond_to do |format|
       if @restaurantavailability.update(restaurantavailability_params)
         format.html do
@@ -76,7 +76,7 @@ class RestaurantavailabilitiesController < ApplicationController
   # DELETE /restaurantavailabilities/1 or /restaurantavailabilities/1.json
   def destroy
     authorize @restaurantavailability
-    
+
     @restaurantavailability.update(archived: true)
     respond_to do |format|
       format.html do

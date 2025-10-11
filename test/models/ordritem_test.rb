@@ -8,22 +8,22 @@ class OrdritemTest < ActiveSupport::TestCase
   end
 
   # Association tests
-  test "should belong to ordr" do
+  test 'should belong to ordr' do
     assert_respond_to @ordritem, :ordr
     assert_not_nil @ordritem.ordr
   end
 
-  test "should belong to menuitem" do
+  test 'should belong to menuitem' do
     assert_respond_to @ordritem, :menuitem
     assert_not_nil @ordritem.menuitem
   end
 
-  test "should have one ordrparticipant" do
+  test 'should have one ordrparticipant' do
     assert_respond_to @ordritem, :ordrparticipant
   end
 
   # Enum tests
-  test "should have status enum" do
+  test 'should have status enum' do
     assert_respond_to @ordritem, :status
     assert_respond_to @ordritem, :added?
     assert_respond_to @ordritem, :removed?
@@ -32,7 +32,7 @@ class OrdritemTest < ActiveSupport::TestCase
     assert_respond_to @ordritem, :delivered?
   end
 
-  test "should set status correctly" do
+  test 'should set status correctly' do
     @ordritem.status = :added
     assert @ordritem.added?
     assert_not @ordritem.removed?
@@ -70,59 +70,59 @@ class OrdritemTest < ActiveSupport::TestCase
   end
 
   # Validation tests
-  test "should be valid with valid attributes" do
+  test 'should be valid with valid attributes' do
     ordritem = Ordritem.new(
       ordr: @ordr,
       menuitem: @menuitem,
       status: :added,
-      ordritemprice: 10.50
+      ordritemprice: 10.50,
     )
     assert ordritem.valid?
   end
 
-  test "should require ordr" do
+  test 'should require ordr' do
     ordritem = Ordritem.new(
       menuitem: @menuitem,
       status: :added,
-      ordritemprice: 10.50
+      ordritemprice: 10.50,
     )
     assert_not ordritem.valid?
-    assert_includes ordritem.errors[:ordr], "must exist"
+    assert_includes ordritem.errors[:ordr], 'must exist'
   end
 
-  test "should require menuitem" do
+  test 'should require menuitem' do
     ordritem = Ordritem.new(
       ordr: @ordr,
       status: :added,
-      ordritemprice: 10.50
+      ordritemprice: 10.50,
     )
     assert_not ordritem.valid?
-    assert_includes ordritem.errors[:menuitem], "must exist"
+    assert_includes ordritem.errors[:menuitem], 'must exist'
   end
 
   # Business logic tests
-  test "should handle price calculations" do
+  test 'should handle price calculations' do
     @ordritem.update!(ordritemprice: 15.75)
     assert_equal 15.75, @ordritem.ordritemprice
   end
 
-  test "should handle zero price" do
+  test 'should handle zero price' do
     @ordritem.update!(ordritemprice: 0.0)
     assert_equal 0.0, @ordritem.ordritemprice
   end
 
-  test "should handle negative price" do
+  test 'should handle negative price' do
     @ordritem.update!(ordritemprice: -5.0)
     assert_equal(-5.0, @ordritem.ordritemprice)
   end
 
   # Status workflow tests
-  test "should progress through typical order workflow" do
+  test 'should progress through typical order workflow' do
     ordritem = Ordritem.create!(
       ordr: @ordr,
       menuitem: @menuitem,
       status: :added,
-      ordritemprice: 12.50
+      ordritemprice: 12.50,
     )
 
     # Start as added
@@ -141,12 +141,12 @@ class OrdritemTest < ActiveSupport::TestCase
     assert ordritem.delivered?
   end
 
-  test "should handle removal workflow" do
+  test 'should handle removal workflow' do
     ordritem = Ordritem.create!(
       ordr: @ordr,
       menuitem: @menuitem,
       status: :added,
-      ordritemprice: 12.50
+      ordritemprice: 12.50,
     )
 
     # Start as added
@@ -158,7 +158,7 @@ class OrdritemTest < ActiveSupport::TestCase
   end
 
   # IdentityCache tests
-  test "should have identity cache configured" do
+  test 'should have identity cache configured' do
     assert Ordritem.respond_to?(:cache_index)
     assert Ordritem.respond_to?(:fetch_by_id)
     assert Ordritem.respond_to?(:fetch_by_ordr_id)
@@ -166,36 +166,36 @@ class OrdritemTest < ActiveSupport::TestCase
   end
 
   # Cache association tests
-  test "should have cached associations configured" do
+  test 'should have cached associations configured' do
     assert @ordritem.respond_to?(:fetch_ordr)
     assert @ordritem.respond_to?(:fetch_menuitem)
     assert @ordritem.respond_to?(:fetch_ordrparticipant)
   end
 
   # Edge case tests
-  test "should handle very large prices" do
-    @ordritem.update!(ordritemprice: 999999.99)
-    assert_equal 999999.99, @ordritem.ordritemprice
+  test 'should handle very large prices' do
+    @ordritem.update!(ordritemprice: 999_999.99)
+    assert_equal 999_999.99, @ordritem.ordritemprice
   end
 
-  test "should handle very small prices" do
+  test 'should handle very small prices' do
     @ordritem.update!(ordritemprice: 0.01)
     assert_equal 0.01, @ordritem.ordritemprice
   end
 
   # Association integrity tests
-  test "should maintain association with ordr" do
+  test 'should maintain association with ordr' do
     original_ordr = @ordritem.ordr
     assert_equal original_ordr.id, @ordritem.ordr_id
   end
 
-  test "should maintain association with menuitem" do
+  test 'should maintain association with menuitem' do
     original_menuitem = @ordritem.menuitem
     assert_equal original_menuitem.id, @ordritem.menuitem_id
   end
 
   # Status value tests
-  test "should have correct enum values" do
+  test 'should have correct enum values' do
     assert_equal 0, Ordritem.statuses[:added]
     assert_equal 10, Ordritem.statuses[:removed]
     assert_equal 20, Ordritem.statuses[:ordered]

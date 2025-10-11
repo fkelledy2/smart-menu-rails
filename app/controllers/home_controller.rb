@@ -27,8 +27,8 @@ class HomeController < ApplicationController
       AnalyticsService.track_user_event(current_user, 'homepage_viewed', {
         has_restaurants: current_user.restaurants.any?,
         plan_name: current_user.plan&.name,
-        user_type: 'authenticated'
-      })
+        user_type: 'authenticated',
+      },)
     else
       anonymous_id = session[:session_id] ||= SecureRandom.uuid
       AnalyticsService.track_anonymous_event(anonymous_id, 'homepage_viewed', {
@@ -36,8 +36,8 @@ class HomeController < ApplicationController
         referrer: request.referer,
         utm_source: params[:utm_source],
         utm_medium: params[:utm_medium],
-        utm_campaign: params[:utm_campaign]
-      })
+        utm_campaign: params[:utm_campaign],
+      },)
     end
 
     # Explicitly render the template with layout
@@ -51,8 +51,8 @@ class HomeController < ApplicationController
     anonymous_id = session[:session_id] ||= SecureRandom.uuid
     AnalyticsService.track_anonymous_event(anonymous_id, 'terms_viewed', {
       page: 'terms_of_service',
-      referrer: request.referer
-    })
+      referrer: request.referer,
+    },)
 
     @page_title = 'Terms of Service - Mellow Menu'
     @page_description = 'Read our Terms of Service to understand the rules and guidelines for using Mellow Menu.'
@@ -70,8 +70,8 @@ class HomeController < ApplicationController
     anonymous_id = session[:session_id] ||= SecureRandom.uuid
     AnalyticsService.track_anonymous_event(anonymous_id, 'privacy_viewed', {
       page: 'privacy_policy',
-      referrer: request.referer
-    })
+      referrer: request.referer,
+    },)
 
     @page_title = 'Privacy Policy - Mellow Menu'
     @page_description = 'Learn how Mellow Menu collects, uses, and protects your personal information in our Privacy Policy.'

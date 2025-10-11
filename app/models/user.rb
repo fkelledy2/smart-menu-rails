@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   include IdentityCache
-  
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :omniauthable
@@ -18,14 +18,14 @@ class User < ApplicationRecord
   belongs_to :plan, optional: true
   has_many :restaurants, dependent: :destroy
   has_one :onboarding_session, dependent: :destroy
-  
+
   # IdentityCache configuration
   cache_index :id
   cache_index :email, unique: true
   cache_index :confirmation_token, unique: true
   cache_index :reset_password_token, unique: true
   cache_index :plan_id
-  
+
   # Cache associations
   cache_has_many :restaurants, embed: :ids
   cache_has_many :userplans, embed: :ids
@@ -33,54 +33,54 @@ class User < ApplicationRecord
   cache_has_many :employees, embed: :ids
   cache_has_one :onboarding_session, embed: :id
   cache_belongs_to :plan
-  
+
+  before_validation :assign_default_plan, on: :create
+  after_create :create_onboarding_session
   # Cache invalidation hooks
   after_update :invalidate_user_caches
-  
-  after_create :create_onboarding_session
-  before_validation :assign_default_plan, on: :create
-  
+
   def onboarding_complete?
     onboarding_session&.completed?
   end
-  
+
   def onboarding_progress
     return 0 unless onboarding_session
+
     onboarding_session.progress_percentage
   end
-  
+
   def needs_onboarding?
     !onboarding_complete? && restaurants.empty?
   end
-  
+
   def name
     "#{first_name} #{last_name}".strip
   end
-  
+
   def name=(full_name)
     parts = full_name.to_s.split(' ', 2)
     self.first_name = parts[0]
     self.last_name = parts[1] if parts.length > 1
   end
-  
+
   private
-  
+
   def create_onboarding_session
     OnboardingSession.create!(user: self, status: :started)
   end
-  
+
   def assign_default_plan
     # Assign a default plan if no plan is set
     return if plan.present?
-    
+
     # Try to find the cheapest plan (starter) or fall back to first plan
-    default_plan = Plan.where(key: 'plan.starter.key').first || 
-                   Plan.order(:pricePerMonth).first || 
+    default_plan = Plan.where(key: 'plan.starter.key').first ||
+                   Plan.order(:pricePerMonth).first ||
                    Plan.first
     self.plan = default_plan if default_plan
   end
 
   def invalidate_user_caches
-    AdvancedCacheService.invalidate_user_caches(self.id)
+    AdvancedCacheService.invalidate_user_caches(id)
   end
 end

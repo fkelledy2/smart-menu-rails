@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class Api::V1::RestaurantsController < Api::V1::BaseController
-  before_action :set_restaurant, only: [:show, :update, :destroy]
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :set_restaurant, only: %i[show update destroy]
+  before_action :authenticate_user!, except: %i[index show]
 
   # GET /api/v1/restaurants
   def index
     @restaurants = Restaurant.includes(:user).page(params[:page]).per(20)
-    
+
     render json: @restaurants.map { |restaurant|
       {
         id: restaurant.id,
@@ -21,7 +21,7 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
         timezone: restaurant.timezone,
         active: restaurant.active?,
         created_at: restaurant.created_at,
-        updated_at: restaurant.updated_at
+        updated_at: restaurant.updated_at,
       }
     }
   end
@@ -29,7 +29,7 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
   # GET /api/v1/restaurants/:id
   def show
     authorize @restaurant
-    
+
     render json: {
       id: @restaurant.id,
       name: @restaurant.name,
@@ -42,7 +42,7 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
       timezone: @restaurant.timezone,
       active: @restaurant.active?,
       created_at: @restaurant.created_at,
-      updated_at: @restaurant.updated_at
+      updated_at: @restaurant.updated_at,
     }
   end
 
@@ -54,7 +54,8 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
     if @restaurant.save
       render json: restaurant_json(@restaurant), status: :created
     else
-      render json: { error: { code: 'VALIDATION_ERROR', message: @restaurant.errors.full_messages.join(', ') } }, status: :unprocessable_entity
+      render json: { error: { code: 'VALIDATION_ERROR', message: @restaurant.errors.full_messages.join(', ') } },
+             status: :unprocessable_entity
     end
   end
 
@@ -65,7 +66,8 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
     if @restaurant.update(restaurant_params)
       render json: restaurant_json(@restaurant)
     else
-      render json: { error: { code: 'VALIDATION_ERROR', message: @restaurant.errors.full_messages.join(', ') } }, status: :unprocessable_entity
+      render json: { error: { code: 'VALIDATION_ERROR', message: @restaurant.errors.full_messages.join(', ') } },
+             status: :unprocessable_entity
     end
   end
 
@@ -101,7 +103,7 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
       timezone: restaurant.timezone,
       active: restaurant.active?,
       created_at: restaurant.created_at,
-      updated_at: restaurant.updated_at
+      updated_at: restaurant.updated_at,
     }
   end
 end

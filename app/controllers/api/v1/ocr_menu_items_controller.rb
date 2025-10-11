@@ -30,14 +30,14 @@ module Api
         # Handle both parameter formats for backward compatibility
         param_key = params.key?(:ocr_menu_item) ? :ocr_menu_item : :item_data
         attrs = params.require(param_key).permit(:name, :description, :price, :category, allergens: [],
-                                                                                   dietary_restrictions: [],)
+                                                                                         dietary_restrictions: [],)
 
         # Validate and normalize price
         if attrs.key?(:price)
           begin
             attrs[:price] = BigDecimal(attrs[:price].to_s)
           rescue ArgumentError, TypeError
-            return render json: error_response('invalid_price', 'Price must be a valid number'), 
+            return render json: error_response('invalid_price', 'Price must be a valid number'),
                           status: :unprocessable_entity
           end
         end

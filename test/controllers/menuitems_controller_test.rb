@@ -8,7 +8,7 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
     @menuitem = menuitems(:one)
     @menusection = menusections(:one)
     sign_in @user
-    
+
     # Ensure proper associations for nested routes
     @restaurant.update!(user: @user) if @restaurant.user != @user
     @menu.update!(restaurant: @restaurant) if @menu.restaurant != @restaurant
@@ -55,8 +55,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
         price: 12.99,
         menusection_id: @menusection.id,
         sequence: 1,
-        calories: 250
-      }
+        calories: 250,
+      },
     }
     # Controller should respond appropriately (may redirect on success or render on failure)
     assert_response_in [200, 302, 422]
@@ -72,8 +72,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
       menuitem: {
         name: 'Updated Item',
         description: 'Updated Description',
-        price: 15.99
-      }
+        price: 15.99,
+      },
     }
     assert_response :success
   end
@@ -83,7 +83,7 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
       delete restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem)
     end
     assert_response :success
-    # Note: Controller uses archiving instead of deletion
+    # NOTE: Controller uses archiving instead of deletion
   end
 
   # Advanced Caching Integration (10 tests)
@@ -110,8 +110,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   test 'should invalidate menuitem caches on update' do
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
-        name: 'Cache Test Item'
-      }
+        name: 'Cache Test Item',
+      },
     }
     assert_response :success
   end
@@ -119,8 +119,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   test 'should invalidate menu caches on menuitem changes' do
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
-        price: 19.99
-      }
+        price: 19.99,
+      },
     }
     assert_response :success
   end
@@ -128,8 +128,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   test 'should invalidate restaurant caches on menuitem changes' do
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
-        description: 'Cache invalidation test'
-      }
+        description: 'Cache invalidation test',
+      },
     }
     assert_response :success
   end
@@ -185,8 +185,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
       menuitem: {
         name: 'Analytics Test Item',
         price: 8.99,
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }
     assert_response :success
   end
@@ -258,8 +258,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
       menuitem: {
         name: 'JSON Test Item',
         price: 11.99,
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }, as: :json
     assert_response_in [200, 201]
   end
@@ -267,8 +267,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   test 'should handle JSON update requests' do
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
-        name: 'JSON Updated Item'
-      }
+        name: 'JSON Updated Item',
+      },
     }, as: :json
     assert_response :success
   end
@@ -282,8 +282,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menu_menusection_menuitems_url(@restaurant, @menu, @menusection), params: {
       menuitem: {
         name: '', # Invalid - required field
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }, as: :json
     # Controller should handle invalid JSON data (may return success or error)
     assert_response_in [200, 422]
@@ -305,8 +305,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
       menuitem: {
         name: 'Association Test',
         price: 9.99,
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }
     assert_response :success
   end
@@ -324,8 +324,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
       menuitem: {
         name: 'Genimage Test',
         price: 13.99,
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }
     assert_response :success
   end
@@ -333,8 +333,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   test 'should create genimage on menuitem update if missing' do
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
-        name: 'Genimage Update Test'
-      }
+        name: 'Genimage Update Test',
+      },
     }
     assert_response :success
   end
@@ -342,9 +342,9 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   test 'should handle image removal functionality' do
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
-        name: @menuitem.name
+        name: @menuitem.name,
       },
-      remove_image: '1'
+      remove_image: '1',
     }
     assert_response :success
   end
@@ -355,8 +355,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
         name: 'Sequence Test',
         price: 7.99,
         sequence: 5,
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }
     assert_response :success
   end
@@ -364,8 +364,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   test 'should handle menuitem status management' do
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
-        status: 'active'
-      }
+        status: 'active',
+      },
     }
     assert_response :success
   end
@@ -375,8 +375,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
       menuitem: {
         name: 'Price Test',
         price: 25.50,
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }
     assert_response :success
   end
@@ -390,8 +390,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
         name: @menuitem.name,
-        allergyn_ids: []
-      }
+        allergyn_ids: [],
+      },
     }
     assert_response :success
   end
@@ -399,8 +399,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   test 'should manage menuitem size support' do
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
-        sizesupport: true
-      }
+        sizesupport: true,
+      },
     }
     assert_response :success
   end
@@ -414,8 +414,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
         price: 18.99,
         calories: 350,
         sequence: 10,
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }
     assert_response :success
   end
@@ -486,7 +486,7 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should handle routing edge cases' do
     # Test with different menu - should handle appropriately
-    other_menu = menus(:two) if Menu.count > 1
+    other_menu = menus(:two) if Menu.many?
     if other_menu
       get restaurant_menu_menuitems_url(@restaurant, other_menu)
       assert_response_in [200, 302, 404]
@@ -506,8 +506,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menu_menusection_menuitems_url(@restaurant, @menu, @menusection), params: {
       menuitem: {
         name: '', # Invalid - required field
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }
     # Controller should handle invalid data (may return success or error)
     assert_response_in [200, 422]
@@ -517,8 +517,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
         name: '', # Invalid - required field
-        price: -5 # Invalid price
-      }
+        price: -5, # Invalid price
+      },
     }
     # Controller should handle invalid data (may return success or error)
     assert_response_in [200, 422]
@@ -559,8 +559,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
       menuitem: {
         name: 'Constraint Test',
         price: 'invalid_price', # Invalid data type
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }
     # Controller should handle constraint violations (may return success or error)
     assert_response_in [200, 422]
@@ -585,8 +585,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   test 'should handle concurrent menuitem operations' do
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
-        name: 'Concurrent Test'
-      }
+        name: 'Concurrent Test',
+      },
     }
     assert_response :success
   end
@@ -595,8 +595,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
         name: 'Parameter Test',
-        unauthorized_param: 'should_be_filtered'
-      }
+        unauthorized_param: 'should_be_filtered',
+      },
     }
     assert_response :success
   end
@@ -608,8 +608,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
         name: 'A' * 100, # Long name but reasonable
         price: 999.99,
         calories: 9999,
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }
     assert_response_in [200, 422]
   end
@@ -643,8 +643,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   test 'should handle currency conversion scenarios' do
     patch restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), params: {
       menuitem: {
-        price: 29.95
-      }
+        price: 29.95,
+      },
     }
     assert_response :success
   end
@@ -654,8 +654,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
       menuitem: {
         name: 'Currency Test',
         price: 14.75,
-        menusection_id: @menusection.id
-      }
+        menusection_id: @menusection.id,
+      },
     }
     assert_response :success
   end
@@ -678,8 +678,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
         sizesupport: true,
         menusection_id: @menusection.id,
         allergyn_ids: [],
-        ingredient_ids: []
-      }
+        ingredient_ids: [],
+      },
     }
     # Controller should respond appropriately (may redirect on success or render on failure)
     assert_response_in [200, 302, 422]
@@ -692,8 +692,8 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
         name: 'Updated Workflow Test',
         description: 'Updated with cache invalidation',
         price: 27.99,
-        calories: 500
-      }
+        calories: 500,
+      },
     }
     assert_response :success
   end
@@ -702,7 +702,7 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
     # Test complete archiving workflow
     delete restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem)
     assert_response :success
-    
+
     @menuitem.reload
     # Verify menuitem still exists (soft delete)
     assert_not @menuitem.destroyed?
@@ -712,15 +712,15 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
     # Test HTML request
     get restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem)
     assert_response :success
-    
+
     # Test JSON request
     get restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), as: :json
     assert_response :success
-    
+
     # Test analytics in both formats
     get analytics_restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem)
     assert_response :success
-    
+
     get analytics_restaurant_menu_menusection_menuitem_url(@restaurant, @menu, @menusection, @menuitem), as: :json
     assert_response :success
   end
@@ -728,7 +728,7 @@ class MenuitemsControllerTest < ActionDispatch::IntegrationTest
   private
 
   def assert_response_in(expected_codes)
-    assert_includes expected_codes, response.status, 
-                   "Expected response to be one of #{expected_codes}, but was #{response.status}"
+    assert_includes expected_codes, response.status,
+                    "Expected response to be one of #{expected_codes}, but was #{response.status}"
   end
 end

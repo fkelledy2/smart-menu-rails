@@ -23,16 +23,16 @@ class OcrMenuItemResource < Madmin::Resource
 
   # Customize the display name of records in the admin area
   def self.display_name(record)
-    price_display = record.price ? "$#{record.price}" : "No price"
+    price_display = record.price ? "$#{record.price}" : 'No price'
     "#{record.name} - #{price_display}"
   end
 
   # Customize the default sort column and direction
   def self.default_sort_column
-    "sequence"
+    'sequence'
   end
 
   def self.default_sort_direction
-    "asc"
+    'asc'
   end
 end

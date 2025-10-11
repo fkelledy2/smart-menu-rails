@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe OnboardingSession, type: :model do
+RSpec.describe OnboardingSession do
   let(:user) { create(:user) }
   let(:restaurant) { create(:restaurant, user: user) }
   let(:menu) { create(:menu, restaurant: restaurant) }
@@ -8,21 +8,21 @@ RSpec.describe OnboardingSession, type: :model do
 
   describe 'associations' do
     it 'belongs to user optionally' do
-      session = OnboardingSession.new
+      session = described_class.new
       expect(session.user).to be_nil
       session.user = user
       expect(session.user).to eq(user)
     end
 
     it 'belongs to restaurant optionally' do
-      session = OnboardingSession.new
+      session = described_class.new
       expect(session.restaurant).to be_nil
       session.restaurant = restaurant
       expect(session.restaurant).to eq(restaurant)
     end
 
     it 'belongs to menu optionally' do
-      session = OnboardingSession.new
+      session = described_class.new
       expect(session.menu).to be_nil
       session.menu = menu
       expect(session.menu).to eq(menu)
@@ -31,19 +31,19 @@ RSpec.describe OnboardingSession, type: :model do
 
   describe 'enums' do
     it 'defines status enum correctly' do
-      expect(OnboardingSession.statuses).to eq({
+      expect(described_class.statuses).to eq({
         'started' => 0,
         'account_created' => 1,
         'restaurant_details' => 2,
         'plan_selected' => 3,
         'menu_created' => 4,
-        'completed' => 5
+        'completed' => 5,
       })
     end
   end
 
   describe 'wizard data accessors' do
-    let(:session) { OnboardingSession.new }
+    let(:session) { described_class.new }
 
     describe 'restaurant_name' do
       it 'sets and gets restaurant_name' do
@@ -121,17 +121,17 @@ RSpec.describe OnboardingSession, type: :model do
     it 'preserves existing wizard_data when setting new values' do
       session.restaurant_name = 'Test Restaurant'
       session.cuisine_type = 'italian'
-      
+
       expect(session.wizard_data).to eq({
         'restaurant_name' => 'Test Restaurant',
-        'cuisine_type' => 'italian'
+        'cuisine_type' => 'italian',
       })
     end
   end
 
   describe '#progress_percentage' do
     it 'calculates correct percentage for each status' do
-      session = OnboardingSession.new
+      session = described_class.new
 
       session.status = 'started'
       expect(session.progress_percentage).to eq(20)
@@ -154,7 +154,7 @@ RSpec.describe OnboardingSession, type: :model do
   end
 
   describe '#step_valid?' do
-    let(:session) { OnboardingSession.new(user: user) }
+    let(:session) { described_class.new(user: user) }
 
     context 'step 1 (account creation)' do
       it 'returns true when user has name and email' do
@@ -247,24 +247,24 @@ RSpec.describe OnboardingSession, type: :model do
   describe 'IdentityCache integration' do
     it 'has cache indexes configured' do
       # Test that the model has IdentityCache included
-      expect(OnboardingSession.included_modules).to include(IdentityCache)
+      expect(described_class.included_modules).to include(IdentityCache)
     end
 
     it 'can be found by id' do
       session = create(:onboarding_session)
-      found_session = OnboardingSession.find(session.id)
+      found_session = described_class.find(session.id)
       expect(found_session).to eq(session)
     end
 
     it 'can be found by user_id' do
       session = create(:onboarding_session, user: user)
-      found_sessions = OnboardingSession.where(user_id: user.id)
+      found_sessions = described_class.where(user_id: user.id)
       expect(found_sessions).to include(session)
     end
 
     it 'can be found by status' do
       session = create(:onboarding_session, status: 'started')
-      found_sessions = OnboardingSession.where(status: 'started')
+      found_sessions = described_class.where(status: 'started')
       expect(found_sessions).to include(session)
     end
   end

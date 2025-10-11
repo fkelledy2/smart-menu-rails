@@ -6,7 +6,7 @@ class MenuPolicy < ApplicationPolicy
   def show?
     # Allow public access for customer viewing, but restrict sensitive data to owners
     return true unless user # Allow anonymous customers
-    
+
     owner?
   end
 

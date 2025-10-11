@@ -2,27 +2,27 @@
 
 class OrdrparticipantPolicy < ApplicationPolicy
   # Order participants are sensitive business data - only restaurant owners can access
-  
+
   def index?
     user.present?
   end
-  
+
   def show?
     user.present? && owns_order_participant?
   end
-  
+
   def create?
     user.present?
   end
-  
+
   def update?
     user.present? && owns_order_participant?
   end
-  
+
   def destroy?
     user.present? && owns_order_participant?
   end
-  
+
   class Scope < Scope
     def resolve
       if user.present?
@@ -34,12 +34,12 @@ class OrdrparticipantPolicy < ApplicationPolicy
       end
     end
   end
-  
+
   private
-  
+
   def owns_order_participant?
     return false unless user && record.ordr&.restaurant
-    
+
     # Check if user owns the restaurant that the order belongs to
     user.restaurants.exists?(id: record.ordr.restaurant_id)
   end

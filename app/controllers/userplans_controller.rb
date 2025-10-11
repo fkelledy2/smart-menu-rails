@@ -1,7 +1,7 @@
 class UserplansController < ApplicationController
   before_action :authenticate_user!
   before_action :set_userplan, only: %i[show edit update destroy]
-  
+
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
@@ -52,7 +52,7 @@ class UserplansController < ApplicationController
   # PATCH/PUT /userplans/1 or /userplans/1.json
   def update
     authorize @userplan
-    
+
     respond_to do |format|
       if @userplan.update(userplan_params)
         @user = User.where(id: @userplan.user.id).first

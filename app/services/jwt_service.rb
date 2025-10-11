@@ -10,7 +10,7 @@ class JwtService
 
   def self.decode(token)
     decoded = JWT.decode(token, SECRET_KEY)[0]
-    HashWithIndifferentAccess.new(decoded)
+    ActiveSupport::HashWithIndifferentAccess.new(decoded)
   rescue JWT::DecodeError => e
     Rails.logger.warn "JWT decode error: #{e.message}"
     nil
@@ -20,7 +20,7 @@ class JwtService
     payload = {
       user_id: user.id,
       email: user.email,
-      iat: Time.current.to_i
+      iat: Time.current.to_i,
     }
     encode(payload)
   end

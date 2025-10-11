@@ -16,18 +16,18 @@ module OnboardingHelper
 
   def onboarding_progress_percentage(step)
     step_number = case step.to_s
-    when '1', 'restaurant'
-      1
-    when '2', 'menu'
-      2
-    when '3', 'payment'
-      3
-    when '4', 'complete'
-      4
-    else
-      0
-    end
-    
+                  when '1', 'restaurant'
+                    1
+                  when '2', 'menu'
+                    2
+                  when '3', 'payment'
+                    3
+                  when '4', 'complete'
+                    4
+                  else
+                    0
+                  end
+
     ((step_number.to_f / 4) * 100).round
   end
 

@@ -86,7 +86,7 @@ class BaseService
                      service: self.class.name,
                      error: e.message,
                      backtrace: e.backtrace.first(10)
-      rescue => logger_error
+      rescue StandardError
         # If logging fails, continue without logging
       end
       failure("An unexpected error occurred: #{e.message}")
@@ -131,11 +131,11 @@ class BaseService
   def require_params!(*required_keys)
     missing_keys = required_keys - params.keys
     nil_keys = required_keys.select { |key| params[key].nil? }
-    
+
     if missing_keys.any?
       raise ValidationError, "Missing required parameters: #{missing_keys.join(', ')}"
     end
-    
+
     if nil_keys.any?
       raise ValidationError, "Required parameters cannot be nil: #{nil_keys.join(', ')}"
     end

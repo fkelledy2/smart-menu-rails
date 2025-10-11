@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "onboarding/show.html.erb", type: :view do
+RSpec.describe 'onboarding/show.html.erb' do
   let(:user) { create(:user) }
   let(:onboarding_session) { create(:onboarding_session, user: user, status: 'started') }
 

@@ -17,11 +17,11 @@ RSpec.describe ImportToMenu, type: :service do
         sec2 = import.ocr_menu_sections.create!(name: 'Mains', sequence: 2, is_confirmed: true)
 
         sec1.ocr_menu_items.create!(name: 'Soup', description: 'Tomato soup', price: 4.5, sequence: 1,
-                                    allergens: ['dairy'], is_confirmed: true)
+                                    allergens: ['dairy'], is_confirmed: true,)
         sec1.ocr_menu_items.create!(name: 'Bread', description: 'Garlic bread', price: 3.0, sequence: 2,
-                                    allergens: ['gluten'], is_confirmed: true)
-        sec2.ocr_menu_items.create!(name: 'Steak', description: 'Sirloin', price: 14.0, sequence: 1, 
-                                    allergens: [], is_confirmed: true)
+                                    allergens: ['gluten'], is_confirmed: true,)
+        sec2.ocr_menu_items.create!(name: 'Steak', description: 'Sirloin', price: 14.0, sequence: 1,
+                                    allergens: [], is_confirmed: true,)
 
         menu = described_class.new(restaurant: restaurant, import: import).call
 

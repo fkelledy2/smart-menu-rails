@@ -46,37 +46,37 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should create ordr with business logic' do
-    post restaurant_ordrs_url(@restaurant), params: { 
-      ordr: { 
+    post restaurant_ordrs_url(@restaurant), params: {
+      ordr: {
         menu_id: @menu.id,
         tablesetting_id: @tablesetting.id,
         restaurant_id: @restaurant.id,
         status: 0,
-        ordercapacity: 2
-      } 
+        ordercapacity: 2,
+      },
     }
     assert_response :success
   end
 
   test 'should create ordr as json' do
-    post restaurant_ordrs_url(@restaurant), params: { 
-      ordr: { 
+    post restaurant_ordrs_url(@restaurant), params: {
+      ordr: {
         menu_id: @menu.id,
         tablesetting_id: @tablesetting.id,
         restaurant_id: @restaurant.id,
         status: 0,
-        ordercapacity: 2
-      } 
+        ordercapacity: 2,
+      },
     }, as: :json
     assert_response :success
   end
 
   test 'should handle create with invalid data' do
-    post restaurant_ordrs_url(@restaurant), params: { 
-      ordr: { 
+    post restaurant_ordrs_url(@restaurant), params: {
+      ordr: {
         # Missing required fields
-        status: 0
-      } 
+        status: 0,
+      },
     }
     assert_response :success
   end
@@ -87,20 +87,20 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update ordr with status change' do
-    patch restaurant_ordr_url(@restaurant, @ordr), params: { 
-      ordr: { 
+    patch restaurant_ordr_url(@restaurant, @ordr), params: {
+      ordr: {
         status: 20, # ordered status
-        tip: 5.0
-      } 
+        tip: 5.0,
+      },
     }, as: :json
     assert_response :success
   end
 
   test 'should handle update with invalid data' do
-    patch restaurant_ordr_url(@restaurant, @ordr), params: { 
-      ordr: { 
-        status: 'invalid_status'
-      } 
+    patch restaurant_ordr_url(@restaurant, @ordr), params: {
+      ordr: {
+        status: 'invalid_status',
+      },
     }
     assert_response :success # Controller handles invalid data gracefully
   end
@@ -129,24 +129,24 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should allow anonymous customer create' do
     sign_out @user
-    post restaurant_ordrs_url(@restaurant), params: { 
-      ordr: { 
+    post restaurant_ordrs_url(@restaurant), params: {
+      ordr: {
         menu_id: @menu.id,
         tablesetting_id: @tablesetting.id,
         restaurant_id: @restaurant.id,
         status: 0,
-        ordercapacity: 1
-      } 
+        ordercapacity: 1,
+      },
     }
     assert_response :success
   end
 
   test 'should allow anonymous customer update' do
     sign_out @user
-    patch restaurant_ordr_url(@restaurant, @ordr), params: { 
-      ordr: { 
-        tip: 3.0
-      } 
+    patch restaurant_ordr_url(@restaurant, @ordr), params: {
+      ordr: {
+        tip: 3.0,
+      },
     }, as: :json
     assert_response :success
   end
@@ -182,45 +182,45 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
   # Order Calculation Tests
   test 'should calculate order totals correctly' do
     # Test that order calculations work properly
-    post restaurant_ordrs_url(@restaurant), params: { 
-      ordr: { 
+    post restaurant_ordrs_url(@restaurant), params: {
+      ordr: {
         menu_id: @menu.id,
         tablesetting_id: @tablesetting.id,
         restaurant_id: @restaurant.id,
         status: 0,
         ordercapacity: 2,
-        tip: 5.0
-      } 
+        tip: 5.0,
+      },
     }
     assert_response :success
   end
 
   test 'should handle status transitions' do
     # Test status change from open to ordered
-    patch restaurant_ordr_url(@restaurant, @ordr), params: { 
-      ordr: { status: 20 } # ordered status
+    patch restaurant_ordr_url(@restaurant, @ordr), params: {
+      ordr: { status: 20 }, # ordered status
     }, as: :json
     assert_response :success
   end
 
   test 'should update timestamps on status change' do
     # Test that timestamps are updated correctly
-    patch restaurant_ordr_url(@restaurant, @ordr), params: { 
-      ordr: { status: 20 } # ordered status
+    patch restaurant_ordr_url(@restaurant, @ordr), params: {
+      ordr: { status: 20 }, # ordered status
     }, as: :json
     assert_response :success
   end
 
   test 'should handle cover charges' do
     # Test cover charge calculations
-    post restaurant_ordrs_url(@restaurant), params: { 
-      ordr: { 
+    post restaurant_ordrs_url(@restaurant), params: {
+      ordr: {
         menu_id: @menu.id,
         tablesetting_id: @tablesetting.id,
         restaurant_id: @restaurant.id,
         status: 0,
-        ordercapacity: 3 # 3 people for cover charge calculation
-      } 
+        ordercapacity: 3, # 3 people for cover charge calculation
+      },
     }
     assert_response :success
   end
@@ -230,7 +230,7 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
     # Test that caching is properly integrated
     get restaurant_ordrs_url(@restaurant)
     assert_response :success
-    
+
     # Second request should use cache
     get restaurant_ordrs_url(@restaurant)
     assert_response :success
@@ -245,14 +245,14 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should handle transactions' do
     # Test transaction handling in create
-    post restaurant_ordrs_url(@restaurant), params: { 
-      ordr: { 
+    post restaurant_ordrs_url(@restaurant), params: {
+      ordr: {
         menu_id: @menu.id,
         tablesetting_id: @tablesetting.id,
         restaurant_id: @restaurant.id,
         status: 0,
-        ordercapacity: 1
-      } 
+        ordercapacity: 1,
+      },
     }
     assert_response :success
   end
@@ -266,15 +266,15 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
 
   # Parameter Handling Tests
   test 'should filter order parameters correctly' do
-    post restaurant_ordrs_url(@restaurant), params: { 
-      ordr: { 
+    post restaurant_ordrs_url(@restaurant), params: {
+      ordr: {
         menu_id: @menu.id,
         tablesetting_id: @tablesetting.id,
         restaurant_id: @restaurant.id,
         status: 0,
-        ordercapacity: 1
+        ordercapacity: 1,
       },
-      malicious_param: 'should_be_filtered'
+      malicious_param: 'should_be_filtered',
     }
     assert_response :success
   end
@@ -292,14 +292,14 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should handle order capacity' do
-    post restaurant_ordrs_url(@restaurant), params: { 
-      ordr: { 
+    post restaurant_ordrs_url(@restaurant), params: {
+      ordr: {
         menu_id: @menu.id,
         tablesetting_id: @tablesetting.id,
         restaurant_id: @restaurant.id,
         status: 0,
-        ordercapacity: 4 # Test with specific capacity
-      } 
+        ordercapacity: 4, # Test with specific capacity
+      },
     }
     assert_response :success
   end
@@ -313,33 +313,33 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
   # Complex Workflow Tests
   test 'should handle complete order lifecycle' do
     # Create order
-    post restaurant_ordrs_url(@restaurant), params: { 
-      ordr: { 
+    post restaurant_ordrs_url(@restaurant), params: {
+      ordr: {
         menu_id: @menu.id,
         tablesetting_id: @tablesetting.id,
         restaurant_id: @restaurant.id,
         status: 0,
-        ordercapacity: 2
-      } 
+        ordercapacity: 2,
+      },
     }
     assert_response :success
-    
+
     # View order
     get restaurant_ordr_url(@restaurant, @ordr)
     assert_response :success
-    
+
     # Update order status
-    patch restaurant_ordr_url(@restaurant, @ordr), params: { 
-      ordr: { status: 20 } # ordered
+    patch restaurant_ordr_url(@restaurant, @ordr), params: {
+      ordr: { status: 20 }, # ordered
     }, as: :json
     assert_response :success
-    
+
     # Update to paid
-    patch restaurant_ordr_url(@restaurant, @ordr), params: { 
-      ordr: { status: 40 } # paid
+    patch restaurant_ordr_url(@restaurant, @ordr), params: {
+      ordr: { status: 40 }, # paid
     }, as: :json
     assert_response :success
-    
+
     # Delete order
     delete restaurant_ordr_url(@restaurant, @ordr)
     assert_response :success

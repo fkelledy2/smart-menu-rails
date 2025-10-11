@@ -84,7 +84,8 @@ class MenuparticipantsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to restaurant_menu_menuparticipants_path(@restaurant || @menu.restaurant, @menu), status: :see_other, notice: 'Menuparticipant was successfully destroyed.'
+        redirect_to restaurant_menu_menuparticipants_path(@restaurant || @menu.restaurant, @menu), status: :see_other,
+                                                                                                   notice: 'Menuparticipant was successfully destroyed.'
       end
       format.json { head :no_content }
     end
@@ -99,11 +100,11 @@ class MenuparticipantsController < ApplicationController
 
   # Set menu from nested route parameter
   def set_menu
-    if @restaurant
-      @menu = @restaurant.menus.find(params[:menu_id])
-    else
-      @menu = Menu.find(params[:menu_id])
-    end
+    @menu = if @restaurant
+              @restaurant.menus.find(params[:menu_id])
+            else
+              Menu.find(params[:menu_id])
+            end
   end
 
   def broadcastPartials

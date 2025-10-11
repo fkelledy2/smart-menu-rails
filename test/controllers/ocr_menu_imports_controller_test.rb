@@ -2,7 +2,7 @@ require 'test_helper'
 
 class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
   self.use_transactional_tests = false
-  
+
   setup do
     @user = users(:one)
     sign_in @user
@@ -42,8 +42,8 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
   test 'should create import with PDF' do
     post restaurant_ocr_menu_imports_path(@restaurant), params: {
       ocr_menu_import: {
-        name: 'Test Import'
-      }
+        name: 'Test Import',
+      },
     }
     assert_response :success
   end
@@ -55,7 +55,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should update import' do
     patch restaurant_ocr_menu_import_path(@restaurant, @import), params: {
-      ocr_menu_import: { name: 'Updated Import Name' }
+      ocr_menu_import: { name: 'Updated Import Name' },
     }
     assert_response :success
   end
@@ -99,7 +99,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
   test 'should process PDF with state transition' do
     # Skip if import is not in processable state
     skip unless @import.may_process?
-    
+
     post process_pdf_restaurant_ocr_menu_import_path(@restaurant, @import)
     assert_redirected_to restaurant_ocr_menu_import_path(@restaurant, @import)
   end
@@ -114,8 +114,8 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
     # Test that PDF processing is queued on creation
     post restaurant_ocr_menu_imports_path(@restaurant), params: {
       ocr_menu_import: {
-        name: 'Background Job Test'
-      }
+        name: 'Background Job Test',
+      },
     }
     assert_response :success
   end
@@ -184,7 +184,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
     # Ensure import is completed and has confirmed sections
     @import.update(status: 'completed')
     @starters.update(is_confirmed: true)
-    
+
     post confirm_import_restaurant_ocr_menu_import_path(@restaurant, @import)
     assert_response :success
   end
@@ -192,7 +192,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
   test 'should require confirmed sections for publishing' do
     # Test publishing without confirmed sections
     @import.ocr_menu_sections.update_all(is_confirmed: false)
-    
+
     post confirm_import_restaurant_ocr_menu_import_path(@restaurant, @import)
     assert_response :success
   end
@@ -201,7 +201,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
     # Test error handling in menu publishing
     @import.update(status: 'completed')
     @starters.update(is_confirmed: true)
-    
+
     post confirm_import_restaurant_ocr_menu_import_path(@restaurant, @import)
     assert_response :success
   end
@@ -332,7 +332,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
   # Error Handling Tests
   test 'should handle invalid import creation' do
     post restaurant_ocr_menu_imports_path(@restaurant), params: {
-      ocr_menu_import: { name: '' } # Invalid - name required
+      ocr_menu_import: { name: '' }, # Invalid - name required
     }
     assert_response :success
   end
@@ -346,7 +346,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should handle missing PDF files' do
     post restaurant_ocr_menu_imports_path(@restaurant), params: {
-      ocr_menu_import: { name: 'No PDF Test' }
+      ocr_menu_import: { name: 'No PDF Test' },
     }
     assert_response :success
   end
@@ -379,9 +379,9 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
   test 'should filter import parameters correctly' do
     post restaurant_ocr_menu_imports_path(@restaurant), params: {
       ocr_menu_import: {
-        name: 'Param Test Import'
+        name: 'Param Test Import',
       },
-      malicious_param: 'should_be_filtered'
+      malicious_param: 'should_be_filtered',
     }
     assert_response :success
   end
@@ -396,24 +396,24 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
     # Create import
     post restaurant_ocr_menu_imports_path(@restaurant), params: {
       ocr_menu_import: {
-        name: 'Lifecycle Test Import'
-      }
+        name: 'Lifecycle Test Import',
+      },
     }
     assert_response :success
-    
+
     # View import
     get restaurant_ocr_menu_import_path(@restaurant, @import)
     assert_response :success
-    
+
     # Edit import
     get edit_restaurant_ocr_menu_import_path(@restaurant, @import)
     assert_response :success
-    
+
     # Update import
     patch restaurant_ocr_menu_import_path(@restaurant, @import),
           params: { ocr_menu_import: { name: 'Updated Lifecycle Import' } }
     assert_response :success
-    
+
     # Delete import
     delete restaurant_ocr_menu_import_path(@restaurant, @import)
     assert_response :success

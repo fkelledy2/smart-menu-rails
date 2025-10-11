@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe OnboardingHelper, type: :helper do
+RSpec.describe OnboardingHelper do
   describe '#onboarding_step_title' do
     it 'returns correct title for step 1' do
       expect(helper.onboarding_step_title('1')).to eq('Restaurant Information')

@@ -63,7 +63,6 @@ class Menuitem < ApplicationRecord
     end
   end
 
-
   enum :status, {
     inactive: 0,
     active: 1,
@@ -129,8 +128,8 @@ class Menuitem < ApplicationRecord
   private
 
   def invalidate_menuitem_caches
-    AdvancedCacheService.invalidate_menuitem_caches(self.id)
-    AdvancedCacheService.invalidate_menu_caches(self.menusection.menu.id)
-    AdvancedCacheService.invalidate_restaurant_caches(self.menusection.menu.restaurant.id)
+    AdvancedCacheService.invalidate_menuitem_caches(id)
+    AdvancedCacheService.invalidate_menu_caches(menusection.menu.id)
+    AdvancedCacheService.invalidate_restaurant_caches(menusection.menu.restaurant.id)
   end
 end

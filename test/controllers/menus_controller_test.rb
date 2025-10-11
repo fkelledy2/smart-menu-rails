@@ -40,8 +40,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should create menu with background jobs' do
-    post restaurant_menus_url(@restaurant), params: { 
-      menu: { 
+    post restaurant_menus_url(@restaurant), params: {
+      menu: {
         name: 'Test Menu',
         description: 'Test Description',
         status: 'active',
@@ -49,8 +49,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
         sequence: 1,
         displayImages: true,
         allowOrdering: true,
-        inventoryTracking: false
-      } 
+        inventoryTracking: false,
+      },
     }
     assert_response :success
   end
@@ -61,7 +61,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update menu with cache invalidation' do
-    patch restaurant_menu_url(@restaurant, @menu), params: { 
+    patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: 'Updated Menu Name',
         description: @menu.description,
@@ -70,8 +70,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
         displayImages: @menu.displayImages,
         allowOrdering: @menu.allowOrdering,
         inventoryTracking: @menu.inventoryTracking,
-        imagecontext: @menu.imagecontext
-      } 
+        imagecontext: @menu.imagecontext,
+      },
     }
     assert_response :success
   end
@@ -86,10 +86,10 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'should handle nested route parameters' do
     # Test complex nested route handling
-    get restaurant_menu_url(@restaurant, @menu), params: { 
-      menu_id: @menu.id, 
+    get restaurant_menu_url(@restaurant, @menu), params: {
+      menu_id: @menu.id,
       id: @menu.id,
-      restaurant_id: @restaurant.id
+      restaurant_id: @restaurant.id,
     }
     assert_response :success
   end
@@ -134,7 +134,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     # Test analytics tracking for authenticated users
     get restaurant_menus_url(@restaurant)
     assert_response :success
-    
+
     # Test analytics tracking for anonymous users
     sign_out @user
     get restaurant_menus_url(@restaurant)
@@ -164,37 +164,37 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should handle PDF menu scan upload' do
-    patch restaurant_menu_url(@restaurant, @menu), params: { 
+    patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: @menu.name,
         description: @menu.description,
-        status: @menu.status
-      } 
+        status: @menu.status,
+      },
     }
     assert_response :success
   end
 
   test 'should handle PDF menu scan removal' do
-    patch restaurant_menu_url(@restaurant, @menu), params: { 
+    patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: @menu.name,
         description: @menu.description,
         status: @menu.status,
-        remove_pdf_menu_scan: '1'
-      } 
+        remove_pdf_menu_scan: '1',
+      },
     }
     assert_response :success
   end
 
   test 'should create genimage on menu creation' do
     # Test that genimage is created when menu is created
-    post restaurant_menus_url(@restaurant), params: { 
-      menu: { 
+    post restaurant_menus_url(@restaurant), params: {
+      menu: {
         name: 'Genimage Test Menu',
         description: 'Test Description',
         status: 'active',
-        restaurant_id: @restaurant.id
-      } 
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response :success
   end
@@ -216,7 +216,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     # Test that caching is properly integrated
     get restaurant_menu_url(@restaurant, @menu)
     assert_response :success
-    
+
     # Second request should use cache
     get restaurant_menu_url(@restaurant, @menu)
     assert_response :success
@@ -231,13 +231,13 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'should handle background job integration' do
     # Test background job triggering in create
-    post restaurant_menus_url(@restaurant), params: { 
-      menu: { 
+    post restaurant_menus_url(@restaurant), params: {
+      menu: {
         name: 'Background Job Test Menu',
         description: 'Test Description',
         status: 'active',
-        restaurant_id: @restaurant.id
-      } 
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response :success
   end
@@ -254,20 +254,20 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should handle JSON create requests' do
-    post restaurant_menus_url(@restaurant), params: { 
-      menu: { 
+    post restaurant_menus_url(@restaurant), params: {
+      menu: {
         name: 'JSON Test Menu',
         description: 'JSON Test Description',
         status: 'active',
-        restaurant_id: @restaurant.id
-      } 
+        restaurant_id: @restaurant.id,
+      },
     }, as: :json
     assert_response :success
   end
 
   test 'should handle JSON update requests' do
-    patch restaurant_menu_url(@restaurant, @menu), params: { 
-      menu: { name: 'JSON Updated Name' } 
+    patch restaurant_menu_url(@restaurant, @menu), params: {
+      menu: { name: 'JSON Updated Name' },
     }, as: :json
     assert_response :success
   end
@@ -284,18 +284,18 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
 
   # Error Handling Tests
   test 'should handle invalid menu creation' do
-    post restaurant_menus_url(@restaurant), params: { 
-      menu: { 
+    post restaurant_menus_url(@restaurant), params: {
+      menu: {
         name: '', # Invalid - name is required
-        description: 'Test Description'
-      } 
+        description: 'Test Description',
+      },
     }
     assert_response :success
   end
 
   test 'should handle invalid menu updates' do
-    patch restaurant_menu_url(@restaurant, @menu), params: { 
-      menu: { name: '' } # Invalid - name required
+    patch restaurant_menu_url(@restaurant, @menu), params: {
+      menu: { name: '' }, # Invalid - name required
     }
     assert_response :success
   end
@@ -320,27 +320,27 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should handle menu sequencing' do
-    patch restaurant_menu_url(@restaurant, @menu), params: { 
+    patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: @menu.name,
         description: @menu.description,
         status: @menu.status,
-        sequence: 5
-      } 
+        sequence: 5,
+      },
     }
     assert_response :success
   end
 
   test 'should handle menu display settings' do
-    patch restaurant_menu_url(@restaurant, @menu), params: { 
+    patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: @menu.name,
         description: @menu.description,
         status: @menu.status,
         displayImages: false,
         allowOrdering: false,
-        inventoryTracking: true
-      } 
+        inventoryTracking: true,
+      },
     }
     assert_response :success
   end
@@ -353,14 +353,14 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
 
   # Parameter Handling Tests
   test 'should filter menu parameters correctly' do
-    post restaurant_menus_url(@restaurant), params: { 
-      menu: { 
+    post restaurant_menus_url(@restaurant), params: {
+      menu: {
         name: 'Param Test Menu',
         description: 'Test Description',
         status: 'active',
-        restaurant_id: @restaurant.id
+        restaurant_id: @restaurant.id,
       },
-      malicious_param: 'should_be_filtered'
+      malicious_param: 'should_be_filtered',
     }
     assert_response :success
   end
@@ -373,30 +373,30 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   # Complex Workflow Tests
   test 'should handle complete menu lifecycle' do
     # Create menu
-    post restaurant_menus_url(@restaurant), params: { 
-      menu: { 
+    post restaurant_menus_url(@restaurant), params: {
+      menu: {
         name: 'Lifecycle Test Menu',
         description: 'Test Description',
         status: 'active',
-        restaurant_id: @restaurant.id
-      } 
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response :success
-    
+
     # View menu
     get restaurant_menu_url(@restaurant, @menu)
     assert_response :success
-    
+
     # Edit menu
     get edit_restaurant_menu_url(@restaurant, @menu)
     assert_response :success
-    
+
     # Update menu
-    patch restaurant_menu_url(@restaurant, @menu), params: { 
-      menu: { name: 'Updated Lifecycle Menu' } 
+    patch restaurant_menu_url(@restaurant, @menu), params: {
+      menu: { name: 'Updated Lifecycle Menu' },
     }
     assert_response :success
-    
+
     # Archive menu
     delete restaurant_menu_url(@restaurant, @menu)
     assert_response :success

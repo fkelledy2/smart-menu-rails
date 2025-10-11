@@ -23,10 +23,10 @@ class OcrMenuSectionResource < Madmin::Resource
 
   # Customize the default sort column and direction
   def self.default_sort_column
-    "sequence"
+    'sequence'
   end
 
   def self.default_sort_direction
-    "asc"
+    'asc'
   end
 end

@@ -7,20 +7,20 @@ class PerformanceMonitoringMiddleware
 
   def call(env)
     start_time = Time.current
-    
+
     # Track memory before request
     PerformanceMonitoringService.track_memory_usage
-    
+
     # Process request
     status, headers, response = @app.call(env)
-    
+
     # Calculate duration
     duration = (Time.current - start_time) * 1000 # Convert to milliseconds
-    
+
     # Extract request info
     request = ActionDispatch::Request.new(env)
     controller_action = extract_controller_action(env)
-    
+
     # Track request performance
     PerformanceMonitoringService.track_request(
       controller: controller_action[:controller],
@@ -28,27 +28,27 @@ class PerformanceMonitoringMiddleware
       duration: duration,
       status: status,
       method: request.method,
-      path: request.path
+      path: request.path,
     )
-    
+
     # Track memory after request
     PerformanceMonitoringService.track_memory_usage
-    
+
     [status, headers, response]
-  rescue => e
+  rescue StandardError => e
     # Track failed requests
     duration = (Time.current - start_time) * 1000
     controller_action = extract_controller_action(env)
-    
+
     PerformanceMonitoringService.track_request(
       controller: controller_action[:controller],
       action: controller_action[:action],
       duration: duration,
       status: 500,
       method: ActionDispatch::Request.new(env).method,
-      path: ActionDispatch::Request.new(env).path
+      path: ActionDispatch::Request.new(env).path,
     )
-    
+
     raise e
   end
 
@@ -67,12 +67,12 @@ class PerformanceMonitoringMiddleware
       # Fallback for non-Rails requests
       path = env['PATH_INFO'] || '/'
       controller = 'Unknown'
-      action = path.split('/').reject(&:blank?).first || 'index'
+      action = path.split('/').compact_blank.first || 'index'
     end
 
     {
       controller: controller || 'Unknown',
-      action: action || 'unknown'
+      action: action || 'unknown',
     }
   end
 end

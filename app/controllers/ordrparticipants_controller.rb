@@ -1,11 +1,11 @@
 class OrdrparticipantsController < ApplicationController
-  before_action :authenticate_user!, except: [:update]  # Allow unauthenticated updates for smart menu
-  before_action :set_restaurant, except: [:update]  # Allow direct updates without restaurant context
+  before_action :authenticate_user!, except: [:update] # Allow unauthenticated updates for smart menu
+  before_action :set_restaurant, except: [:update] # Allow direct updates without restaurant context
   before_action :set_ordrparticipant, only: %i[show edit update destroy]
   before_action :set_ordrparticipant_for_direct_update, only: [:update], if: -> { params[:restaurant_id].blank? }
-  
+
   # Pundit authorization
-  after_action :verify_authorized, except: [:index, :update]  # Skip authorization for direct updates
+  after_action :verify_authorized, except: %i[index update] # Skip authorization for direct updates
   after_action :verify_policy_scoped, only: [:index]
 
   # GET /ordrparticipants or /ordrparticipants.json
@@ -33,7 +33,7 @@ class OrdrparticipantsController < ApplicationController
   def create
     @ordrparticipant = Ordrparticipant.new(ordrparticipant_params)
     authorize @ordrparticipant
-    
+
     respond_to do |format|
       if @ordrparticipant.save
         @tablesetting = Tablesetting.find_by(id: @ordrparticipant.ordr.tablesetting.id)
@@ -50,7 +50,7 @@ class OrdrparticipantsController < ApplicationController
   def update
     # Only authorize if user is authenticated (nested route)
     authorize @ordrparticipant if current_user
-    
+
     respond_to do |format|
       if @ordrparticipant.update(ordrparticipant_params)
         # Find all entries for participant with same sessionid and order_id and update the name.
@@ -68,11 +68,11 @@ class OrdrparticipantsController < ApplicationController
   # DELETE /ordrparticipants/1 or /ordrparticipants/1.json
   def destroy
     authorize @ordrparticipant
-    
+
     @ordrparticipant.destroy!
     respond_to do |format|
       format.html do
-        redirect_to ordrparticipants_url, 
+        redirect_to ordrparticipants_url,
                     notice: t('common.flash.deleted', resource: t('activerecord.models.ordrparticipant'))
       end
       format.json { head :no_content }
@@ -234,8 +234,6 @@ class OrdrparticipantsController < ApplicationController
     require 'base64'
     Base64.strict_encode64(Zlib::Deflate.deflate(str))
   end
-
-  private
 
   # Set restaurant from nested route parameter
   def set_restaurant

@@ -112,6 +112,6 @@ class Restaurant < ApplicationRecord
   private
 
   def invalidate_restaurant_caches
-    AdvancedCacheService.invalidate_restaurant_caches(self.id)
+    AdvancedCacheService.invalidate_restaurant_caches(id)
   end
 end

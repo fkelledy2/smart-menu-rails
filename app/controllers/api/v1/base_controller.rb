@@ -38,16 +38,14 @@ module Api
       def authenticate_api_user!
         token = extract_token_from_header
         @current_user = JwtService.user_from_token(token)
-        
+
         unless @current_user
-          render json: error_response('unauthorized', 'Invalid or missing authentication token'), 
+          render json: error_response('unauthorized', 'Invalid or missing authentication token'),
                  status: :unauthorized
         end
       end
 
-      def current_user
-        @current_user
-      end
+      attr_reader :current_user
 
       def user_signed_in?
         @current_user.present?
@@ -56,8 +54,8 @@ module Api
       def extract_token_from_header
         auth_header = request.headers['Authorization']
         return nil unless auth_header&.start_with?('Bearer ')
-        
-        auth_header.split(' ').last
+
+        auth_header.split.last
       end
 
       def debug_api_request

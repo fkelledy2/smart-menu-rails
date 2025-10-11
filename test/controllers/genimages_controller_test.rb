@@ -19,13 +19,13 @@ class GenimagesControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create genimage' do
     # Controller create method is incomplete - just authorizes but doesn't save
-    post restaurant_genimages_url(@restaurant), params: { 
-      genimage: { 
+    post restaurant_genimages_url(@restaurant), params: {
+      genimage: {
         name: 'Test Image',
         description: 'Test Description',
         restaurant_id: @restaurant.id,
-        menu_id: @restaurant.menus.first&.id
-      } 
+        menu_id: @restaurant.menus.first&.id,
+      },
     }
     assert_response :success # Returns 200, doesn't actually create
   end
@@ -41,11 +41,11 @@ class GenimagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update genimage' do
-    patch restaurant_genimage_url(@restaurant, @genimage), params: { 
-      genimage: { 
+    patch restaurant_genimage_url(@restaurant, @genimage), params: {
+      genimage: {
         name: 'Updated Name',
-        description: 'Updated Description'
-      } 
+        description: 'Updated Description',
+      },
     }
     assert_response :success # Controller update method works
   end

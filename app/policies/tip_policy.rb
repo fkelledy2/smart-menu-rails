@@ -2,27 +2,27 @@
 
 class TipPolicy < ApplicationPolicy
   # Tips are business-critical financial data - only restaurant owners can manage
-  
+
   def index?
     user.present?
   end
-  
+
   def show?
     user.present? && owns_tip?
   end
-  
+
   def create?
     user.present?
   end
-  
+
   def update?
     user.present? && owns_tip?
   end
-  
+
   def destroy?
     user.present? && owns_tip?
   end
-  
+
   class Scope < Scope
     def resolve
       if user.present?
@@ -34,12 +34,12 @@ class TipPolicy < ApplicationPolicy
       end
     end
   end
-  
+
   private
-  
+
   def owns_tip?
     return false unless user && record.restaurant
-    
+
     # Check if user owns the restaurant
     user.restaurants.exists?(id: record.restaurant_id)
   end
