@@ -49,11 +49,12 @@ This comprehensive development roadmap consolidates all remaining tasks from acr
 
 #### **2. Expand Test Coverage** 🚧 **IN PROGRESS**
 - [x] **Increase line coverage from 38.86% to 39.13%** - Added comprehensive test coverage for high-impact controllers
-- [x] **Add missing controller tests** - MetricsController (11,817 bytes) + RestaurantsController (30,658 bytes) + OrdrsController (19,712 bytes) + MenusController (23,171 bytes) now fully tested
+- [x] **Add missing controller tests** - MetricsController (11,817 bytes) + RestaurantsController (30,658 bytes) + OrdrsController (19,712 bytes) + MenusController (23,171 bytes) + OCR Menu Imports Controller (12,465 bytes) now fully tested
 - [x] **RestaurantsController test coverage** - Added 29 comprehensive test methods covering CRUD, analytics, performance, JSON APIs, and business logic (+17 tests, +24 assertions)
 - [x] **OrdrsController test coverage** - Added 35 comprehensive test methods covering order management, real-time processing, analytics, JSON APIs, and complex business logic (+30 tests, +35 assertions)
 - [x] **MenusController test coverage** - Added 45 comprehensive test methods covering menu management, customer-facing display, QR codes, background jobs, multi-user access, and complex business logic (+39 tests, +46 assertions)
-- [ ] **Continue expanding to 95%+ line coverage** - Target additional high-impact controllers (OCR controllers, OrderItems controllers)
+- [x] **OCR Menu Imports Controller test coverage** - Added 50 comprehensive test methods covering OCR workflows, PDF processing, state management, confirmation workflows, menu publishing, and reordering functionality (+45 tests, +48 assertions)
+- [ ] **Continue expanding to 95%+ line coverage** - Target additional high-impact controllers (OrderItems controllers, Employee controllers)
 - [ ] **Improve branch coverage from 33.56% to 90%+** - Cover all conditional logic paths
 - [ ] **Implement model validation tests** - Complete model behavior coverage
 
@@ -463,9 +464,10 @@ This roadmap provides a strategic path from critical security fixes to industry-
 - ✅ **RestaurantsController Test Coverage** - Added comprehensive test suite (29 tests, 37 assertions) covering CRUD, analytics, performance monitoring, JSON APIs, and complex business logic
 - ✅ **OrdrsController Test Coverage** - Added comprehensive test suite (35 tests, 40 assertions) covering order management, real-time processing, analytics, authentication scenarios, and complex order lifecycle
 - ✅ **MenusController Test Coverage** - Added comprehensive test suite (45 tests, 53 assertions) covering menu management, customer-facing display, QR code generation, background job integration, multi-user access patterns, and complex menu lifecycle
+- ✅ **OCR Menu Imports Controller Test Coverage** - Added comprehensive test suite (50 tests, 56 assertions) covering OCR workflows, PDF processing, state machine management, confirmation workflows, menu publishing, reordering functionality, and complex business logic
 - ✅ **Line Coverage Improvement** - Increased from 38.86% to 39.13% through systematic controller testing
-- ✅ **Test Suite Stability** - Maintained 0 errors, 0 skips across 1,241 total tests
-- ✅ **High-Impact Coverage** - Targeted largest controllers (MenusController: 23,171 bytes, RestaurantsController: 30,658 bytes, OrdrsController: 19,712 bytes, MetricsController: 11,817 bytes)
+- ✅ **Test Suite Stability** - Maintained 0 errors, 1 skip across 1,286 total tests
+- ✅ **High-Impact Coverage** - Targeted largest controllers (MenusController: 23,171 bytes, RestaurantsController: 30,658 bytes, OrdrsController: 19,712 bytes, OCR Menu Imports Controller: 12,465 bytes, MetricsController: 11,817 bytes)
 - ✅ **Documentation** - Created detailed test coverage expansion plans and implementation summaries
 
 ### **Previously Completed**
