@@ -3,11 +3,8 @@
     <h1><%= t('.tags') %></h1>
   </div>
   <div class="col-6 text-end">
-  <% if @futureParentRestaurant %>
-    <%= link_to new_restaurant_tag_path(@futureParentRestaurant), class: 'btn btn-sm btn-dark' do %>
-  <% else %>
-    <%= link_to new_restaurant_tag_path(current_user.restaurants.first), class: 'btn btn-sm btn-dark' do %>
-  <% end %>
+  <% restaurant_path = @futureParentRestaurant || current_user.restaurants.first %>
+  <%= link_to new_restaurant_tag_path(restaurant_path), class: 'btn btn-sm btn-dark' do %>
     <i class="bi bi-plus"></i> <%= t('.tag') %>
   <% end %>
   </div>

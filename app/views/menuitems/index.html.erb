@@ -7,10 +7,12 @@
     <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t('common.deactivate') %></button>
     <% if @menu %>
       <%= link_to edit_restaurant_menu_path(@menu.restaurant, @menu), class: 'btn btn-sm btn-dark', title: 'Go to menu to add items to specific sections' do %>
+        <i class="bi bi-plus"></i> <%= t(".menuItem") %>
+      <% end %>
     <% else %>
       <%= link_to '#', class: 'btn btn-sm btn-dark disabled' do %>
-    <% end %>
-      <i class="bi bi-plus"></i> <%= t(".menuItem") %>
+        <i class="bi bi-plus"></i> <%= t(".menuItem") %>
+      <% end %>
     <% end %>
   </div>
 </div>

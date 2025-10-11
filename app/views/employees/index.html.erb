@@ -10,12 +10,9 @@
     <% end %>
     <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t('common.activate') %></button>
     <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t('common.deactivate') %></button>
-    <% if @futureParentRestaurant %>
-      <%= link_to new_restaurant_employee_path(@futureParentRestaurant), class: 'btn btn-sm btn-dark' do %>
-    <% else %>
-      <%= link_to new_restaurant_employee_path(current_user.restaurants.first), class: 'btn btn-sm btn-dark' do %>
-    <% end %>
-        <i class="bi bi-plus"></i> <%=t(".employee")%>
+    <% restaurant_path = @futureParentRestaurant || current_user.restaurants.first %>
+    <%= link_to new_restaurant_employee_path(restaurant_path), class: 'btn btn-sm btn-dark' do %>
+      <i class="bi bi-plus"></i> <%=t(".employee")%>
     <% end %>
   </div>
 </div>

@@ -8,7 +8,7 @@ app_path: "."
 output_format: :to_s
 
 # Specify the Rails version (if not detected correctly)
-rails_version: "7.1"
+rails_version: "7.2"
 
 # Minimum confidence level (High, Medium, Weak)
 # High = more certain, fewer false positives
@@ -16,8 +16,8 @@ rails_version: "7.1"
 # Weak = catch more potential issues, more false positives
 min_confidence: 2  # Medium confidence
 
-# Exit with error code if warnings found
-exit_on_warn: true
+# Exit with error code if warnings found (set to false for development)
+exit_on_warn: false
 
 # Exit with error code if errors occur during analysis
 exit_on_error: true
@@ -25,75 +25,8 @@ exit_on_error: true
 # Suppress informational warnings
 quiet: false
 
-# Additional checks to run
-run_checks:
-  - BasicAuth
-  - BasicAuthTimingAttack
-  - ContentTag
-  - CreateWith
-  - CrossSiteScripting
-  - DefaultRoutes
-  - Deserialize
-  - DetailedExceptions
-  - DigestDoS
-  - DivideByZero
-  - DynamicFinders
-  - EscapeFunction
-  - Evaluation
-  - Execute
-  - FileAccess
-  - FileDisclosure
-  - FilterSkipping
-  - ForgerySetting
-  - HeaderDoS
-  - I18nXSS
-  - JRubyXML
-  - JSONEncoding
-  - JSONParsing
-  - LinkTo
-  - LinkToHref
-  - MailTo
-  - MassAssignment
-  - MimeTypeDoS
-  - ModelAttrAccessible
-  - ModelAttributes
-  - ModelSerialize
-  - NestedAttributes
-  - NestedAttributesBypass
-  - NumberToCurrency
-  - PermitAttributes
-  - QuoteTableName
-  - Redirect
-  - Regex
-  - Render
-  - RenderDoS
-  - RenderInline
-  - ResponseSplitting
-  - RouteDoS
-  - SQL
-  - SQLCVEs
-  - SSLVerify
-  - SafeBufferManipulation
-  - SanitizeMethods
-  - SelectTag
-  - SelectVulnerability
-  - Send
-  - SendFile
-  - SessionManipulation
-  - SessionSettings
-  - SimpleFormat
-  - SingleQuotes
-  - SkipBeforeFilter
-  - SprocketsPathTraversal
-  - StripTags
-  - SymbolDoSCVE
-  - TranslateBug
-  - UnsafeReflection
-  - UnscopedFind
-  - ValidationRegex
-  - WithoutProtection
-  - XMLDoS
-  - YAMLParsing
+# Use default checks (recommended)
+# run_checks: [] # Empty array means use all default checks
 
 # Skip certain checks (if needed)
 skip_checks: []

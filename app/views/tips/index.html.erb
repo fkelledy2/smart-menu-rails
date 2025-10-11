@@ -8,11 +8,8 @@
         <i class="bi bi-chevron-left"></i>
       <% end %>
     <% end %>
-  <% if @futureParentRestaurant %>
-    <%= link_to new_restaurant_tip_path(@futureParentRestaurant), class: 'btn btn-sm btn-dark' do %>
-  <% else %>
-    <%= link_to new_restaurant_tip_path(current_user.restaurants.first), class: 'btn btn-sm btn-dark' do %>
-  <% end %>
+  <% restaurant_path = @futureParentRestaurant || current_user.restaurants.first %>
+  <%= link_to new_restaurant_tip_path(restaurant_path), class: 'btn btn-sm btn-dark' do %>
     <i class="bi bi-plus"></i> Tip
   <% end %>
   </div>

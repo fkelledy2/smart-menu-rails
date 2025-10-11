@@ -227,6 +227,8 @@ class EmployeesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def employee_params
-    params.require(:employee).permit(:name, :eid, :image, :role, :user_id, :status, :sequence, :restaurant_id)
+    # Remove dangerous mass assignment parameters (user_id, restaurant_id, role)
+    # These should be set explicitly in controller actions, not via mass assignment
+    params.require(:employee).permit(:name, :eid, :image, :status, :sequence)
   end
 end

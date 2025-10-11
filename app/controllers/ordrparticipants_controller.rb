@@ -259,7 +259,9 @@ class OrdrparticipantsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def ordrparticipant_params
-    params.require(:ordrparticipant).permit(:sessionid, :action, :role, :employee_id, :ordr_id, :ordritem_id, :name,
-                                            :preferredlocale, allergyn_ids: [],)
+    # Remove dangerous mass assignment parameters (employee_id, ordr_id, ordritem_id, role)
+    # These should be set explicitly in controller actions, not via mass assignment
+    params.require(:ordrparticipant).permit(:sessionid, :action, :name,
+                                            :preferredlocale, allergyn_ids: [])
   end
 end

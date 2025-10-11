@@ -30,7 +30,9 @@ class TablesettingsController < ApplicationController
   # GET /tablesettings/1 or /tablesettings/1.json
   def show
     @restaurant = Restaurant.find_by(id: params[:restaurant_id])
-    @qr = RQRCode::QRCode.new(@tablesetting.status)
+    # Sanitize the status input to prevent XSS in QR code generation
+    sanitized_status = ActionController::Base.helpers.sanitize(@tablesetting.status.to_s)
+    @qr = RQRCode::QRCode.new(sanitized_status)
     @menus = Menu.joins(:restaurant).all
   end
 
