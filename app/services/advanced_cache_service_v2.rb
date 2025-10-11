@@ -56,7 +56,8 @@ class AdvancedCacheServiceV2 < AdvancedCacheService
       # Extract IDs and fetch model instances
       employee_ids = cached_data[:employees].map { |emp_hash| emp_hash[:id] }
       restaurant = Restaurant.find(restaurant_id)
-      employees = restaurant.employees.where(id: employee_ids, archived: false)
+      employees = restaurant.employees.where(id: employee_ids)
+                            .where.not(status: :archived)
                             .includes(:user)
                             .order(:sequence)
       

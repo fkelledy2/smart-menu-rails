@@ -260,8 +260,7 @@ class AdvancedCacheServiceTest < ActiveSupport::TestCase
 
   # Individual menuitem tests
   test "should cache menuitem with analytics" do
-    menuitem = @menu.menusections.first&.menuitems&.first
-    skip "No menuitems available" unless menuitem
+    menuitem = menuitems(:one) # Use fixture directly
     
     result = AdvancedCacheService.cached_menuitem_with_analytics(menuitem.id)
     
@@ -274,8 +273,7 @@ class AdvancedCacheServiceTest < ActiveSupport::TestCase
   end
 
   test "should cache menuitem performance" do
-    menuitem = @menu.menusections.first&.menuitems&.first
-    skip "No menuitems available" unless menuitem
+    menuitem = menuitems(:one) # Use fixture directly
     
     result = AdvancedCacheService.cached_menuitem_performance(menuitem.id)
     
@@ -287,8 +285,7 @@ class AdvancedCacheServiceTest < ActiveSupport::TestCase
   end
 
   test "should cache menuitem performance with custom days" do
-    menuitem = @menu.menusections.first&.menuitems&.first
-    skip "No menuitems available" unless menuitem
+    menuitem = menuitems(:one) # Use fixture directly
     
     result = AdvancedCacheService.cached_menuitem_performance(menuitem.id, days: 7)
     

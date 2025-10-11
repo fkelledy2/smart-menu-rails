@@ -786,3 +786,6 @@ en:
     edit:
       saveChanges: Update
       selectPlan: Choose Plan
+  contacts:
+    controller:
+      thanks: Thank you for contacting us! We'll get back to you soon.

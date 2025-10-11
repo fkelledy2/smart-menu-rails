@@ -180,11 +180,9 @@ class AdvancedCacheServiceV2Test < ActiveSupport::TestCase
   end
 
   test "should return employee model instances when return_models is true" do
-    skip "Employee model validation issues - test disabled for now"
-    
     # Create test employees
-    employee1 = create_test_employee(@restaurant)
-    employee2 = create_test_employee(@restaurant)
+    employee1 = create_test_employee(@restaurant, id_override: 1)
+    employee2 = create_test_employee(@restaurant, id_override: 2)
     
     AdvancedCacheService.stub(:cached_restaurant_employees, @mock_employee_data) do
       result = AdvancedCacheServiceV2.cached_restaurant_employees_with_models(
@@ -223,7 +221,30 @@ class AdvancedCacheServiceV2Test < ActiveSupport::TestCase
   end
 
   test "should filter out archived employees" do
-    skip "Employee model validation issues - test disabled for now"
+    # Create active and archived employees
+    active_employee = create_test_employee(@restaurant, id_override: 1, archived: false)
+    archived_employee = create_test_employee(@restaurant, id_override: 2, archived: true)
+    
+    # Mock the service to return both employees
+    mock_data = {
+      employees: [
+        { id: active_employee.id, name: active_employee.name, status: 'active' },
+        { id: archived_employee.id, name: archived_employee.name, status: 'archived' }
+      ],
+      metadata: { total_count: 2 }
+    }
+    
+    AdvancedCacheService.stub(:cached_restaurant_employees, mock_data) do
+      result = AdvancedCacheServiceV2.cached_restaurant_employees_with_models(
+        @restaurant.id, 
+        return_models: true
+      )
+      
+      # Should only return active employees (method filters archived by default)
+      assert_equal 1, result[:employees].count
+      assert_equal active_employee.id, result[:employees].first.id
+      assert_equal 'active', result[:employees].first.status
+    end
   end
 
   # Test cached_collection_to_models method
@@ -246,7 +267,23 @@ class AdvancedCacheServiceV2Test < ActiveSupport::TestCase
   end
 
   test "should convert employees collection to models" do
-    skip "Employee model validation issues - test disabled for now"
+    # Create test employees
+    employee1 = create_test_employee(@restaurant, id_override: 1)
+    employee2 = create_test_employee(@restaurant, id_override: 2)
+    
+    cached_data = {
+      employees: [{ id: employee1.id }, { id: employee2.id }],
+      metadata: { total_count: 2 }
+    }
+    
+    result = AdvancedCacheServiceV2.cached_collection_to_models(
+      cached_data, 
+      Employee
+    )
+    
+    assert_respond_to result[:employees], :each # ActiveRecord relation
+    assert_equal cached_data[:metadata], result[:metadata]
+    assert_equal 2, result[:employees].count
   end
 
   test "should apply scope_proc when provided" do
@@ -411,10 +448,11 @@ class AdvancedCacheServiceV2Test < ActiveSupport::TestCase
       password_confirmation: "password123"
     )
     
-    # Create employee with proper enum values (don't override ID - let Rails handle it)
+    # Create employee with proper enum values and required fields
     employee = restaurant.employees.create!(
       user: user,
       name: "Test Employee #{id_override || rand(1000)}", # Add required name
+      eid: "EMP#{id_override || rand(1000)}", # Add required employee ID
       role: :staff, # Use enum symbol
       status: archived ? :archived : :active, # Use enum symbols
       sequence: id_override || 1

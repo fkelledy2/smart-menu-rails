@@ -1,5 +1,9 @@
 class ContactsController < ApplicationController
   # Public contact form - no authentication required
+  skip_before_action :set_current_employee
+  skip_before_action :set_permissions
+  skip_before_action :redirect_to_onboarding_if_needed
+  
   after_action :verify_authorized
 
   def new

@@ -1,21 +1,31 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  description: MyText
+  name: Zucchini Flan
+  description: Delicious zucchini flan with herbs
   status: 1
   sequence: 1
-  calories: 1
-  price: 1.5
+  calories: 250
+  price: 12.50
   itemtype: food
   menusection: one
 
 two:
-  name: AnotherString
-  description: AnotherText
+  name: Eggs Benedict
+  description: Classic eggs benedict with hollandaise
   status: 1
   sequence: 2
-  calories: 2
-  price: 2.5
+  calories: 400
+  price: 15.00
+  itemtype: food
+  menusection: one
+
+three:
+  name: Fresh Orange Juice
+  description: Freshly squeezed orange juice
+  status: 1
+  sequence: 3
+  calories: 120
+  price: 5.50
   itemtype: drink
   menusection: one

@@ -1,11 +1,16 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  key: MyString
-  descriptionKey: MyString
+  key: advanced_analytics
+  descriptionKey: Advanced analytics and reporting
   status: 1
 
 two:
-  key: MyString
-  descriptionKey: MyString
+  key: api_access
+  descriptionKey: Full API access for integrations
+  status: 1
+
+three:
+  key: custom_branding
+  descriptionKey: Custom branding and white-label options
   status: 1
