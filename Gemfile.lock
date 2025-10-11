@@ -837,8 +837,8 @@ DEPENDENCIES
   ruby-openai
   seed_dump
   selenium-webdriver
-  sentry-rails
-  sentry-ruby
+  sentry-rails (~> 5.12)
+  sentry-ruby (~> 5.12)
   shrine (~> 3.3)
   sidekiq (~> 6.2)
   simplecov

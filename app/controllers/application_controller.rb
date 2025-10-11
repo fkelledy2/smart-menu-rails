@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   impersonates :user
   include Pundit::Authorization
   include AnalyticsTrackable
+  include SentryContext
 
   # include StructuredLogging # Temporarily disabled
   # include MetricsTracking # Temporarily disabled
