@@ -5,6 +5,9 @@ require 'simplecov'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
+
+# Use test adapter for Active Job in tests
+ActiveJob::Base.queue_adapter = :test
 require 'minitest/mock'
 
 module ActiveSupport

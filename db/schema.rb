@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_05_181034) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_12_172730) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -166,6 +166,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_05_181034) do
     t.index ["menuitem_id", "updated_at"], name: "index_inventories_on_menuitem_updated_at"
     t.index ["menuitem_id"], name: "index_inventories_on_menuitem_id"
     t.index ["status"], name: "index_inventories_on_status"
+  end
+
+  create_table "memory_metrics", force: :cascade do |t|
+    t.bigint "heap_size", null: false
+    t.bigint "heap_free"
+    t.bigint "objects_allocated"
+    t.integer "gc_count"
+    t.bigint "rss_memory"
+    t.datetime "timestamp", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rss_memory", "timestamp"], name: "index_memory_metrics_on_rss_memory_and_timestamp"
+    t.index ["timestamp"], name: "index_memory_metrics_on_timestamp"
   end
 
   create_table "menu_imports", force: :cascade do |t|
@@ -699,6 +712,25 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_05_181034) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "performance_metrics", force: :cascade do |t|
+    t.string "endpoint", null: false
+    t.float "response_time", null: false
+    t.integer "memory_usage"
+    t.integer "status_code", null: false
+    t.bigint "user_id"
+    t.string "controller"
+    t.string "action"
+    t.datetime "timestamp", null: false
+    t.json "additional_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["endpoint", "timestamp"], name: "index_performance_metrics_on_endpoint_and_timestamp"
+    t.index ["response_time"], name: "index_performance_metrics_on_response_time"
+    t.index ["status_code", "timestamp"], name: "index_performance_metrics_on_status_code_and_timestamp"
+    t.index ["timestamp"], name: "index_performance_metrics_on_timestamp"
+    t.index ["user_id"], name: "index_performance_metrics_on_user_id"
+  end
+
   create_table "plans", force: :cascade do |t|
     t.string "key"
     t.string "descriptionKey"
@@ -822,6 +854,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_05_181034) do
     t.bigint "restaurant_id"
     t.index ["restaurant_id", "status"], name: "index_sizes_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id"], name: "index_sizes_on_restaurant_id"
+  end
+
+  create_table "slow_queries", force: :cascade do |t|
+    t.text "sql", null: false
+    t.float "duration", null: false
+    t.string "query_name"
+    t.text "backtrace"
+    t.datetime "timestamp", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["duration", "timestamp"], name: "index_slow_queries_on_duration_and_timestamp"
+    t.index ["timestamp"], name: "index_slow_queries_on_timestamp"
   end
 
   create_table "smartmenus", force: :cascade do |t|
@@ -1010,6 +1054,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_05_181034) do
   add_foreign_key "pay_charges", "pay_subscriptions", column: "subscription_id"
   add_foreign_key "pay_payment_methods", "pay_customers", column: "customer_id"
   add_foreign_key "pay_subscriptions", "pay_customers", column: "customer_id"
+  add_foreign_key "performance_metrics", "users"
   add_foreign_key "restaurant_onboardings", "restaurants"
   add_foreign_key "restaurantavailabilities", "restaurants"
   add_foreign_key "restaurantlocales", "restaurants"

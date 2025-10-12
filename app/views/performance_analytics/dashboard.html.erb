@@ -1,0 +1,240 @@
+<% content_for :title, "Performance Analytics Dashboard" %>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <h1>Application Performance Monitoring</h1>
+      <p class="text-muted">Real-time performance metrics and analytics</p>
+    </div>
+  </div>
+
+  <!-- Current Metrics Overview -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Avg Response Time</h5>
+          <h2 class="text-primary"><%= @current_metrics[:avg_response_time].round(2) %>ms</h2>
+          <small class="text-muted">Last 5 minutes</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Memory Usage</h5>
+          <h2 class="text-info"><%= @current_metrics[:current_memory_usage][:formatted_rss] %></h2>
+          <small class="text-muted">Current RSS</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Error Rate</h5>
+          <h2 class="text-<%= @current_metrics[:error_rate] > 5 ? 'danger' : 'success' %>"><%= @current_metrics[:error_rate] %>%</h2>
+          <small class="text-muted">Last 5 minutes</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Active Users</h5>
+          <h2 class="text-success"><%= @current_metrics[:active_users] %></h2>
+          <small class="text-muted">Last 5 minutes</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5>Response Time Trend (24h)</h5>
+        </div>
+        <div class="card-body">
+          <canvas id="response-time-chart" width="400" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5>Memory Usage Trend (24h)</h5>
+        </div>
+        <div class="card-body">
+          <canvas id="memory-chart" width="400" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slow Endpoints -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5>Slowest Endpoints (Last Hour)</h5>
+        </div>
+        <div class="card-body">
+          <% if @slow_endpoints.any? %>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Endpoint</th>
+                    <th>Avg Response Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @slow_endpoints.each do |endpoint_data| %>
+                    <tr>
+                      <td><code><%= endpoint_data[:endpoint] %></code></td>
+                      <td><%= endpoint_data[:avg_response_time] %>ms</td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted">No slow endpoints detected</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5>Recent Slow Queries</h5>
+        </div>
+        <div class="card-body">
+          <% if @slow_queries.any? %>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Duration</th>
+                    <th>Query</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @slow_queries.each do |query| %>
+                    <tr>
+                      <td><%= query.formatted_duration %></td>
+                      <td><code><%= truncate(query.sql, length: 50) %></code></td>
+                      <td><%= time_ago_in_words(query.timestamp) %> ago</td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted">No slow queries detected</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5>Actions</h5>
+        </div>
+        <div class="card-body">
+          <a href="<%= performance_summary_performance_analytics_path(format: :json) %>" class="btn btn-outline-primary">
+            Export Summary (JSON)
+          </a>
+          <a href="<%= export_metrics_performance_analytics_path(format: :csv, timeframe: '24h') %>" class="btn btn-outline-secondary">
+            Export Metrics (CSV)
+          </a>
+          <button id="refresh-dashboard" class="btn btn-outline-success">
+            Refresh Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize charts
+  const responseTimeData = <%= raw @performance_trends[:response_time_trend].to_json %>;
+  const memoryData = <%= raw @performance_trends[:memory_trend].to_json %>;
+  
+  // Response Time Chart
+  const responseCtx = document.getElementById('response-time-chart').getContext('2d');
+  new Chart(responseCtx, {
+    type: 'line',
+    data: {
+      labels: Object.keys(responseTimeData),
+      datasets: [{
+        label: 'Response Time (ms)',
+        data: Object.values(responseTimeData),
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.1)',
+        tension: 0.1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  
+  // Memory Chart
+  const memoryCtx = document.getElementById('memory-chart').getContext('2d');
+  new Chart(memoryCtx, {
+    type: 'line',
+    data: {
+      labels: Object.keys(memoryData),
+      datasets: [{
+        label: 'Memory Usage (bytes)',
+        data: Object.values(memoryData),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.1)',
+        tension: 0.1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return (value / 1024 / 1024).toFixed(1) + ' MB';
+            }
+          }
+        }
+      }
+    }
+  });
+  
+  // Auto-refresh functionality
+  document.getElementById('refresh-dashboard').addEventListener('click', function() {
+    location.reload();
+  });
+  
+  // Auto-refresh every 30 seconds
+  setInterval(function() {
+    location.reload();
+  }, 30000);
+});
+</script>

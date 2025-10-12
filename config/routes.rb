@@ -229,6 +229,19 @@ Rails.application.routes.draw do
     end
   end
   
+  # Performance Analytics (APM)
+  resources :performance_analytics, only: [] do
+    collection do
+      get :dashboard
+      get :api_metrics
+      get :endpoint_analysis
+      get :slow_queries
+      get :memory_analysis
+      get :performance_summary
+      get :export_metrics
+    end
+  end
+  
   # Admin analytics dashboard
   namespace :admin do
     resources :metrics, only: [:index, :show] do
