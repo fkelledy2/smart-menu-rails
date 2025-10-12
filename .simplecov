@@ -1,18 +1,18 @@
 # SimpleCov configuration
 SimpleCov.start 'rails' do
-  # Filter out directories we don't want to track
+  # Filter out directories we don't want to track (infrastructure only)
   add_filter '/bin/'
   add_filter '/config/'
   add_filter '/db/'
   add_filter '/vendor/'
-  add_filter '/app/channels/'
-  add_filter '/app/mailers/'
-  add_filter '/app/jobs/'
   add_filter '/test/'
   add_filter '/spec/'
   add_filter '/lib/tasks/'
-
-  # Track all Ruby files in app directory
+  
+  # Filter out specific files that shouldn't be tested
+  add_filter '/app/channels/application_cable/' # Base ActionCable classes
+  
+  # Track all Ruby files in app directory (including jobs, mailers, channels)
   track_files 'app/**/*.rb'
 
   # Enable branch coverage for more detailed analysis
@@ -29,6 +29,13 @@ SimpleCov.start 'rails' do
   add_group 'Helpers', 'app/helpers'
   add_group 'Views', 'app/views'
   add_group 'Policies', 'app/policies'
+  add_group 'Jobs', 'app/jobs'
+  add_group 'Mailers', 'app/mailers'
+  add_group 'Channels', 'app/channels'
+  add_group 'Serializers', 'app/serializers'
+  add_group 'Middleware', 'app/middleware'
+  add_group 'Uploaders', 'app/uploaders'
+  add_group 'Admin', 'app/madmin'
 
   # Minimum coverage thresholds
   if ENV['COVERAGE_MIN']

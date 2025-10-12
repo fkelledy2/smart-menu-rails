@@ -1,4 +1,5 @@
 require 'sidekiq'
+require 'limiter/mixin'
 
 class GenerateImageJob
   include Sidekiq::Worker

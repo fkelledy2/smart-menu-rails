@@ -13,7 +13,7 @@ module ApplicationHelper
     {
       'data-restaurant-id' => restaurant.id,
       'data-restaurant-name' => restaurant.name,
-      'data-restaurant-slug' => restaurant.slug,
+      'data-restaurant-slug' => restaurant.respond_to?(:slug) ? restaurant.slug : nil,
     }
   end
 
@@ -48,7 +48,7 @@ module ApplicationHelper
         window.currentRestaurant = {
           id: #{restaurant.id.to_json},
           name: #{restaurant.name.to_json},
-          slug: #{restaurant.slug.to_json}
+          slug: #{(restaurant.respond_to?(:slug) ? restaurant.slug : nil).to_json}
         };
 
         // Store in session storage for persistence
