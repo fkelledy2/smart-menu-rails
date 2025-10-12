@@ -36,9 +36,11 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
   test 'should handle missing genimage gracefully' do
     job = GenerateImageJob.new
     
-    # Should handle missing genimage without raising errors
-    assert_nothing_raised do
-      job.perform(99999) # Non-existent genimage ID
+    # Mock the expensive_api_call to avoid real API calls
+    job.stub(:expensive_api_call, nil) do
+      assert_nothing_raised do
+        job.perform(99999) # Non-existent genimage ID
+      end
     end
   end
 
@@ -52,8 +54,11 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
     
     job = GenerateImageJob.new
     
-    assert_nothing_raised do
-      job.perform(orphaned_genimage.id)
+    # Mock the expensive_api_call to avoid real API calls
+    job.stub(:expensive_api_call, nil) do
+      assert_nothing_raised do
+        job.perform(orphaned_genimage.id)
+      end
     end
   end
 
@@ -70,11 +75,9 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
   end
 
   test 'should handle API failure gracefully' do
-    # Mock failed API response
-    mock_response = OpenStruct.new(success?: false)
-    
+    # Mock the expensive_api_call to avoid real API calls
     job = GenerateImageJob.new
-    job.stub(:generate_image, mock_response) do
+    job.stub(:expensive_api_call, nil) do
       assert_nothing_raised do
         job.perform(@genimage.id)
       end
