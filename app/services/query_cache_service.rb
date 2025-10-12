@@ -20,7 +20,7 @@ class QueryCacheService
   }.freeze
 
   class << self
-    delegate :fetch, :clear, :clear_pattern, :warm_cache, to: :instance
+    delegate :fetch, :clear, :clear_pattern, :clear_performance_data, :warm_cache, to: :instance
   end
 
   # Fetch cached result or execute block and cache the result
@@ -77,6 +77,12 @@ class QueryCacheService
     end
   end
 
+  # Clear performance data cache (useful for fixing corruption)
+  def clear_performance_data
+    Rails.cache.delete('query_cache:performance')
+    Rails.logger.info "[QueryCache] Cleared performance data cache"
+  end
+
   # Pre-warm cache with commonly accessed data
   # @param cache_configs [Array<Hash>] Array of cache configurations
   def warm_cache(cache_configs = [])
@@ -120,23 +126,32 @@ class QueryCacheService
   # @param execution_time [Float] Query execution time
   # @param result_type [Symbol] :hit, :miss, or :error
   def track_cache_performance(cache_type, execution_time, result_type)
-    performance_data = cache_performance_data
+    return unless Rails.env.production? || Rails.env.development?
+    
+    begin
+      performance_data = cache_performance_data
+      
+      # Ensure all values are not nil before performing arithmetic
+      performance_data[:total_requests] = (performance_data[:total_requests] || 0) + 1
+      performance_data[:"cache_#{result_type}s"] = (performance_data[:"cache_#{result_type}s"] || 0) + 1
+      performance_data[:total_query_time] = (performance_data[:total_query_time] || 0.0) + (execution_time || 0.0)
+      
+      performance_data[:by_type][cache_type] ||= { requests: 0, total_time: 0.0 }
+      performance_data[:by_type][cache_type][:requests] = (performance_data[:by_type][cache_type][:requests] || 0) + 1
+      performance_data[:by_type][cache_type][:total_time] = (performance_data[:by_type][cache_type][:total_time] || 0.0) + (execution_time || 0.0)
 
-    performance_data[:total_requests] += 1
-    performance_data[:"cache_#{result_type}s"] += 1
-    performance_data[:total_query_time] += execution_time
-    performance_data[:by_type][cache_type] ||= { requests: 0, total_time: 0 }
-    performance_data[:by_type][cache_type][:requests] += 1
-    performance_data[:by_type][cache_type][:total_time] += execution_time
-
-    # Store updated performance data
-    Rails.cache.write('query_cache:performance', performance_data, expires_in: 1.hour)
+      # Store updated performance data
+      Rails.cache.write('query_cache:performance', performance_data, expires_in: 1.hour)
+    rescue StandardError => e
+      Rails.logger.warn "[QueryCache] Failed to track performance: #{e.message}"
+    end
   end
 
   # Get cache performance data from cache
   # @return [Hash] Performance data
   def cache_performance_data
-    @cache_performance_data ||= Rails.cache.fetch('query_cache:performance', expires_in: 1.hour) do
+    # Don't use instance variable to avoid corruption between requests
+    data = Rails.cache.fetch('query_cache:performance', expires_in: 1.hour) do
       {
         total_requests: 0,
         cache_hits: 0,
@@ -146,25 +161,64 @@ class QueryCacheService
         by_type: {},
       }
     end
+    
+    # Ensure data integrity - return default if data is corrupted
+    return default_performance_data unless data.is_a?(Hash)
+    
+    # Ensure all required keys exist with proper defaults
+    {
+      total_requests: data[:total_requests] || 0,
+      cache_hits: data[:cache_hits] || 0,
+      cache_misses: data[:cache_misses] || 0,
+      errors: data[:errors] || 0,
+      total_query_time: data[:total_query_time] || 0.0,
+      by_type: data[:by_type] || {},
+    }
+  end
+  
+  # Default performance data structure
+  def default_performance_data
+    {
+      total_requests: 0,
+      cache_hits: 0,
+      cache_misses: 0,
+      errors: 0,
+      total_query_time: 0.0,
+      by_type: {},
+    }
   end
 
   # Calculate cache hit rate
   # @return [Float] Hit rate percentage
   def calculate_hit_rate
-    data = cache_performance_data
-    total = data[:cache_hits] + data[:cache_misses]
-    return 0.0 if total.zero?
+    begin
+      data = cache_performance_data
+      hits = data[:cache_hits] || 0
+      misses = data[:cache_misses] || 0
+      total = hits + misses
+      return 0.0 if total.zero?
 
-    (data[:cache_hits].to_f / total * 100).round(2)
+      (hits.to_f / total * 100).round(2)
+    rescue StandardError => e
+      Rails.logger.warn "[QueryCache] Error calculating hit rate: #{e.message}"
+      0.0
+    end
   end
 
   # Calculate average query execution time
   # @return [Float] Average time in seconds
   def calculate_average_query_time
-    data = cache_performance_data
-    return 0.0 if data[:cache_misses].zero?
+    begin
+      data = cache_performance_data
+      misses = data[:cache_misses] || 0
+      total_time = data[:total_query_time] || 0.0
+      return 0.0 if misses.zero?
 
-    (data[:total_query_time] / data[:cache_misses]).round(4)
+      (total_time / misses).round(4)
+    rescue StandardError => e
+      Rails.logger.warn "[QueryCache] Error calculating average query time: #{e.message}"
+      0.0
+    end
   end
 
   # Estimate cache size (rough approximation)
