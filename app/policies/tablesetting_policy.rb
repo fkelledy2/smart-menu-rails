@@ -4,7 +4,7 @@ class TablesettingPolicy < ApplicationPolicy
   end
 
   def show?
-    return true unless user # Allow anonymous customers
+    return true unless user.id # Allow anonymous customers (User.new has no id)
 
     owner?
   end
