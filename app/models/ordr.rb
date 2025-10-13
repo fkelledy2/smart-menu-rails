@@ -33,6 +33,19 @@ class Ordr < ApplicationRecord
   has_many :ordrparticipants, dependent: :destroy
   has_many :ordractions, dependent: :destroy
 
+  # Optimized associations to prevent N+1 queries
+  has_many :ordered_items_with_details, -> { 
+    where(status: 20).includes(menuitem: [:genimage, :allergyns, :sizes]) 
+  }, class_name: 'Ordritem'
+
+  has_many :prepared_items_with_details, -> { 
+    where(status: 30).includes(menuitem: [:genimage, :allergyns, :sizes]) 
+  }, class_name: 'Ordritem'
+
+  has_many :delivered_items_with_details, -> { 
+    where(status: 40).includes(menuitem: [:genimage, :allergyns, :sizes]) 
+  }, class_name: 'Ordritem'
+
   # IdentityCache configuration
   cache_index :id
   cache_index :restaurant_id
@@ -52,6 +65,25 @@ class Ordr < ApplicationRecord
   # Cache invalidation hooks - DISABLED in favor of background jobs
   # after_update :invalidate_order_caches
   # after_destroy :invalidate_order_caches
+
+  # Scopes for optimized queries
+  scope :with_complete_items, -> {
+    includes(
+      :restaurant,
+      :tablesetting,
+      :menu,
+      :employee,
+      ordritems: [
+        menuitem: [:genimage, :allergyns, :sizes, :menuitemlocales]
+      ]
+    )
+  }
+
+  scope :for_restaurant_dashboard, ->(restaurant_id) {
+    where(restaurant_id: restaurant_id)
+      .with_complete_items
+      .order(created_at: :desc)
+  }
 
   enum :status, {
     opened: 0,

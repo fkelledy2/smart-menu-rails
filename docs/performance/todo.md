@@ -6,19 +6,27 @@ Based on analysis of performance documentation, here are the remaining performan
 
 ### **HIGH PRIORITY - Performance Optimization**
 
-#### **1. Analytics System Enhancement**
+#### **1. Database Query Optimization** ✅ **COMPLETED**
+- [x] **Eliminate remaining N+1 patterns** in complex controllers ✅ **COMPLETED**
+  - ✅ Implemented comprehensive `includes` statements in MenusController
+  - ✅ Enhanced AdvancedCacheServiceV2 with deep includes for order items
+  - ✅ Added optimized scopes and associations to Order and Menu models
+  - ✅ Created performance tests for N+1 pattern detection
+  - ✅ Documented implementation plan and strategies in `/docs/performance/n-plus-1-elimination-plan.md`
+
+#### **2. Analytics System Enhancement**
 - [ ] **Real-time analytics optimization** - Reduce query response times to <100ms
 - [ ] **Dashboard performance tuning** - Optimize Chart.js rendering for large datasets
 - [ ] **Analytics caching strategy** - Implement intelligent caching for frequently accessed reports
 - [ ] **Data aggregation optimization** - Pre-compute common analytics queries
 
-#### **2. Database Performance Monitoring**
+#### **3. Database Performance Monitoring**
 - [ ] **Query performance baseline** establishment and monitoring
 - [ ] **Slow query detection** automation with alerting
 - [ ] **Database connection pool** optimization for peak loads
 - [ ] **Read replica performance** monitoring and optimization
 
-#### **3. Application Performance Monitoring (APM)** ✅ **COMPLETED**
+#### **4. Application Performance Monitoring (APM)** ✅ **COMPLETED**
 - [x] **Real-time performance tracking** across all controllers
 - [x] **Memory usage monitoring** with leak detection
 - [x] **Response time analysis** by endpoint and user type
@@ -26,19 +34,19 @@ Based on analysis of performance documentation, here are the remaining performan
 
 ### **MEDIUM PRIORITY - Advanced Performance Features**
 
-#### **4. Caching Strategy Enhancement**
+#### **5. Caching Strategy Enhancement**
 - [ ] **Multi-level caching hierarchy** implementation (L1-L4)
 - [ ] **Predictive cache warming** using ML-based user pattern analysis
 - [ ] **Cache hit rate optimization** to achieve 95%+ across all models
 - [ ] **Intelligent cache invalidation** with dependency tracking
 
-#### **5. Performance Visualization System**
+#### **6. Performance Visualization System**
 - [ ] **Real-time performance dashboard** for operations team
 - [ ] **Performance trend analysis** and forecasting
 - [ ] **User experience metrics** (Core Web Vitals) tracking
 - [ ] **Performance comparison tools** for A/B testing
 
-#### **6. Load Testing & Capacity Planning**
+#### **7. Load Testing & Capacity Planning**
 - [ ] **Automated load testing** integration in CI/CD
 - [ ] **Stress testing scenarios** for peak restaurant hours
 - [ ] **Capacity planning models** for 10x and 100x traffic growth
@@ -46,19 +54,19 @@ Based on analysis of performance documentation, here are the remaining performan
 
 ### **MEDIUM PRIORITY - Analytics & Business Intelligence**
 
-#### **7. Advanced Analytics Engine**
+#### **8. Advanced Analytics Engine**
 - [ ] **Predictive analytics** for demand forecasting
 - [ ] **Customer behavior analysis** and segmentation
 - [ ] **Revenue optimization analytics** with pricing recommendations
 - [ ] **Operational efficiency metrics** and optimization suggestions
 
-#### **8. Real-time Business Intelligence**
+#### **9. Real-time Business Intelligence**
 - [ ] **Live dashboard updates** without page refresh
 - [ ] **Real-time alerting** for business KPIs
 - [ ] **Executive summary automation** with key insights
 - [ ] **Automated report generation** and distribution
 
-#### **9. Performance Analytics Integration**
+#### **10. Performance Analytics Integration**
 - [ ] **User journey performance tracking**
 - [ ] **Feature usage analytics** with performance correlation
 - [ ] **Mobile vs desktop performance** comparison
@@ -66,19 +74,19 @@ Based on analysis of performance documentation, here are the remaining performan
 
 ### **LOW PRIORITY - Advanced Features**
 
-#### **10. Machine Learning Performance Optimization**
+#### **11. Machine Learning Performance Optimization**
 - [ ] **ML-based query optimization** recommendations
 - [ ] **Intelligent resource allocation** based on usage patterns
 - [ ] **Predictive scaling** for traffic spikes
 - [ ] **Automated performance tuning** based on historical data
 
-#### **11. Advanced Monitoring & Alerting**
+#### **12. Advanced Monitoring & Alerting**
 - [ ] **Anomaly detection** for performance metrics
 - [ ] **Predictive alerting** before performance issues occur
 - [ ] **Root cause analysis** automation for performance problems
 - [ ] **Performance incident management** workflow
 
-#### **12. Global Performance Optimization**
+#### **13. Global Performance Optimization**
 - [ ] **CDN performance optimization** for international users
 - [ ] **Edge computing integration** for reduced latency
 - [ ] **Multi-region performance monitoring**

@@ -137,7 +137,7 @@ class SlowQueryTest < ActiveSupport::TestCase
     assert_equal "users", @slow_query.table_name
     
     @slow_query.sql = "EXPLAIN SELECT * FROM complex_query"
-    assert_equal "complex_query", @slow_query.table_name  # The method correctly extracts table names
+    assert_equal "complex_query", @slow_query.table_name
   end
 
   test "potential_n_plus_one should detect N+1 patterns" do

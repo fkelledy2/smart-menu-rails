@@ -82,7 +82,7 @@ class MemoryMetricTest < ActiveSupport::TestCase
   end
 
   test "current_memory_usage should return latest metrics" do
-    # Create newer metric with a future timestamp to ensure it's the latest
+    # Create newer metric (more recent than setup metric)
     newer_metric = MemoryMetric.create!(
       heap_size: 2048,
       rss_memory: 4096,

@@ -9,11 +9,18 @@ class AdvancedCacheServiceV2 < AdvancedCacheService
 
       return cached_data unless return_models
 
-      # Extract IDs and fetch model instances
+      # Extract IDs and fetch model instances with comprehensive includes to prevent N+1
       order_ids = cached_data[:orders].pluck(:id)
       restaurant = Restaurant.find(restaurant_id)
       orders = restaurant.ordrs.where(id: order_ids)
-        .includes(:ordritems, :tablesetting, :menu, :employee)
+        .includes(
+          :tablesetting,
+          :menu,
+          :employee,
+          ordritems: [
+            menuitem: [:genimage, :allergyns, :sizes, :menuitemlocales]
+          ]
+        )
         .order(created_at: :desc)
 
       # Return enhanced structure with both cached data and models
@@ -31,12 +38,19 @@ class AdvancedCacheServiceV2 < AdvancedCacheService
 
       return cached_data unless return_models
 
-      # Extract IDs and fetch model instances
+      # Extract IDs and fetch model instances with comprehensive includes to prevent N+1
       order_ids = cached_data[:orders].pluck(:id)
       user = User.find(user_id)
       orders = Ordr.joins(restaurant: :user)
         .where(id: order_ids, restaurant: { user: user })
-        .includes(:ordritems, :tablesetting, :menu, :restaurant)
+        .includes(
+          :tablesetting,
+          :menu,
+          :restaurant,
+          ordritems: [
+            menuitem: [:genimage, :allergyns, :sizes, :menuitemlocales]
+          ]
+        )
         .order(created_at: :desc)
 
       {

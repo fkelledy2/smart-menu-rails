@@ -15,18 +15,7 @@ module SmartMenu
     config.active_job.queue_adapter = :sidekiq
     config.application_name = Rails.application.class.module_parent_name
     # Initialize configuration defaults for originally generated Rails version.
-    config.generators.system_tests = nil
     config.load_defaults 7.1
-
-    # APM Configuration
-    config.enable_apm = Rails.env.production? || Rails.env.development?
-    config.apm_sample_rate = Rails.env.production? ? 1.0 : 0.1 # Sample 100% in production, 10% in development
-    config.slow_query_threshold = Rails.env.production? ? 100 : 50 # milliseconds
-    config.memory_monitoring_interval = 60 # seconds
-    config.performance_alert_threshold = 1.5 # 50% increase triggers alert
-    config.memory_leak_threshold = 50 # MB per hour
-    
-    # APM middleware will be added in initializer
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.

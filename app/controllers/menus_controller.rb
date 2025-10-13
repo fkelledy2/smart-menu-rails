@@ -19,13 +19,12 @@ class MenusController < ApplicationController
     @currentMin = Time.now.strftime('%M').to_i
     if current_user
       @menus = if @restaurant
-                 policy_scope(Menu).where(restaurant_id: @restaurant.id, archived: false)
-                   .includes([:menuavailabilities])
-                   .order(:sequence).all
+                 policy_scope(Menu).where(restaurant_id: @restaurant.id)
+                   .for_management_display
+                   .order(:sequence)
                else
-                 policy_scope(Menu).where(archived: false).order(:sequence)
-                   .includes([:menuavailabilities])
-                   .all
+                 policy_scope(Menu).for_management_display
+                   .order(:sequence)
                end
       AnalyticsService.track_user_event(current_user, 'menus_viewed', {
         menus_count: @menus.count,
@@ -34,7 +33,8 @@ class MenusController < ApplicationController
       },)
     elsif params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
-      @menus = Menu.where(restaurant: @restaurant).all
+      @menus = Menu.where(restaurant: @restaurant)
+                   .for_customer_display
       @tablesettings = @restaurant.tablesettings
       anonymous_id = session[:session_id] ||= SecureRandom.uuid
       AnalyticsService.track_anonymous_event(anonymous_id, 'menus_viewed_anonymous', {

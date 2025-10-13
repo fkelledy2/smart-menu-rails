@@ -15,9 +15,6 @@ class CacheWarmingService
     start_time = Time.current
 
     begin
-      # Clear any corrupted performance data at startup
-      QueryCacheService.clear_performance_data
-      
       warm_metrics
       warm_analytics
       warm_orders

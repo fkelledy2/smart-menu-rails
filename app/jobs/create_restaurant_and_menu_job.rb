@@ -2,8 +2,17 @@ class CreateRestaurantAndMenuJob < ApplicationJob
   queue_as :default
 
   def perform(user_id, onboarding_session_id)
-    user = User.find(user_id)
-    onboarding = OnboardingSession.find(onboarding_session_id)
+    user = User.find_by(id: user_id)
+    unless user
+      Rails.logger.error "CreateRestaurantAndMenuJob: User with ID #{user_id} not found. Skipping job."
+      return
+    end
+
+    onboarding = OnboardingSession.find_by(id: onboarding_session_id)
+    unless onboarding
+      Rails.logger.error "CreateRestaurantAndMenuJob: OnboardingSession with ID #{onboarding_session_id} not found. Skipping job."
+      return
+    end
 
     ActiveRecord::Base.transaction do
       # Create restaurant

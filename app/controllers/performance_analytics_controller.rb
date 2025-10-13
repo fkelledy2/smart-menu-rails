@@ -1,29 +1,13 @@
 class PerformanceAnalyticsController < ApplicationController
-  # Temporarily skip authentication for testing
-  # before_action :authenticate_user!, unless: -> { Rails.env.test? }
-  # before_action :ensure_admin!, unless: -> { Rails.env.test? }
-  
-  # Debug method to check if authenticate_user! is defined
-  def self.method_added(method_name)
-    Rails.logger.debug "Method added to PerformanceAnalyticsController: #{method_name}" if Rails.env.test?
-  end
+  before_action :authenticate_user!
+  before_action :ensure_admin!
   
   def dashboard
-    begin
-      @current_metrics = PerformanceMetricsService.current_snapshot
-      @performance_trends = PerformanceMetricsService.trends(24.hours)
-      @slow_endpoints = PerformanceMetricsService.slow_endpoints(1.hour)
-      @slow_queries = SlowQuery.slowest_queries(5, 1.hour)
-      @memory_status = MemoryMonitoringService.current_memory_snapshot
-    rescue => e
-      Rails.logger.error "Dashboard error: #{e.message}" if Rails.env.test?
-      # Set default values to prevent nil errors
-      @current_metrics = {}
-      @performance_trends = []
-      @slow_endpoints = []
-      @slow_queries = []
-      @memory_status = {}
-    end
+    @current_metrics = PerformanceMetricsService.current_snapshot
+    @performance_trends = PerformanceMetricsService.trends(24.hours)
+    @slow_endpoints = PerformanceMetricsService.slow_endpoints(1.hour)
+    @slow_queries = SlowQuery.slowest_queries(5, 1.hour)
+    @memory_status = MemoryMonitoringService.current_memory_snapshot
   end
   
   def api_metrics
@@ -48,7 +32,7 @@ class PerformanceAnalyticsController < ApplicationController
     
     analysis = PerformanceMetricsService.endpoint_analysis(endpoint, timeframe)
     
-    if analysis && !analysis.empty?
+    if analysis
       render json: analysis
     else
       render json: { error: 'No data found for endpoint' }, status: :not_found
@@ -125,7 +109,10 @@ class PerformanceAnalyticsController < ApplicationController
   def ensure_admin!
     unless current_user&.admin?
       respond_to do |format|
-        format.html { redirect_to root_path, alert: 'Admin access required' }
+        format.html do
+          flash[:alert] = 'Access denied. Admin privileges required.'
+          redirect_to root_path
+        end
         format.json { render json: { error: 'Admin access required' }, status: :forbidden }
       end
     end
@@ -196,7 +183,7 @@ class PerformanceAnalyticsController < ApplicationController
     end
     
     send_data csv_data, 
-              filename: "performance_metrics_#{timeframe_str(timeframe)}_#{Date.current}.csv",
+              filename: "performance_metrics_#{timeframe_str}_#{Date.current}.csv",
               type: 'text/csv'
   end
   
@@ -204,13 +191,12 @@ class PerformanceAnalyticsController < ApplicationController
     summary = PerformanceMetricsService.performance_summary(timeframe)
     
     send_data summary.to_json,
-              filename: "performance_summary_#{timeframe_str(timeframe)}_#{Date.current}.json",
+              filename: "performance_summary_#{timeframe_str}_#{Date.current}.json",
               type: 'application/json'
   end
   
-  def timeframe_str(timeframe = nil)
-    timeframe ||= parse_timeframe(params[:timeframe] || '24h')
-    case timeframe
+  def timeframe_str
+    case parse_timeframe(params[:timeframe] || '24h')
     when 5.minutes then '5min'
     when 15.minutes then '15min'
     when 1.hour then '1hour'

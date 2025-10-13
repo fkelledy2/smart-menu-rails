@@ -31,6 +31,33 @@ class Menu < ApplicationRecord
   after_update :invalidate_menu_caches
   after_destroy :invalidate_menu_caches
 
+  # Optimized scopes to prevent N+1 queries
+  scope :with_availabilities_and_sections, -> {
+    includes(
+      :menuavailabilities,
+      :restaurant,
+      menusections: [
+        :menusectionlocales,
+        menuitems: [
+          :menuitemlocales,
+          :allergyns,
+          :sizes,
+          :genimage
+        ]
+      ]
+    )
+  }
+
+  scope :for_customer_display, -> {
+    where(archived: false, status: 'active')
+      .with_availabilities_and_sections
+  }
+
+  scope :for_management_display, -> {
+    where(archived: false)
+      .with_availabilities_and_sections
+  }
+
   def slug
     if Smartmenu.where(restaurant: restaurant, menu: self).first
       Smartmenu.where(restaurant: restaurant, menu: self).first.slug

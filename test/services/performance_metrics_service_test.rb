@@ -203,7 +203,7 @@ class PerformanceMetricsServiceTest < ActiveSupport::TestCase
     values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     
     p50 = PerformanceMetricsService.send(:percentile, values, 50)
-    assert_equal 6, p50  # 50th percentile of 10 values is the 6th value (index 4.5 rounds to 5)
+    assert_equal 6, p50
     
     p95 = PerformanceMetricsService.send(:percentile, values, 95)
     assert_equal 10, p95
