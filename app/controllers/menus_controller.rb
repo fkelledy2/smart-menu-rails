@@ -318,31 +318,6 @@ class MenusController < ApplicationController
     end
   end
 
-  # GET /menus/1/performance
-  def performance
-    authorize @menu, :show?
-
-    # Get performance period from params or default to 30 days
-    days = params[:days]&.to_i || 30
-
-    # Use AdvancedCacheService for menu performance analytics
-    @performance_data = AdvancedCacheService.cached_menu_performance(@menu.id, days: days)
-
-    # Track performance view
-    AnalyticsService.track_user_event(current_user, 'menu_performance_viewed', {
-      restaurant_id: @menu.restaurant.id,
-      menu_id: @menu.id,
-      menu_name: @menu.name,
-      period_days: days,
-      total_orders: @performance_data[:performance][:total_orders],
-      total_revenue: @performance_data[:performance][:total_revenue],
-    },)
-
-    respond_to do |format|
-      format.html
-      format.json { render json: @performance_data }
-    end
-  end
 
   private
 
@@ -414,6 +389,7 @@ class MenusController < ApplicationController
                 alert: 'An error occurred while loading the menu'
   end
 
+  # GET /menus/1/performance
   # GET /restaurants/:restaurant_id/menus/:id/performance
   def performance
     Rails.logger.debug do
