@@ -330,99 +330,6 @@ class MenusController < ApplicationController
     end
   end
 
-
-  private
-
-  # Skip policy scope verification for optimized restaurant-specific JSON requests
-  def skip_policy_scope?
-    @restaurant.present? && request.format.json? && current_user.present?
-  end
-
-  # Set restaurant from nested route parameter - optimized for fast failure
-  def set_restaurant
-    return unless params[:restaurant_id].present?
-    
-    if current_user
-      # Fast ownership check to avoid expensive exception handling
-      restaurant_id = params[:restaurant_id].to_i
-      unless current_user.restaurants.exists?(id: restaurant_id)
-        Rails.logger.warn "[MenusController] Access denied: User #{current_user.id} cannot access restaurant #{restaurant_id}"
-        respond_to do |format|
-          format.html { redirect_to restaurants_path, alert: 'Restaurant not found or access denied' }
-          format.json { head :forbidden }
-        end
-        return
-      end
-      
-      @restaurant = current_user.restaurants.find(restaurant_id)
-    else
-      # For non-authenticated users (public access)
-      @restaurant = Restaurant.find(params[:restaurant_id])
-    end
-    
-    Rails.logger.debug { "[MenusController] Found restaurant: #{@restaurant&.id} - #{@restaurant&.name}" }
-  rescue ActiveRecord::RecordNotFound => e
-    Rails.logger.warn "[MenusController] Restaurant not found for id=#{params[:restaurant_id]}: #{e.message}"
-    respond_to do |format|
-      format.html { redirect_to restaurants_path, alert: 'Restaurant not found' }
-      format.json { head :not_found }
-    end
-  rescue StandardError => e
-    Rails.logger.error "[MenusController] Error in set_restaurant: #{e.message}"
-    respond_to do |format|
-      format.html { redirect_to restaurants_path, alert: 'An error occurred while loading the restaurant' }
-      format.json { head :internal_server_error }
-    end
-  end
-
-  # Use callbacks to share common setup or constraints between actions.
-  def set_menu
-    menu_id = params[:menu_id] || params[:id]
-
-    Rails.logger.debug { "[MenusController] set_menu called with menu_id=#{menu_id}, restaurant=#{@restaurant&.id}" }
-
-    if menu_id.blank?
-      Rails.logger.error "[MenusController] No menu ID provided in params: #{params.inspect}"
-      redirect_to restaurant_menus_path(@restaurant), alert: 'Menu not specified'
-      return
-    end
-
-    @menu = if @restaurant
-              @restaurant.menus.find(menu_id)
-            else
-              Menu.find(menu_id)
-            end
-
-    Rails.logger.debug { "[MenusController] Found menu: #{@menu&.id} - #{@menu&.name}" }
-
-    # Check ownership
-    if current_user && (@menu.nil? || (@menu.restaurant.user != current_user))
-      Rails.logger.warn "[MenusController] Menu access denied for user #{current_user.id}"
-      redirect_to restaurants_path, alert: 'Menu not found or access denied'
-      return
-    end
-
-    # Set up additional menu context
-    if @menu
-      @restaurantCurrency = ISO4217::Currency.from_code(@menu.restaurant.currency || 'USD')
-      @canAddMenuItem = false
-      if current_user
-        @menuItemCount = @menu.menuitems.count
-        if @menuItemCount < current_user.plan.itemspermenu || current_user.plan.itemspermenu == -1
-          @canAddMenuItem = true
-        end
-      end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    Rails.logger.warn "[MenusController] Menu not found for id=#{menu_id}: #{e.message}"
-    redirect_to (@restaurant ? restaurant_menus_path(@restaurant) : restaurants_path), alert: 'Menu not found'
-  rescue StandardError => e
-    Rails.logger.error "[MenusController] Error in set_menu: #{e.message}"
-    Rails.logger.error e.backtrace.join("\n")
-    redirect_to (@restaurant ? restaurant_menus_path(@restaurant) : restaurants_path),
-                alert: 'An error occurred while loading the menu'
-  end
-
   # GET /menus/1/performance
   # GET /restaurants/:restaurant_id/menus/:id/performance
   def performance
@@ -523,6 +430,98 @@ class MenusController < ApplicationController
     end
   end
 
+  private
+
+  # Skip policy scope verification for optimized restaurant-specific JSON requests
+  def skip_policy_scope?
+    @restaurant.present? && request.format.json? && current_user.present?
+  end
+
+  # Set restaurant from nested route parameter - optimized for fast failure
+  def set_restaurant
+    return unless params[:restaurant_id].present?
+    
+    if current_user
+      # Fast ownership check to avoid expensive exception handling
+      restaurant_id = params[:restaurant_id].to_i
+      unless current_user.restaurants.exists?(id: restaurant_id)
+        Rails.logger.warn "[MenusController] Access denied: User #{current_user.id} cannot access restaurant #{restaurant_id}"
+        respond_to do |format|
+          format.html { redirect_to restaurants_path, alert: 'Restaurant not found or access denied' }
+          format.json { head :forbidden }
+        end
+        return
+      end
+      
+      @restaurant = current_user.restaurants.find(restaurant_id)
+    else
+      # For non-authenticated users (public access)
+      @restaurant = Restaurant.find(params[:restaurant_id])
+    end
+    
+    Rails.logger.debug { "[MenusController] Found restaurant: #{@restaurant&.id} - #{@restaurant&.name}" }
+  rescue ActiveRecord::RecordNotFound => e
+    Rails.logger.warn "[MenusController] Restaurant not found for id=#{params[:restaurant_id]}: #{e.message}"
+    respond_to do |format|
+      format.html { redirect_to restaurants_path, alert: 'Restaurant not found' }
+      format.json { head :not_found }
+    end
+  rescue StandardError => e
+    Rails.logger.error "[MenusController] Error in set_restaurant: #{e.message}"
+    respond_to do |format|
+      format.html { redirect_to restaurants_path, alert: 'An error occurred while loading the restaurant' }
+      format.json { head :internal_server_error }
+    end
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_menu
+    menu_id = params[:menu_id] || params[:id]
+
+    Rails.logger.debug { "[MenusController] set_menu called with menu_id=#{menu_id}, restaurant=#{@restaurant&.id}" }
+
+    if menu_id.blank?
+      Rails.logger.error "[MenusController] No menu ID provided in params: #{params.inspect}"
+      redirect_to restaurant_menus_path(@restaurant), alert: 'Menu not specified'
+      return
+    end
+
+    @menu = if @restaurant
+              @restaurant.menus.find(menu_id)
+            else
+              Menu.find(menu_id)
+            end
+
+    Rails.logger.debug { "[MenusController] Found menu: #{@menu&.id} - #{@menu&.name}" }
+
+    # Check ownership
+    if current_user && (@menu.nil? || (@menu.restaurant.user != current_user))
+      Rails.logger.warn "[MenusController] Menu access denied for user #{current_user.id}"
+      redirect_to restaurants_path, alert: 'Menu not found or access denied'
+      return
+    end
+
+    # Set up additional menu context
+    if @menu
+      @restaurantCurrency = ISO4217::Currency.from_code(@menu.restaurant.currency || 'USD')
+      @canAddMenuItem = false
+      if current_user
+        @menuItemCount = @menu.menuitems.count
+        if @menuItemCount < current_user.plan.itemspermenu || current_user.plan.itemspermenu == -1
+          @canAddMenuItem = true
+        end
+      end
+    end
+  rescue ActiveRecord::RecordNotFound => e
+    Rails.logger.warn "[MenusController] Menu not found for id=#{menu_id}: #{e.message}"
+    redirect_to (@restaurant ? restaurant_menus_path(@restaurant) : restaurants_path), alert: 'Menu not found'
+  rescue StandardError => e
+    Rails.logger.error "[MenusController] Error in set_menu: #{e.message}"
+    Rails.logger.error e.backtrace.join("\n")
+    redirect_to (@restaurant ? restaurant_menus_path(@restaurant) : restaurants_path),
+                alert: 'An error occurred while loading the menu'
+  end
+
   # Menu-specific performance data collection methods
   def collect_menu_cache_performance_data
     # Get menu-specific cache performance from AdvancedCacheService
@@ -621,9 +620,99 @@ class MenusController < ApplicationController
     0
   end
 
+  # Menu-specific performance data collection methods
+  def collect_menu_cache_performance_data
+    # Get menu-specific cache performance from AdvancedCacheService
+    menu_performance = AdvancedCacheService.cached_menu_performance(@menu.id, 30)
+
+    {
+      hit_rate: menu_performance[:cache_stats][:hit_rate] || 0,
+      total_hits: menu_performance[:cache_stats][:hits] || 0,
+      total_misses: menu_performance[:cache_stats][:misses] || 0,
+      total_operations: menu_performance[:cache_stats][:operations] || 0,
+      last_reset: Time.current.iso8601,
+    }
+  rescue StandardError => e
+    Rails.logger.error "[MenusController#performance] Cache performance collection failed: #{e.message}"
+    { hit_rate: 0, total_hits: 0, total_misses: 0, total_operations: 0, last_reset: Time.current.iso8601 }
+  end
+
+  def collect_menu_database_performance_data
+    {
+      primary_queries: 0, # Would need actual query monitoring
+      replica_queries: 0,
+      replica_lag: 0,
+      connection_pool_usage: calculate_connection_pool_usage,
+      slow_queries: 0, # Would need slow query log analysis
+    }
+  rescue StandardError => e
+    Rails.logger.error "[MenusController#performance] Database performance collection failed: #{e.message}"
+    { primary_queries: 0, replica_queries: 0, replica_lag: 0, connection_pool_usage: 0, slow_queries: 0 }
+  end
+
+  def collect_menu_response_time_data
+    # This would typically come from application performance monitoring
+    {
+      average: 250, # milliseconds - placeholder
+      maximum: 1200,
+      request_count: 0,
+      cache_efficiency: 85.5,
+    }
+  rescue StandardError => e
+    Rails.logger.error "[MenusController#performance] Response time collection failed: #{e.message}"
+    { average: 0, maximum: 0, request_count: 0, cache_efficiency: 0 }
+  end
+
+  def collect_menu_user_activity_data(days)
+    # This would typically come from analytics service
+    {
+      total_sessions: 0,
+      unique_visitors: 0,
+      page_views: 0,
+      average_session_duration: 0,
+      bounce_rate: 0,
+    }
+  rescue StandardError => e
+    Rails.logger.error "[MenusController#performance] User activity collection failed: #{e.message}"
+    { total_sessions: 0, unique_visitors: 0, page_views: 0, average_session_duration: 0, bounce_rate: 0 }
+  end
+
+  def collect_menu_system_metrics_data
+    {
+      memory_usage: calculate_memory_usage,
+      cpu_usage: 0, # Would need system monitoring
+      disk_usage: 0,
+      active_connections: calculate_active_connections,
+      background_jobs: 0, # Would need Sidekiq stats
+    }
+  rescue StandardError => e
+    Rails.logger.error "[MenusController#performance] System metrics collection failed: #{e.message}"
+    { memory_usage: 0, cpu_usage: 0, disk_usage: 0, active_connections: 0, background_jobs: 0 }
+  end
+
+  def calculate_memory_usage
+    # Basic memory usage calculation
+    `ps -o rss= -p #{Process.pid}`.to_i / 1024 # Convert KB to MB
+  rescue StandardError
+    0
+  end
+
+  def calculate_active_connections
+    ActiveRecord::Base.connection_pool.connections.count
+  rescue StandardError
+    0
+  end
+
+  def calculate_connection_pool_usage
+    pool = ActiveRecord::Base.connection_pool
+    (pool.connections.count.to_f / pool.size * 100).round(2)
+  rescue StandardError
+    0
+  end
+
   # Only allow a list of trusted parameters through.
   def menu_params
     params.require(:menu).permit(:name, :description, :image, :remove_image, :pdf_menu_scan, :status, :sequence,
-                                 :restaurant_id, :displayImages, :displayImagesInPopup, :allowOrdering, :inventoryTracking, :imagecontext, :covercharge,)
+                                 :restaurant_id, :displayImages, :displayImagesInPopup, :allowOrdering, :inventoryTracking, :imagecontext, :covercharge, :test)
   end
 end
