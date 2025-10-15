@@ -49,7 +49,7 @@ class OrdrsController < ApplicationController
       end
 
       format.json do
-        # For JSON requests, use actual ActiveRecord objects
+        # For JSON requests, use actual ActiveRecord objects with minimal includes
         # Ensure user is authenticated for sensitive order data
         unless current_user
           head :unauthorized
@@ -57,14 +57,18 @@ class OrdrsController < ApplicationController
         end
 
         if @restaurant
-          @ordrs = policy_scope(@restaurant.ordrs.includes(:ordritems, :tablesetting, :menu, :employee,
-                                                           :ordrparticipants,))
+          # For JSON requests (table data), only load minimal data needed for display
+          @ordrs = policy_scope(@restaurant.ordrs.includes(:menu, :tablesetting).order(created_at: :desc))
         else
-          # Get orders from all user's restaurants
+          # Get orders from all user's restaurants with minimal includes
           restaurant_ids = current_user.restaurants.pluck(:id)
-          @ordrs = policy_scope(Ordr.where(restaurant_id: restaurant_ids).includes(:ordritems, :tablesetting, :menu,
-                                                                                   :employee, :ordrparticipants,))
+          @ordrs = policy_scope(Ordr.where(restaurant_id: restaurant_ids)
+                                   .includes(:menu, :tablesetting)
+                                   .order(created_at: :desc))
         end
+        
+        # Use minimal JSON view for better performance
+        render 'index_minimal'
       end
     end
   end

@@ -11,9 +11,9 @@ class AllergynsController < ApplicationController
     if params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
       @allergyns = if current_user
-                     policy_scope(Allergyn).where(restaurant: @restaurant)
+                     policy_scope(Allergyn).includes(:restaurant).where(restaurant: @restaurant)
                    else
-                     Allergyn.where(restaurant: @restaurant)
+                     Allergyn.includes(:restaurant).where(restaurant: @restaurant)
                    end
     end
 
@@ -66,7 +66,7 @@ class AllergynsController < ApplicationController
           redirect_to edit_restaurant_path(id: @allergyn.restaurant.id),
                       notice: t('common.flash.created', resource: t('activerecord.models.allergyn'))
         end
-        format.json { render :show, status: :created, location: @allergyn }
+        format.json { render :show, status: :created, location: restaurant_allergyn_url(@allergyn.restaurant, @allergyn) }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @allergyn.errors, status: :unprocessable_entity }
@@ -84,7 +84,7 @@ class AllergynsController < ApplicationController
           redirect_to edit_restaurant_path(id: @allergyn.restaurant.id),
                       notice: t('common.flash.updated', resource: t('activerecord.models.allergyn'))
         end
-        format.json { render :show, status: :ok, location: @allergyn }
+        format.json { render :show, status: :ok, location: restaurant_allergyn_url(@allergyn.restaurant, @allergyn) }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @allergyn.errors, status: :unprocessable_entity }

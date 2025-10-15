@@ -4,14 +4,29 @@ class MenusectionsController < ApplicationController
 
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
-  after_action :verify_policy_scoped, only: [:index]
+  after_action :verify_policy_scoped, only: [:index], unless: :skip_policy_scope_for_json?
 
   # GET /menusections or /menusections.json
   def index
-    @menusections = []
     if params[:menu_id]
       @menu = Menu.find_by(id: params[:menu_id])
-      @menusections += policy_scope(Menusection).where(menu: @menu)
+      
+      # Optimize query based on request format
+      @menusections = if request.format.json?
+                        # JSON: Direct association without expensive includes
+                        @menu.menusections.order(:sequence)
+                      else
+                        # HTML: Full policy scope
+                        policy_scope(Menusection).where(menu: @menu)
+                      end
+    else
+      @menusections = []
+    end
+    
+    # Use minimal JSON view for better performance
+    respond_to do |format|
+      format.html # Default HTML view
+      format.json { render 'index_minimal' } # Use optimized minimal JSON view
     end
   end
 
@@ -56,7 +71,7 @@ class MenusectionsController < ApplicationController
           redirect_to edit_menu_url(@menusection.menu),
                       notice: t('common.flash.created', resource: t('activerecord.models.menusection'))
         end
-        format.json { render :show, status: :created, location: @menusection }
+        format.json { render :show, status: :created, location: restaurant_menu_menusection_url(@menusection.menu.restaurant, @menusection.menu, @menusection) }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @menusection.errors, status: :unprocessable_entity }
@@ -80,10 +95,10 @@ class MenusectionsController < ApplicationController
           @genimage.save
         end
         format.html do
-          redirect_to edit_menu_path(@menusection.menu),
+          redirect_to edit_restaurant_menu_path(@menusection.menu.restaurant, @menusection.menu),
                       notice: t('common.flash.updated', resource: t('activerecord.models.menusection'))
         end
-        format.json { render :show, status: :ok, location: @menusection }
+        format.json { render :show, status: :ok, location: restaurant_menu_menusection_url(@menusection.menu.restaurant, @menusection.menu, @menusection) }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menusection.errors, status: :unprocessable_entity }
@@ -98,7 +113,7 @@ class MenusectionsController < ApplicationController
     @menusection.update(archived: true)
     respond_to do |format|
       format.html do
-        redirect_to edit_menu_path(@menusection.menu),
+        redirect_to edit_restaurant_menu_path(@menusection.menu.restaurant, @menusection.menu),
                     notice: t('common.flash.deleted', resource: t('activerecord.models.menusection'))
       end
       format.json { head :no_content }
@@ -106,6 +121,11 @@ class MenusectionsController < ApplicationController
   end
 
   private
+
+  # Skip policy scope verification for optimized JSON requests
+  def skip_policy_scope_for_json?
+    request.format.json? && current_user.present?
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_menusection

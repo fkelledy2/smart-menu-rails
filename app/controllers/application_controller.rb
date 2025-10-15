@@ -17,13 +17,35 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, prepend: true
+  
+  # Add debugging for CSRF issues
+  rescue_from ActionController::InvalidAuthenticityToken do |exception|
+    Rails.logger.error "CSRF token verification failed: #{exception.message}"
+    Rails.logger.error "Session ID: #{session.id}"
+    Rails.logger.error "Request method: #{request.method}"
+    Rails.logger.error "Request path: #{request.path}"
+    Rails.logger.error "Form authenticity token: #{form_authenticity_token}"
+    Rails.logger.error "Request authenticity token: #{request.headers['X-CSRF-Token'] || params[:authenticity_token]}"
+    
+    # For development, show more details
+    if Rails.env.development?
+      render plain: "CSRF Error: #{exception.message}\nSession: #{session.id}\nExpected: #{form_authenticity_token}\nReceived: #{request.headers['X-CSRF-Token'] || params[:authenticity_token]}", status: :unprocessable_entity
+    else
+      redirect_to new_user_session_path, alert: 'Security token expired. Please try logging in again.'
+    end
+  end
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   before_action :set_current_employee
   before_action :set_permissions
   before_action :redirect_to_onboarding_if_needed
+
+  # PWA offline page
+  def offline
+    render 'application/offline', layout: false
+  end
 
   protected
 

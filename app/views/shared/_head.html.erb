@@ -38,8 +38,19 @@
 <!-- Canonical Tag -->
 <link rel="canonical" href="https://www.mellow.menu">
 
-<%= tag.meta name: "theme-color", content: "#000000" %>
-<%= favicon_link_tag "/icons/qr-icon.svg", rel: "icon", type: "image/svg" %>
+<!-- PWA Meta Tags -->
+<%= tag.meta name: "theme-color", content: "#007bff" %>
+<%= tag.meta name: "apple-mobile-web-app-capable", content: "yes" %>
+<%= tag.meta name: "apple-mobile-web-app-status-bar-style", content: "default" %>
+<%= tag.meta name: "apple-mobile-web-app-title", content: "Smart Menu" %>
+<%= tag.meta name: "mobile-web-app-capable", content: "yes" %>
+<%= tag.meta name: "msapplication-TileColor", content: "#007bff" %>
+<%= tag.meta name: "msapplication-config", content: "/browserconfig.xml" %>
+
+<!-- PWA Icons -->
+<%= favicon_link_tag "/icons/qr-logo.svg", rel: "icon", type: "image/svg+xml" %>
+<%= favicon_link_tag "/icons/qr-logo.svg", rel: "apple-touch-icon", sizes: "180x180", type: "image/svg+xml" %>
+<%= favicon_link_tag "/icons/qr-logo.svg", rel: "mask-icon", color: "#007bff", type: "image/svg+xml" %>
 
 <%= csrf_meta_tags %>
 <%= csp_meta_tag %>

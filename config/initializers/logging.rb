@@ -1,9 +1,9 @@
 # Logging configuration for structured logging
 Rails.application.configure do
-  # Configure log level based on environment
+  # Configure log level based on environment - reduced verbosity
   config.log_level = case Rails.env
                      when 'development'
-                       :debug
+                       :warn  # Reduced from :debug to :warn
                      when 'test'
                        :warn
                      when 'production'
@@ -28,12 +28,16 @@ Rails.application.configure do
     config.log_formatter = ::Logger::Formatter.new
   end
 
-  # Configure log tags for request tracking
-  config.log_tags = [
-    :request_id,
-    -> request { "IP:#{request.remote_ip}" },
-    -> request { "User:#{request.env['warden']&.user&.id || 'anonymous'}" }
-  ]
+  # Configure log tags for request tracking - reduced in development
+  config.log_tags = if Rails.env.development?
+    [] # Remove all tags in development to reduce noise
+  else
+    [
+      :request_id,
+      -> request { "IP:#{request.remote_ip}" },
+      -> request { "User:#{request.env['warden']&.user&.id || 'anonymous'}" }
+    ]
+  end
 
   # Silence certain log messages in development
   if Rails.env.development?
@@ -44,13 +48,11 @@ Rails.application.configure do
     config.action_view.logger = nil if config.respond_to?(:action_view)
   end
 
-  # Configure ActiveRecord logging
+  # Configure ActiveRecord logging - reduced verbosity in development
   if defined?(ActiveRecord)
-    # Log slow queries in development
+    # Disable ActiveRecord logging in development to reduce noise
     if Rails.env.development?
-      ActiveRecord::Base.logger = ActiveSupport::TaggedLogging.new(
-        ActiveSupport::Logger.new(STDOUT)
-      )
+      ActiveRecord::Base.logger = nil
     end
     
     # Set slow query threshold (not available in Rails 7.1+)

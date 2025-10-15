@@ -6,6 +6,7 @@ en:
       deleted: Menu was successfully deleted.
       image_regeneration_queued: Queued image regeneration for %{count} items on this
         menu.
+      image_regeneration_queued_rake: Image regeneration job has been queued for this menu.
       updated: Menu was successfully updated.
     edit:
       availabilities: Availabilities

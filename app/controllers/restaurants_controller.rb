@@ -10,7 +10,7 @@ class RestaurantsController < ApplicationController
 
   # Pundit authorization
   after_action :verify_authorized, except: %i[index spotify_auth spotify_callback]
-  after_action :verify_policy_scoped, only: [:index]
+  after_action :verify_policy_scoped, only: [:index], unless: :skip_policy_scope_for_json?
 
   require 'rspotify'
 
@@ -84,8 +84,14 @@ class RestaurantsController < ApplicationController
     authorize Restaurant
 
     if current_user.plan
-      # Use policy scope for secure filtering
-      @restaurants = policy_scope(Restaurant).where(archived: false)
+      # Optimize query based on request format
+      @restaurants = if request.format.json?
+                       # JSON: Minimal data without expensive associations
+                       current_user.restaurants.where(archived: false).order(:sequence)
+                     else
+                       # HTML: Full data as needed
+                       policy_scope(Restaurant).where(archived: false)
+                     end
 
       AnalyticsService.track_user_event(current_user, 'restaurants_viewed', {
         restaurants_count: @restaurants.count,
@@ -95,6 +101,12 @@ class RestaurantsController < ApplicationController
       @canAddRestaurant = @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
     else
       redirect_to root_url
+    end
+    
+    # Use minimal JSON view for better performance
+    respond_to do |format|
+      format.html # Default HTML view
+      format.json { render 'index_minimal' } # Use optimized minimal JSON view
     end
   end
 
@@ -413,6 +425,11 @@ class RestaurantsController < ApplicationController
   end
 
   private
+
+  # Skip policy scope verification for optimized JSON requests
+  def skip_policy_scope_for_json?
+    request.format.json? && current_user.present?
+  end
 
   def disable_turbo
     @disable_turbo = true

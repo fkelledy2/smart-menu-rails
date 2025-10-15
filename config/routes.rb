@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   # ============================================================================
   get '/privacy', to: 'home#privacy'
   get '/terms', to: 'home#terms'
+  get '/offline', to: 'application#offline'
   
   # ============================================================================
   # HEALTH AND MONITORING

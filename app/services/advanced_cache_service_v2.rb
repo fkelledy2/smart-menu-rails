@@ -83,6 +83,84 @@ class AdvancedCacheServiceV2 < AdvancedCacheService
       }
     end
 
+    # Enhanced method for menu items
+    def cached_menu_items_with_details(menu_id, include_analytics: false, return_models: true)
+      cached_data = super(menu_id, include_analytics: include_analytics)
+
+      return cached_data unless return_models
+
+      # Extract IDs and fetch model instances with comprehensive includes
+      item_ids = cached_data[:items].pluck(:id)
+      menu = Menu.find(menu_id)
+      menuitems = menu.menuitems.where(id: item_ids)
+        .includes(
+          :genimage,
+          :allergyns,
+          :sizes,
+          :tags,
+          :ingredients,
+          :menusection
+        )
+        .order(:sequence)
+
+      {
+        menu: menu, # Model instance
+        items: menuitems, # ActiveRecord relation
+        cached_analytics: cached_data[:items], # Hash data with analytics
+        metadata: cached_data[:metadata],
+      }
+    end
+
+    # Enhanced method for section items
+    def cached_section_items_with_details(menusection_id, return_models: true)
+      cached_data = super(menusection_id)
+
+      return cached_data unless return_models
+
+      # Extract IDs and fetch model instances
+      item_ids = cached_data[:items].pluck(:id)
+      menusection = Menusection.find(menusection_id)
+      menuitems = menusection.menuitems.where(id: item_ids)
+        .includes(
+          :genimage,
+          :allergyns,
+          :sizes,
+          :tags,
+          :ingredients
+        )
+        .order(:sequence)
+
+      {
+        menusection: menusection, # Model instance
+        items: menuitems, # ActiveRecord relation
+        cached_data: cached_data[:items], # Hash data
+        metadata: cached_data[:metadata],
+      }
+    end
+
+    # Enhanced method for single menuitem
+    def cached_menuitem_with_analytics(menuitem_id, return_models: true)
+      cached_data = super(menuitem_id)
+
+      return cached_data unless return_models
+
+      # Fetch model instance with comprehensive includes
+      menuitem = Menuitem.find(menuitem_id)
+        .includes(
+          :genimage,
+          :allergyns,
+          :sizes,
+          :tags,
+          :ingredients,
+          :menusection
+        )
+
+      {
+        menuitem: menuitem, # Model instance
+        cached_analytics: cached_data, # Hash data with analytics
+      }
+    end
+
     # Generic method to convert any cached collection to models
     def cached_collection_to_models(cached_data, model_class, scope_proc = nil)
       return cached_data unless (cached_data.is_a?(Hash) && cached_data.key?(:orders)) || cached_data.key?(:employees)

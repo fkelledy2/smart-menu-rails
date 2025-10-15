@@ -58,44 +58,55 @@ class GenerateImageJob
     restaurant   = menu&.restaurant
 
     item_name    = @menuitem.name.to_s.strip
-    item_desc    = @menuitem.description.to_s.strip
+    item_desc    = @menuitem.description.to_s.strip.truncate(100)
     sec_name     = section&.name.to_s.strip
-    sec_desc     = section&.description.to_s.strip
-    menu_ctx     = menu&.imagecontext.to_s.strip
     rest_name    = restaurant&.name.to_s.strip
-    rest_desc    = restaurant&.try(:description).to_s.strip
-    rest_img_ctx = restaurant&.imagecontext.to_s.strip
+    rest_desc    = restaurant&.try(:description).to_s.strip.truncate(150)
+    rest_img_ctx = restaurant&.imagecontext.to_s.strip.truncate(50)
 
     # Ensure we have a persisted style profile for this restaurant to maximize consistency across items
     ensure_style_profile!(restaurant)
 
-    style_profile = resolve_style_profile(restaurant)
+    style_profile = resolve_style_profile(restaurant).truncate(100)
 
     parts = []
-    parts << "Generate a photorealistic image of #{item_name}#{" — #{item_desc}" if item_desc.present?}."
-    if sec_name.present? || sec_desc.present?
-      section_line = "This item appears in the #{sec_name} section"
-      section_line += ": #{sec_desc}" if sec_desc.present?
-      section_line += '.'
-      parts << section_line
-    end
-
+    parts << "Photorealistic #{item_name}#{" - #{item_desc}" if item_desc.present?}"
+    parts << "#{sec_name} section" if sec_name.present?
+    parts << "Restaurant: #{rest_name}" if rest_name.present?
+    
+    # Combine brand context more efficiently
     brand_bits = [rest_desc, rest_img_ctx].compact_blank.join('. ')
-    parts << "Restaurant: #{rest_name}." if rest_name.present?
-    parts << "Brand/cuisine context: #{brand_bits}." if brand_bits.present?
-    parts << "Table setting context: #{menu_ctx}." if menu_ctx.present?
+    parts << "Context: #{brand_bits}" if brand_bits.present? && brand_bits.length < 200
 
-    # Visual direction for consistency across the same restaurant
-    parts << "Style: #{style_profile}."
-    parts << 'Composition: hero dish centered, tight crop, shallow depth of field.'
-    parts << 'Lighting: soft natural window light, gentle shadows.'
-    parts << 'Angle/Lens: 45-degree angle, 50mm equivalent.'
-    parts << 'Background/props: neutral linen, matte stoneware, rustic wooden table, minimal props.'
+    # Concise style direction
+    parts << "Style: #{style_profile}" if style_profile.present?
+    parts << 'Hero dish centered, shallow depth, soft natural light, 45° angle'
+    parts << 'Neutral props, no people/text/logos'
 
-    # Negative prompts to avoid common artifacts/drift
-    parts << 'Avoid: people, hands, logos, text, watermarks, duplicate dishes, messy background, cartoonish or illustrative style.'
-
-    join_parts(parts)
+    # Build prompt and ensure it's under 1000 characters
+    prompt = join_parts(parts)
+    
+    # If still too long, progressively trim less important parts
+    if prompt.length > 1000
+      # Remove brand context first
+      parts = parts.reject { |p| p.start_with?('Context:') }
+      prompt = join_parts(parts)
+    end
+    
+    if prompt.length > 1000
+      # Truncate item description further
+      item_desc = item_desc.truncate(50) if item_desc.present?
+      parts[0] = "Photorealistic #{item_name}#{" - #{item_desc}" if item_desc.present?}"
+      prompt = join_parts(parts)
+    end
+    
+    if prompt.length > 1000
+      # Final truncation to ensure we're under limit
+      prompt = prompt.truncate(995) + '...'
+    end
+    
+    Rails.logger.debug "[GenerateImageJob] Final prompt length: #{prompt.length}" if Rails.env.development?
+    prompt
   end
 
   def generate_image(prompt, number, size)

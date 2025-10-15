@@ -5,7 +5,10 @@
 import '@hotwired/turbo-rails'
 import { Application } from '@hotwired/stimulus'
 
-// Minimal Bootstrap - only collapse and dropdown (most commonly used)
+// PWA functionality
+import './pwa/pwa-manager.js'
+
+// Minimal Bootstrap components (only what's absolutely necessary)
 import 'bootstrap/js/dist/collapse'
 import 'bootstrap/js/dist/dropdown'
 

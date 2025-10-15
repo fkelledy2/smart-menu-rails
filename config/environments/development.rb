@@ -2,15 +2,15 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
 
-  # Bullet gem configuration for N+1 query detection
+  # Bullet gem configuration for N+1 query detection - reduced verbosity
   config.after_initialize do
     if defined?(Bullet)
       Bullet.enable        = true
       Bullet.alert         = false  # Disable JavaScript alerts
       Bullet.bullet_logger = true  # Log to bullet.log file
-      Bullet.console       = true  # Log to console
-      Bullet.rails_logger  = true  # Log to Rails logger
-      Bullet.add_footer    = true  # Add HTML footer (non-intrusive)
+      Bullet.console       = false # Disable console logging to reduce noise
+      Bullet.rails_logger  = false # Disable Rails logger to reduce noise
+      Bullet.add_footer    = false # Disable HTML footer to reduce noise
 
       # Additional Bullet configurations for better detection
       Bullet.counter_cache_enable = false
@@ -47,8 +47,8 @@ Rails.application.configure do
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  # Only show warnings and above in the logs
-  config.log_level = :info
+  # Reduce log verbosity - only show warnings and above
+  config.log_level = :warn
   
   # Use the standard formatter
   config.log_formatter = ::Logger::Formatter.new

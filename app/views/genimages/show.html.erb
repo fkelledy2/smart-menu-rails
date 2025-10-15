@@ -1,8 +1,8 @@
 <div class="page-header">
-  <%= link_to genimages_path, class: 'btn btn-default' do %>
+  <%= link_to restaurant_genimages_path(@genimage.restaurant), class: 'btn btn-default' do %>
     All Genimages
   <% end %>
-  <%= link_to edit_genimage_path(@genimage), class: 'btn btn-dark' do %>
+  <%= link_to edit_restaurant_genimage_path(@genimage.restaurant, @genimage), class: 'btn btn-dark' do %>
     Edit
   <% end %>
   <h1>Show genimage</h1>

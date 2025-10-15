@@ -158,11 +158,9 @@ class SmartmenusController < ApplicationController
   def load_menu_associations_for_show
     return unless @menu
 
-    @menu = Menu.includes(
-      :menusections,
-      :menuavailabilities,
-      menuitems: %i[menuitemlocales tags sizes ingredients allergyns genimage inventory],
-    ).find(@menu.id)
+    # Only include associations that are actually used in the controller/views
+    # The views handle their own specific includes for menuitems
+    @menu = Menu.includes(:menusections, :restaurant).find(@menu.id)
   end
 
   # Only allow a list of trusted parameters through.

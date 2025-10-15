@@ -1,8 +1,8 @@
 # Application Performance Monitoring (APM) Configuration
 
 Rails.application.configure do
-  # APM Configuration
-  config.enable_apm = Rails.env.production? || Rails.env.development? || (Rails.env.test? && ENV['ENABLE_APM_TESTS'])
+  # APM Configuration - reduced verbosity in development
+  config.enable_apm = Rails.env.production? || (Rails.env.test? && ENV['ENABLE_APM_TESTS'])
   config.apm_sample_rate = Rails.env.production? ? 1.0 : 0.1 # Sample 100% in production, 10% in development
   config.slow_query_threshold = Rails.env.production? ? 100 : 50 # milliseconds
   config.memory_monitoring_interval = 60 # seconds

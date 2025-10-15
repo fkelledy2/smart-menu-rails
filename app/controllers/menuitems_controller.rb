@@ -5,32 +5,23 @@ class MenuitemsController < ApplicationController
 
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
-  after_action :verify_policy_scoped, only: [:index]
+  after_action :verify_policy_scoped, only: [:index], unless: :skip_policy_scope_for_json?
 
   # GET /menus/:menu_id/menuitems or /menuitems/1/analytics
   def index
-    if params[:menu_id]
-      @menu = Menu.find(params[:menu_id])
-
-      # Use AdvancedCacheService for comprehensive menu items data
-      @menu_items_data = AdvancedCacheService.cached_menu_items_with_details(@menu.id, include_analytics: true)
-      @menuitems = @menu_items_data[:items]
-
-      # Track menu items view
-      AnalyticsService.track_user_event(current_user, 'menu_items_viewed', {
-        menu_id: @menu.id,
-        menu_name: @menu.name,
-        restaurant_id: @menu.restaurant.id,
-        items_count: @menuitems.count,
-        viewing_context: 'menu_management',
-      },)
-
-    elsif params[:menusection_id]
+    if params[:menusection_id]
       menusection = Menusection.find_by(id: params[:menusection_id])
+      authorize menusection.menu, :show? # Authorize access to the menu
 
-      # Use AdvancedCacheService for section-specific items
-      @section_items_data = AdvancedCacheService.cached_section_items_with_details(menusection.id)
-      @menuitems = @section_items_data[:items]
+      # Optimize query based on request format
+      @menuitems = if request.format.json?
+                     # JSON: Direct association with minimal includes for performance
+                     menusection.menuitems.includes(:genimage, :inventory).order(:sequence)
+                   else
+                     # HTML: Use AdvancedCacheServiceV2 for comprehensive data
+                     @section_items_data = AdvancedCacheServiceV2.cached_section_items_with_details(menusection.id)
+                     policy_scope(@section_items_data[:items])
+                   end
 
       # Track section items view
       AnalyticsService.track_user_event(current_user, 'section_items_viewed', {
@@ -40,8 +31,39 @@ class MenuitemsController < ApplicationController
         restaurant_id: menusection.menu.restaurant.id,
         items_count: @menuitems.count,
       },)
+    elsif params[:menu_id]
+      @menu = Menu.find(params[:menu_id])
+      authorize @menu, :show? # Authorize access to the menu
+
+      # Optimize query based on request format
+      @menuitems = if request.format.json?
+                     # JSON: Direct association with minimal includes for performance
+                     @menu.menuitems.includes(:genimage, :inventory).order(:sequence)
+                   else
+                     # HTML: Use AdvancedCacheServiceV2 for comprehensive data
+                     @menu_items_data = AdvancedCacheServiceV2.cached_menu_items_with_details(@menu.id, include_analytics: true)
+                     policy_scope(@menu_items_data[:items])
+                   end
+
+      # Track menu items view (only for HTML requests to avoid overhead)
+      unless request.format.json?
+        AnalyticsService.track_user_event(current_user, 'menu_items_viewed', {
+          menu_id: @menu.id,
+          menu_name: @menu.name,
+          restaurant_id: @menu.restaurant.id,
+          items_count: @menuitems.count,
+          viewing_context: 'menu_management',
+        },)
+      end
+
     else
-      @menuitems = []
+      @menuitems = policy_scope(Menuitem.none) # Empty scope with policy applied
+    end
+    
+    # Use minimal JSON view for better performance
+    respond_to do |format|
+      format.html # Default HTML view
+      format.json { render 'index_minimal' } # Use optimized minimal JSON view
     end
   end
 
@@ -49,8 +71,8 @@ class MenuitemsController < ApplicationController
   def show
     authorize @menuitem
 
-    # Use AdvancedCacheService for comprehensive menuitem data
-    @menuitem_data = AdvancedCacheService.cached_menuitem_with_analytics(@menuitem.id)
+    # Use AdvancedCacheServiceV2 for comprehensive menuitem data (returns model instances)
+    @menuitem_data = AdvancedCacheServiceV2.cached_menuitem_with_analytics(@menuitem.id)
 
     # Track menuitem view
     AnalyticsService.track_user_event(current_user, 'menuitem_viewed', {
@@ -135,7 +157,7 @@ class MenuitemsController < ApplicationController
           redirect_to edit_menuitem_url(@menuitem),
                       notice: t('common.flash.created', resource: t('activerecord.models.menuitem'))
         end
-        format.json { render :show, status: :created, location: @menuitem }
+        format.json { render :show, status: :created, location: restaurant_menu_menusection_menuitem_url(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, @menuitem.menusection, @menuitem) }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @menuitem.errors, status: :unprocessable_entity }
@@ -173,7 +195,7 @@ class MenuitemsController < ApplicationController
           redirect_to edit_menuitem_url(@menuitem),
                       notice: t('common.flash.updated', resource: t('activerecord.models.menuitem'))
         end
-        format.json { render :show, status: :ok, location: @menuitem }
+        format.json { render :show, status: :ok, location: restaurant_menu_menusection_menuitem_url(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, @menuitem.menusection, @menuitem) }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menuitem.errors, status: :unprocessable_entity }
@@ -202,6 +224,11 @@ class MenuitemsController < ApplicationController
   end
 
   private
+
+  # Skip policy scope verification for optimized JSON requests
+  def skip_policy_scope_for_json?
+    request.format.json? && current_user.present?
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_menuitem

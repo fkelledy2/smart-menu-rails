@@ -100,7 +100,7 @@
                 <li>
                     <span class="float-end">
                         <% if menuitem.genimage %>
-                        <%= link_to t(".generateImage"), genimage_path(menuitem.genimage.id, genimage: { id: menuitem.genimage.id }), method: 'patch', class: 'dropdown-item' %>
+                        <%= link_to t(".generateImage"), restaurant_genimage_path(menuitem.menusection.menu.restaurant, menuitem.genimage, genimage: { id: menuitem.genimage.id }), method: 'patch', class: 'dropdown-item' %>
                         <% end %>
                     </span>
                 </li>

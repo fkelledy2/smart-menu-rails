@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# Toggle verbose logging in development
+# Usage: bin/toggle_verbose_logs [on|off]
+
+ENV_FILE=".env"
+
+if [ "$1" = "on" ]; then
+    echo "Enabling verbose logging..."
+    if grep -q "VERBOSE_LOGS=" "$ENV_FILE"; then
+        sed -i '' 's/VERBOSE_LOGS=.*/VERBOSE_LOGS=true/' "$ENV_FILE"
+    else
+        echo "VERBOSE_LOGS=true" >> "$ENV_FILE"
+    fi
+    echo "✅ Verbose logging enabled. Restart your Rails server to see the changes."
+    echo "   You'll see detailed SQL queries, request logs, and performance monitoring."
+elif [ "$1" = "off" ]; then
+    echo "Disabling verbose logging..."
+    if grep -q "VERBOSE_LOGS=" "$ENV_FILE"; then
+        sed -i '' 's/VERBOSE_LOGS=.*/VERBOSE_LOGS=false/' "$ENV_FILE"
+    else
+        echo "VERBOSE_LOGS=false" >> "$ENV_FILE"
+    fi
+    echo "✅ Verbose logging disabled. Restart your Rails server to see the changes."
+    echo "   Logs will be much quieter now."
+else
+    echo "Usage: bin/toggle_verbose_logs [on|off]"
+    echo ""
+    echo "Current status:"
+    if grep -q "VERBOSE_LOGS=true" "$ENV_FILE" 2>/dev/null; then
+        echo "  📢 Verbose logging is ON"
+    else
+        echo "  🔇 Verbose logging is OFF (default)"
+    fi
+    echo ""
+    echo "Examples:"
+    echo "  bin/toggle_verbose_logs on   # Enable detailed logging"
+    echo "  bin/toggle_verbose_logs off  # Disable detailed logging (default)"
+fi

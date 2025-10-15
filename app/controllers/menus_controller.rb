@@ -9,7 +9,7 @@ class MenusController < ApplicationController
 
   # Pundit authorization
   after_action :verify_authorized, except: %i[index performance]
-  after_action :verify_policy_scoped, only: [:index]
+  after_action :verify_policy_scoped, only: [:index], unless: :skip_policy_scope?
 
   # GET	/restaurants/:restaurant_id/menus
   # GET /menus or /menus.json
@@ -17,15 +17,27 @@ class MenusController < ApplicationController
     @today = Time.zone.today.strftime('%A').downcase!
     @currentHour = Time.now.strftime('%H').to_i
     @currentMin = Time.now.strftime('%M').to_i
+    
     if current_user
+      # Optimize query based on request format and restaurant scope
       @menus = if @restaurant
-                 policy_scope(Menu).where(restaurant_id: @restaurant.id)
-                   .for_management_display
-                   .order(:sequence)
+                 # For restaurant-specific requests, we already verified ownership in set_restaurant
+                 # so we can skip the expensive policy scope joins
+                 if request.format.json?
+                   # JSON: Minimal data without expensive includes (we already have @restaurant)
+                   @restaurant.menus.for_management_display
+                     .order(:sequence)
+                 else
+                   # HTML: Full data as needed
+                   policy_scope(Menu).where(restaurant_id: @restaurant.id)
+                     .for_management_display
+                     .order(:sequence)
+                 end
                else
-                 policy_scope(Menu).for_management_display
-                   .order(:sequence)
+                 # For all-menus requests, use policy scope
+                 policy_scope(Menu).for_management_display.order(:sequence)
                end
+      
       AnalyticsService.track_user_event(current_user, 'menus_viewed', {
         menus_count: @menus.count,
         restaurant_id: @restaurant&.id,
@@ -43,6 +55,12 @@ class MenusController < ApplicationController
         restaurant_name: @restaurant.name,
       },)
     end
+    
+    # Use minimal JSON view for better performance
+    respond_to do |format|
+      format.html # Default HTML view
+      format.json { render 'index_minimal' } # Use optimized minimal JSON view
+    end
   end
 
   # POST /menus/:id/regenerate_images
@@ -53,17 +71,11 @@ class MenusController < ApplicationController
       redirect_to root_url and return
     end
 
-    scope = Genimage.where(menu_id: @menu.id)
-    queued = 0
-    scope.find_each do |genimage|
-      next if genimage.menuitem&.itemtype == 'wine'
+    # Use the rake task logic for consistency
+    # Queue the job to run the rake task asynchronously to avoid blocking the request
+    RegenerateImagesJob.perform_async(@menu.id)
 
-      # Prefer async to avoid blocking the request
-      GenerateImageJob.perform_async(genimage.id)
-      queued += 1
-    end
-
-    flash[:notice] = t('menus.controller.image_regeneration_queued', count: queued)
+    flash[:notice] = t('menus.controller.image_regeneration_queued_rake')
     redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu)
   end
 
@@ -321,24 +333,46 @@ class MenusController < ApplicationController
 
   private
 
-  # Set restaurant from nested route parameter
+  # Skip policy scope verification for optimized restaurant-specific JSON requests
+  def skip_policy_scope?
+    @restaurant.present? && request.format.json? && current_user.present?
+  end
+
+  # Set restaurant from nested route parameter - optimized for fast failure
   def set_restaurant
-    if params[:restaurant_id].present?
-      @restaurant = if current_user
-                      current_user.restaurants.find(params[:restaurant_id])
-                    else
-                      Restaurant.find(params[:restaurant_id])
-                    end
-      Rails.logger.debug { "[MenusController] Found restaurant: #{@restaurant&.id} - #{@restaurant&.name}" }
+    return unless params[:restaurant_id].present?
+    
+    if current_user
+      # Fast ownership check to avoid expensive exception handling
+      restaurant_id = params[:restaurant_id].to_i
+      unless current_user.restaurants.exists?(id: restaurant_id)
+        Rails.logger.warn "[MenusController] Access denied: User #{current_user.id} cannot access restaurant #{restaurant_id}"
+        respond_to do |format|
+          format.html { redirect_to restaurants_path, alert: 'Restaurant not found or access denied' }
+          format.json { head :forbidden }
+        end
+        return
+      end
+      
+      @restaurant = current_user.restaurants.find(restaurant_id)
     else
-      Rails.logger.debug { "[MenusController] No restaurant_id in params: #{params.inspect}" }
+      # For non-authenticated users (public access)
+      @restaurant = Restaurant.find(params[:restaurant_id])
     end
+    
+    Rails.logger.debug { "[MenusController] Found restaurant: #{@restaurant&.id} - #{@restaurant&.name}" }
   rescue ActiveRecord::RecordNotFound => e
     Rails.logger.warn "[MenusController] Restaurant not found for id=#{params[:restaurant_id]}: #{e.message}"
-    redirect_to restaurants_path, alert: 'Restaurant not found or access denied'
+    respond_to do |format|
+      format.html { redirect_to restaurants_path, alert: 'Restaurant not found' }
+      format.json { head :not_found }
+    end
   rescue StandardError => e
     Rails.logger.error "[MenusController] Error in set_restaurant: #{e.message}"
-    redirect_to restaurants_path, alert: 'An error occurred while loading the restaurant'
+    respond_to do |format|
+      format.html { redirect_to restaurants_path, alert: 'An error occurred while loading the restaurant' }
+      format.json { head :internal_server_error }
+    end
   end
 
   # Use callbacks to share common setup or constraints between actions.

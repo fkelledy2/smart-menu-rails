@@ -6,6 +6,7 @@ it:
       deleted: Menu eliminato con successo.
       image_regeneration_queued: Rigenerazione delle immagini in coda per %{count}
         elementi di questo menu.
+      image_regeneration_queued_rake: Il lavoro di rigenerazione delle immagini è stato messo in coda per questo menu.
       updated: Menu aggiornato con successo.
     edit:
       availabilities: Disponibilità

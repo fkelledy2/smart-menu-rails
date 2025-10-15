@@ -40,15 +40,18 @@ class EmployeesController < ApplicationController
       end
 
       format.json do
-        # For JSON requests, use actual ActiveRecord objects
+        # For JSON requests, use optimized queries with minimal includes
         if params[:restaurant_id]
           @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-          @employees = policy_scope(@futureParentRestaurant.employees.where(archived: false))
+          @employees = policy_scope(@futureParentRestaurant.employees.where(archived: false).order(:sequence))
         else
           # Get employees from all user's restaurants
           restaurant_ids = current_user.restaurants.pluck(:id)
-          @employees = policy_scope(Employee.where(restaurant_id: restaurant_ids, archived: false))
+          @employees = policy_scope(Employee.where(restaurant_id: restaurant_ids, archived: false).order(:sequence))
         end
+        
+        # Use minimal JSON view for better performance
+        render 'index_minimal'
       end
     end
   end

@@ -1,20 +1,121 @@
 {
-  "name": "Mellow Menu",
-  "short_name": "MellowMenu",
+  "name": "Smart Menu - Restaurant Management",
+  "short_name": "Smart Menu",
+  "description": "Complete restaurant menu and order management system with offline capabilities",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "theme_color": "#007bff",
+  "categories": ["business", "food", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/icons/qr-logo.svg",
+      "sizes": "72x72",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/qr-logo.svg",
+      "sizes": "96x96",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/qr-logo.svg",
+      "sizes": "128x128",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/qr-logo.svg",
+      "sizes": "144x144",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/qr-logo.svg",
+      "sizes": "152x152",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/qr-logo.svg",
       "sizes": "192x192",
-      "type": "image/svg"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/qr-logo.svg",
+      "sizes": "384x384",
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
       "src": "/icons/qr-logo.svg",
       "sizes": "512x512",
-      "type": "image/svg"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Order",
+      "short_name": "Order",
+      "description": "Create a new order",
+      "url": "/orders/new",
+      "icons": [
+        {
+          "src": "/icons/qr-logo.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Menu Management",
+      "short_name": "Menus",
+      "description": "Manage restaurant menus",
+      "url": "/menus",
+      "icons": [
+        {
+          "src": "/icons/qr-logo.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "short_name": "Analytics",
+      "description": "View restaurant analytics",
+      "url": "/analytics",
+      "icons": [
+        {
+          "src": "/icons/qr-logo.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/pwa/screenshots/desktop-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Restaurant dashboard on desktop"
+    },
+    {
+      "src": "/pwa/screenshots/mobile-menu.png",
+      "sizes": "375x812",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Menu management on mobile"
     }
   ]
 }
