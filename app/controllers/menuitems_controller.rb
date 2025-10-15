@@ -16,7 +16,7 @@ class MenuitemsController < ApplicationController
       # Optimize query based on request format
       @menuitems = if request.format.json?
                      # JSON: Direct association with minimal includes for performance
-                     menusection.menuitems.includes(:genimage, :inventory).order(:sequence)
+                     menusection.menuitems.includes(:genimage, :inventory, menusection: { menu: :restaurant }).order(:sequence)
                    else
                      # HTML: Use AdvancedCacheServiceV2 for comprehensive data
                      @section_items_data = AdvancedCacheServiceV2.cached_section_items_with_details(menusection.id)
@@ -38,7 +38,7 @@ class MenuitemsController < ApplicationController
       # Optimize query based on request format
       @menuitems = if request.format.json?
                      # JSON: Direct association with minimal includes for performance
-                     @menu.menuitems.includes(:genimage, :inventory).order(:sequence)
+                     @menu.menuitems.includes(:genimage, :inventory, menusection: { menu: :restaurant }).order(:sequence)
                    else
                      # HTML: Use AdvancedCacheServiceV2 for comprehensive data
                      @menu_items_data = AdvancedCacheServiceV2.cached_menu_items_with_details(@menu.id, include_analytics: true)

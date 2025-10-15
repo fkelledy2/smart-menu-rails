@@ -8,4 +8,8 @@ json.preptime menuitem.preptime
 json.status menuitem.status
 json.sequence menuitem.sequence
 json.inventory menuitem.inventory
-json.url restaurant_menu_menusection_menuitem_url(menuitem.menusection.menu.restaurant, menuitem.menusection.menu, menuitem.menusection, menuitem, format: :json)
+if menuitem.menusection&.menu&.restaurant
+  json.url restaurant_menu_menusection_menuitem_url(menuitem.menusection.menu.restaurant, menuitem.menusection.menu, menuitem.menusection, menuitem, format: :json)
+else
+  json.url nil
+end
