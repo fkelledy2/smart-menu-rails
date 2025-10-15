@@ -58,15 +58,30 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   end
 
   test 'should handle missing user gracefully' do
-    assert_raises ActiveRecord::RecordNotFound do
+    # The job handles missing users gracefully by logging and returning early
+    assert_nothing_raised do
       CreateRestaurantAndMenuJob.perform_now(99999, @onboarding.id)
     end
+    
+    # Verify onboarding session is not updated when user is missing
+    @onboarding.reload
+    assert_not_equal 'completed', @onboarding.status
   end
 
   test 'should handle missing onboarding session gracefully' do
-    assert_raises ActiveRecord::RecordNotFound do
+    # The job handles missing onboarding sessions gracefully by logging and returning early
+    assert_nothing_raised do
       CreateRestaurantAndMenuJob.perform_now(@user.id, 99999)
     end
+    
+    # Verify no restaurant or menu is created when onboarding session is missing
+    initial_restaurant_count = Restaurant.count
+    initial_menu_count = Menu.count
+    
+    CreateRestaurantAndMenuJob.perform_now(@user.id, 99999)
+    
+    assert_equal initial_restaurant_count, Restaurant.count
+    assert_equal initial_menu_count, Menu.count
   end
 
   # === RESTAURANT CREATION TESTS ===
@@ -456,13 +471,11 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
     Rails.logger = Logger.new(log_output)
     
     begin
-      # Use non-existent user ID to cause failure
-      assert_raises ActiveRecord::RecordNotFound do
-        CreateRestaurantAndMenuJob.perform_now(99999, @onboarding.id)
-      end
+      # Use non-existent user ID - this will log an error but not raise an exception
+      CreateRestaurantAndMenuJob.perform_now(99999, @onboarding.id)
       
       log_content = log_output.string
-      assert_includes log_content, 'Failed to create restaurant and menu'
+      assert_includes log_content, 'User with ID 99999 not found'
     ensure
       Rails.logger = original_logger
     end
