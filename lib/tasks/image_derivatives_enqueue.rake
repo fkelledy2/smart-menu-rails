@@ -1,6 +1,5 @@
-# lib/tasks/resize_existing_images.rake
-namespace :images do
-  desc 'Queue image resizing for all existing records'
+namespace :image_derivatives do
+  desc 'Queue image derivative generation for all existing menu items'
   task enqueue: :environment do
     Menuitem.where.not(image_data: nil).find_each do |record|
       GenerateImageDerivativesJob.perform_later('Menuitem', record.id)

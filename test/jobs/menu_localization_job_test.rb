@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TranslateMenuJobSimpleTest < ActiveJob::TestCase
+class MenuLocalizationJobTest < ActiveJob::TestCase
   setup do
     @user = users(:one)
     @restaurant = restaurants(:one)
@@ -25,13 +25,13 @@ class TranslateMenuJobSimpleTest < ActiveJob::TestCase
     # Mock DeeplApiService
     DeeplApiService.stub :translate, 'Translated Text' do
       assert_nothing_raised do
-        TranslateMenuJob.new.perform(@restaurant_locale.id)
+        MenuLocalizationJob.new.perform(@restaurant_locale.id)
       end
     end
   end
 
   test 'should handle missing restaurant locale gracefully' do
-    job = TranslateMenuJob.new
+    job = MenuLocalizationJob.new
     
     # The job will fail with NoMethodError when restaurant locale doesn't exist
     # This is expected behavior - the job should handle this at the application level
@@ -44,7 +44,7 @@ class TranslateMenuJobSimpleTest < ActiveJob::TestCase
     # Mock DeeplApiService to raise an error
     DeeplApiService.stub :translate, -> { raise StandardError.new('Translation error') } do
       assert_nothing_raised do
-        TranslateMenuJob.new.perform(@restaurant_locale.id)
+        MenuLocalizationJob.new.perform(@restaurant_locale.id)
       end
     end
   end
@@ -55,7 +55,7 @@ class TranslateMenuJobSimpleTest < ActiveJob::TestCase
     # Test without mocking to ensure basic job structure works
     DeeplApiService.stub :translate, ->(text, options) { "IT: #{text}" } do
       assert_nothing_raised do
-        TranslateMenuJob.new.perform(@restaurant_locale.id)
+        MenuLocalizationJob.new.perform(@restaurant_locale.id)
       end
     end
   end
@@ -65,7 +65,7 @@ class TranslateMenuJobSimpleTest < ActiveJob::TestCase
     3.times do |i|
       DeeplApiService.stub :translate, "Translation #{i}" do
         assert_nothing_raised do
-          TranslateMenuJob.new.perform(@restaurant_locale.id)
+          MenuLocalizationJob.new.perform(@restaurant_locale.id)
         end
       end
     end
@@ -77,7 +77,7 @@ class TranslateMenuJobSimpleTest < ActiveJob::TestCase
     start_time = Time.current
     
     DeeplApiService.stub :translate, 'Quick Translation' do
-      TranslateMenuJob.new.perform(@restaurant_locale.id)
+      MenuLocalizationJob.new.perform(@restaurant_locale.id)
     end
     
     execution_time = Time.current - start_time
@@ -89,7 +89,7 @@ class TranslateMenuJobSimpleTest < ActiveJob::TestCase
   test 'should handle nil translation results' do
     DeeplApiService.stub :translate, nil do
       assert_nothing_raised do
-        TranslateMenuJob.new.perform(@restaurant_locale.id)
+        MenuLocalizationJob.new.perform(@restaurant_locale.id)
       end
     end
   end
@@ -97,7 +97,7 @@ class TranslateMenuJobSimpleTest < ActiveJob::TestCase
   test 'should handle empty translation results' do
     DeeplApiService.stub :translate, '' do
       assert_nothing_raised do
-        TranslateMenuJob.new.perform(@restaurant_locale.id)
+        MenuLocalizationJob.new.perform(@restaurant_locale.id)
       end
     end
   end
@@ -108,7 +108,7 @@ class TranslateMenuJobSimpleTest < ActiveJob::TestCase
     # Simulate restaurant adding Italian translations
     DeeplApiService.stub :translate, ->(text, options) { "IT: #{text}" } do
       assert_nothing_raised do
-        TranslateMenuJob.new.perform(@restaurant_locale.id)
+        MenuLocalizationJob.new.perform(@restaurant_locale.id)
       end
     end
   end
@@ -124,7 +124,7 @@ class TranslateMenuJobSimpleTest < ActiveJob::TestCase
       end
     } do
       assert_nothing_raised do
-        TranslateMenuJob.new.perform(@restaurant_locale.id)
+        MenuLocalizationJob.new.perform(@restaurant_locale.id)
       end
     end
   end

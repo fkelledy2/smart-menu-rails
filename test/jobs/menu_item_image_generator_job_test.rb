@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class GenerateImageJobSimpleTest < ActiveJob::TestCase
+class MenuItemImageGeneratorJobTest < ActiveJob::TestCase
   setup do
     @user = users(:one)
     @restaurant = restaurants(:one)
@@ -25,7 +25,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
   
   test 'should find genimage and menuitem successfully' do
     # Mock the expensive API call to avoid external dependencies
-    job = GenerateImageJob.new
+    job = MenuItemImageGeneratorJob.new
     job.stub(:expensive_api_call, true) do
       assert_nothing_raised do
         job.perform(@genimage.id)
@@ -34,7 +34,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
   end
 
   test 'should handle missing genimage gracefully' do
-    job = GenerateImageJob.new
+    job = MenuItemImageGeneratorJob.new
     
     # Mock the expensive_api_call to avoid real API calls
     job.stub(:expensive_api_call, nil) do
@@ -52,7 +52,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
       menuitem: nil
     )
     
-    job = GenerateImageJob.new
+    job = MenuItemImageGeneratorJob.new
     
     # Mock the expensive_api_call to avoid real API calls
     job.stub(:expensive_api_call, nil) do
@@ -66,7 +66,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
   
   test 'should generate and process image successfully with mocked API' do
     # Simply mock the expensive_api_call to avoid complex image processing
-    job = GenerateImageJob.new
+    job = MenuItemImageGeneratorJob.new
     job.stub(:expensive_api_call, true) do
       assert_nothing_raised do
         job.perform(@genimage.id)
@@ -76,7 +76,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
 
   test 'should handle API failure gracefully' do
     # Mock the expensive_api_call to avoid real API calls
-    job = GenerateImageJob.new
+    job = MenuItemImageGeneratorJob.new
     job.stub(:expensive_api_call, nil) do
       assert_nothing_raised do
         job.perform(@genimage.id)
@@ -92,7 +92,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
       'data' => [{ 'url' => 'https://example.com/invalid-image.jpg' }]
     )
     
-    job = GenerateImageJob.new
+    job = MenuItemImageGeneratorJob.new
     job.stub(:generate_image, mock_response) do
       # Mock URI.parse to raise an error
       URI.stub(:parse, -> { raise StandardError.new('Download failed') }) do
@@ -107,7 +107,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
   
   test 'should log successful image generation' do
     # Mock the expensive_api_call to avoid complex image processing
-    job = GenerateImageJob.new
+    job = MenuItemImageGeneratorJob.new
     
     # Capture log output
     log_output = StringIO.new
@@ -123,7 +123,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
 
   test 'should log image processing errors' do
     # Test that the job handles errors gracefully
-    job = GenerateImageJob.new
+    job = MenuItemImageGeneratorJob.new
     
     # Mock the expensive_api_call to avoid complex error scenarios
     job.stub(:expensive_api_call, true) do
@@ -153,7 +153,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
       menuitem: menuitem2
     )
     
-    job = GenerateImageJob.new
+    job = MenuItemImageGeneratorJob.new
     job.stub(:expensive_api_call, true) do
       assert_nothing_raised do
         job.perform(genimage2.id)
@@ -167,7 +167,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
     
     3.times do |i|
       jobs << Thread.new do
-        job = GenerateImageJob.new
+        job = MenuItemImageGeneratorJob.new
         job.stub(:expensive_api_call, true) do
           assert_nothing_raised do
             job.perform(@genimage.id)
@@ -187,18 +187,18 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
   
   test 'should work with proper job inheritance' do
     # Test that the job includes Sidekiq::Worker
-    assert GenerateImageJob.ancestors.include?(Sidekiq::Worker)
+    assert MenuItemImageGeneratorJob.ancestors.include?(Sidekiq::Worker)
   end
 
   test 'should have proper queue configuration' do
     # Test that the job is configured for the right queue
-    job = GenerateImageJob.new
+    job = MenuItemImageGeneratorJob.new
     assert job.respond_to?(:perform)
   end
 
   test 'should support rate limiting' do
     # Test that rate limiting is configured (Limiter::Mixin)
-    assert GenerateImageJob.singleton_class.ancestors.include?(Limiter::Mixin)
+    assert MenuItemImageGeneratorJob.singleton_class.ancestors.include?(Limiter::Mixin)
   end
 
   # === PERFORMANCE TESTS ===
@@ -206,7 +206,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
   test 'should complete within reasonable time' do
     start_time = Time.current
     
-    job = GenerateImageJob.new
+    job = MenuItemImageGeneratorJob.new
     job.stub(:expensive_api_call, true) do
       job.perform(@genimage.id)
     end
@@ -238,7 +238,7 @@ class GenerateImageJobSimpleTest < ActiveJob::TestCase
     
     # Process all genimages
     genimages.each do |genimage|
-      job = GenerateImageJob.new
+      job = MenuItemImageGeneratorJob.new
       job.stub(:expensive_api_call, true) do
         assert_nothing_raised do
           job.perform(genimage.id)

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SmartMenuSyncJobTest < ActiveJob::TestCase
+class SmartMenuGeneratorJobTest < ActiveJob::TestCase
   setup do
     @user = users(:one)
     @restaurant = restaurants(:one)
@@ -40,13 +40,13 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
   
   test 'should perform job successfully with valid restaurant' do
     assert_nothing_raised do
-      SmartMenuSyncJob.new.perform(@restaurant.id)
+      SmartMenuGeneratorJob.new.perform(@restaurant.id)
     end
   end
 
   test 'should handle missing restaurant gracefully' do
     assert_raises ActiveRecord::RecordNotFound do
-      SmartMenuSyncJob.new.perform(99999)
+      SmartMenuGeneratorJob.new.perform(99999)
     end
   end
 
@@ -70,7 +70,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
     )
     
     assert_nothing_raised do
-      SmartMenuSyncJob.new.perform(empty_restaurant.id)
+      SmartMenuGeneratorJob.new.perform(empty_restaurant.id)
     end
   end
 
@@ -91,7 +91,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
     )
     
     assert_nothing_raised do
-      SmartMenuSyncJob.new.perform(no_tables_restaurant.id)
+      SmartMenuGeneratorJob.new.perform(no_tables_restaurant.id)
     end
   end
 
@@ -100,7 +100,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
   test 'should create smartmenu for menu without table' do
     initial_count = Smartmenu.count
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Should create smartmenu for menu without table
     menu_smartmenu = Smartmenu.find_by(
@@ -117,7 +117,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
   test 'should create smartmenus for each menu-table combination' do
     initial_count = Smartmenu.count
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Should create smartmenus for each menu-table combination
     [@table1, @table2].each do |table|
@@ -136,7 +136,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
   end
 
   test 'should create smartmenus for tables without menu' do
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Should create smartmenus for each table without menu
     [@table1, @table2].each do |table|
@@ -161,7 +161,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
     end
     Smartmenu.where(restaurant: @restaurant).destroy_all
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     smartmenus = Smartmenu.where(restaurant: @restaurant)
     slugs = smartmenus.pluck(:slug)
@@ -177,10 +177,10 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
 
   test 'should not create duplicate smartmenus' do
     # Run job twice
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     initial_count = Smartmenu.where(restaurant: @restaurant).count
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     final_count = Smartmenu.where(restaurant: @restaurant).count
     
     # Count should not change on second run
@@ -196,7 +196,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
       status: :active
     )
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Should create smartmenus for both menus
     [@menu, menu2].each do |menu|
@@ -231,7 +231,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
       slug: 'existing-slug-123'
     )
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Existing smartmenu should not be modified
     existing_smartmenu.reload
@@ -257,7 +257,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
       sequence: 3
     )
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Should create smartmenu regardless of table status
     occupied_smartmenu = Smartmenu.find_by(
@@ -279,7 +279,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
       sequence: 4
     )
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Should still create smartmenu for archived table
     archived_smartmenu = Smartmenu.find_by(
@@ -298,7 +298,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
       archived: true
     )
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Should still create smartmenu for archived menu
     archived_smartmenu = Smartmenu.find_by(
@@ -326,7 +326,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
     
     start_time = Time.current
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     execution_time = Time.current - start_time
     assert execution_time < 10.seconds, "Job took too long with many tables: #{execution_time}s"
@@ -353,7 +353,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
     
     start_time = Time.current
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     execution_time = Time.current - start_time
     assert execution_time < 15.seconds, "Job took too long with many menus: #{execution_time}s"
@@ -384,7 +384,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
     
     initial_smartmenu_count = Smartmenu.where(restaurant: @restaurant).count
     
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     final_smartmenu_count = Smartmenu.where(restaurant: @restaurant).count
     
@@ -421,7 +421,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
     )
     
     # Run sync job
-    SmartMenuSyncJob.new.perform(new_restaurant.id)
+    SmartMenuGeneratorJob.new.perform(new_restaurant.id)
     
     # Should create all necessary smartmenus
     smartmenus = Smartmenu.where(restaurant: new_restaurant)
@@ -437,7 +437,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
   
   test 'should handle restaurant expansion scenario' do
     # Initial sync
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     initial_count = Smartmenu.where(restaurant: @restaurant).count
     
     # Restaurant adds new table
@@ -451,7 +451,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
     )
     
     # Run sync again
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Should create smartmenus for new table
     new_count = Smartmenu.where(restaurant: @restaurant).count
@@ -464,7 +464,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
 
   test 'should handle menu addition scenario' do
     # Initial sync
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     initial_count = Smartmenu.where(restaurant: @restaurant).count
     
     # Restaurant adds new menu
@@ -476,7 +476,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
     )
     
     # Run sync again
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Should create smartmenus for new menu
     new_count = Smartmenu.where(restaurant: @restaurant).count
@@ -490,7 +490,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
   end
 
   test 'should handle QR code generation workflow' do
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Each smartmenu should have a unique slug for QR code generation
     smartmenus = Smartmenu.where(restaurant: @restaurant)
@@ -508,7 +508,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
   end
 
   test 'should handle table ordering workflow' do
-    SmartMenuSyncJob.new.perform(@restaurant.id)
+    SmartMenuGeneratorJob.new.perform(@restaurant.id)
     
     # Each table should have smartmenus for ordering
     [@table1, @table2].each do |table|
@@ -538,7 +538,7 @@ class SmartMenuSyncJobTest < ActiveJob::TestCase
     
     3.times do
       jobs << Thread.new do
-        SmartMenuSyncJob.new.perform(@restaurant.id)
+        SmartMenuGeneratorJob.new.perform(@restaurant.id)
       end
     end
     

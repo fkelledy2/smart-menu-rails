@@ -53,7 +53,7 @@ class RestaurantlocalesController < ApplicationController
             end
           end
         end
-        TranslateMenuJob.perform_async(@restaurantlocale.id)
+        MenuLocalizationJob.perform_async(@restaurantlocale.id)
         format.html do
           redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id),
                       notice: t('restaurantlocales.controller.created')

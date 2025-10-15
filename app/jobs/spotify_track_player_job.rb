@@ -1,11 +1,11 @@
 require 'sidekiq'
 require 'securerandom'
 
-class SpotifyPlayJob
+class SpotifyTrackPlayerJob
   include Sidekiq::Job
 
   def perform(*args)
-    Rails.logger.debug 'SpotifyPlayJob'
+    Rails.logger.debug 'SpotifyTrackPlayerJob'
     @restaurant = Restaurant.find_by(id: args[0])
     return if @restaurant.spotifyuserid.nil?
 

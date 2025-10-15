@@ -1,16 +1,16 @@
-class CreateRestaurantAndMenuJob < ApplicationJob
+class RestaurantOnboardingJob < ApplicationJob
   queue_as :default
 
   def perform(user_id, onboarding_session_id)
     user = User.find_by(id: user_id)
     unless user
-      Rails.logger.error "CreateRestaurantAndMenuJob: User with ID #{user_id} not found. Skipping job."
+      Rails.logger.error "RestaurantOnboardingJob: User with ID #{user_id} not found. Skipping job."
       return
     end
 
     onboarding = OnboardingSession.find_by(id: onboarding_session_id)
     unless onboarding
-      Rails.logger.error "CreateRestaurantAndMenuJob: OnboardingSession with ID #{onboarding_session_id} not found. Skipping job."
+      Rails.logger.error "RestaurantOnboardingJob: OnboardingSession with ID #{onboarding_session_id} not found. Skipping job."
       return
     end
 
@@ -32,7 +32,7 @@ class CreateRestaurantAndMenuJob < ApplicationJob
       track_completion_analytics(user, restaurant, menu, onboarding)
 
       # Generate smart menus for the restaurant
-      SmartMenuSyncJob.perform_async(restaurant.id)
+      SmartMenuGeneratorJob.perform_async(restaurant.id)
 
       # Log success
       Rails.logger.info "Successfully created restaurant #{restaurant.id} and menu #{menu.id} for user #{user.id}"

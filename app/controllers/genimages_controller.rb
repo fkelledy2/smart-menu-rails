@@ -43,7 +43,7 @@ class GenimagesController < ApplicationController
 
     respond_to do |format|
       if @genimage.menuitem.itemtype != 'wine'
-        GenerateImageJob.perform_sync(@genimage.id)
+        MenuItemImageGeneratorJob.perform_sync(@genimage.id)
       end
       format.html do
         redirect_to edit_menuitem_path(@genimage.menuitem),

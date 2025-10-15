@@ -1,4 +1,4 @@
-class ProcessPdfJob < ApplicationJob
+class PdfMenuExtractionJob < ApplicationJob
   queue_as :default
 
   # Retry configuration to prevent infinite retries
@@ -11,7 +11,7 @@ class ProcessPdfJob < ApplicationJob
 
     # If record doesn't exist, log and exit gracefully (don't retry)
     unless ocr_menu_import
-      Rails.logger.warn "ProcessPdfJob: OcrMenuImport with ID #{ocr_menu_import_id} not found. Record may have been deleted."
+      Rails.logger.warn "PdfMenuExtractionJob: OcrMenuImport with ID #{ocr_menu_import_id} not found. Record may have been deleted."
       return
     end
 
@@ -20,7 +20,7 @@ class ProcessPdfJob < ApplicationJob
       if ocr_menu_import.may_process?
         ocr_menu_import.process!
       elsif ocr_menu_import.failed? || ocr_menu_import.completed?
-        Rails.logger.info "ProcessPdfJob: Skipping processing for OcrMenuImport ##{ocr_menu_import.id} in state '#{ocr_menu_import.status}'"
+        Rails.logger.info "PdfMenuExtractionJob: Skipping processing for OcrMenuImport ##{ocr_menu_import.id} in state '#{ocr_menu_import.status}'"
         return
       end
 
@@ -34,14 +34,14 @@ class ProcessPdfJob < ApplicationJob
       if ocr_menu_import.respond_to?(:may_complete?) && ocr_menu_import.may_complete?
         ocr_menu_import.complete!
       else
-        Rails.logger.warn "ProcessPdfJob: Cannot complete OcrMenuImport ##{ocr_menu_import.id} from state '#{ocr_menu_import.status}'"
+        Rails.logger.warn "PdfMenuExtractionJob: Cannot complete OcrMenuImport ##{ocr_menu_import.id} from state '#{ocr_menu_import.status}'"
       end
     rescue StandardError => e
-      Rails.logger.error "Error in ProcessPdfJob: #{e.message}\n#{e.backtrace.join("\n")}"
+      Rails.logger.error "Error in PdfMenuExtractionJob: #{e.message}\n#{e.backtrace.join("\n")}"
 
       # Handle case where record might have been deleted during processing
       unless ocr_menu_import.persisted?
-        Rails.logger.warn "ProcessPdfJob: OcrMenuImport ##{ocr_menu_import_id} was deleted during processing"
+        Rails.logger.warn "PdfMenuExtractionJob: OcrMenuImport ##{ocr_menu_import_id} was deleted during processing"
         return
       end
 
@@ -52,7 +52,7 @@ class ProcessPdfJob < ApplicationJob
         rescue AASM::InvalidTransition
           ocr_menu_import.update(error_message: e.message, failed_at: Time.current)
         rescue ActiveRecord::RecordNotFound
-          Rails.logger.warn "ProcessPdfJob: OcrMenuImport ##{ocr_menu_import_id} was deleted while updating error state"
+          Rails.logger.warn "PdfMenuExtractionJob: OcrMenuImport ##{ocr_menu_import_id} was deleted while updating error state"
           nil
         end
       else
@@ -60,7 +60,7 @@ class ProcessPdfJob < ApplicationJob
         begin
           ocr_menu_import.update(error_message: e.message, failed_at: ocr_menu_import.failed_at || Time.current)
         rescue ActiveRecord::RecordNotFound
-          Rails.logger.warn "ProcessPdfJob: OcrMenuImport ##{ocr_menu_import_id} was deleted while updating error details"
+          Rails.logger.warn "PdfMenuExtractionJob: OcrMenuImport ##{ocr_menu_import_id} was deleted while updating error details"
           return
         end
         # Only re-raise for non-AASM errors to allow genuine retries

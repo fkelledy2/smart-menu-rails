@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
+class RestaurantOnboardingJobTest < ActiveJob::TestCase
   include ActiveJob::TestHelper
 
   setup do
@@ -32,7 +32,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   
   test 'should be configured with correct queue' do
     # Test that the job is configured with the default queue
-    job = CreateRestaurantAndMenuJob.new
+    job = RestaurantOnboardingJob.new
     assert_equal 'default', job.queue_name
   end
 
@@ -41,7 +41,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
     initial_menu_count = Menu.count
     
     assert_nothing_raised do
-      CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+      RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     end
     
     assert_equal initial_restaurant_count + 1, Restaurant.count
@@ -49,7 +49,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   end
 
   test 'should update onboarding session status to completed' do
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     @onboarding.reload
     assert_equal 'completed', @onboarding.status
@@ -60,7 +60,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   test 'should handle missing user gracefully' do
     # The job handles missing users gracefully by logging and returning early
     assert_nothing_raised do
-      CreateRestaurantAndMenuJob.perform_now(99999, @onboarding.id)
+      RestaurantOnboardingJob.perform_now(99999, @onboarding.id)
     end
     
     # Verify onboarding session is not updated when user is missing
@@ -71,14 +71,14 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   test 'should handle missing onboarding session gracefully' do
     # The job handles missing onboarding sessions gracefully by logging and returning early
     assert_nothing_raised do
-      CreateRestaurantAndMenuJob.perform_now(@user.id, 99999)
+      RestaurantOnboardingJob.perform_now(@user.id, 99999)
     end
     
     # Verify no restaurant or menu is created when onboarding session is missing
     initial_restaurant_count = Restaurant.count
     initial_menu_count = Menu.count
     
-    CreateRestaurantAndMenuJob.perform_now(@user.id, 99999)
+    RestaurantOnboardingJob.perform_now(@user.id, 99999)
     
     assert_equal initial_restaurant_count, Restaurant.count
     assert_equal initial_menu_count, Menu.count
@@ -87,7 +87,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   # === RESTAURANT CREATION TESTS ===
   
   test 'should create restaurant with correct attributes' do
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     restaurant = Restaurant.last
     assert_equal 'Test Restaurant', restaurant.name
@@ -127,7 +127,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
         ]
       )
       
-      CreateRestaurantAndMenuJob.perform_now(@user.id, test_onboarding.id)
+      RestaurantOnboardingJob.perform_now(@user.id, test_onboarding.id)
       
       test_onboarding.reload
       restaurant = test_onboarding.restaurant
@@ -136,7 +136,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   end
 
   test 'should create default restaurant settings' do
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     restaurant = Restaurant.last
     
@@ -202,7 +202,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   end
 
   test 'should create owner employee record' do
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     restaurant = Restaurant.last
     assert restaurant.employees.exists?
@@ -220,7 +220,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   # === MENU CREATION TESTS ===
   
   test 'should create menu with correct attributes' do
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     menu = Menu.last
     assert_equal 'Test Menu', menu.name
@@ -232,14 +232,14 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   test 'should create menu with default name when not provided' do
     @onboarding.update!(menu_name: nil)
     
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     menu = Menu.last
     assert_equal 'Demo Menu', menu.name
   end
 
   test 'should create menu section and items' do
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     menu = Menu.last
     
@@ -269,7 +269,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   end
 
   test 'should create allergen mappings for menu items' do
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     menu = Menu.last
     menu_items = menu.menusections.first.menuitems
@@ -281,7 +281,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   end
 
   test 'should create size mappings for first menu item only' do
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     menu = Menu.last
     menu_items = menu.menusections.first.menuitems.order(:sequence)
@@ -308,7 +308,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   end
 
   test 'should create inventory for each menu item' do
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     menu = Menu.last
     menu_items = menu.menusections.first.menuitems
@@ -326,7 +326,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   end
 
   test 'should create menu availabilities matching restaurant hours' do
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     restaurant = Restaurant.last
     menu = Menu.last
@@ -349,7 +349,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
     @onboarding.update!(menu_items: [])
     
     assert_nothing_raised do
-      CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+      RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     end
     
     menu = Menu.last
@@ -363,7 +363,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
       '1' => { 'name' => 'Hash Item 2', 'price' => '15.00' }
     })
     
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     menu = Menu.last
     section = menu.menusections.first
@@ -383,7 +383,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
       AnalyticsService.stub :track_restaurant_created, ->(user, restaurant) { analytics_calls << [:restaurant_created, user, restaurant] } do
         AnalyticsService.stub :track_menu_created, ->(user, menu) { analytics_calls << [:menu_created, user, menu] } do
           AnalyticsService.stub :identify_user, ->(user, traits) { analytics_calls << [:identify_user, user, traits] } do
-            CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+            RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
           end
         end
       end
@@ -410,7 +410,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
     # Mock AnalyticsService to raise errors
     AnalyticsService.stub :track_onboarding_completed, -> { raise StandardError.new('Analytics error') } do
       assert_nothing_raised do
-        CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+        RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
       end
     end
     
@@ -421,17 +421,17 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
 
   # === SMART MENU SYNC TESTS ===
   
-  test 'should call SmartMenuSyncJob perform_async' do
-    # Mock SmartMenuSyncJob to verify it's called
+  test 'should call SmartMenuGeneratorJob perform_async' do
+    # Mock SmartMenuGeneratorJob to verify it's called
     sync_job_called = false
-    SmartMenuSyncJob.stub :perform_async, ->(restaurant_id) { 
+    SmartMenuGeneratorJob.stub :perform_async, ->(restaurant_id) { 
       sync_job_called = true
       assert_not_nil restaurant_id
     } do
-      CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+      RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     end
     
-    assert sync_job_called, 'SmartMenuSyncJob.perform_async should have been called'
+    assert sync_job_called, 'SmartMenuGeneratorJob.perform_async should have been called'
   end
 
   # === ERROR HANDLING TESTS ===
@@ -453,7 +453,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
     )
     
     assert_raises ActiveRecord::RecordInvalid do
-      CreateRestaurantAndMenuJob.perform_now(@user.id, invalid_onboarding.id)
+      RestaurantOnboardingJob.perform_now(@user.id, invalid_onboarding.id)
     end
     
     # Should rollback all changes
@@ -472,7 +472,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
     
     begin
       # Use non-existent user ID - this will log an error but not raise an exception
-      CreateRestaurantAndMenuJob.perform_now(99999, @onboarding.id)
+      RestaurantOnboardingJob.perform_now(99999, @onboarding.id)
       
       log_content = log_output.string
       assert_includes log_content, 'User with ID 99999 not found'
@@ -498,7 +498,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
       sizes: Size.count
     }
     
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     # Verify all expected records were created
     assert_equal initial_counts[:restaurants] + 1, Restaurant.count
@@ -518,7 +518,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
   test 'should complete job execution within reasonable time' do
     start_time = Time.current
     
-    CreateRestaurantAndMenuJob.perform_now(@user.id, @onboarding.id)
+    RestaurantOnboardingJob.perform_now(@user.id, @onboarding.id)
     
     execution_time = Time.current - start_time
     assert execution_time < 10.seconds, "Job took too long: #{execution_time}s"
@@ -549,7 +549,7 @@ class CreateRestaurantAndMenuJobTest < ActiveJob::TestCase
       ]
     )
     
-    CreateRestaurantAndMenuJob.perform_now(user.id, onboarding.id)
+    RestaurantOnboardingJob.perform_now(user.id, onboarding.id)
     
     # Verify complete setup
     onboarding.reload

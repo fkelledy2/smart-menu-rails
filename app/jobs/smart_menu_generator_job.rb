@@ -1,7 +1,7 @@
 require 'sidekiq'
 require 'securerandom'
 
-class SmartMenuSyncJob
+class SmartMenuGeneratorJob
   include Sidekiq::Job
 
   def perform(restaurantId)

@@ -1,8 +1,8 @@
 namespace :restaurants do
   desc 'Generate image_style_profile for all restaurants that are missing one'
-  task backfill_image_style_profile: :environment do
-    puts 'Backfilling restaurant image_style_profile...'
-    job = GenerateImageJob.new
+  task generate_image_styles: :environment do
+    puts 'Generating restaurant image style profiles...'
+    job = MenuItemImageGeneratorJob.new
     count = 0
 
     Restaurant.find_each do |restaurant|

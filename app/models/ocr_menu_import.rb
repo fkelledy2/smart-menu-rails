@@ -70,7 +70,7 @@ class OcrMenuImport < ApplicationRecord
   end
 
   def process_pdf_async
-    ProcessPdfJob.perform_later(id)
+    PdfMenuExtractionJob.perform_later(id)
   end
 
   # Process menu data from OCR results

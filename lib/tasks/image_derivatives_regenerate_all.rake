@@ -1,6 +1,6 @@
-namespace :images do
+namespace :image_derivatives do
   desc 'Regenerate all image derivatives (thumb, medium, large) for Menuitems and Menusections'
-  task regenerate_derivatives: :environment do
+  task regenerate_all: :environment do
     puts 'Regenerating Menuitem image derivatives...'
     Menuitem.find_each do |item|
       if item.image_attacher&.file

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ProcessPdfJobTest < ActiveJob::TestCase
+class PdfMenuExtractionJobTest < ActiveJob::TestCase
   include ActiveJob::TestHelper
 
   setup do
@@ -16,7 +16,7 @@ class ProcessPdfJobTest < ActiveJob::TestCase
 
     PdfMenuProcessor.stub :new, processor_double do
       # Perform the job directly instead of using assert_enqueued_with
-      ProcessPdfJob.perform_now(import.id)
+      PdfMenuExtractionJob.perform_now(import.id)
     end
 
     import.reload
@@ -33,7 +33,7 @@ class ProcessPdfJobTest < ActiveJob::TestCase
 
     PdfMenuProcessor.stub :new, processor_double do
       # Perform the job directly instead of using perform_enqueued_jobs
-      ProcessPdfJob.perform_now(import.id)
+      PdfMenuExtractionJob.perform_now(import.id)
     end
 
     import.reload
@@ -48,7 +48,7 @@ class ProcessPdfJobTest < ActiveJob::TestCase
     # Should not call processor at all; stub to raise if called
     PdfMenuProcessor.stub :new, ->(*) { raise 'should not be called' } do
       perform_enqueued_jobs do
-        ProcessPdfJob.perform_later(import.id)
+        PdfMenuExtractionJob.perform_later(import.id)
       end
     end
 

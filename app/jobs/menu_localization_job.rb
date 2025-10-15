@@ -1,7 +1,7 @@
 require 'sidekiq'
 require 'deepl'
 
-class TranslateMenuJob
+class MenuLocalizationJob
   include Sidekiq::Worker
 
   #   sidekiq_options queue: "limited"

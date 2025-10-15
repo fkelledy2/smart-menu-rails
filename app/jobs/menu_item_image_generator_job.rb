@@ -1,7 +1,7 @@
 require 'sidekiq'
 require 'limiter/mixin'
 
-class GenerateImageJob
+class MenuItemImageGeneratorJob
   include Sidekiq::Worker
 
   sidekiq_options queue: 'limited'
