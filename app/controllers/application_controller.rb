@@ -10,6 +10,9 @@ class ApplicationController < ActionController::Base
 
   before_action :debug_request_in_test
 
+  # Authorization monitoring
+  rescue_from Pundit::NotAuthorizedError, with: :handle_authorization_failure
+
   def switch_locale(&)
     unless request.env['HTTP_ACCEPT_LANGUAGE'].nil?
       @locale = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
@@ -177,5 +180,60 @@ class ApplicationController < ActionController::Base
     if params[:menu_id]
       warm_menu_cache_async(params[:menu_id])
     end
+  end
+
+  # Authorization monitoring and failure handling
+  def handle_authorization_failure(exception)
+    # Track the authorization failure
+    AuthorizationMonitoringService.track_authorization_failure(
+      current_user,
+      exception.record,
+      exception.query,
+      exception,
+      {
+        controller: controller_name,
+        action: action_name,
+        request_ip: request.remote_ip,
+        user_agent: request.user_agent
+      }
+    )
+
+    # Handle the failure based on request format
+    respond_to do |format|
+      format.html do
+        flash[:alert] = 'You are not authorized to perform this action.'
+        redirect_to(request.referrer || root_path)
+      end
+      format.json do
+        render json: { error: 'Unauthorized' }, status: :forbidden
+      end
+      format.any do
+        head :forbidden
+      end
+    end
+  end
+
+  # Override authorize to add monitoring
+  def authorize(record, query = nil)
+    query ||= "#{action_name}?"
+    
+    # Call Pundit's original authorize method to ensure proper tracking
+    result = super(record, query)
+
+    # Track the authorization check for monitoring
+    AuthorizationMonitoringService.track_authorization_check(
+      current_user,
+      record,
+      query.to_s.gsub('?', ''),
+      result,
+      {
+        controller: controller_name,
+        action: action_name,
+        request_ip: request.remote_ip,
+        user_agent: request.user_agent
+      }
+    )
+
+    result
   end
 end

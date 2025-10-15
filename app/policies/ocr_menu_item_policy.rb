@@ -1,10 +1,6 @@
 class OcrMenuItemPolicy < ApplicationPolicy
   def update?
-    result = owner?
-    if Rails.env.test?
-      Rails.logger.warn "[TEST DEBUG] OcrMenuItemPolicy#update?: user.id=#{user&.id}, result=#{result}"
-    end
-    result
+    owner?
   end
 
   private
@@ -15,10 +11,6 @@ class OcrMenuItemPolicy < ApplicationPolicy
     section = record.ocr_menu_section
     import = section&.ocr_menu_import
     restaurant = import&.restaurant
-    is_owner = restaurant && restaurant.user_id == user.id
-    if Rails.env.test?
-      Rails.logger.warn "[TEST DEBUG] OcrMenuItemPolicy#owner?: user.id=#{user&.id}, restaurant.user_id=#{restaurant&.user_id}, is_owner=#{is_owner}"
-    end
-    is_owner
+    restaurant && restaurant.user_id == user.id
   end
 end

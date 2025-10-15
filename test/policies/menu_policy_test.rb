@@ -25,9 +25,9 @@ class MenuPolicyTest < ActiveSupport::TestCase
 
   # === SHOW TESTS (Public Access for Customers) ===
   
-  test "should deny anonymous customer from viewing menu" do
+  test "should allow anonymous customer to view menu" do
     policy = MenuPolicy.new(nil, @menu)
-    assert_not policy.show?, "Anonymous customers cannot view menus (ApplicationPolicy creates User.new)"
+    assert policy.show?, "Anonymous customers should be able to view menus for ordering"
   end
 
   test "should allow owner to view their menu" do
@@ -35,22 +35,22 @@ class MenuPolicyTest < ActiveSupport::TestCase
     assert policy.show?
   end
 
-  test "should deny non-owner authenticated user from viewing menu" do
+  test "should allow non-owner authenticated user to view menu" do
     policy = MenuPolicy.new(@other_user, @menu)
-    assert_not policy.show?, "Non-owner authenticated users cannot view other restaurant's menus"
+    assert policy.show?, "All users should be able to view menus for ordering"
   end
 
   # === CREATE TESTS ===
   
   test "should allow authenticated user to create menu" do
-    policy = MenuPolicy.new(@user, Menu.new)
+    new_menu = Menu.new(restaurant_id: @restaurant.id)
+    policy = MenuPolicy.new(@user, new_menu)
     assert policy.create?
   end
 
-  test "should allow anonymous user to create menu" do
+  test "should deny anonymous user from creating menu" do
     policy = MenuPolicy.new(nil, Menu.new)
-    # ApplicationPolicy creates User.new for nil user, so user.present? is true
-    assert policy.create?, "ApplicationPolicy creates User.new for anonymous users"
+    assert_not policy.create?, "Anonymous users should not be able to create menus"
   end
 
   # === UPDATE TESTS ===
@@ -245,16 +245,16 @@ class MenuPolicyTest < ActiveSupport::TestCase
     assert_not policy_other_menu.destroy?
   end
 
-  test "should deny public access but restrict management actions" do
-    # Anonymous user should not be able to view or manage (ApplicationPolicy creates User.new)
+  test "should allow public access but restrict management actions" do
+    # Anonymous user should be able to view but not manage
     anonymous_policy = MenuPolicy.new(nil, @menu)
-    assert_not anonymous_policy.show?, "Anonymous users cannot view menus (no ownership)"
+    assert anonymous_policy.show?, "Anonymous users should be able to view menus for ordering"
     assert_not anonymous_policy.update?, "Anonymous users should not be able to update menus"
     assert_not anonymous_policy.destroy?, "Anonymous users should not be able to destroy menus"
     
-    # Non-owner should not be able to view or manage
+    # Non-owner should be able to view but not manage
     non_owner_policy = MenuPolicy.new(@other_user, @menu)
-    assert_not non_owner_policy.show?, "Non-owners cannot view other restaurant's menus"
+    assert non_owner_policy.show?, "All users should be able to view menus for ordering"
     assert_not non_owner_policy.update?, "Non-owners should not be able to update menus"
     assert_not non_owner_policy.destroy?, "Non-owners should not be able to destroy menus"
   end

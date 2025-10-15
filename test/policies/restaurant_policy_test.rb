@@ -1,11 +1,18 @@
 require 'test_helper'
 
 class RestaurantPolicyTest < ActiveSupport::TestCase
+  include AuthorizationTestHelper
+
   def setup
     @user = users(:one)
     @other_user = users(:two)
     @restaurant = restaurants(:one)  # Owned by @user
     @other_restaurant = restaurants(:two)  # Owned by @other_user
+    
+    # Create employee users for testing
+    @admin_employee = create_employee_user(:admin, @restaurant)
+    @manager_employee = create_employee_user(:manager, @restaurant)
+    @staff_employee = create_employee_user(:staff, @restaurant)
   end
 
   # === INDEX TESTS ===
@@ -497,8 +504,9 @@ class RestaurantPolicyTest < ActiveSupport::TestCase
   test "should use efficient scope queries" do
     scope = RestaurantPolicy::Scope.new(@user, Restaurant).resolve
     
-    # Verify the scope uses efficient queries
-    assert scope.to_sql.include?('user_id'), "Scope should filter by user_id"
+    # Verify the scope returns only user's restaurants
+    assert_includes scope, @restaurant, "Scope should include user's restaurant"
+    assert_not_includes scope, @other_restaurant, "Scope should not include other user's restaurant"
   end
 
   test "should handle scope with additional conditions" do
@@ -519,24 +527,36 @@ class RestaurantPolicyTest < ActiveSupport::TestCase
   # === RESTAURANT OWNERSHIP VALIDATION ===
   
   test "should validate direct ownership model" do
-    # Restaurants have direct user ownership (not through associations)
+    # Create a fresh restaurant for this test to avoid setup interference
+    test_restaurant = Restaurant.create!(
+      name: 'Test Ownership Restaurant',
+      user: @user,
+      status: :active
+    )
     
     # Test direct ownership
-    assert_equal @user.id, @restaurant.user_id, "Restaurant should have direct user ownership"
+    assert_equal @user.id, test_restaurant.user_id, "Restaurant should have direct user ownership"
     
-    policy = RestaurantPolicy.new(@user, @restaurant)
+    policy = RestaurantPolicy.new(@user, test_restaurant)
     assert policy.show?, "Owner should have access through direct ownership"
     
     # Test ownership transfer scenario
-    new_owner = User.create!(email: 'newowner@example.com', password: 'password123')
-    @restaurant.update!(user: new_owner)
+    new_owner = User.create!(
+      email: 'newowner@example.com', 
+      password: 'password123',
+      first_name: 'New',
+      last_name: 'Owner',
+      plan: plans(:one)
+    )
+    test_restaurant.update!(user: new_owner)
     
-    # Original owner should lose access
-    original_policy = RestaurantPolicy.new(@user, @restaurant)
+    # Original owner should lose access (no employee relationship exists)
+    test_restaurant.reload
+    original_policy = RestaurantPolicy.new(@user, test_restaurant)
     assert_not original_policy.show?, "Original owner should lose access after transfer"
     
     # New owner should gain access
-    new_policy = RestaurantPolicy.new(new_owner, @restaurant)
+    new_policy = RestaurantPolicy.new(new_owner, test_restaurant)
     assert new_policy.show?, "New owner should gain access after transfer"
   end
 
@@ -562,5 +582,212 @@ class RestaurantPolicyTest < ActiveSupport::TestCase
     assert creator_policy.update?, "Creator should be able to update"
     assert creator_policy.destroy?, "Creator should be able to destroy"
     assert creator_policy.analytics?, "Creator should access analytics"
+  end
+
+  # === EMPLOYEE ROLE AUTHORIZATION TESTS ===
+
+  test "should allow admin employees to view restaurant" do
+    policy = RestaurantPolicy.new(@admin_employee, @restaurant)
+    assert policy.show?, "Admin employee should view restaurant"
+  end
+
+  test "should allow manager employees to view restaurant" do
+    policy = RestaurantPolicy.new(@manager_employee, @restaurant)
+    assert policy.show?, "Manager employee should view restaurant"
+  end
+
+  test "should allow staff employees to view restaurant" do
+    policy = RestaurantPolicy.new(@staff_employee, @restaurant)
+    assert policy.show?, "Staff employee should view restaurant"
+  end
+
+  test "should allow admin employees to update restaurant" do
+    policy = RestaurantPolicy.new(@admin_employee, @restaurant)
+    assert policy.update?, "Admin employee should update restaurant"
+  end
+
+  test "should deny manager employees from updating restaurant" do
+    policy = RestaurantPolicy.new(@manager_employee, @restaurant)
+    assert_not policy.update?, "Manager employee should not update restaurant"
+  end
+
+  test "should deny staff employees from updating restaurant" do
+    policy = RestaurantPolicy.new(@staff_employee, @restaurant)
+    assert_not policy.update?, "Staff employee should not update restaurant"
+  end
+
+  test "should deny all employees from destroying restaurant" do
+    [@admin_employee, @manager_employee, @staff_employee].each do |employee|
+      policy = RestaurantPolicy.new(employee, @restaurant)
+      assert_not policy.destroy?, "#{employee.employees.first.role} employee should not destroy restaurant"
+    end
+  end
+
+  test "should allow admin employees to access analytics" do
+    policy = RestaurantPolicy.new(@admin_employee, @restaurant)
+    assert policy.analytics?, "Admin employee should access analytics"
+  end
+
+  test "should deny manager and staff employees from accessing analytics" do
+    [@manager_employee, @staff_employee].each do |employee|
+      policy = RestaurantPolicy.new(employee, @restaurant)
+      assert_not policy.analytics?, "#{employee.employees.first.role} employee should not access analytics"
+    end
+  end
+
+  test "should allow admin employees to access performance data" do
+    policy = RestaurantPolicy.new(@admin_employee, @restaurant)
+    assert policy.performance?, "Admin employee should access performance data"
+  end
+
+  test "should allow admin employees to access spotify features" do
+    policy = RestaurantPolicy.new(@admin_employee, @restaurant)
+    assert policy.spotify_auth?, "Admin employee should access spotify auth"
+    assert policy.spotify_callback?, "Admin employee should access spotify callback"
+  end
+
+  test "should deny non-admin employees from accessing spotify features" do
+    [@manager_employee, @staff_employee].each do |employee|
+      policy = RestaurantPolicy.new(employee, @restaurant)
+      assert_not policy.spotify_auth?, "#{employee.employees.first.role} employee should not access spotify auth"
+      assert_not policy.spotify_callback?, "#{employee.employees.first.role} employee should not access spotify callback"
+    end
+  end
+
+  test "should include employee restaurants in scope" do
+    scope = RestaurantPolicy::Scope.new(@admin_employee, Restaurant).resolve
+    assert_includes scope, @restaurant, "Employee should see their restaurant in scope"
+    assert_not_includes scope, @other_restaurant, "Employee should not see other restaurants in scope"
+  end
+
+  test "should handle inactive employees" do
+    # Make employee inactive
+    @admin_employee.employees.first.update!(status: :inactive)
+    
+    policy = RestaurantPolicy.new(@admin_employee, @restaurant)
+    assert_not policy.show?, "Inactive employee should not access restaurant"
+    assert_not policy.update?, "Inactive employee should not update restaurant"
+    assert_not policy.analytics?, "Inactive employee should not access analytics"
+  end
+
+  test "should prevent employees from accessing other restaurants" do
+    other_restaurant_employee = create_employee_user(:admin, @other_restaurant)
+    
+    policy = RestaurantPolicy.new(other_restaurant_employee, @restaurant)
+    assert_not policy.show?, "Employee should not access other restaurant"
+    assert_not policy.update?, "Employee should not update other restaurant"
+    assert_not policy.analytics?, "Employee should not access other restaurant analytics"
+  end
+
+  # === COMPREHENSIVE AUTHORIZATION TESTS ===
+
+  test "should enforce complete authorization matrix for show action" do
+    expected_results = {
+      owner: true,
+      employee_admin: true,
+      employee_manager: true,
+      employee_staff: true,
+      customer: false,
+      anonymous: false
+    }
+    
+    expected_results.each do |role, expected|
+      user = create_user_with_role(role, @restaurant)
+      policy = RestaurantPolicy.new(user, @restaurant)
+      result = policy.show?
+      
+      assert_equal expected, result,
+        "#{role} should #{expected ? 'be allowed' : 'be denied'} show on Restaurant"
+    end
+  end
+
+  test "should enforce complete authorization matrix for update action" do
+    expected_results = {
+      owner: true,
+      employee_admin: true,
+      employee_manager: false,
+      employee_staff: false,
+      customer: false,
+      anonymous: false
+    }
+    
+    expected_results.each do |role, expected|
+      user = create_user_with_role(role, @restaurant)
+      policy = RestaurantPolicy.new(user, @restaurant)
+      result = policy.update?
+      
+      assert_equal expected, result,
+        "#{role} should #{expected ? 'be allowed' : 'be denied'} update on Restaurant"
+    end
+  end
+
+  test "should enforce complete authorization matrix for destroy action" do
+    expected_results = {
+      owner: true,
+      employee_admin: false,
+      employee_manager: false,
+      employee_staff: false,
+      customer: false,
+      anonymous: false
+    }
+    
+    expected_results.each do |role, expected|
+      user = create_user_with_role(role, @restaurant)
+      policy = RestaurantPolicy.new(user, @restaurant)
+      result = policy.destroy?
+      
+      assert_equal expected, result,
+        "#{role} should #{expected ? 'be allowed' : 'be denied'} destroy on Restaurant"
+    end
+  end
+
+  test "should enforce complete authorization matrix for analytics action" do
+    expected_results = {
+      owner: true,
+      employee_admin: true,
+      employee_manager: false,
+      employee_staff: false,
+      customer: false,
+      anonymous: false
+    }
+    
+    expected_results.each do |role, expected|
+      user = create_user_with_role(role, @restaurant)
+      policy = RestaurantPolicy.new(user, @restaurant)
+      result = policy.analytics?
+      
+      assert_equal expected, result,
+        "#{role} should #{expected ? 'be allowed' : 'be denied'} analytics on Restaurant"
+    end
+  end
+
+  # === CROSS-RESTAURANT ISOLATION TESTS ===
+
+  test "should prevent cross-restaurant data access" do
+    owner1 = users(:one)
+    owner2 = users(:two)
+    
+    # Create resource owned by owner2
+    resource = Restaurant.create!(name: 'Test Restaurant', user: owner2, status: :active)
+    
+    # Test that owner1 cannot access owner2's resource
+    policy = RestaurantPolicy.new(owner1, resource)
+    result = policy.show?
+    
+    refute result, "User should not be able to show other user's Restaurant"
+  end
+
+  test "should prevent cross-restaurant analytics access" do
+    owner1 = users(:one)
+    owner2 = users(:two)
+    
+    # Create resource owned by owner2
+    resource = Restaurant.create!(name: 'Analytics Restaurant', user: owner2, status: :active)
+    
+    # Test that owner1 cannot access owner2's resource
+    policy = RestaurantPolicy.new(owner1, resource)
+    result = policy.analytics?
+    
+    refute result, "User should not be able to analytics other user's Restaurant"
   end
 end

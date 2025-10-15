@@ -5,27 +5,7 @@ module Api
 
       # PATCH /api/v1/ocr_menu_items/:id
       def update
-        if Rails.env.test?
-          Rails.logger.warn '[TEST DEBUG] HIT Api::V1::OcrMenuItemsController#update'
-        end
-
         authorize @item
-
-        # Test-only diagnostics for authorization debugging
-        if Rails.env.test?
-          section = @item.ocr_menu_section
-          import = section&.ocr_menu_import
-          restaurant = import&.restaurant
-          owner_id = restaurant&.user_id
-          current_id = current_user&.id
-          is_owner = owns_item?(current_user, @item)
-          Rails.logger.warn "[TEST DEBUG] Api::V1::OcrMenuItemsController#update: current_user.id=#{current_id}, owner_id=#{owner_id}, is_owner=#{is_owner}"
-        end
-
-        unless owns_item?(current_user, @item)
-          return render json: error_response('forbidden', 'You are not authorized to perform this action'),
-                        status: :forbidden
-        end
 
         # Handle both parameter formats for backward compatibility
         param_key = params.key?(:ocr_menu_item) ? :ocr_menu_item : :item_data
