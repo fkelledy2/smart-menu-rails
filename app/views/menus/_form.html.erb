@@ -10,8 +10,14 @@
                     <div class="top-neg7 btn-group" role="group" aria-label="Button group with nested dropdown">
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-sm btn-dark">
-                                <%= link_to smartmenu_path(@menu.slug), class: 'text-white text-decoration-none link-light' do %>
+                                <% if @menu.smartmenu&.slug %>
+                                  <%= link_to smartmenu_path(@menu.smartmenu.slug), class: 'text-white text-decoration-none link-light' do %>
                                     <i class="bi bi-eye-fill"></i>
+                                  <% end %>
+                                <% else %>
+                                  <span class="text-white text-decoration-none link-light disabled">
+                                    <i class="bi bi-eye-fill"></i>
+                                  </span>
                                 <% end %>
                             </button>
                         </div>
