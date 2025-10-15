@@ -182,7 +182,7 @@ class OnboardingController < ApplicationController
       },)
 
       # Create restaurant and menu in background
-      CreateRestaurantAndMenuJob.perform_later(current_user.id, @onboarding.id)
+      RestaurantOnboardingJob.perform_later(current_user.id, @onboarding.id)
 
       redirect_to onboarding_step_path(5), status: :see_other
     else

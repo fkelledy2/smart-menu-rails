@@ -67,7 +67,7 @@ class RestaurantOnboardingJob < ApplicationJob
       onboarding_completed_at: Time.current,
     },)
   rescue StandardError => e
-    Rails.logger.error "Analytics tracking failed in CreateRestaurantAndMenuJob: #{e.message}"
+    Rails.logger.error "Analytics tracking failed in RestaurantOnboardingJob: #{e.message}"
     # Don't fail the job if analytics fails
   end
 

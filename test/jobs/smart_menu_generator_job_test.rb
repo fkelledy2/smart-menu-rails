@@ -45,7 +45,8 @@ class SmartMenuGeneratorJobTest < ActiveJob::TestCase
   end
 
   test 'should handle missing restaurant gracefully' do
-    assert_raises ActiveRecord::RecordNotFound do
+    # Job should return early without raising an exception when restaurant doesn't exist
+    assert_nothing_raised do
       SmartMenuGeneratorJob.new.perform(99999)
     end
   end

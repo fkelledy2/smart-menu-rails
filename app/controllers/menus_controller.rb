@@ -73,7 +73,7 @@ class MenusController < ApplicationController
 
     # Use the rake task logic for consistency
     # Queue the job to run the rake task asynchronously to avoid blocking the request
-    RegenerateImagesJob.perform_async(@menu.id)
+    MenuItemImageBatchJob.perform_async(@menu.id)
 
     flash[:notice] = t('menus.controller.image_regeneration_queued_rake')
     redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu)

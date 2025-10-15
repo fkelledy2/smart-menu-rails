@@ -364,13 +364,13 @@ class RestaurantsController < ApplicationController
         # Invalidate AdvancedCacheService caches for this restaurant
         AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id)
 
-        Rails.logger.debug 'SmartMenuSyncJob.start'
-        SmartMenuSyncJob.perform_sync(@restaurant.id)
-        Rails.logger.debug 'SmartMenuSyncJob.end'
+        Rails.logger.debug 'SmartMenuGeneratorJob.start'
+        SmartMenuGeneratorJob.perform_sync(@restaurant.id)
+        Rails.logger.debug 'SmartMenuGeneratorJob.end'
 
-        #             puts 'SpotifySyncJob.start'
-        #             SpotifySyncJob.perform_sync(@restaurant.id)
-        #             puts 'SpotifySyncJob.end'
+        #             puts 'SpotifyPlaylistSyncJob.start'
+        #             SpotifyPlaylistSyncJob.perform_sync(@restaurant.id)
+        #             puts 'SpotifyPlaylistSyncJob.end'
 
         AnalyticsService.track_user_event(current_user, AnalyticsService::RESTAURANT_UPDATED, {
           restaurant_id: @restaurant.id,
