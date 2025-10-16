@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
-  self.use_transactional_tests = false
+  # Use transactional tests to avoid deadlock issues
+  self.use_transactional_tests = true
 
   setup do
     @user = users(:one)
