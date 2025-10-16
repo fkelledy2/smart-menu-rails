@@ -62,18 +62,22 @@ module ApplicationHelper
   end
 
   # Enhanced body tag with restaurant context
-  def body_with_restaurant_context(options = {}, restaurant = nil)
-    restaurant ||= @restaurant ||
-                   @menu&.restaurant ||
-                   @menuitem&.menusection&.menu&.restaurant ||
-                   @menusection&.menu&.restaurant
-
-    if restaurant
-      options.merge!(restaurant_context_data(restaurant))
-    end
-
+  def body_with_restaurant_context(restaurant = nil, **options, &block)
+    # Merge restaurant context data with any existing data attributes
+    restaurant_data = restaurant_context_data(restaurant)
+    options[:data] = (options[:data] || {}).merge(restaurant_data.transform_keys { |k| k.delete_prefix('data-').tr('-', '_') })
+    
     tag.body(options) do
       yield if block_given?
     end
   end
+
+  # Safely render HTML content from translations
+  # This method should be used when translation values contain HTML that needs to be rendered
+  def t_html(key, **options)
+    raw t(key, **options)
+  end
+
+  # Alternative method name for clarity
+  alias_method :translate_html, :t_html
 end
