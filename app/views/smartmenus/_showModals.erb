@@ -370,9 +370,9 @@
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="payOrderModalLabel"><%= t('.payBill') %></h5>
+                    <h5 class="modal-title" id="payOrderModalLabel"><%= t(".payBill") %></h5>
                 </div>
-                <div class="modal-body">
+                <div style='padding-right:0px' class="modal-body">
                     <form>
                         <div class="row">
                             <% if order %>
@@ -451,6 +451,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
+                                        <p></p>
                                         <span class="float-end">
                                             <div style="position:relative;left:15px" class="btn-toolbar btn-toolbar-sm mb-3" role="toolbar" aria-label="<%= t('.tip_options') %>">
                                                 <div class="btn-group btn-group-sm mr-2" role="group" aria-label="First group">
@@ -481,11 +482,14 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <p></p>
                                     <div style='display: flex;justify-content: center;' class="col-12">
                                         <button id="refreshPaymentLink" type="button" style='width:200px' class="btn btn-dark"><%= t('.payment_link') %></button>
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <p></p>
+                                    <p></p>
                                     <div style='display: flex;justify-content: center;' class="col-12">
                                         <input type="hidden" id="openOrderId" value="<%= order.id %>">
                                         <input type="hidden" id="paymentAmount" value="<%= order.grossInCents %>">
