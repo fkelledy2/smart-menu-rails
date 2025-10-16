@@ -13,51 +13,51 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "/icons/qr-logo.svg",
+      "src": "/icons/smart-menu-icon.png",
       "sizes": "72x72",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/qr-logo.svg",
+      "src": "/icons/smart-menu-icon.png",
       "sizes": "96x96",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/qr-logo.svg",
+      "src": "/icons/smart-menu-icon.png",
       "sizes": "128x128",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/qr-logo.svg",
+      "src": "/icons/smart-menu-icon.png",
       "sizes": "144x144",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/qr-logo.svg",
+      "src": "/icons/smart-menu-icon.png",
       "sizes": "152x152",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/qr-logo.svg",
+      "src": "/icons/smart-menu-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/qr-logo.svg",
+      "src": "/icons/smart-menu-icon.png",
       "sizes": "384x384",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/qr-logo.svg",
+      "src": "/icons/smart-menu-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
@@ -69,9 +69,9 @@
       "url": "/orders/new",
       "icons": [
         {
-          "src": "/icons/qr-logo.svg",
+          "src": "/icons/smart-menu-icon.png",
           "sizes": "96x96",
-          "type": "image/svg+xml"
+          "type": "image/png"
         }
       ]
     },
@@ -82,9 +82,9 @@
       "url": "/menus",
       "icons": [
         {
-          "src": "/icons/qr-logo.svg",
+          "src": "/icons/smart-menu-icon.png",
           "sizes": "96x96",
-          "type": "image/svg+xml"
+          "type": "image/png"
         }
       ]
     },
@@ -95,9 +95,9 @@
       "url": "/analytics",
       "icons": [
         {
-          "src": "/icons/qr-logo.svg",
+          "src": "/icons/smart-menu-icon.png",
           "sizes": "96x96",
-          "type": "image/svg+xml"
+          "type": "image/png"
         }
       ]
     }

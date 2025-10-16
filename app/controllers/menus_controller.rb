@@ -241,9 +241,9 @@ class MenusController < ApplicationController
           @genimage.updated_at = DateTime.current
           @genimage.save
         end
-        Rails.logger.debug 'SmartMenuSyncJob.start'
-        SmartMenuSyncJob.perform_async(@menu.restaurant.id)
-        Rails.logger.debug 'SmartMenuSyncJob.end'
+        Rails.logger.debug 'SmartMenuGeneratorJob.start'
+        SmartMenuGeneratorJob.perform_async(@menu.restaurant.id)
+        Rails.logger.debug 'SmartMenuGeneratorJob.end'
         format.html do
           redirect_to edit_restaurant_path(id: @menu.restaurant.id),
                       notice: t('common.flash.created', resource: t('activerecord.models.menu'))
@@ -288,9 +288,9 @@ class MenusController < ApplicationController
           @genimage.updated_at = DateTime.current
           @genimage.save
         end
-        Rails.logger.debug 'SmartMenuSyncJob.start'
-        SmartMenuSyncJob.perform_async(@menu.restaurant.id)
-        Rails.logger.debug 'SmartMenuSyncJob.end'
+        Rails.logger.debug 'SmartMenuGeneratorJob.start'
+        SmartMenuGeneratorJob.perform_async(@menu.restaurant.id)
+        Rails.logger.debug 'SmartMenuGeneratorJob.end'
         format.html do
           redirect_to edit_restaurant_path(id: @menu.restaurant.id),
                       notice: t('common.flash.updated', resource: t('activerecord.models.menu'))

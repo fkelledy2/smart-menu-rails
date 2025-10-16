@@ -3,17 +3,19 @@
  * Provides offline functionality, caching, and background sync
  */
 
-const CACHE_NAME = 'smart-menu-v1.0.0'
-const STATIC_CACHE = 'smart-menu-static-v1.0.0'
-const DYNAMIC_CACHE = 'smart-menu-dynamic-v1.0.0'
-const API_CACHE = 'smart-menu-api-v1.0.0'
+const CACHE_NAME = 'smart-menu-v1.0.1'
+const STATIC_CACHE = 'smart-menu-static-v1.0.1'
+const DYNAMIC_CACHE = 'smart-menu-dynamic-v1.0.1'
+const API_CACHE = 'smart-menu-api-v1.0.1'
 
 // Resources to cache immediately
 const STATIC_RESOURCES = [
   '/',
   '/manifest.json',
   '/offline',
-  '/icons/qr-logo.svg'
+  '/icons/smart-menu-icon.png',
+  '/icons/smart-menu-192.png',
+  '/icons/smart-menu-512.png'
 ]
 
 // Cache strategies for different request types
@@ -26,7 +28,7 @@ const CACHE_STRATEGIES = {
 
 class SmartMenuServiceWorker {
   constructor() {
-    this.version = '1.0.0'
+    this.version = '1.0.1'
     this.caches = {
       static: STATIC_CACHE,
       dynamic: DYNAMIC_CACHE,
