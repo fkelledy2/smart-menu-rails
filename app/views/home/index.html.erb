@@ -277,18 +277,18 @@
             <div class="text-start">
             <ul class="list-unstyled mt-3 mb-4">
               <% if plan.attribute1 %>
-                  <%= t(plan.attribute1, locations: plan.locations) %>
+                  <%= raw t(plan.attribute1, locations: plan.locations) %>
               <% else %>
                   <li>&nbsp</li>
               <% end %>
               <% if plan.attribute2 %>
-                  <%= t(plan.attribute2, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages) %>
+                  <%= raw t(plan.attribute2, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages) %>
               <% else %>
                   <li>&nbsp</li>
               <% end %>
               <% if plan.attribute3 %>
                     <hr>
-                  <%= t(plan.attribute3, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages) %>
+                  <%= raw t(plan.attribute3, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages) %>
               <% else %>
                   <li>&nbsp</li>
               <% end %>
