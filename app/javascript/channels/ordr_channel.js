@@ -63,7 +63,7 @@ const createConnectionStatusElement = () => {
   statusEl = document.createElement('div');
   statusEl.id = 'connection-status';
   statusEl.style.position = 'fixed';
-  statusEl.style.top = '5px';
+  statusEl.style.bottom = '5px';
   statusEl.style.right = '5px';
   statusEl.style.padding = '5px 10px';
   statusEl.style.borderRadius = '4px';

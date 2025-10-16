@@ -25,9 +25,10 @@ class OrdrPolicy < ApplicationPolicy
   end
 
   def update?
-    # Allow access for owners and employees only
-    return false if user.id.nil? # Deny anonymous users
+    # Allow anonymous users to update orders in smartmenu context (adding items, etc.)
+    return true if user.id.nil? # Allow anonymous customers (User.new has no ID)
 
+    # Allow access for owners and employees
     owner? || authorized_employee?
   end
 

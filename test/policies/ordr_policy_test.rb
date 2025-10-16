@@ -95,9 +95,9 @@ class OrdrPolicyTest < ActiveSupport::TestCase
 
   # === UPDATE TESTS (Customer + Staff Access) ===
   
-  test "should deny anonymous customer from updating order" do
+  test "should allow anonymous customer to update order in smartmenu context" do
     policy = OrdrPolicy.new(nil, @ordr)
-    assert_not policy.update?, "Anonymous customers cannot update orders (ApplicationPolicy creates User.new)"
+    assert policy.update?, "Anonymous customers should be able to update orders in smartmenu context (add items, etc.)"
   end
 
   test "should allow owner to update order" do
@@ -200,7 +200,7 @@ class OrdrPolicyTest < ActiveSupport::TestCase
     assert_not customer_policy.show?, "Anonymous users cannot view orders (no ownership)"
     assert customer_policy.new?, "Anonymous users should be able to create new orders"
     assert customer_policy.create?, "Anonymous users should be able to create orders"
-    assert_not customer_policy.update?, "Anonymous users cannot update orders (no ownership)"
+    assert customer_policy.update?, "Anonymous users should be able to update orders in smartmenu context"
     assert_not customer_policy.edit?, "Anonymous users should not be able to edit orders (staff function)"
     assert_not customer_policy.destroy?, "Anonymous users should not be able to destroy orders"
     
@@ -243,7 +243,7 @@ class OrdrPolicyTest < ActiveSupport::TestCase
     assert anonymous_policy.create?, "Anonymous users should be able to create orders"
     assert authenticated_policy.create?, "Authenticated users should be able to create orders"
     
-    assert_not anonymous_policy.update?, "Anonymous users should not be able to update orders (no ownership)"
+    assert anonymous_policy.update?, "Anonymous users should be able to update orders in smartmenu context"
     assert_not authenticated_policy.update?, "Authenticated non-owners should not be able to update orders"
     
     # Staff-level permissions should be denied for both

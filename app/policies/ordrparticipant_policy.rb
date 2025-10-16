@@ -12,10 +12,16 @@ class OrdrparticipantPolicy < ApplicationPolicy
   end
 
   def create?
+    # Allow anonymous users to create participant records in smartmenu context
+    return true if user.id.nil? # Allow anonymous customers (User.new has no ID)
+    
     user.present?
   end
 
   def update?
+    # Allow anonymous users to update their own participant information (name, etc.)
+    return true if user.id.nil? # Allow anonymous customers (User.new has no ID)
+    
     user.present? && owns_order_participant?
   end
 

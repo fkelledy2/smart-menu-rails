@@ -38,7 +38,7 @@ class OrdrparticipantsController < ApplicationController
       if @ordrparticipant.save
         @tablesetting = Tablesetting.find_by(id: @ordrparticipant.ordr.tablesetting.id)
         broadcast_partials(@ordrparticipant.ordr, @tablesetting, @ordrparticipant)
-        format.json { render :show, status: :ok, location: @ordrparticipant.ordr }
+        format.json { render :show, status: :ok, location: restaurant_ordr_url(@ordrparticipant.ordr.restaurant, @ordrparticipant.ordr) }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @ordrparticipant.errors, status: :unprocessable_entity }
@@ -57,7 +57,7 @@ class OrdrparticipantsController < ApplicationController
         @tablesetting = Tablesetting.find_by(id: @ordrparticipant.ordr.tablesetting.id)
         Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
         broadcast_partials(@ordrparticipant.ordr, @tablesetting, @ordrparticipant)
-        format.json { render :show, status: :ok, location: @ordrparticipant.ordr }
+        format.json { render :show, status: :ok, location: restaurant_ordr_url(@ordrparticipant.ordr.restaurant, @ordrparticipant.ordr) }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @ordrparticipant.errors, status: :unprocessable_entity }

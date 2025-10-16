@@ -47,7 +47,7 @@ class OrdrPolicyComprehensiveTest < ActiveSupport::TestCase
     assert_not policy.show?, "Anonymous users should not view orders"
     assert policy.new?, "Anonymous users should create orders"
     assert policy.create?, "Anonymous users should create orders"
-    assert_not policy.update?, "Anonymous users should not update orders"
+    assert policy.update?, "Anonymous users should be able to update orders in smartmenu context"
   end
 
   test "should allow owner to manage orders" do
