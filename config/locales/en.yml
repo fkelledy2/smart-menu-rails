@@ -397,7 +397,7 @@ en:
   plan:
     business:
       attribut6: ''
-      attribute1: "<li><i class='bi bi-check-lg'></i> For multi-location venues</li></li>"
+      attribute1: "<li><i class='bi bi-check-lg'></i> For multi-location venues</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{locations}</strong>
         Restaurants</li>"
       attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong>
@@ -412,7 +412,7 @@ en:
     call: Contact Us
     enterprise:
       attribut6: ''
-      attribute1: "<li><i class='bi bi-check-lg'></i> For large restaurant chains</li></li>"
+      attribute1: "<li><i class='bi bi-check-lg'></i> For large restaurant chains</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
         Restaurants</li>"
       attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menus
@@ -426,9 +426,9 @@ en:
       key: Enterprise
     pro:
       attribut6: ''
-      attribute1: "<li><i class='bi bi-check-lg'></i> For growing restaurants</li></li>"
+      attribute1: "<li><i class='bi bi-check-lg'></i> For growing restaurants</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{locations}</strong>
-        Restaurants</li></li>"
+        Restaurants</li>"
       attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong>
         menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong>
         dishes / menu</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{languages}</strong>
