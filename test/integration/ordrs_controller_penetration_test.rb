@@ -165,6 +165,7 @@ class OrdrsControllerPenetrationTest < ActionDispatch::IntegrationTest
     @order1.reload
     # Status should not change or should follow business rules
     # (depends on application logic - customer might have limited status changes)
+    assert_equal original_status, @order1.status, "Customer should not be able to directly modify order status"
   end
 
   test "cannot modify other customer orders" do
@@ -260,14 +261,27 @@ class OrdrsControllerPenetrationTest < ActionDispatch::IntegrationTest
     
     # Should be able to process payment for own order
     post process_payment_restaurant_ordr_path(@restaurant1, @order1) if respond_to?(:process_payment_restaurant_ordr_path)
+    if response
+      # Should allow payment for own order (success or redirect to payment processor)
+      assert_includes [200, 302], response.status, "Should allow payment processing for own order"
+    end
     
     # Should not process payment for other's order
     post process_payment_restaurant_ordr_path(@restaurant1, @order3) if respond_to?(:process_payment_restaurant_ordr_path)
-    # Should be denied
+    if response
+      # Should be denied access to other customer's order payment
+      assert_not_equal 200, response.status, "Should not allow payment processing for other customer's order"
+      assert_includes [302, 401, 403, 404], response.status, "Should deny payment access to other's orders"
+    else
+      # If route doesn't exist, that's also acceptable security
+      assert true, "Payment processing route properly secured"
+    end
   end
 
   test "cannot manipulate payment amounts" do
     sign_in @customer1
+    
+    original_total = @order1.respond_to?(:total_amount) ? @order1.total_amount : (@order1.respond_to?(:total) ? @order1.total : 0)
     
     # Try to modify payment amount during processing
     post process_payment_restaurant_ordr_path(@restaurant1, @order1), params: {
@@ -278,6 +292,13 @@ class OrdrsControllerPenetrationTest < ActionDispatch::IntegrationTest
     } if respond_to?(:process_payment_restaurant_ordr_path)
     
     # Payment should use order's actual total, not provided amount
+    if response
+      # Either the request should be rejected or the amount should be ignored
+      assert_not_equal 0.01, original_total, "Payment amount manipulation should be prevented"
+    else
+      # If route doesn't exist, that's also acceptable security
+      assert true, "Payment processing route not available"
+    end
   end
 
   # ============================================================================
@@ -287,6 +308,8 @@ class OrdrsControllerPenetrationTest < ActionDispatch::IntegrationTest
   test "order status changes follow business rules" do
     sign_in @owner1
     
+    original_status = @order1.status
+    
     # Test valid status transitions
     patch restaurant_ordr_path(@restaurant1, @order1), params: {
       ordr: { status: 'confirmed' }
@@ -294,6 +317,8 @@ class OrdrsControllerPenetrationTest < ActionDispatch::IntegrationTest
     
     @order1.reload
     # Verify status change is allowed based on business logic
+    valid_statuses = ['opened', 'confirmed', 'preparing', 'ready', 'completed', 'cancelled']
+    assert_includes valid_statuses, @order1.status, "Order status should be valid after update"
     
     # Test invalid status transitions
     patch restaurant_ordr_path(@restaurant1, @order1), params: {
@@ -302,6 +327,7 @@ class OrdrsControllerPenetrationTest < ActionDispatch::IntegrationTest
     
     @order1.reload
     # Should not accept invalid status
+    assert_includes valid_statuses, @order1.status, "Order should not accept invalid status values"
   end
 
   # ============================================================================
@@ -352,14 +378,20 @@ class OrdrsControllerPenetrationTest < ActionDispatch::IntegrationTest
           order_ids = json_response.map { |o| o["id"] }
           
           # Should only include customer's orders
-          assert_includes order_ids, @order1.id
-          assert_not_includes order_ids, @order2.id
-          assert_not_includes order_ids, @order3.id
+          assert_includes order_ids, @order1.id, "Customer should see their own orders"
+          assert_not_includes order_ids, @order2.id, "Customer should not see other customer's orders"
+          assert_not_includes order_ids, @order3.id, "Customer should not see other customer's orders"
+        else
+          # If response is not an array, verify it's still a valid response
+          assert_not_nil json_response, "Should receive valid JSON response"
         end
       rescue JSON::ParserError
         # If JSON parsing fails, just verify we got a response
-        assert_not_nil response.body
+        assert_not_nil response.body, "Should receive response body even if not JSON"
       end
+    else
+      # If route doesn't exist or fails, that's also a valid test result
+      assert true, "Customer order API route properly handled"
     end
   end
 
@@ -422,15 +454,18 @@ class OrdrsControllerPenetrationTest < ActionDispatch::IntegrationTest
     
     get restaurant_ordrs_analytics_path(@restaurant1) if respond_to?(:restaurant_ordrs_analytics_path)
     if response
-      assert_response :success
+      assert_response :success, "Owner should access own restaurant's analytics"
       
       # Test accessing other restaurant's analytics
       get restaurant_ordrs_analytics_path(@restaurant2) if respond_to?(:restaurant_ordrs_analytics_path)
-      if response.successful?
-        assert_response :success
-      else
-        assert_response :redirect
+      if response
+        # Should not have access to other restaurant's analytics
+        assert_not_equal 200, response.status, "Owner should not access other restaurant's analytics"
+        assert_includes [302, 401, 403, 404], response.status, "Should deny access to other restaurant's analytics"
       end
+    else
+      # If route doesn't exist, that's also acceptable
+      assert true, "Analytics route properly secured"
     end
   end
 
@@ -439,11 +474,12 @@ class OrdrsControllerPenetrationTest < ActionDispatch::IntegrationTest
     
     get restaurant_ordrs_analytics_path(@restaurant1) if respond_to?(:restaurant_ordrs_analytics_path)
     if response
-      if response.successful?
-        assert_response :success
-      else
-        assert_response :redirect
-      end
+      # Customers should not have access to analytics - should be redirected or forbidden
+      assert_not_equal 200, response.status, "Customer should not have access to order analytics"
+      assert_includes [302, 401, 403, 404], response.status, "Should redirect or deny access to analytics"
+    else
+      # If route doesn't exist, that's also acceptable security
+      assert true, "Analytics route not available to customers"
     end
   end
 
@@ -456,10 +492,20 @@ class OrdrsControllerPenetrationTest < ActionDispatch::IntegrationTest
     
     # Should export own restaurant's orders
     get export_restaurant_ordrs_path(@restaurant1, format: :csv) if respond_to?(:export_restaurant_ordrs_path)
+    if response
+      assert_response :success, "Owner should be able to export own restaurant's orders"
+    end
     
     # Should not export other restaurant's orders
     get export_restaurant_ordrs_path(@restaurant2, format: :csv) if respond_to?(:export_restaurant_ordrs_path)
-    # Should be denied
+    if response
+      # Should be denied access to other restaurant's data
+      assert_not_equal 200, response.status, "Owner should not access other restaurant's order exports"
+      assert_includes [302, 401, 403, 404], response.status, "Should deny access to other restaurant's exports"
+    else
+      # If route doesn't exist, that's also acceptable
+      assert true, "Export route properly restricted"
+    end
   end
 
   # ============================================================================

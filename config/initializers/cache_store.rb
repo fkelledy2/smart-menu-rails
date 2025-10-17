@@ -19,7 +19,7 @@ Rails.application.config.to_prepare do
   # Namespacing prevents collisions across apps/environments
   namespace = ENV.fetch("CACHE_NAMESPACE", "#{Rails.application.class.module_parent_name.downcase}:#{Rails.env}:cache")
 
-  # Heroku-optimized Redis options
+  # L1 Cache Optimization - Enhanced Redis options
   redis_options = {
     url: redis_url,
     namespace: namespace,
@@ -35,13 +35,20 @@ Rails.application.config.to_prepare do
     reconnect_delay: 0.1,
     reconnect_delay_max: 1.0,
     
-    # Connection pooling for high concurrency (Heroku dynos)
-    pool_size: ENV.fetch("REDIS_POOL_SIZE", "25").to_i,
-    pool_timeout: 5,
+    # L1 Optimization: Enhanced connection pooling for high concurrency
+    pool_size: ENV.fetch("REDIS_POOL_SIZE", "50").to_i, # Increased from 25
+    pool_timeout: 10, # Increased from 5
     
-    # Compression for memory efficiency
+    # L1 Optimization: Advanced compression for memory efficiency
     compress: true,
-    compression_threshold: 1024, # Compress objects >1KB
+    compression_threshold: 512, # Reduced from 1024 for better compression
+    
+    # L1 Optimization: Memory management
+    maxmemory_policy: ENV.fetch("REDIS_MAXMEMORY_POLICY", "allkeys-lru"),
+    
+    # L1 Optimization: Performance tuning
+    tcp_keepalive: 60,
+    timeout: 0,
   }
 
   # SSL configuration for Heroku Redis (rediss:// URLs)
