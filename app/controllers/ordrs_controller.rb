@@ -240,7 +240,8 @@ class OrdrsController < ApplicationController
     # Always authorize - policy handles public vs private access
     authorize @ordr
 
-    ActiveRecord::Base.transaction do
+    begin
+      ActiveRecord::Base.transaction do
       @ordr.assign_attributes(ordr_params)
       calculate_order_totals(@ordr)
 
@@ -272,6 +273,14 @@ class OrdrsController < ApplicationController
           format.html { render :edit, status: :unprocessable_entity }
           format.json { render json: @ordr.errors, status: :unprocessable_entity }
         end
+      end
+    end
+    rescue ArgumentError => e
+      # Handle invalid enum values
+      @ordr.errors.add(:status, e.message)
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @ordr.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -425,7 +434,7 @@ class OrdrsController < ApplicationController
     # Allergyns already loaded via restaurant association
     allergyns = restaurant.allergyns
     restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
-    ordrparticipant.preferredlocale = menuparticipant.preferredlocale if menuparticipant
+    ordrparticipant.preferredlocale = menuparticipant.preferredlocale if menuparticipant&.preferredlocale
 
     partials = {
       context: compress_string(
@@ -563,7 +572,9 @@ class OrdrsController < ApplicationController
       ),
       fullPageRefresh: { refresh: full_refresh },
     }
-    ActionCable.server.broadcast("ordr_#{menuparticipant.smartmenu.slug}_channel", partials)
+    if menuparticipant&.smartmenu&.slug
+      ActionCable.server.broadcast("ordr_#{menuparticipant.smartmenu.slug}_channel", partials)
+    end
   end
 
   def compress_string(str)

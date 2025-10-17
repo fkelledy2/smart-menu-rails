@@ -331,10 +331,11 @@ class RestaurantsController < ApplicationController
 
   # POST /restaurants or /restaurants.json
   def create
-    @restaurant = Restaurant.new(restaurant_params)
-    authorize @restaurant
+    begin
+      @restaurant = Restaurant.new(restaurant_params)
+      authorize @restaurant
 
-    respond_to do |format|
+      respond_to do |format|
       if @restaurant.save
         AnalyticsService.track_restaurant_created(current_user, @restaurant)
         if @restaurant.genimage.nil?
@@ -349,6 +350,15 @@ class RestaurantsController < ApplicationController
         end
         format.json { render :show, status: :created, location: @restaurant }
       else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @restaurant.errors, status: :unprocessable_entity }
+      end
+    end
+    rescue ArgumentError => e
+      # Handle invalid enum values
+      @restaurant = Restaurant.new
+      @restaurant.errors.add(:status, e.message)
+      respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @restaurant.errors, status: :unprocessable_entity }
       end

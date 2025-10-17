@@ -1,5 +1,6 @@
 class TipsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_restaurant
   before_action :set_tip, only: %i[show edit update destroy]
   before_action :return_url
 
@@ -39,15 +40,25 @@ class TipsController < ApplicationController
 
   # POST /tips or /tips.json
   def create
-    @tip = Tip.new(tip_params)
-    authorize @tip
-    respond_to do |format|
-      if @tip.save
-        format.html do
-          redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.created')
+    begin
+      @tip = Tip.new(tip_params)
+      authorize @tip
+      respond_to do |format|
+        if @tip.save
+          format.html do
+            redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.created')
+          end
+          format.json { render :show, status: :created, location: restaurant_tip_url(@tip.restaurant, @tip) }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @tip.errors, status: :unprocessable_entity }
         end
-        format.json { render :show, status: :created, location: @tip }
-      else
+      end
+    rescue ArgumentError => e
+      # Handle invalid enum values
+      @tip = Tip.new
+      @tip.errors.add(:status, e.message)
+      respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @tip.errors, status: :unprocessable_entity }
       end
@@ -63,7 +74,7 @@ class TipsController < ApplicationController
         format.html do
           redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.updated')
         end
-        format.json { render :show, status: :ok, location: @tip }
+        format.json { render :show, status: :ok, location: restaurant_tip_url(@tip.restaurant, @tip) }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @tip.errors, status: :unprocessable_entity }
@@ -89,6 +100,11 @@ class TipsController < ApplicationController
   end
 
   # Use callbacks to share common setup or constraints between actions.
+  def set_restaurant
+    @restaurant = current_user.restaurants.find(params[:restaurant_id])
+    authorize @restaurant, :show?
+  end
+
   def set_tip
     @tip = Tip.find(params[:id])
   end

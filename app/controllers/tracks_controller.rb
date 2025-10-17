@@ -3,6 +3,7 @@ class TracksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_restaurant, only: %i[index new create]
   before_action :set_track, only: %i[show edit update destroy]
+  before_action :set_restaurant_from_track, only: %i[show edit update destroy]
 
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
@@ -38,17 +39,28 @@ class TracksController < ApplicationController
 
   # POST /tracks or /tracks.json
   def create
-    @track = Track.new(track_params)
-    authorize @track
+    begin
+      @track = Track.new(track_params)
+      authorize @track
 
-    respond_to do |format|
-      if @track.save
-        format.html do
-          redirect_to restaurant_tracks_path(@track.restaurant),
-                      notice: t('common.flash.created', resource: t('activerecord.models.track'))
+      respond_to do |format|
+        if @track.save
+          format.html do
+            redirect_to restaurant_tracks_path(@track.restaurant),
+                        notice: t('common.flash.created', resource: t('activerecord.models.track'))
+          end
+          format.json { render :show, status: :created, location: [@track.restaurant, @track] }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @track.errors, status: :unprocessable_entity }
         end
-        format.json { render :show, status: :created, location: @track }
-      else
+      end
+    rescue ArgumentError => e
+      # Handle invalid enum values
+      @track = Track.new(track_params.except(:status))
+      @track.restaurant = @restaurant
+      @track.errors.add(:status, e.message)
+      respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @track.errors, status: :unprocessable_entity }
       end
@@ -65,7 +77,7 @@ class TracksController < ApplicationController
           redirect_to restaurant_tracks_path(@track.restaurant),
                       notice: t('common.flash.updated', resource: t('activerecord.models.track'))
         end
-        format.json { render :show, status: :ok, location: @track }
+        format.json { render :show, status: :ok, location: [@track.restaurant, @track] }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @track.errors, status: :unprocessable_entity }
@@ -96,6 +108,10 @@ class TracksController < ApplicationController
 
   def set_restaurant
     @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
+  end
+
+  def set_restaurant_from_track
+    @restaurant = @track.restaurant if @track
   end
 
   # Only allow a list of trusted parameters through.

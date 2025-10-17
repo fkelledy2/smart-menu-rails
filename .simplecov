@@ -1,5 +1,7 @@
-# SimpleCov configuration
-SimpleCov.start 'rails' do
+# SimpleCov configuration - optimized for speed
+# Skip SimpleCov entirely if disabled for fast test runs
+unless ENV['DISABLE_SIMPLECOV'] == '1'
+  SimpleCov.start 'rails' do
   # Filter out directories we don't want to track (infrastructure only)
   add_filter '/bin/'
   add_filter '/config/'
@@ -15,8 +17,8 @@ SimpleCov.start 'rails' do
   # Track all Ruby files in app directory (including jobs, mailers, channels)
   track_files 'app/**/*.rb'
 
-  # Enable branch coverage for more detailed analysis
-  enable_coverage :branch
+  # Enable branch coverage for more detailed analysis (disable for speed)
+  enable_coverage :branch unless ENV['FAST_TESTS'] == '1'
 
   # Merge results from different test runs (RSpec + Minitest)
   use_merging true
@@ -42,4 +44,5 @@ SimpleCov.start 'rails' do
     minimum_coverage ENV['COVERAGE_MIN'].to_i
     refuse_coverage_drop
   end
-end
+  end # SimpleCov.start
+end # unless ENV['DISABLE_SIMPLECOV']

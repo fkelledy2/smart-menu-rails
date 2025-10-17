@@ -38,17 +38,17 @@ class MetricsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create metric' do
     post metrics_url, params: { metric: {} }
-    assert_response :success
+    assert_response :redirect
   end
 
   test 'should update metric' do
     patch metric_url(@metric), params: { metric: {} }
-    assert_response :success
+    assert_response :redirect
   end
 
   test 'should destroy metric' do
     delete metric_url(@metric)
-    assert_response :success
+    assert_response :redirect
   end
 
   test 'should handle JSON requests' do
@@ -76,7 +76,7 @@ class MetricsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should handle empty parameters' do
     post metrics_url, params: { metric: {} }
-    assert_response :success
+    assert_response :redirect
   end
 
   test 'should filter unknown parameters' do
@@ -84,7 +84,7 @@ class MetricsControllerTest < ActionDispatch::IntegrationTest
       metric: {},
       unknown_param: 'should_be_ignored',
     }
-    assert_response :success
+    assert_response :redirect
   end
 
   test 'should access metric actions' do

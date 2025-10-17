@@ -121,10 +121,13 @@ class QueryCacheService
   # @param result_type [Symbol] :hit, :miss, or :error
   def track_cache_performance(cache_type, execution_time, result_type)
     performance_data = cache_performance_data
-
-    performance_data[:total_requests] += 1
-    performance_data[:"cache_#{result_type}s"] += 1
-    performance_data[:total_query_time] += execution_time
+    
+    # Ensure performance_data is not nil and has required keys
+    return unless performance_data.is_a?(Hash)
+    
+    performance_data[:total_requests] = (performance_data[:total_requests] || 0) + 1
+    performance_data[:"cache_#{result_type}s"] = (performance_data[:"cache_#{result_type}s"] || 0) + 1
+    performance_data[:total_query_time] = (performance_data[:total_query_time] || 0.0) + execution_time
     performance_data[:by_type][cache_type] ||= { requests: 0, total_time: 0 }
     performance_data[:by_type][cache_type][:requests] += 1
     performance_data[:by_type][cache_type][:total_time] += execution_time

@@ -57,7 +57,7 @@
         <span class="float-end">
         <% if employee.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t('common.delete'), employee, method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
+            <%= link_to t('common.delete'), restaurant_employee_path(employee.restaurant, employee), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
         <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>

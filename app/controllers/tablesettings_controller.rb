@@ -63,7 +63,7 @@ class TablesettingsController < ApplicationController
                       notice: t('common.flash.created', resource: t('activerecord.models.tablesetting'))
         end
         # format.html { redirect_to tablesetting_url(@tablesetting), notice: "Tablesetting was successfully created." }
-        format.json { render :show, status: :created, location: @tablesetting }
+        format.json { render :show, status: :created, location: restaurant_tablesetting_url(@restaurant, @tablesetting) }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @tablesetting.errors, status: :unprocessable_entity }
@@ -81,7 +81,7 @@ class TablesettingsController < ApplicationController
           redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id),
                       notice: t('common.flash.updated', resource: t('activerecord.models.tablesetting'))
         end
-        format.json { render :show, status: :ok, location: @tablesetting }
+        format.json { render :show, status: :ok, location: restaurant_tablesetting_url(@restaurant, @tablesetting) }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @tablesetting.errors, status: :unprocessable_entity }

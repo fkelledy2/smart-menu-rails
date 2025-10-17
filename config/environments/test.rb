@@ -7,20 +7,25 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
 
-  # Bullet gem configuration for test environment
+  # Bullet gem configuration for test environment - DISABLED for speed
   config.after_initialize do
     if defined?(Bullet)
-      Bullet.enable = true
-      Bullet.alert = false # No JavaScript alerts in tests
-      Bullet.bullet_logger = true # Log to bullet.log file
-      Bullet.rails_logger = true # Log to Rails logger
-      Bullet.raise = true # Raise errors in tests to catch N+1 queries
-      Bullet.unused_eager_loading_enable = true
-      Bullet.counter_cache_enable = false
+      # Disable Bullet in tests for speed unless explicitly enabled
+      bullet_enabled = ENV['ENABLE_BULLET_IN_TESTS'] == 'true'
+      Bullet.enabled = bullet_enabled
       
-      # Configure stacktrace for better debugging in tests
-      Bullet.stacktrace_includes = [ 'app', 'test' ]
-      Bullet.stacktrace_excludes = [ 'vendor', 'lib', 'gems' ]
+      if bullet_enabled
+        Bullet.alert = false # No JavaScript alerts in tests
+        Bullet.bullet_logger = false # Disable logging for speed
+        Bullet.rails_logger = false # Disable Rails logging for speed
+        Bullet.raise = true # Raise errors in tests to catch N+1 queries
+        Bullet.unused_eager_loading_enable = true
+        Bullet.counter_cache_enable = false
+        
+        # Configure stacktrace for better debugging in tests
+        Bullet.stacktrace_includes = [ 'app', 'test' ]
+        Bullet.stacktrace_excludes = [ 'vendor', 'lib', 'gems' ]
+      end
     end
   end
 
@@ -60,6 +65,18 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
   # Use memory store for tests so cache operations work
   config.cache_store = :memory_store
+  
+  # Test speed optimizations
+  config.eager_load = false # Don't eager load in tests for faster startup
+  config.log_level = :error # Reduce logging overhead
+  
+  # Enable asset compilation in tests for view rendering
+  config.assets.compile = true
+  config.assets.digest = false
+  config.assets.debug = false  # Disable debug mode for speed
+  
+  # Disable ActionCable for speed
+  config.action_cable.disable_request_forgery_protection = true
 
   # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :rescuable

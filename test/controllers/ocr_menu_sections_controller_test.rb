@@ -3,6 +3,8 @@ require 'test_helper'
 class OcrMenuSectionsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @section = ocr_menu_sections(:starters_section)
+    @user = users(:one)
+    sign_in @user
   end
 
   test 'PATCH /ocr_menu_sections/:id updates name' do

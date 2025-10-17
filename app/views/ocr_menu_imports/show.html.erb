@@ -261,7 +261,7 @@
                                           <span><%= item.name %></span>
                                         </div>
                                         <span class="text-nowrap px-0 py-1">
-                                            <%= number_to_currency(item.price, unit: @restaurantCurrency.symbol ? @restaurantCurrency.symbol : "") %>
+                                            <%= number_to_currency(item.price, unit: @restaurantCurrency&.symbol || "$") %>
                                             &nbsp;
                                             <span class="btn btn-sm btn-outline-secondary">
                                                 <i class="bi bi-pencil"

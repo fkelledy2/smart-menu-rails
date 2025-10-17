@@ -53,10 +53,11 @@ class MenusectionsController < ApplicationController
 
   # POST /menusections or /menusections.json
   def create
-    @menusection = Menusection.new(menusection_params)
-    authorize @menusection
+    begin
+      @menusection = Menusection.new(menusection_params)
+      authorize @menusection
 
-    respond_to do |format|
+      respond_to do |format|
       if @menusection.save
         if @menusection.genimage.nil?
           @genimage = Genimage.new
@@ -68,11 +69,20 @@ class MenusectionsController < ApplicationController
           @genimage.save
         end
         format.html do
-          redirect_to edit_menu_url(@menusection.menu),
+          redirect_to edit_restaurant_menu_url(@menusection.menu.restaurant, @menusection.menu),
                       notice: t('common.flash.created', resource: t('activerecord.models.menusection'))
         end
         format.json { render :show, status: :created, location: restaurant_menu_menusection_url(@menusection.menu.restaurant, @menusection.menu, @menusection) }
       else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @menusection.errors, status: :unprocessable_entity }
+      end
+    end
+    rescue ArgumentError => e
+      # Handle invalid enum values
+      @menusection = Menusection.new
+      @menusection.errors.add(:status, e.message)
+      respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @menusection.errors, status: :unprocessable_entity }
       end

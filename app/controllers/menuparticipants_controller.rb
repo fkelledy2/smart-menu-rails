@@ -110,6 +110,7 @@ class MenuparticipantsController < ApplicationController
   def broadcastPartials
     menuparticipant = Menuparticipant.includes(smartmenu: [:menu,
                                                            { restaurant: %i[menusections menuavailabilities] }, :tablesetting,]).find_by(sessionid: session.id.to_s)
+    return unless menuparticipant
     smartmenu = menuparticipant.smartmenu
     menu = smartmenu.menu
     restaurant = smartmenu.restaurant

@@ -3,6 +3,11 @@ require 'simplecov'
 # SimpleCov configuration is loaded from .simplecov file
 
 ENV['RAILS_ENV'] ||= 'test'
+
+# Speed optimizations for test environment
+ENV['DISABLE_SPRING'] = '1' unless ENV['ENABLE_SPRING']
+ENV['RAILS_LOG_LEVEL'] = 'error' # Reduce logging overhead
+
 require_relative '../config/environment'
 require 'rails/test_help'
 
@@ -10,10 +15,15 @@ require 'rails/test_help'
 ActiveJob::Base.queue_adapter = :test
 require 'minitest/mock'
 
+# Disable ActionCable in tests for speed
+ActionCable.server.config.disable_request_forgery_protection = true
+
 module ActiveSupport
   class TestCase
-    # Run tests in a single process to avoid state bleed in auth/system tests
-    parallelize(workers: 1)
+    # Enable parallel testing for speed (conservative approach for stability)
+    # Use single worker by default to avoid issues, can be overridden
+    workers = ENV['RAILS_PARALLEL_WORKERS']&.to_i || 1
+    parallelize(workers: workers)
 
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all

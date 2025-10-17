@@ -36,7 +36,7 @@
         <span class="float-end">
         <% if tax.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t('common.delete'), tax, method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
+            <%= link_to t('common.delete'), [tax.restaurant, tax], method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
         <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>

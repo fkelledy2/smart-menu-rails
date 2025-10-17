@@ -216,10 +216,11 @@ class MenusController < ApplicationController
 
   # POST /menus or /menus.json
   def create
-    @menu = (@restaurant || Restaurant.find(menu_params[:restaurant_id])).menus.build(menu_params)
-    authorize @menu
+    begin
+      @menu = (@restaurant || Restaurant.find(menu_params[:restaurant_id])).menus.build(menu_params)
+      authorize @menu
 
-    respond_to do |format|
+      respond_to do |format|
       # Remove PDF if requested
       if (params[:menu][:remove_pdf_menu_scan] == '1') && @menu.pdf_menu_scan.attached?
         @menu.pdf_menu_scan.purge
@@ -252,6 +253,15 @@ class MenusController < ApplicationController
           render :show, status: :created, location: restaurant_menu_url(@restaurant || @menu.restaurant, @menu)
         end
       else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @menu.errors, status: :unprocessable_entity }
+      end
+    end
+    rescue ArgumentError => e
+      # Handle invalid enum values
+      @menu = Menu.new
+      @menu.errors.add(:status, e.message)
+      respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @menu.errors, status: :unprocessable_entity }
       end

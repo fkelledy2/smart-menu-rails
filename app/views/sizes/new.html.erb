@@ -3,8 +3,8 @@
   <div class="row">
     <div class="col-12">
       <h4>
-        <%= link_to edit_restaurant_path(id: @size.restaurant.id), class: "link-dark" do %>
-          <%= @size.restaurant.name %>
+        <%= link_to edit_restaurant_path(id: @restaurant.id), class: "link-dark" do %>
+          <%= @restaurant.name %>
         <% end %>
       </h4>
     </div>
@@ -13,7 +13,7 @@
 <ul class="nav-tabs-height nav nav-tabs overflow-auto flex-nowrap" id="taxTabsBack" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark">
-      <%= link_to edit_restaurant_path(id: @size.restaurant.id), class: "link-dark" do %>
+      <%= link_to edit_restaurant_path(id: @restaurant.id), class: "link-dark" do %>
         <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
       <% end %>
     </button>

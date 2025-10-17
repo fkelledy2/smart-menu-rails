@@ -44,7 +44,7 @@ class MenuavailabilitiesController < ApplicationController
     respond_to do |format|
       if @menuavailability.save
         format.html do
-          redirect_to edit_menu_url(@menuavailability.menu),
+          redirect_to edit_restaurant_menu_url(@menuavailability.menu.restaurant, @menuavailability.menu),
                       notice: t('common.flash.created', resource: t('activerecord.models.menuavailability'))
         end
         format.json { render :show, status: :created, location: restaurant_menu_menuavailability_url(@menuavailability.menu.restaurant, @menuavailability.menu, @menuavailability) }
@@ -62,7 +62,7 @@ class MenuavailabilitiesController < ApplicationController
     respond_to do |format|
       if @menuavailability.update(menuavailability_params)
         format.html do
-          redirect_to edit_menu_url(@menuavailability.menu),
+          redirect_to edit_restaurant_menu_url(@menuavailability.menu.restaurant, @menuavailability.menu),
                       notice: t('common.flash.updated', resource: t('activerecord.models.menuavailability'))
         end
         format.json { render :show, status: :ok, location: restaurant_menu_menuavailability_url(@menuavailability.menu.restaurant, @menuavailability.menu, @menuavailability) }
@@ -80,7 +80,7 @@ class MenuavailabilitiesController < ApplicationController
     @menuavailability.update(archived: true)
     respond_to do |format|
       format.html do
-        redirect_to edit_menu_url(@menuavailability.menu),
+        redirect_to edit_restaurant_menu_url(@menuavailability.menu.restaurant, @menuavailability.menu),
                     notice: t('common.flash.deleted', resource: t('activerecord.models.menuavailability'))
       end
       format.json { head :no_content }

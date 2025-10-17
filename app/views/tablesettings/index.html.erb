@@ -11,7 +11,7 @@
         <% end %>
         <button id="unarchive-row" class='btn btn-sm btn-success' disabled><%= t('.unarchive') %></button>
         <button id="archive-row"class='btn btn-sm btn-danger' disabled><%= t('.archive') %></button>
-        <%= link_to new_tablesetting_path, class: 'btn btn-dark' do %>
+        <%= link_to new_restaurant_tablesetting_path(@restaurant), class: 'btn btn-dark' do %>
             <i class="bi bi-plus"></i> <%= t('.table_setting') %>
         <% end %>
       </div>

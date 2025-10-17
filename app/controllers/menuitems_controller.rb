@@ -154,8 +154,12 @@ class MenuitemsController < ApplicationController
           @genimage.save
         end
         format.html do
-          redirect_to edit_menuitem_url(@menuitem),
-                      notice: t('common.flash.created', resource: t('activerecord.models.menuitem'))
+          redirect_to edit_restaurant_menu_menusection_menuitem_url(
+            @menuitem.menusection.menu.restaurant,
+            @menuitem.menusection.menu,
+            @menuitem.menusection,
+            @menuitem
+          ), notice: t('common.flash.created', resource: t('activerecord.models.menuitem'))
         end
         format.json { render :show, status: :created, location: restaurant_menu_menusection_menuitem_url(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, @menuitem.menusection, @menuitem) }
       else
@@ -192,8 +196,12 @@ class MenuitemsController < ApplicationController
           @menuitem.save
         end
         format.html do
-          redirect_to edit_menuitem_url(@menuitem),
-                      notice: t('common.flash.updated', resource: t('activerecord.models.menuitem'))
+          redirect_to edit_restaurant_menu_menusection_menuitem_url(
+            @menuitem.menusection.menu.restaurant,
+            @menuitem.menusection.menu,
+            @menuitem.menusection,
+            @menuitem
+          ), notice: t('common.flash.updated', resource: t('activerecord.models.menuitem'))
         end
         format.json { render :show, status: :ok, location: restaurant_menu_menusection_menuitem_url(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, @menuitem.menusection, @menuitem) }
       else
@@ -216,8 +224,11 @@ class MenuitemsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to edit_menu_menusection_path(@menuitem.menusection.menu, @menuitem.menusection),
-                    notice: t('common.flash.deleted', resource: t('activerecord.models.menuitem'))
+        redirect_to edit_restaurant_menu_menusection_path(
+          @menuitem.menusection.menu.restaurant,
+          @menuitem.menusection.menu,
+          @menuitem.menusection
+        ), notice: t('common.flash.deleted', resource: t('activerecord.models.menuitem'))
       end
       format.json { head :no_content }
     end

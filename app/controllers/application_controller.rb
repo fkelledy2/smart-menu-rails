@@ -14,8 +14,31 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :handle_authorization_failure
 
   def switch_locale(&)
-    unless request.env['HTTP_ACCEPT_LANGUAGE'].nil?
-      @locale = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
+    begin
+      # Extract locale from Accept-Language header
+      accept_language = request.env['HTTP_ACCEPT_LANGUAGE']
+      requested_locale = nil
+      
+      if accept_language.present?
+        # Extract the first two-letter language code
+        requested_locale = accept_language.scan(/^[a-z]{2}/).first
+      end
+      
+      # Validate locale is supported
+      if requested_locale && I18n.available_locales.map(&:to_s).include?(requested_locale)
+        @locale = requested_locale.to_sym
+        Rails.logger.debug "Using locale: #{@locale}"
+        I18n.with_locale(@locale, &)
+      else
+        # Fall back to default locale for unsupported or missing locales
+        @locale = I18n.default_locale
+        Rails.logger.debug "Falling back to default locale: #{@locale} (requested: #{requested_locale})"
+        I18n.with_locale(@locale, &)
+      end
+    rescue => e
+      # Safety net: if anything goes wrong with locale switching, use default
+      Rails.logger.error "Locale switching error: #{e.message}, falling back to default locale"
+      @locale = I18n.default_locale
       I18n.with_locale(@locale, &)
     end
   end

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Ultra-fast single test file runner
+# Usage: bin/test_single test/controllers/some_controller_test.rb
+# Usage: bin/test_single test/controllers/some_controller_test.rb -n test_method_name
+
+if [ $# -eq 0 ]; then
+  echo "Usage: bin/test_single <test_file> [test_options]"
+  echo "Example: bin/test_single test/controllers/restaurants_controller_test.rb"
+  echo "Example: bin/test_single test/controllers/restaurants_controller_test.rb -n test_should_get_index"
+  exit 1
+fi
+
+# Maximum speed optimizations
+export RAILS_ENV=test
+export DISABLE_SPRING=1
+export RAILS_LOG_LEVEL=fatal
+export DISABLE_SIMPLECOV=1
+export DISABLE_BULLET_IN_TESTS=true
+export FAST_TESTS=1
+
+# Single worker for single file
+export RAILS_PARALLEL_WORKERS=1
+
+echo "⚡ Ultra-Fast Single Test Runner"
+echo "   File: $1"
+echo "   Coverage: disabled"
+echo "   Logging: fatal only"
+
+# Skip database preparation for single tests (assume it's ready)
+# bundle exec rails db:test:prepare
+
+# Run the specific test file
+bundle exec rails test "$@" --verbose

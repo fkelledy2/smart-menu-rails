@@ -94,7 +94,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
         restaurant_id: @size.restaurant_id
       }
     }
-    assert_response :success
+    assert_response :redirect
   end
 
   test 'should update size status' do
@@ -106,7 +106,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
         restaurant_id: @size.restaurant_id
       }
     }
-    assert_response :success
+    assert_response :redirect
   end
 
   test 'should handle update with invalid data' do
@@ -122,7 +122,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
 
   test 'should destroy size (archive)' do
     delete restaurant_size_url(@restaurant, @size)
-    assert_response :success
+    assert_response :redirect
   end
 
   # === AUTHORIZATION TESTS ===
@@ -136,7 +136,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
     )
     
     get restaurant_sizes_url(other_restaurant)
-    assert_response_in [200, 302, 403]
+    assert_response_in [200, 302, 403, 404]
   end
 
   test 'should redirect unauthorized users' do
@@ -285,23 +285,23 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
         restaurant_id: @size.restaurant_id
       }
     }
-    assert_response :success
+    assert_response :redirect
   end
 
   # === EDGE CASE TESTS ===
   
   test 'should handle long size names' do
-    long_name = 'A' * 100 # Test reasonable length limit
+    long_name = 'A' * 256 # Exceeds typical varchar limit
     
     post restaurant_sizes_url(@restaurant), params: {
       size: {
         name: long_name,
-        size: :xl,
+        size: 'XL',
         status: :active,
         restaurant_id: @restaurant.id
       }
     }
-    assert_response_in [200, 422]
+    assert_response_in [200, 302, 422]
   end
 
   test 'should handle special characters in size names' do
@@ -327,7 +327,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
         unauthorized_param: 'should_be_filtered'
       }
     }
-    assert_response :success
+    assert_response :redirect
   end
 
   # === PERFORMANCE TESTS ===

@@ -1,5 +1,6 @@
 class SizesController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_restaurant
   before_action :set_size, only: %i[show edit update destroy]
 
   # Pundit authorization
@@ -38,17 +39,27 @@ class SizesController < ApplicationController
 
   # POST /sizes or /sizes.json
   def create
-    @size = Size.new(size_params)
-    authorize @size
+    begin
+      @size = Size.new(size_params)
+      authorize @size
 
-    respond_to do |format|
-      if @size.save
+      respond_to do |format|
+        if @size.save
         format.html do
           redirect_to edit_restaurant_path(@size.restaurant_id),
                       notice: t('common.flash.created', resource: t('activerecord.models.size'))
         end
-        format.json { render :show, status: :created, location: @size }
+        format.json { render :show, status: :created, location: restaurant_size_url(@restaurant, @size) }
       else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @size.errors, status: :unprocessable_entity }
+        end
+      end
+    rescue ArgumentError => e
+      # Handle invalid enum values
+      @size = Size.new
+      @size.errors.add(:size, e.message)
+      respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @size.errors, status: :unprocessable_entity }
       end
@@ -65,7 +76,7 @@ class SizesController < ApplicationController
           redirect_to edit_restaurant_path(@size.restaurant),
                       notice: t('common.flash.updated', resource: t('activerecord.models.size'))
         end
-        format.json { render :show, status: :ok, location: @size }
+        format.json { render :show, status: :ok, location: restaurant_size_url(@restaurant, @size) }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @size.errors, status: :unprocessable_entity }
@@ -90,6 +101,11 @@ class SizesController < ApplicationController
   private
 
   # Use callbacks to share common setup or constraints between actions.
+  def set_restaurant
+    @restaurant = current_user.restaurants.find(params[:restaurant_id])
+    authorize @restaurant, :show?
+  end
+
   def set_size
     @size = Size.find(params[:id])
   end

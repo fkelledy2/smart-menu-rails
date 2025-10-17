@@ -11,6 +11,7 @@ one:
   country: MyString
   status: 1
   capacity: 1
+  currency: USD
   user: one
 
 two:
@@ -24,4 +25,5 @@ two:
   country: AnotherCountry
   status: 1
   capacity: 2
+  currency: EUR
   user: two

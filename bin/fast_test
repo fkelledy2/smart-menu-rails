@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Fast test runner with optimizations
+# Usage: bin/fast_test [test_file_or_pattern]
+
+# Set environment variables for speed
+export RAILS_ENV=test
+export DISABLE_SPRING=1
+export RAILS_LOG_LEVEL=error
+export DISABLE_BULLET_IN_TESTS=true
+
+# Skip coverage for faster runs unless explicitly enabled
+if [ "${ENABLE_COVERAGE:-}" != "true" ]; then
+  export DISABLE_SIMPLECOV=1
+fi
+
+# Use faster test database setup
+export RAILS_PARALLEL_WORKERS=${RAILS_PARALLEL_WORKERS:-$(nproc)}
+
+echo "🚀 Fast Test Runner"
+echo "   Workers: $RAILS_PARALLEL_WORKERS"
+echo "   Coverage: ${ENABLE_COVERAGE:-disabled}"
+echo "   Bullet: ${ENABLE_BULLET_IN_TESTS:-disabled}"
+
+# Prepare test database quickly
+echo "📦 Preparing test database..."
+bundle exec rails db:test:prepare --trace
+
+# Run tests with optimizations
+if [ $# -eq 0 ]; then
+  echo "🧪 Running all tests..."
+  bundle exec rails test --verbose
+else
+  echo "🧪 Running tests: $*"
+  bundle exec rails test "$@" --verbose
+fi

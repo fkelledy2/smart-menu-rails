@@ -2,6 +2,7 @@
 
 class GenimagesController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_restaurant
   before_action :set_genimage, only: %i[show edit update destroy]
 
   # Pundit authorization
@@ -46,10 +47,19 @@ class GenimagesController < ApplicationController
         MenuItemImageGeneratorJob.perform_sync(@genimage.id)
       end
       format.html do
-        redirect_to edit_menuitem_path(@genimage.menuitem),
-                    notice: t('common.flash.updated', resource: t('activerecord.models.genimage'))
+        if @genimage.menuitem&.menusection&.menu&.restaurant
+          redirect_to edit_restaurant_menu_menusection_menuitem_path(
+            @genimage.menuitem.menusection.menu.restaurant,
+            @genimage.menuitem.menusection.menu,
+            @genimage.menuitem.menusection,
+            @genimage.menuitem
+          ), notice: t('common.flash.updated', resource: t('activerecord.models.genimage'))
+        else
+          redirect_to restaurant_genimages_path(@restaurant),
+                      notice: t('common.flash.updated', resource: t('activerecord.models.genimage'))
+        end
       end
-      format.json { render :show, status: :ok, location: @genimage }
+      format.json { render :show, status: :ok, location: restaurant_genimage_url(@restaurant, @genimage) }
     end
   end
 
@@ -60,7 +70,7 @@ class GenimagesController < ApplicationController
     @genimage.destroy!
     respond_to do |format|
       format.html do
-        redirect_to genimages_path, status: :see_other,
+        redirect_to restaurant_genimages_path(@restaurant), status: :see_other,
                                     notice: t('common.flash.deleted', resource: t('activerecord.models.genimage'))
       end
       format.json { head :no_content }
@@ -70,6 +80,11 @@ class GenimagesController < ApplicationController
   private
 
   # Use callbacks to share common setup or constraints between actions.
+  def set_restaurant
+    @restaurant = current_user.restaurants.find(params[:restaurant_id])
+    authorize @restaurant, :show?
+  end
+
   def set_genimage
     @genimage = Genimage.find(params[:id])
   end

@@ -145,15 +145,14 @@ class AdvancedCacheServiceV2 < AdvancedCacheService
       return cached_data unless return_models
 
       # Fetch model instance with comprehensive includes
-      menuitem = Menuitem.find(menuitem_id)
-        .includes(
+      menuitem = Menuitem.includes(
           :genimage,
           :allergyns,
           :sizes,
           :tags,
           :ingredients,
           :menusection
-        )
+        ).find(menuitem_id)
 
       {
         menuitem: menuitem, # Model instance

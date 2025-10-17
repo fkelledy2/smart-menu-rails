@@ -48,12 +48,24 @@ test:
   primary:
     <<: *default
     database: smart_menu_test
+    # Test-specific optimizations for speed
+    pool: 25  # Increased pool for parallel tests
+    checkout_timeout: 5
+    prepared_statements: false  # Faster for short-lived test connections
+    variables:
+      # PostgreSQL optimizations for test speed (only runtime-changeable parameters)
+      synchronous_commit: 'off'  # Faster writes (safe for tests)
+      # Note: fsync, full_page_writes, checkpoint_segments, wal_buffers, shared_buffers
+      # cannot be changed at runtime and must be set in postgresql.conf
   
   # Test environment uses same database for both primary and replica
   replica:
     <<: *default
     database: smart_menu_test
     replica: true
+    pool: 25
+    checkout_timeout: 5
+    prepared_statements: false
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

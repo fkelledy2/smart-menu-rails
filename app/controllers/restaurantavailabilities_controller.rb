@@ -1,5 +1,6 @@
 class RestaurantavailabilitiesController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_restaurant
   before_action :set_restaurantavailability, only: %i[show edit update destroy]
 
   # Pundit authorization
@@ -90,6 +91,10 @@ class RestaurantavailabilitiesController < ApplicationController
   private
 
   # Use callbacks to share common setup or constraints between actions.
+  def set_restaurant
+    @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
+  end
+
   def set_restaurantavailability
     @restaurantavailability = Restaurantavailability.find(params[:id])
   end

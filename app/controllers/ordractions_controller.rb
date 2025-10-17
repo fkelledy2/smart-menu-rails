@@ -1,5 +1,6 @@
 class OrdractionsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_restaurant
   before_action :set_ordraction, only: %i[show edit update destroy]
 
   # Pundit authorization
@@ -71,7 +72,7 @@ class OrdractionsController < ApplicationController
     @ordraction.destroy!
     respond_to do |format|
       format.html do
-        redirect_to ordractions_url,
+        redirect_to restaurant_ordractions_path(@restaurant),
                     notice: t('common.flash.deleted', resource: t('activerecord.models.ordraction'))
       end
       format.json { head :no_content }
@@ -81,6 +82,11 @@ class OrdractionsController < ApplicationController
   private
 
   # Use callbacks to share common setup or constraints between actions.
+  def set_restaurant
+    @restaurant = current_user.restaurants.find(params[:restaurant_id])
+    authorize @restaurant, :show?
+  end
+
   def set_ordraction
     @ordraction = Ordraction.find(params[:id])
   end

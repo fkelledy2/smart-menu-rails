@@ -1,8 +1,8 @@
 <div class="page-header">
-  <%= link_to ordractions_path, class: 'btn btn-default' do %>
+  <%= link_to restaurant_ordractions_path(@ordraction.restaurant), class: 'btn btn-default' do %>
     All Ordractions
   <% end %>
-  <%= link_to edit_ordraction_path(@ordraction), class: 'btn btn-dark' do %>
+  <%= link_to edit_restaurant_ordraction_path(@ordraction.restaurant, @ordraction), class: 'btn btn-dark' do %>
     Edit
   <% end %>
   <h1>Show ordraction</h1>

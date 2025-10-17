@@ -1,4 +1,4 @@
-<%= form_with(model: track) do |form| %>
+<%= form_with(model: [track.restaurant || Restaurant.find(track.restaurant_id), track]) do |form| %>
   <% if track.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(track.errors.count, "error") %> prohibited this track from being saved:</h2>
@@ -44,14 +44,14 @@
   <div class="mb-3">
     <% if track.persisted? %>
       <div class="float-end">
-        <%= link_to t('common.delete'), track, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
+        <%= link_to t('common.delete'), [track.restaurant, track], method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
       </div>
     <% end %>
 
     <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if track.persisted? %>
-      <%= link_to t('common.cancel'), track, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), [track.restaurant, track], class: "btn btn-link" %>
     <% else %>
       <%= link_to t('common.cancel'), restaurant_tracks_path(track.restaurant || current_user.restaurants.first), class: "btn btn-link" %>
     <% end %>

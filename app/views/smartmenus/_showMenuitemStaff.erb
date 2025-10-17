@@ -1,8 +1,6 @@
- <div style="padding-top:1px" class="col-6 col-md-4 col-lg-4 menu-item-card" data-name="<%= menuitem.name.to_s.downcase %>" data-description="<%= menuitem.description.to_s.downcase %>">
+ <div class="col-6 col-md-4 col-lg-4 menu-item-card" data-name="<%= menuitem.name.to_s.downcase %>" data-description="<%= menuitem.description.to_s.downcase %>">
     <div class="card">
         <% if order && ( order.status != 'billrequested' && order.status != 'closed' ) %>
-                    <div class="row">
-                        <div class="col-12">
                             <div class="d-grid gap-2">
                                 <div style="min-height:100px" class="btn-group">
                                     <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
@@ -44,11 +42,7 @@
                                     <% end %>
                                 </div>
                             </div>
-                        </div>
-                    </div>
         <% else %>
-            <div class="row">
-                <div class="col-12">
                     <div class="d-grid gap-2">
                         <div style="min-height:100px" class="btn-group">
                             <button class="btn btn-sm btn-dark" disabled>
@@ -72,8 +66,6 @@
                             <% end %>
                         </div>
                     </div>
-                </div>
-            </div>
         <% end %>
     </div>
  </div>

@@ -1,4 +1,4 @@
-<%= form_with(model: genimage) do |form| %>
+<%= form_with(model: [@restaurant, genimage]) do |form| %>
   <% if genimage.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(genimage.errors.count, "error") %> prohibited this genimage from being saved:</h2>
@@ -49,16 +49,16 @@
   <div class="mb-3">
     <% if genimage.persisted? %>
       <div class="float-end">
-        <%= link_to t('common.delete'), genimage, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
+        <%= link_to t('common.delete'), restaurant_genimage_path(@restaurant, genimage), method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
       </div>
     <% end %>
 
     <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if genimage.persisted? %>
-      <%= link_to t('common.cancel'), genimage, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), restaurant_genimage_path(@restaurant, genimage), class: "btn btn-link" %>
     <% else %>
-      <%= link_to t('common.cancel'), genimages_path, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), restaurant_genimages_path(@restaurant), class: "btn btn-link" %>
     <% end %>
   </div>
 <% end %>
