@@ -4,9 +4,17 @@
         <h2><%= t(".menuItem") %></h2>
     </div>
     <div class="col-2">
-        <% if @menuitem.persisted? %>
-          <%= link_to t(".cancel"), edit_restaurant_menu_menusection_path(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, @menuitem.menusection), class: "float-end btn btn-sm btn-light" %>
-        <% end %>
+      <% 
+        # Determine the menusection for the cancel link
+        menusection = @menuitem.menusection || @futureParentMenuSection
+        menu = menusection&.menu || @menu
+        restaurant = menu&.restaurant
+      %>
+      <% if menusection && menu && restaurant %>
+        <%= link_to t('.cancel'), edit_restaurant_menu_menusection_path(restaurant, menu, menusection), class: "float-end btn btn-light" %>
+      <% elsif menu && restaurant %>
+        <%= link_to t('.cancel'), edit_restaurant_menu_path(restaurant, menu), class: "float-end btn btn-light" %>
+      <% end %>
     </div>
   </div>
 </div>
@@ -15,4 +23,3 @@
     <%= render 'form', menuitem: @menuitem %>
   </div>
 </div>
-

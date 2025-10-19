@@ -1,17 +1,22 @@
 <div class="page-header">
   <div class="row">
-    <div class="col-9">
-      <h2><%=t(".inventory")%></h2>
+    <div class="col-10">
+        <h2><%= t(".inventory") %></h2>
     </div>
     <div class="col-2">
-      <% if @inventory.persisted? %>
-        <%= link_to t('.cancel'), edit_restaurant_path(id: @inventory.menuitem.menusection.menu.restaurant.id), class: "float-end btn btn-light" %>
-      <% else %>
-        <% if @futureParentRestaurant %>
-          <%= link_to t('.cancel'), edit_restaurant_path(id: @futureParentRestaurant.id), class: "float-end btn btn-light" %>
-        <% else %>
-          <%= link_to t('.cancel'), restaurant_inventories_path(current_user.restaurants.first), class: "float-end btn btn-light" %>
-        <% end %>
+      <%
+        # Determine the context for the cancel link
+        menuitem = @inventory.menuitem
+        menusection = menuitem&.menusection || @futureParentMenuSection
+        menu = menusection&.menu || @menu
+        restaurant = @futureParentRestaurant || menu&.restaurant || @inventory.restaurant
+      %>
+      <% if menusection && menu && restaurant %>
+        <%= link_to t('.cancel'), edit_restaurant_menu_menusection_path(restaurant, menu, menusection), class: "float-end btn btn-light" %>
+      <% elsif menu && restaurant %>
+        <%= link_to t('.cancel'), edit_restaurant_menu_path(restaurant, menu), class: "float-end btn btn-light" %>
+      <% elsif restaurant %>
+        <%= link_to t('.cancel'), restaurant_inventories_path(restaurant), class: "float-end btn btn-light" %>
       <% end %>
     </div>
   </div>

@@ -60,6 +60,7 @@ import { initAllergyns } from './allergyns'
 import { initSmartmenus } from './smartmenus'
 import { initTags } from './tags'
 import { initOCRMenuImportDnD } from './ocr_menu_imports'
+import { initiInventories } from './inventories'
 
 // Import additional dependencies
 import { DateTime } from 'luxon'
@@ -760,6 +761,7 @@ const turboLoadHandler = async (event) => {
       initAllergyns()
       initSmartmenus()
       initTags()
+      initiInventories()
       
       // Initialize OCR Menu Import Drag-and-Drop
       try {
