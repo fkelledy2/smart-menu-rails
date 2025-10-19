@@ -481,6 +481,176 @@ function refreshOrderJSLogic() {
     }
 }
 
+// ============================================================================
+// MODAL PRESERVATION FUNCTIONS
+// ============================================================================
+// These functions preserve modal state during WebSocket updates to prevent
+// the modal overlay bug where backdrops remain after DOM updates
+
+/**
+ * Captures the current state of all open modals
+ * @returns {Array} Array of modal state objects
+ */
+function preserveModalState() {
+  const openModals = [];
+  
+  try {
+    const modalElements = document.querySelectorAll('.modal.show');
+    
+    modalElements.forEach(modalEl => {
+      try {
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if (modalInstance) {
+          console.log(`[Modal Preservation] Preserving modal: ${modalEl.id}`);
+          
+          // Store modal state
+          openModals.push({
+            id: modalEl.id,
+            scrollTop: modalEl.querySelector('.modal-body')?.scrollTop || 0,
+            formData: captureFormData(modalEl)
+          });
+          
+          // Properly hide modal (this removes the backdrop)
+          modalInstance.hide();
+        }
+      } catch (error) {
+        console.error(`[Modal Preservation] Error preserving modal ${modalEl.id}:`, error);
+      }
+    });
+    
+    if (openModals.length > 0) {
+      console.log(`[Modal Preservation] Preserved ${openModals.length} modal(s)`);
+    }
+  } catch (error) {
+    console.error('[Modal Preservation] Error in preserveModalState:', error);
+  }
+  
+  return openModals;
+}
+
+/**
+ * Captures form data from a modal element
+ * @param {HTMLElement} modalEl - The modal element
+ * @returns {Object} Object containing form field values
+ */
+function captureFormData(modalEl) {
+  const formData = {};
+  
+  try {
+    const inputs = modalEl.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      if (input.id) {
+        if (input.type === 'checkbox') {
+          formData[input.id] = input.checked;
+        } else if (input.type === 'radio') {
+          if (input.checked) {
+            formData[input.id] = input.value;
+          }
+        } else {
+          formData[input.id] = input.value;
+        }
+      }
+    });
+  } catch (error) {
+    console.error('[Modal Preservation] Error capturing form data:', error);
+  }
+  
+  return formData;
+}
+
+/**
+ * Restores previously open modals after DOM update
+ * @param {Array} openModals - Array of modal state objects
+ */
+function restoreModalState(openModals) {
+  if (!openModals || openModals.length === 0) {
+    return;
+  }
+  
+  try {
+    console.log(`[Modal Preservation] Restoring ${openModals.length} modal(s)`);
+    
+    openModals.forEach(modalState => {
+      try {
+        const modalEl = document.getElementById(modalState.id);
+        if (!modalEl) {
+          console.warn(`[Modal Preservation] Modal element not found: ${modalState.id}`);
+          return;
+        }
+        
+        // Restore form data
+        Object.keys(modalState.formData).forEach(inputId => {
+          const input = document.getElementById(inputId);
+          if (input) {
+            if (input.type === 'checkbox') {
+              input.checked = modalState.formData[inputId];
+            } else {
+              input.value = modalState.formData[inputId];
+            }
+          }
+        });
+        
+        // Restore scroll position
+        const modalBody = modalEl.querySelector('.modal-body');
+        if (modalBody && modalState.scrollTop > 0) {
+          modalBody.scrollTop = modalState.scrollTop;
+        }
+        
+        // Re-show modal
+        const modalInstance = new bootstrap.Modal(modalEl);
+        modalInstance.show();
+        
+        console.log(`[Modal Preservation] Restored modal: ${modalState.id}`);
+      } catch (error) {
+        console.error(`[Modal Preservation] Error restoring modal ${modalState.id}:`, error);
+      }
+    });
+  } catch (error) {
+    console.error('[Modal Preservation] Error in restoreModalState:', error);
+  }
+}
+
+/**
+ * Fallback function to force close all modals and clean up backdrops
+ * Used if modal preservation fails
+ */
+function closeAllModalsProper() {
+  try {
+    console.log('[Modal Cleanup] Force closing all modals');
+    
+    const modalElements = document.querySelectorAll('.modal.show');
+    
+    modalElements.forEach(modalEl => {
+      try {
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if (modalInstance) {
+          modalInstance.hide();
+        }
+      } catch (error) {
+        console.error('[Modal Cleanup] Error closing modal:', error);
+      }
+    });
+    
+    // Force remove any lingering backdrops
+    document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+      backdrop.remove();
+    });
+    
+    // Remove modal-open class from body
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('padding-right');
+    
+    console.log('[Modal Cleanup] Cleanup complete');
+  } catch (error) {
+    console.error('[Modal Cleanup] Error in closeAllModalsProper:', error);
+  }
+}
+
+// ============================================================================
+// END MODAL PRESERVATION FUNCTIONS
+// ============================================================================
+
 // Initialize the order channel subscription
 function initializeOrderChannel() {
   if (!isBrowser || !document.body) return null;
@@ -517,6 +687,9 @@ function initializeOrderChannel() {
           console.log('Received WebSocket message with keys:', Object.keys(data));
 
           try {
+            // STEP 1: Preserve modal state before any DOM updates
+            let preservedModals = [];
+            
             // Map WebSocket data keys to their corresponding DOM selectors
             const partialsToUpdate = [
               { key: 'context', selector: '#contextContainer' },
@@ -567,6 +740,11 @@ function initializeOrderChannel() {
 
               if (element) {
                 try {
+                  // STEP 2: If updating modals, preserve state first
+                  if (key === 'modals') {
+                    preservedModals = preserveModalState();
+                  }
+                  
                   const decompressed = decompressPartial(data[key]);
 
                   // Special handling for menu content to replace the entire container
@@ -577,9 +755,26 @@ function initializeOrderChannel() {
                     element.innerHTML = decompressed;
                   }
 
+                  // STEP 3: If we updated modals, restore state after DOM is ready
+                  if (key === 'modals' && preservedModals.length > 0) {
+                    // Use setTimeout to ensure DOM is fully updated
+                    setTimeout(() => {
+                      try {
+                        restoreModalState(preservedModals);
+                      } catch (restoreError) {
+                        console.error('[Modal Preservation] Failed to restore modals, using fallback:', restoreError);
+                        closeAllModalsProper();
+                      }
+                    }, 100);
+                  }
+
                   console.log(`Updated ${key} with ${decompressed.length} characters`);
                 } catch (error) {
                   console.error(`Error processing ${key}:`, error);
+                  // If modal update failed, ensure cleanup
+                  if (key === 'modals') {
+                    closeAllModalsProper();
+                  }
                 }
               } else {
                 console.warn(`Element not found for selector: ${selector} (key: ${key})`);
