@@ -16,9 +16,11 @@
                   menuitem.menusection
                 elsif @futureParentMenuSection
                   @futureParentMenuSection
+                elsif @menusection
+                  @menusection
                 else
                   # This shouldn't happen in normal flow - all menuitem routes should have menusection context
-                  raise "No menusection context available for menuitem form"
+                  raise "No menusection context available for menuitem form. Please create menuitems from within a menu section."
                 end
 %>
 <%= form_with(model: [menu.restaurant, menu, menusection, menuitem]) do |form| %>

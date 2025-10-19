@@ -5,6 +5,8 @@ en:
       created: Menu item was successfully created.
       deleted: Menu item was successfully deleted.
       updated: Menu item was successfully updated.
+    errors:
+      menusection_required: Please create menu items from within a menu section.
     edit:
       tab_item: Item
     form:

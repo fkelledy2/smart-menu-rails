@@ -110,24 +110,30 @@ class MenuitemsController < ApplicationController
     end
   end
 
-  # GET /menus/:menu_id/menuitems/new
+  # GET /menus/:menu_id/menusections/:menusection_id/menuitems/new
   def new
     @menuitem = Menuitem.new
-    if params[:menu_id]
-      @menu = Menu.find(params[:menu_id])
-      # Set default values
-      @menuitem.sequence = 999
-      @menuitem.calories = 0
-      @menuitem.price = 0
-      @menuitem.sizesupport = false
-    elsif params[:menusection_id]
+    
+    # Menuitems are always nested under menusections
+    if params[:menusection_id]
       @futureParentMenuSection = Menusection.find_by(id: params[:menusection_id])
       @menuitem.menusection = @futureParentMenuSection
-      @menuitem.sequence = 999
-      @menuitem.calories = 0
-      @menuitem.price = 0
-      @menuitem.sizesupport = false
+      @menu = @futureParentMenuSection&.menu
+    elsif params[:menu_id]
+      # If only menu_id is provided, redirect to menu edit page
+      # User should create menuitem from within a menusection
+      @menu = Menu.find(params[:menu_id])
+      redirect_to edit_restaurant_menu_path(@menu.restaurant, @menu), 
+                  alert: t('menuitems.errors.menusection_required')
+      return
     end
+    
+    # Set default values
+    @menuitem.sequence = 999
+    @menuitem.calories = 0
+    @menuitem.price = 0
+    @menuitem.sizesupport = false
+    
     authorize @menuitem
   end
 

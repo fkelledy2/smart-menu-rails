@@ -41,13 +41,9 @@
                         </div>
                         <span class="display-none qrWiFi"><%= restaurant.wifiQRString %></span>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="col-12">
-                                <div class="section-spacing-vertical" id="<%= restaurant.wifiQRString %>" class="d-flex justify-content-center">
+                    <div style='padding:0px' class="card-body">
+                                <div id="<%= restaurant.wifiQRString %>" class="d-flex justify-content-center">
                                 </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -70,15 +66,11 @@
                         </div>
                         <span class="display-none qrSlug"><%= smartmenu.slug %></span>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="col-12">
+                    <div style='padding:0px' class="card-body">
                                 <%= link_to smartmenu_path(smartmenu.slug) do %>
-                                    <div class="section-spacing-vertical" id="<%= smartmenu.slug %>" class="d-flex justify-content-center">
+                                    <div id="<%= smartmenu.slug %>" class="d-flex justify-content-center">
                                     </div>
                                 <% end %>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
