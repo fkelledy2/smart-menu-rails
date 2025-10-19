@@ -85,6 +85,10 @@ class MenusController < ApplicationController
   def show
     # Always authorize - policy handles public vs private access
     authorize @menu
+    
+    # Enable browser caching with ETag for JSON responses
+    return if request.format.json? && cache_with_etag(@menu, max_age: 300, public: false)
+    
     if params[:menu_id] && params[:id]
       if params[:restaurant_id]
         @restaurant = Restaurant.find_by(id: params[:restaurant_id])

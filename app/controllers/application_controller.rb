@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   include Pundit::Authorization
   include AnalyticsTrackable
   include SentryContext
+  include BrowserCacheable
 
   # include StructuredLogging # Temporarily disabled
   # include MetricsTracking # Temporarily disabled

@@ -116,6 +116,9 @@ class RestaurantsController < ApplicationController
 
     return unless params[:restaurant_id] && params[:id]
 
+    # Enable browser caching with ETag for JSON responses
+    return if request.format.json? && cache_with_etag(@restaurant, max_age: 300, public: false)
+
     # Use AdvancedCacheService for comprehensive dashboard data
     @dashboard_data = AdvancedCacheService.cached_restaurant_dashboard(@restaurant.id)
 
