@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_15_205345) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_19_203820) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -753,6 +753,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_15_205345) do
     t.integer "menusperlocation", default: 0
   end
 
+  create_table "push_subscriptions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "endpoint", null: false
+    t.text "p256dh_key", null: false
+    t.text "auth_key", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["endpoint"], name: "index_push_subscriptions_on_endpoint", unique: true
+    t.index ["user_id", "active"], name: "index_push_subscriptions_on_user_id_and_active"
+    t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
+  end
+
   create_table "restaurant_onboardings", force: :cascade do |t|
     t.bigint "restaurant_id", null: false
     t.integer "status", default: 0
@@ -1055,6 +1068,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_15_205345) do
   add_foreign_key "pay_payment_methods", "pay_customers", column: "customer_id"
   add_foreign_key "pay_subscriptions", "pay_customers", column: "customer_id"
   add_foreign_key "performance_metrics", "users"
+  add_foreign_key "push_subscriptions", "users"
   add_foreign_key "restaurant_onboardings", "restaurants"
   add_foreign_key "restaurantavailabilities", "restaurants"
   add_foreign_key "restaurantlocales", "restaurants"

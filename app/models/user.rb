@@ -14,6 +14,7 @@ class User < ApplicationRecord
   has_many :userplans, dependent: :destroy
   has_many :testimonials, dependent: :destroy
   has_many :employees, dependent: :destroy
+  has_many :push_subscriptions, dependent: :destroy
 
   belongs_to :plan, optional: true
   has_many :restaurants, dependent: :destroy

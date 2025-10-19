@@ -87,6 +87,13 @@ Rails.application.routes.draw do
   resources :notifications, only: [:index]
   resources :announcements, only: [:index]
   
+  # Push notification subscriptions
+  resources :push_subscriptions, only: [:create, :destroy] do
+    collection do
+      post :test
+    end
+  end
+  
   # ============================================================================
   # SUBSCRIPTION AND BILLING
   # ============================================================================
