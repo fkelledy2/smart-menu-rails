@@ -71,9 +71,6 @@ class MenuitemsController < ApplicationController
   def show
     authorize @menuitem
 
-    # Enable browser caching with ETag for JSON responses
-    return if request.format.json? && cache_with_etag(@menuitem, max_age: 300, public: false)
-
     # Use AdvancedCacheServiceV2 for comprehensive menuitem data (returns model instances)
     @menuitem_data = AdvancedCacheServiceV2.cached_menuitem_with_analytics(@menuitem.id)
 
