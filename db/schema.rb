@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_19_203820) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_19_214400) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -179,6 +179,22 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_19_203820) do
     t.datetime "updated_at", null: false
     t.index ["rss_memory", "timestamp"], name: "index_memory_metrics_on_rss_memory_and_timestamp"
     t.index ["timestamp"], name: "index_memory_metrics_on_timestamp"
+  end
+
+  create_table "menu_edit_sessions", force: :cascade do |t|
+    t.bigint "menu_id", null: false
+    t.bigint "user_id", null: false
+    t.string "session_id", null: false
+    t.json "locked_fields", default: []
+    t.datetime "started_at"
+    t.datetime "last_activity_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["last_activity_at"], name: "index_menu_edit_sessions_on_last_activity_at"
+    t.index ["menu_id", "user_id"], name: "index_menu_edit_sessions_on_menu_id_and_user_id", unique: true
+    t.index ["menu_id"], name: "index_menu_edit_sessions_on_menu_id"
+    t.index ["session_id"], name: "index_menu_edit_sessions_on_session_id"
+    t.index ["user_id"], name: "index_menu_edit_sessions_on_user_id"
   end
 
   create_table "menu_imports", force: :cascade do |t|
@@ -766,6 +782,22 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_19_203820) do
     t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
   end
 
+  create_table "resource_locks", force: :cascade do |t|
+    t.string "resource_type", null: false
+    t.bigint "resource_id", null: false
+    t.string "field_name"
+    t.bigint "user_id", null: false
+    t.string "session_id", null: false
+    t.datetime "acquired_at"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expires_at"], name: "index_resource_locks_on_expires_at"
+    t.index ["resource_type", "resource_id", "field_name"], name: "index_resource_locks_on_resource_and_field", unique: true
+    t.index ["session_id"], name: "index_resource_locks_on_session_id"
+    t.index ["user_id"], name: "index_resource_locks_on_user_id"
+  end
+
   create_table "restaurant_onboardings", force: :cascade do |t|
     t.bigint "restaurant_id", null: false
     t.integer "status", default: 0
@@ -974,6 +1006,23 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_19_203820) do
     t.index ["restaurant_id"], name: "index_tracks_on_restaurant_id"
   end
 
+  create_table "user_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "session_id", null: false
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.string "status", default: "active", null: false
+    t.datetime "last_activity_at"
+    t.json "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["last_activity_at"], name: "index_user_sessions_on_last_activity_at"
+    t.index ["resource_type", "resource_id"], name: "index_user_sessions_on_resource_type_and_resource_id"
+    t.index ["session_id"], name: "index_user_sessions_on_session_id", unique: true
+    t.index ["user_id", "status"], name: "index_user_sessions_on_user_id_and_status"
+    t.index ["user_id"], name: "index_user_sessions_on_user_id"
+  end
+
   create_table "userplans", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "plan_id", null: false
@@ -1019,6 +1068,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_19_203820) do
   add_foreign_key "genimages", "menusections"
   add_foreign_key "genimages", "restaurants"
   add_foreign_key "inventories", "menuitems"
+  add_foreign_key "menu_edit_sessions", "menus"
+  add_foreign_key "menu_edit_sessions", "users"
   add_foreign_key "menu_imports", "restaurants"
   add_foreign_key "menu_imports", "users"
   add_foreign_key "menu_items", "menu_sections"
@@ -1069,6 +1120,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_19_203820) do
   add_foreign_key "pay_subscriptions", "pay_customers", column: "customer_id"
   add_foreign_key "performance_metrics", "users"
   add_foreign_key "push_subscriptions", "users"
+  add_foreign_key "resource_locks", "users"
   add_foreign_key "restaurant_onboardings", "restaurants"
   add_foreign_key "restaurantavailabilities", "restaurants"
   add_foreign_key "restaurantlocales", "restaurants"
@@ -1084,6 +1136,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_19_203820) do
   add_foreign_key "testimonials", "users"
   add_foreign_key "tips", "restaurants"
   add_foreign_key "tracks", "restaurants"
+  add_foreign_key "user_sessions", "users"
   add_foreign_key "userplans", "plans"
   add_foreign_key "userplans", "users"
 end
