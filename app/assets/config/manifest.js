@@ -22,6 +22,9 @@
 //= link channels/consumer_with_reconnect.js
 //= link channels/index.js
 //= link channels/ordr_channel.js
+//= link channels/kitchen_channel.js
+//= link channels/presence_channel.js
+//= link channels/menu_editing_channel.js
 //= link dw_orders_mv.js
 //= link smartmenus.js
 //= link restaurantlocales.js
