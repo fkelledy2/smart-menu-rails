@@ -4,7 +4,7 @@
       <strong class="fs-5">Order #<%= order.id %></strong>
       <% if order.tablesetting.present? %>
         <span class="badge bg-secondary ms-2">
-          <i class="bi bi-table"></i> <%= order.tablesetting.name %>
+          <%= order.tablesetting.name %>
         </span>
       <% end %>
     </div>
@@ -35,15 +35,15 @@
   <div class="card-footer py-2 bg-white border-top">
     <% if order.status == 'ordered' %>
       <button class="btn btn-warning w-100 order-status-btn" data-order-id="<%= order.id %>" data-new-status="preparing">
-        <i class="bi bi-play-fill"></i> Start Preparing
+        Start Preparing
       </button>
     <% elsif order.status == 'preparing' %>
       <button class="btn btn-success w-100 order-status-btn" data-order-id="<%= order.id %>" data-new-status="ready">
-        <i class="bi bi-check-circle"></i> Mark Ready
+        Mark Ready
       </button>
     <% elsif order.status == 'ready' %>
       <button class="btn btn-primary w-100 order-status-btn" data-order-id="<%= order.id %>" data-new-status="delivered">
-        <i class="bi bi-check2-all"></i> Mark as Collected
+        Mark as Collected
       </button>
     <% end %>
   </div>

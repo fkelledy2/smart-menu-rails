@@ -248,7 +248,7 @@ class OrdrsController < ApplicationController
       if @ordr.status_changed?
         handle_status_change(@ordr, ordr_params[:status])
       end
-      @ordr.ordritems.added.update_all(status: 20) # Batch update
+      # Status cascading now handled by after_update callback in Ordr model
 
       if @ordr.save
         # Move cache invalidation to background job to improve response time

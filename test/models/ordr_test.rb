@@ -153,15 +153,15 @@ class OrdrTest < ActiveSupport::TestCase
       ordritemprice: 10.0,
     )
 
-    added_item = @ordr.ordritems.create!(
+    opened_item = @ordr.ordritems.create!(
       menuitem: menuitem,
-      status: :added,
+      status: :opened,
       ordritemprice: 15.0,
     )
 
     ordered_items = @ordr.orderedItems
     assert_includes ordered_items, ordered_item
-    assert_not_includes ordered_items, added_item
+    assert_not_includes ordered_items, opened_item
   end
 
   test 'orderedItemsCount should count items with status 20' do
@@ -176,19 +176,19 @@ class OrdrTest < ActiveSupport::TestCase
 
     @ordr.ordritems.create!(
       menuitem: menuitem,
-      status: :added,
+      status: :opened,
       ordritemprice: 15.0,
     )
 
     assert_equal initial_count + 1, @ordr.orderedItemsCount
   end
 
-  test 'preparedItems should return items with status 30' do
+  test 'preparedItems should return items with status preparing' do
     menuitem = menuitems(:one)
 
     prepared_item = @ordr.ordritems.create!(
       menuitem: menuitem,
-      status: :prepared,
+      status: :preparing,
       ordritemprice: 10.0,
     )
 
@@ -203,20 +203,20 @@ class OrdrTest < ActiveSupport::TestCase
     assert_not_includes prepared_items, ordered_item
   end
 
-  test 'preparedItemsCount should count items with status 30' do
+  test 'preparedItemsCount should count items with status preparing' do
     initial_count = @ordr.preparedItemsCount
     menuitem = menuitems(:one)
 
     @ordr.ordritems.create!(
       menuitem: menuitem,
-      status: :prepared,
+      status: :preparing,
       ordritemprice: 10.0,
     )
 
     assert_equal initial_count + 1, @ordr.preparedItemsCount
   end
 
-  test 'deliveredItems should return items with status 40' do
+  test 'deliveredItems should return items with status 25' do
     menuitem = menuitems(:one)
 
     delivered_item = @ordr.ordritems.create!(
@@ -227,7 +227,7 @@ class OrdrTest < ActiveSupport::TestCase
 
     prepared_item = @ordr.ordritems.create!(
       menuitem: menuitem,
-      status: :prepared,
+      status: :preparing,
       ordritemprice: 15.0,
     )
 
@@ -236,7 +236,7 @@ class OrdrTest < ActiveSupport::TestCase
     assert_not_includes delivered_items, prepared_item
   end
 
-  test 'deliveredItemsCount should count items with status 40' do
+  test 'deliveredItemsCount should count items with status 25' do
     initial_count = @ordr.deliveredItemsCount
     menuitem = menuitems(:one)
 
@@ -260,14 +260,14 @@ class OrdrTest < ActiveSupport::TestCase
     menuitem = menuitems(:one)
 
     # Create items with different statuses
-    ordr.ordritems.create!(menuitem: menuitem, status: :added, ordritemprice: 10.0)
+    ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.0)
     ordr.ordritems.create!(menuitem: menuitem, status: :ordered, ordritemprice: 15.0)
-    ordr.ordritems.create!(menuitem: menuitem, status: :prepared, ordritemprice: 20.0)
-    ordr.ordritems.create!(menuitem: menuitem, status: :delivered, ordritemprice: 25.0)
-    ordr.ordritems.create!(menuitem: menuitem, status: :removed, ordritemprice: 30.0)
+    ordr.ordritems.create!(menuitem: menuitem, status: :preparing, ordritemprice: 20.0)
+    ordr.ordritems.create!(menuitem: menuitem, status: :ready, ordritemprice: 25.0)
+    ordr.ordritems.create!(menuitem: menuitem, status: :delivered, ordritemprice: 30.0)
 
-    # Should count added(0), ordered(20), prepared(30), delivered(40) but not removed(10)
-    assert_equal 4, ordr.totalItemsCount
+    # Should count all items: opened(0), ordered(20), preparing(22), ready(24), delivered(25)
+    assert_equal 5, ordr.totalItemsCount
   end
 
   test 'ordrDate should format created_at as dd/mm/yyyy' do
@@ -297,9 +297,9 @@ class OrdrTest < ActiveSupport::TestCase
     )
     menuitem = menuitems(:one)
 
-    ordr.ordritems.create!(menuitem: menuitem, status: :added, ordritemprice: 10.50)
+    ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.50)
     ordr.ordritems.create!(menuitem: menuitem, status: :ordered, ordritemprice: 15.75)
-    ordr.ordritems.create!(menuitem: menuitem, status: :prepared, ordritemprice: 20.25)
+    ordr.ordritems.create!(menuitem: menuitem, status: :preparing, ordritemprice: 20.25)
 
     assert_equal 46.50, ordr.runningTotal
   end

@@ -154,7 +154,7 @@
                         </div>
                     </div>
                     <% order.ordractions.includes([:ordritem]).each do |ordraction| %>
-                        <% if ordraction.ordritem && ordraction.ordritem.status == 'added' && ordraction.ordritem.in?(order.ordritems) %>
+                        <% if ordraction.ordritem && ordraction.ordritem.status == 'opened' && ordraction.ordritem.in?(order.ordritems) %>
                             <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
                                 <div class="col-8">
                                     <div class="d-flex w-100 overflow-hidden">
@@ -201,7 +201,7 @@
                         </div>
                     </div>
                     <% order.ordractions.includes([:ordritem]).each do |ordraction| %>
-                        <% if ordraction.ordritem && ordraction.ordritem.status == 'ordered' && ordraction.ordritem.in?(order.ordritems) %>
+                        <% if ordraction.ordritem && (ordraction.ordritem.status == 'ordered' || ordraction.ordritem.status == 'preparing' || ordraction.ordritem.status == 'ready'  || ordraction.ordritem.status == 'delivered') && ordraction.ordritem.in?(order.ordritems) %>
                             <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
                                 <div class="col-8">
                                     <div class="d-flex w-100 overflow-hidden">

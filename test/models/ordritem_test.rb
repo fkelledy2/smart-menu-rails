@@ -25,48 +25,51 @@ class OrdritemTest < ActiveSupport::TestCase
   # Enum tests
   test 'should have status enum' do
     assert_respond_to @ordritem, :status
-    assert_respond_to @ordritem, :added?
-    assert_respond_to @ordritem, :removed?
+    assert_respond_to @ordritem, :opened?
     assert_respond_to @ordritem, :ordered?
-    assert_respond_to @ordritem, :prepared?
+    assert_respond_to @ordritem, :preparing?
+    assert_respond_to @ordritem, :ready?
     assert_respond_to @ordritem, :delivered?
+    assert_respond_to @ordritem, :billrequested?
+    assert_respond_to @ordritem, :paid?
+    assert_respond_to @ordritem, :closed?
   end
 
   test 'should set status correctly' do
-    @ordritem.status = :added
-    assert @ordritem.added?
-    assert_not @ordritem.removed?
+    @ordritem.status = :opened
+    assert @ordritem.opened?
     assert_not @ordritem.ordered?
-    assert_not @ordritem.prepared?
-    assert_not @ordritem.delivered?
-
-    @ordritem.status = :removed
-    assert @ordritem.removed?
-    assert_not @ordritem.added?
-    assert_not @ordritem.ordered?
-    assert_not @ordritem.prepared?
+    assert_not @ordritem.preparing?
+    assert_not @ordritem.ready?
     assert_not @ordritem.delivered?
 
     @ordritem.status = :ordered
     assert @ordritem.ordered?
-    assert_not @ordritem.added?
-    assert_not @ordritem.removed?
-    assert_not @ordritem.prepared?
+    assert_not @ordritem.opened?
+    assert_not @ordritem.preparing?
+    assert_not @ordritem.ready?
     assert_not @ordritem.delivered?
 
-    @ordritem.status = :prepared
-    assert @ordritem.prepared?
-    assert_not @ordritem.added?
-    assert_not @ordritem.removed?
+    @ordritem.status = :preparing
+    assert @ordritem.preparing?
+    assert_not @ordritem.opened?
     assert_not @ordritem.ordered?
+    assert_not @ordritem.ready?
+    assert_not @ordritem.delivered?
+
+    @ordritem.status = :ready
+    assert @ordritem.ready?
+    assert_not @ordritem.opened?
+    assert_not @ordritem.ordered?
+    assert_not @ordritem.preparing?
     assert_not @ordritem.delivered?
 
     @ordritem.status = :delivered
     assert @ordritem.delivered?
-    assert_not @ordritem.added?
-    assert_not @ordritem.removed?
+    assert_not @ordritem.opened?
     assert_not @ordritem.ordered?
-    assert_not @ordritem.prepared?
+    assert_not @ordritem.preparing?
+    assert_not @ordritem.ready?
   end
 
   # Validation tests
@@ -74,7 +77,7 @@ class OrdritemTest < ActiveSupport::TestCase
     ordritem = Ordritem.new(
       ordr: @ordr,
       menuitem: @menuitem,
-      status: :added,
+      status: :opened,
       ordritemprice: 10.50,
     )
     assert ordritem.valid?
@@ -83,7 +86,7 @@ class OrdritemTest < ActiveSupport::TestCase
   test 'should require ordr' do
     ordritem = Ordritem.new(
       menuitem: @menuitem,
-      status: :added,
+      status: :opened,
       ordritemprice: 10.50,
     )
     assert_not ordritem.valid?
@@ -93,7 +96,7 @@ class OrdritemTest < ActiveSupport::TestCase
   test 'should require menuitem' do
     ordritem = Ordritem.new(
       ordr: @ordr,
-      status: :added,
+      status: :opened,
       ordritemprice: 10.50,
     )
     assert_not ordritem.valid?
@@ -121,40 +124,48 @@ class OrdritemTest < ActiveSupport::TestCase
     ordritem = Ordritem.create!(
       ordr: @ordr,
       menuitem: @menuitem,
-      status: :added,
+      status: :opened,
       ordritemprice: 12.50,
     )
 
-    # Start as added
-    assert ordritem.added?
+    # Start as opened
+    assert ordritem.opened?
 
     # Move to ordered
     ordritem.update!(status: :ordered)
     assert ordritem.ordered?
 
-    # Move to prepared
-    ordritem.update!(status: :prepared)
-    assert ordritem.prepared?
+    # Move to preparing
+    ordritem.update!(status: :preparing)
+    assert ordritem.preparing?
+
+    # Move to ready
+    ordritem.update!(status: :ready)
+    assert ordritem.ready?
 
     # Move to delivered
     ordritem.update!(status: :delivered)
     assert ordritem.delivered?
   end
 
-  test 'should handle removal workflow' do
+  test 'should cascade status from parent order' do
     ordritem = Ordritem.create!(
       ordr: @ordr,
       menuitem: @menuitem,
-      status: :added,
+      status: :opened,
       ordritemprice: 12.50,
     )
 
-    # Start as added
-    assert ordritem.added?
+    # Start as opened
+    assert ordritem.opened?
 
-    # Can be removed
-    ordritem.update!(status: :removed)
-    assert ordritem.removed?
+    # Update parent order status
+    @ordr.update!(status: :ordered)
+    ordritem.reload
+    
+    # Child item should match parent status
+    assert_equal 'ordered', ordritem.status
+    assert ordritem.ordered?
   end
 
   # IdentityCache tests
@@ -196,10 +207,13 @@ class OrdritemTest < ActiveSupport::TestCase
 
   # Status value tests
   test 'should have correct enum values' do
-    assert_equal 0, Ordritem.statuses[:added]
-    assert_equal 10, Ordritem.statuses[:removed]
+    assert_equal 0, Ordritem.statuses[:opened]
     assert_equal 20, Ordritem.statuses[:ordered]
-    assert_equal 30, Ordritem.statuses[:prepared]
-    assert_equal 40, Ordritem.statuses[:delivered]
+    assert_equal 22, Ordritem.statuses[:preparing]
+    assert_equal 24, Ordritem.statuses[:ready]
+    assert_equal 25, Ordritem.statuses[:delivered]
+    assert_equal 30, Ordritem.statuses[:billrequested]
+    assert_equal 35, Ordritem.statuses[:paid]
+    assert_equal 40, Ordritem.statuses[:closed]
   end
 end

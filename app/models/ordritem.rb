@@ -10,6 +10,7 @@ class Ordritem < ApplicationRecord
   # Enums
   enum :status, {
     opened: 0,
+    removed: 10,
     ordered: 20,
     preparing: 22,
     ready: 24,

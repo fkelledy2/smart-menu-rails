@@ -38,6 +38,7 @@ class Ordr < ApplicationRecord
   # Callbacks for real-time kitchen updates
   after_create :broadcast_new_order
   after_update :broadcast_status_change, if: :saved_change_to_status?
+  after_update :cascade_status_to_items, if: :saved_change_to_status?
   
   # Standard ActiveRecord associations
   belongs_to :employee, optional: true
@@ -55,11 +56,11 @@ class Ordr < ApplicationRecord
   }, class_name: 'Ordritem'
 
   has_many :prepared_items_with_details, -> { 
-    where(status: 30).includes(menuitem: [:genimage, :allergyns, :sizes]) 
+    where(status: 22).includes(menuitem: [:genimage, :allergyns, :sizes]) 
   }, class_name: 'Ordritem'
 
   has_many :delivered_items_with_details, -> { 
-    where(status: 40).includes(menuitem: [:genimage, :allergyns, :sizes]) 
+    where(status: 25).includes(menuitem: [:genimage, :allergyns, :sizes]) 
   }, class_name: 'Ordritem'
 
   # IdentityCache configuration
@@ -125,23 +126,23 @@ class Ordr < ApplicationRecord
   end
 
   def preparedItems
-    ordritems.where(status: 30).all
+    ordritems.where(status: 22).all
   end
 
   def preparedItemsCount
-    ordritems.where(status: 30).count
+    ordritems.where(status: 22).count
   end
 
   def totalItemsCount
-    ordritems.where(status: 0).count + ordritems.where(status: 20).count + ordritems.where(status: 30).count + ordritems.where(status: 40).count
+    ordritems.where(status: [0, 20, 22, 24, 25]).count
   end
 
   def deliveredItems
-    ordritems.where(status: 40).all
+    ordritems.where(status: 25).all
   end
 
   def deliveredItemsCount
-    ordritems.where(status: 40).count
+    ordritems.where(status: 25).count
   end
 
   def ordrDate
@@ -157,7 +158,7 @@ class Ordr < ApplicationRecord
   end
 
   def orderedCount
-    ordractions.joins(:ordritem).where(ordritems: { status: 20 }).count
+    ordractions.joins(:ordritem).where(ordritems: { status: [20, 22, 24, 25] }).count
   end
 
   def addedCount
@@ -185,6 +186,19 @@ class Ordr < ApplicationRecord
     return unless %w[ordered preparing ready delivered billrequested].include?(new_status)
     
     KitchenBroadcastService.broadcast_status_change(self, old_status, new_status)
+  end
+  
+  def cascade_status_to_items
+    # When order status changes, update all child ordritems to match
+    # This ensures ordritems always reflect their parent order's status
+    new_status_value = status
+    
+    ordritems.each do |item|
+      # Only update if status is different to avoid unnecessary updates
+      if item.status != new_status_value
+        item.update_column(:status, Ordritem.statuses[new_status_value])
+      end
+    end
   end
 
   def invalidate_order_caches

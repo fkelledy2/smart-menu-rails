@@ -135,13 +135,27 @@ class KitchenDashboard {
   
   initializeSortButtons() {
     document.addEventListener('click', (event) => {
-      const button = event.target.closest('.sort-btn')
+      const button = event.target.closest('.sort-toggle-btn')
       if (!button) return
       
       const column = button.dataset.column
-      const direction = button.dataset.direction
+      const currentDirection = button.dataset.direction
       
-      this.sortColumn(column, direction)
+      // Toggle direction
+      const newDirection = currentDirection === 'asc' ? 'desc' : 'asc'
+      button.dataset.direction = newDirection
+      
+      // Update icon
+      const icon = button.querySelector('i')
+      if (newDirection === 'asc') {
+        icon.className = 'bi bi-sort-up'
+        button.title = 'Sort: Oldest First'
+      } else {
+        icon.className = 'bi bi-sort-down'
+        button.title = 'Sort: Newest First'
+      }
+      
+      this.sortColumn(column, newDirection)
     })
   }
   
@@ -166,11 +180,6 @@ class KitchenDashboard {
     // Clear and re-append sorted cards
     column.innerHTML = ''
     cards.forEach(card => column.appendChild(card))
-    
-    // Visual feedback
-    const allButtons = document.querySelectorAll(`.sort-btn[data-column="${columnName}"]`)
-    allButtons.forEach(btn => btn.classList.remove('active'))
-    event.target.closest('.sort-btn')?.classList.add('active')
   }
   
   playNotificationSound() {
