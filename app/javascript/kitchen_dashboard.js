@@ -400,20 +400,14 @@ class KitchenDashboard {
     if (order.status === 'preparing') headerClass = 'bg-warning-subtle'
     if (order.status === 'ready') headerClass = 'bg-success-subtle'
     
-    // Build items HTML
+    // Build items HTML as bullet list
     let itemsHtml = ''
     if (order.ordritems && order.ordritems.length > 0) {
       itemsHtml = order.ordritems.map(item => `
-        <div class="list-group-item px-0 py-2 border-0">
-          <div class="d-flex justify-content-between align-items-start">
-            <div class="flex-grow-1">
-              <strong>${item.menuitem ? item.menuitem.name : 'Item'}</strong>
-            </div>
-          </div>
-        </div>
+        <li>${item.menuitem ? item.menuitem.name : 'Item'}</li>
       `).join('')
     } else {
-      itemsHtml = '<div class="list-group-item px-0 py-2 border-0">Loading items...</div>'
+      itemsHtml = '<li>Loading items...</li>'
     }
     
     // Determine button based on status
@@ -440,7 +434,7 @@ class KitchenDashboard {
           <strong class="fs-5">Order #${order.id}</strong>
           ${order.tablesetting ? `
             <span class="badge bg-secondary ms-2">
-              <i class="bi bi-table"></i> ${order.tablesetting.name}
+              ${order.tablesetting.name}
             </span>
           ` : ''}
         </div>
@@ -450,9 +444,9 @@ class KitchenDashboard {
       </div>
       
       <div class="card-body py-2">
-        <div class="list-group list-group-flush">
+        <ul class="mb-0">
           ${itemsHtml}
-        </div>
+        </ul>
       </div>
       
       <div class="card-footer py-2 bg-white border-top">
