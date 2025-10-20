@@ -1,0 +1,194 @@
+/* Kitchen Dashboard - Bootstrap 5 Enhanced Styles */
+
+/* Ensure Bootstrap Icons are available */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css");
+
+/* Custom animations for new orders */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+  }
+}
+
+/* New order animation */
+.order-card.new-order {
+  animation: slideInFromTop 0.5s ease, pulseGlow 2s infinite;
+}
+
+/* Smooth transitions for cards */
+.order-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Active sort button styling */
+.sort-btn.active {
+  background-color: #0d6efd !important;
+  color: white !important;
+  border-color: #0d6efd !important;
+}
+
+/* Column scroll styling */
+.card-body.overflow-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.card-body.overflow-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.card-body.overflow-auto::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.card-body.overflow-auto::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Status-specific card styling */
+.order-card[data-status="ordered"] {
+  border-left: 4px solid #dc3545;
+}
+
+.order-card[data-status="preparing"] {
+  border-left: 4px solid #ffc107;
+}
+
+.order-card[data-status="ready"] {
+  border-left: 4px solid #198754;
+}
+
+/* Button hover effects */
+.order-status-btn {
+  transition: all 0.2s ease;
+}
+
+.order-status-btn:hover {
+  transform: scale(1.02);
+}
+
+/* Metric cards pulse on update */
+@keyframes metricPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.metric-updated {
+  animation: metricPulse 0.3s ease;
+}
+
+/* Empty state styling */
+.card-body:empty::after {
+  content: 'No orders';
+  display: block;
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 991px) {
+  .col-lg-4 {
+    margin-bottom: 1rem;
+  }
+  
+  .card-body.overflow-auto {
+    max-height: 400px !important;
+  }
+}
+
+/* Print styles for kitchen tickets */
+@media print {
+  .navbar, .sort-btn, .btn-group {
+    display: none !important;
+  }
+  
+  .order-card {
+    page-break-inside: avoid;
+    border: 2px solid #000 !important;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Loading state */
+.order-card.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Badge styling for table numbers */
+.badge {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Card header icons */
+.card-header i {
+  font-size: 1.2rem;
+}
+
+/* List group item hover */
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+/* Time badge styling */
+.order-card .text-muted {
+  font-size: 0.875rem;
+}
+
+/* Button icons */
+.btn i {
+  margin-right: 0.25rem;
+}
+
+/* Navbar styling */
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Metric display */
+.display-4 {
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Column headers */
+.card-header h5 {
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+/* Smooth color transitions */
+.bg-danger-subtle,
+.bg-warning-subtle,
+.bg-success-subtle {
+  transition: background-color 0.3s ease;
+}

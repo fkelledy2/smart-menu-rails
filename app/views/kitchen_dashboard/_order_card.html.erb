@@ -1,0 +1,50 @@
+<div class="card mb-2 order-card shadow-sm" data-order-id="<%= order.id %>" data-status="<%= order.status %>" data-created-at="<%= order.created_at.to_i %>">
+  <div class="card-header py-2 d-flex justify-content-between align-items-center <%= order.status == 'ordered' ? 'bg-danger-subtle' : order.status == 'preparing' ? 'bg-warning-subtle' : 'bg-success-subtle' %>">
+    <div>
+      <strong class="fs-5">Order #<%= order.id %></strong>
+      <% if order.tablesetting.present? %>
+        <span class="badge bg-secondary ms-2">
+          <i class="bi bi-table"></i> <%= order.tablesetting.name %>
+        </span>
+      <% end %>
+    </div>
+    <small class="text-muted">
+      <i class="bi bi-clock"></i> <%= time_ago_in_words(order.created_at) %> ago
+    </small>
+  </div>
+  
+  <div class="card-body py-2">
+    <div class="list-group list-group-flush">
+      <% order.ordritems.each do |item| %>
+        <div class="list-group-item px-0 py-2 border-0">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <strong><%= item.menuitem.name %></strong>
+              <% if item.ordritemnotes.any? %>
+                <div class="text-muted small mt-1">
+                  <i class="bi bi-sticky"></i> <%= item.ordritemnotes.map(&:note).join(', ') %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="card-footer py-2 bg-white border-top">
+    <% if order.status == 'ordered' %>
+      <button class="btn btn-warning w-100 order-status-btn" data-order-id="<%= order.id %>" data-new-status="preparing">
+        <i class="bi bi-play-fill"></i> Start Preparing
+      </button>
+    <% elsif order.status == 'preparing' %>
+      <button class="btn btn-success w-100 order-status-btn" data-order-id="<%= order.id %>" data-new-status="ready">
+        <i class="bi bi-check-circle"></i> Mark Ready
+      </button>
+    <% elsif order.status == 'ready' %>
+      <button class="btn btn-primary w-100 order-status-btn" data-order-id="<%= order.id %>" data-new-status="delivered">
+        <i class="bi bi-check2-all"></i> Mark as Collected
+      </button>
+    <% end %>
+  </div>
+</div>

@@ -1,5 +1,7 @@
-//= link_tree ../builds
 //= link_tree ../images
+//= link_tree ../builds
+//= link application.css
+//= link kitchen_dashboard_bootstrap.css
 //= link controllers/application.js
 //= link controllers/menu_import_controller.js
 //= link allergyns.js
@@ -25,6 +27,7 @@
 //= link channels/kitchen_channel.js
 //= link channels/presence_channel.js
 //= link channels/menu_editing_channel.js
+//= link kitchen_dashboard.js
 //= link dw_orders_mv.js
 //= link smartmenus.js
 //= link restaurantlocales.js

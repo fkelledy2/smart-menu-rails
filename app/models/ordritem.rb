@@ -5,14 +5,18 @@ class Ordritem < ApplicationRecord
   belongs_to :ordr
   belongs_to :menuitem
   has_one :ordrparticipant
+  has_many :ordritemnotes, dependent: :destroy
 
   # Enums
   enum :status, {
-    added: 0,
-    removed: 10,
+    opened: 0,
     ordered: 20,
-    prepared: 30,
-    delivered: 40,
+    preparing: 22,
+    ready: 24,
+    delivered: 25,
+    billrequested: 30,
+    paid: 35,
+    closed: 40,
   }
 
   # IdentityCache configuration

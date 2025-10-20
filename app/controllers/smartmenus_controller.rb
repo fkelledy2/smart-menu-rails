@@ -39,7 +39,7 @@ class SmartmenusController < ApplicationController
         menu_id: @menu.id,
         tablesetting_id: @tablesetting.id,
         restaurant_id: @tablesetting.restaurant_id,
-        status: [0, 20, 30],
+        status: [0, 20, 22, 24, 25, 30], # opened, ordered, preparing, ready, delivered, billrequested
       ).first
 
       if @openOrder

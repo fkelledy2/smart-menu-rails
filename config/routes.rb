@@ -113,6 +113,11 @@ Rails.application.routes.draw do
   # RESTAURANT MANAGEMENT
   # ============================================================================
   resources :restaurants do
+    # Kitchen Dashboard
+    member do
+      get 'kitchen', to: 'kitchen_dashboard#index', as: :kitchen_dashboard
+    end
+    
     # Restaurant configuration
     resources :restaurantlocales
     resources :tablesettings

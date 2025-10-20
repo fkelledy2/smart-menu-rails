@@ -57,7 +57,7 @@
                                     </button>
                                 <% end %>
                             <% end %>
-                                <% if order.status == 'ordered' %>
+                                <% if order.status == 'ordered' || order.status == 'preparing' || order.status == 'ready'  || order.status == 'delivered' %>
                                     <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#requestBillModal">
                                         <%= t(".bill") %> <i class="bi bi-receipt"></i></i>
                                     </button>

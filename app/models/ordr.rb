@@ -4,14 +4,26 @@ class Ordr < ApplicationRecord
 
   aasm column: 'status' do
     state :opened, initial: true
-    state :ordered, :billrequested, :paid, :closed
+    state :ordered, :preparing, :ready, :delivered, :billrequested, :paid, :closed
 
     event :order do
       transitions from: :opened, to: :ordered
     end
 
+    event :start_preparing do
+      transitions from: :ordered, to: :preparing
+    end
+
+    event :mark_ready do
+      transitions from: :preparing, to: :ready
+    end
+
+    event :mark_delivered do
+      transitions from: :ready, to: :delivered
+    end
+
     event :requestbill do
-      transitions from: %i[opened ordered], to: :billrequested
+      transitions from: %i[opened ordered preparing ready delivered], to: :billrequested
     end
 
     event :paybill do
@@ -23,6 +35,10 @@ class Ordr < ApplicationRecord
     end
   end
 
+  # Callbacks for real-time kitchen updates
+  after_create :broadcast_new_order
+  after_update :broadcast_status_change, if: :saved_change_to_status?
+  
   # Standard ActiveRecord associations
   belongs_to :employee, optional: true
   belongs_to :tablesetting
@@ -88,6 +104,8 @@ class Ordr < ApplicationRecord
   enum :status, {
     opened: 0,
     ordered: 20,
+    preparing: 22,
+    ready: 24,
     delivered: 25,
     billrequested: 30,
     paid: 35,
@@ -147,6 +165,27 @@ class Ordr < ApplicationRecord
   end
 
   private
+
+  def broadcast_new_order
+    # Only broadcast kitchen-relevant statuses
+    return unless %w[ordered preparing ready].include?(status)
+    
+    KitchenBroadcastService.broadcast_new_order(self)
+  end
+  
+  def broadcast_status_change
+    old_status_value = saved_change_to_status[0]
+    new_status_value = saved_change_to_status[1]
+    
+    # Convert to string for comparison (handles both integer and symbol values)
+    old_status = Ordr.statuses.key(old_status_value) || old_status_value.to_s
+    new_status = Ordr.statuses.key(new_status_value) || new_status_value.to_s
+    
+    # Only broadcast kitchen-relevant status changes (including delivered to remove from dashboard)
+    return unless %w[ordered preparing ready delivered billrequested].include?(new_status)
+    
+    KitchenBroadcastService.broadcast_status_change(self, old_status, new_status)
+  end
 
   def invalidate_order_caches
     AdvancedCacheService.invalidate_order_caches(id)

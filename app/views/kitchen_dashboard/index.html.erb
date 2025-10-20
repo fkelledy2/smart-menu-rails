@@ -1,0 +1,130 @@
+<%= stylesheet_link_tag 'kitchen_dashboard_bootstrap', media: 'all' %>
+
+<div class="kitchen-dashboard bg-light min-vh-100" data-restaurant-id="<%= @restaurant.id %>">
+  <!-- Header -->
+  <nav class="navbar navbar-dark bg-primary shadow-sm mb-4">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">
+        <i class="bi bi-shop"></i> <%= @restaurant.name %> Kitchen Dashboard
+      </span>
+      <div class="d-flex align-items-center text-white">
+        <i class="bi bi-clock me-2"></i>
+        <span id="current-time" class="fw-bold"></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Metrics Cards -->
+  <div class="container-fluid mb-4">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body text-center">
+            <div class="display-4 fw-bold text-danger" id="pending-count"><%= @metrics[:total_pending] %></div>
+            <div class="text-muted text-uppercase small fw-bold">Pending Orders</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body text-center">
+            <div class="display-4 fw-bold text-warning" id="preparing-count"><%= @metrics[:total_preparing] %></div>
+            <div class="text-muted text-uppercase small fw-bold">Preparing</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body text-center">
+            <div class="display-4 fw-bold text-success" id="ready-count"><%= @metrics[:total_ready] %></div>
+            <div class="text-muted text-uppercase small fw-bold">Ready</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body text-center">
+            <div class="display-4 fw-bold text-info"><%= @metrics[:orders_today] %></div>
+            <div class="text-muted text-uppercase small fw-bold">Today's Orders</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Columns -->
+  <div class="container-fluid">
+    <div class="row g-3">
+      <!-- Pending Orders Column -->
+      <div class="col-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <i class="bi bi-hourglass-split"></i> Pending Orders
+              <span class="badge bg-white text-danger ms-2"><%= @pending_orders.count %></span>
+            </h5>
+            <div class="btn-group btn-group-sm" role="group">
+              <button type="button" class="btn btn-light sort-btn" data-column="pending" data-direction="asc" title="Sort Oldest First">
+                <i class="bi bi-sort-up"></i>
+              </button>
+              <button type="button" class="btn btn-light sort-btn" data-column="pending" data-direction="desc" title="Sort Newest First">
+                <i class="bi bi-sort-down"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-2 overflow-auto" style="max-height: calc(100vh - 350px);" id="pending-orders">
+            <%= render partial: 'order_card', collection: @pending_orders, as: :order %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preparing Orders Column -->
+      <div class="col-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <i class="bi bi-fire"></i> Preparing
+              <span class="badge bg-white text-warning ms-2"><%= @preparing_orders.count %></span>
+            </h5>
+            <div class="btn-group btn-group-sm" role="group">
+              <button type="button" class="btn btn-light sort-btn" data-column="preparing" data-direction="asc" title="Sort Oldest First">
+                <i class="bi bi-sort-up"></i>
+              </button>
+              <button type="button" class="btn btn-light sort-btn" data-column="preparing" data-direction="desc" title="Sort Newest First">
+                <i class="bi bi-sort-down"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-2 overflow-auto" style="max-height: calc(100vh - 350px);" id="preparing-orders">
+            <%= render partial: 'order_card', collection: @preparing_orders, as: :order %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ready Orders Column -->
+      <div class="col-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <i class="bi bi-check-circle"></i> Ready
+              <span class="badge bg-white text-success ms-2"><%= @ready_orders.count %></span>
+            </h5>
+            <div class="btn-group btn-group-sm" role="group">
+              <button type="button" class="btn btn-light sort-btn" data-column="ready" data-direction="asc" title="Sort Oldest First">
+                <i class="bi bi-sort-up"></i>
+              </button>
+              <button type="button" class="btn btn-light sort-btn" data-column="ready" data-direction="desc" title="Sort Newest First">
+                <i class="bi bi-sort-down"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-2 overflow-auto" style="max-height: calc(100vh - 350px);" id="ready-orders">
+            <%= render partial: 'order_card', collection: @ready_orders, as: :order %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag 'kitchen_dashboard', defer: true %>
