@@ -149,11 +149,11 @@ class OcrMenuImportsController < ApplicationController
         if stats.present?
           notice << " (sections: +#{stats[:sections_created]}/~#{stats[:sections_updated]}#{", -#{stats[:sections_archived]}" if sync}, items: +#{stats[:items_created]}/~#{stats[:items_updated]}#{", -#{stats[:items_archived]}" if sync})"
         end
-        redirect_to restaurant_menu_path(@restaurant, menu), notice: notice
+        redirect_to edit_restaurant_menu_path(@restaurant, menu), notice: notice
       else
         # First-time publish: create a new menu from confirmed content
         menu = service.call
-        redirect_to restaurant_menu_path(@restaurant, menu), notice: t('ocr_menu_imports.controller.published')
+        redirect_to edit_restaurant_menu_path(@restaurant, menu), notice: t('ocr_menu_imports.controller.published')
       end
     rescue StandardError => e
       Rails.logger.error("Error creating menu from import ##{@ocr_menu_import.id}: #{e.class}: #{e.message}")

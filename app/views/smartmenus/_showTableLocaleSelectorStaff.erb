@@ -7,7 +7,7 @@
                     <%= t(".table") %>
                 <% end %>
             </button>
-            <ul class="dropdown-menu dropdown-menu-dark">
+            <ul class="dropdown-menu dropdown-menu-dark" style="z-index: 1050;">
                 <% Smartmenu.where( restaurant_id: restaurant.id, menu_id: menu.id ).includes([:tablesetting]).order('id ASC').each do |smartmenu| %>
                     <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
                         <li>

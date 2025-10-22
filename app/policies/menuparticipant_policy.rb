@@ -4,19 +4,19 @@ class MenuparticipantPolicy < ApplicationPolicy
   end
 
   def show?
-    return true unless user # Allow anonymous customers
+    return true unless user.persisted? # Allow anonymous customers
 
     owner?
   end
 
   def create?
-    return true unless user # Allow anonymous customers
+    return true unless user.persisted? # Allow anonymous customers
 
-    user.present?
+    user.persisted?
   end
 
   def update?
-    return true unless user # Allow anonymous customers
+    return true unless user.persisted? # Allow anonymous customers
 
     owner?
   end

@@ -1,117 +1,83 @@
 require 'sidekiq'
-require 'deepl'
 
+# Background job for localizing menus to restaurant locales
+# Supports two use cases:
+# 1. New menu created → localize to all restaurant locales
+#    Usage: MenuLocalizationJob.perform_async('menu', menu_id)
+# 2. New locale added → localize all menus to that locale
+#    Usage: MenuLocalizationJob.perform_async('locale', restaurant_locale_id)
+#
+# Backward compatible with old interface:
+#    MenuLocalizationJob.perform_async(restaurant_locale_id) [deprecated]
 class MenuLocalizationJob
   include Sidekiq::Worker
 
-  #   sidekiq_options queue: "limited"
-  #
-  #   extend Limiter::Mixin
-  #   limit_method :expensive_api_call, rate: 4, interval: 60, balanced: true
+  sidekiq_options queue: 'default', retry: 3
 
-  def perform(restaurant_id)
-    expensive_api_call(restaurant_id)
+  # Main entry point - supports both new and legacy interfaces
+  #
+  # @param type_or_id [String, Integer] Either 'menu'/'locale' or an integer (legacy)
+  # @param id [Integer, nil] The menu_id or restaurant_locale_id (required if type_or_id is a string)
+  def perform(type_or_id, id = nil)
+    # Handle legacy single integer parameter (backward compatibility)
+    if type_or_id.is_a?(Integer) && id.nil?
+      Rails.logger.info("[MenuLocalizationJob] Legacy call with restaurant_locale_id: #{type_or_id}")
+      return localize_to_new_locale(type_or_id)
+    end
+
+    # Handle new interface with type and id
+    case type_or_id
+    when 'menu'
+      raise ArgumentError, 'menu_id is required' if id.nil?
+      localize_menu(id)
+    when 'locale'
+      raise ArgumentError, 'restaurant_locale_id is required' if id.nil?
+      localize_to_new_locale(id)
+    else
+      raise ArgumentError, "Invalid type: #{type_or_id}. Must be 'menu' or 'locale'"
+    end
   end
 
   private
 
-  def expensive_api_call(restaurantlocaleid)
-    restaurantlocale = Restaurantlocale.where(id: restaurantlocaleid).first
-    restaurant = Restaurant.find(restaurantlocale.restaurant_id)
-    return unless restaurant
+  # Use Case 1: Localize a specific menu to all restaurant locales
+  def localize_menu(menu_id)
+    menu = Menu.find(menu_id)
+    Rails.logger.info("[MenuLocalizationJob] Localizing menu ##{menu_id} to all restaurant locales")
 
-    Menu.where(restaurant_id: restaurant.id).find_each do |menu|
-      Menulocale.where(menu_id: menu.id, locale: restaurantlocale.locale).destroy_all
-      menu_locale = Menulocale.new
-      menu_locale.locale = restaurantlocale.locale
-      menu_locale.status = restaurantlocale.status
-      menu_locale.menu_id = menu.id
-      if restaurantlocale.dfault == true
-        menu_locale.name = menu.name
-        menu_locale.description = menu.description
-      else
-        begin
-          translation = DeeplApiService.translate(menu.name, to: restaurantlocale.locale, from: 'en')
-          menu_locale.name = translation
-        rescue StandardError
-          menu_locale.name = menu.name
-        end
-        begin
-          translation = DeeplApiService.translate(menu.description, to: restaurantlocale.locale, from: 'en')
-          menu_locale.description = translation
-        rescue StandardError
-          menu_locale.description = menu.description
-        end
-      end
-      menu_locale.save
-      Menusection.where(menu_id: menu.id).find_each do |menusection|
-        Menusectionlocale.where(menusection_id: menusection.id, locale: restaurantlocale.locale).destroy_all
-        menusection_locale = Menusectionlocale.new
-        menusection_locale.locale = restaurantlocale.locale
-        menusection_locale.status = restaurantlocale.status
-        menusection_locale.menusection_id = menusection.id
-        if restaurantlocale.dfault == true
-          menusection_locale.name = menusection.name
-          menusection_locale.description = menusection.description
-        else
-          begin
-            translation = DeeplApiService.translate(menusection.name, to: restaurantlocale.locale,
-                                                                      from: 'en',)
-            menusection_locale.name = translation
-          rescue StandardError
-            menusection_locale.name = menusection.name
-          end
-          begin
-            translation = DeeplApiService.translate(menu.description, to: restaurantlocale.locale,
-                                                                      from: 'en',)
-            menusection_locale.description = translation
-          rescue StandardError
-            menusection_locale.description = menusection.description
-          end
-        end
-        menusection_locale.save
-        Menuitem.where(menusection_id: menusection.id).find_each do |menuitem|
-          Menuitemlocale.where(menuitem_id: menuitem.id, locale: restaurantlocale.locale).destroy_all
-          menu_item_locale = Menuitemlocale.new
-          menu_item_locale.locale = restaurantlocale.locale
-          menu_item_locale.status = restaurantlocale.status
-          menu_item_locale.menuitem_id = menuitem.id
-          if restaurantlocale.dfault == true
-            menu_item_locale.name = menuitem.name
-            menu_item_locale.description = menuitem.description
-          else
-            begin
-              translation = DeeplApiService.translate(menuitem.name, to: restaurantlocale.locale,
-                                                                     from: 'en',)
-              menu_item_locale.name = translation
-            rescue StandardError
-              menu_item_locale.name = menuitem.name
-            end
-            begin
-              translation = DeeplApiService.translate(menuitem.description, to: restaurantlocale.locale,
-                                                                            from: 'en',)
-              menu_item_locale.description = translation
-            rescue StandardError
-              menu_item_locale.description = menuitem.description
-            end
-          end
-          menu_item_locale.save
-        end
-      end
-    end
+    stats = LocalizeMenuService.localize_menu_to_all_locales(menu)
+
+    Rails.logger.info("[MenuLocalizationJob] Completed menu ##{menu_id} localization: #{stats}")
+    stats
+  rescue ActiveRecord::RecordNotFound => e
+    # Menu was deleted - this is not an error, just log and skip
+    Rails.logger.warn("[MenuLocalizationJob] Menu ##{menu_id} not found (likely deleted): #{e.message}")
+    # Don't re-raise - no point retrying a deleted record
+    { locales_processed: 0, menu_locales_created: 0, errors: ["Menu ##{menu_id} not found"] }
+  rescue StandardError => e
+    Rails.logger.error("[MenuLocalizationJob] Error localizing menu ##{menu_id}: #{e.class}: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
+    raise
   end
 
-  def ask_question(prompt)
-    api_key = Rails.application.credentials.openai_api_key
-    headers = { 'Authorization' => "Bearer #{api_key}", 'Content-Type' => 'application/json' }
-    body = {
-      messages: [{ role: 'user', content: prompt }],
-      model: 'gpt-3.5-turbo',
-    }.to_json
-    HTTParty.post(
-      'https://api.openai.com/v1/chat/completions',
-      headers: headers,
-      body: body,
-    )
+  # Use Case 2: Localize all restaurant menus to a newly added locale
+  def localize_to_new_locale(restaurant_locale_id)
+    restaurant_locale = Restaurantlocale.find(restaurant_locale_id)
+    restaurant = restaurant_locale.restaurant
+    Rails.logger.info("[MenuLocalizationJob] Localizing all menus for restaurant ##{restaurant.id} to locale #{restaurant_locale.locale}")
+
+    stats = LocalizeMenuService.localize_all_menus_to_locale(restaurant, restaurant_locale)
+
+    Rails.logger.info("[MenuLocalizationJob] Completed restaurant ##{restaurant.id} localization to #{restaurant_locale.locale}: #{stats}")
+    stats
+  rescue ActiveRecord::RecordNotFound => e
+    # Locale was deleted - this is not an error, just log and skip
+    Rails.logger.warn("[MenuLocalizationJob] Restaurant locale ##{restaurant_locale_id} not found (likely deleted): #{e.message}")
+    # Don't re-raise - no point retrying a deleted record
+    { menus_processed: 0, menu_locales_created: 0, errors: ["Restaurant locale ##{restaurant_locale_id} not found"] }
+  rescue StandardError => e
+    Rails.logger.error("[MenuLocalizationJob] Error localizing to locale ##{restaurant_locale_id}: #{e.class}: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
+    raise
   end
 end

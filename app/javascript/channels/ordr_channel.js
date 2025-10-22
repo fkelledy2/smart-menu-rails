@@ -270,7 +270,10 @@ function refreshOrderJSLogic() {
                      'preferredlocale': locale
                  }
             };
-           patch( '/menuparticipants/'+$('#menuParticipant').text(), menuparticipant);
+           const restaurantId = $('#currentRestaurant').text();
+           const menuId = $('#currentMenu').text();
+           const menuParticipantId = $('#menuParticipant').text();
+           patch( `/restaurants/${restaurantId}/menus/${menuId}/menuparticipants/${menuParticipantId}`, menuparticipant);
        }
        event.preventDefault();
     });

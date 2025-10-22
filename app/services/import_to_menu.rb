@@ -6,6 +6,7 @@ class ImportToMenu
 
   def call
     validate_import!(allow_existing_menu: false)
+    menu = nil
     ActiveRecord::Base.transaction do
       menu = build_menu!
       build_sections_and_items!(menu)
@@ -24,8 +25,19 @@ class ImportToMenu
         Rails.logger.warn("[ImportToMenu.call] cache expire warning: #{e.class}: #{e.message}")
       end
       @import.update!(menu: menu)
-      menu
     end
+    
+    # Trigger localization after transaction commits
+    # Note: Menu model has after_commit callback that also triggers this,
+    # but we explicitly trigger here to ensure it happens for OCR imports
+    begin
+      MenuLocalizationJob.perform_async('menu', menu.id)
+      Rails.logger.info("[ImportToMenu.call] Enqueued localization for menu ##{menu.id}")
+    rescue StandardError => e
+      Rails.logger.warn("[ImportToMenu.call] Failed to enqueue localization: #{e.class}: #{e.message}")
+    end
+    
+    menu
   end
 
   # Republish into an existing menu: upsert confirmed sections and items
@@ -153,6 +165,15 @@ class ImportToMenu
         Rails.logger.warn("[ImportToMenu.upsert] menu expire warning: #{e.class}: #{e.message}")
       end
     end
+    
+    # Re-localize updated menu to all locales to reflect changes
+    begin
+      MenuLocalizationJob.perform_async('menu', menu.id)
+      Rails.logger.info("[ImportToMenu.upsert] Enqueued re-localization for menu ##{menu.id}")
+    rescue StandardError => e
+      Rails.logger.warn("[ImportToMenu.upsert] Failed to enqueue localization: #{e.class}: #{e.message}")
+    end
+    
     [menu, stats]
   end
 

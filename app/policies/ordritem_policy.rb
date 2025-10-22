@@ -5,42 +5,42 @@ class OrdritemPolicy < ApplicationPolicy
 
   def show?
     # Allow both staff and customers to view order items
-    return true unless user # Allow anonymous customers
+    return true unless user.persisted? # Allow anonymous customers
 
     owner?
   end
 
   def new?
     # Allow both staff and customers to create order items
-    return true unless user # Allow anonymous customers
+    return true unless user.persisted? # Allow anonymous customers
 
-    user.present?
+    user.persisted?
   end
 
   def create?
     # Allow both staff and customers to create order items
-    return true unless user # Allow anonymous customers
+    return true unless user.persisted? # Allow anonymous customers
 
-    user.present?
+    user.persisted?
   end
 
   def edit?
     # Allow both staff and customers to edit order items
-    return true unless user # Allow anonymous customers
+    return true unless user.persisted? # Allow anonymous customers
 
     owner?
   end
 
   def update?
     # Allow both staff and customers to update order items
-    return true unless user # Allow anonymous customers
+    return true unless user.persisted? # Allow anonymous customers
 
     owner?
   end
 
   def destroy?
     # Allow both staff and customers to delete order items
-    return true unless user # Allow anonymous customers
+    return true unless user.persisted? # Allow anonymous customers
 
     owner?
   end

@@ -32,6 +32,9 @@ class Menu < ApplicationRecord
   after_update :invalidate_menu_caches
   after_destroy :invalidate_menu_caches
 
+  # Localization hook - trigger localization after menu is created
+  after_commit :enqueue_localization, on: :create
+
   # Optimized scopes to prevent N+1 queries
   scope :with_availabilities_and_sections, -> {
     includes(
@@ -117,5 +120,15 @@ class Menu < ApplicationRecord
   def invalidate_menu_caches
     AdvancedCacheService.invalidate_menu_caches(id)
     AdvancedCacheService.invalidate_restaurant_caches(restaurant_id)
+  end
+
+  private
+
+  # Enqueue background job to localize this menu to all restaurant locales
+  def enqueue_localization
+    MenuLocalizationJob.perform_async('menu', id)
+  rescue StandardError => e
+    Rails.logger.error("[Menu#enqueue_localization] Failed to enqueue localization for menu ##{id}: #{e.message}")
+    # Don't raise - localization is not critical to menu creation
   end
 end

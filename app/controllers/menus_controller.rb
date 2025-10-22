@@ -24,8 +24,10 @@ class MenusController < ApplicationController
                  # For restaurant-specific requests, we already verified ownership in set_restaurant
                  # so we can skip the expensive policy scope joins
                  if request.format.json?
-                   # JSON: Minimal data without expensive includes (we already have @restaurant)
+                   # JSON: Eager load associations to avoid N+1 queries
+                   # Include nested menuitems since JSON view renders full hierarchy
                    @restaurant.menus.for_management_display
+                     .includes(menusections: :menuitems, menuavailabilities: [])
                      .order(:sequence)
                  else
                    # HTML: Full data as needed
@@ -38,11 +40,14 @@ class MenusController < ApplicationController
                  policy_scope(Menu).for_management_display.order(:sequence)
                end
       
-      AnalyticsService.track_user_event(current_user, 'menus_viewed', {
-        menus_count: @menus.count,
-        restaurant_id: @restaurant&.id,
-        viewing_context: params[:restaurant_id] ? 'restaurant_specific' : 'all_menus',
-      },)
+      # Skip analytics for JSON requests to improve performance
+      unless request.format.json?
+        AnalyticsService.track_user_event(current_user, 'menus_viewed', {
+          menus_count: @menus.size, # Use size instead of count (uses loaded records)
+          restaurant_id: @restaurant&.id,
+          viewing_context: params[:restaurant_id] ? 'restaurant_specific' : 'all_menus',
+        },)
+      end
     elsif params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
       @menus = Menu.where(restaurant: @restaurant)
