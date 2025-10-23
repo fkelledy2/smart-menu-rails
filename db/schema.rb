@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_19_214400) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_23_205430) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -410,6 +410,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_19_214400) do
     t.integer "tohour", default: 23
     t.integer "tomin", default: 59
     t.boolean "restricted", default: false
+    t.index ["menu_id", "sequence"], name: "index_menusections_on_menu_and_sequence"
     t.index ["menu_id", "status", "sequence"], name: "index_menusections_on_menu_status_sequence", where: "(archived = false)"
     t.index ["menu_id"], name: "index_menusections_on_menu_id"
   end
@@ -628,6 +629,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_19_214400) do
     t.index ["restaurant_id"], name: "index_ordrs_on_restaurant_id"
     t.index ["status"], name: "index_ordrs_on_status"
     t.index ["tablesetting_id", "status", "created_at"], name: "index_ordrs_on_table_status_created"
+    t.index ["tablesetting_id", "status"], name: "index_ordrs_on_tablesetting_and_status"
     t.index ["tablesetting_id"], name: "index_ordrs_on_tablesetting_id"
     t.index ["updated_at"], name: "index_ordrs_on_updated_at"
   end
@@ -677,6 +679,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_19_214400) do
     t.datetime "updated_at", null: false
     t.string "type"
     t.index ["owner_type", "owner_id", "processor"], name: "index_pay_merchants_on_owner_type_and_owner_id_and_processor"
+    t.index ["processor_id"], name: "index_pay_merchants_on_processor_id"
   end
 
   create_table "pay_payment_methods", force: :cascade do |t|
@@ -718,6 +721,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_19_214400) do
     t.index ["customer_id", "processor_id"], name: "index_pay_subscriptions_on_customer_id_and_processor_id", unique: true
     t.index ["metered"], name: "index_pay_subscriptions_on_metered"
     t.index ["pause_starts_at"], name: "index_pay_subscriptions_on_pause_starts_at"
+    t.index ["payment_method_id"], name: "index_pay_subscriptions_on_payment_method_id"
   end
 
   create_table "pay_webhooks", force: :cascade do |t|

@@ -32,6 +32,14 @@ class SmartmenusController < ApplicationController
       redirect_to root_url and return
     end
 
+    # HTTP caching with ETags for better performance
+    # Cache is invalidated when menu or restaurant is updated
+    fresh_when(
+      etag: [@smartmenu, @menu, @restaurant],
+      last_modified: [@smartmenu.updated_at, @menu.updated_at, @restaurant.updated_at].compact.max,
+      public: true
+    )
+
     @allergyns = Allergyn.where(restaurant_id: @menu.restaurant_id)
 
     if @tablesetting
@@ -158,9 +166,24 @@ class SmartmenusController < ApplicationController
   def load_menu_associations_for_show
     return unless @menu
 
-    # Only include associations that are actually used in the controller/views
-    # The views handle their own specific includes for menuitems
-    @menu = Menu.includes(:menusections, :restaurant).find(@menu.id)
+    # Comprehensive eager loading to prevent N+1 queries
+    # This loads all associations needed for rendering the smartmenu view
+    @menu = Menu.includes(
+      :restaurant,
+      :menulocales,
+      :menuavailabilities,
+      menusections: [
+        :menusectionlocales,
+        menuitems: [
+          :menuitemlocales,
+          :allergyns,
+          :ingredients,
+          :sizes,
+          :menuitem_allergyn_mappings,
+          :menuitem_ingredient_mappings
+        ]
+      ]
+    ).find(@menu.id)
   end
 
   # Only allow a list of trusted parameters through.

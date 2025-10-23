@@ -1,16 +1,24 @@
 <%= render 'shared/currency' %>
-<% if current_user %>
-<div id="menuu" class="menu-sticky-header">
-<% else %>
-<div id="menuc" class="menu-sticky-header">
+
+<%# Cache the menu header - invalidates when smartmenu, menu, or restaurant changes %>
+<% cache [@smartmenu, @menu, @restaurant, current_user ? 'staff' : 'customer'], expires_in: 1.hour do %>
+  <% if current_user %>
+  <div id="menuu" class="menu-sticky-header">
+  <% else %>
+  <div id="menuc" class="menu-sticky-header">
+  <% end %>
+      <%= render partial: "smartmenus/showMenuBanner" %>
+  </div>
 <% end %>
-    <%= render partial: "smartmenus/showMenuBanner" %>
-</div>
 
 <div id="menuContentContainer">
-    <% if current_user %>
-        <%= render partial: "smartmenus/showMenuContentStaff", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
-    <% else %>
-        <%= render partial: "smartmenus/showMenuContentCustomer", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+    <%# Cache menu content separately - includes order state for dynamic content %>
+    <% cache_key = [@smartmenu, @menu, @allergyns.maximum(:updated_at), @openOrder&.updated_at, current_user ? 'staff' : 'customer'] %>
+    <% cache cache_key, expires_in: 30.minutes do %>
+        <% if current_user %>
+            <%= render partial: "smartmenus/showMenuContentStaff", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+        <% else %>
+            <%= render partial: "smartmenus/showMenuContentCustomer", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+        <% end %>
     <% end %>
 </div>
