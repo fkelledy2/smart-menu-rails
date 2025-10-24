@@ -27,15 +27,61 @@ module CdnCacheControl
 
   # Generate cache control header for content type
   # @param content_type [String] MIME type
+  # @param stale_while_revalidate [Integer, nil] SWR duration in seconds
   # @return [String] Cache-Control header value
-  def self.cache_control_for(content_type)
+  def self.cache_control_for(content_type, stale_while_revalidate: nil)
     duration = CACHE_DURATIONS[content_type] || 1.hour
     
     if duration.zero?
       'no-cache, no-store, must-revalidate'
     else
-      "public, max-age=#{duration.to_i}, immutable"
+      parts = ["public", "max-age=#{duration.to_i}"]
+      
+      # Add stale-while-revalidate for better performance
+      swr_duration = stale_while_revalidate || default_swr_duration(content_type)
+      parts << "stale-while-revalidate=#{swr_duration}" if swr_duration.positive?
+      
+      # Add immutable for assets that never change
+      parts << "immutable" if immutable_content?(content_type)
+      
+      parts.join(', ')
     end
+  end
+  
+  # Get default stale-while-revalidate duration for content type
+  # @param content_type [String] MIME type
+  # @return [Integer] SWR duration in seconds
+  def self.default_swr_duration(content_type)
+    case content_type
+    when /^image\//
+      1.day.to_i
+    when 'application/javascript', 'text/javascript', 'text/css'
+      1.week.to_i
+    when 'application/json'
+      5.minutes.to_i
+    else
+      1.hour.to_i
+    end
+  end
+  
+  # Check if content type should be marked as immutable
+  # @param content_type [String] MIME type
+  # @return [Boolean]
+  def self.immutable_content?(content_type)
+    # Assets with fingerprints are immutable
+    %w[
+      application/javascript
+      text/javascript
+      text/css
+      image/png
+      image/jpeg
+      image/jpg
+      image/gif
+      image/svg+xml
+      image/webp
+      font/woff
+      font/woff2
+    ].include?(content_type)
   end
 
   # Generate CDN-specific cache control header
