@@ -10,13 +10,15 @@
                                         <span class="visually-hidden"><%= t('.loading') %></span>
                                     </div>
                                 </div>
-                                <img class="card-img-top img-fluid" style="-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));display:none;"
-                                  onload="fadeIn(this)"
-                                  src="<%= menuitem.medium_url %>"
-                                  srcset="<%= menuitem.image_srcset %>"
-                                  sizes="<%= menuitem.image_sizes %>"
-                                  alt="<%= menuitem.name %>"
-                                  loading="lazy">
+                                <%= picture_tag_with_webp(menuitem.image,
+                                  alt: menuitem.name,
+                                  sizes: menuitem.image_sizes,
+                                  class_name: 'card-img-top img-fluid',
+                                  style: '-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));display:none;',
+                                  onload: 'fadeIn(this)',
+                                  loading: 'lazy',
+                                  quality: 85
+                                ) %>
                             </div>
                         </div>
                     </div>

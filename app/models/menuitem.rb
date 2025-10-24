@@ -117,6 +117,66 @@ class Menuitem < ApplicationRecord
     '(max-width: 600px) 200px, (max-width: 1200px) 600px, 1000px'
   end
 
+  # Get WebP URL if available, fallback to original
+  def webp_url(size = :medium)
+    return nil unless image.present?
+    
+    begin
+      # Check if WebP derivative exists
+      webp_key = "#{size}_webp".to_sym
+      if image_attacher.derivatives&.key?(webp_key)
+        image_url(webp_key)
+      else
+        # Fallback to original size
+        image_url_or_fallback(size)
+      end
+    rescue StandardError => e
+      Rails.logger.error "[Menuitem] Error getting WebP URL for #{id}: #{e.message}"
+      image_url_or_fallback(size)
+    end
+  end
+
+  # Generate WebP srcset for responsive images
+  def webp_srcset
+    return '' unless image.present?
+    
+    begin
+      srcset_parts = []
+      
+      # Add WebP derivatives if they exist
+      if image_attacher.derivatives&.key?(:thumb_webp)
+        srcset_parts << "#{image_url(:thumb_webp)} 200w"
+      end
+      
+      if image_attacher.derivatives&.key?(:medium_webp)
+        srcset_parts << "#{image_url(:medium_webp)} 600w"
+      end
+      
+      if image_attacher.derivatives&.key?(:large_webp)
+        srcset_parts << "#{image_url(:large_webp)} 1000w"
+      end
+      
+      srcset_parts.join(', ')
+    rescue StandardError => e
+      Rails.logger.error "[Menuitem] Error generating WebP srcset for #{id}: #{e.message}"
+      ''
+    end
+  end
+
+  # Enhanced srcset that includes WebP when available
+  def image_srcset_with_webp
+    webp = webp_srcset
+    webp.present? ? webp : image_srcset
+  end
+  
+  # Check if WebP derivatives exist
+  def has_webp_derivatives?
+    image.present? && 
+    image_attacher.derivatives&.key?(:thumb_webp) &&
+    image_attacher.derivatives&.key?(:medium_webp) &&
+    image_attacher.derivatives&.key?(:large_webp)
+  end
+
   validates :inventory, presence: false
   validates :name, presence: true
   validates :itemtype, presence: true

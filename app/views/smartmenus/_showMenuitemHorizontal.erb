@@ -24,7 +24,13 @@
                                     <span class="visually-hidden"><%= t('.loading') %></span>
                                 </div>
                             </div>
-                            <%= render "smartmenus/showImage", src: mi.medium_url, alt: mi.name, srcset: mi.image_srcset, sizes: mi.image_sizes, cached: true, loading: "lazy", class: "img-fluid" %>
+                            <%= picture_tag_with_webp(mi.image,
+                              alt: mi.name,
+                              sizes: mi.image_sizes,
+                              class_name: 'img-fluid',
+                              loading: 'lazy',
+                              quality: 85
+                            ) %>
                         </div>
                     </div>
                     <div style='padding-left:0px' class="col-7">

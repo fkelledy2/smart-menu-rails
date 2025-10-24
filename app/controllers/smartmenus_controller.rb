@@ -32,14 +32,6 @@ class SmartmenusController < ApplicationController
       redirect_to root_url and return
     end
 
-    # HTTP caching with ETags for better performance
-    # Cache is invalidated when menu or restaurant is updated
-    fresh_when(
-      etag: [@smartmenu, @menu, @restaurant],
-      last_modified: [@smartmenu.updated_at, @menu.updated_at, @restaurant.updated_at].compact.max,
-      public: true
-    )
-
     @allergyns = Allergyn.where(restaurant_id: @menu.restaurant_id)
 
     if @tablesetting
@@ -81,6 +73,22 @@ class SmartmenusController < ApplicationController
       mp.smartmenu = @smartmenu
     end
     @menuparticipant.update(smartmenu: @smartmenu) unless @menuparticipant.smartmenu == @smartmenu
+
+    # HTTP caching with ETags for better performance
+    # Cache is invalidated when menu, restaurant, or participant locale is updated
+    # Include participant locale in ETag to ensure cache invalidation on locale switch
+    participant_locale = @ordrparticipant&.preferredlocale || @menuparticipant&.preferredlocale
+    fresh_when(
+      etag: [@smartmenu, @menu, @restaurant, participant_locale],
+      last_modified: [
+        @smartmenu.updated_at,
+        @menu.updated_at,
+        @restaurant.updated_at,
+        @ordrparticipant&.updated_at,
+        @menuparticipant&.updated_at
+      ].compact.max,
+      public: false # Set to false since it varies by session/participant
+    )
   end
 
   # GET /smartmenus/new

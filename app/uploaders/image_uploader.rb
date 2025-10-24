@@ -16,10 +16,33 @@ class ImageUploader < Shrine
 
   Attacher.derivatives do |original|
     magick = ImageProcessing::MiniMagick.source(original)
-    {
+    
+    # Original format derivatives (PNG/JPEG)
+    derivatives = {
       thumb: magick.resize_to_limit!(200, 200),
       medium: magick.resize_to_limit!(600, 480),
       large: magick.resize_to_limit!(1000, 800),
     }
+    
+    # WebP derivatives for better performance
+    derivatives.merge!({
+      thumb_webp: ImageProcessing::MiniMagick
+        .source(original)
+        .convert('webp')
+        .saver(quality: 85)
+        .resize_to_limit!(200, 200),
+      medium_webp: ImageProcessing::MiniMagick
+        .source(original)
+        .convert('webp')
+        .saver(quality: 85)
+        .resize_to_limit!(600, 480),
+      large_webp: ImageProcessing::MiniMagick
+        .source(original)
+        .convert('webp')
+        .saver(quality: 85)
+        .resize_to_limit!(1000, 800),
+    })
+    
+    derivatives
   end
 end
