@@ -1,3 +1,15 @@
+  <div class="row">
+    <div class="col-12">
+        <span style='position:relative; top:25px;right:35px;' class="float-end">
+          <div class="btn-group" role="group">
+            <div style='display:none'>
+                <%= button_to 'Optimise Images', regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), method: :post, class: 'btn btn-sm btn-dark', data: { turbo: false, confirm: 'Regenerate WebP derivatives for existing images?' }, title: 'Regenerate WebP derivatives for existing menu item images' %>
+            </div>
+            <%= button_to 'Generate Images', regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu, generate_ai: true), method: :post, class: 'btn btn-sm btn-dark', data: { turbo: false, confirm: 'Generate new AI images using DALL-E? This will cost API credits.' }, title: 'Generate new AI images for menu items using DALL-E' %>
+          </div>
+        </span>
+    </div>
+</div>
 <%= menu_form_with(menu, auto_save: true, validate: true) do |form| %>
   <div class="form-group row">
     <div class="col-12">
@@ -207,15 +219,3 @@
   </div>
   <% end %>
 <% end %>
-  <div class="spacing-md"></div>
-  <div class="row">
-    <div class="col-3">
-    </div>
-    <div class="col-9">
-        <span class="float-end">
-        <% if menu.persisted? %>
-            <%= button_to t('.regenerate_images'), regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), method: :post, class: 'btn btn-sm btn-dark', data: { turbo: false, confirm: t('.regenerate_images_confirm') } %>
-        <% end %>
-        </span>
-    </div>
-  </div>

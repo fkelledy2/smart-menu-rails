@@ -75,8 +75,11 @@ export class InventoryModule extends ComponentBase {
     // Initialize inventory table
     const inventoryTable = this.find('#menusection-inventory-table');
     if (inventoryTable) {
+      // Get restaurant ID from data attribute
+      const restaurantId = inventoryTable.getAttribute('data-bs-restaurant');
+      
       const table = this.tableManager.initializeTable(inventoryTable, {
-        ajaxURL: '/inventories.json',
+        ajaxURL: `/restaurants/${restaurantId}/inventories.json`,
         movableRows: true,
         initialSort: [{ column: "sequence", dir: "asc" }],
         columns: [

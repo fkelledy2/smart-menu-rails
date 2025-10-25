@@ -176,22 +176,29 @@ class SmartmenusController < ApplicationController
 
     # Comprehensive eager loading to prevent N+1 queries
     # This loads all associations needed for rendering the smartmenu view
+    # Only load active menu items for public-facing smart menu
     @menu = Menu.includes(
       :restaurant,
       :menulocales,
       :menuavailabilities,
       menusections: [
         :menusectionlocales,
-        menuitems: [
+        { menuitems: [
           :menuitemlocales,
           :allergyns,
           :ingredients,
           :sizes,
           :menuitem_allergyn_mappings,
           :menuitem_ingredient_mappings
-        ]
+        ] }
       ]
     ).find(@menu.id)
+    
+    # Filter to only active menu items after loading
+    # This ensures inactive items are not shown in the smart menu
+    @menu.menusections.each do |section|
+      section.association(:menuitems).target.select! { |item| item.active? }
+    end
   end
 
   # Only allow a list of trusted parameters through.

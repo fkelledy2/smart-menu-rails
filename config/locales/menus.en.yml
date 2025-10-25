@@ -7,6 +7,8 @@ en:
       image_regeneration_queued: Queued image regeneration for %{count} items on this
         menu.
       image_regeneration_queued_rake: Image regeneration job has been queued for this menu.
+      webp_regeneration_queued: WebP derivative regeneration has been queued for this menu's images.
+      ai_image_generation_queued: AI image generation has been queued for this menu's items.
       updated: Menu was successfully updated.
     edit:
       availabilities: Availabilities

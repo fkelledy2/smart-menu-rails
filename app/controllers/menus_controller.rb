@@ -76,11 +76,17 @@ class MenusController < ApplicationController
       redirect_to root_url and return
     end
 
-    # Use the rake task logic for consistency
-    # Queue the job to run the rake task asynchronously to avoid blocking the request
-    MenuItemImageBatchJob.perform_async(@menu.id)
+    # Check if user wants to generate AI images or regenerate WebP derivatives
+    if params[:generate_ai] == 'true'
+      # Generate new AI images using DALL-E
+      MenuItemImageBatchJob.perform_async(@menu.id)
+      flash[:notice] = t('menus.controller.ai_image_generation_queued')
+    else
+      # Regenerate WebP derivatives for existing images
+      RegenerateMenuWebpJob.perform_async(@menu.id)
+      flash[:notice] = t('menus.controller.webp_regeneration_queued')
+    end
 
-    flash[:notice] = t('menus.controller.image_regeneration_queued_rake')
     redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu)
   end
 

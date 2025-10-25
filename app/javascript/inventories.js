@@ -7,6 +7,9 @@ export function initiInventories() {
     }
 
     if ($("#menusection-inventory-table").length) {
+        // Get restaurant ID from data attribute
+        var restaurantId = $("#menusection-inventory-table").data('bs-restaurant');
+        
         function status(cell, formatterParams){
             return cell.getRow().getData("data").status.toUpperCase();
         }
@@ -22,7 +25,7 @@ export function initiInventories() {
             maxHeight:"100%",
             responsiveLayout:true,
             layout:"fitDataStretch",
-            ajaxURL: '/inventories.json',
+            ajaxURL: '/restaurants/' + restaurantId + '/inventories.json',
             initialSort:[
                 {column:"sequence", dir:"asc"}
             ],
