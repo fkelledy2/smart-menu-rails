@@ -80,32 +80,16 @@
         </div>
       <% end %>
 <% else %>
-  <div id="myCarousel" class="carousel hero-carousel" data-bs-ride="carousel">
-    <div class="carousel-inner">
-      <div class="carousel-item justify-content-center active position-relative">
-  <!-- Subtle overlay for text readability -->
-  <div class="hero-overlay position-absolute w-100 h-100"></div>
-        <%= image_tag "https://placehold.co/1x500/transparent/transparent", class: "img-responsive bg-item parallax img-fluid" %>
-        <div class="container">
-          <div class="hero-caption carousel-caption text-start">
-            <h1><%=t(".ctaTitle1")%></h1>
-            <p><strong><%=t(".ctaBody1")%></strong></p>
-            <p><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
-          </div>
-        </div>
-      </div>
-      <div class="carousel-item justify-content-center position-relative">
-  <!-- Subtle overlay for text readability -->
-  <div class="hero-overlay position-absolute w-100 h-100"></div>
-        <%= image_tag "https://placehold.co/1x500/transparent/transparent", class: "img-responsive bg-item parallax img-fluid" %>
-        <div class="container">
-          <div class="hero-caption carousel-caption text-start">
-            <h1><%=t(".ctaTitle2")%></h1>
-            <p><strong><%=t(".ctaBody2")%></strong></p>
-            <p><a class="btn btn-danger" href="#contact_us"><%=t(".contactUs")%></a></p>
-          </div>
-        </div>
-      </div>
+  <div class="hero-carousel" 
+       data-cta1-title="<%=t('.ctaTitle1')%>" 
+       data-cta1-body="<%=t('.ctaBody1')%>"
+       data-cta2-title="<%=t('.ctaTitle2')%>" 
+       data-cta2-body="<%=t('.ctaBody2')%>">
+    <!-- Background images will be dynamically inserted by JavaScript -->
+    <div class="hero-caption text-start">
+      <h1 data-cta-title><%=t(".ctaTitle1")%></h1>
+      <p data-cta-body><strong><%=t(".ctaBody1")%></strong></p>
+      <p><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
     </div>
   </div>
   </div>

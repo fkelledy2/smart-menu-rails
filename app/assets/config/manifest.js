@@ -37,3 +37,6 @@
 
 // Application entry point
 //= link application.js
+
+// Modules
+//= link modules/hero_carousel.js

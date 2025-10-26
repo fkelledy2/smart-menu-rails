@@ -1,60 +1,67 @@
 // Home Page Styles
 // Styles specific to the homepage and marketing pages
 
-// Hero carousel - Modern restaurant theme
+// Hero carousel - Bright, modern restaurant theme with dissolving backgrounds
 .hero-carousel {
   overflow-x: hidden;
   width: calc(100% + 50px);
   margin-left: -25px;
   margin-right: -25px;
-  background: linear-gradient(135deg, #1F2937 0%, #111827 100%);
+  background: #FFFFFF;
   min-height: 500px;
   position: relative;
+}
+
+// Background image layers for dissolve effect
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+  z-index: 0;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80') no-repeat center center;
-    background-size: cover;
-    opacity: 0.3;
-    z-index: 0;
+  &.active {
+    opacity: 1;
   }
 }
 
-// Hero overlay - Enhanced gradient
+// Hero overlay - REMOVED for brighter appearance
 .hero-overlay {
   position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
-  background: linear-gradient(135deg, 
-    rgba(31, 41, 55, 0.85) 0%, 
-    rgba(17, 24, 39, 0.75) 100%
-  );
+  background: transparent;
   z-index: 1;
   pointer-events: none;
 }
 
 .hero-caption {
+  position: absolute;
+  bottom: 40px;
   left: 5%;
   right: 5%;
   z-index: 2;
-  position: relative;
   
   h1 {
     color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.8);
     font-weight: 700;
+    transition: opacity 0.5s ease-in-out;
   }
   
   p {
-    color: #D1D5DB;
+    color: white;
     font-size: 1.25rem;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.8);
+    transition: opacity 0.5s ease-in-out;
     
     strong {
       color: white;
@@ -393,6 +400,7 @@
   }
   
   .hero-caption {
+    bottom: 20px;
     left: 10px;
     right: 10px;
     

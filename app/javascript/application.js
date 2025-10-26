@@ -68,6 +68,9 @@ import '@rails/request.js'
 import './add_jquery'
 import './channels'
 
+// Import hero carousel for homepage
+import './modules/hero_carousel.js'
+
 // Make additional libraries available globally
 window.DateTime = DateTime
 
