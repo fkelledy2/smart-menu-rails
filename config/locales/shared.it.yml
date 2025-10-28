@@ -11,6 +11,7 @@ it:
     navbar:
       adminArea: Admin
       billing: Fatturazione
+      heroImages: Immagini Hero
       impersonated_as: Accesso come
       login: Accedi
       logout: Logout

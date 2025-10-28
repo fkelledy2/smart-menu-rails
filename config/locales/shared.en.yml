@@ -11,6 +11,7 @@ en:
     navbar:
       adminArea: Admin
       billing: Billing
+      heroImages: Hero Images
       impersonated_as: You're logged in as
       login: Log in
       logout: Logout

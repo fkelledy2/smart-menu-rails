@@ -17,6 +17,7 @@ class HomeController < ApplicationController
     @features = Feature.all
     @contact = Contact.new
     @testimonials = Testimonial.where(status: 'approved').order(:sequence).all
+    @hero_images = HeroImage.approved_for_carousel
 
     # Set page metadata
     @page_title = 'Mellow Menu - Digital Menu Solution for Restaurants'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_23_205430) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_28_151017) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -141,6 +141,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_23_205430) do
     t.index ["menusection_id"], name: "index_genimages_on_menusection_id"
     t.index ["restaurant_id", "menu_id", "menuitem_id"], name: "index_genimages_on_restaurant_menu_item"
     t.index ["restaurant_id"], name: "index_genimages_on_restaurant_id"
+  end
+
+  create_table "hero_images", force: :cascade do |t|
+    t.string "image_url", null: false
+    t.string "alt_text"
+    t.integer "sequence", default: 0
+    t.integer "status", default: 0, null: false
+    t.string "source_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sequence"], name: "index_hero_images_on_sequence"
+    t.index ["status"], name: "index_hero_images_on_status"
   end
 
   create_table "ingredients", force: :cascade do |t|

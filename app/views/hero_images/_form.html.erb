@@ -1,0 +1,58 @@
+<%= form_with(model: hero_image) do |form| %>
+  <% if hero_image.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(hero_image.errors.count, "error") %> prohibited this hero image from being saved:</h4>
+      <ul>
+        <% hero_image.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :image_url, 'Image URL', class: 'form-label' %>
+    <%= form.text_field :image_url, class: 'form-control', placeholder: 'https://images.pexels.com/...' %>
+    <div class="form-text">Enter the full URL of the image from Pexels or other source</div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :alt_text, 'Alt Text', class: 'form-label' %>
+    <%= form.text_field :alt_text, class: 'form-control', placeholder: 'Busy restaurant interior with diners' %>
+    <div class="form-text">Descriptive text for accessibility</div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :sequence, class: 'form-label' %>
+    <%= form.number_field :sequence, class: 'form-control', value: hero_image.sequence || 0 %>
+    <div class="form-text">Display order (lower numbers appear first)</div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :status, class: 'form-label' %>
+    <%= form.select :status, HeroImage.statuses.keys.map { |k| [k.titleize, k] }, {}, class: 'form-select' %>
+    <div class="form-text">Only approved images will appear on the homepage</div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :source_url, 'Source URL (Optional)', class: 'form-label' %>
+    <%= form.text_field :source_url, class: 'form-control', placeholder: 'https://www.pexels.com/photo/...' %>
+    <div class="form-text">Link to the original source page</div>
+  </div>
+
+  <div class="mb-3">
+    <% if hero_image.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Delete', hero_image, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit 'Save', class: 'btn btn-primary' %>
+
+    <% if hero_image.persisted? %>
+      <%= link_to 'Cancel', hero_image, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to 'Cancel', hero_images_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

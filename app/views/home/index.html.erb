@@ -84,7 +84,8 @@
        data-cta1-title="<%=t('.ctaTitle1')%>" 
        data-cta1-body="<%=t('.ctaBody1')%>"
        data-cta2-title="<%=t('.ctaTitle2')%>" 
-       data-cta2-body="<%=t('.ctaBody2')%>">
+       data-cta2-body="<%=t('.ctaBody2')%>"
+       data-hero-images="<%= @hero_images.map { |img| { url: img.image_url, alt: img.alt_text } }.to_json %>">
     <!-- Background images will be dynamically inserted by JavaScript -->
     <div class="hero-caption text-start">
       <h1 data-cta-title><%=t(".ctaTitle1")%></h1>

@@ -28,7 +28,25 @@ export class HeroCarousel {
   }
   
   getDefaultImages() {
-    // Curated Pexels restaurant images with people (landscape, 3+ people)
+    // Try to get images from backend first
+    const heroImagesData = this.container.dataset.heroImages;
+    
+    if (heroImagesData) {
+      try {
+        const backendImages = JSON.parse(heroImagesData);
+        if (backendImages && backendImages.length > 0) {
+          console.log('[HeroCarousel] Using', backendImages.length, 'backend-approved images');
+          // Extract URLs from backend data and randomize
+          const imageUrls = backendImages.map(img => img.url);
+          return this.shuffleArray(imageUrls);
+        }
+      } catch (e) {
+        console.warn('[HeroCarousel] Failed to parse backend images, using fallback:', e);
+      }
+    }
+    
+    // Fallback to hardcoded Pexels images if no backend images
+    console.log('[HeroCarousel] Using fallback Pexels images');
     const images = [
       'https://images.pexels.com/photos/1581384/pexels-photo-1581384.jpeg?auto=compress&cs=tinysrgb&w=1920',
       'https://images.pexels.com/photos/696218/pexels-photo-696218.jpeg?auto=compress&cs=tinysrgb&w=1920',

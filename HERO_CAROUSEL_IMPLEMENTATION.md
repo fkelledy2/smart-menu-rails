@@ -1,7 +1,16 @@
 # Hero Carousel Implementation - Dissolving Background Images
 
 ## Overview
-Implemented a CSS dissolve transition carousel for the homepage hero section with independent timers: CTA text changes every 5 seconds and background images change every 10 seconds. Images are randomized from Pexels, with CTA overlay positioned at the bottom.
+Implemented a CSS dissolve transition carousel for the homepage hero section with independent timers: CTA text changes every 5 seconds and background images change every 10 seconds. Images are sourced from an **admin-controlled database** with fallback to Pexels, randomized on each page load, with CTA overlay positioned at the bottom.
+
+## Admin Management
+**NEW**: Hero images are now managed through an admin interface. See [HERO_IMAGE_ADMIN_SYSTEM.md](HERO_IMAGE_ADMIN_SYSTEM.md) for complete documentation on:
+- Adding/removing images via admin UI
+- Approval workflow
+- Image sequencing
+- Database schema and API
+
+**Admin URL**: `/hero_images` (admin users only)
 
 ## Changes Made
 
@@ -54,8 +63,11 @@ Implemented a CSS dissolve transition carousel for the homepage hero section wit
 - Pause on hover functionality (pauses both timers)
 - Clean lifecycle management (init/destroy)
 
-**Default Images (Pexels - Landscape, 3+ People):**
-The carousel includes 10 curated restaurant images that are randomized on each page load using the Fisher-Yates shuffle algorithm:
+**Image Sources:**
+1. **Primary**: Admin-approved images from database (`HeroImage.approved_for_carousel`)
+2. **Fallback**: 10 hardcoded Pexels images (used if no approved images exist)
+
+**Fallback Images (Pexels - Landscape, 3+ People):**
 1. `https://images.pexels.com/photos/1581384/pexels-photo-1581384.jpeg?auto=compress&cs=tinysrgb&w=1920`
 2. `https://images.pexels.com/photos/696218/pexels-photo-696218.jpeg?auto=compress&cs=tinysrgb&w=1920`
 3. `https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=1920`
@@ -67,7 +79,7 @@ The carousel includes 10 curated restaurant images that are randomized on each p
 9. `https://images.pexels.com/photos/1126728/pexels-photo-1126728.jpeg?auto=compress&cs=tinysrgb&w=1920`
 10. `https://images.pexels.com/photos/2788799/pexels-photo-2788799.jpeg?auto=compress&cs=tinysrgb&w=1920`
 
-**Randomization:** Images are shuffled on each page load, so visitors see a different sequence each time.
+**Randomization:** Images are shuffled on each page load using Fisher-Yates algorithm, so visitors see a different sequence each time.
 
 ### 3. Application Integration (`app/javascript/application.js`)
 

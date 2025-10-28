@@ -157,3 +157,6 @@ Employee.create!([
   { name: 'Fergus Kelledy', eid: 'FK1', image: 'Fake Image', status: 'active', restaurant_id: 1, role: 'manager',
     email: 'fkelledy@gmail.com', user_id: 1, },
 ])
+
+# Load hero images seed data
+load Rails.root.join('db', 'seeds', 'hero_images.rb')

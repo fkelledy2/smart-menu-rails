@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-10 offset-md-1">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3>Hero Image Details</h3>
+          <div>
+            <%= link_to 'Edit', edit_hero_image_path(@hero_image), class: 'btn btn-warning' %>
+            <%= link_to 'Back', hero_images_path, class: 'btn btn-secondary' %>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-12">
+              <h5>Preview</h5>
+              <img src="<%= @hero_image.image_url %>" alt="<%= @hero_image.alt_text %>" class="img-fluid" style="max-height: 400px; object-fit: cover;">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Image URL:</strong></p>
+              <p class="text-break"><%= @hero_image.image_url %></p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Alt Text:</strong></p>
+              <p><%= @hero_image.alt_text %></p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <p><strong>Sequence:</strong></p>
+              <p><%= @hero_image.sequence %></p>
+            </div>
+            <div class="col-md-4">
+              <p><strong>Status:</strong></p>
+              <p>
+                <% if @hero_image.approved? %>
+                  <span class="badge bg-success">Approved</span>
+                <% else %>
+                  <span class="badge bg-warning">Unapproved</span>
+                <% end %>
+              </p>
+            </div>
+            <div class="col-md-4">
+              <p><strong>Created:</strong></p>
+              <p><%= @hero_image.created_at.strftime('%B %d, %Y') %></p>
+            </div>
+          </div>
+
+          <% if @hero_image.source_url.present? %>
+            <div class="row">
+              <div class="col-12">
+                <p><strong>Source URL:</strong></p>
+                <p><%= link_to @hero_image.source_url, @hero_image.source_url, target: '_blank', rel: 'noopener' %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

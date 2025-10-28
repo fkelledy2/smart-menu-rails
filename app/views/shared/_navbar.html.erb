@@ -55,6 +55,7 @@
               <% if current_user.admin? && respond_to?(:madmin_root_path) %>
                 <div class="dropdown-divider"></div>
                 <%= link_to t(".testimonials"), testimonials_path, class: "dropdown-item" %>
+                <%= link_to t(".heroImages"), hero_images_path, class: "dropdown-item" %>
                 <%= link_to t(".adminArea"), madmin_root_path, class: "dropdown-item" %>
               <% end %>
               <div class="dropdown-divider"></div>
