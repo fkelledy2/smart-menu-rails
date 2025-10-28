@@ -6,7 +6,7 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   def setup
     # Clear cache before each test
     Rails.cache.clear
-    
+
     # Set up test metrics
     Rails.cache.write('cache_metrics:hits', 100)
     Rails.cache.write('cache_metrics:misses', 20)
@@ -25,7 +25,7 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
     assert_includes CacheMetricsService::METRICS, :hit_rate
     assert_includes CacheMetricsService::METRICS, :memory_usage
     assert_includes CacheMetricsService::METRICS, :throughput
-    
+
     assert_equal 1.minute, CacheMetricsService::TIME_WINDOWS[:realtime]
     assert_equal 5.minutes, CacheMetricsService::TIME_WINDOWS[:short]
     assert_equal 1.hour, CacheMetricsService::TIME_WINDOWS[:medium]
@@ -35,15 +35,14 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   # Test metrics collection
   test 'should collect comprehensive metrics' do
     # Mock individual metric collection methods
-    CacheMetricsService.stub :collect_performance_metrics, -> (window) { { hit_rate: 83.33 } } do
+    CacheMetricsService.stub :collect_performance_metrics, ->(_window) { { hit_rate: 83.33 } } do
       CacheMetricsService.stub :collect_memory_metrics, -> { { usage: {} } } do
-        CacheMetricsService.stub :collect_operation_metrics, -> (window) { { total_operations: 182 } } do
+        CacheMetricsService.stub :collect_operation_metrics, ->(_window) { { total_operations: 182 } } do
           CacheMetricsService.stub :collect_health_metrics, -> { { availability: true } } do
             CacheMetricsService.stub :collect_pattern_metrics, -> { { key_counts: {} } } do
               CacheMetricsService.stub :generate_recommendations, -> { [] } do
-                
                 metrics = CacheMetricsService.collect_metrics(window: :medium)
-                
+
                 assert_kind_of Hash, metrics
                 assert_includes metrics.keys, :timestamp
                 assert_includes metrics.keys, :window
@@ -53,10 +52,9 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
                 assert_includes metrics.keys, :health
                 assert_includes metrics.keys, :patterns
                 assert_includes metrics.keys, :recommendations
-                
+
                 assert_equal :medium, metrics[:window]
                 assert_equal 1.hour, metrics[:duration]
-                
               end
             end
           end
@@ -68,7 +66,7 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   # Test hit rate calculation
   test 'should calculate hit rate correctly' do
     hit_rate = CacheMetricsService.calculate_hit_rate
-    
+
     # Expected: 100 hits / (100 hits + 20 misses) = 83.33%
     assert_equal 83.33, hit_rate
   end
@@ -76,7 +74,7 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   test 'should handle zero operations for hit rate' do
     Rails.cache.write('cache_metrics:hits', 0)
     Rails.cache.write('cache_metrics:misses', 0)
-    
+
     hit_rate = CacheMetricsService.calculate_hit_rate
     assert_equal 0.0, hit_rate
   end
@@ -84,7 +82,7 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   # Test miss rate calculation
   test 'should calculate miss rate correctly' do
     miss_rate = CacheMetricsService.calculate_miss_rate
-    
+
     # Expected: 100 - 83.33 = 16.67%
     assert_equal 16.67, miss_rate
   end
@@ -92,10 +90,9 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   # Test throughput calculation
   test 'should calculate throughput correctly' do
     # Mock TIME_WINDOWS for predictable calculation
-    original_windows = CacheMetricsService::TIME_WINDOWS
     CacheMetricsService.stub_const(:TIME_WINDOWS, { medium: 60.seconds }) do
       throughput = CacheMetricsService.calculate_throughput(window: :medium)
-      
+
       # Expected: (100 + 20 + 50 + 10) operations / 60 seconds = 3.0 ops/sec
       assert_equal 3.0, throughput
     end
@@ -105,7 +102,7 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
     total_ops = CacheMetricsService.calculate_total_operations(window: :medium)
     duration_seconds = 3600 # 1 hour in seconds for :medium window
     expected_throughput = (total_ops.to_f / duration_seconds).round(2)
-    
+
     throughput = CacheMetricsService.calculate_throughput(window: :medium)
     assert_equal expected_throughput, throughput
   end
@@ -113,7 +110,7 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   # Test total operations calculation
   test 'should calculate total operations correctly' do
     total_ops = CacheMetricsService.calculate_total_operations
-    
+
     # Expected: 100 + 20 + 50 + 10 = 180
     assert_equal 180, total_ops
   end
@@ -121,7 +118,7 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   # Test error rate calculation
   test 'should calculate error rate correctly' do
     error_rate = CacheMetricsService.calculate_error_rate
-    
+
     # Expected: 2 errors / 180 total operations = 1.11%
     assert_equal 1.11, error_rate
   end
@@ -131,7 +128,7 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
     Rails.cache.write('cache_metrics:misses', 0)
     Rails.cache.write('cache_metrics:writes', 0)
     Rails.cache.write('cache_metrics:deletes', 0)
-    
+
     error_rate = CacheMetricsService.calculate_error_rate
     assert_equal 0.0, error_rate
   end
@@ -140,32 +137,30 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   test 'should get memory usage when Redis is available' do
     # Mock Redis memory info
     memory_info = {
-      'used_memory' => 1048576,
+      'used_memory' => 1_048_576,
       'used_memory_human' => '1.00M',
-      'used_memory_peak' => 2097152,
+      'used_memory_peak' => 2_097_152,
       'used_memory_peak_human' => '2.00M',
-      'mem_fragmentation_ratio' => 1.2
+      'mem_fragmentation_ratio' => 1.2,
     }
-    
+
     # Mock Redis cache and methods
     mock_redis = Object.new
-    mock_redis.define_singleton_method(:memory) { |type| memory_info }
-    
+    mock_redis.define_singleton_method(:memory) { |_type| memory_info }
+
     mock_cache = Object.new
     mock_cache.define_singleton_method(:redis) { mock_redis }
-    
+
     CacheMetricsService.stub :redis_available?, true do
       Rails.stub :cache, mock_cache do
-        
         usage = CacheMetricsService.get_memory_usage
-        
-        assert_equal 1048576, usage[:used_memory]
+
+        assert_equal 1_048_576, usage[:used_memory]
         assert_equal '1.00M', usage[:used_memory_human]
-        assert_equal 2097152, usage[:used_memory_peak]
+        assert_equal 2_097_152, usage[:used_memory_peak]
         assert_equal '2.00M', usage[:used_memory_peak_human]
         assert_equal 1.2, usage[:memory_fragmentation_ratio]
         assert_kind_of Numeric, usage[:memory_efficiency]
-        
       end
     end
   end
@@ -184,7 +179,7 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
       ratio = CacheMetricsService.calculate_compression_ratio
       assert_equal 0.65, ratio
     end
-    
+
     # Test no compression
     Rails.cache.stub :options, { compression_threshold: 0 } do
       ratio = CacheMetricsService.calculate_compression_ratio
@@ -196,23 +191,21 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   test 'should measure cache response time' do
     CacheMetricsService.stub :redis_available?, true do
       # Mock cache operations to be fast
-      Rails.cache.stub :read, -> (key) { nil } do
-        Rails.cache.stub :write, -> (key, value, opts) { true } do
-          Rails.cache.stub :delete, -> (key) { true } do
-            
+      Rails.cache.stub :read, ->(_key) {} do
+        Rails.cache.stub :write, ->(_key, _value, _opts) { true } do
+          Rails.cache.stub :delete, ->(_key) { true } do
             read_time = CacheMetricsService.measure_response_time(operation: :read, samples: 3)
             write_time = CacheMetricsService.measure_response_time(operation: :write, samples: 3)
             delete_time = CacheMetricsService.measure_response_time(operation: :delete, samples: 3)
-            
+
             assert_kind_of Numeric, read_time
             assert_kind_of Numeric, write_time
             assert_kind_of Numeric, delete_time
-            
+
             # Should be reasonably fast (< 100ms)
             assert read_time < 100
             assert write_time < 100
             assert delete_time < 100
-            
           end
         end
       end
@@ -229,13 +222,11 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   # Test cache availability check
   test 'should check cache availability when Redis is available' do
     CacheMetricsService.stub :redis_available?, true do
-      Rails.cache.stub :write, -> (key, value, opts) { true } do
-        Rails.cache.stub :read, -> (key) { Time.current.to_i } do
-          Rails.cache.stub :delete, -> (key) { true } do
-            
+      Rails.cache.stub :write, ->(_key, _value, _opts) { true } do
+        Rails.cache.stub :read, ->(_key) { Time.current.to_i } do
+          Rails.cache.stub :delete, ->(_key) { true } do
             availability = CacheMetricsService.check_availability
             assert_equal true, availability
-            
           end
         end
       end
@@ -260,21 +251,19 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
       else []
       end
     end
-    
+
     mock_cache = Object.new
     mock_cache.define_singleton_method(:redis) { mock_redis }
     mock_cache.define_singleton_method(:options) { { namespace: 'test' } }
-    
+
     CacheMetricsService.stub :redis_available?, true do
       Rails.stub :cache, mock_cache do
-        
         key_counts = CacheMetricsService.get_key_count_by_pattern
-        
+
         assert_kind_of Hash, key_counts
         assert_equal 2, key_counts['restaurant:*']
         assert_equal 1, key_counts['menu:*']
         assert_equal 0, key_counts['order:*']
-        
       end
     end
   end
@@ -283,15 +272,15 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   test 'should reset cache metrics' do
     # Verify metrics exist before reset
     assert_equal 100, Rails.cache.read('cache_metrics:hits')
-    
+
     CacheMetricsService.reset_metrics
-    
+
     # Verify metrics are reset to 0
     # Note: reset_metrics resets all METRICS, not individual metric keys
     assert_equal 0, Rails.cache.read('cache_metrics:hit_rate')
     assert_equal 0, Rails.cache.read('cache_metrics:miss_rate')
     assert_not_nil Rails.cache.read('cache_metrics:last_reset')
-    
+
     # The original metric keys might still exist, so let's check if they were reset
     # by checking if the reset timestamp was set
     reset_time = Rails.cache.read('cache_metrics:last_reset')
@@ -301,29 +290,27 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
 
   # Test metrics export
   test 'should export metrics in JSON format' do
-    CacheMetricsService.stub :collect_metrics, -> (opts) { 
-      { performance: { hit_rate: 83.33 }, timestamp: Time.current.iso8601 } 
+    CacheMetricsService.stub :collect_metrics, lambda { |_opts|
+      { performance: { hit_rate: 83.33 }, timestamp: Time.current.iso8601 }
     } do
-      
       json_export = CacheMetricsService.export_metrics(format: :json)
-      
+
       assert_kind_of String, json_export
       parsed = JSON.parse(json_export)
       assert_equal 83.33, parsed['performance']['hit_rate']
-      
     end
   end
 
   test 'should export metrics in Prometheus format' do
-    metrics = { 
+    metrics = {
       performance: { hit_rate: 83.33, miss_rate: 16.67, throughput: 3.0, error_rate: 1.11 },
-      memory: { usage: { used_memory: 1048576 } },
-      operations: { total_operations: 180, hits: 100, misses: 20 }
+      memory: { usage: { used_memory: 1_048_576 } },
+      operations: { total_operations: 180, hits: 100, misses: 20 },
     }
-    
-    CacheMetricsService.stub :collect_metrics, -> (opts) { metrics } do
+
+    CacheMetricsService.stub :collect_metrics, ->(_opts) { metrics } do
       prometheus_export = CacheMetricsService.export_metrics(format: :prometheus)
-      
+
       assert_kind_of String, prometheus_export
       assert_includes prometheus_export, 'cache_hit_rate 83.33'
       assert_includes prometheus_export, 'cache_miss_rate 16.67'
@@ -333,15 +320,15 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   end
 
   test 'should export metrics in CSV format' do
-    metrics = { 
+    metrics = {
       performance: { hit_rate: 83.33, miss_rate: 16.67, throughput: 3.0, error_rate: 1.11 },
       operations: { total_operations: 180 },
-      timestamp: Time.current.iso8601
+      timestamp: Time.current.iso8601,
     }
-    
-    CacheMetricsService.stub :collect_metrics, -> (opts) { metrics } do
+
+    CacheMetricsService.stub :collect_metrics, ->(_opts) { metrics } do
       csv_export = CacheMetricsService.export_metrics(format: :csv)
-      
+
       assert_kind_of String, csv_export
       assert_includes csv_export, 'Metric,Value,Unit,Timestamp'
       assert_includes csv_export, 'Hit Rate,83.33,%'
@@ -353,17 +340,15 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   test 'should handle Redis errors gracefully' do
     # Mock Redis to raise an error
     mock_redis = Object.new
-    mock_redis.define_singleton_method(:memory) { |type| raise Redis::ConnectionError, 'Connection failed' }
-    
+    mock_redis.define_singleton_method(:memory) { |_type| raise Redis::ConnectionError, 'Connection failed' }
+
     mock_cache = Object.new
     mock_cache.define_singleton_method(:redis) { mock_redis }
-    
+
     CacheMetricsService.stub :redis_available?, true do
       Rails.stub :cache, mock_cache do
-        
         usage = CacheMetricsService.get_memory_usage
         assert_equal({}, usage)
-        
       end
     end
   end
@@ -371,23 +356,21 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   # Test performance
   test 'should collect metrics efficiently' do
     start_time = Time.current
-    
-    CacheMetricsService.stub :collect_performance_metrics, -> (window) { {} } do
+
+    CacheMetricsService.stub :collect_performance_metrics, ->(_window) { {} } do
       CacheMetricsService.stub :collect_memory_metrics, -> { {} } do
-        CacheMetricsService.stub :collect_operation_metrics, -> (window) { {} } do
+        CacheMetricsService.stub :collect_operation_metrics, ->(_window) { {} } do
           CacheMetricsService.stub :collect_health_metrics, -> { {} } do
             CacheMetricsService.stub :collect_pattern_metrics, -> { {} } do
               CacheMetricsService.stub :generate_recommendations, -> { [] } do
-                
                 CacheMetricsService.collect_metrics
-                
               end
             end
           end
         end
       end
     end
-    
+
     duration = Time.current - start_time
     assert duration < 1.second, "Metrics collection took too long: #{duration} seconds"
   end
@@ -396,11 +379,11 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   test 'should log metrics operations' do
     log_output = StringIO.new
     logger = Logger.new(log_output)
-    
+
     Rails.stub :logger, logger do
       CacheMetricsService.reset_metrics
     end
-    
+
     log_content = log_output.string
     assert_includes log_content, 'Cache metrics reset'
   end
@@ -408,21 +391,19 @@ class CacheMetricsServiceTest < ActiveSupport::TestCase
   # Test private method behavior through public interface
   test 'should generate appropriate recommendations' do
     # Set up conditions for recommendations
-    Rails.cache.write('cache_metrics:hits', 80)  # Low hit rate
+    Rails.cache.write('cache_metrics:hits', 80) # Low hit rate
     Rails.cache.write('cache_metrics:misses', 20)
-    Rails.cache.write('cache_metrics:errors', 5)  # High error rate
-    
-    CacheMetricsService.stub :get_memory_usage, -> { 
+    Rails.cache.write('cache_metrics:errors', 5) # High error rate
+
+    CacheMetricsService.stub :get_memory_usage, lambda {
       { memory_fragmentation_ratio: 2.0 } # High fragmentation
     } do
-      
       recommendations = CacheMetricsService.send(:generate_recommendations)
-      
+
       assert_kind_of Array, recommendations
-      assert recommendations.any? { |r| r[:type] == 'performance' }
-      assert recommendations.any? { |r| r[:type] == 'reliability' }
-      assert recommendations.any? { |r| r[:type] == 'memory' }
-      
+      assert(recommendations.any? { |r| r[:type] == 'performance' })
+      assert(recommendations.any? { |r| r[:type] == 'reliability' })
+      assert(recommendations.any? { |r| r[:type] == 'memory' })
     end
   end
 end

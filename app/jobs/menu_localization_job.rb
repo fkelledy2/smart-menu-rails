@@ -29,9 +29,11 @@ class MenuLocalizationJob
     case type_or_id
     when 'menu'
       raise ArgumentError, 'menu_id is required' if id.nil?
+
       localize_menu(id)
     when 'locale'
       raise ArgumentError, 'restaurant_locale_id is required' if id.nil?
+
       localize_to_new_locale(id)
     else
       raise ArgumentError, "Invalid type: #{type_or_id}. Must be 'menu' or 'locale'"

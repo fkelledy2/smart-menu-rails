@@ -5,14 +5,14 @@ class OnboardingHelperTest < ActionView::TestCase
     @user = users(:one)
     @restaurant = restaurants(:one)
     @menu = menus(:one)
-    
+
     # Ensure proper associations
     @restaurant.update!(user: @user) if @restaurant.user != @user
     @menu.update!(restaurant: @restaurant) if @menu.restaurant != @restaurant
   end
 
   # === ONBOARDING STEP TITLE TESTS ===
-  
+
   test 'should return correct title for restaurant step' do
     assert_equal 'Restaurant Information', onboarding_step_title('1')
     assert_equal 'Restaurant Information', onboarding_step_title('restaurant')
@@ -45,7 +45,7 @@ class OnboardingHelperTest < ActionView::TestCase
   end
 
   # === ONBOARDING PROGRESS PERCENTAGE TESTS ===
-  
+
   test 'should return correct percentage for restaurant step' do
     assert_equal 25, onboarding_progress_percentage('1')
     assert_equal 25, onboarding_progress_percentage('restaurant')
@@ -84,7 +84,7 @@ class OnboardingHelperTest < ActionView::TestCase
   end
 
   # === ONBOARDING STEP COMPLETED TESTS ===
-  
+
   test 'should return false for nil user' do
     assert_equal false, onboarding_step_completed?('1', nil)
     assert_equal false, onboarding_step_completed?('restaurant', nil)
@@ -94,15 +94,15 @@ class OnboardingHelperTest < ActionView::TestCase
     # User with restaurant should have completed restaurant step
     assert_equal true, onboarding_step_completed?('1', @user)
     assert_equal true, onboarding_step_completed?('restaurant', @user)
-    
+
     # User without restaurants should not have completed restaurant step
     user_without_restaurant = User.create!(
       email: 'norestaurant@example.com',
       password: 'password123',
       first_name: 'No',
-      last_name: 'Restaurant'
+      last_name: 'Restaurant',
     )
-    
+
     assert_equal false, onboarding_step_completed?('1', user_without_restaurant)
     assert_equal false, onboarding_step_completed?('restaurant', user_without_restaurant)
   end
@@ -111,22 +111,22 @@ class OnboardingHelperTest < ActionView::TestCase
     # User with restaurant and menu should have completed menu step
     assert_equal true, onboarding_step_completed?('2', @user)
     assert_equal true, onboarding_step_completed?('menu', @user)
-    
+
     # User with restaurant but no menu should not have completed menu step
     user_with_restaurant_no_menu = User.create!(
       email: 'nomenu@example.com',
       password: 'password123',
       first_name: 'No',
-      last_name: 'Menu'
+      last_name: 'Menu',
     )
-    
+
     Restaurant.create!(
       name: 'Restaurant Without Menu',
       user: user_with_restaurant_no_menu,
       capacity: 30,
-      status: :active
+      status: :active,
     )
-    
+
     assert_equal false, onboarding_step_completed?('2', user_with_restaurant_no_menu)
     assert_equal false, onboarding_step_completed?('menu', user_with_restaurant_no_menu)
   end
@@ -136,7 +136,7 @@ class OnboardingHelperTest < ActionView::TestCase
     @restaurant.update!(status: :active)
     assert_equal true, onboarding_step_completed?('3', @user)
     assert_equal true, onboarding_step_completed?('payment', @user)
-    
+
     # User with inactive restaurant should not have completed payment step
     @restaurant.update!(status: :inactive)
     assert_equal false, onboarding_step_completed?('3', @user)
@@ -150,7 +150,7 @@ class OnboardingHelperTest < ActionView::TestCase
   end
 
   # === NEXT ONBOARDING STEP TESTS ===
-  
+
   test 'should return correct next step for restaurant step' do
     assert_equal '2', next_onboarding_step('1')
     assert_equal '2', next_onboarding_step('restaurant')
@@ -179,24 +179,24 @@ class OnboardingHelperTest < ActionView::TestCase
   end
 
   # === INTEGRATION TESTS ===
-  
+
   test 'should work together for complete onboarding flow' do
     # Test complete onboarding workflow
-    steps = ['1', '2', '3', '4']
-    
+    steps = %w[1 2 3 4]
+
     steps.each_with_index do |step, index|
       title = onboarding_step_title(step)
       percentage = onboarding_progress_percentage(step)
       next_step = next_onboarding_step(step)
-      
+
       # Title should be meaningful
       assert title.present?
       assert_not_equal 'Onboarding', title unless step == '4' # Complete step might be different
-      
+
       # Percentage should increase with each step
       expected_percentage = ((index + 1).to_f / 4 * 100).round
       assert_equal expected_percentage, percentage
-      
+
       # Next step should be logical
       if step == '4'
         assert_equal '1', next_step # Cycles back
@@ -212,61 +212,61 @@ class OnboardingHelperTest < ActionView::TestCase
       email: 'newuser@example.com',
       password: 'password123',
       first_name: 'New',
-      last_name: 'User'
+      last_name: 'User',
     )
-    
+
     # Step 1: Should not be completed initially
     assert_equal false, onboarding_step_completed?('1', new_user)
-    
+
     # Create restaurant for user
     new_restaurant = Restaurant.create!(
       name: 'New User Restaurant',
       user: new_user,
       capacity: 25,
-      status: :inactive
+      status: :inactive,
     )
-    
+
     # Step 1: Should now be completed
     assert_equal true, onboarding_step_completed?('1', new_user)
     # Step 2: Should not be completed yet
     assert_equal false, onboarding_step_completed?('2', new_user)
-    
+
     # Create menu for restaurant
     Menu.create!(
       name: 'New User Menu',
       restaurant: new_restaurant,
-      status: :active
+      status: :active,
     )
-    
+
     # Step 2: Should now be completed
     assert_equal true, onboarding_step_completed?('2', new_user)
     # Step 3: Should not be completed yet (restaurant inactive)
     assert_equal false, onboarding_step_completed?('3', new_user)
-    
+
     # Activate restaurant
     new_restaurant.update!(status: :active)
-    
+
     # Step 3: Should now be completed
     assert_equal true, onboarding_step_completed?('3', new_user)
   end
 
   # === EDGE CASE TESTS ===
-  
+
   test 'should handle user with multiple restaurants' do
     # Create second restaurant for user
-    second_restaurant = Restaurant.create!(
+    Restaurant.create!(
       name: 'Second Restaurant',
       user: @user,
       capacity: 40,
-      status: :active
+      status: :active,
     )
-    
+
     # Should still return true for restaurant step (user has restaurants)
     assert_equal true, onboarding_step_completed?('1', @user)
-    
+
     # Should return true for menu step if any restaurant has menus
     assert_equal true, onboarding_step_completed?('2', @user)
-    
+
     # Should return true for payment step if any restaurant is active
     assert_equal true, onboarding_step_completed?('3', @user)
   end
@@ -274,7 +274,7 @@ class OnboardingHelperTest < ActionView::TestCase
   test 'should handle archived restaurants' do
     # Archive the restaurant
     @restaurant.update!(archived: true, status: :active)
-    
+
     # Should still count archived restaurants for completion
     assert_equal true, onboarding_step_completed?('1', @user)
     assert_equal true, onboarding_step_completed?('2', @user)
@@ -283,15 +283,15 @@ class OnboardingHelperTest < ActionView::TestCase
 
   test 'should handle restaurants with different statuses' do
     # Test various restaurant statuses (check what statuses are actually valid)
-    statuses = [:active, :inactive]
-    
+    statuses = %i[active inactive]
+
     statuses.each do |status|
       @restaurant.update!(status: status)
-      
+
       # Restaurant and menu steps should always be true if restaurant exists
       assert_equal true, onboarding_step_completed?('1', @user)
       assert_equal true, onboarding_step_completed?('2', @user)
-      
+
       # Payment step should only be true for active restaurants
       expected_payment_completion = (status == :active)
       assert_equal expected_payment_completion, onboarding_step_completed?('3', @user)
@@ -299,34 +299,34 @@ class OnboardingHelperTest < ActionView::TestCase
   end
 
   # === PERFORMANCE TESTS ===
-  
+
   test 'should handle multiple calls efficiently' do
     start_time = Time.current
-    
+
     100.times do |i|
-      step = (i % 4 + 1).to_s
+      step = ((i % 4) + 1).to_s
       onboarding_step_title(step)
       onboarding_progress_percentage(step)
       onboarding_step_completed?(step, @user)
       next_onboarding_step(step)
     end
-    
+
     execution_time = Time.current - start_time
     assert execution_time < 1.second, "Helper calls took too long: #{execution_time}s"
   end
 
   # === BUSINESS SCENARIO TESTS ===
-  
+
   test 'should support onboarding wizard navigation' do
     # Simulate user navigating through onboarding wizard
     current_step = '1'
-    
+
     # Get current step info
     title = onboarding_step_title(current_step)
     progress = onboarding_progress_percentage(current_step)
     completed = onboarding_step_completed?(current_step, @user)
     next_step = next_onboarding_step(current_step)
-    
+
     assert_equal 'Restaurant Information', title
     assert_equal 25, progress
     assert_equal true, completed # User has restaurant
@@ -335,44 +335,44 @@ class OnboardingHelperTest < ActionView::TestCase
 
   test 'should support progress tracking' do
     # Test progress tracking for different users at different stages
-    
+
     # New user - no progress
     new_user = User.create!(
       email: 'progress@example.com',
       password: 'password123',
       first_name: 'Progress',
-      last_name: 'User'
+      last_name: 'User',
     )
-    
-    steps_completed = ['1', '2', '3'].count { |step| onboarding_step_completed?(step, new_user) }
+
+    steps_completed = %w[1 2 3].count { |step| onboarding_step_completed?(step, new_user) }
     assert_equal 0, steps_completed
-    
+
     # User with restaurant - 1 step completed
     Restaurant.create!(
       name: 'Progress Restaurant',
       user: new_user,
       capacity: 30,
-      status: :inactive
+      status: :inactive,
     )
-    
-    steps_completed = ['1', '2', '3'].count { |step| onboarding_step_completed?(step, new_user) }
+
+    steps_completed = %w[1 2 3].count { |step| onboarding_step_completed?(step, new_user) }
     assert_equal 1, steps_completed
   end
 
   test 'should support conditional UI rendering' do
     # Test helpers used for conditional UI rendering
-    
+
     # Show different content based on step completion
     if onboarding_step_completed?('1', @user)
       # User has restaurant - show advanced options
       assert_equal true, true # Restaurant step completed
     end
-    
+
     if onboarding_step_completed?('2', @user)
       # User has menu - show menu management
       assert_equal true, true # Menu step completed
     end
-    
+
     if onboarding_step_completed?('3', @user)
       # User has payment - show full features
       payment_completed = @restaurant.status == 'active'

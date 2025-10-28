@@ -40,16 +40,16 @@ class MenuPolicy < ApplicationPolicy
     def resolve
       # Include menus from restaurants owned by user
       owned_ids = scope.joins(:restaurant).where(restaurants: { user_id: user.id }).pluck(:id)
-      
+
       # Include menus from restaurants where user is an employee
       employee_ids = scope.joins(restaurant: :employees)
-                          .where(employees: { user: user, status: :active }).pluck(:id)
-      
+        .where(employees: { user: user, status: :active }).pluck(:id)
+
       # Combine both ID arrays and filter
       all_ids = (owned_ids + employee_ids).uniq
-      
+
       return scope.none if all_ids.empty?
-      
+
       scope.where(id: all_ids)
     end
   end
@@ -84,7 +84,7 @@ class MenuPolicy < ApplicationPolicy
   def employee_manager?
     return false unless user.present? && record.respond_to?(:restaurant) && record.restaurant
 
-    user.employees.exists?(restaurant_id: record.restaurant.id, role: [:manager, :admin], status: :active)
+    user.employees.exists?(restaurant_id: record.restaurant.id, role: %i[manager admin], status: :active)
   end
 
   def employee_admin_of_restaurant?

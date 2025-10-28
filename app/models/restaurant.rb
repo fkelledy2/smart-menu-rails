@@ -114,7 +114,7 @@ class Restaurant < ApplicationRecord
   def dashboard_summary
     self.class.cached_query("restaurant:#{id}:dashboard", cache_type: :dashboard) do
       Restaurant.joins(:menus, :ordrs)
-        .select('restaurants.*, 
+        .select('restaurants.*,
                  COUNT(DISTINCT menus.id) as menu_count,
                  COUNT(DISTINCT ordrs.id) as order_count,
                  COALESCE(SUM(ordrs.gross), 0) as total_revenue')
@@ -126,18 +126,18 @@ class Restaurant < ApplicationRecord
   def order_analytics(date_range = nil)
     cache_key = "restaurant:#{id}:order_analytics"
     cache_key += ":#{date_range[:start]}_#{date_range[:end]}" if date_range
-    
+
     self.class.cached_query(cache_key, cache_type: :analytics) do
       query = ordrs.select('ordrs.*,
                             COUNT(ordritems.id) as item_count,
                             SUM(ordritems.ordritemprice) as items_total')
-                   .joins(:ordritems)
-                   .group('ordrs.id')
-      
+        .joins(:ordritems)
+        .group('ordrs.id')
+
       if date_range
         query = query.where('ordrs."orderedAt" >= ? AND ordrs."orderedAt" <= ?', date_range[:start], date_range[:end])
       end
-      
+
       query
     end
   end
@@ -150,8 +150,8 @@ class Restaurant < ApplicationRecord
                     SUM(ordrs.service) as total_service,
                     SUM(ordrs.tax) as total_tax,
                     SUM(ordrs.gross) as total_gross')
-           .group('DATE(ordrs."orderedAt")')
-           .order('order_date DESC')
+        .group('DATE(ordrs."orderedAt")')
+        .order(order_date: :desc)
     end
   end
 

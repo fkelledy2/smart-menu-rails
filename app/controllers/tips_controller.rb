@@ -40,28 +40,26 @@ class TipsController < ApplicationController
 
   # POST /tips or /tips.json
   def create
-    begin
-      @tip = Tip.new(tip_params)
-      authorize @tip
-      respond_to do |format|
-        if @tip.save
-          format.html do
-            redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.created')
-          end
-          format.json { render :show, status: :created, location: restaurant_tip_url(@tip.restaurant, @tip) }
-        else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @tip.errors, status: :unprocessable_entity }
+    @tip = Tip.new(tip_params)
+    authorize @tip
+    respond_to do |format|
+      if @tip.save
+        format.html do
+          redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.created')
         end
-      end
-    rescue ArgumentError => e
-      # Handle invalid enum values
-      @tip = Tip.new
-      @tip.errors.add(:status, e.message)
-      respond_to do |format|
+        format.json { render :show, status: :created, location: restaurant_tip_url(@tip.restaurant, @tip) }
+      else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @tip.errors, status: :unprocessable_entity }
       end
+    end
+  rescue ArgumentError => e
+    # Handle invalid enum values
+    @tip = Tip.new
+    @tip.errors.add(:status, e.message)
+    respond_to do |format|
+      format.html { render :new, status: :unprocessable_entity }
+      format.json { render json: @tip.errors, status: :unprocessable_entity }
     end
   end
 

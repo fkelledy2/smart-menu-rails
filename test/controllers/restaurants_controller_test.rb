@@ -25,7 +25,7 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   test 'should get index with no plan' do
     @user.update(plan: nil)
     get restaurants_url
-    assert_response_in [:success, :redirect]
+    assert_response_in %i[success redirect]
   end
 
   test 'should get new' do
@@ -279,7 +279,7 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === COMPREHENSIVE CRUD OPERATIONS ===
-  
+
   test 'should create restaurant with all valid attributes' do
     post restaurants_url, params: {
       restaurant: {
@@ -298,15 +298,15 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
         wifiPassword: 'password123',
         wifiEncryptionType: :WPA,
         wifiHidden: false,
-        user_id: @user.id
-      }
+        user_id: @user.id,
+      },
     }
     assert_response :success
   end
 
   test 'should create restaurant with different status values' do
-    status_values = [:inactive, :active, :archived]
-    
+    status_values = %i[inactive active archived]
+
     status_values.each_with_index do |status_value, index|
       post restaurants_url, params: {
         restaurant: {
@@ -314,16 +314,16 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
           description: 'Status test description',
           status: status_value,
           capacity: 50,
-          user_id: @user.id
-        }
+          user_id: @user.id,
+        },
       }
       assert_response :success
     end
   end
 
   test 'should create restaurant with different wifi encryption types' do
-    wifi_types = [:WPA, :WEP, :NONE]
-    
+    wifi_types = %i[WPA WEP NONE]
+
     wifi_types.each_with_index do |wifi_type, index|
       post restaurants_url, params: {
         restaurant: {
@@ -333,16 +333,16 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
           wifissid: "TestWiFi#{index}",
           capacity: 50,
           status: :active,
-          user_id: @user.id
-        }
+          user_id: @user.id,
+        },
       }
       assert_response :success
     end
   end
 
   test 'should create restaurant with different currencies' do
-    currencies = ['USD', 'EUR', 'GBP', 'CAD', 'AUD']
-    
+    currencies = %w[USD EUR GBP CAD AUD]
+
     currencies.each_with_index do |currency, index|
       post restaurants_url, params: {
         restaurant: {
@@ -351,8 +351,8 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
           currency: currency,
           capacity: 50,
           status: :active,
-          user_id: @user.id
-        }
+          user_id: @user.id,
+        },
       }
       assert_response :success
     end
@@ -362,8 +362,8 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_url(@restaurant), params: {
       restaurant: {
         name: @restaurant.name,
-        status: :archived
-      }
+        status: :archived,
+      },
     }
     assert_response :success
   end
@@ -375,8 +375,8 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
         wifissid: 'UpdatedWiFi',
         wifiPassword: 'newpassword',
         wifiEncryptionType: :WEP,
-        wifiHidden: true
-      }
+        wifiHidden: true,
+      },
     }
     assert_response :success
   end
@@ -390,23 +390,23 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
         city: 'Updated City',
         state: 'Updated State',
         postcode: '54321',
-        country: 'Updated Country'
-      }
+        country: 'Updated Country',
+      },
     }
     assert_response :success
   end
 
   # === AUTHORIZATION TESTS ===
-  
+
   test 'should enforce restaurant ownership' do
     other_user = User.create!(email: 'other@example.com', password: 'password')
     other_restaurant = Restaurant.create!(
       name: 'Other Restaurant',
       user: other_user,
       capacity: 30,
-      status: :active
+      status: :active,
     )
-    
+
     get restaurant_url(other_restaurant)
     assert_response_in [200, 302, 403]
   end
@@ -428,7 +428,7 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === JSON API TESTS ===
-  
+
   test 'should handle JSON index requests' do
     get restaurants_url, as: :json
     assert_response :success
@@ -453,34 +453,34 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
     post restaurants_url, params: {
       restaurant: {
         name: '', # Invalid
-        user_id: @user.id
-      }
+        user_id: @user.id,
+      },
     }, as: :json
     assert_response_in [200, 422]
   end
 
   # === BUSINESS LOGIC TESTS ===
-  
+
   test 'should handle all status enum values' do
-    status_values = [:inactive, :active, :archived]
-    
+    status_values = %i[inactive active archived]
+
     status_values.each do |status_value|
       restaurant = Restaurant.create!(
         name: "#{status_value.to_s.capitalize} Restaurant",
         description: 'Test restaurant',
         status: status_value,
         capacity: 50,
-        user: @user
+        user: @user,
       )
-      
+
       get restaurant_url(restaurant)
       assert_response :success
     end
   end
 
   test 'should handle all wifi encryption types' do
-    wifi_types = [:WPA, :WEP, :NONE]
-    
+    wifi_types = %i[WPA WEP NONE]
+
     wifi_types.each do |wifi_type|
       restaurant = Restaurant.create!(
         name: "#{wifi_type} WiFi Restaurant",
@@ -489,9 +489,9 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
         wifissid: 'TestNetwork',
         capacity: 50,
         status: :active,
-        user: @user
+        user: @user,
       )
-      
+
       get restaurant_url(restaurant)
       assert_response :success
     end
@@ -499,7 +499,7 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should handle restaurant capacity management' do
     capacities = [10, 25, 50, 100, 200]
-    
+
     capacities.each_with_index do |capacity, index|
       post restaurants_url, params: {
         restaurant: {
@@ -507,8 +507,8 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
           description: 'Capacity test',
           capacity: capacity,
           status: :active,
-          user_id: @user.id
-        }
+          user_id: @user.id,
+        },
       }
       assert_response :success
     end
@@ -519,7 +519,7 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
     Restaurant.create!(name: 'Active Restaurant', status: :active, capacity: 50, user: @user)
     Restaurant.create!(name: 'Inactive Restaurant', status: :inactive, capacity: 30, user: @user)
     Restaurant.create!(name: 'Archived Restaurant', status: :archived, capacity: 40, user: @user)
-    
+
     get restaurants_url
     assert_response :success
   end
@@ -540,30 +540,30 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === ERROR HANDLING TESTS ===
-  
+
   test 'should handle invalid enum values gracefully' do
     post restaurants_url, params: {
       restaurant: {
         name: 'Invalid Enum Test',
         status: 'invalid_status', # Invalid enum value
         capacity: 50,
-        user_id: @user.id
-      }
+        user_id: @user.id,
+      },
     }
     assert_response_in [200, 422]
   end
 
   test 'should handle invalid capacity values' do
     invalid_capacities = [-1, 0, 'not_a_number']
-    
+
     invalid_capacities.each do |invalid_capacity|
       post restaurants_url, params: {
         restaurant: {
           name: 'Invalid Capacity Test',
           capacity: invalid_capacity,
           status: :active,
-          user_id: @user.id
-        }
+          user_id: @user.id,
+        },
       }
       assert_response_in [200, 422]
     end
@@ -573,40 +573,40 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_url(@restaurant), params: {
       restaurant: {
         name: 'Concurrent Test Restaurant',
-        description: 'Concurrent update test'
-      }
+        description: 'Concurrent update test',
+      },
     }
     assert_response :success
   end
 
   # === EDGE CASE TESTS ===
-  
+
   test 'should handle long restaurant names' do
     long_name = 'A' * 100 # Test reasonable length limit
-    
+
     post restaurants_url, params: {
       restaurant: {
         name: long_name,
         description: 'Long name test',
         capacity: 50,
         status: :active,
-        user_id: @user.id
-      }
+        user_id: @user.id,
+      },
     }
     assert_response_in [200, 302, 422]
   end
 
   test 'should handle special characters in restaurant names' do
     special_name = 'Restaurant with "quotes" & symbols!'
-    
+
     post restaurants_url, params: {
       restaurant: {
         name: special_name,
         description: 'Special characters test',
         capacity: 50,
         status: :active,
-        user_id: @user.id
-      }
+        user_id: @user.id,
+      },
     }
     assert_response_in [200, 302]
   end
@@ -615,9 +615,9 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_url(@restaurant), params: {
       restaurant: {
         name: 'Parameter Test',
-        description: 'Parameter filtering test'
+        description: 'Parameter filtering test',
       },
-      unauthorized_param: 'should_be_filtered'
+      unauthorized_param: 'should_be_filtered',
     }
     assert_response :success
   end
@@ -635,8 +635,8 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
         country: '',
         capacity: 50,
         status: :active,
-        user_id: @user.id
-      }
+        user_id: @user.id,
+      },
     }
     assert_response_in [200, 302]
   end
@@ -652,17 +652,17 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
         wifiHidden: true,
         capacity: 50,
         status: :active,
-        user_id: @user.id
-      }
+        user_id: @user.id,
+      },
     }
     assert_response_in [200, 302]
   end
 
   # === ANALYTICS TESTS ===
-  
+
   test 'should handle analytics with different time periods' do
     time_periods = [1, 7, 30, 90, 365]
-    
+
     time_periods.each do |days|
       get analytics_restaurant_url(@restaurant), params: { days: days }
       assert_response :success
@@ -672,7 +672,7 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   test 'should handle analytics with date ranges' do
     get analytics_restaurant_url(@restaurant), params: {
       start_date: 30.days.ago.to_date.to_s,
-      end_date: Date.current.to_s
+      end_date: Date.current.to_s,
     }
     assert_response :success
   end
@@ -684,7 +684,7 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should handle performance with custom periods' do
     periods = [7, 30, 90]
-    
+
     periods.each do |days|
       get performance_restaurant_url(@restaurant), params: { days: days }
       assert_response :success
@@ -692,7 +692,7 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === CACHING TESTS ===
-  
+
   test 'should handle cached restaurant data efficiently' do
     get restaurant_url(@restaurant)
     assert_response :success
@@ -702,8 +702,8 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_url(@restaurant), params: {
       restaurant: {
         name: 'Cache Invalidation Test',
-        description: 'Testing cache invalidation'
-      }
+        description: 'Testing cache invalidation',
+      },
     }
     assert_response :success
   end
@@ -717,14 +717,14 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
     # First request
     get restaurant_url(@restaurant)
     assert_response :success
-    
+
     # Second request should use cache
     get restaurant_url(@restaurant)
     assert_response :success
   end
 
   # === PERFORMANCE TESTS ===
-  
+
   test 'should optimize database queries for index' do
     get restaurants_url
     assert_response :success
@@ -737,17 +737,17 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
         name: "Performance Test Restaurant #{i}",
         description: "Performance test #{i}",
         capacity: (20..100).to_a.sample,
-        status: [:inactive, :active, :archived].sample,
-        user: @user
+        status: %i[inactive active archived].sample,
+        user: @user,
       )
     end
-    
+
     get restaurants_url
     assert_response :success
   end
 
   # === INTEGRATION TESTS ===
-  
+
   test 'should handle restaurant with menus integration' do
     get restaurant_url(@restaurant)
     assert_response :success
@@ -769,16 +769,16 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === BUSINESS SCENARIO TESTS ===
-  
+
   test 'should support restaurant management scenarios' do
     # Test creating different types of restaurants
     restaurant_types = [
       { name: 'Fine Dining Restaurant', capacity: 50, description: 'Upscale dining experience' },
       { name: 'Fast Casual Cafe', capacity: 30, description: 'Quick service restaurant' },
       { name: 'Food Truck', capacity: 10, description: 'Mobile food service' },
-      { name: 'Catering Service', capacity: 100, description: 'Event catering' }
+      { name: 'Catering Service', capacity: 100, description: 'Event catering' },
     ]
-    
+
     restaurant_types.each do |restaurant_data|
       post restaurants_url, params: {
         restaurant: {
@@ -786,8 +786,8 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
           description: restaurant_data[:description],
           capacity: restaurant_data[:capacity],
           status: :active,
-          user_id: @user.id
-        }
+          user_id: @user.id,
+        },
       }
       assert_response :success
     end
@@ -801,26 +801,26 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
         description: 'Testing lifecycle',
         capacity: 50,
         status: :inactive,
-        user_id: @user.id
-      }
+        user_id: @user.id,
+      },
     }
     assert_response :success
-    
+
     # Activate restaurant
     patch restaurant_url(@restaurant), params: {
       restaurant: {
         name: @restaurant.name,
-        status: :active
-      }
+        status: :active,
+      },
     }
     assert_response :success
-    
+
     # Archive restaurant
     patch restaurant_url(@restaurant), params: {
       restaurant: {
         name: @restaurant.name,
-        status: :archived
-      }
+        status: :archived,
+      },
     }
     assert_response :success
   end
@@ -830,9 +830,9 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
     locations = [
       { name: 'Downtown Location', city: 'Downtown', address1: '123 Main St' },
       { name: 'Uptown Location', city: 'Uptown', address1: '456 Oak Ave' },
-      { name: 'Suburban Location', city: 'Suburbs', address1: '789 Pine Rd' }
+      { name: 'Suburban Location', city: 'Suburbs', address1: '789 Pine Rd' },
     ]
-    
+
     locations.each do |location|
       post restaurants_url, params: {
         restaurant: {
@@ -842,8 +842,8 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
           city: location[:city],
           capacity: 50,
           status: :active,
-          user_id: @user.id
-        }
+          user_id: @user.id,
+        },
       }
       assert_response :success
     end
@@ -866,8 +866,8 @@ class RestaurantsControllerTest < ActionDispatch::IntegrationTest
         wifiPassword: 'setuppass',
         wifiEncryptionType: :WPA,
         wifiHidden: false,
-        status: :active
-      }
+        status: :active,
+      },
     }
     assert_response :success
   end

@@ -12,7 +12,7 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     @menusection = menusections(:one)
     @menu = menus(:one)
     @restaurant = restaurants(:one)
-    
+
     # Ensure proper associations
     @restaurant.update!(user: @user) if @restaurant.user != @user
     @menu.update!(restaurant: @restaurant) if @menu.restaurant != @restaurant
@@ -24,7 +24,7 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === BASIC CRUD OPERATIONS ===
-  
+
   test 'should get index' do
     get restaurant_menu_menusections_url(@restaurant, @menu)
     assert_response :success
@@ -34,7 +34,7 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     empty_menu = Menu.create!(
       name: 'Empty Menu',
       restaurant: @restaurant,
-      status: :active
+      status: :active,
     )
     get restaurant_menu_menusections_url(@restaurant, empty_menu)
     assert_response :success
@@ -52,15 +52,15 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
         description: 'Test section description',
         status: :active,
         sequence: 1,
-        menu_id: @menu.id
-      }
+        menu_id: @menu.id,
+      },
     }
     assert_response_in [200, 302]
   end
 
   test 'should create menusection with different status values' do
-    status_values = [:inactive, :active, :archived]
-    
+    status_values = %i[inactive active archived]
+
     status_values.each_with_index do |status_value, index|
       post restaurant_menu_menusections_url(@restaurant, @menu), params: {
         menusection: {
@@ -68,8 +68,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
           description: 'Status test description',
           status: status_value,
           sequence: index + 1,
-          menu_id: @menu.id
-        }
+          menu_id: @menu.id,
+        },
       }
       assert_response_in [200, 302]
     end
@@ -80,8 +80,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
       menusection: {
         name: '', # Invalid - required field
         description: 'Test Description',
-        menu_id: @menu.id
-      }
+        menu_id: @menu.id,
+      },
     }
     assert_response_in [200, 422]
   end
@@ -102,8 +102,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
         name: 'Updated Section Name',
         description: 'Updated description',
         status: @menusection.status,
-        sequence: @menusection.sequence
-      }
+        sequence: @menusection.sequence,
+      },
     }
     assert_response :success
   end
@@ -113,8 +113,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
       menusection: {
         name: @menusection.name,
         status: :archived,
-        sequence: @menusection.sequence
-      }
+        sequence: @menusection.sequence,
+      },
     }
     assert_response :success
   end
@@ -124,8 +124,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
       menusection: {
         name: @menusection.name,
         status: @menusection.status,
-        sequence: 10
-      }
+        sequence: 10,
+      },
     }
     assert_response :success
   end
@@ -134,8 +134,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menusection_url(@restaurant, @menu, @menusection), params: {
       menusection: {
         name: '', # Invalid - required field
-        description: 'Test Description'
-      }
+        description: 'Test Description',
+      },
     }
     assert_response_in [200, 422]
   end
@@ -146,20 +146,20 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === AUTHORIZATION TESTS ===
-  
+
   test 'should enforce restaurant ownership' do
     other_restaurant = Restaurant.create!(
       name: 'Other Restaurant',
       user: User.create!(email: 'other@example.com', password: 'password'),
       capacity: 30,
-      status: :active
+      status: :active,
     )
     other_menu = Menu.create!(
       name: 'Other Menu',
       restaurant: other_restaurant,
-      status: :active
+      status: :active,
     )
-    
+
     get restaurant_menu_menusections_url(other_restaurant, other_menu)
     assert_response_in [200, 302, 403]
   end
@@ -181,7 +181,7 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === JSON API TESTS ===
-  
+
   test 'should handle JSON index requests' do
     get restaurant_menu_menusections_url(@restaurant, @menu), as: :json
     assert_response :success
@@ -199,8 +199,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
         description: 'JSON created section',
         status: :active,
         sequence: 1,
-        menu_id: @menu.id
-      }
+        menu_id: @menu.id,
+      },
     }, as: :json
     assert_response_in [200, 201, 302]
   end
@@ -209,8 +209,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menusection_url(@restaurant, @menu, @menusection), params: {
       menusection: {
         name: 'JSON Updated Section',
-        description: 'JSON updated description'
-      }
+        description: 'JSON updated description',
+      },
     }, as: :json
     assert_response :success
   end
@@ -224,26 +224,26 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menu_menusections_url(@restaurant, @menu), params: {
       menusection: {
         name: '', # Invalid
-        menu_id: @menu.id
-      }
+        menu_id: @menu.id,
+      },
     }, as: :json
     assert_response_in [200, 422]
   end
 
   # === BUSINESS LOGIC TESTS ===
-  
+
   test 'should handle all status enum values' do
-    status_values = [:inactive, :active, :archived]
-    
+    status_values = %i[inactive active archived]
+
     status_values.each do |status_value|
       menusection = Menusection.create!(
         name: "#{status_value.to_s.capitalize} Section",
         description: 'Test section',
         status: status_value,
         sequence: 1,
-        menu: @menu
+        menu: @menu,
       )
-      
+
       get restaurant_menu_menusection_url(@restaurant, @menu, menusection)
       assert_response :success
     end
@@ -251,7 +251,7 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should handle sequence management' do
     sequences = [1, 5, 10, 15]
-    
+
     sequences.each_with_index do |sequence, index|
       post restaurant_menu_menusections_url(@restaurant, @menu), params: {
         menusection: {
@@ -259,8 +259,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
           description: 'Sequence test',
           status: :active,
           sequence: sequence,
-          menu_id: @menu.id
-        }
+          menu_id: @menu.id,
+        },
       }
       assert_response_in [200, 302]
     end
@@ -271,7 +271,7 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     Menusection.create!(name: 'Active Section', status: :active, sequence: 1, menu: @menu)
     Menusection.create!(name: 'Inactive Section', status: :inactive, sequence: 2, menu: @menu)
     Menusection.create!(name: 'Archived Section', status: :archived, sequence: 3, menu: @menu)
-    
+
     get restaurant_menu_menusections_url(@restaurant, @menu)
     assert_response :success
   end
@@ -285,8 +285,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menusection_url(@restaurant, @menu, @menusection), params: {
       menusection: {
         name: @menusection.name,
-        description: 'Image test section'
-      }
+        description: 'Image test section',
+      },
     }
     assert_response :success
   end
@@ -297,14 +297,14 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === ERROR HANDLING TESTS ===
-  
+
   test 'should handle invalid enum values gracefully' do
     post restaurant_menu_menusections_url(@restaurant, @menu), params: {
       menusection: {
         name: 'Invalid Enum Test',
         status: 'invalid_status', # Invalid enum value
-        menu_id: @menu.id
-      }
+        menu_id: @menu.id,
+      },
     }
     assert_response_in [200, 422]
   end
@@ -313,8 +313,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menusection_url(@restaurant, @menu, @menusection), params: {
       menusection: {
         name: 'Concurrent Test Section',
-        description: 'Concurrent update test'
-      }
+        description: 'Concurrent update test',
+      },
     }
     assert_response :success
   end
@@ -325,40 +325,40 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
         name: 'Invalid Sequence Test',
         sequence: -1, # Invalid negative sequence
         status: :active,
-        menu_id: @menu.id
-      }
+        menu_id: @menu.id,
+      },
     }
     assert_response_in [200, 422]
   end
 
   # === EDGE CASE TESTS ===
-  
+
   test 'should handle long menusection names' do
     long_name = 'A' * 100 # Test reasonable length limit
-    
+
     post restaurant_menu_menusections_url(@restaurant, @menu), params: {
       menusection: {
         name: long_name,
         description: 'Long name test',
         status: :active,
         sequence: 1,
-        menu_id: @menu.id
-      }
+        menu_id: @menu.id,
+      },
     }
     assert_response_in [200, 302, 422]
   end
 
   test 'should handle special characters in menusection names' do
     special_name = 'Section with "quotes" & symbols!'
-    
+
     post restaurant_menu_menusections_url(@restaurant, @menu), params: {
       menusection: {
         name: special_name,
         description: 'Special characters test',
         status: :active,
         sequence: 1,
-        menu_id: @menu.id
-      }
+        menu_id: @menu.id,
+      },
     }
     assert_response_in [200, 302]
   end
@@ -367,9 +367,9 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menusection_url(@restaurant, @menu, @menusection), params: {
       menusection: {
         name: 'Parameter Test',
-        description: 'Parameter filtering test'
+        description: 'Parameter filtering test',
       },
-      unauthorized_param: 'should_be_filtered'
+      unauthorized_param: 'should_be_filtered',
     }
     assert_response :success
   end
@@ -381,8 +381,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
         description: '',
         status: :active,
         sequence: 1,
-        menu_id: @menu.id
-      }
+        menu_id: @menu.id,
+      },
     }
     assert_response_in [200, 302]
   end
@@ -394,14 +394,14 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
         description: 'Testing duplicate sequences',
         status: :active,
         sequence: @menusection.sequence, # Same sequence as existing
-        menu_id: @menu.id
-      }
+        menu_id: @menu.id,
+      },
     }
     assert_response_in [200, 302, 422]
   end
 
   # === CACHING TESTS ===
-  
+
   test 'should handle cached menusection data efficiently' do
     get restaurant_menu_menusection_url(@restaurant, @menu, @menusection)
     assert_response :success
@@ -411,8 +411,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_menusection_url(@restaurant, @menu, @menusection), params: {
       menusection: {
         name: 'Cache Invalidation Test',
-        description: 'Testing cache invalidation'
-      }
+        description: 'Testing cache invalidation',
+      },
     }
     assert_response :success
   end
@@ -423,7 +423,7 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === PERFORMANCE TESTS ===
-  
+
   test 'should optimize database queries for index' do
     get restaurant_menu_menusections_url(@restaurant, @menu)
     assert_response :success
@@ -435,18 +435,18 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
       Menusection.create!(
         name: "Performance Test Section #{i}",
         description: "Performance test #{i}",
-        status: [:inactive, :active, :archived].sample,
+        status: %i[inactive active archived].sample,
         sequence: i + 1,
-        menu: @menu
+        menu: @menu,
       )
     end
-    
+
     get restaurant_menu_menusections_url(@restaurant, @menu)
     assert_response :success
   end
 
   # === INTEGRATION TESTS ===
-  
+
   test 'should handle menusection with menuitems integration' do
     get restaurant_menu_menusection_url(@restaurant, @menu, @menusection)
     assert_response :success
@@ -463,16 +463,16 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === BUSINESS SCENARIO TESTS ===
-  
+
   test 'should support menu section management scenarios' do
     # Test creating multiple sections for a menu
     section_types = [
       { name: 'Appetizers', description: 'Start your meal' },
       { name: 'Main Courses', description: 'Hearty entrees' },
       { name: 'Desserts', description: 'Sweet endings' },
-      { name: 'Beverages', description: 'Drinks and refreshments' }
+      { name: 'Beverages', description: 'Drinks and refreshments' },
     ]
-    
+
     section_types.each_with_index do |section_data, index|
       post restaurant_menu_menusections_url(@restaurant, @menu), params: {
         menusection: {
@@ -480,8 +480,8 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
           description: section_data[:description],
           status: :active,
           sequence: index + 1,
-          menu_id: @menu.id
-        }
+          menu_id: @menu.id,
+        },
       }
       assert_response_in [200, 302]
     end
@@ -495,26 +495,26 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
         description: 'Testing lifecycle',
         status: :inactive,
         sequence: 1,
-        menu_id: @menu.id
-      }
+        menu_id: @menu.id,
+      },
     }
     assert_response_in [200, 302]
-    
+
     # Activate menusection
     patch restaurant_menu_menusection_url(@restaurant, @menu, @menusection), params: {
       menusection: {
         name: @menusection.name,
-        status: :active
-      }
+        status: :active,
+      },
     }
     assert_response :success
-    
+
     # Archive menusection
     patch restaurant_menu_menusection_url(@restaurant, @menu, @menusection), params: {
       menusection: {
         name: @menusection.name,
-        status: :archived
-      }
+        status: :archived,
+      },
     }
     assert_response :success
   end
@@ -523,26 +523,26 @@ class MenusectionsControllerTest < ActionDispatch::IntegrationTest
     # Create multiple sections with different sequences
     sequences = [1, 3, 5, 7, 9]
     sections = []
-    
+
     sequences.each_with_index do |seq, index|
       section = Menusection.create!(
         name: "Reorder Test #{index}",
         description: "Sequence #{seq}",
         status: :active,
         sequence: seq,
-        menu: @menu
+        menu: @menu,
       )
       sections << section
     end
-    
+
     # Test reordering by updating sequences
     sections.each_with_index do |section, index|
       new_sequence = sequences.reverse[index]
       patch restaurant_menu_menusection_url(@restaurant, @menu, section), params: {
         menusection: {
           name: section.name,
-          sequence: new_sequence
-        }
+          sequence: new_sequence,
+        },
       }
       assert_response :success
     end

@@ -16,7 +16,8 @@ class MenuitemsController < ApplicationController
       # Optimize query based on request format
       @menuitems = if request.format.json?
                      # JSON: Direct association with minimal includes for performance
-                     menusection.menuitems.includes(:genimage, :inventory, menusection: { menu: :restaurant }).order(:sequence)
+                     menusection.menuitems.includes(:genimage, :inventory,
+                                                    menusection: { menu: :restaurant },).order(:sequence)
                    else
                      # HTML: Use AdvancedCacheServiceV2 for comprehensive data
                      @section_items_data = AdvancedCacheServiceV2.cached_section_items_with_details(menusection.id)
@@ -38,10 +39,12 @@ class MenuitemsController < ApplicationController
       # Optimize query based on request format
       @menuitems = if request.format.json?
                      # JSON: Direct association with minimal includes for performance
-                     @menu.menuitems.includes(:genimage, :inventory, menusection: { menu: :restaurant }).order(:sequence)
+                     @menu.menuitems.includes(:genimage, :inventory,
+                                              menusection: { menu: :restaurant },).order(:sequence)
                    else
                      # HTML: Use AdvancedCacheServiceV2 for comprehensive data
-                     @menu_items_data = AdvancedCacheServiceV2.cached_menu_items_with_details(@menu.id, include_analytics: true)
+                     @menu_items_data = AdvancedCacheServiceV2.cached_menu_items_with_details(@menu.id,
+                                                                                              include_analytics: true,)
                      policy_scope(@menu_items_data[:items])
                    end
 
@@ -59,7 +62,7 @@ class MenuitemsController < ApplicationController
     else
       @menuitems = policy_scope(Menuitem.none) # Empty scope with policy applied
     end
-    
+
     # Use minimal JSON view for better performance
     respond_to do |format|
       format.html # Default HTML view
@@ -113,7 +116,7 @@ class MenuitemsController < ApplicationController
   # GET /menus/:menu_id/menusections/:menusection_id/menuitems/new
   def new
     @menuitem = Menuitem.new
-    
+
     # Menuitems are always nested under menusections
     if params[:menusection_id]
       @futureParentMenuSection = Menusection.find_by(id: params[:menusection_id])
@@ -123,17 +126,17 @@ class MenuitemsController < ApplicationController
       # If only menu_id is provided, redirect to menu edit page
       # User should create menuitem from within a menusection
       @menu = Menu.find(params[:menu_id])
-      redirect_to edit_restaurant_menu_path(@menu.restaurant, @menu), 
+      redirect_to edit_restaurant_menu_path(@menu.restaurant, @menu),
                   alert: t('menuitems.errors.menusection_required')
       return
     end
-    
+
     # Set default values
     @menuitem.sequence = 999
     @menuitem.calories = 0
     @menuitem.price = 0
     @menuitem.sizesupport = false
-    
+
     authorize @menuitem
   end
 
@@ -164,10 +167,13 @@ class MenuitemsController < ApplicationController
             @menuitem.menusection.menu.restaurant,
             @menuitem.menusection.menu,
             @menuitem.menusection,
-            @menuitem
+            @menuitem,
           ), notice: t('common.flash.created', resource: t('activerecord.models.menuitem'))
         end
-        format.json { render :show, status: :created, location: restaurant_menu_menusection_menuitem_url(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, @menuitem.menusection, @menuitem) }
+        format.json do
+          render :show, status: :created,
+                        location: restaurant_menu_menusection_menuitem_url(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, @menuitem.menusection, @menuitem)
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @menuitem.errors, status: :unprocessable_entity }
@@ -206,10 +212,13 @@ class MenuitemsController < ApplicationController
             @menuitem.menusection.menu.restaurant,
             @menuitem.menusection.menu,
             @menuitem.menusection,
-            @menuitem
+            @menuitem,
           ), notice: t('common.flash.updated', resource: t('activerecord.models.menuitem'))
         end
-        format.json { render :show, status: :ok, location: restaurant_menu_menusection_menuitem_url(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, @menuitem.menusection, @menuitem) }
+        format.json do
+          render :show, status: :ok,
+                        location: restaurant_menu_menusection_menuitem_url(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, @menuitem.menusection, @menuitem)
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menuitem.errors, status: :unprocessable_entity }
@@ -233,7 +242,7 @@ class MenuitemsController < ApplicationController
         redirect_to edit_restaurant_menu_menusection_path(
           @menuitem.menusection.menu.restaurant,
           @menuitem.menusection.menu,
-          @menuitem.menusection
+          @menuitem.menusection,
         ), notice: t('common.flash.deleted', resource: t('activerecord.models.menuitem'))
       end
       format.json { head :no_content }

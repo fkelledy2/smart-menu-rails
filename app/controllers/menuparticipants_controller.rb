@@ -54,7 +54,10 @@ class MenuparticipantsController < ApplicationController
           @menu ||= @menuparticipant.smartmenu.menu
         end
         broadcastPartials
-        format.json { render :show, status: :created, location: restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant) }
+        format.json do
+          render :show, status: :created,
+                        location: restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant)
+        end
       else
         @smartmenus = Smartmenu.all
         format.html { render :new, status: :unprocessable_entity }
@@ -74,7 +77,9 @@ class MenuparticipantsController < ApplicationController
         @menuparticipant.save
         broadcastPartials
         #         format.html { redirect_to @menuparticipant, notice: "Menuparticipant was successfully updated." }
-        format.json { render :show, status: :ok, location: restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant) }
+        format.json do
+          render :show, status: :ok, location: restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant)
+        end
       else
         #         @smartmenus = Smartmenu.all
         format.html { render :edit, status: :unprocessable_entity }
@@ -116,6 +121,7 @@ class MenuparticipantsController < ApplicationController
     menuparticipant = Menuparticipant.includes(smartmenu: [:menu,
                                                            { restaurant: %i[menusections menuavailabilities] }, :tablesetting,]).find_by(sessionid: session.id.to_s)
     return unless menuparticipant
+
     smartmenu = menuparticipant.smartmenu
     menu = smartmenu.menu
     restaurant = smartmenu.restaurant
@@ -265,8 +271,8 @@ class MenuparticipantsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_menuparticipant
-    @menuparticipant = Menuparticipant.includes(smartmenu: [:menu, :restaurant]).find(params[:id])
-    
+    @menuparticipant = Menuparticipant.includes(smartmenu: %i[menu restaurant]).find(params[:id])
+
     # Ensure @restaurant and @menu are set for form rendering
     if @menuparticipant.smartmenu
       @restaurant ||= @menuparticipant.smartmenu.restaurant

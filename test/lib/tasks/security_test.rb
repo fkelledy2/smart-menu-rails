@@ -32,8 +32,8 @@ class SecurityRakeTest < ActiveSupport::TestCase
 
   test 'security:all has correct dependencies' do
     task = Rake::Task['security:all']
-    expected_dependencies = ['brakeman', 'bundle_audit', 'secrets_scan']
-    
+    expected_dependencies = %w[brakeman bundle_audit secrets_scan]
+
     assert_equal expected_dependencies.sort, task.prerequisites.sort,
                  'security:all should depend on brakeman, bundle_audit, and secrets_scan'
   end

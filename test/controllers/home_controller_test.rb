@@ -93,7 +93,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
       get terms_path
 
       # In test environment, errors may bubble up, so we accept either success or server error
-      assert_response_in [:success, :internal_server_error]
+      assert_response_in %i[success internal_server_error]
     end
   end
 
@@ -130,7 +130,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
       get privacy_path
 
       # In test environment, errors may bubble up, so we accept either success or server error
-      assert_response_in [:success, :internal_server_error]
+      assert_response_in %i[success internal_server_error]
     end
   end
 

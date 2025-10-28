@@ -2,7 +2,7 @@ require 'test_helper'
 
 class OcrMenuImportsHelperTest < ActionView::TestCase
   # === STATUS BADGE CLASSES TESTS ===
-  
+
   test 'should return correct classes for pending status' do
     result = status_badge_classes(:pending)
     assert_includes result, 'bg-yellow-100 text-yellow-800'
@@ -29,7 +29,7 @@ class OcrMenuImportsHelperTest < ActionView::TestCase
   end
 
   # === STATUS BADGE TESTS ===
-  
+
   test 'should create status badge with correct content' do
     result = status_badge('pending')
     assert_includes result, 'Pending'
@@ -37,7 +37,7 @@ class OcrMenuImportsHelperTest < ActionView::TestCase
   end
 
   # === HUMAN FILE SIZE TESTS ===
-  
+
   test 'should return 0 B for zero bytes' do
     assert_equal '0 B', human_file_size(0)
     assert_equal '0 B', human_file_size(nil)
@@ -45,6 +45,6 @@ class OcrMenuImportsHelperTest < ActionView::TestCase
 
   test 'should format file sizes correctly' do
     assert_includes human_file_size(1024), 'KB'
-    assert_includes human_file_size(1048576), 'MB'
+    assert_includes human_file_size(1_048_576), 'MB'
   end
 end

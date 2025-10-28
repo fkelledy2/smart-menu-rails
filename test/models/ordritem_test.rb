@@ -162,7 +162,7 @@ class OrdritemTest < ActiveSupport::TestCase
     # Update parent order status
     @ordr.update!(status: :ordered)
     ordritem.reload
-    
+
     # Child item should match parent status
     assert_equal 'ordered', ordritem.status
     assert ordritem.ordered?

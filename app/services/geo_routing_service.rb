@@ -15,7 +15,7 @@ class GeoRoutingService
   # @return [Hash] Location data with country, region, continent
   def detect_location(request)
     # Try CloudFlare headers first
-    country = request.headers['CF-IPCountry'] || 
+    country = request.headers['CF-IPCountry'] ||
               request.headers['CloudFront-Viewer-Country'] ||
               detect_from_ip(request.remote_ip)
 
@@ -26,7 +26,7 @@ class GeoRoutingService
       country: country,
       continent: continent,
       region: region,
-      ip: request.remote_ip
+      ip: request.remote_ip,
     }
   end
 
@@ -35,7 +35,7 @@ class GeoRoutingService
   # @return [String] Edge location identifier
   def optimal_edge_location(location)
     region = location[:region] || 'us'
-    
+
     EDGE_LOCATIONS[region] || EDGE_LOCATIONS['us']
   end
 
@@ -48,7 +48,7 @@ class GeoRoutingService
 
     location = detect_location(request)
     edge = optimal_edge_location(location)
-    
+
     "#{edge}/#{asset_path.sub(%r{^/}, '')}"
   end
 
@@ -64,7 +64,7 @@ class GeoRoutingService
     {
       supported_regions: supported_regions,
       edge_locations: EDGE_LOCATIONS,
-      cdn_enabled: cdn_enabled?
+      cdn_enabled: cdn_enabled?,
     }
   end
 
@@ -77,7 +77,7 @@ class GeoRoutingService
     'asia' => ENV['CDN_EDGE_ASIA'] || ENV['CDN_HOST'] || 'https://cdn-asia.mellow.menu',
     'oceania' => ENV['CDN_EDGE_OCEANIA'] || ENV['CDN_HOST'] || 'https://cdn-oceania.mellow.menu',
     'sa' => ENV['CDN_EDGE_SA'] || ENV['CDN_HOST'] || 'https://cdn-sa.mellow.menu',
-    'africa' => ENV['CDN_EDGE_AFRICA'] || ENV['CDN_HOST'] || 'https://cdn-africa.mellow.menu'
+    'africa' => ENV['CDN_EDGE_AFRICA'] || ENV['CDN_HOST'] || 'https://cdn-africa.mellow.menu',
   }.freeze
 
   # Country to continent mapping
@@ -96,7 +96,7 @@ class GeoRoutingService
     # South America
     'BR' => 'SA', 'AR' => 'SA', 'CL' => 'SA', 'CO' => 'SA', 'PE' => 'SA',
     # Africa
-    'ZA' => 'AF', 'EG' => 'AF', 'NG' => 'AF', 'KE' => 'AF'
+    'ZA' => 'AF', 'EG' => 'AF', 'NG' => 'AF', 'KE' => 'AF',
   }.freeze
 
   # Continent to region mapping
@@ -106,7 +106,7 @@ class GeoRoutingService
     'AS' => 'asia',
     'OC' => 'oceania',
     'SA' => 'sa',
-    'AF' => 'africa'
+    'AF' => 'africa',
   }.freeze
 
   # Detect country from IP address
@@ -116,7 +116,7 @@ class GeoRoutingService
     # Default to US if we can't detect
     # In production, this would use MaxMind GeoIP or similar
     return 'US' if ip.nil? || ip == '127.0.0.1' || ip.start_with?('192.168.', '10.', '172.')
-    
+
     # Mock detection for development
     'US'
   end

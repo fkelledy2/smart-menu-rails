@@ -13,23 +13,21 @@ class LocalizeMenuService
       restaurant = menu.restaurant
       stats = { locales_processed: 0, menu_locales_created: 0, menu_locales_updated: 0,
                 section_locales_created: 0, section_locales_updated: 0,
-                item_locales_created: 0, item_locales_updated: 0, errors: [] }
+                item_locales_created: 0, item_locales_updated: 0, errors: [], }
 
       restaurant.restaurantlocales.active.find_each do |restaurant_locale|
-        begin
-          locale_stats = localize_menu_to_locale(menu, restaurant_locale)
-          stats[:locales_processed] += 1
-          stats[:menu_locales_created] += locale_stats[:menu_locales_created]
-          stats[:menu_locales_updated] += locale_stats[:menu_locales_updated]
-          stats[:section_locales_created] += locale_stats[:section_locales_created]
-          stats[:section_locales_updated] += locale_stats[:section_locales_updated]
-          stats[:item_locales_created] += locale_stats[:item_locales_created]
-          stats[:item_locales_updated] += locale_stats[:item_locales_updated]
-        rescue StandardError => e
-          error_msg = "Failed to localize menu ##{menu.id} to locale #{restaurant_locale.locale}: #{e.message}"
-          Rails.logger.error("[LocalizeMenuService] #{error_msg}")
-          stats[:errors] << error_msg
-        end
+        locale_stats = localize_menu_to_locale(menu, restaurant_locale)
+        stats[:locales_processed] += 1
+        stats[:menu_locales_created] += locale_stats[:menu_locales_created]
+        stats[:menu_locales_updated] += locale_stats[:menu_locales_updated]
+        stats[:section_locales_created] += locale_stats[:section_locales_created]
+        stats[:section_locales_updated] += locale_stats[:section_locales_updated]
+        stats[:item_locales_created] += locale_stats[:item_locales_created]
+        stats[:item_locales_updated] += locale_stats[:item_locales_updated]
+      rescue StandardError => e
+        error_msg = "Failed to localize menu ##{menu.id} to locale #{restaurant_locale.locale}: #{e.message}"
+        Rails.logger.error("[LocalizeMenuService] #{error_msg}")
+        stats[:errors] << error_msg
       end
 
       Rails.logger.info("[LocalizeMenuService] Localized menu ##{menu.id} to #{stats[:locales_processed]} locales")
@@ -45,23 +43,21 @@ class LocalizeMenuService
     def localize_all_menus_to_locale(restaurant, restaurant_locale)
       stats = { menus_processed: 0, menu_locales_created: 0, menu_locales_updated: 0,
                 section_locales_created: 0, section_locales_updated: 0,
-                item_locales_created: 0, item_locales_updated: 0, errors: [] }
+                item_locales_created: 0, item_locales_updated: 0, errors: [], }
 
       restaurant.menus.find_each do |menu|
-        begin
-          menu_stats = localize_menu_to_locale(menu, restaurant_locale)
-          stats[:menus_processed] += 1
-          stats[:menu_locales_created] += menu_stats[:menu_locales_created]
-          stats[:menu_locales_updated] += menu_stats[:menu_locales_updated]
-          stats[:section_locales_created] += menu_stats[:section_locales_created]
-          stats[:section_locales_updated] += menu_stats[:section_locales_updated]
-          stats[:item_locales_created] += menu_stats[:item_locales_created]
-          stats[:item_locales_updated] += menu_stats[:item_locales_updated]
-        rescue StandardError => e
-          error_msg = "Failed to localize menu ##{menu.id} to locale #{restaurant_locale.locale}: #{e.message}"
-          Rails.logger.error("[LocalizeMenuService] #{error_msg}")
-          stats[:errors] << error_msg
-        end
+        menu_stats = localize_menu_to_locale(menu, restaurant_locale)
+        stats[:menus_processed] += 1
+        stats[:menu_locales_created] += menu_stats[:menu_locales_created]
+        stats[:menu_locales_updated] += menu_stats[:menu_locales_updated]
+        stats[:section_locales_created] += menu_stats[:section_locales_created]
+        stats[:section_locales_updated] += menu_stats[:section_locales_updated]
+        stats[:item_locales_created] += menu_stats[:item_locales_created]
+        stats[:item_locales_updated] += menu_stats[:item_locales_updated]
+      rescue StandardError => e
+        error_msg = "Failed to localize menu ##{menu.id} to locale #{restaurant_locale.locale}: #{e.message}"
+        Rails.logger.error("[LocalizeMenuService] #{error_msg}")
+        stats[:errors] << error_msg
       end
 
       Rails.logger.info("[LocalizeMenuService] Localized #{stats[:menus_processed]} menus to locale #{restaurant_locale.locale}")
@@ -79,12 +75,12 @@ class LocalizeMenuService
       is_default = restaurant_locale.dfault
       stats = { menu_locales_created: 0, menu_locales_updated: 0,
                 section_locales_created: 0, section_locales_updated: 0,
-                item_locales_created: 0, item_locales_updated: 0 }
+                item_locales_created: 0, item_locales_updated: 0, }
 
       # Upsert menu locale
       menu_locale = Menulocale.find_or_initialize_by(
         menu_id: menu.id,
-        locale: locale_code
+        locale: locale_code,
       )
 
       was_new_record = menu_locale.new_record?
@@ -92,7 +88,7 @@ class LocalizeMenuService
       menu_locale.assign_attributes(
         status: restaurant_locale.status,
         name: localize_text(menu.name, locale_code, is_default),
-        description: localize_text(menu.description, locale_code, is_default)
+        description: localize_text(menu.description, locale_code, is_default),
       )
 
       if menu_locale.changed?
@@ -123,12 +119,12 @@ class LocalizeMenuService
       locale_code = restaurant_locale.locale
       is_default = restaurant_locale.dfault
       stats = { section_locales_created: 0, section_locales_updated: 0,
-                item_locales_created: 0, item_locales_updated: 0 }
+                item_locales_created: 0, item_locales_updated: 0, }
 
       # Upsert section locale
       section_locale = Menusectionlocale.find_or_initialize_by(
         menusection_id: section.id,
-        locale: locale_code
+        locale: locale_code,
       )
 
       was_new_record = section_locale.new_record?
@@ -136,7 +132,7 @@ class LocalizeMenuService
       section_locale.assign_attributes(
         status: restaurant_locale.status,
         name: localize_text(section.name, locale_code, is_default),
-        description: localize_text(section.description, locale_code, is_default)
+        description: localize_text(section.description, locale_code, is_default),
       )
 
       if section_locale.changed?
@@ -167,7 +163,7 @@ class LocalizeMenuService
       # Upsert item locale
       item_locale = Menuitemlocale.find_or_initialize_by(
         menuitem_id: item.id,
-        locale: locale_code
+        locale: locale_code,
       )
 
       was_new_record = item_locale.new_record?
@@ -175,7 +171,7 @@ class LocalizeMenuService
       item_locale.assign_attributes(
         status: restaurant_locale.status,
         name: localize_text(item.name, locale_code, is_default),
-        description: localize_text(item.description, locale_code, is_default)
+        description: localize_text(item.description, locale_code, is_default),
       )
 
       if item_locale.changed?
@@ -219,22 +215,22 @@ class LocalizeMenuService
 
       begin
         result = DeeplApiService.translate(text, to: target_locale, from: source_locale)
-        
+
         # Add small delay to prevent rate limiting (50ms between calls)
         sleep(0.05) unless Rails.env.test?
-        
+
         result
       rescue StandardError => e
         # Check if it's a rate limit error (429)
         if e.message.include?('429') && retry_count < max_retries
           retry_count += 1
-          delay = base_delay * (2 ** (retry_count - 1)) # Exponential backoff: 1s, 2s, 4s
-          
+          delay = base_delay * (2**(retry_count - 1)) # Exponential backoff: 1s, 2s, 4s
+
           Rails.logger.warn("[LocalizeMenuService] Rate limit hit (429) for '#{text.truncate(50)}' to #{target_locale}. Retry #{retry_count}/#{max_retries} after #{delay}s")
           sleep(delay)
           retry
         end
-        
+
         # For other errors or max retries exceeded, log and fallback
         Rails.logger.warn("[LocalizeMenuService] Translation failed for '#{text.truncate(50)}' to #{target_locale}: #{e.message}")
         text # Fallback to original text

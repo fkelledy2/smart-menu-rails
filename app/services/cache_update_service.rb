@@ -62,10 +62,10 @@ class CacheUpdateService
 
     # Partial cache update for menu items
     def update_menu_item_cache(menu_item, operation: :update)
-      Rails.logger.debug("[CacheUpdateService] Updating menu item cache for item #{menu_item.id}")
+      Rails.logger.debug { "[CacheUpdateService] Updating menu item cache for item #{menu_item.id}" }
 
       menu = menu_item.menusection.menu
-      
+
       case operation
       when :update
         update_menu_item_in_cache(menu_item, menu)
@@ -98,7 +98,7 @@ class CacheUpdateService
 
     # Smart cache update based on changed attributes
     def smart_update_cache(model, changed_attributes)
-      Rails.logger.debug("[CacheUpdateService] Smart cache update for #{model.class.name}##{model.id}")
+      Rails.logger.debug { "[CacheUpdateService] Smart cache update for #{model.class.name}##{model.id}" }
 
       case model.class.name
       when 'Restaurant'
@@ -116,7 +116,7 @@ class CacheUpdateService
 
     # Update cache with computed deltas (incremental updates)
     def update_cache_with_delta(cache_key, delta_data)
-      Rails.logger.debug("[CacheUpdateService] Updating cache with delta: #{cache_key}")
+      Rails.logger.debug { "[CacheUpdateService] Updating cache with delta: #{cache_key}" }
 
       existing_data = Rails.cache.read(cache_key)
       return unless existing_data
@@ -153,7 +153,8 @@ class CacheUpdateService
       locales.each do |locale|
         [true, false].each do |include_inactive|
           menu_key = "menu_full:#{menu.id}:#{locale}:#{include_inactive}"
-          fresh_menu = AdvancedCacheService.cached_menu_with_items(menu.id, locale: locale, include_inactive: include_inactive)
+          fresh_menu = AdvancedCacheService.cached_menu_with_items(menu.id, locale: locale,
+                                                                            include_inactive: include_inactive,)
           Rails.cache.write(menu_key, fresh_menu, expires_in: 30.minutes)
         end
       end
@@ -253,17 +254,17 @@ class CacheUpdateService
         [true, false].each do |include_inactive|
           menu_key = "menu_full:#{menu.id}:#{locale}:#{include_inactive}"
           menu_cache = Rails.cache.read(menu_key)
-          
-          if menu_cache && menu_cache[:sections]
-            # Find and update the specific item
-            menu_cache[:sections].each do |section|
-              if section[:id] == menu_item.menusection.id
-                item_index = section[:items].find_index { |item| item[:id] == menu_item.id }
-                if item_index
-                  section[:items][item_index] = serialize_menu_item(menu_item)
-                  Rails.cache.write(menu_key, menu_cache, expires_in: 30.minutes)
-                end
-              end
+
+          next unless menu_cache && menu_cache[:sections]
+
+          # Find and update the specific item
+          menu_cache[:sections].each do |section|
+            next unless section[:id] == menu_item.menusection.id
+
+            item_index = section[:items].find_index { |item| item[:id] == menu_item.id }
+            if item_index
+              section[:items][item_index] = serialize_menu_item(menu_item)
+              Rails.cache.write(menu_key, menu_cache, expires_in: 30.minutes)
             end
           end
         end
@@ -272,17 +273,17 @@ class CacheUpdateService
       # Update section items cache
       section_key = "section_items:#{menu_item.menusection.id}"
       section_cache = Rails.cache.read(section_key)
-      if section_cache && section_cache[:items]
-        item_index = section_cache[:items].find_index { |item| item[:id] == menu_item.id }
-        if item_index
-          section_cache[:items][item_index] = serialize_menu_item_basic(menu_item)
-          Rails.cache.write(section_key, section_cache, expires_in: 15.minutes)
-        end
+      return unless section_cache && section_cache[:items]
+
+      item_index = section_cache[:items].find_index { |item| item[:id] == menu_item.id }
+      if item_index
+        section_cache[:items][item_index] = serialize_menu_item_basic(menu_item)
+        Rails.cache.write(section_key, section_cache, expires_in: 15.minutes)
       end
     end
 
     # Add menu item to existing cache
-    def add_menu_item_to_cache(menu_item, menu)
+    def add_menu_item_to_cache(_menu_item, menu)
       # Similar to update but adds the item instead of updating
       update_menu_data(menu) # Full refresh for new items
     end
@@ -297,13 +298,13 @@ class CacheUpdateService
         [true, false].each do |include_inactive|
           menu_key = "menu_full:#{menu.id}:#{locale}:#{include_inactive}"
           menu_cache = Rails.cache.read(menu_key)
-          
-          if menu_cache && menu_cache[:sections]
-            menu_cache[:sections].each do |section|
-              if section[:id] == menu_item.menusection.id
-                section[:items].reject! { |item| item[:id] == menu_item.id }
-                Rails.cache.write(menu_key, menu_cache, expires_in: 30.minutes)
-              end
+
+          next unless menu_cache && menu_cache[:sections]
+
+          menu_cache[:sections].each do |section|
+            if section[:id] == menu_item.menusection.id
+              section[:items].reject! { |item| item[:id] == menu_item.id }
+              Rails.cache.write(menu_key, menu_cache, expires_in: 30.minutes)
             end
           end
         end
@@ -349,7 +350,7 @@ class CacheUpdateService
     # Smart menu item update based on changed attributes
     def update_menu_item_smart(menu_item, changed_attributes)
       menu = menu_item.menusection.menu
-      
+
       if changed_attributes.include?('name') || changed_attributes.include?('price') || changed_attributes.include?('status')
         # Update the item in existing caches
         update_menu_item_in_cache(menu_item, menu)
@@ -383,14 +384,16 @@ class CacheUpdateService
       # Update menu info in restaurant dashboard and other related caches
       restaurant_dashboard_key = "restaurant_dashboard:#{menu.restaurant.id}"
       dashboard_cache = Rails.cache.read(restaurant_dashboard_key)
-      
-      if dashboard_cache && dashboard_cache[:recent_activity] && dashboard_cache[:recent_activity][:latest_menu_updates]
-        # Update menu info in recent activity
-        menu_update = dashboard_cache[:recent_activity][:latest_menu_updates].find { |m| m[:id] == menu.id }
-        if menu_update
-          menu_update.merge!(serialize_menu_basic(menu))
-          Rails.cache.write(restaurant_dashboard_key, dashboard_cache, expires_in: 15.minutes)
-        end
+
+      unless dashboard_cache && dashboard_cache[:recent_activity] && dashboard_cache[:recent_activity][:latest_menu_updates]
+        return
+      end
+
+      # Update menu info in recent activity
+      menu_update = dashboard_cache[:recent_activity][:latest_menu_updates].find { |m| m[:id] == menu.id }
+      if menu_update
+        menu_update.merge!(serialize_menu_basic(menu))
+        Rails.cache.write(restaurant_dashboard_key, dashboard_cache, expires_in: 15.minutes)
       end
     end
 
@@ -418,17 +421,13 @@ class CacheUpdateService
         result.concat(delta_data[:add])
       end
 
-      if delta_data[:remove]
-        delta_data[:remove].each do |item_to_remove|
-          result.reject! { |item| item[:id] == item_to_remove[:id] }
-        end
+      delta_data[:remove]&.each do |item_to_remove|
+        result.reject! { |item| item[:id] == item_to_remove[:id] }
       end
 
-      if delta_data[:update]
-        delta_data[:update].each do |item_to_update|
-          index = result.find_index { |item| item[:id] == item_to_update[:id] }
-          result[index] = item_to_update if index
-        end
+      delta_data[:update]&.each do |item_to_update|
+        index = result.find_index { |item| item[:id] == item_to_update[:id] }
+        result[index] = item_to_update if index
       end
 
       result
@@ -445,7 +444,7 @@ class CacheUpdateService
         sequence: menu_item.sequence,
         calories: menu_item.calories,
         has_image: menu_item.image.present?,
-        updated_at: menu_item.updated_at.iso8601
+        updated_at: menu_item.updated_at.iso8601,
       }
     end
 
@@ -456,7 +455,7 @@ class CacheUpdateService
         name: menu_item.name,
         price: menu_item.price,
         status: menu_item.status,
-        sequence: menu_item.sequence
+        sequence: menu_item.sequence,
       }
     end
 
@@ -467,7 +466,7 @@ class CacheUpdateService
         name: restaurant.name,
         status: restaurant.status,
         currency: restaurant.currency,
-        updated_at: restaurant.updated_at.iso8601
+        updated_at: restaurant.updated_at.iso8601,
       }
     end
 
@@ -477,7 +476,7 @@ class CacheUpdateService
         id: menu.id,
         name: menu.name,
         status: menu.status,
-        updated_at: menu.updated_at.iso8601
+        updated_at: menu.updated_at.iso8601,
       }
     end
   end

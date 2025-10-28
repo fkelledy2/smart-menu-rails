@@ -10,7 +10,7 @@ class MenusectionsController < ApplicationController
   def index
     if params[:menu_id]
       @menu = Menu.find_by(id: params[:menu_id])
-      
+
       # Optimize query based on request format
       @menusections = if request.format.json?
                         # JSON: Direct association without expensive includes
@@ -22,7 +22,7 @@ class MenusectionsController < ApplicationController
     else
       @menusections = []
     end
-    
+
     # Use minimal JSON view for better performance
     respond_to do |format|
       format.html # Default HTML view
@@ -53,11 +53,10 @@ class MenusectionsController < ApplicationController
 
   # POST /menusections or /menusections.json
   def create
-    begin
-      @menusection = Menusection.new(menusection_params)
-      authorize @menusection
+    @menusection = Menusection.new(menusection_params)
+    authorize @menusection
 
-      respond_to do |format|
+    respond_to do |format|
       if @menusection.save
         if @menusection.genimage.nil?
           @genimage = Genimage.new
@@ -72,20 +71,22 @@ class MenusectionsController < ApplicationController
           redirect_to edit_restaurant_menu_url(@menusection.menu.restaurant, @menusection.menu),
                       notice: t('common.flash.created', resource: t('activerecord.models.menusection'))
         end
-        format.json { render :show, status: :created, location: restaurant_menu_menusection_url(@menusection.menu.restaurant, @menusection.menu, @menusection) }
+        format.json do
+          render :show, status: :created,
+                        location: restaurant_menu_menusection_url(@menusection.menu.restaurant, @menusection.menu, @menusection)
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @menusection.errors, status: :unprocessable_entity }
       end
     end
-    rescue ArgumentError => e
-      # Handle invalid enum values
-      @menusection = Menusection.new
-      @menusection.errors.add(:status, e.message)
-      respond_to do |format|
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @menusection.errors, status: :unprocessable_entity }
-      end
+  rescue ArgumentError => e
+    # Handle invalid enum values
+    @menusection = Menusection.new
+    @menusection.errors.add(:status, e.message)
+    respond_to do |format|
+      format.html { render :new, status: :unprocessable_entity }
+      format.json { render json: @menusection.errors, status: :unprocessable_entity }
     end
   end
 
@@ -108,7 +109,10 @@ class MenusectionsController < ApplicationController
           redirect_to edit_restaurant_menu_path(@menusection.menu.restaurant, @menusection.menu),
                       notice: t('common.flash.updated', resource: t('activerecord.models.menusection'))
         end
-        format.json { render :show, status: :ok, location: restaurant_menu_menusection_url(@menusection.menu.restaurant, @menusection.menu, @menusection) }
+        format.json do
+          render :show, status: :ok,
+                        location: restaurant_menu_menusection_url(@menusection.menu.restaurant, @menusection.menu, @menusection)
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menusection.errors, status: :unprocessable_entity }

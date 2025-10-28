@@ -14,37 +14,34 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :handle_authorization_failure
 
   def switch_locale(&)
-    begin
-      # Extract locale from Accept-Language header
-      accept_language = request.env['HTTP_ACCEPT_LANGUAGE']
-      requested_locale = nil
-      
-      if accept_language.present?
-        # Extract the first two-letter language code
-        requested_locale = accept_language.scan(/^[a-z]{2}/).first
-      end
-      
-      # Validate locale is supported
-      if requested_locale && I18n.available_locales.map(&:to_s).include?(requested_locale)
-        @locale = requested_locale.to_sym
-        Rails.logger.debug "Using locale: #{@locale}"
-        I18n.with_locale(@locale, &)
-      else
-        # Fall back to default locale for unsupported or missing locales
-        @locale = I18n.default_locale
-        Rails.logger.debug "Falling back to default locale: #{@locale} (requested: #{requested_locale})"
-        I18n.with_locale(@locale, &)
-      end
-    rescue => e
-      # Safety net: if anything goes wrong with locale switching, use default
-      Rails.logger.error "Locale switching error: #{e.message}, falling back to default locale"
-      @locale = I18n.default_locale
-      I18n.with_locale(@locale, &)
+    # Extract locale from Accept-Language header
+    accept_language = request.env['HTTP_ACCEPT_LANGUAGE']
+    requested_locale = nil
+
+    if accept_language.present?
+      # Extract the first two-letter language code
+      requested_locale = accept_language.scan(/^[a-z]{2}/).first
     end
+
+    # Validate locale is supported
+    if requested_locale && I18n.available_locales.map(&:to_s).include?(requested_locale)
+      @locale = requested_locale.to_sym
+      Rails.logger.debug { "Using locale: #{@locale}" }
+    else
+      # Fall back to default locale for unsupported or missing locales
+      @locale = I18n.default_locale
+      Rails.logger.debug { "Falling back to default locale: #{@locale} (requested: #{requested_locale})" }
+    end
+    I18n.with_locale(@locale, &)
+  rescue StandardError => e
+    # Safety net: if anything goes wrong with locale switching, use default
+    Rails.logger.error "Locale switching error: #{e.message}, falling back to default locale"
+    @locale = I18n.default_locale
+    I18n.with_locale(@locale, &)
   end
 
   protect_from_forgery with: :exception, prepend: true
-  
+
   # Add debugging for CSRF issues
   rescue_from ActionController::InvalidAuthenticityToken do |exception|
     Rails.logger.error "CSRF token verification failed: #{exception.message}"
@@ -53,10 +50,11 @@ class ApplicationController < ActionController::Base
     Rails.logger.error "Request path: #{request.path}"
     Rails.logger.error "Form authenticity token: #{form_authenticity_token}"
     Rails.logger.error "Request authenticity token: #{request.headers['X-CSRF-Token'] || params[:authenticity_token]}"
-    
+
     # For development, show more details
     if Rails.env.development?
-      render plain: "CSRF Error: #{exception.message}\nSession: #{session.id}\nExpected: #{form_authenticity_token}\nReceived: #{request.headers['X-CSRF-Token'] || params[:authenticity_token]}", status: :unprocessable_entity
+      render plain: "CSRF Error: #{exception.message}\nSession: #{session.id}\nExpected: #{form_authenticity_token}\nReceived: #{request.headers['X-CSRF-Token'] || params[:authenticity_token]}",
+             status: :unprocessable_entity
     else
       redirect_to new_user_session_path, alert: 'Security token expired. Please try logging in again.'
     end
@@ -217,15 +215,15 @@ class ApplicationController < ActionController::Base
         controller: controller_name,
         action: action_name,
         request_ip: request.remote_ip,
-        user_agent: request.user_agent
-      }
+        user_agent: request.user_agent,
+      },
     )
 
     # Handle the failure based on request format
     respond_to do |format|
       format.html do
         flash[:alert] = 'You are not authorized to perform this action.'
-        redirect_to(request.referrer || root_path)
+        redirect_to(request.referer || root_path)
       end
       format.json do
         render json: { error: 'Unauthorized' }, status: :forbidden
@@ -239,22 +237,22 @@ class ApplicationController < ActionController::Base
   # Override authorize to add monitoring
   def authorize(record, query = nil)
     query ||= "#{action_name}?"
-    
+
     # Call Pundit's original authorize method to ensure proper tracking
-    result = super(record, query)
+    result = super
 
     # Track the authorization check for monitoring
     AuthorizationMonitoringService.track_authorization_check(
       current_user,
       record,
-      query.to_s.gsub('?', ''),
+      query.to_s.delete('?'),
       result,
       {
         controller: controller_name,
         action: action_name,
         request_ip: request.remote_ip,
-        user_agent: request.user_agent
-      }
+        user_agent: request.user_agent,
+      },
     )
 
     result

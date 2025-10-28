@@ -49,7 +49,7 @@ class EmployeesController < ApplicationController
           restaurant_ids = current_user.restaurants.pluck(:id)
           @employees = policy_scope(Employee.where(restaurant_id: restaurant_ids, archived: false).order(:sequence))
         end
-        
+
         # Use minimal JSON view for better performance
         render 'index_minimal'
       end

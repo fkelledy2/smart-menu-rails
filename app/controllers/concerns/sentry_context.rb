@@ -18,7 +18,7 @@ module SentryContext
         Sentry.set_user(
           id: current_user.id,
           email: current_user.email,
-          username: current_user.name || current_user.email
+          username: current_user.name || current_user.email,
         )
       end
 
@@ -38,17 +38,17 @@ module SentryContext
       Sentry.set_tag('controller', controller_name)
       Sentry.set_tag('action', action_name)
       Sentry.set_tag('request_method', request.method)
-      
+
       # Set additional context for debugging
       Sentry.set_context('request_info', {
         url: request.url,
         user_agent: request.user_agent,
         ip_address: request.remote_ip,
-        referer: request.referer
-      })
-    rescue => e
+        referer: request.referer,
+      },)
+    rescue StandardError => e
       # Silently fail in test environment or if Sentry is not properly configured
-      Rails.logger.debug "Sentry context setting failed: #{e.message}" if Rails.env.development?
+      Rails.logger.debug { "Sentry context setting failed: #{e.message}" } if Rails.env.development?
     end
   end
 end

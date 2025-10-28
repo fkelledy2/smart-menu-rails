@@ -10,7 +10,7 @@ class IntelligentCacheWarmingService
     hot: { expires_in: 5.minutes, priority: :high },
     warm: { expires_in: 30.minutes, priority: :medium },
     cold: { expires_in: 6.hours, priority: :low },
-    archive: { expires_in: 24.hours, priority: :archive }
+    archive: { expires_in: 24.hours, priority: :archive },
   }.freeze
 
   class << self
@@ -23,15 +23,15 @@ class IntelligentCacheWarmingService
 
       Rails.logger.info("[IntelligentCacheWarmingService] Warming cache for user #{user_id}")
 
-      options = CACHE_TIERS[tier]
-      
+      CACHE_TIERS[tier]
+
       # Pre-load user's restaurants with dashboard data
       user.restaurants.find_each do |restaurant|
         warm_restaurant_context(restaurant.id, tier: :hot)
-        
+
         # Pre-load recent orders
         AdvancedCacheService.cached_restaurant_orders(restaurant.id, include_calculations: true)
-        
+
         # Pre-load employee data
         AdvancedCacheService.cached_restaurant_employees(restaurant.id, include_analytics: true)
       end
@@ -41,7 +41,7 @@ class IntelligentCacheWarmingService
       AdvancedCacheService.cached_user_all_orders(user_id)
       AdvancedCacheService.cached_user_all_employees(user_id)
 
-      Rails.logger.debug("[IntelligentCacheWarmingService] User context warming completed for user #{user_id}")
+      Rails.logger.debug { "[IntelligentCacheWarmingService] User context warming completed for user #{user_id}" }
     end
 
     # Warm cache based on restaurant access patterns
@@ -53,7 +53,7 @@ class IntelligentCacheWarmingService
 
       Rails.logger.info("[IntelligentCacheWarmingService] Warming cache for restaurant #{restaurant_id}")
 
-      options = CACHE_TIERS[tier]
+      CACHE_TIERS[tier]
 
       # Pre-load restaurant dashboard (most frequently accessed)
       AdvancedCacheService.cached_restaurant_dashboard(restaurant_id)
@@ -72,7 +72,9 @@ class IntelligentCacheWarmingService
       # Pre-load employee summary
       AdvancedCacheService.cached_restaurant_employee_summary(restaurant_id, days: 30)
 
-      Rails.logger.debug("[IntelligentCacheWarmingService] Restaurant context warming completed for restaurant #{restaurant_id}")
+      Rails.logger.debug do
+        "[IntelligentCacheWarmingService] Restaurant context warming completed for restaurant #{restaurant_id}"
+      end
     end
 
     # Warm cache based on menu access patterns
@@ -84,7 +86,7 @@ class IntelligentCacheWarmingService
 
       Rails.logger.info("[IntelligentCacheWarmingService] Warming cache for menu #{menu_id}")
 
-      options = CACHE_TIERS[tier]
+      CACHE_TIERS[tier]
 
       # Pre-load menu with items and localization
       locales = menu.restaurant.restaurantlocales.pluck(:locale).presence || ['en']
@@ -109,13 +111,13 @@ class IntelligentCacheWarmingService
       # Warm cache keys using CacheKeyService
       CacheKeyService.warm_menu_cache(menu)
 
-      Rails.logger.debug("[IntelligentCacheWarmingService] Menu context warming completed for menu #{menu_id}")
+      Rails.logger.debug { "[IntelligentCacheWarmingService] Menu context warming completed for menu #{menu_id}" }
     end
 
     # Warm cache based on time patterns (business hours optimization)
     def warm_time_based_cache
       current_hour = Time.current.hour
-      
+
       Rails.logger.info("[IntelligentCacheWarmingService] Time-based cache warming for hour #{current_hour}")
 
       case current_hour
@@ -148,14 +150,14 @@ class IntelligentCacheWarmingService
 
     # Scheduled cache warming for off-peak hours
     def warm_scheduled_cache
-      Rails.logger.info("[IntelligentCacheWarmingService] Scheduled cache warming started")
+      Rails.logger.info('[IntelligentCacheWarmingService] Scheduled cache warming started')
 
       # Warm most accessed restaurants (top 20% by activity)
       active_restaurants = Restaurant.joins(:ordrs)
-                                   .where(ordrs: { created_at: 7.days.ago.. })
-                                   .group('restaurants.id')
-                                   .order('COUNT(ordrs.id) DESC')
-                                   .limit(20)
+        .where(ordrs: { created_at: 7.days.ago.. })
+        .group('restaurants.id')
+        .order('COUNT(ordrs.id) DESC')
+        .limit(20)
 
       active_restaurants.find_each do |restaurant|
         warm_restaurant_context(restaurant.id, tier: :cold)
@@ -163,17 +165,17 @@ class IntelligentCacheWarmingService
 
       # Warm frequently accessed menus
       active_menus = Menu.joins(restaurant: :ordrs)
-                        .where(ordrs: { created_at: 7.days.ago.. })
-                        .where(status: 'active')
-                        .group('menus.id')
-                        .order('COUNT(ordrs.id) DESC')
-                        .limit(50)
+        .where(ordrs: { created_at: 7.days.ago.. })
+        .where(status: 'active')
+        .group('menus.id')
+        .order('COUNT(ordrs.id) DESC')
+        .limit(50)
 
       active_menus.find_each do |menu|
         warm_menu_context(menu.id, tier: :cold)
       end
 
-      Rails.logger.info("[IntelligentCacheWarmingService] Scheduled cache warming completed")
+      Rails.logger.info('[IntelligentCacheWarmingService] Scheduled cache warming completed')
     end
 
     # Get cache warming recommendations based on usage patterns
@@ -182,7 +184,7 @@ class IntelligentCacheWarmingService
         high_priority: identify_high_priority_warming,
         time_based: identify_time_based_warming,
         business_events: identify_business_event_warming,
-        memory_optimization: identify_memory_optimization_opportunities
+        memory_optimization: identify_memory_optimization_opportunities,
       }
     end
 
@@ -190,8 +192,8 @@ class IntelligentCacheWarmingService
 
     # Morning cache warming (6-10 AM)
     def warm_morning_cache
-      Rails.logger.debug("[IntelligentCacheWarmingService] Morning cache warming")
-      
+      Rails.logger.debug('[IntelligentCacheWarmingService] Morning cache warming')
+
       # Dashboard data for restaurant owners
       Restaurant.joins(:users).distinct.find_each do |restaurant|
         AdvancedCacheService.cached_restaurant_dashboard(restaurant.id)
@@ -201,8 +203,8 @@ class IntelligentCacheWarmingService
 
     # Lunch cache warming (11 AM - 2 PM)
     def warm_lunch_cache
-      Rails.logger.debug("[IntelligentCacheWarmingService] Lunch cache warming")
-      
+      Rails.logger.debug('[IntelligentCacheWarmingService] Lunch cache warming')
+
       # Menu data for active restaurants
       Menu.joins(:restaurant).where(status: 'active').find_each do |menu|
         warm_menu_context(menu.id, tier: :hot)
@@ -211,13 +213,13 @@ class IntelligentCacheWarmingService
 
     # Dinner cache warming (5-9 PM)
     def warm_dinner_cache
-      Rails.logger.debug("[IntelligentCacheWarmingService] Dinner cache warming")
-      
+      Rails.logger.debug('[IntelligentCacheWarmingService] Dinner cache warming')
+
       # Same as lunch but with higher priority
       Menu.joins(:restaurant).where(status: 'active').find_each do |menu|
         warm_menu_context(menu.id, tier: :hot)
       end
-      
+
       # Real-time order data
       Restaurant.find_each do |restaurant|
         AdvancedCacheService.cached_restaurant_orders(restaurant.id, include_calculations: true)
@@ -226,8 +228,8 @@ class IntelligentCacheWarmingService
 
     # Night cache warming (10 PM - 5 AM)
     def warm_night_cache
-      Rails.logger.debug("[IntelligentCacheWarmingService] Night cache warming")
-      
+      Rails.logger.debug('[IntelligentCacheWarmingService] Night cache warming')
+
       # Analytics and reporting data
       Restaurant.find_each do |restaurant|
         [7, 30].each do |days|
@@ -239,10 +241,10 @@ class IntelligentCacheWarmingService
     # Warm cache after menu updates
     def warm_menu_update_cache(menu_id)
       return unless menu_id
-      
+
       # Invalidate old cache first
       CacheKeyService.invalidate_menu_cache(menu_id)
-      
+
       # Warm new cache
       warm_menu_context(menu_id, tier: :hot)
     end
@@ -250,7 +252,7 @@ class IntelligentCacheWarmingService
     # Warm cache after order placement
     def warm_order_cache(restaurant_id)
       return unless restaurant_id
-      
+
       # Update restaurant dashboard
       AdvancedCacheService.cached_restaurant_dashboard(restaurant_id)
       AdvancedCacheService.cached_restaurant_orders(restaurant_id, include_calculations: true)
@@ -259,7 +261,7 @@ class IntelligentCacheWarmingService
     # Warm cache for employee login
     def warm_employee_cache(restaurant_id, employee_id)
       return unless restaurant_id && employee_id
-      
+
       warm_restaurant_context(restaurant_id, tier: :hot)
       AdvancedCacheService.cached_employee_with_details(employee_id)
     end
@@ -267,9 +269,9 @@ class IntelligentCacheWarmingService
     # Warm cache before peak hours
     def warm_peak_hours_cache(restaurant_id)
       return unless restaurant_id
-      
+
       warm_restaurant_context(restaurant_id, tier: :hot)
-      
+
       restaurant = Restaurant.find(restaurant_id)
       restaurant.menus.where(status: 'active').find_each do |menu|
         warm_menu_context(menu.id, tier: :hot)
@@ -286,7 +288,7 @@ class IntelligentCacheWarmingService
     # Identify time-based warming opportunities
     def identify_time_based_warming
       current_hour = Time.current.hour
-      
+
       case current_hour
       when 5..6 then ['morning_prep']
       when 10..11 then ['lunch_prep']

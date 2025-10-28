@@ -7,31 +7,31 @@ class DietaryRestrictableTest < ActiveSupport::TestCase
     @ocr_menu_import = OcrMenuImport.create!(
       restaurant: @restaurant,
       name: 'Test Menu Import',
-      status: :completed
+      status: :completed,
     )
     @ocr_menu_section = OcrMenuSection.create!(
       ocr_menu_import: @ocr_menu_import,
       name: 'Test Section',
-      position: 1
+      position: 1,
     )
     @model = OcrMenuItem.new(
       ocr_menu_section: @ocr_menu_section,
-      name: 'Test Item'
+      name: 'Test Item',
     )
   end
 
   # Branch coverage tests for dietary_restrictions getter
   test 'dietary_restrictions should return from metadata when present' do
-    @model.metadata = { 'dietary_restrictions' => ['vegan', 'gluten_free'] }
-    
-    assert_equal ['vegan', 'gluten_free'], @model.dietary_restrictions
+    @model.metadata = { 'dietary_restrictions' => %w[vegan gluten_free] }
+
+    assert_equal %w[vegan gluten_free], @model.dietary_restrictions
   end
 
   test 'dietary_restrictions should return from boolean flags when metadata absent' do
     @model.is_vegan = true
     @model.is_gluten_free = true
-    
-    expected = ['vegan', 'gluten_free']
+
+    expected = %w[vegan gluten_free]
     assert_equal expected, @model.dietary_restrictions
   end
 
@@ -42,28 +42,28 @@ class DietaryRestrictableTest < ActiveSupport::TestCase
   test 'dietary_restrictions should handle nil metadata' do
     @model.metadata = nil
     @model.is_vegan = true
-    
+
     assert_equal ['vegan'], @model.dietary_restrictions
   end
 
   test 'dietary_restrictions should handle non-hash metadata' do
     @model.metadata = 'not a hash'
     @model.is_vegetarian = true
-    
+
     assert_equal ['vegetarian'], @model.dietary_restrictions
   end
 
   test 'dietary_restrictions should handle metadata without dietary_restrictions key' do
     @model.metadata = { 'other_key' => 'other_value' }
     @model.is_dairy_free = true
-    
+
     assert_equal ['dairy_free'], @model.dietary_restrictions
   end
 
   # Branch coverage tests for dietary_restrictions setter
   test 'dietary_restrictions= should update boolean flags' do
-    @model.dietary_restrictions = ['vegan', 'gluten_free']
-    
+    @model.dietary_restrictions = %w[vegan gluten_free]
+
     assert @model.is_vegan
     assert @model.is_gluten_free
     assert_not @model.is_vegetarian
@@ -71,16 +71,16 @@ class DietaryRestrictableTest < ActiveSupport::TestCase
   end
 
   test 'dietary_restrictions= should store in metadata when model supports it' do
-    @model.dietary_restrictions = ['vegan', 'dairy_free']
-    
-    expected_metadata = { 'dietary_restrictions' => ['vegan', 'dairy_free'] }
+    @model.dietary_restrictions = %w[vegan dairy_free]
+
+    expected_metadata = { 'dietary_restrictions' => %w[vegan dairy_free] }
     assert_equal expected_metadata, @model.metadata
   end
 
   test 'dietary_restrictions= should handle empty array' do
     @model.is_vegan = true # Set some initial state
     @model.dietary_restrictions = []
-    
+
     assert_not @model.is_vegan
     assert_not @model.is_vegetarian
     assert_not @model.is_gluten_free
@@ -90,7 +90,7 @@ class DietaryRestrictableTest < ActiveSupport::TestCase
   test 'dietary_restrictions= should handle nil input' do
     @model.is_vegan = true # Set some initial state
     @model.dietary_restrictions = nil
-    
+
     assert_not @model.is_vegan
     assert_not @model.is_vegetarian
     assert_not @model.is_gluten_free
@@ -99,8 +99,8 @@ class DietaryRestrictableTest < ActiveSupport::TestCase
 
   # Branch coverage tests for dietary_info
   test 'dietary_info should return formatted text when restrictions present' do
-    @model.dietary_restrictions = ['vegan', 'gluten_free']
-    
+    @model.dietary_restrictions = %w[vegan gluten_free]
+
     result = @model.dietary_info
     assert_not_nil result
     assert result.include?('Vegan')
@@ -114,7 +114,7 @@ class DietaryRestrictableTest < ActiveSupport::TestCase
   # Branch coverage tests for has_dietary_restrictions?
   test 'has_dietary_restrictions? should return true when restrictions present' do
     @model.dietary_restrictions = ['vegan']
-    
+
     assert @model.has_dietary_restrictions?
   end
 
@@ -129,15 +129,15 @@ class DietaryRestrictableTest < ActiveSupport::TestCase
   end
 
   test 'matches_dietary_restrictions? should return true when all required restrictions match' do
-    @model.dietary_restrictions = ['vegan', 'gluten_free', 'dairy_free']
-    
-    assert @model.matches_dietary_restrictions?(['vegan', 'gluten_free'])
+    @model.dietary_restrictions = %w[vegan gluten_free dairy_free]
+
+    assert @model.matches_dietary_restrictions?(%w[vegan gluten_free])
   end
 
   test 'matches_dietary_restrictions? should return false when some required restrictions missing' do
     @model.dietary_restrictions = ['vegan']
-    
-    assert_not @model.matches_dietary_restrictions?(['vegan', 'gluten_free'])
+
+    assert_not @model.matches_dietary_restrictions?(%w[vegan gluten_free])
   end
 
   test 'matches_dietary_restrictions? should return false when no item restrictions' do
@@ -154,22 +154,22 @@ class DietaryRestrictableTest < ActiveSupport::TestCase
 
   # Edge case tests
   test 'should handle mixed case dietary restrictions' do
-    @model.dietary_restrictions = ['VEGAN', 'Gluten_Free']
-    
+    @model.dietary_restrictions = %w[VEGAN Gluten_Free]
+
     assert @model.is_vegan
     assert @model.is_gluten_free
   end
 
   test 'should handle unknown dietary restrictions gracefully' do
-    @model.dietary_restrictions = ['unknown_restriction', 'vegan']
-    
+    @model.dietary_restrictions = %w[unknown_restriction vegan]
+
     assert @model.is_vegan
     # Unknown restrictions should not cause errors
   end
 
   test 'should handle duplicate dietary restrictions' do
-    @model.dietary_restrictions = ['vegan', 'vegan', 'gluten_free']
-    
+    @model.dietary_restrictions = %w[vegan vegan gluten_free]
+
     assert @model.is_vegan
     assert @model.is_gluten_free
   end
@@ -177,8 +177,8 @@ class DietaryRestrictableTest < ActiveSupport::TestCase
   # Test with model that doesn't respond to metadata
   test 'should work with models that do not support metadata' do
     # Test the logic without stubbing - just verify it works
-    @model.dietary_restrictions = ['vegan', 'gluten_free']
-    
+    @model.dietary_restrictions = %w[vegan gluten_free]
+
     assert @model.is_vegan
     assert @model.is_gluten_free
     assert_not @model.is_vegetarian

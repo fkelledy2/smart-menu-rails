@@ -6,7 +6,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
     sign_in @user
     @size = sizes(:one)
     @restaurant = restaurants(:one)
-    
+
     # Ensure proper associations
     @restaurant.update!(user: @user) if @restaurant.user != @user
     @size.update!(restaurant: @restaurant) if @size.restaurant != @restaurant
@@ -17,7 +17,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === BASIC CRUD OPERATIONS ===
-  
+
   test 'should get index' do
     get restaurant_sizes_url(@restaurant)
     assert_response :success
@@ -28,7 +28,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
       name: 'Empty Restaurant',
       user: @user,
       capacity: 50,
-      status: :active
+      status: :active,
     )
     get restaurant_sizes_url(empty_restaurant)
     assert_response :success
@@ -45,8 +45,8 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
         name: 'Extra Large',
         size: :xl,
         status: :active,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 302]
   end
@@ -57,8 +57,8 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
         name: 'Small Cup',
         size: :sm,
         status: :active,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 302]
   end
@@ -69,8 +69,8 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
         size: {
           name: '', # Invalid - required field
           size: :lg,
-          restaurant_id: @restaurant.id
-        }
+          restaurant_id: @restaurant.id,
+        },
       }
     end
     assert_response_in [200, 422]
@@ -91,8 +91,8 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
       size: {
         name: 'Updated Size Name',
         size: @size.size,
-        restaurant_id: @size.restaurant_id
-      }
+        restaurant_id: @size.restaurant_id,
+      },
     }
     assert_response :redirect
   end
@@ -103,8 +103,8 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
         name: @size.name,
         size: @size.size,
         status: :archived,
-        restaurant_id: @size.restaurant_id
-      }
+        restaurant_id: @size.restaurant_id,
+      },
     }
     assert_response :redirect
   end
@@ -114,8 +114,8 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
       size: {
         name: '', # Invalid - required field
         size: @size.size,
-        restaurant_id: @size.restaurant_id
-      }
+        restaurant_id: @size.restaurant_id,
+      },
     }
     assert_response_in [200, 422]
   end
@@ -126,15 +126,15 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === AUTHORIZATION TESTS ===
-  
+
   test 'should enforce restaurant ownership' do
     other_restaurant = Restaurant.create!(
       name: 'Other Restaurant',
       user: User.create!(email: 'other@example.com', password: 'password'),
       capacity: 30,
-      status: :active
+      status: :active,
     )
-    
+
     get restaurant_sizes_url(other_restaurant)
     assert_response_in [200, 302, 403, 404]
   end
@@ -151,7 +151,7 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === JSON API TESTS ===
-  
+
   test 'should handle JSON index requests' do
     get restaurant_sizes_url(@restaurant), as: :json
     assert_response :success
@@ -168,8 +168,8 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
         name: 'JSON Size',
         size: :md,
         status: :active,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }, as: :json
     assert_response_in [200, 201, 302]
   end
@@ -179,8 +179,8 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
       size: {
         name: 'JSON Updated Size',
         size: @size.size,
-        restaurant_id: @size.restaurant_id
-      }
+        restaurant_id: @size.restaurant_id,
+      },
     }, as: :json
     assert_response :success
   end
@@ -195,41 +195,41 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
       size: {
         name: '', # Invalid
         size: :lg,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }, as: :json
     assert_response_in [200, 422]
   end
 
   # === BUSINESS LOGIC TESTS ===
-  
+
   test 'should handle all size enum values' do
-    enum_values = [:xs, :sm, :md, :lg, :xl]
-    
+    enum_values = %i[xs sm md lg xl]
+
     enum_values.each_with_index do |size_value, index|
       post restaurant_sizes_url(@restaurant), params: {
         size: {
           name: "Test Size #{index}",
           size: size_value,
           status: :active,
-          restaurant_id: @restaurant.id
-        }
+          restaurant_id: @restaurant.id,
+        },
       }
       assert_response_in [200, 302]
     end
   end
 
   test 'should handle all status enum values' do
-    status_values = [:inactive, :active, :archived]
-    
+    status_values = %i[inactive active archived]
+
     status_values.each_with_index do |status_value, index|
       post restaurant_sizes_url(@restaurant), params: {
         size: {
           name: "Status Test #{index}",
           size: :md,
           status: status_value,
-          restaurant_id: @restaurant.id
-        }
+          restaurant_id: @restaurant.id,
+        },
       }
       assert_response_in [200, 302]
     end
@@ -241,9 +241,9 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
       name: 'Association Test',
       size: :lg,
       status: :active,
-      restaurant: @restaurant
+      restaurant: @restaurant,
     )
-    
+
     get restaurant_size_url(@restaurant, new_size)
     assert_response :success
   end
@@ -253,21 +253,21 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
     Size.create!(name: 'Active Size', size: :sm, status: :active, restaurant: @restaurant)
     Size.create!(name: 'Inactive Size', size: :md, status: :inactive, restaurant: @restaurant)
     Size.create!(name: 'Archived Size', size: :lg, status: :archived, restaurant: @restaurant)
-    
+
     get restaurant_sizes_url(@restaurant)
     assert_response :success
   end
 
   # === ERROR HANDLING TESTS ===
-  
+
   test 'should handle invalid enum values gracefully' do
     post restaurant_sizes_url(@restaurant), params: {
       size: {
         name: 'Invalid Enum Test',
         size: 'invalid_size', # Invalid enum value
         status: :active,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 422]
   end
@@ -282,38 +282,38 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
       size: {
         name: 'Concurrent Test',
         size: @size.size,
-        restaurant_id: @size.restaurant_id
-      }
+        restaurant_id: @size.restaurant_id,
+      },
     }
     assert_response :redirect
   end
 
   # === EDGE CASE TESTS ===
-  
+
   test 'should handle long size names' do
     long_name = 'A' * 256 # Exceeds typical varchar limit
-    
+
     post restaurant_sizes_url(@restaurant), params: {
       size: {
         name: long_name,
         size: 'XL',
         status: :active,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 302, 422]
   end
 
   test 'should handle special characters in size names' do
     special_name = 'Size with "quotes" & symbols!'
-    
+
     post restaurant_sizes_url(@restaurant), params: {
       size: {
         name: special_name,
         size: :md,
         status: :active,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 302]
   end
@@ -324,14 +324,14 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
         name: 'Parameter Test',
         size: @size.size,
         restaurant_id: @size.restaurant_id,
-        unauthorized_param: 'should_be_filtered'
-      }
+        unauthorized_param: 'should_be_filtered',
+      },
     }
     assert_response :redirect
   end
 
   # === PERFORMANCE TESTS ===
-  
+
   test 'should optimize database queries for index' do
     get restaurant_sizes_url(@restaurant)
     assert_response :success
@@ -342,12 +342,12 @@ class SizesControllerTest < ActionDispatch::IntegrationTest
     10.times do |i|
       Size.create!(
         name: "Performance Test #{i}",
-        size: [:xs, :sm, :md, :lg, :xl].sample,
+        size: %i[xs sm md lg xl].sample,
         status: :active,
-        restaurant: @restaurant
+        restaurant: @restaurant,
       )
     end
-    
+
     get restaurant_sizes_url(@restaurant)
     assert_response :success
   end

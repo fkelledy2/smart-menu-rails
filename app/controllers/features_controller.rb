@@ -15,14 +15,14 @@ class FeaturesController < ApplicationController
 
   def show
     @feature = Feature.find(params[:id])
-    Rails.logger.debug "FeaturesController#show: Found feature #{@feature.id}, format: #{request.format}"
+    Rails.logger.debug { "FeaturesController#show: Found feature #{@feature.id}, format: #{request.format}" }
 
     respond_to do |format|
       format.html # Feature detail page
-      format.json { 
-        Rails.logger.debug "FeaturesController#show: Rendering JSON"
-        render json: @feature 
-      }
+      format.json do
+        Rails.logger.debug 'FeaturesController#show: Rendering JSON'
+        render json: @feature
+      end
     end
   end
 end

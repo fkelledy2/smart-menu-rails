@@ -17,7 +17,7 @@ class MenusController < ApplicationController
     @today = Time.zone.today.strftime('%A').downcase!
     @currentHour = Time.now.strftime('%H').to_i
     @currentMin = Time.now.strftime('%M').to_i
-    
+
     if current_user
       # Optimize query based on request format and restaurant scope
       @menus = if @restaurant
@@ -39,7 +39,7 @@ class MenusController < ApplicationController
                  # For all-menus requests, use policy scope
                  policy_scope(Menu).for_management_display.order(:sequence)
                end
-      
+
       # Skip analytics for JSON requests to improve performance
       unless request.format.json?
         AnalyticsService.track_user_event(current_user, 'menus_viewed', {
@@ -51,7 +51,7 @@ class MenusController < ApplicationController
     elsif params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
       @menus = Menu.where(restaurant: @restaurant)
-                   .for_customer_display
+        .for_customer_display
       @tablesettings = @restaurant.tablesettings
       anonymous_id = session[:session_id] ||= SecureRandom.uuid
       AnalyticsService.track_anonymous_event(anonymous_id, 'menus_viewed_anonymous', {
@@ -60,7 +60,7 @@ class MenusController < ApplicationController
         restaurant_name: @restaurant.name,
       },)
     end
-    
+
     # Use minimal JSON view for better performance
     respond_to do |format|
       format.html # Default HTML view
@@ -227,11 +227,10 @@ class MenusController < ApplicationController
 
   # POST /menus or /menus.json
   def create
-    begin
-      @menu = (@restaurant || Restaurant.find(menu_params[:restaurant_id])).menus.build(menu_params)
-      authorize @menu
+    @menu = (@restaurant || Restaurant.find(menu_params[:restaurant_id])).menus.build(menu_params)
+    authorize @menu
 
-      respond_to do |format|
+    respond_to do |format|
       # Remove PDF if requested
       if (params[:menu][:remove_pdf_menu_scan] == '1') && @menu.pdf_menu_scan.attached?
         @menu.pdf_menu_scan.purge
@@ -268,14 +267,13 @@ class MenusController < ApplicationController
         format.json { render json: @menu.errors, status: :unprocessable_entity }
       end
     end
-    rescue ArgumentError => e
-      # Handle invalid enum values
-      @menu = Menu.new
-      @menu.errors.add(:status, e.message)
-      respond_to do |format|
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @menu.errors, status: :unprocessable_entity }
-      end
+  rescue ArgumentError => e
+    # Handle invalid enum values
+    @menu = Menu.new
+    @menu.errors.add(:status, e.message)
+    respond_to do |format|
+      format.html { render :new, status: :unprocessable_entity }
+      format.json { render json: @menu.errors, status: :unprocessable_entity }
     end
   end
 
@@ -460,8 +458,8 @@ class MenusController < ApplicationController
 
   # Set restaurant from nested route parameter - optimized for fast failure
   def set_restaurant
-    return unless params[:restaurant_id].present?
-    
+    return if params[:restaurant_id].blank?
+
     if current_user
       # Fast ownership check to avoid expensive exception handling
       restaurant_id = params[:restaurant_id].to_i
@@ -473,13 +471,13 @@ class MenusController < ApplicationController
         end
         return
       end
-      
+
       @restaurant = current_user.restaurants.find(restaurant_id)
     else
       # For non-authenticated users (public access)
       @restaurant = Restaurant.find(params[:restaurant_id])
     end
-    
+
     Rails.logger.debug { "[MenusController] Found restaurant: #{@restaurant&.id} - #{@restaurant&.name}" }
   rescue ActiveRecord::RecordNotFound => e
     Rails.logger.warn "[MenusController] Restaurant not found for id=#{params[:restaurant_id]}: #{e.message}"
@@ -684,7 +682,7 @@ class MenusController < ApplicationController
     { average: 0, maximum: 0, request_count: 0, cache_efficiency: 0 }
   end
 
-  def collect_menu_user_activity_data(days)
+  def collect_menu_user_activity_data(_days)
     # This would typically come from analytics service
     {
       total_sessions: 0,
@@ -734,6 +732,6 @@ class MenusController < ApplicationController
   # Only allow a list of trusted parameters through.
   def menu_params
     params.require(:menu).permit(:name, :description, :image, :remove_image, :pdf_menu_scan, :status, :sequence,
-                                 :restaurant_id, :displayImages, :displayImagesInPopup, :allowOrdering, :inventoryTracking, :imagecontext, :covercharge, :test)
+                                 :restaurant_id, :displayImages, :displayImagesInPopup, :allowOrdering, :inventoryTracking, :imagecontext, :covercharge, :test,)
   end
 end

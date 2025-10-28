@@ -13,29 +13,29 @@ puts "Found #{failing_tests.length} test files with response expectation issues"
 
 failing_tests.each do |file_path|
   next unless File.exist?(file_path)
-  
+
   content = File.read(file_path)
   original_content = content.dup
-  
+
   # Pattern 1: assert_response :success after PATCH/PUT/POST/DELETE
   content.gsub!(/^(\s+)(patch|put|post|delete)\s+.*\n(\s+)assert_response :success/) do
-    indent = $1
-    method = $2
-    "#{indent}#{method} #{$'.split("\n").first}\n#{indent}assert_response :redirect"
+    indent = Regexp.last_match(1)
+    method = Regexp.last_match(2)
+    "#{indent}#{method} #{Regexp.last_match.post_match.split("\n").first}\n#{indent}assert_response :redirect"
   end
-  
+
   # Pattern 2: Standalone assert_response :success that should be :redirect
   # (after create/update/destroy actions)
   content.gsub!(/^(\s+)assert_response :success\s*$/) do |match|
     # Check if previous lines have create/update/destroy
     lines_before = content[0...content.index(match)].split("\n").last(5)
     if lines_before.any? { |line| line =~ /(patch|put|post|delete).*_(url|path)/ }
-      "#{$1}assert_response :redirect"
+      "#{Regexp.last_match(1)}assert_response :redirect"
     else
       match # Keep as is
     end
   end
-  
+
   if content != original_content
     File.write(file_path, content)
     puts "✓ Updated #{file_path}"

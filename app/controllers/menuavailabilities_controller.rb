@@ -47,7 +47,10 @@ class MenuavailabilitiesController < ApplicationController
           redirect_to edit_restaurant_menu_url(@menuavailability.menu.restaurant, @menuavailability.menu),
                       notice: t('common.flash.created', resource: t('activerecord.models.menuavailability'))
         end
-        format.json { render :show, status: :created, location: restaurant_menu_menuavailability_url(@menuavailability.menu.restaurant, @menuavailability.menu, @menuavailability) }
+        format.json do
+          render :show, status: :created,
+                        location: restaurant_menu_menuavailability_url(@menuavailability.menu.restaurant, @menuavailability.menu, @menuavailability)
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @menuavailability.errors, status: :unprocessable_entity }
@@ -65,7 +68,10 @@ class MenuavailabilitiesController < ApplicationController
           redirect_to edit_restaurant_menu_url(@menuavailability.menu.restaurant, @menuavailability.menu),
                       notice: t('common.flash.updated', resource: t('activerecord.models.menuavailability'))
         end
-        format.json { render :show, status: :ok, location: restaurant_menu_menuavailability_url(@menuavailability.menu.restaurant, @menuavailability.menu, @menuavailability) }
+        format.json do
+          render :show, status: :ok,
+                        location: restaurant_menu_menuavailability_url(@menuavailability.menu.restaurant, @menuavailability.menu, @menuavailability)
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menuavailability.errors, status: :unprocessable_entity }

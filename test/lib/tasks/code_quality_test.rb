@@ -36,8 +36,8 @@ class CodeQualityRakeTest < ActiveSupport::TestCase
 
   test 'code_quality:all has correct dependencies' do
     task = Rake::Task['code_quality:all']
-    expected_dependencies = ['rubocop', 'brakeman', 'bundle_audit']
-    
+    expected_dependencies = %w[rubocop brakeman bundle_audit]
+
     assert_equal expected_dependencies.sort, task.prerequisites.sort,
                  'code_quality:all should depend on rubocop, brakeman, and bundle_audit'
   end

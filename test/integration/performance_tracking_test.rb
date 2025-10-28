@@ -4,15 +4,15 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:one)
     @restaurant = restaurants(:one)
-    
+
     # Enable APM for testing
     ENV['ENABLE_APM_TESTS'] = 'true'
     Rails.application.config.enable_apm = true
     Rails.application.config.apm_sample_rate = 1.0
-    
+
     # Clear existing metrics
     PerformanceMetric.delete_all
-    
+
     # Ensure test adapter is used
     ActiveJob::Base.queue_adapter = :test
   end
@@ -25,9 +25,9 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
     ActiveJob::Base.queue_adapter.enqueued_jobs.clear
   end
 
-  test "should track performance metrics for authenticated requests" do
+  test 'should track performance metrics for authenticated requests' do
     login_as(@user, scope: :user)
-    
+
     # Manually trigger performance tracking job to test functionality
     PerformanceTrackingJob.perform_now(
       endpoint: 'GET /restaurants',
@@ -38,9 +38,9 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
       controller: 'restaurants',
       action: 'index',
       timestamp: Time.current,
-      additional_data: { user_agent: 'test' }
+      additional_data: { user_agent: 'test' },
     )
-    
+
     metric = PerformanceMetric.last
     assert_not_nil metric
     assert_equal 'GET /restaurants', metric.endpoint
@@ -52,7 +52,7 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
     assert metric.timestamp.present?
   end
 
-  test "should track performance metrics for unauthenticated requests" do
+  test 'should track performance metrics for unauthenticated requests' do
     # Manually trigger performance tracking job to test functionality
     PerformanceTrackingJob.perform_now(
       endpoint: 'GET /',
@@ -63,9 +63,9 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
       controller: 'home',
       action: 'index',
       timestamp: Time.current,
-      additional_data: { user_agent: 'test' }
+      additional_data: { user_agent: 'test' },
     )
-    
+
     metric = PerformanceMetric.last
     assert_not_nil metric
     assert_equal 'GET /', metric.endpoint
@@ -74,9 +74,9 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
     assert_nil metric.user_id
   end
 
-  test "should track error responses" do
+  test 'should track error responses' do
     login_as(@user, scope: :user)
-    
+
     # Manually trigger performance tracking job to test error response tracking
     PerformanceTrackingJob.perform_now(
       endpoint: 'GET /nonexistent',
@@ -87,36 +87,36 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
       controller: 'application',
       action: 'not_found',
       timestamp: Time.current,
-      additional_data: { error: 'not_found' }
+      additional_data: { error: 'not_found' },
     )
-    
+
     metric = PerformanceMetric.last
     assert_not_nil metric
     assert_equal 'GET /nonexistent', metric.endpoint
     assert_equal 404, metric.status_code
   end
 
-  test "should not track asset requests" do
+  test 'should not track asset requests' do
     assert_no_difference 'PerformanceMetric.count' do
       get '/assets/application.css'
     end
   end
 
-  test "should not track health check requests" do
+  test 'should not track health check requests' do
     assert_no_difference 'PerformanceMetric.count' do
       get '/up'
     end
   end
 
-  test "should respect sample rate" do
+  test 'should respect sample rate' do
     Rails.application.config.apm_sample_rate = 0.0 # 0% sampling
-    
+
     assert_no_difference 'PerformanceMetric.count' do
       get root_path
     end
   end
 
-  test "should track additional data" do
+  test 'should track additional data' do
     # Manually trigger performance tracking job to test additional data tracking
     PerformanceTrackingJob.perform_now(
       endpoint: 'GET /',
@@ -129,10 +129,10 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
       timestamp: Time.current,
       additional_data: {
         user_agent: 'Test Browser',
-        referer: 'https://example.com'
-      }
+        referer: 'https://example.com',
+      },
     )
-    
+
     metric = PerformanceMetric.last
     assert_not_nil metric
     assert metric.additional_data.present?
@@ -140,7 +140,7 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
     assert_equal 'https://example.com', metric.additional_data['referer']
   end
 
-  test "should handle memory tracking" do
+  test 'should handle memory tracking' do
     # Manually trigger performance tracking job to test memory tracking
     PerformanceTrackingJob.perform_now(
       endpoint: 'GET /',
@@ -151,9 +151,9 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
       controller: 'home',
       action: 'index',
       timestamp: Time.current,
-      additional_data: {}
+      additional_data: {},
     )
-    
+
     metric = PerformanceMetric.last
     assert_not_nil metric
     # Memory usage should be tracked (can be 0 in test environment)
@@ -161,9 +161,9 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
     assert_equal 2048, metric.memory_usage
   end
 
-  test "should work with different HTTP methods" do
+  test 'should work with different HTTP methods' do
     login_as(@user, scope: :user)
-    
+
     # Manually trigger performance tracking job to test different HTTP methods
     PerformanceTrackingJob.perform_now(
       endpoint: 'POST /restaurants',
@@ -174,47 +174,47 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
       controller: 'restaurants',
       action: 'create',
       timestamp: Time.current,
-      additional_data: { method: 'POST' }
+      additional_data: { method: 'POST' },
     )
-    
+
     metric = PerformanceMetric.last
     assert_not_nil metric
     assert metric.endpoint.start_with?('POST')
     assert_equal 201, metric.status_code
   end
 
-  test "should handle concurrent requests" do
+  test 'should handle concurrent requests' do
     login_as(@user, scope: :user)
-    
+
     # Manually trigger multiple performance tracking jobs to simulate concurrent requests
     3.times do |i|
       PerformanceTrackingJob.perform_now(
         endpoint: 'GET /restaurants',
-        response_time: 100.0 + i * 10,
-        memory_usage: 1024 + i * 100,
+        response_time: 100.0 + (i * 10),
+        memory_usage: 1024 + (i * 100),
         status_code: 200,
         user_id: @user.id,
         controller: 'restaurants',
         action: 'index',
         timestamp: Time.current - i.seconds,
-        additional_data: { request_id: i }
+        additional_data: { request_id: i },
       )
     end
-    
+
     # Should have tracked all requests
     assert PerformanceMetric.count >= 3
   end
 
-  test "should not break application on APM errors" do
+  test 'should not break application on APM errors' do
     # Application should still work even if APM has issues
     get root_path
     assert_response :success
-    
+
     # Even if job fails, application continues
     perform_enqueued_jobs only: PerformanceTrackingJob
   end
 
-  test "should track slow requests" do
+  test 'should track slow requests' do
     # Manually trigger performance tracking job to test slow request tracking
     PerformanceTrackingJob.perform_now(
       endpoint: 'GET /',
@@ -225,18 +225,18 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
       controller: 'home',
       action: 'index',
       timestamp: Time.current,
-      additional_data: { slow: true }
+      additional_data: { slow: true },
     )
-    
+
     metric = PerformanceMetric.last
     assert_not_nil metric
-    assert metric.response_time > 0 # Should have some response time
+    assert metric.response_time.positive? # Should have some response time
     assert_equal 500.0, metric.response_time
   end
 
-  test "should extract controller and action correctly" do
+  test 'should extract controller and action correctly' do
     login_as(@user, scope: :user)
-    
+
     # Manually trigger performance tracking job to test controller/action extraction
     PerformanceTrackingJob.perform_now(
       endpoint: 'GET /restaurants',
@@ -247,19 +247,20 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
       controller: 'restaurants',
       action: 'index',
       timestamp: Time.current,
-      additional_data: {}
+      additional_data: {},
     )
-    
+
     metric = PerformanceMetric.last
     assert_not_nil metric
     assert_equal 'restaurants', metric.controller
     assert_equal 'index', metric.action
   end
 
-  test "should handle requests with parameters" do
+  test 'should handle requests with parameters' do
     login_as(@user, scope: :user)
-    restaurant = Restaurant.create!(name: 'Test', description: 'Test', user: @user, status: 1, capacity: 50, city: 'Test', state: 'Test', country: 'Test')
-    
+    restaurant = Restaurant.create!(name: 'Test', description: 'Test', user: @user, status: 1, capacity: 50,
+                                    city: 'Test', state: 'Test', country: 'Test',)
+
     # Manually trigger performance tracking job to test parameterized requests
     PerformanceTrackingJob.perform_now(
       endpoint: "GET /restaurants/#{restaurant.id}",
@@ -270,9 +271,9 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
       controller: 'restaurants',
       action: 'show',
       timestamp: Time.current,
-      additional_data: { restaurant_id: restaurant.id }
+      additional_data: { restaurant_id: restaurant.id },
     )
-    
+
     metric = PerformanceMetric.last
     assert_not_nil metric
     assert_equal "GET /restaurants/#{restaurant.id}", metric.endpoint
@@ -280,9 +281,9 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
     assert_equal 'show', metric.action
   end
 
-  test "should work with JSON requests" do
+  test 'should work with JSON requests' do
     login_as(@user, scope: :user)
-    
+
     # Manually trigger performance tracking job to test JSON requests
     PerformanceTrackingJob.perform_now(
       endpoint: 'GET /restaurants',
@@ -293,9 +294,9 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
       controller: 'restaurants',
       action: 'index',
       timestamp: Time.current,
-      additional_data: { format: 'json', accept: 'application/json' }
+      additional_data: { format: 'json', accept: 'application/json' },
     )
-    
+
     metric = PerformanceMetric.last
     assert_not_nil metric
     assert_equal 'GET /restaurants', metric.endpoint
@@ -307,8 +308,8 @@ class PerformanceTrackingTest < ActionDispatch::IntegrationTest
     post user_session_path, params: {
       user: {
         email: user.email,
-        password: 'password123'
-      }
+        password: 'password123',
+      },
     }
   end
 end

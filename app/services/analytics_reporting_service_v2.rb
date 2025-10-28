@@ -36,7 +36,7 @@ class AnalyticsReportingServiceV2
         total_orders: total_orders,
         completed_orders: completed_orders,
         cancelled_orders: cancelled_orders,
-        average_order_value: total_orders > 0 ? (total_revenue / total_orders).round(2) : 0.0,
+        average_order_value: total_orders.positive? ? (total_revenue / total_orders).round(2) : 0.0,
         orders_by_day: orders_by_day_mv(restaurant_id, date_range),
         orders_by_hour: orders_by_hour_mv(restaurant_id, date_range),
         popular_items: popular_items_mv(restaurant_id, date_range),
@@ -58,7 +58,7 @@ class AnalyticsReportingServiceV2
         total_revenue: total_revenue,
         revenue_by_day: revenue_by_day_mv(restaurant_id, date_range),
         revenue_by_month: revenue_by_month_mv(restaurant_id, date_range),
-        average_daily_revenue: days_in_range > 0 ? (total_revenue / days_in_range).round(2) : 0.0,
+        average_daily_revenue: days_in_range.positive? ? (total_revenue / days_in_range).round(2) : 0.0,
         revenue_growth: calculate_revenue_growth_mv(restaurant_id, date_range),
       }
     end
@@ -115,7 +115,7 @@ class AnalyticsReportingServiceV2
 
   # Fallback methods - use original service if materialized views are unavailable
   def restaurant_performance_report_fallback(restaurant_id, date_range = 30.days.ago..Time.current)
-    Rails.logger.warn "[AnalyticsReportingServiceV2] Using fallback to original service"
+    Rails.logger.warn '[AnalyticsReportingServiceV2] Using fallback to original service'
     AnalyticsReportingService.restaurant_performance_report(restaurant_id, date_range)
   end
 
@@ -159,8 +159,7 @@ class AnalyticsReportingServiceV2
 
   def popular_items_mv(restaurant_id, date_range)
     MenuPerformanceMv.most_popular_items(restaurant_id, date_range, 10)
-      .map { |item| [item[:name], item[:times_ordered]] }
-      .to_h
+      .to_h { |item| [item[:name], item[:times_ordered]] }
   end
 
   def revenue_by_day_mv(restaurant_id, date_range)
@@ -188,7 +187,7 @@ class AnalyticsReportingServiceV2
     # Calculate previous period for comparison
     period_length = date_range.end - date_range.begin
     previous_range = (date_range.begin - period_length)..(date_range.begin)
-    
+
     previous_revenue = RestaurantAnalyticsMv
       .for_restaurant(restaurant_id)
       .for_date_range(previous_range.begin, previous_range.end)

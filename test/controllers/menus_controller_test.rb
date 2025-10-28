@@ -11,7 +11,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     sign_in @user
     @menu = menus(:one)
     @restaurant = restaurants(:one)
-    
+
     # Ensure proper associations
     @restaurant.update!(user: @user) if @restaurant.user != @user
     @menu.update!(restaurant: @restaurant) if @menu.restaurant != @restaurant
@@ -412,7 +412,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === COMPREHENSIVE CRUD OPERATIONS ===
-  
+
   test 'should create menu with all valid attributes' do
     post restaurant_menus_url(@restaurant), params: {
       menu: {
@@ -421,23 +421,23 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
         status: :active,
         sequence: 1,
         displayImages: true,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 302]
   end
 
   test 'should create menu with different status values' do
-    status_values = [:inactive, :active, :archived]
-    
+    status_values = %i[inactive active archived]
+
     status_values.each_with_index do |status_value, index|
       post restaurant_menus_url(@restaurant), params: {
         menu: {
           name: "Status Test Menu #{index}",
           description: 'Status test description',
           status: status_value,
-          restaurant_id: @restaurant.id
-        }
+          restaurant_id: @restaurant.id,
+        },
       }
       assert_response_in [200, 302]
     end
@@ -448,8 +448,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
       menu: {
         name: '', # Invalid - required field
         description: 'Test Description',
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 422]
   end
@@ -459,8 +459,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
       menu: {
         name: 'Updated Menu Name',
         description: 'Updated description',
-        status: @menu.status
-      }
+        status: @menu.status,
+      },
     }
     assert_response :success
   end
@@ -469,8 +469,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: @menu.name,
-        status: :archived
-      }
+        status: :archived,
+      },
     }
     assert_response :success
   end
@@ -479,8 +479,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: '', # Invalid - required field
-        description: 'Test Description'
-      }
+        description: 'Test Description',
+      },
     }
     assert_response_in [200, 422]
   end
@@ -491,15 +491,15 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === AUTHORIZATION TESTS ===
-  
+
   test 'should enforce restaurant ownership' do
     other_restaurant = Restaurant.create!(
       name: 'Other Restaurant',
       user: User.create!(email: 'other@example.com', password: 'password'),
       capacity: 30,
-      status: :active
+      status: :active,
     )
-    
+
     get restaurant_menus_url(other_restaurant)
     assert_response_in [200, 302, 403]
   end
@@ -522,7 +522,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === JSON API TESTS ===
-  
+
   test 'should handle comprehensive JSON index requests' do
     get restaurant_menus_url(@restaurant), as: :json
     assert_response :success
@@ -539,8 +539,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
         name: 'JSON Menu',
         description: 'JSON created menu',
         status: :active,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }, as: :json
     assert_response_in [200, 201, 302]
   end
@@ -549,8 +549,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: 'JSON Updated Menu',
-        description: 'JSON updated description'
-      }
+        description: 'JSON updated description',
+      },
     }, as: :json
     assert_response :success
   end
@@ -564,25 +564,25 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     post restaurant_menus_url(@restaurant), params: {
       menu: {
         name: '', # Invalid
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }, as: :json
     assert_response_in [200, 422]
   end
 
   # === BUSINESS LOGIC TESTS ===
-  
+
   test 'should handle all status enum values' do
-    status_values = [:inactive, :active, :archived]
-    
+    status_values = %i[inactive active archived]
+
     status_values.each do |status_value|
       menu = Menu.create!(
         name: "#{status_value.to_s.capitalize} Menu",
         description: 'Test menu',
         status: status_value,
-        restaurant: @restaurant
+        restaurant: @restaurant,
       )
-      
+
       get restaurant_menu_url(@restaurant, menu)
       assert_response :success
     end
@@ -595,8 +595,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
         description: 'Test sequence',
         sequence: 5,
         status: :active,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 302]
   end
@@ -605,8 +605,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: @menu.name,
-        displayImages: true
-      }
+        displayImages: true,
+      },
     }
     assert_response :success
   end
@@ -621,7 +621,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     Menu.create!(name: 'Active Menu', status: :active, restaurant: @restaurant)
     Menu.create!(name: 'Inactive Menu', status: :inactive, restaurant: @restaurant)
     Menu.create!(name: 'Archived Menu', status: :archived, restaurant: @restaurant)
-    
+
     get restaurant_menus_url(@restaurant)
     assert_response :success
   end
@@ -632,14 +632,14 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === ERROR HANDLING TESTS ===
-  
+
   test 'should handle invalid enum values gracefully' do
     post restaurant_menus_url(@restaurant), params: {
       menu: {
         name: 'Invalid Enum Test',
         status: 'invalid_status', # Invalid enum value
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 422]
   end
@@ -648,8 +648,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: 'Concurrent Test Menu',
-        description: 'Concurrent update test'
-      }
+        description: 'Concurrent update test',
+      },
     }
     assert_response :success
   end
@@ -660,31 +660,31 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === EDGE CASE TESTS ===
-  
+
   test 'should handle long menu names' do
     long_name = 'A' * 100 # Test reasonable length limit
-    
+
     post restaurant_menus_url(@restaurant), params: {
       menu: {
         name: long_name,
         description: 'Long name test',
         status: :active,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 302, 422]
   end
 
   test 'should handle special characters in menu names' do
     special_name = 'Menu with "quotes" & symbols!'
-    
+
     post restaurant_menus_url(@restaurant), params: {
       menu: {
         name: special_name,
         description: 'Special characters test',
         status: :active,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 302]
   end
@@ -693,9 +693,9 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: 'Parameter Test',
-        description: 'Parameter filtering test'
+        description: 'Parameter filtering test',
       },
-      unauthorized_param: 'should_be_filtered'
+      unauthorized_param: 'should_be_filtered',
     }
     assert_response :success
   end
@@ -706,14 +706,14 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
         name: 'Empty Description Menu',
         description: '',
         status: :active,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 302]
   end
 
   # === CACHING TESTS ===
-  
+
   test 'should handle cached menu data efficiently' do
     get restaurant_menu_url(@restaurant, @menu)
     assert_response :success
@@ -723,8 +723,8 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: 'Cache Invalidation Test',
-        description: 'Testing cache invalidation'
-      }
+        description: 'Testing cache invalidation',
+      },
     }
     assert_response :success
   end
@@ -735,7 +735,7 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === PERFORMANCE TESTS ===
-  
+
   test 'should optimize database queries for index' do
     get restaurant_menus_url(@restaurant)
     assert_response :success
@@ -747,17 +747,17 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
       Menu.create!(
         name: "Performance Test Menu #{i}",
         description: "Performance test #{i}",
-        status: [:inactive, :active, :archived].sample,
-        restaurant: @restaurant
+        status: %i[inactive active archived].sample,
+        restaurant: @restaurant,
       )
     end
-    
+
     get restaurant_menus_url(@restaurant)
     assert_response :success
   end
 
   # === INTEGRATION TESTS ===
-  
+
   test 'should handle menu with menusections integration' do
     get restaurant_menu_url(@restaurant, @menu)
     assert_response :success
@@ -774,24 +774,24 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   # === BUSINESS SCENARIO TESTS ===
-  
+
   test 'should support restaurant menu management scenarios' do
     # Test creating multiple menus for a restaurant
     menu_types = [
       { name: 'Breakfast Menu', description: 'Morning offerings' },
       { name: 'Lunch Menu', description: 'Midday meals' },
       { name: 'Dinner Menu', description: 'Evening dining' },
-      { name: 'Drinks Menu', description: 'Beverages' }
+      { name: 'Drinks Menu', description: 'Beverages' },
     ]
-    
+
     menu_types.each do |menu_data|
       post restaurant_menus_url(@restaurant), params: {
         menu: {
           name: menu_data[:name],
           description: menu_data[:description],
           status: :active,
-          restaurant_id: @restaurant.id
-        }
+          restaurant_id: @restaurant.id,
+        },
       }
       assert_response_in [200, 302]
     end
@@ -804,26 +804,26 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
         name: 'Lifecycle Menu',
         description: 'Testing lifecycle',
         status: :inactive,
-        restaurant_id: @restaurant.id
-      }
+        restaurant_id: @restaurant.id,
+      },
     }
     assert_response_in [200, 302]
-    
+
     # Activate menu
     patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: @menu.name,
-        status: :active
-      }
+        status: :active,
+      },
     }
     assert_response :success
-    
+
     # Archive menu
     patch restaurant_menu_url(@restaurant, @menu), params: {
       menu: {
         name: @menu.name,
-        status: :archived
-      }
+        status: :archived,
+      },
     }
     assert_response :success
   end

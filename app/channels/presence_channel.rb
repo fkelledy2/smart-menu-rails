@@ -1,7 +1,7 @@
 class PresenceChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "presence_channel"
-    
+    stream_from 'presence_channel'
+
     # Mark user as online
     if current_user
       session_id = connection.connection_identifier
@@ -16,14 +16,14 @@ class PresenceChannel < ApplicationCable::Channel
       PresenceService.user_offline(current_user, session_id)
     end
   end
-  
-  def appear(data)
+
+  def appear(_data)
     # User activity detected
     if current_user
       PresenceService.touch_activity(connection.connection_identifier)
     end
   end
-  
+
   def away
     # User went idle
     if current_user

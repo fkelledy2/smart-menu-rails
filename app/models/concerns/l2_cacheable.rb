@@ -11,10 +11,10 @@ module L2Cacheable
     # @param force_refresh [Boolean] Force cache refresh
     # @param &block [Block] Block that returns an ActiveRecord::Relation
     # @return [ActiveRecord::Result] Query result
-    def cached_query(cache_key, cache_type: :default, force_refresh: false, &block)
-      relation = block.call
+    def cached_query(_cache_key, cache_type: :default, force_refresh: false)
+      relation = yield
       sql = relation.to_sql
-      
+
       # Extract bindings safely
       bindings = []
       if relation.respond_to?(:bound_attributes)
@@ -22,12 +22,12 @@ module L2Cacheable
       elsif relation.respond_to?(:bind_values)
         bindings = relation.bind_values
       end
-      
+
       L2QueryCacheService.fetch_query(
         sql,
         bindings,
         cache_type: cache_type,
-        force_refresh: force_refresh
+        force_refresh: force_refresh,
       )
     end
 
@@ -49,18 +49,14 @@ module L2Cacheable
     # @param &block [Block] Block that returns aggregate value
     # @return [Object] Aggregate result
     def cached_aggregate(cache_key, cache_type: :aggregate, &block)
-      full_key = "aggregate:#{table_name}:#{cache_key}"
-      
       L2QueryCacheService.fetch_query(
         "SELECT #{cache_key}",
         [],
-        cache_type: cache_type
-      ) do
-        block.call
-      end
+        cache_type: cache_type, &block
+      )
     rescue StandardError
       # Fallback to direct execution if caching fails
-      block.call
+      yield
     end
 
     # Clear L2 cache for this model
@@ -72,7 +68,7 @@ module L2Cacheable
   # Instance methods for L2 caching
   included do
     # Clear L2 cache after model changes
-    after_commit :clear_model_l2_cache, on: [:create, :update, :destroy]
+    after_commit :clear_model_l2_cache, on: %i[create update destroy]
   end
 
   private
@@ -81,7 +77,7 @@ module L2Cacheable
   def clear_model_l2_cache
     # Clear caches that might include this record
     self.class.clear_l2_cache
-    
+
     # Clear related caches if associations exist
     clear_association_caches if respond_to?(:clear_association_caches, true)
   end
@@ -92,14 +88,13 @@ module L2CacheableRelation
   # Override load to use L2 cache
   def load
     return super if loaded?
-    
+
     cache_type = @l2_cache_type || :default
-    cache_key_suffix = @l2_cache_key_suffix || ''
-    
+    @l2_cache_key_suffix || ''
+
     # Generate cache key from SQL
-    sql_hash = Digest::SHA256.hexdigest(to_sql)[0..15]
-    cache_key = "relation:#{klass.table_name}:#{sql_hash}#{cache_key_suffix}"
-    
+    Digest::SHA256.hexdigest(to_sql)[0..15]
+
     begin
       # Extract bindings safely
       bindings = []
@@ -108,19 +103,19 @@ module L2CacheableRelation
       elsif respond_to?(:bind_values)
         bindings = bind_values
       end
-      
+
       result = L2QueryCacheService.fetch_query(
         to_sql,
         bindings,
-        cache_type: cache_type
+        cache_type: cache_type,
       )
-      
+
       # Convert result to records
       @records = result.rows.map do |row|
         attributes = result.columns.zip(row).to_h
         klass.instantiate(attributes)
       end
-      
+
       @loaded = true
       @records
     rescue StandardError => e

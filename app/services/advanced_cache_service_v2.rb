@@ -18,8 +18,8 @@ class AdvancedCacheServiceV2 < AdvancedCacheService
           :menu,
           :employee,
           ordritems: [
-            menuitem: [:genimage, :allergyns, :sizes, :menuitemlocales]
-          ]
+            menuitem: %i[genimage allergyns sizes menuitemlocales],
+          ],
         )
         .order(created_at: :desc)
 
@@ -48,8 +48,8 @@ class AdvancedCacheServiceV2 < AdvancedCacheService
           :menu,
           :restaurant,
           ordritems: [
-            menuitem: [:genimage, :allergyns, :sizes, :menuitemlocales]
-          ]
+            menuitem: %i[genimage allergyns sizes menuitemlocales],
+          ],
         )
         .order(created_at: :desc)
 
@@ -99,7 +99,7 @@ class AdvancedCacheServiceV2 < AdvancedCacheService
           :sizes,
           :tags,
           :ingredients,
-          :menusection
+          :menusection,
         )
         .order(:sequence)
 
@@ -126,7 +126,7 @@ class AdvancedCacheServiceV2 < AdvancedCacheService
           :allergyns,
           :sizes,
           :tags,
-          :ingredients
+          :ingredients,
         )
         .order(:sequence)
 
@@ -146,13 +146,13 @@ class AdvancedCacheServiceV2 < AdvancedCacheService
 
       # Fetch model instance with comprehensive includes
       menuitem = Menuitem.includes(
-          :genimage,
-          :allergyns,
-          :sizes,
-          :tags,
-          :ingredients,
-          :menusection
-        ).find(menuitem_id)
+        :genimage,
+        :allergyns,
+        :sizes,
+        :tags,
+        :ingredients,
+        :menusection,
+      ).find(menuitem_id)
 
       {
         menuitem: menuitem, # Model instance

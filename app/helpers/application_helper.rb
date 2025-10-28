@@ -62,11 +62,13 @@ module ApplicationHelper
   end
 
   # Enhanced body tag with restaurant context
-  def body_with_restaurant_context(restaurant = nil, **options, &block)
+  def body_with_restaurant_context(restaurant = nil, **options)
     # Merge restaurant context data with any existing data attributes
     restaurant_data = restaurant_context_data(restaurant)
-    options[:data] = (options[:data] || {}).merge(restaurant_data.transform_keys { |k| k.delete_prefix('data-').tr('-', '_') })
-    
+    options[:data] = (options[:data] || {}).merge(restaurant_data.transform_keys do |k|
+      k.delete_prefix('data-').tr('-', '_')
+    end)
+
     tag.body(options) do
       yield if block_given?
     end
@@ -74,10 +76,10 @@ module ApplicationHelper
 
   # Safely render HTML content from translations
   # This method should be used when translation values contain HTML that needs to be rendered
-  def t_html(key, **options)
-    raw t(key, **options)
+  def t_html(key, **)
+    raw t(key, **)
   end
 
   # Alternative method name for clarity
-  alias_method :translate_html, :t_html
+  alias translate_html t_html
 end

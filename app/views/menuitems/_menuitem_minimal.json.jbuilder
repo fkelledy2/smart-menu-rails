@@ -9,7 +9,8 @@ json.status menuitem.status
 json.sequence menuitem.sequence
 json.inventory menuitem.inventory
 if menuitem.menusection&.menu&.restaurant
-  json.url restaurant_menu_menusection_menuitem_url(menuitem.menusection.menu.restaurant, menuitem.menusection.menu, menuitem.menusection, menuitem, format: :json)
+  json.url restaurant_menu_menusection_menuitem_url(menuitem.menusection.menu.restaurant, menuitem.menusection.menu,
+                                                    menuitem.menusection, menuitem, format: :json,)
 else
   json.url nil
 end

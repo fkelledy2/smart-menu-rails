@@ -24,13 +24,13 @@ class ImageOptimizationService
       # Use ActiveStorage variant for WebP conversion
       variant = blob.variant(
         format: :webp,
-        saver: { quality: quality }
+        saver: { quality: quality },
       )
-      
+
       # Process the variant to generate the WebP version
       variant.processed
-      
-      Rails.logger.info "[ImageOptimization] Successfully converted to WebP"
+
+      Rails.logger.info '[ImageOptimization] Successfully converted to WebP'
       variant
     rescue StandardError => e
       Rails.logger.error "[ImageOptimization] WebP conversion failed: #{e.message}"
@@ -49,19 +49,17 @@ class ImageOptimizationService
     Rails.logger.info "[ImageOptimization] Generating responsive variants for #{blob.filename}"
 
     variants = {}
-    
+
     sizes.each do |width|
-      begin
-        variant = blob.variant(
-          resize_to_limit: [width, nil],
-          saver: { quality: quality }
-        )
-        
-        variants[width] = variant.processed
-        Rails.logger.debug "[ImageOptimization] Generated #{width}px variant"
-      rescue StandardError => e
-        Rails.logger.error "[ImageOptimization] Failed to generate #{width}px variant: #{e.message}"
-      end
+      variant = blob.variant(
+        resize_to_limit: [width, nil],
+        saver: { quality: quality },
+      )
+
+      variants[width] = variant.processed
+      Rails.logger.debug { "[ImageOptimization] Generated #{width}px variant" }
+    rescue StandardError => e
+      Rails.logger.error "[ImageOptimization] Failed to generate #{width}px variant: #{e.message}"
     end
 
     Rails.logger.info "[ImageOptimization] Generated #{variants.size} responsive variants"
@@ -79,11 +77,11 @@ class ImageOptimizationService
 
     begin
       variant = blob.variant(
-        saver: { quality: quality, strip: true }
+        saver: { quality: quality, strip: true },
       )
-      
+
       variant.processed
-      Rails.logger.info "[ImageOptimization] Successfully optimized compression"
+      Rails.logger.info '[ImageOptimization] Successfully optimized compression'
       variant
     rescue StandardError => e
       Rails.logger.error "[ImageOptimization] Compression optimization failed: #{e.message}"
@@ -127,7 +125,7 @@ class ImageOptimizationService
       webp_supported: webp_supported?,
       supported_formats: %w[jpeg jpg png gif webp],
       default_quality: 85,
-      default_responsive_sizes: [320, 640, 1024, 1920]
+      default_responsive_sizes: [320, 640, 1024, 1920],
     }
   end
 
@@ -138,11 +136,11 @@ class ImageOptimizationService
   def create_test_blob
     # Create a minimal 1x1 PNG blob for testing
     png_data = Base64.decode64('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
-    
+
     ActiveStorage::Blob.create_and_upload!(
       io: StringIO.new(png_data),
       filename: 'test.png',
-      content_type: 'image/png'
+      content_type: 'image/png',
     )
   end
 end

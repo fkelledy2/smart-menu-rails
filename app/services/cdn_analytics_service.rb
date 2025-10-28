@@ -14,7 +14,7 @@ class CdnAnalyticsService
   # @return [Hash] Analytics data
   def fetch_analytics(start_date: 7.days.ago, end_date: Time.current)
     Rails.logger.info "[CDN Analytics] Fetching analytics from #{start_date} to #{end_date}"
-    
+
     # In production, this would fetch from Cloudflare API
     # For now, return mock data
     mock_analytics
@@ -38,9 +38,9 @@ class CdnAnalyticsService
     analytics = fetch_analytics
     total = analytics[:requests]
     cached = analytics[:cached_requests]
-    
+
     return 0.0 if total.zero?
-    
+
     (cached.to_f / total * 100).round(2)
   end
 
@@ -50,9 +50,9 @@ class CdnAnalyticsService
     analytics = fetch_analytics
     total_bandwidth = analytics[:bandwidth]
     cached_bandwidth = analytics[:cached_bandwidth]
-    
+
     return 0.0 if total_bandwidth.zero?
-    
+
     (cached_bandwidth.to_f / total_bandwidth * 100).round(2)
   end
 
@@ -60,7 +60,7 @@ class CdnAnalyticsService
   # @return [Hash] Performance summary
   def performance_summary
     analytics = fetch_analytics
-    
+
     {
       cache_hit_rate: cache_hit_rate,
       bandwidth_saved: bandwidth_saved,
@@ -96,14 +96,14 @@ class CdnAnalyticsService
   # Get asset host from Rails configuration
   # @return [String, nil] Asset host URL
   def asset_host
-    Rails.application.config.asset_host || ENV['CDN_HOST']
+    Rails.application.config.asset_host || ENV.fetch('CDN_HOST', nil)
   end
 
   # Get CDN provider name
   # @return [String] Provider name
   def cdn_provider
     return 'none' unless cdn_enabled?
-    
+
     host = asset_host.to_s.downcase
     if host.include?('cloudflare')
       'cloudflare'
@@ -118,13 +118,13 @@ class CdnAnalyticsService
   # @return [String] Status (healthy, degraded, unhealthy)
   def check_cdn_status
     return 'disabled' unless cdn_enabled?
-    
+
     # Test CDN connectivity by checking if assets are accessible
     test_url = "#{asset_host}/assets/application.css"
-    
+
     uri = URI(test_url)
     response = Net::HTTP.get_response(uri)
-    
+
     case response.code
     when '200'
       'healthy'

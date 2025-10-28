@@ -39,31 +39,29 @@ class TracksController < ApplicationController
 
   # POST /tracks or /tracks.json
   def create
-    begin
-      @track = Track.new(track_params)
-      authorize @track
+    @track = Track.new(track_params)
+    authorize @track
 
-      respond_to do |format|
-        if @track.save
-          format.html do
-            redirect_to restaurant_tracks_path(@track.restaurant),
-                        notice: t('common.flash.created', resource: t('activerecord.models.track'))
-          end
-          format.json { render :show, status: :created, location: [@track.restaurant, @track] }
-        else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @track.errors, status: :unprocessable_entity }
+    respond_to do |format|
+      if @track.save
+        format.html do
+          redirect_to restaurant_tracks_path(@track.restaurant),
+                      notice: t('common.flash.created', resource: t('activerecord.models.track'))
         end
-      end
-    rescue ArgumentError => e
-      # Handle invalid enum values
-      @track = Track.new(track_params.except(:status))
-      @track.restaurant = @restaurant
-      @track.errors.add(:status, e.message)
-      respond_to do |format|
+        format.json { render :show, status: :created, location: [@track.restaurant, @track] }
+      else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @track.errors, status: :unprocessable_entity }
       end
+    end
+  rescue ArgumentError => e
+    # Handle invalid enum values
+    @track = Track.new(track_params.except(:status))
+    @track.restaurant = @restaurant
+    @track.errors.add(:status, e.message)
+    respond_to do |format|
+      format.html { render :new, status: :unprocessable_entity }
+      format.json { render json: @track.errors, status: :unprocessable_entity }
     end
   end
 

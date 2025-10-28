@@ -102,7 +102,7 @@ class RestaurantsController < ApplicationController
     else
       redirect_to root_url
     end
-    
+
     # Use minimal JSON view for better performance
     respond_to do |format|
       format.html # Default HTML view
@@ -331,11 +331,10 @@ class RestaurantsController < ApplicationController
 
   # POST /restaurants or /restaurants.json
   def create
-    begin
-      @restaurant = Restaurant.new(restaurant_params)
-      authorize @restaurant
+    @restaurant = Restaurant.new(restaurant_params)
+    authorize @restaurant
 
-      respond_to do |format|
+    respond_to do |format|
       if @restaurant.save
         AnalyticsService.track_restaurant_created(current_user, @restaurant)
         if @restaurant.genimage.nil?
@@ -354,14 +353,13 @@ class RestaurantsController < ApplicationController
         format.json { render json: @restaurant.errors, status: :unprocessable_entity }
       end
     end
-    rescue ArgumentError => e
-      # Handle invalid enum values
-      @restaurant = Restaurant.new
-      @restaurant.errors.add(:status, e.message)
-      respond_to do |format|
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @restaurant.errors, status: :unprocessable_entity }
-      end
+  rescue ArgumentError => e
+    # Handle invalid enum values
+    @restaurant = Restaurant.new
+    @restaurant.errors.add(:status, e.message)
+    respond_to do |format|
+      format.html { render :new, status: :unprocessable_entity }
+      format.json { render json: @restaurant.errors, status: :unprocessable_entity }
     end
   end
 

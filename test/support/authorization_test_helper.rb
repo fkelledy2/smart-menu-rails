@@ -3,17 +3,17 @@
 module AuthorizationTestHelper
   # Test authorization for all user roles against a specific action and resource
   def verify_authorization_for_all_roles(action, resource, expected_results = {})
-    roles = [:owner, :employee_admin, :employee_manager, :employee_staff, :customer, :anonymous]
-    
+    roles = %i[owner employee_admin employee_manager employee_staff customer anonymous]
+
     roles.each do |role|
       user = create_user_with_role(role, resource)
       policy = policy_for(user, resource)
       result = policy.public_send("#{action}?")
-      
+
       expected = expected_results[role] || false
-      
+
       assert_equal expected, result,
-        "#{role} should #{expected ? 'be allowed' : 'be denied'} #{action} on #{resource.class.name}"
+                   "#{role} should #{expected ? 'be allowed' : 'be denied'} #{action} on #{resource.class.name}"
     end
   end
 
@@ -21,30 +21,30 @@ module AuthorizationTestHelper
   def verify_cross_restaurant_isolation(action, resource_factory)
     owner1 = users(:one)
     owner2 = users(:two)
-    
+
     # Create resource owned by owner2
     resource = resource_factory.call(owner2)
-    
+
     # Test that owner1 cannot access owner2's resource
     policy = policy_for(owner1, resource)
     result = policy.public_send("#{action}?")
-    
-    refute result, "User should not be able to #{action} other user's #{resource.class.name}"
+
+    assert_not result, "User should not be able to #{action} other user's #{resource.class.name}"
   end
 
   # Test employee role-based access within a restaurant
   def verify_employee_role_access(action, resource, allowed_roles = [])
     restaurant = resource.respond_to?(:restaurant) ? resource.restaurant : restaurants(:one)
-    
-    [:staff, :manager, :admin].each do |role|
+
+    %i[staff manager admin].each do |role|
       employee_user = create_employee_user(role, restaurant)
       policy = policy_for(employee_user, resource)
       result = policy.public_send("#{action}?")
-      
+
       expected = allowed_roles.include?(role)
-      
+
       assert_equal expected, result,
-        "Employee with #{role} role should #{expected ? 'be allowed' : 'be denied'} #{action}"
+                   "Employee with #{role} role should #{expected ? 'be allowed' : 'be denied'} #{action}"
     end
   end
 
@@ -52,27 +52,27 @@ module AuthorizationTestHelper
   def verify_anonymous_access(action, resource, should_allow = false)
     policy = policy_for(nil, resource)
     result = policy.public_send("#{action}?")
-    
+
     assert_equal should_allow, result,
-      "Anonymous user should #{should_allow ? 'be allowed' : 'be denied'} #{action}"
+                 "Anonymous user should #{should_allow ? 'be allowed' : 'be denied'} #{action}"
   end
 
   # Test API vs web interface consistency
   def verify_api_web_consistency(controller_class, action, resource)
     user = users(:one)
-    
+
     # Test web interface authorization
     controller = controller_class.new
     controller.instance_variable_set(:@current_user, user)
-    
+
     # This would need to be implemented based on specific controller patterns
     # For now, we'll focus on policy-level testing
     policy = policy_for(user, resource)
     result = policy.public_send("#{action}?")
-    
+
     # The expectation is that API and web should have same authorization
     assert result.is_a?(TrueClass) || result.is_a?(FalseClass),
-      "Authorization should return boolean for consistency"
+           'Authorization should return boolean for consistency'
   end
 
   private
@@ -113,7 +113,7 @@ module AuthorizationTestHelper
       last_name: 'Employee',
       plan: plans(:one),
       password: 'password123',
-      password_confirmation: 'password123'
+      password_confirmation: 'password123',
     )
 
     # Create employee record
@@ -123,7 +123,7 @@ module AuthorizationTestHelper
       role: role,
       status: :active,
       name: "#{role.to_s.capitalize} Employee",
-      eid: "EMP#{SecureRandom.hex(4)}"
+      eid: "EMP#{SecureRandom.hex(4)}",
     )
 
     user
@@ -154,7 +154,7 @@ module AuthorizationTestHelper
         employee_manager: true,
         employee_staff: false,
         customer: false,
-        anonymous: false
+        anonymous: false,
       }
     when :show
       {
@@ -163,7 +163,7 @@ module AuthorizationTestHelper
         employee_manager: false,
         employee_staff: false,
         customer: false,
-        anonymous: false
+        anonymous: false,
       }
     when :create
       {
@@ -172,7 +172,7 @@ module AuthorizationTestHelper
         employee_manager: false,
         employee_staff: false,
         customer: false,
-        anonymous: false
+        anonymous: false,
       }
     when :update
       {
@@ -181,7 +181,7 @@ module AuthorizationTestHelper
         employee_manager: false,
         employee_staff: false,
         customer: false,
-        anonymous: false
+        anonymous: false,
       }
     when :destroy
       {
@@ -190,7 +190,7 @@ module AuthorizationTestHelper
         employee_manager: false,
         employee_staff: false,
         customer: false,
-        anonymous: false
+        anonymous: false,
       }
     else
       {
@@ -199,7 +199,7 @@ module AuthorizationTestHelper
         employee_manager: false,
         employee_staff: false,
         customer: false,
-        anonymous: false
+        anonymous: false,
       }
     end
   end
@@ -214,7 +214,7 @@ module AuthorizationTestHelper
         employee_manager: true,
         employee_staff: true,
         customer: true,
-        anonymous: true
+        anonymous: true,
       }
     else
       default_authorization_matrix(action)
@@ -231,7 +231,7 @@ module AuthorizationTestHelper
         employee_manager: false,
         employee_staff: false,
         customer: false,
-        anonymous: false
+        anonymous: false,
       }
     else
       default_authorization_matrix(action)

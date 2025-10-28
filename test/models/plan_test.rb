@@ -101,7 +101,7 @@ class PlanTest < ActiveSupport::TestCase
       languages: 5,
       locations: 3,
       itemspermenu: 100,
-      menusperlocation: 10
+      menusperlocation: 10,
     )
     assert plan.valid?
   end

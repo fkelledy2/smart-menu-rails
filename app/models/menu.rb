@@ -36,28 +36,28 @@ class Menu < ApplicationRecord
   after_commit :enqueue_localization, on: :create
 
   # Optimized scopes to prevent N+1 queries
-  scope :with_availabilities_and_sections, -> {
+  scope :with_availabilities_and_sections, lambda {
     includes(
       :menuavailabilities,
       :restaurant,
       menusections: [
         :menusectionlocales,
-        menuitems: [
-          :menuitemlocales,
-          :allergyns,
-          :sizes,
-          :genimage
-        ]
-      ]
+        { menuitems: %i[
+          menuitemlocales
+          allergyns
+          sizes
+          genimage
+        ] },
+      ],
     )
   }
 
-  scope :for_customer_display, -> {
+  scope :for_customer_display, lambda {
     where(archived: false, status: 'active')
       .with_availabilities_and_sections
   }
 
-  scope :for_management_display, -> {
+  scope :for_management_display, lambda {
     where(archived: false)
       .with_availabilities_and_sections
   }
@@ -121,8 +121,6 @@ class Menu < ApplicationRecord
     AdvancedCacheService.invalidate_menu_caches(id)
     AdvancedCacheService.invalidate_restaurant_caches(restaurant_id)
   end
-
-  private
 
   # Enqueue background job to localize this menu to all restaurant locales
   def enqueue_localization

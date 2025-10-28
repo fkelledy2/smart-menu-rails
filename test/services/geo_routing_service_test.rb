@@ -15,11 +15,11 @@ class GeoRoutingServiceTest < ActiveSupport::TestCase
   test 'detect_location with CloudFlare header' do
     request = OpenStruct.new(
       headers: { 'CF-IPCountry' => 'GB' },
-      remote_ip: '1.2.3.4'
+      remote_ip: '1.2.3.4',
     )
-    
+
     location = @service.detect_location(request)
-    
+
     assert_equal 'GB', location[:country]
     assert_equal 'EU', location[:continent]
     assert_equal 'eu', location[:region]
@@ -29,11 +29,11 @@ class GeoRoutingServiceTest < ActiveSupport::TestCase
   test 'detect_location defaults to US for local IP' do
     request = OpenStruct.new(
       headers: {},
-      remote_ip: '127.0.0.1'
+      remote_ip: '127.0.0.1',
     )
-    
+
     location = @service.detect_location(request)
-    
+
     assert_equal 'US', location[:country]
     assert_equal 'NA', location[:continent]
     assert_equal 'us', location[:region]
@@ -41,15 +41,15 @@ class GeoRoutingServiceTest < ActiveSupport::TestCase
 
   test 'optimal_edge_location returns correct edge for US' do
     location = { region: 'us' }
-    
+
     edge = @service.optimal_edge_location(location)
-    
-    assert_match /cdn/, edge
+
+    assert_match(/cdn/, edge)
   end
 
   test 'supported_regions returns all regions' do
     regions = @service.supported_regions
-    
+
     assert_kind_of Array, regions
     assert_includes regions, 'us'
     assert_includes regions, 'eu'
@@ -58,7 +58,7 @@ class GeoRoutingServiceTest < ActiveSupport::TestCase
 
   test 'region_stats returns correct structure' do
     stats = @service.region_stats
-    
+
     assert_kind_of Hash, stats
     assert_includes stats, :supported_regions
     assert_includes stats, :edge_locations

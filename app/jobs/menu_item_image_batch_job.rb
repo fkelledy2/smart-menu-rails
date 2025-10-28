@@ -4,25 +4,25 @@ class MenuItemImageBatchJob
   def perform(menu_id)
     menu = Menu.find_by(id: menu_id)
     menu_name = menu&.name || "menu_id=#{menu_id}"
-    
-    Rails.logger.info "=" * 80
+
+    Rails.logger.info '=' * 80
     Rails.logger.info "[MenuItemImageBatchJob] 🎨 Starting AI image generation for #{menu_name}"
-    Rails.logger.info "=" * 80
-    
+    Rails.logger.info '=' * 80
+
     # Call the rake task logic directly
     scope = Genimage.where(menu_id: menu_id)
     total = scope.count
-    
+
     Rails.logger.info "[MenuItemImageBatchJob] Found #{total} genimage records to process"
-    
+
     processed = 0
     skipped = 0
     errors = 0
-    
+
     scope.find_each.with_index do |genimage, index|
       menuitem = genimage.menuitem
-      item_name = menuitem&.name || "Unknown"
-      
+      item_name = menuitem&.name || 'Unknown'
+
       Rails.logger.info "[MenuItemImageBatchJob] [#{index + 1}/#{total}] Processing: '#{item_name}' (genimage ##{genimage.id})"
 
       # Skip if the genimage is associated with a wine item
@@ -31,7 +31,7 @@ class MenuItemImageBatchJob
         skipped += 1
         next
       end
-      
+
       unless menuitem
         Rails.logger.warn "[MenuItemImageBatchJob] ⚠️  Skipped: genimage ##{genimage.id} (no associated menuitem)"
         skipped += 1
@@ -52,9 +52,9 @@ class MenuItemImageBatchJob
       Rails.logger.error e.backtrace.first(5).join("\n") if e.backtrace
     end
 
-    Rails.logger.info "=" * 80
+    Rails.logger.info '=' * 80
     Rails.logger.info "[MenuItemImageBatchJob] 🎉 Finished AI image generation for #{menu_name}"
     Rails.logger.info "[MenuItemImageBatchJob] Summary: #{processed} generated, #{skipped} skipped, #{errors} errors (Total: #{total})"
-    Rails.logger.info "=" * 80
+    Rails.logger.info '=' * 80
   end
 end

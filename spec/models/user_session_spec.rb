@@ -1,5 +1,5 @@
 require 'rails_helper'
 
-RSpec.describe UserSession, type: :model do
+RSpec.describe UserSession do
   pending "add some examples to (or delete) #{__FILE__}"
 end

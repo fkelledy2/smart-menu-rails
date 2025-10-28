@@ -52,7 +52,7 @@ class GenimagesController < ApplicationController
             @genimage.menuitem.menusection.menu.restaurant,
             @genimage.menuitem.menusection.menu,
             @genimage.menuitem.menusection,
-            @genimage.menuitem
+            @genimage.menuitem,
           ), notice: t('common.flash.updated', resource: t('activerecord.models.genimage'))
         else
           redirect_to restaurant_genimages_path(@restaurant),
@@ -71,7 +71,7 @@ class GenimagesController < ApplicationController
     respond_to do |format|
       format.html do
         redirect_to restaurant_genimages_path(@restaurant), status: :see_other,
-                                    notice: t('common.flash.deleted', resource: t('activerecord.models.genimage'))
+                                                            notice: t('common.flash.deleted', resource: t('activerecord.models.genimage'))
       end
       format.json { head :no_content }
     end

@@ -26,7 +26,7 @@ class ImportToMenu
       end
       @import.update!(menu: menu)
     end
-    
+
     # Trigger localization after transaction commits
     # Note: Menu model has after_commit callback that also triggers this,
     # but we explicitly trigger here to ensure it happens for OCR imports
@@ -36,7 +36,7 @@ class ImportToMenu
     rescue StandardError => e
       Rails.logger.warn("[ImportToMenu.call] Failed to enqueue localization: #{e.class}: #{e.message}")
     end
-    
+
     menu
   end
 
@@ -165,7 +165,7 @@ class ImportToMenu
         Rails.logger.warn("[ImportToMenu.upsert] menu expire warning: #{e.class}: #{e.message}")
       end
     end
-    
+
     # Re-localize updated menu to all locales to reflect changes
     begin
       MenuLocalizationJob.perform_async('menu', menu.id)
@@ -173,7 +173,7 @@ class ImportToMenu
     rescue StandardError => e
       Rails.logger.warn("[ImportToMenu.upsert] Failed to enqueue localization: #{e.class}: #{e.message}")
     end
-    
+
     [menu, stats]
   end
 

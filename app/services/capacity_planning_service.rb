@@ -12,7 +12,7 @@ class CapacityPlanningService
     redis_cache_gb: 4,
     app_servers: 2,
     app_server_vcpu: 2,
-    app_server_ram_gb: 4
+    app_server_ram_gb: 4,
   }.freeze
 
   # Infrastructure costs (monthly, in USD)
@@ -29,7 +29,7 @@ class CapacityPlanningService
     redis_large: 500,       # 256 GB
     load_balancer: 50,
     cdn: 100,
-    message_queue: 50
+    message_queue: 50,
   }.freeze
 
   class << self
@@ -40,7 +40,7 @@ class CapacityPlanningService
         metrics: calculate_metrics(growth_multiplier),
         infrastructure: calculate_infrastructure(growth_multiplier),
         costs: calculate_costs(growth_multiplier),
-        recommendations: generate_recommendations(growth_multiplier)
+        recommendations: generate_recommendations(growth_multiplier),
       }
     end
 
@@ -49,7 +49,7 @@ class CapacityPlanningService
       report = {
         generated_at: Time.current,
         current_baseline: CURRENT_METRICS,
-        scenarios: {}
+        scenarios: {},
       }
 
       growth_multipliers.each do |multiplier|
@@ -65,13 +65,13 @@ class CapacityPlanningService
       growth_multiplier = target_users.to_f / current_capacity
 
       capacity = calculate_capacity(growth_multiplier)
-      
+
       {
         can_handle: growth_multiplier <= 2, # 2x with current infrastructure
         target_users: target_users,
         growth_multiplier: growth_multiplier.round(2),
         required_infrastructure: capacity[:infrastructure],
-        estimated_cost: capacity[:costs][:total_monthly]
+        estimated_cost: capacity[:costs][:total_monthly],
       }
     end
 
@@ -81,7 +81,7 @@ class CapacityPlanningService
         timestamp: Time.current,
         database: database_utilization,
         cache: cache_utilization,
-        application: application_utilization
+        application: application_utilization,
       }
     end
 
@@ -94,7 +94,7 @@ class CapacityPlanningService
         avg_orders_per_hour: (CURRENT_METRICS[:avg_orders_per_hour] * multiplier).to_i,
         database_size_gb: (CURRENT_METRICS[:database_size_gb] * multiplier).to_i,
         redis_cache_gb: (CURRENT_METRICS[:redis_cache_gb] * multiplier * 0.8).to_i, # Cache grows slower
-        requests_per_second: ((CURRENT_METRICS[:avg_orders_per_hour] * multiplier) / 3600.0 * 5).to_i # 5 requests per order
+        requests_per_second: ((CURRENT_METRICS[:avg_orders_per_hour] * multiplier) / 3600.0 * 5).to_i, # 5 requests per order
       }
     end
 
@@ -117,19 +117,19 @@ class CapacityPlanningService
           count: 2,
           type: 'small',
           vcpu: 2,
-          ram_gb: 4
+          ram_gb: 4,
         },
         database: {
           primary: { vcpu: 4, ram_gb: 16, storage_gb: 100 },
-          replicas: 0
+          replicas: 0,
         },
         cache: {
           size_gb: 4,
-          nodes: 1
+          nodes: 1,
         },
         load_balancer: true,
         cdn: false,
-        message_queue: false
+        message_queue: false,
       }
     end
 
@@ -139,19 +139,19 @@ class CapacityPlanningService
           count: 4,
           type: 'medium',
           vcpu: 4,
-          ram_gb: 8
+          ram_gb: 8,
         },
         database: {
           primary: { vcpu: 8, ram_gb: 32, storage_gb: 300 },
-          replicas: 1
+          replicas: 1,
         },
         cache: {
           size_gb: 16,
-          nodes: 2
+          nodes: 2,
         },
         load_balancer: true,
         cdn: true,
-        message_queue: false
+        message_queue: false,
       }
     end
 
@@ -162,20 +162,20 @@ class CapacityPlanningService
           type: 'medium',
           vcpu: 4,
           ram_gb: 8,
-          autoscaling: { min: 6, max: 12 }
+          autoscaling: { min: 6, max: 12 },
         },
         database: {
           primary: { vcpu: 8, ram_gb: 32, storage_gb: 500 },
-          replicas: 2
+          replicas: 2,
         },
         cache: {
           size_gb: 32,
           nodes: 3,
-          clustering: true
+          clustering: true,
         },
         load_balancer: true,
         cdn: true,
-        message_queue: true
+        message_queue: true,
       }
     end
 
@@ -187,29 +187,29 @@ class CapacityPlanningService
           vcpu: 8,
           ram_gb: 16,
           autoscaling: { min: 20, max: 50 },
-          multi_region: true
+          multi_region: true,
         },
         database: {
           primary: { vcpu: 16, ram_gb: 64, storage_gb: 5000 },
           replicas: 6,
-          sharding: true
+          sharding: true,
         },
         cache: {
           size_gb: 256,
           nodes: 6,
           clustering: true,
-          multi_region: true
+          multi_region: true,
         },
         load_balancer: true,
         cdn: true,
         message_queue: true,
-        additional_services: ['monitoring', 'log_aggregation', 'security_scanning']
+        additional_services: %w[monitoring log_aggregation security_scanning],
       }
     end
 
     def calculate_costs(multiplier)
       infra = calculate_infrastructure(multiplier)
-      
+
       app_cost = case infra[:app_servers][:type]
                  when 'small' then COSTS[:app_server_small]
                  when 'medium' then COSTS[:app_server_medium]
@@ -243,7 +243,7 @@ class CapacityPlanningService
         cache: cache_cost,
         additional_services: additional_cost,
         total_monthly: total,
-        total_annual: total * 12
+        total_annual: total * 12,
       }
     end
 
@@ -282,7 +282,7 @@ class CapacityPlanningService
 
       pool = ActiveRecord::Base.connection_pool
       active = pool.connections.count(&:in_use?)
-      
+
       # Use stat method if available (Rails 7.1+), otherwise calculate manually
       available = if pool.respond_to?(:available_connection_count)
                     pool.available_connection_count
@@ -294,7 +294,7 @@ class CapacityPlanningService
         pool_size: pool.size,
         active_connections: active,
         available_connections: available,
-        utilization_percent: (active.to_f / pool.size * 100).round(2)
+        utilization_percent: (active.to_f / pool.size * 100).round(2),
       }
     rescue StandardError => e
       Rails.logger.error("Failed to get database utilization: #{e.message}")
@@ -311,9 +311,9 @@ class CapacityPlanningService
       {
         used_memory_mb: (info['used_memory'].to_i / 1024.0 / 1024.0).round(2),
         max_memory_mb: (info['maxmemory'].to_i / 1024.0 / 1024.0).round(2),
-        utilization_percent: ((info['used_memory'].to_f / info['maxmemory'].to_f) * 100).round(2),
+        utilization_percent: ((info['used_memory'].to_f / info['maxmemory']) * 100).round(2),
         connected_clients: info['connected_clients'].to_i,
-        hit_rate: calculate_cache_hit_rate(info)
+        hit_rate: calculate_cache_hit_rate(info),
       }
     rescue StandardError => e
       Rails.logger.error("Failed to get cache utilization: #{e.message}")
@@ -323,7 +323,7 @@ class CapacityPlanningService
     def application_utilization
       {
         process_count: `ps aux | grep puma | grep -v grep | wc -l`.strip.to_i,
-        memory_usage_mb: `ps aux | grep puma | grep -v grep | awk '{sum+=$6} END {print sum/1024}'`.strip.to_f.round(2)
+        memory_usage_mb: `ps aux | grep puma | grep -v grep | awk '{sum+=$6} END {print sum/1024}'`.strip.to_f.round(2),
       }
     rescue StandardError => e
       Rails.logger.error("Failed to get application utilization: #{e.message}")
@@ -334,9 +334,9 @@ class CapacityPlanningService
       hits = info['keyspace_hits'].to_f
       misses = info['keyspace_misses'].to_f
       total = hits + misses
-      
+
       return 0.0 if total.zero?
-      
+
       ((hits / total) * 100).round(2)
     end
   end

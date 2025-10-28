@@ -34,8 +34,8 @@ class RestaurantavailabilitiesControllerTest < ActionDispatch::IntegrationTest
       restaurantavailability: {
         dayofweek: :tuesday,
         starttime: '09:00',
-        endtime: '22:00'
-      }
+        endtime: '22:00',
+      },
     }
     assert_response :redirect
   end

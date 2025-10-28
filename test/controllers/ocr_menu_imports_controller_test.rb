@@ -118,7 +118,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
   test 'should handle invalid state transitions' do
     # Test processing when not in valid state
     post process_pdf_restaurant_ocr_menu_import_path(@restaurant, @import)
-    assert_response_in [:success, :redirect]
+    assert_response_in %i[success redirect]
   end
 
   test 'should queue background job on create' do
@@ -159,7 +159,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
           params: { section_id: 99999, confirmed: true },
           as: :json
     assert_response :not_found
-    response_json = JSON.parse(response.body)
+    response_json = response.parsed_body
     assert_equal false, response_json['ok']
     assert_equal 'section not found', response_json['error']
   end
@@ -169,7 +169,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
           params: { section_id: 0, confirmed: true },
           as: :json
     assert_response :not_found
-    response_json = JSON.parse(response.body)
+    response_json = response.parsed_body
     assert_equal false, response_json['ok']
     assert_equal 'section not found', response_json['error']
   end
@@ -250,7 +250,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
           as: :json
 
     assert_response :unprocessable_entity
-    response_json = JSON.parse(response.body)
+    response_json = response.parsed_body
     assert_equal 'items mismatch', response_json['error']
   end
 
@@ -276,7 +276,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
           params: { section_ids: [99999, 99998] },
           as: :json
     assert_response :unprocessable_entity
-    response_json = JSON.parse(response.body)
+    response_json = response.parsed_body
     assert_equal 'sections mismatch', response_json['error']
   end
 
@@ -286,7 +286,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
           params: { section_id: @starters.id, item_ids: [99999, 99998] },
           as: :json
     assert_response :unprocessable_entity
-    response_json = JSON.parse(response.body)
+    response_json = response.parsed_body
     assert_equal 'items mismatch', response_json['error']
   end
 
@@ -297,13 +297,13 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
 
     # Controller returns bad request for empty section_ids
     assert_response :bad_request
-    response_json = JSON.parse(response.body)
+    response_json = response.parsed_body
     assert_equal 'section_ids required', response_json['error']
   end
 
   test 'PATCH reorder_items with missing params returns bad_request' do
     # Capture original order for starters
-    original_ids = @starters.ocr_menu_items.ordered.pluck(:id)
+    @starters.ocr_menu_items.ordered.pluck(:id)
 
     patch reorder_items_restaurant_ocr_menu_import_path(@restaurant, @import, format: :json),
           params: { section_id: 0, item_ids: [] },
@@ -311,7 +311,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
 
     # Controller returns bad request for missing/invalid params
     assert_response :bad_request
-    response_json = JSON.parse(response.body)
+    response_json = response.parsed_body
     assert_equal 'section_id and item_ids required', response_json['error']
   end
 
@@ -334,7 +334,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
           params: { section_id: 99999, confirmed: true },
           as: :json
     assert_response :not_found
-    response_json = JSON.parse(response.body)
+    response_json = response.parsed_body
     assert_equal false, response_json['ok']
     assert_equal 'section not found', response_json['error']
   end
@@ -366,7 +366,7 @@ class OcrMenuImportsControllerTest < ActionDispatch::IntegrationTest
           params: { ocr_menu_import: { name: '' } }, # Invalid - name required
           as: :json
     assert_response :unprocessable_entity
-    response_json = JSON.parse(response.body)
+    response_json = response.parsed_body
     assert_equal false, response_json['ok']
     assert_includes response_json['errors'], "Name can't be blank"
   end

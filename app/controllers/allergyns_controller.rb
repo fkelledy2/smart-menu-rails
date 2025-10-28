@@ -66,7 +66,9 @@ class AllergynsController < ApplicationController
           redirect_to edit_restaurant_path(id: @allergyn.restaurant.id),
                       notice: t('common.flash.created', resource: t('activerecord.models.allergyn'))
         end
-        format.json { render :show, status: :created, location: restaurant_allergyn_url(@allergyn.restaurant, @allergyn) }
+        format.json do
+          render :show, status: :created, location: restaurant_allergyn_url(@allergyn.restaurant, @allergyn)
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @allergyn.errors, status: :unprocessable_entity }

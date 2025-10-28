@@ -44,8 +44,8 @@ gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'google-cloud-vision', '~> 2.0.2'
 
 # Error tracking and monitoring
-gem 'sentry-ruby', '~> 5.12'
 gem 'sentry-rails', '~> 5.12'
+gem 'sentry-ruby', '~> 5.12'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '~> 1.18', require: false

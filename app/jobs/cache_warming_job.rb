@@ -2,7 +2,7 @@
 # Background job for intelligent cache warming operations
 class CacheWarmingJob < ApplicationJob
   queue_as :cache_warming
-  
+
   # Retry with exponential backoff for transient failures
   retry_on StandardError, wait: :exponentially_longer, attempts: 3
 
@@ -10,11 +10,11 @@ class CacheWarmingJob < ApplicationJob
     # Support both old and new parameter formats for backward compatibility
     actual_warming_type = warming_type || warm_type
     actual_context = context.merge(user_id: user_id, restaurant_id: restaurant_id, menu_id: menu_id).compact
-    
+
     Rails.logger.info("[CacheWarmingJob] Starting cache warming: #{actual_warming_type}")
-    
+
     start_time = Time.current
-    
+
     case actual_warming_type
     when 'user_login', 'user_restaurants'
       warm_user_login_cache(actual_context[:user_id] || user_id)
@@ -35,10 +35,9 @@ class CacheWarmingJob < ApplicationJob
     else
       Rails.logger.warn("[CacheWarmingJob] Unknown warm_type: #{actual_warming_type}")
     end
-    
+
     duration = ((Time.current - start_time) * 1000).round(2)
     Rails.logger.info("[CacheWarmingJob] Cache warming completed: #{actual_warming_type} in #{duration}ms")
-    
   rescue StandardError => e
     Rails.logger.error("[CacheWarmingJob] Cache warming failed: #{actual_warming_type} - #{e.message}")
     raise
@@ -52,7 +51,7 @@ class CacheWarmingJob < ApplicationJob
     user = User.find_by(id: user_id)
     return unless user
 
-    Rails.logger.debug("[CacheWarmingJob] Warming user login cache for user #{user_id}")
+    Rails.logger.debug { "[CacheWarmingJob] Warming user login cache for user #{user_id}" }
 
     # Use intelligent cache warming service
     IntelligentCacheWarmingService.warm_user_context(user_id, tier: :hot)
@@ -61,7 +60,7 @@ class CacheWarmingJob < ApplicationJob
     user.restaurants.limit(5).find_each do |restaurant|
       # Warm recent orders
       AdvancedCacheService.cached_restaurant_orders(restaurant.id, include_calculations: false)
-      
+
       # Warm dashboard data
       AdvancedCacheService.cached_restaurant_dashboard(restaurant.id)
     end
@@ -77,14 +76,14 @@ class CacheWarmingJob < ApplicationJob
     restaurant = Restaurant.find_by(id: restaurant_id)
     return unless restaurant
 
-    Rails.logger.debug("[CacheWarmingJob] Warming restaurant cache for restaurant #{restaurant_id}")
+    Rails.logger.debug { "[CacheWarmingJob] Warming restaurant cache for restaurant #{restaurant_id}" }
 
     # Use intelligent cache warming service
     IntelligentCacheWarmingService.warm_restaurant_context(restaurant_id, tier: :hot)
 
     # Pre-load time-sensitive data
     AdvancedCacheService.cached_restaurant_orders(restaurant_id, include_calculations: true)
-    
+
     # Pre-load analytics for common time periods
     [1, 7, 30].each do |days|
       AdvancedCacheService.cached_order_analytics(restaurant_id, days.days.ago..Time.current)
@@ -97,7 +96,7 @@ class CacheWarmingJob < ApplicationJob
     menu = Menu.find_by(id: menu_id)
     return unless menu
 
-    Rails.logger.debug("[CacheWarmingJob] Warming menu cache for menu #{menu_id}")
+    Rails.logger.debug { "[CacheWarmingJob] Warming menu cache for menu #{menu_id}" }
 
     # Use intelligent cache warming service
     IntelligentCacheWarmingService.warm_menu_context(menu_id, tier: :hot)
@@ -110,7 +109,7 @@ class CacheWarmingJob < ApplicationJob
     # Pre-load individual menu items with analytics
     menu.menusections.includes(:menuitems).find_each do |section|
       AdvancedCacheService.cached_section_items_with_details(section.id)
-      
+
       section.menuitems.limit(10).find_each do |item|
         AdvancedCacheService.cached_menuitem_with_analytics(item.id)
       end
@@ -118,11 +117,11 @@ class CacheWarmingJob < ApplicationJob
   end
 
   def warm_scheduled_cache
-    Rails.logger.info("[CacheWarmingJob] Starting scheduled cache warming")
-    
+    Rails.logger.info('[CacheWarmingJob] Starting scheduled cache warming')
+
     # Use intelligent scheduled warming
     IntelligentCacheWarmingService.warm_scheduled_cache
-    
+
     # Additional scheduled warming for high-traffic data
     warm_high_traffic_data
     warm_analytics_data
@@ -131,19 +130,19 @@ class CacheWarmingJob < ApplicationJob
 
   # Warm high-traffic data during off-peak hours
   def warm_high_traffic_data
-    Rails.logger.debug("[CacheWarmingJob] Warming high-traffic data")
-    
+    Rails.logger.debug('[CacheWarmingJob] Warming high-traffic data')
+
     # Most accessed restaurants in the last 24 hours
     active_restaurants = Restaurant.joins(:ordrs)
-                                  .where(ordrs: { created_at: 24.hours.ago.. })
-                                  .group('restaurants.id')
-                                  .order('COUNT(ordrs.id) DESC')
-                                  .limit(20)
+      .where(ordrs: { created_at: 24.hours.ago.. })
+      .group('restaurants.id')
+      .order('COUNT(ordrs.id) DESC')
+      .limit(20)
 
     active_restaurants.find_each do |restaurant|
       # Warm restaurant dashboard (most frequently accessed)
       AdvancedCacheService.cached_restaurant_dashboard(restaurant.id)
-      
+
       # Warm active menus
       restaurant.menus.where(status: 'active').limit(3).find_each do |menu|
         AdvancedCacheService.cached_menu_with_items(menu.id, locale: 'en', include_inactive: false)
@@ -153,15 +152,14 @@ class CacheWarmingJob < ApplicationJob
 
   # Warm analytics data for reporting
   def warm_analytics_data
-    Rails.logger.debug("[CacheWarmingJob] Warming analytics data")
-    
+    Rails.logger.debug('[CacheWarmingJob] Warming analytics data')
+
     # Warm analytics for restaurants with recent activity
     Restaurant.joins(:ordrs)
-              .where(ordrs: { created_at: 7.days.ago.. })
-              .distinct
-              .limit(15)
-              .find_each do |restaurant|
-      
+      .where(ordrs: { created_at: 7.days.ago.. })
+      .distinct
+      .limit(15)
+      .find_each do |restaurant|
       # Warm common analytics queries
       [7, 30].each do |days|
         AdvancedCacheService.cached_order_analytics(restaurant.id, days.days.ago..Time.current)
@@ -172,17 +170,17 @@ class CacheWarmingJob < ApplicationJob
 
   # Warm data commonly accessed in user sessions
   def warm_user_session_data
-    Rails.logger.debug("[CacheWarmingJob] Warming user session data")
-    
+    Rails.logger.debug('[CacheWarmingJob] Warming user session data')
+
     # Warm data for users who logged in recently
     recent_users = User.where(updated_at: 24.hours.ago..)
-                      .includes(:restaurants)
-                      .limit(10)
+      .includes(:restaurants)
+      .limit(10)
 
     recent_users.find_each do |user|
       # Warm user activity summary
       AdvancedCacheService.cached_user_activity(user.id, days: 7)
-      
+
       # Warm user's restaurant data
       user.restaurants.limit(3).find_each do |restaurant|
         AdvancedCacheService.cached_restaurant_dashboard(restaurant.id)

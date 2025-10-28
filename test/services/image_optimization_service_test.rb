@@ -22,20 +22,20 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
   end
 
   test 'supported_format? returns false for unsupported formats' do
-    refute @service.supported_format?('application/pdf')
-    refute @service.supported_format?('text/plain')
-    refute @service.supported_format?('video/mp4')
+    assert_not @service.supported_format?('application/pdf')
+    assert_not @service.supported_format?('text/plain')
+    assert_not @service.supported_format?('video/mp4')
   end
 
   test 'optimization_stats returns correct structure' do
     stats = @service.optimization_stats
-    
+
     assert_kind_of Hash, stats
     assert_includes stats, :webp_supported
     assert_includes stats, :supported_formats
     assert_includes stats, :default_quality
     assert_includes stats, :default_responsive_sizes
-    
+
     assert_kind_of Array, stats[:supported_formats]
     assert_equal 85, stats[:default_quality]
     assert_equal [320, 640, 1024, 1920], stats[:default_responsive_sizes]
@@ -43,7 +43,7 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
 
   test 'convert_to_webp returns nil for unsupported format' do
     blob = create_test_blob('test.pdf', 'application/pdf')
-    
+
     # Mock the content_type since ActiveStorage may override it
     blob.stub :content_type, 'application/pdf' do
       result = @service.convert_to_webp(blob)
@@ -53,7 +53,7 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
 
   test 'convert_to_webp returns blob for webp input' do
     blob = create_test_blob('test.webp', 'image/webp')
-    
+
     # Mock the content_type
     blob.stub :content_type, 'image/webp' do
       result = @service.convert_to_webp(blob)
@@ -63,7 +63,7 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
 
   test 'generate_responsive_variants returns empty hash for unsupported format' do
     blob = create_test_blob('test.pdf', 'application/pdf')
-    
+
     # Mock the content_type
     blob.stub :content_type, 'application/pdf' do
       variants = @service.generate_responsive_variants(blob)
@@ -73,9 +73,9 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
 
   test 'generate_responsive_variants with custom sizes' do
     blob = create_test_blob('test.png', 'image/png')
-    
+
     variants = @service.generate_responsive_variants(blob, sizes: [100, 200])
-    
+
     assert_kind_of Hash, variants
     # Variants may be empty if image processing fails in test environment
     # Just verify it returns a hash
@@ -83,7 +83,7 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
 
   test 'optimize_compression returns nil for unsupported format' do
     blob = create_test_blob('test.txt', 'text/plain')
-    
+
     # Mock the content_type
     blob.stub :content_type, 'text/plain' do
       result = @service.optimize_compression(blob)
@@ -93,7 +93,7 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
 
   test 'optimize_compression with custom quality' do
     blob = create_test_blob('test.png', 'image/png')
-    
+
     # Should not raise error
     assert_nothing_raised do
       @service.optimize_compression(blob, quality: 75)
@@ -109,7 +109,7 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
 
   test 'handles errors gracefully in convert_to_webp' do
     blob = create_test_blob('test.png', 'image/png')
-    
+
     # Mock an error
     blob.stub :variant, ->(*) { raise StandardError, 'Test error' } do
       result = @service.convert_to_webp(blob)
@@ -119,7 +119,7 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
 
   test 'handles errors gracefully in generate_responsive_variants' do
     blob = create_test_blob('test.png', 'image/png')
-    
+
     # Should not raise error even if variant generation fails
     assert_nothing_raised do
       @service.generate_responsive_variants(blob, sizes: [100])
@@ -128,7 +128,7 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
 
   test 'handles errors gracefully in optimize_compression' do
     blob = create_test_blob('test.png', 'image/png')
-    
+
     # Mock an error
     blob.stub :variant, ->(*) { raise StandardError, 'Test error' } do
       result = @service.optimize_compression(blob)
@@ -138,24 +138,24 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
 
   test 'logs conversion attempts' do
     blob = create_test_blob('test.png', 'image/png')
-    
-    assert_logs_match /Converting.*to WebP/ do
+
+    assert_logs_match(/Converting.*to WebP/) do
       @service.convert_to_webp(blob)
     end
   end
 
   test 'logs responsive variant generation' do
     blob = create_test_blob('test.png', 'image/png')
-    
-    assert_logs_match /Generating responsive variants/ do
+
+    assert_logs_match(/Generating responsive variants/) do
       @service.generate_responsive_variants(blob)
     end
   end
 
   test 'logs compression optimization' do
     blob = create_test_blob('test.png', 'image/png')
-    
-    assert_logs_match /Optimizing compression/ do
+
+    assert_logs_match(/Optimizing compression/) do
       @service.optimize_compression(blob)
     end
   end
@@ -166,7 +166,7 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
     ActiveStorage::Blob.create_and_upload!(
       io: StringIO.new(@test_image_data),
       filename: filename,
-      content_type: content_type
+      content_type: content_type,
     )
   end
 
@@ -174,9 +174,9 @@ class ImageOptimizationServiceTest < ActiveSupport::TestCase
     original_logger = Rails.logger
     log_output = StringIO.new
     Rails.logger = Logger.new(log_output)
-    
+
     yield
-    
+
     assert_match pattern, log_output.string
   ensure
     Rails.logger = original_logger

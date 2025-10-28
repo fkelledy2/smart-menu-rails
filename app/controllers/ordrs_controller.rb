@@ -66,7 +66,7 @@ class OrdrsController < ApplicationController
                                    .includes(:menu, :tablesetting)
                                    .order(created_at: :desc))
         end
-        
+
         # Use minimal JSON view for better performance
         render 'index_minimal'
       end
@@ -242,39 +242,39 @@ class OrdrsController < ApplicationController
 
     begin
       ActiveRecord::Base.transaction do
-      @ordr.assign_attributes(ordr_params)
-      calculate_order_totals(@ordr)
+        @ordr.assign_attributes(ordr_params)
+        calculate_order_totals(@ordr)
 
-      if @ordr.status_changed?
-        handle_status_change(@ordr, ordr_params[:status])
-      end
-      # Status cascading now handled by after_update callback in Ordr model
+        if @ordr.status_changed?
+          handle_status_change(@ordr, ordr_params[:status])
+        end
+        # Status cascading now handled by after_update callback in Ordr model
 
-      if @ordr.save
-        # Move cache invalidation to background job to improve response time
-        CacheInvalidationJob.perform_later(
-          order_id: @ordr.id,
-          restaurant_id: @ordr.restaurant_id,
-          user_id: @ordr.restaurant.user_id,
-        )
+        if @ordr.save
+          # Move cache invalidation to background job to improve response time
+          CacheInvalidationJob.perform_later(
+            order_id: @ordr.id,
+            restaurant_id: @ordr.restaurant_id,
+            user_id: @ordr.restaurant.user_id,
+          )
 
-        @tablesetting = @ordr.tablesetting
-        @ordrparticipant = find_or_create_ordr_participant(@ordr)
-        @ordr.status
-        full_refresh = false
-        respond_to do |format|
-          format.json do
-            render :show, status: :ok, location: restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr)
+          @tablesetting = @ordr.tablesetting
+          @ordrparticipant = find_or_create_ordr_participant(@ordr)
+          @ordr.status
+          full_refresh = false
+          respond_to do |format|
+            format.json do
+              render :show, status: :ok, location: restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr)
+            end
+            broadcast_partials(@ordr, @tablesetting, @ordrparticipant, full_refresh)
           end
-          broadcast_partials(@ordr, @tablesetting, @ordrparticipant, full_refresh)
-        end
-      else
-        respond_to do |format|
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @ordr.errors, status: :unprocessable_entity }
+        else
+          respond_to do |format|
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @ordr.errors, status: :unprocessable_entity }
+          end
         end
       end
-    end
     rescue ArgumentError => e
       # Handle invalid enum values
       @ordr.errors.add(:status, e.message)

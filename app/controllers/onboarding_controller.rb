@@ -83,6 +83,8 @@ class OnboardingController < ApplicationController
   def set_onboarding_session
     @onboarding = current_user.onboarding_session
     @onboarding ||= current_user.create_onboarding_session(status: :started)
+    # Reload to get a mutable object (IdentityCache returns frozen objects)
+    @onboarding = @onboarding.reload if @onboarding.persisted? && @onboarding.frozen?
   end
 
   def handle_account_details

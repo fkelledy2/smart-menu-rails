@@ -1,7 +1,7 @@
 class PerformanceAnalyticsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin!
-  
+
   def dashboard
     @current_metrics = PerformanceMetricsService.current_snapshot
     @performance_trends = PerformanceMetricsService.trends(24.hours)
@@ -9,42 +9,42 @@ class PerformanceAnalyticsController < ApplicationController
     @slow_queries = SlowQuery.slowest_queries(5, 1.hour)
     @memory_status = MemoryMonitoringService.current_memory_snapshot
   end
-  
+
   def api_metrics
     timeframe = parse_timeframe(params[:timeframe] || '1h')
-    
+
     render json: {
       current_snapshot: PerformanceMetricsService.current_snapshot,
       trends: PerformanceMetricsService.trends(timeframe),
       slow_endpoints: PerformanceMetricsService.slow_endpoints(timeframe),
-      memory_status: MemoryMonitoringService.current_memory_snapshot
+      memory_status: MemoryMonitoringService.current_memory_snapshot,
     }
   end
-  
+
   def endpoint_analysis
     endpoint = params[:endpoint]
     timeframe = parse_timeframe(params[:timeframe] || '24h')
-    
+
     if endpoint.blank?
       render json: { error: 'Endpoint parameter is required' }, status: :bad_request
       return
     end
-    
+
     analysis = PerformanceMetricsService.endpoint_analysis(endpoint, timeframe)
-    
+
     if analysis
       render json: analysis
     else
       render json: { error: 'No data found for endpoint' }, status: :not_found
     end
   end
-  
+
   def slow_queries
     timeframe = parse_timeframe(params[:timeframe] || '1h')
     limit = [params[:limit].to_i, 50].min.positive? ? params[:limit].to_i : 10
-    
+
     queries = SlowQuery.slowest_queries(limit, timeframe)
-    
+
     render json: {
       queries: queries.map do |query|
         {
@@ -54,20 +54,20 @@ class PerformanceAnalyticsController < ApplicationController
           formatted_duration: query.formatted_duration,
           table_name: query.table_name,
           timestamp: query.timestamp,
-          potential_n_plus_one: query.potential_n_plus_one?
+          potential_n_plus_one: query.potential_n_plus_one?,
         }
       end,
       summary: {
         total_count: queries.count,
         avg_duration: queries.average(&:duration)&.round(2),
-        timeframe: timeframe_description(timeframe)
-      }
+        timeframe: timeframe_description(timeframe),
+      },
     }
   end
-  
+
   def memory_analysis
     timeframe = parse_timeframe(params[:timeframe] || '1h')
-    
+
     render json: {
       current: MemoryMonitoringService.current_memory_snapshot,
       trend: MemoryMetric.memory_trend(timeframe),
@@ -78,22 +78,22 @@ class PerformanceAnalyticsController < ApplicationController
           rss_memory: metric.rss_memory,
           formatted_rss: metric.formatted_rss_memory,
           heap_size: metric.heap_size,
-          gc_count: metric.gc_count
+          gc_count: metric.gc_count,
         }
-      end
+      end,
     }
   end
-  
+
   def performance_summary
     timeframe = parse_timeframe(params[:timeframe] || '24h')
-    
+
     render json: PerformanceMetricsService.performance_summary(timeframe)
   end
-  
+
   def export_metrics
     timeframe = parse_timeframe(params[:timeframe] || '24h')
     format = params[:format] || 'json'
-    
+
     case format.downcase
     when 'csv'
       export_csv(timeframe)
@@ -103,21 +103,21 @@ class PerformanceAnalyticsController < ApplicationController
       render json: { error: 'Unsupported format. Use csv or json.' }, status: :bad_request
     end
   end
-  
+
   private
-  
+
   def ensure_admin!
-    unless current_user&.admin?
-      respond_to do |format|
-        format.html do
-          flash[:alert] = 'Access denied. Admin privileges required.'
-          redirect_to root_path
-        end
-        format.json { render json: { error: 'Admin access required' }, status: :forbidden }
+    return if current_user&.admin?
+
+    respond_to do |format|
+      format.html do
+        flash[:alert] = 'Access denied. Admin privileges required.'
+        redirect_to root_path
       end
+      format.json { render json: { error: 'Admin access required' }, status: :forbidden }
     end
   end
-  
+
   def parse_timeframe(timeframe_str)
     case timeframe_str.downcase
     when '5m', '5min'
@@ -138,7 +138,7 @@ class PerformanceAnalyticsController < ApplicationController
       1.hour # default
     end
   end
-  
+
   def timeframe_description(timeframe)
     case timeframe
     when 5.minutes
@@ -159,15 +159,16 @@ class PerformanceAnalyticsController < ApplicationController
       "Last #{timeframe.inspect}"
     end
   end
-  
+
   def export_csv(timeframe)
     require 'csv'
-    
+
     metrics = PerformanceMetric.recent(timeframe).includes(:user)
-    
+
     csv_data = CSV.generate(headers: true) do |csv|
-      csv << ['Timestamp', 'Endpoint', 'Response Time (ms)', 'Status Code', 'Memory Usage', 'User ID', 'Controller', 'Action']
-      
+      csv << ['Timestamp', 'Endpoint', 'Response Time (ms)', 'Status Code', 'Memory Usage', 'User ID', 'Controller',
+              'Action',]
+
       metrics.find_each do |metric|
         csv << [
           metric.timestamp,
@@ -177,24 +178,24 @@ class PerformanceAnalyticsController < ApplicationController
           metric.memory_usage,
           metric.user_id,
           metric.controller,
-          metric.action
+          metric.action,
         ]
       end
     end
-    
-    send_data csv_data, 
+
+    send_data csv_data,
               filename: "performance_metrics_#{timeframe_str}_#{Date.current}.csv",
               type: 'text/csv'
   end
-  
+
   def export_json(timeframe)
     summary = PerformanceMetricsService.performance_summary(timeframe)
-    
+
     send_data summary.to_json,
               filename: "performance_summary_#{timeframe_str}_#{Date.current}.json",
               type: 'application/json'
   end
-  
+
   def timeframe_str
     case parse_timeframe(params[:timeframe] || '24h')
     when 5.minutes then '5min'

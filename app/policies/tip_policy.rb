@@ -38,7 +38,7 @@ class TipPolicy < ApplicationPolicy
   private
 
   def owns_tip?
-    return false unless user && record && record.restaurant
+    return false unless user && record&.restaurant
 
     # Check if user owns the restaurant
     user.restaurants.exists?(id: record.restaurant_id)

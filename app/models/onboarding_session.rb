@@ -34,7 +34,7 @@ class OnboardingSession < ApplicationRecord
   end
 
   def restaurant_name=(value)
-    self.wizard_data = (wizard_data || {}).merge('restaurant_name' => value)
+    self.wizard_data = (wizard_data || {}).dup.merge('restaurant_name' => value)
   end
 
   def restaurant_type
@@ -42,7 +42,7 @@ class OnboardingSession < ApplicationRecord
   end
 
   def restaurant_type=(value)
-    self.wizard_data = (wizard_data || {}).merge('restaurant_type' => value)
+    self.wizard_data = (wizard_data || {}).dup.merge('restaurant_type' => value)
   end
 
   def cuisine_type
@@ -50,7 +50,7 @@ class OnboardingSession < ApplicationRecord
   end
 
   def cuisine_type=(value)
-    self.wizard_data = (wizard_data || {}).merge('cuisine_type' => value)
+    self.wizard_data = (wizard_data || {}).dup.merge('cuisine_type' => value)
   end
 
   def location
@@ -58,7 +58,7 @@ class OnboardingSession < ApplicationRecord
   end
 
   def location=(value)
-    self.wizard_data = (wizard_data || {}).merge('location' => value)
+    self.wizard_data = (wizard_data || {}).dup.merge('location' => value)
   end
 
   def phone
@@ -66,7 +66,7 @@ class OnboardingSession < ApplicationRecord
   end
 
   def phone=(value)
-    self.wizard_data = (wizard_data || {}).merge('phone' => value)
+    self.wizard_data = (wizard_data || {}).dup.merge('phone' => value)
   end
 
   def selected_plan_id
@@ -74,7 +74,7 @@ class OnboardingSession < ApplicationRecord
   end
 
   def selected_plan_id=(value)
-    self.wizard_data = (wizard_data || {}).merge('selected_plan_id' => value)
+    self.wizard_data = (wizard_data || {}).dup.merge('selected_plan_id' => value)
   end
 
   def menu_name
@@ -82,7 +82,7 @@ class OnboardingSession < ApplicationRecord
   end
 
   def menu_name=(value)
-    self.wizard_data = (wizard_data || {}).merge('menu_name' => value)
+    self.wizard_data = (wizard_data || {}).dup.merge('menu_name' => value)
   end
 
   def menu_items
@@ -90,7 +90,7 @@ class OnboardingSession < ApplicationRecord
   end
 
   def menu_items=(value)
-    self.wizard_data = (wizard_data || {}).merge('menu_items' => value)
+    self.wizard_data = (wizard_data || {}).dup.merge('menu_items' => value)
   end
 
   # Progress calculation

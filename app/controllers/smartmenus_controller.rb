@@ -85,9 +85,9 @@ class SmartmenusController < ApplicationController
         @menu.updated_at,
         @restaurant.updated_at,
         @ordrparticipant&.updated_at,
-        @menuparticipant&.updated_at
+        @menuparticipant&.updated_at,
       ].compact.max,
-      public: false # Set to false since it varies by session/participant
+      public: false, # Set to false since it varies by session/participant
     )
   end
 
@@ -183,21 +183,21 @@ class SmartmenusController < ApplicationController
       :menuavailabilities,
       menusections: [
         :menusectionlocales,
-        { menuitems: [
-          :menuitemlocales,
-          :allergyns,
-          :ingredients,
-          :sizes,
-          :menuitem_allergyn_mappings,
-          :menuitem_ingredient_mappings
-        ] }
-      ]
+        { menuitems: %i[
+          menuitemlocales
+          allergyns
+          ingredients
+          sizes
+          menuitem_allergyn_mappings
+          menuitem_ingredient_mappings
+        ] },
+      ],
     ).find(@menu.id)
-    
+
     # Filter to only active menu items after loading
     # This ensures inactive items are not shown in the smart menu
     @menu.menusections.each do |section|
-      section.association(:menuitems).target.select! { |item| item.active? }
+      section.association(:menuitems).target.select!(&:active?)
     end
   end
 

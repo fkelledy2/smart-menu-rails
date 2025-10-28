@@ -39,7 +39,7 @@ class Ordr < ApplicationRecord
   after_create :broadcast_new_order
   after_update :broadcast_status_change, if: :saved_change_to_status?
   after_update :cascade_status_to_items, if: :saved_change_to_status?
-  
+
   # Standard ActiveRecord associations
   belongs_to :employee, optional: true
   belongs_to :tablesetting
@@ -51,16 +51,16 @@ class Ordr < ApplicationRecord
   has_many :ordractions, dependent: :destroy
 
   # Optimized associations to prevent N+1 queries
-  has_many :ordered_items_with_details, -> { 
-    where(status: 20).includes(menuitem: [:genimage, :allergyns, :sizes]) 
+  has_many :ordered_items_with_details, lambda {
+    where(status: 20).includes(menuitem: %i[genimage allergyns sizes])
   }, class_name: 'Ordritem'
 
-  has_many :prepared_items_with_details, -> { 
-    where(status: 22).includes(menuitem: [:genimage, :allergyns, :sizes]) 
+  has_many :prepared_items_with_details, lambda {
+    where(status: 22).includes(menuitem: %i[genimage allergyns sizes])
   }, class_name: 'Ordritem'
 
-  has_many :delivered_items_with_details, -> { 
-    where(status: 25).includes(menuitem: [:genimage, :allergyns, :sizes]) 
+  has_many :delivered_items_with_details, lambda {
+    where(status: 25).includes(menuitem: %i[genimage allergyns sizes])
   }, class_name: 'Ordritem'
 
   # IdentityCache configuration
@@ -84,19 +84,19 @@ class Ordr < ApplicationRecord
   # after_destroy :invalidate_order_caches
 
   # Scopes for optimized queries
-  scope :with_complete_items, -> {
+  scope :with_complete_items, lambda {
     includes(
       :restaurant,
       :tablesetting,
       :menu,
       :employee,
       ordritems: [
-        menuitem: [:genimage, :allergyns, :sizes, :menuitemlocales]
-      ]
+        menuitem: %i[genimage allergyns sizes menuitemlocales],
+      ],
     )
   }
 
-  scope :for_restaurant_dashboard, ->(restaurant_id) {
+  scope :for_restaurant_dashboard, lambda { |restaurant_id|
     where(restaurant_id: restaurant_id)
       .with_complete_items
       .order(created_at: :desc)
@@ -170,29 +170,29 @@ class Ordr < ApplicationRecord
   def broadcast_new_order
     # Only broadcast kitchen-relevant statuses
     return unless %w[ordered preparing ready].include?(status)
-    
+
     KitchenBroadcastService.broadcast_new_order(self)
   end
-  
+
   def broadcast_status_change
     old_status_value = saved_change_to_status[0]
     new_status_value = saved_change_to_status[1]
-    
+
     # Convert to string for comparison (handles both integer and symbol values)
     old_status = Ordr.statuses.key(old_status_value) || old_status_value.to_s
     new_status = Ordr.statuses.key(new_status_value) || new_status_value.to_s
-    
+
     # Only broadcast kitchen-relevant status changes (including delivered to remove from dashboard)
     return unless %w[ordered preparing ready delivered billrequested].include?(new_status)
-    
+
     KitchenBroadcastService.broadcast_status_change(self, old_status, new_status)
   end
-  
+
   def cascade_status_to_items
     # When order status changes, update all child ordritems to match
     # This ensures ordritems always reflect their parent order's status
     new_status_value = status
-    
+
     ordritems.each do |item|
       # Only update if status is different to avoid unnecessary updates
       if item.status != new_status_value

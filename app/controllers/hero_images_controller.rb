@@ -50,7 +50,7 @@ class HeroImagesController < ApplicationController
   # PATCH/PUT /hero_images/1 or /hero_images/1.json
   def update
     authorize @hero_image
-    
+
     respond_to do |format|
       if @hero_image.update(hero_image_params)
         format.html do
@@ -72,7 +72,7 @@ class HeroImagesController < ApplicationController
     respond_to do |format|
       format.html do
         redirect_to hero_images_path, status: :see_other,
-                                       notice: t('common.flash.deleted', resource: 'Hero Image')
+                                      notice: t('common.flash.deleted', resource: 'Hero Image')
       end
       format.json { head :no_content }
     end

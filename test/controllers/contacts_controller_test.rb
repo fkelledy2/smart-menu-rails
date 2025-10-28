@@ -60,37 +60,37 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
   test 'contact creation should work with valid params and send emails' do
     # Clear any existing emails
     ActionMailer::Base.deliveries.clear
-    
+
     contact_params = {
       contact: {
         email: 'test@example.com',
-        message: 'This is a test message'
-      }
+        message: 'This is a test message',
+      },
     }
 
     # Test the controller action - may not work due to test environment issues
     post contacts_path, params: contact_params
-    
+
     # Since controller execution may be bypassed in test environment,
     # test the core functionality directly
     contact = Contact.new(contact_params[:contact])
-    
+
     if contact.valid?
       contact.save!
-      
+
       # Simulate what the controller should do
       ContactMailer.receipt(contact).deliver_now
       ContactMailer.notification(contact).deliver_now
-      
+
       # Verify exactly 2 emails were sent
       assert_equal 2, ActionMailer::Base.deliveries.count
-      
+
       emails = ActionMailer::Base.deliveries
-      
+
       # Verify receipt email to customer
       receipt_email = emails.find { |email| email.to.include?('test@example.com') }
       assert_not_nil receipt_email, 'Should send receipt email to customer'
-      
+
       # Verify notification email to admin
       notification_email = emails.find { |email| email.to.include?('admin@mellow.menu') }
       assert_not_nil notification_email, 'Should send notification email to admin'
@@ -104,26 +104,26 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
   test 'contact creation should handle invalid params and not send emails' do
     # Clear any existing emails
     ActionMailer::Base.deliveries.clear
-    
+
     contact_params = {
       contact: {
         email: '', # Invalid email
-        message: '' # Invalid message
-      }
+        message: '', # Invalid message
+      },
     }
 
     # Test the controller action - may not work due to test environment issues
     post contacts_path, params: contact_params
-    
+
     # Since controller execution may be bypassed in test environment,
     # test the core functionality directly
     contact = Contact.new(contact_params[:contact])
-    
+
     # Verify contact is invalid
     assert_not contact.valid?, 'Contact should be invalid with empty email and message'
     assert_includes contact.errors[:email], "can't be blank"
     assert_includes contact.errors[:message], "can't be blank"
-    
+
     # Verify no emails are sent for invalid contact
     assert_equal 0, ActionMailer::Base.deliveries.count
   end
@@ -137,7 +137,7 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should authorize contact actions for authenticated user' do
     sign_in users(:one)
-    
+
     assert_nothing_raised do
       get new_contact_path
     end

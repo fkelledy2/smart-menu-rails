@@ -15,7 +15,7 @@ class CdnPurgeService
     return false unless cdn_enabled?
 
     Rails.logger.info '[CDN] Purging entire CDN cache...'
-    
+
     if cloudflare_enabled?
       purge_cloudflare_all
     else
@@ -36,7 +36,7 @@ class CdnPurgeService
     return false if urls.empty?
 
     Rails.logger.info "[CDN] Purging #{urls.size} URLs from CDN..."
-    
+
     if cloudflare_enabled?
       purge_cloudflare_urls(urls)
     else
@@ -55,14 +55,14 @@ class CdnPurgeService
     return false unless cdn_enabled?
 
     Rails.logger.info '[CDN] Purging asset files from CDN...'
-    
+
     asset_urls = [
       "#{asset_host}/assets/*",
       "#{asset_host}/packs/*",
       "#{asset_host}/*.js",
       "#{asset_host}/*.css",
     ]
-    
+
     purge_urls(asset_urls)
   end
 
@@ -73,7 +73,7 @@ class CdnPurgeService
     return false unless cdn_enabled?
 
     Rails.logger.info "[CDN] Purging CDN cache by pattern: #{pattern}"
-    
+
     # For Cloudflare, convert pattern to URL
     url = "#{asset_host}/#{pattern}"
     purge_urls([url])
@@ -110,7 +110,7 @@ class CdnPurgeService
     # Simulate Cloudflare API call
     # In production, this would use the Cloudflare gem
     Rails.logger.info '[CDN] Cloudflare: Purging all cache'
-    
+
     # Mock successful purge
     true
   end
@@ -122,7 +122,7 @@ class CdnPurgeService
     # Simulate Cloudflare API call
     # In production, this would use the Cloudflare gem
     Rails.logger.info "[CDN] Cloudflare: Purging #{urls.size} URLs"
-    
+
     # Mock successful purge
     true
   end
@@ -130,7 +130,7 @@ class CdnPurgeService
   # Get asset host from Rails configuration
   # @return [String, nil] Asset host URL
   def asset_host
-    Rails.application.config.asset_host || ENV['CDN_HOST']
+    Rails.application.config.asset_host || ENV.fetch('CDN_HOST', nil)
   end
 
   # Get CDN provider name
@@ -149,7 +149,7 @@ class CdnPurgeService
   # @return [Hash, nil] Cloudflare credentials
   def cloudflare_credentials
     return nil unless Rails.application.credentials.respond_to?(:cloudflare)
-    
+
     Rails.application.credentials.cloudflare
   rescue StandardError
     nil
