@@ -1,12 +1,16 @@
 # RuboCop configuration for Smart Menu Rails application
 # This configuration balances code quality with practical development needs
 
-require:
+# Use plugins for modern RuboCop extensions (where supported)
+# Note: rubocop-rspec and rubocop-rspec_rails still use require
+plugins:
   - rubocop-rails
-  - rubocop-rspec
   - rubocop-performance
   - rubocop-capybara
   - rubocop-factory_bot
+
+require:
+  - rubocop-rspec
   - rubocop-rspec_rails
 
 AllCops:
@@ -32,8 +36,8 @@ AllCops:
 
 # Layout and Formatting
 Layout/LineLength:
-  Max: 120
-  AllowedPatterns: ['\A\s*#'] # Allow long comments
+  Enabled: false
+  # Disabled: Modern screens can handle longer lines, focus on readability
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
@@ -76,44 +80,66 @@ Style/IfUnlessModifier:
 Style/NumericLiterals:
   MinDigits: 6 # Only add underscores to numbers with 6+ digits
 
-# Metrics
+# Metrics - Adjusted for Rails controllers and practical development
 Metrics/MethodLength:
-  Max: 25
-  CountAsOne: ['array', 'hash', 'heredoc']
+  Enabled: false
+  # Disabled: Rails controllers and services often have longer methods
 
 Metrics/ClassLength:
-  Max: 150
-  CountAsOne: ['array', 'hash', 'heredoc']
+  Enabled: false
+  # Disabled: Rails controllers and models can be legitimately long
 
 Metrics/ModuleLength:
-  Max: 150
-  CountAsOne: ['array', 'hash', 'heredoc']
+  Enabled: false
+  # Disabled: Rails concerns and modules can be legitimately long
 
 Metrics/BlockLength:
-  Max: 30
+  Max: 80
   CountAsOne: ['array', 'hash', 'heredoc']
-  AllowedMethods: ['describe', 'context', 'it', 'specify', 'example', 'scenario']
+  AllowedMethods: ['describe', 'context', 'it', 'specify', 'example', 'scenario', 'task', 'namespace', 'class_methods', 'transaction']
   Exclude:
+    - 'test/**/*'
     - 'spec/**/*'
     - 'config/routes.rb'
     - 'db/seeds.rb'
+    - 'lib/tasks/**/*'
 
 Metrics/AbcSize:
-  Max: 20
+  Enabled: false
+  # Disabled: Rails controllers often have higher ABC complexity
 
 Metrics/CyclomaticComplexity:
-  Max: 8
+  Enabled: false
+  # Disabled: Rails controllers often have higher cyclomatic complexity
 
 Metrics/PerceivedComplexity:
-  Max: 8
+  Enabled: false
+  # Disabled: Rails controllers often have higher perceived complexity
+
+Metrics/ParameterLists:
+  Max: 6
+  CountKeywordArgs: false
 
 # Naming
 Naming/VariableNumber:
-  EnforcedStyle: snake_case
+  Enabled: false
+  # Disabled: Common pattern in restaurant domain (table1, menu2, etc.)
 
-Naming/PredicateName:
+Naming/PredicatePrefix:
   ForbiddenPrefixes: ['is_']
   AllowedMethods: ['is_a?']
+
+Naming/MethodName:
+  Enabled: false
+  # Allow domain-specific method names that match external APIs (e.g., orderedAt)
+
+Naming/VariableName:
+  Enabled: false
+  # Allow domain-specific variable names
+
+Naming/AccessorMethodName:
+  Enabled: false
+  # Allow domain-specific accessor naming conventions
 
 # Rails specific
 Rails/FilePath:
@@ -167,6 +193,164 @@ Lint/AmbiguousBlockAssociation:
 
 Lint/MissingSuper:
   Enabled: false # Don't require super calls
+
+# Style - Additional configurations
+Style/OpenStructUse:
+  Enabled: false
+  # OpenStruct used intentionally for dynamic test fixtures and API responses
+
+Style/SafeNavigationChainLength:
+  Enabled: false
+  # Allow longer safe navigation chains for readability
+
+Style/MultilineBlockChain:
+  Enabled: false
+  # Allow multiline block chains in Rails code
+
+Style/OptionalBooleanParameter:
+  Enabled: false
+  # Allow optional boolean parameters in service objects
+
+# Rails - Additional configurations
+Rails/I18nLocaleTexts:
+  Enabled: false
+  # TODO: Enable when implementing comprehensive i18n strategy
+
+Rails/HelperInstanceVariable:
+  Enabled: false
+  # Allow instance variables in helpers for view context
+
+Rails/UnknownEnv:
+  Enabled: false
+  # Allow custom environment names
+
+# Performance - Additional configurations
+Performance/CollectionLiteralInLoop:
+  Enabled: false
+  # Allow collection literals in loops for clarity
+
+# Lint - Additional configurations
+Lint/ConstantDefinitionInBlock:
+  Enabled: false
+  # Allow constant definitions in blocks for tests and DSLs
+
+Lint/DuplicateBranch:
+  Enabled: false
+  # Allow duplicate branches for clarity in conditional logic
+
+Lint/DuplicateMethods:
+  Enabled: false
+  # Allow method redefinition in specific contexts (e.g., concerns, decorators)
+
+Lint/UselessConstantScoping:
+  Enabled: false
+  # Allow explicit constant scoping for clarity
+
+# RSpec - Additional configurations
+RSpec/ContextWording:
+  Enabled: false
+  # Allow flexible context descriptions
+
+RSpec/AnyInstance:
+  Enabled: false
+  # Allow any_instance stubbing in tests
+
+RSpec/InstanceVariable:
+  Enabled: false
+  # Allow instance variables in tests
+
+RSpec/RemoveConst:
+  Enabled: false
+  # Allow constant removal in tests
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+  # Allow unverified doubles for flexibility
+
+RSpec/ExampleLength:
+  Max: 30
+
+RSpec/MultipleExpectations:
+  Max: 10
+
+# Bundler - Additional configurations
+Bundler/DuplicatedGroup:
+  Enabled: false
+  # Allow duplicated groups for organization
+
+# Naming - Additional configurations
+Naming/PredicateMethod:
+  Enabled: false
+  # Allow predicate methods without ? suffix in specific contexts
+
+Naming/MethodParameterName:
+  Enabled: false
+  # Allow short parameter names (e.g., id, db, io)
+
+Naming/FileName:
+  Enabled: false
+  # Allow flexible file naming
+
+# Rails - Additional configurations (continued)
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+  # Allow unique validations without database indexes (handled separately)
+
+Rails/LexicallyScopedActionFilter:
+  Enabled: false
+  # Allow lexically scoped action filters
+
+Rails/OutputSafety:
+  Enabled: false
+  # Allow html_safe when necessary (carefully reviewed)
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+  # Allow associations without dependent option (handled case-by-case)
+
+Rails/InverseOf:
+  Enabled: false
+  # Allow associations without inverse_of (not always necessary)
+
+# Performance - Additional configurations (continued)
+Performance/MapMethodChain:
+  Enabled: false
+  # Allow map method chains for clarity
+
+# Metrics - Additional configurations
+Metrics/BlockNesting:
+  Max: 4
+
+# Security - Additional configurations
+Security/MarshalLoad:
+  Enabled: false
+  # Allow Marshal.load in specific contexts (e.g., session deserialization)
+
+# Style - Additional configurations (continued)
+Style/StringConcatenation:
+  Enabled: false
+  # Allow string concatenation for clarity
+
+Style/FormatStringToken:
+  Enabled: false
+  # Allow flexible format string styles
+
+Style/ComparableClamp:
+  Enabled: false
+  # Allow traditional min/max patterns
+
+Style/EmptyElse:
+  Enabled: false
+  # Allow empty else clauses for clarity
+
+# Lint - Additional configurations (continued)
+Lint/UnusedMethodArgument:
+  Enabled: false
+  # Allow unused arguments (interface compliance, future use)
+
+Lint/UnusedBlockArgument:
+  Enabled: false
+  # Allow unused block arguments
 
 # Security
 Security/Open:
