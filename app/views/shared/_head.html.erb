@@ -55,6 +55,17 @@
 <%= csrf_meta_tags %>
 <%= csp_meta_tag %>
 
+<!-- Sentry Configuration -->
+<% if defined?(Sentry) && Sentry.configuration.dsn.present? %>
+  <%= tag.meta name: 'sentry-dsn', content: Sentry.configuration.dsn %>
+  <%= tag.meta name: 'sentry-environment', content: Sentry.configuration.environment %>
+  <%= tag.meta name: 'sentry-release', content: Sentry.configuration.release %>
+  <% if current_user %>
+    <%= tag.meta name: 'current-user-id', content: current_user.id %>
+    <%= tag.meta name: 'current-user-email', content: current_user.email %>
+  <% end %>
+<% end %>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
 

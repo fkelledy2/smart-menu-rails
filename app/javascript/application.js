@@ -1,6 +1,9 @@
 // Main entry point for the Smart Menu application
 // Modern, modular JavaScript architecture with enhanced functionality
 
+// Initialize Sentry error tracking (must be first)
+import './sentry';
+
 // Global error handler for module resolution issues
 window.addEventListener('error', (event) => {
   if (

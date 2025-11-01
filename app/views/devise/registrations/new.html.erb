@@ -1,61 +1,95 @@
-<style>
-    ::-webkit-scrollbar {
-        height: 0px;
-        width: 4px;
-        border: 1px solid #d5d5d5;
-    }
-    .form-control:disabled {
-        background-color: #fafafa;
-        opacity: 1;
-    }
-    .tabulator-row-odd {
-        background-color: #ffffff !important;
-    }
-    .tabulator-row-even {
-        background-color: #ffffff !important;
-    }
-    .disabled .ts-control {
-        opacity: 1.0;
-        background-color: #fafafa;
-    }
-    .ts-dropdown, .ts-control, .ts-control input {
-        border: 0px;
-        color: #000000;
-        padding-left:12px;
-        font-size: 16px;
-        line-height: 18px;
-    }
-</style>
-<div class="row">
-  <div class="col-lg-4 offset-lg-4">
-    <br>
-    <h1 class="text-center"><%= t(".signUp") %></h1>
-
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
-
-      <div class="mb-3">
-        <%= f.text_field :name, autofocus: false, class: 'form-control', placeholder: t(".fullName") %>
+<div class="container px-4 py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-11 col-md-9 col-lg-6 col-xl-5">
+      
+      <!-- Header Section -->
+      <div class="text-center mb-4">
+        <h1 class="pb-2 border-bottom d-inline-block"><%= t(".signUp") %></h1>
+        <p class="text-muted mt-3">Create your account to get started with mellow.menu</p>
       </div>
 
-      <div class="mb-3">
-        <%= f.email_field :email, autofocus: false, class: 'form-control', placeholder: t(".emailAddress") %>
+      <!-- Sign Up Card -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body px-4 py-4 px-md-5 py-md-5">
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+            
+            <!-- Error Messages -->
+            <%= render "devise/shared/error_messages", resource: resource %>
+            
+            <!-- Full Name Field -->
+            <div class="mb-4">
+              <label for="user_name" class="form-label fw-semibold">
+                <i class="bi bi-person me-2"></i>Full Name
+              </label>
+              <%= f.text_field :name, 
+                  autofocus: true, 
+                  placeholder: t(".fullName"), 
+                  class: 'form-control form-control-lg',
+                  id: 'user_name' %>
+            </div>
+
+            <!-- Email Field -->
+            <div class="mb-4">
+              <label for="user_email" class="form-label fw-semibold">
+                <i class="bi bi-envelope me-2"></i>Email Address
+              </label>
+              <%= f.email_field :email, 
+                  autofocus: false, 
+                  placeholder: t(".emailAddress"), 
+                  class: 'form-control form-control-lg',
+                  id: 'user_email' %>
+            </div>
+
+            <!-- Password Field -->
+            <div class="mb-4">
+              <label for="user_password" class="form-label fw-semibold">
+                <i class="bi bi-lock me-2"></i>Password
+              </label>
+              <%= f.password_field :password, 
+                  autocomplete: "off", 
+                  placeholder: t(".password"), 
+                  class: 'form-control form-control-lg',
+                  id: 'user_password' %>
+              <div class="form-text small">Minimum 6 characters</div>
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="mb-4">
+              <label for="user_password_confirmation" class="form-label fw-semibold">
+                <i class="bi bi-lock-fill me-2"></i>Confirm Password
+              </label>
+              <%= f.password_field :password_confirmation, 
+                  autocomplete: "off", 
+                  placeholder: t(".confirmPassword"), 
+                  class: 'form-control form-control-lg',
+                  id: 'user_password_confirmation' %>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid mb-3">
+              <%= f.submit "Create Account", class: "btn btn-danger btn-lg" %>
+            </div>
+          <% end %>
+
+          <!-- Divider -->
+          <div class="position-relative my-4">
+            <hr>
+            <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">
+              Already have an account?
+            </span>
+          </div>
+
+          <!-- Sign In Link -->
+          <div class="d-grid">
+            <%= link_to "Sign In", new_user_session_path, class: "btn btn-outline-dark btn-lg" %>
+          </div>
+        </div>
       </div>
 
-      <div class="mb-3">
-        <%= f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: t(".password") %>
+      <!-- Additional Links -->
+      <div class="text-center text-muted small">
+        <%= render "devise/shared/links" %>
       </div>
-
-      <div class="mb-3">
-        <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-control', placeholder: t(".confirmPassword") %>
-      </div>
-
-      <div class="mb-3 d-grid">
-        <%= f.submit "Sign up", class: "btn btn-danger btn-lg" %>
-      </div>
-    <% end %>
-    <div class="text-center">
-      <%= render "devise/shared/links" %>
     </div>
   </div>
 </div>

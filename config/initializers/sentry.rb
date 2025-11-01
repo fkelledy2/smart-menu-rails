@@ -8,7 +8,9 @@ if defined?(Sentry)
   Sentry.init do |config|
     config.dsn = ENV['SENTRY_DSN']
     config.enabled_environments = %w[production staging]
-    config.breadcrumbs_logger = [:active_support_logger, :http_logger]
+    
+    # Disable breadcrumbs in test to avoid initialization issues
+    config.breadcrumbs_logger = Rails.env.test? ? [] : [:active_support_logger, :http_logger]
 
     # Set release version for better tracking
     config.release = ENV['HEROKU_SLUG_COMMIT'] || ENV['GIT_COMMIT'] || 'unknown'

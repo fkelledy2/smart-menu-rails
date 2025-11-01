@@ -13,6 +13,8 @@
     "@rails/activestorage": "^7.2.202",
     "@rails/request.js": "^0.0.11",
     "@rails/ujs": "^7.1.502",
+    "@sentry/browser": "^10.22.0",
+    "@sentry/tracing": "^7.120.4",
     "autoprefixer": "^10.4.17",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",

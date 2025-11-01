@@ -1,21 +1,60 @@
-<div class="row">
-  <div class="col-lg-4 offset-lg-4">
-    <br>
-    <h2 class="text-center">Forgot your password?</h2>
-    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
-      <p class="text-center">Enter your email address below and we will send you a link to reset your password.</p>
-
-      <div class="mb-3">
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: 'Email address', class: 'form-control' %>
+<div class="container px-4 py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-11 col-md-9 col-lg-6 col-xl-5">
+      
+      <!-- Header Section -->
+      <div class="text-center mb-4">
+        <h1 class="pb-2 border-bottom d-inline-block">Forgot Your Password?</h1>
+        <p class="text-muted mt-3">No worries! Enter your email address and we'll send you instructions to reset your password.</p>
       </div>
 
-      <div class="mb-3 d-grid">
-        <%= f.submit "Send password reset email instructions", class: 'btn btn-danger btn-lg' %>
+      <!-- Reset Password Card -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body px-4 py-4 px-md-5 py-md-5">
+          <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+            
+            <!-- Error Messages -->
+            <%= render "devise/shared/error_messages", resource: resource %>
+            
+            <!-- Email Field -->
+            <div class="mb-4">
+              <label for="user_email" class="form-label fw-semibold">
+                <i class="bi bi-envelope me-2"></i>Email Address
+              </label>
+              <%= f.email_field :email, 
+                  autofocus: true, 
+                  autocomplete: "email", 
+                  placeholder: 'Enter your email address', 
+                  class: 'form-control form-control-lg',
+                  id: 'user_email' %>
+              <div class="form-text small">We'll send password reset instructions to this email</div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid mb-3">
+              <%= f.submit "Send Reset Instructions", class: 'btn btn-danger btn-lg' %>
+            </div>
+          <% end %>
+
+          <!-- Divider -->
+          <div class="position-relative my-4">
+            <hr>
+            <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">
+              Remember your password?
+            </span>
+          </div>
+
+          <!-- Back to Sign In Link -->
+          <div class="d-grid">
+            <%= link_to "Back to Sign In", new_user_session_path, class: "btn btn-outline-dark btn-lg" %>
+          </div>
+        </div>
       </div>
-    <% end %>
-    <div class="text-center">
-      <%= render "devise/shared/links" %>
+
+      <!-- Additional Links -->
+      <div class="text-center text-muted small">
+        <%= render "devise/shared/links" %>
+      </div>
     </div>
   </div>
 </div>

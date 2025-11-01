@@ -1,31 +1,80 @@
-<div class="row">
-  <div class="col-lg-4 offset-lg-4">
-    <br>
-    <h1 class="text-center"><%= t(".login") %></h1>
-
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-      <div class="mb-3">
-        <%= f.email_field :email, autofocus: true, placeholder: t(".emailAddress"), class: 'form-control' %>
+<div class="container px-4 py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-11 col-md-9 col-lg-6 col-xl-5">
+      
+      <!-- Header Section -->
+      <div class="text-center mb-4">
+        <h1 class="pb-2 border-bottom d-inline-block"><%= t(".login") %></h1>
+        <p class="text-muted mt-3">Welcome back! Please sign in to your account.</p>
       </div>
 
-      <div class="mb-3">
-        <%= f.password_field :password, autocomplete: "current-password", placeholder: t(".password"), class: 'form-control' %>
-      </div>
-
-      <% if devise_mapping.rememberable? %>
-            <div class="form-check">
-              <label class="form-check-label">
-                <%= f.check_box :remember_me, class: "form-check-input" %>
-                <%= t(".rememberMe") %>
+      <!-- Sign In Card -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body px-4 py-4 px-md-5 py-md-5">
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+            
+            <!-- Email Field -->
+            <div class="mb-4">
+              <label for="user_email" class="form-label fw-semibold">
+                <i class="bi bi-envelope me-2"></i>Email Address
               </label>
+              <%= f.email_field :email, 
+                  autofocus: true, 
+                  placeholder: t(".emailAddress"), 
+                  class: 'form-control form-control-lg',
+                  id: 'user_email' %>
             </div>
-      <% end %>
 
-      <div class="mb-3 d-grid">
-            <%= f.submit t(".login"), class: "btn btn-danger btn-lg" %>
+            <!-- Password Field -->
+            <div class="mb-4">
+              <label for="user_password" class="form-label fw-semibold">
+                <i class="bi bi-lock me-2"></i>Password
+              </label>
+              <%= f.password_field :password, 
+                  autocomplete: "current-password", 
+                  placeholder: t(".password"), 
+                  class: 'form-control form-control-lg',
+                  id: 'user_password' %>
+            </div>
+
+            <!-- Remember Me & Forgot Password Row -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <% if devise_mapping.rememberable? %>
+                <div class="form-check">
+                  <%= f.check_box :remember_me, class: "form-check-input" %>
+                  <label class="form-check-label" for="user_remember_me">
+                    <%= t(".rememberMe") %>
+                  </label>
+                </div>
+              <% end %>
+              
+              <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+                <%= link_to t("devise.shared.links.forgotYourPassword"), new_password_path(resource_name), class: "text-decoration-none" %>
+              <% end %>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid mb-3">
+              <%= f.submit t(".login"), class: "btn btn-danger btn-lg" %>
+            </div>
+          <% end %>
+
+          <!-- Divider -->
+          <div class="position-relative my-4">
+            <hr>
+            <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">
+              Don't have an account?
+            </span>
+          </div>
+
+          <!-- Sign Up Link -->
+          <div class="d-grid">
+            <%= link_to "Create Account", new_user_registration_path, class: "btn btn-outline-dark btn-lg" %>
+          </div>
+        </div>
       </div>
-    <% end %>
 
-    <div class="text-center">
-      <%= render "devise/shared/links" %>
-    </div>
+      <!-- Additional Links -->
+      <div class="text-center text-muted small">
+        <%= render "devise/shared/links" %>
+      </div>
