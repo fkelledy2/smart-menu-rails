@@ -16,23 +16,23 @@ export class OrderModule extends ComponentBase {
     this.formManager = null;
     this.tableManager = null;
     this.restaurantCurrencySymbol = '$';
-    
+
     // Order status constants
     this.ORDER_STATUS = {
       OPENED: 0,
       ORDERED: 20,
       DELIVERED: 25,
       BILL_REQUESTED: 30,
-      CLOSED: 40
+      CLOSED: 40,
     };
-    
+
     // Order item status constants
     this.ORDERITEM_STATUS = {
       ADDED: 0,
       REMOVED: 10,
       ORDERED: 20,
       PREPARED: 30,
-      DELIVERED: 40
+      DELIVERED: 40,
     };
   }
 
@@ -50,9 +50,9 @@ export class OrderModule extends ComponentBase {
     this.initializeModals();
     this.bindEvents();
 
-    EventBus.emit(AppEvents.COMPONENT_READY, { 
-      component: 'OrderModule', 
-      instance: this 
+    EventBus.emit(AppEvents.COMPONENT_READY, {
+      component: 'OrderModule',
+      instance: this,
     });
 
     return this;
@@ -73,7 +73,7 @@ export class OrderModule extends ComponentBase {
    */
   initializeForms() {
     const formConfig = getFormConfig('order');
-    
+
     this.formManager = new FormManager(this.container);
     this.addChildComponent('formManager', this.formManager);
     this.formManager.init();
@@ -103,59 +103,59 @@ export class OrderModule extends ComponentBase {
           ajaxURL: `/restaurants/${restaurantId}/ordrs.json`,
           columns: [
             {
-              formatter: "rowSelection", 
-              titleFormatter: "rowSelection", 
-              width: 30, 
-              frozen: true, 
-              headerHozAlign: "left", 
-              hozAlign: "left", 
+              formatter: 'rowSelection',
+              titleFormatter: 'rowSelection',
+              width: 30,
+              frozen: true,
+              headerHozAlign: 'left',
+              hozAlign: 'left',
               headerSort: false,
-              cellClick: (e, cell) => cell.getRow().toggleSelect()
+              cellClick: (e, cell) => cell.getRow().toggleSelect(),
             },
             {
-              title: "Order #", 
-              field: "id", 
-              formatter: this.orderLinkFormatter, 
-              hozAlign: "left"
+              title: 'Order #',
+              field: 'id',
+              formatter: this.orderLinkFormatter,
+              hozAlign: 'left',
             },
             {
-              title: "Table", 
-              field: "tablesetting.name", 
-              hozAlign: "left"
+              title: 'Table',
+              field: 'tablesetting.name',
+              hozAlign: 'left',
             },
             {
-              title: "Status", 
-              field: "status", 
-              formatter: this.statusFormatter, 
-              hozAlign: "center"
+              title: 'Status',
+              field: 'status',
+              formatter: this.statusFormatter,
+              hozAlign: 'center',
             },
             {
-              title: "Total", 
-              field: "total", 
-              formatter: "money", 
-              hozAlign: "right",
+              title: 'Total',
+              field: 'total',
+              formatter: 'money',
+              hozAlign: 'right',
               formatterParams: {
-                decimal: ".",
-                thousand: ",",
+                decimal: '.',
+                thousand: ',',
                 symbol: this.restaurantCurrencySymbol,
                 negativeSign: true,
-                precision: 2
-              }
+                precision: 2,
+              },
             },
             {
-              title: "Created", 
-              field: "created_at", 
-              formatter: "datetime", 
-              hozAlign: "right"
+              title: 'Created',
+              field: 'created_at',
+              formatter: 'datetime',
+              hozAlign: 'right',
             },
             {
-              title: "Actions", 
-              field: "actions", 
-              formatter: this.actionsFormatter, 
+              title: 'Actions',
+              field: 'actions',
+              formatter: this.actionsFormatter,
               headerSort: false,
-              hozAlign: "center"
-            }
-          ]
+              hozAlign: 'center',
+            },
+          ],
         });
 
         if (table) {
@@ -171,12 +171,12 @@ export class OrderModule extends ComponentBase {
   initializeModals() {
     const modalIds = [
       'openOrderModalLabel',
-      'addItemToOrderModalLabel', 
+      'addItemToOrderModalLabel',
       'filterOrderModalLabel',
-      'viewOrderModalLabel'
+      'viewOrderModalLabel',
     ];
 
-    modalIds.forEach(modalId => {
+    modalIds.forEach((modalId) => {
       const modal = this.find(`#${modalId}`);
       if (modal) {
         this.addEventListener(modal, 'shown.bs.modal', () => {
@@ -201,18 +201,18 @@ export class OrderModule extends ComponentBase {
    */
   setupTableEvents(table) {
     // Row selection changed
-    table.on("rowSelectionChanged", (data, rows) => {
+    table.on('rowSelectionChanged', (data, rows) => {
       const hasSelection = data.length > 0;
-      
+
       // Enable/disable bulk action buttons
       const bulkButtons = this.findAll('.bulk-order-action');
-      bulkButtons.forEach(btn => {
+      bulkButtons.forEach((btn) => {
         btn.disabled = !hasSelection;
       });
     });
 
     // Row click for order details
-    table.on("rowClick", (e, row) => {
+    table.on('rowClick', (e, row) => {
       const orderData = row.getData();
       this.showOrderDetails(orderData);
     });
@@ -223,8 +223,9 @@ export class OrderModule extends ComponentBase {
    */
   orderLinkFormatter(cell) {
     const id = cell.getValue();
-    const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
-                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+    const restaurantId =
+      document.getElementById('currentRestaurant')?.textContent ||
+      document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
     return `<a class='link-primary' href='/restaurants/${restaurantId}/ordrs/${id}'>#${id}</a>`;
   }
 
@@ -238,9 +239,9 @@ export class OrderModule extends ComponentBase {
       [this.ORDER_STATUS.ORDERED]: { text: 'ORDERED', class: 'badge-primary' },
       [this.ORDER_STATUS.DELIVERED]: { text: 'DELIVERED', class: 'badge-success' },
       [this.ORDER_STATUS.BILL_REQUESTED]: { text: 'BILL REQUESTED', class: 'badge-warning' },
-      [this.ORDER_STATUS.CLOSED]: { text: 'CLOSED', class: 'badge-dark' }
+      [this.ORDER_STATUS.CLOSED]: { text: 'CLOSED', class: 'badge-dark' },
     };
-    
+
     const statusInfo = statusMap[status] || { text: 'UNKNOWN', class: 'badge-light' };
     return `<span class="badge ${statusInfo.class}">${statusInfo.text}</span>`;
   }
@@ -251,7 +252,7 @@ export class OrderModule extends ComponentBase {
   actionsFormatter(cell) {
     const rowData = cell.getRow().getData();
     const orderId = rowData.id;
-    
+
     return `
       <div class="btn-group btn-group-sm">
         <button class="btn btn-outline-primary btn-sm view-order" data-order-id="${orderId}">
@@ -280,16 +281,16 @@ export class OrderModule extends ComponentBase {
   bindEvents() {
     // Order management buttons
     this.bindOrderActions();
-    
+
     // Payment functionality
     this.bindPaymentActions();
-    
+
     // Modal interactions
     this.bindModalActions();
 
     // Form submissions
     const orderForms = this.findAll('form[data-order-form]');
-    orderForms.forEach(form => {
+    orderForms.forEach((form) => {
       this.addEventListener(form, 'submit', (e) => {
         this.handleFormSubmit(e, form);
       });
@@ -390,18 +391,19 @@ export class OrderModule extends ComponentBase {
     if (!currentOrderId) return;
 
     try {
-      const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
-                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+      const restaurantId =
+        document.getElementById('currentRestaurant')?.textContent ||
+        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
       await patch(`/restaurants/${restaurantId}/ordrs/${currentOrderId}`, {
-        ordr: { status: this.ORDER_STATUS.CLOSED }
+        ordr: { status: this.ORDER_STATUS.CLOSED },
       });
-      
+
       this.showNotification('Order closed successfully', 'success');
       this.refreshOrderTable();
-      
-      EventBus.emit(AppEvents.ORDER_UPDATE, { 
-        orderId: currentOrderId, 
-        status: 'closed' 
+
+      EventBus.emit(AppEvents.ORDER_UPDATE, {
+        orderId: currentOrderId,
+        status: 'closed',
       });
     } catch (error) {
       console.error('Failed to close order:', error);
@@ -426,14 +428,15 @@ export class OrderModule extends ComponentBase {
           tablesetting_id: currentTableId,
           restaurant_id: currentRestaurantId,
           menu_id: currentMenuId,
-          status: this.ORDER_STATUS.BILL_REQUESTED
-        }
+          status: this.ORDER_STATUS.BILL_REQUESTED,
+        },
       };
 
-      const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
-                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+      const restaurantId =
+        document.getElementById('currentRestaurant')?.textContent ||
+        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
       await patch(`/restaurants/${restaurantId}/ordrs/${currentOrderId}`, orderData);
-      
+
       this.showNotification('Bill requested successfully', 'success');
       this.refreshOrderTable();
     } catch (error) {
@@ -448,7 +451,7 @@ export class OrderModule extends ComponentBase {
   async processPayment() {
     const tipField = this.find('#tipNumberField');
     const tip = tipField ? parseFloat(tipField.value) || 0 : 0;
-    
+
     const currentOrderId = this.find('#currentOrder')?.textContent;
     if (!currentOrderId) return;
 
@@ -456,17 +459,18 @@ export class OrderModule extends ComponentBase {
       const paymentData = {
         ordr: {
           tip: tip,
-          status: this.ORDER_STATUS.CLOSED
-        }
+          status: this.ORDER_STATUS.CLOSED,
+        },
       };
 
-      const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
-                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+      const restaurantId =
+        document.getElementById('currentRestaurant')?.textContent ||
+        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
       await patch(`/restaurants/${restaurantId}/ordrs/${currentOrderId}`, paymentData);
-      
+
       this.showNotification('Payment processed successfully', 'success');
       this.refreshOrderTable();
-      
+
       // Reload page if needed
       if (this.locationReload) {
         window.location.reload();
@@ -498,21 +502,21 @@ export class OrderModule extends ComponentBase {
         amount,
         currency,
         restaurantName,
-        restaurantId
+        restaurantId,
       });
 
       if (response.payment_link) {
         const paymentLinkEl = this.find('#paymentlink');
         const paymentAnchorEl = this.find('#paymentAnchor');
-        
+
         if (paymentLinkEl) paymentLinkEl.textContent = response.payment_link;
         if (paymentAnchorEl) paymentAnchorEl.href = response.payment_link;
-        
+
         // Generate QR code if function exists
         if (typeof fetchQR === 'function') {
           fetchQR(response.payment_link);
         }
-        
+
         this.showNotification('Payment link refreshed', 'success');
       } else {
         throw new Error('No payment link received');
@@ -528,8 +532,9 @@ export class OrderModule extends ComponentBase {
    */
   viewOrder(orderId) {
     // Open order details modal or navigate to order page
-    const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
-                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+    const restaurantId =
+      document.getElementById('currentRestaurant')?.textContent ||
+      document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
     window.open(`/restaurants/${restaurantId}/ordrs/${orderId}`, '_blank');
   }
 
@@ -537,8 +542,9 @@ export class OrderModule extends ComponentBase {
    * Edit order
    */
   editOrder(orderId) {
-    const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
-                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+    const restaurantId =
+      document.getElementById('currentRestaurant')?.textContent ||
+      document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
     window.location.href = `/restaurants/${restaurantId}/ordrs/${orderId}/edit`;
   }
 
@@ -551,15 +557,16 @@ export class OrderModule extends ComponentBase {
     }
 
     try {
-      const restaurantId = document.getElementById('currentRestaurant')?.textContent || 
-                        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
+      const restaurantId =
+        document.getElementById('currentRestaurant')?.textContent ||
+        document.querySelector('[data-restaurant-id]')?.dataset.restaurantId;
       await fetch(`/restaurants/${restaurantId}/ordrs/${orderId}`, {
         method: 'DELETE',
         headers: {
-          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content
-        }
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
+        },
       });
-      
+
       this.showNotification('Order deleted successfully', 'success');
       this.refreshOrderTable();
     } catch (error) {
@@ -575,7 +582,7 @@ export class OrderModule extends ComponentBase {
     // Implementation for showing order details in modal
     EventBus.emit('modal:show', {
       type: 'order-details',
-      data: orderData
+      data: orderData,
     });
   }
 
@@ -637,17 +644,17 @@ export class OrderModule extends ComponentBase {
         body: formData,
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content
-        }
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
+        },
       });
 
       if (response.ok) {
         this.showNotification('Order saved successfully', 'success');
         this.refreshOrderTable();
-        
-        EventBus.emit(AppEvents.DATA_SAVE, { 
-          type: 'order', 
-          form: form 
+
+        EventBus.emit(AppEvents.DATA_SAVE, {
+          type: 'order',
+          form: form,
         });
       } else {
         throw new Error(`HTTP ${response.status}`);
@@ -675,8 +682,8 @@ export class OrderModule extends ComponentBase {
   destroy() {
     super.destroy();
 
-    EventBus.emit(AppEvents.COMPONENT_DESTROY, { 
-      component: 'OrderModule' 
+    EventBus.emit(AppEvents.COMPONENT_DESTROY, {
+      component: 'OrderModule',
     });
   }
 

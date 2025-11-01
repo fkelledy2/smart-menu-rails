@@ -8,15 +8,15 @@ export class TableManager extends ComponentBase {
   static instances = new Map();
   static globalDefaults = {
     dataLoader: false,
-    maxHeight: "100%",
+    maxHeight: '100%',
     responsiveLayout: true,
-    pagination: "local",
+    pagination: 'local',
     paginationSize: 20,
     movableColumns: true,
-    layout: "fitDataStretch",
-    placeholder: "No data available",
+    layout: 'fitDataStretch',
+    placeholder: 'No data available',
     tooltips: true,
-    history: true
+    history: true,
   };
 
   constructor(container = document) {
@@ -41,20 +41,31 @@ export class TableManager extends ComponentBase {
    */
   initializeTables() {
     const tableElements = this.findAll('[data-tabulator]');
-    
-    tableElements.forEach(element => {
+
+    tableElements.forEach((element) => {
       this.initializeTable(element);
     });
 
     // Also initialize tables with specific IDs that follow patterns
     const commonTableSelectors = [
-      '#restaurant-table', '#menu-table', '#menuitem-table', '#menusection-table',
-      '#employee-table', '#inventory-table', '#tax-table', '#tip-table',
-      '#testimonial-table', '#tag-table', '#size-table', '#allergyn-table',
-      '#track-table', '#smartmenu-table', '#tablesetting-table'
+      '#restaurant-table',
+      '#menu-table',
+      '#menuitem-table',
+      '#menusection-table',
+      '#employee-table',
+      '#inventory-table',
+      '#tax-table',
+      '#tip-table',
+      '#testimonial-table',
+      '#tag-table',
+      '#size-table',
+      '#allergyn-table',
+      '#track-table',
+      '#smartmenu-table',
+      '#tablesetting-table',
     ];
 
-    commonTableSelectors.forEach(selector => {
+    commonTableSelectors.forEach((selector) => {
       const element = this.find(selector);
       if (element && !this.tables.has(element)) {
         this.initializeTable(element);
@@ -79,7 +90,7 @@ export class TableManager extends ComponentBase {
 
       const config = this.buildTableConfig(element, userConfig);
       const table = new window.Tabulator(element, config);
-      
+
       // Track the instance
       this.tables.set(element, table);
       TableManager.instances.set(element.id || element, table);
@@ -102,8 +113,8 @@ export class TableManager extends ComponentBase {
    */
   buildTableConfig(element, userConfig = {}) {
     // Parse configuration from data attributes
-    const dataConfig = element.dataset.tabulatorConfig 
-      ? JSON.parse(element.dataset.tabulatorConfig) 
+    const dataConfig = element.dataset.tabulatorConfig
+      ? JSON.parse(element.dataset.tabulatorConfig)
       : {};
 
     // Determine table type and apply type-specific defaults
@@ -118,7 +129,7 @@ export class TableManager extends ComponentBase {
       ...TableManager.globalDefaults,
       ...typeDefaults,
       ...dataConfig,
-      ...userConfig
+      ...userConfig,
     };
 
     // Add columns if configured
@@ -162,41 +173,41 @@ export class TableManager extends ComponentBase {
   getTypeDefaults(tableType) {
     const typeDefaults = {
       restaurant: {
-        pagination: "local",
+        pagination: 'local',
         paginationSize: 10,
-        sortMode: "local",
-        filterMode: "local"
+        sortMode: 'local',
+        filterMode: 'local',
       },
       menu: {
-        pagination: "local",
+        pagination: 'local',
         paginationSize: 15,
-        groupBy: "status"
+        groupBy: 'status',
       },
       employee: {
-        pagination: "local",
-        paginationSize: 20
+        pagination: 'local',
+        paginationSize: 20,
       },
       inventory: {
-        pagination: "local",
+        pagination: 'local',
         paginationSize: 25,
-        sortMode: "local"
+        sortMode: 'local',
       },
       order: {
-        pagination: "local",
+        pagination: 'local',
         paginationSize: 10,
-        sortMode: "local",
-        initialSort: [{ column: "created_at", dir: "desc" }]
+        sortMode: 'local',
+        initialSort: [{ column: 'created_at', dir: 'desc' }],
       },
       track: {
-        height: "400px",
+        height: '400px',
         pagination: false,
-        maxHeight: "400px"
+        maxHeight: '400px',
       },
       testimonial: {
-        pagination: "local",
-        paginationSize: 10
+        pagination: 'local',
+        paginationSize: 10,
       },
-      generic: {}
+      generic: {},
     };
 
     return typeDefaults[tableType] || typeDefaults.generic;
@@ -227,13 +238,13 @@ export class TableManager extends ComponentBase {
     // AJAX URL from data attribute
     if (element.dataset.ajaxUrl) {
       config.ajaxURL = element.dataset.ajaxUrl;
-      config.ajaxConfig = "GET";
-      config.ajaxContentType = "json";
+      config.ajaxConfig = 'GET';
+      config.ajaxContentType = 'json';
     }
 
     // Progressive loading
     if (element.dataset.progressiveLoad === 'true') {
-      config.progressiveLoad = "scroll";
+      config.progressiveLoad = 'scroll';
       config.progressiveLoadDelay = 200;
     }
 
@@ -253,31 +264,31 @@ export class TableManager extends ComponentBase {
    */
   setupTableEvents(table, element) {
     // Row selection events
-    table.on("rowClick", (e, row) => {
+    table.on('rowClick', (e, row) => {
       this.emit('table:row:click', { table, row, element, data: row.getData() });
     });
 
-    table.on("rowDblClick", (e, row) => {
+    table.on('rowDblClick', (e, row) => {
       this.emit('table:row:dblclick', { table, row, element, data: row.getData() });
     });
 
     // Data events
-    table.on("dataLoaded", (data) => {
+    table.on('dataLoaded', (data) => {
       this.emit('table:data:loaded', { table, element, data });
     });
 
-    table.on("dataLoadError", (error) => {
+    table.on('dataLoadError', (error) => {
       this.emit('table:data:error', { table, element, error });
       console.error('Table data load error:', error);
     });
 
     // Filter events
-    table.on("dataFiltered", (filters, rows) => {
+    table.on('dataFiltered', (filters, rows) => {
       this.emit('table:filtered', { table, element, filters, rows });
     });
 
     // Sort events
-    table.on("dataSorted", (sorters, rows) => {
+    table.on('dataSorted', (sorters, rows) => {
       this.emit('table:sorted', { table, element, sorters, rows });
     });
   }
@@ -287,7 +298,7 @@ export class TableManager extends ComponentBase {
    */
   getTable(elementOrSelector) {
     let element;
-    
+
     if (typeof elementOrSelector === 'string') {
       element = this.find(elementOrSelector);
     } else {
@@ -393,16 +404,16 @@ export class TableManager extends ComponentBase {
     if (table) {
       switch (format.toLowerCase()) {
         case 'csv':
-          table.download("csv", `${filename}.csv`);
+          table.download('csv', `${filename}.csv`);
           break;
         case 'json':
-          table.download("json", `${filename}.json`);
+          table.download('json', `${filename}.json`);
           break;
         case 'xlsx':
-          table.download("xlsx", `${filename}.xlsx`);
+          table.download('xlsx', `${filename}.xlsx`);
           break;
         case 'pdf':
-          table.download("pdf", `${filename}.pdf`);
+          table.download('pdf', `${filename}.pdf`);
           break;
         default:
           console.warn('Unsupported export format:', format);
@@ -420,11 +431,11 @@ export class TableManager extends ComponentBase {
       } catch (error) {
         console.warn('Error destroying table:', error);
       }
-      
+
       // Clean up global tracking
       TableManager.instances.delete(element.id || element);
     });
-    
+
     this.tables.clear();
     super.destroy();
   }
@@ -434,7 +445,7 @@ export class TableManager extends ComponentBase {
    */
   static createTable(elementOrSelector, userConfig = {}) {
     let element;
-    
+
     if (typeof elementOrSelector === 'string') {
       element = document.querySelector(elementOrSelector);
     } else {
@@ -460,7 +471,7 @@ export class TableManager extends ComponentBase {
    */
   static destroyTable(elementOrSelector) {
     let element;
-    
+
     if (typeof elementOrSelector === 'string') {
       element = document.querySelector(elementOrSelector);
     } else {
@@ -478,7 +489,7 @@ export class TableManager extends ComponentBase {
    * Static method to destroy all tables
    */
   static destroyAll() {
-    TableManager.instances.forEach(table => {
+    TableManager.instances.forEach((table) => {
       try {
         table.destroy();
       } catch (error) {

@@ -31,9 +31,9 @@ export class MenuItemModule extends ComponentBase {
     this.initializeTables();
     this.bindEvents();
 
-    EventBus.emit(AppEvents.COMPONENT_READY, { 
-      component: 'MenuItemModule', 
-      instance: this 
+    EventBus.emit(AppEvents.COMPONENT_READY, {
+      component: 'MenuItemModule',
+      instance: this,
     });
 
     return this;
@@ -54,7 +54,7 @@ export class MenuItemModule extends ComponentBase {
    */
   initializeForms() {
     const formConfig = getFormConfig('menuitem');
-    
+
     this.formManager = new FormManager(this.container);
     this.addChildComponent('formManager', this.formManager);
     this.formManager.init();
@@ -66,7 +66,7 @@ export class MenuItemModule extends ComponentBase {
 
     this.formManager.on('select:initialized', (event) => {
       const { element, tomSelect } = event.detail;
-      
+
       // Special handling for menu section select
       if (element.id === 'menuitem_menusection_id') {
         tomSelect.on('change', (value) => {
@@ -91,137 +91,137 @@ export class MenuItemModule extends ComponentBase {
       const menuId = menuItemTable.dataset.menu;
       if (menusectionId && menuId) {
         const restaurantId = this.getRestaurantId();
-        const ajaxURL = restaurantId ? 
-          `/restaurants/${restaurantId}/menus/${menuId}/menusections/${menusectionId}/menuitems.json` :
-          `/menus/${menuId}/menusections/${menusectionId}/menuitems.json`;
-        
+        const ajaxURL = restaurantId
+          ? `/restaurants/${restaurantId}/menus/${menuId}/menusections/${menusectionId}/menuitems.json`
+          : `/menus/${menuId}/menusections/${menusectionId}/menuitems.json`;
+
         const table = this.tableManager.initializeTable(menuItemTable, {
           ajaxURL: ajaxURL,
           movableRows: true,
-          initialSort: [{ column: "sequence", dir: "asc" }],
+          initialSort: [{ column: 'sequence', dir: 'asc' }],
           columns: [
             {
-              formatter: "rowSelection", 
-              titleFormatter: "rowSelection", 
-              responsive: 0, 
-              width: 30, 
-              frozen: true, 
-              headerHozAlign: "left", 
-              hozAlign: "left", 
+              formatter: 'rowSelection',
+              titleFormatter: 'rowSelection',
+              responsive: 0,
+              width: 30,
+              frozen: true,
+              headerHozAlign: 'left',
+              hozAlign: 'left',
               headerSort: false,
-              cellClick: (e, cell) => cell.getRow().toggleSelect()
-            },
-            { 
-              rowHandle: true, 
-              formatter: "handle", 
-              headerSort: false, 
-              frozen: true, 
-              responsive: 0, 
-              width: 30, 
-              minWidth: 30 
-            },
-            { 
-              title: "", 
-              field: "sequence", 
-              visible: false, 
-              formatter: "rownum", 
-              hozAlign: "right", 
-              headerHozAlign: "right", 
-              headerSort: false 
+              cellClick: (e, cell) => cell.getRow().toggleSelect(),
             },
             {
-              title: "Name", 
-              field: "id", 
-              responsive: 0, 
-              maxWidth: 180, 
-              formatter: this.linkFormatter, 
-              hozAlign: "left"
+              rowHandle: true,
+              formatter: 'handle',
+              headerSort: false,
+              frozen: true,
+              responsive: 0,
+              width: 30,
+              minWidth: 30,
             },
             {
-              title: "genImageId", 
-              visible: false, 
-              field: "genImageId"
+              title: '',
+              field: 'sequence',
+              visible: false,
+              formatter: 'rownum',
+              hozAlign: 'right',
+              headerHozAlign: 'right',
+              headerSort: false,
             },
             {
-              title: "Calories", 
-              field: "calories", 
-              responsive: 5, 
-              hozAlign: "right", 
-              headerHozAlign: "right"
+              title: 'Name',
+              field: 'id',
+              responsive: 0,
+              maxWidth: 180,
+              formatter: this.linkFormatter,
+              hozAlign: 'left',
             },
             {
-              title: "Price", 
-              field: "price", 
-              responsive: 4, 
-              formatter: "money", 
-              hozAlign: "right", 
-              headerHozAlign: "right",
+              title: 'genImageId',
+              visible: false,
+              field: 'genImageId',
+            },
+            {
+              title: 'Calories',
+              field: 'calories',
+              responsive: 5,
+              hozAlign: 'right',
+              headerHozAlign: 'right',
+            },
+            {
+              title: 'Price',
+              field: 'price',
+              responsive: 4,
+              formatter: 'money',
+              hozAlign: 'right',
+              headerHozAlign: 'right',
               formatterParams: {
-                decimal: ".",
-                thousand: ",",
+                decimal: '.',
+                thousand: ',',
                 symbol: this.restaurantCurrencySymbol,
                 negativeSign: true,
-                precision: 2
-              }
+                precision: 2,
+              },
             },
             {
-              title: "Prep Time", 
-              field: "preptime", 
-              responsive: 5, 
-              hozAlign: "right", 
-              headerHozAlign: "right"
+              title: 'Prep Time',
+              field: 'preptime',
+              responsive: 5,
+              hozAlign: 'right',
+              headerHozAlign: 'right',
             },
             {
-              title: "Inventory",
+              title: 'Inventory',
               columns: [
                 {
-                  title: "Starting", 
-                  responsive: 5, 
-                  field: "inventory.startinginventory", 
-                  hozAlign: "right", 
-                  headerHozAlign: "right"
+                  title: 'Starting',
+                  responsive: 5,
+                  field: 'inventory.startinginventory',
+                  hozAlign: 'right',
+                  headerHozAlign: 'right',
                 },
                 {
-                  title: "Current", 
-                  responsive: 5, 
-                  field: "inventory.currentinventory", 
-                  hozAlign: "right", 
-                  headerHozAlign: "right"
+                  title: 'Current',
+                  responsive: 5,
+                  field: 'inventory.currentinventory',
+                  hozAlign: 'right',
+                  headerHozAlign: 'right',
                 },
                 {
-                  title: "Resets At", 
-                  responsive: 5, 
-                  field: "inventory.resethour", 
-                  hozAlign: "right", 
-                  headerHozAlign: "right"
-                }
-              ]
+                  title: 'Resets At',
+                  responsive: 5,
+                  field: 'inventory.resethour',
+                  hozAlign: 'right',
+                  headerHozAlign: 'right',
+                },
+              ],
             },
             {
-              title: "Status", 
-              field: "status", 
-              formatter: this.statusFormatter, 
-              responsive: 0, 
-              minWidth: 100, 
-              hozAlign: "right", 
-              headerHozAlign: "right"
-            }
+              title: 'Status',
+              field: 'status',
+              formatter: this.statusFormatter,
+              responsive: 0,
+              minWidth: 100,
+              hozAlign: 'right',
+              headerHozAlign: 'right',
+            },
           ],
           locale: true,
           langs: {
-            "it": {
-              "columns": {
-                "id": "Nome",
-                "status": "Stato"
-              }
+            it: {
+              columns: {
+                id: 'Nome',
+                status: 'Stato',
+              },
             },
-            "en": {
-              "columns": {
-                "id": "Name",
-                "status": "Status"
-              }
-            }
-          }
+            en: {
+              columns: {
+                id: 'Name',
+                status: 'Status',
+              },
+            },
+          },
         });
 
         if (table) {
@@ -236,12 +236,12 @@ export class MenuItemModule extends ComponentBase {
    */
   setupTableEvents(table) {
     // Row moved event
-    table.on("rowMoved", (row) => {
+    table.on('rowMoved', (row) => {
       this.updateSequences(table);
     });
 
     // Row selection changed
-    table.on("rowSelectionChanged", (data, rows) => {
+    table.on('rowSelectionChanged', (data, rows) => {
       const actionsBtn = this.find('#menuitem-actions');
       if (actionsBtn) {
         actionsBtn.disabled = data.length === 0;
@@ -254,18 +254,18 @@ export class MenuItemModule extends ComponentBase {
    */
   async updateSequences(table) {
     const rows = table.getRows();
-    
+
     for (let i = 0; i < rows.length; i++) {
       const rowData = rows[i].getData();
       const newSequence = rows[i].getPosition();
-      
+
       // Update table data
       table.updateData([{ id: rowData.id, sequence: newSequence }]);
-      
+
       // Update server
       try {
         await patch(rowData.url, {
-          menuitem: { sequence: newSequence }
+          menuitem: { sequence: newSequence },
         });
       } catch (error) {
         console.error('Failed to update sequence:', error);
@@ -278,7 +278,7 @@ export class MenuItemModule extends ComponentBase {
    * Status formatter for tables
    */
   statusFormatter(cell) {
-    const status = cell.getRow().getData("data")?.status || cell.getValue();
+    const status = cell.getRow().getData('data')?.status || cell.getValue();
     return status ? status.toUpperCase() : '';
   }
 
@@ -287,16 +287,16 @@ export class MenuItemModule extends ComponentBase {
    */
   linkFormatter(cell) {
     const id = cell.getValue();
-    const rowData = cell.getRow().getData("data");
+    const rowData = cell.getRow().getData('data');
     const name = rowData?.name || id;
-    
+
     // Get menu and menusection IDs from table element for nested routes
     const tableElement = cell.getTable().element;
     const menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
     const menusectionId = tableElement.dataset.menusection || tableElement.dataset.bsMenusection;
-    
+
     const restaurantId = this.getRestaurantId();
-    
+
     if (restaurantId && menuId && menusectionId) {
       return `<a class='link-dark' href='/restaurants/${restaurantId}/menus/${menuId}/menusections/${menusectionId}/menuitems/${id}/edit'>${name}</a>`;
     } else if (menuId && menusectionId) {
@@ -311,8 +311,8 @@ export class MenuItemModule extends ComponentBase {
    * Update related data when menu section changes
    */
   updateRelatedData(menusectionId) {
-    EventBus.emit(AppEvents.MENUSECTION_SELECT, { 
-      menusection: { id: menusectionId } 
+    EventBus.emit(AppEvents.MENUSECTION_SELECT, {
+      menusection: { id: menusectionId },
     });
 
     // Update any dependent tables
@@ -339,7 +339,7 @@ export class MenuItemModule extends ComponentBase {
 
     // Handle form submissions
     const menuItemForms = this.findAll('form[data-menuitem-form]');
-    menuItemForms.forEach(form => {
+    menuItemForms.forEach((form) => {
       this.addEventListener(form, 'submit', (e) => {
         this.handleFormSubmit(e, form);
       });
@@ -365,19 +365,19 @@ export class MenuItemModule extends ComponentBase {
     const genImageBtn = this.find('#genimage-menuitem');
     const activateBtn = this.find('#activate-menuitem');
     const deactivateBtn = this.find('#deactivate-menuitem');
-    
+
     if (genImageBtn) {
       this.addEventListener(genImageBtn, 'click', () => {
         this.bulkGenerateImages();
       });
     }
-    
+
     if (activateBtn) {
       this.addEventListener(activateBtn, 'click', () => {
         this.bulkUpdateStatus('active');
       });
     }
-    
+
     if (deactivateBtn) {
       this.addEventListener(deactivateBtn, 'click', () => {
         this.bulkUpdateStatus('inactive');
@@ -394,12 +394,12 @@ export class MenuItemModule extends ComponentBase {
 
     const selectedRows = table.getSelectedData();
     let successCount = 0;
-    
+
     for (const rowData of selectedRows) {
       if (rowData.genImageId) {
         try {
           await patch(`/genimages/${rowData.genImageId}`, {
-            genimage: { id: rowData.genImageId }
+            genimage: { id: rowData.genImageId },
           });
           successCount++;
         } catch (error) {
@@ -423,15 +423,15 @@ export class MenuItemModule extends ComponentBase {
     if (!table) return;
 
     const selectedRows = table.getSelectedData();
-    
+
     for (const rowData of selectedRows) {
       try {
         // Update table data
         table.updateData([{ id: rowData.id, status: status }]);
-        
+
         // Update server
         await patch(rowData.url, {
-          menuitem: { status: status }
+          menuitem: { status: status },
         });
       } catch (error) {
         console.error('Failed to update status:', error);
@@ -450,13 +450,13 @@ export class MenuItemModule extends ComponentBase {
   onMenuSectionSelected(menusection) {
     // Update any UI elements that depend on menu section selection
     const sectionNameElements = this.findAll('.current-section-name');
-    sectionNameElements.forEach(el => {
+    sectionNameElements.forEach((el) => {
       el.textContent = menusection.name;
     });
 
     // Update breadcrumbs
     const breadcrumbElements = this.findAll('.section-breadcrumb');
-    breadcrumbElements.forEach(el => {
+    breadcrumbElements.forEach((el) => {
       el.textContent = menusection.name;
       el.href = `/menusections/${menusection.id}`;
     });
@@ -467,7 +467,7 @@ export class MenuItemModule extends ComponentBase {
    */
   updateCurrencySymbol(newSymbol) {
     this.restaurantCurrencySymbol = newSymbol;
-    
+
     // Update existing tables
     const table = this.tableManager.getTable('#menusection-menuitem-table');
     if (table) {
@@ -476,12 +476,12 @@ export class MenuItemModule extends ComponentBase {
       if (priceColumn) {
         priceColumn.updateDefinition({
           formatterParams: {
-            decimal: ".",
-            thousand: ",",
+            decimal: '.',
+            thousand: ',',
             symbol: newSymbol,
             negativeSign: true,
-            precision: 2
-          }
+            precision: 2,
+          },
         });
         table.redraw();
       }
@@ -501,19 +501,19 @@ export class MenuItemModule extends ComponentBase {
         body: formData,
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content
-        }
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
+        },
       });
 
       if (response.ok) {
         this.showNotification('Menu item saved successfully', 'success');
-        
+
         // Refresh tables if needed
         this.tableManager.refreshTable('#menusection-menuitem-table');
-        
-        EventBus.emit(AppEvents.DATA_SAVE, { 
-          type: 'menuitem', 
-          form: form 
+
+        EventBus.emit(AppEvents.DATA_SAVE, {
+          type: 'menuitem',
+          form: form,
         });
       } else {
         throw new Error(`HTTP ${response.status}`);
@@ -532,10 +532,10 @@ export class MenuItemModule extends ComponentBase {
 
     // Refresh tables
     this.tableManager.refreshTable('#menusection-menuitem-table');
-    
+
     // Refresh forms
     this.formManager.refresh();
-    
+
     // Update currency symbol
     this.initializeCurrency();
   }
@@ -548,22 +548,22 @@ export class MenuItemModule extends ComponentBase {
     if (window.RestaurantContext) {
       return window.RestaurantContext.getRestaurantId(this.container);
     }
-    
+
     // Fallback to basic detection for backward compatibility
     const pathMatch = window.location.pathname.match(/\/restaurants\/(\d+)/);
     if (pathMatch) {
       return pathMatch[1];
     }
-    
+
     const restaurantElement = this.find('[data-restaurant-id]');
     if (restaurantElement) {
       return restaurantElement.dataset.restaurantId;
     }
-    
+
     if (window.currentRestaurant) {
       return window.currentRestaurant.id;
     }
-    
+
     return null;
   }
 
@@ -574,8 +574,8 @@ export class MenuItemModule extends ComponentBase {
     // Clean up child components
     super.destroy();
 
-    EventBus.emit(AppEvents.COMPONENT_DESTROY, { 
-      component: 'MenuItemModule' 
+    EventBus.emit(AppEvents.COMPONENT_DESTROY, {
+      component: 'MenuItemModule',
     });
   }
 

@@ -48,7 +48,7 @@ export function waitForElement(selector, timeout = 5000) {
 
     observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
 
     setTimeout(() => {
@@ -62,7 +62,7 @@ export function waitForElement(selector, timeout = 5000) {
  * Add class(es) to element(s)
  */
 export function addClass(elements, className) {
-  $$(elements).forEach(el => {
+  $$(elements).forEach((el) => {
     if (className.includes(' ')) {
       el.classList.add(...className.split(' '));
     } else {
@@ -75,7 +75,7 @@ export function addClass(elements, className) {
  * Remove class(es) from element(s)
  */
 export function removeClass(elements, className) {
-  $$(elements).forEach(el => {
+  $$(elements).forEach((el) => {
     if (className.includes(' ')) {
       el.classList.remove(...className.split(' '));
     } else {
@@ -88,7 +88,7 @@ export function removeClass(elements, className) {
  * Toggle class on element(s)
  */
 export function toggleClass(elements, className) {
-  $$(elements).forEach(el => {
+  $$(elements).forEach((el) => {
     el.classList.toggle(className);
   });
 }
@@ -104,7 +104,7 @@ export function hasClass(element, className) {
  * Show element(s)
  */
 export function show(elements) {
-  $$(elements).forEach(el => {
+  $$(elements).forEach((el) => {
     el.style.display = '';
     el.removeAttribute('hidden');
   });
@@ -114,7 +114,7 @@ export function show(elements) {
  * Hide element(s)
  */
 export function hide(elements) {
-  $$(elements).forEach(el => {
+  $$(elements).forEach((el) => {
     el.style.display = 'none';
   });
 }
@@ -123,7 +123,7 @@ export function hide(elements) {
  * Toggle visibility of element(s)
  */
 export function toggle(elements) {
-  $$(elements).forEach(el => {
+  $$(elements).forEach((el) => {
     if (el.style.display === 'none') {
       show(el);
     } else {
@@ -204,8 +204,8 @@ export function data(element, name, value = null) {
  */
 export function createElement(tag, attributes = {}, content = '') {
   const element = document.createElement(tag);
-  
-  Object.keys(attributes).forEach(key => {
+
+  Object.keys(attributes).forEach((key) => {
     if (key === 'className') {
       element.className = attributes[key];
     } else if (key === 'textContent') {
@@ -216,7 +216,7 @@ export function createElement(tag, attributes = {}, content = '') {
       element.setAttribute(key, attributes[key]);
     }
   });
-  
+
   if (content) {
     if (typeof content === 'string') {
       element.innerHTML = content;
@@ -224,7 +224,7 @@ export function createElement(tag, attributes = {}, content = '') {
       element.appendChild(content);
     }
   }
-  
+
   return element;
 }
 
@@ -233,7 +233,7 @@ export function createElement(tag, attributes = {}, content = '') {
  */
 export function append(parent, children) {
   const parentEl = $(parent);
-  $$(children).forEach(child => {
+  $$(children).forEach((child) => {
     parentEl.appendChild(child);
   });
 }
@@ -243,7 +243,7 @@ export function append(parent, children) {
  */
 export function prepend(parent, children) {
   const parentEl = $(parent);
-  $$(children).forEach(child => {
+  $$(children).forEach((child) => {
     parentEl.insertBefore(child, parentEl.firstChild);
   });
 }
@@ -252,7 +252,7 @@ export function prepend(parent, children) {
  * Remove element(s) from DOM
  */
 export function remove(elements) {
-  $$(elements).forEach(el => {
+  $$(elements).forEach((el) => {
     if (el.parentNode) {
       el.parentNode.removeChild(el);
     }
@@ -269,7 +269,7 @@ export function offset(element) {
     top: rect.top + window.pageYOffset,
     left: rect.left + window.pageXOffset,
     width: rect.width,
-    height: rect.height
+    height: rect.height,
   };
 }
 
@@ -282,7 +282,7 @@ export function position(element) {
     top: el.offsetTop,
     left: el.offsetLeft,
     width: el.offsetWidth,
-    height: el.offsetHeight
+    height: el.offsetHeight,
   };
 }
 
@@ -294,9 +294,9 @@ export function scrollTo(element, options = {}) {
   const defaultOptions = {
     behavior: 'smooth',
     block: 'start',
-    inline: 'nearest'
+    inline: 'nearest',
   };
-  
+
   el.scrollIntoView({ ...defaultOptions, ...options });
 }
 
@@ -306,7 +306,7 @@ export function scrollTo(element, options = {}) {
 export function isInViewport(element) {
   const el = $(element);
   const rect = el.getBoundingClientRect();
-  
+
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&
@@ -337,11 +337,11 @@ export function debounce(func, wait, immediate = false) {
  */
 export function throttle(func, limit) {
   let inThrottle;
-  return function(...args) {
+  return function (...args) {
     if (!inThrottle) {
       func.apply(this, args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 }
@@ -352,8 +352,8 @@ export function throttle(func, limit) {
 export function getFormData(form) {
   const formData = new FormData($(form));
   const data = {};
-  
-  for (let [key, value] of formData.entries()) {
+
+  for (const [key, value] of formData.entries()) {
     if (data[key]) {
       if (Array.isArray(data[key])) {
         data[key].push(value);
@@ -364,7 +364,7 @@ export function getFormData(form) {
       data[key] = value;
     }
   }
-  
+
   return data;
 }
 
@@ -373,8 +373,8 @@ export function getFormData(form) {
  */
 export function setFormData(form, data) {
   const formEl = $(form);
-  
-  Object.keys(data).forEach(key => {
+
+  Object.keys(data).forEach((key) => {
     const field = formEl.querySelector(`[name="${key}"]`);
     if (field) {
       if (field.type === 'checkbox' || field.type === 'radio') {
@@ -393,13 +393,13 @@ export function animate(element, properties, duration = 300) {
   return new Promise((resolve) => {
     const el = $(element);
     const originalTransition = el.style.transition;
-    
+
     el.style.transition = `all ${duration}ms ease`;
-    
-    Object.keys(properties).forEach(prop => {
+
+    Object.keys(properties).forEach((prop) => {
       el.style[prop] = properties[prop];
     });
-    
+
     setTimeout(() => {
       el.style.transition = originalTransition;
       resolve(el);
@@ -414,7 +414,7 @@ export function fadeIn(element, duration = 300) {
   const el = $(element);
   el.style.opacity = '0';
   el.style.display = '';
-  
+
   return animate(el, { opacity: '1' }, duration);
 }
 
@@ -423,7 +423,7 @@ export function fadeIn(element, duration = 300) {
  */
 export function fadeOut(element, duration = 300) {
   const el = $(element);
-  
+
   return animate(el, { opacity: '0' }, duration).then(() => {
     el.style.display = 'none';
     return el;
@@ -436,11 +436,11 @@ export function fadeOut(element, duration = 300) {
 export function slideDown(element, duration = 300) {
   const el = $(element);
   const height = el.scrollHeight;
-  
+
   el.style.height = '0';
   el.style.overflow = 'hidden';
   el.style.display = '';
-  
+
   return animate(el, { height: `${height}px` }, duration).then(() => {
     el.style.height = '';
     el.style.overflow = '';
@@ -453,7 +453,7 @@ export function slideDown(element, duration = 300) {
  */
 export function slideUp(element, duration = 300) {
   const el = $(element);
-  
+
   return animate(el, { height: '0' }, duration).then(() => {
     el.style.display = 'none';
     el.style.height = '';

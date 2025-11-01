@@ -19,13 +19,13 @@ export class PerformanceMonitor {
 
     this.isEnabled = true;
     this.memoryBaseline = this.getMemoryUsage();
-    
+
     // Set up performance observers
     this.setupPerformanceObservers();
-    
+
     // Start periodic monitoring
     this.startPeriodicMonitoring();
-    
+
     console.log('[Performance] Monitoring initialized');
   }
 
@@ -42,7 +42,7 @@ export class PerformanceMonitor {
               type: entry.entryType,
               name: entry.name,
               duration: entry.duration,
-              startTime: entry.startTime
+              startTime: entry.startTime,
             });
           }
         });
@@ -61,7 +61,7 @@ export class PerformanceMonitor {
                 name: entry.name,
                 duration: entry.duration,
                 transferSize: entry.transferSize,
-                encodedBodySize: entry.encodedBodySize
+                encodedBodySize: entry.encodedBodySize,
               });
             }
           }
@@ -79,9 +79,9 @@ export class PerformanceMonitor {
             this.recordMetric('longTask', {
               duration: entry.duration,
               startTime: entry.startTime,
-              name: entry.name
+              name: entry.name,
             });
-            
+
             if (entry.duration > 50) {
               console.warn(`[Performance] Long task detected: ${entry.duration}ms`);
             }
@@ -119,10 +119,10 @@ export class PerformanceMonitor {
     if (!this.metrics.has(category)) {
       this.metrics.set(category, []);
     }
-    
+
     this.metrics.get(category).push({
       ...data,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     // Keep only last 100 entries per category
@@ -140,7 +140,7 @@ export class PerformanceMonitor {
       return {
         used: performance.memory.usedJSHeapSize,
         total: performance.memory.totalJSHeapSize,
-        limit: performance.memory.jsHeapSizeLimit
+        limit: performance.memory.jsHeapSizeLimit,
       };
     }
     return null;
@@ -160,7 +160,7 @@ export class PerformanceMonitor {
       used: current.used,
       total: current.total,
       growth: growth,
-      growthPercent: growthPercent
+      growthPercent: growthPercent,
     });
 
     // Alert if memory growth is significant
@@ -169,7 +169,7 @@ export class PerformanceMonitor {
       console.log('Memory details:', {
         baseline: this.memoryBaseline,
         current: current,
-        growth: `${(growth / 1024 / 1024).toFixed(2)} MB`
+        growth: `${(growth / 1024 / 1024).toFixed(2)} MB`,
       });
     }
   }
@@ -179,10 +179,10 @@ export class PerformanceMonitor {
    */
   checkDOMNodes() {
     const nodeCount = document.getElementsByTagName('*').length;
-    
+
     this.recordMetric('dom', {
       nodeCount: nodeCount,
-      bodyChildren: document.body.children.length
+      bodyChildren: document.body.children.length,
     });
 
     // Alert if DOM nodes are growing excessively
@@ -190,7 +190,7 @@ export class PerformanceMonitor {
     if (domMetrics.length > 1) {
       const previous = domMetrics[domMetrics.length - 2];
       const growth = nodeCount - previous.nodeCount;
-      
+
       if (growth > 100) {
         console.warn(`[Performance] DOM nodes increased by ${growth}`);
       }
@@ -203,9 +203,9 @@ export class PerformanceMonitor {
   checkEventListeners() {
     // This is an approximation - actual listener count is hard to measure
     const elementsWithListeners = document.querySelectorAll('[data-event-listeners]').length;
-    
+
     this.recordMetric('events', {
-      elementsWithListeners: elementsWithListeners
+      elementsWithListeners: elementsWithListeners,
     });
   }
 
@@ -214,19 +214,21 @@ export class PerformanceMonitor {
    */
   measureComponentInit(componentName, initFunction) {
     const startTime = performance.now();
-    
+
     const result = initFunction();
-    
+
     const endTime = performance.now();
     const duration = endTime - startTime;
-    
+
     this.recordMetric('componentInit', {
       component: componentName,
-      duration: duration
+      duration: duration,
     });
 
     if (duration > 100) {
-      console.warn(`[Performance] Slow component initialization: ${componentName} took ${duration.toFixed(2)}ms`);
+      console.warn(
+        `[Performance] Slow component initialization: ${componentName} took ${duration.toFixed(2)}ms`
+      );
     }
 
     return result;
@@ -237,28 +239,28 @@ export class PerformanceMonitor {
    */
   async measureAsync(operationName, asyncFunction) {
     const startTime = performance.now();
-    
+
     try {
       const result = await asyncFunction();
       const endTime = performance.now();
       const duration = endTime - startTime;
-      
+
       this.recordMetric('asyncOperation', {
         operation: operationName,
         duration: duration,
-        success: true
+        success: true,
       });
 
       return result;
     } catch (error) {
       const endTime = performance.now();
       const duration = endTime - startTime;
-      
+
       this.recordMetric('asyncOperation', {
         operation: operationName,
         duration: duration,
         success: false,
-        error: error.message
+        error: error.message,
       });
 
       throw error;
@@ -272,7 +274,7 @@ export class PerformanceMonitor {
     const report = {
       timestamp: new Date().toISOString(),
       memory: this.getMemoryUsage(),
-      metrics: {}
+      metrics: {},
     };
 
     // Summarize each metric category
@@ -280,58 +282,58 @@ export class PerformanceMonitor {
       if (entries.length === 0) continue;
 
       const recent = entries.slice(-10); // Last 10 entries
-      
+
       switch (category) {
         case 'memory':
           report.metrics.memory = {
             current: recent[recent.length - 1],
             trend: this.calculateTrend(recent, 'used'),
-            averageGrowth: this.calculateAverage(recent, 'growthPercent')
+            averageGrowth: this.calculateAverage(recent, 'growthPercent'),
           };
           break;
-          
+
         case 'componentInit':
-          const durations = recent.map(e => e.duration);
+          const durations = recent.map((e) => e.duration);
           report.metrics.componentInit = {
             count: recent.length,
             averageDuration: this.calculateAverage(recent, 'duration'),
             maxDuration: Math.max(...durations),
-            slowComponents: recent.filter(e => e.duration > 100)
+            slowComponents: recent.filter((e) => e.duration > 100),
           };
           break;
-          
+
         case 'asyncOperation':
-          const successRate = recent.filter(e => e.success).length / recent.length;
+          const successRate = recent.filter((e) => e.success).length / recent.length;
           report.metrics.asyncOperations = {
             count: recent.length,
             successRate: successRate,
             averageDuration: this.calculateAverage(recent, 'duration'),
-            failures: recent.filter(e => !e.success)
+            failures: recent.filter((e) => !e.success),
           };
           break;
-          
+
         case 'longTask':
           report.metrics.longTasks = {
             count: recent.length,
             totalDuration: recent.reduce((sum, e) => sum + e.duration, 0),
-            averageDuration: this.calculateAverage(recent, 'duration')
+            averageDuration: this.calculateAverage(recent, 'duration'),
           };
           break;
-          
+
         case 'dom':
           report.metrics.dom = {
             currentNodes: recent[recent.length - 1]?.nodeCount,
-            trend: this.calculateTrend(recent, 'nodeCount')
+            trend: this.calculateTrend(recent, 'nodeCount'),
           };
           break;
       }
     }
 
     console.log('[Performance] Report:', report);
-    
+
     // Store report for potential export
     this.recordMetric('report', report);
-    
+
     return report;
   }
 
@@ -340,10 +342,10 @@ export class PerformanceMonitor {
    */
   calculateTrend(entries, field) {
     if (entries.length < 2) return 0;
-    
+
     const first = entries[0][field];
     const last = entries[entries.length - 1][field];
-    
+
     return ((last - first) / first) * 100;
   }
 
@@ -352,7 +354,7 @@ export class PerformanceMonitor {
    */
   calculateAverage(entries, field) {
     if (entries.length === 0) return 0;
-    
+
     const sum = entries.reduce((total, entry) => total + (entry[field] || 0), 0);
     return sum / entries.length;
   }
@@ -365,19 +367,19 @@ export class PerformanceMonitor {
       timestamp: new Date().toISOString(),
       baseline: this.memoryBaseline,
       current: this.getMemoryUsage(),
-      metrics: Object.fromEntries(this.metrics)
+      metrics: Object.fromEntries(this.metrics),
     };
 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    
+
     const a = document.createElement('a');
     a.href = url;
     a.download = `performance-data-${Date.now()}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    
+
     URL.revokeObjectURL(url);
   }
 
@@ -386,20 +388,18 @@ export class PerformanceMonitor {
    */
   getSummary() {
     const current = this.getMemoryUsage();
-    const memoryGrowth = current && this.memoryBaseline 
-      ? ((current.used - this.memoryBaseline.used) / this.memoryBaseline.used) * 100
-      : 0;
+    const memoryGrowth =
+      current && this.memoryBaseline
+        ? ((current.used - this.memoryBaseline.used) / this.memoryBaseline.used) * 100
+        : 0;
 
     const componentInits = this.metrics.get('componentInit') || [];
-    const avgInitTime = componentInits.length > 0
-      ? this.calculateAverage(componentInits, 'duration')
-      : 0;
+    const avgInitTime =
+      componentInits.length > 0 ? this.calculateAverage(componentInits, 'duration') : 0;
 
     const longTasks = this.metrics.get('longTask') || [];
     const domMetrics = this.metrics.get('dom') || [];
-    const currentNodes = domMetrics.length > 0 
-      ? domMetrics[domMetrics.length - 1].nodeCount 
-      : 0;
+    const currentNodes = domMetrics.length > 0 ? domMetrics[domMetrics.length - 1].nodeCount : 0;
 
     return {
       memoryUsage: current,
@@ -407,7 +407,7 @@ export class PerformanceMonitor {
       averageComponentInitTime: avgInitTime,
       longTasksCount: longTasks.length,
       domNodeCount: currentNodes,
-      isHealthy: memoryGrowth < 25 && avgInitTime < 50 && longTasks.length < 5
+      isHealthy: memoryGrowth < 25 && avgInitTime < 50 && longTasks.length < 5,
     };
   }
 
@@ -416,14 +416,14 @@ export class PerformanceMonitor {
    */
   destroy() {
     // Disconnect all observers
-    this.observers.forEach(observer => {
+    this.observers.forEach((observer) => {
       observer.disconnect();
     });
     this.observers.clear();
 
     // Clear metrics
     this.metrics.clear();
-    
+
     this.isEnabled = false;
     console.log('[Performance] Monitoring destroyed');
   }

@@ -29,9 +29,9 @@ export class EmployeeModule extends ComponentBase {
     this.initializeTables();
     this.bindEvents();
 
-    EventBus.emit(AppEvents.COMPONENT_READY, { 
-      component: 'EmployeeModule', 
-      instance: this 
+    EventBus.emit(AppEvents.COMPONENT_READY, {
+      component: 'EmployeeModule',
+      instance: this,
     });
 
     return this;
@@ -42,7 +42,7 @@ export class EmployeeModule extends ComponentBase {
    */
   initializeForms() {
     const formConfig = getFormConfig('employee');
-    
+
     this.formManager = new FormManager(this.container);
     this.addChildComponent('formManager', this.formManager);
     this.formManager.init();
@@ -54,7 +54,7 @@ export class EmployeeModule extends ComponentBase {
 
     this.formManager.on('select:initialized', (event) => {
       const { element, tomSelect } = event.detail;
-      
+
       // Special handling for restaurant select
       if (element.id === 'employee_restaurant_id') {
         tomSelect.on('change', (value) => {
@@ -80,78 +80,78 @@ export class EmployeeModule extends ComponentBase {
         const table = this.tableManager.initializeTable(restaurantEmployeeTable, {
           ajaxURL: `/restaurants/${restaurantId}/employees.json`,
           movableRows: true,
-          initialSort: [{ column: "sequence", dir: "asc" }],
+          initialSort: [{ column: 'sequence', dir: 'asc' }],
           columns: [
             {
-              formatter: "rowSelection", 
-              titleFormatter: "rowSelection", 
-              width: 30, 
-              frozen: true, 
-              headerHozAlign: "left", 
-              hozAlign: "left", 
+              formatter: 'rowSelection',
+              titleFormatter: 'rowSelection',
+              width: 30,
+              frozen: true,
+              headerHozAlign: 'left',
+              hozAlign: 'left',
               headerSort: false,
-              cellClick: (e, cell) => cell.getRow().toggleSelect()
-            },
-            { 
-              rowHandle: true, 
-              formatter: "handle", 
-              headerSort: false, 
-              frozen: true, 
-              responsive: 0, 
-              width: 30, 
-              minWidth: 30 
+              cellClick: (e, cell) => cell.getRow().toggleSelect(),
             },
             {
-              title: "", 
-              field: "sequence", 
-              visible: true, 
-              formatter: "rownum", 
-              responsive: 5, 
-              hozAlign: "right", 
-              headerHozAlign: "right", 
-              headerSort: false
+              rowHandle: true,
+              formatter: 'handle',
+              headerSort: false,
+              frozen: true,
+              responsive: 0,
+              width: 30,
+              minWidth: 30,
             },
             {
-              title: "Name", 
-              field: "id", 
-              responsive: 0, 
-              formatter: this.linkFormatter, 
-              hozAlign: "left"
+              title: '',
+              field: 'sequence',
+              visible: true,
+              formatter: 'rownum',
+              responsive: 5,
+              hozAlign: 'right',
+              headerHozAlign: 'right',
+              headerSort: false,
             },
             {
-              title: "Role", 
-              field: "role", 
-              responsive: 5, 
-              hozAlign: "right", 
-              headerHozAlign: "right"
+              title: 'Name',
+              field: 'id',
+              responsive: 0,
+              formatter: this.linkFormatter,
+              hozAlign: 'left',
             },
             {
-              title: "Status", 
-              field: "status", 
-              formatter: this.statusFormatter, 
-              responsive: 0, 
-              minWidth: 100, 
-              hozAlign: "right", 
-              headerHozAlign: "right"
-            }
+              title: 'Role',
+              field: 'role',
+              responsive: 5,
+              hozAlign: 'right',
+              headerHozAlign: 'right',
+            },
+            {
+              title: 'Status',
+              field: 'status',
+              formatter: this.statusFormatter,
+              responsive: 0,
+              minWidth: 100,
+              hozAlign: 'right',
+              headerHozAlign: 'right',
+            },
           ],
           locale: true,
           langs: {
-            "it": {
-              "columns": {
-                "id": "Nome",
-                "role": "Ruolo",
-                "status": "Stato"
-              }
+            it: {
+              columns: {
+                id: 'Nome',
+                role: 'Ruolo',
+                status: 'Stato',
+              },
             },
-            "en": {
-              "columns": {
-                "id": "Name",
-                "role": "Role",
-                "status": "Status"
-              }
-            }
-          }
+            en: {
+              columns: {
+                id: 'Name',
+                role: 'Role',
+                status: 'Status',
+              },
+            },
+          },
         });
 
         if (table) {
@@ -166,12 +166,12 @@ export class EmployeeModule extends ComponentBase {
    */
   setupTableEvents(table) {
     // Row moved event
-    table.on("rowMoved", (row) => {
+    table.on('rowMoved', (row) => {
       this.updateSequences(table);
     });
 
     // Row selection changed
-    table.on("rowSelectionChanged", (data, rows) => {
+    table.on('rowSelectionChanged', (data, rows) => {
       const actionsBtn = this.find('#employee-actions');
       if (actionsBtn) {
         actionsBtn.disabled = data.length === 0;
@@ -184,18 +184,18 @@ export class EmployeeModule extends ComponentBase {
    */
   async updateSequences(table) {
     const rows = table.getRows();
-    
+
     for (let i = 0; i < rows.length; i++) {
       const rowData = rows[i].getData();
       const newSequence = rows[i].getPosition();
-      
+
       // Update table data
       table.updateData([{ id: rowData.id, sequence: newSequence }]);
-      
+
       // Update server
       try {
         await patch(rowData.url, {
-          employee: { sequence: newSequence }
+          employee: { sequence: newSequence },
         });
       } catch (error) {
         console.error('Failed to update sequence:', error);
@@ -208,7 +208,7 @@ export class EmployeeModule extends ComponentBase {
    * Status formatter for tables
    */
   statusFormatter(cell) {
-    const status = cell.getRow().getData("data")?.status || cell.getValue();
+    const status = cell.getRow().getData('data')?.status || cell.getValue();
     return status ? status.toUpperCase() : '';
   }
 
@@ -217,7 +217,7 @@ export class EmployeeModule extends ComponentBase {
    */
   linkFormatter(cell) {
     const id = cell.getValue();
-    const rowData = cell.getRow().getData("data");
+    const rowData = cell.getRow().getData('data');
     const name = rowData?.name || id;
     return `<a class='link-dark' href='/employees/${id}/edit'>${name}</a>`;
   }
@@ -226,8 +226,8 @@ export class EmployeeModule extends ComponentBase {
    * Update related data when restaurant changes
    */
   updateRelatedData(restaurantId) {
-    EventBus.emit(AppEvents.RESTAURANT_SELECT, { 
-      restaurant: { id: restaurantId } 
+    EventBus.emit(AppEvents.RESTAURANT_SELECT, {
+      restaurant: { id: restaurantId },
     });
 
     // Update any dependent tables
@@ -254,7 +254,7 @@ export class EmployeeModule extends ComponentBase {
 
     // Handle form submissions
     const employeeForms = this.findAll('form[data-employee-form]');
-    employeeForms.forEach(form => {
+    employeeForms.forEach((form) => {
       this.addEventListener(form, 'submit', (e) => {
         this.handleFormSubmit(e, form);
       });
@@ -273,13 +273,13 @@ export class EmployeeModule extends ComponentBase {
   bindBulkActions() {
     const activateBtn = this.find('#activate-employee');
     const deactivateBtn = this.find('#deactivate-employee');
-    
+
     if (activateBtn) {
       this.addEventListener(activateBtn, 'click', () => {
         this.bulkUpdateStatus('active');
       });
     }
-    
+
     if (deactivateBtn) {
       this.addEventListener(deactivateBtn, 'click', () => {
         this.bulkUpdateStatus('inactive');
@@ -295,15 +295,15 @@ export class EmployeeModule extends ComponentBase {
     if (!table) return;
 
     const selectedRows = table.getSelectedData();
-    
+
     for (const rowData of selectedRows) {
       try {
         // Update table data
         table.updateData([{ id: rowData.id, status: status }]);
-        
+
         // Update server
         await patch(rowData.url, {
-          employee: { status: status }
+          employee: { status: status },
         });
       } catch (error) {
         console.error('Failed to update status:', error);
@@ -322,7 +322,7 @@ export class EmployeeModule extends ComponentBase {
   onRestaurantSelected(restaurant) {
     // Update any UI elements that depend on restaurant selection
     const restaurantNameElements = this.findAll('.current-restaurant-name');
-    restaurantNameElements.forEach(el => {
+    restaurantNameElements.forEach((el) => {
       el.textContent = restaurant.name;
     });
   }
@@ -340,19 +340,19 @@ export class EmployeeModule extends ComponentBase {
         body: formData,
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content
-        }
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
+        },
       });
 
       if (response.ok) {
         this.showNotification('Employee saved successfully', 'success');
-        
+
         // Refresh tables if needed
         this.tableManager.refreshTable('#restaurant-employee-table');
-        
-        EventBus.emit(AppEvents.DATA_SAVE, { 
-          type: 'employee', 
-          form: form 
+
+        EventBus.emit(AppEvents.DATA_SAVE, {
+          type: 'employee',
+          form: form,
         });
       } else {
         throw new Error(`HTTP ${response.status}`);
@@ -371,7 +371,7 @@ export class EmployeeModule extends ComponentBase {
 
     // Refresh tables
     this.tableManager.refreshTable('#restaurant-employee-table');
-    
+
     // Refresh forms
     this.formManager.refresh();
   }
@@ -383,8 +383,8 @@ export class EmployeeModule extends ComponentBase {
     // Clean up child components
     super.destroy();
 
-    EventBus.emit(AppEvents.COMPONENT_DESTROY, { 
-      component: 'EmployeeModule' 
+    EventBus.emit(AppEvents.COMPONENT_DESTROY, {
+      component: 'EmployeeModule',
     });
   }
 

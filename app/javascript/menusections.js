@@ -1,177 +1,228 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
 
 export function initMenusections() {
+  if ($('#menusection_menu_id').length) {
+    initTomSelectIfNeeded('#menusection_menu_id', {});
+  }
+  if ($('#menusection_restricted').length) {
+    initTomSelectIfNeeded('#menusection_restricted', {});
+  }
 
-    if ($("#menusection_menu_id").length) {
-      initTomSelectIfNeeded("#menusection_menu_id",{
+  if ($('#sectionTabs').length) {
+    const pillsTab = document.querySelector('#sectionTabs');
+    const pills = pillsTab.querySelectorAll('button[data-bs-toggle="tab"]');
+
+    pills.forEach((pill) => {
+      pill.addEventListener('shown.bs.tab', (event) => {
+        const { target } = event;
+        const { id: targetId } = target;
+        savePillId(targetId);
       });
+    });
+
+    const savePillId = (selector) => {
+      localStorage.setItem('activeSectionPillId', selector);
+    };
+
+    const getPillId = () => {
+      const activePillId = localStorage.getItem('activeSectionPillId');
+      // if local storage item is null, show default tab
+      if (!activePillId) return;
+      // call 'show' function
+      const someTabTriggerEl = document.querySelector(`#${activePillId}`);
+      const tab = new bootstrap.Tab(someTabTriggerEl);
+      tab.show();
+    };
+    // get pill id on load
+    getPillId();
+  }
+
+  if ($('#menu-menusection-table').length) {
+    function status(cell, formatterParams) {
+      return cell.getRow().getData('data').status.toUpperCase();
     }
-    if ($("#menusection_restricted").length) {
-      initTomSelectIfNeeded("#menusection_restricted",{
-      });
+    function link(cell, formatterParams) {
+      const id = cell.getValue();
+      const name = cell.getRow();
+      const rowData = cell.getRow().getData('data').name;
+
+      // Get menu and restaurant ID from table element for nested routes
+      const tableElement = cell.getTable().element;
+      const menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
+      const restaurantId = tableElement.dataset.restaurant || tableElement.dataset.bsRestaurant;
+
+      if (menuId && restaurantId) {
+        return (
+          "<a class='link-dark' href='/restaurants/" +
+          restaurantId +
+          '/menus/' +
+          menuId +
+          '/menusections/' +
+          id +
+          "/edit'>" +
+          rowData +
+          '</a>'
+        );
+      } else {
+        // Fallback to old route if context not available
+        return "<a class='link-dark' href='/menusections/" + id + "/edit'>" + rowData + '</a>';
+      }
     }
-
-    if ($("#sectionTabs").length) {
-        const pillsTab = document.querySelector('#sectionTabs');
-        const pills = pillsTab.querySelectorAll('button[data-bs-toggle="tab"]');
-
-        pills.forEach(pill => {
-            pill.addEventListener('shown.bs.tab', (event) => {
-                const { target } = event;
-                const { id: targetId } = target;
-                savePillId(targetId);
-            });
-        });
-
-        const savePillId = (selector) => {
-            localStorage.setItem('activeSectionPillId', selector);
-        };
-
-        const getPillId = () => {
-            const activePillId = localStorage.getItem('activeSectionPillId');
-            // if local storage item is null, show default tab
-            if (!activePillId) return;
-            // call 'show' function
-            const someTabTriggerEl = document.querySelector(`#${activePillId}`)
-            const tab = new bootstrap.Tab(someTabTriggerEl);
-            tab.show();
-        };
-        // get pill id on load
-        getPillId();
-    }
-
-    if ($("#menu-menusection-table").length) {
-        function status(cell, formatterParams){
-            return cell.getRow().getData("data").status.toUpperCase();
-        }
-        function link(cell, formatterParams){
-            var id = cell.getValue();
-            var name = cell.getRow();
-            var rowData = cell.getRow().getData("data").name;
-            
-            // Get menu and restaurant ID from table element for nested routes
-            var tableElement = cell.getTable().element;
-            var menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
-            var restaurantId = tableElement.dataset.restaurant || tableElement.dataset.bsRestaurant;
-            
-            if (menuId && restaurantId) {
-                return "<a class='link-dark' href='/restaurants/"+restaurantId+"/menus/"+menuId+"/menusections/"+id+"/edit'>"+rowData+"</a>";
-            } else {
-                // Fallback to old route if context not available
-                return "<a class='link-dark' href='/menusections/"+id+"/edit'>"+rowData+"</a>";
-            }
-        }
-        const menusectionTableElement = document.getElementById('menu-menusection-table');
-        if (!menusectionTableElement) return; // Exit if element doesn't exist
-        const menuId = menusectionTableElement.getAttribute('data-bs-menu');
-        const restaurantId = menusectionTableElement.getAttribute('data-bs-restaurant');
-        var menusectionTable = new Tabulator("#menu-menusection-table", {
-          dataLoader: false,
-          maxHeight:"100%",
-          responsiveLayout:true,
-          layout:"fitColumns",
-          ajaxURL: '/restaurants/'+restaurantId+'/menus/'+menuId+'/menusections.json',
-          initialSort:[
-            {column:"sequence", dir:"asc"},
-          ],
-          movableRows:true,
-          columns: [
-          {
-              formatter:"rowSelection", titleFormatter:"rowSelection", width: 30, frozen:true, responsive:0, headerHozAlign:"left", hozAlign:"left", headerSort:false, cellClick:function(e, cell) {
-                  cell.getRow().toggleSelect();
-              }
+    const menusectionTableElement = document.getElementById('menu-menusection-table');
+    if (!menusectionTableElement) return; // Exit if element doesn't exist
+    const menuId = menusectionTableElement.getAttribute('data-bs-menu');
+    const restaurantId = menusectionTableElement.getAttribute('data-bs-restaurant');
+    const menusectionTable = new Tabulator('#menu-menusection-table', {
+      dataLoader: false,
+      maxHeight: '100%',
+      responsiveLayout: true,
+      layout: 'fitColumns',
+      ajaxURL: '/restaurants/' + restaurantId + '/menus/' + menuId + '/menusections.json',
+      initialSort: [{ column: 'sequence', dir: 'asc' }],
+      movableRows: true,
+      columns: [
+        {
+          formatter: 'rowSelection',
+          titleFormatter: 'rowSelection',
+          width: 30,
+          frozen: true,
+          responsive: 0,
+          headerHozAlign: 'left',
+          hozAlign: 'left',
+          headerSort: false,
+          cellClick: function (e, cell) {
+            cell.getRow().toggleSelect();
           },
-          { rowHandle:true, formatter:"handle", headerSort:false, frozen:true, responsive:0, width:30, minWidth:30 },
-          { title:"", field:"sequence", visible:false, formatter:"rownum", hozAlign:"right", headerHozAlign:"right", headerSort:false },
-          {title:"Name", field:"id", responsive:0, formatter:link, hozAlign:"left"},
+        },
+        {
+          rowHandle: true,
+          formatter: 'handle',
+          headerSort: false,
+          frozen: true,
+          responsive: 0,
+          width: 30,
+          minWidth: 30,
+        },
+        {
+          title: '',
+          field: 'sequence',
+          visible: false,
+          formatter: 'rownum',
+          hozAlign: 'right',
+          headerHozAlign: 'right',
+          headerSort: false,
+        },
+        { title: 'Name', field: 'id', responsive: 0, formatter: link, hozAlign: 'left' },
 
-          {title: 'Available', field: 'fromhour', mutator: (value, data) => String(data.fromhour).padStart(2, '0') + ':' + String(data.frommin).padStart(2, '0')+' - '+String(data.tohour).padStart(2, '0') + ':' + String(data.tomin).padStart(2, '0'), hozAlign:"right", headerHozAlign:"right" },
-          {title: 'Restricted', field: 'restricted', hozAlign:"right", headerHozAlign:"right" },
-          {title:"Status", field:"status", formatter:status, responsive:0, minWidth: 100, hozAlign:"right", headerHozAlign:"right" }
-          ],
-          locale: true,
-          langs: {
-            "en": {
-              "pagination": {
-                "first": "First",
-                "first_title": "First Page",
-                "last": "Last",
-                "last_title": "Last Page",
-                "prev": "Prev",
-                "prev_title": "Previous Page",
-                "next": "Next",
-                "next_title": "Next Page"
-              },
-              "headerFilters": {
-                "default": "filter column..."
-              },
-              "columns": {
-                "id": "Name",
-                "status": "Status",
-                "fromhour": "Available",
-                "restricted": "Restricted"
-              }
-            },
-            "it": {
-              "columns": {
-                "id": "Nome",
-                "status": "Stato",
-                "fromhour": "Disponibile",
-                "restricted": "Limitato"
-              }
-            }
-          }
+        {
+          title: 'Available',
+          field: 'fromhour',
+          mutator: (value, data) =>
+            String(data.fromhour).padStart(2, '0') +
+            ':' +
+            String(data.frommin).padStart(2, '0') +
+            ' - ' +
+            String(data.tohour).padStart(2, '0') +
+            ':' +
+            String(data.tomin).padStart(2, '0'),
+          hozAlign: 'right',
+          headerHozAlign: 'right',
+        },
+        { title: 'Restricted', field: 'restricted', hozAlign: 'right', headerHozAlign: 'right' },
+        {
+          title: 'Status',
+          field: 'status',
+          formatter: status,
+          responsive: 0,
+          minWidth: 100,
+          hozAlign: 'right',
+          headerHozAlign: 'right',
+        },
+      ],
+      locale: true,
+      langs: {
+        en: {
+          pagination: {
+            first: 'First',
+            first_title: 'First Page',
+            last: 'Last',
+            last_title: 'Last Page',
+            prev: 'Prev',
+            prev_title: 'Previous Page',
+            next: 'Next',
+            next_title: 'Next Page',
+          },
+          headerFilters: {
+            default: 'filter column...',
+          },
+          columns: {
+            id: 'Name',
+            status: 'Status',
+            fromhour: 'Available',
+            restricted: 'Restricted',
+          },
+        },
+        it: {
+          columns: {
+            id: 'Nome',
+            status: 'Stato',
+            fromhour: 'Disponibile',
+            restricted: 'Limitato',
+          },
+        },
+      },
+    });
+    menusectionTable.on('rowMoved', function (row) {
+      const rows = menusectionTable.getRows();
+      for (let i = 0; i < rows.length; i++) {
+        menusectionTable.updateData([
+          { id: rows[i].getData().id, sequence: rows[i].getPosition() },
+        ]);
+        const mus = {
+          menusection: {
+            sequence: rows[i].getPosition(),
+          },
+        };
+        fetch(rows[i].getData().url, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector("meta[name='csrf-token']").content,
+          },
+          body: JSON.stringify(mus),
         });
-        menusectionTable.on("rowMoved", function(row){
-            const rows = menusectionTable.getRows();
-            for (let i = 0; i < rows.length; i++) {
-                menusectionTable.updateData([{id:rows[i].getData().id, sequence:rows[i].getPosition()}]);
-                let mus = {
-                  'menusection': {
-                      'sequence': rows[i].getPosition()
-                  }
-                };
-                fetch(rows[i].getData().url, {
-                    method: 'PATCH',
-                    headers:  {
-                      "Content-Type": "application/json",
-                      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                    },
-                    body: JSON.stringify(mus)
-                });
-            }
-        });
-        menusectionTable.on("rowSelectionChanged", function(data, rows){
-          if( data.length > 0 ) {
-            document.getElementById("menusection-actions").disabled = false;
-          } else {
-            document.getElementById("menusection-actions").disabled = true;
-          }
-        });
-        document.getElementById("activate-menusection").addEventListener("click", function(){
-            const rows = menusectionTable.getSelectedData();
-            for (let i = 0; i < rows.length; i++) {
-                menusectionTable.updateData([{id:rows[i].id, status:'active'}]);
-                let r = {
-                  'menusection': {
-                      'status': 'active'
-                  }
-                };
-                patch( rows[i].url, r );
-            }
-        });
-        document.getElementById("deactivate-menusection").addEventListener("click", function(){
-            const rows = menusectionTable.getSelectedData();
-            for (let i = 0; i < rows.length; i++) {
-                menusectionTable.updateData([{id:rows[i].id, status:'inactive'}]);
-                let r = {
-                  'menusection': {
-                      'status': 'inactive'
-                  }
-                };
-                patch( rows[i].url, r );
-            }
-        });
-    }
+      }
+    });
+    menusectionTable.on('rowSelectionChanged', function (data, rows) {
+      if (data.length > 0) {
+        document.getElementById('menusection-actions').disabled = false;
+      } else {
+        document.getElementById('menusection-actions').disabled = true;
+      }
+    });
+    document.getElementById('activate-menusection').addEventListener('click', function () {
+      const rows = menusectionTable.getSelectedData();
+      for (let i = 0; i < rows.length; i++) {
+        menusectionTable.updateData([{ id: rows[i].id, status: 'active' }]);
+        const r = {
+          menusection: {
+            status: 'active',
+          },
+        };
+        patch(rows[i].url, r);
+      }
+    });
+    document.getElementById('deactivate-menusection').addEventListener('click', function () {
+      const rows = menusectionTable.getSelectedData();
+      for (let i = 0; i < rows.length; i++) {
+        menusectionTable.updateData([{ id: rows[i].id, status: 'inactive' }]);
+        const r = {
+          menusection: {
+            status: 'inactive',
+          },
+        };
+        patch(rows[i].url, r);
+      }
+    });
+  }
 }
-

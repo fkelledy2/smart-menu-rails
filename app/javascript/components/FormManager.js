@@ -12,7 +12,7 @@ export class FormManager extends ComponentBase {
     this.defaultSelectOptions = {
       allowEmptyOption: true,
       create: false,
-      sortField: 'text'
+      sortField: 'text',
     };
   }
 
@@ -27,7 +27,7 @@ export class FormManager extends ComponentBase {
     this.initializeSelects();
     this.initializeValidation();
     this.bindFormEvents();
-    
+
     return this;
   }
 
@@ -37,14 +37,14 @@ export class FormManager extends ComponentBase {
   initializeSelects() {
     // Find all elements with data-tom-select attribute
     const selectElements = this.findAll('[data-tom-select]');
-    
-    selectElements.forEach(element => {
+
+    selectElements.forEach((element) => {
       this.initializeSelect(element);
     });
 
     // Also initialize standard select elements that aren't already TomSelect
     const standardSelects = this.findAll('select:not([data-tom-select])');
-    standardSelects.forEach(element => {
+    standardSelects.forEach((element) => {
       if (!element.tomselect && !element.hasAttribute('data-skip-tomselect')) {
         this.initializeSelect(element);
       }
@@ -61,15 +61,15 @@ export class FormManager extends ComponentBase {
 
     try {
       // Parse options from data attribute
-      const dataOptions = element.dataset.tomSelectOptions 
-        ? JSON.parse(element.dataset.tomSelectOptions) 
+      const dataOptions = element.dataset.tomSelectOptions
+        ? JSON.parse(element.dataset.tomSelectOptions)
         : {};
 
       // Merge options: defaults < data attributes < custom options
       const options = {
         ...this.defaultSelectOptions,
         ...dataOptions,
-        ...customOptions
+        ...customOptions,
       };
 
       // Special handling for different select types
@@ -83,7 +83,7 @@ export class FormManager extends ComponentBase {
 
       // Create TomSelect instance
       const tomSelect = new window.TomSelect(element, options);
-      
+
       // Track the instance
       this.selects.set(element, tomSelect);
 
@@ -141,9 +141,9 @@ export class FormManager extends ComponentBase {
     try {
       const response = await fetch(`${url}?q=${encodeURIComponent(query)}`, {
         headers: {
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-        }
+          Accept: 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
       });
 
       if (!response.ok) {
@@ -163,8 +163,8 @@ export class FormManager extends ComponentBase {
    */
   initializeValidation() {
     const forms = this.findAll('form[data-validate]');
-    
-    forms.forEach(form => {
+
+    forms.forEach((form) => {
       this.initializeFormValidation(form);
     });
   }
@@ -180,7 +180,7 @@ export class FormManager extends ComponentBase {
     const validator = {
       form,
       rules: this.parseValidationRules(form),
-      errors: new Map()
+      errors: new Map(),
     };
 
     this.validators.set(form, validator);
@@ -195,7 +195,7 @@ export class FormManager extends ComponentBase {
 
     // Real-time validation
     const inputs = form.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
+    inputs.forEach((input) => {
       this.addEventListener(input, 'blur', () => {
         this.validateField(validator, input);
       });
@@ -207,9 +207,9 @@ export class FormManager extends ComponentBase {
    */
   parseValidationRules(form) {
     const rules = new Map();
-    
+
     const fields = form.querySelectorAll('[data-validate-rules]');
-    fields.forEach(field => {
+    fields.forEach((field) => {
       try {
         const fieldRules = JSON.parse(field.dataset.validateRules);
         rules.set(field.name || field.id, fieldRules);
@@ -229,7 +229,7 @@ export class FormManager extends ComponentBase {
     validator.errors.clear();
 
     const inputs = validator.form.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
+    inputs.forEach((input) => {
       if (!this.validateField(validator, input)) {
         isValid = false;
       }
@@ -245,7 +245,7 @@ export class FormManager extends ComponentBase {
   validateField(validator, field) {
     const fieldName = field.name || field.id;
     const rules = validator.rules.get(fieldName);
-    
+
     if (!rules) {
       return true;
     }
@@ -295,7 +295,7 @@ export class FormManager extends ComponentBase {
   displayValidationErrors(validator) {
     // Clear previous errors
     const errorElements = validator.form.querySelectorAll('.validation-error');
-    errorElements.forEach(el => el.remove());
+    errorElements.forEach((el) => el.remove());
 
     // Show new errors
     validator.errors.forEach((errors, fieldName) => {
@@ -311,13 +311,13 @@ export class FormManager extends ComponentBase {
    */
   showFieldError(field, message) {
     this.clearFieldError(field);
-    
+
     field.classList.add('is-invalid');
-    
+
     const errorElement = document.createElement('div');
     errorElement.className = 'validation-error text-danger small mt-1';
     errorElement.textContent = message;
-    
+
     field.parentNode.appendChild(errorElement);
   }
 
@@ -326,7 +326,7 @@ export class FormManager extends ComponentBase {
    */
   clearFieldError(field) {
     field.classList.remove('is-invalid');
-    
+
     const existingError = field.parentNode.querySelector('.validation-error');
     if (existingError) {
       existingError.remove();
@@ -339,13 +339,13 @@ export class FormManager extends ComponentBase {
   bindFormEvents() {
     // Auto-save functionality
     const autoSaveForms = this.findAll('form[data-auto-save]');
-    autoSaveForms.forEach(form => {
+    autoSaveForms.forEach((form) => {
       this.initializeAutoSave(form);
     });
 
     // Form reset handling
     const forms = this.findAll('form');
-    forms.forEach(form => {
+    forms.forEach((form) => {
       this.addEventListener(form, 'reset', () => {
         // Reset TomSelect instances
         this.selects.forEach((tomSelect, element) => {
@@ -353,7 +353,7 @@ export class FormManager extends ComponentBase {
             tomSelect.clear();
           }
         });
-        
+
         // Clear validation errors
         const validator = this.validators.get(form);
         if (validator) {
@@ -379,7 +379,7 @@ export class FormManager extends ComponentBase {
     };
 
     const inputs = form.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
+    inputs.forEach((input) => {
       this.addEventListener(input, 'input', debouncedSave);
       this.addEventListener(input, 'change', debouncedSave);
     });
@@ -396,8 +396,8 @@ export class FormManager extends ComponentBase {
         body: formData,
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content
-        }
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
+        },
       });
 
       if (response.ok) {
@@ -434,7 +434,7 @@ export class FormManager extends ComponentBase {
    */
   destroy() {
     // Destroy all TomSelect instances
-    this.selects.forEach(tomSelect => {
+    this.selects.forEach((tomSelect) => {
       try {
         tomSelect.destroy();
       } catch (error) {

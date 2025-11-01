@@ -31,9 +31,9 @@ export class MenuSectionModule extends ComponentBase {
     this.initializeTabs();
     this.bindEvents();
 
-    EventBus.emit(AppEvents.COMPONENT_READY, { 
-      component: 'MenuSectionModule', 
-      instance: this 
+    EventBus.emit(AppEvents.COMPONENT_READY, {
+      component: 'MenuSectionModule',
+      instance: this,
     });
 
     return this;
@@ -44,7 +44,7 @@ export class MenuSectionModule extends ComponentBase {
    */
   initializeForms() {
     const formConfig = getFormConfig('menusection');
-    
+
     this.formManager = new FormManager(this.container);
     this.addChildComponent('formManager', this.formManager);
     this.formManager.init();
@@ -56,7 +56,7 @@ export class MenuSectionModule extends ComponentBase {
 
     this.formManager.on('select:initialized', (event) => {
       const { element, tomSelect } = event.detail;
-      
+
       // Special handling for menu select
       if (element.id === 'menusection_menu_id') {
         tomSelect.on('change', (value) => {
@@ -80,107 +80,107 @@ export class MenuSectionModule extends ComponentBase {
       const menuId = menusectionTable.dataset.menu;
       if (menuId) {
         const restaurantId = this.getRestaurantId();
-        const ajaxURL = restaurantId ? 
-          `/restaurants/${restaurantId}/menus/${menuId}/menusections.json` :
-          `/menus/${menuId}/menusections.json`;
-        
+        const ajaxURL = restaurantId
+          ? `/restaurants/${restaurantId}/menus/${menuId}/menusections.json`
+          : `/menus/${menuId}/menusections.json`;
+
         const table = this.tableManager.initializeTable(menusectionTable, {
           ajaxURL: ajaxURL,
-          layout: "fitColumns",
+          layout: 'fitColumns',
           movableRows: true,
-          initialSort: [{ column: "sequence", dir: "asc" }],
+          initialSort: [{ column: 'sequence', dir: 'asc' }],
           columns: [
             {
-              formatter: "rowSelection", 
-              titleFormatter: "rowSelection", 
-              width: 30, 
-              frozen: true, 
-              responsive: 0, 
-              headerHozAlign: "left", 
-              hozAlign: "left", 
+              formatter: 'rowSelection',
+              titleFormatter: 'rowSelection',
+              width: 30,
+              frozen: true,
+              responsive: 0,
+              headerHozAlign: 'left',
+              hozAlign: 'left',
               headerSort: false,
-              cellClick: (e, cell) => cell.getRow().toggleSelect()
-            },
-            { 
-              rowHandle: true, 
-              formatter: "handle", 
-              headerSort: false, 
-              frozen: true, 
-              responsive: 0, 
-              width: 30, 
-              minWidth: 30 
-            },
-            { 
-              title: "", 
-              field: "sequence", 
-              visible: false, 
-              formatter: "rownum", 
-              hozAlign: "right", 
-              headerHozAlign: "right", 
-              headerSort: false 
+              cellClick: (e, cell) => cell.getRow().toggleSelect(),
             },
             {
-              title: "Name", 
-              field: "id", 
-              responsive: 0, 
-              formatter: this.linkFormatter, 
-              hozAlign: "left"
+              rowHandle: true,
+              formatter: 'handle',
+              headerSort: false,
+              frozen: true,
+              responsive: 0,
+              width: 30,
+              minWidth: 30,
             },
             {
-              title: 'Available', 
-              field: 'fromhour', 
-              mutator: this.availabilityMutator, 
-              hozAlign: "right", 
-              headerHozAlign: "right"
+              title: '',
+              field: 'sequence',
+              visible: false,
+              formatter: 'rownum',
+              hozAlign: 'right',
+              headerHozAlign: 'right',
+              headerSort: false,
             },
             {
-              title: 'Restricted', 
-              field: 'restricted', 
-              hozAlign: "right", 
-              headerHozAlign: "right"
+              title: 'Name',
+              field: 'id',
+              responsive: 0,
+              formatter: this.linkFormatter,
+              hozAlign: 'left',
             },
             {
-              title: "Status", 
-              field: "status", 
-              formatter: this.statusFormatter, 
-              responsive: 0, 
-              minWidth: 100, 
-              hozAlign: "right", 
-              headerHozAlign: "right"
-            }
+              title: 'Available',
+              field: 'fromhour',
+              mutator: this.availabilityMutator,
+              hozAlign: 'right',
+              headerHozAlign: 'right',
+            },
+            {
+              title: 'Restricted',
+              field: 'restricted',
+              hozAlign: 'right',
+              headerHozAlign: 'right',
+            },
+            {
+              title: 'Status',
+              field: 'status',
+              formatter: this.statusFormatter,
+              responsive: 0,
+              minWidth: 100,
+              hozAlign: 'right',
+              headerHozAlign: 'right',
+            },
           ],
           locale: true,
           langs: {
-            "en": {
-              "pagination": {
-                "first": "First",
-                "first_title": "First Page",
-                "last": "Last",
-                "last_title": "Last Page",
-                "prev": "Prev",
-                "prev_title": "Previous Page",
-                "next": "Next",
-                "next_title": "Next Page"
+            en: {
+              pagination: {
+                first: 'First',
+                first_title: 'First Page',
+                last: 'Last',
+                last_title: 'Last Page',
+                prev: 'Prev',
+                prev_title: 'Previous Page',
+                next: 'Next',
+                next_title: 'Next Page',
               },
-              "headerFilters": {
-                "default": "filter column..."
+              headerFilters: {
+                default: 'filter column...',
               },
-              "columns": {
-                "id": "Name",
-                "status": "Status",
-                "fromhour": "Available",
-                "restricted": "Restricted"
-              }
+              columns: {
+                id: 'Name',
+                status: 'Status',
+                fromhour: 'Available',
+                restricted: 'Restricted',
+              },
             },
-            "it": {
-              "columns": {
-                "id": "Nome",
-                "status": "Stato",
-                "fromhour": "Disponibile",
-                "restricted": "Limitato"
-              }
-            }
-          }
+            it: {
+              columns: {
+                id: 'Nome',
+                status: 'Stato',
+                fromhour: 'Disponibile',
+                restricted: 'Limitato',
+              },
+            },
+          },
         });
 
         if (table) {
@@ -197,8 +197,8 @@ export class MenuSectionModule extends ComponentBase {
     const sectionTabs = this.find('#sectionTabs');
     if (sectionTabs) {
       const pills = sectionTabs.querySelectorAll('button[data-bs-toggle="tab"]');
-      
-      pills.forEach(pill => {
+
+      pills.forEach((pill) => {
         this.addEventListener(pill, 'shown.bs.tab', (event) => {
           const { target } = event;
           const { id: targetId } = target;
@@ -237,12 +237,12 @@ export class MenuSectionModule extends ComponentBase {
    */
   setupTableEvents(table) {
     // Row moved event
-    table.on("rowMoved", (row) => {
+    table.on('rowMoved', (row) => {
       this.updateSequences(table);
     });
 
     // Row selection changed
-    table.on("rowSelectionChanged", (data, rows) => {
+    table.on('rowSelectionChanged', (data, rows) => {
       const actionsBtn = this.find('#menusection-actions');
       if (actionsBtn) {
         actionsBtn.disabled = data.length === 0;
@@ -255,18 +255,18 @@ export class MenuSectionModule extends ComponentBase {
    */
   async updateSequences(table) {
     const rows = table.getRows();
-    
+
     for (let i = 0; i < rows.length; i++) {
       const rowData = rows[i].getData();
       const newSequence = rows[i].getPosition();
-      
+
       // Update table data
       table.updateData([{ id: rowData.id, sequence: newSequence }]);
-      
+
       // Update server
       try {
         await patch(rowData.url, {
-          menusection: { sequence: newSequence }
+          menusection: { sequence: newSequence },
         });
       } catch (error) {
         console.error('Failed to update sequence:', error);
@@ -279,7 +279,7 @@ export class MenuSectionModule extends ComponentBase {
    * Status formatter for tables
    */
   statusFormatter(cell) {
-    const status = cell.getRow().getData("data")?.status || cell.getValue();
+    const status = cell.getRow().getData('data')?.status || cell.getValue();
     return status ? status.toUpperCase() : '';
   }
 
@@ -288,15 +288,15 @@ export class MenuSectionModule extends ComponentBase {
    */
   linkFormatter(cell) {
     const id = cell.getValue();
-    const rowData = cell.getRow().getData("data");
+    const rowData = cell.getRow().getData('data');
     const name = rowData?.name || id;
-    
+
     // Get menu ID from table element for nested routes
     const tableElement = cell.getTable().element;
     const menuId = tableElement.dataset.menu || tableElement.dataset.bsMenu;
-    
+
     const restaurantId = this.getRestaurantId();
-    
+
     if (restaurantId && menuId) {
       return `<a class='link-dark' href='/restaurants/${restaurantId}/menus/${menuId}/menusections/${id}/edit'>${name}</a>`;
     } else if (menuId) {
@@ -315,7 +315,7 @@ export class MenuSectionModule extends ComponentBase {
     const fromMin = String(data.frommin || 0).padStart(2, '0');
     const toHour = String(data.tohour || 23).padStart(2, '0');
     const toMin = String(data.tomin || 59).padStart(2, '0');
-    
+
     return `${fromHour}:${fromMin} - ${toHour}:${toMin}`;
   }
 
@@ -323,17 +323,17 @@ export class MenuSectionModule extends ComponentBase {
    * Update related data when menu changes
    */
   updateRelatedData(menuId) {
-    EventBus.emit(AppEvents.MENU_SELECT, { 
-      menu: { id: menuId } 
+    EventBus.emit(AppEvents.MENU_SELECT, {
+      menu: { id: menuId },
     });
 
     // Update any dependent tables
     const menusectionTable = this.tableManager.getTable('#menu-menusection-table');
     if (menusectionTable) {
       const restaurantId = this.getRestaurantId();
-      const newUrl = restaurantId ? 
-        `/restaurants/${restaurantId}/menus/${menuId}/menusections.json` :
-        `/menus/${menuId}/menusections.json`;
+      const newUrl = restaurantId
+        ? `/restaurants/${restaurantId}/menus/${menuId}/menusections.json`
+        : `/menus/${menuId}/menusections.json`;
       menusectionTable.setData(newUrl);
     }
   }
@@ -354,7 +354,7 @@ export class MenuSectionModule extends ComponentBase {
 
     // Handle form submissions
     const menusectionForms = this.findAll('form[data-menusection-form]');
-    menusectionForms.forEach(form => {
+    menusectionForms.forEach((form) => {
       this.addEventListener(form, 'submit', (e) => {
         this.handleFormSubmit(e, form);
       });
@@ -373,13 +373,13 @@ export class MenuSectionModule extends ComponentBase {
   bindBulkActions() {
     const activateBtn = this.find('#activate-menusection');
     const deactivateBtn = this.find('#deactivate-menusection');
-    
+
     if (activateBtn) {
       this.addEventListener(activateBtn, 'click', () => {
         this.bulkUpdateStatus('active');
       });
     }
-    
+
     if (deactivateBtn) {
       this.addEventListener(deactivateBtn, 'click', () => {
         this.bulkUpdateStatus('inactive');
@@ -395,15 +395,15 @@ export class MenuSectionModule extends ComponentBase {
     if (!table) return;
 
     const selectedRows = table.getSelectedData();
-    
+
     for (const rowData of selectedRows) {
       try {
         // Update table data
         table.updateData([{ id: rowData.id, status: status }]);
-        
+
         // Update server
         await patch(rowData.url, {
-          menusection: { status: status }
+          menusection: { status: status },
         });
       } catch (error) {
         console.error('Failed to update status:', error);
@@ -412,7 +412,10 @@ export class MenuSectionModule extends ComponentBase {
     }
 
     if (selectedRows.length > 0) {
-      this.showNotification(`Updated ${selectedRows.length} menu section(s) to ${status}`, 'success');
+      this.showNotification(
+        `Updated ${selectedRows.length} menu section(s) to ${status}`,
+        'success'
+      );
     }
   }
 
@@ -422,13 +425,13 @@ export class MenuSectionModule extends ComponentBase {
   onMenuSelected(menu) {
     // Update any UI elements that depend on menu selection
     const menuNameElements = this.findAll('.current-menu-name');
-    menuNameElements.forEach(el => {
+    menuNameElements.forEach((el) => {
       el.textContent = menu.name;
     });
 
     // Update breadcrumbs
     const breadcrumbElements = this.findAll('.menu-breadcrumb');
-    breadcrumbElements.forEach(el => {
+    breadcrumbElements.forEach((el) => {
       el.textContent = menu.name;
       el.href = `/menus/${menu.id}`;
     });
@@ -447,19 +450,19 @@ export class MenuSectionModule extends ComponentBase {
         body: formData,
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content
-        }
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
+        },
       });
 
       if (response.ok) {
         this.showNotification('Menu section saved successfully', 'success');
-        
+
         // Refresh tables if needed
         this.tableManager.refreshTable('#menu-menusection-table');
-        
-        EventBus.emit(AppEvents.DATA_SAVE, { 
-          type: 'menusection', 
-          form: form 
+
+        EventBus.emit(AppEvents.DATA_SAVE, {
+          type: 'menusection',
+          form: form,
         });
       } else {
         throw new Error(`HTTP ${response.status}`);
@@ -478,10 +481,10 @@ export class MenuSectionModule extends ComponentBase {
 
     // Refresh tables
     this.tableManager.refreshTable('#menu-menusection-table');
-    
+
     // Refresh forms
     this.formManager.refresh();
-    
+
     // Restore active tab
     this.restoreActiveTab();
   }
@@ -494,22 +497,22 @@ export class MenuSectionModule extends ComponentBase {
     if (window.RestaurantContext) {
       return window.RestaurantContext.getRestaurantId(this.container);
     }
-    
+
     // Fallback to basic detection for backward compatibility
     const pathMatch = window.location.pathname.match(/\/restaurants\/(\d+)/);
     if (pathMatch) {
       return pathMatch[1];
     }
-    
+
     const restaurantElement = this.find('[data-restaurant-id]');
     if (restaurantElement) {
       return restaurantElement.dataset.restaurantId;
     }
-    
+
     if (window.currentRestaurant) {
       return window.currentRestaurant.id;
     }
-    
+
     return null;
   }
 
@@ -520,8 +523,8 @@ export class MenuSectionModule extends ComponentBase {
     // Clean up child components
     super.destroy();
 
-    EventBus.emit(AppEvents.COMPONENT_DESTROY, { 
-      component: 'MenuSectionModule' 
+    EventBus.emit(AppEvents.COMPONENT_DESTROY, {
+      component: 'MenuSectionModule',
     });
   }
 

@@ -1,6 +1,6 @@
 /**
  * Smart Restaurant ID Detection Utility
- * 
+ *
  * Provides intelligent restaurant context detection across the application
  * with multiple fallback strategies and caching for performance.
  */
@@ -11,10 +11,10 @@ class RestaurantContext {
     this.cacheTimeout = 5 * 60 * 1000; // 5 minutes
     this.observers = new Set();
     this.currentRestaurantId = null;
-    
+
     // Initialize detection on construction
     this.detectRestaurantId();
-    
+
     // Set up URL change detection for SPAs
     this.setupUrlChangeDetection();
   }
@@ -27,27 +27,27 @@ class RestaurantContext {
   getRestaurantId(context = document) {
     const cacheKey = this.getCacheKey(context);
     const cached = this.cache.get(cacheKey);
-    
+
     // Return cached value if still valid
     if (cached && Date.now() - cached.timestamp < this.cacheTimeout) {
       return cached.value;
     }
-    
+
     // Detect restaurant ID using multiple strategies
     const restaurantId = this.detectRestaurantId(context);
-    
+
     // Cache the result
     this.cache.set(cacheKey, {
       value: restaurantId,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
-    
+
     // Notify observers if restaurant changed
     if (restaurantId !== this.currentRestaurantId) {
       this.currentRestaurantId = restaurantId;
       this.notifyObservers(restaurantId);
     }
-    
+
     return restaurantId;
   }
 
@@ -105,20 +105,20 @@ class RestaurantContext {
    */
   getRestaurantIdFromUrl() {
     const patterns = [
-      /\/restaurants\/(\d+)/,           // Primary pattern
-      /restaurant_id[=:](\d+)/,         // Query parameter pattern
-      /\/r\/(\d+)/,                     // Short URL pattern
+      /\/restaurants\/(\d+)/, // Primary pattern
+      /restaurant_id[=:](\d+)/, // Query parameter pattern
+      /\/r\/(\d+)/, // Short URL pattern
     ];
 
     const url = window.location.pathname + window.location.search;
-    
+
     for (const pattern of patterns) {
       const match = url.match(pattern);
       if (match) {
         return match[1];
       }
     }
-    
+
     return null;
   }
 
@@ -133,17 +133,18 @@ class RestaurantContext {
       '[data-bs-restaurant_id]',
       '[data-restaurant]',
       '.restaurant-context[data-id]',
-      '#restaurant-context[data-id]'
+      '#restaurant-context[data-id]',
     ];
 
     for (const selector of selectors) {
       const element = context.querySelector(selector);
       if (element) {
-        const restaurantId = element.dataset.restaurantId || 
-                           element.dataset.bsRestaurant || 
-                           element.dataset.bsRestaurantId ||
-                           element.dataset.restaurant ||
-                           element.dataset.id;
+        const restaurantId =
+          element.dataset.restaurantId ||
+          element.dataset.bsRestaurant ||
+          element.dataset.bsRestaurantId ||
+          element.dataset.restaurant ||
+          element.dataset.id;
         if (restaurantId) {
           return restaurantId;
         }
@@ -162,15 +163,14 @@ class RestaurantContext {
       '#restaurant-id',
       '.current-restaurant-id',
       'body[data-restaurant-id]',
-      'html[data-restaurant-id]'
+      'html[data-restaurant-id]',
     ];
 
     for (const selector of globalSelectors) {
       const element = document.querySelector(selector);
       if (element) {
-        const restaurantId = element.textContent?.trim() || 
-                           element.dataset.restaurantId ||
-                           element.value;
+        const restaurantId =
+          element.textContent?.trim() || element.dataset.restaurantId || element.value;
         if (restaurantId) {
           return restaurantId;
         }
@@ -184,19 +184,16 @@ class RestaurantContext {
    * Get restaurant ID from JavaScript global variables
    */
   getRestaurantIdFromJsGlobals() {
-    const globalVars = [
-      'currentRestaurant',
-      'restaurantContext',
-      'appContext'
-    ];
+    const globalVars = ['currentRestaurant', 'restaurantContext', 'appContext'];
 
     for (const varName of globalVars) {
       const globalVar = window[varName];
       if (globalVar) {
-        const restaurantId = globalVar.id || 
-                           globalVar.restaurant_id || 
-                           globalVar.restaurantId ||
-                           (typeof globalVar === 'string' ? globalVar : null);
+        const restaurantId =
+          globalVar.id ||
+          globalVar.restaurant_id ||
+          globalVar.restaurantId ||
+          (typeof globalVar === 'string' ? globalVar : null);
         if (restaurantId) {
           return restaurantId;
         }
@@ -213,7 +210,7 @@ class RestaurantContext {
     const metaSelectors = [
       'meta[name="restaurant-id"]',
       'meta[name="current-restaurant"]',
-      'meta[property="restaurant:id"]'
+      'meta[property="restaurant:id"]',
     ];
 
     for (const selector of metaSelectors) {
@@ -234,9 +231,10 @@ class RestaurantContext {
    */
   getRestaurantIdFromStorage() {
     try {
-      const stored = localStorage.getItem('currentRestaurantId') ||
-                    localStorage.getItem('restaurant_id') ||
-                    sessionStorage.getItem('currentRestaurantId');
+      const stored =
+        localStorage.getItem('currentRestaurantId') ||
+        localStorage.getItem('restaurant_id') ||
+        sessionStorage.getItem('currentRestaurantId');
       return stored;
     } catch (error) {
       console.warn('Unable to access storage for restaurant ID:', error);
@@ -325,7 +323,7 @@ class RestaurantContext {
    * @param {string|null} restaurantId - New restaurant ID
    */
   notifyObservers(restaurantId) {
-    this.observers.forEach(callback => {
+    this.observers.forEach((callback) => {
       try {
         callback(restaurantId);
       } catch (error) {
@@ -362,8 +360,8 @@ class RestaurantContext {
         globalElements: this.getRestaurantIdFromGlobalElements(),
         jsGlobals: this.getRestaurantIdFromJsGlobals(),
         meta: this.getRestaurantIdFromMeta(),
-        storage: this.getRestaurantIdFromStorage()
-      }
+        storage: this.getRestaurantIdFromStorage(),
+      },
     };
   }
 }

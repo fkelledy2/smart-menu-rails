@@ -19,7 +19,7 @@ export class ComponentBase {
     if (this.isInitialized || this.isDestroyed) {
       return this;
     }
-    
+
     this.isInitialized = true;
     return this;
   }
@@ -33,7 +33,7 @@ export class ComponentBase {
     }
 
     // Clean up child components
-    this.childComponents.forEach(component => {
+    this.childComponents.forEach((component) => {
       if (component && typeof component.destroy === 'function') {
         component.destroy();
       }
@@ -66,13 +66,12 @@ export class ComponentBase {
    */
   removeEventListener(element, event, handler) {
     element.removeEventListener(event, handler);
-    
+
     const index = this.eventListeners.findIndex(
-      listener => listener.element === element && 
-                 listener.event === event && 
-                 listener.handler === handler
+      (listener) =>
+        listener.element === element && listener.event === event && listener.handler === handler
     );
-    
+
     if (index > -1) {
       this.eventListeners.splice(index, 1);
     }
@@ -143,7 +142,7 @@ export class ComponentBase {
     const event = new CustomEvent(eventName, {
       detail: { ...detail, component: this },
       bubbles: true,
-      cancelable: true
+      cancelable: true,
     });
 
     this.container.dispatchEvent(event);
@@ -164,7 +163,7 @@ export class ComponentBase {
       handler(event);
       this.removeEventListener(this.container, eventName, onceHandler);
     };
-    
+
     this.addEventListener(this.container, eventName, onceHandler, options);
   }
 }

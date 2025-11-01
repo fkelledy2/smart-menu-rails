@@ -30,9 +30,9 @@ export class RestaurantModule extends ComponentBase {
     this.initializeQRCodes();
     this.bindEvents();
 
-    EventBus.emit(AppEvents.COMPONENT_READY, { 
-      component: 'RestaurantModule', 
-      instance: this 
+    EventBus.emit(AppEvents.COMPONENT_READY, {
+      component: 'RestaurantModule',
+      instance: this,
     });
 
     return this;
@@ -43,7 +43,7 @@ export class RestaurantModule extends ComponentBase {
    */
   initializeForms() {
     const formConfig = getFormConfig('restaurant');
-    
+
     // Initialize form manager for restaurant forms
     this.formManager = new FormManager(this.container);
     this.addChildComponent('formManager', this.formManager);
@@ -56,7 +56,7 @@ export class RestaurantModule extends ComponentBase {
 
     this.formManager.on('select:initialized', (event) => {
       const { element, tomSelect } = event.detail;
-      
+
       // Special handling for country/currency selects
       if (element.id === 'restaurant_country') {
         tomSelect.on('change', (value) => {
@@ -78,7 +78,7 @@ export class RestaurantModule extends ComponentBase {
     const restaurantTable = this.find('#restaurant-table');
     if (restaurantTable) {
       const table = this.tableManager.initializeTable(restaurantTable, RESTAURANT_TABLE_CONFIG);
-      
+
       if (table) {
         // Set up table event listeners
         this.tableManager.on('table:row:click', (event) => {
@@ -106,7 +106,7 @@ export class RestaurantModule extends ComponentBase {
       { selector: '#restaurant-tracks-table', type: 'track' },
       { selector: '#restaurant-locale-table', type: 'locale' },
       { selector: '#restaurant-openinghour-table', type: 'availability' },
-      { selector: '#restaurant-tablesetting-table', type: 'tablesetting' }
+      { selector: '#restaurant-tablesetting-table', type: 'tablesetting' },
     ];
 
     relatedTables.forEach(({ selector, type }) => {
@@ -115,7 +115,7 @@ export class RestaurantModule extends ComponentBase {
         const restaurantId = tableElement.dataset.restaurantId;
         if (restaurantId) {
           this.tableManager.initializeTable(tableElement, {
-            ajaxURL: `${selector.replace('#restaurant-', '/restaurants/' + restaurantId + '/')}.json`
+            ajaxURL: `${selector.replace('#restaurant-', '/restaurants/' + restaurantId + '/')}.json`,
           });
         }
       }
@@ -127,8 +127,8 @@ export class RestaurantModule extends ComponentBase {
    */
   initializeQRCodes() {
     const qrElements = this.findAll('.qrSlug');
-    
-    qrElements.forEach(element => {
+
+    qrElements.forEach((element) => {
       this.generateQRCode(element);
     });
   }
@@ -145,54 +145,54 @@ export class RestaurantModule extends ComponentBase {
 
     try {
       const qrCode = new QRCodeStyling({
-        type: "canvas",
-        shape: "square",
+        type: 'canvas',
+        shape: 'square',
         width: 300,
         height: 300,
         data: `https://${qrHost}/smartmenus/${qrSlug}`,
         margin: 0,
         qrOptions: {
-          typeNumber: "0",
-          mode: "Byte",
-          errorCorrectionLevel: "Q"
+          typeNumber: '0',
+          mode: 'Byte',
+          errorCorrectionLevel: 'Q',
         },
         imageOptions: {
           saveAsBlob: true,
           hideBackgroundDots: true,
           imageSize: 0.4,
-          margin: 0
+          margin: 0,
         },
         dotsOptions: {
-          type: "extra-rounded",
-          color: "#000000",
-          roundSize: true
+          type: 'extra-rounded',
+          color: '#000000',
+          roundSize: true,
         },
         backgroundOptions: {
           round: 0,
-          color: "#ffffff"
+          color: '#ffffff',
         },
         image: qrIcon,
         dotsOptionsHelper: {
           colorType: {
             single: true,
-            gradient: false
+            gradient: false,
           },
           gradient: {
             linear: true,
             radial: false,
-            color1: "#6a1a4c",
-            color2: "#6a1a4c",
-            rotation: "0"
-          }
+            color1: '#6a1a4c',
+            color2: '#6a1a4c',
+            rotation: '0',
+          },
         },
         cornersSquareOptions: {
-          type: "extra-rounded",
-          color: "#000000"
+          type: 'extra-rounded',
+          color: '#000000',
         },
         cornersDotOptions: {
-          type: "extra-rounded",
-          color: "#000000"
-        }
+          type: 'extra-rounded',
+          color: '#000000',
+        },
       });
 
       // Store QR code instance
@@ -207,11 +207,10 @@ export class RestaurantModule extends ComponentBase {
         container.appendChild(qrContainer);
       }
 
-      EventBus.emit(AppEvents.DATA_LOAD, { 
-        type: 'qr_code_generated', 
-        slug: qrSlug 
+      EventBus.emit(AppEvents.DATA_LOAD, {
+        type: 'qr_code_generated',
+        slug: qrSlug,
       });
-
     } catch (error) {
       console.error('Failed to generate QR code:', error);
       this.showNotification('Failed to generate QR code', 'error');
@@ -227,14 +226,14 @@ export class RestaurantModule extends ComponentBase {
 
     // Country to currency mapping (simplified)
     const countryCurrencies = {
-      'US': 'USD',
-      'GB': 'GBP',
-      'DE': 'EUR',
-      'FR': 'EUR',
-      'JP': 'JPY',
-      'CA': 'CAD',
-      'AU': 'AUD',
-      'IE': 'EUR'
+      US: 'USD',
+      GB: 'GBP',
+      DE: 'EUR',
+      FR: 'EUR',
+      JP: 'JPY',
+      CA: 'CAD',
+      AU: 'AUD',
+      IE: 'EUR',
     };
 
     const suggestedCurrency = countryCurrencies[countryCode];
@@ -247,8 +246,8 @@ export class RestaurantModule extends ComponentBase {
    * Handle restaurant selection from table
    */
   handleRestaurantSelect(restaurantData) {
-    EventBus.emit(AppEvents.RESTAURANT_SELECT, { 
-      restaurant: restaurantData 
+    EventBus.emit(AppEvents.RESTAURANT_SELECT, {
+      restaurant: restaurantData,
     });
 
     // Update any dependent components
@@ -262,10 +261,10 @@ export class RestaurantModule extends ComponentBase {
     const relatedTableSelectors = [
       '#restaurant-menu-table',
       '#restaurant-employee-table',
-      '#restaurant-tracks-table'
+      '#restaurant-tracks-table',
     ];
 
-    relatedTableSelectors.forEach(selector => {
+    relatedTableSelectors.forEach((selector) => {
       const table = this.tableManager.getTable(selector);
       if (table) {
         // Update AJAX URL with new restaurant ID
@@ -282,8 +281,8 @@ export class RestaurantModule extends ComponentBase {
     const statsContainer = this.find('.table-stats');
     if (statsContainer && Array.isArray(data)) {
       const totalCount = data.length;
-      const activeCount = data.filter(item => item.status === 'active').length;
-      
+      const activeCount = data.filter((item) => item.status === 'active').length;
+
       statsContainer.innerHTML = `
         <div class="row">
           <div class="col-md-6">
@@ -322,7 +321,7 @@ export class RestaurantModule extends ComponentBase {
 
     // Handle form submissions
     const restaurantForms = this.findAll('form[data-restaurant-form]');
-    restaurantForms.forEach(form => {
+    restaurantForms.forEach((form) => {
       this.addEventListener(form, 'submit', (e) => {
         this.handleFormSubmit(e, form);
       });
@@ -330,7 +329,7 @@ export class RestaurantModule extends ComponentBase {
 
     // Handle QR code download buttons
     const qrDownloadButtons = this.findAll('.qr-download-btn');
-    qrDownloadButtons.forEach(button => {
+    qrDownloadButtons.forEach((button) => {
       this.addEventListener(button, 'click', (e) => {
         this.handleQRDownload(e);
       });
@@ -338,7 +337,7 @@ export class RestaurantModule extends ComponentBase {
 
     // Handle restaurant deletion
     const deleteButtons = this.findAll('.delete-restaurant-btn');
-    deleteButtons.forEach(button => {
+    deleteButtons.forEach((button) => {
       this.addEventListener(button, 'click', (e) => {
         this.handleRestaurantDelete(e);
       });
@@ -351,13 +350,13 @@ export class RestaurantModule extends ComponentBase {
   onRestaurantSelected(restaurant) {
     // Update any UI elements that depend on restaurant selection
     const restaurantNameElements = this.findAll('.current-restaurant-name');
-    restaurantNameElements.forEach(el => {
+    restaurantNameElements.forEach((el) => {
       el.textContent = restaurant.name;
     });
 
     // Update breadcrumbs
     const breadcrumbElements = this.findAll('.restaurant-breadcrumb');
-    breadcrumbElements.forEach(el => {
+    breadcrumbElements.forEach((el) => {
       el.textContent = restaurant.name;
       el.href = `/restaurants/${restaurant.id}`;
     });
@@ -376,19 +375,19 @@ export class RestaurantModule extends ComponentBase {
         body: formData,
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content
-        }
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
+        },
       });
 
       if (response.ok) {
         this.showNotification('Restaurant saved successfully', 'success');
-        
+
         // Refresh tables if needed
         this.tableManager.refreshTable('#restaurant-table');
-        
-        EventBus.emit(AppEvents.DATA_SAVE, { 
-          type: 'restaurant', 
-          form: form 
+
+        EventBus.emit(AppEvents.DATA_SAVE, {
+          type: 'restaurant',
+          form: form,
         });
       } else {
         throw new Error(`HTTP ${response.status}`);
@@ -410,12 +409,12 @@ export class RestaurantModule extends ComponentBase {
     if (qrCode) {
       qrCode.download({
         name: `qr-code-${qrSlug}`,
-        extension: "png"
+        extension: 'png',
       });
 
-      EventBus.emit(AppEvents.FEATURE_USED, { 
-        feature: 'qr_code_download', 
-        slug: qrSlug 
+      EventBus.emit(AppEvents.FEATURE_USED, {
+        feature: 'qr_code_download',
+        slug: qrSlug,
       });
     }
   }
@@ -428,7 +427,9 @@ export class RestaurantModule extends ComponentBase {
     const restaurantId = button.dataset.restaurantId;
     const restaurantName = button.dataset.restaurantName;
 
-    if (!confirm(`Are you sure you want to delete "${restaurantName}"? This action cannot be undone.`)) {
+    if (
+      !confirm(`Are you sure you want to delete "${restaurantName}"? This action cannot be undone.`)
+    ) {
       return;
     }
 
@@ -437,17 +438,17 @@ export class RestaurantModule extends ComponentBase {
         method: 'DELETE',
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content
-        }
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
+        },
       });
 
       if (response.ok) {
         this.showNotification('Restaurant deleted successfully', 'success');
         this.tableManager.refreshTable('#restaurant-table');
-        
-        EventBus.emit(AppEvents.DATA_DELETE, { 
-          type: 'restaurant', 
-          id: restaurantId 
+
+        EventBus.emit(AppEvents.DATA_DELETE, {
+          type: 'restaurant',
+          id: restaurantId,
         });
       } else {
         throw new Error(`HTTP ${response.status}`);
@@ -466,10 +467,10 @@ export class RestaurantModule extends ComponentBase {
 
     // Refresh tables
     this.tableManager.refreshTable('#restaurant-table');
-    
+
     // Refresh forms
     this.formManager.refresh();
-    
+
     // Regenerate QR codes if needed
     this.initializeQRCodes();
   }
@@ -484,8 +485,8 @@ export class RestaurantModule extends ComponentBase {
     // Clean up child components
     super.destroy();
 
-    EventBus.emit(AppEvents.COMPONENT_DESTROY, { 
-      component: 'RestaurantModule' 
+    EventBus.emit(AppEvents.COMPONENT_DESTROY, {
+      component: 'RestaurantModule',
     });
   }
 

@@ -43,18 +43,35 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:watch": "vitest --watch",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "lint:js": "eslint \"app/javascript/**/*.js\"",
+    "lint:js:fix": "eslint \"app/javascript/**/*.js\" --fix",
+    "lint:css": "stylelint \"app/assets/stylesheets/**/*.{css,scss}\"",
+    "lint:css:fix": "stylelint \"app/assets/stylesheets/**/*.{css,scss}\" --fix",
+    "format": "prettier --write \"app/javascript/**/*.js\"",
+    "format:check": "prettier --check \"app/javascript/**/*.js\"",
+    "lint": "yarn lint:js && yarn lint:css",
+    "lint:fix": "yarn lint:js:fix && yarn lint:css:fix && yarn format"
   },
   "browserslist": [
     "defaults"
   ],
   "devDependencies": {
+    "@eslint/js": "^9.39.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/user-event": "^14.6.1",
     "@vitest/ui": "2.1.8",
+    "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.4",
     "happy-dom": "15.11.7",
     "jsdom": "25.0.1",
+    "prettier": "^3.6.2",
+    "stylelint": "^16.25.0",
+    "stylelint-config-prettier-scss": "^1.0.0",
+    "stylelint-config-standard-scss": "^16.0.0",
     "vitest": "2.1.8"
   }
 }

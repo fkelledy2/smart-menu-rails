@@ -36,9 +36,9 @@ export class OcrMenuImportModule extends ComponentBase {
     this.initializeInlineEditing();
     this.bindEvents();
 
-    EventBus.emit(AppEvents.COMPONENT_READY, { 
-      component: 'OcrMenuImportModule', 
-      instance: this 
+    EventBus.emit(AppEvents.COMPONENT_READY, {
+      component: 'OcrMenuImportModule',
+      instance: this,
     });
 
     return this;
@@ -152,7 +152,7 @@ export class OcrMenuImportModule extends ComponentBase {
 
     // Handle import form submissions
     const importForms = this.findAll('form[data-ocr-import-form]');
-    importForms.forEach(form => {
+    importForms.forEach((form) => {
       this.addEventListener(form, 'submit', (e) => {
         this.handleImportSubmit(e, form);
       });
@@ -168,7 +168,8 @@ export class OcrMenuImportModule extends ComponentBase {
 
     this.dragDropManager = new DragDropManager(sectionsContainer, {
       onSectionMove: (sectionId, newPosition) => this.handleSectionMove(sectionId, newPosition),
-      onItemMove: (itemId, newSectionId, newPosition) => this.handleItemMove(itemId, newSectionId, newPosition)
+      onItemMove: (itemId, newSectionId, newPosition) =>
+        this.handleItemMove(itemId, newSectionId, newPosition),
     });
 
     this.dragDropManager.init();
@@ -186,7 +187,7 @@ export class OcrMenuImportModule extends ComponentBase {
 
     // Enable controls
     if (masterToggle) masterToggle.disabled = false;
-    sectionToggles.forEach(toggle => toggle.disabled = false);
+    sectionToggles.forEach((toggle) => (toggle.disabled = false));
 
     // Set up master toggle
     if (masterToggle) {
@@ -194,7 +195,7 @@ export class OcrMenuImportModule extends ComponentBase {
     }
 
     // Set up individual section toggles
-    sectionToggles.forEach(toggle => {
+    sectionToggles.forEach((toggle) => {
       this.setupSectionToggle(toggle, masterToggle, sectionToggles);
     });
 
@@ -213,7 +214,7 @@ export class OcrMenuImportModule extends ComponentBase {
       masterToggle.disabled = true;
 
       // Optimistically update all section toggles
-      sectionToggles.forEach(toggle => {
+      sectionToggles.forEach((toggle) => {
         toggle.checked = confirmed;
         this.updateSectionConfirmationUI(toggle);
       });
@@ -224,7 +225,7 @@ export class OcrMenuImportModule extends ComponentBase {
       } catch (error) {
         console.error('Failed to update all confirmations:', error);
         // Revert on error
-        sectionToggles.forEach(toggle => {
+        sectionToggles.forEach((toggle) => {
           toggle.checked = !confirmed;
           this.updateSectionConfirmationUI(toggle);
         });
@@ -290,7 +291,7 @@ export class OcrMenuImportModule extends ComponentBase {
     if (!masterToggle) return;
 
     const total = sectionToggles.length;
-    const checked = Array.from(sectionToggles).filter(toggle => toggle.checked).length;
+    const checked = Array.from(sectionToggles).filter((toggle) => toggle.checked).length;
 
     masterToggle.indeterminate = checked > 0 && checked < total;
     masterToggle.checked = total > 0 && checked === total;
@@ -302,13 +303,13 @@ export class OcrMenuImportModule extends ComponentBase {
   initializeInlineEditing() {
     // Section title editing
     const sectionTitles = this.findAll('.section-title-editable');
-    sectionTitles.forEach(element => {
+    sectionTitles.forEach((element) => {
       this.setupInlineEditor(element, 'section');
     });
 
     // Import title editing
     const importTitles = this.findAll('.import-title-editable');
-    importTitles.forEach(element => {
+    importTitles.forEach((element) => {
       this.setupInlineEditor(element, 'import');
     });
   }
@@ -320,7 +321,7 @@ export class OcrMenuImportModule extends ComponentBase {
     const editor = new InlineEditor(element, {
       type: type,
       onSave: (value) => this.handleInlineEdit(element, value, type),
-      onCancel: () => this.showNotification('Edit cancelled', 'info')
+      onCancel: () => this.showNotification('Edit cancelled', 'info'),
     });
 
     this.inlineEditors.set(element, editor);
@@ -337,10 +338,10 @@ export class OcrMenuImportModule extends ComponentBase {
     try {
       const data = { [field]: value };
       await patch(url, data);
-      
+
       element.textContent = value;
       this.showNotification(`${type} updated successfully`, 'success');
-      
+
       EventBus.emit('ocr:inline-edit', { element, value, type });
     } catch (error) {
       console.error('Failed to save inline edit:', error);
@@ -355,9 +356,9 @@ export class OcrMenuImportModule extends ComponentBase {
   async handleSectionMove(sectionId, newPosition) {
     try {
       await patch(`/ocr_menu_sections/${sectionId}`, {
-        ocr_menu_section: { sequence: newPosition }
+        ocr_menu_section: { sequence: newPosition },
       });
-      
+
       this.showNotification('Section order updated', 'success');
       EventBus.emit('ocr:section-moved', { sectionId, newPosition });
     } catch (error) {
@@ -372,12 +373,12 @@ export class OcrMenuImportModule extends ComponentBase {
   async handleItemMove(itemId, newSectionId, newPosition) {
     try {
       await patch(`/ocr_menu_items/${itemId}`, {
-        ocr_menu_item: { 
+        ocr_menu_item: {
           ocr_menu_section_id: newSectionId,
-          sequence: newPosition 
-        }
+          sequence: newPosition,
+        },
       });
-      
+
       this.showNotification('Item moved successfully', 'success');
       EventBus.emit('ocr:item-moved', { itemId, newSectionId, newPosition });
     } catch (error) {
@@ -394,21 +395,21 @@ export class OcrMenuImportModule extends ComponentBase {
 
     const submitButton = form.querySelector('button[type="submit"]');
     const originalText = submitButton.textContent;
-    
+
     try {
       submitButton.disabled = true;
       submitButton.textContent = 'Processing...';
-      
+
       this.showImportProgress();
-      
+
       const formData = new FormData(form);
       const response = await fetch(form.action, {
         method: 'POST',
         body: formData,
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content
-        }
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
+        },
       });
 
       if (response.ok) {
@@ -466,7 +467,7 @@ export class OcrMenuImportModule extends ComponentBase {
    */
   handleImportSuccess(result) {
     this.showNotification('Import completed successfully', 'success');
-    
+
     // Refresh the page or update the UI with new data
     if (result.redirect_url) {
       window.location.href = result.redirect_url;
@@ -474,7 +475,7 @@ export class OcrMenuImportModule extends ComponentBase {
       // Refresh current page to show updated data
       window.location.reload();
     }
-    
+
     EventBus.emit('ocr:import-success', { result });
   }
 
@@ -548,11 +549,17 @@ export class OcrMenuImportModule extends ComponentBase {
    * Bulk delete unconfirmed sections
    */
   async bulkDeleteUnconfirmed() {
-    if (!confirm('Are you sure you want to delete all unconfirmed sections? This action cannot be undone.')) {
+    if (
+      !confirm(
+        'Are you sure you want to delete all unconfirmed sections? This action cannot be undone.'
+      )
+    ) {
       return;
     }
 
-    const unconfirmedToggles = this.findAll('input.form-check-input[data-section-id]:not(:checked)');
+    const unconfirmedToggles = this.findAll(
+      'input.form-check-input[data-section-id]:not(:checked)'
+    );
     let deletedCount = 0;
 
     for (const toggle of unconfirmedToggles) {
@@ -561,8 +568,8 @@ export class OcrMenuImportModule extends ComponentBase {
         await fetch(`/ocr_menu_sections/${sectionId}`, {
           method: 'DELETE',
           headers: {
-            'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content
-          }
+            'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
+          },
         });
 
         const sectionContainer = toggle.closest('.section-container');
@@ -590,9 +597,9 @@ export class OcrMenuImportModule extends ComponentBase {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
         },
-        body: JSON.stringify({ confirmed_only: true })
+        body: JSON.stringify({ confirmed_only: true }),
       });
 
       if (response.ok) {
@@ -605,7 +612,7 @@ export class OcrMenuImportModule extends ComponentBase {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
-        
+
         this.showNotification('Export completed', 'success');
       } else {
         throw new Error('Export failed');
@@ -632,7 +639,7 @@ export class OcrMenuImportModule extends ComponentBase {
 
     // Escape: Cancel any active inline editing
     if (event.key === 'Escape') {
-      this.inlineEditors.forEach(editor => {
+      this.inlineEditors.forEach((editor) => {
         if (editor.isActive()) {
           editor.cancel();
         }
@@ -647,7 +654,7 @@ export class OcrMenuImportModule extends ComponentBase {
     // Re-initialize components for the new section
     this.initializeConfirmationToggles();
     this.initializeInlineEditing();
-    
+
     if (this.dragDropManager) {
       this.dragDropManager.refresh();
     }
@@ -671,15 +678,15 @@ export class OcrMenuImportModule extends ComponentBase {
 
     // Refresh form manager
     this.formManager.refresh();
-    
+
     // Refresh drag and drop
     if (this.dragDropManager) {
       this.dragDropManager.refresh();
     }
-    
+
     // Re-initialize confirmation toggles
     this.initializeConfirmationToggles();
-    
+
     // Re-initialize inline editing
     this.initializeInlineEditing();
   }
@@ -694,7 +701,7 @@ export class OcrMenuImportModule extends ComponentBase {
     }
 
     // Clean up inline editors
-    this.inlineEditors.forEach(editor => editor.destroy());
+    this.inlineEditors.forEach((editor) => editor.destroy());
     this.inlineEditors.clear();
 
     // Clean up progress indicator
@@ -703,8 +710,8 @@ export class OcrMenuImportModule extends ComponentBase {
     // Clean up child components
     super.destroy();
 
-    EventBus.emit(AppEvents.COMPONENT_DESTROY, { 
-      component: 'OcrMenuImportModule' 
+    EventBus.emit(AppEvents.COMPONENT_DESTROY, {
+      component: 'OcrMenuImportModule',
     });
   }
 
@@ -735,13 +742,13 @@ class DragDropManager {
 
   setupSectionDragDrop() {
     const sections = this.container.querySelectorAll('.section-container');
-    
-    sections.forEach(section => {
+
+    sections.forEach((section) => {
       const handle = section.querySelector('.section-drag-handle');
       if (!handle) return;
 
       handle.draggable = true;
-      
+
       handle.addEventListener('dragstart', (e) => {
         this.draggedElement = section;
         section.classList.add('dragging');
@@ -759,24 +766,24 @@ class DragDropManager {
     this.container.addEventListener('dragover', (e) => {
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
-      
+
       const afterElement = this.getDragAfterElement(this.container, e.clientY);
       this.showPlaceholder(afterElement);
     });
 
     this.container.addEventListener('drop', (e) => {
       e.preventDefault();
-      
+
       if (this.draggedElement && this.placeholder) {
         const newPosition = Array.from(this.container.children).indexOf(this.placeholder);
         this.container.insertBefore(this.draggedElement, this.placeholder);
-        
+
         const sectionId = this.draggedElement.dataset.sectionId;
         if (sectionId && this.options.onSectionMove) {
           this.options.onSectionMove(sectionId, newPosition);
         }
       }
-      
+
       this.removePlaceholder();
     });
   }
@@ -788,17 +795,20 @@ class DragDropManager {
 
   getDragAfterElement(container, y) {
     const draggableElements = [...container.querySelectorAll('.section-container:not(.dragging)')];
-    
-    return draggableElements.reduce((closest, child) => {
-      const box = child.getBoundingClientRect();
-      const offset = y - box.top - box.height / 2;
-      
-      if (offset < 0 && offset > closest.offset) {
-        return { offset: offset, element: child };
-      } else {
-        return closest;
-      }
-    }, { offset: Number.NEGATIVE_INFINITY }).element;
+
+    return draggableElements.reduce(
+      (closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      },
+      { offset: Number.NEGATIVE_INFINITY }
+    ).element;
   }
 
   showPlaceholder(afterElement) {
@@ -863,18 +873,18 @@ class InlineEditor {
   startEdit() {
     this.isEditing = true;
     this.originalValue = this.element.textContent.replace(/\s*✏️\s*$/, '').trim();
-    
+
     this.input = document.createElement('input');
     this.input.type = 'text';
     this.input.className = 'inline-edit-input';
     this.input.value = this.originalValue;
-    
+
     this.element.style.display = 'none';
     this.element.parentNode.insertBefore(this.input, this.element);
-    
+
     this.input.focus();
     this.input.select();
-    
+
     this.input.addEventListener('blur', () => this.save());
     this.input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
@@ -887,9 +897,9 @@ class InlineEditor {
 
   async save() {
     if (!this.isEditing) return;
-    
+
     const newValue = this.input.value.trim();
-    
+
     if (newValue !== this.originalValue) {
       try {
         if (this.options.onSave) {
@@ -900,7 +910,7 @@ class InlineEditor {
         return;
       }
     }
-    
+
     this.endEdit();
   }
 
@@ -915,7 +925,7 @@ class InlineEditor {
     if (this.input && this.input.parentNode) {
       this.input.parentNode.removeChild(this.input);
     }
-    
+
     this.element.style.display = '';
     this.isEditing = false;
     this.input = null;

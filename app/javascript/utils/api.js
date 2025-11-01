@@ -17,9 +17,9 @@ function getCSRFToken() {
 const DEFAULT_OPTIONS = {
   headers: {
     'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest'
+    'X-Requested-With': 'XMLHttpRequest',
   },
-  credentials: 'same-origin'
+  credentials: 'same-origin',
 };
 
 /**
@@ -30,7 +30,7 @@ function addCSRFToken(options) {
   if (token) {
     options.headers = {
       ...options.headers,
-      'X-CSRF-Token': token
+      'X-CSRF-Token': token,
     };
   }
   return options;
@@ -41,28 +41,28 @@ function addCSRFToken(options) {
  */
 async function handleResponse(response) {
   const contentType = response.headers.get('content-type');
-  
+
   if (!response.ok) {
     let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-    
+
     try {
       if (contentType && contentType.includes('application/json')) {
         const errorData = await response.json();
         errorMessage = errorData.message || errorData.error || errorMessage;
       } else {
-        errorMessage = await response.text() || errorMessage;
+        errorMessage = (await response.text()) || errorMessage;
       }
     } catch (e) {
       // Use default error message if parsing fails
     }
-    
+
     throw new Error(errorMessage);
   }
-  
+
   if (contentType && contentType.includes('application/json')) {
     return response.json();
   }
-  
+
   return response.text();
 }
 
@@ -73,9 +73,9 @@ export async function get(url, options = {}) {
   const requestOptions = {
     ...DEFAULT_OPTIONS,
     ...options,
-    method: 'GET'
+    method: 'GET',
   };
-  
+
   const response = await fetch(url, addCSRFToken(requestOptions));
   return handleResponse(response);
 }
@@ -87,9 +87,9 @@ export async function post(url, data = null, options = {}) {
   const requestOptions = {
     ...DEFAULT_OPTIONS,
     ...options,
-    method: 'POST'
+    method: 'POST',
   };
-  
+
   if (data) {
     if (data instanceof FormData) {
       // Remove Content-Type header for FormData (browser will set it with boundary)
@@ -99,7 +99,7 @@ export async function post(url, data = null, options = {}) {
       requestOptions.body = JSON.stringify(data);
     }
   }
-  
+
   const response = await fetch(url, addCSRFToken(requestOptions));
   return handleResponse(response);
 }
@@ -111,9 +111,9 @@ export async function put(url, data = null, options = {}) {
   const requestOptions = {
     ...DEFAULT_OPTIONS,
     ...options,
-    method: 'PUT'
+    method: 'PUT',
   };
-  
+
   if (data) {
     if (data instanceof FormData) {
       delete requestOptions.headers['Content-Type'];
@@ -122,7 +122,7 @@ export async function put(url, data = null, options = {}) {
       requestOptions.body = JSON.stringify(data);
     }
   }
-  
+
   const response = await fetch(url, addCSRFToken(requestOptions));
   return handleResponse(response);
 }
@@ -134,9 +134,9 @@ export async function patch(url, data = null, options = {}) {
   const requestOptions = {
     ...DEFAULT_OPTIONS,
     ...options,
-    method: 'PATCH'
+    method: 'PATCH',
   };
-  
+
   if (data) {
     if (data instanceof FormData) {
       delete requestOptions.headers['Content-Type'];
@@ -145,7 +145,7 @@ export async function patch(url, data = null, options = {}) {
       requestOptions.body = JSON.stringify(data);
     }
   }
-  
+
   const response = await fetch(url, addCSRFToken(requestOptions));
   return handleResponse(response);
 }
@@ -157,9 +157,9 @@ export async function del(url, options = {}) {
   const requestOptions = {
     ...DEFAULT_OPTIONS,
     ...options,
-    method: 'DELETE'
+    method: 'DELETE',
   };
-  
+
   const response = await fetch(url, addCSRFToken(requestOptions));
   return handleResponse(response);
 }
@@ -171,16 +171,16 @@ export function uploadFile(url, file, options = {}) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     const formData = new FormData();
-    
+
     formData.append('file', file);
-    
+
     // Add additional form data if provided
     if (options.data) {
-      Object.keys(options.data).forEach(key => {
+      Object.keys(options.data).forEach((key) => {
         formData.append(key, options.data[key]);
       });
     }
-    
+
     // Set up progress tracking
     if (options.onProgress) {
       xhr.upload.addEventListener('progress', (e) => {
@@ -190,7 +190,7 @@ export function uploadFile(url, file, options = {}) {
         }
       });
     }
-    
+
     // Set up completion handlers
     xhr.addEventListener('load', () => {
       if (xhr.status >= 200 && xhr.status < 300) {
@@ -204,26 +204,26 @@ export function uploadFile(url, file, options = {}) {
         reject(new Error(`Upload failed: ${xhr.status} ${xhr.statusText}`));
       }
     });
-    
+
     xhr.addEventListener('error', () => {
       reject(new Error('Upload failed: Network error'));
     });
-    
+
     xhr.addEventListener('abort', () => {
       reject(new Error('Upload aborted'));
     });
-    
+
     // Set headers
     const token = getCSRFToken();
     if (token) {
       xhr.setRequestHeader('X-CSRF-Token', token);
     }
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    
+
     // Start upload
     xhr.open('POST', url);
     xhr.send(formData);
-    
+
     // Return xhr for potential cancellation
     return xhr;
   });
@@ -249,7 +249,7 @@ export async function parallel(requests) {
         throw new Error(`Unsupported method: ${method}`);
     }
   });
-  
+
   return Promise.all(promises);
 }
 
@@ -258,10 +258,10 @@ export async function parallel(requests) {
  */
 export async function sequence(requests) {
   const results = [];
-  
+
   for (const { method, url, data, options } of requests) {
     let result;
-    
+
     switch (method.toLowerCase()) {
       case 'get':
         result = await get(url, options);
@@ -281,10 +281,10 @@ export async function sequence(requests) {
       default:
         throw new Error(`Unsupported method: ${method}`);
     }
-    
+
     results.push(result);
   }
-  
+
   return results;
 }
 
@@ -293,19 +293,19 @@ export async function sequence(requests) {
  */
 export async function withRetry(requestFn, maxRetries = 3, delay = 1000) {
   let lastError;
-  
+
   for (let i = 0; i <= maxRetries; i++) {
     try {
       return await requestFn();
     } catch (error) {
       lastError = error;
-      
+
       if (i < maxRetries) {
-        await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+        await new Promise((resolve) => setTimeout(resolve, delay * Math.pow(2, i)));
       }
     }
   }
-  
+
   throw lastError;
 }
 
@@ -316,7 +316,7 @@ export async function withTimeout(requestFn, timeout = 10000) {
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => reject(new Error('Request timeout')), timeout);
   });
-  
+
   return Promise.race([requestFn(), timeoutPromise]);
 }
 
@@ -331,14 +331,14 @@ const requestCache = new Map();
 export async function getCached(url, options = {}) {
   const cacheKey = `${url}${JSON.stringify(options)}`;
   const cached = requestCache.get(cacheKey);
-  
+
   if (cached && Date.now() - cached.timestamp < (options.cacheTime || 300000)) {
     return cached.data;
   }
-  
+
   const data = await get(url, options);
   requestCache.set(cacheKey, { data, timestamp: Date.now() });
-  
+
   return data;
 }
 
@@ -364,12 +364,15 @@ export function clearCache(pattern = null) {
 export function createClient(baseURL, defaultOptions = {}) {
   const client = {
     get: (path, options = {}) => get(`${baseURL}${path}`, { ...defaultOptions, ...options }),
-    post: (path, data, options = {}) => post(`${baseURL}${path}`, data, { ...defaultOptions, ...options }),
-    put: (path, data, options = {}) => put(`${baseURL}${path}`, data, { ...defaultOptions, ...options }),
-    patch: (path, data, options = {}) => patch(`${baseURL}${path}`, data, { ...defaultOptions, ...options }),
-    delete: (path, options = {}) => del(`${baseURL}${path}`, { ...defaultOptions, ...options })
+    post: (path, data, options = {}) =>
+      post(`${baseURL}${path}`, data, { ...defaultOptions, ...options }),
+    put: (path, data, options = {}) =>
+      put(`${baseURL}${path}`, data, { ...defaultOptions, ...options }),
+    patch: (path, data, options = {}) =>
+      patch(`${baseURL}${path}`, data, { ...defaultOptions, ...options }),
+    delete: (path, options = {}) => del(`${baseURL}${path}`, { ...defaultOptions, ...options }),
   };
-  
+
   return client;
 }
 
@@ -381,8 +384,10 @@ window.addEventListener('unhandledrejection', (event) => {
   if (event.reason && event.reason.message && event.reason.message.includes('HTTP')) {
     console.error('API Error:', event.reason.message);
     // You can emit an event here for global error handling
-    document.dispatchEvent(new CustomEvent('api:error', { 
-      detail: { error: event.reason } 
-    }));
+    document.dispatchEvent(
+      new CustomEvent('api:error', {
+        detail: { error: event.reason },
+      })
+    );
   }
 });

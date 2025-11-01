@@ -1,0 +1,9 @@
+node_modules/
+app/assets/builds/
+public/
+vendor/
+coverage/
+tmp/
+*.min.js
+*.min.css
+esbuild.config.mjs
