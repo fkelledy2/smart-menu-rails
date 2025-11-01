@@ -241,4 +241,223 @@ class MenuitemTest < ActiveSupport::TestCase
   test 'should have identity cache configured' do
     assert Menuitem.respond_to?(:cache_index)
   end
+
+  # === COMPLEX VALIDATION TESTS - EDGE CASES ===
+
+  test 'should accept zero price for free items' do
+    @menuitem.price = 0.0
+    assert @menuitem.valid?
+  end
+
+  test 'should reject negative price' do
+    @menuitem.price = -1.0
+    assert_not @menuitem.valid?
+    assert_includes @menuitem.errors[:price], 'must be greater than or equal to 0'
+  end
+
+  test 'should accept very high price' do
+    @menuitem.price = 999999.99
+    assert @menuitem.valid?
+  end
+
+  test 'should accept zero preptime' do
+    @menuitem.preptime = 0
+    assert @menuitem.valid?
+  end
+
+  test 'should reject negative preptime' do
+    @menuitem.preptime = -1
+    assert_not @menuitem.valid?
+    assert_includes @menuitem.errors[:preptime], 'must be greater than or equal to 0'
+  end
+
+  test 'should accept very high preptime' do
+    @menuitem.preptime = 999
+    assert @menuitem.valid?
+  end
+
+  test 'should accept zero calories' do
+    @menuitem.calories = 0
+    assert @menuitem.valid?
+  end
+
+  test 'should reject negative calories' do
+    @menuitem.calories = -1
+    assert_not @menuitem.valid?
+    assert_includes @menuitem.errors[:calories], 'must be greater than or equal to 0'
+  end
+
+  test 'should accept very high calories' do
+    @menuitem.calories = 9999
+    assert @menuitem.valid?
+  end
+
+  test 'should reject string for price' do
+    @menuitem.price = 'abc'
+    assert_not @menuitem.valid?
+    assert_includes @menuitem.errors[:price], 'is not a number'
+  end
+
+  test 'should reject string for preptime' do
+    @menuitem.preptime = 'abc'
+    assert_not @menuitem.valid?
+    assert_includes @menuitem.errors[:preptime], 'is not a number'
+  end
+
+  test 'should reject string for calories' do
+    @menuitem.calories = 'abc'
+    assert_not @menuitem.valid?
+    assert_includes @menuitem.errors[:calories], 'is not a number'
+  end
+
+  test 'should reject float for preptime' do
+    @menuitem.preptime = 10.5
+    assert_not @menuitem.valid?
+    assert_includes @menuitem.errors[:preptime], 'must be an integer'
+  end
+
+  test 'should reject float for calories' do
+    @menuitem.calories = 250.5
+    assert_not @menuitem.valid?
+    assert_includes @menuitem.errors[:calories], 'must be an integer'
+  end
+
+  test 'should accept float for price' do
+    @menuitem.price = 12.99
+    assert @menuitem.valid?
+  end
+
+  test 'should accept integer for price' do
+    @menuitem.price = 12
+    assert @menuitem.valid?
+  end
+
+  test 'should accept empty string name as invalid' do
+    @menuitem.name = ''
+    assert_not @menuitem.valid?
+    assert_includes @menuitem.errors[:name], "can't be blank"
+  end
+
+  test 'should accept very long name' do
+    @menuitem.name = 'A' * 255
+    assert @menuitem.valid?
+  end
+
+  test 'should accept unicode in name' do
+    @menuitem.name = 'Crème Brûlée 🍮'
+    assert @menuitem.valid?
+  end
+
+  test 'should accept special characters in name' do
+    @menuitem.name = "Chef's Special (Spicy!)"
+    assert @menuitem.valid?
+  end
+
+  test 'should handle nil description' do
+    @menuitem.description = nil
+    assert @menuitem.valid?
+  end
+
+  test 'should handle empty description' do
+    @menuitem.description = ''
+    assert @menuitem.valid?
+  end
+
+  test 'should handle very long description' do
+    @menuitem.description = 'A' * 5000
+    assert @menuitem.valid?
+  end
+
+  # === BUSINESS RULE VALIDATION TESTS ===
+
+  test 'should allow status transition from inactive to active' do
+    @menuitem.inactive!
+    @menuitem.active!
+    assert @menuitem.active?
+  end
+
+  test 'should allow status transition from active to archived' do
+    @menuitem.active!
+    @menuitem.archived!
+    assert @menuitem.archived?
+  end
+
+  test 'should allow status transition from archived to active' do
+    @menuitem.archived!
+    @menuitem.active!
+    assert @menuitem.active?
+  end
+
+  test 'should maintain price precision' do
+    @menuitem.price = 12.99
+    @menuitem.save!
+    @menuitem.reload
+    assert_equal 12.99, @menuitem.price
+  end
+
+  test 'should handle price with many decimal places' do
+    @menuitem.price = 12.999999
+    assert @menuitem.valid?
+  end
+
+  test 'should create with minimum required fields' do
+    menuitem = Menuitem.new(
+      name: 'Test Item',
+      price: 1.0,
+      preptime: 1,
+      calories: 1,
+      itemtype: :food,
+      status: :active,
+      menusection: @menusection
+    )
+    assert menuitem.valid?
+    assert menuitem.save
+  end
+
+  test 'should fail without menusection' do
+    menuitem = Menuitem.new(
+      name: 'Test Item',
+      price: 1.0,
+      preptime: 1,
+      calories: 1,
+      itemtype: :food,
+      status: :active
+    )
+    assert_not menuitem.valid?
+    assert_includes menuitem.errors[:menusection], 'must exist'
+  end
+
+  test 'should handle multiple validation errors' do
+    menuitem = Menuitem.new(
+      name: nil,
+      price: -1.0,
+      preptime: -1,
+      calories: -1,
+      itemtype: nil,
+      status: nil
+    )
+    assert_not menuitem.valid?
+    assert menuitem.errors[:name].any?
+    assert menuitem.errors[:price].any?
+    assert menuitem.errors[:preptime].any?
+    assert menuitem.errors[:calories].any?
+    assert menuitem.errors[:itemtype].any?
+    assert menuitem.errors[:status].any?
+  end
+
+  test 'should validate all numeric fields simultaneously' do
+    menuitem = Menuitem.new(
+      name: 'Test',
+      price: 'abc',
+      preptime: 'def',
+      calories: 'ghi',
+      itemtype: :food,
+      status: :active,
+      menusection: @menusection
+    )
+    assert_not menuitem.valid?
+    assert_includes menuitem.errors[:price], 'is not a number'
+    assert_includes menuitem.errors[:preptime], 'is not a number'
+    assert_includes menuitem.errors[:calories], 'is not a number'
+  end
 end

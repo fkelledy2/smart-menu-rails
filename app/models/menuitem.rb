@@ -181,9 +181,9 @@ class Menuitem < ApplicationRecord
   validates :name, presence: true
   validates :itemtype, presence: true
   validates :status, presence: true
-  validates :preptime, presence: true, numericality: { only_integer: true }
-  validates :price, presence: true, numericality: { only_float: true }
-  validates :calories, presence: true, numericality: { only_integer: true }
+  validates :preptime, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :price, presence: true, numericality: { only_float: true, greater_than_or_equal_to: 0 }
+  validates :calories, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   private
 

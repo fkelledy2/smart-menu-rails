@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class MenuTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+  
   def setup
     @menu = menus(:one)
     @restaurant = restaurants(:one)
@@ -236,5 +238,293 @@ class MenuTest < ActiveSupport::TestCase
     assert @menu.respond_to?(:fetch_menusections)
     assert @menu.respond_to?(:fetch_menuavailabilities)
     assert @menu.respond_to?(:fetch_menulocales)
+  end
+
+  # === CALLBACK TESTS ===
+
+  # after_update :invalidate_menu_caches callback tests
+  test 'should call cache invalidation after update' do
+    mock = Minitest::Mock.new
+    mock.expect :call, true, [@menu.id]
+    
+    AdvancedCacheService.stub :invalidate_menu_caches, mock do
+      @menu.update!(name: 'Updated Menu Name')
+      mock.verify
+    end
+  end
+
+  test 'should not call cache invalidation on create' do
+    mock = Minitest::Mock.new
+    # No expectation set - should not be called
+    
+    AdvancedCacheService.stub :invalidate_menu_caches, mock do
+      Menu.create!(
+        name: 'New Menu',
+        restaurant: @restaurant,
+        status: :active
+      )
+      # If cache invalidation was called, mock would raise error
+    end
+  end
+
+  test 'should call cache invalidation with correct menu id' do
+    original_id = @menu.id
+    called_with_id = nil
+    
+    AdvancedCacheService.stub :invalidate_menu_caches, ->(id) { called_with_id = id } do
+      @menu.update!(description: 'Updated description')
+    end
+    
+    assert_equal original_id, called_with_id
+  end
+
+  # after_destroy :invalidate_menu_caches callback tests
+  test 'should call cache invalidation after destroy' do
+    menu = Menu.create!(
+      name: 'Menu to Delete',
+      restaurant: @restaurant,
+      status: :active
+    )
+    menu_id = menu.id
+    
+    mock = Minitest::Mock.new
+    mock.expect :call, true, [menu_id]
+    
+    AdvancedCacheService.stub :invalidate_menu_caches, mock do
+      menu.destroy!
+      mock.verify
+    end
+  end
+
+  test 'should trigger cache invalidation on any attribute update' do
+    attributes_to_test = [
+      { name: 'New Name' },
+      { description: 'New Description' },
+      { status: :archived }
+    ]
+    
+    attributes_to_test.each do |attrs|
+      mock = Minitest::Mock.new
+      mock.expect :call, true, [@menu.id]
+      
+      AdvancedCacheService.stub :invalidate_menu_caches, mock do
+        @menu.update!(attrs)
+        mock.verify
+      end
+    end
+  end
+
+  # after_commit :enqueue_localization callback tests
+  test 'should call enqueue_localization after create' do
+    menu = Menu.new(
+      name: 'New Menu for Localization',
+      restaurant: @restaurant,
+      status: :active
+    )
+    
+    # Mock the Sidekiq job
+    mock = Minitest::Mock.new
+    mock.expect :call, true, ['menu', Integer]
+    
+    MenuLocalizationJob.stub :perform_async, mock do
+      menu.save!
+      mock.verify
+    end
+  end
+
+  test 'should not call enqueue_localization on update' do
+    # Mock should not be called
+    mock = Minitest::Mock.new
+    # No expectation set
+    
+    MenuLocalizationJob.stub :perform_async, mock do
+      @menu.update!(name: 'Updated Name')
+      # If enqueue was called, mock would raise error
+    end
+  end
+
+  test 'should not call enqueue_localization on destroy' do
+    menu = Menu.create!(
+      name: 'Menu to Delete',
+      restaurant: @restaurant,
+      status: :active
+    )
+    
+    # Mock should not be called for destroy
+    mock = Minitest::Mock.new
+    # No expectation set
+    
+    MenuLocalizationJob.stub :perform_async, mock do
+      menu.destroy!
+      # If enqueue was called, mock would raise error
+    end
+  end
+
+  test 'should call enqueue_localization with correct parameters' do
+    menu = Menu.new(
+      name: 'Test Menu',
+      restaurant: @restaurant,
+      status: :active
+    )
+    
+    called_with_type = nil
+    called_with_id = nil
+    
+    MenuLocalizationJob.stub :perform_async, ->(type, id) { 
+      called_with_type = type
+      called_with_id = id
+    } do
+      menu.save!
+    end
+    
+    assert_equal 'menu', called_with_type
+    assert_equal menu.id, called_with_id
+  end
+
+  # === SCOPE TESTS ===
+
+  # with_availabilities_and_sections scope tests
+  test 'should eager load associations with with_availabilities_and_sections scope' do
+    menu = Menu.create!(
+      name: 'Test Menu with Associations',
+      restaurant: @restaurant,
+      status: :active
+    )
+    menu.menusections.create!(name: 'Section 1', status: :active)
+    menu.menuavailabilities.create!(menu: menu, dayofweek: 1, starthour: 9, startmin: 0, endhour: 17, endmin: 0)
+    
+    results = Menu.with_availabilities_and_sections
+    
+    # Verify associations are loaded
+    assert results.first.association(:menusections).loaded?
+    assert results.first.association(:menuavailabilities).loaded?
+    assert results.first.association(:restaurant).loaded?
+  end
+
+  test 'should include all menus with with_availabilities_and_sections scope' do
+    menu1 = Menu.create!(name: 'Menu 1', restaurant: @restaurant, status: :active)
+    menu2 = Menu.create!(name: 'Menu 2', restaurant: @restaurant, status: :inactive)
+    menu3 = Menu.create!(name: 'Menu 3', restaurant: @restaurant, status: :active, archived: true)
+    
+    results = Menu.with_availabilities_and_sections
+    
+    assert_includes results, menu1
+    assert_includes results, menu2
+    assert_includes results, menu3
+  end
+
+  # for_customer_display scope tests
+  test 'should return only active non-archived menus with for_customer_display' do
+    active_menu = Menu.create!(
+      name: 'Active Menu',
+      restaurant: @restaurant,
+      status: :active,
+      archived: false
+    )
+    
+    inactive_menu = Menu.create!(
+      name: 'Inactive Menu',
+      restaurant: @restaurant,
+      status: :inactive,
+      archived: false
+    )
+    
+    archived_menu = Menu.create!(
+      name: 'Archived Menu',
+      restaurant: @restaurant,
+      status: :active,
+      archived: true
+    )
+    
+    results = Menu.for_customer_display
+    
+    assert_includes results, active_menu
+    assert_not_includes results, inactive_menu
+    assert_not_includes results, archived_menu
+  end
+
+  test 'should include associations with for_customer_display' do
+    menu = Menu.create!(
+      name: 'Customer Menu',
+      restaurant: @restaurant,
+      status: :active,
+      archived: false
+    )
+    menu.menusections.create!(name: 'Section', status: :active)
+    
+    results = Menu.for_customer_display
+    
+    # Verify associations are loaded
+    assert results.first.association(:menusections).loaded?
+    assert results.first.association(:menuavailabilities).loaded?
+  end
+
+  test 'should exclude inactive and archived menus from for_customer_display' do
+    inactive_menu = Menu.create!(name: 'Inactive', restaurant: @restaurant, status: :inactive, archived: false)
+    archived_menu = Menu.create!(name: 'Archived', restaurant: @restaurant, status: :active, archived: true)
+    
+    results = Menu.for_customer_display
+    
+    assert_not_includes results, inactive_menu
+    assert_not_includes results, archived_menu
+  end
+
+  # for_management_display scope tests
+  test 'should return non-archived menus with for_management_display' do
+    active_menu = Menu.create!(
+      name: 'Active Menu',
+      restaurant: @restaurant,
+      status: :active,
+      archived: false
+    )
+    
+    inactive_menu = Menu.create!(
+      name: 'Inactive Menu',
+      restaurant: @restaurant,
+      status: :inactive,
+      archived: false
+    )
+    
+    archived_menu = Menu.create!(
+      name: 'Archived Menu',
+      restaurant: @restaurant,
+      status: :active,
+      archived: true
+    )
+    
+    results = Menu.for_management_display
+    
+    assert_includes results, active_menu
+    assert_includes results, inactive_menu
+    assert_not_includes results, archived_menu
+  end
+
+  test 'should include inactive menus in for_management_display' do
+    inactive_menu = Menu.create!(
+      name: 'Inactive Menu',
+      restaurant: @restaurant,
+      status: :inactive,
+      archived: false
+    )
+    
+    results = Menu.for_management_display
+    
+    assert_includes results, inactive_menu
+  end
+
+  test 'should include associations with for_management_display' do
+    menu = Menu.create!(
+      name: 'Management Menu',
+      restaurant: @restaurant,
+      status: :active,
+      archived: false
+    )
+    menu.menusections.create!(name: 'Section', status: :active)
+    
+    results = Menu.for_management_display
+    
+    # Verify associations are loaded
+    assert results.first.association(:menusections).loaded?
+    assert results.first.association(:menuavailabilities).loaded?
   end
 end

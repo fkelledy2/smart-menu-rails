@@ -348,4 +348,380 @@ class OrdrTest < ActiveSupport::TestCase
     assert @ordr.respond_to?(:fetch_ordrparticipants)
     assert @ordr.respond_to?(:fetch_ordractions)
   end
+
+  # === CALLBACK TESTS ===
+
+  # after_create :broadcast_new_order callback tests
+  test 'should broadcast new order for kitchen-relevant status' do
+    # Mock the broadcast service
+    mock = Minitest::Mock.new
+    mock.expect :call, true do |ordr|
+      ordr.is_a?(Ordr)
+    end
+    
+    KitchenBroadcastService.stub :broadcast_new_order, mock do
+      ordr = Ordr.create!(
+        restaurant: @restaurant,
+        menu: @menu,
+        tablesetting: @tablesetting,
+        gross: 0.0,
+        status: :ordered
+      )
+      
+      mock.verify
+    end
+  end
+
+  test 'should not broadcast new order for non-kitchen status' do
+    # Mock should not be called for 'opened' status
+    mock = Minitest::Mock.new
+    # No expectation set
+    
+    KitchenBroadcastService.stub :broadcast_new_order, mock do
+      ordr = Ordr.create!(
+        restaurant: @restaurant,
+        menu: @menu,
+        tablesetting: @tablesetting,
+        gross: 0.0,
+        status: :opened
+      )
+      
+      # If broadcast was called, mock would raise error
+    end
+  end
+
+  test 'should broadcast for preparing status on create' do
+    mock = Minitest::Mock.new
+    mock.expect :call, true do |ordr|
+      ordr.is_a?(Ordr)
+    end
+    
+    KitchenBroadcastService.stub :broadcast_new_order, mock do
+      ordr = Ordr.create!(
+        restaurant: @restaurant,
+        menu: @menu,
+        tablesetting: @tablesetting,
+        gross: 0.0,
+        status: :preparing
+      )
+      
+      mock.verify
+    end
+  end
+
+  # after_update :broadcast_status_change callback tests
+  test 'should broadcast status change when status changes' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+      status: :opened
+    )
+    
+    mock = Minitest::Mock.new
+    mock.expect :call, true do |order, old_status, new_status|
+      order.is_a?(Ordr) && old_status == 'opened' && new_status == 'ordered'
+    end
+    
+    KitchenBroadcastService.stub :broadcast_status_change, mock do
+      ordr.update!(status: :ordered)
+      mock.verify
+    end
+  end
+
+  test 'should not broadcast status change when status unchanged' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+      status: :opened
+    )
+    
+    mock = Minitest::Mock.new
+    # No expectation set
+    
+    KitchenBroadcastService.stub :broadcast_status_change, mock do
+      ordr.update!(gross: 100.0) # Update different field
+      # If broadcast was called, mock would raise error
+    end
+  end
+
+  test 'should broadcast for kitchen-relevant status transitions' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+      status: :ordered
+    )
+    
+    # Test ordered -> preparing
+    mock = Minitest::Mock.new
+    mock.expect :call, true do |order, old_status, new_status|
+      order.is_a?(Ordr) && old_status == 'ordered' && new_status == 'preparing'
+    end
+    
+    KitchenBroadcastService.stub :broadcast_status_change, mock do
+      ordr.update!(status: :preparing)
+      mock.verify
+    end
+  end
+
+  test 'should not broadcast for non-kitchen status transitions' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+      status: :billrequested
+    )
+    
+    mock = Minitest::Mock.new
+    # No expectation set
+    
+    KitchenBroadcastService.stub :broadcast_status_change, mock do
+      ordr.update!(status: :paid)
+      # If broadcast was called, mock would raise error (paid is not kitchen-relevant)
+    end
+  end
+
+  # after_update :cascade_status_to_items callback tests
+  test 'should cascade status to ordritems when order status changes' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+      status: :opened
+    )
+    
+    menuitem = menuitems(:one)
+    item1 = ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.0)
+    item2 = ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 15.0)
+    
+    # Change order status
+    ordr.update!(status: :ordered)
+    
+    # Reload items to get updated status
+    item1.reload
+    item2.reload
+    
+    # Items should have cascaded status
+    assert item1.ordered?
+    assert item2.ordered?
+  end
+
+  test 'should not cascade status when status unchanged' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+      status: :opened
+    )
+    
+    menuitem = menuitems(:one)
+    item = ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.0)
+    
+    # Update different field
+    ordr.update!(gross: 100.0)
+    
+    # Reload item
+    item.reload
+    
+    # Item status should remain unchanged
+    assert item.opened?
+  end
+
+  test 'should cascade status to multiple ordritems' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+      status: :ordered
+    )
+    
+    menuitem = menuitems(:one)
+    items = []
+    5.times do
+      items << ordr.ordritems.create!(menuitem: menuitem, status: :ordered, ordritemprice: 10.0)
+    end
+    
+    # Change order status
+    ordr.update!(status: :preparing)
+    
+    # All items should have cascaded status
+    items.each do |item|
+      item.reload
+      assert item.preparing?, "Item #{item.id} should be preparing"
+    end
+  end
+
+  test 'should only update ordritems with different status' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+      status: :opened
+    )
+    
+    menuitem = menuitems(:one)
+    item_to_update = ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.0)
+    item_already_opened = ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 15.0)
+    
+    # Change order status to ordered
+    ordr.update!(status: :ordered)
+    
+    # Reload items
+    item_to_update.reload
+    item_already_opened.reload
+    
+    # Both items should now be ordered (cascaded from order)
+    assert item_to_update.ordered?
+    assert item_already_opened.ordered?
+    
+    # Now change one item back to opened manually using update_column (bypasses callbacks)
+    item_to_update.update_column(:status, Ordritem.statuses[:opened])
+    item_to_update.reload
+    assert item_to_update.opened?
+    
+    # Change order status to preparing (actual status change)
+    # This should cascade and update both items
+    ordr.update!(status: :preparing)
+    
+    # Reload items
+    item_to_update.reload
+    item_already_opened.reload
+    
+    # Both items should now be preparing
+    assert item_to_update.preparing?
+    assert item_already_opened.preparing?
+  end
+
+  test 'should handle empty ordritems gracefully in cascade' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+      status: :opened
+    )
+    
+    # No ordritems created
+    
+    # Should not raise error when cascading
+    assert_nothing_raised do
+      ordr.update!(status: :ordered)
+    end
+  end
+
+  # === SCOPE TESTS ===
+
+  # with_complete_items scope tests
+  test 'should eager load associations with with_complete_items scope' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0
+    )
+    
+    menuitem = menuitems(:one)
+    ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.0)
+    
+    results = Ordr.with_complete_items
+    
+    # Verify associations are loaded
+    assert results.first.association(:restaurant).loaded?
+    assert results.first.association(:tablesetting).loaded?
+    assert results.first.association(:menu).loaded?
+    assert results.first.association(:ordritems).loaded?
+  end
+
+  test 'should include all orders with with_complete_items scope' do
+    ordr1 = Ordr.create!(restaurant: @restaurant, menu: @menu, tablesetting: @tablesetting, gross: 0.0, status: :opened)
+    ordr2 = Ordr.create!(restaurant: @restaurant, menu: @menu, tablesetting: @tablesetting, gross: 0.0, status: :ordered)
+    ordr3 = Ordr.create!(restaurant: @restaurant, menu: @menu, tablesetting: @tablesetting, gross: 0.0, status: :closed)
+    
+    results = Ordr.with_complete_items
+    
+    assert_includes results, ordr1
+    assert_includes results, ordr2
+    assert_includes results, ordr3
+  end
+
+  # for_restaurant_dashboard scope tests
+  test 'should filter by restaurant_id with for_restaurant_dashboard' do
+    restaurant1 = restaurants(:one)
+    restaurant2 = restaurants(:two)
+    
+    # Create tablesetting for restaurant2
+    tablesetting2 = restaurant2.tablesettings.create!(
+      name: 'Table 1',
+      status: :free,
+      tabletype: :indoor,
+      capacity: 4
+    )
+    
+    ordr1 = Ordr.create!(restaurant: restaurant1, menu: @menu, tablesetting: @tablesetting, gross: 0.0)
+    ordr2 = Ordr.create!(restaurant: restaurant2, menu: menus(:two), tablesetting: tablesetting2, gross: 0.0)
+    
+    results = Ordr.for_restaurant_dashboard(restaurant1.id)
+    
+    assert_includes results, ordr1
+    assert_not_includes results, ordr2
+  end
+
+  test 'should order by created_at desc with for_restaurant_dashboard' do
+    old_ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+      created_at: 2.days.ago
+    )
+    
+    new_ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+      created_at: Time.current
+    )
+    
+    results = Ordr.for_restaurant_dashboard(@restaurant.id)
+    
+    assert_equal new_ordr.id, results.first.id
+    assert_equal old_ordr.id, results.last.id
+  end
+
+  test 'should include associations with for_restaurant_dashboard' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0
+    )
+    
+    menuitem = menuitems(:one)
+    ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.0)
+    
+    results = Ordr.for_restaurant_dashboard(@restaurant.id)
+    
+    # Verify associations are loaded
+    assert results.first.association(:restaurant).loaded?
+    assert results.first.association(:ordritems).loaded?
+  end
+
+  test 'should return empty for_restaurant_dashboard when no orders for restaurant' do
+    restaurant2 = restaurants(:two)
+    
+    results = Ordr.for_restaurant_dashboard(restaurant2.id)
+    
+    assert_empty results
+  end
 end
