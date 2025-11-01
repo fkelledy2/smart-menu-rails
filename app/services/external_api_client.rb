@@ -130,7 +130,6 @@ class ExternalApiClient
   # Override in subclasses to specify which errors should trigger retries
   def retryable_errors
     [
-      Net::TimeoutError,
       Net::ReadTimeout,
       Net::OpenTimeout,
       Errno::ECONNREFUSED,
