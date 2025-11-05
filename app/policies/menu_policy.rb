@@ -15,6 +15,10 @@ class MenuPolicy < ApplicationPolicy
   def update?
     owner? || employee_admin? || employee_manager?
   end
+  
+  def update_availabilities?
+    owner? || employee_admin? || employee_manager?
+  end
 
   def destroy?
     owner? || employee_admin?

@@ -1,0 +1,148 @@
+<%# 
+  Restaurant Details Section
+  Core information form with auto-save
+%>
+
+<% restaurant = local_assigns[:restaurant] || @restaurant %>
+
+<!-- Quick Actions Card -->
+<div class="quick-actions-card">
+  <h2 class="quick-actions-title">
+    <i class="bi bi-lightning-charge"></i>
+    <%= t('.quick_actions', default: 'Quick Actions') %>
+  </h2>
+  
+  <div class="quick-actions-grid">
+    <%= link_to new_restaurant_menu_path(restaurant), class: 'quick-action-btn' do %>
+      <i class="bi bi-plus-circle"></i>
+      <span><%= t('.new_menu', default: 'New Menu') %></span>
+    <% end %>
+    
+    <%= link_to new_restaurant_ocr_menu_import_path(restaurant), class: 'quick-action-btn' do %>
+      <i class="bi bi-file-earmark-arrow-up"></i>
+      <span><%= t('.bulk_import', default: 'Bulk Import') %></span>
+    <% end %>
+  </div>
+</div>
+
+<!-- Overview Stats Card -->
+<div class="overview-stats-card">
+  <h2 class="quick-actions-title">
+    <i class="bi bi-graph-up"></i>
+    <%= t('.overview', default: 'Overview') %>
+  </h2>
+  
+  <div class="overview-stats-grid">
+    <div class="stat-item">
+      <span class="stat-value"><%= restaurant.menus.count %></span>
+      <span class="stat-label"><%= t('.menus', default: 'Menus') %></span>
+    </div>
+    
+    <div class="stat-item">
+      <span class="stat-value">
+        <%= restaurant.menus.joins(:menusections).joins(:menuitems).distinct.count(:menuitems) rescue 0 %>
+      </span>
+      <span class="stat-label"><%= t('.items', default: 'Items') %></span>
+    </div>
+    
+    <div class="stat-item">
+      <span class="stat-value"><%= restaurant.employees.count %></span>
+      <span class="stat-label"><%= t('.staff', default: 'Staff') %></span>
+    </div>
+  </div>
+</div>
+
+<!-- Restaurant Details Form -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-building"></i>
+    <%= t('.restaurant_details', default: 'Restaurant Details') %>
+  </h2>
+  
+  <%= restaurant_form_with(restaurant, auto_save: true, validate: true) do |form| %>
+    <div class="form-group-2025 mb-4">
+      <%= form.label :name, class: 'form-label-2025' do %>
+        <%= t('activerecord.attributes.restaurant.name', default: 'Restaurant Name') %>
+        <span class="text-danger">*</span>
+      <% end %>
+      <%= form.text_field :name, 
+          class: 'form-control-2025', 
+          placeholder: t('.name_placeholder', default: 'e.g., Pizza Place'),
+          required: true %>
+      <div class="form-help-2025">
+        <%= t('.name_help', default: 'This is how customers will see your restaurant') %>
+      </div>
+    </div>
+    
+    <div class="form-group-2025 mb-4">
+      <%= form.label :description, class: 'form-label-2025' do %>
+        <%= t('activerecord.attributes.restaurant.description', default: 'Description') %>
+      <% end %>
+      <%= form.text_area :description, 
+          class: 'form-control-2025', 
+          rows: 4,
+          placeholder: t('.description_placeholder', default: 'Describe your restaurant, cuisine, and what makes it special...') %>
+      <div class="form-help-2025">
+        <%= t('.description_help', default: 'A brief description that appears on your menu') %>
+      </div>
+    </div>
+    
+    <div class="form-group-2025 mb-4">
+      <%= form.label :currency, class: 'form-label-2025' do %>
+        <%= t('activerecord.attributes.restaurant.currency', default: 'Currency') %>
+      <% end %>
+      <%= currency_select(form, :currency) %>
+      <div class="form-help-2025">
+        <%= t('.currency_help', default: 'Currency for all prices') %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- Image Context Details Section -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-image"></i>
+    <%= t('.image_context_details', default: 'Image Context Details') %>
+  </h2>
+  
+  <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
+    <div class="form-group-2025 mb-4">
+      <%= form.label :imagecontext, class: 'form-label-2025' do %>
+        <%= t('activerecord.attributes.restaurant.imagecontext', default: 'Image Context') %>
+      <% end %>
+      <%= form.text_area :imagecontext, 
+          class: 'form-control-2025', 
+          rows: 3,
+          placeholder: t('.imagecontext_placeholder', default: 'e.g., Modern Italian restaurant with rustic decor...') %>
+      <div class="form-help-2025">
+        <%= t('.imagecontext_help', default: 'Describe your restaurant\'s style and atmosphere to help AI generate appropriate menu item images') %>
+      </div>
+    </div>
+    
+    <div class="form-group-2025 mb-4">
+      <%= form.label :image_style_profile, class: 'form-label-2025' do %>
+        <%= t('activerecord.attributes.restaurant.image_style_profile', default: 'Image Style Profile') %>
+      <% end %>
+      <%= form.text_area :image_style_profile, 
+          class: 'form-control-2025', 
+          rows: 4,
+          placeholder: t('.image_style_profile_placeholder', default: 'e.g., Professional food photography, well-lit, white background, top-down view...') %>
+      <div class="form-help-2025">
+        <%= t('.image_style_profile_help', default: 'Specify the style and presentation preferences for AI-generated menu item images') %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .form-help-2025 {
+    font-size: var(--text-sm);
+    color: var(--color-gray-500);
+    margin-top: var(--space-1);
+  }
+  
+  .text-danger {
+    color: var(--color-danger);
+  }
+</style>

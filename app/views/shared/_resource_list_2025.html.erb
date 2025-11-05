@@ -1,0 +1,301 @@
+<%
+  # Resource List Component 2025
+  # Modern, consistent list view for any entity
+  # 
+  # Usage:
+  # <%= render 'shared/resource_list_2025',
+  #   title: 'Menus',
+  #   items: @menus,
+  #   columns: [
+  #     { key: :name, label: 'Name', primary: true },
+  #     { key: :status, label: 'Status', type: :badge },
+  #     { key: :updated_at, label: 'Modified', type: :date }
+  #   ],
+  #   actions: [
+  #     { label: '+ New Menu', path: new_menu_path, class: 'btn-2025 btn-2025-primary btn-2025-md' }
+  #   ]
+  # %>
+  
+  title ||= local_assigns[:title] || 'Items'
+  items ||= local_assigns[:items] || []
+  columns ||= local_assigns[:columns] || []
+  actions ||= local_assigns[:actions] || []
+  searchable ||= local_assigns[:searchable] || true
+  selectable ||= local_assigns[:selectable] || true
+  empty_message ||= local_assigns[:empty_message] || "No #{title.downcase} found"
+  empty_description ||= local_assigns[:empty_description] || "Get started by creating your first item"
+  empty_action ||= local_assigns[:empty_action]
+%>
+
+<div class="resource-list-2025">
+  <!-- Header -->
+  <div class="resource-list-2025-header">
+    <div>
+      <h2 class="resource-list-2025-title"><%= title %></h2>
+      <p class="resource-list-2025-subtitle"><%= pluralize(items.count, 'item') %></p>
+    </div>
+    
+    <div class="resource-list-2025-actions">
+      <% if searchable %>
+        <input type="search" 
+               placeholder="Search <%= title.downcase %>..." 
+               class="form-control-2025"
+               style="width: 300px;">
+      <% end %>
+      
+      <% actions.each do |action| %>
+        <%= link_to action[:label], action[:path], class: action[:class] || 'btn-2025 btn-2025-primary btn-2025-md' %>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Filters (if needed) -->
+  <% if local_assigns[:filters] %>
+    <div class="resource-list-2025-filters">
+      <%= filters %>
+    </div>
+  <% end %>
+  
+  <!-- Table -->
+  <% if items.any? %>
+    <div class="resource-list-2025-table">
+      <!-- Header Row -->
+      <div class="resource-list-2025-row resource-list-2025-header-row">
+        <% if selectable %>
+          <div class="resource-list-2025-cell">
+            <input type="checkbox" id="select-all" class="form-check-input">
+          </div>
+        <% end %>
+        
+        <% columns.each do |column| %>
+          <div class="resource-list-2025-cell <%= 'resource-list-2025-cell-primary' if column[:primary] %>">
+            <%= column[:label] %>
+          </div>
+        <% end %>
+        
+        <div class="resource-list-2025-cell resource-list-2025-cell-actions">
+          Actions
+        </div>
+      </div>
+      
+      <!-- Data Rows -->
+      <% items.each do |item| %>
+        <div class="resource-list-2025-row" data-id="<%= item.id %>">
+          <% if selectable %>
+            <div class="resource-list-2025-cell">
+              <input type="checkbox" value="<%= item.id %>" class="form-check-input item-checkbox">
+            </div>
+          <% end %>
+          
+          <% columns.each do |column| %>
+            <div class="resource-list-2025-cell <%= 'resource-list-2025-cell-primary' if column[:primary] %>">
+              <% value = item.send(column[:key]) %>
+              
+              <% if column[:type] == :badge %>
+                <%= render 'shared/status_badge_2025', status: value %>
+              <% elsif column[:type] == :date %>
+                <%= time_ago_in_words(value) %> ago
+              <% elsif column[:type] == :currency %>
+                <%= number_to_currency(value) %>
+              <% elsif column[:link] %>
+                <%= link_to value, column[:link].call(item), class: 'resource-list-2025-link' %>
+              <% else %>
+                <%= value %>
+              <% end %>
+            </div>
+          <% end %>
+          
+          <div class="resource-list-2025-cell resource-list-2025-cell-actions">
+            <div class="dropdown">
+              <button class="btn-2025 btn-2025-ghost btn-2025-sm" 
+                      type="button" 
+                      data-bs-toggle="dropdown">
+                <i class="bi bi-three-dots"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <% if local_assigns[:item_actions] %>
+                  <% item_actions.each do |action| %>
+                    <li>
+                      <%= link_to action[:label], action[:path].call(item), 
+                          class: "dropdown-item #{action[:class]}", 
+                          method: action[:method],
+                          data: action[:data] %>
+                    </li>
+                  <% end %>
+                <% else %>
+                  <li><%= link_to 'Edit', [:edit, item], class: 'dropdown-item' %></li>
+                  <li><%= link_to 'Delete', item, method: :delete, class: 'dropdown-item text-danger', data: { confirm: 'Are you sure?' } %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Footer -->
+    <div class="resource-list-2025-footer">
+      <span class="text-sm text-gray-500">
+        Showing <%= items.count %> <%= title.downcase %>
+      </span>
+    </div>
+  <% else %>
+    <!-- Empty State -->
+    <div class="resource-list-2025-empty">
+      <div class="resource-list-2025-empty-icon">
+        <i class="bi bi-inbox" style="font-size: 48px; color: var(--color-gray-400);"></i>
+      </div>
+      <h3 class="resource-list-2025-empty-title"><%= empty_message %></h3>
+      <p class="resource-list-2025-empty-description"><%= empty_description %></p>
+      <% if empty_action %>
+        <%= link_to empty_action[:label], empty_action[:path], class: 'btn-2025 btn-2025-primary btn-2025-md mt-4' %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .resource-list-2025 {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  
+  .resource-list-2025-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-6);
+    border-bottom: 1px solid var(--color-gray-200);
+    background-color: var(--color-gray-50);
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+  
+  .resource-list-2025-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-semibold);
+    color: var(--color-gray-900);
+    margin: 0;
+  }
+  
+  .resource-list-2025-subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-gray-500);
+    margin: var(--space-1) 0 0 0;
+  }
+  
+  .resource-list-2025-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  
+  .resource-list-2025-table {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .resource-list-2025-row {
+    display: grid;
+    grid-template-columns: 48px 2fr 1fr 120px 80px;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--color-gray-100);
+    align-items: center;
+    transition: background var(--transition-fast);
+  }
+  
+  .resource-list-2025-row:hover:not(.resource-list-2025-header-row) {
+    background-color: var(--color-gray-50);
+  }
+  
+  .resource-list-2025-header-row {
+    background-color: var(--color-gray-50);
+    font-weight: var(--font-medium);
+    font-size: var(--text-sm);
+    color: var(--color-gray-700);
+  }
+  
+  .resource-list-2025-cell {
+    font-size: var(--text-sm);
+    color: var(--color-gray-600);
+  }
+  
+  .resource-list-2025-cell-primary {
+    font-weight: var(--font-medium);
+    color: var(--color-gray-900);
+    font-size: var(--text-base);
+  }
+  
+  .resource-list-2025-cell-actions {
+    text-align: right;
+  }
+  
+  .resource-list-2025-link {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  
+  .resource-list-2025-link:hover {
+    text-decoration: underline;
+  }
+  
+  .resource-list-2025-footer {
+    padding: var(--space-4) var(--space-6);
+    background-color: var(--color-gray-50);
+    border-top: 1px solid var(--color-gray-200);
+  }
+  
+  /* Empty State */
+  .resource-list-2025-empty {
+    padding: var(--space-16) var(--space-6);
+    text-align: center;
+  }
+  
+  .resource-list-2025-empty-icon {
+    margin-bottom: var(--space-4);
+  }
+  
+  .resource-list-2025-empty-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-2);
+  }
+  
+  .resource-list-2025-empty-description {
+    font-size: var(--text-base);
+    color: var(--color-gray-500);
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .resource-list-2025-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .resource-list-2025-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+    
+    .resource-list-2025-actions input {
+      width: 100% !important;
+    }
+    
+    .resource-list-2025-row {
+      grid-template-columns: 40px 1fr 80px;
+      font-size: var(--text-xs);
+    }
+    
+    .resource-list-2025-cell:nth-child(3),
+    .resource-list-2025-cell:nth-child(4) {
+      display: none;
+    }
+  }
+</style>

@@ -15,8 +15,8 @@ class TablesettingsController < ApplicationController
 
     if current_user
       if params[:restaurant_id]
-        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-        @tablesettings = policy_scope(Tablesetting).where(restaurant: @futureParentRestaurant, archived: false)
+        @restaurant = Restaurant.find(params[:restaurant_id])
+        @tablesettings = policy_scope(Tablesetting).where(restaurant: @restaurant, archived: false)
       else
         @tablesettings = policy_scope(Tablesetting).where(archived: false)
       end
@@ -29,7 +29,7 @@ class TablesettingsController < ApplicationController
 
   # GET /tablesettings/1 or /tablesettings/1.json
   def show
-    @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    @restaurant = @tablesetting.restaurant
     # Sanitize the status input to prevent XSS in QR code generation
     sanitized_status = ActionController::Base.helpers.sanitize(@tablesetting.status.to_s)
     @qr = RQRCode::QRCode.new(sanitized_status)
@@ -40,14 +40,15 @@ class TablesettingsController < ApplicationController
   def new
     @tablesetting = Tablesetting.new
     if params[:restaurant_id]
-      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-      @tablesetting.restaurant = @futureParentRestaurant
+      @restaurant = Restaurant.find(params[:restaurant_id])
+      @tablesetting.restaurant = @restaurant
     end
     authorize @tablesetting
   end
 
   # GET /tablesettings/1/edit
   def edit
+    @restaurant = @tablesetting.restaurant
     authorize @tablesetting
   end
 

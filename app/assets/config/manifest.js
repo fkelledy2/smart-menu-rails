@@ -34,6 +34,9 @@
 //= link testimonials.js
 //= link controllers/hello_controller.js
 //= link controllers/index.js
+//= link controllers/auto_save_controller.js
+//= link controllers/sidebar_controller.js
+//= link controllers/sortable_controller.js
 
 // Application entry point
 //= link application.js

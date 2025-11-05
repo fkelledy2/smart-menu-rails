@@ -19,9 +19,11 @@ pin 'tom-select', to: 'https://cdn.skypack.dev/tom-select', preload: true
 pin 'tabulator-tables', to: 'https://cdn.skypack.dev/tabulator-tables', preload: true
 pin 'local-time', to: 'https://cdn.skypack.dev/local-time', preload: true
 pin 'luxon', to: 'https://cdn.skypack.dev/luxon', preload: true
+pin 'qr-code-styling', to: 'https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js', preload: true
 
 # Pin application JavaScript (used by ALL controllers)
-pin 'application', preload: true
+# Cache bust timestamp to force reload: 2025-11-04-19-17
+pin 'application', to: 'application.js?v=20251104191700', preload: true
 pin_all_from 'app/javascript/controllers', under: 'controllers'
 pin_all_from 'app/javascript/channels', under: 'channels'
 

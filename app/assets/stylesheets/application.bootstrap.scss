@@ -30,6 +30,17 @@
 // Import utility styles
 @import 'utility';
 
+// ============================================
+// 2025 DESIGN SYSTEM
+// Modern, industry-standard components
+// ============================================
+@import 'design_system_2025';
+@import 'components/buttons_2025';
+@import 'components/forms_2025';
+@import 'components/cards_2025';
+@import 'components/ocr_2025';
+@import 'components/sidebar_2025';
+
 // Fix for dropdown button clickability issues
 .dropdown-toggle {
   position: relative;

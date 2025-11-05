@@ -1,5 +1,7 @@
 export function initAllergyns() {
-  if ($('#restaurantTabs').length) {
+  // Initialize allergyn table if it exists on the page
+  const allergynTableElement = document.getElementById('allergyn-table');
+  if (allergynTableElement) {
     // Debounce utility to prevent rapid successive calls
     function debounce(func, wait) {
       let timeout;
@@ -22,8 +24,6 @@ export function initAllergyns() {
       const rowData = cell.getRow().getData('data').name;
       return "<a class='link-dark' href='/allergyns/" + id + "/edit'>" + rowData + '</a>';
     }
-    const allergynTableElement = document.getElementById('allergyn-table');
-    if (!allergynTableElement) return; // Exit if element doesn't exist
     const restaurantId = allergynTableElement.getAttribute('data-bs-restaurant_id');
     const allergynTable = new Tabulator('#allergyn-table', {
       dataLoader: false,

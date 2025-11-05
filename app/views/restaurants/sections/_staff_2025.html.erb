@@ -1,0 +1,349 @@
+<%# 
+  Restaurant Staff Section
+  Employee management
+%>
+
+<% restaurant = local_assigns[:restaurant] || @restaurant %>
+
+<!-- Staff Management -->
+<div class="content-card-2025">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="content-card-title mb-0">
+      <i class="bi bi-people"></i>
+      <%= t('.staff', default: 'Staff Members') %>
+    </h2>
+    
+    <%= link_to new_restaurant_employee_path(restaurant), 
+        class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+      <i class="bi bi-person-plus"></i>
+      <%= t('.add_staff', default: 'Add Staff Member') %>
+    <% end %>
+  </div>
+  
+  <% if restaurant.employees.any? %>
+    <!-- Desktop Table View -->
+    <div class="table-responsive staff-table-view">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th><%= t('.name', default: 'Name') %></th>
+            <th><%= t('.email', default: 'Email') %></th>
+            <th><%= t('.role', default: 'Role') %></th>
+            <th><%= t('.status', default: 'Status') %></th>
+            <th><%= t('.joined', default: 'Joined') %></th>
+            <th class="text-end"><%= t('.actions', default: 'Actions') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% restaurant.employees.includes(:user).order(created_at: :desc).each do |employee| %>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar-circle">
+                    <%= employee.user&.email&.first&.upcase || '?' %>
+                  </div>
+                  <div>
+                    <div class="fw-semibold">
+                      <%= employee.user&.email&.split('@')&.first || t('.unnamed', default: 'Unnamed') %>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="text-muted">
+                <%= employee.user&.email || '-' %>
+              </td>
+              <td>
+                <% badge_class = case employee.role
+                                 when 'manager' then 'bg-primary'
+                                 when 'staff' then 'bg-info'
+                                 when 'admin' then 'bg-danger'
+                                 else 'bg-secondary'
+                                 end %>
+                <span class="badge <%= badge_class %>">
+                  <%= employee.role&.titleize || t('.no_role', default: 'No role') %>
+                </span>
+              </td>
+              <td>
+                <% if employee.active? %>
+                  <span class="badge bg-success">
+                    <i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %>
+                  </span>
+                <% else %>
+                  <span class="badge bg-secondary">
+                    <i class="bi bi-dash-circle"></i> <%= t('.inactive', default: 'Inactive') %>
+                  </span>
+                <% end %>
+              </td>
+              <td class="text-muted">
+                <%= l(employee.created_at, format: :short) if employee.created_at %>
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <%= link_to edit_restaurant_employee_path(restaurant, employee), 
+                      class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
+                    <i class="bi bi-pencil"></i>
+                  <% end %>
+                  
+                  <%= link_to restaurant_employee_path(restaurant, employee), 
+                      method: :delete,
+                      data: { confirm: t('.confirm_remove', default: 'Remove this staff member?') },
+                      class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
+                    <i class="bi bi-trash"></i>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Mobile Card View -->
+    <div class="staff-cards-view">
+      <% restaurant.employees.includes(:user).order(created_at: :desc).each do |employee| %>
+        <div class="staff-card-mobile">
+          <div class="d-flex align-items-start justify-content-between mb-3">
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar-circle">
+                <%= employee.user&.email&.first&.upcase || '?' %>
+              </div>
+              <div>
+                <div class="fw-semibold">
+                  <%= employee.user&.email&.split('@')&.first || t('.unnamed', default: 'Unnamed') %>
+                </div>
+                <div class="text-muted small">
+                  <%= employee.user&.email || '-' %>
+                </div>
+              </div>
+            </div>
+            <div class="btn-group">
+              <%= link_to edit_restaurant_employee_path(restaurant, employee), 
+                  class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
+                <i class="bi bi-pencil"></i>
+              <% end %>
+              
+              <%= link_to restaurant_employee_path(restaurant, employee), 
+                  method: :delete,
+                  data: { confirm: t('.confirm_remove', default: 'Remove this staff member?') },
+                  class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
+                <i class="bi bi-trash"></i>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="d-flex gap-2 flex-wrap">
+            <% badge_class = case employee.role
+                             when 'manager' then 'bg-primary'
+                             when 'staff' then 'bg-info'
+                             when 'admin' then 'bg-danger'
+                             else 'bg-secondary'
+                             end %>
+            <span class="badge <%= badge_class %>">
+              <%= employee.role&.titleize || t('.no_role', default: 'No role') %>
+            </span>
+            
+            <% if employee.active? %>
+              <span class="badge bg-success">
+                <i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %>
+              </span>
+            <% else %>
+              <span class="badge bg-secondary">
+                <i class="bi bi-dash-circle"></i> <%= t('.inactive', default: 'Inactive') %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <!-- Empty State -->
+    <div class="text-center py-5">
+      <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+      <h3 class="mt-3 text-muted">
+        <%= t('.no_staff', default: 'No staff members yet') %>
+      </h3>
+      <p class="text-muted">
+        <%= t('.no_staff_description', default: 'Add team members to collaborate on your restaurant') %>
+      </p>
+      <%= link_to new_restaurant_employee_path(restaurant), 
+          class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3' do %>
+        <i class="bi bi-person-plus"></i>
+        <%= t('.add_first_staff', default: 'Add Your First Staff Member') %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Roles & Permissions -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-shield-check"></i>
+    <%= t('.roles_permissions', default: 'Roles & Permissions') %>
+  </h2>
+  
+  <p class="text-muted mb-4">
+    <%= t('.roles_description', default: 'Define what each role can access and manage') %>
+  </p>
+  
+  <div class="roles-grid">
+    <div class="role-card">
+      <div class="role-icon bg-danger">
+        <i class="bi bi-star-fill"></i>
+      </div>
+      <h4 class="role-name"><%= t('.manager', default: 'Manager') %></h4>
+      <p class="role-description">
+        <%= t('.manager_desc', default: 'Full access to all restaurant settings and data') %>
+      </p>
+      <ul class="role-permissions">
+        <li><i class="bi bi-check text-success"></i> <%= t('.edit_menus', default: 'Edit menus') %></li>
+        <li><i class="bi bi-check text-success"></i> <%= t('.manage_staff', default: 'Manage staff') %></li>
+        <li><i class="bi bi-check text-success"></i> <%= t('.view_analytics', default: 'View analytics') %></li>
+        <li><i class="bi bi-check text-success"></i> <%= t('.manage_orders', default: 'Manage orders') %></li>
+      </ul>
+    </div>
+    
+    <div class="role-card">
+      <div class="role-icon bg-primary">
+        <i class="bi bi-pencil-fill"></i>
+      </div>
+      <h4 class="role-name"><%= t('.editor', default: 'Editor') %></h4>
+      <p class="role-description">
+        <%= t('.editor_desc', default: 'Can edit menus and manage content') %>
+      </p>
+      <ul class="role-permissions">
+        <li><i class="bi bi-check text-success"></i> <%= t('.edit_menus', default: 'Edit menus') %></li>
+        <li><i class="bi bi-check text-success"></i> <%= t('.edit_items', default: 'Edit items') %></li>
+        <li><i class="bi bi-x text-danger"></i> <%= t('.no_staff_access', default: 'No staff access') %></li>
+        <li><i class="bi bi-x text-danger"></i> <%= t('.no_analytics', default: 'No analytics') %></li>
+      </ul>
+    </div>
+    
+    <div class="role-card">
+      <div class="role-icon bg-info">
+        <i class="bi bi-eye-fill"></i>
+      </div>
+      <h4 class="role-name"><%= t('.viewer', default: 'Viewer') %></h4>
+      <p class="role-description">
+        <%= t('.viewer_desc', default: 'Read-only access to menus and orders') %>
+      </p>
+      <ul class="role-permissions">
+        <li><i class="bi bi-check text-success"></i> <%= t('.view_menus', default: 'View menus') %></li>
+        <li><i class="bi bi-check text-success"></i> <%= t('.view_orders', default: 'View orders') %></li>
+        <li><i class="bi bi-x text-danger"></i> <%= t('.no_editing', default: 'No editing') %></li>
+        <li><i class="bi bi-x text-danger"></i> <%= t('.no_deletion', default: 'No deletion') %></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Avatar */
+  .avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-semibold);
+  }
+  
+  /* Staff Views - Responsive */
+  .staff-table-view {
+    display: block;
+  }
+  
+  .staff-cards-view {
+    display: none;
+  }
+  
+  /* Mobile: Show cards, hide table */
+  @media (max-width: 768px) {
+    .staff-table-view {
+      display: none;
+    }
+    
+    .staff-cards-view {
+      display: block;
+    }
+  }
+  
+  /* Mobile Staff Card */
+  .staff-card-mobile {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-3);
+    transition: all var(--transition-base);
+  }
+  
+  .staff-card-mobile:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-gray-300);
+  }
+  
+  .staff-card-mobile:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Roles Grid */
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-4);
+  }
+  
+  @media (max-width: 768px) {
+    .roles-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .role-card {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+  }
+  
+  .role-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+    margin-bottom: var(--space-3);
+  }
+  
+  .role-name {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-2);
+  }
+  
+  .role-description {
+    font-size: var(--text-sm);
+    color: var(--color-gray-600);
+    margin-bottom: var(--space-3);
+  }
+  
+  .role-permissions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .role-permissions li {
+    font-size: var(--text-sm);
+    padding: var(--space-2) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+</style>

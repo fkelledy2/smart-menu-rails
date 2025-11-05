@@ -1,7 +1,8 @@
+<!-- 2025 Design System: Updated with new button styles -->
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h3"><%= t('.title') %></h1>
-    <%= link_to t('.new_import'), new_restaurant_ocr_menu_import_path(@restaurant), class: 'btn btn-primary' %>
+    <%= link_to t('.new_import'), new_restaurant_ocr_menu_import_path(@restaurant), class: 'btn-2025 btn-2025-primary btn-2025-md' %>
   </div>
 
   <% if @ocr_menu_imports.any? %>
@@ -19,7 +20,7 @@
         <h3 class="h5 mt-3"><%= t('.empty_title') %></h3>
         <p class="text-muted"><%= t('.empty_hint') %></p>
         <div class="mt-4">
-          <%= link_to t('.new_import'), new_restaurant_ocr_menu_import_path(@restaurant), class: 'btn btn-primary' %>
+          <%= link_to t('.new_import'), new_restaurant_ocr_menu_import_path(@restaurant), class: 'btn-2025 btn-2025-primary btn-2025-md' %>
         </div>
       </div>
     </div>

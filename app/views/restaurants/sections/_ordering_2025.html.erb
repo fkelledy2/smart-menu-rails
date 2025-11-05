@@ -1,0 +1,126 @@
+<%# 
+  Restaurant Ordering Section
+  Order management settings and preferences
+%>
+
+<% restaurant = local_assigns[:restaurant] || @restaurant %>
+
+<\!-- Ordering Settings - Coming Soon -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-cart-check"></i>
+    <%= t('.ordering_settings', default: 'Ordering Settings') %>
+  </h2>
+  
+  <div class="text-center py-5">
+    <i class="bi bi-cart-check text-muted" style="font-size: 3rem;"></i>
+    <h3 class="mt-3 text-muted">
+      <%= t('.coming_soon', default: 'Online Ordering Coming Soon') %>
+    </h3>
+    <p class="text-muted mb-4">
+      <%= t('.coming_soon_desc', default: 'We\'re working on adding online ordering capabilities to your smart menu. This feature will allow customers to place orders directly through your digital menu.') %>
+    </p>
+    <div class="d-flex justify-content-center flex-wrap gap-2">
+      <span class="badge bg-primary">
+        <i class="bi bi-check-circle me-1"></i> <%= t('.feature_1', default: 'Order Management') %>
+      </span>
+      <span class="badge bg-primary">
+        <i class="bi bi-check-circle me-1"></i> <%= t('.feature_2', default: 'Payment Integration') %>
+      </span>
+      <span class="badge bg-primary">
+        <i class="bi bi-check-circle me-1"></i> <%= t('.feature_3', default: 'Real-time Notifications') %>
+      </span>
+    </div>
+  </div>
+</div>
+
+<\!-- Planned Features -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-star"></i>
+    <%= t('.planned_features', default: 'Planned Features') %>
+  </h2>
+  
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="feature-preview-card">
+        <div class="feature-icon bg-primary">
+          <i class="bi bi-cart-check"></i>
+        </div>
+        <h4><%= t('.table_ordering', default: 'Table Ordering') %></h4>
+        <p class="text-muted">
+          <%= t('.table_ordering_desc', default: 'Customers scan QR codes at tables to browse menus and place orders directly from their phones.') %>
+        </p>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="feature-preview-card">
+        <div class="feature-icon bg-success">
+          <i class="bi bi-credit-card"></i>
+        </div>
+        <h4><%= t('.payment_integration', default: 'Payment Integration') %></h4>
+        <p class="text-muted">
+          <%= t('.payment_integration_desc', default: 'Integrated payment processing with support for cards, digital wallets, and cash.') %>
+        </p>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="feature-preview-card">
+        <div class="feature-icon bg-warning">
+          <i class="bi bi-bell"></i>
+        </div>
+        <h4><%= t('.real_time_notifications', default: 'Real-time Notifications') %></h4>
+        <p class="text-muted">
+          <%= t('.real_time_notifications_desc', default: 'Instant alerts for new orders via email, SMS, and in-app notifications.') %>
+        </p>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="feature-preview-card">
+        <div class="feature-icon bg-info">
+          <i class="bi bi-graph-up"></i>
+        </div>
+        <h4><%= t('.order_analytics', default: 'Order Analytics') %></h4>
+        <p class="text-muted">
+          <%= t('.order_analytics_desc', default: 'Track order volumes, popular items, peak times, and customer preferences.') %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .feature-preview-card {
+    padding: var(--space-4);
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    height: 100%;
+  }
+  
+  .feature-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: var(--space-3);
+  }
+  
+  .feature-preview-card h4 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-2);
+  }
+  
+  .feature-preview-card p {
+    font-size: var(--text-sm);
+    margin-bottom: 0;
+  }
+</style>

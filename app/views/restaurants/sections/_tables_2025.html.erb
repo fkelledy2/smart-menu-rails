@@ -1,0 +1,233 @@
+<%# 
+  Restaurant Tables Section
+  Table management and settings
+%>
+
+<% restaurant = local_assigns[:restaurant] || @restaurant %>
+
+<!-- Table Settings -->
+<% if restaurant.tablesettings.any? %>
+  <div class="content-card-2025">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="content-card-title mb-0">
+        <i class="bi bi-layout-wtf"></i>
+        <%= t('.table_settings', default: 'Table Settings') %>
+      </h2>
+      
+      <%= link_to new_restaurant_tablesetting_path(restaurant), 
+          class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+        <i class="bi bi-plus-circle"></i>
+        <%= t('.add_table', default: 'Add Table') %>
+      <% end %>
+    </div>
+    
+    <!-- Desktop Table View -->
+    <div class="table-responsive tables-table-view">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th><%= t('.table_number', default: 'Table #') %></th>
+            <th><%= t('.table_name', default: 'Name') %></th>
+            <th><%= t('.capacity', default: 'Capacity') %></th>
+            <th><%= t('.status', default: 'Status') %></th>
+            <th><%= t('.qr_code', default: 'QR Code') %></th>
+            <th class="text-end"><%= t('.actions', default: 'Actions') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% restaurant.tablesettings.order(:name).each do |table| %>
+            <tr>
+              <td>
+                <span class="badge bg-primary fs-6"><%= table.name %></span>
+              </td>
+              <td>
+                <strong><%= table.name %></strong>
+              </td>
+              <td>
+                <i class="bi bi-people"></i>
+                <%= table.capacity || '-' %>
+              </td>
+              <td>
+                <% if table.free? %>
+                  <span class="badge bg-success">
+                    <i class="bi bi-check-circle"></i> <%= t('.free', default: 'Free') %>
+                  </span>
+                <% elsif table.occupied? %>
+                  <span class="badge bg-warning">
+                    <i class="bi bi-person-fill"></i> <%= t('.occupied', default: 'Occupied') %>
+                  </span>
+                <% elsif table.archived? %>
+                  <span class="badge bg-secondary">
+                    <i class="bi bi-archive"></i> <%= t('.archived', default: 'Archived') %>
+                  </span>
+                <% end %>
+              </td>
+              <td>
+                <% table_smartmenu = Smartmenu.find_by(tablesetting_id: table.id) %>
+                <% if table_smartmenu&.slug %>
+                  <%= link_to smartmenu_path(table_smartmenu.slug), 
+                      class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                      target: '_blank',
+                      title: t('.view_qr_code', default: 'View QR Code for this table') do %>
+                    <i class="bi bi-qr-code"></i> <%= t('.view', default: 'View') %>
+                  <% end %>
+                <% else %>
+                  <button class="btn-2025 btn-2025-ghost btn-2025-sm" 
+                          disabled
+                          title="<%= t('.no_smartmenu', default: 'No QR code generated yet') %>">
+                    <i class="bi bi-qr-code"></i> <%= t('.view', default: 'View') %>
+                  </button>
+                <% end %>
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <%= link_to edit_restaurant_tablesetting_path(restaurant, table), 
+                      class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
+                    <i class="bi bi-pencil"></i>
+                  <% end %>
+                  
+                  <%= link_to restaurant_tablesetting_path(restaurant, table), 
+                      method: :delete,
+                      data: { confirm: t('.confirm_delete', default: 'Delete this table?') },
+                      class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
+                    <i class="bi bi-trash"></i>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Mobile Card View -->
+    <div class="tables-cards-view">
+      <% restaurant.tablesettings.order(:name).each do |table| %>
+        <div class="table-card-mobile">
+          <div class="d-flex align-items-start justify-content-between mb-3">
+            <div class="d-flex align-items-center gap-3">
+              <span class="badge bg-primary" style="font-size: 1.25rem; padding: 0.5rem 0.75rem;">
+                <%= table.name %>
+              </span>
+              <div>
+                <div class="fw-semibold"><%= table.name %></div>
+                <div class="text-muted small">
+                  <i class="bi bi-people"></i> 
+                  <%= table.capacity ? "#{table.capacity} seats" : t('.no_capacity', default: 'Capacity not set') %>
+                </div>
+              </div>
+            </div>
+            <div class="btn-group">
+              <%= link_to edit_restaurant_tablesetting_path(restaurant, table), 
+                  class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
+                <i class="bi bi-pencil"></i>
+              <% end %>
+              
+              <%= link_to restaurant_tablesetting_path(restaurant, table), 
+                  method: :delete,
+                  data: { confirm: t('.confirm_delete', default: 'Delete this table?') },
+                  class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
+                <i class="bi bi-trash"></i>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="d-flex gap-2 align-items-center flex-wrap">
+            <% if table.free? %>
+              <span class="badge bg-success">
+                <i class="bi bi-check-circle"></i> <%= t('.free', default: 'Free') %>
+              </span>
+            <% elsif table.occupied? %>
+              <span class="badge bg-warning">
+                <i class="bi bi-person-fill"></i> <%= t('.occupied', default: 'Occupied') %>
+              </span>
+            <% elsif table.archived? %>
+              <span class="badge bg-secondary">
+                <i class="bi bi-archive"></i> <%= t('.archived', default: 'Archived') %>
+              </span>
+            <% end %>
+            
+            <% table_smartmenu = Smartmenu.find_by(tablesetting_id: table.id) %>
+            <% if table_smartmenu&.slug %>
+              <%= link_to smartmenu_path(table_smartmenu.slug), 
+                  class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                  target: '_blank',
+                  title: t('.view_qr_code', default: 'View QR Code for this table') do %>
+                <i class="bi bi-qr-code"></i> <%= t('.view_qr', default: 'View QR') %>
+              <% end %>
+            <% else %>
+              <button class="btn-2025 btn-2025-ghost btn-2025-sm" 
+                      disabled
+                      title="<%= t('.no_smartmenu', default: 'No QR code generated yet') %>">
+                <i class="bi bi-qr-code"></i> <%= t('.view_qr', default: 'View QR') %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <div class="content-card-2025">
+    <h2 class="content-card-title">
+      <i class="bi bi-layout-wtf"></i>
+      <%= t('.table_settings', default: 'Table Settings') %>
+    </h2>
+    
+    <div class="text-center py-5">
+      <i class="bi bi-layout-wtf text-muted" style="font-size: 3rem;"></i>
+      <h3 class="mt-3 text-muted">
+        <%= t('.no_tables', default: 'No tables configured yet') %>
+      </h3>
+      <p class="text-muted">
+        <%= t('.no_tables_description', default: 'Set up your restaurant tables to enable table-specific QR codes and ordering.') %>
+      </p>
+      <%= link_to new_restaurant_tablesetting_path(restaurant), 
+          class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3' do %>
+        <i class="bi bi-plus-circle"></i>
+        <%= t('.create_first_table', default: 'Create Your First Table') %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<style>
+  /* Table Views - Responsive */
+  .tables-table-view {
+    display: block;
+  }
+  
+  .tables-cards-view {
+    display: none;
+  }
+  
+  /* Mobile: Show cards, hide table */
+  @media (max-width: 768px) {
+    .tables-table-view {
+      display: none;
+    }
+    
+    .tables-cards-view {
+      display: block;
+    }
+  }
+  
+  /* Mobile Table Card */
+  .table-card-mobile {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-3);
+    transition: all var(--transition-base);
+  }
+  
+  .table-card-mobile:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-gray-300);
+  }
+  
+  .table-card-mobile:last-child {
+    margin-bottom: 0;
+  }
+</style>

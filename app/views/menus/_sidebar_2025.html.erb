@@ -1,0 +1,101 @@
+<%# 
+  Sidebar Navigation for Menu Configuration
+  Groups menu management into 3 logical sections
+%>
+
+<% 
+  # Calculate counts for badges
+  menu = local_assigns[:menu] || @menu
+  sections_count = menu.menusections.count rescue 0
+  items_count = menu.menuitems.count rescue 0
+  schedules_count = menu.menuavailabilities.count rescue 0
+  current_section = local_assigns[:current_section] || 'details'
+%>
+
+<aside class="sidebar-2025" data-sidebar-target="sidebar">
+  <!-- Mobile Header -->
+  <div class="sidebar-header">
+    <h3><%= menu.name %></h3>
+    <button data-action="click->sidebar#close" aria-label="Close menu">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <!-- CORE SECTION -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">
+      <i class="bi bi-file-text"></i>
+      <%= t('.core', default: 'CORE') %>
+    </div>
+    
+    <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'details'), 
+        class: "sidebar-link #{'active' if current_section == 'details'}",
+        data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-info-circle"></i>
+      <span><%= t('.details', default: 'Details') %></span>
+    <% end %>
+    
+    <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'design'), 
+        class: "sidebar-link #{'active' if current_section == 'design'}",
+        data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-palette"></i>
+      <span><%= t('.design', default: 'Design') %></span>
+    <% end %>
+  </div>
+
+  <!-- CONTENT SECTION -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">
+      <i class="bi bi-grid-3x3-gap"></i>
+      <%= t('.content', default: 'CONTENT') %>
+    </div>
+    
+    <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'sections'), 
+        class: "sidebar-link #{'active' if current_section == 'sections'}",
+        data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-layout-text-sidebar"></i>
+      <span><%= t('.sections', default: 'Sections') %></span>
+      <% if sections_count > 0 %>
+        <span class="sidebar-link-badge"><%= sections_count %></span>
+      <% end %>
+    <% end %>
+    
+    <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'items'), 
+        class: "sidebar-link #{'active' if current_section == 'items'}",
+        data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-list-ul"></i>
+      <span><%= t('.items', default: 'Items') %></span>
+      <% if items_count > 0 %>
+        <span class="sidebar-link-badge"><%= items_count %></span>
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- SETUP SECTION -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">
+      <i class="bi bi-gear"></i>
+      <%= t('.setup', default: 'SETUP') %>
+    </div>
+    
+    <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'schedule'), 
+        class: "sidebar-link #{'active' if current_section == 'schedule'}",
+        data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-calendar-check"></i>
+      <span><%= t('.schedule', default: 'Schedule') %></span>
+      <% if schedules_count > 0 %>
+        <span class="sidebar-link-badge"><%= schedules_count %></span>
+      <% end %>
+    <% end %>
+    
+    <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'qrcode'), 
+        class: "sidebar-link #{'active' if current_section == 'qrcode'}",
+        data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-qr-code"></i>
+      <span><%= t('.qrcode', default: 'QR Code') %></span>
+    <% end %>
+  </div>
+</aside>
+
+<!-- Mobile Overlay -->
+<div class="sidebar-overlay" data-sidebar-target="overlay" data-action="click->sidebar#close"></div>

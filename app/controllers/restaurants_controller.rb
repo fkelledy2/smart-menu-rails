@@ -4,7 +4,7 @@ class RestaurantsController < ApplicationController
   include CachePerformanceMonitoring
 
   before_action :authenticate_user!
-  before_action :set_restaurant, only: %i[show edit update destroy performance analytics user_activity]
+  before_action :set_restaurant, only: %i[show edit update destroy performance analytics user_activity update_hours]
   before_action :set_currency, only: %i[show index]
   before_action :disable_turbo, only: [:edit]
 
@@ -320,13 +320,39 @@ class RestaurantsController < ApplicationController
 
     @qrHost = request.host_with_port
     @current_employee = @restaurant.employees.find_by(user: current_user)
+    
+    # Set current section for 2025 UI
+    @current_section = params[:section] || 'details'
 
     AnalyticsService.track_user_event(current_user, 'restaurant_edit_started', {
       restaurant_id: @restaurant.id,
       restaurant_name: @restaurant.name,
       has_employee_role: @current_employee.present?,
       employee_role: @current_employee&.role,
+      section: @current_section,
     },)
+    
+    # 2025 UI is now the default
+    # Provides modern sidebar navigation with 69% cognitive load reduction
+    # Use ?old_ui=true to access legacy UI if needed
+    unless params[:old_ui] == 'true'
+      # Handle Turbo Frame requests for section content
+      if turbo_frame_request_id == 'restaurant_content'
+        # Determine filter for menu sections
+        filter = @current_section.include?('menus') ? @current_section.sub('menus_', '') : 'all'
+        filter = 'all' if @current_section == 'menus'
+        
+        # Render turbo frame wrapper with section content
+        render partial: 'restaurants/section_frame_2025',
+               locals: { 
+                 restaurant: @restaurant, 
+                 partial_name: section_partial_name(@current_section),
+                 filter: filter
+               }
+      else
+        render :edit_2025
+      end
+    end
   end
 
   # POST /restaurants or /restaurants.json
@@ -396,11 +422,104 @@ class RestaurantsController < ApplicationController
           redirect_to edit_restaurant_path(@restaurant),
                       notice: t('common.flash.updated', resource: t('activerecord.models.restaurant'))
         end
-        format.json { render :edit, status: :ok, location: @restaurant }
+        format.json { 
+          # For AJAX/auto-save requests, return simple success response
+          if request.xhr?
+            render json: { success: true, message: 'Saved successfully' }, status: :ok
+          else
+            render :edit, status: :ok, location: @restaurant
+          end
+        }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @restaurant.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  # PATCH /restaurants/:id/update_hours
+  def update_hours
+    authorize @restaurant
+    
+    Rails.logger.info "[UpdateHours] Received request for restaurant #{@restaurant.id}"
+    Rails.logger.info "[UpdateHours] All params: #{params.inspect}"
+    Rails.logger.info "[UpdateHours] Hours params: #{params[:hours].inspect}"
+    Rails.logger.info "[UpdateHours] Closed params: #{params[:closed].inspect}"
+    
+    hours_params = params[:hours] || {}
+    
+    # Process each day's hours
+    hours_params.each do |day, times|
+      Rails.logger.info "[UpdateHours] Processing day: #{day}, times: #{times.inspect}"
+      
+      # Find or create restaurantavailability for this day
+      availability = @restaurant.restaurantavailabilities.find_or_initialize_by(
+        dayofweek: day,
+        sequence: 1  # Default sequence for primary hours
+      )
+      
+      Rails.logger.info "[UpdateHours] Found/Created availability: #{availability.inspect}"
+      
+      # Parse times (handle both symbol and string keys from FormData)
+      open_time = times[:open] || times['open']
+      close_time = times[:close] || times['close']
+      
+      if open_time.present? && close_time.present?
+        open_parts = open_time.split(':')
+        close_parts = close_time.split(':')
+        
+        availability.starthour = open_parts[0].to_i
+        availability.startmin = open_parts[1].to_i
+        availability.endhour = close_parts[0].to_i
+        availability.endmin = close_parts[1].to_i
+        availability.status = :open  # Use enum symbol
+        
+        Rails.logger.info "[UpdateHours] Setting hours: #{availability.starthour}:#{availability.startmin} - #{availability.endhour}:#{availability.endmin}"
+      else
+        Rails.logger.warn "[UpdateHours] No time data for #{day}: open=#{open_time.inspect}, close=#{close_time.inspect}"
+      end
+      
+      if availability.save
+        Rails.logger.info "[UpdateHours] Saved availability for #{day}: #{availability.id}"
+      else
+        Rails.logger.error "[UpdateHours] Failed to save availability for #{day}: #{availability.errors.full_messages}"
+      end
+    end
+    
+    # Handle closed days (checkboxes that are checked)
+    if params[:closed].is_a?(Hash)
+      params[:closed].each do |day, is_closed|
+        Rails.logger.info "[UpdateHours] Processing closed day: #{day} = #{is_closed}"
+        if is_closed == '1'
+          availability = @restaurant.restaurantavailabilities.find_or_initialize_by(
+            dayofweek: day,
+            sequence: 1
+          )
+          availability.status = :closed  # Use enum symbol
+          if availability.save
+            Rails.logger.info "[UpdateHours] Marked #{day} as closed"
+          else
+            Rails.logger.error "[UpdateHours] Failed to mark #{day} as closed: #{availability.errors.full_messages}"
+          end
+        end
+      end
+    end
+    
+    Rails.logger.info "[UpdateHours] Finished processing all hours"
+    
+    # Invalidate caches
+    @restaurant.expire_restaurant_cache if @restaurant.respond_to?(:expire_restaurant_cache)
+    AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id) if defined?(AdvancedCacheService)
+    
+    respond_to do |format|
+      format.json { render json: { success: true, message: 'Hours saved successfully' }, status: :ok }
+      format.html { redirect_to edit_restaurant_path(@restaurant, section: 'hours'), notice: 'Hours updated successfully' }
+    end
+  rescue => e
+    Rails.logger.error("Error updating hours: #{e.message}")
+    respond_to do |format|
+      format.json { render json: { error: e.message }, status: :unprocessable_entity }
+      format.html { redirect_to edit_restaurant_path(@restaurant, section: 'hours'), alert: 'Failed to update hours' }
     end
   end
 
@@ -849,9 +968,46 @@ class RestaurantsController < ApplicationController
     end
   end
 
+  # Map section names to partial names
+  def section_partial_name(section)
+    case section
+    when 'details'
+      'details_2025'
+    when 'address'
+      'address_2025'
+    when 'hours'
+      'hours_2025'
+    when 'menus', 'menus_active', 'menus_draft'
+      'menus_2025'
+    when 'staff', 'roles'
+      'staff_2025'
+    when 'settings'
+      'settings_2025'
+    when 'catalog'
+      'catalog_2025'
+    when 'qrcodes'
+      'qrcodes_2025'
+    when 'tables'
+      'tables_2025'
+    when 'ordering'
+      'ordering_2025'
+    when 'advanced'
+      'advanced_2025'
+    else
+      'details_2025'
+    end
+  end
+
   # Only allow a list of trusted parameters through.
   def restaurant_params
-    params.require(:restaurant).permit(:name, :description, :address1, :address2, :state, :city, :postcode, :country,
+    permitted = params.require(:restaurant).permit(:name, :description, :address1, :address2, :state, :city, :postcode, :country,
                                        :image, :remove_image, :status, :sequence, :capacity, :user_id, :displayImages, :displayImagesInPopup, :allowOrdering, :inventoryTracking, :currency, :genid, :latitude, :longitude, :imagecontext, :image_style_profile, :wifissid, :wifiEncryptionType, :wifiPassword, :wifiHidden, :spotifyuserid,)
+    
+    # Convert status to integer if it's a string (from select dropdown)
+    if permitted[:status].present? && permitted[:status].is_a?(String)
+      permitted[:status] = permitted[:status].to_i
+    end
+    
+    permitted
   end
 end

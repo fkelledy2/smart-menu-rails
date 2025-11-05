@@ -1,34 +1,64 @@
-<%= render 'shared/customcss' %>
-<div class="page-header">
-  <div class="row">
-    <div class="col-12">
-      <h4>
-        <%= link_to edit_restaurant_path(id: @restaurant.id), class: "link-dark" do %>
-          <%= @restaurant.name %>
-        <% end %>
-      </h4>
+<%# 
+  New Size - 2025 Design System
+  Modern form layout with consistent styling
+%>
+
+<!-- Page Header -->
+<div class="container-fluid px-0 pb-4">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <div>
+      <!-- Breadcrumb -->
+      <div class="text-sm text-gray-500 mb-2">
+        <%= link_to @restaurant.name, edit_restaurant_path(@restaurant), class: 'text-primary' %>
+        <i class="bi bi-chevron-right"></i>
+        <%= link_to t('.sizes', default: 'Sizes'), restaurant_sizes_path(@restaurant), class: 'text-primary' %>
+        <i class="bi bi-chevron-right"></i>
+        <%= t('.new', default: 'New') %>
+      </div>
+      
+      <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+        <i class="bi bi-plus-circle"></i>
+        <%= t('.new_size', default: 'New Size') %>
+      </h1>
+      <p class="text-sm text-gray-500">
+        <%= t('.description', default: 'Create a new size variant for menu items') %>
+      </p>
     </div>
-  </div>
-</div>
-<ul class="nav-tabs-height nav nav-tabs overflow-auto flex-nowrap" id="taxTabsBack" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark">
-      <%= link_to edit_restaurant_path(id: @restaurant.id), class: "link-dark" do %>
-        <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
+    
+    <div class="d-flex gap-2">
+      <%= link_to restaurant_sizes_path(@restaurant), 
+          class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+        <i class="bi bi-x-lg"></i> <%= t('.cancel', default: 'Cancel') %>
       <% end %>
-    </button>
-  </li>
-</ul>
-<p>
-<div class="page-header">
-  <div class="row">
-    <div class="col-12">
-        <h4><%= t(".size") %></h4>
     </div>
   </div>
 </div>
-<div class="row">
-  <div class="col-12">
-    <%= render 'form', size: @size %>
-  </div>
+
+<!-- Form Card -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-rulers"></i>
+    <%= t('.size_details', default: 'Size Details') %>
+  </h2>
+  
+  <%= render 'form', size: @size %>
 </div>
+
+<style>
+  .text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  
+  .text-gray-900 {
+    color: var(--color-gray-900);
+  }
+  
+  .text-gray-500 {
+    color: var(--color-gray-500);
+  }
+  
+  .text-sm {
+    font-size: 0.875rem;
+  }
+</style>

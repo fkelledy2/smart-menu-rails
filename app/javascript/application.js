@@ -1,8 +1,11 @@
 // Main entry point for the Smart Menu application
 // Modern, modular JavaScript architecture with enhanced functionality
+// VERSION: 2025.11.03.2314 - Auto-save routing fix
 
 // Initialize Sentry error tracking (must be first)
 import './sentry';
+
+console.log('[SmartMenu] Loading application.js v2025.11.03.2314');
 
 // Global error handler for module resolution issues
 window.addEventListener('error', (event) => {
@@ -37,6 +40,9 @@ window.addEventListener('unhandledrejection', (event) => {
 import '@hotwired/turbo-rails';
 import { Application } from '@hotwired/stimulus';
 
+// Import Stimulus controllers
+import './controllers';
+
 // Import enhanced restaurant context system
 import RestaurantContext from './utils/RestaurantContext.js';
 
@@ -46,6 +52,7 @@ import * as bootstrap from 'bootstrap';
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
 import TomSelect from 'tom-select';
 import localTime from 'local-time';
+import QRCodeStyling from 'qr-code-styling';
 
 // Import all the initialization functions like the old system
 import { initTomSelectIfNeeded } from './tomselect_helper';
@@ -92,6 +99,10 @@ window.$ = window.jQuery = jquery;
 window.bootstrap = bootstrap;
 window.Tabulator = Tabulator;
 window.TomSelect = TomSelect;
+window.QRCodeStyling = QRCodeStyling;
+
+// Make initialization functions available globally for inline scripts
+window.initialiseSlugs = initialiseSlugs;
 
 console.log(
   '[SmartMenu] Libraries loaded - TomSelect:',
@@ -120,6 +131,13 @@ try {
 
 import MenuImportController from './controllers/menu_import_controller.js';
 application.register('menu-import', MenuImportController);
+
+import SidebarController from './controllers/sidebar_controller.js';
+application.register('sidebar', SidebarController);
+
+import AutoSaveController from './controllers/auto_save_controller.js';
+application.register('auto-save', AutoSaveController);
+console.log('[SmartMenu] Auto-save controller registered');
 
 // Register stimulus controllers manually for importmap compatibility
 // Note: Controllers are loaded via importmap's pin_all_from directive
@@ -174,9 +192,9 @@ class ApplicationManager {
     // Log performance summary
     if (this.performanceMonitor) {
       const summary = this.performanceMonitor.getSummary();
-      console.log('[SmartMenu] Application initialized successfully', summary);
+      console.log('[SmartMenu] Application initialized successfully v2025.11.03.2314', summary);
     } else {
-      console.log('[SmartMenu] Application initialized successfully');
+      console.log('[SmartMenu] Application initialized successfully v2025.11.03.2314');
     }
   }
 
@@ -230,23 +248,147 @@ class ApplicationManager {
       PAYMENT_SUCCESS: 'payment:success',
     };
 
-    // Create basic FormManager fallback
+    // Create basic FormManager fallback with auto-save support
     this.FormManager = class BasicFormManager {
       constructor(container = document) {
         this.container = container;
         this.isDestroyed = false;
+        this.saveTimeouts = new Map();
       }
 
       init() {
         console.log('[SmartMenu] Basic FormManager initialized');
+        this.initializeAutoSave();
         return this;
       }
 
+      initializeAutoSave() {
+        // Find all forms with data-auto-save attribute
+        const autoSaveForms = this.container.querySelectorAll('form[data-auto-save="true"]');
+        
+        autoSaveForms.forEach((form) => {
+          const saveDelay = parseInt(form.dataset.autoSaveDelay) || 2000;
+          
+          const debouncedSave = () => {
+            // Clear existing timeout for this form
+            if (this.saveTimeouts.has(form)) {
+              clearTimeout(this.saveTimeouts.get(form));
+            }
+            
+            // Set new timeout
+            const timeoutId = setTimeout(() => {
+              this.autoSaveForm(form);
+            }, saveDelay);
+            
+            this.saveTimeouts.set(form, timeoutId);
+          };
+          
+          // Bind to all form inputs
+          const inputs = form.querySelectorAll('input, select, textarea');
+          inputs.forEach((input) => {
+            input.addEventListener('input', debouncedSave);
+            input.addEventListener('change', debouncedSave);
+          });
+          
+          console.log('[SmartMenu] Auto-save enabled for form:', form.action);
+        });
+      }
+
+      async autoSaveForm(form) {
+        try {
+          const formData = new FormData(form);
+          const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
+          
+          // Use form.action if it's set correctly, otherwise construct from pathname
+          let url = form.action;
+          
+          // If form.action is empty or contains /edit, reconstruct it
+          if (!url || url.includes('/edit')) {
+            const pathname = window.location.pathname.replace(/\/edit.*$/, '');
+            url = window.location.origin + pathname;
+          }
+          
+          console.log('[SmartMenu] Form action:', form.action);
+          console.log('[SmartMenu] Final URL for PATCH:', url);
+          console.log('[SmartMenu] Using XMLHttpRequest to bypass fetch interceptors');
+          
+          // Use XMLHttpRequest instead of fetch to avoid browser extension interference
+          const response = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('PATCH', url);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader('X-CSRF-Token', csrfToken || '');
+            xhr.setRequestHeader('Accept', 'application/json');
+            
+            xhr.onload = () => {
+              console.log('[SmartMenu] XHR completed, status:', xhr.status);
+              resolve({
+                ok: xhr.status >= 200 && xhr.status < 300,
+                status: xhr.status,
+                json: async () => JSON.parse(xhr.responseText || '{}')
+              });
+            };
+            
+            xhr.onerror = () => {
+              console.error('[SmartMenu] XHR error');
+              reject(new Error('Network error'));
+            };
+            
+            console.log('[SmartMenu] Sending XHR to:', url);
+            xhr.send(formData);
+          });
+
+          if (response.ok) {
+            console.log('[SmartMenu] Form auto-saved successfully');
+            this.showSaveIndicator(form, 'saved');
+          } else {
+            console.error('[SmartMenu] Auto-save failed:', response.status);
+            this.showSaveIndicator(form, 'error');
+          }
+        } catch (error) {
+          console.error('[SmartMenu] Auto-save error:', error);
+          this.showSaveIndicator(form, 'error');
+        }
+      }
+
+      showSaveIndicator(form, status) {
+        // Show a temporary save indicator
+        let indicator = form.querySelector('.auto-save-indicator');
+        if (!indicator) {
+          indicator = document.createElement('div');
+          indicator.className = 'auto-save-indicator';
+          indicator.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 6px; z-index: 9999; font-size: 14px; transition: opacity 0.3s;';
+          form.appendChild(indicator);
+        }
+        
+        if (status === 'saved') {
+          indicator.textContent = '✓ Saved';
+          indicator.style.backgroundColor = '#10b981';
+          indicator.style.color = 'white';
+        } else if (status === 'error') {
+          indicator.textContent = '✗ Save failed';
+          indicator.style.backgroundColor = '#ef4444';
+          indicator.style.color = 'white';
+        }
+        
+        indicator.style.opacity = '1';
+        
+        // Fade out after 2 seconds
+        setTimeout(() => {
+          indicator.style.opacity = '0';
+          setTimeout(() => indicator.remove(), 300);
+        }, 2000);
+      }
+
       refresh() {
-        // Basic refresh logic
+        // Re-initialize auto-save for any new forms
+        this.initializeAutoSave();
       }
 
       destroy() {
+        // Clear all timeouts
+        this.saveTimeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+        this.saveTimeouts.clear();
         this.isDestroyed = true;
       }
 

@@ -1,16 +1,17 @@
-<div class="row">
+<!-- 2025 Design System: Updated with new button styles -->
+<div class="row mb-4">
   <div class="col-6">
     <h1><%= t(".menuItems") %></h1>
   </div>
   <div class="col-6 text-end">
-    <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t('common.activate') %></button>
-    <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t('common.deactivate') %></button>
+    <button id="activate-row" class='btn-2025 btn-2025-primary btn-2025-sm' disabled><%= t('common.activate') %></button>
+    <button id="deactivate-row" class='btn-2025 btn-2025-outline-danger btn-2025-sm' disabled><%= t('common.deactivate') %></button>
     <% if @menu %>
-      <%= link_to edit_restaurant_menu_path(@menu.restaurant, @menu), class: 'btn btn-sm btn-dark', title: 'Go to menu to add items to specific sections' do %>
+      <%= link_to edit_restaurant_menu_path(@menu.restaurant, @menu), class: 'btn-2025 btn-2025-primary btn-2025-md', title: 'Go to menu to add items to specific sections' do %>
         <i class="bi bi-plus"></i> <%= t(".menuItem") %>
       <% end %>
     <% else %>
-      <%= link_to '#', class: 'btn btn-sm btn-dark disabled' do %>
+      <%= link_to '#', class: 'btn-2025 btn-2025-primary btn-2025-md disabled' do %>
         <i class="bi bi-plus"></i> <%= t(".menuItem") %>
       <% end %>
     <% end %>

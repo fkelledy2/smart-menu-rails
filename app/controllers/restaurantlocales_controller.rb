@@ -28,14 +28,15 @@ class RestaurantlocalesController < ApplicationController
   def new
     @restaurantlocale = Restaurantlocale.new
     if params[:restaurant_id]
-      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-      @restaurantlocale.restaurant = @futureParentRestaurant
+      @restaurant = Restaurant.find(params[:restaurant_id])
+      @restaurantlocale.restaurant = @restaurant
     end
     authorize @restaurantlocale
   end
 
   # GET /restaurantlocales/1/edit
   def edit
+    @restaurant = @restaurantlocale.restaurant
     authorize @restaurantlocale
   end
 

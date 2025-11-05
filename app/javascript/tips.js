@@ -5,7 +5,9 @@ export function initTips() {
     initTomSelectIfNeeded('#tip_restaurant_id', {});
   }
 
-  if ($('#restaurantTabs').length) {
+  // Initialize tip table if it exists on the page
+  const tipTableElement = document.getElementById('restaurant-tip-table');
+  if (tipTableElement) {
     function status(cell, formatterParams) {
       return cell.getRow().getData('data').status.toUpperCase();
     }
@@ -15,8 +17,6 @@ export function initTips() {
       const rowData = cell.getRow().getData('data').percentage;
       return "<a class='link-dark' href='/tips/" + id + "/edit'>" + rowData + '</a>';
     }
-    const tipTableElement = document.getElementById('restaurant-tip-table');
-    if (!tipTableElement) return; // Exit if element doesn't exist
     const restaurantId = tipTableElement.getAttribute('data-bs-restaurant_id');
     const restaurantTipTable = new Tabulator('#restaurant-tip-table', {
       dataLoader: false,

@@ -11,9 +11,9 @@ class TaxesController < ApplicationController
   def index
     if params[:restaurant_id]
       @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-      @taxes = policy_scope(Tax).where(restaurant: @futureParentRestaurant, archived: false)
+      @taxes = policy_scope(Tax).where(restaurant: @futureParentRestaurant, archived: false).where.not(status: :archived)
     else
-      @taxes = policy_scope(Tax).where(archived: false)
+      @taxes = policy_scope(Tax).where(archived: false).where.not(status: :archived)
     end
   end
 

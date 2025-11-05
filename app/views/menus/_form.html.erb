@@ -1,15 +1,19 @@
-  <div class="row">
-    <div class="col-12">
-        <span style='position:relative; top:25px;right:35px;' class="float-end">
-          <div class="btn-group" role="group">
-            <div style='display:none'>
-                <%= button_to 'Optimise Images', regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), method: :post, class: 'btn btn-sm btn-dark', data: { turbo: false, confirm: 'Regenerate WebP derivatives for existing images?' }, title: 'Regenerate WebP derivatives for existing menu item images' %>
+  <% if menu.persisted? %>
+    <div class="row mb-3">
+      <div class="col-12">
+          <div class="float-end">
+            <div class="btn-group-2025" role="group">
+              <div style='display:none'>
+                  <%= button_to 'Optimise Images', regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), method: :post, class: 'btn-2025 btn-2025-secondary btn-2025-sm', data: { turbo: false, confirm: 'Regenerate WebP derivatives for existing images?' }, title: 'Regenerate WebP derivatives for existing menu item images' %>
+              </div>
+              <%= button_to regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu, generate_ai: true), method: :post, class: 'btn-2025 btn-2025-secondary btn-2025-sm', data: { turbo: false, confirm: 'Generate new AI images using DALL-E? This will cost API credits.' }, title: 'Generate new AI images for menu items using DALL-E' do %>
+                <i class="bi bi-stars"></i> Generate Images
+              <% end %>
             </div>
-            <%= button_to 'Generate Images', regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu, generate_ai: true), method: :post, class: 'btn btn-sm btn-dark', data: { turbo: false, confirm: 'Generate new AI images using DALL-E? This will cost API credits.' }, title: 'Generate new AI images for menu items using DALL-E' %>
           </div>
-        </span>
-    </div>
-</div>
+      </div>
+  </div>
+  <% end %>
 <%= menu_form_with(menu, auto_save: true, validate: true) do |form| %>
   <div class="form-group row">
     <div class="col-12">
@@ -19,21 +23,16 @@
                     <%=t(".details")%>
                     <% if menu.id %>
                     <span class="float-end">
-                    <div class="top-neg7 btn-group" role="group" aria-label="Button group with nested dropdown">
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-sm btn-dark">
-                                <% if @menu.smartmenu&.slug %>
-                                  <%= link_to smartmenu_path(@menu.smartmenu.slug), class: 'text-white text-decoration-none link-light' do %>
-                                    <i class="bi bi-eye-fill"></i>
-                                  <% end %>
-                                <% else %>
-                                  <span class="text-white text-decoration-none link-light disabled">
-                                    <i class="bi bi-eye-fill"></i>
-                                  </span>
-                                <% end %>
-                            </button>
-                        </div>
-                    </div>
+                      <% if @menu.smartmenu&.slug %>
+                        <%= link_to smartmenu_path(@menu.smartmenu.slug), class: 'btn-2025 btn-2025-secondary btn-2025-sm', target: '_blank' do %>
+                          <i class="bi bi-eye-fill"></i> Preview
+                        <% end %>
+                      <% else %>
+                        <button type="button" class="btn-2025 btn-2025-secondary btn-2025-sm" disabled>
+                          <i class="bi bi-eye-fill"></i> Preview
+                        </button>
+                      <% end %>
+                    </span>
                     <% end %>
                 </h4>
             </div>
@@ -193,14 +192,12 @@
     <div class="col-3">
     </div>
     <div class="col-9">
-        <span class="float-end">
+        <div class="d-flex justify-content-end gap-3">
         <% if menu.persisted? %>
-          <div class="btn btn-dark ">
-            <%= link_to t('common.delete'), restaurant_menu_path(menu.restaurant, menu), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
-          </div>
+          <%= link_to t('common.delete'), restaurant_menu_path(menu.restaurant, menu), method: :delete, class: "btn-2025 btn-2025-outline-danger btn-2025-md", data: { confirm: t('common.confirm') } %>
         <% end %>
-        <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
-        </span>
+        <%= form.submit value: t('common.save'), class: 'btn-2025 btn-2025-primary btn-2025-md' %>
+        </div>
     </div>
   </div>
   <div class="spacing-sm"></div>

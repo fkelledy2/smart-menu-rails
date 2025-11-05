@@ -1,0 +1,180 @@
+<%# 
+  EXAMPLE: Menus Index with 2025 Design System
+  This is an example of how to use the new resource list component
+  
+  To use this:
+  1. Rename this file to index.html.erb (backup the old one)
+  2. Or copy the render statement to your current index.html.erb
+%>
+
+<%= render 'shared/customcss' %>
+<%= render 'shared/currency' %>
+
+<% if current_user %>
+  <div class="container-fluid px-4 py-4">
+    <%= render 'shared/resource_list_2025',
+      title: 'Menus',
+      items: @menus,
+      columns: [
+        { 
+          key: :name, 
+          label: 'Menu Name', 
+          primary: true,
+          link: ->(menu) { edit_restaurant_menu_path(@restaurant, menu) }
+        },
+        { 
+          key: :status, 
+          label: 'Status', 
+          type: :badge 
+        },
+        { 
+          key: :updated_at, 
+          label: 'Last Modified', 
+          type: :date 
+        }
+      ],
+      actions: [
+        { 
+          label: '+ New Menu', 
+          path: new_restaurant_menu_path(@restaurant),
+          class: 'btn-2025 btn-2025-primary btn-2025-md'
+        }
+      ],
+      item_actions: [
+        {
+          label: 'Edit',
+          path: ->(menu) { edit_restaurant_menu_path(@restaurant, menu) },
+          class: ''
+        },
+        {
+          label: 'View Live',
+          path: ->(menu) { menu.smartmenu ? smartmenu_path(menu.smartmenu.slug) : '#' },
+          class: ''
+        },
+        {
+          label: 'Duplicate',
+          path: ->(menu) { duplicate_restaurant_menu_path(@restaurant, menu) },
+          method: :post,
+          class: ''
+        },
+        {
+          label: 'Delete',
+          path: ->(menu) { restaurant_menu_path(@restaurant, menu) },
+          method: :delete,
+          class: 'text-danger',
+          data: { confirm: 'Are you sure you want to delete this menu?' }
+        }
+      ],
+      empty_message: 'No menus yet',
+      empty_description: 'Create your first menu to get started with Smart Menu',
+      empty_action: {
+        label: 'Create First Menu',
+        path: new_restaurant_menu_path(@restaurant)
+      }
+    %>
+  </div>
+  
+  <!-- Bulk Actions Bar (appears when items selected) -->
+  <div id="bulk-actions-bar" 
+       class="position-fixed bottom-0 start-50 translate-middle-x bg-white border rounded-lg shadow-lg p-4 d-none"
+       style="z-index: 1000;">
+    <div class="d-flex align-items-center gap-3">
+      <span class="font-medium">
+        <span id="selected-count">0</span> selected
+      </span>
+      <button class="btn-2025 btn-2025-secondary btn-2025-sm" id="activate-selected">
+        Activate
+      </button>
+      <button class="btn-2025 btn-2025-secondary btn-2025-sm" id="deactivate-selected">
+        Deactivate
+      </button>
+      <button class="btn-2025 btn-2025-outline-danger btn-2025-sm" id="delete-selected">
+        Delete
+      </button>
+      <button class="btn-2025 btn-2025-ghost btn-2025-sm" id="clear-selection">
+        Clear
+      </button>
+    </div>
+  </div>
+  
+  <script>
+    // Simple bulk selection logic
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectAll = document.getElementById('select-all');
+      const checkboxes = document.querySelectorAll('.item-checkbox');
+      const bulkBar = document.getElementById('bulk-actions-bar');
+      const selectedCount = document.getElementById('selected-count');
+      
+      function updateBulkBar() {
+        const checked = document.querySelectorAll('.item-checkbox:checked').length;
+        selectedCount.textContent = checked;
+        
+        if (checked > 0) {
+          bulkBar.classList.remove('d-none');
+        } else {
+          bulkBar.classList.add('d-none');
+        }
+      }
+      
+      if (selectAll) {
+        selectAll.addEventListener('change', function() {
+          checkboxes.forEach(cb => cb.checked = this.checked);
+          updateBulkBar();
+        });
+      }
+      
+      checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateBulkBar);
+      });
+      
+      // Clear selection
+      document.getElementById('clear-selection')?.addEventListener('click', function() {
+        checkboxes.forEach(cb => cb.checked = false);
+        if (selectAll) selectAll.checked = false;
+        updateBulkBar();
+      });
+      
+      // Bulk activate
+      document.getElementById('activate-selected')?.addEventListener('click', function() {
+        const selected = Array.from(document.querySelectorAll('.item-checkbox:checked'))
+          .map(cb => cb.value);
+        
+        if (selected.length > 0) {
+          // TODO: Implement bulk activate
+          alert('Bulk activate: ' + selected.join(', '));
+        }
+      });
+      
+      // Bulk deactivate
+      document.getElementById('deactivate-selected')?.addEventListener('click', function() {
+        const selected = Array.from(document.querySelectorAll('.item-checkbox:checked'))
+          .map(cb => cb.value);
+        
+        if (selected.length > 0) {
+          // TODO: Implement bulk deactivate
+          alert('Bulk deactivate: ' + selected.join(', '));
+        }
+      });
+      
+      // Bulk delete
+      document.getElementById('delete-selected')?.addEventListener('click', function() {
+        const selected = Array.from(document.querySelectorAll('.item-checkbox:checked'))
+          .map(cb => cb.value);
+        
+        if (selected.length > 0 && confirm('Are you sure you want to delete ' + selected.length + ' menus?')) {
+          // TODO: Implement bulk delete
+          alert('Bulk delete: ' + selected.join(', '));
+        }
+      });
+    });
+  </script>
+
+<% else %>
+  <%# For unauthenticated users - keep existing logic %>
+  <%= format('%02d',@currentHour) %>:<%= format('%02d',@currentMin) %>
+  <% @menus.each do |menu| %>
+    <% if menu.available? @currentHour, @currentMin %>
+      <%= link_to menu.name, smartmenu_path(menu.smartmenu.slug), class: 'btn btn-dark' if menu.smartmenu&.slug %>
+    <% end %>
+  <% end %>
+<% end %>

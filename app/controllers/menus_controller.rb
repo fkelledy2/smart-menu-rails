@@ -5,7 +5,7 @@ class MenusController < ApplicationController
 
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_restaurant
-  before_action :set_menu, only: %i[show edit update destroy regenerate_images performance]
+  before_action :set_menu, only: %i[show edit update destroy regenerate_images performance update_availabilities]
 
   # Pundit authorization
   after_action :verify_authorized, except: %i[index performance]
@@ -208,6 +208,7 @@ class MenusController < ApplicationController
         @menu = Menu.find_by(id: params[:menu_id])
         if @menu.restaurant != @restaurant
           redirect_to root_url
+          return
         end
       end
       Analytics.track(
@@ -218,11 +219,31 @@ class MenusController < ApplicationController
         },
       )
     end
-    @qrURL = Rails.application.routes.url_helpers.restaurant_menu_url(@restaurant || @menu.restaurant, @menu,
-                                                                      host: request.host_with_port,)
-    @qrURL.sub! 'http', 'https'
-    @qrURL.sub! '/edit', ''
-    @qr = RQRCode::QRCode.new(@qrURL)
+    # Generate QR code for public menu URL (smartmenu slug)
+    if @menu.smartmenu&.slug
+      @qrURL = Rails.application.routes.url_helpers.smartmenu_url(@menu.smartmenu.slug, host: request.host_with_port)
+      @qrURL.sub! 'http', 'https'
+      @qr = RQRCode::QRCode.new(@qrURL)
+    end
+    
+    # Set current section for 2025 UI
+    @current_section = params[:section] || 'details'
+    
+    # 2025 UI is now the default
+    # Provides modern sidebar navigation
+    # Use ?old_ui=true to access legacy UI if needed
+    unless params[:old_ui] == 'true'
+      # Handle Turbo Frame requests for section content
+      if turbo_frame_request_id == 'menu_content'
+        render partial: 'menus/section_frame_2025',
+               locals: { 
+                 menu: @menu, 
+                 partial_name: menu_section_partial_name(@current_section)
+               }
+      else
+        render :edit_2025
+      end
+    end
   end
 
   # POST /menus or /menus.json
@@ -319,6 +340,91 @@ class MenusController < ApplicationController
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menu.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  # PATCH /restaurants/:restaurant_id/menus/:id/update_availabilities
+  def update_availabilities
+    authorize @menu
+    
+    Rails.logger.info "[UpdateAvailabilities] Received request for menu #{@menu.id}"
+    Rails.logger.info "[UpdateAvailabilities] Availabilities params: #{params[:availabilities].inspect}"
+    Rails.logger.info "[UpdateAvailabilities] Inactive params: #{params[:inactive].inspect}"
+    
+    availabilities_params = params[:availabilities] || {}
+    
+    # Process each day's availabilities
+    availabilities_params.each do |day, times|
+      Rails.logger.info "[UpdateAvailabilities] Processing day: #{day}, times: #{times.inspect}"
+      
+      # Find or create menuavailability for this day
+      availability = @menu.menuavailabilities.find_or_initialize_by(
+        dayofweek: day,
+        sequence: 1  # Default sequence for primary availability
+      )
+      
+      Rails.logger.info "[UpdateAvailabilities] Found/Created availability: #{availability.inspect}"
+      
+      # Parse times (handle both symbol and string keys from FormData)
+      start_time = times[:start] || times['start']
+      end_time = times[:end] || times['end']
+      
+      if start_time.present? && end_time.present?
+        start_parts = start_time.split(':')
+        end_parts = end_time.split(':')
+        
+        availability.starthour = start_parts[0].to_i
+        availability.startmin = start_parts[1].to_i
+        availability.endhour = end_parts[0].to_i
+        availability.endmin = end_parts[1].to_i
+        availability.status = :active  # Use enum symbol
+        
+        Rails.logger.info "[UpdateAvailabilities] Setting times: #{availability.starthour}:#{availability.startmin} - #{availability.endhour}:#{availability.endmin}"
+      else
+        Rails.logger.warn "[UpdateAvailabilities] No time data for #{day}: start=#{start_time.inspect}, end=#{end_time.inspect}"
+      end
+      
+      if availability.save
+        Rails.logger.info "[UpdateAvailabilities] Saved availability for #{day}: #{availability.id}"
+      else
+        Rails.logger.error "[UpdateAvailabilities] Failed to save availability for #{day}: #{availability.errors.full_messages}"
+      end
+    end
+    
+    # Handle inactive days (checkboxes that are checked)
+    if params[:inactive].is_a?(Hash)
+      params[:inactive].each do |day, is_inactive|
+        Rails.logger.info "[UpdateAvailabilities] Processing inactive day: #{day} = #{is_inactive}"
+        if is_inactive == '1'
+          availability = @menu.menuavailabilities.find_or_initialize_by(
+            dayofweek: day,
+            sequence: 1
+          )
+          availability.status = :inactive  # Use enum symbol
+          if availability.save
+            Rails.logger.info "[UpdateAvailabilities] Marked #{day} as inactive"
+          else
+            Rails.logger.error "[UpdateAvailabilities] Failed to mark #{day} as inactive: #{availability.errors.full_messages}"
+          end
+        end
+      end
+    end
+    
+    Rails.logger.info "[UpdateAvailabilities] Finished processing all availabilities"
+    
+    # Invalidate caches
+    AdvancedCacheService.invalidate_menu_caches(@menu.id) if defined?(AdvancedCacheService)
+    AdvancedCacheService.invalidate_restaurant_caches(@menu.restaurant.id) if defined?(AdvancedCacheService)
+    
+    respond_to do |format|
+      format.json { render json: { success: true, message: 'Availabilities saved successfully' }, status: :ok }
+      format.html { redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'schedule'), notice: 'Availabilities updated successfully' }
+    end
+  rescue => e
+    Rails.logger.error("Error updating availabilities: #{e.message}")
+    respond_to do |format|
+      format.json { render json: { error: e.message }, status: :unprocessable_entity }
+      format.html { redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'schedule'), alert: 'Failed to update availabilities' }
     end
   end
 
@@ -450,6 +556,19 @@ class MenusController < ApplicationController
   end
 
   private
+
+  # Map section names to partial names for 2025 UI
+  def menu_section_partial_name(section)
+    case section
+    when 'details' then 'details_2025'
+    when 'design' then 'design_2025'
+    when 'sections' then 'sections_2025'
+    when 'items' then 'items_2025'
+    when 'schedule' then 'schedule_2025'
+    when 'qrcode' then 'qrcode_2025'
+    else 'details_2025'
+    end
+  end
 
   # Skip policy scope verification for optimized restaurant-specific JSON requests
   def skip_policy_scope?

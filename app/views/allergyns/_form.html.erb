@@ -1,62 +1,76 @@
-<%= form_with(model: allergyn) do |form| %>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :name, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :description, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_area :description, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :symbol, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :symbol, class: 'form-control' %>
-    </div>
-  </div>
+<%= form_with(model: [allergyn.restaurant, allergyn]) do |form| %>
   <% if @futureParentRestaurant %>
     <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
   <% else %>
     <%= form.hidden_field :restaurant_id %>
   <% end %>
-  <div class="spacing-md"></div>
-  <div class="row">
-    <div class="col-3">
-    </div>
-    <div class="col-9">
-        <span class="float-end">
-        <% if allergyn.persisted? %>
-          <div class="btn btn-dark ">
-            <%= link_to t(".delete"), allergyn, method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
-          </div>
-        <% end %>
-        <%= form.submit value: t(".save"), class: 'btn btn-dark' %>
-        </span>
+  
+  <!-- Name -->
+  <div class="form-group-2025 mb-4">
+    <%= form.label :name, class: 'form-label-2025' do %>
+      <%= t('.name', default: 'Allergen Name') %>
+      <span class="text-danger">*</span>
+    <% end %>
+    <%= form.text_field :name, 
+        class: 'form-control-2025',
+        placeholder: t('.name_placeholder', default: 'e.g., Peanuts, Dairy, Gluten'),
+        required: true %>
+    <div class="form-help-2025">
+      <%= t('.name_help', default: 'The name of the allergen') %>
     </div>
   </div>
-  <% if allergyn.errors.any? %>
-  <div class="row">
-    <div class="col-2">
-        <%= t('common.errors') %>
+  
+  <!-- Description -->
+  <div class="form-group-2025 mb-4">
+    <%= form.label :description, class: 'form-label-2025' do %>
+      <%= t('.description', default: 'Description') %>
+    <% end %>
+    <%= form.text_area :description, 
+        class: 'form-control-2025',
+        rows: 3,
+        placeholder: t('.description_placeholder', default: 'Optional details about this allergen...') %>
+    <div class="form-help-2025">
+      <%= t('.description_help', default: 'Optional: Additional information about the allergen') %>
     </div>
-    <div class="col-10">
-      <ul>
-          <% allergyn.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
+  </div>
+  
+  <!-- Symbol -->
+  <div class="form-group-2025 mb-4">
+    <%= form.label :symbol, class: 'form-label-2025' do %>
+      <%= t('.symbol', default: 'Symbol') %>
+    <% end %>
+    <%= form.text_field :symbol, 
+        class: 'form-control-2025',
+        placeholder: t('.symbol_placeholder', default: 'e.g., 🥜, 🥛, 🌾'),
+        maxlength: 10 %>
+    <div class="form-help-2025">
+      <%= t('.symbol_help', default: 'Optional: Emoji or short symbol to represent this allergen') %>
+    </div>
+  </div>
+  
+  <!-- Error Messages -->
+  <% if allergyn.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <h6 class="alert-heading">
+        <i class="bi bi-exclamation-triangle"></i>
+        <%= t('common.errors', default: 'Errors') %>
+      </h6>
+      <ul class="mb-0">
+        <% allergyn.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
-  </div>
   <% end %>
+  
+  <!-- Form Actions -->
+  <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+    <%= link_to restaurant_allergyns_path(allergyn.restaurant), 
+        class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+      <%= t('common.cancel', default: 'Cancel') %>
+    <% end %>
+    
+    <%= form.submit t('common.save', default: 'Save'), 
+        class: 'btn-2025 btn-2025-primary btn-2025-md' %>
+  </div>
 <% end %>

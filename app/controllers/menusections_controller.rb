@@ -134,6 +134,25 @@ class MenusectionsController < ApplicationController
     end
   end
 
+  # PATCH /restaurants/:restaurant_id/menus/:menu_id/menusections/reorder
+  def reorder
+    @menu = Menu.find(params[:menu_id])
+    @restaurant = @menu.restaurant
+    
+    # Authorize that user owns this restaurant
+    authorize @menu, :update?
+    
+    # Update sequence for each section
+    params[:order].each do |item|
+      section = @menu.menusections.find(item[:id])
+      section.update_column(:sequence, item[:sequence])
+    end
+    
+    render json: { status: 'success' }, status: :ok
+  rescue => e
+    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+  end
+
   private
 
   # Skip policy scope verification for optimized JSON requests

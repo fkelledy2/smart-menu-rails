@@ -96,20 +96,21 @@ module JavascriptHelper
   end
 
   # Generate data attributes for forms
+  # Note: Don't include 'data-' prefix as form_with will add it automatically
   def form_data_attributes(type, options = {})
     attributes = {
-      "data-#{type}-form" => 'true',
+      "#{type}-form" => 'true',
     }
 
     # Add auto-save if enabled
     if options[:auto_save]
-      attributes['data-auto-save'] = 'true'
-      attributes['data-auto-save-delay'] = options[:auto_save_delay] || 2000
+      attributes['auto-save'] = 'true'
+      attributes['auto-save-delay'] = options[:auto_save_delay] || 2000
     end
 
     # Add validation if enabled
     if options[:validate]
-      attributes['data-validate'] = 'true'
+      attributes['validate'] = 'true'
     end
 
     attributes
@@ -211,10 +212,17 @@ module JavascriptHelper
   def restaurant_form_with(model, options = {}, &)
     form_options = {
       auto_save: options.delete(:auto_save) || false,
+      auto_save_delay: options.delete(:auto_save_delay),
       validate: options.delete(:validate) || true,
     }
 
     attributes = form_data_attributes('restaurant', form_options)
+    
+    # Ensure proper URL is set for auto-save to work correctly
+    # For existing records, use the standard resource path
+    if model.persisted?
+      options[:url] ||= restaurant_path(model)
+    end
 
     form_with(model: model, **options.merge(data: attributes), &)
   end
@@ -223,6 +231,7 @@ module JavascriptHelper
   def menu_form_with(model, options = {}, &)
     form_options = {
       auto_save: options.delete(:auto_save) || false,
+      auto_save_delay: options.delete(:auto_save_delay),
       validate: options.delete(:validate) || true,
     }
 

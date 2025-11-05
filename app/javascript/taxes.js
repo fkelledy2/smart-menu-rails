@@ -8,7 +8,9 @@ export function initTaxes() {
     initTomSelectIfNeeded('#tax_restaurant_id', {});
   }
 
-  if ($('#restaurantTabs').length) {
+  // Initialize tax table if it exists on the page
+  const taxTableElement = document.getElementById('restaurant-tax-table');
+  if (taxTableElement) {
     function status(cell, formatterParams) {
       return cell.getRow().getData('data').status.toUpperCase();
     }
@@ -18,8 +20,6 @@ export function initTaxes() {
       const rowData = cell.getRow().getData('data').name;
       return "<a class='link-dark' href='/taxes/" + id + "/edit'>" + rowData + '</a>';
     }
-    const taxTableElement = document.getElementById('restaurant-tax-table');
-    if (!taxTableElement) return; // Exit if element doesn't exist
     const restaurantId = taxTableElement.getAttribute('data-bs-restaurant_id');
     const restaurantTaxTable = new Tabulator('#restaurant-tax-table', {
       dataLoader: false,

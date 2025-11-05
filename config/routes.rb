@@ -117,6 +117,7 @@ Rails.application.routes.draw do
     # Kitchen Dashboard
     member do
       get 'kitchen', to: 'kitchen_dashboard#index', as: :kitchen_dashboard
+      patch 'update_hours', to: 'restaurants#update_hours'
     end
     
     # Restaurant configuration
@@ -176,7 +177,15 @@ Rails.application.routes.draw do
       
       # Menu structure and content
       resources :menusections do
+        collection do
+          patch :reorder
+        end
+        
         resources :menuitems do  # Full CRUD for menusection-specific menuitems
+          collection do
+            patch :reorder
+          end
+          
           member do
             get :analytics
           end
@@ -190,6 +199,7 @@ Rails.application.routes.draw do
       # Menu actions and analytics
       member do
         post :regenerate_images
+        patch :update_availabilities
         get :tablesettings, to: 'menus#show'
         get :analytics
         get :performance

@@ -1,0 +1,409 @@
+<%# 
+  2025 OCR Upload Page Redesign
+  Modern, intuitive drag-and-drop interface with better user guidance
+%>
+
+<!-- 2025 Design System: Modern OCR Upload Experience -->
+<div class="container-fluid px-4 py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8">
+      
+      <!-- Header with Progress Indicator -->
+      <div class="mb-5">
+        <h1 class="text-2xl font-semibold text-gray-900 mb-2">
+          <%= t('.title', default: 'Import Your Menu') %>
+        </h1>
+        <p class="text-base text-gray-600">
+          <%= t('.subtitle', default: 'Upload a PDF menu and our AI will extract all items automatically') %>
+        </p>
+        
+        <!-- Progress Steps -->
+        <div class="flex items-center gap-4 mt-6">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-medium">
+              1
+            </div>
+            <span class="text-sm font-medium text-gray-900">Upload</span>
+          </div>
+          <div class="flex-1 h-px bg-gray-300"></div>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-medium">
+              2
+            </div>
+            <span class="text-sm text-gray-500">Process</span>
+          </div>
+          <div class="flex-1 h-px bg-gray-300"></div>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-medium">
+              3
+            </div>
+            <span class="text-sm text-gray-500">Review</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Upload Card -->
+      <div class="card-2025 mb-4">
+        <%= form_with(model: [@restaurant, @ocr_menu_import], 
+                      local: true, 
+                      html: { class: 'needs-validation', novalidate: true, id: 'ocr-upload-form' }) do |f| %>
+          
+          <div class="card-2025-body">
+            <!-- Menu Name Input -->
+            <div class="form-group-2025 mb-6">
+              <%= f.label :name, t('.name_label', default: 'Menu Name'), class: 'form-label-2025' %>
+              <%= f.text_field :name, 
+                  class: 'form-control-2025', 
+                  placeholder: t('.name_placeholder', default: 'e.g., Summer Menu 2024'),
+                  required: true,
+                  data: { target: 'ocr-upload.nameInput' } %>
+              <div class="form-help-2025">
+                <%= t('.name_help', default: 'Give your menu a descriptive name for easy identification') %>
+              </div>
+            </div>
+
+            <!-- Drag and Drop Upload Area -->
+            <div class="form-group-2025">
+              <%= f.label :pdf_file, t('.pdf_label', default: 'Menu PDF'), class: 'form-label-2025' %>
+              
+              <!-- Drop Zone -->
+              <div class="upload-dropzone-2025" 
+                   id="dropzone"
+                   data-controller="dropzone">
+                
+                <!-- Initial State -->
+                <div class="upload-dropzone-content" id="dropzone-default">
+                  <div class="upload-icon-2025">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M24 4L24 32M24 4L14 14M24 4L34 14" stroke-linecap="round" stroke-linejoin="round"/>
+                      <rect x="8" y="32" width="32" height="10" rx="2"/>
+                    </svg>
+                  </div>
+                  <h3 class="upload-title-2025">
+                    <%= t('.drop_title', default: 'Drag and drop your PDF here') %>
+                  </h3>
+                  <p class="upload-subtitle-2025">
+                    <%= t('.drop_subtitle', default: 'or') %>
+                  </p>
+                  <label for="pdf-file-input" class="btn-2025 btn-2025-primary btn-2025-md">
+                    <i class="bi bi-folder"></i> <%= t('.browse_files', default: 'Browse Files') %>
+                  </label>
+                  <%= f.file_field :pdf_file, 
+                      id: 'pdf-file-input',
+                      class: 'd-none', 
+                      accept: 'application/pdf', 
+                      required: true,
+                      data: { target: 'dropzone.fileInput' } %>
+                  <p class="upload-hint-2025 mt-3">
+                    <%= t('.pdf_hint', default: 'PDF up to 10MB. Clear scans work best.') %>
+                  </p>
+                </div>
+
+                <!-- File Selected State (hidden by default) -->
+                <div class="upload-dropzone-selected d-none" id="dropzone-selected">
+                  <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div class="flex items-center gap-3">
+                      <div class="w-12 h-12 bg-primary-light rounded flex items-center justify-center">
+                        <i class="bi bi-file-earmark-pdf text-primary" style="font-size: 24px;"></i>
+                      </div>
+                      <div>
+                        <p class="font-medium text-gray-900" id="file-name"></p>
+                        <p class="text-sm text-gray-500" id="file-size"></p>
+                      </div>
+                    </div>
+                    <button type="button" 
+                            class="btn-2025 btn-2025-ghost btn-2025-sm"
+                            id="remove-file"
+                            aria-label="Remove file">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </div>
+                  
+                  <!-- File Preview (if possible) -->
+                  <div class="mt-4 p-4 bg-white border border-gray-200 rounded-lg">
+                    <canvas id="pdf-preview" style="max-width: 100%; height: auto;"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="card-2025-footer">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="text-sm text-gray-500">
+                <i class="bi bi-clock"></i>
+                <%= t('.estimated_time', default: 'Processing takes ~2-5 minutes') %>
+              </div>
+              <div class="d-flex gap-3">
+                <%= link_to t('.cancel', default: 'Cancel'), 
+                    restaurant_ocr_menu_imports_path(@restaurant), 
+                    class: 'btn-2025 btn-2025-secondary btn-2025-md' %>
+                <button type="submit" 
+                        class="btn-2025 btn-2025-primary btn-2025-md"
+                        id="submit-button"
+                        disabled>
+                  <i class="bi bi-magic"></i> <%= t('.start_processing', default: 'Start Processing') %>
+                </button>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Tips & Best Practices -->
+      <div class="card-2025">
+        <div class="card-2025-header">
+          <h3 class="card-2025-title">
+            <i class="bi bi-lightbulb text-warning"></i>
+            <%= t('.tips_title', default: 'Tips for Best Results') %>
+          </h3>
+        </div>
+        <div class="card-2025-body">
+          <div class="space-y-4">
+            <div class="tip-item-2025">
+              <div class="tip-icon-2025 bg-success-light">
+                <i class="bi bi-check-circle text-success"></i>
+              </div>
+              <div>
+                <h4 class="tip-title-2025">
+                  <%= t('.tip_quality_title', default: 'Use High-Quality Scans') %>
+                </h4>
+                <p class="tip-text-2025">
+                  <%= t('.tip_quality_text', default: 'Clear, high-resolution PDFs with good contrast work best. Avoid blurry or low-quality photos.') %>
+                </p>
+              </div>
+            </div>
+
+            <div class="tip-item-2025">
+              <div class="tip-icon-2025 bg-info-light">
+                <i class="bi bi-layout-text-window text-info"></i>
+              </div>
+              <div>
+                <h4 class="tip-title-2025">
+                  <%= t('.tip_format_title', default: 'Standard Menu Layout') %>
+                </h4>
+                <p class="tip-text-2025">
+                  <%= t('.tip_format_text', default: 'Menus with clear sections and item names separated from prices work best. Our AI can handle most layouts.') %>
+                </p>
+              </div>
+            </div>
+
+            <div class="tip-item-2025">
+              <div class="tip-icon-2025 bg-primary-light">
+                <i class="bi bi-translate text-primary"></i>
+              </div>
+              <div>
+                <h4 class="tip-title-2025">
+                  <%= t('.tip_language_title', default: 'Multiple Languages Supported') %>
+                </h4>
+                <p class="tip-text-2025">
+                  <%= t('.tip_language_text', default: 'We support menus in English, Italian, Spanish, French, and more. Multi-language menus work too!') %>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Styles for new components -->
+<style>
+  /* Upload Dropzone */
+  .upload-dropzone-2025 {
+    border: 2px dashed var(--color-gray-300);
+    border-radius: var(--radius-lg);
+    padding: var(--space-12);
+    text-align: center;
+    background-color: var(--color-gray-50);
+    transition: all var(--transition-base);
+    cursor: pointer;
+  }
+
+  .upload-dropzone-2025:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+  }
+
+  .upload-dropzone-2025.dragover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    transform: scale(1.02);
+  }
+
+  .upload-dropzone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .upload-icon-2025 {
+    color: var(--color-gray-400);
+    margin-bottom: var(--space-2);
+  }
+
+  .upload-title-2025 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--color-gray-900);
+    margin: 0;
+  }
+
+  .upload-subtitle-2025 {
+    font-size: var(--text-sm);
+    color: var(--color-gray-500);
+    margin: 0;
+  }
+
+  .upload-hint-2025 {
+    font-size: var(--text-xs);
+    color: var(--color-gray-500);
+    margin: 0;
+  }
+
+  /* Tip Items */
+  .tip-item-2025 {
+    display: flex;
+    gap: var(--space-4);
+    align-items-start;
+  }
+
+  .tip-icon-2025 {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .tip-title-2025 {
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--color-gray-900);
+    margin: 0 0 var(--space-1) 0;
+  }
+
+  .tip-text-2025 {
+    font-size: var(--text-sm);
+    color: var(--color-gray-600);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* Progress Steps */
+  .flex {
+    display: flex;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .justify-between {
+    justify-content: space-between;
+  }
+
+  .gap-2 {
+    gap: var(--space-2);
+  }
+
+  .gap-3 {
+    gap: var(--space-3);
+  }
+
+  .gap-4 {
+    gap: var(--space-4);
+  }
+
+  .flex-1 {
+    flex: 1;
+  }
+
+  .space-y-4 > * + * {
+    margin-top: var(--space-4);
+  }
+</style>
+
+<!-- JavaScript for drag-and-drop functionality -->
+<script>
+document.addEventListener('turbo:load', function() {
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('pdf-file-input');
+  const defaultState = document.getElementById('dropzone-default');
+  const selectedState = document.getElementById('dropzone-selected');
+  const submitButton = document.getElementById('submit-button');
+  const removeFileBtn = document.getElementById('remove-file');
+  
+  if (!dropzone || !fileInput) return;
+
+  // Drag and drop events
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropzone.addEventListener(eventName, preventDefaults, false);
+  });
+
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropzone.addEventListener(eventName, () => {
+      dropzone.classList.add('dragover');
+    }, false);
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropzone.addEventListener(eventName, () => {
+      dropzone.classList.remove('dragover');
+    }, false);
+  });
+
+  dropzone.addEventListener('drop', (e) => {
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFile(files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      handleFile(e.target.files[0]);
+    }
+  });
+
+  dropzone.addEventListener('click', (e) => {
+    if (e.target.id !== 'remove-file') {
+      fileInput.click();
+    }
+  });
+
+  removeFileBtn?.addEventListener('click', () => {
+    fileInput.value = '';
+    defaultState.classList.remove('d-none');
+    selectedState.classList.add('d-none');
+    submitButton.disabled = true;
+  });
+
+  function handleFile(file) {
+    if (file.type !== 'application/pdf') {
+      alert('Please select a PDF file');
+      return;
+    }
+
+    const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+    
+    document.getElementById('file-name').textContent = file.name;
+    document.getElementById('file-size').textContent = `${fileSizeMB} MB`;
+    
+    defaultState.classList.add('d-none');
+    selectedState.classList.remove('d-none');
+    submitButton.disabled = false;
+  }
+});
+</script>

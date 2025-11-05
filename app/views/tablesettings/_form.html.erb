@@ -43,8 +43,8 @@
       <%= form.text_field :capacity, class: 'form-control' %>
     </div>
   </div>
-  <% if @futureParentRestaurant %>
-      <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
+  <% if @restaurant %>
+      <%= form.hidden_field :restaurant_id, value: @restaurant.id %>
   <% else %>
       <%= form.hidden_field :restaurant_id %>
   <% end %>
@@ -56,7 +56,7 @@
         <span class="float-end">
         <% if tablesetting.persisted? %>
           <div class="btn btn-dark ">
-            <%= link_to t('common.delete'), tablesetting, method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
+            <%= link_to t('common.delete'), restaurant_tablesetting_path(tablesetting.restaurant, tablesetting), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
           </div>
         <% end %>
         <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>

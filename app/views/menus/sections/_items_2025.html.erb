@@ -1,0 +1,165 @@
+<%# 
+  Menu Items Section
+  View all menu items across all sections
+%>
+
+<% menu = local_assigns[:menu] || @menu %>
+<% restaurant = menu.restaurant %>
+
+<!-- Items Header -->
+<div class="content-card-2025">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="content-card-title mb-0">
+      <i class="bi bi-list-ul"></i>
+      <%= t('.menu_items', default: 'Menu Items') %>
+    </h2>
+    
+    <% if menu.menusections.any? %>
+      <%= link_to '#', 
+          class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+        <i class="bi bi-plus-circle"></i>
+        <%= t('.add_item', default: 'Add Item') %>
+      <% end %>
+    <% end %>
+  </div>
+  
+  <p class="text-muted mb-4">
+    <%= t('.items_description', default: 'View and manage all menu items across all sections') %>
+  </p>
+  
+  <% if menu.menuitems.any? %>
+    <!-- Items Table -->
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th style="width: 40px;"></th>
+            <th><%= t('.name', default: 'Name') %></th>
+            <th><%= t('.price', default: 'Price') %></th>
+            <th><%= t('.actions', default: 'Actions') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% menu.menusections.order(:sequence).each do |section| %>
+            <% section_items = section.menuitems.order(:sequence) %>
+            <% if section_items.any? %>
+              <!-- Section Header Row -->
+              <tr class="table-section-header">
+                <td colspan="4">
+                  <strong class="text-primary">
+                    <i class="bi bi-layout-text-sidebar"></i>
+                    <%= section.name %>
+                  </strong>
+                  <span class="badge bg-secondary ms-2"><%= section_items.count %> items</span>
+                </td>
+              </tr>
+              
+              <!-- Items in this section (sortable group) -->
+              <tbody class="sortable-group"
+                     data-controller="sortable"
+                     data-sortable-url-value="<%= reorder_restaurant_menu_menusection_menuitems_path(restaurant, menu, section) %>"
+                     data-sortable-handle-value=".item-handle">
+              <% section_items.each do |item| %>
+                <tr data-sortable-id="<%= item.id %>">
+                  <td class="item-handle" style="width: 40px; cursor: grab;">
+                    <i class="bi bi-grip-vertical text-muted"></i>
+                  </td>
+                  <td>
+                    <strong><%= item.name %></strong>
+                    <% if item.description.present? %>
+                      <div class="text-sm text-muted">
+                        <%= truncate(item.description, length: 50) %>
+                      </div>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if item.price.present? && item.price > 0 %>
+                      <% 
+                        currency_symbols = {
+                          'USD' => '$', 'EUR' => '€', 'GBP' => '£', 'JPY' => '¥',
+                          'CNY' => '¥', 'INR' => '₹', 'AUD' => 'A$', 'CAD' => 'C$',
+                          'CHF' => 'CHF', 'SEK' => 'kr', 'NZD' => 'NZ$', 'MXN' => '$',
+                          'SGD' => 'S$', 'HKD' => 'HK$', 'NOK' => 'kr', 'KRW' => '₩',
+                          'TRY' => '₺', 'RUB' => '₽', 'BRL' => 'R$', 'ZAR' => 'R'
+                        }
+                        currency_symbol = currency_symbols[restaurant.currency] || restaurant.currency || '$'
+                      %>
+                      <%= number_to_currency(item.price, unit: currency_symbol) %>
+                    <% else %>
+                      <span class="text-muted">-</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= link_to '#', 
+                        class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
+                      <i class="bi bi-pencil"></i>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Items Summary -->
+    <div class="alert alert-info mt-4">
+      <i class="bi bi-info-circle"></i>
+      <strong><%= menu.menuitems.count %></strong> <%= t('.total_items', default: 'total items') %>
+    </div>
+  <% else %>
+    <!-- Empty State -->
+    <div class="text-center py-5">
+      <i class="bi bi-list-ul text-muted" style="font-size: 4rem;"></i>
+      <h4 class="mt-3"><%= t('.no_items', default: 'No items yet') %></h4>
+      <p class="text-muted">
+        <%= t('.no_items_desc', default: 'Add sections first, then add items to those sections') %>
+      </p>
+      <%= link_to edit_restaurant_menu_path(restaurant, menu, section: 'sections'), 
+          class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3',
+          data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
+        <i class="bi bi-layout-text-sidebar"></i>
+        <%= t('.go_to_sections', default: 'Go to Sections') %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .table-section-header {
+    background-color: var(--color-gray-100);
+    border-top: 2px solid var(--color-gray-300);
+  }
+  
+  .table-section-header td {
+    padding: var(--space-3) var(--space-4);
+    font-weight: 600;
+  }
+  
+  .table-section-header:hover {
+    background-color: var(--color-gray-100) !important;
+  }
+  
+  /* Item drag handle styles */
+  .item-handle {
+    cursor: grab;
+    user-select: none;
+  }
+  
+  .item-handle:active {
+    cursor: grabbing;
+  }
+  
+  /* Sortable states */
+  .sortable-ghost {
+    opacity: 0.4;
+    background: var(--color-primary-light);
+  }
+  
+  .sortable-drag {
+    opacity: 1;
+    cursor: grabbing;
+  }
+</style>

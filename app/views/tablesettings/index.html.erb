@@ -1,17 +1,18 @@
 <% if current_user %>
-    <div class="row">
+    <!-- 2025 Design System: Updated with new button styles -->
+    <div class="row mb-4">
       <div class="col-sm-6">
         <h1><%= t('.table_settings') %></h1>
       </div>
       <div class="col-sm-6 text-end">
         <% if @futureParentRestaurant %>
-          <%= link_to restaurant_path(id: @futureParentRestaurant.id), class: 'btn btn-sm btn-light' do %>
+          <%= link_to restaurant_path(id: @futureParentRestaurant.id), class: 'btn-2025 btn-2025-secondary btn-2025-sm' do %>
             <i class="bi bi-chevron-left"></i>
           <% end %>
         <% end %>
-        <button id="unarchive-row" class='btn btn-sm btn-success' disabled><%= t('.unarchive') %></button>
-        <button id="archive-row"class='btn btn-sm btn-danger' disabled><%= t('.archive') %></button>
-        <%= link_to new_restaurant_tablesetting_path(@restaurant), class: 'btn btn-dark' do %>
+        <button id="unarchive-row" class='btn-2025 btn-2025-primary btn-2025-sm' disabled><%= t('.unarchive') %></button>
+        <button id="archive-row" class='btn-2025 btn-2025-outline-danger btn-2025-sm' disabled><%= t('.archive') %></button>
+        <%= link_to new_restaurant_tablesetting_path(@restaurant), class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
             <i class="bi bi-plus"></i> <%= t('.table_setting') %>
         <% end %>
       </div>
@@ -36,11 +37,11 @@
                   <div class="card-body">
                     <h2 class="card-title">
                         <% if tablesetting.status == 'occupied' %>
-                            <div class="btn btn-lg btn-danger">
+                            <div class="btn-2025 btn-2025-outline-danger btn-2025-lg">
                                 <h2><%= tablesetting.name %></h2>
                             </div>
                         <% else %>
-                            <%= link_to restaurant_tablesetting_path(@restaurant, tablesetting), class: 'btn btn-lg btn-success' do %>
+                            <%= link_to restaurant_tablesetting_path(@restaurant, tablesetting), class: 'btn-2025 btn-2025-primary btn-2025-lg' do %>
                                 <h2><%= tablesetting.name %></h2>
                             <% end %>
                         <% end %>

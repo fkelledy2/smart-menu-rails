@@ -1,52 +1,95 @@
 <%= form_with(model: [restaurantlocale.restaurant, restaurantlocale]) do |form| %>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :locale, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.select :locale, [['English', 'EN'], ['French', 'FR'], ['Italian', 'IT'], ['Spanish', 'ES']], {}, {class: "form-control"} %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :dfault, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.select :dfault, [['TRUE', true], ['FALSE', false]], {}, {class: "form-control"} %>
-    </div>
-  </div>
-  <% if @futureParentRestaurant %>
-      <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
+  <div style='display:none'>
+  <% if @restaurant %>
+    <%= form.hidden_field :restaurant_id, value: @restaurant.id %>
   <% else %>
-      <%= form.hidden_field :restaurant_id %>
+    <%= form.hidden_field :restaurant_id %>
   <% end %>
-  <%= form.hidden_field :status, value: 'active' %>
-  <div class="spacing-md"></div>
-  <div class="row">
-    <div class="col-12">
-        <span class="float-end">
-        <% if restaurantlocale.persisted? %>
-          <div class="btn btn-dark ">
-            <%= link_to t(".delete"), restaurantlocale, method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
-          </div>
-        <% end %>
-        <%= form.submit value: t(".save"), class: 'btn btn-dark' %>
-        </span>
+  </div>
+  <% unless restaurantlocale.persisted? %>
+    <%= form.hidden_field :status, value: 'active' %>
+  <% end %>
+  
+  <!-- Language/Locale -->
+  <div class="form-group-2025 mb-4">
+    <%= form.label :locale, class: 'form-label-2025' do %>
+      <%= t('.locale', default: 'Language') %>
+      <% unless restaurantlocale.persisted? %>
+        <span class="text-danger">*</span>
+      <% end %>
+    <% end %>
+    
+    <% if restaurantlocale.persisted? %>
+      <!-- Show as read-only display on edit -->
+      <%= form.hidden_field :locale %>
+      <div class="form-control-2025 bg-light" style="cursor: not-allowed;">
+        <%= restaurantlocale.language %>
+      </div>
+      <div class="form-help-2025">
+        <%= t('.locale_locked', default: 'Language cannot be changed after creation') %>
+      </div>
+    <% else %>
+      <!-- Editable select on new -->
+      <%= form.select :locale, 
+          [
+            ['English', 'EN'], 
+            ['French', 'FR'], 
+            ['Italian', 'IT'], 
+            ['Spanish', 'ES'],
+            ['German', 'DE'],
+            ['Portuguese', 'PT'],
+            ['Chinese', 'ZH'],
+            ['Japanese', 'JA'],
+            ['Korean', 'KO'],
+            ['Arabic', 'AR']
+          ], 
+          {}, 
+          { class: 'form-control-2025',
+            required: true,
+            data: { skip_tomselect: 'true' } } %>
+      <div class="form-help-2025">
+        <%= t('.locale_help', default: 'Select the language for translations') %>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- Default Language -->
+  <div class="form-group-2025 mb-4">
+    <%= form.label :dfault, class: 'form-label-2025' do %>
+      <%= t('.default', default: 'Default Language') %>
+    <% end %>
+    <div class="form-check form-switch">
+      <%= form.check_box :dfault, 
+          { class: 'form-check-input', role: 'switch', data: { skip_tomselect: 'true' } } %>
+      <label class="form-check-label text-muted">
+        <%= t('.default_help', default: 'Set as default language for your restaurant') %>
+      </label>
     </div>
   </div>
+  
+  <!-- Error Messages -->
   <% if restaurantlocale.errors.any? %>
-  <div class="row">
-    <div class="col-3">
-      <span class="float-md-end"><%= t('common.errors') %></span>
-    </div>
-    <div class="col-9">
-      <ul>
-          <% restaurantlocale.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
+    <div class="alert alert-danger" role="alert">
+      <h6 class="alert-heading">
+        <i class="bi bi-exclamation-triangle"></i>
+        <%= t('common.errors', default: 'Errors') %>
+      </h6>
+      <ul class="mb-0">
+        <% restaurantlocale.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
-  </div>
   <% end %>
+  
+  <!-- Form Actions -->
+  <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+    <%= link_to edit_restaurant_path(restaurantlocale.restaurant, section: 'settings'), 
+        class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+      <%= t('common.cancel', default: 'Cancel') %>
+    <% end %>
+    
+    <%= form.submit t('common.save', default: 'Save'), 
+        class: 'btn-2025 btn-2025-primary btn-2025-md' %>
+  </div>
 <% end %>

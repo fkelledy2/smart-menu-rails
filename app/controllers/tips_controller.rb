@@ -12,9 +12,9 @@ class TipsController < ApplicationController
   def index
     if params[:restaurant_id]
       @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-      @tips = policy_scope(Tip).where(restaurant: @futureParentRestaurant, archived: false)
+      @tips = policy_scope(Tip).where(restaurant: @futureParentRestaurant, archived: false).where.not(status: :archived)
     else
-      @tips = policy_scope(Tip).where(archived: false)
+      @tips = policy_scope(Tip).where(archived: false).where.not(status: :archived)
     end
   end
 

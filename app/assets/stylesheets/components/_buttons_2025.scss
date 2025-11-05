@@ -1,0 +1,343 @@
+// ============================================
+// BUTTON SYSTEM 2025
+// Modern, accessible, touch-friendly buttons
+// ============================================
+
+.btn-2025 {
+  // Base button styles
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-family);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  
+  &:focus {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
+  
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  // ============================================
+  // SIZES
+  // ============================================
+  
+  &-sm {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+    min-height: 36px;
+    line-height: 1.25;
+  }
+  
+  &-md {
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--text-base);
+    min-height: 44px;  // Touch-friendly
+    line-height: 1.25;
+  }
+  
+  &-lg {
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--text-lg);
+    min-height: 52px;
+    line-height: 1.25;
+  }
+  
+  // ============================================
+  // VARIANTS
+  // ============================================
+  
+  // Primary - Main CTAs
+  &-primary {
+    background-color: var(--color-primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--color-primary-hover);
+      box-shadow: var(--shadow-md);
+    }
+    
+    &:active:not(:disabled) {
+      background-color: var(--color-primary-dark);
+    }
+  }
+  
+  // Secondary - Supporting actions
+  &-secondary {
+    background-color: white;
+    border: 1.5px solid var(--color-gray-300);
+    color: var(--color-gray-700);
+    box-shadow: var(--shadow-xs);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--color-gray-50);
+      border-color: var(--color-gray-400);
+    }
+    
+    &:active:not(:disabled) {
+      background-color: var(--color-gray-100);
+    }
+  }
+  
+  // Ghost - Tertiary actions
+  &-ghost {
+    background-color: transparent;
+    color: var(--color-gray-600);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--color-gray-100);
+      color: var(--color-gray-700);
+    }
+    
+    &:active:not(:disabled) {
+      background-color: var(--color-gray-200);
+    }
+  }
+  
+  // Danger - Destructive actions
+  &-danger {
+    background-color: var(--color-danger);
+    color: white;
+    box-shadow: var(--shadow-sm);
+    
+    &:hover:not(:disabled) {
+      background-color: #DC2626;
+      box-shadow: var(--shadow-md);
+    }
+    
+    &:active:not(:disabled) {
+      background-color: #B91C1C;
+    }
+  }
+  
+  // Outline Danger - Less prominent destructive
+  &-outline-danger {
+    background-color: white;
+    border: 1.5px solid var(--color-danger);
+    color: var(--color-danger);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--color-danger-light);
+    }
+    
+    &:active:not(:disabled) {
+      background-color: #FECACA;
+    }
+  }
+  
+  // Success - Positive actions
+  &-success {
+    background-color: var(--color-success);
+    color: white;
+    box-shadow: var(--shadow-sm);
+    
+    &:hover:not(:disabled) {
+      background-color: #059669;
+      box-shadow: var(--shadow-md);
+    }
+    
+    &:active:not(:disabled) {
+      background-color: #047857;
+    }
+  }
+  
+  // Link - Text-only buttons
+  &-link {
+    background-color: transparent;
+    color: var(--color-primary);
+    padding: var(--space-2) var(--space-3);
+    
+    &:hover:not(:disabled) {
+      color: var(--color-primary-hover);
+      text-decoration: underline;
+    }
+  }
+  
+  // ============================================
+  // SPECIAL VARIANTS
+  // ============================================
+  
+  // Icon only button
+  &-icon {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: var(--color-gray-600);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--color-gray-100);
+      color: var(--color-gray-700);
+    }
+    
+    &-sm {
+      width: 36px;
+      height: 36px;
+      min-height: 36px;
+    }
+  }
+  
+  // Full width button
+  &-block {
+    width: 100%;
+    display: flex;
+  }
+  
+  // ============================================
+  // BUTTON GROUPS
+  // ============================================
+  
+  &-group {
+    display: inline-flex;
+    align-items: stretch;
+    
+    .btn-2025 {
+      border-radius: 0;
+      
+      &:first-child {
+        border-top-left-radius: var(--radius-md);
+        border-bottom-left-radius: var(--radius-md);
+      }
+      
+      &:last-child {
+        border-top-right-radius: var(--radius-md);
+        border-bottom-right-radius: var(--radius-md);
+      }
+      
+      &:not(:last-child) {
+        margin-right: -1px;
+      }
+    }
+  }
+}
+
+// ============================================
+// LOADING STATE
+// ============================================
+
+.btn-2025-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: btn-spinner 0.6s linear infinite;
+  }
+}
+
+@keyframes btn-spinner {
+  to { transform: rotate(360deg); }
+}
+
+// ============================================
+// FLOATING ACTION BUTTON (FAB)
+// ============================================
+
+.fab-2025 {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  z-index: var(--z-fixed);
+  
+  &:hover {
+    background-color: var(--color-primary-hover);
+    box-shadow: var(--shadow-xl);
+    transform: scale(1.05);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  i, svg {
+    font-size: 24px;
+  }
+}
+
+// ============================================
+// RESPONSIVE ADJUSTMENTS
+// ============================================
+
+@media (max-width: 768px) {
+  // Ensure touch-friendly on mobile
+  .btn-2025-sm {
+    min-height: 40px;
+    padding: var(--space-2) var(--space-5);
+  }
+  
+  .btn-2025-md {
+    min-height: 48px;
+  }
+  
+  // Stack button groups on mobile
+  .btn-2025-group {
+    flex-direction: column;
+    
+    .btn-2025 {
+      border-radius: 0 !important;
+      
+      &:first-child {
+        border-top-left-radius: var(--radius-md) !important;
+        border-top-right-radius: var(--radius-md) !important;
+      }
+      
+      &:last-child {
+        border-bottom-left-radius: var(--radius-md) !important;
+        border-bottom-right-radius: var(--radius-md) !important;
+      }
+      
+      &:not(:last-child) {
+        margin-right: 0;
+        margin-bottom: -1px;
+      }
+    }
+  }
+  
+  // FAB positioning on mobile
+  .fab-2025 {
+    bottom: var(--space-4);
+    right: var(--space-4);
+  }
+}

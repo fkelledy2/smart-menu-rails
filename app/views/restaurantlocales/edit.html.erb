@@ -1,3 +1,82 @@
-<h1>Edit Restaurantlocale</h1>
+<%# 
+  Edit Restaurant Locale - 2025 Design System
+  Modern form layout with consistent styling
+%>
 
-<%= render 'form', restaurantlocale: @restaurantlocale %>
+<!-- Page Header -->
+<div class="container-fluid px-0 pb-4">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <div>
+      <!-- Breadcrumb -->
+      <div class="text-sm text-gray-500 mb-2">
+        <%= link_to @restaurantlocale.restaurant.name, edit_restaurant_path(@restaurantlocale.restaurant), class: 'text-primary' %>
+        <i class="bi bi-chevron-right"></i>
+        <%= link_to t('.settings', default: 'Settings'), edit_restaurant_path(@restaurantlocale.restaurant, section: 'settings'), class: 'text-primary' %>
+        <i class="bi bi-chevron-right"></i>
+        <%= @restaurantlocale.language %>
+      </div>
+      
+      <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+        <i class="bi bi-translate"></i>
+        <%= t('.edit_locale', default: 'Edit Language') %>
+      </h1>
+      <p class="text-sm text-gray-500">
+        <%= t('.description', default: 'Update language configuration') %>
+      </p>
+    </div>
+    
+    <div class="d-flex gap-2">
+      <%= link_to edit_restaurant_path(@restaurantlocale.restaurant, section: 'settings'), 
+          class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+        <i class="bi bi-arrow-left"></i> <%= t('.back', default: 'Back to Settings') %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Form Card -->
+<div class="content-card-2025" data-skip-form-manager="true">
+  <%= render 'form', restaurantlocale: @restaurantlocale %>
+</div>
+
+<script>
+  // Prevent TomSelect initialization on this form
+  function preventTomSelect() {
+    const form = document.querySelector('[data-skip-form-manager]');
+    if (form) {
+      form.querySelectorAll('select, input[type="checkbox"], input[type="hidden"]').forEach(el => {
+        el.setAttribute('data-skip-tomselect', 'true');
+        // Also destroy any existing TomSelect instances
+        if (el.tomselect) {
+          el.tomselect.destroy();
+        }
+      });
+    }
+  }
+  
+  // Run on initial load
+  document.addEventListener('DOMContentLoaded', preventTomSelect);
+  // Run on Turbo navigation
+  document.addEventListener('turbo:load', preventTomSelect);
+  // Run immediately in case we're already loaded
+  preventTomSelect();
+</script>
+
+<style>
+  .text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  
+  .text-gray-900 {
+    color: var(--color-gray-900);
+  }
+  
+  .text-gray-500 {
+    color: var(--color-gray-500);
+  }
+  
+  .text-sm {
+    font-size: 0.875rem;
+  }
+</style>

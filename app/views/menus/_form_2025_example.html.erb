@@ -1,0 +1,153 @@
+<%# 
+  EXAMPLE: Menu Form with 2025 Design System & Auto-Save
+  This demonstrates the new unified form helper with auto-save
+  
+  Features:
+  - Auto-saves after 1 second of inactivity
+  - Consistent styling across all fields
+  - TomSelect on dropdowns
+  - Touch-friendly (44px minimum)
+  - Accessible focus states
+%>
+
+<%= unified_form_with(menu) do |form| %>
+  
+  <div class="card-2025">
+    <div class="card-2025-header">
+      <div>
+        <h3 class="card-2025-title">Menu Details</h3>
+        <p class="card-2025-subtitle">Basic information about your menu</p>
+      </div>
+      
+      <% if menu.id %>
+        <div class="flex gap-2">
+          <% if menu.smartmenu&.slug %>
+            <%= link_to smartmenu_path(menu.smartmenu.slug), 
+                class: 'btn-2025 btn-2025-secondary btn-2025-sm',
+                target: '_blank' do %>
+              <i class="bi bi-eye-fill"></i> Preview
+            <% end %>
+          <% end %>
+          
+          <%= button_to 'Generate Images', 
+              regenerate_images_restaurant_menu_path(menu.restaurant, menu, generate_ai: true), 
+              method: :post, 
+              class: 'btn-2025 btn-2025-secondary btn-2025-sm',
+              data: { turbo: false, confirm: 'Generate new AI images? This will use API credits.' } do %>
+            <i class="bi bi-stars"></i> AI Images
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="card-2025-body">
+      <%= unified_text_field(form, :name, 
+        label: 'Menu Name',
+        placeholder: 'e.g., Summer Menu 2024',
+        help: 'Choose a descriptive name for your menu',
+        required: true
+      ) %>
+      
+      <%= unified_text_area(form, :description, 
+        label: 'Description',
+        placeholder: 'Describe what makes this menu special...',
+        help: 'This will be shown to customers',
+        rows: 4
+      ) %>
+      
+      <%= unified_select(form, :status, 
+        Menu.statuses.keys,
+        label: 'Status',
+        help: 'Active menus are visible to customers'
+      ) %>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <%= unified_checkbox(form, :pdf_enabled, 
+            label: 'Enable PDF Menu',
+            help: 'Allow customers to download menu as PDF'
+          ) %>
+        </div>
+        
+        <div class="col-md-6">
+          <%= unified_checkbox(form, :show_prices, 
+            label: 'Show Prices',
+            help: 'Display prices on the menu'
+          ) %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card-2025 mt-4">
+    <div class="card-2025-header">
+      <h3 class="card-2025-title">Image Settings</h3>
+    </div>
+    
+    <div class="card-2025-body">
+      <div class="form-group-2025">
+        <label class="form-label-2025">Menu Image</label>
+        
+        <% if menu.image.attached? %>
+          <div class="mb-3">
+            <%= image_tag menu.image, style: 'max-width: 200px; border-radius: 8px;' %>
+          </div>
+        <% end %>
+        
+        <%= form.file_field :image, 
+          class: 'form-control-2025',
+          accept: 'image/*' %>
+        
+        <div class="form-help-2025">
+          Recommended size: 1200x800px. JPG, PNG, or WebP format.
+        </div>
+        
+        <% if menu.image.attached? %>
+          <div class="mt-2">
+            <%= unified_checkbox(form, :remove_image, 
+              label: 'Remove current image'
+            ) %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Auto-save indicator (shown automatically) -->
+  <div data-auto-save-target="status"></div>
+  
+  <!-- Optional: Manual save button (form auto-saves, but can provide explicit action) -->
+  <div class="mt-4 d-flex justify-content-end gap-3">
+    <%= link_to 'Cancel', 
+        restaurant_menus_path(menu.restaurant || @restaurant), 
+        class: 'btn-2025 btn-2025-secondary btn-2025-md' %>
+    <%= button_tag 'Save Manually', 
+        type: 'submit', 
+        class: 'btn-2025 btn-2025-primary btn-2025-md' %>
+  </div>
+  
+<% end %>
+
+<style>
+  /* Additional styles for this form */
+  .card-2025 + .card-2025 {
+    margin-top: var(--space-6);
+  }
+</style>
+
+<script>
+  // Optional: Add custom behavior after save
+  document.addEventListener('auto-save:saved', function(event) {
+    console.log('Menu saved:', event.detail);
+    
+    // Show a toast notification
+    // showToast('Menu saved successfully', 'success');
+  });
+  
+  document.addEventListener('auto-save:error', function(event) {
+    console.error('Save error:', event.detail);
+    
+    // Show error notification
+    // showToast('Failed to save menu', 'error');
+  });
+</script>

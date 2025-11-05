@@ -1,17 +1,18 @@
-<div class="row">
+<!-- 2025 Design System: Updated with new button styles -->
+<div class="row mb-4">
   <div class="col-sm-6">
     <h1><%=t(".restaurantavailabilities")%></h1>
   </div>
   <div class="col-sm-6 text-end">
     <% if @futureParentRestaurant %>
-      <%= link_to restaurant_path(id: @futureParentRestaurant.id), class: 'btn btn-sm btn-light' do %>
+      <%= link_to restaurant_path(id: @futureParentRestaurant.id), class: 'btn-2025 btn-2025-secondary btn-2025-sm' do %>
         <i class="bi bi-chevron-left"></i>
       <% end %>
     <% end %>
-    <button id="activate-row" class='btn btn-sm btn-success' disabled><%= t('common.activate') %></button>
-    <button id="deactivate-row"class='btn btn-sm btn-danger' disabled><%= t('common.deactivate') %></button>
+    <button id="activate-row" class='btn-2025 btn-2025-primary btn-2025-sm' disabled><%= t('common.activate') %></button>
+    <button id="deactivate-row" class='btn-2025 btn-2025-outline-danger btn-2025-sm' disabled><%= t('common.deactivate') %></button>
     <% restaurant_path = @futureParentRestaurant || current_user.restaurants.first %>
-    <%= link_to new_restaurant_restaurantavailability_path(restaurant_path), class: 'btn btn-sm btn-dark' do %>
+    <%= link_to new_restaurant_restaurantavailability_path(restaurant_path), class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
       <i class="bi bi-plus"></i> <%= t(".restaurantAvailability") %>
     <% end %>
   </div>

@@ -1,24 +1,23 @@
-<div class="row">
+<!-- 2025 Design System: Updated with new button styles -->
+<div class="row mb-4">
   <div class="col-6">
     <h4><%=t(".restaurants")%> </h4>
   </div>
   <div class="col-6 text-end">
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
       <div class="btn-group" role="group">
-        <button id="restaurant-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
+        <button id="restaurant-actions" type="button" class="btn-2025 btn-2025-secondary btn-2025-sm dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
           <%= t('common.actions') %>
         </button>
-        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
+        <ul class="dropdown-menu" aria-labelledby="restaurant-actions">
           <li><a id="activate-restaurant" class="dropdown-item" href="#"><%= t('common.activate') %></a></li>
           <li><a id="deactivate-restaurant" class="dropdown-item" href="#"><%= t('common.deactivate') %></a></li>
         </ul>
       </div>
       <% if @canAddRestaurant == true %>
-        <button type="button" class="btn btn-dark">
-            <%= link_to new_restaurant_path, class: 'link-light' do %>
-                <i class="bi bi-plus"></i>
-            <% end %>
-        </button>
+        <%= link_to new_restaurant_path, class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+          <i class="bi bi-plus"></i> <%= t(".restaurant") rescue "New Restaurant" %>
+        <% end %>
       <% end %>
     </div>
   </div>

@@ -50,18 +50,17 @@
       <%= form.hidden_field :restaurant_id %>
   <% end %>
   <div class="spacing-md"></div>
+  <!-- 2025 Design System: Updated with new button styles -->
   <div class="row">
     <div class="col-3">
     </div>
     <div class="col-9">
-        <span class="float-end">
+        <div class="d-flex justify-content-end gap-3">
         <% if employee.persisted? %>
-          <div class="btn btn-dark ">
-            <%= link_to t('common.delete'), restaurant_employee_path(employee.restaurant, employee), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
-          </div>
+          <%= link_to t('common.delete'), restaurant_employee_path(employee.restaurant, employee), method: :delete, class: "btn-2025 btn-2025-outline-danger btn-2025-md", data: { confirm: t('common.confirm') } %>
         <% end %>
-        <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
-        </span>
+        <%= form.submit value: t('common.save'), class: 'btn-2025 btn-2025-primary btn-2025-md' %>
+        </div>
     </div>
   </div>
   <div class="spacing-sm"></div>

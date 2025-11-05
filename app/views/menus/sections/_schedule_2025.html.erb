@@ -1,0 +1,455 @@
+<%# 
+  Menu Availabilities Section
+  Weekly availability schedule with time sliders
+%>
+
+<% menu = local_assigns[:menu] || @menu %>
+<% restaurant = menu.restaurant %>
+
+<!-- Menu Availabilities -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-calendar-check"></i>
+    <%= t('.menu_availabilities', default: 'Menu Availabilities') %>
+  </h2>
+  
+  <p class="text-muted mb-4">
+    <%= t('.availabilities_description', default: 'Set when this menu is available to customers throughout the week') %>
+  </p>
+  
+  <form data-controller="auto-save" 
+        data-auto-save-url-value="<%= update_availabilities_restaurant_menu_path(restaurant, menu) %>"
+        data-auto-save-method-value="patch"
+        data-auto-save-debounce-value="1500">
+    
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    
+    <!-- Loading skeleton -->
+    <div class="availability-loading-skeleton">
+      <div class="skeleton-shimmer"></div>
+    </div>
+    
+  <div class="availability-editor" style="opacity: 0; transition: opacity 0.3s ease;">
+    <% %w[monday tuesday wednesday thursday friday saturday sunday].each_with_index do |day, index| %>
+      <% day_availability = menu.menuavailabilities.where(dayofweek: day).order(:sequence).first %>
+      <% is_inactive = day_availability.nil? || day_availability.inactive? %>
+      <% start_hour = day_availability&.starthour || 0 %>
+      <% start_min = day_availability&.startmin || 0 %>
+      <% end_hour = day_availability&.endhour || 23 %>
+      <% end_min = day_availability&.endmin || 59 %>
+      <% start_minutes = (start_hour * 60) + start_min %>
+      <% end_minutes = (end_hour * 60) + end_min %>
+      
+      <div class="day-row mb-3" data-day="<%= day %>">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label class="form-label-2025 mb-0 fw-semibold">
+            <%= t("date.day_names")[Date::DAYNAMES.index(day.capitalize)] %>
+          </label>
+          
+          <div class="form-check form-switch">
+            <input class="form-check-input inactive-toggle" 
+                   type="checkbox" 
+                   id="inactive_<%= day %>" 
+                   name="inactive[<%= day %>]"
+                   value="1"
+                   <%= 'checked' if is_inactive %>
+                   data-day="<%= day %>" />
+            <label class="form-check-label text-muted" for="inactive_<%= day %>">
+              <%= t('.unavailable', default: 'Unavailable') %>
+            </label>
+          </div>
+        </div>
+        
+        <div class="time-slider-container <%= 'disabled' if is_inactive %>">
+          <!-- Time display above slider -->
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <div class="time-display start-time">
+              <i class="bi bi-clock"></i>
+              <span class="time-value"><%= sprintf('%02d:%02d', start_hour, start_min) %></span>
+            </div>
+            <div class="time-display end-time">
+              <i class="bi bi-clock-fill"></i>
+              <span class="time-value"><%= sprintf('%02d:%02d', end_hour, end_min) %></span>
+            </div>
+          </div>
+          
+          <!-- Range slider -->
+          <div class="time-range-slider" 
+               id="availability_slider_<%= day %>"
+               data-start="<%= start_minutes %>"
+               data-end="<%= end_minutes %>">
+          </div>
+          
+          <!-- 24-hour timeline markers -->
+          <div class="timeline-markers">
+            <% (0..23).step(3).each do |hour| %>
+              <div class="marker">
+                <span><%= sprintf('%02d:00', hour) %></span>
+              </div>
+            <% end %>
+          </div>
+          
+          <!-- Hidden inputs for form submission -->
+          <input type="hidden" class="start-time-input" name="availabilities[<%= day %>][start]" value="<%= sprintf('%02d:%02d', start_hour, start_min) %>" />
+          <input type="hidden" class="end-time-input" name="availabilities[<%= day %>][end]" value="<%= sprintf('%02d:%02d', end_hour, end_min) %>" />
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="mt-4">
+    <button type="button" class="btn-2025 btn-2025-secondary btn-2025-sm copy-monday-btn">
+      <i class="bi bi-files"></i>
+      <%= t('.copy_to_all', default: 'Copy Monday to All Days') %>
+    </button>
+    
+    <!-- Auto-save status indicator -->
+    <span class="form-autosave-status ms-3" data-auto-save-target="status"></span>
+  </div>
+  
+  </form>
+</div>
+
+<!-- Preload noUiSlider CSS for faster loading -->
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" /></noscript>
+<script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script>
+
+<style>
+  .availability-editor .day-row {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    transition: all var(--transition-base);
+  }
+  
+  .availability-editor .day-row:hover {
+    background-color: #fff;
+    border-color: var(--color-gray-300);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .time-slider-container {
+    position: relative;
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .time-slider-container.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  
+  .time-display {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-gray-700);
+  }
+  
+  .time-display i {
+    font-size: 1.125rem;
+  }
+  
+  .time-range-slider {
+    margin: 0.75rem 0;
+    height: 12px;
+  }
+  
+  /* noUiSlider customization */
+  .noUi-target {
+    background: var(--color-gray-200);
+    border: none;
+    box-shadow: none;
+    border-radius: 6px;
+    height: 12px;
+  }
+  
+  .noUi-connect {
+    background: var(--color-gray-600);
+    box-shadow: none;
+  }
+  
+  .noUi-handle {
+    background: #fff;
+    border: 3px solid var(--color-gray-400);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    top: -6px;
+    cursor: grab;
+  }
+  
+  .noUi-handle:active {
+    cursor: grabbing;
+    border-color: var(--color-gray-700);
+  }
+  
+  .noUi-handle:hover {
+    border-color: var(--color-gray-500);
+  }
+  
+  .noUi-handle:before,
+  .noUi-handle:after {
+    display: none;
+  }
+  
+  .noUi-tooltip {
+    display: none;
+  }
+  
+  .timeline-markers {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+    padding: 0 0.25rem;
+  }
+  
+  .timeline-markers .marker {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+  
+  .timeline-markers .marker span {
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+    font-weight: 500;
+  }
+  
+  .timeline-markers .marker:before {
+    content: '';
+    position: absolute;
+    top: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 4px;
+    background: var(--color-gray-300);
+  }
+  
+  .form-check-input.inactive-toggle:checked {
+    background-color: #dc2626;
+    border-color: #dc2626;
+  }
+  
+  /* Auto-save status indicator */
+  .form-autosave-status {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    display: inline-block;
+    transition: all 0.3s ease;
+  }
+  
+  .form-autosave-status.saving {
+    color: #0ea5e9;
+    background-color: #e0f2fe;
+  }
+  
+  .form-autosave-status.saved {
+    color: #10b981;
+    background-color: #d1fae5;
+  }
+  
+  .form-autosave-status.error {
+    color: #ef4444;
+    background-color: #fee2e2;
+  }
+  
+  /* Loading skeleton */
+  .availability-loading-skeleton {
+    height: 400px;
+    background: linear-gradient(90deg, var(--color-gray-100) 25%, var(--color-gray-50) 50%, var(--color-gray-100) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-md);
+    transition: opacity 0.3s ease;
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  
+  .availability-loading-skeleton.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  function initializeMenuAvailabilities() {
+    console.log('[MenuAvailabilities] Initializing with auto-save');
+    
+    // Verify auto-save controller is attached
+    const form = document.querySelector('[data-controller*="auto-save"]');
+    if (!form) {
+      console.error('[MenuAvailabilities] Auto-save form NOT found!');
+    }
+    
+    // Initialize all time sliders
+    const sliders = document.querySelectorAll('.time-range-slider');
+    
+    // Destroy existing sliders first to prevent duplicates
+    sliders.forEach((sliderElement) => {
+      if (sliderElement.noUiSlider) {
+        sliderElement.noUiSlider.destroy();
+      }
+    });
+    
+    sliders.forEach((sliderElement) => {
+      const day = sliderElement.id.replace('availability_slider_', '');
+      const dayRow = sliderElement.closest('.day-row');
+      const startMinutes = parseInt(sliderElement.dataset.start) || 0; // 00:00
+      const endMinutes = parseInt(sliderElement.dataset.end) || 1439; // 23:59
+      
+      // Create the slider
+      const slider = noUiSlider.create(sliderElement, {
+        start: [startMinutes, endMinutes],
+        connect: true,
+        range: {
+          'min': 0,      // 00:00
+          'max': 1440    // 24:00
+        },
+        step: 15, // 15-minute intervals
+        tooltips: false
+      });
+      
+      // Update time displays in real-time while dragging
+      slider.on('update', function(values, handle) {
+        const minutes = Math.round(values[handle]);
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        const timeString = sprintf('%02d:%02d', hours, mins);
+        
+        if (handle === 0) {
+          // Start time
+          const startTime = dayRow.querySelector('.start-time .time-value');
+          startTime.textContent = timeString;
+        } else {
+          // End time
+          const endTime = dayRow.querySelector('.end-time .time-value');
+          endTime.textContent = timeString;
+        }
+      });
+      
+      // Trigger auto-save when user releases the slider handle
+      slider.on('set', function(values, handle) {
+        const minutes = Math.round(values[handle]);
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        const timeString = sprintf('%02d:%02d', hours, mins);
+        
+        let input; // Declare outside if/else for proper scoping
+        
+        if (handle === 0) {
+          // Start time
+          input = dayRow.querySelector('.start-time-input');
+          input.value = timeString;
+        } else {
+          // End time
+          input = dayRow.querySelector('.end-time-input');
+          input.value = timeString;
+        }
+        
+        // Trigger change and input events for auto-save
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+    });
+    
+    // Handle inactive toggle
+    document.querySelectorAll('.inactive-toggle').forEach((toggle) => {
+      toggle.addEventListener('change', function() {
+        const dayRow = this.closest('.day-row');
+        const container = dayRow.querySelector('.time-slider-container');
+        
+        if (this.checked) {
+          container.classList.add('disabled');
+        } else {
+          container.classList.remove('disabled');
+        }
+      });
+    });
+    
+    // Copy Monday to all days
+    const copyButton = document.querySelector('.copy-monday-btn');
+    if (copyButton) {
+      copyButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const mondayRow = document.querySelector('[data-day="monday"]');
+        if (!mondayRow) return;
+        
+        const mondaySlider = mondayRow.querySelector('.time-range-slider');
+        const mondaySliderInstance = mondaySlider.noUiSlider;
+        const mondayValues = mondaySliderInstance.get();
+        const mondayIsInactive = mondayRow.querySelector('.inactive-toggle').checked;
+        
+        // Apply to all other days
+        document.querySelectorAll('.day-row').forEach((row) => {
+          if (row.dataset.day === 'monday') return;
+          
+          const slider = row.querySelector('.time-range-slider');
+          const toggle = row.querySelector('.inactive-toggle');
+          
+          // Set inactive state
+          toggle.checked = mondayIsInactive;
+          toggle.dispatchEvent(new Event('change'));
+          
+          // Set slider values
+          if (slider.noUiSlider) {
+            slider.noUiSlider.set(mondayValues);
+          }
+        });
+        
+        // Show success message
+        const btn = this;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Copied!';
+        btn.classList.remove('btn-2025-secondary');
+        btn.classList.add('btn-2025-primary');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('btn-2025-primary');
+          btn.classList.add('btn-2025-secondary');
+        }, 2000);
+      });
+    }
+    
+    // Show the editor and hide skeleton now that sliders are initialized
+    const editor = document.querySelector('.availability-editor');
+    const skeleton = document.querySelector('.availability-loading-skeleton');
+    
+    if (skeleton) {
+      skeleton.classList.add('hidden');
+    }
+    
+    if (editor) {
+      editor.style.opacity = '1';
+    }
+  }
+  
+  // Helper function for formatting
+  function sprintf(format, ...args) {
+    let i = 0;
+    return format.replace(/%0?(\d*)d/g, (match, width) => {
+      const num = args[i++].toString();
+      return width ? num.padStart(parseInt(width), '0') : num;
+    });
+  }
+  
+  // Initialize on DOMContentLoaded (full page load)
+  document.addEventListener('DOMContentLoaded', initializeMenuAvailabilities);
+  
+  // Initialize on Turbo navigation (sidebar navigation)
+  document.addEventListener('turbo:load', initializeMenuAvailabilities);
+  document.addEventListener('turbo:frame-load', initializeMenuAvailabilities);
+  
+  console.log('[MenuAvailabilities] Event listeners registered for DOMContentLoaded, turbo:load, and turbo:frame-load');
+</script>

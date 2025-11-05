@@ -9,11 +9,13 @@ class AllergynsController < ApplicationController
   # GET /allergyns or /allergyns.json
   def index
     if params[:restaurant_id]
-      @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+      @futureParentRestaurant = Restaurant.find_by(id: params[:restaurant_id])
+      @restaurant = @futureParentRestaurant
+      # Only show first 7 active allergyns by sequence
       @allergyns = if current_user
-                     policy_scope(Allergyn).includes(:restaurant).where(restaurant: @restaurant)
+                     policy_scope(Allergyn).includes(:restaurant).where(restaurant: @restaurant, status: :active, archived: false).order(:sequence).limit(7)
                    else
-                     Allergyn.includes(:restaurant).where(restaurant: @restaurant)
+                     Allergyn.includes(:restaurant).where(restaurant: @restaurant, status: :active, archived: false).order(:sequence).limit(7)
                    end
     end
 

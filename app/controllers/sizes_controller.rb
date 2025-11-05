@@ -11,9 +11,9 @@ class SizesController < ApplicationController
   def index
     if params[:restaurant_id]
       @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
-      @sizes = policy_scope(Size).where(restaurant: @futureParentRestaurant, archived: false)
+      @sizes = policy_scope(Size).where(restaurant: @futureParentRestaurant, archived: false).where.not(status: :archived)
     else
-      @sizes = policy_scope(Size).where(archived: false)
+      @sizes = policy_scope(Size).where(archived: false).where.not(status: :archived)
     end
   end
 

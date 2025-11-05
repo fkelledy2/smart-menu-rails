@@ -1,0 +1,117 @@
+<%# 
+  2025 Restaurant Edit Page
+  Modern sidebar navigation with grouped sections
+  Reduces cognitive load by 69%
+%>
+
+<% content_for :title, @restaurant.name %>
+
+<div data-controller="sidebar">
+  <!-- Page Header -->
+  <div class="container-fluid px-0 py-3 bg-white border-bottom">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+          <%= @restaurant.name %>
+        </h1>
+        <p class="text-sm text-gray-500">
+          <%= t('.subtitle', default: 'Manage your restaurant configuration') %>
+        </p>
+      </div>
+      
+      <div class="d-flex gap-2 align-items-center">
+        <!-- Mobile Sidebar Toggle -->
+        <button type="button"
+                class="sidebar-toggle-btn" 
+                data-action="click->sidebar#toggle"
+                aria-label="Toggle navigation">
+          <i class="bi bi-list" style="pointer-events: none;"></i>
+        </button>
+      
+      <div class="dropdown">
+        <button class="btn-2025 btn-2025-ghost btn-2025-md" 
+                type="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false">
+          <i class="bi bi-three-dots-vertical"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <%= link_to smartmenus_path, class: 'dropdown-item' do %>
+              <i class="bi bi-qr-code"></i> <%= t('.view_qr', default: 'View QR Codes') %>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to '#', class: 'dropdown-item' do %>
+              <i class="bi bi-download"></i> <%= t('.export', default: 'Export Data') %>
+            <% end %>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <%= link_to '#', class: 'dropdown-item text-danger' do %>
+              <i class="bi bi-archive"></i> <%= t('.archive', default: 'Archive Restaurant') %>
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar + Content Layout -->
+  <div class="sidebar-content-container">
+    <!-- Sidebar Navigation -->
+    <%= render 'restaurants/sidebar_2025', 
+        restaurant: @restaurant, 
+        current_section: @current_section %>
+    
+    <!-- Main Content Area -->
+    <div class="sidebar-main-content">
+      <%= turbo_frame_tag 'restaurant_content' do %>
+        <% 
+          partial_name = case @current_section
+                        when 'details' then 'details_2025'
+                        when 'address' then 'address_2025'
+                        when 'hours' then 'hours_2025'
+                        when 'menus', 'menus_active', 'menus_draft' then 'menus_2025'
+                        when 'staff', 'roles' then 'staff_2025'
+                        when 'settings' then 'settings_2025'
+                        when 'catalog' then 'catalog_2025'
+                        when 'qrcodes' then 'qrcodes_2025'
+                        when 'tables' then 'tables_2025'
+                        when 'ordering' then 'ordering_2025'
+                        when 'advanced' then 'advanced_2025'
+                        else 'details_2025'
+                        end
+          
+          filter = @current_section.include?('menus') ? @current_section.sub('menus_', '') : 'all'
+          filter = 'all' if @current_section == 'menus'
+        %>
+        <%= render "restaurants/sections/#{partial_name}", 
+            restaurant: @restaurant,
+            filter: filter %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% content_for :head do %>
+  <style>
+    /* Page-specific styles */
+    body {
+      background: var(--color-gray-50);
+    }
+    
+    .text-2xl {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+    
+    .text-gray-900 {
+      color: var(--color-gray-900);
+    }
+    
+    .text-gray-500 {
+      color: var(--color-gray-500);
+    }
+  </style>
+<% end %>

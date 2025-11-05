@@ -1,0 +1,228 @@
+<%# 
+  Menu Design Section
+  Images, PDF uploads, and visual settings
+%>
+
+<% menu = local_assigns[:menu] || @menu %>
+<% restaurant = menu.restaurant %>
+
+<!-- Menu Image -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-image"></i>
+    <%= t('.menu_image', default: 'Menu Image') %>
+  </h2>
+  
+  <%= menu_form_with(menu, auto_save: true) do |form| %>
+    <div class="row g-4">
+      <% if menu.image.present? %>
+        <div class="col-md-12">
+          <div class="image-preview">
+            <%= image_tag menu.image_url, class: 'img-fluid rounded' %>
+          </div>
+        </div>
+      <% end %>
+      
+      <div class="col-md-12">
+        <div class="form-group-2025">
+          <%= form.label :image, class: 'form-label-2025' do %>
+            <%= t('.upload_image', default: 'Upload Image') %>
+          <% end %>
+          <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
+          <%= form.file_field :image, class: 'form-control-2025' %>
+          <div class="form-help-2025">
+            <%= t('.image_help', default: 'Hero image for your menu (recommended: 1200x600px)') %>
+          </div>
+        </div>
+      </div>
+      
+      <% if menu.image.present? %>
+        <div class="col-md-12">
+          <div class="form-check">
+            <%= form.check_box :remove_image, class: 'form-check-input' %>
+            <%= form.label :remove_image, t('.remove_image', default: 'Remove current image'), class: 'form-check-label' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<!-- AI Image Generation -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-stars"></i>
+    <%= t('.ai_images', default: 'AI Image Generation') %>
+  </h2>
+  
+  <p class="text-muted mb-4">
+    <%= t('.ai_images_desc', default: 'Generate professional images for your menu items using AI') %>
+  </p>
+  
+  <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true), 
+      method: :post,
+      class: 'btn-2025 btn-2025-primary btn-2025-lg',
+      data: { turbo: false, confirm: t('.confirm_ai', default: 'Generate new AI images? This will cost API credits.') } do %>
+    <i class="bi bi-stars"></i> <%= t('.generate_images', default: 'Generate AI Images') %>
+  <% end %>
+</div>
+
+<!-- PDF Menu -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-file-pdf"></i>
+    <%= t('.pdf_menu', default: 'PDF Menu') %>
+  </h2>
+  
+  <p class="text-muted mb-4">
+    <%= t('.pdf_menu_desc', default: 'Upload a PDF version of your menu for customers to download') %>
+  </p>
+  
+  <%= menu_form_with(menu, auto_save: true) do |form| %>
+    <div class="row g-4">
+      <% if menu.pdf_menu_scan.attached? %>
+        <div class="col-md-12">
+          <div class="pdf-preview">
+            <i class="bi bi-file-pdf text-danger" style="font-size: 3rem;"></i>
+            <div class="ms-3">
+              <strong><%= menu.pdf_menu_scan.filename %></strong>
+              <div class="text-sm text-muted">
+                <%= number_to_human_size(menu.pdf_menu_scan.byte_size) %>
+              </div>
+              <%= link_to rails_blob_path(menu.pdf_menu_scan, disposition: "attachment"), 
+                  target: "_blank",
+                  class: 'btn-2025 btn-2025-ghost btn-2025-sm mt-2' do %>
+                <i class="bi bi-download"></i> <%= t('.download', default: 'Download') %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      
+      <div class="col-md-12">
+        <div class="form-group-2025">
+          <%= form.label :pdf_menu_scan, class: 'form-label-2025' do %>
+            <%= t('.upload_pdf', default: 'Upload PDF') %>
+          <% end %>
+          <%= form.file_field :pdf_menu_scan, 
+              class: 'form-control-2025',
+              accept: 'application/pdf' %>
+          <div class="form-help-2025">
+            <%= t('.pdf_help', default: 'Upload a PDF version of your menu') %>
+          </div>
+        </div>
+      </div>
+      
+      <% if menu.pdf_menu_scan.attached? %>
+        <div class="col-md-12">
+          <div class="form-check">
+            <%= check_box_tag 'menu[remove_pdf_menu_scan]', '1', false, class: 'form-check-input' %>
+            <%= label_tag 'menu[remove_pdf_menu_scan]', t('.remove_pdf', default: 'Remove current PDF'), class: 'form-check-label' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Display Settings -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-sliders"></i>
+    <%= t('.display_settings', default: 'Display Settings') %>
+  </h2>
+  
+  <%= menu_form_with(menu, auto_save: true) do |form| %>
+    <div class="settings-list">
+      <div class="setting-item">
+        <div>
+          <h5><%= t('.show_prices', default: 'Show Prices') %></h5>
+          <p class="text-sm text-muted">
+            <%= t('.show_prices_desc', default: 'Display item prices to customers') %>
+          </p>
+        </div>
+        <div class="form-check form-switch">
+          <%= form.check_box :show_prices, class: 'form-check-input' %>
+        </div>
+      </div>
+      
+      <div class="setting-item">
+        <div>
+          <h5><%= t('.show_images', default: 'Show Images') %></h5>
+          <p class="text-sm text-muted">
+            <%= t('.show_images_desc', default: 'Display item images in menu') %>
+          </p>
+        </div>
+        <div class="form-check form-switch">
+          <%= form.check_box :displayImages, class: 'form-check-input' %>
+        </div>
+      </div>
+      
+      <div class="setting-item">
+        <div>
+          <h5><%= t('.show_descriptions', default: 'Show Descriptions') %></h5>
+          <p class="text-sm text-muted">
+            <%= t('.show_descriptions_desc', default: 'Display item descriptions') %>
+          </p>
+        </div>
+        <div class="form-check form-switch">
+          <%= form.check_box :show_descriptions, class: 'form-check-input' %>
+        </div>
+      </div>
+      
+      <div class="setting-item">
+        <div>
+          <h5><%= t('.popup_images', default: 'Popup Images') %></h5>
+          <p class="text-sm text-muted">
+            <%= t('.popup_images_desc', default: 'Show larger image when tapped') %>
+          </p>
+        </div>
+        <div class="form-check form-switch">
+          <%= form.check_box :displayImagesInPopup, class: 'form-check-input' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .image-preview {
+    max-width: 600px;
+    margin-bottom: var(--space-4);
+  }
+  
+  .pdf-preview {
+    display: flex;
+    align-items: center;
+    padding: var(--space-4);
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+  }
+  
+  .settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  
+  .setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-4);
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+  }
+  
+  .setting-item h5 {
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    margin: 0 0 var(--space-1) 0;
+  }
+  
+  .setting-item p {
+    margin: 0;
+  }
+</style>

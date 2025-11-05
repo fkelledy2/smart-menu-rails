@@ -1,0 +1,145 @@
+<%# 
+  Menu Sections Section
+  Manage menu sections (categories)
+%>
+
+<% menu = local_assigns[:menu] || @menu %>
+<% restaurant = menu.restaurant %>
+
+<!-- Sections Header -->
+<div class="content-card-2025">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="content-card-title mb-0">
+      <i class="bi bi-layout-text-sidebar"></i>
+      <%= t('.menu_sections', default: 'Menu Sections') %>
+    </h2>
+    
+    <%= link_to new_restaurant_menu_menusection_path(restaurant, menu), 
+        class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+      <i class="bi bi-plus-circle"></i>
+      <%= t('.add_section', default: 'Add Section') %>
+    <% end %>
+  </div>
+  
+  <p class="text-muted mb-4">
+    <%= t('.sections_description', default: 'Organize your menu into sections like Appetizers, Main Courses, Desserts, etc.') %>
+  </p>
+  
+  <% if menu.menusections.any? %>
+    <!-- Sections List -->
+    <div class="sections-list"
+         data-controller="sortable"
+         data-sortable-url-value="<%= reorder_restaurant_menu_menusections_path(restaurant, menu) %>"
+         data-sortable-handle-value=".section-handle">
+      <% menu.menusections.order(:sequence).each do |section| %>
+        <div class="section-card" data-sortable-id="<%= section.id %>">
+          <div class="section-handle">
+            <i class="bi bi-grip-vertical text-muted"></i>
+          </div>
+          
+          <div class="section-content">
+            <h4 class="section-title"><%= section.name %></h4>
+            <div class="section-meta">
+              <span class="badge bg-secondary">
+                <%= section.menuitems.count %> <%= t('.items', default: 'items') %>
+              </span>
+            </div>
+          </div>
+          
+          <div class="section-actions">
+            <%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section), 
+                class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
+              <i class="bi bi-pencil"></i> <%= t('.edit', default: 'Edit') %>
+            <% end %>
+            
+            <%= link_to restaurant_menu_menusection_path(restaurant, menu, section), 
+                method: :delete,
+                data: { confirm: t('.confirm_delete', default: 'Delete this section?') },
+                class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
+              <i class="bi bi-trash"></i>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <!-- Empty State -->
+    <div class="text-center py-5">
+      <i class="bi bi-layout-text-sidebar text-muted" style="font-size: 4rem;"></i>
+      <h4 class="mt-3"><%= t('.no_sections', default: 'No sections yet') %></h4>
+      <p class="text-muted">
+        <%= t('.no_sections_desc', default: 'Add your first section to start building your menu') %>
+      </p>
+      <%= link_to new_restaurant_menu_menusection_path(restaurant, menu), 
+          class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3' do %>
+        <i class="bi bi-plus-circle"></i>
+        <%= t('.add_first_section', default: 'Add First Section') %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .sections-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  
+  .section-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-base);
+  }
+  
+  .section-card:hover {
+    border-color: var(--color-gray-300);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .section-handle {
+    cursor: grab;
+    padding: var(--space-2);
+  }
+  
+  .section-handle:active {
+    cursor: grabbing;
+  }
+  
+  .section-content {
+    flex: 1;
+  }
+  
+  .section-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    margin: 0 0 var(--space-2) 0;
+  }
+  
+  .section-meta {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+  
+  .section-actions {
+    display: flex;
+    gap: var(--space-2);
+  }
+  
+  /* Sortable states */
+  .sortable-ghost {
+    opacity: 0.4;
+    background: var(--color-primary-light);
+  }
+  
+  .sortable-drag {
+    opacity: 1;
+    cursor: grabbing;
+  }
+</style>

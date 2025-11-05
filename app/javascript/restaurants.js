@@ -291,25 +291,9 @@ export function initRestaurants() {
     initTomSelectIfNeeded(restaurantStatusEl, {});
   }
 
-  const displayImagesEl = document.getElementById('restaurant_displayImages');
-  if (displayImagesEl) {
-    initTomSelectIfNeeded(displayImagesEl, {});
-  }
-
-  const displayImagesInPopupEl = document.getElementById('restaurant_displayImagesInPopup');
-  if (displayImagesInPopupEl) {
-    initTomSelectIfNeeded(displayImagesInPopupEl, {});
-  }
-
-  const allowOrderingEl = document.getElementById('restaurant_allowOrdering');
-  if (allowOrderingEl) {
-    initTomSelectIfNeeded(allowOrderingEl, {});
-  }
-
-  const inventoryTrackingEl = document.getElementById('restaurant_inventoryTracking');
-  if (inventoryTrackingEl) {
-    initTomSelectIfNeeded(inventoryTrackingEl, {});
-  }
+  // Note: displayImages, displayImagesInPopup, allowOrdering, and inventoryTracking
+  // are now rendered as Bootstrap switches in the settings section
+  // and should not be initialized with TomSelect
 
   if ($('#restaurant-table').length) {
     // Check if user is authenticated before loading restaurant data - multiple checks

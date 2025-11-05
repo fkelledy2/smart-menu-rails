@@ -1,42 +1,54 @@
 <%= form_with(model: [@restaurant || tip.restaurant, tip]) do |form| %>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :percentage, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :percentage, class: 'form-control' %>
-    </div>
-  </div>
   <% if @futureParentRestaurant %>
-      <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
+    <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
   <% else %>
-      <%= form.hidden_field :restaurant_id %>
+    <%= form.hidden_field :restaurant_id %>
   <% end %>
-  <div class="spacing-md"></div>
-  <div class="row">
-    <div class="col-12">
-        <span class="float-end">
-        <% if tip.persisted? %>
-          <div class="btn btn-dark ">
-            <%= link_to t(".delete"), [tip.restaurant, tip], method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
-          </div>
-        <% end %>
-        <%= form.submit value: t(".save"), class: 'btn btn-dark' %>
-        </span>
+  
+  <!-- Percentage -->
+  <div class="form-group-2025 mb-4">
+    <%= form.label :percentage, class: 'form-label-2025' do %>
+      <%= t('.percentage', default: 'Tip Percentage') %>
+      <span class="text-danger">*</span>
+    <% end %>
+    <div class="input-group">
+      <%= form.number_field :percentage, 
+          class: 'form-control-2025',
+          placeholder: t('.percentage_placeholder', default: 'e.g., 15'),
+          step: 0.01,
+          min: 0,
+          max: 100,
+          required: true %>
+      <span class="input-group-text">%</span>
+    </div>
+    <div class="form-help-2025">
+      <%= t('.percentage_help', default: 'Enter the tip percentage (0-100)') %>
     </div>
   </div>
+  
+  <!-- Error Messages -->
   <% if tip.errors.any? %>
-  <div class="row">
-    <div class="col-3">
-      <span class="float-md-end"><%= t('common.errors') %></span>
-    </div>
-    <div class="col-9">
-      <ul>
-          <% tip.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
+    <div class="alert alert-danger" role="alert">
+      <h6 class="alert-heading">
+        <i class="bi bi-exclamation-triangle"></i>
+        <%= t('common.errors', default: 'Errors') %>
+      </h6>
+      <ul class="mb-0">
+        <% tip.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
-  </div>
   <% end %>
+  
+  <!-- Form Actions -->
+  <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+    <%= link_to restaurant_tips_path(@restaurant || tip.restaurant), 
+        class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+      <%= t('common.cancel', default: 'Cancel') %>
+    <% end %>
+    
+    <%= form.submit t('common.save', default: 'Save'), 
+        class: 'btn-2025 btn-2025-primary btn-2025-md' %>
+  </div>
 <% end %>

@@ -1,18 +1,90 @@
-<div class="row">
-  <div class="col-6">
-    <h1><%=t('.tips')%></h1>
-  </div>
-  <div class="col-6 text-end">
-    <% if @futureParentRestaurant %>
-      <%= link_to restaurant_path(id: @futureParentRestaurant.id), class: 'btn btn-sm btn-light' do %>
-        <i class="bi bi-chevron-left"></i>
+<%# 
+  Tips Management - 2025 Design System
+  Modern card-based layout with consistent styling
+%>
+
+<% restaurant = @futureParentRestaurant || current_user.restaurants.first %>
+
+<!-- Page Header -->
+<div class="container-fluid px-0 pb-4">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <div>
+      <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+        <i class="bi bi-cash-coin"></i>
+        <%= t('.tips', default: 'Tip Options') %>
+      </h1>
+      <p class="text-sm text-gray-500">
+        <%= t('.description', default: 'Manage tip percentages available to customers at checkout') %>
+      </p>
+    </div>
+    
+    <div class="d-flex gap-2">
+      <% if @futureParentRestaurant %>
+        <%= link_to edit_restaurant_path(@futureParentRestaurant, section: 'catalog'), 
+            class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+          <i class="bi bi-arrow-left"></i> <%= t('.back', default: 'Back') %>
+        <% end %>
       <% end %>
-    <% end %>
-  <% restaurant_path = @futureParentRestaurant || current_user.restaurants.first %>
-  <%= link_to new_restaurant_tip_path(restaurant_path), class: 'btn btn-sm btn-dark' do %>
-    <i class="bi bi-plus"></i> Tip
-  <% end %>
+      
+      <%= link_to new_restaurant_tip_path(restaurant), 
+          class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+        <i class="bi bi-plus-circle"></i> <%= t('.new_tip', default: 'New Tip Option') %>
+      <% end %>
+    </div>
   </div>
 </div>
-<div class="table-container-spacing table-borderless" id="tip-table">
+
+<!-- Tips Table Card -->
+<div class="content-card-2025">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="content-card-title mb-0">
+      <i class="bi bi-list-ul"></i>
+      <%= t('.all_tips', default: 'All Tip Options') %>
+    </h2>
+    
+    <div class="btn-group" role="group">
+      <button id="tip-actions" type="button" 
+              class="btn-2025 btn-2025-ghost btn-2025-sm dropdown-toggle" 
+              disabled 
+              data-bs-toggle="dropdown" 
+              aria-expanded="false">
+        <%= t('common.actions', default: 'Actions') %>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="tip-actions">
+        <li>
+          <a id="activate-tip" class="dropdown-item" href="#">
+            <i class="bi bi-check-circle"></i> <%= t('common.activate', default: 'Activate') %>
+          </a>
+        </li>
+        <li>
+          <a id="deactivate-tip" class="dropdown-item" href="#">
+            <i class="bi bi-x-circle"></i> <%= t('common.deactivate', default: 'Deactivate') %>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div id="restaurant-tip-table" data-bs-restaurant_id="<%= restaurant.id %>">
+    <!-- Tabulator table will be loaded here via JavaScript -->
+  </div>
 </div>
+
+<style>
+  .text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  
+  .text-gray-900 {
+    color: var(--color-gray-900);
+  }
+  
+  .text-gray-500 {
+    color: var(--color-gray-500);
+  }
+  
+  .text-sm {
+    font-size: 0.875rem;
+  }
+</style>
