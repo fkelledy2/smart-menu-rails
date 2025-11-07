@@ -1,23 +1,98 @@
-<%= render 'shared/customcss' %>
-<%= render 'shared/currency' %>
+<%# 
+  Menus Management - 2025 Design System
+  Modern card-based layout with consistent styling
+%>
+
 <% if current_user %>
-    <!-- 2025 Design System: Updated header with new button styles -->
-    <div class="row mb-4">
-      <div class="col-6">
-        <h1><%= t(".menus") %></h1>
+  <% restaurant = @restaurant %>
+
+  <!-- Page Header -->
+  <div class="container-fluid px-0 pb-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+      <div>
+        <!-- Breadcrumb -->
+        <div class="text-sm text-gray-500 mb-2">
+          <%= link_to restaurant.name, edit_restaurant_path(restaurant), class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= t('.menus', default: 'Menus') %>
+        </div>
+        
+        <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+          <i class="bi bi-menu-button-wide"></i>
+          <%= t('.menus', default: 'Menus') %>
+        </h1>
+        <p class="text-sm text-gray-500">
+          <%= t('.description', default: 'Manage your restaurant menus and sections') %>
+        </p>
       </div>
-      <div class="col-6 text-end">
-        <button id="activate-row" class='btn-2025 btn-2025-primary btn-2025-sm' disabled><%= t('common.activate') %></button>
-        <button id="deactivate-row" class='btn-2025 btn-2025-outline-danger btn-2025-sm' disabled><%= t('common.deactivate') %></button>
-        <%= link_to new_restaurant_menu_path(@restaurant), class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
-          <i class="bi bi-plus"></i> <%= t(".menu") %>
+      
+      <div class="d-flex gap-2">
+        <%= link_to edit_restaurant_path(restaurant, section: 'menus'), 
+            class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+          <i class="bi bi-arrow-left"></i> <%= t('.back', default: 'Back') %>
+        <% end %>
+        
+        <%= link_to new_restaurant_menu_path(restaurant), 
+            class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+          <i class="bi bi-plus-circle"></i> <%= t('.new_menu', default: 'New Menu') %>
         <% end %>
       </div>
     </div>
-    
-    <!-- Keep existing Tabulator table for now -->
-    <div class="table-container-spacing table-borderless" id="menu-table">
+  </div>
+
+  <!-- Menus Table Card -->
+  <div class="content-card-2025">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="content-card-title mb-0">
+        <i class="bi bi-list-ul"></i>
+        <%= t('.all_menus', default: 'All Menus') %>
+      </h2>
+      
+      <div class="btn-group" role="group">
+        <button id="menu-actions" type="button" 
+                class="btn-2025 btn-2025-ghost btn-2025-sm dropdown-toggle" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false">
+          <%= t('common.actions', default: 'Actions') %>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="menu-actions">
+          <li>
+            <a id="activate-row" class="dropdown-item" href="#">
+              <i class="bi bi-check-circle"></i> <%= t('common.activate', default: 'Activate') %>
+            </a>
+          </li>
+          <li>
+            <a id="deactivate-row" class="dropdown-item" href="#">
+              <i class="bi bi-x-circle"></i> <%= t('common.deactivate', default: 'Deactivate') %>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
+    
+    <div id="menu-table" data-bs-restaurant_id="<%= restaurant.id %>">
+      <!-- Tabulator table will be loaded here via JavaScript -->
+    </div>
+  </div>
+
+  <style>
+    .text-2xl {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+    
+    .text-gray-900 {
+      color: var(--color-gray-900);
+    }
+    
+    .text-gray-500 {
+      color: var(--color-gray-500);
+    }
+    
+    .text-sm {
+      font-size: 0.875rem;
+    }
+  </style>
 <% else %>
     <%= format('%02d',@currentHour) %>:<%= format('%02d',@currentMin) %>
     <% @menus.each do |menu| %>

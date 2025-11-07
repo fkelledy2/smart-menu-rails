@@ -18,28 +18,36 @@
   menus = menus.order(:sequence)
 %>
 
-<!-- Menus Header with Actions -->
-<div class="content-card-2025">
-  <div class="menus-header-wrapper">
-    <h2 class="content-card-title mb-0">
-      <i class="bi bi-menu-button-wide"></i>
-      <%= t(".menus_#{filter}", default: filter.titleize + ' Menus') %>
-    </h2>
+<!-- Quick Actions Card -->
+<div class="quick-actions-card">
+  <h2 class="quick-actions-title">
+    <i class="bi bi-lightning-charge"></i>
+    <%= t('.quick_actions', default: 'Quick Actions') %>
+  </h2>
+  
+  <div class="quick-actions-grid">
+    <%= link_to new_restaurant_menu_path(restaurant), 
+        class: 'quick-action-btn',
+        data: { turbo_frame: '_top' } do %>
+      <i class="bi bi-plus-circle"></i>
+      <span><%= t('.new_menu', default: 'New Menu') %></span>
+    <% end %>
     
-    <div class="menus-header-actions">
-      <%= link_to new_restaurant_menu_path(restaurant), 
-          class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
-        <i class="bi bi-plus-circle"></i>
-        <span class="btn-text"><%= t('.new_menu', default: 'New Menu') %></span>
-      <% end %>
-      
-      <%= link_to new_restaurant_ocr_menu_import_path(restaurant), 
-          class: 'btn-2025 btn-2025-secondary btn-2025-md' do %>
-        <i class="bi bi-file-earmark-arrow-up"></i>
-        <span class="btn-text"><%= t('.bulk_import', default: 'Import') %></span>
-      <% end %>
-    </div>
+    <%= link_to new_restaurant_ocr_menu_import_path(restaurant), 
+        class: 'quick-action-btn',
+        data: { turbo_frame: '_top' } do %>
+      <i class="bi bi-file-earmark-arrow-up"></i>
+      <span><%= t('.import_menu', default: 'Import Menu') %></span>
+    <% end %>
   </div>
+</div>
+
+<!-- Menus List -->
+<div class="content-card-2025">
+  <h2 class="content-card-title mb-0">
+    <i class="bi bi-menu-button-wide"></i>
+    <%= t(".menus_#{filter}", default: filter.titleize + ' Menus') %>
+  </h2>
   
   <!-- Filter Tabs -->
   <ul class="nav nav-tabs mb-4">
@@ -185,7 +193,8 @@
         <%= t('.no_menus_description', default: 'Create your first menu to get started') %>
       </p>
       <%= link_to new_restaurant_menu_path(restaurant), 
-          class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3' do %>
+          class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3',
+          data: { turbo_frame: '_top' } do %>
         <i class="bi bi-plus-circle"></i>
         <%= t('.create_first_menu', default: 'Create Your First Menu') %>
       <% end %>
@@ -194,46 +203,6 @@
 </div>
 
 <style>
-  /* Header Layout - Responsive */
-  .menus-header-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-4);
-    gap: var(--space-3);
-  }
-  
-  .menus-header-actions {
-    display: flex;
-    gap: var(--space-2);
-    flex-shrink: 0;
-  }
-  
-  /* Mobile Header - Stack vertically */
-  @media (max-width: 768px) {
-    .menus-header-wrapper {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    
-    .menus-header-actions {
-      width: 100%;
-      justify-content: stretch;
-    }
-    
-    .menus-header-actions .btn-2025 {
-      flex: 1;
-      justify-content: center;
-    }
-    
-    /* Hide button text on very small screens, show icon only */
-    @media (max-width: 480px) {
-      .menus-header-actions .btn-text {
-        display: none;
-      }
-    }
-  }
-  
   /* Menus List - Single Column */
   .menus-list {
     display: flex;
