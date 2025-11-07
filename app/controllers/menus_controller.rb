@@ -8,7 +8,7 @@ class MenusController < ApplicationController
   before_action :set_menu, only: %i[show edit update destroy regenerate_images performance update_availabilities]
 
   # Pundit authorization
-  after_action :verify_authorized, except: %i[index performance]
+  after_action :verify_authorized, except: %i[index performance update_sequence]
   after_action :verify_policy_scoped, only: [:index], unless: :skip_policy_scope?
 
   # GET	/restaurants/:restaurant_id/menus
@@ -553,6 +553,40 @@ class MenusController < ApplicationController
       format.html
       format.json { render json: @performance_data }
     end
+  end
+
+  # PATCH /restaurants/:restaurant_id/menus/update_sequence
+  def update_sequence
+    # Check restaurant ownership
+    unless @restaurant.user_id == current_user.id
+      return render json: { status: 'error', message: 'Unauthorized' }, status: :forbidden
+    end
+    
+    Rails.logger.info "Received params: #{params.inspect}"
+    
+    order = params[:order] || []
+    
+    Rails.logger.info "Order array: #{order.inspect}"
+    
+    if order.blank?
+      return render json: { status: 'error', message: 'No order data provided' }, status: :unprocessable_entity
+    end
+    
+    ActiveRecord::Base.transaction do
+      order.each do |item|
+        Rails.logger.info "Processing item: #{item.inspect}"
+        menu = @restaurant.menus.find(item[:id])
+        menu.update_column(:sequence, item[:sequence])
+      end
+    end
+    
+    render json: { status: 'success', message: 'Menus reordered successfully' }, status: :ok
+  rescue ActiveRecord::RecordNotFound => e
+    Rails.logger.error "Menu not found: #{e.message}"
+    render json: { status: 'error', message: 'Menu not found' }, status: :not_found
+  rescue StandardError => e
+    Rails.logger.error "Update sequence error: #{e.message}\n#{e.backtrace.join("\n")}"
+    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
   end
 
   private

@@ -19,41 +19,13 @@
         </p>
       </div>
       
-      <div class="d-flex gap-2 align-items-center">
-        <!-- Mobile Sidebar Toggle -->
-        <button type="button"
-                class="sidebar-toggle-btn" 
-                data-action="click->sidebar#toggle"
-                aria-label="Toggle navigation">
-          <i class="bi bi-list" style="pointer-events: none;"></i>
-        </button>
-      
-      <div class="dropdown">
-        <button class="btn-2025 btn-2025-ghost btn-2025-md" 
-                type="button" 
-                data-bs-toggle="dropdown" 
-                aria-expanded="false">
-          <i class="bi bi-three-dots-vertical"></i>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end">
-          <li>
-            <%= link_to smartmenus_path, class: 'dropdown-item' do %>
-              <i class="bi bi-qr-code"></i> <%= t('.view_qr', default: 'View QR Codes') %>
-            <% end %>
-          </li>
-          <li>
-            <%= link_to '#', class: 'dropdown-item' do %>
-              <i class="bi bi-download"></i> <%= t('.export', default: 'Export Data') %>
-            <% end %>
-          </li>
-          <li><hr class="dropdown-divider"></li>
-          <li>
-            <%= link_to '#', class: 'dropdown-item text-danger' do %>
-              <i class="bi bi-archive"></i> <%= t('.archive', default: 'Archive Restaurant') %>
-            <% end %>
-          </li>
-        </ul>
-      </div>
+      <!-- Mobile Sidebar Toggle -->
+      <button type="button"
+              class="sidebar-toggle-btn" 
+              data-action="click->sidebar#toggle"
+              aria-label="Toggle navigation">
+        <i class="bi bi-list" style="pointer-events: none;"></i>
+      </button>
     </div>
   </div>
 
@@ -72,7 +44,7 @@
                         when 'details' then 'details_2025'
                         when 'address' then 'address_2025'
                         when 'hours' then 'hours_2025'
-                        when 'menus', 'menus_active', 'menus_draft' then 'menus_2025'
+                        when 'menus', 'menus_active', 'menus_inactive' then 'menus_2025'
                         when 'staff', 'roles' then 'staff_2025'
                         when 'settings' then 'settings_2025'
                         when 'catalog' then 'catalog_2025'

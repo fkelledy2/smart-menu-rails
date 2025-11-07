@@ -7,7 +7,7 @@
   # Calculate counts for badges
   restaurant = local_assigns[:restaurant] || @restaurant
   active_menus_count = restaurant.menus.where(archived: false, status: 'active').count rescue 0
-  draft_menus_count = restaurant.menus.where(archived: false, status: 'inactive').count rescue 0
+  inactive_menus_count = restaurant.menus.where(archived: false, status: 'inactive').count rescue 0
   staff_count = restaurant.employees.count rescue 0
   current_section = local_assigns[:current_section] || 'details'
 %>
@@ -75,13 +75,13 @@
       <% end %>
     <% end %>
     
-    <% if draft_menus_count > 0 %>
-      <%= link_to edit_restaurant_path(restaurant, section: 'menus_draft'), 
-          class: "sidebar-link #{'active' if current_section == 'menus_draft'}",
+    <% if inactive_menus_count > 0 %>
+      <%= link_to edit_restaurant_path(restaurant, section: 'menus_inactive'), 
+          class: "sidebar-link #{'active' if current_section == 'menus_inactive'}",
           data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
         <i class="bi bi-file-earmark"></i>
-        <span><%= t('.draft_menus', default: 'Drafts') %></span>
-        <span class="sidebar-link-badge"><%= draft_menus_count %></span>
+        <span><%= t('.inactive_menus', default: 'Inactive') %></span>
+        <span class="sidebar-link-badge"><%= inactive_menus_count %></span>
       <% end %>
     <% end %>
   </div>
@@ -101,13 +101,6 @@
       <% if staff_count > 0 %>
         <span class="sidebar-link-badge"><%= staff_count %></span>
       <% end %>
-    <% end %>
-    
-    <%= link_to edit_restaurant_path(restaurant, section: 'roles'), 
-        class: "sidebar-link #{'active' if current_section == 'roles'}",
-        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-      <i class="bi bi-shield-check"></i>
-      <span><%= t('.roles', default: 'Roles & Permissions') %></span>
     <% end %>
   </div>
 

@@ -337,7 +337,7 @@ class RestaurantsController < ApplicationController
     # Use ?old_ui=true to access legacy UI if needed
     unless params[:old_ui] == 'true'
       # Handle Turbo Frame requests for section content
-      if turbo_frame_request_id == 'restaurant_content'
+      if request.headers["Turbo-Frame"] == 'restaurant_content'
         # Determine filter for menu sections
         filter = @current_section.include?('menus') ? @current_section.sub('menus_', '') : 'all'
         filter = 'all' if @current_section == 'menus'
@@ -977,7 +977,7 @@ class RestaurantsController < ApplicationController
       'address_2025'
     when 'hours'
       'hours_2025'
-    when 'menus', 'menus_active', 'menus_draft'
+    when 'menus', 'menus_active', 'menus_inactive'
       'menus_2025'
     when 'staff', 'roles'
       'staff_2025'

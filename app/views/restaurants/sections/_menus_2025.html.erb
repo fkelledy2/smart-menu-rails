@@ -60,26 +60,32 @@
       <% end %>
     </li>
     <li class="nav-item">
-      <%= link_to edit_restaurant_path(restaurant, section: 'menus_draft'), 
-          class: "nav-link #{'active' if filter == 'draft'}",
+      <%= link_to edit_restaurant_path(restaurant, section: 'menus_inactive'), 
+          class: "nav-link #{'active' if filter == 'inactive'}",
           data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <%= t('.draft', default: 'Draft') %> 
+        <%= t('.inactive', default: 'Inactive') %> 
         <span class="badge bg-warning"><%= restaurant.menus.where(archived: false, status: 'inactive').count %></span>
       <% end %>
     </li>
   </ul>
   
   <% if menus.any? %>
-    <!-- Menus Grid -->
-    <div class="menus-grid">
+    <!-- Menus List -->
+    <div class="menus-list" 
+         data-controller="sortable"
+         data-sortable-url-value="<%= update_sequence_restaurant_menus_path(restaurant) %>"
+         data-sortable-handle-value=".drag-handle">
       <% menus.each do |menu| %>
-        <div class="menu-card">
-          <div class="menu-card-header">
-            <h3 class="menu-card-title">
-              <%= menu.name %>
-            </h3>
-            
-            <div class="menu-card-badges">
+        <div class="menu-card" data-sortable-id="<%= menu.id %>">
+          <!-- Drag Handle -->
+          <div class="drag-handle" title="Drag to reorder">
+            <i class="bi bi-grip-vertical"></i>
+          </div>
+          
+          <!-- Menu Info Section -->
+          <div class="menu-card-main">
+            <div class="menu-card-title-row">
+              <h3 class="menu-card-title"><%= menu.name %></h3>
               <% if menu.active? %>
                 <span class="badge bg-success">
                   <i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %>
@@ -90,20 +96,21 @@
                 </span>
               <% end %>
             </div>
-          </div>
-          
-          <div class="menu-card-body">
-            <% if menu.description.present? %>
-              <p class="menu-card-description">
-                <%= truncate(menu.description, length: 100) %>
-              </p>
-            <% end %>
             
-            <div class="menu-card-stats">
+            <div class="menu-card-meta">
+              <% if menu.description.present? %>
+                <span class="menu-card-description">
+                  <%= truncate(menu.description, length: 80) %>
+                </span>
+                <span class="meta-separator">•</span>
+              <% end %>
+              
               <span class="stat-badge">
                 <i class="bi bi-grid-3x3"></i>
                 <%= menu.menusections.count %> <%= t('.sections', default: 'sections') %>
               </span>
+              
+              <span class="meta-separator">•</span>
               
               <span class="stat-badge">
                 <i class="bi bi-list"></i>
@@ -112,6 +119,7 @@
             </div>
           </div>
           
+          <!-- Actions Section -->
           <div class="menu-card-actions">
             <%= link_to edit_restaurant_menu_path(restaurant, menu), 
                 class: 'btn-2025 btn-2025-primary btn-2025-sm flex-fill',
@@ -226,103 +234,154 @@
     }
   }
   
-  /* Menus Grid - Responsive */
-  .menus-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: var(--space-4);
+  /* Menus List - Single Column */
+  .menus-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
   }
   
-  /* Mobile Grid - Single column */
-  @media (max-width: 768px) {
-    .menus-grid {
-      grid-template-columns: 1fr;
-      gap: var(--space-3);
-    }
-  }
-  
+  /* Menu Card - Horizontal Layout */
   .menu-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
     background: white;
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    padding: var(--space-4);
     transition: all var(--transition-base);
   }
   
   .menu-card:hover {
     box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+    border-color: var(--color-gray-300);
   }
   
-  .menu-card-header {
-    padding: var(--space-4);
-    border-bottom: 1px solid var(--color-gray-100);
+  /* Sortable states */
+  .sortable-ghost {
+    opacity: 0.4;
+    background: var(--color-gray-50);
   }
   
-  /* Mobile Card Header - Reduce padding */
-  @media (max-width: 480px) {
-    .menu-card-header {
-      padding: var(--space-3);
-    }
+  .sortable-drag {
+    opacity: 1;
+    box-shadow: var(--shadow-lg);
+  }
+  
+  /* Drag Handle */
+  .drag-handle {
+    cursor: grab;
+    color: var(--color-gray-400);
+    font-size: 1.5rem;
+    padding: var(--space-2);
+    margin: calc(var(--space-2) * -1);
+    transition: color var(--transition-base);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .drag-handle:hover {
+    color: var(--color-gray-600);
+  }
+  
+  .drag-handle:active {
+    cursor: grabbing;
+  }
+  
+  /* Main Content Area */
+  .menu-card-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .menu-card-title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
   }
   
   .menu-card-title {
     font-size: var(--text-lg);
     font-weight: var(--font-semibold);
     color: var(--color-gray-900);
-    margin: 0 0 var(--space-2) 0;
+    margin: 0;
   }
   
-  /* Mobile Title - Smaller font */
-  @media (max-width: 480px) {
-    .menu-card-title {
-      font-size: var(--text-base);
-    }
-  }
-  
-  .menu-card-badges {
+  .menu-card-meta {
     display: flex;
+    align-items: center;
     gap: var(--space-2);
     flex-wrap: wrap;
-  }
-  
-  .menu-card-body {
-    padding: var(--space-4);
-  }
-  
-  /* Mobile Card Body - Reduce padding */
-  @media (max-width: 480px) {
-    .menu-card-body {
-      padding: var(--space-3);
-    }
+    font-size: var(--text-sm);
+    color: var(--color-gray-600);
   }
   
   .menu-card-description {
     color: var(--color-gray-600);
-    font-size: var(--text-sm);
-    margin-bottom: var(--space-3);
   }
   
-  .menu-card-stats {
-    display: flex;
-    gap: var(--space-3);
-    flex-wrap: wrap;
+  .meta-separator {
+    color: var(--color-gray-300);
+    font-weight: bold;
   }
   
   .stat-badge {
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    font-size: var(--text-xs);
     color: var(--color-gray-600);
+    white-space: nowrap;
   }
   
+  /* Actions Section */
   .menu-card-actions {
     display: flex;
     gap: var(--space-2);
-    padding: var(--space-3) var(--space-4);
-    background: var(--color-gray-50);
-    border-top: 1px solid var(--color-gray-100);
+    flex-shrink: 0;
+    align-items: center;
+  }
+  
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .menu-card {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-3);
+    }
+    
+    .drag-handle {
+      align-self: flex-start;
+    }
+    
+    .menu-card-actions {
+      width: 100%;
+      justify-content: stretch;
+    }
+    
+    .menu-card-actions .flex-fill {
+      flex: 1;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .menu-card {
+      padding: var(--space-3);
+    }
+    
+    .menu-card-title {
+      font-size: var(--text-base);
+    }
+    
+    .menu-card-meta {
+      font-size: var(--text-xs);
+    }
   }
   
   /* Mobile Card Actions - Better spacing */

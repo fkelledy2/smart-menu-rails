@@ -191,29 +191,31 @@ class JavascriptHelperTest < ActionView::TestCase
   end
 
   # Form data attributes tests
+  # Note: form_data_attributes returns keys WITHOUT 'data-' prefix
+  # because form_with will add it automatically
   test 'should generate basic form data attributes' do
     attributes = form_data_attributes('restaurant')
 
-    assert_equal 'true', attributes['data-restaurant-form']
+    assert_equal 'true', attributes['restaurant-form']
   end
 
   test 'should include auto-save in form attributes' do
     attributes = form_data_attributes('restaurant', auto_save: true)
 
-    assert_equal 'true', attributes['data-auto-save']
-    assert_equal 2000, attributes['data-auto-save-delay']
+    assert_equal 'true', attributes['auto-save']
+    assert_equal 2000, attributes['auto-save-delay']
   end
 
   test 'should include custom auto-save delay' do
     attributes = form_data_attributes('restaurant', auto_save: true, auto_save_delay: 5000)
 
-    assert_equal 5000, attributes['data-auto-save-delay']
+    assert_equal 5000, attributes['auto-save-delay']
   end
 
   test 'should include validation in form attributes' do
     attributes = form_data_attributes('restaurant', validate: true)
 
-    assert_equal 'true', attributes['data-validate']
+    assert_equal 'true', attributes['validate']
   end
 
   # Select data attributes tests
@@ -308,17 +310,17 @@ class JavascriptHelperTest < ActionView::TestCase
   test 'should generate form data attributes for restaurant forms' do
     attributes = form_data_attributes('restaurant', auto_save: true, validate: true)
 
-    assert_equal 'true', attributes['data-restaurant-form']
-    assert_equal 'true', attributes['data-auto-save']
-    assert_equal 'true', attributes['data-validate']
+    assert_equal 'true', attributes['restaurant-form']
+    assert_equal 'true', attributes['auto-save']
+    assert_equal 'true', attributes['validate']
   end
 
   test 'should generate form data attributes for menu forms' do
     attributes = form_data_attributes('menu', auto_save: false, validate: true)
 
-    assert_equal 'true', attributes['data-menu-form']
-    assert_nil attributes['data-auto-save']
-    assert_equal 'true', attributes['data-validate']
+    assert_equal 'true', attributes['menu-form']
+    assert_nil attributes['auto-save']
+    assert_equal 'true', attributes['validate']
   end
 
   # QR code helper tests
@@ -388,8 +390,8 @@ class JavascriptHelperTest < ActionView::TestCase
   test 'should handle empty options for form attributes' do
     attributes = form_data_attributes('test', {})
 
-    assert_equal 'true', attributes['data-test-form']
-    assert_nil attributes['data-auto-save']
+    assert_equal 'true', attributes['test-form']
+    assert_nil attributes['auto-save']
   end
 
   test 'should handle empty options for select attributes' do

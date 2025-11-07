@@ -72,6 +72,10 @@ export default class extends Controller {
   
   async saveOrder(order) {
     try {
+      console.log('Sending order to:', this.urlValue)
+      console.log('CSRF Token:', this.csrfToken())
+      console.log('Order data:', order)
+      
       const response = await fetch(this.urlValue, {
         method: 'PATCH',
         headers: {
@@ -83,9 +87,13 @@ export default class extends Controller {
         body: JSON.stringify({ order: order })
       })
       
+      const data = await response.json()
+      console.log('Response:', response.status, data)
+      
       if (response.ok) {
         this.showSuccess()
       } else {
+        console.error('Save failed:', response.status, data)
         this.showError()
       }
     } catch (error) {

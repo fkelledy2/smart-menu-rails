@@ -171,6 +171,10 @@ Rails.application.routes.draw do
     
     # Menu management (full operations within restaurant context)
     resources :menus do
+      collection do
+        patch :update_sequence
+      end
+      
       # Menu configuration
       resources :menuparticipants
       resources :menuavailabilities
