@@ -35,38 +35,55 @@ class RestaurantsController < ApplicationController
 
   def spotify_callback
     if params[:code]
-      auth_response = RestClient.post('https://accounts.spotify.com/api/token', {
+      # Encode client credentials for Basic Auth
+      credentials = Base64.strict_encode64("#{Rails.application.credentials.spotify_key}:#{Rails.application.credentials.spotify_secret}")
+      
+      # Prepare form data as URL-encoded string
+      form_data = URI.encode_www_form({
         grant_type: 'authorization_code',
         code: params[:code],
-        redirect_uri: ENV.fetch('SPOTIFY_REDIRECT_URI', nil),
-        client_id: Rails.application.credentials.spotify_key,
-        client_secret: Rails.application.credentials.spotify_secret,
-      },)
+        redirect_uri: ENV.fetch('SPOTIFY_REDIRECT_URI', nil)
+      })
+      
+      auth_response = RestClient.post(
+        'https://accounts.spotify.com/api/token',
+        form_data,
+        {
+          Authorization: "Basic #{credentials}",
+          content_type: 'application/x-www-form-urlencoded',
+          accept: 'application/json'
+        }
+      )
+      
       auth_data = JSON.parse(auth_response.body)
-      Rails.logger.debug auth_data
-      spotify_user = RSpotify::User.new(auth_data)
+      Rails.logger.debug "Spotify auth response: #{auth_data}"
+      
+      # Get user info from Spotify API
+      user_response = RestClient.get(
+        'https://api.spotify.com/v1/me',
+        { Authorization: "Bearer #{auth_data['access_token']}" }
+      )
+      user_data = JSON.parse(user_response.body)
 
       session[:spotify_user] = {
-        id: spotify_user.id,
-        display_name: spotify_user.display_name,
-        email: spotify_user.email,
+        id: user_data['id'],
+        display_name: user_data['display_name'],
+        email: user_data['email'],
         token: auth_data['access_token'],
         refresh_token: auth_data['refresh_token'],
         expires_at: Time.now.to_i + auth_data['expires_in'],
       }
+      
       if session[:spotify_restaurant_id]
-        # Use fetch with cache
-        @restaurant = Restaurant.fetch(session[:spotify_restaurant_id])
+        @restaurant = Restaurant.find(session[:spotify_restaurant_id])
         @restaurant.spotifyaccesstoken = auth_data['access_token']
         @restaurant.spotifyrefreshtoken = auth_data['refresh_token']
+        @restaurant.spotifyuserid = user_data['id']
         @restaurant.save
 
-        # Expire the cache for this restaurant
-        @restaurant.expire_restaurant_cache if @restaurant.respond_to?(:expire_restaurant_cache)
-
-        Rails.logger.debug @restaurant.name
-        Rails.logger.debug @restaurant.id
-        Rails.logger.debug edit_restaurant_path(@restaurant)
+        Rails.logger.info "Spotify connected for restaurant: #{@restaurant.name} (ID: #{@restaurant.id})"
+        redirect_to edit_restaurant_path(@restaurant, section: 'advanced')
+      else
         redirect_to root_url
       end
     else

@@ -3,6 +3,13 @@
 // Modern sidebar for restaurant configuration
 // ============================================
 
+// Sticky Header
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030; // Below modals (1050) but above most content
+}
+
 // Main Sidebar Container
 .sidebar-2025 {
   width: 260px;
@@ -60,6 +67,11 @@
   
   &:last-child {
     border-bottom: none;
+    
+    // Extra padding on mobile to ensure last items are accessible when keyboard appears
+    @media (max-width: 768px) {
+      padding-bottom: 300px; // Large bottom padding for mobile keyboard clearance
+    }
   }
 }
 

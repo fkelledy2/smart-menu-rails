@@ -5,21 +5,29 @@
 
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
+<!-- Quick Actions Card -->
+<div class="quick-actions-card">
+  <h2 class="quick-actions-title">
+    <i class="bi bi-lightning-charge"></i>
+    <%= t('.quick_actions', default: 'Quick Actions') %>
+  </h2>
+  
+  <div class="quick-actions-grid">
+    <%= link_to new_restaurant_tablesetting_path(restaurant), 
+        class: 'quick-action-btn' do %>
+      <i class="bi bi-plus-circle"></i>
+      <span><%= t('.add_table', default: 'Add Table') %></span>
+    <% end %>
+  </div>
+</div>
+
 <!-- Table Settings -->
 <% if restaurant.tablesettings.any? %>
   <div class="content-card-2025">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="content-card-title mb-0">
-        <i class="bi bi-layout-wtf"></i>
-        <%= t('.table_settings', default: 'Table Settings') %>
-      </h2>
-      
-      <%= link_to new_restaurant_tablesetting_path(restaurant), 
-          class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
-        <i class="bi bi-plus-circle"></i>
-        <%= t('.add_table', default: 'Add Table') %>
-      <% end %>
-    </div>
+    <h2 class="content-card-title mb-4">
+      <i class="bi bi-layout-wtf"></i>
+      <%= t('.table_settings', default: 'Table Settings') %>
+    </h2>
     
     <!-- Desktop Table View -->
     <div class="table-responsive tables-table-view">
@@ -169,11 +177,6 @@
   </div>
 <% else %>
   <div class="content-card-2025">
-    <h2 class="content-card-title">
-      <i class="bi bi-layout-wtf"></i>
-      <%= t('.table_settings', default: 'Table Settings') %>
-    </h2>
-    
     <div class="text-center py-5">
       <i class="bi bi-layout-wtf text-muted" style="font-size: 3rem;"></i>
       <h3 class="mt-3 text-muted">
@@ -182,11 +185,6 @@
       <p class="text-muted">
         <%= t('.no_tables_description', default: 'Set up your restaurant tables to enable table-specific QR codes and ordering.') %>
       </p>
-      <%= link_to new_restaurant_tablesetting_path(restaurant), 
-          class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3' do %>
-        <i class="bi bi-plus-circle"></i>
-        <%= t('.create_first_table', default: 'Create Your First Table') %>
-      <% end %>
     </div>
   </div>
 <% end %>
