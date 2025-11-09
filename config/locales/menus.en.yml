@@ -65,3 +65,8 @@ en:
       availabilities: Availabilities
     showMenusections:
       sections: Sections
+    sections:
+      settings_2025:
+        disabled_at_restaurant: Disabled at restaurant level
+        parent_restriction: 'Note:'
+        parent_restriction_desc: Settings disabled at the restaurant level cannot be enabled for individual menus. Enable them at the restaurant level first.

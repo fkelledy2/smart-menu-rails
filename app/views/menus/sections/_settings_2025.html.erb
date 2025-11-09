@@ -43,17 +43,24 @@
   <%= menu_form_with(menu, auto_save: true) do |form| %>
   <div class="features-grid">
     <!-- Display Images -->
-    <div class="feature-card">
+    <div class="feature-card <%= 'feature-card-disabled' unless restaurant.displayImages %>">
       <div class="feature-card-icon bg-primary">
         <i class="bi bi-image"></i>
       </div>
       <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.display_images', default: 'Display Images') %></h5>
+        <h5 class="feature-card-title">
+          <%= t('.display_images', default: 'Display Images') %>
+        </h5>
         <p class="feature-card-description">
           <%= t('.display_images_help', default: 'Show menu item images in this menu') %>
         </p>
       </div>
       <div class="feature-card-toggle">
+        <% unless restaurant.displayImages %>
+          <span class="badge bg-warning text-dark">
+            <i class="bi bi-lock"></i> <%= t('.disabled_at_restaurant', default: 'Disabled at restaurant level') %>
+          </span>
+        <% end %>
         <div class="form-check form-switch">
           <input type="hidden" name="menu[displayImages]" value="false">
           <input class="form-check-input" 
@@ -62,23 +69,31 @@
                  id="menu_displayImages_settings"
                  value="true"
                  <%= 'checked' if menu.displayImages %>
+                 <%= 'disabled' unless restaurant.displayImages %>
                  data-skip-tomselect="true">
         </div>
       </div>
     </div>
     
     <!-- Display Images in Popup -->
-    <div class="feature-card">
+    <div class="feature-card <%= 'feature-card-disabled' unless restaurant.displayImagesInPopup %>">
       <div class="feature-card-icon bg-success">
         <i class="bi bi-window-stack"></i>
       </div>
       <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.display_images_popup', default: 'Display Images in Popup') %></h5>
+        <h5 class="feature-card-title">
+          <%= t('.display_images_popup', default: 'Display Images in Popup') %>
+        </h5>
         <p class="feature-card-description">
           <%= t('.display_images_popup_help', default: 'Open menu item images in a popup modal when clicked') %>
         </p>
       </div>
       <div class="feature-card-toggle">
+        <% unless restaurant.displayImagesInPopup %>
+          <span class="badge bg-warning text-dark">
+            <i class="bi bi-lock"></i> <%= t('.disabled_at_restaurant', default: 'Disabled at restaurant level') %>
+          </span>
+        <% end %>
         <div class="form-check form-switch">
           <input type="hidden" name="menu[displayImagesInPopup]" value="false">
           <input class="form-check-input" 
@@ -87,23 +102,31 @@
                  id="menu_displayImagesInPopup_settings"
                  value="true"
                  <%= 'checked' if menu.displayImagesInPopup %>
+                 <%= 'disabled' unless restaurant.displayImagesInPopup %>
                  data-skip-tomselect="true">
         </div>
       </div>
     </div>
     
     <!-- Allow Ordering -->
-    <div class="feature-card">
+    <div class="feature-card <%= 'feature-card-disabled' unless restaurant.allowOrdering %>">
       <div class="feature-card-icon bg-warning">
         <i class="bi bi-cart-check"></i>
       </div>
       <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.allow_ordering', default: 'Allow Ordering') %></h5>
+        <h5 class="feature-card-title">
+          <%= t('.allow_ordering', default: 'Allow Ordering') %>
+        </h5>
         <p class="feature-card-description">
           <%= t('.allow_ordering_help', default: 'Enable online ordering for this menu') %>
         </p>
       </div>
       <div class="feature-card-toggle">
+        <% unless restaurant.allowOrdering %>
+          <span class="badge bg-warning text-dark">
+            <i class="bi bi-lock"></i> <%= t('.disabled_at_restaurant', default: 'Disabled at restaurant level') %>
+          </span>
+        <% end %>
         <div class="form-check form-switch">
           <input type="hidden" name="menu[allowOrdering]" value="false">
           <input class="form-check-input" 
@@ -112,6 +135,7 @@
                  id="menu_allowOrdering_settings"
                  value="true"
                  <%= 'checked' if menu.allowOrdering %>
+                 <%= 'disabled' unless restaurant.allowOrdering %>
                  data-skip-tomselect="true">
         </div>
       </div>
@@ -155,6 +179,10 @@
       <h4 class="mb-2"><%= t('.settings_info_title', default: 'About Menu Settings') %></h4>
       <p class="text-sm text-muted mb-2">
         <%= t('.settings_info_desc', default: 'These settings control functionality for this specific menu. Changes are saved automatically.') %>
+      </p>
+      <p class="text-sm text-muted mb-2">
+        <i class="bi bi-lock"></i> <strong><%= t('.parent_restriction', default: 'Note:') %></strong> 
+        <%= t('.parent_restriction_desc', default: 'Settings disabled at the restaurant level cannot be enabled for individual menus. Enable them at the restaurant level first.') %>
       </p>
       <ul class="text-sm text-muted mb-0 ps-3">
         <li><strong><%= t('.status', default: 'Status') %>:</strong> <%= t('.status_info', default: 'Controls menu visibility') %></li>
@@ -223,6 +251,10 @@
   .feature-card-toggle {
     padding-top: var(--space-2);
     border-top: 1px solid var(--color-gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-2);
   }
   
   .feature-card-toggle .form-switch {
@@ -239,5 +271,35 @@
   
   .bg-light {
     background: var(--color-gray-50) !important;
+  }
+  
+  /* Disabled feature card styling */
+  .feature-card-disabled {
+    opacity: 0.7;
+    background: var(--color-gray-50);
+  }
+  
+  .feature-card-disabled .feature-card-icon {
+    opacity: 0.5;
+  }
+  
+  .feature-card-disabled .feature-card-title {
+    color: var(--color-gray-600);
+  }
+  
+  .feature-card-disabled:hover {
+    border-color: var(--color-gray-200);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+  
+  .feature-card-disabled .form-check-input:disabled {
+    cursor: not-allowed;
+  }
+  
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    font-weight: normal;
   }
 </style>

@@ -63,3 +63,8 @@ it:
       availabilities: Disponibilità
     showMenusections:
       sections: Sezioni
+    sections:
+      settings_2025:
+        disabled_at_restaurant: Disabilitato a livello di ristorante
+        parent_restriction: 'Nota:'
+        parent_restriction_desc: Le impostazioni disabilitate a livello di ristorante non possono essere abilitate per i singoli menù. Abilitarle prima a livello di ristorante.
