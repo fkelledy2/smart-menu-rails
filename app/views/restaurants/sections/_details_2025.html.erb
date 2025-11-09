@@ -13,12 +13,16 @@
   </h2>
   
   <div class="quick-actions-grid">
-    <%= link_to new_restaurant_menu_path(restaurant), class: 'quick-action-btn' do %>
+    <%= link_to new_restaurant_menu_path(restaurant), 
+        class: 'quick-action-btn',
+        data: { turbo_frame: '_top' } do %>
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.new_menu', default: 'New Menu') %></span>
     <% end %>
     
-    <%= link_to new_restaurant_ocr_menu_import_path(restaurant), class: 'quick-action-btn' do %>
+    <%= link_to new_restaurant_ocr_menu_import_path(restaurant), 
+        class: 'quick-action-btn',
+        data: { turbo_frame: '_top' } do %>
       <i class="bi bi-file-earmark-arrow-up"></i>
       <span><%= t('.import_menu', default: 'Import Menu') %></span>
     <% end %>
@@ -43,6 +47,11 @@
         <%= restaurant.menus.joins(:menusections).joins(:menuitems).distinct.count(:menuitems) rescue 0 %>
       </span>
       <span class="stat-label"><%= t('.items', default: 'Items') %></span>
+    </div>
+    
+    <div class="stat-item">
+      <span class="stat-value"><%= restaurant.tablesettings.count %></span>
+      <span class="stat-label"><%= t('.tables', default: 'Tables') %></span>
     </div>
     
     <div class="stat-item">

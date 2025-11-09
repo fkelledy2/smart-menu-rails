@@ -11,6 +11,7 @@
   staff_count = restaurant.employees.count rescue 0
   tables_count = restaurant.tablesettings.count rescue 0
   allergens_count = restaurant.allergyns.where(archived: false).count rescue 0
+  locales_count = restaurant.restaurantlocales.count rescue 0
   current_section = local_assigns[:current_section] || 'details'
 %>
 
@@ -49,6 +50,9 @@
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
       <i class="bi bi-globe"></i>
       <span><%= t('.localization', default: 'Localization') %></span>
+      <% if locales_count > 0 %>
+        <span class="sidebar-link-badge"><%= locales_count %></span>
+      <% end %>
     <% end %>
   </div>
 
