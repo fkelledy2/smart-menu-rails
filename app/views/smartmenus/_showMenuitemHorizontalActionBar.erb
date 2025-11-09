@@ -1,20 +1,18 @@
-<div style='padding:0px;min-height:32px' class="card-footer text-muted">
-                <div class="row">
-                    <div class="col-12">
-                        <span class="float-start">
-                                <div class="btn-group btn-allergyn-group-custom-rounded" role="group" aria-label="<%= t('.allergyns') %>">
-                                    <% mi.allergyns.each do |allergyn| %>
-                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                            <small><small><%= allergyn.symbol %></small></small>
-                                        </button>
-                                    <% end %>
-                                </div>
-                        </span>
-                        <% if order && ( order.status != 'billrequested' && order.status != 'closed' ) %>
-                            <span class="float-end">
-                                <div class="btn-group btn-group-sm btn-order-group-custom-rounded" role="group" aria-label="<%= t('.order') %>">
+<div class="card-footer text-muted" style="padding: 12px; min-height: 56px;">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="allergen-badges">
+            <div class="d-flex gap-1" role="group" aria-label="<%= t('.allergyns') %>">
+                <% mi.allergyns.each do |allergyn| %>
+                    <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
+                        <%= allergyn.symbol %>
+                    </span>
+                <% end %>
+            </div>
+        </div>
+        <% if order && ( order.status != 'billrequested' && order.status != 'closed' ) %>
+            <div class="d-flex gap-0" role="group" aria-label="<%= t('.order') %>">
                                     <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                                        <button type="button" class="addItemToOrder btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                        <button type="button" class="addItemToOrder btn-touch-primary" style="border-radius: 8px 0 0 8px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                             data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                             data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                             data-bs-ordr_id="<%= order.id %>"
@@ -23,12 +21,12 @@
                                             data-bs-menuitem_description="<%= mi.localised_description(ordrparticipant.preferredlocale) %>"
                                             data-bs-menuitem_price="<%= mi.price %>"
                                             data-bs-menuitem_image="<%= mi.image_url %>">
-                                            <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
-                                            <i class="bi bi-plus"></i>
-                                        </button>
+                            <i class="bi bi-plus"></i>
+                            <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
+                        </button>
                                     <% else %>
                                         <% if menuparticipant && menuparticipant.preferredlocale %>
-                                            <button type="button" class="addItemToOrder btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                            <button type="button" class="addItemToOrder btn-touch-primary" style="border-radius: 8px 0 0 8px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                                 data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                 data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                                 data-bs-ordr_id="<%= order.id %>"
@@ -37,11 +35,11 @@
                                                 data-bs-menuitem_description="<%= mi.localised_description(menuparticipant.preferredlocale) %>"
                                                 data-bs-menuitem_price="<%= mi.price %>"
                                                 data-bs-menuitem_image="<%= mi.medium_url %>">
-                                                <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
-                                                <i class="bi bi-plus"></i>
-                                            </button>
+                            <i class="bi bi-plus"></i>
+                            <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
+                        </button>
                                         <% else %>
-                                            <button type="button" class="addItemToOrder btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                            <button type="button" class="addItemToOrder btn-touch-primary" style="border-radius: 8px 0 0 8px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                                 data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                 data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                                 data-bs-ordr_id="<%= order.id %>"
@@ -50,13 +48,13 @@
                                                 data-bs-menuitem_description="<%= mi.description %>"
                                                 data-bs-menuitem_price="<%= mi.price %>"
                                                 data-bs-menuitem_image="<%= mi.medium_url %>">
-                                                <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
-                                                <i class="bi bi-plus"></i>
-                                            </button>
+                            <i class="bi bi-plus"></i>
+                            <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
+                        </button>
                                         <% end %>
                                     <% end %>
                                     <% if mi.menuitem_size_mappings.count > 0 %>
-                                        <button type="button" style='border-top-right-radius: 0px;border-bottom-right-radius: 5px;max-width:50px' class="addItemToOrder btn btn-sm btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
+                        <button type="button" class="btn-touch-primary dropdown-toggle dropdown-toggle-split" style="border-radius: 0 8px 8px 0; min-width: 44px;" data-bs-toggle="dropdown" aria-expanded="false"
                                                             data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                             data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>">
                                             <span class="visually-hidden"><%= t('.toggle_dropdown') %></span>
@@ -83,9 +81,7 @@
                                             <% end %>
                                         </ul>
                                     <% end %>
-                                </div>
-                            </span>
-                        <% end %>
-                    </div>
-                </div>
+            </div>
+        <% end %>
+    </div>
 </div>

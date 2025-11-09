@@ -1,109 +1,97 @@
-        <div class="pt-2 row">
-            <div class="col-12">
-                <span>
-                    <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                        <%= menu.localised_name(ordrparticipant.preferredlocale) %>
-                    <% else %>
-                        <%= menu.name %>
-                    <% end %>
-                </span>
-                <span class="float-end">
-                <div style="position: relative; z-index: 0;" class="btn-group" role="group">
-                        <% if ordrparticipant && ordrparticipant.name == nil %>
-                           <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
-                              <i class="bi bi-person-fill-add"></i>
-                           </button>
-                        <% else %>
-                           <% if ordrparticipant && ordrparticipant.name %>
-                              <button type="button" style="max-width: 100px;" class="btn btn-sm btn-dark d-inline-block text-truncate" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal">
-                                  <small><%= ordrparticipant.name %></small>
-                              </button>
-                           <% end %>
-                        <% end %>
+        <span class="menu-name">
+            <% if ordrparticipant && ordrparticipant.preferredlocale %>
+                <%= menu.localised_name(ordrparticipant.preferredlocale) %>
+            <% else %>
+                <%= menu.name %>
+            <% end %>
+        </span>
+        <div class="order-button-group">
+            <% if ordrparticipant && ordrparticipant.name == nil %>
+              <button type="button" class="btn-touch-primary btn-touch-icon" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal" aria-label="<%= t('.add_name', default: 'Add your name') %>">
+                <i class="bi bi-person-fill-add"></i>
+              </button>
+            <% else %>
+              <% if ordrparticipant && ordrparticipant.name %>
+                <button type="button" class="btn-touch-dark btn-touch-sm" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal" style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;">
+                  <%= ordrparticipant.name %>
+                </button>
+              <% end %>
+            <% end %>
                     <% if tablesetting %>
                         <% if order %>
                             <% if order.status == 'opened' %>
                                 <% if order.nett > 0 %>
                                     <% if order.addedCount > 0 %>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
-                                            <%= t(".order") %>
+                                        <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
                                             <i id="orderCart" class="bi bi-cart"></i>
-                                            <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm float-right" role="status"></div>
-                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-                                                <%= order.totalItemsCount %>
-                                                <span class="visually-hidden"><%= t('.items_in_cart') %></span>
-                                            </span>
-                                          </button>
+                                            <%= t(".order") %>
+                                            <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm" role="status"></div>
+                                        </button>
                                     <% else %>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
-                                            <%= t(".order") %>
+                                        <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
                                             <i id="orderCart" class="bi bi-cart"></i>
-                                            <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm float-right" role="status"></div>
-                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-                                                <%= order.totalItemsCount %>
-                                                <span class="visually-hidden"><%= t('.items_in_cart') %></span>
-                                            </span>
+                                            <%= t(".order") %>
+                                            <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm" role="status"></div>
                                         </button>
                                     <% end %>
                                 <% else %>
-                                    <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" disabled>
-                                        <%= t(".order") %>
+                                    <button type="button" class="btn-touch-secondary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" disabled>
                                         <i id="orderCart" class="bi bi-cart"></i>
-                                        <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm float-right" role="status"></div>
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-                                            <%= order.totalItemsCount %>
-                                            <span class="visually-hidden"><%= t('.items_in_cart') %></span>
-                                        </span>
+                                        <%= t(".order") %>
                                     </button>
                                 <% end %>
                             <% end %>
                                 <% if order.status == 'ordered' || order.status == 'preparing' || order.status == 'ready'  || order.status == 'delivered' %>
-                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#requestBillModal">
-                                        <%= t(".bill") %> <i class="bi bi-receipt"></i></i>
+                                    <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#requestBillModal">
+                                        <i class="bi bi-receipt"></i>
+                                        <%= t(".bill") %>
                                     </button>
                                     <% if order.addedCount > 0 %>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
-                                            <%= t(".order") %>
+                                        <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
                                             <i id="orderCart" class="bi bi-cart"></i>
-                                            <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm float-right" role="status"></div>
-                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-                                                <%= order.totalItemsCount %>
-                                                <span class="visually-hidden"><%= t('.items_in_cart') %></span>
-                                            </span>
+                                            <%= t(".order") %>
+                                            <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm" role="status"></div>
                                         </button>
                                     <% else %>
-                                        <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
-                                            <%= t(".order") %>
+                                        <button type="button" class="btn-touch-secondary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
                                             <i id="orderCart" class="bi bi-cart"></i>
-                                            <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm float-right" role="status"></div>
-                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-                                                <%= order.totalItemsCount %>
-                                                <span class="visually-hidden"><%= t('.items_in_cart') %></span>
-                                            </span>
+                                            <%= t(".order") %>
                                         </button>
                                     <% end %>
                                 <% end %>
                                 <% if order.status == 'billrequested' %>
-                                        <button type="button" class="btn btn-sm btn-dark">
-                                            <%= t(".staffAlerted") %> <i class="bi bi-receipt"></i></i>
+                                        <button type="button" class="btn-touch-dark btn-touch-sm" disabled>
+                                            <i class="bi bi-receipt"></i>
+                                            <%= t(".staffAlerted") %>
                                         </button>
                                 <% end %>
                                 <% if order.status == 'closed' %>
                                     <% if menu.allowOrdering == true && menu.restaurant.allowOrdering == true %>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#openOrderModal">
-                                            <%= t(".startOrder") %> <i class="bi bi-plus-circle"></i>
+                                        <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#openOrderModal">
+                                            <i class="bi bi-plus-circle"></i>
+                                            <%= t(".startOrder") %>
                                         </button>
                                     <% end %>
                                 <% end %>
                         <% else %>
                             <% if menu.allowOrdering == true && menu.restaurant.allowOrdering == true %>
-                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#openOrderModal">
-                                    <%= t(".startOrder") %> <i class="bi bi-plus-circle"></i>
+                                <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#openOrderModal">
+                                    <i class="bi bi-plus-circle"></i>
+                                    <%= t(".startOrder") %>
                                 </button>
                             <% end %>
                         <% end %>
                     <% end %>
-                </span>
-                </div>
-            </div>
         </div>
+        
+        <%# Floating Action Button for Cart - Mobile Optimized %>
+        <% if order && order.status == 'opened' && order.nett > 0 %>
+          <div class="order-fab">
+            <button type="button" class="fab-button <%= 'has-new-items' if order.addedCount > 0 %>" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" aria-label="<%= t('.view_cart', default: 'View cart') %>">
+              <i class="bi bi-cart"></i>
+              <% if order.totalItemsCount > 0 %>
+                <span class="fab-badge"><%= order.totalItemsCount %></span>
+              <% end %>
+            </button>
+          </div>
+        <% end %>

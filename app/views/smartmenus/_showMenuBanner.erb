@@ -1,83 +1,83 @@
-  <div class="row">
-      <div class="col-12 col-md-12 col-lg-12">
-        <div class="row">
-            <div class="col-12">
-                <div style="padding-top:5px" class="row">
-                    <div class="col-12">
-                        <% if current_user %>
-                           <%= link_to edit_restaurant_menu_path(@menu.restaurant, @menu), class: 'link-dark' do %>
-                               <span class="h5"><%= @menu.restaurant.name %></span>
-                           <% end %>
-                        <% else %>
-                            <span class="h5"><%= @menu.restaurant.name %></span>
-                        <% end %>
-                        <span class="float-end">
-                            <div id="tableLocaleSelectorContainer">
-                                <% if current_user %>
-                                    <%= render partial: "showTableLocaleSelectorStaff", locals: { menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
-                                <% else %>
-                                    <%= render partial: "showTableLocaleSelectorCustomer", locals: { menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
-                                <% end %>
-                            </div>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="openOrderContainer">
-            <% if @openOrder %>
-                <% if current_user %>
-                    <%= render partial: "orderStaff", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @openOrder.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
-                <% else %>
-                    <%= render partial: "orderCustomer", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @openOrder.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
-                <% end %>
-            <% else %>
-                <% if current_user %>
-                    <%= render partial: "orderStaff", locals: { order: nil, menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
-                <% else %>
-                    <%= render partial: "orderCustomer", locals: { order: nil, menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
-                <% end %>
-            <% end %>
-        </div>
-        <div class="container-fluid">
-            <nav id="navbar-example2" style="position:relative; left:-10px;width:106%;mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 140%" class="nav flex-nowrap overflow-auto">
-              <ul style="position:relative; left:-37px;top:5px;" class="menu_sections_tab d-flex">
-                <input style='position:relative;top:5px;left:5px;margin-right:2px;margin:0px;width:120px;height:31px;' type="text" id="menu-item-search" class="" placeholder="Filter...">&nbsp;
-                <% if current_user %>
-                    <a style='margin:5px' class="sectionnav btn btn-sm btn-warning text-nowrap" href="#menusection_allergyns"><%= t(".allergyns") %></a>
-                <% else %>
-                <div class="btn-group" role="group">
-                    <% if @ordrparticipant %>
-                        <button style='margin:5px;margin-right:0px' type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#filterOrderModal">
-                            <i class="bi bi-filter"></i>
-                            <% if @ordrparticipant.allergyns.size > 0 %>
-                                <span class="position-absolute top-0 start-90 translate-middle badge rounded-pill bg-danger">
-                                    <%= @ordrparticipant.allergyns.size %>
-                                    <span class="visually-hidden"></span>
-                                </span>
-                            <% end %>
-                        </button>
-                    <% end %>
-                    <a style='margin:5px;margin-left:1px' class="sectionnav btn btn-sm btn-warning text-nowrap" href="#menusection_allergyns"><%= t(".allergyns") %></a>
-                </div>
-                <% end %>
-
-                <% @menu.menusections.order(:sequence).each do |menusection| %>
-                      <a style='margin:5px' class="sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>">
-                        <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
-                            <%= menusection.localised_name(@ordrparticipant.preferredlocale) %>
-                        <% else %>
-                            <% if @menuparticipant && @menuparticipant.preferredlocale %>
-                              <%= menusection.localised_name(@menuparticipant.preferredlocale) %>
-                            <% else %>
-                              <%= menusection.name %>
-                            <% end %>
-                        <% end %>
-                      </a>
-                <% end %>
-              </ul>
-            </nav>
-        </div>
-      </div>
+  <!-- Restaurant Name & Locale Selector -->
+  <div class="header-restaurant-row">
+    <% if current_user %>
+      <%= link_to edit_restaurant_menu_path(@menu.restaurant, @menu), class: 'restaurant-name' do %>
+        <%= @menu.restaurant.name %>
+      <% end %>
+    <% else %>
+      <span class="restaurant-name"><%= @menu.restaurant.name %></span>
+    <% end %>
+    
+    <div class="locale-selector" id="tableLocaleSelectorContainer">
+      <% if current_user %>
+        <%= render partial: "showTableLocaleSelectorStaff", locals: { menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+      <% else %>
+        <%= render partial: "showTableLocaleSelectorCustomer", locals: { menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+      <% end %>
     </div>
+  </div>
+
+  <!-- Order Controls -->
+  <div class="header-order-row" id="openOrderContainer">
+    <% if @openOrder %>
+      <% if current_user %>
+        <%= render partial: "orderStaff", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @openOrder.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+      <% else %>
+        <%= render partial: "orderCustomer", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @openOrder.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+      <% end %>
+    <% else %>
+      <% if current_user %>
+        <%= render partial: "orderStaff", locals: { order: nil, menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+      <% else %>
+        <%= render partial: "orderCustomer", locals: { order: nil, menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+      <% end %>
+    <% end %>
+  </div>
+  <!-- Navigation: Search & Sections -->
+  <div class="menu-sections-nav-mobile">
+    <!-- Search and Filter Row -->
+    <div class="sections-filter-row">
+      <input type="text" 
+             id="menu-item-search" 
+             class="menu-search-input" 
+             placeholder="<%= t('.search_menu', default: 'Search menu...') %>">
+      
+      <% unless current_user %>
+        <% if @ordrparticipant %>
+          <button type="button" 
+                  class="filter-button" 
+                  data-bs-toggle="modal" 
+                  data-bs-restaurant="<%= @menu.restaurant.id %>" 
+                  data-bs-menu="<%= @menu.id %>" 
+                  data-bs-target="#filterOrderModal"
+                  aria-label="<%= t('.filter_allergens', default: 'Filter allergens') %>">
+            <i class="bi bi-filter"></i>
+            <% if @ordrparticipant.allergyns.size > 0 %>
+              <span class="filter-badge"><%= @ordrparticipant.allergyns.size %></span>
+            <% end %>
+          </button>
+        <% end %>
+      <% end %>
+    </div>
+    
+    <!-- Section Tabs -->
+    <div class="sections-tabs-container">
+      <nav id="navbar-example2" class="sections-tabs">
+        <a class="section-tab" href="#menusection_allergyns">
+          <%= t(".allergyns", default: 'Allergens') %>
+        </a>
+        
+        <% @menu.menusections.order(:sequence).each do |menusection| %>
+          <a class="section-tab sectionnav" href="#menusection_<%= menusection.id %>">
+            <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
+              <%= menusection.localised_name(@ordrparticipant.preferredlocale) %>
+            <% elsif @menuparticipant && @menuparticipant.preferredlocale %>
+              <%= menusection.localised_name(@menuparticipant.preferredlocale) %>
+            <% else %>
+              <%= menusection.name %>
+            <% end %>
+          </a>
+        <% end %>
+      </nav>
+    </div>
+  </div>
