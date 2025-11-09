@@ -1,5 +1,59 @@
 ---
 it:
+  time:
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      short: "%d %b %H:%M"
+      long: "%B %d, %Y %H:%M"
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %b"
+      long: "%B %d, %Y"
+    abbr_day_names:
+      - dom
+      - lun
+      - mar
+      - mer
+      - gio
+      - ven
+      - sab
+    abbr_month_names:
+      - 
+      - gen
+      - feb
+      - mar
+      - apr
+      - mag
+      - giu
+      - lug
+      - ago
+      - set
+      - ott
+      - nov
+      - dic
+    day_names:
+      - domenica
+      - lunedì
+      - martedì
+      - mercoledì
+      - giovedì
+      - venerdì
+      - sabato
+    month_names:
+      - 
+      - gennaio
+      - febbraio
+      - marzo
+      - aprile
+      - maggio
+      - giugno
+      - luglio
+      - agosto
+      - settembre
+      - ottobre
+      - novembre
+      - dicembre
   activerecord:
     attributes:
       allergyn:
@@ -80,9 +134,9 @@ it:
         music: Music
         name: Nome
         postcode: CAP
-        spotifyaccesstoken: Access Token
-        spotifyrefreshtoken: Refresh Token
-        spotifyuserid: Spotify ID
+        spotifyaccesstoken: Token di Accesso
+        spotifyrefreshtoken: Token di Aggiornamento
+        spotifyuserid: ID Utente Spotify
         state: Stato
         status: Stato
         tips: Tips

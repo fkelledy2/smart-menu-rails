@@ -26,9 +26,10 @@ module SmartMenu
     # config.middleware.use MetricsMiddleware # Temporarily disabled
     # config.middleware.use RequestLoggingMiddleware # Temporarily disabled
 
-    config.i18n.load_path += Dir[Rails.root.join("my", "locales", "*.{rb,yml}")]
+    # Load locale files from config/locales directory
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
     config.i18n.default_locale = :en
-    config.i18n.available_locales = %w(en it)
+    config.i18n.available_locales = [:en, :it]
 
     # Configuration for the application, engines, and railties goes here.
     #

@@ -114,7 +114,9 @@ en:
       tracks: Tracks
     edit_2025:
       subtitle: Manage your restaurant configuration
+      toggle_navigation: Toggle navigation
     sidebar_2025:
+      close_menu: Close menu
       restaurant: RESTAURANT
       details: Details
       schedule: Schedule

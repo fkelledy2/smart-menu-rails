@@ -6,79 +6,142 @@ en:
         quick_actions: Quick Actions
         new_menu: New Menu
         import_menu: Import Menu
-        all_menus: All Menus
-        active_menus: Active Menus
-        inactive_menus: Inactive Menus
-        filter_all: All
-        filter_active: Active
-        filter_inactive: Inactive
-        no_menus: No menus yet
-        no_menus_description: Create your first menu to get started
-        create_menu: Create Menu
-        drag_to_reorder: Drag to reorder
+        all: All
+        active: Active
+        inactive: Inactive
+        menus_all: All Menus
+        menus_active: Active Menus
+        menus_inactive: Inactive Menus
+        sections: sections
+        items: items
         edit: Edit
+        preview: Preview Menu
+        no_preview: Menu not published yet
         duplicate: Duplicate
-        confirm_delete: Are you sure?
         delete: Delete
-        items_count: "%{count} items"
+        confirm_delete: Are you sure?
+        no_menus: No menus found
+        no_menus_description: Create your first menu to get started
+        create_first_menu: Create Your First Menu
+        drag_to_reorder: Drag to reorder
       tables_2025:
         quick_actions: Quick Actions
         add_table: Add Table
         table_settings: Table Settings
-        table_number: Table
+        table_number: Table #
+        table_name: Name
         capacity: Capacity
+        status: Status
         qr_code: QR Code
         actions: Actions
+        free: Free
+        occupied: Occupied
+        archived: Archived
         view: View
         view_qr: View QR
         view_qr_code: View QR Code for this table
         no_smartmenu: No QR code generated yet
+        no_capacity: Capacity not set
+        seats: seats
         confirm_delete: Delete this table?
-        no_tables: No tables yet
-        no_tables_description: Add your first table to get started
+        no_tables: No tables configured yet
+        no_tables_description: Set up your restaurant tables to enable table-specific QR codes and ordering.
       allergens_2025:
         quick_actions: Quick Actions
         add_allergen: Add Allergen
-        allergen_management: Allergen Management
-        allergen_name: Name
-        symbol: Symbol
-        status: Status
-        actions: Actions
-        no_allergens: No allergens yet
-        no_allergens_description: Add allergens to help customers make informed choices
+        allergens: Allergens
+        allergens_description: Manage allergen information for your menu items to help customers make informed choices.
+        total_allergens: Total Allergens
+        manage_allergens: Manage Allergens
+        common_templates: Common Templates
+        templates_description: Quickly add standard allergen sets
+        fda_top_8: FDA Top 8 Allergens
+        recommended: Recommended
+        fda_top_8_desc: Milk, Eggs, Fish, Shellfish, Tree Nuts, Peanuts, Wheat, Soybeans
+        eu_allergens: EU 14 Allergens
+        eu_allergens_desc: All 14 major allergens as per EU regulation
+        common_dietary: Common Dietary Restrictions
+        common_dietary_desc: Gluten-Free, Vegan, Vegetarian, Halal, Kosher
+        load_template: Load Template
+        current_allergens: Current Allergens
+        inactive: Inactive
       sizes_2025:
         quick_actions: Quick Actions
         add_size: Add Size
-        size_management: Size Management
-        size_name: Name
-        price_modifier: Price Modifier
-        status: Status
-        actions: Actions
-        no_sizes: No sizes yet
-        no_sizes_description: Add size options for menu items
+        sizes: Menu Item Sizes
+        sizes_description: Define size variants for menu items like Small, Medium, Large, etc.
+        total_sizes: Total Sizes
+        manage_sizes: Manage Sizes
+        current_sizes: Current Sizes
+        common_templates: Common Templates
+        templates_description: Quickly add standard size sets
+        pizza_sizes: Pizza Sizes
+        recommended: Recommended
+        pizza_sizes_desc: Personal, Small, Medium, Large, X-Large
+        beverage_sizes: Beverage Sizes
+        beverage_sizes_desc: Small, Medium, Large, Extra Large
+        load_template: Load Template
       catalog_2025:
         quick_actions: Quick Actions
         add_tax: Add Tax
         add_tip: Add Tip
         taxes_and_tips: Taxes & Tips
+        taxes_and_tips_description: Manage taxes and tip configurations
         taxes: Taxes
         tips: Tips
-        no_taxes: No taxes configured
-        no_taxes_description: Add taxes for your region
-        no_tips: No tip options configured
-        no_tips_description: Add suggested tip amounts
+        configured: configured
+        manage: Manage
+        tax_tip_templates: Tax & Tip Templates
+        templates_description: Pre-configured tax and tip sets for quick setup
+        us_restaurant: US Restaurant
+        recommended: Recommended
+        us_restaurant_desc: Sales tax + tip suggestions (15%, 18%, 20%)
+        eu_restaurant: EU Restaurant
+        eu_restaurant_desc: VAT + service charge included
+        load_template: Load Template
       staff_2025:
         quick_actions: Quick Actions
         add_staff: Add Staff Member
-        staff_management: Staff Management
-        staff_member_name: Name
-        role: Role
+        staff: Staff Members
+        name: Name
         email: Email
+        role: Role
         status: Status
+        joined: Joined
         actions: Actions
+        unnamed: Unnamed
+        no_role: No role
+        active: Active
+        inactive: Inactive
+        confirm_remove: Remove this staff member?
         no_staff: No staff members yet
-        no_staff_description: Invite team members to help manage your restaurant
+        no_staff_description: Add team members to collaborate on your restaurant
+        add_first_staff: Add Your First Staff Member
+        roles_permissions: Roles & Permissions
+        roles_description: Define what each role can access and manage
+        manager: Manager
+        manager_desc: Full access to all restaurant settings and data
+        editor: Editor
+        editor_desc: Can edit menus and manage content
+        viewer: Viewer
+        viewer_desc: Read-only access to menus and orders
+        edit_menus: Edit menus
+        manage_staff: Manage staff
+        view_analytics: View analytics
+        manage_orders: Manage orders
+        edit_items: Edit items
+        no_staff_access: No staff access
+        no_analytics: No analytics
+        view_menus: View menus
+        view_orders: View orders
+        no_editing: No editing
+        no_deletion: No deletion
       settings_2025:
+        general_settings: General Settings
+        status_active: Active - Restaurant is open and visible
+        status_inactive: Inactive - Restaurant is temporarily closed
+        status_archived: Archived - Restaurant is permanently closed
+        status_help: Controls whether your restaurant is visible to customers
         feature_toggles: Feature Toggles
         display_images: Display Images
         display_images_help: Show menu item images in your digital menu
@@ -87,19 +150,43 @@ en:
         allow_ordering: Allow Ordering
         allow_ordering_help: Enable online ordering for customers
         inventory_tracking: Inventory Tracking
-        inventory_tracking_help: Track item availability (Coming Soon)
+        inventory_tracking_help: Track stock levels for menu items (Coming Soon)
+        wifi_configuration: WiFi Configuration
+        wifi_description: Configure WiFi settings to generate QR codes for customer access
+        ssid_placeholder: Enter your WiFi network name
+        ssid_help: The name of your WiFi network that customers will connect to
+        select_encryption: Select encryption...
+        encryption_help: The security protocol used by your WiFi network
+        password_placeholder: Enter WiFi password
+        password_help: The password customers will need to connect
+        select_option: Select option...
+        no: No
+        yes: Yes
+        hidden_help: Whether the network name is broadcast publicly
+        settings_info_title: About Settings
+        settings_info_desc: These settings control core functionality of your restaurant. Changes are saved automatically.
+        status: Status
+        status_info: Controls restaurant visibility
+        images_info: Toggle menu item photos
+        popup_info: Full-screen image viewing
       qrcodes_2025:
         quick_actions: Quick Actions
         view_all_qr: View All QR Codes
+        qr_codes: QR Codes
+        qr_description: Generate QR codes for your menus. Customers can scan these to view your digital menu.
         qr_code_types: QR Code Types
         general_qr: General Menu QR
         general_qr_desc: Single QR code for all menus. Best for small restaurants with one location.
+        download: Download
         table_qr: Table-Specific QR
         table_qr_desc: Unique QR code for each table. Enables table ordering and tracking.
+        manage_tables: Manage Tables
         menu_qr: Menu-Specific QR
         menu_qr_desc: Separate QR codes for each menu. Great for breakfast, lunch, dinner menus.
         setup_tables: Setup Tables
         view_menus: View Menus
+        qr_customization: QR Code Customization
+        customization_description: Customize the appearance of your QR codes to match your brand.
         customization: Customization Options
         logo: Logo
         logo_desc: Add your restaurant logo to the center of QR codes
@@ -109,9 +196,11 @@ en:
         customize_colors: Customize Colors
       hours_2025:
         quick_actions: Quick Actions
-        opening_hours: Opening Hours
-        opening_hours_desc: Set your restaurant's operating hours for each day of the week
+        copy_to_all: Copy Monday to All Days
+        operating_hours: Opening Hours
+        hours_description: Set your restaurant's regular business hours
         closed: Closed
+        copied_success: Copied!
         open_24h: Open 24h
         custom: Custom
         monday: Monday
@@ -124,25 +213,47 @@ en:
       localization_2025:
         quick_actions: Quick Actions
         add_language: Add Language
-        language_settings: Language Settings
-        language_settings_desc: Manage the languages available in your restaurant
+        localization: Localization & Languages
+        localization_description: Manage translations for your menus in multiple languages
         language: Language
         locale_code: Code
         status: Status
         actions: Actions
-        quick_add: Quick Add Popular Languages
+        active: Active
+        inactive: Inactive
+        no_locales: No additional languages configured
+        no_locales_description: Add translations to make your menu accessible in multiple languages
+        common_languages: Common Languages
+        common_languages_description: Quickly add popular language translations
         spanish: Spanish
         french: French
         german: German
         italian: Italian
+        chinese: Chinese
+        japanese: Japanese
         add: Add
-        no_languages: No languages configured
-        no_languages_description: Add languages to serve international customers
       jukebox_2025:
         jukebox: Jukebox
+        jukebox_description: Integrate with Spotify to play music in your restaurant and create the perfect atmosphere
+        spotify: Spotify
+        connected: Connected
+        not_connected: Not Connected
+        connect: Connect
+        unknown_artist: Unknown Artist
+        no_tracks: No tracks configured
+        spotify_integration: Connect your Spotify account to manage your restaurant playlist
         jukebox_desc: Connect Spotify to let customers control the music
         spotify_status: Spotify Status
-        not_connected: Not Connected
         connect_spotify: Connect Spotify
         disconnect: Disconnect
         connected_as: "Connected as: %{user}"
+      advanced_2025:
+        advanced_features: Advanced Features
+        ai_features: AI-Powered Features
+        ai_desc: Enable AI menu descriptions and image generation
+        dynamic_pricing: Dynamic Pricing
+        dynamic_pricing_desc: Adjust prices based on time of day or demand
+        recommendations: Smart Recommendations
+        recommendations_desc: Show personalized menu recommendations to customers
+        age_verification: Age Verification
+        age_verification_desc: Require age verification for alcohol items

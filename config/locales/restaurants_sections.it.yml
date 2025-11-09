@@ -6,79 +6,142 @@ it:
         quick_actions: Azioni Rapide
         new_menu: Nuovo Menù
         import_menu: Importa Menù
-        all_menus: Tutti i Menù
-        active_menus: Menù Attivi
-        inactive_menus: Menù Inattivi
-        filter_all: Tutti
-        filter_active: Attivi
-        filter_inactive: Inattivi
-        no_menus: Nessun menù ancora
-        no_menus_description: Crea il tuo primo menù per iniziare
-        create_menu: Crea Menù
-        drag_to_reorder: Trascina per riordinare
+        all: Tutti
+        active: Attivi
+        inactive: Inattivi
+        menus_all: Tutti i Menù
+        menus_active: Menù Attivi
+        menus_inactive: Menù Inattivi
+        sections: sezioni
+        items: articoli
         edit: Modifica
+        preview: Anteprima Menù
+        no_preview: Menù non ancora pubblicato
         duplicate: Duplica
-        confirm_delete: Sei sicuro?
         delete: Elimina
-        items_count: "%{count} articoli"
+        confirm_delete: Sei sicuro?
+        no_menus: Nessun menù trovato
+        no_menus_description: Crea il tuo primo menù per iniziare
+        create_first_menu: Crea il Tuo Primo Menù
+        drag_to_reorder: Trascina per riordinare
       tables_2025:
         quick_actions: Azioni Rapide
         add_table: Aggiungi Tavolo
         table_settings: Impostazioni Tavoli
-        table_number: Tavolo
+        table_number: Tavolo #
+        table_name: Nome
         capacity: Capacità
+        status: Stato
         qr_code: Codice QR
         actions: Azioni
+        free: Libero
+        occupied: Occupato
+        archived: Archiviato
         view: Visualizza
         view_qr: Vedi QR
         view_qr_code: Visualizza codice QR per questo tavolo
         no_smartmenu: Nessun codice QR generato ancora
+        no_capacity: Capacità non impostata
+        seats: posti
         confirm_delete: Eliminare questo tavolo?
-        no_tables: Nessun tavolo ancora
-        no_tables_description: Aggiungi il tuo primo tavolo per iniziare
+        no_tables: Nessun tavolo configurato ancora
+        no_tables_description: Configura i tavoli del tuo ristorante per abilitare codici QR e ordinazioni specifici per tavolo.
       allergens_2025:
         quick_actions: Azioni Rapide
         add_allergen: Aggiungi Allergene
-        allergen_management: Gestione Allergeni
-        allergen_name: Nome
-        symbol: Simbolo
-        status: Stato
-        actions: Azioni
-        no_allergens: Nessun allergene ancora
-        no_allergens_description: Aggiungi allergeni per aiutare i clienti a fare scelte informate
+        allergens: Allergeni
+        allergens_description: Gestisci le informazioni sugli allergeni per i tuoi articoli del menù per aiutare i clienti a fare scelte informate.
+        total_allergens: Totale Allergeni
+        manage_allergens: Gestisci Allergeni
+        common_templates: Modelli Comuni
+        templates_description: Aggiungi rapidamente set di allergeni standard
+        fda_top_8: FDA 8 Allergeni Principali
+        recommended: Consigliato
+        fda_top_8_desc: Latte, Uova, Pesce, Molluschi, Frutta a Guscio, Arachidi, Grano, Soia
+        eu_allergens: UE 14 Allergeni
+        eu_allergens_desc: Tutti i 14 principali allergeni secondo il regolamento UE
+        common_dietary: Restrizioni Dietetiche Comuni
+        common_dietary_desc: Senza Glutine, Vegano, Vegetariano, Halal, Kosher
+        load_template: Carica Modello
+        current_allergens: Allergeni Attuali
+        inactive: Inattivo
       sizes_2025:
         quick_actions: Azioni Rapide
         add_size: Aggiungi Dimensione
-        size_management: Gestione Dimensioni
-        size_name: Nome
-        price_modifier: Modificatore Prezzo
-        status: Stato
-        actions: Azioni
-        no_sizes: Nessuna dimensione ancora
-        no_sizes_description: Aggiungi opzioni di dimensione per gli articoli del menù
+        sizes: Dimensioni Articoli Menù
+        sizes_description: Definisci varianti di dimensione per gli articoli del menù come Piccolo, Medio, Grande, ecc.
+        total_sizes: Totale Dimensioni
+        manage_sizes: Gestisci Dimensioni
+        current_sizes: Dimensioni Attuali
+        common_templates: Modelli Comuni
+        templates_description: Aggiungi rapidamente set di dimensioni standard
+        pizza_sizes: Dimensioni Pizza
+        recommended: Consigliato
+        pizza_sizes_desc: Personale, Piccola, Media, Grande, Extra-Grande
+        beverage_sizes: Dimensioni Bevande
+        beverage_sizes_desc: Piccola, Media, Grande, Extra Grande
+        load_template: Carica Modello
       catalog_2025:
         quick_actions: Azioni Rapide
         add_tax: Aggiungi Tassa
         add_tip: Aggiungi Mancia
         taxes_and_tips: Tasse e Mance
+        taxes_and_tips_description: Gestisci le configurazioni di tasse e mance
         taxes: Tasse
         tips: Mance
-        no_taxes: Nessuna tassa configurata
-        no_taxes_description: Aggiungi le tasse per la tua regione
-        no_tips: Nessuna opzione di mancia configurata
-        no_tips_description: Aggiungi importi suggeriti per le mance
+        configured: configurate
+        manage: Gestisci
+        tax_tip_templates: Modelli Tasse e Mance
+        templates_description: Set di tasse e mance preconfigurati per una configurazione rapida
+        us_restaurant: Ristorante USA
+        recommended: Consigliato
+        us_restaurant_desc: Tassa sulle vendite + suggerimenti mancia (15%, 18%, 20%)
+        eu_restaurant: Ristorante UE
+        eu_restaurant_desc: IVA + servizio incluso
+        load_template: Carica Modello
       staff_2025:
         quick_actions: Azioni Rapide
         add_staff: Aggiungi Membro Staff
-        staff_management: Gestione Staff
-        staff_member_name: Nome
-        role: Ruolo
+        staff: Membri dello Staff
+        name: Nome
         email: Email
+        role: Ruolo
         status: Stato
+        joined: Iscritto
         actions: Azioni
+        unnamed: Senza nome
+        no_role: Nessun ruolo
+        active: Attivo
+        inactive: Inattivo
+        confirm_remove: Rimuovere questo membro dello staff?
         no_staff: Nessun membro dello staff ancora
-        no_staff_description: Invita membri del team per aiutare a gestire il tuo ristorante
+        no_staff_description: Aggiungi membri del team per collaborare al tuo ristorante
+        add_first_staff: Aggiungi il Tuo Primo Membro dello Staff
+        roles_permissions: Ruoli e Permessi
+        roles_description: Definisci cosa ogni ruolo può accedere e gestire
+        manager: Manager
+        manager_desc: Accesso completo a tutte le impostazioni e dati del ristorante
+        editor: Editor
+        editor_desc: Può modificare menù e gestire contenuti
+        viewer: Visualizzatore
+        viewer_desc: Accesso in sola lettura a menù e ordini
+        edit_menus: Modifica menù
+        manage_staff: Gestisci staff
+        view_analytics: Visualizza statistiche
+        manage_orders: Gestisci ordini
+        edit_items: Modifica articoli
+        no_staff_access: Nessun accesso staff
+        no_analytics: Nessuna statistica
+        view_menus: Visualizza menù
+        view_orders: Visualizza ordini
+        no_editing: Nessuna modifica
+        no_deletion: Nessuna eliminazione
       settings_2025:
+        general_settings: Impostazioni Generali
+        status_active: Attivo - Il ristorante è aperto e visibile
+        status_inactive: Inattivo - Il ristorante è temporaneamente chiuso
+        status_archived: Archiviato - Il ristorante è permanentemente chiuso
+        status_help: Controlla se il tuo ristorante è visibile ai clienti
         feature_toggles: Attivazione Funzionalità
         display_images: Mostra Immagini
         display_images_help: Mostra immagini degli articoli nel menù digitale
@@ -87,19 +150,43 @@ it:
         allow_ordering: Permetti Ordinazioni
         allow_ordering_help: Abilita ordinazioni online per i clienti
         inventory_tracking: Tracciamento Inventario
-        inventory_tracking_help: Traccia disponibilità articoli (Prossimamente)
+        inventory_tracking_help: Traccia i livelli di stock per gli articoli del menù (Prossimamente)
+        wifi_configuration: Configurazione WiFi
+        wifi_description: Configura le impostazioni WiFi per generare codici QR per l'accesso dei clienti
+        ssid_placeholder: Inserisci il nome della tua rete WiFi
+        ssid_help: Il nome della tua rete WiFi a cui i clienti si connetteranno
+        select_encryption: Seleziona crittografia...
+        encryption_help: Il protocollo di sicurezza utilizzato dalla tua rete WiFi
+        password_placeholder: Inserisci la password WiFi
+        password_help: La password di cui i clienti avranno bisogno per connettersi
+        select_option: Seleziona opzione...
+        no: No
+        yes: Sì
+        hidden_help: Se il nome della rete è trasmesso pubblicamente
+        settings_info_title: Informazioni sulle Impostazioni
+        settings_info_desc: Queste impostazioni controllano le funzionalità principali del tuo ristorante. Le modifiche vengono salvate automaticamente.
+        status: Stato
+        status_info: Controlla la visibilità del ristorante
+        images_info: Attiva/disattiva foto degli articoli del menù
+        popup_info: Visualizzazione immagini a schermo intero
       qrcodes_2025:
         quick_actions: Azioni Rapide
         view_all_qr: Visualizza Tutti i Codici QR
+        qr_codes: Codici QR
+        qr_description: Genera codici QR per i tuoi menù. I clienti possono scansionarli per visualizzare il menù digitale.
         qr_code_types: Tipi di Codice QR
         general_qr: Codice QR Menù Generale
         general_qr_desc: Codice QR singolo per tutti i menù. Ideale per piccoli ristoranti con una sede.
+        download: Scarica
         table_qr: Codice QR Specifico Tavolo
         table_qr_desc: Codice QR univoco per ogni tavolo. Abilita ordinazioni e tracciamento per tavolo.
+        manage_tables: Gestisci Tavoli
         menu_qr: Codice QR Specifico Menù
         menu_qr_desc: Codici QR separati per ogni menù. Ottimo per menù colazione, pranzo, cena.
         setup_tables: Configura Tavoli
         view_menus: Visualizza Menù
+        qr_customization: Personalizzazione Codici QR
+        customization_description: Personalizza l'aspetto dei tuoi codici QR per abbinarli al tuo brand.
         customization: Opzioni di Personalizzazione
         logo: Logo
         logo_desc: Aggiungi il logo del tuo ristorante al centro dei codici QR
@@ -109,9 +196,11 @@ it:
         customize_colors: Personalizza Colori
       hours_2025:
         quick_actions: Azioni Rapide
-        opening_hours: Orari di Apertura
-        opening_hours_desc: Imposta gli orari di apertura del tuo ristorante per ogni giorno della settimana
+        copy_to_all: Copia Lunedì a Tutti i Giorni
+        operating_hours: Orari di Apertura
+        hours_description: Imposta gli orari di apertura del tuo ristorante
         closed: Chiuso
+        copied_success: Copiato!
         open_24h: Aperto 24h
         custom: Personalizzato
         monday: Lunedì
@@ -124,25 +213,47 @@ it:
       localization_2025:
         quick_actions: Azioni Rapide
         add_language: Aggiungi Lingua
-        language_settings: Impostazioni Lingua
-        language_settings_desc: Gestisci le lingue disponibili nel tuo ristorante
+        localization: Localizzazione e Lingue
+        localization_description: Gestisci le traduzioni per i tuoi menù in più lingue
         language: Lingua
         locale_code: Codice
         status: Stato
         actions: Azioni
-        quick_add: Aggiungi Rapidamente Lingue Popolari
+        active: Attivo
+        inactive: Inattivo
+        no_locales: Nessuna lingua aggiuntiva configurata
+        no_locales_description: Aggiungi traduzioni per rendere il tuo menù accessibile in più lingue
+        common_languages: Lingue Comuni
+        common_languages_description: Aggiungi rapidamente traduzioni di lingue popolari
         spanish: Spagnolo
         french: Francese
         german: Tedesco
         italian: Italiano
+        chinese: Cinese
+        japanese: Giapponese
         add: Aggiungi
-        no_languages: Nessuna lingua configurata
-        no_languages_description: Aggiungi lingue per servire clienti internazionali
       jukebox_2025:
         jukebox: Jukebox
+        jukebox_description: Integra con Spotify per riprodurre musica nel tuo ristorante e creare l'atmosfera perfetta
+        spotify: Spotify
+        connected: Connesso
+        not_connected: Non Connesso
+        connect: Connetti
+        unknown_artist: Artista Sconosciuto
+        no_tracks: Nessuna traccia configurata
+        spotify_integration: Connetti il tuo account Spotify per gestire la playlist del tuo ristorante
         jukebox_desc: Connetti Spotify per permettere ai clienti di controllare la musica
         spotify_status: Stato Spotify
-        not_connected: Non Connesso
         connect_spotify: Connetti Spotify
         disconnect: Disconnetti
         connected_as: "Connesso come: %{user}"
+      advanced_2025:
+        advanced_features: Funzionalità Avanzate
+        ai_features: Funzionalità IA
+        ai_desc: Abilita descrizioni dei menù e generazione di immagini con IA
+        dynamic_pricing: Prezzi Dinamici
+        dynamic_pricing_desc: Regola i prezzi in base all'orario o alla domanda
+        recommendations: Raccomandazioni Intelligenti
+        recommendations_desc: Mostra raccomandazioni di menù personalizzate ai clienti
+        age_verification: Verifica dell'Età
+        age_verification_desc: Richiedi verifica dell'età per articoli alcolici

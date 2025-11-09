@@ -14,11 +14,21 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :handle_authorization_failure
 
   def switch_locale(&)
-    # Extract locale from Accept-Language header
-    accept_language = request.env['HTTP_ACCEPT_LANGUAGE']
+    # Locale detection with optional URL override
+    # Priority: URL parameter > Session > Browser Accept-Language > Default
+    # Supports: en (English), it (Italian)
+    
     requested_locale = nil
-
-    if accept_language.present?
+    
+    # 1. Check for explicit URL parameter (for testing/debugging)
+    if params[:locale].present?
+      requested_locale = params[:locale]
+    # 2. Check session (if user previously used URL parameter)
+    elsif session[:locale].present?
+      requested_locale = session[:locale]
+    # 3. Fall back to browser's Accept-Language header (primary method)
+    elsif request.env['HTTP_ACCEPT_LANGUAGE'].present?
+      accept_language = request.env['HTTP_ACCEPT_LANGUAGE']
       # Extract the first two-letter language code
       requested_locale = accept_language.scan(/^[a-z]{2}/).first
     end
@@ -26,12 +36,13 @@ class ApplicationController < ActionController::Base
     # Validate locale is supported
     if requested_locale && I18n.available_locales.map(&:to_s).include?(requested_locale)
       @locale = requested_locale.to_sym
-      Rails.logger.debug { "Using locale: #{@locale}" }
+      # Store in session only if explicitly set via URL parameter
+      session[:locale] = @locale.to_s if params[:locale].present?
     else
       # Fall back to default locale for unsupported or missing locales
       @locale = I18n.default_locale
-      Rails.logger.debug { "Falling back to default locale: #{@locale} (requested: #{requested_locale})" }
     end
+    
     I18n.with_locale(@locale, &)
   rescue StandardError => e
     # Safety net: if anything goes wrong with locale switching, use default

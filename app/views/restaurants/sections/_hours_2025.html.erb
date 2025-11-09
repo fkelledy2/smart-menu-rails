@@ -13,7 +13,9 @@
   </h2>
   
   <div class="quick-actions-grid">
-    <button type="button" class="quick-action-btn copy-monday-btn">
+    <button type="button" 
+            class="quick-action-btn copy-monday-btn"
+            data-copied-text="<%= t('.copied_success', default: 'Copied!') %>">
       <i class="bi bi-files"></i>
       <span><%= t('.copy_to_all', default: 'Copy Monday to All Days') %></span>
     </button>
@@ -469,7 +471,8 @@
         // Show success message
         const btn = this;
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Copied!';
+        const copiedText = btn.dataset.copiedText || 'Copied!';
+        btn.innerHTML = `<i class="bi bi-check-circle-fill"></i> ${copiedText}`;
         btn.classList.remove('btn-2025-secondary');
         btn.classList.add('btn-2025-primary');
         

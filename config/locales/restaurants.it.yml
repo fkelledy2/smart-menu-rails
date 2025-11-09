@@ -114,7 +114,9 @@ it:
       tracks: Brani
     edit_2025:
       subtitle: Gestisci la configurazione del tuo ristorante
+      toggle_navigation: Attiva/disattiva navigazione
     sidebar_2025:
+      close_menu: Chiudi menu
       restaurant: RISTORANTE
       details: Dettagli
       schedule: Orari

@@ -121,7 +121,7 @@
                 <div class="fw-semibold"><%= table.name %></div>
                 <div class="text-muted small">
                   <i class="bi bi-people"></i> 
-                  <%= table.capacity ? "#{table.capacity} seats" : t('.no_capacity', default: 'Capacity not set') %>
+                  <%= table.capacity ? "#{table.capacity} #{t('.seats', default: 'seats')}" : t('.no_capacity', default: 'Capacity not set') %>
                 </div>
               </div>
             </div>
