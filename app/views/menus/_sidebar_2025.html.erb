@@ -21,11 +21,11 @@
     </button>
   </div>
 
-  <!-- CORE SECTION -->
+  <!-- MENU SECTION -->
   <div class="sidebar-section">
     <div class="sidebar-section-title">
       <i class="bi bi-file-text"></i>
-      <%= t('.core', default: 'CORE') %>
+      <%= t('.menu', default: 'MENU') %>
     </div>
     
     <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'details'), 
@@ -40,6 +40,16 @@
         data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
       <i class="bi bi-palette"></i>
       <span><%= t('.design', default: 'Design') %></span>
+    <% end %>
+    
+    <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'schedule'), 
+        class: "sidebar-link #{'active' if current_section == 'schedule'}",
+        data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-calendar-check"></i>
+      <span><%= t('.schedule', default: 'Schedule') %></span>
+      <% if schedules_count > 0 %>
+        <span class="sidebar-link-badge"><%= schedules_count %></span>
+      <% end %>
     <% end %>
   </div>
 
@@ -78,14 +88,11 @@
       <%= t('.setup', default: 'SETUP') %>
     </div>
     
-    <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'schedule'), 
-        class: "sidebar-link #{'active' if current_section == 'schedule'}",
+    <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'settings'), 
+        class: "sidebar-link #{'active' if current_section == 'settings'}",
         data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
-      <i class="bi bi-calendar-check"></i>
-      <span><%= t('.schedule', default: 'Schedule') %></span>
-      <% if schedules_count > 0 %>
-        <span class="sidebar-link-badge"><%= schedules_count %></span>
-      <% end %>
+      <i class="bi bi-toggles"></i>
+      <span><%= t('.settings', default: 'Settings') %></span>
     <% end %>
     
     <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'qrcode'), 

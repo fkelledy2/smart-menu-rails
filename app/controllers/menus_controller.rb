@@ -599,6 +599,7 @@ class MenusController < ApplicationController
     when 'sections' then 'sections_2025'
     when 'items' then 'items_2025'
     when 'schedule' then 'schedule_2025'
+    when 'settings' then 'settings_2025'
     when 'qrcode' then 'qrcode_2025'
     else 'details_2025'
     end
