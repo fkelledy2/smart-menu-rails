@@ -9,6 +9,8 @@
   active_menus_count = restaurant.menus.where(archived: false, status: 'active').count rescue 0
   inactive_menus_count = restaurant.menus.where(archived: false, status: 'inactive').count rescue 0
   staff_count = restaurant.employees.count rescue 0
+  tables_count = restaurant.tablesettings.count rescue 0
+  allergens_count = restaurant.allergyns.where(archived: false).count rescue 0
   current_section = local_assigns[:current_section] || 'details'
 %>
 
@@ -21,25 +23,18 @@
     </button>
   </div>
 
-  <!-- CORE SECTION -->
+  <!-- RESTAURANT SECTION -->
   <div class="sidebar-section">
     <div class="sidebar-section-title">
       <i class="bi bi-file-text"></i>
-      <%= t('.core', default: 'CORE') %>
+      <%= t('.restaurant', default: 'RESTAURANT') %>
     </div>
     
     <%= link_to edit_restaurant_path(restaurant, section: 'details'), 
-        class: "sidebar-link #{'active' if current_section == 'details'}",
+        class: "sidebar-link #{'active' if current_section == 'details' || current_section == 'address'}",
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
       <i class="bi bi-info-circle"></i>
       <span><%= t('.details', default: 'Details') %></span>
-    <% end %>
-    
-    <%= link_to edit_restaurant_path(restaurant, section: 'address'), 
-        class: "sidebar-link #{'active' if current_section == 'address'}",
-        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-      <i class="bi bi-geo-alt"></i>
-      <span><%= t('.address', default: 'Address') %></span>
     <% end %>
     
     <%= link_to edit_restaurant_path(restaurant, section: 'hours'), 
@@ -47,6 +42,13 @@
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
       <i class="bi bi-calendar-check"></i>
       <span><%= t('.schedule', default: 'Schedule') %></span>
+    <% end %>
+    
+    <%= link_to edit_restaurant_path(restaurant, section: 'localization'), 
+        class: "sidebar-link #{'active' if current_section == 'localization'}",
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-globe"></i>
+      <span><%= t('.localization', default: 'Localization') %></span>
     <% end %>
   </div>
 
@@ -58,33 +60,50 @@
     </div>
     
     <%= link_to edit_restaurant_path(restaurant, section: 'menus'), 
-        class: "sidebar-link #{'active' if current_section == 'menus'}",
+        class: "sidebar-link #{'active' if current_section == 'menus' || current_section == 'menus_active' || current_section == 'menus_inactive'}",
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
       <i class="bi bi-grid-3x3"></i>
       <span><%= t('.all_menus', default: 'All Menus') %></span>
       <span class="sidebar-link-badge"><%= restaurant.menus.count %></span>
     <% end %>
     
-    <% if active_menus_count > 0 %>
-      <%= link_to edit_restaurant_path(restaurant, section: 'menus_active'), 
-          class: "sidebar-link #{'active' if current_section == 'menus_active'}",
-          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <i class="bi bi-check-circle"></i>
-        <span><%= t('.active_menus', default: 'Active') %></span>
-        <span class="sidebar-link-badge"><%= active_menus_count %></span>
+    <%= link_to edit_restaurant_path(restaurant, section: 'allergens'), 
+        class: "sidebar-link #{'active' if current_section == 'allergens'}",
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-exclamation-triangle"></i>
+      <span><%= t('.allergens', default: 'Allergens') %></span>
+      <% if allergens_count > 0 %>
+        <span class="sidebar-link-badge"><%= allergens_count %></span>
       <% end %>
     <% end %>
     
-    <% if inactive_menus_count > 0 %>
-      <%= link_to edit_restaurant_path(restaurant, section: 'menus_inactive'), 
-          class: "sidebar-link #{'active' if current_section == 'menus_inactive'}",
-          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <i class="bi bi-file-earmark"></i>
-        <span><%= t('.inactive_menus', default: 'Inactive') %></span>
-        <span class="sidebar-link-badge"><%= inactive_menus_count %></span>
-      <% end %>
+    <%= link_to edit_restaurant_path(restaurant, section: 'sizes'), 
+        class: "sidebar-link #{'active' if current_section == 'sizes'}",
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-rulers"></i>
+      <span><%= t('.sizes', default: 'Sizes') %></span>
     <% end %>
   </div>
+
+  <!-- TABLES SECTION -->
+  <% if @current_employee && @current_employee.role == 'manager' %>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">
+        <i class="bi bi-layout-wtf"></i>
+        <%= t('.tables', default: 'TABLES') %>
+      </div>
+      
+      <%= link_to edit_restaurant_path(restaurant, section: 'tables'), 
+          class: "sidebar-link #{'active' if current_section == 'tables'}",
+          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+        <i class="bi bi-layout-wtf"></i>
+        <span><%= t('.tables', default: 'Tables') %></span>
+        <% if tables_count > 0 %>
+          <span class="sidebar-link-badge"><%= tables_count %></span>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
 
   <!-- TEAM SECTION -->
   <div class="sidebar-section">
@@ -104,6 +123,30 @@
     <% end %>
   </div>
 
+  <!-- FINANCIALS SECTION -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">
+      <i class="bi bi-cash-stack"></i>
+      <%= t('.financials', default: 'FINANCIALS') %>
+    </div>
+    
+    <%= link_to edit_restaurant_path(restaurant, section: 'taxes_and_tips'), 
+        class: "sidebar-link #{'active' if current_section == 'taxes_and_tips'}",
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-cash-coin"></i>
+      <span><%= t('.taxes_and_tips', default: 'Taxes & Tips') %></span>
+    <% end %>
+    
+    <% if @current_employee && @current_employee.role == 'manager' %>
+      <%= link_to edit_restaurant_path(restaurant, section: 'ordering'), 
+          class: "sidebar-link #{'active' if current_section == 'ordering'}",
+          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+        <i class="bi bi-cart-check"></i>
+        <span><%= t('.ordering', default: 'Ordering') %></span>
+      <% end %>
+    <% end %>
+  </div>
+
   <!-- SETUP SECTION -->
   <div class="sidebar-section">
     <div class="sidebar-section-title">
@@ -118,13 +161,6 @@
       <span><%= t('.settings', default: 'Settings') %></span>
     <% end %>
     
-    <%= link_to edit_restaurant_path(restaurant, section: 'catalog'), 
-        class: "sidebar-link #{'active' if current_section == 'catalog'}",
-        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-      <i class="bi bi-bookmarks"></i>
-      <span><%= t('.catalog', default: 'Catalog') %></span>
-    <% end %>
-    
     <%= link_to edit_restaurant_path(restaurant, section: 'qrcodes'), 
         class: "sidebar-link #{'active' if current_section == 'qrcodes'}",
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
@@ -132,21 +168,14 @@
       <span><%= t('.qr_codes', default: 'QR Codes') %></span>
     <% end %>
     
+    <%= link_to edit_restaurant_path(restaurant, section: 'jukebox'), 
+        class: "sidebar-link #{'active' if current_section == 'jukebox'}",
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+      <i class="bi bi-music-note-beamed"></i>
+      <span><%= t('.jukebox', default: 'Jukebox') %></span>
+    <% end %>
+    
     <% if @current_employee && @current_employee.role == 'manager' %>
-      <%= link_to edit_restaurant_path(restaurant, section: 'tables'), 
-          class: "sidebar-link #{'active' if current_section == 'tables'}",
-          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <i class="bi bi-layout-wtf"></i>
-        <span><%= t('.tables', default: 'Tables') %></span>
-      <% end %>
-      
-      <%= link_to edit_restaurant_path(restaurant, section: 'ordering'), 
-          class: "sidebar-link #{'active' if current_section == 'ordering'}",
-          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <i class="bi bi-cart-check"></i>
-        <span><%= t('.ordering', default: 'Ordering') %></span>
-      <% end %>
-      
       <%= link_to edit_restaurant_path(restaurant, section: 'advanced'), 
           class: "sidebar-link #{'active' if current_section == 'advanced'}",
           data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>

@@ -11,11 +11,11 @@ class AllergynsController < ApplicationController
     if params[:restaurant_id]
       @futureParentRestaurant = Restaurant.find_by(id: params[:restaurant_id])
       @restaurant = @futureParentRestaurant
-      # Only show first 7 active allergyns by sequence
+      # Show all non-archived allergens (both active and inactive) scoped by restaurant
       @allergyns = if current_user
-                     policy_scope(Allergyn).includes(:restaurant).where(restaurant: @restaurant, status: :active, archived: false).order(:sequence).limit(7)
+                     policy_scope(Allergyn).includes(:restaurant).where(restaurant: @restaurant, archived: false).order(:sequence)
                    else
-                     Allergyn.includes(:restaurant).where(restaurant: @restaurant, status: :active, archived: false).order(:sequence).limit(7)
+                     Allergyn.includes(:restaurant).where(restaurant: @restaurant, archived: false).order(:sequence)
                    end
     end
 

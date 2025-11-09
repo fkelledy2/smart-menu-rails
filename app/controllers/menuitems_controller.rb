@@ -143,6 +143,9 @@ class MenuitemsController < ApplicationController
   # GET /menuitems/1/edit
   def edit
     authorize @menuitem
+    
+    # Use 2025 UI
+    render 'edit_2025'
   end
 
   # POST /menuitems or /menuitems.json

@@ -46,23 +46,12 @@
         </div>
       </div>
       
-      <div class="d-flex gap-2 align-items-center">
-        <!-- Mobile Sidebar Toggle -->
-        <button class="sidebar-toggle-btn" 
-                data-action="click->sidebar#toggle"
-                aria-label="Toggle navigation">
-          <i class="bi bi-list"></i>
-        </button>
-      
-        <!-- Quick Actions -->
-        <% if @menu.smartmenu&.slug %>
-          <%= link_to smartmenu_path(@menu.smartmenu.slug), 
-              class: 'btn-2025 btn-2025-secondary btn-2025-md',
-              target: '_blank' do %>
-            <i class="bi bi-eye"></i> <%= t('.preview', default: 'Preview Menu') %>
-          <% end %>
-        <% end %>
-      </div>
+      <!-- Mobile Sidebar Toggle -->
+      <button class="sidebar-toggle-btn" 
+              data-action="click->sidebar#toggle"
+              aria-label="Toggle navigation">
+        <i class="bi bi-list"></i>
+      </button>
     </div>
   </div>
 

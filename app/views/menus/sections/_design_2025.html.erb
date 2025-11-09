@@ -6,6 +6,33 @@
 <% menu = local_assigns[:menu] || @menu %>
 <% restaurant = menu.restaurant %>
 
+<!-- Quick Actions Card -->
+<div class="quick-actions-card">
+  <h2 class="quick-actions-title">
+    <i class="bi bi-lightning-charge"></i>
+    <%= t('.quick_actions', default: 'Quick Actions') %>
+  </h2>
+  
+  <div class="quick-actions-grid">
+    <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true), 
+        method: :post,
+        class: 'quick-action-btn',
+        data: { turbo: false, confirm: t('.confirm_ai', default: 'Generate new AI images? This will cost API credits.') } do %>
+      <i class="bi bi-stars"></i>
+      <span><%= t('.generate_images', default: 'Generate AI Images') %></span>
+    <% end %>
+    
+    <% if menu.smartmenu&.slug %>
+      <%= link_to smartmenu_path(menu.smartmenu.slug), 
+          class: 'quick-action-btn',
+          target: '_blank' do %>
+        <i class="bi bi-eye"></i>
+        <span><%= t('.preview_menu', default: 'Preview Menu') %></span>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
 <!-- Menu Image -->
 <div class="content-card-2025">
   <h2 class="content-card-title">
@@ -45,25 +72,6 @@
         </div>
       <% end %>
     </div>
-  <% end %>
-</div>
-
-<!-- AI Image Generation -->
-<div class="content-card-2025">
-  <h2 class="content-card-title">
-    <i class="bi bi-stars"></i>
-    <%= t('.ai_images', default: 'AI Image Generation') %>
-  </h2>
-  
-  <p class="text-muted mb-4">
-    <%= t('.ai_images_desc', default: 'Generate professional images for your menu items using AI') %>
-  </p>
-  
-  <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true), 
-      method: :post,
-      class: 'btn-2025 btn-2025-primary btn-2025-lg',
-      data: { turbo: false, confirm: t('.confirm_ai', default: 'Generate new AI images? This will cost API credits.') } do %>
-    <i class="bi bi-stars"></i> <%= t('.generate_images', default: 'Generate AI Images') %>
   <% end %>
 </div>
 
@@ -133,52 +141,54 @@
   </h2>
   
   <%= menu_form_with(menu, auto_save: true) do |form| %>
-    <div class="settings-list">
-      <div class="setting-item">
-        <div>
-          <h5><%= t('.show_prices', default: 'Show Prices') %></h5>
-          <p class="text-sm text-muted">
-            <%= t('.show_prices_desc', default: 'Display item prices to customers') %>
-          </p>
+    <div class="features-grid">
+      <!-- Show Images -->
+      <div class="feature-card">
+        <div class="feature-card-icon bg-primary">
+          <i class="bi bi-image"></i>
         </div>
-        <div class="form-check form-switch">
-          <%= form.check_box :show_prices, class: 'form-check-input' %>
-        </div>
-      </div>
-      
-      <div class="setting-item">
-        <div>
-          <h5><%= t('.show_images', default: 'Show Images') %></h5>
-          <p class="text-sm text-muted">
+        <div class="feature-card-content">
+          <h5 class="feature-card-title"><%= t('.show_images', default: 'Show Images') %></h5>
+          <p class="feature-card-description">
             <%= t('.show_images_desc', default: 'Display item images in menu') %>
           </p>
         </div>
-        <div class="form-check form-switch">
-          <%= form.check_box :displayImages, class: 'form-check-input' %>
+        <div class="feature-card-toggle">
+          <div class="form-check form-switch">
+            <input type="hidden" name="menu[displayImages]" value="false">
+            <input class="form-check-input" 
+                   type="checkbox" 
+                   name="menu[displayImages]"
+                   id="menu_displayImages_toggle"
+                   value="true"
+                   <%= 'checked' if menu.displayImages %>
+                   data-skip-tomselect="true">
+          </div>
         </div>
       </div>
       
-      <div class="setting-item">
-        <div>
-          <h5><%= t('.show_descriptions', default: 'Show Descriptions') %></h5>
-          <p class="text-sm text-muted">
-            <%= t('.show_descriptions_desc', default: 'Display item descriptions') %>
-          </p>
+      <!-- Popup Images -->
+      <div class="feature-card">
+        <div class="feature-card-icon bg-success">
+          <i class="bi bi-window-stack"></i>
         </div>
-        <div class="form-check form-switch">
-          <%= form.check_box :show_descriptions, class: 'form-check-input' %>
-        </div>
-      </div>
-      
-      <div class="setting-item">
-        <div>
-          <h5><%= t('.popup_images', default: 'Popup Images') %></h5>
-          <p class="text-sm text-muted">
+        <div class="feature-card-content">
+          <h5 class="feature-card-title"><%= t('.popup_images', default: 'Popup Images') %></h5>
+          <p class="feature-card-description">
             <%= t('.popup_images_desc', default: 'Show larger image when tapped') %>
           </p>
         </div>
-        <div class="form-check form-switch">
-          <%= form.check_box :displayImagesInPopup, class: 'form-check-input' %>
+        <div class="feature-card-toggle">
+          <div class="form-check form-switch">
+            <input type="hidden" name="menu[displayImagesInPopup]" value="false">
+            <input class="form-check-input" 
+                   type="checkbox" 
+                   name="menu[displayImagesInPopup]"
+                   id="menu_displayImagesInPopup_toggle"
+                   value="true"
+                   <%= 'checked' if menu.displayImagesInPopup %>
+                   data-skip-tomselect="true">
+          </div>
         </div>
       </div>
     </div>
@@ -200,29 +210,73 @@
     border-radius: var(--radius-lg);
   }
   
-  .settings-list {
+  /* Feature Grid Layout */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-4);
+  }
+  
+  .feature-card {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-  }
-  
-  .setting-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: var(--space-4);
-    background: var(--color-gray-50);
-    border: 1px solid var(--color-gray-200);
+    background: white;
+    border: 2px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
+    transition: all var(--transition-base);
   }
   
-  .setting-item h5 {
+  .feature-card:hover {
+    border-color: var(--color-gray-300);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .feature-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  .feature-card-content {
+    flex: 1;
+  }
+  
+  .feature-card-title {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
-    margin: 0 0 var(--space-1) 0;
+    margin: 0 0 var(--space-2) 0;
+    color: var(--color-gray-900);
   }
   
-  .setting-item p {
+  .feature-card-description {
+    font-size: var(--text-sm);
+    color: var(--color-gray-600);
     margin: 0;
+    line-height: 1.5;
+  }
+  
+  .feature-card-toggle {
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-gray-100);
+  }
+  
+  .feature-card-toggle .form-switch {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

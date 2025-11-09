@@ -30,35 +30,42 @@
   </div>
 
   <div class="spacing-sm"></div>
-    <div class="form-group row">
-      <div class="col-3">
-        <span class="float-md-end"><%= form.label :starthour, class: 'col-form-label' %></span>
-      </div>
-      <div class="col-9">
-        <div class="row">
-          <div class="col-6">
-            <%= form.text_field :fromhour, class: 'form-control' %>
-          </div>
-          <div class="col-6">
-            <%= form.text_field :frommin, class: 'form-control' %>
-          </div>
-        </div>
-      </div>
-    </div>
-  <div class="spacing-sm"></div>
   <div class="form-group row">
     <div class="col-3">
-      <span class="float-md-end"><%= form.label :endhour, class: 'col-form-label' %></span>
+      <span class="float-md-end"><%= t('.availability_time', default: 'Availability Time') %></span>
     </div>
     <div class="col-9">
-        <div class="row">
-          <div class="col-6">
-            <%= form.text_field :tohour, class: 'form-control' %>
+      <!-- Hidden fields for time values -->
+      <%= form.hidden_field :fromhour, class: 'from-hour-field' %>
+      <%= form.hidden_field :frommin, class: 'from-min-field' %>
+      <%= form.hidden_field :tohour, class: 'to-hour-field' %>
+      <%= form.hidden_field :tomin, class: 'to-min-field' %>
+      
+      <!-- Time Slider -->
+      <div class="time-slider-container">
+        <!-- Time display above slider -->
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <div class="time-display opening-time">
+            <i class="bi bi-sunrise"></i>
+            <span class="time-value"><%= sprintf('%02d:%02d', menusection.fromhour || 9, menusection.frommin || 0) %></span>
           </div>
-          <div class="col-6">
-            <%= form.text_field :tomin, class: 'form-control' %>
+          <div class="time-display closing-time">
+            <i class="bi bi-sunset"></i>
+            <span class="time-value"><%= sprintf('%02d:%02d', menusection.tohour || 22, menusection.tomin || 0) %></span>
           </div>
         </div>
+        
+        <!-- Range slider -->
+        <% 
+          open_minutes = ((menusection.fromhour || 9) * 60) + (menusection.frommin || 0)
+          close_minutes = ((menusection.tohour || 22) * 60) + (menusection.tomin || 0)
+        %>
+        <div class="time-range-slider" 
+             id="section_time_slider"
+             data-open="<%= open_minutes %>"
+             data-close="<%= close_minutes %>">
+        </div>
+      </div>
     </div>
   </div>
   <div class="spacing-sm"></div>
@@ -108,15 +115,6 @@
     </div>
     <div class="col-9">
       <%= form.select :status, options_for_select(Menusection.statuses.keys.to_a, form.object.status), {}, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :menu_id, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.collection_select :menu_id, Menu.all ,:id, :name, options = {:prompt => t(".selectMenu")}%>
     </div>
   </div>
   <div class="spacing-md"></div>

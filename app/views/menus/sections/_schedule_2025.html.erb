@@ -6,8 +6,23 @@
 <% menu = local_assigns[:menu] || @menu %>
 <% restaurant = menu.restaurant %>
 
+<!-- Quick Actions Card -->
+<div class="quick-actions-card">
+  <h2 class="quick-actions-title">
+    <i class="bi bi-lightning-charge"></i>
+    <%= t('.quick_actions', default: 'Quick Actions') %>
+  </h2>
+  
+  <div class="quick-actions-grid">
+    <button type="button" class="quick-action-btn copy-monday-btn">
+      <i class="bi bi-files"></i>
+      <span><%= t('.copy_to_all', default: 'Copy Monday to All Days') %></span>
+    </button>
+  </div>
+</div>
+
 <!-- Menu Availabilities -->
-<div class="content-card-2025">
+<div class="content-card-2025 py-4">
   <h2 class="content-card-title">
     <i class="bi bi-calendar-check"></i>
     <%= t('.menu_availabilities', default: 'Menu Availabilities') %>
@@ -98,13 +113,8 @@
   </div>
   
   <div class="mt-4">
-    <button type="button" class="btn-2025 btn-2025-secondary btn-2025-sm copy-monday-btn">
-      <i class="bi bi-files"></i>
-      <%= t('.copy_to_all', default: 'Copy Monday to All Days') %>
-    </button>
-    
     <!-- Auto-save status indicator -->
-    <span class="form-autosave-status ms-3" data-auto-save-target="status"></span>
+    <span class="form-autosave-status" data-auto-save-target="status"></span>
   </div>
   
   </form>
@@ -113,7 +123,26 @@
 <!-- Preload noUiSlider CSS for faster loading -->
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" /></noscript>
-<script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script>
+
+<!-- Load noUiSlider -->
+<script data-turbo-track="reload">
+  if (typeof noUiSlider === 'undefined') {
+    console.log('[MenuAvailabilities] Loading noUiSlider from CDN...');
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js';
+    script.onload = function() {
+      console.log('[MenuAvailabilities] noUiSlider loaded successfully');
+      window.noUiSliderLoaded = true;
+    };
+    script.onerror = function() {
+      console.error('[MenuAvailabilities] Failed to load noUiSlider from CDN');
+    };
+    document.head.appendChild(script);
+  } else {
+    console.log('[MenuAvailabilities] noUiSlider already loaded');
+    window.noUiSliderLoaded = true;
+  }
+</script>
 
 <style>
   .availability-editor .day-row {
@@ -282,8 +311,28 @@
 </style>
 
 <script>
+  let menuAvailabilityRetries = 0;
+  const MAX_AVAILABILITY_RETRIES = 50;
+  
   function initializeMenuAvailabilities() {
     console.log('[MenuAvailabilities] Initializing with auto-save');
+    
+    // Check if noUiSlider is loaded
+    if (typeof noUiSlider === 'undefined') {
+      if (menuAvailabilityRetries < MAX_AVAILABILITY_RETRIES) {
+        menuAvailabilityRetries++;
+        console.log(`[MenuAvailabilities] Waiting for noUiSlider... (attempt ${menuAvailabilityRetries}/${MAX_AVAILABILITY_RETRIES})`);
+        setTimeout(initializeMenuAvailabilities, 100);
+        return;
+      } else {
+        console.error('[MenuAvailabilities] Failed to load noUiSlider after max retries');
+        return;
+      }
+    }
+    
+    // Reset retry counter on success
+    menuAvailabilityRetries = 0;
+    console.log('[MenuAvailabilities] noUiSlider is available, proceeding with initialization');
     
     // Verify auto-save controller is attached
     const form = document.querySelector('[data-controller*="auto-save"]');
@@ -444,12 +493,18 @@
     });
   }
   
-  // Initialize on DOMContentLoaded (full page load)
-  document.addEventListener('DOMContentLoaded', initializeMenuAvailabilities);
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeMenuAvailabilities);
+  } else {
+    // DOM already loaded, initialize immediately
+    initializeMenuAvailabilities();
+  }
   
   // Initialize on Turbo navigation (sidebar navigation)
   document.addEventListener('turbo:load', initializeMenuAvailabilities);
   document.addEventListener('turbo:frame-load', initializeMenuAvailabilities);
+  document.addEventListener('turbo:render', initializeMenuAvailabilities);
   
-  console.log('[MenuAvailabilities] Event listeners registered for DOMContentLoaded, turbo:load, and turbo:frame-load');
+  console.log('[MenuAvailabilities] Event listeners registered for DOMContentLoaded, turbo:load, turbo:frame-load, and turbo:render');
 </script>

@@ -5,6 +5,21 @@
 
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
+<!-- Quick Actions Card -->
+<div class="quick-actions-card">
+  <h2 class="quick-actions-title">
+    <i class="bi bi-lightning-charge"></i>
+    <%= t('.quick_actions', default: 'Quick Actions') %>
+  </h2>
+  
+  <div class="quick-actions-grid">
+    <button type="button" class="quick-action-btn copy-monday-btn">
+      <i class="bi bi-files"></i>
+      <span><%= t('.copy_to_all', default: 'Copy Monday to All Days') %></span>
+    </button>
+  </div>
+</div>
+
 <!-- Operating Hours -->
 <div class="content-card-2025 py-4">
   <h2 class="content-card-title">
@@ -97,13 +112,8 @@
   </div>
   
   <div class="mt-4">
-    <button type="button" class="btn-2025 btn-2025-secondary btn-2025-sm copy-monday-btn">
-      <i class="bi bi-files"></i>
-      <%= t('.copy_to_all', default: 'Copy Monday to All Days') %>
-    </button>
-    
     <!-- Auto-save status indicator -->
-    <span class="form-autosave-status ms-3" data-auto-save-target="status"></span>
+    <span class="form-autosave-status" data-auto-save-target="status"></span>
   </div>
   
   </form>

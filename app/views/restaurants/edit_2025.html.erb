@@ -41,14 +41,17 @@
       <%= turbo_frame_tag 'restaurant_content' do %>
         <% 
           partial_name = case @current_section
-                        when 'details' then 'details_2025'
-                        when 'address' then 'address_2025'
+                        when 'details', 'address' then 'details_2025'
                         when 'hours' then 'hours_2025'
+                        when 'localization' then 'localization_2025'
                         when 'menus', 'menus_active', 'menus_inactive' then 'menus_2025'
+                        when 'allergens' then 'allergens_2025'
+                        when 'sizes' then 'sizes_2025'
                         when 'staff', 'roles' then 'staff_2025'
                         when 'settings' then 'settings_2025'
-                        when 'catalog' then 'catalog_2025'
+                        when 'taxes_and_tips', 'financials', 'catalog' then 'catalog_2025'
                         when 'qrcodes' then 'qrcodes_2025'
+                        when 'jukebox' then 'jukebox_2025'
                         when 'tables' then 'tables_2025'
                         when 'ordering' then 'ordering_2025'
                         when 'advanced' then 'advanced_2025'

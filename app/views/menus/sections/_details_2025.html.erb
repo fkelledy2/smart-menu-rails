@@ -14,15 +14,21 @@
   </h2>
   
   <div class="quick-actions-grid">
-    <%= link_to regenerate_images_restaurant_menu_path(restaurant, menu), 
+    <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true), 
         method: :post,
-        data: { 
-          confirm: t('.regenerate_images_confirm', default: 'This will queue image regeneration jobs for all items in this menu. Continue?'),
-          turbo: false 
-        },
-        class: 'quick-action-btn' do %>
-      <i class="bi bi-image"></i>
-      <span><%= t('.regenerate_images', default: 'Regenerate Images') %></span>
+        class: 'quick-action-btn',
+        data: { turbo: false, confirm: t('.confirm_ai', default: 'Generate new AI images? This will cost API credits.') } do %>
+      <i class="bi bi-stars"></i>
+      <span><%= t('.generate_images', default: 'Generate AI Images') %></span>
+    <% end %>
+    
+    <% if menu.smartmenu&.slug %>
+      <%= link_to smartmenu_path(menu.smartmenu.slug), 
+          class: 'quick-action-btn',
+          target: '_blank' do %>
+        <i class="bi bi-eye"></i>
+        <span><%= t('.preview_menu', default: 'Preview Menu') %></span>
+      <% end %>
     <% end %>
   </div>
 </div>
@@ -124,60 +130,6 @@
         <div class="stat-label"><%= t('.schedules', default: 'Schedules') %></div>
       </div>
     </div>
-    
-    <div class="stat-card">
-      <div class="stat-icon bg-info">
-        <i class="bi bi-clock-history"></i>
-      </div>
-      <div class="stat-info">
-        <div class="stat-value"><%= time_ago_in_words(menu.updated_at) %></div>
-        <div class="stat-label"><%= t('.last_updated', default: 'Last Updated') %></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Quick Actions -->
-<div class="content-card-2025">
-  <h2 class="content-card-title">
-    <i class="bi bi-lightning"></i>
-    <%= t('.quick_actions', default: 'Quick Actions') %>
-  </h2>
-  
-  <div class="quick-actions-grid">
-    <%= link_to edit_restaurant_menu_path(restaurant, menu, section: 'sections'), 
-        class: 'action-card',
-        data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
-      <i class="bi bi-layout-text-sidebar text-primary"></i>
-      <h4><%= t('.manage_sections', default: 'Manage Sections') %></h4>
-      <p><%= t('.manage_sections_desc', default: 'Organize your menu into sections') %></p>
-    <% end %>
-    
-    <%= link_to edit_restaurant_menu_path(restaurant, menu, section: 'items'), 
-        class: 'action-card',
-        data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
-      <i class="bi bi-list-ul text-success"></i>
-      <h4><%= t('.manage_items', default: 'Manage Items') %></h4>
-      <p><%= t('.manage_items_desc', default: 'Add, edit, or remove menu items') %></p>
-    <% end %>
-    
-    <%= link_to edit_restaurant_menu_path(restaurant, menu, section: 'schedule'), 
-        class: 'action-card',
-        data: { turbo_frame: 'menu_content', turbo_action: 'advance' } do %>
-      <i class="bi bi-calendar-check text-warning"></i>
-      <h4><%= t('.set_schedule', default: 'Set Schedule') %></h4>
-      <p><%= t('.set_schedule_desc', default: 'Control when this menu is available') %></p>
-    <% end %>
-    
-    <% if menu.smartmenu&.slug %>
-      <%= link_to smartmenu_path(menu.smartmenu.slug), 
-          class: 'action-card',
-          target: '_blank' do %>
-        <i class="bi bi-eye text-info"></i>
-        <h4><%= t('.preview_menu', default: 'Preview Menu') %></h4>
-        <p><%= t('.preview_menu_desc', default: 'See how customers view your menu') %></p>
-      <% end %>
-    <% end %>
   </div>
 </div>
 
@@ -221,46 +173,5 @@
     font-size: var(--text-sm);
     color: var(--color-gray-600);
     margin-top: var(--space-1);
-  }
-  
-  .quick-actions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--space-4);
-  }
-  
-  .action-card {
-    padding: var(--space-4);
-    background: var(--color-gray-50);
-    border: 2px solid var(--color-gray-200);
-    border-radius: var(--radius-lg);
-    text-decoration: none;
-    transition: all var(--transition-base);
-    display: block;
-  }
-  
-  .action-card:hover {
-    border-color: var(--color-primary);
-    background: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .action-card i {
-    font-size: 2rem;
-    margin-bottom: var(--space-2);
-  }
-  
-  .action-card h4 {
-    font-size: var(--text-base);
-    font-weight: var(--font-semibold);
-    color: var(--color-gray-900);
-    margin-bottom: var(--space-1);
-  }
-  
-  .action-card p {
-    font-size: var(--text-sm);
-    color: var(--color-gray-600);
-    margin: 0;
   }
 </style>

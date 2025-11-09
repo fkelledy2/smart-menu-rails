@@ -1,0 +1,86 @@
+<%# 
+  2025 Menu Item Edit Page
+  Modern design aligned with menu edit page
+%>
+
+<% content_for :title, @menuitem.name %>
+
+<!-- Page Header -->
+<div class="container-fluid px-0 py-4 bg-white border-bottom sticky-header">
+  <div class="container-2025">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <!-- Breadcrumb -->
+        <div class="text-sm text-gray-500 mb-2">
+          <%= link_to @menuitem.menusection.menu.restaurant.name, 
+              edit_restaurant_path(@menuitem.menusection.menu.restaurant), 
+              class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= link_to @menuitem.menusection.menu.name, 
+              edit_restaurant_menu_path(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, section: 'items'), 
+              class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= t('.menu_item', default: 'Menu Item') %>
+        </div>
+        
+        <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+          <%= @menuitem.name %>
+        </h1>
+        
+        <div class="d-flex align-items-center gap-3 mt-2">
+          <!-- Section Badge -->
+          <span class="badge bg-secondary">
+            <i class="bi bi-layout-text-sidebar"></i> <%= @menuitem.menusection.name %>
+          </span>
+        </div>
+      </div>
+      
+      <div class="d-flex gap-2 align-items-center">
+        <!-- Back Button -->
+        <%= link_to edit_restaurant_menu_path(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, section: 'items'), 
+            class: 'btn-2025 btn-2025-secondary btn-2025-md' do %>
+          <i class="bi bi-arrow-left"></i> <%= t('.back_to_items', default: 'Back to Items') %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container-2025 py-4">
+  <div class="content-card-2025 py-4">
+    <%= render 'form', menuitem: @menuitem %>
+  </div>
+</div>
+
+<% content_for :head do %>
+  <style>
+    /* Page-specific styles */
+    body {
+      background: var(--color-gray-50);
+    }
+    
+    .container-2025 {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-4);
+    }
+    
+    .text-2xl {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+    
+    .text-gray-900 {
+      color: var(--color-gray-900);
+    }
+    
+    .text-gray-500 {
+      color: var(--color-gray-500);
+    }
+    
+    .text-sm {
+      font-size: var(--text-sm);
+    }
+  </style>
+<% end %>

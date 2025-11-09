@@ -18,6 +18,9 @@ class RestaurantsController < ApplicationController
     if params[:restaurant_id]
       session[:spotify_restaurant_id] = params[:restaurant_id]
     end
+    if params[:return_to]
+      session[:spotify_return_to] = params[:return_to]
+    end
     scopes = %w[
       user-read-email
       user-read-private
@@ -82,7 +85,8 @@ class RestaurantsController < ApplicationController
         @restaurant.save
 
         Rails.logger.info "Spotify connected for restaurant: #{@restaurant.name} (ID: #{@restaurant.id})"
-        redirect_to edit_restaurant_path(@restaurant, section: 'advanced')
+        return_path = session.delete(:spotify_return_to) || edit_restaurant_path(@restaurant, section: 'jukebox')
+        redirect_to return_path
       else
         redirect_to root_url
       end
@@ -988,22 +992,28 @@ class RestaurantsController < ApplicationController
   # Map section names to partial names
   def section_partial_name(section)
     case section
-    when 'details'
+    when 'details', 'address'
       'details_2025'
-    when 'address'
-      'address_2025'
     when 'hours'
       'hours_2025'
+    when 'localization'
+      'localization_2025'
     when 'menus', 'menus_active', 'menus_inactive'
       'menus_2025'
+    when 'allergens'
+      'allergens_2025'
+    when 'sizes'
+      'sizes_2025'
     when 'staff', 'roles'
       'staff_2025'
     when 'settings'
       'settings_2025'
-    when 'catalog'
+    when 'taxes_and_tips', 'financials', 'catalog'
       'catalog_2025'
     when 'qrcodes'
       'qrcodes_2025'
+    when 'jukebox'
+      'jukebox_2025'
     when 'tables'
       'tables_2025'
     when 'ordering'

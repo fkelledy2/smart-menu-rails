@@ -6,22 +6,38 @@
 <% menu = local_assigns[:menu] || @menu %>
 <% restaurant = menu.restaurant %>
 
-<!-- Items Header -->
-<div class="content-card-2025">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="content-card-title mb-0">
-      <i class="bi bi-list-ul"></i>
-      <%= t('.menu_items', default: 'Menu Items') %>
+<!-- Quick Actions Card -->
+<% if menu.menusections.any? %>
+  <div class="quick-actions-card">
+    <h2 class="quick-actions-title">
+      <i class="bi bi-lightning-charge"></i>
+      <%= t('.quick_actions', default: 'Quick Actions') %>
     </h2>
     
-    <% if menu.menusections.any? %>
-      <%= link_to '#', 
-          class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+    <div class="quick-actions-grid">
+      <%= link_to '#', class: 'quick-action-btn' do %>
         <i class="bi bi-plus-circle"></i>
-        <%= t('.add_item', default: 'Add Item') %>
+        <span><%= t('.add_item', default: 'Add Menu Item') %></span>
       <% end %>
-    <% end %>
+      
+      <% if menu.smartmenu&.slug %>
+        <%= link_to smartmenu_path(menu.smartmenu.slug), 
+            class: 'quick-action-btn',
+            target: '_blank' do %>
+          <i class="bi bi-eye"></i>
+          <span><%= t('.preview_menu', default: 'Preview Menu') %></span>
+        <% end %>
+      <% end %>
+    </div>
   </div>
+<% end %>
+
+<!-- Items List -->
+<div class="content-card-2025 py-4">
+  <h2 class="content-card-title">
+    <i class="bi bi-list-ul"></i>
+    <%= t('.menu_items', default: 'Menu Items') %>
+  </h2>
   
   <p class="text-muted mb-4">
     <%= t('.items_description', default: 'View and manage all menu items across all sections') %>
@@ -36,7 +52,11 @@
             <th style="width: 40px;"></th>
             <th><%= t('.name', default: 'Name') %></th>
             <th><%= t('.price', default: 'Price') %></th>
-            <th><%= t('.actions', default: 'Actions') %></th>
+            <th class="text-end">
+              <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                <i class="bi bi-gear"></i>
+              </span>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -89,9 +109,10 @@
                       <span class="text-muted">-</span>
                     <% end %>
                   </td>
-                  <td>
-                    <%= link_to '#', 
-                        class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
+                  <td class="text-end">
+                    <%= link_to edit_restaurant_menu_menusection_menuitem_path(restaurant, menu, section, item), 
+                        class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                        data: { turbo_frame: '_top' } do %>
                       <i class="bi bi-pencil"></i>
                     <% end %>
                   </td>
@@ -102,12 +123,6 @@
           <% end %>
         </tbody>
       </table>
-    </div>
-    
-    <!-- Items Summary -->
-    <div class="alert alert-info mt-4">
-      <i class="bi bi-info-circle"></i>
-      <strong><%= menu.menuitems.count %></strong> <%= t('.total_items', default: 'total items') %>
     </div>
   <% else %>
     <!-- Empty State -->

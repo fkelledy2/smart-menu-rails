@@ -82,4 +82,20 @@ module ApplicationHelper
 
   # Alternative method name for clarity
   alias translate_html t_html
+
+  # Get Bootstrap icon class for currency
+  def currency_icon(currency_code)
+    case currency_code&.upcase
+    when 'USD'
+      'bi-currency-dollar'
+    when 'EUR'
+      'bi-currency-euro'
+    when 'GBP'
+      'bi-currency-pound'
+    when 'JPY', 'CNY'
+      'bi-currency-yen'
+    else
+      'bi-cash-coin' # Generic fallback
+    end
+  end
 end

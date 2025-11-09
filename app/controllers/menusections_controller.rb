@@ -49,6 +49,9 @@ class MenusectionsController < ApplicationController
   # GET /menusections/1/edit
   def edit
     authorize @menusection
+    
+    # Use 2025 UI
+    render 'edit_2025'
   end
 
   # POST /menusections or /menusections.json
@@ -106,7 +109,7 @@ class MenusectionsController < ApplicationController
           @genimage.save
         end
         format.html do
-          redirect_to edit_restaurant_menu_path(@menusection.menu.restaurant, @menusection.menu),
+          redirect_to edit_restaurant_menu_path(@menusection.menu.restaurant, @menusection.menu, section: 'sections'),
                       notice: t('common.flash.updated', resource: t('activerecord.models.menusection'))
         end
         format.json do
@@ -127,7 +130,7 @@ class MenusectionsController < ApplicationController
     @menusection.update(archived: true)
     respond_to do |format|
       format.html do
-        redirect_to edit_restaurant_menu_path(@menusection.menu.restaurant, @menusection.menu),
+        redirect_to edit_restaurant_menu_path(@menusection.menu.restaurant, @menusection.menu, section: 'sections'),
                     notice: t('common.flash.deleted', resource: t('activerecord.models.menusection'))
       end
       format.json { head :no_content }

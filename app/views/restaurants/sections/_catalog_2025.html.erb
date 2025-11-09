@@ -1,19 +1,43 @@
 <%# 
-  Restaurant Catalog Section
-  Taxes, tips, sizes, allergens, tags management
+  Restaurant Taxes & Tips Section
+  Taxes and tips management
 %>
 
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
-<!-- Catalog Overview -->
+<!-- Quick Actions Card -->
+<div class="quick-actions-card">
+  <h2 class="quick-actions-title">
+    <i class="bi bi-lightning-charge"></i>
+    <%= t('.quick_actions', default: 'Quick Actions') %>
+  </h2>
+  
+  <div class="quick-actions-grid">
+    <%= link_to new_restaurant_tax_path(restaurant), 
+        class: 'quick-action-btn',
+        data: { turbo_frame: '_top' } do %>
+      <i class="bi bi-receipt"></i>
+      <span><%= t('.add_tax', default: 'Add Tax') %></span>
+    <% end %>
+    
+    <%= link_to new_restaurant_tip_path(restaurant), 
+        class: 'quick-action-btn',
+        data: { turbo_frame: '_top' } do %>
+      <i class="bi <%= currency_icon(restaurant.currency) %>"></i>
+      <span><%= t('.add_tip', default: 'Add Tip') %></span>
+    <% end %>
+  </div>
+</div>
+
+<!-- Taxes & Tips Overview -->
 <div class="content-card-2025 py-4">
   <h2 class="content-card-title">
-    <i class="bi bi-bookmarks"></i>
-    <%= t('.catalog', default: 'Restaurant Catalog') %>
+    <i class="bi bi-cash-coin"></i>
+    <%= t('.taxes_and_tips', default: 'Taxes & Tips') %>
   </h2>
   
   <p class="text-muted mb-4">
-    <%= t('.catalog_description', default: 'Manage reusable components for your menus') %>
+    <%= t('.taxes_and_tips_description', default: 'Manage taxes and tip configurations') %>
   </p>
   
   <div class="catalog-grid">
@@ -38,7 +62,7 @@
     <!-- Tips -->
     <div class="catalog-item">
       <div class="catalog-icon bg-success">
-        <i class="bi bi-currency-dollar"></i>
+        <i class="bi <%= currency_icon(restaurant.currency) %>"></i>
       </div>
       <div class="catalog-info">
         <h4 class="catalog-title"><%= t('.tips', default: 'Tips') %></h4>
@@ -53,124 +77,18 @@
       <% end %>
     </div>
     
-    <!-- Sizes -->
-    <div class="catalog-item">
-      <div class="catalog-icon bg-warning">
-        <i class="bi bi-rulers"></i>
-      </div>
-      <div class="catalog-info">
-        <h4 class="catalog-title"><%= t('.sizes', default: 'Sizes') %></h4>
-        <p class="catalog-count">
-          <%= restaurant.sizes.where(archived: false).where.not(status: :archived).count %> <%= t('.configured', default: 'configured') %>
-        </p>
-      </div>
-      <%= link_to restaurant_sizes_path(restaurant), 
-          class: 'btn-2025 btn-2025-secondary btn-2025-sm',
-          data: { turbo_frame: '_top' } do %>
-        <i class="bi bi-pencil"></i> <%= t('.manage', default: 'Manage') %>
-      <% end %>
-    </div>
-    
-    <!-- Allergens -->
-    <div class="catalog-item">
-      <div class="catalog-icon bg-danger">
-        <i class="bi bi-exclamation-triangle"></i>
-      </div>
-      <div class="catalog-info">
-        <h4 class="catalog-title"><%= t('.allergens', default: 'Allergens') %></h4>
-        <p class="catalog-count">
-          <%= [restaurant.allergyns.where(status: :active, archived: false).order(:sequence).limit(7).count, 7].min %> <%= t('.configured', default: 'configured') %>
-        </p>
-      </div>
-      <%= link_to restaurant_allergyns_path(restaurant), 
-          class: 'btn-2025 btn-2025-secondary btn-2025-sm',
-          data: { turbo_frame: '_top' } do %>
-        <i class="bi bi-pencil"></i> <%= t('.manage', default: 'Manage') %>
-      <% end %>
-    </div>
-    
   </div>
 </div>
 
-<!-- Quick Add -->
-<div class="content-card-2025">
-  <h2 class="content-card-title">
-    <i class="bi bi-plus-circle"></i>
-    <%= t('.quick_add', default: 'Quick Add') %>
-  </h2>
-  
-  <p class="text-muted mb-4">
-    <%= t('.quick_add_description', default: 'Add common items to your catalog') %>
-  </p>
-  
-  <div class="row g-3">
-    <div class="col-md-6">
-      <div class="quick-add-card">
-        <h5><i class="bi bi-receipt me-2"></i><%= t('.add_tax', default: 'Add Tax') %></h5>
-        <p class="text-sm text-muted mb-3">
-          <%= t('.add_tax_desc', default: 'Sales tax, VAT, or service charge') %>
-        </p>
-        <%= link_to new_restaurant_tax_path(restaurant), 
-            class: 'btn-2025 btn-2025-primary btn-2025-sm w-100',
-            data: { turbo_frame: '_top' } do %>
-          <i class="bi bi-plus"></i> <%= t('.add', default: 'Add') %>
-        <% end %>
-      </div>
-    </div>
-    
-    <div class="col-md-6">
-      <div class="quick-add-card">
-        <h5><i class="bi bi-currency-dollar me-2"></i><%= t('.add_tip', default: 'Add Tip') %></h5>
-        <p class="text-sm text-muted mb-3">
-          <%= t('.add_tip_desc', default: 'Suggested tip percentage') %>
-        </p>
-        <%= link_to new_restaurant_tip_path(restaurant), 
-            class: 'btn-2025 btn-2025-primary btn-2025-sm w-100',
-            data: { turbo_frame: '_top' } do %>
-          <i class="bi bi-plus"></i> <%= t('.add', default: 'Add') %>
-        <% end %>
-      </div>
-    </div>
-    
-    <div class="col-md-6">
-      <div class="quick-add-card">
-        <h5><i class="bi bi-rulers me-2"></i><%= t('.add_size', default: 'Add Size') %></h5>
-        <p class="text-sm text-muted mb-3">
-          <%= t('.add_size_desc', default: 'Small, Medium, Large, etc.') %>
-        </p>
-        <%= link_to new_restaurant_size_path(restaurant), 
-            class: 'btn-2025 btn-2025-primary btn-2025-sm w-100',
-            data: { turbo_frame: '_top' } do %>
-          <i class="bi bi-plus"></i> <%= t('.add', default: 'Add') %>
-        <% end %>
-      </div>
-    </div>
-    
-    <div class="col-md-6">
-      <div class="quick-add-card">
-        <h5><i class="bi bi-exclamation-triangle me-2"></i><%= t('.add_allergen', default: 'Add Allergen') %></h5>
-        <p class="text-sm text-muted mb-3">
-          <%= t('.add_allergen_desc', default: 'Peanuts, Gluten, Dairy, etc.') %>
-        </p>
-        <%= link_to new_restaurant_allergyn_path(restaurant), 
-            class: 'btn-2025 btn-2025-primary btn-2025-sm w-100',
-            data: { turbo_frame: '_top' } do %>
-          <i class="bi bi-plus"></i> <%= t('.add', default: 'Add') %>
-        <% end %>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Common Templates -->
+<!-- Tax & Tip Templates -->
 <div class="content-card-2025">
   <h2 class="content-card-title">
     <i class="bi bi-lightning-charge"></i>
-    <%= t('.common_templates', default: 'Common Templates') %>
+    <%= t('.tax_tip_templates', default: 'Tax & Tip Templates') %>
   </h2>
   
   <p class="text-muted mb-4">
-    <%= t('.templates_description', default: 'Pre-configured sets for quick setup') %>
+    <%= t('.templates_description', default: 'Pre-configured tax and tip sets for quick setup') %>
   </p>
   
   <div class="templates-list">
@@ -193,30 +111,6 @@
       </div>
       <p class="text-sm text-muted">
         <%= t('.eu_restaurant_desc', default: 'VAT + service charge included') %>
-      </p>
-      <button class="btn-2025 btn-2025-outline btn-2025-sm">
-        <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
-      </button>
-    </div>
-    
-    <div class="template-card">
-      <div class="template-header">
-        <h5><%= t('.pizza_sizes', default: 'Pizza Sizes') %></h5>
-      </div>
-      <p class="text-sm text-muted">
-        <%= t('.pizza_sizes_desc', default: 'Personal, Small, Medium, Large, X-Large') %>
-      </p>
-      <button class="btn-2025 btn-2025-outline btn-2025-sm">
-        <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
-      </button>
-    </div>
-    
-    <div class="template-card">
-      <div class="template-header">
-        <h5><%= t('.common_allergens', default: 'Common Allergens') %></h5>
-      </div>
-      <p class="text-sm text-muted">
-        <%= t('.common_allergens_desc', default: 'Top 8 allergens (FDA)') %>
       </p>
       <button class="btn-2025 btn-2025-outline btn-2025-sm">
         <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
@@ -274,20 +168,6 @@
     font-size: var(--text-sm);
     color: var(--color-gray-600);
     margin: 0;
-  }
-  
-  .quick-add-card {
-    padding: var(--space-4);
-    background: var(--color-gray-50);
-    border: 1px solid var(--color-gray-200);
-    border-radius: var(--radius-lg);
-    height: 100%;
-  }
-  
-  .quick-add-card h5 {
-    font-size: var(--text-base);
-    font-weight: var(--font-semibold);
-    margin-bottom: var(--space-2);
   }
   
   .templates-list {

@@ -6,8 +6,32 @@
 <% menu = local_assigns[:menu] || @menu %>
 <% restaurant = menu.restaurant %>
 
+<!-- Quick Actions Card -->
+<% if menu.smartmenu&.slug %>
+  <div class="quick-actions-card">
+    <h2 class="quick-actions-title">
+      <i class="bi bi-lightning-charge"></i>
+      <%= t('.quick_actions', default: 'Quick Actions') %>
+    </h2>
+    
+    <div class="quick-actions-grid">
+      <button class="quick-action-btn" onclick="copyToClipboard()">
+        <i class="bi bi-clipboard"></i>
+        <span><%= t('.copy_url', default: 'Copy URL') %></span>
+      </button>
+      
+      <%= link_to smartmenu_path(menu.smartmenu.slug), 
+          class: 'quick-action-btn',
+          target: '_blank' do %>
+        <i class="bi bi-box-arrow-up-right"></i>
+        <span><%= t('.preview_menu', default: 'Preview Menu') %></span>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
 <!-- QR Code Preview -->
-<div class="content-card-2025">
+<div class="content-card-2025 py-4">
   <h2 class="content-card-title">
     <i class="bi bi-qr-code"></i>
     <%= t('.qr_code', default: 'QR Code') %>
@@ -22,59 +46,27 @@
     <div id="qrHost" style="display: none;"><%= request.host_with_port %></div>
     <div class="qrSlug" style="display: none;"><%= menu.smartmenu.slug %></div>
     <div id="qrIcon" style="display: none;"><%= image_url('qr-icon.svg') %></div>
-  <% end %>
-  
-  <div class="row g-4">
-    <div class="col-md-6">
+    <div id="qrProtocol" style="display: none;"><%= request.protocol %></div>
+    
+    <!-- Centered QR Code -->
+    <div class="d-flex justify-content-center">
       <div class="qr-preview">
-        <% if menu.smartmenu&.slug %>
-          <!-- Styled QR code will be inserted here by JavaScript -->
-          <div id="<%= menu.smartmenu.slug %>" class="qr-code-container"></div>
-        <% else %>
-          <div class="qr-placeholder">
-            <i class="bi bi-qr-code"></i>
-            <p class="mt-2">
-              <%= t('.qr_not_available', default: 'QR code will appear here once menu is published') %>
-            </p>
-          </div>
-        <% end %>
+        <!-- Styled QR code will be inserted here by JavaScript -->
+        <div id="<%= menu.smartmenu.slug %>" class="qr-code-container"></div>
       </div>
     </div>
-    
-    <div class="col-md-6">
-      <h4><%= t('.menu_url', default: 'Menu URL') %></h4>
-      <% if defined?(@qrURL) && @qrURL %>
-        <div class="url-display">
-          <%= @qrURL %>
-        </div>
-        
-        <div class="d-flex gap-2 mt-3">
-          <button class="btn-2025 btn-2025-secondary btn-2025-md" onclick="copyToClipboard()">
-            <i class="bi bi-clipboard"></i>
-            <%= t('.copy_url', default: 'Copy URL') %>
-          </button>
-          
-          <% if menu.smartmenu&.slug %>
-            <%= link_to smartmenu_path(menu.smartmenu.slug), 
-                class: 'btn-2025 btn-2025-secondary btn-2025-md',
-                target: '_blank' do %>
-              <i class="bi bi-box-arrow-up-right"></i>
-              <%= t('.preview_menu', default: 'Preview Menu') %>
-            <% end %>
-          <% end %>
-        </div>
-      <% else %>
-        <div class="alert alert-warning">
-          <i class="bi bi-exclamation-triangle"></i>
-          <%= t('.no_public_url', default: 'Public menu URL not available yet. Save your menu to generate a QR code.') %>
-        </div>
-      <% end %>
+  <% else %>
+    <div class="qr-placeholder">
+      <i class="bi bi-qr-code"></i>
+      <p class="mt-2">
+        <%= t('.qr_not_available', default: 'QR code will appear here once menu is published') %>
+      </p>
     </div>
-  </div>
+  <% end %>
 </div>
 
 <!-- Download Options -->
-<div class="content-card-2025">
+<div class="content-card-2025 py-4">
   <h2 class="content-card-title">
     <i class="bi bi-download"></i>
     <%= t('.download_options', default: 'Download Options') %>
@@ -121,7 +113,7 @@
 </div>
 
 <!-- QR Code Usage Tips -->
-<div class="content-card-2025">
+<div class="content-card-2025 py-4">
   <h2 class="content-card-title">
     <i class="bi bi-lightbulb"></i>
     <%= t('.usage_tips', default: 'Usage Tips') %>
@@ -182,20 +174,14 @@
     text-align: center;
     padding: var(--space-6);
     color: var(--color-gray-400);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   
   .qr-placeholder i {
     font-size: 4rem;
-  }
-  
-  .url-display {
-    padding: var(--space-3);
-    background: var(--color-gray-50);
-    border: 1px solid var(--color-gray-200);
-    border-radius: var(--radius-md);
-    font-family: monospace;
-    word-break: break-all;
-    font-size: var(--text-sm);
   }
   
   .download-grid {
@@ -249,10 +235,18 @@
 
 <script>
   function copyToClipboard() {
-    const urlText = document.querySelector('.url-display').textContent.trim();
-    navigator.clipboard.writeText(urlText).then(() => {
-      alert('<%= t('.url_copied', default: 'URL copied to clipboard!') %>');
-    });
+    // Get the menu slug and construct the URL with server-side protocol
+    const slug = document.querySelector('.qrSlug');
+    const host = document.querySelector('#qrHost');
+    const protocol = document.querySelector('#qrProtocol');
+    if (slug && host && protocol) {
+      // Remove trailing colon from protocol if present
+      const cleanProtocol = protocol.textContent.trim().replace(/:$/, '');
+      const url = `${cleanProtocol}://${host.textContent.trim()}/m/${slug.textContent.trim()}`;
+      navigator.clipboard.writeText(url).then(() => {
+        alert('<%= t('.url_copied', default: 'URL copied to clipboard!') %>');
+      });
+    }
   }
   
   // Initialize styled QR code when section loads

@@ -6,61 +6,82 @@
 <% menu = local_assigns[:menu] || @menu %>
 <% restaurant = menu.restaurant %>
 
-<!-- Sections Header -->
-<div class="content-card-2025">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="content-card-title mb-0">
-      <i class="bi bi-layout-text-sidebar"></i>
-      <%= t('.menu_sections', default: 'Menu Sections') %>
-    </h2>
-    
-    <%= link_to new_restaurant_menu_menusection_path(restaurant, menu), 
-        class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+<!-- Quick Actions Card -->
+<div class="quick-actions-card">
+  <h2 class="quick-actions-title">
+    <i class="bi bi-lightning-charge"></i>
+    <%= t('.quick_actions', default: 'Quick Actions') %>
+  </h2>
+  
+  <div class="quick-actions-grid">
+    <%= link_to new_restaurant_menu_menusection_path(restaurant, menu), class: 'quick-action-btn' do %>
       <i class="bi bi-plus-circle"></i>
-      <%= t('.add_section', default: 'Add Section') %>
+      <span><%= t('.add_section', default: 'Add Section') %></span>
+    <% end %>
+    
+    <% if menu.smartmenu&.slug %>
+      <%= link_to smartmenu_path(menu.smartmenu.slug), 
+          class: 'quick-action-btn',
+          target: '_blank' do %>
+        <i class="bi bi-eye"></i>
+        <span><%= t('.preview_menu', default: 'Preview Menu') %></span>
+      <% end %>
     <% end %>
   </div>
+</div>
+
+<!-- Sections List -->
+<div class="content-card-2025 py-4">
+  <h2 class="content-card-title">
+    <i class="bi bi-layout-text-sidebar"></i>
+    <%= t('.menu_sections', default: 'Menu Sections') %>
+  </h2>
   
   <p class="text-muted mb-4">
     <%= t('.sections_description', default: 'Organize your menu into sections like Appetizers, Main Courses, Desserts, etc.') %>
   </p>
   
   <% if menu.menusections.any? %>
-    <!-- Sections List -->
-    <div class="sections-list"
-         data-controller="sortable"
-         data-sortable-url-value="<%= reorder_restaurant_menu_menusections_path(restaurant, menu) %>"
-         data-sortable-handle-value=".section-handle">
-      <% menu.menusections.order(:sequence).each do |section| %>
-        <div class="section-card" data-sortable-id="<%= section.id %>">
-          <div class="section-handle">
-            <i class="bi bi-grip-vertical text-muted"></i>
-          </div>
-          
-          <div class="section-content">
-            <h4 class="section-title"><%= section.name %></h4>
-            <div class="section-meta">
-              <span class="badge bg-secondary">
-                <%= section.menuitems.count %> <%= t('.items', default: 'items') %>
+    <!-- Sections Table -->
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th style="width: 40px;"></th>
+            <th><%= t('.name', default: 'Name') %></th>
+            <th class="text-end"><%= t('.items', default: 'Items') %></th>
+            <th class="text-end">
+              <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                <i class="bi bi-gear"></i>
               </span>
-            </div>
-          </div>
-          
-          <div class="section-actions">
-            <%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section), 
-                class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
-              <i class="bi bi-pencil"></i> <%= t('.edit', default: 'Edit') %>
-            <% end %>
-            
-            <%= link_to restaurant_menu_menusection_path(restaurant, menu, section), 
-                method: :delete,
-                data: { confirm: t('.confirm_delete', default: 'Delete this section?') },
-                class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
-              <i class="bi bi-trash"></i>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
+            </th>
+          </tr>
+        </thead>
+        <tbody data-controller="sortable"
+               data-sortable-url-value="<%= reorder_restaurant_menu_menusections_path(restaurant, menu) %>"
+               data-sortable-handle-value=".section-handle">
+          <% menu.menusections.order(:sequence).each do |section| %>
+            <tr data-sortable-id="<%= section.id %>">
+              <td class="section-handle" style="width: 40px; cursor: grab;">
+                <i class="bi bi-grip-vertical text-muted"></i>
+              </td>
+              <td>
+                <strong><%= section.name %></strong>
+              </td>
+              <td class="text-end">
+                <%= section.menuitems.count %>
+              </td>
+              <td class="text-end">
+                <%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section), 
+                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                    data: { turbo_frame: '_top' } do %>
+                  <i class="bi bi-pencil"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   <% else %>
     <!-- Empty State -->
@@ -80,56 +101,14 @@
 </div>
 
 <style>
-  .sections-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-  
-  .section-card {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    background: var(--color-gray-50);
-    border: 1px solid var(--color-gray-200);
-    border-radius: var(--radius-lg);
-    transition: all var(--transition-base);
-  }
-  
-  .section-card:hover {
-    border-color: var(--color-gray-300);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
+  /* Section drag handle styles */
   .section-handle {
     cursor: grab;
-    padding: var(--space-2);
+    user-select: none;
   }
   
   .section-handle:active {
     cursor: grabbing;
-  }
-  
-  .section-content {
-    flex: 1;
-  }
-  
-  .section-title {
-    font-size: var(--text-lg);
-    font-weight: var(--font-semibold);
-    margin: 0 0 var(--space-2) 0;
-  }
-  
-  .section-meta {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-  }
-  
-  .section-actions {
-    display: flex;
-    gap: var(--space-2);
   }
   
   /* Sortable states */

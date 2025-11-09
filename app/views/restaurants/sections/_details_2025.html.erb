@@ -135,6 +135,95 @@
   <% end %>
 </div>
 
+<!-- Address & Location -->
+<div class="content-card-2025 py-4">
+  <h2 class="content-card-title">
+    <i class="bi bi-geo-alt"></i>
+    <%= t('.location', default: 'Location & Address') %>
+  </h2>
+  
+  <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
+    <div class="form-group-2025 mb-4">
+      <%= form.label :address1, class: 'form-label-2025' do %>
+        <%= t('activerecord.attributes.restaurant.address', default: 'Street Address') %>
+        <span class="text-danger">*</span>
+      <% end %>
+      <%= form.text_field :address1, 
+          class: 'form-control-2025',
+          placeholder: t('.address_placeholder', default: '123 Main Street'),
+          required: true %>
+      <%= form.hidden_field :latitude %>
+      <%= form.hidden_field :longitude %>
+      <%= form.hidden_field :country %>
+      <div class="form-help-2025">
+        <%= t('.address_help', default: 'Your restaurant\'s street address') %>
+      </div>
+    </div>
+    
+    <div class="form-group-2025 mb-4">
+      <%= form.label :address2, class: 'form-label-2025' do %>
+        <%= t('activerecord.attributes.restaurant.address2', default: 'Apartment, suite, etc.') %>
+      <% end %>
+      <%= form.text_field :address2, 
+          class: 'form-control-2025',
+          placeholder: t('.address2_placeholder', default: 'Suite 100 (optional)') %>
+      <div class="form-help-2025">
+        <%= t('.address2_help', default: 'Additional address details') %>
+      </div>
+    </div>
+    
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <div class="form-group-2025">
+          <%= form.label :city, class: 'form-label-2025' do %>
+            <%= t('activerecord.attributes.restaurant.city', default: 'City') %>
+            <span class="text-danger">*</span>
+          <% end %>
+          <%= form.text_field :city, 
+              class: 'form-control-2025',
+              required: true %>
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <div class="form-group-2025">
+          <%= form.label :state, class: 'form-label-2025' do %>
+            <%= t('activerecord.attributes.restaurant.state', default: 'State/Province') %>
+          <% end %>
+          <%= form.text_field :state, 
+              class: 'form-control-2025' %>
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <div class="form-group-2025">
+          <%= form.label :postcode, class: 'form-label-2025' do %>
+            <%= t('activerecord.attributes.restaurant.postcode', default: 'ZIP/Postal Code') %>
+          <% end %>
+          <%= form.text_field :postcode, 
+              class: 'form-control-2025' %>
+        </div>
+      </div>
+    </div>
+    
+    <% if restaurant.latitude.present? && restaurant.longitude.present? %>
+      <div class="location-map-container mb-3">
+        <div class="location-map-header">
+          <i class="bi bi-check-circle-fill text-success me-2"></i>
+          <span class="text-success fw-semibold">
+            <%= t('.location_verified', default: 'Location verified') %>
+          </span>
+        </div>
+        <div id="restaurant-map" class="restaurant-map" 
+             data-latitude="<%= restaurant.latitude %>" 
+             data-longitude="<%= restaurant.longitude %>"
+             data-name="<%= restaurant.name %>">
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
 <style>
   .form-help-2025 {
     font-size: var(--text-sm);
@@ -145,4 +234,138 @@
   .text-danger {
     color: var(--color-danger);
   }
+  
+  .location-map-container {
+    margin-top: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .location-map-header {
+    padding: 0.75rem 1rem;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+  }
+  
+  .restaurant-map {
+    width: 100%;
+    height: 400px;
+    background-color: #f3f4f6;
+  }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async function() {
+    const mapElement = document.getElementById('restaurant-map');
+    if (!mapElement) return;
+    
+    const latitude = parseFloat(mapElement.dataset.latitude);
+    const longitude = parseFloat(mapElement.dataset.longitude);
+    const restaurantName = mapElement.dataset.name;
+    
+    if (isNaN(latitude) || isNaN(longitude)) return;
+    
+    // Show loading state
+    mapElement.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; padding: 2rem;">
+        <div class="spinner-border text-primary" role="status" style="margin-bottom: 1rem;">
+          <span class="visually-hidden">Loading map...</span>
+        </div>
+        <p style="color: #6b7280; margin: 0;">Loading map...</p>
+      </div>
+    `;
+    
+    // Function to wait for Google Maps to be fully loaded
+    async function waitForGoogleMaps(maxAttempts = 20) {
+      for (let i = 0; i < maxAttempts; i++) {
+        if (typeof google !== 'undefined' && google.maps && google.maps.Map) {
+          return true;
+        }
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+      return false;
+    }
+    
+    try {
+      // Load Google Maps API if not already loaded
+      if (typeof google === 'undefined' || !google.maps || !google.maps.Map) {
+        console.log('[RestaurantMap] Loading Google Maps API...');
+        
+        if (typeof window.initGoogleMaps === 'function') {
+          await window.initGoogleMaps();
+          // Wait for the API to be fully initialized
+          const loaded = await waitForGoogleMaps();
+          if (!loaded) {
+            throw new Error('Google Maps API did not initialize in time');
+          }
+        } else {
+          throw new Error('Google Maps loader not available');
+        }
+      }
+      
+      console.log('[RestaurantMap] Google Maps API ready, initializing map...');
+      
+      // Clear loading state
+      mapElement.innerHTML = '';
+      
+      const position = { lat: latitude, lng: longitude };
+      
+      // Initialize Google Map (without mapId and styles to avoid API errors)
+      const map = new google.maps.Map(mapElement, {
+        center: position,
+        zoom: 15,
+        mapTypeControl: true,
+        streetViewControl: true,
+        fullscreenControl: true
+      });
+      
+      // Add marker for restaurant location (use legacy Marker for compatibility)
+      const marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        title: restaurantName,
+        animation: google.maps.Animation.DROP
+      });
+      
+      // Add info window
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div style="padding: 8px;">
+            <h6 style="margin: 0 0 4px 0; font-weight: 600;">${restaurantName}</h6>
+            <p style="margin: 0; font-size: 0.875rem; color: #6b7280;">
+              ${latitude.toFixed(6)}, ${longitude.toFixed(6)}
+            </p>
+          </div>
+        `
+      });
+      
+      // Show info window on marker click
+      marker.addListener('click', function() {
+        infoWindow.open(map, marker);
+      });
+      
+      // Auto-open info window briefly
+      setTimeout(() => {
+        infoWindow.open(map, marker);
+        setTimeout(() => infoWindow.close(), 3000);
+      }, 500);
+      
+      console.log('[RestaurantMap] Map initialized successfully');
+      
+    } catch (error) {
+      // Fallback: Display coordinates if Google Maps fails to load
+      console.error('[RestaurantMap] Failed to load Google Maps:', error);
+      mapElement.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; padding: 2rem;">
+          <i class="bi bi-map" style="font-size: 3rem; color: #9ca3af; margin-bottom: 1rem;"></i>
+          <p style="color: #6b7280; margin: 0; font-weight: 500;">${restaurantName}</p>
+          <p style="color: #6b7280; margin: 0.5rem 0 0 0;">Location: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}</p>
+          <p style="color: #9ca3af; font-size: 0.875rem; margin-top: 0.5rem;">Map could not be loaded</p>
+        </div>
+      `;
+    }
+  });
+</script>
