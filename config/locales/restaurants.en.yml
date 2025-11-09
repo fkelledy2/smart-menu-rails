@@ -112,3 +112,75 @@ en:
       loading: Loading...
     showTracks:
       tracks: Tracks
+    edit_2025:
+      subtitle: Manage your restaurant configuration
+    sidebar_2025:
+      restaurant: RESTAURANT
+      details: Details
+      schedule: Schedule
+      localization: Localization
+      menus: MENUS
+      all_menus: All Menus
+      allergens: Allergens
+      sizes: Sizes
+      tables: TABLES
+      team: TEAM
+      staff: Staff
+      financials: FINANCIALS
+      taxes_and_tips: Taxes & Tips
+      ordering: Ordering
+      setup: SETUP
+      settings: Settings
+      qr_codes: QR Codes
+      jukebox: Jukebox
+      advanced: Advanced
+    sections:
+      details_2025:
+        quick_actions: Quick Actions
+        new_menu: New Menu
+        import_menu: Import Menu
+        overview: Overview
+        menus: Menus
+        items: Items
+        tables: Tables
+        staff: Staff
+        restaurant_details: Restaurant Details
+        restaurant_name: Restaurant Name
+        restaurant_name_placeholder: e.g., Bella Italia
+        restaurant_name_help: The name customers will see
+        description: Description
+        description_placeholder: Describe your restaurant...
+        description_help: Brief description of your restaurant
+        status: Status
+        active: Active
+        inactive: Inactive
+        status_help: Only active restaurants are visible to customers
+        phone: Phone
+        phone_placeholder: e.g., +1 (555) 123-4567
+        phone_help: Contact number for customers
+        website: Website
+        website_placeholder: https://example.com
+        website_help: Your restaurant website
+        currency: Currency
+        currency_help: Currency used for pricing
+        timezone: Timezone
+        timezone_help: Local timezone for operating hours
+        location: Location
+        address: Address
+        address_placeholder: Street address
+        address_help: Full street address
+        city: City
+        city_placeholder: City name
+        state: State/Province
+        state_placeholder: State or province
+        postcode: Postal Code
+        postcode_placeholder: e.g., 12345
+        country: Country
+        country_placeholder: Country
+        latitude: Latitude
+        latitude_placeholder: e.g., 40.7128
+        longitude: Longitude
+        longitude_placeholder: e.g., -74.0060
+        loading_map: Loading map...
+        map_error: Map could not be loaded
+        location_label: 'Location:'

@@ -1,0 +1,148 @@
+---
+it:
+  restaurants:
+    sections:
+      menus_2025:
+        quick_actions: Azioni Rapide
+        new_menu: Nuovo Menù
+        import_menu: Importa Menù
+        all_menus: Tutti i Menù
+        active_menus: Menù Attivi
+        inactive_menus: Menù Inattivi
+        filter_all: Tutti
+        filter_active: Attivi
+        filter_inactive: Inattivi
+        no_menus: Nessun menù ancora
+        no_menus_description: Crea il tuo primo menù per iniziare
+        create_menu: Crea Menù
+        drag_to_reorder: Trascina per riordinare
+        edit: Modifica
+        duplicate: Duplica
+        confirm_delete: Sei sicuro?
+        delete: Elimina
+        items_count: "%{count} articoli"
+      tables_2025:
+        quick_actions: Azioni Rapide
+        add_table: Aggiungi Tavolo
+        table_settings: Impostazioni Tavoli
+        table_number: Tavolo
+        capacity: Capacità
+        qr_code: Codice QR
+        actions: Azioni
+        view: Visualizza
+        view_qr: Vedi QR
+        view_qr_code: Visualizza codice QR per questo tavolo
+        no_smartmenu: Nessun codice QR generato ancora
+        confirm_delete: Eliminare questo tavolo?
+        no_tables: Nessun tavolo ancora
+        no_tables_description: Aggiungi il tuo primo tavolo per iniziare
+      allergens_2025:
+        quick_actions: Azioni Rapide
+        add_allergen: Aggiungi Allergene
+        allergen_management: Gestione Allergeni
+        allergen_name: Nome
+        symbol: Simbolo
+        status: Stato
+        actions: Azioni
+        no_allergens: Nessun allergene ancora
+        no_allergens_description: Aggiungi allergeni per aiutare i clienti a fare scelte informate
+      sizes_2025:
+        quick_actions: Azioni Rapide
+        add_size: Aggiungi Dimensione
+        size_management: Gestione Dimensioni
+        size_name: Nome
+        price_modifier: Modificatore Prezzo
+        status: Stato
+        actions: Azioni
+        no_sizes: Nessuna dimensione ancora
+        no_sizes_description: Aggiungi opzioni di dimensione per gli articoli del menù
+      catalog_2025:
+        quick_actions: Azioni Rapide
+        add_tax: Aggiungi Tassa
+        add_tip: Aggiungi Mancia
+        taxes_and_tips: Tasse e Mance
+        taxes: Tasse
+        tips: Mance
+        no_taxes: Nessuna tassa configurata
+        no_taxes_description: Aggiungi le tasse per la tua regione
+        no_tips: Nessuna opzione di mancia configurata
+        no_tips_description: Aggiungi importi suggeriti per le mance
+      staff_2025:
+        quick_actions: Azioni Rapide
+        add_staff: Aggiungi Membro Staff
+        staff_management: Gestione Staff
+        staff_member_name: Nome
+        role: Ruolo
+        email: Email
+        status: Stato
+        actions: Azioni
+        no_staff: Nessun membro dello staff ancora
+        no_staff_description: Invita membri del team per aiutare a gestire il tuo ristorante
+      settings_2025:
+        feature_toggles: Attivazione Funzionalità
+        display_images: Mostra Immagini
+        display_images_help: Mostra immagini degli articoli nel menù digitale
+        display_images_popup: Mostra Immagini in Popup
+        display_images_popup_help: Apri immagini degli articoli in un popup quando cliccate
+        allow_ordering: Permetti Ordinazioni
+        allow_ordering_help: Abilita ordinazioni online per i clienti
+        inventory_tracking: Tracciamento Inventario
+        inventory_tracking_help: Traccia disponibilità articoli (Prossimamente)
+      qrcodes_2025:
+        quick_actions: Azioni Rapide
+        view_all_qr: Visualizza Tutti i Codici QR
+        qr_code_types: Tipi di Codice QR
+        general_qr: Codice QR Menù Generale
+        general_qr_desc: Codice QR singolo per tutti i menù. Ideale per piccoli ristoranti con una sede.
+        table_qr: Codice QR Specifico Tavolo
+        table_qr_desc: Codice QR univoco per ogni tavolo. Abilita ordinazioni e tracciamento per tavolo.
+        menu_qr: Codice QR Specifico Menù
+        menu_qr_desc: Codici QR separati per ogni menù. Ottimo per menù colazione, pranzo, cena.
+        setup_tables: Configura Tavoli
+        view_menus: Visualizza Menù
+        customization: Opzioni di Personalizzazione
+        logo: Logo
+        logo_desc: Aggiungi il logo del tuo ristorante al centro dei codici QR
+        upload_logo: Carica Logo
+        colors: Colori
+        colors_desc: Scegli colori personalizzati per i tuoi codici QR
+        customize_colors: Personalizza Colori
+      hours_2025:
+        quick_actions: Azioni Rapide
+        opening_hours: Orari di Apertura
+        opening_hours_desc: Imposta gli orari di apertura del tuo ristorante per ogni giorno della settimana
+        closed: Chiuso
+        open_24h: Aperto 24h
+        custom: Personalizzato
+        monday: Lunedì
+        tuesday: Martedì
+        wednesday: Mercoledì
+        thursday: Giovedì
+        friday: Venerdì
+        saturday: Sabato
+        sunday: Domenica
+      localization_2025:
+        quick_actions: Azioni Rapide
+        add_language: Aggiungi Lingua
+        language_settings: Impostazioni Lingua
+        language_settings_desc: Gestisci le lingue disponibili nel tuo ristorante
+        language: Lingua
+        locale_code: Codice
+        status: Stato
+        actions: Azioni
+        quick_add: Aggiungi Rapidamente Lingue Popolari
+        spanish: Spagnolo
+        french: Francese
+        german: Tedesco
+        italian: Italiano
+        add: Aggiungi
+        no_languages: Nessuna lingua configurata
+        no_languages_description: Aggiungi lingue per servire clienti internazionali
+      jukebox_2025:
+        jukebox: Jukebox
+        jukebox_desc: Connetti Spotify per permettere ai clienti di controllare la musica
+        spotify_status: Stato Spotify
+        not_connected: Non Connesso
+        connect_spotify: Connetti Spotify
+        disconnect: Disconnetti
+        connected_as: "Connesso come: %{user}"

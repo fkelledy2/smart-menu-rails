@@ -86,7 +86,7 @@
       <% menus.each do |menu| %>
         <div class="menu-card" data-sortable-id="<%= menu.id %>">
           <!-- Drag Handle -->
-          <div class="drag-handle" title="Drag to reorder">
+          <div class="drag-handle" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>">
             <i class="bi bi-grip-vertical"></i>
           </div>
           

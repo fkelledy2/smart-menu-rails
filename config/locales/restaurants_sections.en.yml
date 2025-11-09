@@ -1,0 +1,148 @@
+---
+en:
+  restaurants:
+    sections:
+      menus_2025:
+        quick_actions: Quick Actions
+        new_menu: New Menu
+        import_menu: Import Menu
+        all_menus: All Menus
+        active_menus: Active Menus
+        inactive_menus: Inactive Menus
+        filter_all: All
+        filter_active: Active
+        filter_inactive: Inactive
+        no_menus: No menus yet
+        no_menus_description: Create your first menu to get started
+        create_menu: Create Menu
+        drag_to_reorder: Drag to reorder
+        edit: Edit
+        duplicate: Duplicate
+        confirm_delete: Are you sure?
+        delete: Delete
+        items_count: "%{count} items"
+      tables_2025:
+        quick_actions: Quick Actions
+        add_table: Add Table
+        table_settings: Table Settings
+        table_number: Table
+        capacity: Capacity
+        qr_code: QR Code
+        actions: Actions
+        view: View
+        view_qr: View QR
+        view_qr_code: View QR Code for this table
+        no_smartmenu: No QR code generated yet
+        confirm_delete: Delete this table?
+        no_tables: No tables yet
+        no_tables_description: Add your first table to get started
+      allergens_2025:
+        quick_actions: Quick Actions
+        add_allergen: Add Allergen
+        allergen_management: Allergen Management
+        allergen_name: Name
+        symbol: Symbol
+        status: Status
+        actions: Actions
+        no_allergens: No allergens yet
+        no_allergens_description: Add allergens to help customers make informed choices
+      sizes_2025:
+        quick_actions: Quick Actions
+        add_size: Add Size
+        size_management: Size Management
+        size_name: Name
+        price_modifier: Price Modifier
+        status: Status
+        actions: Actions
+        no_sizes: No sizes yet
+        no_sizes_description: Add size options for menu items
+      catalog_2025:
+        quick_actions: Quick Actions
+        add_tax: Add Tax
+        add_tip: Add Tip
+        taxes_and_tips: Taxes & Tips
+        taxes: Taxes
+        tips: Tips
+        no_taxes: No taxes configured
+        no_taxes_description: Add taxes for your region
+        no_tips: No tip options configured
+        no_tips_description: Add suggested tip amounts
+      staff_2025:
+        quick_actions: Quick Actions
+        add_staff: Add Staff Member
+        staff_management: Staff Management
+        staff_member_name: Name
+        role: Role
+        email: Email
+        status: Status
+        actions: Actions
+        no_staff: No staff members yet
+        no_staff_description: Invite team members to help manage your restaurant
+      settings_2025:
+        feature_toggles: Feature Toggles
+        display_images: Display Images
+        display_images_help: Show menu item images in your digital menu
+        display_images_popup: Display Images in Popup
+        display_images_popup_help: Open menu item images in a popup modal when clicked
+        allow_ordering: Allow Ordering
+        allow_ordering_help: Enable online ordering for customers
+        inventory_tracking: Inventory Tracking
+        inventory_tracking_help: Track item availability (Coming Soon)
+      qrcodes_2025:
+        quick_actions: Quick Actions
+        view_all_qr: View All QR Codes
+        qr_code_types: QR Code Types
+        general_qr: General Menu QR
+        general_qr_desc: Single QR code for all menus. Best for small restaurants with one location.
+        table_qr: Table-Specific QR
+        table_qr_desc: Unique QR code for each table. Enables table ordering and tracking.
+        menu_qr: Menu-Specific QR
+        menu_qr_desc: Separate QR codes for each menu. Great for breakfast, lunch, dinner menus.
+        setup_tables: Setup Tables
+        view_menus: View Menus
+        customization: Customization Options
+        logo: Logo
+        logo_desc: Add your restaurant logo to the center of QR codes
+        upload_logo: Upload Logo
+        colors: Colors
+        colors_desc: Choose custom colors for your QR codes
+        customize_colors: Customize Colors
+      hours_2025:
+        quick_actions: Quick Actions
+        opening_hours: Opening Hours
+        opening_hours_desc: Set your restaurant's operating hours for each day of the week
+        closed: Closed
+        open_24h: Open 24h
+        custom: Custom
+        monday: Monday
+        tuesday: Tuesday
+        wednesday: Wednesday
+        thursday: Thursday
+        friday: Friday
+        saturday: Saturday
+        sunday: Sunday
+      localization_2025:
+        quick_actions: Quick Actions
+        add_language: Add Language
+        language_settings: Language Settings
+        language_settings_desc: Manage the languages available in your restaurant
+        language: Language
+        locale_code: Code
+        status: Status
+        actions: Actions
+        quick_add: Quick Add Popular Languages
+        spanish: Spanish
+        french: French
+        german: German
+        italian: Italian
+        add: Add
+        no_languages: No languages configured
+        no_languages_description: Add languages to serve international customers
+      jukebox_2025:
+        jukebox: Jukebox
+        jukebox_desc: Connect Spotify to let customers control the music
+        spotify_status: Spotify Status
+        not_connected: Not Connected
+        connect_spotify: Connect Spotify
+        disconnect: Disconnect
+        connected_as: "Connected as: %{user}"

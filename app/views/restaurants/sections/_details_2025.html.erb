@@ -281,9 +281,9 @@
     mapElement.innerHTML = `
       <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; padding: 2rem;">
         <div class="spinner-border text-primary" role="status" style="margin-bottom: 1rem;">
-          <span class="visually-hidden">Loading map...</span>
+          <span class="visually-hidden"><%= t('.loading_map', default: 'Loading map...') %></span>
         </div>
-        <p style="color: #6b7280; margin: 0;">Loading map...</p>
+        <p style="color: #6b7280; margin: 0;"><%= t('.loading_map', default: 'Loading map...') %></p>
       </div>
     `;
     
@@ -371,8 +371,8 @@
         <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; padding: 2rem;">
           <i class="bi bi-map" style="font-size: 3rem; color: #9ca3af; margin-bottom: 1rem;"></i>
           <p style="color: #6b7280; margin: 0; font-weight: 500;">${restaurantName}</p>
-          <p style="color: #6b7280; margin: 0.5rem 0 0 0;">Location: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}</p>
-          <p style="color: #9ca3af; font-size: 0.875rem; margin-top: 0.5rem;">Map could not be loaded</p>
+          <p style="color: #6b7280; margin: 0.5rem 0 0 0;"><%= t('.location_label', default: 'Location:') %> ${latitude.toFixed(6)}, ${longitude.toFixed(6)}</p>
+          <p style="color: #9ca3af; font-size: 0.875rem; margin-top: 0.5rem;"><%= t('.map_error', default: 'Map could not be loaded') %></p>
         </div>
       `;
     }
