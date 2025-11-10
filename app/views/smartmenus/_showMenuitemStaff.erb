@@ -24,7 +24,7 @@
                                             <% menuitem.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
                                                 <li>
                                                     <a class="dropdown-item" href="#">
-                                                        <button style="background: none!important;border: none;padding: 0!important;" type="button" class="addItemToOrder" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                        <button style="position:relative;bottom:-12px;border-radius: 8px 0 8px 0px;background: none!important;border: none;padding: 0!important;" type="button" class="addItemToOrder" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                                                             data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
                                                             data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
                                                             data-bs-ordr_id="<%= order.id %>"
