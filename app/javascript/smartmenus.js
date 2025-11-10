@@ -2,6 +2,9 @@ export function initSmartmenus() {
   // Initialize section tab auto-scroll on scroll spy
   initSectionTabAutoScroll();
   
+  // Initialize time-based menu restrictions
+  initMenuTimeRestrictions();
+  
   function smlink(cell, formatterParams) {
     const id = cell.getValue();
     const name = cell.getRow();
@@ -123,4 +126,74 @@ function initSectionTabAutoScroll() {
       }, 100);
     });
   });
+}
+
+/**
+ * Initialize time-based menu restrictions
+ * Disables "Add to Order" buttons for menu items in restricted sections
+ * when the current time is outside the section's available time range
+ */
+function initMenuTimeRestrictions() {
+  // Get current time in minutes since midnight
+  const date = new Date();
+  const currentOffset = date.getHours() * 60 + date.getMinutes();
+  
+  // Find all "Add to Order" buttons
+  const addToOrderButtons = document.querySelectorAll('.addItemToOrder');
+  
+  if (addToOrderButtons.length === 0) return;
+  
+  // Check each button's time restrictions
+  addToOrderButtons.forEach(button => {
+    const fromOffset = parseInt(button.getAttribute('data-bs-menusection_from_offset'));
+    const toOffset = parseInt(button.getAttribute('data-bs-menusection_to_offset'));
+    
+    // If button has time restrictions (from/to offsets are set)
+    if (!isNaN(fromOffset) && !isNaN(toOffset)) {
+      // Disable button if current time is outside the valid range
+      if (currentOffset < fromOffset || currentOffset > toOffset) {
+        button.disabled = true;
+        button.classList.add('disabled');
+        button.style.opacity = '0.5';
+        button.style.cursor = 'not-allowed';
+        
+        // Add tooltip to explain why it's disabled
+        button.setAttribute('title', 'This item is not available at this time');
+      } else {
+        // Ensure button is enabled if we're within the valid time range
+        button.disabled = false;
+        button.classList.remove('disabled');
+        button.style.opacity = '';
+        button.style.cursor = '';
+        button.removeAttribute('title');
+      }
+    }
+  });
+  
+  // Re-check restrictions every minute to update button states
+  setInterval(() => {
+    const date = new Date();
+    const currentOffset = date.getHours() * 60 + date.getMinutes();
+    
+    addToOrderButtons.forEach(button => {
+      const fromOffset = parseInt(button.getAttribute('data-bs-menusection_from_offset'));
+      const toOffset = parseInt(button.getAttribute('data-bs-menusection_to_offset'));
+      
+      if (!isNaN(fromOffset) && !isNaN(toOffset)) {
+        if (currentOffset < fromOffset || currentOffset > toOffset) {
+          button.disabled = true;
+          button.classList.add('disabled');
+          button.style.opacity = '0.5';
+          button.style.cursor = 'not-allowed';
+          button.setAttribute('title', 'This item is not available at this time');
+        } else {
+          button.disabled = false;
+          button.classList.remove('disabled');
+          button.style.opacity = '';
+          button.style.cursor = '';
+          button.removeAttribute('title');
+        }
+      }
+    });
+  }, 60000); // Check every minute (60000 milliseconds)
 }
