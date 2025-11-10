@@ -63,10 +63,6 @@
     <!-- Section Tabs -->
     <div class="sections-tabs-container">
       <nav id="navbar-example2" class="sections-tabs">
-        <a class="section-tab" href="#menusection_allergyns">
-          <%= t(".allergyns", default: 'Allergens') %>
-        </a>
-        
         <% @menu.menusections.order(:sequence).each do |menusection| %>
           <a class="section-tab sectionnav" href="#menusection_<%= menusection.id %>">
             <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
@@ -78,6 +74,9 @@
             <% end %>
           </a>
         <% end %>
+        <a class="section-tab" href="#menusection_allergyns">
+          <%= t(".allergyns", default: 'Allergens') %>
+        </a>
       </nav>
     </div>
   </div>

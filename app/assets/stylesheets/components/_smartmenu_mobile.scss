@@ -117,7 +117,8 @@
     align-items: center;
     
     .menu-name {
-      font-size: 0.875rem;
+      font-size: 1.125rem;
+      font-weight: 700;
       color: #666;
       flex: 1;
       min-width: 0;
@@ -148,7 +149,7 @@
   .sections-filter-row {
     display: flex;
     gap: 8px;
-    padding: 0 16px;
+    padding: 0;
     margin-bottom: 12px;
     
     // Search input - full width, prominent
@@ -157,7 +158,7 @@
       height: 44px; // Touch-friendly minimum
       padding: 0 16px;
       border: 2px solid #e5e5e5;
-      border-radius: 22px;
+      border-radius: 5px;
       font-size: 1rem;
       background: #f9fafb;
       transition: all 0.2s ease;
@@ -221,7 +222,7 @@
   .sections-tabs-container {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 0 16px 8px;
+    padding: 0 8px 8px 0;
     
     // Show scrollbar on mobile for clarity
     &::-webkit-scrollbar {
@@ -250,7 +251,7 @@
         flex-shrink: 0;
         height: 40px;
         padding: 0 20px;
-        border-radius: 20px;
+        border-radius: 5px;
         border: 2px solid #e5e5e5;
         background: white;
         font-size: 0.875rem;
