@@ -1,0 +1,376 @@
+// ============================================================================
+// WELCOME BANNER - Phase 2
+// First-time user onboarding and instructions
+// ============================================================================
+
+.welcome-banner {
+  position: relative;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  color: white;
+  padding: 24px 16px;
+  margin: 16px 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  animation: slideDown 0.4s ease-out;
+  overflow: hidden;
+  
+  // Decorative background pattern
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    z-index: 0;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    z-index: 0;
+  }
+  
+  .welcome-content {
+    position: relative;
+    z-index: 1;
+    
+    .welcome-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      
+      &::before {
+        content: "👋";
+      }
+    }
+    
+    .welcome-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    
+    .welcome-subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    
+    .welcome-steps {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+      
+      li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+        font-size: 0.9375rem;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        .step-icon {
+          flex-shrink: 0;
+          width: 24px;
+          height: 24px;
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          font-size: 0.875rem;
+        }
+        
+        .step-text {
+          flex: 1;
+          padding-top: 2px;
+        }
+      }
+    }
+    
+    .welcome-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+      
+      .btn-welcome {
+        flex: 1;
+        min-height: 44px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        
+        &.primary {
+          background: white;
+          color: #dc2626;
+          
+          &:active {
+            transform: scale(0.96);
+            background: #f0f0f0;
+          }
+        }
+        
+        &.secondary {
+          background: rgba(255, 255, 255, 0.2);
+          color: white;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          
+          &:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.3);
+          }
+        }
+      }
+    }
+  }
+  
+  .welcome-dismiss {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 2;
+    
+    &:active {
+      transform: scale(0.9);
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    i {
+      display: block;
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================================================
+// COMPACT WELCOME BANNER (after first interaction)
+// ============================================================================
+
+.welcome-banner-compact {
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  color: white;
+  padding: 12px 16px;
+  margin: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+  
+  .compact-icon {
+    font-size: 24px;
+  }
+  
+  .compact-text {
+    flex: 1;
+    
+    .compact-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      margin-bottom: 2px;
+    }
+    
+    .compact-subtitle {
+      font-size: 0.8125rem;
+      opacity: 0.8;
+    }
+  }
+  
+  .compact-arrow {
+    font-size: 1.25rem;
+    opacity: 0.6;
+  }
+}
+
+// ============================================================================
+// HELP TIP BANNER (contextual help)
+// ============================================================================
+
+.help-tip-banner {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+  padding: 12px 16px;
+  margin: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  
+  .help-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+  
+  .help-content {
+    flex: 1;
+    
+    .help-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      margin-bottom: 4px;
+      color: #1e3a8a;
+    }
+    
+    .help-text {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: #1e40af;
+    }
+  }
+  
+  .help-dismiss {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    background: none;
+    border: none;
+    color: #3b82f6;
+    font-size: 1.125rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    
+    &:active {
+      opacity: 1;
+    }
+  }
+}
+
+// ============================================================================
+// FADE OUT ANIMATION (when dismissed)
+// ============================================================================
+
+.welcome-banner,
+.welcome-banner-compact,
+.help-tip-banner {
+  &.dismissing {
+    animation: fadeOut 0.3s ease-out forwards;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 0;
+  }
+}
+
+// ============================================================================
+// MOBILE OPTIMIZATION
+// ============================================================================
+
+@media (max-width: 576px) {
+  .welcome-banner {
+    margin: 12px 8px;
+    padding: 20px 12px;
+    
+    .welcome-content {
+      .welcome-title {
+        font-size: 1.25rem;
+      }
+      
+      .welcome-subtitle {
+        font-size: 0.9375rem;
+      }
+      
+      .welcome-steps li {
+        font-size: 0.875rem;
+      }
+      
+      .welcome-actions {
+        flex-direction: column;
+        
+        .btn-welcome {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// ============================================================================
+// ACCESSIBILITY
+// ============================================================================
+
+.welcome-banner,
+.welcome-banner-compact,
+.help-tip-banner {
+  // Keyboard focus
+  button:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+}
+
+// No animations for users who prefer reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .welcome-banner,
+  .welcome-banner-compact,
+  .help-tip-banner {
+    animation: none !important;
+    transition: none !important;
+  }
+}

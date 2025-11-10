@@ -1,0 +1,115 @@
+<%# Welcome Banner for First-Time Users - Phase 2 %>
+<div class="welcome-banner" id="welcomeBanner" data-dismissible="true">
+  <button type="button" class="welcome-dismiss" onclick="dismissWelcomeBanner()" aria-label="<%= t('.dismiss', default: 'Dismiss') %>">
+    <i class="bi bi-x"></i>
+  </button>
+  
+  <div class="welcome-content">
+    <div class="welcome-icon"></div>
+    
+    <h2 class="welcome-title">
+      <%= t('.welcome_title', default: 'Welcome to %{restaurant_name}!') % { restaurant_name: @restaurant.name } %>
+    </h2>
+    
+    <p class="welcome-subtitle">
+      <%= t('.welcome_subtitle', default: 'Browse our menu and order from your device') %>
+    </p>
+    
+    <ul class="welcome-steps">
+      <li>
+        <span class="step-icon">1</span>
+        <span class="step-text"><%= t('.step_1', default: 'Browse menu items and tap to add to your order') %></span>
+      </li>
+      <li>
+        <span class="step-icon">2</span>
+        <span class="step-text"><%= t('.step_2', default: 'Review your cart using the red button') %></span>
+      </li>
+      <li>
+        <span class="step-icon">3</span>
+        <span class="step-text"><%= t('.step_3', default: 'Submit your order and we\'ll bring it to your table') %></span>
+      </li>
+    </ul>
+    
+    <div class="welcome-actions">
+      <button type="button" class="btn-welcome primary" onclick="dismissWelcomeBanner()">
+        <%= t('.got_it', default: 'Got It!') %>
+      </button>
+      <button type="button" class="btn-welcome secondary" data-bs-toggle="modal" data-bs-target="#helpModal">
+        <%= t('.learn_more', default: 'Learn More') %>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function dismissWelcomeBanner() {
+    const banner = document.getElementById('welcomeBanner');
+    if (banner) {
+      banner.classList.add('dismissing');
+      setTimeout(() => {
+        banner.style.display = 'none';
+        // Store in localStorage so it doesn't show again
+        localStorage.setItem('welcomeBannerDismissed_<%= @smartmenu&.id %>', 'true');
+      }, 300);
+    }
+  }
+  
+  // Check if banner was already dismissed
+  document.addEventListener('DOMContentLoaded', function() {
+    const dismissed = localStorage.getItem('welcomeBannerDismissed_<%= @smartmenu&.id %>');
+    const banner = document.getElementById('welcomeBanner');
+    if (dismissed && banner) {
+      banner.style.display = 'none';
+    }
+  });
+</script>
+
+<%# Compact Welcome Banner (shown after first interaction) %>
+<div class="welcome-banner-compact" id="welcomeBannerCompact" style="display: none;" onclick="showWelcomeDetails()">
+  <div class="compact-icon">💡</div>
+  <div class="compact-text">
+    <div class="compact-title"><%= t('.need_help', default: 'Need Help?') %></div>
+    <div class="compact-subtitle"><%= t('.tap_to_learn', default: 'Tap to learn how to order') %></div>
+  </div>
+  <div class="compact-arrow">
+    <i class="bi bi-chevron-right"></i>
+  </div>
+</div>
+
+<script>
+  function showWelcomeDetails() {
+    // Show help modal or expand banner
+    const modal = new bootstrap.Modal(document.getElementById('helpModal'));
+    modal.show();
+  }
+</script>
+
+<%# Help Tip Banner (contextual help) %>
+<% if defined?(show_help_tip) && show_help_tip %>
+  <div class="help-tip-banner" id="helpTipBanner">
+    <div class="help-icon">
+      <i class="bi bi-lightbulb"></i>
+    </div>
+    <div class="help-content">
+      <div class="help-title"><%= t('.tip_title', default: 'Quick Tip') %></div>
+      <div class="help-text">
+        <%= defined?(help_text) ? help_text : t('.default_tip', default: 'Tap the floating red button to view your cart at any time.') %>
+      </div>
+    </div>
+    <button type="button" class="help-dismiss" onclick="dismissHelpTip()" aria-label="<%= t('.dismiss', default: 'Dismiss') %>">
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+  
+  <script>
+    function dismissHelpTip() {
+      const tipBanner = document.getElementById('helpTipBanner');
+      if (tipBanner) {
+        tipBanner.classList.add('dismissing');
+        setTimeout(() => {
+          tipBanner.style.display = 'none';
+        }, 300);
+      }
+    }
+  </script>
+<% end %>

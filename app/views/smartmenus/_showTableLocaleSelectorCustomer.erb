@@ -1,6 +1,6 @@
 <div class="d-flex gap-1" role="group">
     <div class="btn-group" role="group">
-        <button id="table-selector-customer" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <button id="table-selector-customer" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 0px 0 8px 8px;">
             <% if tablesetting %>
                 <%= tablesetting.name %>
             <% else %>
@@ -10,7 +10,7 @@
     </div>
     <% if Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active').count > 0 %>
         <div class="btn-group" role="group" style="position: relative; z-index: 9999;">
-            <button id="lovale-actions" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 60px;">
+            <button id="lovale-actions" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 0px 0 8px 8px; min-width: 60px;">
                     <% if ordrparticipant && ordrparticipant.preferredlocale %>
                         <img src="<%= restaurant.getLocale(ordrparticipant.preferredlocale).flag %>" class="rounded-1 border border-white flag-icon-selected">
                     <% else %>

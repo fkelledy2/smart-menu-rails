@@ -1,0 +1,328 @@
+// ============================================================================
+// IMAGE BLUR-UP PLACEHOLDERS - Phase 2
+// Progressive image loading with blur-up effect
+// ============================================================================
+
+// ============================================================================
+// IMAGE CONTAINER
+// ============================================================================
+
+.image-progressive {
+  position: relative;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  
+  // Placeholder (low-res blurred version)
+  .image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(20px);
+    transform: scale(1.1); // Slightly larger to hide blur edges
+    transition: opacity 0.4s ease-out;
+    
+    &.loaded {
+      opacity: 0;
+    }
+  }
+  
+  // Full resolution image
+  .image-full {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.4s ease-in;
+    
+    &.loaded {
+      opacity: 1;
+    }
+  }
+  
+  // Loading spinner overlay
+  .image-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    &.hidden {
+      display: none;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ============================================================================
+// MENU ITEM IMAGE PROGRESSIVE LOADING
+// ============================================================================
+
+.menu-item-image-progressive {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    #f0f0f0 0%,
+    #e0e0e0 50%,
+    #f0f0f0 100%
+  );
+  
+  .image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(10px);
+    transform: scale(1.05);
+    transition: opacity 0.3s ease-out;
+  }
+  
+  .image-full {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+    
+    &.loaded {
+      opacity: 1;
+    }
+  }
+  
+  &.loaded {
+    .image-placeholder {
+      opacity: 0;
+    }
+  }
+}
+
+// ============================================================================
+// BACKGROUND IMAGE PROGRESSIVE (for banners/headers)
+// ============================================================================
+
+.bg-progressive {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(20px);
+    transform: scale(1.1);
+    transition: opacity 0.4s ease-out;
+    z-index: 0;
+  }
+  
+  &.loaded::before {
+    opacity: 0;
+  }
+  
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// ============================================================================
+// ASPECT RATIO CONTAINERS
+// ============================================================================
+
+.image-aspect-ratio {
+  position: relative;
+  width: 100%;
+  
+  &::before {
+    content: '';
+    display: block;
+    padding-top: 56.25%; // 16:9 default
+  }
+  
+  &.ratio-1-1::before {
+    padding-top: 100%; // Square
+  }
+  
+  &.ratio-4-3::before {
+    padding-top: 75%; // 4:3
+  }
+  
+  &.ratio-16-9::before {
+    padding-top: 56.25%; // 16:9
+  }
+  
+  &.ratio-21-9::before {
+    padding-top: 42.86%; // 21:9 (ultra-wide)
+  }
+  
+  .image-progressive,
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// ============================================================================
+// COLOR PLACEHOLDER (extracted from image)
+// ============================================================================
+
+.image-color-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  
+  // Common food colors
+  &.red {
+    background: #dc2626;
+  }
+  
+  &.orange {
+    background: #f97316;
+  }
+  
+  &.yellow {
+    background: #eab308;
+  }
+  
+  &.green {
+    background: #16a34a;
+  }
+  
+  &.brown {
+    background: #92400e;
+  }
+  
+  &.gray {
+    background: #6b7280;
+  }
+}
+
+// ============================================================================
+// LAZY LOAD FADE-IN
+// ============================================================================
+
+.lazy-load {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+  
+  &.visible {
+    opacity: 1;
+  }
+}
+
+// ============================================================================
+// INTERSECTION OBSERVER STATES
+// ============================================================================
+
+[data-lazy-load] {
+  &:not(.loaded) {
+    background: linear-gradient(
+      90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+  }
+}
+
+// ============================================================================
+// PERFORMANCE OPTIMIZATION
+// ============================================================================
+
+.image-progressive,
+.menu-item-image-progressive {
+  // GPU acceleration
+  will-change: opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  
+  img {
+    // Image rendering optimization
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    
+    // Prevent layout shift
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// ============================================================================
+// MOBILE OPTIMIZATION
+// ============================================================================
+
+@media (max-width: 576px) {
+  .menu-item-image-progressive {
+    height: 150px; // Smaller on mobile
+  }
+  
+  .image-progressive {
+    .image-loading .spinner {
+      width: 32px;
+      height: 32px;
+      border-width: 2px;
+    }
+  }
+}
+
+// ============================================================================
+// ACCESSIBILITY
+// ============================================================================
+
+.image-progressive,
+.menu-item-image-progressive {
+  img {
+    // Improve text alternatives
+    &[alt=""] {
+      opacity: 0.5;
+    }
+  }
+}
+
+// No animations for users who prefer reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .image-progressive *,
+  .menu-item-image-progressive *,
+  .lazy-load {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,230 @@
+// ============================================================================
+// EMPTY STATES - Phase 2
+// Friendly messages when no content is available
+// ============================================================================
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  min-height: 400px;
+  
+  .empty-icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+    opacity: 0.3;
+    
+    i {
+      display: block;
+    }
+  }
+  
+  .empty-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+  }
+  
+  .empty-description {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 24px;
+    max-width: 400px;
+    line-height: 1.6;
+  }
+  
+  .empty-action {
+    margin-top: 8px;
+  }
+}
+
+// ============================================================================
+// EMPTY MENU STATE
+// ============================================================================
+
+.empty-menu {
+  .empty-icon {
+    color: #dc2626;
+    
+    &::before {
+      content: "🍽️";
+      font-size: 64px;
+    }
+  }
+}
+
+// ============================================================================
+// EMPTY CART STATE
+// ============================================================================
+
+.empty-cart {
+  .empty-icon {
+    color: #dc2626;
+    
+    &::before {
+      content: "🛒";
+      font-size: 64px;
+    }
+  }
+}
+
+// ============================================================================
+// EMPTY SEARCH STATE
+// ============================================================================
+
+.empty-search {
+  min-height: 300px;
+  padding: 32px 24px;
+  
+  .empty-icon {
+    color: #666;
+    
+    &::before {
+      content: "🔍";
+      font-size: 48px;
+    }
+  }
+  
+  .empty-title {
+    font-size: 1.25rem;
+  }
+}
+
+// ============================================================================
+// NO ITEMS FILTERED STATE
+// ============================================================================
+
+.empty-filter {
+  min-height: 300px;
+  padding: 32px 24px;
+  
+  .empty-icon {
+    color: #f59e0b;
+    
+    &::before {
+      content: "🔶";
+      font-size: 48px;
+    }
+  }
+}
+
+// ============================================================================
+// NO TABLE SELECTED STATE
+// ============================================================================
+
+.empty-table {
+  .empty-icon {
+    color: #3b82f6;
+    
+    &::before {
+      content: "📍";
+      font-size: 64px;
+    }
+  }
+}
+
+// ============================================================================
+// ORDER COMPLETE STATE
+// ============================================================================
+
+.order-complete {
+  .empty-icon {
+    color: #10b981;
+    
+    &::before {
+      content: "✅";
+      font-size: 64px;
+    }
+  }
+}
+
+// ============================================================================
+// ERROR STATE
+// ============================================================================
+
+.empty-error {
+  .empty-icon {
+    color: #ef4444;
+    
+    &::before {
+      content: "⚠️";
+      font-size: 64px;
+    }
+  }
+  
+  .empty-title {
+    color: #ef4444;
+  }
+}
+
+// ============================================================================
+// MOBILE OPTIMIZATION
+// ============================================================================
+
+@media (max-width: 576px) {
+  .empty-state {
+    padding: 32px 16px;
+    min-height: 300px;
+    
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      
+      &::before {
+        font-size: 48px !important;
+      }
+    }
+    
+    .empty-title {
+      font-size: 1.25rem;
+    }
+    
+    .empty-description {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// ============================================================================
+// ANIMATION
+// ============================================================================
+
+.empty-state {
+  animation: fadeIn 0.3s ease-in;
+  
+  .empty-icon {
+    animation: bounceIn 0.6s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

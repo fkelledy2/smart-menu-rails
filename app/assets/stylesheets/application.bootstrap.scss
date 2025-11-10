@@ -23,6 +23,12 @@
 @import 'components/scrollbars';
 @import 'components/smartmenu_mobile';
 
+// Phase 2: Enhanced UX
+@import 'components/skeleton_loading';
+@import 'components/empty_states';
+@import 'components/image_placeholders';
+@import 'components/welcome_banner';
+
 // Import page-specific styles
 @import 'pages/home';
 @import 'pages/smartmenu';

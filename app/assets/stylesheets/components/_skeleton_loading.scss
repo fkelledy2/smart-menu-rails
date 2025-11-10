@@ -1,0 +1,236 @@
+// ============================================================================
+// SKELETON LOADING STATES - Phase 2
+// Provides visual feedback while content loads
+// ============================================================================
+
+// Base skeleton element
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #e0e0e0 20%,
+    #f0f0f0 40%,
+    #f0f0f0 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 4px;
+  
+  &.dark {
+    background: linear-gradient(
+      90deg,
+      #2a2a2a 0%,
+      #3a3a3a 20%,
+      #2a2a2a 40%,
+      #2a2a2a 100%
+    );
+    background-size: 200% 100%;
+  }
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// ============================================================================
+// MENU ITEM SKELETON
+// ============================================================================
+
+.skeleton-menu-item {
+  width: 100%;
+  padding: 12px 2px;
+  
+  .skeleton-card {
+    border-radius: 12px;
+    border: 1px solid #e5e5e5;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    
+    .skeleton-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(
+        90deg,
+        #f0f0f0 0%,
+        #e0e0e0 20%,
+        #f0f0f0 40%,
+        #f0f0f0 100%
+      );
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s ease-in-out infinite;
+    }
+    
+    .skeleton-content {
+      padding: 16px;
+      
+      .skeleton-title {
+        height: 24px;
+        width: 70%;
+        margin-bottom: 12px;
+        border-radius: 4px;
+      }
+      
+      .skeleton-description {
+        height: 16px;
+        width: 100%;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        
+        &:last-of-type {
+          width: 85%;
+        }
+      }
+      
+      .skeleton-price {
+        height: 20px;
+        width: 30%;
+        margin-top: 16px;
+        border-radius: 4px;
+      }
+    }
+    
+    .skeleton-footer {
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #f0f0f0;
+      
+      .skeleton-badges {
+        display: flex;
+        gap: 4px;
+        
+        .skeleton-badge {
+          width: 32px;
+          height: 24px;
+          border-radius: 12px;
+        }
+      }
+      
+      .skeleton-button {
+        width: 120px;
+        height: 44px;
+        border-radius: 8px;
+      }
+    }
+  }
+}
+
+// ============================================================================
+// SKELETON GRID LAYOUT
+// ============================================================================
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 16px 12px;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// ============================================================================
+// SKELETON BANNER
+// ============================================================================
+
+.skeleton-banner {
+  padding: 16px 12px;
+  
+  .skeleton-search {
+    height: 44px;
+    width: 100%;
+    margin-bottom: 12px;
+    border-radius: 8px;
+  }
+  
+  .skeleton-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: hidden;
+    
+    .skeleton-tab {
+      height: 36px;
+      min-width: 80px;
+      flex-shrink: 0;
+      border-radius: 18px;
+    }
+  }
+}
+
+// ============================================================================
+// SKELETON TEXT VARIATIONS
+// ============================================================================
+
+.skeleton-text {
+  &.short {
+    width: 30%;
+  }
+  
+  &.medium {
+    width: 60%;
+  }
+  
+  &.long {
+    width: 85%;
+  }
+  
+  &.full {
+    width: 100%;
+  }
+}
+
+// ============================================================================
+// PULSE ANIMATION (Alternative)
+// ============================================================================
+
+.skeleton-pulse {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// ============================================================================
+// ACCESSIBILITY
+// ============================================================================
+
+.skeleton {
+  &[aria-busy="true"] {
+    pointer-events: none;
+  }
+  
+  &[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+// Screen reader text for loading state
+.sr-loading {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

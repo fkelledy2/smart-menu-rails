@@ -27,7 +27,7 @@
                                     <% if menusection.restricted == true %>
                                         <span class='float-end'>
                                             <small class="text-muted">
-                                                <%= menusection.fromhour %>:<%= menusection.frommin %> - <%= menusection.tohour %>:<%= menusection.tomin %>
+                                                <%= format_time_range(menusection.fromhour, menusection.frommin, menusection.tohour, menusection.tomin) %>
                                                 <div style='display:none' id="sectionFromOffset"><%= menusection.fromOffset %></div>
                                                 <div style='display:none' id="sectionToOffset"><%= menusection.toOffset %></div>
                                             </small>
@@ -53,7 +53,7 @@
                                     <% if menusection.restricted == true %>
                                         <span class='float-end'>
                                             <small class="text-muted">
-                                                <%= menusection.fromhour %>:<%= menusection.frommin %> - <%= menusection.tohour %>:<%= menusection.tomin %>
+                                                <%= format_time_range(menusection.fromhour, menusection.frommin, menusection.tohour, menusection.tomin) %>
                                                 <div style='display:none' id="sectionFromOffset"><%= menusection.fromOffset %></div>
                                                 <div style='display:none' id="sectionToOffset"><%= menusection.toOffset %></div>
                                             </small>
