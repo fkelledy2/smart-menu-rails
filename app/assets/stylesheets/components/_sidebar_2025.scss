@@ -358,6 +358,18 @@
     font-weight: var(--font-medium);
     text-align: center;
   }
+  
+  // Secondary variant for customer preview
+  &.quick-action-btn-secondary {
+    background: var(--color-gray-100);
+    border-color: var(--color-gray-300);
+    
+    &:hover {
+      background: var(--color-gray-200);
+      border-color: var(--color-gray-400);
+      color: var(--color-gray-800);
+    }
+  }
 }
 
 // Overview Stats Card

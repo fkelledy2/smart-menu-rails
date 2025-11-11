@@ -8,7 +8,7 @@
   <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
     <div>
       <!-- Breadcrumb -->
-      <div class="text-sm text-gray-500 mb-2">
+      <div class="text-gray-500 mb-2">
         <%= link_to @menu.restaurant.name, edit_restaurant_path(@menu.restaurant), class: 'text-primary' %>
         <i class="bi bi-chevron-right"></i>
         <%= link_to t('.menus', default: 'Menus'), edit_restaurant_path(@menu.restaurant, section: 'menus'), class: 'text-primary' %>

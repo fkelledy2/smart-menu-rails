@@ -32,6 +32,10 @@ class SmartmenusController < ApplicationController
       redirect_to root_url and return
     end
 
+    # Force customer view if query parameter is present
+    # Allows staff to preview menu as customers see it
+    @force_customer_view = params[:view] == 'customer'
+
     @allergyns = Allergyn.where(restaurant_id: @menu.restaurant_id)
 
     if @tablesetting

@@ -22,9 +22,19 @@
       
       <%= link_to smartmenu_path(menu.smartmenu.slug), 
           class: 'quick-action-btn',
-          target: '_blank' do %>
-        <i class="bi bi-box-arrow-up-right"></i>
-        <span><%= t('.preview_menu', default: 'Preview Menu') %></span>
+          target: '_blank',
+          title: 'Preview menu as staff (authenticated view)' do %>
+        <i class="bi bi-eye"></i>
+        <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
+      <% end %>
+      
+      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'), 
+          class: 'quick-action-btn quick-action-btn-secondary',
+          target: '_blank',
+          rel: 'noopener noreferrer',
+          title: 'Preview menu as customers see it (authenticated as staff but viewing customer interface)' do %>
+        <i class="bi bi-eye-slash"></i>
+        <span><%= t('.preview_customer', default: 'Preview (Customer)') %></span>
       <% end %>
     </div>
   </div>
