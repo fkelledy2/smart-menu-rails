@@ -1,6 +1,6 @@
     <div class="menu-item-card-mobile" data-name="<%= mi.name.to_s.downcase %>" data-description="<%= mi.description.to_s.downcase %>">
         <div class="card">
-            <% if mi.description? %>
+            <% if mi.name? %>
                 <div style='padding:5px' class="card-header">
                     <span>
                         <% if ordrparticipant && ordrparticipant.preferredlocale %>
@@ -12,6 +12,7 @@
                                 <%= mi.name %>
                             <% end %>
                         <% end %>
+                        XXX
                     </span>
                 </div>
             <% end %>
