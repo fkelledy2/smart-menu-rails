@@ -95,12 +95,25 @@
                     <i class="bi bi-grip-vertical text-muted"></i>
                   </td>
                   <td>
-                    <strong><%= item.name %></strong>
-                    <% if item.description.present? %>
-                      <div class="text-sm text-muted">
-                        <%= truncate(item.description, length: 50) %>
+                    <div class="item-name-cell">
+                      <div class="d-flex align-items-center gap-2">
+                        <strong><%= item.name %></strong>
+                        <% if item.image.present? %>
+                          <i class="bi bi-image text-primary" style="font-size: 14px;" title="Has image - hover to preview"></i>
+                        <% end %>
                       </div>
-                    <% end %>
+                      <% if item.description.present? %>
+                        <div class="text-sm text-muted">
+                          <%= truncate(item.description, length: 50) %>
+                        </div>
+                      <% end %>
+                      
+                      <% if item.image.present? %>
+                        <div class="item-image-tooltip">
+                          <%= image_tag item.image_url(:thumb), alt: item.name, loading: 'lazy' %>
+                        </div>
+                      <% end %>
+                    </div>
                   </td>
                   <td>
                     <% if item.price.present? && item.price > 0 %>
@@ -187,4 +200,149 @@
     opacity: 1;
     cursor: grabbing;
   }
+  
+  /* Item image tooltip on hover/tap */
+  .item-name-cell {
+    position: relative;
+  }
+  
+  .item-image-tooltip {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 16px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    
+    /* Tooltip styling */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 8px;
+    border: 1px solid var(--color-gray-200);
+  }
+  
+  /* Show on hover (desktop) */
+  .item-name-cell:hover .item-image-tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* Show on tap/active (mobile) - when item name is tapped */
+  .item-name-cell.show-tooltip .item-image-tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .item-image-tooltip img {
+    display: block;
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  
+  /* Arrow indicator for tooltip */
+  .item-image-tooltip::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid white;
+    filter: drop-shadow(-1px 0 0 var(--color-gray-200));
+  }
+  
+  /* Mobile/Tablet responsive adjustments */
+  @media (max-width: 768px) {
+    .item-image-tooltip {
+      /* Reposition to center on mobile */
+      left: 50%;
+      top: auto;
+      bottom: 100%;
+      transform: translateX(-50%);
+      margin-left: 0;
+      margin-bottom: 12px;
+    }
+    
+    /* Change arrow to point down on mobile */
+    .item-image-tooltip::before {
+      left: 50%;
+      top: auto;
+      bottom: -8px;
+      transform: translateX(-50%);
+      border-top: 8px solid white;
+      border-right: 8px solid transparent;
+      border-bottom: none;
+      border-left: 8px solid transparent;
+      filter: drop-shadow(0 1px 0 var(--color-gray-200));
+    }
+    
+    /* Make image larger on mobile for better visibility */
+    .item-image-tooltip img {
+      width: 240px;
+      height: 180px;
+    }
+  }
 </style>
+
+<script>
+  // Touch-friendly image preview for mobile
+  document.addEventListener('DOMContentLoaded', function() {
+    const itemCells = document.querySelectorAll('.item-name-cell');
+    
+    itemCells.forEach(cell => {
+      // Only add touch handling if the cell has an image tooltip
+      if (cell.querySelector('.item-image-tooltip')) {
+        // Handle touch/click on mobile
+        cell.addEventListener('click', function(e) {
+          // Don't interfere with edit button clicks
+          if (e.target.closest('.btn-2025')) return;
+          
+          // Toggle tooltip visibility
+          const isCurrentlyShown = this.classList.contains('show-tooltip');
+          
+          // Close all other tooltips first
+          document.querySelectorAll('.item-name-cell.show-tooltip').forEach(otherCell => {
+            otherCell.classList.remove('show-tooltip');
+          });
+          
+          // Toggle this tooltip
+          if (!isCurrentlyShown) {
+            this.classList.add('show-tooltip');
+          }
+          
+          // Prevent event from bubbling
+          e.stopPropagation();
+        });
+      }
+    });
+    
+    // Close tooltip when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.item-name-cell')) {
+        document.querySelectorAll('.item-name-cell.show-tooltip').forEach(cell => {
+          cell.classList.remove('show-tooltip');
+        });
+      }
+    });
+    
+    // Close tooltip when scrolling
+    const tableContainer = document.querySelector('.table-responsive');
+    if (tableContainer) {
+      tableContainer.addEventListener('scroll', function() {
+        document.querySelectorAll('.item-name-cell.show-tooltip').forEach(cell => {
+          cell.classList.remove('show-tooltip');
+        });
+      });
+    }
+  });
+</script>
