@@ -20,10 +20,10 @@ ActionCable.server.config.disable_request_forgery_protection = true
 
 module ActiveSupport
   class TestCase
-    # Enable parallel testing for speed (conservative approach for stability)
-    # Use single worker by default to avoid issues, can be overridden
-    workers = ENV['RAILS_PARALLEL_WORKERS']&.to_i || 1
-    parallelize(workers: workers)
+    # Parallel testing disabled to show real-time "..." progress
+    # To enable parallel testing, uncomment the lines below:
+    # workers = ENV['RAILS_PARALLEL_WORKERS']&.to_i || 2
+    # parallelize(workers: workers)
 
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
