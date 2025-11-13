@@ -1,0 +1,299 @@
+<%# 
+  OCR Menu Import Section
+  Upload and process PDF menus
+%>
+
+<% restaurant = local_assigns[:restaurant] || @restaurant %>
+
+<!-- Quick Info Banner -->
+<div class="alert alert-info mb-4">
+  <div class="d-flex align-items-start">
+    <i class="bi bi-info-circle me-3" style="font-size: 1.5rem;"></i>
+    <div>
+      <h6 class="mb-1"><%= t('.info_title', default: 'AI-Powered Menu Import') %></h6>
+      <p class="mb-0 small">
+        <%= t('.info_text', default: 'Upload your PDF menu and our AI will automatically extract all items, sections, prices, and descriptions.') %>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Form Card -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-cloud-upload"></i>
+    <%= t('.upload_title', default: 'Upload Menu PDF') %>
+  </h2>
+  
+  <%= form_with(model: [restaurant, restaurant.ocr_menu_imports.new], local: true, html: { class: 'needs-validation', novalidate: true }, data: { turbo_frame: '_top' }) do |f| %>
+    <div class="form-group-2025 mb-4">
+      <%= f.label :name, t('.name_label', default: 'Menu Name'), class: 'form-label-2025' %>
+      <%= f.text_field :name, 
+          class: 'form-control-2025', 
+          placeholder: t('.name_placeholder', default: 'e.g., Summer Menu 2024'),
+          required: true %>
+      <div class="form-help-2025">
+        <%= t('.name_help', default: 'Give this menu a descriptive name') %>
+      </div>
+      <div class="invalid-feedback">
+        <%= t('.name_invalid', default: 'Please provide a menu name') %>
+      </div>
+    </div>
+
+    <div class="form-group-2025 mb-4">
+      <%= f.label :pdf_file, t('.pdf_label', default: 'Menu PDF'), class: 'form-label-2025' %>
+      <div class="file-upload-area">
+        <div class="file-upload-icon">
+          <i class="bi bi-file-earmark-pdf"></i>
+        </div>
+        <div class="file-upload-content">
+          <label for="file-upload" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-upload me-1"></i> <%= t('.choose_file', default: 'Choose File') %>
+            <%= f.file_field :pdf_file, 
+                id: 'file-upload', 
+                class: 'd-none', 
+                accept: 'application/pdf', 
+                required: true,
+                onchange: "document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'" %>
+          </label>
+          <div id="file-name" class="file-upload-filename">
+            <%= t('.no_file_chosen', default: 'No file chosen') %>
+          </div>
+          <p class="file-upload-hint">
+            <%= t('.pdf_hint', default: 'PDF up to 10MB. Clear scans work best.') %>
+          </p>
+        </div>
+      </div>
+      <div class="invalid-feedback">
+        <%= t('.pdf_invalid', default: 'Please select a PDF file') %>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+      <button type="submit" id="upload-submit-btn" class="btn btn-danger btn-lg w-100 w-md-auto" disabled>
+        <i class="bi bi-upload me-1"></i> <%= t('.upload_process', default: 'Upload & Process') %>
+      </button>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form[action*="ocr_menu_imports"]');
+    if (!form) return;
+    
+    const nameInput = form.querySelector('input[name="ocr_menu_import[name]"]');
+    const fileInput = form.querySelector('input[name="ocr_menu_import[pdf_file]"]');
+    const submitBtn = document.getElementById('upload-submit-btn');
+    
+    function checkFormValidity() {
+      const hasName = nameInput && nameInput.value.trim() !== '';
+      const hasFile = fileInput && fileInput.files.length > 0;
+      
+      if (hasName && hasFile) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('btn-secondary');
+        submitBtn.classList.add('btn-danger');
+      } else {
+        submitBtn.disabled = true;
+        submitBtn.classList.remove('btn-danger');
+        submitBtn.classList.add('btn-secondary');
+      }
+    }
+    
+    // Check on input change
+    if (nameInput) {
+      nameInput.addEventListener('input', checkFormValidity);
+      nameInput.addEventListener('blur', checkFormValidity);
+    }
+    
+    if (fileInput) {
+      fileInput.addEventListener('change', checkFormValidity);
+    }
+    
+    // Initial check
+    checkFormValidity();
+  });
+</script>
+
+<!-- Tips Card -->
+<div class="content-card-2025 mt-4">
+  <h2 class="content-card-title">
+    <i class="bi bi-lightbulb"></i>
+    <%= t('.tips_title', default: 'Tips for Best Results') %>
+  </h2>
+  
+  <div class="tips-list">
+    <div class="tip-item">
+      <div class="tip-icon">
+        <i class="bi bi-check-circle text-success"></i>
+      </div>
+      <div class="tip-content">
+        <h6><%= t('.tip_quality_title', default: 'High Quality PDF') %></h6>
+        <p class="text-muted small mb-0">
+          <%= t('.tip_quality_text', default: 'Use a clear, high-resolution PDF for best OCR accuracy. Scanned menus should be crisp and readable.') %>
+        </p>
+      </div>
+    </div>
+    
+    <div class="tip-item">
+      <div class="tip-icon">
+        <i class="bi bi-card-list text-primary"></i>
+      </div>
+      <div class="tip-content">
+        <h6><%= t('.tip_format_title', default: 'Structured Format') %></h6>
+        <p class="text-muted small mb-0">
+          <%= t('.tip_format_text', default: 'Menus with clear sections, item names, and prices work best. Avoid complex layouts or multiple columns.') %>
+        </p>
+      </div>
+    </div>
+    
+    <div class="tip-item">
+      <div class="tip-icon">
+        <i class="bi bi-clock-history text-warning"></i>
+      </div>
+      <div class="tip-content">
+        <h6><%= t('.tip_processing_title', default: 'Processing Time') %></h6>
+        <p class="text-muted small mb-0">
+          <%= t('.tip_processing_text', default: 'Large menus may take a few minutes to process. You will be notified when the import is ready for review.') %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Imports -->
+<% recent_imports = restaurant.ocr_menu_imports.order(created_at: :desc).limit(5) %>
+<% if recent_imports.any? %>
+  <div class="content-card-2025 mt-4">
+    <h2 class="content-card-title">
+      <i class="bi bi-clock-history"></i>
+      <%= t('.recent_imports', default: 'Recent Imports') %>
+    </h2>
+    
+    <div class="list-group list-group-flush">
+      <% recent_imports.each do |import| %>
+        <%= link_to restaurant_ocr_menu_import_path(restaurant, import), 
+            class: "list-group-item list-group-item-action",
+            data: { turbo_frame: '_top' } do %>
+          <div class="d-flex w-100 justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1"><%= import.name %></h6>
+              <p class="mb-0 small text-muted">
+                <%= time_ago_in_words(import.created_at) %> ago
+              </p>
+            </div>
+            <div>
+              <% if import.completed? %>
+                <span class="badge bg-success">
+                  <i class="bi bi-check-circle"></i> Completed
+                </span>
+              <% elsif import.failed? %>
+                <span class="badge bg-danger">
+                  <i class="bi bi-x-circle"></i> Failed
+                </span>
+              <% elsif import.processing? %>
+                <span class="badge bg-primary">
+                  <i class="bi bi-arrow-repeat"></i> Processing
+                </span>
+              <% else %>
+                <span class="badge bg-secondary">
+                  <i class="bi bi-pause-circle"></i> Pending
+                </span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<style>
+  .file-upload-area {
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    background-color: #f9fafb;
+    transition: all 0.2s;
+  }
+  
+  .file-upload-area:hover {
+    border-color: #9ca3af;
+    background-color: #f3f4f6;
+  }
+  
+  .file-upload-icon {
+    font-size: 3rem;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+  }
+  
+  .file-upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .file-upload-filename {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+  }
+  
+  .file-upload-hint {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin: 0;
+  }
+  
+  .form-help-2025 {
+    font-size: var(--text-sm);
+    color: var(--color-gray-500);
+    margin-top: var(--space-1);
+  }
+  
+  .tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .tip-item {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .tip-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  .tip-content h6 {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  /* Mobile-friendly button styling */
+  #upload-submit-btn {
+    min-height: 48px;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  @media (max-width: 768px) {
+    #upload-submit-btn {
+      min-height: 56px;
+      font-size: 1.125rem;
+    }
+  }
+  
+  /* Disabled state styling */
+  #upload-submit-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+</style>

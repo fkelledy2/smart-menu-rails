@@ -20,9 +20,9 @@
       <span><%= t('.new_menu', default: 'New Menu') %></span>
     <% end %>
     
-    <%= link_to new_restaurant_ocr_menu_import_path(restaurant), 
+    <%= link_to edit_restaurant_path(restaurant, section: 'import'), 
         class: 'quick-action-btn',
-        data: { turbo_frame: '_top' } do %>
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
       <i class="bi bi-file-earmark-arrow-up"></i>
       <span><%= t('.import_menu', default: 'Import Menu') %></span>
     <% end %>

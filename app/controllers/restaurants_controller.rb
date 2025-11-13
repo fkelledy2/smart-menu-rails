@@ -1004,6 +1004,8 @@ class RestaurantsController < ApplicationController
       'allergens_2025'
     when 'sizes'
       'sizes_2025'
+    when 'import'
+      'import_2025'
     when 'staff', 'roles'
       'staff_2025'
     when 'settings'

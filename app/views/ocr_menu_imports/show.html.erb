@@ -1,4 +1,13 @@
 <div class="container-fluid py-4" data-controller="menu-import">
+  <!-- Back Navigation -->
+  <div class="mb-3">
+    <%= link_to edit_restaurant_path(@restaurant, section: 'import'), 
+        class: 'btn btn-outline-secondary',
+        data: { turbo_frame: '_top' } do %>
+      <i class="bi bi-arrow-left me-1"></i> <%= t('.back_to_imports', default: 'Back to Imports') %>
+    <% end %>
+  </div>
+  
   <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap">
     <div class="mb-3 mb-md-0">
       <h3 class="h3 mb-2 import-title-editable"
@@ -29,69 +38,40 @@
           <i class="bi bi-gear me-1"></i> <%= t('.process_pdf') %>
         <% end %>
       <% end %>
-      
-      <% if @ocr_menu_import.completed? && @ocr_menu_import.ocr_menu_sections.any? %>
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal">
-          <i class="bi bi-check-circle me-1"></i> <%= t('.create_menu') %>
-        </button>
-      <% end %>
     </div>
   </div>
 
-  <!-- Progress Bar -->
+  <!-- Progress Slider -->
+  <% 
+    # Calculate progress percentage based on status
+    progress_percent = if @ocr_menu_import.completed?
+                        100
+                      elsif @ocr_menu_import.processing?
+                        @ocr_menu_import.progress || 50
+                      elsif @ocr_menu_import.pending?
+                        25
+                      else
+                        0
+                      end
+  %>
   <div class="card mb-2">
-    <div class="card-body">
+    <div class="card-body py-4">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <% steps = [
-          # Upload is active when the import is pending; once it moves past pending, mark as complete
-          { name: t('.steps.upload'), status: (@ocr_menu_import.pending? ? 'active' : (@ocr_menu_import.processing? || @ocr_menu_import.completed? ? 'complete' : '')) },
-          # Processing is active when processing; once completed, mark as complete
-          { name: t('.steps.processing'), status: (@ocr_menu_import.processing? ? 'active' : (@ocr_menu_import.completed? ? 'complete' : '')) },
-          # Review becomes active when the import has completed and is ready to review
-          { name: t('.steps.review'), status: (@ocr_menu_import.completed? ? 'active' : '') },
-          # Complete is marked complete once the import is completed
-          { name: t('.steps.complete'), status: (@ocr_menu_import.completed? ? 'complete' : '') }
-        ] %>
-        
-        <% steps.each_with_index do |step, index| %>
-          <div class="d-flex flex-column align-items-center flex-1">
-            <div class="d-flex align-items-center w-100">
-              <% if index > 0 %>
-                <div class="progress flex-grow-1 me-1 height-3px">
-                  <div class="progress-bar <%= step[:status].present? ? 'bg-success' : 'bg-light' %>" 
-                       role="progressbar" class="full-width">
-                  </div>
-                </div>
-              <% else %>
-                <div class="flex-grow-1 me-1"></div>
-              <% end %>
-              
-              <div class="d-flex flex-column align-items-center position-relative">
-                <span class="d-flex align-items-center justify-content-center rounded-circle <%= step[:status] == 'complete' ? 'bg-success text-white' : (step[:status] == 'active' ? 'bg-primary text-white' : 'bg-light text-muted') %>" 
-                      class="icon-size-36">
-                  <% if step[:status] == 'complete' %>
-                    <i class="bi bi-check-lg"></i>
-                  <% else %>
-                    <%= index + 1 %>
-                  <% end %>
-                </span>
-                <span class="small mt-1 <%= step[:status] == 'active' ? 'fw-bold text-primary' : 'text-muted' %>">
-                  <%= step[:name] %>
-                </span>
-              </div>
-              
-              <% if index < steps.size - 1 %>
-                <div class="progress flex-grow-1 ms-1 height-3px">
-                  <div class="progress-bar <%= steps[index+1][:status].present? ? 'bg-success' : 'bg-light' %>" 
-                       role="progressbar" class="full-width">
-                  </div>
-                </div>
-              <% else %>
-                <div class="flex-grow-1 ms-1"></div>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
+        <span class="text-muted small">0%</span>
+        <span class="fw-bold"><%= progress_percent %>%</span>
+        <span class="text-muted small">100%</span>
+      </div>
+      <div class="progress-slider-container">
+        <input type="range" 
+               class="progress-slider" 
+               min="0" 
+               max="100" 
+               value="<%= progress_percent %>" 
+               disabled
+               style="width: 100%;">
+        <div class="progress-slider-track">
+          <div class="progress-slider-fill" style="width: <%= progress_percent %>%;"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -181,11 +161,10 @@
             <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-4">
               <div class="mb-3 mb-md-0">
                 <h2 class="h4 mb-1"><%= t('.imported_menu_title') %></h2>
-                <p class="text-muted mb-0"><%= t('.imported_menu_subtitle') %></p>
               </div>
-              <div>
+              <div class="w-100 w-md-auto">
                 <button type="button" 
-                        class="btn btn-primary" 
+                        class="btn btn-danger btn-lg w-100 w-md-auto publish-btn" 
                         data-bs-toggle="modal" 
                         data-bs-target="#confirmModal">
                   <i class="bi bi-check-circle me-1"></i> <%= t('.publish') %>
@@ -367,7 +346,7 @@
             <%= label_tag :sync_publish, 'Sync publish (archive sections/items not in this import)', class: 'form-check-label' %>
           </div>
           <div class="d-flex justify-content-center gap-3">
-            <%= submit_tag 'Publish Menu', class: 'btn btn-primary' %>
+            <%= submit_tag 'Publish Menu', class: 'btn btn-danger btn-lg' %>
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
           </div>
         <% end %>
@@ -481,3 +460,91 @@
     </div>
   </div>
 </div>
+
+<style>
+  /* Mobile-friendly Publish button styling */
+  .publish-btn {
+    min-height: 48px;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  @media (max-width: 768px) {
+    .publish-btn {
+      min-height: 56px;
+      font-size: 1.125rem;
+    }
+  }
+  
+  /* Progress Slider Styling */
+  .progress-slider-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .progress-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #e5e7eb;
+    outline: none;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .progress-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #dc2626;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .progress-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #dc2626;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .progress-slider-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  .progress-slider-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  
+  .progress-slider:disabled {
+    cursor: default;
+  }
+  
+  .progress-slider:disabled::-webkit-slider-thumb {
+    cursor: default;
+  }
+  
+  .progress-slider:disabled::-moz-range-thumb {
+    cursor: default;
+  }
+</style>
