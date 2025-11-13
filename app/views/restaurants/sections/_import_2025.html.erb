@@ -173,37 +173,49 @@
     
     <div class="list-group list-group-flush">
       <% recent_imports.each do |import| %>
-        <%= link_to restaurant_ocr_menu_import_path(restaurant, import), 
-            class: "list-group-item list-group-item-action",
-            data: { turbo_frame: '_top' } do %>
-          <div class="d-flex w-100 justify-content-between align-items-center">
-            <div>
-              <h6 class="mb-1"><%= import.name %></h6>
-              <p class="mb-0 small text-muted">
-                <%= time_ago_in_words(import.created_at) %> ago
-              </p>
+        <div class="list-group-item list-group-item-action d-flex align-items-center p-0 import-row">
+          <%= link_to restaurant_ocr_menu_import_path(restaurant, import), 
+              class: "flex-grow-1 p-3 text-decoration-none text-reset",
+              data: { turbo_frame: '_top' } do %>
+            <div class="d-flex w-100 justify-content-between align-items-center">
+              <div>
+                <h6 class="mb-1"><%= import.name %></h6>
+                <p class="mb-0 small text-muted">
+                  <%= time_ago_in_words(import.created_at) %> ago
+                </p>
+              </div>
+              <div>
+                <% if import.completed? %>
+                  <span class="badge bg-success">
+                    <i class="bi bi-check-circle"></i> Completed
+                  </span>
+                <% elsif import.failed? %>
+                  <span class="badge bg-danger">
+                    <i class="bi bi-x-circle"></i> Failed
+                  </span>
+                <% elsif import.processing? %>
+                  <span class="badge bg-primary">
+                    <i class="bi bi-arrow-repeat"></i> Processing
+                  </span>
+                <% else %>
+                  <span class="badge bg-secondary">
+                    <i class="bi bi-pause-circle"></i> Pending
+                  </span>
+                <% end %>
+              </div>
             </div>
-            <div>
-              <% if import.completed? %>
-                <span class="badge bg-success">
-                  <i class="bi bi-check-circle"></i> Completed
-                </span>
-              <% elsif import.failed? %>
-                <span class="badge bg-danger">
-                  <i class="bi bi-x-circle"></i> Failed
-                </span>
-              <% elsif import.processing? %>
-                <span class="badge bg-primary">
-                  <i class="bi bi-arrow-repeat"></i> Processing
-                </span>
-              <% else %>
-                <span class="badge bg-secondary">
-                  <i class="bi bi-pause-circle"></i> Pending
-                </span>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
+          <% end %>
+          <%= button_to restaurant_ocr_menu_import_path(restaurant, import),
+              method: :delete,
+              class: 'btn btn-link text-danger delete-import-btn',
+              data: { 
+                turbo_frame: '_top',
+                turbo_confirm: t('.confirm_delete', default: 'Are you sure you want to delete this import?')
+              },
+              title: t('.delete_import', default: 'Delete import') do %>
+            <i class="bi bi-trash"></i>
+          <% end %>
+        </div>
       <% end %>
     </div>
   </div>
@@ -295,5 +307,36 @@
   #upload-submit-btn:disabled {
     cursor: not-allowed;
     opacity: 0.6;
+  }
+  
+  /* Import row and delete button styling */
+  .import-row {
+    transition: background-color 0.2s;
+  }
+  
+  .import-row:hover {
+    background-color: #f9fafb;
+  }
+  
+  .delete-import-btn {
+    padding: 0.75rem 1rem;
+    font-size: 1.125rem;
+    border-left: 1px solid #e5e7eb;
+    border-radius: 0;
+    opacity: 0.6;
+    transition: opacity 0.2s, background-color 0.2s;
+  }
+  
+  .delete-import-btn:hover {
+    opacity: 1;
+    background-color: #fee2e2;
+  }
+  
+  .delete-import-btn form {
+    margin: 0;
+  }
+  
+  .import-row .delete-import-btn i {
+    font-size: 1rem;
   }
 </style>

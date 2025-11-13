@@ -241,7 +241,7 @@ class OcrMenuImportsController < ApplicationController
   # DELETE /restaurants/:restaurant_id/ocr_menu_imports/:id
   def destroy
     @ocr_menu_import.destroy
-    redirect_to restaurant_ocr_menu_imports_path(@restaurant),
+    redirect_to edit_restaurant_path(@restaurant, section: 'import'),
                 notice: t('ocr_menu_imports.controller.deleted')
   end
 
