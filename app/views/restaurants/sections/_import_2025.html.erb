@@ -6,7 +6,7 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
 <!-- Quick Info Banner -->
-<div class="alert alert-info mb-4">
+<div class="alert alert-info mb-4" data-testid="import-info-banner">
   <div class="d-flex align-items-start">
     <i class="bi bi-info-circle me-3" style="font-size: 1.5rem;"></i>
     <div>
@@ -19,19 +19,20 @@
 </div>
 
 <!-- Upload Form Card -->
-<div class="content-card-2025">
+<div class="content-card-2025" data-testid="import-form-card">
   <h2 class="content-card-title">
     <i class="bi bi-cloud-upload"></i>
     <%= t('.upload_title', default: 'Upload Menu PDF') %>
   </h2>
   
-  <%= form_with(model: [restaurant, restaurant.ocr_menu_imports.new], local: true, html: { class: 'needs-validation', novalidate: true }, data: { turbo_frame: '_top' }) do |f| %>
+  <%= form_with(model: [restaurant, restaurant.ocr_menu_imports.new], local: true, html: { class: 'needs-validation', novalidate: true }, data: { turbo_frame: '_top', testid: 'import-form' }) do |f| %>
     <div class="form-group-2025 mb-4">
       <%= f.label :name, t('.name_label', default: 'Menu Name'), class: 'form-label-2025' %>
       <%= f.text_field :name, 
           class: 'form-control-2025', 
           placeholder: t('.name_placeholder', default: 'e.g., Summer Menu 2024'),
-          required: true %>
+          required: true,
+          data: { testid: 'import-name-input' } %>
       <div class="form-help-2025">
         <%= t('.name_help', default: 'Give this menu a descriptive name') %>
       </div>
@@ -54,9 +55,10 @@
                 class: 'd-none', 
                 accept: 'application/pdf', 
                 required: true,
-                onchange: "document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'" %>
+                onchange: "document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'",
+                data: { testid: 'import-pdf-input' } %>
           </label>
-          <div id="file-name" class="file-upload-filename">
+          <div id="file-name" class="file-upload-filename" data-testid="import-filename-display">
             <%= t('.no_file_chosen', default: 'No file chosen') %>
           </div>
           <p class="file-upload-hint">
@@ -70,7 +72,7 @@
     </div>
 
     <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-      <button type="submit" id="upload-submit-btn" class="btn btn-danger btn-lg w-100 w-md-auto" disabled>
+      <button type="submit" id="upload-submit-btn" class="btn btn-danger btn-lg w-100 w-md-auto" disabled data-testid="import-submit-btn">
         <i class="bi bi-upload me-1"></i> <%= t('.upload_process', default: 'Upload & Process') %>
       </button>
     </div>
@@ -117,7 +119,7 @@
 </script>
 
 <!-- Tips Card -->
-<div class="content-card-2025 mt-4">
+<div class="content-card-2025 mt-4" data-testid="import-tips-card">
   <h2 class="content-card-title">
     <i class="bi bi-lightbulb"></i>
     <%= t('.tips_title', default: 'Tips for Best Results') %>
@@ -165,7 +167,7 @@
 <!-- Recent Imports -->
 <% recent_imports = restaurant.ocr_menu_imports.order(created_at: :desc).limit(5) %>
 <% if recent_imports.any? %>
-  <div class="content-card-2025 mt-4">
+  <div class="content-card-2025 mt-4" data-testid="recent-imports-card">
     <h2 class="content-card-title">
       <i class="bi bi-clock-history"></i>
       <%= t('.recent_imports', default: 'Recent Imports') %>
@@ -173,10 +175,10 @@
     
     <div class="list-group list-group-flush">
       <% recent_imports.each do |import| %>
-        <div class="list-group-item list-group-item-action d-flex align-items-center p-0 import-row">
+        <div class="list-group-item list-group-item-action d-flex align-items-center p-0 import-row" data-testid="import-row-<%= import.id %>">
           <%= link_to restaurant_ocr_menu_import_path(restaurant, import), 
               class: "flex-grow-1 p-3 text-decoration-none text-reset",
-              data: { turbo_frame: '_top' } do %>
+              data: { testid: "import-link-#{import.id}", turbo_frame: '_top' } do %>
             <div class="d-flex w-100 justify-content-between align-items-center">
               <div>
                 <h6 class="mb-1"><%= import.name %></h6>
@@ -208,7 +210,8 @@
           <%= button_to restaurant_ocr_menu_import_path(restaurant, import),
               method: :delete,
               class: 'btn btn-link text-danger delete-import-btn',
-              data: { 
+              data: {
+                testid: "delete-import-#{import.id}",
                 turbo_frame: '_top',
                 turbo_confirm: t('.confirm_delete', default: 'Are you sure you want to delete this import?')
               },

@@ -9,9 +9,9 @@
       </div>
 
       <!-- Reset Password Card -->
-      <div class="card shadow-sm border-0 mb-4">
+      <div class="card shadow-sm border-0 mb-4" data-testid="forgot-password-card">
         <div class="card-body px-4 py-4 px-md-5 py-md-5">
-          <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+          <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, data: { testid: 'forgot-password-form' } }) do |f| %>
             
             <!-- Error Messages -->
             <%= render "devise/shared/error_messages", resource: resource %>
@@ -26,13 +26,14 @@
                   autocomplete: "email", 
                   placeholder: 'Enter your email address', 
                   class: 'form-control form-control-lg',
-                  id: 'user_email' %>
+                  id: 'user_email',
+                  data: { testid: 'forgot-password-email-input' } %>
               <div class="form-text small">We'll send password reset instructions to this email</div>
             </div>
 
             <!-- Submit Button -->
             <div class="d-grid mb-3">
-              <%= f.submit "Send Reset Instructions", class: 'btn btn-danger btn-lg' %>
+              <%= f.submit "Send Reset Instructions", class: 'btn btn-danger btn-lg', data: { testid: 'forgot-password-submit-btn' } %>
             </div>
           <% end %>
 
@@ -46,7 +47,7 @@
 
           <!-- Back to Sign In Link -->
           <div class="d-grid">
-            <%= link_to "Back to Sign In", new_user_session_path, class: "btn btn-outline-dark btn-lg" %>
+            <%= link_to "Back to Sign In", new_user_session_path, class: "btn btn-outline-dark btn-lg", data: { testid: 'back-to-login-link' } %>
           </div>
         </div>
       </div>

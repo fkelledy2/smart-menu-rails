@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include Testable
+  
   # Enhanced restaurant context helper for JavaScript
   def restaurant_context_data(restaurant = nil)
     # Try to determine restaurant from various sources

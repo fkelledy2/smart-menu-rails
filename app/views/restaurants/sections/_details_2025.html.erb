@@ -30,7 +30,7 @@
 </div>
 
 <!-- Overview Stats Card -->
-<div class="overview-stats-card">
+<div class="overview-stats-card" data-testid="overview-stats-card">
   <h2 class="quick-actions-title">
     <i class="bi bi-graph-up"></i>
     <%= t('.overview', default: 'Overview') %>
@@ -62,13 +62,13 @@
 </div>
 
 <!-- Restaurant Details Form -->
-<div class="content-card-2025">
+<div class="content-card-2025" data-testid="restaurant-details-card">
   <h2 class="content-card-title">
     <i class="bi bi-building"></i>
     <%= t('.restaurant_details', default: 'Restaurant Details') %>
   </h2>
   
-  <%= restaurant_form_with(restaurant, auto_save: true, validate: true) do |form| %>
+  <%= restaurant_form_with(restaurant, auto_save: true, validate: true, html: { data: { testid: 'restaurant-details-form' } }) do |form| %>
     <div class="form-group-2025 mb-4">
       <%= form.label :name, class: 'form-label-2025' do %>
         <%= t('activerecord.attributes.restaurant.name', default: 'Restaurant Name') %>
@@ -77,7 +77,8 @@
       <%= form.text_field :name, 
           class: 'form-control-2025', 
           placeholder: t('.name_placeholder', default: 'e.g., Pizza Place'),
-          required: true %>
+          required: true,
+          data: { testid: 'restaurant-name-input' } %>
       <div class="form-help-2025">
         <%= t('.name_help', default: 'This is how customers will see your restaurant') %>
       </div>
@@ -90,7 +91,8 @@
       <%= form.text_area :description, 
           class: 'form-control-2025', 
           rows: 4,
-          placeholder: t('.description_placeholder', default: 'Describe your restaurant, cuisine, and what makes it special...') %>
+          placeholder: t('.description_placeholder', default: 'Describe your restaurant, cuisine, and what makes it special...'),
+          data: { testid: 'restaurant-description-input' } %>
       <div class="form-help-2025">
         <%= t('.description_help', default: 'A brief description that appears on your menu') %>
       </div>
@@ -109,7 +111,7 @@
 </div>
 
 <!-- Image Context Details Section -->
-<div class="content-card-2025">
+<div class="content-card-2025" data-testid="image-context-card">
   <h2 class="content-card-title">
     <i class="bi bi-image"></i>
     <%= t('.image_context_details', default: 'Image Context Details') %>
@@ -123,7 +125,8 @@
       <%= form.text_area :imagecontext, 
           class: 'form-control-2025', 
           rows: 3,
-          placeholder: t('.imagecontext_placeholder', default: 'e.g., Modern Italian restaurant with rustic decor...') %>
+          placeholder: t('.imagecontext_placeholder', default: 'e.g., Modern Italian restaurant with rustic decor...'),
+          data: { testid: 'restaurant-imagecontext-input' } %>
       <div class="form-help-2025">
         <%= t('.imagecontext_help', default: 'Describe your restaurant\'s style and atmosphere to help AI generate appropriate menu item images') %>
       </div>
@@ -136,7 +139,8 @@
       <%= form.text_area :image_style_profile, 
           class: 'form-control-2025', 
           rows: 4,
-          placeholder: t('.image_style_profile_placeholder', default: 'e.g., Professional food photography, well-lit, white background, top-down view...') %>
+          placeholder: t('.image_style_profile_placeholder', default: 'e.g., Professional food photography, well-lit, white background, top-down view...'),
+          data: { testid: 'restaurant-image-style-input' } %>
       <div class="form-help-2025">
         <%= t('.image_style_profile_help', default: 'Specify the style and presentation preferences for AI-generated menu item images') %>
       </div>
@@ -145,7 +149,7 @@
 </div>
 
 <!-- Address & Location -->
-<div class="content-card-2025 py-4">
+<div class="content-card-2025 py-4" data-testid="restaurant-address-card">
   <h2 class="content-card-title">
     <i class="bi bi-geo-alt"></i>
     <%= t('.location', default: 'Location & Address') %>
@@ -160,7 +164,8 @@
       <%= form.text_field :address1, 
           class: 'form-control-2025',
           placeholder: t('.address_placeholder', default: '123 Main Street'),
-          required: true %>
+          required: true,
+          data: { testid: 'restaurant-address1-input' } %>
       <%= form.hidden_field :latitude %>
       <%= form.hidden_field :longitude %>
       <%= form.hidden_field :country %>
@@ -175,7 +180,8 @@
       <% end %>
       <%= form.text_field :address2, 
           class: 'form-control-2025',
-          placeholder: t('.address2_placeholder', default: 'Suite 100 (optional)') %>
+          placeholder: t('.address2_placeholder', default: 'Suite 100 (optional)'),
+          data: { testid: 'restaurant-address2-input' } %>
       <div class="form-help-2025">
         <%= t('.address2_help', default: 'Additional address details') %>
       </div>
@@ -190,7 +196,8 @@
           <% end %>
           <%= form.text_field :city, 
               class: 'form-control-2025',
-              required: true %>
+              required: true,
+              data: { testid: 'restaurant-city-input' } %>
         </div>
       </div>
       
@@ -200,7 +207,8 @@
             <%= t('activerecord.attributes.restaurant.state', default: 'State/Province') %>
           <% end %>
           <%= form.text_field :state, 
-              class: 'form-control-2025' %>
+              class: 'form-control-2025',
+              data: { testid: 'restaurant-state-input' } %>
         </div>
       </div>
       
@@ -210,7 +218,8 @@
             <%= t('activerecord.attributes.restaurant.postcode', default: 'ZIP/Postal Code') %>
           <% end %>
           <%= form.text_field :postcode, 
-              class: 'form-control-2025' %>
+              class: 'form-control-2025',
+              data: { testid: 'restaurant-postcode-input' } %>
         </div>
       </div>
     </div>

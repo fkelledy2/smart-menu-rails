@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# UI Automation Test Suite Runner
+# Runs all UI automation tests in sequence
+# Add new test files to the UI_TESTS array as they are created
+
+set -e  # Exit on error
+
+# Colors for output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}================================${NC}"
+echo -e "${BLUE}UI Automation Test Suite${NC}"
+echo -e "${BLUE}================================${NC}"
+echo ""
+
+# Define UI automation test files
+# Phase 1: Authentication & Menu Management
+# Phase 2: Restaurant Details & Menu Items
+# Add new test files here as they are created
+UI_TESTS=(
+  # Phase 1 - Authentication & Core Flows
+  "test/system/authentication_test.rb"
+  "test/system/import_automation_test.rb"
+  "test/system/restaurant_menu_management_test.rb"
+  
+  # Phase 2 - Restaurant & Menu Item Management
+  "test/system/restaurant_details_test.rb"
+  "test/system/menu_items_test.rb"
+  
+  # Phase 3 - Add new test files here as they are created
+  # Example: "test/system/settings_test.rb"
+  # Example: "test/system/staff_management_test.rb"
+)
+
+# Track results
+TOTAL_TESTS=${#UI_TESTS[@]}
+PASSED_TESTS=0
+FAILED_TESTS=0
+START_TIME=$(date +%s)
+
+echo -e "${YELLOW}Running ${TOTAL_TESTS} UI automation test suites...${NC}"
+echo ""
+
+# Run each test file
+for test_file in "${UI_TESTS[@]}"; do
+  if [ -f "$test_file" ]; then
+    echo -e "${BLUE}Running: ${test_file}${NC}"
+    
+    if bundle exec rails test "$test_file"; then
+      echo -e "${GREEN}✓ Passed: ${test_file}${NC}"
+      ((PASSED_TESTS++))
+    else
+      echo -e "${RED}✗ Failed: ${test_file}${NC}"
+      ((FAILED_TESTS++))
+    fi
+    echo ""
+  else
+    echo -e "${YELLOW}⚠ Warning: Test file not found: ${test_file}${NC}"
+    echo ""
+  fi
+done
+
+# Calculate duration
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+
+# Print summary
+echo -e "${BLUE}================================${NC}"
+echo -e "${BLUE}Test Suite Summary${NC}"
+echo -e "${BLUE}================================${NC}"
+echo -e "Total Test Suites: ${TOTAL_TESTS}"
+echo -e "${GREEN}Passed: ${PASSED_TESTS}${NC}"
+
+if [ $FAILED_TESTS -gt 0 ]; then
+  echo -e "${RED}Failed: ${FAILED_TESTS}${NC}"
+else
+  echo -e "Failed: ${FAILED_TESTS}"
+fi
+
+echo -e "Duration: ${DURATION}s"
+echo ""
+
+# Exit with appropriate code
+if [ $FAILED_TESTS -gt 0 ]; then
+  echo -e "${RED}❌ UI Automation Tests FAILED${NC}"
+  exit 1
+else
+  echo -e "${GREEN}✅ All UI Automation Tests PASSED${NC}"
+  exit 0
+fi

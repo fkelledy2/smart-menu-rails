@@ -19,7 +19,7 @@
 %>
 
 <!-- Quick Actions Card -->
-<div class="quick-actions-card">
+<div class="quick-actions-card" data-testid="menus-quick-actions">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions', default: 'Quick Actions') %>
@@ -28,14 +28,14 @@
   <div class="quick-actions-grid">
     <%= link_to new_restaurant_menu_path(restaurant), 
         class: 'quick-action-btn',
-        data: { turbo_frame: '_top' } do %>
+        data: { testid: 'new-menu-btn', turbo_frame: '_top' } do %>
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.new_menu', default: 'New Menu') %></span>
     <% end %>
     
     <%= link_to edit_restaurant_path(restaurant, section: 'import'), 
         class: 'quick-action-btn',
-        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+        data: { testid: 'import-menu-btn', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
       <i class="bi bi-file-earmark-arrow-up"></i>
       <span><%= t('.import_menu', default: 'Import Menu') %></span>
     <% end %>
@@ -43,7 +43,7 @@
 </div>
 
 <!-- Menus List -->
-<div class="content-card-2025">
+<div class="content-card-2025" data-testid="menus-list-card">
   <h2 class="content-card-title mb-0">
     <i class="bi bi-menu-button-wide"></i>
     <%= t(".menus_#{filter}", default: filter.titleize + ' Menus') %>
@@ -54,7 +54,7 @@
     <li class="nav-item">
       <%= link_to edit_restaurant_path(restaurant, section: 'menus'), 
           class: "nav-link #{'active' if filter == 'all'}",
-          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+          data: { testid: 'menus-filter-all', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
         <%= t('.all', default: 'All') %> 
         <span class="badge bg-secondary"><%= restaurant.menus.where(archived: false).count %></span>
       <% end %>
@@ -62,7 +62,7 @@
     <li class="nav-item">
       <%= link_to edit_restaurant_path(restaurant, section: 'menus_active'), 
           class: "nav-link #{'active' if filter == 'active'}",
-          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+          data: { testid: 'menus-filter-active', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
         <%= t('.active', default: 'Active') %> 
         <span class="badge bg-success"><%= restaurant.menus.where(archived: false, status: 'active').count %></span>
       <% end %>
@@ -70,7 +70,7 @@
     <li class="nav-item">
       <%= link_to edit_restaurant_path(restaurant, section: 'menus_inactive'), 
           class: "nav-link #{'active' if filter == 'inactive'}",
-          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+          data: { testid: 'menus-filter-inactive', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
         <%= t('.inactive', default: 'Inactive') %> 
         <span class="badge bg-warning"><%= restaurant.menus.where(archived: false, status: 'inactive').count %></span>
       <% end %>
@@ -80,11 +80,12 @@
   <% if menus.any? %>
     <!-- Menus List -->
     <div class="menus-list" 
+         data-testid="menus-list"
          data-controller="sortable"
          data-sortable-url-value="<%= update_sequence_restaurant_menus_path(restaurant) %>"
          data-sortable-handle-value=".drag-handle">
       <% menus.each do |menu| %>
-        <div class="menu-card" data-sortable-id="<%= menu.id %>">
+        <div class="menu-card" data-sortable-id="<%= menu.id %>" data-testid="menu-card-<%= menu.id %>">
           <!-- Drag Handle -->
           <div class="drag-handle" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>">
             <i class="bi bi-grip-vertical"></i>
@@ -131,7 +132,7 @@
           <div class="menu-card-actions">
             <%= link_to edit_restaurant_menu_path(restaurant, menu), 
                 class: 'btn-2025 btn-2025-primary btn-2025-sm flex-fill',
-                data: { turbo_frame: '_top' } do %>
+                data: { testid: "edit-menu-#{menu.id}-btn", turbo_frame: '_top' } do %>
               <i class="bi bi-pencil"></i> <%= t('.edit', default: 'Edit') %>
             <% end %>
             
@@ -139,7 +140,8 @@
               <%= link_to smartmenu_path(menu.smartmenu.slug), 
                   class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                   target: '_blank',
-                  title: t('.preview', default: 'Preview Menu') do %>
+                  title: t('.preview', default: 'Preview Menu'),
+                  data: { testid: "preview-menu-#{menu.id}-btn" } do %>
                 <i class="bi bi-eye"></i>
               <% end %>
             <% else %>
@@ -153,7 +155,8 @@
             <div class="dropdown">
               <button class="btn-2025 btn-2025-ghost btn-2025-sm" 
                       type="button" 
-                      data-bs-toggle="dropdown">
+                      data-bs-toggle="dropdown"
+                      data-testid="menu-actions-#{menu.id}-btn">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
@@ -166,7 +169,7 @@
                 <li>
                   <%= link_to restaurant_menu_path(restaurant, menu), 
                       method: :delete,
-                      data: { confirm: t('.confirm_delete', default: 'Are you sure?') },
+                      data: { testid: "delete-menu-#{menu.id}-btn", confirm: t('.confirm_delete', default: 'Are you sure?') },
                       class: 'dropdown-item text-danger' do %>
                     <i class="bi bi-trash"></i> <%= t('.delete', default: 'Delete') %>
                   <% end %>

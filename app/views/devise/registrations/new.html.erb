@@ -9,9 +9,9 @@
       </div>
 
       <!-- Sign Up Card -->
-      <div class="card shadow-sm border-0 mb-4">
+      <div class="card shadow-sm border-0 mb-4" data-testid="signup-card">
         <div class="card-body px-4 py-4 px-md-5 py-md-5">
-          <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { data: { testid: 'signup-form' } }) do |f| %>
             
             <!-- Error Messages -->
             <%= render "devise/shared/error_messages", resource: resource %>
@@ -25,7 +25,8 @@
                   autofocus: true, 
                   placeholder: t(".fullName"), 
                   class: 'form-control form-control-lg',
-                  id: 'user_name' %>
+                  id: 'user_name',
+                  data: { testid: 'signup-name-input' } %>
             </div>
 
             <!-- Email Field -->
@@ -37,7 +38,8 @@
                   autofocus: false, 
                   placeholder: t(".emailAddress"), 
                   class: 'form-control form-control-lg',
-                  id: 'user_email' %>
+                  id: 'user_email',
+                  data: { testid: 'signup-email-input' } %>
             </div>
 
             <!-- Password Field -->
@@ -49,7 +51,8 @@
                   autocomplete: "off", 
                   placeholder: t(".password"), 
                   class: 'form-control form-control-lg',
-                  id: 'user_password' %>
+                  id: 'user_password',
+                  data: { testid: 'signup-password-input' } %>
               <div class="form-text small">Minimum 6 characters</div>
             </div>
 
@@ -62,12 +65,13 @@
                   autocomplete: "off", 
                   placeholder: t(".confirmPassword"), 
                   class: 'form-control form-control-lg',
-                  id: 'user_password_confirmation' %>
+                  id: 'user_password_confirmation',
+                  data: { testid: 'signup-password-confirmation-input' } %>
             </div>
 
             <!-- Submit Button -->
             <div class="d-grid mb-3">
-              <%= f.submit "Create Account", class: "btn btn-danger btn-lg" %>
+              <%= f.submit "Create Account", class: "btn btn-danger btn-lg", data: { testid: 'signup-submit-btn' } %>
             </div>
           <% end %>
 
@@ -81,7 +85,7 @@
 
           <!-- Sign In Link -->
           <div class="d-grid">
-            <%= link_to "Sign In", new_user_session_path, class: "btn btn-outline-dark btn-lg" %>
+            <%= link_to "Sign In", new_user_session_path, class: "btn btn-outline-dark btn-lg", data: { testid: 'login-link' } %>
           </div>
         </div>
       </div>
