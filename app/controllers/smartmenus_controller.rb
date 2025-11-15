@@ -46,6 +46,16 @@ class SmartmenusController < ApplicationController
         status: [0, 20, 22, 24, 25, 30], # opened, ordered, preparing, ready, delivered, billrequested
       ).first
 
+      # Create order automatically if ordering is enabled and no order exists
+      if !@openOrder && @menu.allowOrdering
+        @openOrder = Ordr.create!(
+          menu_id: @menu.id,
+          tablesetting_id: @tablesetting.id,
+          restaurant_id: @tablesetting.restaurant_id,
+          status: 0, # opened
+        )
+      end
+
       if @openOrder
         if current_user
           @ordrparticipant = Ordrparticipant.find_or_create_by(

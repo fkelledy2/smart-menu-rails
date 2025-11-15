@@ -299,7 +299,10 @@ class OrdritemsController < ApplicationController
       ),
       fullPageRefresh: { refresh: full_refresh },
     }
-    ActionCable.server.broadcast("ordr_#{menuparticipant.smartmenu.slug}_channel", partials)
+    # Only broadcast if menuparticipant and smartmenu exist
+    if menuparticipant&.smartmenu&.slug
+      ActionCable.server.broadcast("ordr_#{menuparticipant.smartmenu.slug}_channel", partials)
+    end
   end
 
   def compress_string(str)
@@ -320,14 +323,15 @@ class OrdritemsController < ApplicationController
     totalService = 0
     taxes.each do |tax|
       if tax.taxtype == 'service'
-        totalService += ((tax.taxpercentage * ordr.nett) / 100)
+        totalService += ((tax.taxpercentage * ordr.nett.to_f) / 100)
       else
-        totalTax += ((tax.taxpercentage * ordr.nett) / 100)
+        totalTax += ((tax.taxpercentage * ordr.nett.to_f) / 100)
       end
     end
     ordr.tax = totalTax
     ordr.service = totalService
-    ordr.gross = ordr.nett + ordr.tip + ordr.service + ordr.tax
+    # Use to_f to safely handle nil values
+    ordr.gross = ordr.nett.to_f + ordr.tip.to_f + ordr.service.to_f + ordr.tax.to_f
     ordr.save
   end
 

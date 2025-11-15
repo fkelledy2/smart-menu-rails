@@ -1,7 +1,7 @@
     <div class="row">
-        <div class="col-12 col-md-12 col-lg-12 scrollspy-example" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" tabindex="0">
+        <div class="col-12 col-md-12 col-lg-12 scrollspy-example" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" tabindex="0" data-testid="menu-sections-container">
             <% menu.menusections.order(:sequence).each do |menusection| %>
-                <div style="padding-top:20px" id="menusection_<%= menusection.id %>"></div>
+                <div style="padding-top:20px" id="menusection_<%= menusection.id %>" data-testid="menu-section-<%= menusection.id %>"></div>
                 <% if menu.displayImages == true && menu.restaurant.displayImages == true %>
                     <% if menusection.image %>
                         <div class="card border-light text-bg-dark">
@@ -20,7 +20,7 @@
                     <% else %>
                         <div class="row">
                             <div class="col-12">
-                                <span class='h3'>
+                                <span class='h3' data-testid="menu-section-title-<%= menusection.id %>">
                                     <% if ordrparticipant && ordrparticipant.preferredlocale %>
                                         <%= menusection.localised_name(ordrparticipant.preferredlocale) %>
                                     <% else %>
@@ -53,7 +53,7 @@
                 <% else %>
                         <div class="row">
                             <div class="col-12">
-                                <span class='h3'>
+                                <span class='h3' data-testid="menu-section-title-<%= menusection.id %>">
                                     <% if ordrparticipant && ordrparticipant.preferredlocale %>
                                         <%= menusection.localised_name(ordrparticipant.preferredlocale) %>
                                     <% else %>
@@ -76,7 +76,7 @@
                             </div>
                         </div>
                 <% end %>
-                <div class="row">
+                <div class="row" data-testid="menu-items-row-<%= menusection.id %>">
                     <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).where(status: 'active').order(:sequence).each do |mi| %>
                         <% if ordrparticipant == nil || ordrparticipant && (ordrparticipant.allergyns & mi.allergyns).empty? %>
                             <%= render partial: "smartmenus/showMenuitemHorizontal", locals: { order: order, menu: menu, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, mi: mi, restaurantCurrency: restaurantCurrency } %>

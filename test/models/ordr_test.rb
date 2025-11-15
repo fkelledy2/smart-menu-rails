@@ -368,7 +368,7 @@ class OrdrTest < ActiveSupport::TestCase
         status: :ordered
       )
       
-      mock.verify
+      assert mock.verify
     end
   end
 
@@ -387,6 +387,7 @@ class OrdrTest < ActiveSupport::TestCase
       )
       
       # If broadcast was called, mock would raise error
+      assert ordr.persisted?, "Order should be created successfully"
     end
   end
 
@@ -405,7 +406,7 @@ class OrdrTest < ActiveSupport::TestCase
         status: :preparing
       )
       
-      mock.verify
+      assert mock.verify
     end
   end
 
@@ -426,7 +427,7 @@ class OrdrTest < ActiveSupport::TestCase
     
     KitchenBroadcastService.stub :broadcast_status_change, mock do
       ordr.update!(status: :ordered)
-      mock.verify
+      assert mock.verify
     end
   end
 
@@ -443,8 +444,9 @@ class OrdrTest < ActiveSupport::TestCase
     # No expectation set
     
     KitchenBroadcastService.stub :broadcast_status_change, mock do
-      ordr.update!(gross: 100.0) # Update different field
+      result = ordr.update!(gross: 100.0) # Update different field
       # If broadcast was called, mock would raise error
+      assert result, "Order should update successfully"
     end
   end
 
@@ -465,7 +467,7 @@ class OrdrTest < ActiveSupport::TestCase
     
     KitchenBroadcastService.stub :broadcast_status_change, mock do
       ordr.update!(status: :preparing)
-      mock.verify
+      assert mock.verify
     end
   end
 
@@ -482,8 +484,9 @@ class OrdrTest < ActiveSupport::TestCase
     # No expectation set
     
     KitchenBroadcastService.stub :broadcast_status_change, mock do
-      ordr.update!(status: :paid)
+      result = ordr.update!(status: :paid)
       # If broadcast was called, mock would raise error (paid is not kitchen-relevant)
+      assert result, "Order should update successfully"
     end
   end
 

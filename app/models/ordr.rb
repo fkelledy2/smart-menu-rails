@@ -114,7 +114,7 @@ class Ordr < ApplicationRecord
   }
 
   def grossInCents
-    gross * 100
+    (gross || 0) * 100
   end
 
   def orderedItems

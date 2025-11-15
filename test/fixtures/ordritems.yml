@@ -1,5 +1,2 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  ordr: one
-  menuitem: one
+# Removed fixture ordritems to prevent conflicts with dynamically created order items in system tests

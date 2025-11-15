@@ -249,7 +249,7 @@ class MenuTest < ActiveSupport::TestCase
     
     AdvancedCacheService.stub :invalidate_menu_caches, mock do
       @menu.update!(name: 'Updated Menu Name')
-      mock.verify
+      assert mock.verify
     end
   end
 
@@ -258,12 +258,13 @@ class MenuTest < ActiveSupport::TestCase
     # No expectation set - should not be called
     
     AdvancedCacheService.stub :invalidate_menu_caches, mock do
-      Menu.create!(
+      menu = Menu.create!(
         name: 'New Menu',
         restaurant: @restaurant,
         status: :active
       )
       # If cache invalidation was called, mock would raise error
+      assert menu.persisted?, "Menu should be created successfully"
     end
   end
 
@@ -292,7 +293,7 @@ class MenuTest < ActiveSupport::TestCase
     
     AdvancedCacheService.stub :invalidate_menu_caches, mock do
       menu.destroy!
-      mock.verify
+      assert mock.verify
     end
   end
 
@@ -309,7 +310,7 @@ class MenuTest < ActiveSupport::TestCase
       
       AdvancedCacheService.stub :invalidate_menu_caches, mock do
         @menu.update!(attrs)
-        mock.verify
+        assert mock.verify, "Cache invalidation should be called for #{attrs.keys.first}"
       end
     end
   end
@@ -328,7 +329,7 @@ class MenuTest < ActiveSupport::TestCase
     
     MenuLocalizationJob.stub :perform_async, mock do
       menu.save!
-      mock.verify
+      assert mock.verify
     end
   end
 
@@ -338,8 +339,9 @@ class MenuTest < ActiveSupport::TestCase
     # No expectation set
     
     MenuLocalizationJob.stub :perform_async, mock do
-      @menu.update!(name: 'Updated Name')
+      result = @menu.update!(name: 'Updated Name')
       # If enqueue was called, mock would raise error
+      assert result, "Menu should update successfully"
     end
   end
 
@@ -357,6 +359,7 @@ class MenuTest < ActiveSupport::TestCase
     MenuLocalizationJob.stub :perform_async, mock do
       menu.destroy!
       # If enqueue was called, mock would raise error
+      assert menu.destroyed?, "Menu should be destroyed successfully"
     end
   end
 

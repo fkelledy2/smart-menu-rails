@@ -9,7 +9,7 @@
                     <% if tablesetting %>
                         <% if order %>
                             <% if order.status == 'opened' %>
-                                <% if order.nett > 0 %>
+                                <% if order.nett.to_f > 0 %>
                                     <% if order.addedCount > 0 %>
                                         <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
                                             <i id="orderCart" class="bi bi-cart"></i>
@@ -74,7 +74,7 @@
         </div>
         
         <%# Floating Action Button for Cart - Mobile Optimized (Staff View) %>
-        <% if order && order.status == 'opened' && order.nett > 0 %>
+        <% if order && order.status == 'opened' && order.nett.to_f > 0 %>
           <div class="order-fab">
             <button type="button" class="fab-button <%= 'has-new-items' if order.addedCount > 0 %>" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" aria-label="<%= t('.view_cart', default: 'View cart') %>">
               <i class="bi bi-cart"></i>

@@ -1,0 +1,426 @@
+require "application_system_test_case"
+
+class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
+  setup do
+    @restaurant = restaurants(:one)
+    @menu = menus(:ordering_menu)
+    @table = tablesettings(:table_one)
+    @smartmenu = smartmenus(:one) # test-menu-ordering slug
+    
+    # Menu sections
+    @starters = menusections(:starters_section)
+    @mains = menusections(:mains_section)
+    @desserts = menusections(:desserts_section)
+    
+    # Menu items
+    @spring_rolls = menuitems(:spring_rolls)
+    @caesar_salad = menuitems(:caesar_salad)
+    @burger = menuitems(:burger)
+    @pasta = menuitems(:pasta)
+    @salmon = menuitems(:salmon)
+    @chocolate_cake = menuitems(:chocolate_cake)
+    @ice_cream = menuitems(:ice_cream)
+  end
+
+  # ===================
+  # MENU BROWSING TESTS
+  # ===================
+
+  test 'customer can access smartmenu and see customer view' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Verify customer view is displayed
+    assert_testid('smartmenu-customer-view')
+    assert_no_selector('[data-testid="smartmenu-staff-view"]')
+    
+    # Verify menu content loads
+    assert_testid('menu-content-container')
+    assert_testid('menu-sections-container')
+  end
+
+  test 'customer can see all menu sections' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Verify all sections are visible
+    assert_testid("menu-section-#{@starters.id}")
+    assert_testid("menu-section-title-#{@starters.id}")
+    
+    assert_testid("menu-section-#{@mains.id}")
+    assert_testid("menu-section-title-#{@mains.id}")
+    
+    assert_testid("menu-section-#{@desserts.id}")
+    assert_testid("menu-section-title-#{@desserts.id}")
+    
+    # Verify section names
+    within_testid("menu-section-title-#{@starters.id}") do
+      assert_text 'Starters'
+    end
+  end
+
+  test 'customer can see menu items in sections' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Verify items in starters section
+    assert_testid("menu-item-#{@spring_rolls.id}")
+    assert_testid("menu-item-#{@caesar_salad.id}")
+    
+    # Verify items in mains section
+    assert_testid("menu-item-#{@burger.id}")
+    assert_testid("menu-item-#{@pasta.id}")
+    assert_testid("menu-item-#{@salmon.id}")
+    
+    # Verify item names are displayed
+    within_testid("menu-item-#{@burger.id}") do
+      assert_text 'Classic Burger'
+      assert_text '$15.99'
+    end
+  end
+
+  # ===================
+  # ORDER CREATION TESTS
+  # ===================
+
+  test 'customer can add first item to create new order' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Initially no order exists
+    assert_no_selector('[data-testid="order-fab-container"]')
+    
+    # Click add item button - this opens the add item modal
+    click_testid("add-item-btn-#{@burger.id}")
+    
+    # Click the "Add to Order" button in the modal
+    click_button('addItemToOrderButton')
+    
+    # Wait for view order modal to appear
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Verify order was created
+    order = Ordr.last
+    assert order.present?
+    assert_equal 'opened', order.status
+    assert_equal @table.id, order.tablesetting_id
+    
+    # Verify order has one item
+    assert_equal 1, order.ordritems.count
+  end
+
+  test 'adding first item shows order modal automatically' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    click_testid("add-item-btn-#{@burger.id}")
+    
+    # Modal should open automatically
+    assert_testid('view-order-modal', wait: 5)
+    assert_testid('order-modal-body')
+    
+    # Item should be visible in modal
+    within_testid('order-modal-body') do
+      assert_text 'Classic Burger'
+      assert_text '$15.99'
+    end
+  end
+
+  # ===================
+  # ADDING ITEMS TESTS
+  # ===================
+
+  test 'customer can add multiple different items to order' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add first item
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Close modal
+    find('.btn-dark', text: /cancel|close/i).click
+    
+    # Add second item
+    click_testid("add-item-btn-#{@pasta.id}")
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Close modal
+    find('.btn-dark', text: /cancel|close/i).click
+    
+    # Add third item
+    click_testid("add-item-btn-#{@spring_rolls.id}")
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Verify all three items are in order
+    order = Ordr.last
+    assert_equal 3, order.ordritems.count
+    
+    # Verify items are displayed in modal
+    within_testid('order-modal-body') do
+      assert_text 'Classic Burger'
+      assert_text 'Spaghetti Carbonara'
+      assert_text 'Spring Rolls'
+    end
+  end
+
+  test 'order total updates when items are added' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add first item
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Check initial total
+    expected_total = @burger.price
+    within_testid('order-total-amount') do
+      assert_text "$#{sprintf('%.2f', expected_total)}"
+    end
+    
+    # Close modal and add another item
+    find('.btn-dark', text: /cancel|close/i).click
+    click_testid("add-item-btn-#{@spring_rolls.id}")
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Check updated total
+    expected_total = @burger.price + @spring_rolls.price
+    within_testid('order-total-amount') do
+      assert_text "$#{sprintf('%.2f', expected_total)}"
+    end
+  end
+
+  test 'customer can add same item multiple times' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add burger twice
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    find('.btn-dark', text: /cancel|close/i).click
+    
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Verify two items in order
+    order = Ordr.last
+    assert_equal 2, order.ordritems.count
+    
+    # Verify total reflects both items
+    expected_total = @burger.price * 2
+    within_testid('order-total-amount') do
+      assert_text "$#{sprintf('%.2f', expected_total)}"
+    end
+  end
+
+  # ===================
+  # VIEWING ORDER TESTS
+  # ===================
+
+  test 'customer can open order modal to view cart' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add items
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    find('.btn-dark', text: /cancel|close/i).click
+    
+    # Verify FAB appears after adding item
+    assert_testid('order-fab-container')
+    assert_testid('order-fab-btn')
+    
+    # Click FAB to reopen order
+    click_testid('order-fab-btn')
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Verify order contents
+    within_testid('order-modal-body') do
+      assert_text 'Classic Burger'
+    end
+  end
+
+  test 'order item count badge displays correctly' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add items
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    find('.btn-dark', text: /cancel|close/i).click
+    
+    # Verify badge shows 1
+    within_testid('order-item-count-badge') do
+      assert_text '1'
+    end
+    
+    # Add another item
+    click_testid("add-item-btn-#{@pasta.id}")
+    assert_testid('view-order-modal', wait: 5)
+    find('.btn-dark', text: /cancel|close/i).click
+    
+    # Verify badge shows 2
+    within_testid('order-item-count-badge') do
+      assert_text '2'
+    end
+  end
+
+  # ===================
+  # REMOVING ITEMS TESTS
+  # ===================
+
+  test 'customer can remove item from order' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add two items
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    find('.btn-dark', text: /cancel|close/i).click
+    
+    click_testid("add-item-btn-#{@pasta.id}")
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Get the pasta ordritem
+    order = Ordr.last
+    pasta_ordritem = order.ordritems.joins(:menuitem).find_by(menuitems: { id: @pasta.id })
+    
+    # Remove pasta
+    click_testid("remove-order-item-#{pasta_ordritem.id}-btn")
+    
+    # Wait for removal
+    sleep 1
+    
+    # Verify pasta is gone
+    assert_no_selector("[data-testid='order-item-#{pasta_ordritem.id}']")
+    
+    # Verify burger remains
+    burger_ordritem = order.ordritems.joins(:menuitem).find_by(menuitems: { id: @burger.id })
+    assert_testid("order-item-#{burger_ordritem.id}")
+    
+    # Verify total updated
+    within_testid('order-total-amount') do
+      assert_text "$#{sprintf('%.2f', @burger.price)}"
+    end
+  end
+
+  test 'removing all items leaves order in opened state' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add one item
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    
+    order = Ordr.last
+    order_id = order.id
+    ordritem = order.ordritems.first
+    
+    # Remove the item
+    click_testid("remove-order-item-#{ordritem.id}-btn")
+    
+    # Wait for removal
+    sleep 1
+    
+    # Verify order still exists but is empty
+    order.reload
+    assert_equal 'opened', order.status
+    assert_equal 0, order.ordritems.count
+    
+    # Verify total is 0
+    within_testid('order-total-amount') do
+      assert_text '$0.00'
+    end
+  end
+
+  # ===================
+  # ORDER SUBMISSION TESTS  
+  # ===================
+
+  test 'customer can submit order with items' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add items
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    find('.btn-dark', text: /cancel|close/i).click
+    
+    click_testid("add-item-btn-#{@pasta.id}")
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Submit order
+    click_testid('submit-order-btn')
+    
+    # Wait for submission
+    sleep 2
+    
+    # Verify order status changed
+    order = Ordr.last
+    order.reload
+    assert_equal 'ordered', order.status
+    
+    # Verify items are marked as ordered
+    order.ordritems.each do |item|
+      assert_equal 'ordered', item.status
+    end
+  end
+
+  test 'submit button is disabled when order is empty' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add and then remove an item to create empty order
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    
+    ordritem = Ordr.last.ordritems.first
+    click_testid("remove-order-item-#{ordritem.id}-btn")
+    sleep 1
+    
+    # Verify submit button is disabled
+    submit_btn = find_testid('submit-order-btn')
+    assert submit_btn[:disabled] || submit_btn[:class].include?('disabled')
+  end
+
+  # ===================
+  # ORDER PERSISTENCE TESTS
+  # ===================
+
+  test 'order persists across page reloads' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add items
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    find('.btn-dark', text: /cancel|close/i).click
+    
+    order_id = Ordr.last.id
+    
+    # Reload page
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Verify order still exists
+    assert_testid('order-fab-container')
+    assert_testid('order-item-count-badge')
+    
+    # Open order and verify contents
+    click_testid('order-fab-btn')
+    assert_testid('view-order-modal', wait: 5)
+    
+    within_testid('order-modal-body') do
+      assert_text 'Classic Burger'
+    end
+    
+    # Verify same order
+    assert_equal order_id, Ordr.last.id
+  end
+
+  test 'customer can continue adding to persisted order' do
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add first item
+    click_testid("add-item-btn-#{@burger.id}")
+    assert_testid('view-order-modal', wait: 5)
+    find('.btn-dark', text: /cancel|close/i).click
+    
+    order_id = Ordr.last.id
+    
+    # Reload page
+    visit smartmenu_path(@smartmenu.slug)
+    
+    # Add another item
+    click_testid("add-item-btn-#{@pasta.id}")
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Verify same order with 2 items
+    order = Ordr.find(order_id)
+    assert_equal 2, order.ordritems.count
+  end
+end

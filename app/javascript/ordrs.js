@@ -4,12 +4,17 @@ export function initOrders() {
     $('#orderCart').hide();
     $('#orderCartSpinner').show();
 
-    fetch(url, {
+    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
+    if (!csrfToken) {
+      console.error('CSRF token not found');
+    }
+
+    return fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        'X-CSRF-Token': document.querySelector("meta[name='csrf-token']").content,
+        'X-CSRF-Token': csrfToken || '',
       },
       body: JSON.stringify(body),
     })
@@ -23,13 +28,13 @@ export function initOrders() {
         console.log('Success:', data);
         $('#orderCartSpinner').hide();
         $('#orderCart').show();
-        // Handle success response
+        return data;
       })
       .catch((error) => {
         console.error('Error:', error);
         $('#orderCartSpinner').hide();
         $('#orderCart').show();
-        // Handle error
+        throw error;
       });
   }
 
@@ -346,7 +351,34 @@ export function initOrders() {
         };
 
         console.log('Sending order item:', ordritem);
-        post(`/restaurants/${restaurantId}/ordritems`, ordritem);
+        
+        // Post the order item and wait for completion
+        post(`/restaurants/${restaurantId}/ordritems`, ordritem)
+          .then(() => {
+            // Wait longer for WebSocket to update the DOM
+            return new Promise(resolve => setTimeout(resolve, 1000));
+          })
+          .then(() => {
+            // Close the add item modal first
+            const addModal = document.getElementById('addItemToOrderModal');
+            if (addModal) {
+              $(addModal).modal('hide');
+            }
+            
+            // Wait for add modal to fully close
+            return new Promise(resolve => setTimeout(resolve, 300));
+          })
+          .then(() => {
+            // Now show the view order modal
+            const viewModal = $('#viewOrderModal');
+            if (viewModal.length) {
+              viewModal.modal('show');
+            }
+          })
+          .catch((error) => {
+            console.error('Error adding item to order:', error);
+          });
+        
         return true;
       });
     }

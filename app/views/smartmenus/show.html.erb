@@ -8,15 +8,15 @@
 <%# Cache the menu header - invalidates when smartmenu, menu, or restaurant changes %>
 <% cache [@smartmenu, @menu, @restaurant, show_customer_view ? 'customer' : 'staff'], expires_in: 1.hour do %>
   <% if show_customer_view %>
-  <div id="menuc" class="menu-sticky-header menu-sticky-header-mobile">
+  <div id="menuc" class="menu-sticky-header menu-sticky-header-mobile" data-testid="smartmenu-customer-view">
   <% else %>
-  <div id="menuu" class="menu-sticky-header menu-sticky-header-mobile">
+  <div id="menuu" class="menu-sticky-header menu-sticky-header-mobile" data-testid="smartmenu-staff-view">
   <% end %>
       <%= render partial: "smartmenus/showMenuBanner" %>
   </div>
 <% end %>
 
-<div id="menuContentContainer">
+<div id="menuContentContainer" data-testid="menu-content-container">
     <%# Cache menu content separately - includes order state for dynamic content %>
     <% cache_key = [@smartmenu, @menu, @allergyns.maximum(:updated_at), @openOrder&.updated_at, show_customer_view ? 'customer' : 'staff'] %>
     <% cache cache_key, expires_in: 30.minutes do %>

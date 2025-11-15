@@ -29,3 +29,76 @@ three:
   price: 5.50
   itemtype: drink
   menusection: one
+
+# Items for ordering tests - Starters section
+spring_rolls:
+  name: Spring Rolls
+  description: Crispy vegetable spring rolls with sweet chili sauce
+  status: 1
+  sequence: 1
+  calories: 180
+  price: 8.99
+  itemtype: food
+  menusection: starters_section
+
+caesar_salad:
+  name: Caesar Salad
+  description: Fresh romaine lettuce with parmesan and croutons
+  status: 1
+  sequence: 2
+  calories: 220
+  price: 10.99
+  itemtype: food
+  menusection: starters_section
+
+# Items for ordering tests - Mains section
+burger:
+  name: Classic Burger
+  description: Beef burger with lettuce, tomato, and cheese
+  status: 1
+  sequence: 1
+  calories: 650
+  price: 15.99
+  itemtype: food
+  menusection: mains_section
+
+pasta:
+  name: Spaghetti Carbonara
+  description: Traditional Italian pasta with bacon and cream
+  status: 1
+  sequence: 2
+  calories: 580
+  price: 14.99
+  itemtype: food
+  menusection: mains_section
+
+salmon:
+  name: Grilled Salmon
+  description: Fresh Atlantic salmon with vegetables
+  status: 1
+  sequence: 3
+  calories: 420
+  price: 22.99
+  itemtype: food
+  menusection: mains_section
+
+# Items for ordering tests - Desserts section
+chocolate_cake:
+  name: Chocolate Cake
+  description: Rich chocolate cake with ganache
+  status: 1
+  sequence: 1
+  calories: 450
+  price: 7.99
+  itemtype: food
+  menusection: desserts_section
+
+ice_cream:
+  name: Vanilla Ice Cream
+  description: Homemade vanilla ice cream
+  status: 1
+  sequence: 2
+  calories: 200
+  price: 5.99
+  itemtype: food
+  menusection: desserts_section

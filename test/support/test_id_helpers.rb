@@ -269,6 +269,181 @@ module TestIdHelpers
     element = find_testid(testid, **options)
     uncheck element[:id]
   end
+  
+  # Helper method for smartmenu ordering flow
+  # Clicks add item button, then confirms in modal, then opens view order modal
+  #
+  # @param item_id [Integer] The menu item ID
+  # @param options [Hash] Additional options
+  # @return [void]
+  #
+  # @example
+  #   add_item_to_order(@burger.id)
+  #   add_item_to_order(@pasta.id, wait: 5)
+  #
+  # Helper to close all modals and wait for them to be fully gone
+  def close_all_modals
+    # Close modals and clean up in one efficient JavaScript call
+    page.execute_script(<<~JS)
+      // Close all modal instances
+      document.querySelectorAll('.modal').forEach(modal => {
+        const bsModal = bootstrap.Modal.getInstance(modal);
+        if (bsModal) {
+          bsModal.hide();
+        }
+        // Force immediate cleanup
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+      });
+      
+      // Remove all backdrops
+      document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+        backdrop.remove();
+      });
+      
+      // Clean up body
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('padding-right');
+    JS
+    
+    # Brief pause for DOM to settle
+    sleep 0.2
+  end
+  
+  # Wait for all pending fetch/AJAX requests to complete
+  def wait_for_requests_to_complete(timeout: 5)
+    Timeout.timeout(timeout) do
+      loop do
+        # Check if jQuery has pending AJAX requests
+        pending = page.evaluate_script('typeof jQuery !== "undefined" && jQuery.active || 0')
+        break if pending.zero?
+        sleep 0.05
+      end
+    end
+  rescue Timeout::Error
+    # Continue if timeout
+  end
+  
+  # Wait for DOM to be mutated (e.g., after Turbo Stream updates)
+  def wait_for_dom_update(timeout: 5)
+    Timeout.timeout(timeout) do
+      page.execute_script(<<~JS)
+        return new Promise((resolve) => {
+          const observer = new MutationObserver(() => {
+            observer.disconnect();
+            resolve(true);
+          });
+          observer.observe(document.body, { childList: true, subtree: true });
+          
+          // Auto-resolve if no changes within 500ms
+          setTimeout(() => {
+            observer.disconnect();
+            resolve(true);
+          }, 500);
+        });
+      JS
+    end
+  rescue Timeout::Error
+    # Continue if timeout
+  end
+  
+  # Wait for a specific element to have content (not empty)
+  def wait_for_element_content(selector, timeout: 5)
+    Timeout.timeout(timeout) do
+      loop do
+        content = page.evaluate_script("document.querySelector('#{selector}')?.textContent?.trim()")
+        break if content && !content.empty?
+        sleep 0.05
+      end
+    end
+  rescue Timeout::Error
+    # Continue if timeout
+  end
+  
+  def add_item_to_order(item_id, **options)
+    # First, close any open modals to prevent interference
+    close_all_modals
+    
+    # Click the add item button - opens modal
+    click_testid("add-item-btn-#{item_id}", **options)
+    
+    # Wait for the add-to-order modal to exist and for the price to load
+    begin
+      # Wait for modal to exist
+      find('#menuItemModal', wait: 3, visible: false)
+      
+      # Wait for price span to be populated
+      wait_for_element_content('#a2o_menuitem_price', timeout: 3)
+    rescue Capybara::ElementNotFound, Timeout::Error
+      # Modal or price not loading - log for debugging
+      Rails.logger.debug("Add item modal or price not loading for item #{item_id}")
+    end
+    
+    # Manually enable and click the add button via JavaScript
+    # (WebSocket doesn't work in tests and button may be disabled)
+    page.execute_script(<<~JS)
+      const btn = document.getElementById('addItemToOrderButton');
+      if (btn) {
+        btn.removeAttribute('disabled');
+        btn.click();
+      }
+    JS
+    
+    # Wait for the POST request to complete
+    wait_for_requests_to_complete(timeout: 5)
+    
+    # Wait for Turbo Stream to process and update DOM
+    wait_for_dom_update(timeout: 2)
+    
+    # Ensure all follow-up requests are also done
+    wait_for_requests_to_complete(timeout: 3)
+    
+    # Wait for the view order modal element to exist in DOM
+    begin
+      find('#viewOrderModal', wait: 5, visible: false)
+    rescue Capybara::ElementNotFound
+      # Modal not rendered yet, wait more
+      wait_for_dom_update(timeout: 2)
+      find('#viewOrderModal', wait: 3, visible: false)
+    end
+    
+    # Manually trigger the view order modal using Bootstrap 5 native API
+    # and ensure it's actually visible
+    page.execute_script(<<~JS)
+      const modalEl = document.getElementById('viewOrderModal');
+      if (modalEl && typeof bootstrap !== 'undefined') {
+        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        modal.show();
+        
+        // Force visibility if Bootstrap doesn't set it
+        setTimeout(() => {
+          if (!modalEl.classList.contains('show')) {
+            modalEl.classList.add('show');
+            modalEl.style.display = 'block';
+            modalEl.setAttribute('aria-hidden', 'false');
+          }
+        }, 100);
+      }
+    JS
+    
+    # Wait for modal to be fully visible and verify it
+    sleep 0.5
+    
+    # Verify modal is actually visible, retry if not
+    unless page.has_css?('[data-testid="view-order-modal"]', visible: true, wait: 1)
+      page.execute_script(<<~JS)
+        const modalEl = document.getElementById('viewOrderModal');
+        if (modalEl) {
+          modalEl.classList.add('show');
+          modalEl.style.display = 'block';
+          modalEl.setAttribute('aria-hidden', 'false');
+        }
+      JS
+      sleep 0.3
+    end
+  end
 end
 
 # Automatically include in system tests

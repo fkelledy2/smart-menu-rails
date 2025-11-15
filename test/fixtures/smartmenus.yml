@@ -1,19 +1,25 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  slug: MyString
+  slug: test-menu-ordering
   restaurant: one
-  menu: one
-  tablesetting: one
+  menu: ordering_menu
+  tablesetting: table_one
 
 two:
-  slug: AnotherString
+  slug: another-menu
   restaurant: one
   menu: two
   tablesetting: one
 
 three:
-  slug: ThirdString
+  slug: staff-test-menu
   restaurant: two
   menu: three
   tablesetting: one
+  
+# Smartmenu for customer ordering tests (no table - general menu)
+customer_menu:
+  slug: customer-test-menu
+  restaurant: one
+  menu: ordering_menu

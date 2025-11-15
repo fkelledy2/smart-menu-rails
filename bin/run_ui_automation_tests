@@ -20,6 +20,7 @@ echo ""
 # Define UI automation test files
 # Phase 1: Authentication & Menu Management
 # Phase 2: Restaurant Details & Menu Items
+# Phase 3: Smartmenu Ordering (Customer & Staff)
 # Add new test files here as they are created
 UI_TESTS=(
   # Phase 1 - Authentication & Core Flows
@@ -31,7 +32,12 @@ UI_TESTS=(
   "test/system/restaurant_details_test.rb"
   "test/system/menu_items_test.rb"
   
-  # Phase 3 - Add new test files here as they are created
+  # Phase 3 - Smartmenu Customer & Staff Ordering
+  "test/system/smartmenu_customer_ordering_test.rb"
+  "test/system/smartmenu_staff_ordering_test.rb"
+  "test/system/smartmenu_order_state_test.rb"
+  
+  # Phase 4 - Add new test files here as they are created
   # Example: "test/system/settings_test.rb"
   # Example: "test/system/staff_management_test.rb"
 )

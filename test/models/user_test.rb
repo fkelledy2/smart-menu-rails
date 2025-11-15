@@ -471,7 +471,7 @@ class UserTest < ActiveSupport::TestCase
       user.update!(first_name: 'Updated')
       
       # Verify cache invalidation was called
-      mock.verify
+      assert mock.verify
     end
   end
 
@@ -481,13 +481,14 @@ class UserTest < ActiveSupport::TestCase
     # No expectation set
     
     AdvancedCacheService.stub :invalidate_user_caches, mock do
-      User.create!(
+      user = User.create!(
         email: 'nocache@example.com',
         password: 'password123'
       )
       
       # If cache invalidation was called, mock would raise error
       # No error means callback didn't execute (correct behavior)
+      assert user.persisted?, "User should be created successfully"
     end
   end
 
@@ -520,7 +521,7 @@ class UserTest < ActiveSupport::TestCase
       
       AdvancedCacheService.stub :invalidate_user_caches, mock do
         user.update!(attrs)
-        mock.verify
+        assert mock.verify, "Cache invalidation should be called for #{attrs.keys.first}"
       end
     end
   end

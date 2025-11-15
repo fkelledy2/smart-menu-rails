@@ -1,8 +1,2 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  sessionid: MyString
-  role: 1
-  employee: one
-  ordr: one
-  ordritem: one
+# Removed fixtures to prevent conflicts

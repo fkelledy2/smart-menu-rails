@@ -67,7 +67,7 @@
           </div>
           <div class="modal-footer" style="padding: 16px; gap: 12px; justify-content: flex-end;">
             <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
-            <button id="addItemToOrderButton" type="button" class="btn-touch-primary" data-bs-dismiss="modal">
+            <button id="addItemToOrderButton" type="button" class="btn-touch-primary">
                 <i class="bi bi-plus"></i>
                 <%= restaurantCurrency.symbol ? restaurantCurrency.symbol : "" %><span id="a2o_menuitem_price"></span>
             </button>
@@ -113,13 +113,13 @@
         </div>
     </div>
     <% end %>
-    <div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel">
+    <div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" data-testid="view-order-modal">
       <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="viewOrderModalLabel"><%= t(".yourOrder")%></h5>
           </div>
-          <div class="modal-body">
+          <div class="modal-body" data-testid="order-modal-body">
             <% if order %>
                 <div class="row">
                     <div class="col-8">
@@ -133,7 +133,7 @@
                     </div>
                 </div>
                 <% if order && order.addedCount > 0 %>
-                    <div class="row">
+                    <div class="row" data-testid="order-items-selected-section">
                         <div class="col-2">
                             <p><%= t('.selected') %></p>
                         </div>
@@ -143,13 +143,14 @@
                     </div>
                     <% order.ordractions.includes([:ordritem]).each do |ordraction| %>
                         <% if ordraction.ordritem && ordraction.ordritem.status == 'opened' && ordraction.ordritem.in?(order.ordritems) %>
-                            <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
+                            <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row" data-testid="order-item-<%= ordraction.ordritem.id %>">
                                 <div class="col-8">
                                     <div class="d-flex w-100 overflow-hidden">
                                         <p class="text-truncate">
                                             <button type="button" class="removeItemFromOrderButton btn-touch-danger btn-touch-icon btn-touch-sm"
                                                 data-bs-ordritem_id="<%= ordraction.ordritem.id %>"
-                                                aria-label="<%= t('.remove_item', default: 'Remove item') %>">
+                                                aria-label="<%= t('.remove_item', default: 'Remove item') %>"
+                                                data-testid="remove-order-item-<%= ordraction.ordritem.id %>-btn">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                             <% if ordrparticipant && ordrparticipant.preferredlocale %>
@@ -227,14 +228,14 @@
                     <% end %>
                 <% end %>
 
-                <div class="row">
+                <div class="row" data-testid="order-total-row">
                     <div class="col-8">
                     </div>
                     <div class="col-2">
                         <b><%= t(".total")%>:</b>
                     </div>
                     <div class="col-2">
-                        <span class="float-end"><b><%= number_to_currency(order.nett, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></b></span>
+                        <span class="float-end" data-testid="order-total-amount"><b><%= number_to_currency(order.nett, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></b></span>
                     </div>
                 </div>
             <% end %>
@@ -244,9 +245,9 @@
                 <div style='position:relative;right:-5px;bottom:-5px;' class="btn-group btn-group-lg btn-order-group-custom-rounded" role="group" aria-label="<%= t('.order_aria') %>">
                     <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
                     <% if order && order.addedCount > 0 %>
-                        <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-danger"><%= t(".submit") %></button>
+                        <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-danger" data-testid="submit-order-btn"><%= t(".submit") %></button>
                     <% else %>
-                        <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-danger" disabled><%= t(".submit") %></button>
+                        <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-danger" disabled data-testid="submit-order-btn"><%= t(".submit") %></button>
                     <% end %>
                 </div>
             </span>
@@ -273,7 +274,7 @@
                           </span>
                         </div>
                     </div>
-                    <% if order.covercharge > 0 %>
+                    <% if order.covercharge.to_f > 0 %>
                         <div class="row">
                             <div class="col-10">
                                 <%= t('.cover_charge') %>
@@ -296,7 +297,7 @@
                         </div>
                     </div>
                     <hr>
-                    <% if order.service > 0 %>
+                    <% if order.service.to_f > 0 %>
                         <div class="row">
                             <div class="col-10">
                                 <%= t('.service') %>
@@ -308,7 +309,7 @@
                             </div>
                         </div>
                     <% end %>
-                    <% if order.tax > 0 %>
+                    <% if order.tax.to_f > 0 %>
                         <div class="row">
                             <div class="col-10">
                                 <%= t('.tax') %>
@@ -341,7 +342,7 @@
           </div>
           <div class="modal-footer" style="padding: 16px; gap: 12px; justify-content: flex-end;">
             <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="Close"><%= t(".cancel") %></button>
-            <% if order && order.gross > 0 %>
+            <% if order && order.gross.to_f > 0 %>
                 <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn-touch-primary"><%= t(".requestBill") %></button>
             <% else %>
                 <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn-touch-primary" disabled><%= t(".requestBill") %></button>
@@ -371,7 +372,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <% if order.covercharge > 0 %>
+                                <% if order.covercharge.to_f > 0 %>
                                     <div class="row">
                                         <div class="col-10">
                                             <%= t('.cover_charge') %>
@@ -393,7 +394,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <% if order.service > 0 %>
+                                <% if order.service.to_f > 0 %>
                                     <div class="row">
                                         <div class="col-9">
                                             <%= t('.service') %>
@@ -405,7 +406,7 @@
                                         </div>
                                     </div>
                                 <% end %>
-                                <% if order.tax > 0 %>
+                                <% if order.tax.to_f > 0 %>
                                     <div class="row">
                                         <div class="col-9">
                                             <%= t('.tax') %>
@@ -494,7 +495,7 @@
                 </div>
                 <div class="modal-footer" style="padding: 16px; gap: 12px; justify-content: flex-end;">
                     <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="Close"><%= t(".cancel") %></button>
-                    <% if order && order.gross > 0 %>
+                    <% if order && order.gross.to_f > 0 %>
                         <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn-touch-primary"><%= t(".confirmPayment") %></button>
                     <% else %>
                         <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn-touch-primary" disabled><%= t(".confirmPayment") %></button>

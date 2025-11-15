@@ -15,3 +15,28 @@ two:
   status: 1
   sequence: 2
   menu: one
+
+# Sections for ordering_menu
+starters_section:
+  name: Starters
+  description: Appetizers and small plates
+  image: nil
+  status: 1
+  sequence: 1
+  menu: ordering_menu
+  
+mains_section:
+  name: Main Courses
+  description: Hearty main dishes
+  image: nil
+  status: 1
+  sequence: 2
+  menu: ordering_menu
+  
+desserts_section:
+  name: Desserts
+  description: Sweet treats
+  image: nil
+  status: 1
+  sequence: 3
+  menu: ordering_menu

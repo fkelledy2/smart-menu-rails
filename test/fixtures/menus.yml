@@ -54,3 +54,15 @@ five:
   allowOrdering: false
   inventoryTracking: false
   imagecontext: FifthContext
+
+# For smartmenu ordering tests
+ordering_menu:
+  name: Test Ordering Menu
+  description: Menu for testing customer and staff ordering flows
+  status: 1
+  sequence: 10
+  restaurant: one
+  displayImages: true
+  allowOrdering: true
+  inventoryTracking: false
+  imagecontext: Test menu context

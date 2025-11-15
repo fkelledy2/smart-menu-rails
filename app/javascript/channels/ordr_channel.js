@@ -4,29 +4,47 @@ import pako from 'pako';
 function post(url, body) {
   $('#orderCart').hide();
   $('#orderCartSpinner').show();
-  fetch(url, {
+  
+  const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
+  if (!csrfToken) {
+    console.error('CSRF token not found');
+  }
+  
+  return fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-CSRF-Token': document.querySelector("meta[name='csrf-token']").content,
+      'X-CSRF-Token': csrfToken || '',
     },
     body: JSON.stringify(body),
   })
-    .then((response) => {})
+    .then((response) => {
+      $('#orderCartSpinner').hide();
+      $('#orderCart').show();
+      return response;
+    })
     .catch(function (err) {
       console.info(err + ' url: ' + url);
+      $('#orderCartSpinner').hide();
+      $('#orderCart').show();
+      throw err;
     });
-  return false;
 }
 function patch(url, body) {
   $('#orderCart').hide();
   $('#orderCartSpinner').show();
+  
+  const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
+  if (!csrfToken) {
+    console.error('CSRF token not found');
+  }
+  
   fetch(url, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-CSRF-Token': document.querySelector("meta[name='csrf-token']").content,
+      'X-CSRF-Token': csrfToken || '',
     },
     body: JSON.stringify(body),
   })
@@ -333,7 +351,40 @@ function refreshOrderJSLogic() {
         },
       };
       const restaurantId = $('#currentRestaurant').text();
-      post(`/restaurants/${restaurantId}/ordritems`, ordritem);
+      
+      console.log('=== ADD ITEM TO ORDER ===');
+      console.log('Restaurant ID:', restaurantId);
+      console.log('Order item data:', ordritem);
+      console.log('POST URL:', `/restaurants/${restaurantId}/ordritems`);
+      console.log('========================');
+      
+      // Post the order item and wait for completion
+      post(`/restaurants/${restaurantId}/ordritems`, ordritem)
+        .then(() => {
+          // Wait longer for WebSocket to update the DOM
+          return new Promise(resolve => setTimeout(resolve, 1000));
+        })
+        .then(() => {
+          // Close the add item modal first
+          const addModal = document.getElementById('addItemToOrderModal');
+          if (addModal) {
+            $(addModal).modal('hide');
+          }
+          
+          // Wait for add modal to fully close
+          return new Promise(resolve => setTimeout(resolve, 300));
+        })
+        .then(() => {
+          // Now show the view order modal
+          const viewModal = $('#viewOrderModal');
+          if (viewModal.length) {
+            viewModal.modal('show');
+          }
+        })
+        .catch((error) => {
+          console.error('Error adding item to order:', error);
+        });
+      
       return true;
     });
   }
@@ -801,6 +852,15 @@ function initializeOrderChannel() {
 
             // Refresh any order-related logic
             refreshOrderJSLogic();
+            
+            // Dispatch custom event for test synchronization
+            // Tests can wait for this event instead of arbitrary sleeps
+            window.dispatchEvent(new CustomEvent('ordr:updated', { 
+              detail: { 
+                keys: Object.keys(data),
+                timestamp: new Date().getTime()
+              }
+            }));
           } catch (error) {
             console.error('Error processing received data:', error);
             updateConnectionStatus('error', 'Error processing update');
