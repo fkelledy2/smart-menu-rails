@@ -222,6 +222,7 @@ class OrdritemsController < ApplicationController
               restaurantCurrency: restaurant_currency,
               ordrparticipant: ordrparticipant,
               menuparticipant: menuparticipant,
+              tablesetting: tablesetting,
             },
           )
         end,
@@ -245,6 +246,7 @@ class OrdritemsController < ApplicationController
               restaurantCurrency: restaurant_currency,
               ordrparticipant: ordrparticipant,
               menuparticipant: menuparticipant,
+              tablesetting: tablesetting,
             },
           )
         end,
