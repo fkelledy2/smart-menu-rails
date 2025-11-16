@@ -12,13 +12,13 @@ class MenuitemsizemappingsController < ApplicationController
     respond_to do |format|
       if @menuItemSizeMapping.update(menuitemsizemapping_params)
         format.html do
-          if params[:menu_id]
-            redirect_to edit_menu_menuitem_url(@menuItemSizeMapping.menuitem.menusection.menu, @menuItemSizeMapping.menuitem),
-                        notice: t('common.flash.updated', resource: t('activerecord.models.menuitem'))
-          else
-            redirect_to edit_menuitem_url(@menuItemSizeMapping.menuitem),
-                        notice: t('common.flash.updated', resource: t('activerecord.models.menuitem'))
-          end
+          menuitem = @menuItemSizeMapping.menuitem
+          menusection = menuitem.menusection
+          menu = menusection.menu
+          restaurant = menu.restaurant
+          
+          redirect_to edit_restaurant_menu_menusection_menuitem_path(restaurant, menu, menusection, menuitem),
+                      notice: t('common.flash.updated', resource: t('activerecord.models.menuitem'))
         end
         format.json { render :show, status: :ok, location: @menuItemSizeMapping }
       else

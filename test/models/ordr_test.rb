@@ -277,6 +277,9 @@ class OrdrTest < ActiveSupport::TestCase
   end
 
   test 'diners should count distinct session IDs for role 0 participants' do
+    # Clear existing fixture participants to test from clean state
+    @ordr.ordrparticipants.destroy_all
+    
     # Create test participants with different roles and session IDs
     @ordr.ordrparticipants.create!(role: 0, sessionid: 'session1')
     @ordr.ordrparticipants.create!(role: 0, sessionid: 'session2')
