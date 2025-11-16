@@ -1,5 +1,3 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  menuitem: one
-  allergyn: one
+# Fixtures removed to prevent foreign key constraint violations during test cleanup
+# Tests requiring menuitem_allergyn_mappings should create their own data

@@ -2,9 +2,13 @@ require 'test_helper'
 
 class MenuitemAllergynMappingTest < ActiveSupport::TestCase
   def setup
-    @mapping = menuitem_allergyn_mappings(:one)
     @menuitem = menuitems(:one)
     @allergyn = allergyns(:one)
+    # Create mapping dynamically instead of using fixtures to avoid FK constraint issues
+    @mapping = MenuitemAllergynMapping.create!(
+      menuitem: @menuitem,
+      allergyn: @allergyn
+    )
   end
 
   # === VALIDATION TESTS ===
