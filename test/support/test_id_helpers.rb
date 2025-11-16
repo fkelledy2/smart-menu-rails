@@ -400,49 +400,34 @@ module TestIdHelpers
     # Ensure all follow-up requests are also done
     wait_for_requests_to_complete(timeout: 3)
     
-    # Wait for the view order modal element to exist in DOM
-    begin
-      find('#viewOrderModal', wait: 5, visible: false)
-    rescue Capybara::ElementNotFound
-      # Modal not rendered yet, wait more
-      wait_for_dom_update(timeout: 2)
-      find('#viewOrderModal', wait: 3, visible: false)
-    end
-    
-    # Manually trigger the view order modal using Bootstrap 5 native API
-    # and ensure it's actually visible
-    page.execute_script(<<~JS)
-      const modalEl = document.getElementById('viewOrderModal');
-      if (modalEl && typeof bootstrap !== 'undefined') {
-        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-        modal.show();
-        
-        // Force visibility if Bootstrap doesn't set it
-        setTimeout(() => {
-          if (!modalEl.classList.contains('show')) {
-            modalEl.classList.add('show');
-            modalEl.style.display = 'block';
-            modalEl.setAttribute('aria-hidden', 'false');
-          }
-        }, 100);
-      }
-    JS
-    
-    # Wait for modal to be fully visible and verify it
+    # Wait for add modal to close
     sleep 0.5
     
-    # Verify modal is actually visible, retry if not
-    unless page.has_css?('[data-testid="view-order-modal"]', visible: true, wait: 1)
+    # Item has been added - modal is closed, FAB should update
+    # Tests should manually open view order modal if they need to verify contents
+  end
+  
+  # Opens the view order modal by clicking the FAB button or directly if FAB not visible
+  def open_view_order_modal(**options)
+    # Try to click FAB - in tests, WebSocket doesn't update so FAB may not be visible
+    begin
+      click_testid('order-fab-btn', wait: 2, **options)
+    rescue Capybara::ElementNotFound
+      # FAB not rendered (WebSocket doesn't work in tests), open modal directly
       page.execute_script(<<~JS)
         const modalEl = document.getElementById('viewOrderModal');
-        if (modalEl) {
-          modalEl.classList.add('show');
-          modalEl.style.display = 'block';
-          modalEl.setAttribute('aria-hidden', 'false');
+        if (modalEl && typeof bootstrap !== 'undefined') {
+          const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+          modal.show();
         }
       JS
-      sleep 0.3
     end
+    
+    # Wait for modal to appear
+    assert_testid('view-order-modal', wait: 5)
+    
+    # Wait for modal content to render
+    sleep 0.3
   end
 end
 

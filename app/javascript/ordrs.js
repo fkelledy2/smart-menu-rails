@@ -352,34 +352,37 @@ export function initOrders() {
 
         console.log('Sending order item:', ordritem);
         
-        // Post the order item and wait for completion
+        // Post the order item first
         post(`/restaurants/${restaurantId}/ordritems`, ordritem)
           .then(() => {
-            // Wait longer for WebSocket to update the DOM
-            return new Promise(resolve => setTimeout(resolve, 1000));
-          })
-          .then(() => {
-            // Close the add item modal first
-            const addModal = document.getElementById('addItemToOrderModal');
-            if (addModal) {
-              $(addModal).modal('hide');
+            console.log('Order item posted successfully');
+            
+            // Set flag to prevent WebSocket from updating modals while closing
+            window.closingAddItemModal = true;
+            
+            // Close the modal
+            const modalEl = document.getElementById('addItemToOrderModal');
+            if (modalEl) {
+              const modalInstance = bootstrap.Modal.getInstance(modalEl);
+              if (modalInstance) {
+                modalInstance.hide();
+              } else {
+                // Fallback to jQuery if no instance
+                $('#addItemToOrderModal').modal('hide');
+              }
             }
             
-            // Wait for add modal to fully close
-            return new Promise(resolve => setTimeout(resolve, 300));
-          })
-          .then(() => {
-            // Now show the view order modal
-            const viewModal = $('#viewOrderModal');
-            if (viewModal.length) {
-              viewModal.modal('show');
-            }
+            // Clear flag after a delay (modal animation is ~300ms)
+            setTimeout(() => {
+              window.closingAddItemModal = false;
+            }, 500);
           })
           .catch((error) => {
             console.error('Error adding item to order:', error);
+            window.closingAddItemModal = false;
           });
         
-        return true;
+        return false; // Prevent any default behavior
       });
     }
     if ($('#start-order').length) {

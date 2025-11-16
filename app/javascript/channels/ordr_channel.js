@@ -553,12 +553,25 @@ function refreshOrderJSLogic() {
  */
 function preserveModalState() {
   const openModals = [];
+  
+  // Modals that should NOT be preserved (they should always close after action)
+  const doNotPreserveModals = ['addItemToOrderModal'];
 
   try {
     const modalElements = document.querySelectorAll('.modal.show');
 
     modalElements.forEach((modalEl) => {
       try {
+        // Skip modals that should not be preserved
+        if (doNotPreserveModals.includes(modalEl.id)) {
+          console.log(`[Modal Preservation] Skipping modal (should close): ${modalEl.id}`);
+          const modalInstance = bootstrap.Modal.getInstance(modalEl);
+          if (modalInstance) {
+            modalInstance.hide();
+          }
+          return;
+        }
+        
         const modalInstance = bootstrap.Modal.getInstance(modalEl);
         if (modalInstance) {
           console.log(`[Modal Preservation] Preserving modal: ${modalEl.id}`);
@@ -792,6 +805,12 @@ function initializeOrderChannel() {
             partialsToUpdate.forEach(({ key, selector, shouldUpdate }) => {
               // Skip if the key doesn't exist in the data or shouldn't be updated
               if (!data[key] || (shouldUpdate && !shouldUpdate())) {
+                return;
+              }
+              
+              // Skip updating modals if we're closing the add item modal
+              if (key === 'modals' && window.closingAddItemModal) {
+                console.log('[Modal Update] Skipping modal update - addItemToOrderModal is closing');
                 return;
               }
 

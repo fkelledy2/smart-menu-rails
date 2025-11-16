@@ -79,7 +79,7 @@
                 <div class="row" data-testid="menu-items-row-<%= menusection.id %>">
                     <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).where(status: 'active').order(:sequence).each do |mi| %>
                         <% if ordrparticipant == nil || ordrparticipant && (ordrparticipant.allergyns & mi.allergyns).empty? %>
-                            <%= render partial: "smartmenus/showMenuitemHorizontal", locals: { order: order, menu: menu, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, mi: mi, restaurantCurrency: restaurantCurrency } %>
+                            <%= render partial: "smartmenus/showMenuitemHorizontal", locals: { order: order, menu: menu, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, mi: mi, restaurantCurrency: restaurantCurrency, tablesetting: tablesetting } %>
                         <% end %>
                     <% end %>
                 </div>

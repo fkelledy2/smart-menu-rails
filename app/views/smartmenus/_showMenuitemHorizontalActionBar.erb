@@ -12,7 +12,7 @@
         <% if !order || ( order.status != 'billrequested' && order.status != 'closed' ) %>
             <div class="d-flex gap-0" role="group" aria-label="<%= t('.order') %>">
                                     <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                        <button type="button" class="addItemToOrder btn-touch-primary" style="position:relative; bottom:-12px; border-radius: 8px 0 8px 0px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                        <button type="button" class="addItemToOrder btn-touch-primary" style="position:relative; bottom:-12px; border-radius: 8px 0 8px 0px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal" <%= 'disabled' if tablesetting.nil? %>
                                             data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                             data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                             data-bs-ordr_id="<%= order&.id %>"
@@ -27,7 +27,7 @@
                         </button>
                                     <% else %>
                                         <% if menuparticipant && menuparticipant.preferredlocale %>
-                            <button type="button" class="addItemToOrder btn-touch-primary" style="position:relative; bottom:-12px; border-radius: 8px 0 8px 0px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                            <button type="button" class="addItemToOrder btn-touch-primary" style="position:relative; bottom:-12px; border-radius: 8px 0 8px 0px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal" <%= 'disabled' if tablesetting.nil? %>
                                                 data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                 data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                                 data-bs-ordr_id="<%= order&.id %>"
@@ -41,7 +41,7 @@
                             <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
                         </button>
                                         <% else %>
-                            <button type="button" class="addItemToOrder btn-touch-primary" style="position:relative; bottom:-12px; border-radius: 8px 0 8px 0px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                            <button type="button" class="addItemToOrder btn-touch-primary" style="position:relative; bottom:-12px; border-radius: 8px 0 8px 0px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal" <%= 'disabled' if tablesetting.nil? %>
                                                 data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                 data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                                 data-bs-ordr_id="<%= order&.id %>"
@@ -57,7 +57,7 @@
                                         <% end %>
                                     <% end %>
                                     <% if mi.menuitem_size_mappings.count > 0 %>
-                        <button type="button" class="btn-touch-primary dropdown-toggle dropdown-toggle-split" style="border-radius: 0 8px 8px 0; min-width: 44px;" data-bs-toggle="dropdown" aria-expanded="false"
+                        <button type="button" class="btn-touch-primary dropdown-toggle dropdown-toggle-split" style="border-radius: 0 8px 8px 0; min-width: 44px;" data-bs-toggle="dropdown" aria-expanded="false" <%= 'disabled' if tablesetting.nil? %>
                                                             data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                             data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>">
                                             <span class="visually-hidden"><%= t('.toggle_dropdown') %></span>
@@ -66,7 +66,7 @@
                                             <% mi.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
                                                 <li class="float-end">
                                                     <a class="float-end dropdown-item" href="#">
-                                                        <button style="background: none!important;border: none;padding: 0!important;" type="button" class="btn btn-sm addItemToOrder" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                                                        <button style="background: none!important;border: none;padding: 0!important;" type="button" class="btn btn-sm addItemToOrder" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal" <%= 'disabled' if tablesetting.nil? %>
                                                             data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                             data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                                             data-bs-ordr_id="<%= order&.id %>"

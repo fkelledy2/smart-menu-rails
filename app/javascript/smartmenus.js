@@ -160,12 +160,16 @@ function initMenuTimeRestrictions() {
         // Add tooltip to explain why it's disabled
         button.setAttribute('title', 'This item is not available at this time');
       } else {
-        // Ensure button is enabled if we're within the valid time range
-        button.disabled = false;
-        button.classList.remove('disabled');
-        button.style.opacity = '';
-        button.style.cursor = '';
-        button.removeAttribute('title');
+        // Only enable button if we're within the valid time range
+        // AND there's a table selected (check if button has data-bs-ordr_id)
+        const hasOrder = button.getAttribute('data-bs-ordr_id');
+        if (hasOrder) {
+          button.disabled = false;
+          button.classList.remove('disabled');
+          button.style.opacity = '';
+          button.style.cursor = '';
+          button.removeAttribute('title');
+        }
       }
     }
   });
@@ -187,11 +191,15 @@ function initMenuTimeRestrictions() {
           button.style.cursor = 'not-allowed';
           button.setAttribute('title', 'This item is not available at this time');
         } else {
-          button.disabled = false;
-          button.classList.remove('disabled');
-          button.style.opacity = '';
-          button.style.cursor = '';
-          button.removeAttribute('title');
+          // Only enable button if there's a table selected (check if button has data-bs-ordr_id)
+          const hasOrder = button.getAttribute('data-bs-ordr_id');
+          if (hasOrder) {
+            button.disabled = false;
+            button.classList.remove('disabled');
+            button.style.opacity = '';
+            button.style.cursor = '';
+            button.removeAttribute('title');
+          }
         }
       }
     });

@@ -66,7 +66,7 @@
                 <div class="row">
                     <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).where(status: 'active').order(:sequence).each do |menuitem| %>
                         <% if ordrparticipant == nil || ordrparticipant && (ordrparticipant.allergyns & menuitem.allergyns).empty? %>
-                            <%= render partial: "smartmenus/showMenuitemStaff", locals: { order: order, menu: menu, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, menuitem: menuitem } %>
+                            <%= render partial: "smartmenus/showMenuitemStaff", locals: { order: order, menu: menu, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, menuitem: menuitem, tablesetting: tablesetting } %>
                         <% end %>
                     <% end %>
                 </div>

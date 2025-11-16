@@ -21,9 +21,9 @@
     <% cache_key = [@smartmenu, @menu, @allergyns.maximum(:updated_at), @openOrder&.updated_at, show_customer_view ? 'customer' : 'staff'] %>
     <% cache cache_key, expires_in: 30.minutes do %>
         <% if show_customer_view %>
-            <%= render partial: "smartmenus/showMenuContentCustomer", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+            <%= render partial: "smartmenus/showMenuContentCustomer", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, tablesetting: @tablesetting } %>
         <% else %>
-            <%= render partial: "smartmenus/showMenuContentStaff", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+            <%= render partial: "smartmenus/showMenuContentStaff", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, tablesetting: @tablesetting } %>
         <% end %>
     <% end %>
 </div>

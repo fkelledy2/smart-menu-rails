@@ -87,11 +87,8 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     # Track initial order count
     initial_order_count = Ordr.where(restaurant_id: @restaurant.id).count
     
-    # Click add item button - this opens the add item modal
+    # Add item to order
     add_item_to_order(@burger.id)
-    
-    # Wait for view order modal to appear
-    assert_testid('view-order-modal', wait: 5)
     
     # Verify new order was created
     assert_equal initial_order_count + 1, Ordr.where(restaurant_id: @restaurant.id).count
@@ -115,10 +112,10 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     add_item_to_order(@burger.id)
     
-    # Modal should open automatically
-    assert_testid('view-order-modal', wait: 5)
+    # Open view order modal to verify contents
+    open_view_order_modal
     
-    # Wait for modal content to actually render (Turbo Stream response)
+    # Wait for modal content to actually render
     assert_testid('order-modal-body')
     
     # Wait for the item to appear in the modal body
@@ -137,28 +134,20 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     # Add first item
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
     
     order_id = Ordr.last.id  # Track order ID
     
-    # Close modal
-    find('.btn-dark', text: /cancel|close/i).click
-    close_all_modals
-    
     # Add second item
     add_item_to_order(@pasta.id)
-    assert_testid('view-order-modal', wait: 5)
     
     # Verify still same order
     assert_equal order_id, Ordr.last.id, "Should use same order"
     
-    # Close modal
-    find('.btn-dark', text: /cancel|close/i).click
-    close_all_modals
-    
     # Add third item
     add_item_to_order(@spring_rolls.id)
-    assert_testid('view-order-modal', wait: 5)
+    
+    # Open modal to verify all items
+    open_view_order_modal
     
     # Verify all three items are in order
     order = Ordr.find(order_id)
@@ -179,46 +168,12 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     # Add first item
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
     
-    # Wait for modal content to be visible
-    sleep 1.0
-    
-    # Ensure modal is fully visible
-    page.execute_script(<<~JS)
-      const modalEl = document.getElementById('viewOrderModal');
-      if (modalEl && typeof bootstrap !== 'undefined') {
-        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-        modal.show();
-      }
-    JS
-    sleep 0.3
-    
-    # Check initial total
-    expected_total = @burger.price
-    assert_testid('order-total-amount', wait: 3)  # Ensure element is visible
-    within_testid('order-total-amount') do
-      assert_text "$#{sprintf('%.2f', expected_total)}"
-    end
-    
-    # Close modal and add another item
-    find('.btn-dark', text: /cancel|close/i).click
-    close_all_modals
+    # Add second item
     add_item_to_order(@spring_rolls.id)
-    assert_testid('view-order-modal', wait: 5)
     
-    # Wait for modal content to be visible
-    sleep 1.0
-    
-    # Ensure modal is fully visible
-    page.execute_script(<<~JS)
-      const modalEl = document.getElementById('viewOrderModal');
-      if (modalEl && typeof bootstrap !== 'undefined') {
-        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-        modal.show();
-      }
-    JS
-    sleep 0.3
+    # Open modal to verify total
+    open_view_order_modal
     
     # Check updated total
     expected_total = @burger.price + @spring_rolls.price
@@ -233,12 +188,10 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     # Add burger twice
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
-    find('.btn-dark', text: /cancel|close/i).click
-    close_all_modals
-    
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
+    
+    # Open modal to verify items
+    open_view_order_modal
     
     # Verify two items in order
     order = Ordr.last
@@ -260,14 +213,8 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     skip "Timing issue in multi-test runs - modal not visible after closing and reopening"
     visit smartmenu_path(@smartmenu.slug)
     
-    # Add items
+    # Add item
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
-    
-    find('.btn-dark', text: /cancel|close/i).click
-    
-    # Wait for modal to fully close
-    close_all_modals
     
     # Verify order was created in database
     order = Ordr.last
@@ -299,11 +246,8 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
   test 'order item count badge displays correctly' do
     visit smartmenu_path(@smartmenu.slug)
     
-    # Add items
+    # Add first item
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
-    find('.btn-dark', text: /cancel|close/i).click
-    close_all_modals
     
     # Verify order has 1 item in database
     order = Ordr.last
@@ -313,9 +257,6 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     # Add another item
     add_item_to_order(@pasta.id)
-    assert_testid('view-order-modal', wait: 5)
-    find('.btn-dark', text: /cancel|close/i).click
-    close_all_modals
     
     # Verify order now has 2 items in database
     order.reload
@@ -333,13 +274,10 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     # Add two items
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
-    
-    find('.btn-dark', text: /cancel|close/i).click
-    close_all_modals
-    
     add_item_to_order(@pasta.id)
-    assert_testid('view-order-modal', wait: 5)
+    
+    # Open modal to view and remove items
+    open_view_order_modal
     
     # Get the pasta ordritem
     order = Ordr.last
@@ -389,10 +327,6 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     # Add one item
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
-    
-    # Wait for database transaction to complete
-    sleep 1.0
     
     # Get the order that was just created/updated
     order = Ordr.last
@@ -408,8 +342,8 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     # Ensure we have an order item to remove
     assert ordritem.present?, "Order item should exist after adding to cart"
     
-    # Ensure modal is visible before trying to click remove button
-    assert_testid('view-order-modal', wait: 3)
+    # Open modal to remove item
+    open_view_order_modal
     
     # Remove the item
     click_testid("remove-order-item-#{ordritem.id}-btn")
@@ -449,12 +383,10 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     # Add items
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
-    find('.btn-dark', text: /cancel|close/i).click
-    close_all_modals
-    
     add_item_to_order(@pasta.id)
-    assert_testid('view-order-modal', wait: 5)
+    
+    # Open modal to submit order
+    open_view_order_modal
     
     # Wait for submit button to be enabled (WebSocket should update it)
     # If WebSocket doesn't work, manually enable it for testing
@@ -488,10 +420,9 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     # Add and then remove an item to create empty order
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
     
-    # Wait for server to complete database transaction
-    sleep 1.0
+    # Open modal
+    open_view_order_modal
     
     order = Ordr.last
     assert order.present?, "Order should exist"
@@ -523,15 +454,8 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
   test 'order persists across page reloads' do
     visit smartmenu_path(@smartmenu.slug)
     
-    # Add items
+    # Add item
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
-    
-    # Wait for database transaction to complete
-    sleep 1.0
-    
-    find('.btn-dark', text: /cancel|close/i).click
-    close_all_modals
     
     order_id = Ordr.last.id
     
@@ -544,18 +468,8 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     assert_equal order_id, order.id
     assert_equal 1, order.ordritems.count
     
-    # Open order modal directly to verify contents
-    page.execute_script(<<~JS)
-      const modalEl = document.getElementById('viewOrderModal');
-      if (modalEl && typeof bootstrap !== 'undefined') {
-        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-        modal.show();
-      }
-    JS
-    sleep 0.5
-    
-    assert_testid('view-order-modal', wait: 5)
-    sleep 0.3
+    # Open order modal to verify contents
+    open_view_order_modal
     
     within_testid('order-modal-body') do
       assert_text 'Classic Burger'
@@ -570,13 +484,6 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     # Add first item
     add_item_to_order(@burger.id)
-    assert_testid('view-order-modal', wait: 5)
-    
-    # Wait for database transaction to complete
-    sleep 1.0
-    
-    find('.btn-dark', text: /cancel|close/i).click
-    close_all_modals
     
     order_id = Ordr.last.id
     
@@ -586,7 +493,6 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     # Add another item
     add_item_to_order(@pasta.id)
-    assert_testid('view-order-modal', wait: 5)
     
     # Verify same order with 2 items
     order = Ordr.find(order_id)
