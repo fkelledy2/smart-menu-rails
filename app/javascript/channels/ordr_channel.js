@@ -10,6 +10,11 @@ function post(url, body) {
     console.error('CSRF token not found');
   }
   
+  // Dispatch event for testing: request started
+  window.dispatchEvent(new CustomEvent('ordr:request:start', { 
+    detail: { url, body, timestamp: new Date().getTime() }
+  }));
+  
   return fetch(url, {
     method: 'POST',
     headers: {
@@ -21,12 +26,24 @@ function post(url, body) {
     .then((response) => {
       $('#orderCartSpinner').hide();
       $('#orderCart').show();
+      
+      // Dispatch event for testing: request completed
+      window.dispatchEvent(new CustomEvent('ordr:request:complete', { 
+        detail: { url, status: response.status, timestamp: new Date().getTime() }
+      }));
+      
       return response;
     })
     .catch(function (err) {
       console.info(err + ' url: ' + url);
       $('#orderCartSpinner').hide();
       $('#orderCart').show();
+      
+      // Dispatch event for testing: request failed
+      window.dispatchEvent(new CustomEvent('ordr:request:error', { 
+        detail: { url, error: err.message, timestamp: new Date().getTime() }
+      }));
+      
       throw err;
     });
 }
@@ -880,6 +897,23 @@ function initializeOrderChannel() {
                 timestamp: new Date().getTime()
               }
             }));
+            
+            // Also dispatch specific events for different update types
+            if (data.menuContentStaff || data.menuContentCustomer) {
+              window.dispatchEvent(new CustomEvent('ordr:menu:updated', { 
+                detail: { timestamp: new Date().getTime() }
+              }));
+            }
+            if (data.orderStaff || data.orderCustomer) {
+              window.dispatchEvent(new CustomEvent('ordr:order:updated', { 
+                detail: { timestamp: new Date().getTime() }
+              }));
+            }
+            if (data.modals) {
+              window.dispatchEvent(new CustomEvent('ordr:modals:updated', { 
+                detail: { timestamp: new Date().getTime() }
+              }));
+            }
           } catch (error) {
             console.error('Error processing received data:', error);
             updateConnectionStatus('error', 'Error processing update');

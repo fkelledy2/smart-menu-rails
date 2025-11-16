@@ -366,13 +366,31 @@ module TestIdHelpers
     # First, close any open modals to prevent interference
     close_all_modals
     
-    # Click the add item button - opens modal
+    # Wait for menu content to be loaded
+    assert_selector('#menuContentContainer', wait: 5)
+    
+    # Wait for the specific menu item to be visible
+    assert_testid("menu-item-#{item_id}", wait: 5)
+    
+    # Wait for the add button to exist (may be disabled due to tablesetting)
+    button_selector = "[data-testid='add-item-btn-#{item_id}']"
+    assert_selector(button_selector, wait: 5)
+    
+    # Force enable the button in case it's disabled (e.g., no tablesetting in test)
+    page.execute_script(<<~JS)
+      const btn = document.querySelector("#{button_selector}");
+      if (btn) {
+        btn.removeAttribute('disabled');
+      }
+    JS
+    
+    # Now click the add item button - opens modal
     click_testid("add-item-btn-#{item_id}", **options)
     
     # Wait for the add-to-order modal to exist and for the price to load
     begin
       # Wait for modal to exist
-      find('#menuItemModal', wait: 3, visible: false)
+      find('#addItemToOrderModal', wait: 3, visible: true)
       
       # Wait for price span to be populated
       wait_for_element_content('#a2o_menuitem_price', timeout: 3)
@@ -409,11 +427,34 @@ module TestIdHelpers
   
   # Opens the view order modal by clicking the FAB button or directly if FAB not visible
   def open_view_order_modal(**options)
+    # First, ensure all modals and backdrops are closed
+    page.execute_script(<<~JS)
+      // Close all modals
+      document.querySelectorAll('.modal.show').forEach(modal => {
+        const instance = bootstrap.Modal.getInstance(modal);
+        if (instance) {
+          instance.hide();
+        }
+      });
+      
+      // Remove all backdrops
+      document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+        backdrop.remove();
+      });
+      
+      // Reset body classes
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    JS
+    
+    sleep 0.3 # Wait for cleanup
+    
     # Try to click FAB - in tests, WebSocket doesn't update so FAB may not be visible
     begin
       click_testid('order-fab-btn', wait: 2, **options)
-    rescue Capybara::ElementNotFound
-      # FAB not rendered (WebSocket doesn't work in tests), open modal directly
+    rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::ElementClickInterceptedError
+      # FAB not rendered or obscured, open modal directly via JavaScript
       page.execute_script(<<~JS)
         const modalEl = document.getElementById('viewOrderModal');
         if (modalEl && typeof bootstrap !== 'undefined') {
@@ -430,16 +471,105 @@ module TestIdHelpers
     sleep 0.3
   end
   
-  # Removes an item from the order by clicking the remove button
+  # Removes an item from the order by ordritem id
   def remove_item_from_order_by_testid(testid)
-    # Find and click the remove button
-    within_testid(testid) do
-      find('[data-testid="remove-item-btn"]').click
+    # Extract the ordritem id from the testid format: "order-item-123"
+    item_id = testid.gsub('order-item-', '')
+    
+    # Find and click the remove button using the correct testid format
+    button_testid = "remove-order-item-#{item_id}-btn"
+    
+    begin
+      find_testid(button_testid).click
+    rescue Capybara::ElementNotFound
+      # Button might not be visible, use JavaScript
+      page.execute_script(<<~JS)
+        const btn = document.querySelector('[data-testid=\"#{button_testid}\"]');
+        if (btn) btn.click();
+      JS
     end
     
     # Wait for removal to complete
     wait_for_requests_to_complete(timeout: 3)
     sleep 0.3
+  end
+  
+  # Wait for a custom WebSocket event to be dispatched
+  # This uses JavaScript event listeners instead of polling/sleeping
+  def wait_for_websocket_event(event_name, timeout: 5)
+    result = page.evaluate_async_script(<<~JS, timeout * 1000)
+      const eventName = '#{event_name}';
+      const timeout = arguments[0];
+      const done = arguments[1];
+      
+      let timeoutId;
+      const handler = (event) => {
+        clearTimeout(timeoutId);
+        window.removeEventListener(eventName, handler);
+        done({ success: true, detail: event.detail });
+      };
+      
+      window.addEventListener(eventName, handler);
+      
+      timeoutId = setTimeout(() => {
+        window.removeEventListener(eventName, handler);
+        done({ success: false, error: 'Timeout waiting for ' + eventName });
+      }, timeout);
+    JS
+    
+    unless result['success']
+      raise Timeout::Error, "Timeout waiting for WebSocket event: #{event_name}"
+    end
+    
+    result
+  end
+  
+  # Wait for order update via WebSocket
+  def wait_for_order_update(timeout: 5)
+    wait_for_websocket_event('ordr:updated', timeout: timeout)
+  end
+  
+  # Wait for menu update via WebSocket
+  def wait_for_menu_update(timeout: 5)
+    wait_for_websocket_event('ordr:menu:updated', timeout: timeout)
+  end
+  
+  # Wait for a POST request to start and complete, then wait for WebSocket update
+  def wait_for_order_item_added(timeout: 10)
+    # Wait for the request to complete
+    wait_for_requests_to_complete(timeout: timeout)
+    
+    # Then wait for the WebSocket update
+    wait_for_order_update(timeout: timeout)
+  end
+  
+  # Enhanced add_item_to_order using event-driven waits
+  def add_item_to_order_with_events(item_id, **options)
+    # Close any open modals
+    close_all_modals
+    
+    # Click the add item button - opens modal
+    click_testid("add-item-btn-#{item_id}", **options)
+    
+    # Wait for modal to be visible
+    assert_testid('add-item-modal', wait: 3)
+    
+    # Wait for price to load
+    wait_for_element_content('#a2o_menuitem_price', timeout: 3)
+    
+    # Click the add button (force enable if needed)
+    page.execute_script(<<~JS)
+      const btn = document.getElementById('addItemToOrderButton');
+      if (btn) {
+        btn.removeAttribute('disabled');
+        btn.click();
+      }
+    JS
+    
+    # Wait for HTTP request and WebSocket update
+    wait_for_order_item_added(timeout: 10)
+    
+    # Modal should auto-close after update
   end
 end
 

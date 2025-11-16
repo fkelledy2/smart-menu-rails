@@ -1,4 +1,4 @@
- <div class="col-6 col-md-4 col-lg-4 menu-item-card" data-name="<%= menuitem.name.to_s.downcase %>" data-description="<%= menuitem.description.to_s.downcase %>">
+ <div class="col-6 col-md-4 col-lg-4 menu-item-card" data-name="<%= menuitem.name.to_s.downcase %>" data-description="<%= menuitem.description.to_s.downcase %>" data-testid="menu-item-<%= menuitem.id %>">
     <div class="card">
         <% if !order || ( order.status != 'billrequested' && order.status != 'closed' ) %>
                             <div class="d-grid gap-2">
@@ -11,7 +11,8 @@
                                                 data-bs-menuitem_name="<%= menuitem.name %>"
                                                 data-bs-menuitem_price="<%= menuitem.price %>"
                                                 data-bs-menuitem_description="<%= menuitem.description %>"
-                                                data-bs-menuitem_image="<%= menuitem.medium_url %>">
+                                                data-bs-menuitem_image="<%= menuitem.medium_url %>"
+                                                data-testid="add-item-btn-<%= menuitem.id %>">
                                                     <%= menuitem.name %>
                                     </button>
                                     <% if menuitem.menuitem_size_mappings.count > 0 %>
