@@ -429,6 +429,18 @@ module TestIdHelpers
     # Wait for modal content to render
     sleep 0.3
   end
+  
+  # Removes an item from the order by clicking the remove button
+  def remove_item_from_order_by_testid(testid)
+    # Find and click the remove button
+    within_testid(testid) do
+      find('[data-testid="remove-item-btn"]').click
+    end
+    
+    # Wait for removal to complete
+    wait_for_requests_to_complete(timeout: 3)
+    sleep 0.3
+  end
 end
 
 # Automatically include in system tests

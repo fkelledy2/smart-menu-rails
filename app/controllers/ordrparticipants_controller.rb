@@ -155,6 +155,7 @@ class OrdrparticipantsController < ApplicationController
               restaurantCurrency: restaurant_currency,
               ordrparticipant: ordrparticipant,
               menuparticipant: menuparticipant,
+              tablesetting: tablesetting,
             },
           )
         end,
@@ -178,6 +179,7 @@ class OrdrparticipantsController < ApplicationController
               restaurantCurrency: restaurant_currency,
               ordrparticipant: ordrparticipant,
               menuparticipant: menuparticipant,
+              tablesetting: tablesetting,
             },
           )
         end,
