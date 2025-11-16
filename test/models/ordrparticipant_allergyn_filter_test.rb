@@ -2,9 +2,12 @@ require 'test_helper'
 
 class OrdrparticipantAllergynFilterTest < ActiveSupport::TestCase
   def setup
-    @filter = ordrparticipant_allergyn_filters(:one)
     @ordrparticipant = ordrparticipants(:one)
     @allergyn = allergyns(:one)
+    @filter = OrdrparticipantAllergynFilter.create!(
+      ordrparticipant: @ordrparticipant,
+      allergyn: @allergyn
+    )
   end
 
   # === VALIDATION TESTS ===

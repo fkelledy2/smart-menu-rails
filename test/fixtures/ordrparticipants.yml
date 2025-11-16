@@ -1,2 +1,29 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-# Removed fixtures to prevent conflicts
+# Minimal fixtures for unit/integration tests
+# System tests create participants dynamically and should not rely on these fixtures
+
+one:
+  ordr: one
+  employee: one
+  sessionid: test_session_123
+  role: 1  # staff
+  preferredlocale: en
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+two:
+  ordr: one
+  employee: one  # Same employee as 'one', different session
+  sessionid: test_session_456
+  role: 0  # customer
+  preferredlocale: en
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+three:
+  ordr: one
+  sessionid: test_session_filter
+  role: 0  # customer
+  preferredlocale: en
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>

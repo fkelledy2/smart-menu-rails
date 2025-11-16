@@ -1,2 +1,3 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-# Removed fixtures to prevent conflicts
+# No fixtures defined - this prevents FK constraint violations with system tests
+# Model tests should create their own test data instead of relying on fixtures

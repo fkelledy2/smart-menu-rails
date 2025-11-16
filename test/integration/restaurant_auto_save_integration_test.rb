@@ -2,11 +2,14 @@ require "test_helper"
 
 class RestaurantAutoSaveIntegrationTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
+  include Warden::Test::Helpers
 
   setup do
     @user = users(:one)
     @restaurant = restaurants(:one)
     @restaurant.update!(user: @user)
+    
+    # Use Devise's sign_in helper for integration tests
     sign_in @user
   end
 

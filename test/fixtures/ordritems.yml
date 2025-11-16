@@ -1,2 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-# Removed fixture ordritems to prevent conflicts with dynamically created order items in system tests
+# Minimal fixtures for unit/integration tests
+# System tests create order items dynamically and should not rely on these fixtures
+
+one:
+  ordr: one
+  menuitem: burger
+  status: 0  # opened
+  ordritemprice: 15.99
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>

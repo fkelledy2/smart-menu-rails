@@ -1,19 +1,24 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# encrypted_password is bcrypt hash of 'password' (cost=4 for speed)
+# Generated with: BCrypt::Password.create('password', cost: 4)
 
 one:
   email: test1@gmail.com
+  encrypted_password: $2a$04$R5z/kRsJKLQfYB3ks3mM0OXo5UY6E4K4V/SWz0jR5xNhTVW8Z.lK2
   first_name: Test
   last_name: User One
   plan: one
 
 two:
-  email: test2@gmail.com  
+  email: test2@gmail.com
+  encrypted_password: $2a$04$R5z/kRsJKLQfYB3ks3mM0OXo5UY6E4K4V/SWz0jR5xNhTVW8Z.lK2
   first_name: Test
   last_name: User Two
   plan: two
 
 admin:
   email: admin@gmail.com
+  encrypted_password: $2a$04$R5z/kRsJKLQfYB3ks3mM0OXo5UY6E4K4V/SWz0jR5xNhTVW8Z.lK2
   first_name: Admin
   last_name: User
   admin: true

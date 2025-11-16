@@ -57,7 +57,7 @@
                                         <% end %>
                                     <% end %>
                                     <% if mi.menuitem_size_mappings.count > 0 %>
-                        <button type="button" class="btn-touch-primary dropdown-toggle dropdown-toggle-split" style="border-radius: 0 8px 8px 0; min-width: 44px;" data-bs-toggle="dropdown" aria-expanded="false" <%= 'disabled' if tablesetting.nil? %>
+                        <button type="button" class="btn-touch-primary dropdown-toggle dropdown-toggle-split" style="position:relative; bottom:-12px;border-radius: 0 8px 8px 0; min-width: 44px;" data-bs-toggle="dropdown" aria-expanded="false" <%= 'disabled' if tablesetting.nil? %>
                                                             data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                             data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>">
                                             <span class="visually-hidden"><%= t('.toggle_dropdown') %></span>

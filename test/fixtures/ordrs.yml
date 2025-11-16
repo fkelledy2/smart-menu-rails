@@ -1,2 +1,12 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-# Removed fixture orders to prevent conflicts with dynamically created orders in system tests
+# Minimal fixtures for unit/integration tests
+# System tests create orders dynamically and should not rely on these fixtures
+
+one:
+  restaurant: one
+  menu: one
+  tablesetting: one
+  status: 0  # opened
+  ordercapacity: 4
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
