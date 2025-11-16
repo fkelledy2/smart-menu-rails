@@ -27,3 +27,6 @@
         <% end %>
     <% end %>
 </div>
+
+<%# Allergen Legend Modal - outside cache to always be available %>
+<%= render partial: "smartmenus/allergen_legend_modal", locals: { allergyns: @allergyns } %>

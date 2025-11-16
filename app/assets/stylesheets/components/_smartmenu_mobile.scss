@@ -663,12 +663,48 @@
   
   .d-flex {
     flex-wrap: wrap !important; // Allow badges to wrap
-    gap: 4px !important; // Consistent spacing
+    gap: 3px !important; // Tighter spacing for compact codes
   }
   
   .badge {
     flex-shrink: 0; // Prevent individual badges from shrinking
     white-space: nowrap; // Keep badge text on one line
+    
+    // Optimized styles for 1-2 character codes
+    min-width: 22px;
+    height: 22px;
+    padding: 0 5px;
+    font-size: 11px;
+    font-weight: 700; // Bold for better readability
+    line-height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: help; // Indicates tooltip available
+    transition: all 0.15s ease;
+    
+    // Hover effect to indicate interactivity
+    &:hover {
+      transform: scale(1.1);
+      background-color: #ffeaa7 !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// Compact mode for items with many allergens (5+)
+.allergen-badges.has-many {
+  .badge {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 4px;
+    font-size: 10px;
+    line-height: 20px;
+    margin: 0;
+  }
+  
+  .d-flex {
+    gap: 2px !important;
   }
 }
 

@@ -1,6 +1,25 @@
 class Allergyn < ApplicationRecord
   include IdentityCache
 
+  # EU 14 Major Allergens with standardized codes
+  # Used for allergen legend display
+  STANDARD_ALLERGENS = {
+    'G' => 'Gluten (Cereals containing gluten)',
+    'CR' => 'Crustaceans',
+    'E' => 'Eggs',
+    'F' => 'Fish',
+    'P' => 'Peanuts',
+    'SO' => 'Soy',
+    'M' => 'Milk / Dairy',
+    'N' => 'Tree Nuts',
+    'CL' => 'Celery',
+    'MU' => 'Mustard',
+    'SE' => 'Sesame',
+    'SU' => 'Sulphites',
+    'LU' => 'Lupin',
+    'MO' => 'Molluscs',
+  }.freeze
+
   # Standard ActiveRecord associations
   belongs_to :restaurant
   has_many :menuitem_allergyn_mappings, dependent: :destroy

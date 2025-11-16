@@ -58,6 +58,16 @@
           </button>
         <% end %>
       <% end %>
+      
+      <!-- Allergen Legend Info Button -->
+      <button type="button" 
+              class="filter-button" 
+              data-bs-toggle="modal" 
+              data-bs-target="#allergenLegendModal"
+              aria-label="<%= t('.allergen_key', default: 'Allergen key') %>"
+              title="<%= t('.view_allergen_key', default: 'View allergen key') %>">
+        <i class="bi bi-info-circle"></i>
+      </button>
     </div>
     
     <!-- Section Tabs -->
