@@ -56,6 +56,12 @@ class OrdrparticipantsController < ApplicationController
 
     respond_to do |format|
       if @ordrparticipant.update(ordrparticipant_params)
+        # Keep the menuparticipant locale in sync for this session and
+        # clear cached menu content so it will be regenerated with the
+        # new locale.
+        sync_menuparticipant_locale_for_session(@ordrparticipant)
+        invalidate_menu_content_cache_for_ordr(@ordrparticipant)
+
         # Find all entries for participant with same sessionid and order_id and update the name.
         @tablesetting = Tablesetting.find_by(id: @ordrparticipant.ordr.tablesetting.id)
         Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
@@ -96,9 +102,24 @@ class OrdrparticipantsController < ApplicationController
     allergyns = Allergyn.where(restaurant_id: restaurant.id)
     restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
     full_refresh = ordr.status == 'closed'
-    ordrparticipant.preferredlocale = menuparticipant.preferredlocale if menuparticipant
 
-    partials = {
+    # Temporary workaround: force locale to the restaurant's default
+    # locale (if active and allowed) for all smartmenu pages, ignoring
+    # participant-specific preferred locales. This keeps behaviour
+    # consistent while localization bugs are being addressed.
+    allowed_locales = I18n.available_locales.map(&:to_s)
+
+    participant_locale = nil
+
+    if restaurant.defaultLocale&.locale.present?
+      default_locale_str = restaurant.defaultLocale.locale.to_s.downcase
+      participant_locale = default_locale_str.to_sym if allowed_locales.include?(default_locale_str)
+    end
+
+    participant_locale ||= I18n.default_locale
+
+    partials = I18n.with_locale(participant_locale) do
+      {
       context: compress_string(
         ApplicationController.renderer.render(
           partial: 'smartmenus/showContext',
@@ -233,7 +254,8 @@ class OrdrparticipantsController < ApplicationController
         ),
       ),
       fullPageRefresh: { refresh: full_refresh },
-    }
+      }
+    end
     ActionCable.server.broadcast("ordr_#{menuparticipant.smartmenu.slug}_channel", partials)
   end
 
@@ -241,6 +263,59 @@ class OrdrparticipantsController < ApplicationController
     require 'zlib'
     require 'base64'
     Base64.strict_encode64(Zlib::Deflate.deflate(str))
+  end
+
+  # Ensure there is a single source of truth for the participant's
+  # preferred locale for a given session by keeping the menuparticipant
+  # in sync with the ordrparticipant.
+  def sync_menuparticipant_locale_for_session(ordrparticipant)
+    return unless ordrparticipant.sessionid.present? && ordrparticipant.preferredlocale.present?
+
+    Menuparticipant.where(sessionid: ordrparticipant.sessionid).find_each do |menuparticipant|
+      next if menuparticipant.preferredlocale == ordrparticipant.preferredlocale
+
+      menuparticipant.update(preferredlocale: ordrparticipant.preferredlocale)
+    end
+  end
+
+  # Clear cached menu content for staff and customer views for the
+  # order context so that subsequent broadcasts will render with the
+  # updated locale.
+  def invalidate_menu_content_cache_for_ordr(ordrparticipant)
+    ordr       = ordrparticipant.ordr
+    menu       = ordr.menu
+    restaurant = menu.restaurant
+    menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
+
+    return unless menuparticipant
+
+    restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
+    allergyns = Allergyn.where(restaurant_id: restaurant.id)
+
+    staff_key = [
+      :menu_content_staff,
+      ordr.cache_key_with_version,
+      menu.cache_key_with_version,
+      allergyns.maximum(:updated_at),
+      restaurant_currency.code,
+      ordrparticipant.try(:id),
+      menuparticipant.try(:id),
+    ]
+
+    customer_key = [
+      :menu_content_customer,
+      ordr.cache_key_with_version,
+      menu.cache_key_with_version,
+      allergyns.maximum(:updated_at),
+      restaurant_currency.code,
+      ordrparticipant.try(:id),
+      menuparticipant.try(:id),
+    ]
+
+    Rails.cache.delete(staff_key)
+    Rails.cache.delete(customer_key)
+  rescue StandardError => e
+    Rails.logger.error("Failed to invalidate menu content cache for ordrparticipant ##{ordrparticipant.id}: #{e.message}")
   end
 
   # Set restaurant from nested route parameter

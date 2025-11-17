@@ -1,0 +1,143 @@
+<%#
+  Menu Localization Section (2025)
+  Mirrors the restaurant localization UI but focused on this menu
+%>
+
+<% menu = local_assigns[:menu] || @menu %>
+<% restaurant = menu.restaurant %>
+
+<% active_locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active') %>
+
+<!-- Quick Actions Card -->
+<div class="quick-actions-card">
+  <h2 class="quick-actions-title">
+    <i class="bi bi-lightning-charge"></i>
+    <%= t('.quick_actions', default: 'Quick Actions') %>
+  </h2>
+  
+  <div class="quick-actions-grid">
+    <% if active_locales.any? %>
+      <div class="btn-group">
+        <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false), 
+            method: :post,
+            class: 'quick-action-btn',
+            data: { 
+              turbo: false,
+              confirm: t('.confirm_localize', 
+                default: "Translate this menu to all configured languages (#{active_locales.pluck(:locale).map(&:upcase).join(', ')})? Only missing translations will be created.") 
+            } do %>
+          <i class="bi bi-translate"></i>
+          <span><%= t('.localize_menu', default: 'Localize Menu') %></span>
+        <% end %>
+        <button type="button" class="quick-action-btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+          <span class="visually-hidden">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false), 
+                method: :post,
+                class: 'dropdown-item text-start border-0 bg-transparent',
+                form: { style: 'display: inline;' },
+                data: { 
+                  turbo: false,
+                  confirm: t('.confirm_localize_incremental', 
+                    default: "Translate only missing localizations? Existing translations will be preserved.")
+                } do %>
+              <i class="bi bi-plus-circle"></i> <%= t('.localize_incremental', default: 'Add Missing Translations') %>
+            <% end %>
+          </li>
+          <li>
+            <%= button_to localize_restaurant_menu_path(restaurant, menu, force: true), 
+                method: :post,
+                class: 'dropdown-item text-start border-0 bg-transparent text-warning',
+                form: { style: 'display: inline;' },
+                data: { 
+                  turbo: false,
+                  confirm: t('.confirm_localize_force', 
+                    default: "Re-translate ALL menu content? This will overwrite existing translations and use more API credits.")
+                } do %>
+              <i class="bi bi-arrow-repeat"></i> <%= t('.localize_force', default: 'Re-translate Everything') %>
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Localization & Languages (menu view: no extra quick actions) -->
+<div class="content-card-2025 py-4">
+  <h2 class="content-card-title">
+    <i class="bi bi-globe"></i>
+    <%= t('.localization', default: 'Localization & Languages') %>
+  </h2>
+  
+  <p class="text-muted mb-4">
+    <%= t('.localization_description', default: 'Manage translations for your menu in multiple languages') %>
+  </p>
+  
+  <% if restaurant.restaurantlocales.any? %>
+    <% total_items = menu.menuitems.count %>
+    <!-- Desktop Table View -->
+    <div class="table-responsive languages-table-view">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th><%= t('.language', default: 'Language') %></th>
+            <th><%= t('.locale_code', default: 'Code') %></th>
+            <th><%= t('.default', default: 'Default') %></th>
+            <th class="text-end"><%= t('.items_localized', default: 'Items Localized') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% restaurant.restaurantlocales.each do |locale| %>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="language-avatar">
+                    <i class="bi bi-translate"></i>
+                  </div>
+                  <div class="fw-semibold">
+                    <%= locale.language %>
+                  </div>
+                </div>
+              </td>
+              <td class="text-muted">
+                <code><%= locale.locale %></code>
+              </td>
+              <td>
+                <% if locale.dfault? %>
+                  <span class="badge bg-primary">
+                    <i class="bi bi-star-fill"></i> <%= t('.default_locale', default: 'Default') %>
+                  </span>
+                <% end %>
+              </td>
+              <td class="text-end">
+                <% localized_count = if total_items > 0
+                  Menuitemlocale
+                    .where(menuitem_id: menu.menuitems.select(:id), locale: locale.locale)
+                    .where.not(name: [nil, ''])
+                    .distinct
+                    .count(:menuitem_id)
+                else
+                  0
+                end %>
+                <span><%= localized_count %> / <%= total_items %></span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="text-center py-5">
+      <i class="bi bi-globe text-muted" style="font-size: 3rem;"></i>
+      <h3 class="mt-3 text-muted">
+        <%= t('.no_locales', default: 'No additional languages configured') %>
+      </h3>
+      <p class="text-muted">
+        <%= t('.no_locales_description', default: 'Add translations at the restaurant level to enable menu localization') %>
+      </p>
+    </div>
+  <% end %>
+</div>

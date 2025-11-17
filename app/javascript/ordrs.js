@@ -170,30 +170,35 @@ export function initOrders() {
 
   function refreshOrderJSLogic() {
     const searchInput = document.getElementById('menu-item-search');
-    if (!searchInput) return;
-    searchInput.addEventListener('input', function () {
-      const term = searchInput.value.trim().toLowerCase();
-      if (term.length === 0) {
-        // If search is empty, show all items
-        document.querySelectorAll('.menu-item-card').forEach((card) => (card.style.display = ''));
-        return;
-      }
 
-      document.querySelectorAll('.menu-item-card').forEach(function (card) {
-        // Search in data attributes (original English text)
-        const name = card.getAttribute('data-name') || '';
-        const desc = card.getAttribute('data-description') || '';
-
-        // Search in visible text content (localized text)
-        const cardText = card.textContent.toLowerCase();
-
-        if (name.includes(term) || desc.includes(term) || cardText.includes(term)) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
+    // Only bind the search handler when present; do not return early so
+    // that the rest of the logic (e.g. time-window disabling) always
+    // runs, including after partial updates.
+    if (searchInput) {
+      searchInput.addEventListener('input', function () {
+        const term = searchInput.value.trim().toLowerCase();
+        if (term.length === 0) {
+          // If search is empty, show all items
+          document.querySelectorAll('.menu-item-card').forEach((card) => (card.style.display = ''));
+          return;
         }
+
+        document.querySelectorAll('.menu-item-card').forEach(function (card) {
+          // Search in data attributes (original English text)
+          const name = card.getAttribute('data-name') || '';
+          const desc = card.getAttribute('data-description') || '';
+
+          // Search in visible text content (localized text)
+          const cardText = card.textContent.toLowerCase();
+
+          if (name.includes(term) || desc.includes(term) || cardText.includes(term)) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
       });
-    });
+    }
 
     if ($('#smartmenu').length) {
       const date = new Date();
@@ -254,7 +259,12 @@ export function initOrders() {
     }
     $(document).on('click', '.setparticipantlocale', function (event) {
       const locale = $(this).data('locale');
-      if ($('#currentParticipant').text()) {
+
+      const hasOrderParticipant = $('#currentParticipant').text();
+
+      // When an order participant exists, update their preferred locale
+      // so order-specific views use the participant's choice.
+      if (hasOrderParticipant) {
         const ordrparticipant = {
           ordrparticipant: {
             preferredlocale: locale,
@@ -262,12 +272,21 @@ export function initOrders() {
         };
         patch('/ordrparticipants/' + $('#currentParticipant').text(), ordrparticipant);
       }
+
+      // Keep the menu participant locale in sync. If there is an order
+      // participant, mark this update so the controller can skip
+      // broadcasting (to avoid duplicate partial updates).
       if ($('#menuParticipant').text()) {
         const menuparticipant = {
           menuparticipant: {
             preferredlocale: locale,
           },
         };
+
+        if (hasOrderParticipant) {
+          menuparticipant.skip_broadcast = true;
+        }
+
         const restaurantId = $('#currentRestaurant').text();
         const menuId = $('#currentMenu').text();
         const menuParticipantId = $('#menuParticipant').text();
@@ -276,6 +295,7 @@ export function initOrders() {
           menuparticipant
         );
       }
+
       event.preventDefault();
     });
     $('.removeItemFromOrderButton').on('click', function (event) {

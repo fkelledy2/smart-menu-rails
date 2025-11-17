@@ -42,6 +42,13 @@
       <span><%= t('.design', default: 'Design') %></span>
     <% end %>
     
+    <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'localization'), 
+        class: "sidebar-link #{'active' if current_section == 'localization'}",
+        data: { turbo_frame: 'menu_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick' } do %>
+      <i class="bi bi-globe"></i>
+      <span><%= t('.localization', default: 'Localization') %></span>
+    <% end %>
+    
     <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'schedule'), 
         class: "sidebar-link #{'active' if current_section == 'schedule'}",
         data: { turbo_frame: 'menu_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick' } do %>

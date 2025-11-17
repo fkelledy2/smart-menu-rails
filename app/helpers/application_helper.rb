@@ -100,4 +100,19 @@ module ApplicationHelper
       'bi-cash-coin' # Generic fallback
     end
   end
+
+  def build_number
+    release = ENV['HEROKU_RELEASE_VERSION'] || ENV['HEROKU_RELEASE_NUMBER']
+    return nil if release.nil? || release.empty?
+
+    date_str = if ENV['HEROKU_RELEASE_CREATED_AT']
+                 Time.parse(ENV['HEROKU_RELEASE_CREATED_AT']).utc.to_date.strftime('%Y%m%d')
+               else
+                 Time.now.utc.to_date.strftime('%Y%m%d')
+               end
+
+    "#{date_str}-#{release}"
+  rescue ArgumentError
+    "#{Time.now.utc.to_date.strftime('%Y%m%d')}-#{release}"
+  end
 end
