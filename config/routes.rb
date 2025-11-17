@@ -203,6 +203,7 @@ Rails.application.routes.draw do
       # Menu actions and analytics
       member do
         post :regenerate_images
+        post :localize
         patch :update_availabilities
         get :tablesettings, to: 'menus#show'
         get :analytics

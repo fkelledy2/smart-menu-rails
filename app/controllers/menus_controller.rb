@@ -5,7 +5,7 @@ class MenusController < ApplicationController
 
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_restaurant
-  before_action :set_menu, only: %i[show edit update destroy regenerate_images performance update_availabilities]
+  before_action :set_menu, only: %i[show edit update destroy regenerate_images localize performance update_availabilities]
 
   # Pundit authorization
   after_action :verify_authorized, except: %i[index performance update_sequence]
@@ -88,6 +88,36 @@ class MenusController < ApplicationController
     end
 
     redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu)
+  end
+
+  # POST /menus/:id/localize
+  def localize
+    authorize @menu, :update?
+
+    restaurant = @restaurant || @menu.restaurant
+    active_locales = Restaurantlocale.where(restaurant: restaurant, status: 'active')
+
+    if active_locales.empty?
+      flash[:alert] = t('menus.controller.no_active_locales', default: 'No active locales configured for this restaurant.')
+      redirect_to edit_restaurant_menu_path(restaurant, @menu) and return
+    end
+
+    # Get force parameter (default: false - only translate missing localizations)
+    force = params[:force].to_s == 'true'
+    
+    # Trigger the background job to localize the menu
+    MenuLocalizationJob.perform_async('menu', @menu.id, force)
+    
+    flash_message = if force
+      t('menus.controller.localization_queued_force', 
+        default: "Menu re-translation to #{active_locales.count} locale(s) has been queued. All existing translations will be regenerated.")
+    else
+      t('menus.controller.localization_queued', 
+        default: "Menu localization to #{active_locales.count} locale(s) has been queued. Only missing translations will be created.")
+    end
+    
+    flash[:notice] = flash_message
+    redirect_to edit_restaurant_menu_path(restaurant, @menu)
   end
 
   # GET	/restaurants/:restaurant_id/menus/:menu_id/tablesettings/:id(.:format)	menus#show

@@ -18,11 +18,12 @@ class MenuLocalizationJob
   #
   # @param type_or_id [String, Integer] Either 'menu'/'locale' or an integer (legacy)
   # @param id [Integer, nil] The menu_id or restaurant_locale_id (required if type_or_id is a string)
-  def perform(type_or_id, id = nil)
+  # @param force [Boolean] If true, re-translate all strings. If false (default), only translate missing localizations.
+  def perform(type_or_id, id = nil, force = false)
     # Handle legacy single integer parameter (backward compatibility)
     if type_or_id.is_a?(Integer) && id.nil?
       Rails.logger.info("[MenuLocalizationJob] Legacy call with restaurant_locale_id: #{type_or_id}")
-      return localize_to_new_locale(type_or_id)
+      return localize_to_new_locale(type_or_id, force: force)
     end
 
     # Handle new interface with type and id
@@ -30,11 +31,11 @@ class MenuLocalizationJob
     when 'menu'
       raise ArgumentError, 'menu_id is required' if id.nil?
 
-      localize_menu(id)
+      localize_menu(id, force: force)
     when 'locale'
       raise ArgumentError, 'restaurant_locale_id is required' if id.nil?
 
-      localize_to_new_locale(id)
+      localize_to_new_locale(id, force: force)
     else
       raise ArgumentError, "Invalid type: #{type_or_id}. Must be 'menu' or 'locale'"
     end
@@ -43,11 +44,11 @@ class MenuLocalizationJob
   private
 
   # Use Case 1: Localize a specific menu to all restaurant locales
-  def localize_menu(menu_id)
+  def localize_menu(menu_id, force: false)
     menu = Menu.find(menu_id)
-    Rails.logger.info("[MenuLocalizationJob] Localizing menu ##{menu_id} to all restaurant locales")
+    Rails.logger.info("[MenuLocalizationJob] Localizing menu ##{menu_id} to all restaurant locales (force: #{force})")
 
-    stats = LocalizeMenuService.localize_menu_to_all_locales(menu)
+    stats = LocalizeMenuService.localize_menu_to_all_locales(menu, force: force)
 
     Rails.logger.info("[MenuLocalizationJob] Completed menu ##{menu_id} localization: #{stats}")
     stats
@@ -63,12 +64,12 @@ class MenuLocalizationJob
   end
 
   # Use Case 2: Localize all restaurant menus to a newly added locale
-  def localize_to_new_locale(restaurant_locale_id)
+  def localize_to_new_locale(restaurant_locale_id, force: false)
     restaurant_locale = Restaurantlocale.find(restaurant_locale_id)
     restaurant = restaurant_locale.restaurant
-    Rails.logger.info("[MenuLocalizationJob] Localizing all menus for restaurant ##{restaurant.id} to locale #{restaurant_locale.locale}")
+    Rails.logger.info("[MenuLocalizationJob] Localizing all menus for restaurant ##{restaurant.id} to locale #{restaurant_locale.locale} (force: #{force})")
 
-    stats = LocalizeMenuService.localize_all_menus_to_locale(restaurant, restaurant_locale)
+    stats = LocalizeMenuService.localize_all_menus_to_locale(restaurant, restaurant_locale, force: force)
 
     Rails.logger.info("[MenuLocalizationJob] Completed restaurant ##{restaurant.id} localization to #{restaurant_locale.locale}: #{stats}")
     stats
