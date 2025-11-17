@@ -40,9 +40,10 @@ class Menuitem < ApplicationRecord
   after_destroy :invalidate_menuitem_caches
 
   def localised_name(locale)
-    mil = Menuitemlocale.where(menuitem_id: id, locale: locale).first
-    rl = Restaurantlocale.where(restaurant_id: menusection.menu.restaurant.id, locale: locale).first
-    if rl.dfault == true
+    # Case-insensitive locale lookup
+    mil = Menuitemlocale.where(menuitem_id: id).where('LOWER(locale) = ?', locale.to_s.downcase).first
+    rl = Restaurantlocale.where(restaurant_id: menusection.menu.restaurant.id).where('LOWER(locale) = ?', locale.to_s.downcase).first
+    if rl&.dfault == true
       name
     elsif mil
       mil.name
@@ -52,9 +53,10 @@ class Menuitem < ApplicationRecord
   end
 
   def localised_description(locale)
-    mil = Menuitemlocale.where(menuitem_id: id, locale: locale).first
-    rl = Restaurantlocale.where(restaurant_id: menusection.menu.restaurant.id, locale: locale).first
-    if rl.dfault == true
+    # Case-insensitive locale lookup
+    mil = Menuitemlocale.where(menuitem_id: id).where('LOWER(locale) = ?', locale.to_s.downcase).first
+    rl = Restaurantlocale.where(restaurant_id: menusection.menu.restaurant.id).where('LOWER(locale) = ?', locale.to_s.downcase).first
+    if rl&.dfault == true
       description
     elsif mil
       mil.description

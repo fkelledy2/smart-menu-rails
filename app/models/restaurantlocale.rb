@@ -19,7 +19,7 @@ class Restaurantlocale < ApplicationRecord
   cache_belongs_to :restaurant
 
   def flag
-    case locale
+    case locale&.upcase
     when 'IT'
       'https://flagcdn.com/w40/it.png'
     when 'FR'
@@ -32,7 +32,7 @@ class Restaurantlocale < ApplicationRecord
   end
 
   def language
-    case locale
+    case locale&.upcase
     when 'IT'
       'Italian'
     when 'FR'

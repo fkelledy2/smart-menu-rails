@@ -252,7 +252,7 @@ export function initOrders() {
         event.preventDefault();
       });
     }
-    $('.setparticipantlocale').on('click', function (event) {
+    $(document).on('click', '.setparticipantlocale', function (event) {
       const locale = $(this).data('locale');
       if ($('#currentParticipant').text()) {
         const ordrparticipant = {

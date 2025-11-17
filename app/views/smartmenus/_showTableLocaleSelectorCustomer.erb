@@ -11,25 +11,21 @@
     <% if Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active').count > 0 %>
         <div class="btn-group" role="group" style="position: relative; z-index: 9999;">
             <button id="lovale-actions" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 0px 0 8px 8px; min-width: 60px;">
-                    <% if ordrparticipant && ordrparticipant.preferredlocale %>
+                    <% if ordrparticipant && ordrparticipant.preferredlocale && restaurant.getLocale(ordrparticipant.preferredlocale) %>
                         <img src="<%= restaurant.getLocale(ordrparticipant.preferredlocale).flag %>" class="rounded-1 border border-white flag-icon-selected">
+                    <% elsif menuparticipant && menuparticipant.preferredlocale && restaurant.getLocale(menuparticipant.preferredlocale) %>
+                        <img src="<%= restaurant.getLocale(menuparticipant.preferredlocale).flag %>" class="rounded-1 border border-white flag-icon-selected">
+                    <% elsif restaurant.defaultLocale %>
+                        <img src="<%= restaurant.defaultLocale.flag %>" tooltip="<%= restaurant.defaultLocale.language %>" class="rounded-1 border border-white flag-icon-selected">
                     <% else %>
-                        <% if menuparticipant && menuparticipant.preferredlocale %>
-                            <img src="<%= restaurant.getLocale(menuparticipant.preferredlocale).flag %>" class="rounded-1 border border-white flag-icon-selected">
-                        <% else %>
-                            <% if restaurant.defaultLocale %>
-                                <img src="<%= restaurant.defaultLocale.flag %>" tooltip="<%= restaurant.defaultLocale.language %>" class="rounded-1 border border-white flag-icon-selected">
-                            <% else %>
-                                <i class="bi bi-translate"></i>
-                            <% end %>
-                        <% end %>
+                        <i class="bi bi-translate"></i>
                     <% end %>
             </button>
             <ul style="--bs-dropdown-padding-y: 0.5rem; --bs-dropdown-min-width: 0em; z-index: 9999;" class="dropdown-menu dropdown-menu-dark" aria-labelledby="locales">
                 <% Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active').each do |restaurantlocale| %>
                     <li>
                         <a style="padding: 8px 12px; min-height: 44px; display: flex; align-items: center;" class="dropdown-item" href="#">
-                            <img src="<%= restaurantlocale.flag %>" data-locale="<%= restaurantlocale.locale %>" tooltip="<%= restaurantlocale.language %>" class="setparticipantlocale rounded-1 border border-white flag-icon">
+                            <img src="<%= restaurantlocale.flag %>" data-locale="<%= restaurantlocale.locale.downcase %>" tooltip="<%= restaurantlocale.language %>" class="setparticipantlocale rounded-1 border border-white flag-icon">
                         </a>
                     </li>
                 <% end %>

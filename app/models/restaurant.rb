@@ -100,7 +100,10 @@ class Restaurant < ApplicationRecord
   end
 
   def getLocale(locale)
-    Restaurantlocale.where(restaurant_id: id, status: 'active', locale: locale).first
+    # Case-insensitive lookup to handle both 'it' and 'IT'
+    Restaurantlocale.where(restaurant_id: id, status: 'active')
+                    .where('LOWER(locale) = ?', locale.to_s.downcase)
+                    .first
   end
 
   validates :name, presence: true

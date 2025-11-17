@@ -129,8 +129,13 @@ class MenuparticipantsController < ApplicationController
     restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
     allergyns = Allergyn.where(restaurant_id: restaurant.id)
     full_refresh = false
+    
+    # Use menuparticipant's preferred locale for rendering
+    # Ensure locale is lowercase (I18n expects :en, :it, not :EN, :IT)
+    participant_locale = menuparticipant.preferredlocale.presence&.downcase&.to_sym || I18n.default_locale
 
-    partials = {
+    partials = I18n.with_locale(participant_locale) do
+      {
       context: compress_string(
         ApplicationController.renderer.render(
           partial: 'smartmenus/showContext',
@@ -174,6 +179,8 @@ class MenuparticipantsController < ApplicationController
           allergyns.maximum(:updated_at),
           restaurant_currency.code,
           menuparticipant.try(:id),
+          menuparticipant.try(:preferredlocale),
+          tablesetting.try(:id),
         ]) do
           ApplicationController.renderer.render(
             partial: 'smartmenus/showMenuContentStaff',
@@ -184,6 +191,7 @@ class MenuparticipantsController < ApplicationController
               restaurantCurrency: restaurant_currency,
               ordrparticipant: nil,
               menuparticipant: menuparticipant,
+              tablesetting: tablesetting,
             },
           )
         end,
@@ -195,6 +203,8 @@ class MenuparticipantsController < ApplicationController
           allergyns.maximum(:updated_at),
           restaurant_currency.code,
           menuparticipant.try(:id),
+          menuparticipant.try(:preferredlocale),
+          tablesetting.try(:id),
         ]) do
           ApplicationController.renderer.render(
             partial: 'smartmenus/showMenuContentCustomer',
@@ -205,6 +215,7 @@ class MenuparticipantsController < ApplicationController
               restaurantCurrency: restaurant_currency,
               ordrparticipant: nil,
               menuparticipant: menuparticipant,
+              tablesetting: tablesetting,
             },
           )
         end,
@@ -258,7 +269,9 @@ class MenuparticipantsController < ApplicationController
         ),
       ),
       fullPageRefresh: { refresh: full_refresh },
-    }
+      }
+    end
+    
     ActionCable.server.broadcast("ordr_#{smartmenu.slug}_channel", partials)
   end
 
