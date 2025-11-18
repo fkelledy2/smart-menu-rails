@@ -23,6 +23,52 @@
     <% end %>
     
     <% active_locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active') %>
+    <% if active_locales.any? %>
+      <div class="btn-group">
+        <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false), 
+            method: :post,
+            class: 'quick-action-btn',
+            data: { 
+              turbo: false,
+              confirm: t('.confirm_localize', 
+                default: "Translate this menu to all configured languages (#{active_locales.pluck(:locale).map(&:upcase).join(', ')})? Only missing translations will be created.") 
+            } do %>
+          <i class="bi bi-translate"></i>
+          <span><%= t('.localize_menu', default: 'Localize Menu') %></span>
+        <% end %>
+        <button type="button" class="quick-action-btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+          <span class="visually-hidden">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false), 
+                method: :post,
+                class: 'dropdown-item text-start border-0 bg-transparent',
+                form: { style: 'display: inline;' },
+                data: { 
+                  turbo: false,
+                  confirm: t('.confirm_localize_incremental', 
+                    default: "Translate only missing localizations? Existing translations will be preserved.")
+                } do %>
+              <i class="bi bi-plus-circle"></i> <%= t('.localize_incremental', default: 'Add Missing Translations') %>
+            <% end %>
+          </li>
+          <li>
+            <%= button_to localize_restaurant_menu_path(restaurant, menu, force: true), 
+                method: :post,
+                class: 'dropdown-item text-start border-0 bg-transparent text-warning',
+                form: { style: 'display: inline;' },
+                data: { 
+                  turbo: false,
+                  confirm: t('.confirm_localize_force', 
+                    default: "Re-translate ALL menu content? This will overwrite existing translations and use more API credits.")
+                } do %>
+              <i class="bi bi-arrow-repeat"></i> <%= t('.localize_force', default: 'Re-translate Everything') %>
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    <% end %>
     
     <% if menu.smartmenu&.slug %>
       <%= link_to smartmenu_path(menu.smartmenu.slug), 

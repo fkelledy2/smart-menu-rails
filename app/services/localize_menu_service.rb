@@ -122,22 +122,10 @@ class LocalizeMenuService
         
         # Track rate-limited items
         if translation_result[:rate_limited]
-          stats[:rate_limited_items] << {
-            'type' => 'menu',
-            'id' => menu.id,
-            'field' => 'name',
-            'locale' => locale_code,
-            'text' => menu.name
-          }
+          stats[:rate_limited_items] << { type: 'menu', id: menu.id, field: 'name', locale: locale_code, text: menu.name }
         end
         if description_result[:rate_limited]
-          stats[:rate_limited_items] << {
-            'type' => 'menu',
-            'id' => menu.id,
-            'field' => 'description',
-            'locale' => locale_code,
-            'text' => menu.description
-          }
+          stats[:rate_limited_items] << { type: 'menu', id: menu.id, field: 'description', locale: locale_code, text: menu.description }
         end
       end
 
@@ -196,22 +184,10 @@ class LocalizeMenuService
         
         # Track rate-limited items
         if translation_result[:rate_limited]
-          stats[:rate_limited_items] << {
-            'type' => 'section',
-            'id' => section.id,
-            'field' => 'name',
-            'locale' => locale_code,
-            'text' => section.name
-          }
+          stats[:rate_limited_items] << { type: 'section', id: section.id, field: 'name', locale: locale_code, text: section.name }
         end
         if description_result[:rate_limited]
-          stats[:rate_limited_items] << {
-            'type' => 'section',
-            'id' => section.id,
-            'field' => 'description',
-            'locale' => locale_code,
-            'text' => section.description
-          }
+          stats[:rate_limited_items] << { type: 'section', id: section.id, field: 'description', locale: locale_code, text: section.description }
         end
       end
 
@@ -264,22 +240,10 @@ class LocalizeMenuService
         
         # Track rate-limited items
         if translation_result[:rate_limited]
-          stats[:rate_limited_items] << {
-            'type' => 'item',
-            'id' => item.id,
-            'field' => 'name',
-            'locale' => locale_code,
-            'text' => item.name
-          }
+          stats[:rate_limited_items] << { type: 'item', id: item.id, field: 'name', locale: locale_code, text: item.name }
         end
         if description_result[:rate_limited]
-          stats[:rate_limited_items] << {
-            'type' => 'item',
-            'id' => item.id,
-            'field' => 'description',
-            'locale' => locale_code,
-            'text' => item.description
-          }
+          stats[:rate_limited_items] << { type: 'item', id: item.id, field: 'description', locale: locale_code, text: item.description }
         end
       end
 

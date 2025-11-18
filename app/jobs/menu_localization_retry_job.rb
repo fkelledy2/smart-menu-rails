@@ -59,8 +59,6 @@ class MenuLocalizationRetryJob
 
   # Retry translating a single item
   def retry_item_translation(item, stats)
-    item = item.with_indifferent_access if item.respond_to?(:with_indifferent_access)
-
     locale_code = item[:locale]
     text = item[:text]
     

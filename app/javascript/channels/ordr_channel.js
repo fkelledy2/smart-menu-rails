@@ -206,35 +206,31 @@ function closeAllModals() {
 
 function refreshOrderJSLogic() {
   const searchInput = document.getElementById('menu-item-search');
+  if (!searchInput) return;
 
-  // Only attach the search handler when the search input exists, but do
-  // not return early so that other logic (like time-window disabling)
-  // still executes on partial loads.
-  if (searchInput) {
-    searchInput.addEventListener('input', function () {
-      const term = searchInput.value.trim().toLowerCase();
-      if (term.length === 0) {
-        // If search is empty, show all items
-        document.querySelectorAll('.menu-item-card').forEach((card) => (card.style.display = ''));
-        return;
+  searchInput.addEventListener('input', function () {
+    const term = searchInput.value.trim().toLowerCase();
+    if (term.length === 0) {
+      // If search is empty, show all items
+      document.querySelectorAll('.menu-item-card').forEach((card) => (card.style.display = ''));
+      return;
+    }
+
+    document.querySelectorAll('.menu-item-card').forEach(function (card) {
+      // Search in data attributes (original English text)
+      const name = card.getAttribute('data-name') || '';
+      const desc = card.getAttribute('data-description') || '';
+
+      // Search in visible text content (localized text)
+      const cardText = card.textContent.toLowerCase();
+
+      if (name.includes(term) || desc.includes(term) || cardText.includes(term)) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
       }
-
-      document.querySelectorAll('.menu-item-card').forEach(function (card) {
-        // Search in data attributes (original English text)
-        const name = card.getAttribute('data-name') || '';
-        const desc = card.getAttribute('data-description') || '';
-
-        // Search in visible text content (localized text)
-        const cardText = card.textContent.toLowerCase();
-
-        if (name.includes(term) || desc.includes(term) || cardText.includes(term)) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-      });
     });
-  }
+  });
 
   if ($('#smartmenu').length) {
     const date = new Date();
@@ -296,12 +292,7 @@ function refreshOrderJSLogic() {
   }
   $(document).on('click', '.setparticipantlocale', function (event) {
     const locale = $(this).data('locale');
-
-    const hasOrderParticipant = $('#currentParticipant').text();
-
-    // When an order participant exists, update their preferred locale so
-    // order-specific views can respect their choice.
-    if (hasOrderParticipant) {
+    if ($('#currentParticipant').text()) {
       const ordrparticipant = {
         ordrparticipant: {
           preferredlocale: locale,
@@ -309,21 +300,12 @@ function refreshOrderJSLogic() {
       };
       patch('/ordrparticipants/' + $('#currentParticipant').text(), ordrparticipant);
     }
-
-    // Always keep the menu participant in sync, but when there is an
-    // order participant we mark this update so the controller can skip
-    // broadcasting (to avoid double broadcasts).
     if ($('#menuParticipant').text()) {
       const menuparticipant = {
         menuparticipant: {
           preferredlocale: locale,
         },
       };
-
-      if (hasOrderParticipant) {
-        menuparticipant.skip_broadcast = true;
-      }
-
       const restaurantId = $('#currentRestaurant').text();
       const menuId = $('#currentMenu').text();
       const menuParticipantId = $('#menuParticipant').text();
@@ -332,7 +314,6 @@ function refreshOrderJSLogic() {
         menuparticipant
       );
     }
-
     event.preventDefault();
   });
   $('.removeItemFromOrderButton').on('click', function (event) {

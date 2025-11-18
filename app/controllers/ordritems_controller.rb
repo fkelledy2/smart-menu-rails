@@ -165,30 +165,43 @@ class OrdritemsController < ApplicationController
     full_refresh = ordr.status == 'closed'
     ordrparticipant.preferredlocale = menuparticipant.preferredlocale if menuparticipant
 
-    partials = {
-      context: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showContext',
-          locals: {
-            order: ordr,
-            menu: menu,
-            ordrparticipant: ordrparticipant,
-            tablesetting: tablesetting,
-            menuparticipant: menuparticipant,
-            current_employee: @current_employee,
-          },
+    # Prefer the customer's ordrparticipant (role 0) when determining locale
+    customer_ordrparticipant = ordr.ordrparticipants.where(role: 0).first
+
+    # Determine a safe locale for rendering smartmenu partials
+    available = I18n.available_locales.map(&:to_s)
+    raw_locale = nil
+
+    if customer_ordrparticipant&.preferredlocale.present? && available.include?(customer_ordrparticipant.preferredlocale.downcase)
+      raw_locale = customer_ordrparticipant.preferredlocale.downcase
+    elsif ordrparticipant&.preferredlocale.present? && available.include?(ordrparticipant.preferredlocale.downcase)
+      raw_locale = ordrparticipant.preferredlocale.downcase
+    elsif menuparticipant&.preferredlocale.present? && available.include?(menuparticipant.preferredlocale.downcase)
+      raw_locale = menuparticipant.preferredlocale.downcase
+    elsif restaurant.defaultLocale&.locale.present? && available.include?(restaurant.defaultLocale.locale.to_s.downcase)
+      raw_locale = restaurant.defaultLocale.locale.to_s.downcase
+    elsif available.include?(I18n.default_locale.to_s)
+      raw_locale = I18n.default_locale.to_s
+    end
+
+    render_locale = (raw_locale || I18n.default_locale.to_s).to_sym
+
+    partials = I18n.with_locale(render_locale) do
+      {
+        context: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showContext',
+            locals: {
+              order: ordr,
+              menu: menu,
+              ordrparticipant: ordrparticipant,
+              tablesetting: tablesetting,
+              menuparticipant: menuparticipant,
+              current_employee: @current_employee,
+            },
+          ),
         ),
-      ),
-      modals: compress_string(
-        Rails.cache.fetch([
-          :show_modals,
-          ordr.cache_key_with_version,
-          menu.cache_key_with_version,
-          tablesetting.try(:id),
-          menuparticipant.try(:id),
-          restaurant_currency.code,
-          @current_employee.try(:id),
-        ]) do
+        modals: compress_string(
           ApplicationController.renderer.render(
             partial: 'smartmenus/showModals',
             locals: {
@@ -200,19 +213,9 @@ class OrdritemsController < ApplicationController
               restaurantCurrency: restaurant_currency,
               current_employee: @current_employee,
             },
-          )
-        end,
-      ),
-      menuContentStaff: compress_string(
-        Rails.cache.fetch([
-          :menu_content_staff,
-          ordr.cache_key_with_version,
-          menu.cache_key_with_version,
-          allergyns.maximum(:updated_at),
-          restaurant_currency.code,
-          ordrparticipant.try(:id),
-          menuparticipant.try(:id),
-        ]) do
+          ),
+        ),
+        menuContentStaff: compress_string(
           ApplicationController.renderer.render(
             partial: 'smartmenus/showMenuContentStaff',
             locals: {
@@ -224,19 +227,9 @@ class OrdritemsController < ApplicationController
               menuparticipant: menuparticipant,
               tablesetting: tablesetting,
             },
-          )
-        end,
-      ),
-      menuContentCustomer: compress_string(
-        Rails.cache.fetch([
-          :menu_content_customer,
-          ordr.cache_key_with_version,
-          menu.cache_key_with_version,
-          allergyns.maximum(:updated_at),
-          restaurant_currency.code,
-          ordrparticipant.try(:id),
-          menuparticipant.try(:id),
-        ]) do
+          ),
+        ),
+        menuContentCustomer: compress_string(
           ApplicationController.renderer.render(
             partial: 'smartmenus/showMenuContentCustomer',
             locals: {
@@ -244,63 +237,63 @@ class OrdritemsController < ApplicationController
               menu: menu,
               allergyns: allergyns,
               restaurantCurrency: restaurant_currency,
-              ordrparticipant: ordrparticipant,
+              ordrparticipant: customer_ordrparticipant,
               menuparticipant: menuparticipant,
               tablesetting: tablesetting,
             },
-          )
-        end,
-      ),
-      orderCustomer: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/orderCustomer',
-          locals: {
-            order: ordr,
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: ordrparticipant,
-          },
+          ),
         ),
-      ),
-      orderStaff: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/orderStaff',
-          locals: {
-            order: ordr,
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: ordrparticipant,
-          },
+        orderCustomer: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/orderCustomer',
+            locals: {
+              order: ordr,
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: customer_ordrparticipant,
+            },
+          ),
         ),
-      ),
-      tableLocaleSelectorStaff: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showTableLocaleSelectorStaff',
-          locals: {
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: ordrparticipant,
-            menuparticipant: menuparticipant,
-          },
+        orderStaff: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/orderStaff',
+            locals: {
+              order: ordr,
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: ordrparticipant,
+            },
+          ),
         ),
-      ),
-      tableLocaleSelectorCustomer: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showTableLocaleSelectorCustomer',
-          locals: {
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: ordrparticipant,
-            menuparticipant: menuparticipant,
-          },
+        tableLocaleSelectorStaff: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showTableLocaleSelectorStaff',
+            locals: {
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: ordrparticipant,
+              menuparticipant: menuparticipant,
+            },
+          ),
         ),
-      ),
-      fullPageRefresh: { refresh: full_refresh },
-    }
+        tableLocaleSelectorCustomer: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showTableLocaleSelectorCustomer',
+            locals: {
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: customer_ordrparticipant,
+              menuparticipant: menuparticipant,
+            },
+          ),
+        ),
+        fullPageRefresh: { refresh: full_refresh },
+      }
+    end
     # Only broadcast if menuparticipant and smartmenu exist
     if menuparticipant&.smartmenu&.slug
       ActionCable.server.broadcast("ordr_#{menuparticipant.smartmenu.slug}_channel", partials)

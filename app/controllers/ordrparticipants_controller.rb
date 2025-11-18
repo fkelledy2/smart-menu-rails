@@ -56,12 +56,6 @@ class OrdrparticipantsController < ApplicationController
 
     respond_to do |format|
       if @ordrparticipant.update(ordrparticipant_params)
-        # Keep the menuparticipant locale in sync for this session and
-        # clear cached menu content so it will be regenerated with the
-        # new locale.
-        sync_menuparticipant_locale_for_session(@ordrparticipant)
-        invalidate_menu_content_cache_for_ordr(@ordrparticipant)
-
         # Find all entries for participant with same sessionid and order_id and update the name.
         @tablesetting = Tablesetting.find_by(id: @ordrparticipant.ordr.tablesetting.id)
         Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
@@ -102,47 +96,58 @@ class OrdrparticipantsController < ApplicationController
     allergyns = Allergyn.where(restaurant_id: restaurant.id)
     restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
     full_refresh = ordr.status == 'closed'
+    ordrparticipant.preferredlocale = menuparticipant.preferredlocale if menuparticipant
 
-    # Temporary workaround: force locale to the restaurant's default
-    # locale (if active and allowed) for all smartmenu pages, ignoring
-    # participant-specific preferred locales. This keeps behaviour
-    # consistent while localization bugs are being addressed.
-    allowed_locales = I18n.available_locales.map(&:to_s)
+    # Prefer the customer's ordrparticipant (role 0) when determining locale,
+    # so staff actions do not override the customer's chosen language.
+    customer_ordrparticipant = ordr.ordrparticipants.where(role: 0).first
 
-    participant_locale = nil
+    # Determine a safe locale for rendering smartmenu partials
+    available = I18n.available_locales.map(&:to_s)
+    raw_locale = nil
 
-    if restaurant.defaultLocale&.locale.present?
-      default_locale_str = restaurant.defaultLocale.locale.to_s.downcase
-      participant_locale = default_locale_str.to_sym if allowed_locales.include?(default_locale_str)
+    if customer_ordrparticipant&.preferredlocale.present? && available.include?(customer_ordrparticipant.preferredlocale.downcase)
+      raw_locale = customer_ordrparticipant.preferredlocale.downcase
+    elsif ordrparticipant&.preferredlocale.present? && available.include?(ordrparticipant.preferredlocale.downcase)
+      raw_locale = ordrparticipant.preferredlocale.downcase
+    elsif menuparticipant&.preferredlocale.present? && available.include?(menuparticipant.preferredlocale.downcase)
+      raw_locale = menuparticipant.preferredlocale.downcase
+    elsif restaurant.defaultLocale&.locale.present? && available.include?(restaurant.defaultLocale.locale.to_s.downcase)
+      raw_locale = restaurant.defaultLocale.locale.to_s.downcase
+    elsif available.include?(I18n.default_locale.to_s)
+      raw_locale = I18n.default_locale.to_s
     end
 
-    participant_locale ||= I18n.default_locale
+    render_locale = (raw_locale || I18n.default_locale.to_s).to_sym
 
-    partials = I18n.with_locale(participant_locale) do
+    Rails.logger.warn(
+      "[SmartmenuLocaleDebug] ordr_id=#{ordr.id} " \
+      "customer_ordrparticipant_id=#{customer_ordrparticipant&.id} " \
+      "customer_locale=#{customer_ordrparticipant&.preferredlocale.inspect} " \
+      "staff_ordrparticipant_id=#{ordrparticipant&.id} " \
+      "staff_locale=#{ordrparticipant&.preferredlocale.inspect} " \
+      "menuparticipant_id=#{menuparticipant&.id} " \
+      "menuparticipant_locale=#{menuparticipant&.preferredlocale.inspect} " \
+      "restaurant_default_locale=#{restaurant.defaultLocale&.locale.inspect} " \
+      "render_locale=#{render_locale.inspect}"
+    )
+
+    partials = I18n.with_locale(render_locale) do
       {
-      context: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showContext',
-          locals: {
-            order: ordr,
-            menu: menu,
-            ordrparticipant: ordrparticipant,
-            tablesetting: tablesetting,
-            menuparticipant: menuparticipant,
-            current_employee: @current_employee,
-          },
+        context: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showContext',
+            locals: {
+              order: ordr,
+              menu: menu,
+              ordrparticipant: ordrparticipant,
+              tablesetting: tablesetting,
+              menuparticipant: menuparticipant,
+              current_employee: @current_employee,
+            },
+          ),
         ),
-      ),
-      modals: compress_string(
-        Rails.cache.fetch([
-          :show_modals,
-          ordr.cache_key_with_version,
-          menu.cache_key_with_version,
-          tablesetting.try(:id),
-          menuparticipant.try(:id),
-          restaurant_currency.code,
-          @current_employee.try(:id),
-        ]) do
+        modals: compress_string(
           ApplicationController.renderer.render(
             partial: 'smartmenus/showModals',
             locals: {
@@ -154,19 +159,9 @@ class OrdrparticipantsController < ApplicationController
               restaurantCurrency: restaurant_currency,
               current_employee: @current_employee,
             },
-          )
-        end,
-      ),
-      menuContentStaff: compress_string(
-        Rails.cache.fetch([
-          :menu_content_staff,
-          ordr.cache_key_with_version,
-          menu.cache_key_with_version,
-          allergyns.maximum(:updated_at),
-          restaurant_currency.code,
-          ordrparticipant.try(:id),
-          menuparticipant.try(:id),
-        ]) do
+          ),
+        ),
+        menuContentStaff: compress_string(
           ApplicationController.renderer.render(
             partial: 'smartmenus/showMenuContentStaff',
             locals: {
@@ -178,19 +173,9 @@ class OrdrparticipantsController < ApplicationController
               menuparticipant: menuparticipant,
               tablesetting: tablesetting,
             },
-          )
-        end,
-      ),
-      menuContentCustomer: compress_string(
-        Rails.cache.fetch([
-          :menu_content_customer,
-          ordr.cache_key_with_version,
-          menu.cache_key_with_version,
-          allergyns.maximum(:updated_at),
-          restaurant_currency.code,
-          ordrparticipant.try(:id),
-          menuparticipant.try(:id),
-        ]) do
+          ),
+        ),
+        menuContentCustomer: compress_string(
           ApplicationController.renderer.render(
             partial: 'smartmenus/showMenuContentCustomer',
             locals: {
@@ -198,62 +183,61 @@ class OrdrparticipantsController < ApplicationController
               menu: menu,
               allergyns: allergyns,
               restaurantCurrency: restaurant_currency,
-              ordrparticipant: ordrparticipant,
+              ordrparticipant: customer_ordrparticipant,
               menuparticipant: menuparticipant,
               tablesetting: tablesetting,
             },
-          )
-        end,
-      ),
-      orderCustomer: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/orderCustomer',
-          locals: {
-            order: ordr,
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: ordrparticipant,
-          },
+          ),
         ),
-      ),
-      orderStaff: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/orderStaff',
-          locals: {
-            order: ordr,
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: ordrparticipant,
-          },
+        orderCustomer: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/orderCustomer',
+            locals: {
+              order: ordr,
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: customer_ordrparticipant,
+            },
+          ),
         ),
-      ),
-      tableLocaleSelectorStaff: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showTableLocaleSelectorStaff',
-          locals: {
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: ordrparticipant,
-            menuparticipant: menuparticipant,
-          },
+        orderStaff: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/orderStaff',
+            locals: {
+              order: ordr,
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: ordrparticipant,
+            },
+          ),
         ),
-      ),
-      tableLocaleSelectorCustomer: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showTableLocaleSelectorCustomer',
-          locals: {
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: ordrparticipant,
-            menuparticipant: menuparticipant,
-          },
+        tableLocaleSelectorStaff: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showTableLocaleSelectorStaff',
+            locals: {
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: ordrparticipant,
+              menuparticipant: menuparticipant,
+            },
+          ),
         ),
-      ),
-      fullPageRefresh: { refresh: full_refresh },
+        tableLocaleSelectorCustomer: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showTableLocaleSelectorCustomer',
+            locals: {
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: customer_ordrparticipant,
+              menuparticipant: menuparticipant,
+            },
+          ),
+        ),
+        fullPageRefresh: { refresh: full_refresh },
       }
     end
     ActionCable.server.broadcast("ordr_#{menuparticipant.smartmenu.slug}_channel", partials)
@@ -263,59 +247,6 @@ class OrdrparticipantsController < ApplicationController
     require 'zlib'
     require 'base64'
     Base64.strict_encode64(Zlib::Deflate.deflate(str))
-  end
-
-  # Ensure there is a single source of truth for the participant's
-  # preferred locale for a given session by keeping the menuparticipant
-  # in sync with the ordrparticipant.
-  def sync_menuparticipant_locale_for_session(ordrparticipant)
-    return unless ordrparticipant.sessionid.present? && ordrparticipant.preferredlocale.present?
-
-    Menuparticipant.where(sessionid: ordrparticipant.sessionid).find_each do |menuparticipant|
-      next if menuparticipant.preferredlocale == ordrparticipant.preferredlocale
-
-      menuparticipant.update(preferredlocale: ordrparticipant.preferredlocale)
-    end
-  end
-
-  # Clear cached menu content for staff and customer views for the
-  # order context so that subsequent broadcasts will render with the
-  # updated locale.
-  def invalidate_menu_content_cache_for_ordr(ordrparticipant)
-    ordr       = ordrparticipant.ordr
-    menu       = ordr.menu
-    restaurant = menu.restaurant
-    menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
-
-    return unless menuparticipant
-
-    restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
-    allergyns = Allergyn.where(restaurant_id: restaurant.id)
-
-    staff_key = [
-      :menu_content_staff,
-      ordr.cache_key_with_version,
-      menu.cache_key_with_version,
-      allergyns.maximum(:updated_at),
-      restaurant_currency.code,
-      ordrparticipant.try(:id),
-      menuparticipant.try(:id),
-    ]
-
-    customer_key = [
-      :menu_content_customer,
-      ordr.cache_key_with_version,
-      menu.cache_key_with_version,
-      allergyns.maximum(:updated_at),
-      restaurant_currency.code,
-      ordrparticipant.try(:id),
-      menuparticipant.try(:id),
-    ]
-
-    Rails.cache.delete(staff_key)
-    Rails.cache.delete(customer_key)
-  rescue StandardError => e
-    Rails.logger.error("Failed to invalidate menu content cache for ordrparticipant ##{ordrparticipant.id}: #{e.message}")
   end
 
   # Set restaurant from nested route parameter

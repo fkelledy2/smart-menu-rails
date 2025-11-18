@@ -9,14 +9,24 @@
         </button>
     </div>
     <% if Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active').count > 0 %>
+        <% available_locales = I18n.available_locales.map(&:to_s) %>
+        <% selected_locale = nil %>
+        <% if ordrparticipant && ordrparticipant.preferredlocale.present? && available_locales.include?(ordrparticipant.preferredlocale.downcase) %>
+            <% selected_locale = ordrparticipant.preferredlocale.downcase %>
+        <% elsif menuparticipant && menuparticipant.preferredlocale.present? && available_locales.include?(menuparticipant.preferredlocale.downcase) %>
+            <% selected_locale = menuparticipant.preferredlocale.downcase %>
+        <% elsif restaurant.defaultLocale %>
+            <% default_locale = restaurant.defaultLocale.locale.to_s.downcase %>
+            <% if available_locales.include?(default_locale) %>
+                <% selected_locale = default_locale %>
+            <% elsif available_locales.include?(I18n.default_locale.to_s) %>
+                <% selected_locale = I18n.default_locale.to_s %>
+            <% end %>
+        <% end %>
         <div class="btn-group" role="group" style="position: relative; z-index: 9999;">
             <button id="lovale-actions" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 0px 0 8px 8px; min-width: 60px;">
-                    <% if ordrparticipant && ordrparticipant.preferredlocale && restaurant.getLocale(ordrparticipant.preferredlocale) %>
-                        <img src="<%= restaurant.getLocale(ordrparticipant.preferredlocale).flag %>" class="rounded-1 border border-white flag-icon-selected">
-                    <% elsif menuparticipant && menuparticipant.preferredlocale && restaurant.getLocale(menuparticipant.preferredlocale) %>
-                        <img src="<%= restaurant.getLocale(menuparticipant.preferredlocale).flag %>" class="rounded-1 border border-white flag-icon-selected">
-                    <% elsif restaurant.defaultLocale %>
-                        <img src="<%= restaurant.defaultLocale.flag %>" tooltip="<%= restaurant.defaultLocale.language %>" class="rounded-1 border border-white flag-icon-selected">
+                    <% if selected_locale && restaurant.getLocale(selected_locale) %>
+                        <img src="<%= restaurant.getLocale(selected_locale).flag %>" class="rounded-1 border border-white flag-icon-selected">
                     <% else %>
                         <i class="bi bi-translate"></i>
                     <% end %>
