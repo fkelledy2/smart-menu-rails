@@ -11,7 +11,7 @@
                             <% if order.status == 'opened' %>
                                 <% if order.nett.to_f > 0 %>
                                     <% if order.addedCount > 0 %>
-                                        <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
+                                        <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" data-testid="staff-view-order-btn">
                                             <i id="orderCart" class="bi bi-cart"></i>
                                             <%= t(".order") %>
                                             <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm" role="status"></div>
@@ -31,7 +31,7 @@
                                 <% end %>
                             <% end %>
                                 <% if order.status == 'ordered' || order.status == 'preparing' || order.status == 'ready'  || order.status == 'delivered' %>
-                                    <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#requestBillModal">
+                                    <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#requestBillModal" data-testid="staff-request-bill-btn">
                                         <i class="bi bi-receipt"></i>
                                         <%= t(".bill") %>
                                     </button>
@@ -42,14 +42,14 @@
                                             <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm" role="status"></div>
                                         </button>
                                     <% else %>
-                                        <button type="button" class="btn-touch-secondary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
+                                        <button type="button" class="btn-touch-secondary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" data-testid="staff-view-order-btn">
                                             <i id="orderCart" class="bi bi-cart"></i>
                                             <%= t(".order") %>
                                         </button>
                                     <% end %>
                                 <% end %>
                                 <% if order.status == 'billrequested' %>
-                                        <button type="button" class="btn-touch-dark btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#payOrderModal">
+                                        <button type="button" class="btn-touch-dark btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#payOrderModal" data-testid="staff-pay-btn">
                                             <i class="bi bi-credit-card"></i>
                                             <%= t(".takePayment") %>
                                         </button>

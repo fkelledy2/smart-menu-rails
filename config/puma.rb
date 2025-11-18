@@ -35,8 +35,8 @@ end
 unless ENV['DISABLE_PRELOAD_APP'] == 'true'
   preload_app!
   
-  # Code to run before worker boot
-  on_worker_boot do
+  # Code to run before worker boot (Puma >= 7: use before_worker_boot; runs in cluster mode only)
+  before_worker_boot do
     ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
   end
 end

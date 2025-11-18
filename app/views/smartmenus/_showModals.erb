@@ -243,11 +243,11 @@
           <div style='border-top:0px;padding:0px' class="modal-footer">
             <span class="float-end">
                 <div style='position:relative;right:-5px;bottom:-5px;' class="btn-group btn-group-lg btn-order-group-custom-rounded" role="group" aria-label="<%= t('.order_aria') %>">
-                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
+                    <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
                     <% if order && order.addedCount > 0 %>
-                        <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-danger" data-testid="submit-order-btn"><%= t(".submit") %></button>
+                        <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn-touch-primary" data-testid="submit-order-btn"><%= t(".submit") %></button>
                     <% else %>
-                        <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-danger" disabled data-testid="submit-order-btn"><%= t(".submit") %></button>
+                        <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn-touch-primary" disabled data-testid="submit-order-btn"><%= t(".submit") %></button>
                     <% end %>
                 </div>
             </span>

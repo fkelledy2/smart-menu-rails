@@ -36,6 +36,7 @@ UI_TESTS=(
   "test/system/smartmenu_customer_ordering_test.rb"
   "test/system/smartmenu_staff_ordering_test.rb"
   "test/system/smartmenu_order_state_test.rb"
+  "test/system/smartmenu_multi_table_lifecycle_test.rb"
   
   # Phase 4 - Add new test files here as they are created
   # Example: "test/system/settings_test.rb"
