@@ -6,7 +6,7 @@
               <div style='display:none'>
                   <%= button_to 'Optimise Images', regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), method: :post, class: 'btn-2025 btn-2025-secondary btn-2025-sm', data: { turbo: false, confirm: 'Regenerate WebP derivatives for existing images?' }, title: 'Regenerate WebP derivatives for existing menu item images' %>
               </div>
-              <%= button_to regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu, generate_ai: true), method: :post, class: 'btn-2025 btn-2025-secondary btn-2025-sm', data: { turbo: false, confirm: 'Generate new AI images using DALL-E? This will cost API credits.' }, title: 'Generate new AI images for menu items using DALL-E' do %>
+              <%= button_to regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu, generate_ai: true), method: :post, class: 'btn-2025 btn-2025-secondary btn-2025-sm', data: { turbo: false }, form: { data: { turbo: false, ai_generate: true, menu_id: @menu.id } }, title: 'Generate new AI images for menu items using DALL-E' do %>
                 <i class="bi bi-stars"></i> Generate Images
               <% end %>
             </div>

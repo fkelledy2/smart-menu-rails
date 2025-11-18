@@ -110,9 +110,9 @@
                         </div>
                       <% end %>
                       
-                      <% if item.image.present? %>
+                      <% if item.thumb_url.present? %>
                         <div class="item-image-tooltip">
-                          <%= image_tag item.image_url(:thumb), alt: item.name, loading: 'lazy' %>
+                          <%= image_tag item.thumb_url, alt: item.name, loading: 'lazy' %>
                         </div>
                       <% end %>
                     </div>

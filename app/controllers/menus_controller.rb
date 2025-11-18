@@ -5,7 +5,7 @@ class MenusController < ApplicationController
 
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_restaurant
-  before_action :set_menu, only: %i[show edit update destroy regenerate_images localize performance update_availabilities]
+  before_action :set_menu, only: %i[show edit update destroy regenerate_images image_generation_progress localize performance update_availabilities]
 
   # Pundit authorization
   after_action :verify_authorized, except: %i[index performance update_sequence]
@@ -79,8 +79,34 @@ class MenusController < ApplicationController
     # Check if user wants to generate AI images or regenerate WebP derivatives
     if params[:generate_ai] == 'true'
       # Generate new AI images using DALL-E
-      MenuItemImageBatchJob.perform_async(@menu.id)
-      flash[:notice] = t('menus.controller.ai_image_generation_queued')
+      total = Genimage.where(menu_id: @menu.id).count
+      jid = MenuItemImageBatchJob.perform_async(@menu.id)
+
+      # Initialize progress in Redis via Sidekiq connection
+      begin
+        Sidekiq.redis do |r|
+          r.setex("image_gen:#{jid}", 24 * 3600, {
+            status: 'queued',
+            current: 0,
+            total: total,
+            message: 'Queued AI image generation',
+            menu_id: @menu.id
+          }.to_json)
+        end
+      rescue => e
+        Rails.logger.warn("[MenusController] Failed to init progress for #{jid}: #{e.message}")
+      end
+
+      respond_to do |format|
+        format.html do
+          flash[:notice] = t('menus.controller.ai_image_generation_queued')
+          redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu)
+        end
+        format.json do
+          render json: { job_id: jid, total: total, status: 'queued' }
+        end
+      end
+      return
     else
       # Regenerate WebP derivatives for existing images
       RegenerateMenuWebpJob.perform_async(@menu.id)
@@ -88,6 +114,29 @@ class MenusController < ApplicationController
     end
 
     redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu)
+  end
+
+  # GET /restaurants/:restaurant_id/menus/:id/image_generation_progress
+  def image_generation_progress
+    authorize @menu, :update?
+
+    jid = params[:job_id].to_s
+    payload = nil
+    begin
+      Sidekiq.redis do |r|
+        json = r.get("image_gen:#{jid}")
+        payload = json.present? ? JSON.parse(json) : {}
+      end
+    rescue => e
+      Rails.logger.warn("[MenusController] Progress read failed for #{jid}: #{e.message}")
+      payload ||= {}
+    end
+
+    payload ||= {}
+    payload['job_id'] = jid
+    payload['menu_id'] ||= @menu.id
+
+    render json: payload
   end
 
   # POST /menus/:id/localize
@@ -249,30 +298,36 @@ class MenusController < ApplicationController
         },
       )
     end
-    # Generate QR code for public menu URL (smartmenu slug)
-    if @menu.smartmenu&.slug
-      @qrURL = Rails.application.routes.url_helpers.smartmenu_url(@menu.smartmenu.slug, host: request.host_with_port)
-      @qrURL.sub! 'http', 'https'
-      @qr = RQRCode::QRCode.new(@qrURL)
-    end
-    
-    # Set current section for 2025 UI
-    @current_section = params[:section] || 'details'
-    
-    # 2025 UI is now the default
-    # Provides modern sidebar navigation
-    # Use ?old_ui=true to access legacy UI if needed
-    unless params[:old_ui] == 'true'
-      # Handle Turbo Frame requests for section content
-      if turbo_frame_request_id == 'menu_content'
-        render partial: 'menus/section_frame_2025',
-               locals: { 
-                 menu: @menu, 
-                 partial_name: menu_section_partial_name(@current_section)
-               }
-      else
-        render :edit_2025
+    respond_to do |format|
+      format.html do
+        # Generate QR code for public menu URL (smartmenu slug)
+        if @menu.smartmenu&.slug
+          @qrURL = Rails.application.routes.url_helpers.smartmenu_url(@menu.smartmenu.slug, host: request.host_with_port)
+          @qrURL.sub! 'http', 'https'
+          @qr = RQRCode::QRCode.new(@qrURL)
+        end
+
+        # Set current section for 2025 UI
+        @current_section = params[:section] || 'details'
+
+        # 2025 UI is now the default
+        # Provides modern sidebar navigation
+        # Use ?old_ui=true to access legacy UI if needed
+        unless params[:old_ui] == 'true'
+          # Handle Turbo Frame requests for section content
+          if turbo_frame_request_id == 'menu_content'
+            render partial: 'menus/section_frame_2025',
+                   locals: {
+                     menu: @menu,
+                     partial_name: menu_section_partial_name(@current_section)
+                   }
+          else
+            render :edit_2025
+          end
+        end
       end
+      # Avoid MissingTemplate if a JSON request hits edit (e.g. during locale switching)
+      format.json { head :ok }
     end
   end
 

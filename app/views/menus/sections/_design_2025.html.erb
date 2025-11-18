@@ -17,7 +17,7 @@
     <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true), 
         method: :post,
         class: 'quick-action-btn',
-        data: { turbo: false, confirm: t('.confirm_ai', default: 'Generate new AI images? This will cost API credits.') } do %>
+        data: { turbo: false, ai_generate: true, menu_id: menu.id } do %>
       <i class="bi bi-stars"></i>
       <span><%= t('.generate_images', default: 'Generate AI Images') %></span>
     <% end %>

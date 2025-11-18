@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Clear Sidekiq queues repeatedly via rake task
+# Usage:
+#   ./bin/clear_sidekiq              # Clear all queues + scheduled + retries + dead
+#   ./bin/clear_sidekiq default      # Clear only default queue
+#   ./bin/clear_sidekiq default limited  # Clear only listed queues (space or comma separated)
+
+set -euo pipefail
+
+# Resolve app root
+APP_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$APP_ROOT"
+
+# Build QUEUES env var from args (support space or comma-separated)
+if [[ $# -gt 0 ]]; then
+  # Join all args by comma
+  IFS=',' read -r -a ARR <<< "${*// /,}"
+  QUEUES=$(IFS=','; echo "${ARR[*]}")
+  echo "Clearing Sidekiq queues: $QUEUES"
+  QUEUES="$QUEUES" bundle exec rake sidekiq:clear_queues
+else
+  echo "Clearing all Sidekiq queues, scheduled, retries, and dead sets"
+  bundle exec rake sidekiq:clear_queues
+fi

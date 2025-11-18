@@ -86,11 +86,12 @@ class Menuitem < ApplicationRecord
   end
 
   def image_url_or_fallback(size = nil)
-    if image_attacher.derivatives&.key?(size)
+    url = if image_attacher.derivatives&.key?(size)
       image_url(size)
     else
-      image_url # fallback to original
+      image_url
     end
+    cache_busted(url)
   end
 
   def thumb_url
@@ -126,15 +127,15 @@ class Menuitem < ApplicationRecord
     begin
       # Check if WebP derivative exists
       webp_key = :"#{size}_webp"
-      if image_attacher.derivatives&.key?(webp_key)
+      url = if image_attacher.derivatives&.key?(webp_key)
         image_url(webp_key)
       else
-        # Fallback to original size
         image_url_or_fallback(size)
       end
+      cache_busted(url)
     rescue StandardError => e
       Rails.logger.error "[Menuitem] Error getting WebP URL for #{id}: #{e.message}"
-      image_url_or_fallback(size)
+      cache_busted(image_url_or_fallback(size))
     end
   end
 
@@ -188,6 +189,31 @@ class Menuitem < ApplicationRecord
   validates :calories, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   private
+
+  # Append updated_at timestamp to bust browser caches when images change
+  def cache_busted(url)
+    return url if url.blank?
+    ts = updated_at&.to_i
+    return url unless ts
+
+    begin
+      u = URI.parse(url)
+      # Do not modify pre-signed S3 URLs (X-Amz-*) or if a version param already exists
+      query = u.query.to_s
+      has_s3_sig = query.include?('X-Amz-') || query.include?('X-Amz-Signature')
+      has_version = CGI.parse(query).key?('v')
+      return url if has_s3_sig || has_version
+
+      params = CGI.parse(query)
+      params['v'] = [ts.to_s]
+      u.query = URI.encode_www_form(params)
+      u.to_s
+    rescue
+      # Fallback to simple concatenation if URI parsing fails
+      separator = url.include?('?') ? '&' : '?'
+      "#{url}#{separator}v=#{ts}"
+    end
+  end
 
   def invalidate_menuitem_caches
     AdvancedCacheService.invalidate_menuitem_caches(id)

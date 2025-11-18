@@ -101,5 +101,249 @@
     .text-gray-500 {
       color: var(--color-gray-500);
     }
+
+    /* Ensure modal overlays page header */
+    .modal { z-index: 2000; }
+    .modal-backdrop { z-index: 1990; }
+
+    /* Bottom-sheet modal styles */
+    #aiProgressModal.modal .modal-dialog {
+      margin: 0; /* remove default margins */
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      /* Start off-screen for fade animation */
+      transform: translateY(100%);
+      width: 100%;
+      max-width: 100%;
+    }
+    #aiProgressModal.modal .modal-content {
+      border-top-left-radius: 0.75rem;
+      border-top-right-radius: 0.75rem;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      box-shadow: 0 -8px 24px rgba(0,0,0,0.2);
+    }
+    /* Override Bootstrap fade/transform to slide from bottom for this modal only */
+    #aiProgressModal.modal.fade .modal-dialog { transform: translateY(100%); }
+    #aiProgressModal.modal.show .modal-dialog { transform: translateY(0); }
+    /* Make body scrollable if content grows */
+    #aiProgressModal.modal .modal-body {
+      max-height: 60vh;
+      overflow: auto;
+    }
   </style>
 <% end %>
+
+<!-- AI Image Generation Modal -->
+<div class="modal fade" id="aiProgressModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog ai-bottom-sheet">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Generate AI Images</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="ai-confirm-pane">
+          <p>This will generate new AI images for your menu items and may consume API credits. Proceed?</p>
+        </div>
+        <div id="ai-progress-pane" style="display:none;">
+          <div class="mb-2">
+            <div class="small text-muted">Currently generating:</div>
+            <div id="ai-progress-text" class="fw-semibold">Starting…</div>
+          </div>
+          <div class="progress">
+            <div id="ai-progress-bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <div class="mt-3" id="ai-preview" style="display:none;">
+            <div class="mb-2">
+              <span class="small text-muted me-1">Last Image:</span>
+              <span id="ai-preview-name" class="fw-semibold"></span>
+            </div>
+            <img id="ai-preview-img" src="" alt="Generated item image" class="img-fluid w-100 rounded border" />
+            <div class="row mt-3 g-2">
+              <div class="col-6 d-flex justify-content-center">
+                <button type="button" class="btn btn-light border d-flex justify-content-center align-items-center py-3 w-100" id="ai-like-btn" title="Thumbs up" aria-label="Thumbs up">
+                  <i class="bi bi-hand-thumbs-up fs-1"></i>
+                </button>
+              </div>
+              <div class="col-6 d-flex justify-content-center">
+                <button type="button" class="btn btn-light border d-flex justify-content-center align-items-center py-3 w-100" id="ai-dislike-btn" title="Thumbs down" aria-label="Thumbs down">
+                  <i class="bi bi-hand-thumbs-down fs-1"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="ai-confirm-btn" class="btn btn-primary">Confirm & Start</button>
+      </div>
+    </div>
+  </div>
+ </div>
+
+<script>
+  (function(){
+    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
+    let pendingForm = null;
+    let pollTimer = null;
+    let currentJobId = null;
+
+    function showModalForConfirmation(form){
+      pendingForm = form;
+      const modalEl = document.getElementById('aiProgressModal');
+      const confirmPane = document.getElementById('ai-confirm-pane');
+      const progressPane = document.getElementById('ai-progress-pane');
+      confirmPane.style.display = '';
+      progressPane.style.display = 'none';
+      document.getElementById('ai-confirm-btn').disabled = false;
+      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+      modal.show();
+    }
+
+    async function startJob(){
+      if(!pendingForm) return;
+      // Swap to progress pane
+      document.getElementById('ai-confirm-pane').style.display = 'none';
+      document.getElementById('ai-progress-pane').style.display = '';
+      document.getElementById('ai-progress-text').textContent = 'Queued…';
+      updateBar(0);
+
+      const url = pendingForm.action;
+      const formData = new FormData(pendingForm);
+      try {
+        // Ensure .json is appended before query string
+        const u = new URL(url, window.location.origin);
+        u.pathname = u.pathname.endsWith('.json') ? u.pathname : (u.pathname + '.json');
+        const jsonUrl = u.toString();
+        const resp = await fetch(jsonUrl, {
+          method: 'POST',
+          headers: { 'X-CSRF-Token': csrfToken, 'Accept': 'application/json' },
+          body: formData
+        });
+        const ct = resp.headers.get('Content-Type') || '';
+        console.debug('[AI Images] startJob response', resp.status, ct);
+        let data = null;
+        const text = await resp.text();
+        if (text && ct.includes('application/json')) {
+          try { data = JSON.parse(text); } catch(parseErr) { console.warn('JSON parse failed', parseErr, text); }
+        }
+        if(data && data.job_id){
+          currentJobId = data.job_id;
+          pollProgress(pendingForm, currentJobId);
+        } else {
+          const msg = resp.status >= 400 ? `Failed to start job (HTTP ${resp.status})` : 'Failed to start job';
+          document.getElementById('ai-progress-text').textContent = msg;
+        }
+      } catch(e){
+        document.getElementById('ai-progress-text').textContent = 'Error starting job';
+        console.error(e);
+      }
+    }
+
+    function updateBar(percent){
+      const bar = document.getElementById('ai-progress-bar');
+      bar.style.width = percent + '%';
+      bar.setAttribute('aria-valuenow', percent);
+    }
+
+    async function pollProgress(form, jobId){
+      const menuId = form.dataset.menuId || form.querySelector('[name="menu_id"]')?.value;
+      // Build progress URL from form.action, regardless of existing query params
+      const base = new URL(form.action, window.location.origin);
+      base.pathname = base.pathname.replace(/\/regenerate_images(\.json)?$/, '/image_generation_progress');
+      // Preserve existing query (like generate_ai=true) and add job_id
+      base.searchParams.set('job_id', jobId);
+      const url = base.toString();
+
+      // Clear any existing timer
+      if(pollTimer){ clearInterval(pollTimer); }
+
+      pollTimer = setInterval(async () => {
+        try{
+          const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+          if(!resp.ok) return;
+          const p = await resp.json();
+          const current = p.current || 0;
+          const total = p.total || 0;
+          const status = p.status || 'running';
+          const name = p.current_item_name || '';
+          document.getElementById('ai-progress-text').textContent = name || (p.message || status);
+          const percent = total > 0 ? Math.floor((current / total) * 100) : (status === 'completed' ? 100 : 0);
+          updateBar(percent);
+
+          // Update preview if we have an image URL
+          const previewWrap = document.getElementById('ai-preview');
+          const previewImg = document.getElementById('ai-preview-img');
+          if (p.current_item_image_url) {
+            // Normalize any literal \u0026 to & from JSON representation
+            const normalized = (p.current_item_image_url || '').replace(/\\u0026/g, '&');
+            // Build absolute URL; avoid altering S3 pre-signed URLs (X-Amz-* params)
+            const abs = new URL(normalized, window.location.origin);
+            const hasS3Sig = abs.search.includes('X-Amz-') || abs.searchParams.has('X-Amz-Signature');
+            const hasVersion = abs.searchParams.has('v');
+            if (!hasS3Sig && !hasVersion) {
+              abs.searchParams.set('t', Date.now().toString());
+            }
+            // Dedupe multiple v params if present
+            if (abs.searchParams.getAll('v').length > 1) {
+              const v = abs.searchParams.getAll('v').pop();
+              abs.searchParams.delete('v');
+              abs.searchParams.set('v', v);
+            }
+            previewImg.src = abs.toString();
+            previewWrap.style.display = '';
+          }
+          if(status === 'completed' || status === 'failed'){
+            clearInterval(pollTimer);
+            pollTimer = null;
+            if(status === 'completed'){
+              document.getElementById('ai-progress-text').textContent = 'Completed';
+              updateBar(100);
+              // Auto-close after a short delay
+              setTimeout(() => {
+                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('aiProgressModal'));
+                modal.hide();
+              }, 900);
+            }
+          }
+        } catch(e){
+          console.warn('Progress poll failed', e);
+        }
+      }, 1500);
+    }
+
+    document.addEventListener('submit', function(e){
+      const form = e.target;
+      if(form && form.matches && form.matches('form[data-ai-generate="true"]')){
+        e.preventDefault();
+        showModalForConfirmation(form);
+      }
+    }, true);
+
+    // Also intercept click on submit buttons within the AI form (extra safety)
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('button[type="submit"], input[type="submit"]');
+      if(!btn) return;
+      const form = btn.form;
+      if(form && form.matches && form.matches('form[data-ai-generate="true"]')){
+        // Prevent immediate submission; show confirm modal instead
+        e.preventDefault();
+        showModalForConfirmation(form);
+      }
+    }, true);
+
+    document.getElementById('ai-confirm-btn').addEventListener('click', function(){
+      this.disabled = true;
+      startJob();
+    });
+
+    const modalEl = document.getElementById('aiProgressModal');
+    modalEl.addEventListener('hidden.bs.modal', function(){
+      pendingForm = null;
+    });
+  })();
+</script>
