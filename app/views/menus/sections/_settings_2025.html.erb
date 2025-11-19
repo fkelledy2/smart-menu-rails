@@ -76,7 +76,7 @@
     </div>
     
     <!-- Display Images in Popup -->
-    <div class="feature-card <%= 'feature-card-disabled' unless restaurant.displayImagesInPopup %>">
+    <div id="feature-card-popup" class="feature-card <%= 'feature-card-disabled' unless (restaurant.displayImagesInPopup && menu.displayImages) %>">
       <div class="feature-card-icon bg-success">
         <i class="bi bi-window-stack"></i>
       </div>
@@ -102,7 +102,8 @@
                  id="menu_displayImagesInPopup_settings"
                  value="true"
                  <%= 'checked' if menu.displayImagesInPopup %>
-                 <%= 'disabled' unless restaurant.displayImagesInPopup %>
+                 <%= 'disabled' unless (restaurant.displayImagesInPopup && menu.displayImages) %>
+                 data-rest-enabled="<%= restaurant.displayImagesInPopup %>"
                  data-skip-tomselect="true">
         </div>
       </div>
@@ -303,3 +304,43 @@
     font-weight: normal;
   }
 </style>
+
+<script>
+  (function(){
+    function applyPopupDependency(){
+      const displayImages = document.getElementById('menu_displayImages_settings');
+      const popup = document.getElementById('menu_displayImagesInPopup_settings');
+      const card = document.getElementById('feature-card-popup');
+      if(!displayImages || !popup || !card) return;
+
+      const restEnabled = (popup.getAttribute('data-rest-enabled') === 'true');
+      if (!displayImages.checked) {
+        // Rule 1: if Display Images is false -> disable popup and set false
+        popup.checked = false;
+        popup.disabled = true;
+        card.classList.add('feature-card-disabled');
+      } else {
+        // Rule 2: if Display Images true -> enable popup if allowed by restaurant
+        popup.disabled = !restEnabled;
+        if (restEnabled) {
+          card.classList.remove('feature-card-disabled');
+        } else {
+          card.classList.add('feature-card-disabled');
+        }
+      }
+    }
+
+    function ready(fn){
+      if (document.readyState !== 'loading') return fn();
+      document.addEventListener('DOMContentLoaded', fn);
+    }
+
+    ready(applyPopupDependency);
+    document.addEventListener('turbo:load', applyPopupDependency);
+    document.addEventListener('change', function(e){
+      if (e.target && e.target.id === 'menu_displayImages_settings') {
+        applyPopupDependency();
+      }
+    });
+  })();
+</script>
