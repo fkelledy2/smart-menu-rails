@@ -166,13 +166,13 @@
             <img id="ai-preview-img" src="" alt="Generated item image" class="img-fluid w-100 rounded border" />
             <div class="row mt-3 g-2">
               <div class="col-6 d-flex justify-content-center">
-                <button type="button" class="btn btn-light border d-flex justify-content-center align-items-center py-3 w-100" id="ai-like-btn" title="Thumbs up" aria-label="Thumbs up">
-                  <i class="bi bi-hand-thumbs-up fs-1"></i>
+                <button type="button" class="btn btn-light border d-flex justify-content-center align-items-center py-2 w-100" id="ai-like-btn" title="Thumbs up" aria-label="Thumbs up">
+                  <i class="bi bi-hand-thumbs-up fs-4 text-success"></i>
                 </button>
               </div>
               <div class="col-6 d-flex justify-content-center">
-                <button type="button" class="btn btn-light border d-flex justify-content-center align-items-center py-3 w-100" id="ai-dislike-btn" title="Thumbs down" aria-label="Thumbs down">
-                  <i class="bi bi-hand-thumbs-down fs-1"></i>
+                <button type="button" class="btn btn-light border d-flex justify-content-center align-items-center py-2 w-100" id="ai-dislike-btn" title="Thumbs down" aria-label="Thumbs down">
+                  <i class="bi bi-hand-thumbs-down fs-4 text-danger"></i>
                 </button>
               </div>
             </div>
@@ -193,9 +193,30 @@
     let pendingForm = null;
     let pollTimer = null;
     let currentJobId = null;
+    let currentMode = 'ai'; // 'ai' or 'localize'
+
+    // Global auto-save: submit any form marked with data-auto-save on input changes
+    function bindAutosave(){
+      // Delegated change handler; attaches once
+      if (document.documentElement.dataset.autosaveBound === 'true') return;
+      document.addEventListener('change', function(e){
+        const target = e.target;
+        if (!target || !(target instanceof Element)) return;
+        const form = target.closest('form[data-auto-save="true"], form[data-auto-save=true]');
+        if (!form) return;
+        // Avoid submitting on changes to elements that shouldn't trigger autosave
+        if (target.matches('[data-no-autosave]')) return;
+        try {
+          if (form.requestSubmit) { form.requestSubmit(); }
+          else { form.submit(); }
+        } catch(err) { console.warn('Auto-save submit failed', err); }
+      }, true);
+      document.documentElement.dataset.autosaveBound = 'true';
+    }
 
     function showModalForConfirmation(form){
       pendingForm = form;
+      currentMode = (form.dataset.localize === 'true') ? 'localize' : 'ai';
       const modalEl = document.getElementById('aiProgressModal');
       // Move modal to body once to avoid stacking context issues (e.g., navbar dropdown overlap)
       if (modalEl && !modalEl.dataset.movedToBody) {
@@ -206,6 +227,17 @@
       const progressPane = document.getElementById('ai-progress-pane');
       confirmPane.style.display = '';
       progressPane.style.display = 'none';
+      // Set modal title per mode
+      const titleEl = modalEl.querySelector('.modal-title');
+      if (titleEl) {
+        titleEl.textContent = (currentMode === 'localize') ? 'Localize Menu' : 'Generate AI Images';
+      }
+      // Set confirmation text per mode
+      confirmPane.querySelector('p').textContent = (currentMode === 'localize')
+        ? 'This will localize your menu to active restaurant locales and may consume API credits. Proceed?'
+        : 'This will generate new AI images for your menu items and may consume API credits. Proceed?';
+      // Hide image preview for localization mode, show for AI mode
+      document.getElementById('ai-preview').style.display = (currentMode === 'localize') ? 'none' : '';
       document.getElementById('ai-confirm-btn').disabled = false;
       const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
       modal.show();
@@ -216,7 +248,7 @@
       // Swap to progress pane
       document.getElementById('ai-confirm-pane').style.display = 'none';
       document.getElementById('ai-progress-pane').style.display = '';
-      document.getElementById('ai-progress-text').textContent = 'Queued…';
+      document.getElementById('ai-progress-text').textContent = (currentMode === 'localize') ? 'Queued localization…' : 'Queued…';
       updateBar(0);
 
       const url = pendingForm.action;
@@ -240,7 +272,11 @@
         }
         if(data && data.job_id){
           currentJobId = data.job_id;
-          pollProgress(pendingForm, currentJobId);
+          if (currentMode === 'localize') {
+            pollLocalizationProgress(pendingForm, currentJobId);
+          } else {
+            pollProgress(pendingForm, currentJobId);
+          }
         } else {
           const msg = resp.status >= 400 ? `Failed to start job (HTTP ${resp.status})` : 'Failed to start job';
           document.getElementById('ai-progress-text').textContent = msg;
@@ -323,9 +359,57 @@
       }, 1500);
     }
 
+    async function pollLocalizationProgress(form, jobId){
+      const base = new URL(form.action, window.location.origin);
+      base.pathname = base.pathname.replace(/\/localize(\.json)?$/, '/localization_progress');
+      base.searchParams.set('job_id', jobId);
+      const url = base.toString();
+
+      if(pollTimer){ clearInterval(pollTimer); }
+      pollTimer = setInterval(async () => {
+        try{
+          const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+          if(!resp.ok) return;
+          const p = await resp.json();
+          const current = p.current || 0;
+          const total = p.total || 0;
+          const status = p.status || 'running';
+          const locale = p.current_locale || '';
+          const displayLocale = (() => {
+            try {
+              if (locale && window.Intl && Intl.DisplayNames) {
+                const dn = new Intl.DisplayNames([locale, 'en'], { type: 'language' });
+                const n = dn.of(locale);
+                if (n) return `${n} (${locale.toUpperCase()})`;
+              }
+            } catch(_) {}
+            return locale.toUpperCase();
+          })();
+          const baseMsg = p.message || (locale ? `Localized ${displayLocale}` : status);
+          document.getElementById('ai-progress-text').textContent = total > 0 ? `${baseMsg} — ${current}/${total}` : baseMsg;
+          const percent = total > 0 ? Math.floor((current / total) * 100) : (status === 'completed' ? 100 : 0);
+          updateBar(percent);
+          if(status === 'completed' || status === 'failed'){
+            clearInterval(pollTimer);
+            pollTimer = null;
+            if(status === 'completed'){
+              document.getElementById('ai-progress-text').textContent = 'Completed';
+              updateBar(100);
+              setTimeout(() => {
+                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('aiProgressModal'));
+                modal.hide();
+              }, 900);
+            }
+          }
+        } catch(e){
+          console.warn('Localization progress poll failed', e);
+        }
+      }, 1500);
+    }
+
     document.addEventListener('submit', function(e){
       const form = e.target;
-      if(form && form.matches && form.matches('form[data-ai-generate="true"]')){
+      if(form && form.matches && (form.matches('form[data-ai-generate="true"]') || form.matches('form[data-localize="true"]'))){
         e.preventDefault();
         showModalForConfirmation(form);
       }
@@ -336,7 +420,7 @@
       const btn = e.target.closest('button[type="submit"], input[type="submit"]');
       if(!btn) return;
       const form = btn.form;
-      if(form && form.matches && form.matches('form[data-ai-generate="true"]')){
+      if(form && form.matches && (form.matches('form[data-ai-generate="true"]') || form.matches('form[data-localize="true"]'))){
         // Prevent immediate submission; show confirm modal instead
         e.preventDefault();
         showModalForConfirmation(form);
@@ -352,5 +436,10 @@
     modalEl.addEventListener('hidden.bs.modal', function(){
       pendingForm = null;
     });
+
+    // Ensure auto-save is active on full page and on Turbo frame swaps
+    bindAutosave();
+    document.addEventListener('turbo:load', bindAutosave);
+    document.addEventListener('turbo:frame-load', bindAutosave);
   })();
 </script>

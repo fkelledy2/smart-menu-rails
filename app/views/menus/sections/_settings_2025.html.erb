@@ -337,6 +337,7 @@
 
     ready(applyPopupDependency);
     document.addEventListener('turbo:load', applyPopupDependency);
+    document.addEventListener('turbo:frame-load', applyPopupDependency);
     document.addEventListener('change', function(e){
       if (e.target && e.target.id === 'menu_displayImages_settings') {
         applyPopupDependency();

@@ -29,8 +29,8 @@ class MenuItemImageGeneratorJob
       return
     end
 
-    prompt = build_prompt
-    Rails.logger.debug { "GenerateImageJob prompt: #{prompt}" } if Rails.env.local?
+    prompt = use_prompt_v2? ? build_prompt_v2 : build_prompt
+    Rails.logger.warn("[MenuItemImageGeneratorJob] Prompt for Menuitem #{@menuitem.id} (genimage #{@genimage.id}): #{prompt}")
     response = generate_image(prompt, 1, default_image_size)
     if response.success?
       seed = response['created']
@@ -121,6 +121,149 @@ class MenuItemImageGeneratorJob
 
     Rails.logger.debug { "[GenerateImageJob] Final prompt length: #{prompt.length}" } if Rails.env.development?
     prompt
+  end
+
+  # --- Prompt V2 (A/B) -------------------------------------------------------
+  # Section-aware, structured prompt with negative cues and camera/lighting.
+  # Enable with ENV['MENU_IMAGE_PROMPT_V2'] == '1'
+  def build_prompt_v2
+    section      = @menuitem.menusection
+    menu         = section&.menu
+    restaurant   = menu&.restaurant
+
+    item_name    = sanitize_text(@menuitem.name, 80)
+    item_desc    = sanitize_text(@menuitem.description, 160)
+    sec_name     = sanitize_text(section&.name, 60)
+
+    # Keep brand/style concise and consistent
+    ensure_style_profile!(restaurant)
+    style_profile = sanitize_text(resolve_style_profile(restaurant), 120)
+    brand_adj     = distilled_brand_adjectives(restaurant, max: 5)
+
+    tags = section_tags(sec_name)
+
+    lines = []
+    # Subject and brief description
+    subj = [item_name, (item_desc.present? ? "— #{item_desc}" : nil)].compact.join(' ')
+    lines << "Subject: #{subj}."
+    # Semantic tags
+    lines << "Course: #{tags[:course]}." if tags[:course]
+    lines << "Category: #{tags[:category]}." if tags[:category]
+    lines << "Cuisine: #{tags[:cuisine]}." if tags[:cuisine]
+    lines << "Diet: #{tags[:diet]}." if tags[:diet]
+    # Plating/portion and cooking cues
+    lines << "Plating: #{tags[:plating]}." if tags[:plating]
+    lines << "Texture/Cooking: #{tags[:cooking]}." if tags[:cooking]
+    # Background and camera defaults tailored by section
+    cam = camera_preset_for(tags[:category] || tags[:course])
+    lines << "Background: #{cam[:background]}."
+    lines << "Camera/Lighting: #{cam[:camera]}."
+    # Style and brand
+    lines << "Style: #{style_profile}."
+    lines << "Brand: #{brand_adj.join(', ')}." if brand_adj.any?
+    # Negative cues to reduce mismatches
+    lines << "Negative: no text, no watermark, no people, no hands, no menus, no packaging, no logos."
+
+    prompt = join_parts(lines)
+    prompt = prompt[0, 1000]
+    prompt
+  end
+
+  def use_prompt_v2?
+    true
+  end
+
+  # Map section name keywords to semantic tags
+  def section_tags(sec_name)
+    s = (sec_name || '').downcase
+    tags = {}
+    case s
+    when /starter|appetizer|small/i
+      tags[:course] = 'starter'
+      tags[:plating] = 'small plate, minimal garnish'
+    when /main|mains|entree|entrée/i
+      tags[:course] = 'main'
+      tags[:plating] = 'individual dinner plate, balanced composition'
+    when /dessert|sweet|pudding/i
+      tags[:course] = 'dessert'
+      tags[:plating] = 'dessert plate, elegant presentation'
+    when /side/i
+      tags[:course] = 'side'
+      tags[:plating] = 'small bowl or plate'
+    when /drink|beverage|cocktail|wine|coffee|tea/i
+      tags[:course] = 'drink'
+      tags[:plating] = 'glassware on bar top'
+    end
+
+    if s.match?(/pizza/i)
+      tags[:category] = 'pizza'
+      tags[:cuisine] ||= 'italian'
+      tags[:cooking] = 'wood-fired, lightly charred crust'
+      tags[:plating] ||= 'full round on wooden peel'
+    elsif s.match?(/pasta/i)
+      tags[:category] = 'pasta'
+      tags[:cuisine] ||= 'italian'
+      tags[:plating] ||= 'shallow bowl'
+    elsif s.match?(/seafood|fish|oyster|shellfish/i)
+      tags[:category] = 'seafood'
+      tags[:plating] ||= 'on plate with subtle lemon garnish'
+      tags[:cooking] ||= 'fresh, crisp highlights'
+    elsif s.match?(/salad/i)
+      tags[:category] = 'salad'
+      tags[:plating] ||= 'wide bowl, fresh greens'
+      tags[:cooking] ||= 'fresh, crisp textures'
+    elsif s.match?(/burger|sandwich/i)
+      tags[:category] = 'burger'
+      tags[:plating] ||= 'stacked on plate or board'
+      tags[:cooking] ||= 'grilled, juicy, melted cheese when applicable'
+    elsif s.match?(/grill|steak|bbq/i)
+      tags[:category] = 'grill'
+      tags[:plating] ||= 'centered on plate, rustic sides'
+      tags[:cooking] ||= 'grilled, seared, char marks'
+    end
+
+    if s.match?(/vegan/i)
+      tags[:diet] = 'vegan'
+    elsif s.match?(/vegetarian/i)
+      tags[:diet] = 'vegetarian'
+    elsif s.match?(/gluten[- ]?free|gf/i)
+      tags[:diet] = 'gluten-free'
+    end
+    tags
+  end
+
+  def camera_preset_for(kind)
+    k = (kind || '').to_s.downcase
+    case k
+    when 'pizza'
+      { background: 'clean rustic wooden tabletop, subtle crumbs', camera: 'top-down 15° tilt, natural soft diffused light, 35–50mm equivalent' }
+    when 'salad'
+      { background: 'clean table, fresh greens, shallow depth', camera: 'top-down 10–20°, soft daylight, 35mm equivalent' }
+    when 'burger'
+      { background: 'clean board or plate, minimal props', camera: '3/4 angle, shallow DOF, soft key light, 50mm equivalent' }
+    when 'grill'
+      { background: 'matte plate on wooden table, moody highlights', camera: '3/4 angle, directional soft light, 50–85mm' }
+    when 'starter', 'dessert', 'main', 'side'
+      { background: 'clean restaurant tabletop, minimal props', camera: '3/4 angle, shallow DOF, soft natural light, 50mm equivalent' }
+    else
+      { background: 'clean tabletop, minimal props', camera: '3/4 angle, soft natural light, 50mm' }
+    end
+  end
+
+  def sanitize_text(text, limit)
+    t = text.to_s
+    t = ActionView::Base.full_sanitizer.sanitize(t) rescue t
+    t = t.gsub(/\s+/, ' ').strip
+    return t if t.length <= limit
+    t.split[0..].join(' ')[0, limit]
+  end
+
+  def distilled_brand_adjectives(restaurant, max: 5)
+    return [] unless restaurant
+    pool = [restaurant.try(:imagecontext), restaurant.try(:description)].map { |s| s.to_s.downcase }
+    words = pool.join(' ').scan(/[a-zA-Z]+/)
+    candidates = %w[rustic cozy modern upscale casual coastal vibrant elegant minimalist traditional authentic contemporary warm refined bright moody]
+    (candidates & words).first(max)
   end
 
   def generate_image(prompt, number, size)

@@ -10,7 +10,7 @@ class LocalizeMenuService
     # @param menu [Menu] The menu to localize
     # @param force [Boolean] If true, re-translate all strings. If false, only translate missing localizations.
     # @return [Hash] Statistics about localization operations
-    def localize_menu_to_all_locales(menu, force: false)
+    def localize_menu_to_all_locales(menu, force: false, &on_item)
       restaurant = menu.restaurant
       stats = { locales_processed: 0, menu_locales_created: 0, menu_locales_updated: 0,
                 section_locales_created: 0, section_locales_updated: 0,
@@ -18,7 +18,7 @@ class LocalizeMenuService
                 rate_limited_items: [], errors: [], }
 
       restaurant.restaurantlocales.active.find_each do |restaurant_locale|
-        locale_stats = localize_menu_to_locale(menu, restaurant_locale, force: force)
+        locale_stats = localize_menu_to_locale(menu, restaurant_locale, force: force, &on_item)
         stats[:locales_processed] += 1
         stats[:menu_locales_created] += locale_stats[:menu_locales_created]
         stats[:menu_locales_updated] += locale_stats[:menu_locales_updated]
@@ -38,7 +38,8 @@ class LocalizeMenuService
       # Queue rate-limited items for retry
       if stats[:rate_limited_items].any?
         Rails.logger.info("[LocalizeMenuService] Queueing #{stats[:rate_limited_items].count} rate-limited items for retry")
-        MenuLocalizationRetryJob.perform_in(5.minutes, stats[:rate_limited_items])
+        safe_items = stats[:rate_limited_items].map { |h| h.stringify_keys }
+        MenuLocalizationRetryJob.perform_in(5.minutes, safe_items)
       end
       
       stats
@@ -51,14 +52,14 @@ class LocalizeMenuService
     # @param restaurant_locale [Restaurantlocale] The new locale to localize to
     # @param force [Boolean] If true, re-translate all strings. If false, only translate missing localizations.
     # @return [Hash] Statistics about localization operations
-    def localize_all_menus_to_locale(restaurant, restaurant_locale, force: false)
+    def localize_all_menus_to_locale(restaurant, restaurant_locale, force: false, &on_item)
       stats = { menus_processed: 0, menu_locales_created: 0, menu_locales_updated: 0,
                 section_locales_created: 0, section_locales_updated: 0,
                 item_locales_created: 0, item_locales_updated: 0, 
                 rate_limited_items: [], errors: [], }
 
       restaurant.menus.find_each do |menu|
-        menu_stats = localize_menu_to_locale(menu, restaurant_locale, force: force)
+        menu_stats = localize_menu_to_locale(menu, restaurant_locale, force: force, &on_item)
         stats[:menus_processed] += 1
         stats[:menu_locales_created] += menu_stats[:menu_locales_created]
         stats[:menu_locales_updated] += menu_stats[:menu_locales_updated]
@@ -91,7 +92,7 @@ class LocalizeMenuService
     # @param restaurant_locale [Restaurantlocale] The locale to localize to
     # @param force [Boolean] If true, re-translate all strings. If false, only translate missing localizations.
     # @return [Hash] Statistics about this specific localization
-    def localize_menu_to_locale(menu, restaurant_locale, force: false)
+    def localize_menu_to_locale(menu, restaurant_locale, force: false, &on_item)
       locale_code = restaurant_locale.locale
       is_default = restaurant_locale.dfault
       stats = { menu_locales_created: 0, menu_locales_updated: 0,
@@ -140,7 +141,7 @@ class LocalizeMenuService
 
       # Localize all sections
       menu.menusections.find_each do |section|
-        section_stats = localize_section_to_locale(section, restaurant_locale, force: force)
+        section_stats = localize_section_to_locale(section, restaurant_locale, force: force, &on_item)
         stats[:section_locales_created] += section_stats[:section_locales_created]
         stats[:section_locales_updated] += section_stats[:section_locales_updated]
         stats[:item_locales_created] += section_stats[:item_locales_created]
@@ -154,7 +155,7 @@ class LocalizeMenuService
     private
 
     # Localize a menu section to a specific locale
-    def localize_section_to_locale(section, restaurant_locale, force: false)
+    def localize_section_to_locale(section, restaurant_locale, force: false, &on_item)
       locale_code = restaurant_locale.locale
       is_default = restaurant_locale.dfault
       stats = { section_locales_created: 0, section_locales_updated: 0,
@@ -202,7 +203,7 @@ class LocalizeMenuService
 
       # Localize all items in this section
       section.menuitems.find_each do |item|
-        item_stats = localize_item_to_locale(item, restaurant_locale, force: force)
+        item_stats = localize_item_to_locale(item, restaurant_locale, force: force, &on_item)
         stats[:item_locales_created] += item_stats[:item_locales_created]
         stats[:item_locales_updated] += item_stats[:item_locales_updated]
         stats[:rate_limited_items].concat(item_stats[:rate_limited_items]) if item_stats[:rate_limited_items]
@@ -212,7 +213,7 @@ class LocalizeMenuService
     end
 
     # Localize a menu item to a specific locale
-    def localize_item_to_locale(item, restaurant_locale, force: false)
+    def localize_item_to_locale(item, restaurant_locale, force: false, &on_item)
       locale_code = restaurant_locale.locale
       is_default = restaurant_locale.dfault
       stats = { item_locales_created: 0, item_locales_updated: 0, rate_limited_items: [] }
@@ -253,6 +254,16 @@ class LocalizeMenuService
           stats[:item_locales_created] += 1
         else
           stats[:item_locales_updated] += 1
+        end
+        # Notify progress callback
+        if block_given?
+          yield({
+            item_id: item.id,
+            item_name: item.name,
+            locale: locale_code,
+            translated_name: item_locale.name,
+            translated_description: item_locale.description
+          })
         end
       end
 

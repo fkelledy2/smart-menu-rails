@@ -63,7 +63,7 @@
           <tr>
             <th style="width: 40px;"></th>
             <th><%= t('.name', default: 'Name') %></th>
-            <th><%= t('.price', default: 'Price') %></th>
+            <th class="text-end"><%= t('.price', default: 'Price') %></th>
             <th class="text-end">
               <span class="btn-2025 btn-2025-ghost btn-2025-sm">
                 <i class="bi bi-gear"></i>
@@ -117,7 +117,7 @@
                       <% end %>
                     </div>
                   </td>
-                  <td>
+                  <td class="text-end">
                     <% if item.price.present? && item.price > 0 %>
                       <% 
                         currency_symbols = {

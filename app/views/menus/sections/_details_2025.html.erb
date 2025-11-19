@@ -29,11 +29,8 @@
         <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false), 
             method: :post,
             class: 'quick-action-btn',
-            data: { 
-              turbo: false,
-              confirm: t('.confirm_localize', 
-                default: "Translate this menu to all configured languages (#{active_locales.pluck(:locale).map(&:upcase).join(', ')})? Only missing translations will be created.") 
-            } do %>
+            data: { turbo: false, testid: 'localize-menu-btn' },
+            form: { data: { turbo: false, localize: true, menu_id: menu.id } } do %>
           <i class="bi bi-translate"></i>
           <span><%= t('.localize_menu', default: 'Localize Menu') %></span>
         <% end %>
@@ -45,26 +42,18 @@
             <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false), 
                 method: :post,
                 class: 'dropdown-item text-start border-0 bg-transparent',
-                form: { style: 'display: inline;' },
-                data: { 
-                  turbo: false,
-                  confirm: t('.confirm_localize_incremental', 
-                    default: "Translate only missing localizations? Existing translations will be preserved.")
-                } do %>
-              <i class="bi bi-plus-circle"></i> <%= t('.localize_incremental', default: 'Add Missing Translations') %>
+                form: { style: 'display: inline;', data: { localize: true, turbo: false, menu_id: menu.id } },
+                data: { testid: 'localize-missing-btn' } do %>
+              <i class="bi bi-magic"></i> <%= t('.localize_missing', default: 'Localize Missing Only') %>
             <% end %>
           </li>
           <li>
             <%= button_to localize_restaurant_menu_path(restaurant, menu, force: true), 
                 method: :post,
                 class: 'dropdown-item text-start border-0 bg-transparent text-warning',
-                form: { style: 'display: inline;' },
-                data: { 
-                  turbo: false,
-                  confirm: t('.confirm_localize_force', 
-                    default: "Re-translate ALL menu content? This will overwrite existing translations and use more API credits.")
-                } do %>
-              <i class="bi bi-arrow-repeat"></i> <%= t('.localize_force', default: 'Re-translate Everything') %>
+                form: { style: 'display: inline;', data: { localize: true, turbo: false, menu_id: menu.id } },
+                data: { testid: 'localize-force-btn' } do %>
+              <i class="bi bi-arrow-repeat"></i> <%= t('.localize_force', default: 'Force Re-translate All') %>
             <% end %>
           </li>
         </ul>

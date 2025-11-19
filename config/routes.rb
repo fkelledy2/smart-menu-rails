@@ -204,6 +204,7 @@ Rails.application.routes.draw do
       member do
         post :regenerate_images
         get :image_generation_progress
+        get :localization_progress
         post :localize
         patch :update_availabilities
         get :tablesettings, to: 'menus#show'

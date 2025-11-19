@@ -5,7 +5,7 @@ class MenusController < ApplicationController
 
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_restaurant
-  before_action :set_menu, only: %i[show edit update destroy regenerate_images image_generation_progress localize performance update_availabilities]
+  before_action :set_menu, only: %i[show edit update destroy regenerate_images image_generation_progress localize localization_progress performance update_availabilities]
 
   # Pundit authorization
   after_action :verify_authorized, except: %i[index performance update_sequence]
@@ -155,18 +155,63 @@ class MenusController < ApplicationController
     force = params[:force].to_s == 'true'
     
     # Trigger the background job to localize the menu
-    MenuLocalizationJob.perform_async('menu', @menu.id, force)
-    
-    flash_message = if force
-      t('menus.controller.localization_queued_force', 
-        default: "Menu re-translation to #{active_locales.count} locale(s) has been queued. All existing translations will be regenerated.")
-    else
-      t('menus.controller.localization_queued', 
-        default: "Menu localization to #{active_locales.count} locale(s) has been queued. Only missing translations will be created.")
+    total = active_locales.count * @menu.menuitems.count
+    jid = MenuLocalizationJob.perform_async('menu', @menu.id, force)
+
+    # Initialize localization progress in Redis
+    begin
+      Sidekiq.redis do |r|
+        r.setex("localize:#{jid}", 24 * 3600, {
+          status: 'queued',
+          current: 0,
+          total: total,
+          message: 'Queued menu localization',
+          menu_id: @menu.id
+        }.to_json)
+      end
+    rescue => e
+      Rails.logger.warn("[MenusController] Failed to init localization progress for #{jid}: #{e.message}")
     end
-    
-    flash[:notice] = flash_message
-    redirect_to edit_restaurant_menu_path(restaurant, @menu)
+
+    respond_to do |format|
+      format.html do
+        flash_message = if force
+          t('menus.controller.localization_queued_force', 
+            default: "Menu re-translation has been queued. This will process #{total} item translations across #{active_locales.count} locale(s).")
+        else
+          t('menus.controller.localization_queued', 
+            default: "Menu localization has been queued. This will process up to #{total} item translations across #{active_locales.count} locale(s).")
+        end
+        flash[:notice] = flash_message
+        redirect_to edit_restaurant_menu_path(restaurant, @menu)
+      end
+      format.json do
+        render json: { job_id: jid, total: total, status: 'queued' }
+      end
+    end
+  end
+
+  # GET /restaurants/:restaurant_id/menus/:id/localization_progress
+  def localization_progress
+    authorize @menu, :update?
+
+    jid = params[:job_id].to_s
+    payload = nil
+    begin
+      Sidekiq.redis do |r|
+        json = r.get("localize:#{jid}")
+        payload = json.present? ? JSON.parse(json) : {}
+      end
+    rescue => e
+      Rails.logger.warn("[MenusController] Localization progress read failed for #{jid}: #{e.message}")
+      payload ||= {}
+    end
+
+    payload ||= {}
+    payload['job_id'] = jid
+    payload['menu_id'] ||= @menu.id
+
+    render json: payload
   end
 
   # GET	/restaurants/:restaurant_id/menus/:menu_id/tablesettings/:id(.:format)	menus#show
