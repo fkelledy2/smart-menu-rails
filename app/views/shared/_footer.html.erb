@@ -14,8 +14,8 @@
                       <% if @current_user && @current_user.plan %>
                           <li class="nav-item"><small><span class: "px-2 text-muted">Plan: <%= t(@current_user.plan.key).html_safe %></span></small></li>
                       <% end %>
-                      <li class="nav-item"><small><%= link_to t(".terms"), terms_path, class: "px-2 text-muted"  %></small></li>
-                      <li class="nav-item"><small><%= link_to t(".privacy"), privacy_path, class: "px-2 text-muted"  %></small></li>
+                      <li class="nav-item"><small><%= link_to t(".terms"), terms_path, class: "px-2 text-muted" %></small></li>
+                      <li class="nav-item"><small><%= link_to t(".privacy"), privacy_path, class: "px-2 text-muted" %></small></li>
                    </ul>
                 </div>
            </div>

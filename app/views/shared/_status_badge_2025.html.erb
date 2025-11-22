@@ -1,12 +1,13 @@
 <%
   # Status Badge Component
-  # Usage: <%= render 'shared/status_badge_2025', status: 'active', label: 'Active' %>
+  # Usage: <%= render 'shared/status_badge_2025', status: 'active', label: 'Active'
+%>
   # Usage: <%= render 'shared/status_badge_2025', status: menu.status %>
-  
+
   status ||= local_assigns[:status]
   label ||= local_assigns[:label] || status.to_s.titleize
   size ||= local_assigns[:size] || 'md'  # sm, md, lg
-  
+
   # Map status to color
   color_map = {
     'active' => 'success',
@@ -18,15 +19,15 @@
     'completed' => 'success',
     'failed' => 'danger'
   }
-  
+
   color = color_map[status.to_s.downcase] || 'secondary'
-  
+
   size_classes = {
     'sm' => 'text-xs px-2 py-1',
     'md' => 'text-sm px-3 py-1',
     'lg' => 'text-base px-4 py-2'
   }
-  
+
   size_class = size_classes[size] || size_classes['md']
 %>
 
@@ -44,27 +45,27 @@
     white-space: nowrap;
     line-height: 1;
   }
-  
+
   .badge-2025-success {
     background-color: var(--color-success-light);
     color: var(--color-success);
   }
-  
+
   .badge-2025-warning {
     background-color: var(--color-warning-light);
     color: #92400E;
   }
-  
+
   .badge-2025-danger {
     background-color: var(--color-danger-light);
     color: var(--color-danger);
   }
-  
+
   .badge-2025-info {
     background-color: var(--color-info-light);
     color: var(--color-info);
   }
-  
+
   .badge-2025-secondary {
     background-color: var(--color-gray-100);
     color: var(--color-gray-600);

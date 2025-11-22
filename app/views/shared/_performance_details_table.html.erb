@@ -52,7 +52,7 @@
           <tr>
             <td><strong>Database Replica Usage</strong></td>
             <td>
-              <% 
+              <%
                 replica_queries = performance_data.dig(:database_performance, :replica_queries) || 0
                 primary_queries = performance_data.dig(:database_performance, :primary_queries) || 0
                 total_queries = replica_queries + primary_queries

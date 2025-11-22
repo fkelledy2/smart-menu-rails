@@ -110,14 +110,7 @@
                         <% end %>
                       </div>
                     </div>
-                    <div class="card-footer py-0 d-flex align-items-stretch">
-                      <div class="ms-auto d-flex flex-wrap align-items-stretch gap-2"
-                           data-tasting-meta='<%= tasting_meta.to_json %>'
-                           data-section-id="<%= menusection.id %>">
-                        <% disabled_attr = ( defined?(order) && order.present? && (order.status != 'billrequested' && order.status != 'closed') ) ? '' : 'disabled' %>
-                        <button class="btn btn-lg btn-dark tasting-cta d-flex align-items-center h-100 align-self-stretch" type="button" style="border-radius: 0 0 0.25rem 0;" <%= disabled_attr %>>Add Tasting Menu</button>
-                      </div>
-                    </div>
+                    <%= render partial: "smartmenus/tasting_courses_footer", locals: { tasting_meta: tasting_meta, menusection: menusection, order: order } %>
                   </div>
                 <% else %>
                   <div class="row" data-testid="menu-items-row-<%= menusection.id %>">

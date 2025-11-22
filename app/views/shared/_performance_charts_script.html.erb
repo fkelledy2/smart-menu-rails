@@ -7,11 +7,11 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Performance data from Rails
   const performanceData = <%= raw performance_data.to_json %>;
-  
+
   // Chart.js default configuration
   Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
   Chart.defaults.color = '#6c757d';
-  
+
   // Common chart options
   const commonOptions = {
     responsive: true,

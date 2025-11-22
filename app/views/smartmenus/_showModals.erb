@@ -26,9 +26,7 @@
       <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
       <% end %>
         <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="addItemToOrderModalLabel"><%= t(".addToOrder") %></h1>
-          </div>
+          <%= render partial: "smartmenus/modal_header_add_item" %>
           <div class="modal-body modal-body-no-padding">
                 <% if (menu.displayImages == true && menu.restaurant.displayImages == true) || (menu.displayImagesInPopup == true && menu.restaurant.displayImagesInPopup == true) %>
                     <div class="row">
@@ -78,13 +76,7 @@
               </div>
             </div>
           </div>
-          <div class="modal-footer" style="padding: 16px; gap: 12px; justify-content: flex-end;">
-            <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
-            <button id="addItemToOrderButton" type="button" class="btn-touch-primary">
-                <i class="bi bi-plus"></i>
-                <%= restaurantCurrency.symbol ? restaurantCurrency.symbol : "" %><span id="a2o_menuitem_price"></span>
-            </button>
-          </div>
+          <%= render partial: "smartmenus/modal_footer_add_item", locals: { restaurantCurrency: restaurantCurrency } %>
         </div>
       </div>
     </div>
@@ -117,7 +109,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer" style="padding: 16px; gap: 12px; justify-content: flex-end;">
+                    <div class="modal-footer modal-footer-spaced">
                         <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="Close"><%= t(".cancel") %></button>
                         <%= form.submit value: t(".filterBy"), class: 'btn-touch-primary' %>
                     </div>
@@ -349,14 +341,7 @@
                     </div>
                 <% end %>
           </div>
-          <div class="modal-footer" style="padding: 16px; gap: 12px; justify-content: flex-end;">
-            <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="Close"><%= t(".cancel") %></button>
-            <% if order && order.gross.to_f > 0 %>
-                <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn-touch-primary"><%= t(".requestBill") %></button>
-            <% else %>
-                <button id="request-bill" type="button" data-bs-dismiss="modal" class="btn-touch-primary" disabled><%= t(".requestBill") %></button>
-            <% end %>
-          </div>
+          <%= render partial: "smartmenus/modal_footer_primary", locals: { primary_id: 'request-bill', primary_text: t('.requestBill'), disabled: !(order && order.gross.to_f > 0) } %>
         </div>
       </div>
     </div>
@@ -502,14 +487,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer" style="padding: 16px; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="Close"><%= t(".cancel") %></button>
-                    <% if order && order.gross.to_f > 0 %>
-                        <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn-touch-primary"><%= t(".confirmPayment") %></button>
-                    <% else %>
-                        <button id="pay-order" type="button" data-bs-dismiss="modal" class="btn-touch-primary" disabled><%= t(".confirmPayment") %></button>
-                    <% end %>
-                </div>
+                <%= render partial: "smartmenus/modal_footer_primary", locals: { primary_id: 'pay-order', primary_text: t('.confirmPayment'), disabled: !(order && order.gross.to_f > 0) } %>
             </div>
         </div>
     </div>
@@ -533,7 +511,7 @@
                           </div>
                     </form>
                 </div>
-                <div class="modal-footer" style="padding: 16px; gap: 12px; justify-content: flex-end;">
+                <div class="modal-footer modal-footer-spaced">
                     <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="Close"><%= t(".cancel") %></button>
                     <button id="addNameToParticipantButton" type="button" class="btn-touch-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> <%= t(".add") %></button>
                 </div>

@@ -20,11 +20,11 @@
         <% if current_user %>
             <li class="z-index-high nav-item dropdown">
               <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
-                <%=t(".restaurants")%>
+                <%= t(".restaurants") %>
               <% end %>
               <div id="nav-account-dropdown" class="dropdown-menu" aria-labelledby="navbar-dropdown">
                 <%= link_to restaurants_path, class: "dropdown-item" do %>
-                    <%=t(".restaurants")%>
+                    <%= t(".restaurants") %>
                 <% end %>
                 <% if @restaurants.count > 0 %>
                 <hr class="dropdown-divider">

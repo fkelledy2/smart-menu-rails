@@ -21,20 +21,20 @@
           </h1>
           <% if subtitle.present? %>
             <p class="text-muted mb-0">
-              <%= subtitle %> • 
+              <%= subtitle %> •
               <%= performance_data[:period][:start_date] %> to <%= performance_data[:period][:end_date] %>
               (<%= performance_data[:period][:days] %> days)
             </p>
           <% end %>
         </div>
-        
+
         <% if show_period_selector && defined?(base_path) %>
           <div class="btn-group" role="group">
-            <%= link_to "7 Days", "#{base_path}?days=7", 
+            <%= link_to "7 Days", "#{base_path}?days=7",
                         class: "btn #{'btn-primary' if params[:days] == '7'} #{'btn-outline-primary' if params[:days] != '7'}" %>
-            <%= link_to "30 Days", "#{base_path}?days=30", 
+            <%= link_to "30 Days", "#{base_path}?days=30",
                         class: "btn #{'btn-primary' if params[:days].blank? || params[:days] == '30'} #{'btn-outline-primary' if params[:days] != '30' && params[:days].present?}" %>
-            <%= link_to "90 Days", "#{base_path}?days=90", 
+            <%= link_to "90 Days", "#{base_path}?days=90",
                         class: "btn #{'btn-primary' if params[:days] == '90'} #{'btn-outline-primary' if params[:days] != '90'}" %>
           </div>
         <% end %>

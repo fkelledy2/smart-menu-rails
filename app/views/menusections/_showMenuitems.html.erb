@@ -3,7 +3,7 @@
     <h4><%= t('.menuItems') %></h4>
   </div>
   <div class="col-6 text-end">
-    [<%=@menuItemCount %>/<%= current_user.plan.itemspermenu %>]
+    [<%= @menuItemCount %>/<%= current_user.plan.itemspermenu %>]
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
       <div class="btn-group" role="group">
         <button id="menuitem-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
@@ -12,7 +12,7 @@
         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
           <li><a id="activate-menuitem" class="dropdown-item" href="#"><%= t('common.activate') %></a></li>
           <li><a id="deactivate-menuitem" class="dropdown-item" href="#"><%= t('common.deactivate') %></a></li>
-          <li><a id="genimage-menuitem" class="dropdown-item" href="#"><%=t(".genimage")%></a></li>
+          <li><a id="genimage-menuitem" class="dropdown-item" href="#"><%= t(".genimage") %></a></li>
         </ul>
       </div>
       <% if @canAddMenuItem %>

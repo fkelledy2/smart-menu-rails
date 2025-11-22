@@ -1,0 +1,8 @@
+<div class="card-footer py-0 d-flex align-items-stretch">
+  <div class="ms-auto d-flex flex-wrap align-items-stretch gap-2"
+       data-tasting-meta='<%= tasting_meta.to_json %>'
+       data-section-id="<%= menusection.id %>">
+    <% disabled_attr = ( defined?(order) && order.present? && (order.status != 'billrequested' && order.status != 'closed') ) ? '' : 'disabled' %>
+    <button class="btn btn-lg btn-dark tasting-cta d-flex align-items-center h-100 align-self-stretch br-bottom-right-4" type="button" <%= disabled_attr %>>Add Tasting Menu</button>
+  </div>
+</div>
