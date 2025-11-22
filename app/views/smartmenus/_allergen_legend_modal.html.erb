@@ -9,13 +9,13 @@
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      
+
       <div class="modal-body">
         <p class="text-muted small mb-3">
-          <%= t('.allergen_key_description', 
+          <%= t('.allergen_key_description',
                 default: 'We use short codes to identify allergens. Hover or tap any badge to see the full allergen name.') %>
         </p>
-        
+
         <div class="table-responsive">
           <table class="table table-sm table-hover">
             <thead>
@@ -28,7 +28,7 @@
               <% Allergyn::STANDARD_ALLERGENS.each do |code, name| %>
                 <tr>
                   <td>
-                    <span class="badge bg-warning text-dark" 
+                    <span class="badge bg-warning text-dark"
                           style="min-width: 24px; font-weight: 700;">
                       <%= code %>
                     </span>
@@ -39,7 +39,7 @@
             </tbody>
           </table>
         </div>
-        
+
         <% if defined?(allergyns) && allergyns.present? %>
           <%# Show restaurant-specific allergens if different from standard %>
           <% custom_allergens = allergyns.reject { |a| Allergyn::STANDARD_ALLERGENS.keys.include?(a.symbol) } %>
@@ -54,7 +54,7 @@
                   <% custom_allergens.each do |allergyn| %>
                     <tr>
                       <td style="width: 80px;">
-                        <span class="badge bg-warning text-dark" 
+                        <span class="badge bg-warning text-dark"
                               style="min-width: 24px; font-weight: 700;">
                           <%= allergyn.symbol %>
                         </span>
@@ -67,16 +67,16 @@
             </div>
           <% end %>
         <% end %>
-        
+
         <div class="alert alert-info mt-3 mb-0" role="alert">
           <i class="bi bi-exclamation-triangle-fill me-2"></i>
           <small>
-            <%= t('.allergen_warning', 
+            <%= t('.allergen_warning',
                   default: 'If you have any food allergies or dietary restrictions, please inform your server before ordering.') %>
           </small>
         </div>
       </div>
-      
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           <%= t('.close', default: 'Close') %>

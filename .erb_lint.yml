@@ -1,0 +1,35 @@
+# ERB Lint configuration (Phase 1 safe formatting)
+# See: https://github.com/Shopify/erb-lint
+
+linters:
+  FinalNewline:
+    enabled: true
+  TrailingWhitespace:
+    enabled: true
+  ClosingErbTagIndentation:
+    enabled: true
+  Indentation:
+    enabled: true
+    indent_width: 2
+  ErbSafety:
+    enabled: false
+  RuboCop:
+    enabled: true
+    only:
+      - Layout/IndentationWidth
+      - Layout/TrailingWhitespace
+      - Layout/TrailingEmptyLines
+      - Layout/EmptyLines
+  HardCodedString:
+    enabled: false
+  SelfClosingTag:
+    enabled: false
+
+# Limit scope for now
+exclude:
+  - "db/**"
+  - "log/**"
+  - "tmp/**"
+  - "vendor/**"
+  - "node_modules/**"
+  - "spec/**"

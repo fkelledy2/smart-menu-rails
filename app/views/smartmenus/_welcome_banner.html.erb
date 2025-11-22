@@ -3,18 +3,18 @@
   <button type="button" class="welcome-dismiss" onclick="dismissWelcomeBanner()" aria-label="<%= t('.dismiss', default: 'Dismiss') %>">
     <i class="bi bi-x"></i>
   </button>
-  
+
   <div class="welcome-content">
     <div class="welcome-icon"></div>
-    
+
     <h2 class="welcome-title">
       <%= t('.welcome_title', default: 'Welcome to %{restaurant_name}!') % { restaurant_name: @restaurant.name } %>
     </h2>
-    
+
     <p class="welcome-subtitle">
       <%= t('.welcome_subtitle', default: 'Browse our menu and order from your device') %>
     </p>
-    
+
     <ul class="welcome-steps">
       <li>
         <span class="step-icon">1</span>
@@ -29,7 +29,7 @@
         <span class="step-text"><%= t('.step_3', default: 'Submit your order and we\'ll bring it to your table') %></span>
       </li>
     </ul>
-    
+
     <div class="welcome-actions">
       <button type="button" class="btn-welcome primary" onclick="dismissWelcomeBanner()">
         <%= t('.got_it', default: 'Got It!') %>
@@ -53,7 +53,7 @@
       }, 300);
     }
   }
-  
+
   // Check if banner was already dismissed
   document.addEventListener('DOMContentLoaded', function() {
     const dismissed = localStorage.getItem('welcomeBannerDismissed_<%= @smartmenu&.id %>');
@@ -100,7 +100,7 @@
       <i class="bi bi-x"></i>
     </button>
   </div>
-  
+
   <script>
     function dismissHelpTip() {
       const tipBanner = document.getElementById('helpTipBanner');

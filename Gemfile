@@ -159,3 +159,5 @@ group :development, :test do
   gem 'rubocop-rspec', '~> 2.25', require: false
   gem 'rubocop-rspec_rails', require: false
 end
+
+gem "erb_lint", "~> 0.9.0", groups: [:development, :test]

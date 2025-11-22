@@ -1,0 +1,54 @@
+# ERB Lint configuration focused on safe, non-semantic formatting for Phase 1
+# Docs: https://github.com/Shopify/erb-lint
+
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 3.2
+
+# Only lint views by default
+# We can expand later if desired
+Exclude:
+  - "db/**"
+  - "log/**"
+  - "tmp/**"
+  - "vendor/**"
+  - "node_modules/**"
+  - "spec/**"
+
+linters:
+  FinalNewline:
+    enabled: true
+  TrailingWhitespace:
+    enabled: true
+  SpaceInHtmlTag:
+    enabled: true
+    enforced_style: never
+  SelfClosingTag:
+    enabled: false  # Bootstrap prefers explicit closing tags in some contexts
+  RuboCop:
+    enabled: true
+    # Limit to safe cops for Phase 1
+    only:
+      - Layout/IndentationWidth
+      - Layout/TrailingWhitespace
+      - Layout/TrailingEmptyLines
+      - Layout/EmptyLines
+  ErbSafety:
+    enabled: true
+  ClosingErbTagIndentation:
+    enabled: true
+  HardCodedString:
+    enabled: false  # i18n work deferred to later phase
+  DeprecatedClasses:
+    enabled: false
+  Indentation:
+    enabled: true
+    # 2-space indentation for HTML/ERB
+    indent_width: 2
+  NoJavascriptTagHelper:
+    enabled: false
+  NoClassesInHelper:
+    enabled: false
+
+# Autocorrect will only touch safe formatting items controlled by the above linters.
+# Run with: bundle exec erblint --autocorrect app/views
