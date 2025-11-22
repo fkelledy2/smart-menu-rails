@@ -173,13 +173,14 @@
 <% end %>
 
 <script>
-  let sliderRetries = 0;
-  const MAX_RETRIES = 50;
+  // Keep state on window to avoid redeclaration across Turbo navigations
+  window.__sectionSliderState = window.__sectionSliderState || { retries: 0, max: 50, bound: false };
   
   function initializeSectionTimeSlider() {
+    const state = window.__sectionSliderState;
     if (typeof noUiSlider === 'undefined') {
-      if (sliderRetries < MAX_RETRIES) {
-        sliderRetries++;
+      if (state.retries < state.max) {
+        state.retries++;
         setTimeout(initializeSectionTimeSlider, 100);
         return;
       } else {
@@ -240,14 +241,18 @@
     });
   }
   
-  // Initialize on page load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeSectionTimeSlider);
-  } else {
-    initializeSectionTimeSlider();
-  }
-  
-  // Reinitialize on turbo navigation
-  document.addEventListener('turbo:load', initializeSectionTimeSlider);
-  document.addEventListener('turbo:render', initializeSectionTimeSlider);
+  // Bind listeners once across Turbo visits
+  (function bindOnce(){
+    if (window.__sectionSliderState.bound) return;
+    window.__sectionSliderState.bound = true;
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeSectionTimeSlider);
+    } else {
+      initializeSectionTimeSlider();
+    }
+
+    document.addEventListener('turbo:load', initializeSectionTimeSlider);
+    document.addEventListener('turbo:render', initializeSectionTimeSlider);
+  })();
 </script>

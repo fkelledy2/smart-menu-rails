@@ -95,4 +95,60 @@ class Menusection < ApplicationRecord
 
   validates :name, presence: true
   validates :status, presence: true
+
+  # Scopes
+  scope :tasting, -> { where(tasting_menu: true) }
+
+  # Tasting menu validations
+  with_options if: -> { tasting_menu? } do
+    validates :price_per, inclusion: { in: %w[person table] }
+    validates :tasting_price_cents, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
+    validates :tasting_currency, presence: true, if: -> { tasting_price_cents.present? }
+  end
+
+  with_options if: -> { tasting_menu? && allow_pairing? } do
+    validates :pairing_price_cents, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
+    validates :pairing_currency, presence: true, if: -> { pairing_price_cents.present? }
+  end
+
+  # Default currencies based on parent restaurant
+  before_validation :default_tasting_currencies
+
+  def tasting_price_amount
+    return nil if tasting_price_cents.nil?
+    tasting_price_cents.to_i / 100.0
+  end
+
+  def tasting_price_amount=(value)
+    if value.present?
+      self.tasting_price_cents = (value.to_f * 100).round
+    else
+      self.tasting_price_cents = nil
+    end
+  end
+
+  def pairing_price_amount
+    return nil if pairing_price_cents.nil?
+    pairing_price_cents.to_i / 100.0
+  end
+
+  def pairing_price_amount=(value)
+    if value.present?
+      self.pairing_price_cents = (value.to_f * 100).round
+    else
+      self.pairing_price_cents = nil
+    end
+  end
+
+  private
+
+  def default_tasting_currencies
+    parent_currency = menu&.restaurant&.currency
+    if tasting_menu?
+      self.tasting_currency ||= parent_currency if tasting_price_cents.present?
+      if allow_pairing? && pairing_price_cents.present?
+        self.pairing_currency ||= parent_currency
+      end
+    end
+  end
 end

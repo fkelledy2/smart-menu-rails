@@ -5,7 +5,7 @@
   restaurant = menu.restaurant
   raise "No restaurant context available for menusection form" unless restaurant
 %>
-<%= form_with(model: [restaurant, menu, menusection]) do |form| %>
+<%= form_with(model: [restaurant, menu, menusection], html: { data: { turbo_frame: '_top' } }) do |form| %>
   <div class="form-group row">
     <div class="col-12">
       <h4><%=t(".details")%></h4>
@@ -118,6 +118,117 @@
     </div>
   </div>
   <div class="spacing-md"></div>
+  <div class="form-group row">
+    <div class="col-12">
+      <h4><%= t('.tasting_menu_settings', default: 'Tasting Menu Settings') %></h4>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :tasting_menu, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9 d-flex align-items-center gap-3">
+      <%= form.check_box :tasting_menu %>
+      <small class="text-muted"><%= t('.tasting_menu_help', default: 'When enabled, this section is a fixed-price tasting. Item prices are hidden; supplements may be added per item.') %></small>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-3"></div>
+    <div class="col-9">
+      <small class="text-muted">
+        <i class="bi bi-info-circle"></i>
+        <%= t('.carrier_auto_help', default: 'A hidden carrier menu item is created and kept in sync automatically with this section\'s name, description, and tasting price.') %>
+      </small>
+    </div>
+  </div>
+  <div class="spacing-sm"></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= t('.tasting_price', default: 'Tasting Price') %></span>
+    </div>
+    <div class="col-9">
+      <div class="row g-2 align-items-center">
+        <div class="col-6">
+          <%= form.number_field :tasting_price_amount, class: 'form-control', min: 0, step: 0.01, inputmode: 'decimal' %>
+        </div>
+        <div class="col-6">
+          <small class="text-muted"><%= restaurant.currency %></small>
+        </div>
+      </div>
+      <small class="text-muted"><%= t('.tasting_price_help', default: 'Enter the fixed price in the restaurant currency. Currency is inferred from restaurant settings.') %></small>
+    </div>
+  </div>
+  <div class="spacing-sm"></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :price_per, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.select :price_per, options_for_select([['Per Person', 'person'], ['Per Table', 'table']], form.object.price_per || 'person'), {}, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="spacing-sm"></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= t('.party_size', default: 'Party Size (optional)') %></span>
+    </div>
+    <div class="col-9">
+      <div class="row g-2">
+        <div class="col-6">
+          <%= form.number_field :min_party_size, class: 'form-control', min: 1 %>
+        </div>
+        <div class="col-6">
+          <%= form.number_field :max_party_size, class: 'form-control', min: 1 %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spacing-sm"></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= t('.includes_description', default: 'Includes (description)') %></span>
+    </div>
+    <div class="col-9">
+      <%= form.text_area :includes_description, class: 'form-control', rows: 3 %>
+    </div>
+  </div>
+  <div class="spacing-sm"></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :allow_substitutions, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9 d-flex align-items-center gap-3">
+      <%= form.check_box :allow_substitutions %>
+    </div>
+  </div>
+  <div class="spacing-sm"></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :allow_pairing, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9 d-flex align-items-center gap-3">
+      <%= form.check_box :allow_pairing %>
+      <small class="text-muted"><%= t('.allow_pairing_help', default: 'Enable beverage pairing as an add-on.') %></small>
+    </div>
+  </div>
+
+  <div class="spacing-sm"></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= t('.pairing_price', default: 'Pairing Price') %></span>
+    </div>
+    <div class="col-9">
+      <div class="row g-2 align-items-center">
+        <div class="col-6">
+          <%= form.number_field :pairing_price_amount, class: 'form-control', min: 0, step: 0.01, inputmode: 'decimal' %>
+        </div>
+        <div class="col-6">
+          <small class="text-muted"><%= restaurant.currency %></small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spacing-md"></div>
   <div class="row">
     <div class="col-3">
     </div>
@@ -132,6 +243,8 @@
         </span>
     </div>
   </div>
+
+
   <% if menusection.errors.any? %>
   <div class="row">
     <div class="col-3">

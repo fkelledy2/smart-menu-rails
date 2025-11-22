@@ -19,6 +19,7 @@ class MenusectionsController < ApplicationController
                         # HTML: Full policy scope
                         policy_scope(Menusection).where(menu: @menu)
                       end
+
     else
       @menusections = []
     end
@@ -61,6 +62,7 @@ class MenusectionsController < ApplicationController
 
     respond_to do |format|
       if @menusection.save
+        ensure_carrier_for_tasting(@menusection)
         if @menusection.genimage.nil?
           @genimage = Genimage.new
           @genimage.restaurant = @menusection.menu.restaurant
@@ -99,6 +101,7 @@ class MenusectionsController < ApplicationController
 
     respond_to do |format|
       if @menusection.update(menusection_params)
+        ensure_carrier_for_tasting(@menusection)
         if @menusection.genimage.nil?
           @genimage = Genimage.new
           @genimage.restaurant = @menusection.menu.restaurant
@@ -163,6 +166,32 @@ class MenusectionsController < ApplicationController
     request.format.json? && current_user.present?
   end
 
+  def ensure_carrier_for_tasting(menusection)
+    if menusection.tasting_menu?
+      attrs = {
+        name: menusection.name.to_s.strip.presence || 'Tasting',
+        description: menusection.description.to_s.strip,
+        itemtype: :food,
+        status: 'active',
+        sequence: 0,
+        price: (menusection.tasting_price_amount || 0.0),
+        preptime: 0,
+        calories: 0,
+        hidden: true,
+        tasting_carrier: true,
+      }
+
+      if (carrier = menusection.menuitems.carrier.first)
+        carrier.update(attrs)
+      else
+        menusection.menuitems.create!(attrs)
+      end
+    else
+      # If tasting menu is disabled, remove any existing carrier items for this section
+      menusection.menuitems.carrier.destroy_all
+    end
+  end
+
   # Use callbacks to share common setup or constraints between actions.
   def set_menusection
     if current_user
@@ -186,7 +215,13 @@ class MenusectionsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def menusection_params
-    params.require(:menusection).permit(:name, :description, :fromhour, :frommin, :tohour, :tomin, :restricted,
-                                        :image, :remove_image, :status, :sequence, :menu_id,)
+    params.require(:menusection).permit(
+      :name, :description, :fromhour, :frommin, :tohour, :tomin, :restricted,
+      :image, :remove_image, :status, :sequence, :menu_id,
+      # Tasting menu fields
+      :tasting_menu, :tasting_price_amount, :tasting_currency, :price_per,
+      :min_party_size, :max_party_size, :includes_description,
+      :allow_substitutions, :allow_pairing, :pairing_price_amount, :pairing_currency
+    )
   end
 end

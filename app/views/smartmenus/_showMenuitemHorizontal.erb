@@ -55,7 +55,9 @@
                         </h6>
                     </div>
                 </div>
-                <%= render partial: "smartmenus/showMenuitemHorizontalActionBar", locals: { order: order, mi: mi, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, restaurantCurrency: restaurantCurrency, tablesetting: tablesetting } %>
+                <% unless defined?(hide_add_button) && hide_add_button %>
+                  <%= render partial: "smartmenus/showMenuitemHorizontalActionBar", locals: { order: order, mi: mi, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, restaurantCurrency: restaurantCurrency, tablesetting: tablesetting } %>
+                <% end %>
             <% else %>
                 <div class="row">
                     <div class="col-12">
@@ -72,7 +74,9 @@
                         </h6>
                     </div>
                 </div>
-                <%= render partial: "smartmenus/showMenuitemHorizontalActionBar", locals: { order: order, mi: mi, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, restaurantCurrency: restaurantCurrency, tablesetting: tablesetting } %>
+                <% unless defined?(hide_add_button) && hide_add_button %>
+                  <%= render partial: "smartmenus/showMenuitemHorizontalActionBar", locals: { order: order, mi: mi, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, restaurantCurrency: restaurantCurrency, tablesetting: tablesetting } %>
+                <% end %>
             <% end %>
         </div>
     </div>

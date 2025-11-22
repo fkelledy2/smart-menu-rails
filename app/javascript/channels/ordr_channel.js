@@ -359,49 +359,110 @@ function refreshOrderJSLogic() {
       }
     });
     $('#addItemToOrderButton').on('click', function () {
-      const ordritem = {
-        ordritem: {
-          ordr_id: $('#a2o_ordr_id').text(),
-          menuitem_id: $('#a2o_menuitem_id').text(),
-          status: ORDRITEM_ADDED,
-          ordritemprice: $('#a2o_menuitem_price').text(),
-        },
-      };
       const restaurantId = $('#currentRestaurant').text();
-      
-      console.log('=== ADD ITEM TO ORDER ===');
-      console.log('Restaurant ID:', restaurantId);
-      console.log('Order item data:', ordritem);
-      console.log('POST URL:', `/restaurants/${restaurantId}/ordritems`);
-      console.log('========================');
-      
-      // Post the order item and wait for completion
-      post(`/restaurants/${restaurantId}/ordritems`, ordritem)
-        .then(() => {
-          // Wait longer for WebSocket to update the DOM
-          return new Promise(resolve => setTimeout(resolve, 1000));
-        })
-        .then(() => {
-          // Close the add item modal first
-          const addModal = document.getElementById('addItemToOrderModal');
-          if (addModal) {
-            $(addModal).modal('hide');
+      const addModal = document.getElementById('addItemToOrderModal');
+      const isTasting = addModal?.dataset?.tasting === 'true';
+
+      // Gating: require an active order and allowed status
+      const ordrId = document.getElementById('currentOrder')?.textContent?.trim();
+      const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
+      if (!restaurantId || !ordrId || !statusStr || statusStr === 'billrequested' || statusStr === 'closed') {
+        console.error('Order not active or status not allowed. Aborting add.');
+        return true;
+      }
+
+      const postOrdritem = (payload) => post(`/restaurants/${restaurantId}/ordritems`, payload);
+
+      let postPromise;
+      if (isTasting) {
+        // Build multiple line requests from dataset.tastingBase and current modal controls
+        let base = {};
+        try {
+          base = JSON.parse(addModal.dataset.tastingBase || '{}');
+        } catch (e) {
+          console.error('Invalid tasting base payload:', e);
+        }
+        const ordrId = $('#a2o_ordr_id').text();
+        const qtyField = addModal.querySelector('#a2o_tasting_qty');
+        const pairingField = addModal.querySelector('#a2o_tasting_pairing');
+        const qty = Math.max(1, parseInt(qtyField?.value || '1'));
+        const includePairing = !!pairingField?.checked;
+
+        const tastingPrice = Number(base.tasting_price || 0);
+        const pairingPrice = Number(base.pairing_price || 0);
+        const allowPairing = !!base.allow_pairing;
+        const carrierId = base.carrier_id;
+        const pricePer = base.price_per;
+        const activeItems = Array.isArray(base.active_items) ? base.active_items : [];
+
+        const baseMultiplier = pricePer === 'table' ? 1 : qty;
+        const lines = [];
+        if (tastingPrice > 0 && carrierId) {
+          lines.push({ menuitem_id: carrierId, price: tastingPrice * baseMultiplier });
+        }
+        if (includePairing && allowPairing && pairingPrice > 0 && carrierId) {
+          lines.push({ menuitem_id: carrierId, price: pairingPrice * qty });
+        }
+        activeItems.forEach((it) => {
+          const suppCents = Number(it.supplement_cents || 0);
+          if (suppCents > 0 && it.id) {
+            const lineTotal = (suppCents / 100.0) * qty;
+            lines.push({ menuitem_id: it.id, price: lineTotal });
           }
-          
-          // Wait for add modal to fully close
+        });
+
+        const requests = lines.map((l) => ({
+          ordritem: {
+            ordr_id: ordrId,
+            menuitem_id: l.menuitem_id,
+            status: ORDRITEM_ADDED,
+            ordritemprice: Number(l.price).toFixed(2),
+          },
+        })).map(postOrdritem);
+        postPromise = Promise.all(requests);
+      } else {
+        const ordritem = {
+          ordritem: {
+            ordr_id: $('#a2o_ordr_id').text(),
+            menuitem_id: $('#a2o_menuitem_id').text(),
+            status: ORDRITEM_ADDED,
+            ordritemprice: $('#a2o_menuitem_price').text(),
+          },
+        };
+        console.log('=== ADD ITEM TO ORDER ===');
+        console.log('Restaurant ID:', restaurantId);
+        console.log('Order item data:', ordritem);
+        console.log('POST URL:', `/restaurants/${restaurantId}/ordritems`);
+        console.log('========================');
+        postPromise = postOrdritem(ordritem);
+      }
+
+      // Post and then manage modals
+      postPromise
+        .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
+        .then(() => {
+          // Reset tasting flags if any
+          if (addModal) {
+            delete addModal.dataset.tasting;
+            delete addModal.dataset.tastingBase;
+          }
+          if (addModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const addInstance = bootstrap.Modal.getInstance(addModal) || new bootstrap.Modal(addModal);
+            addInstance.hide();
+          }
           return new Promise(resolve => setTimeout(resolve, 300));
         })
         .then(() => {
-          // Now show the view order modal
-          const viewModal = $('#viewOrderModal');
-          if (viewModal.length) {
-            viewModal.modal('show');
+          const viewModalEl = document.getElementById('viewOrderModal');
+          if (viewModalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const viewInstance = bootstrap.Modal.getInstance(viewModalEl) || new bootstrap.Modal(viewModalEl);
+            viewInstance.show();
           }
         })
         .catch((error) => {
           console.error('Error adding item to order:', error);
         });
-      
+
       return true;
     });
   }

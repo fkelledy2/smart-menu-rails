@@ -23,7 +23,7 @@
                   raise "No menusection context available for menuitem form. Please create menuitems from within a menu section."
                 end
 %>
-<%= form_with(model: [menu.restaurant, menu, menusection, menuitem]) do |form| %>
+<%= form_with(model: [menu.restaurant, menu, menusection, menuitem], html: { data: { turbo_frame: '_top' } }) do |form| %>
 
   <div style="display:none">
       <% if @futureParentMenuSection %>
@@ -164,9 +164,78 @@
     </div>
     <div class="col-9">
       <%= form.text_field :price, class: 'form-control' %>
+      <% if menusection.tasting_menu? %>
+        <small class="text-muted">This price is ignored in tasting menu sections. Use supplement below.</small>
+      <% end %>
     </div>
   </div>
   <div class="spacing-sm"></div>
+
+  <% if menusection.tasting_menu? %>
+    <div class="form-group row">
+      <div class="col-12">
+        <h4><%= t('.tasting_item_settings', default: 'Tasting Item Settings') %></h4>
+      </div>
+    </div>
+    <div class="spacing-sm"></div>
+    <div class="form-group row">
+      <div class="col-3">
+        <span class="float-md-end"><%= t('.tasting_optional', default: 'Optional Course') %></span>
+      </div>
+      <div class="col-9">
+        <div class="form-check form-switch">
+          <%= form.check_box :tasting_optional, class: 'form-check-input', role: 'switch' %>
+          <small class="text-muted"><%= t('.tasting_optional_help', default: 'If checked, this course is optional (guest may skip).') %></small>
+        </div>
+      </div>
+    </div>
+    <div class="spacing-sm"></div>
+    <div class="form-group row">
+      <div class="col-3">
+        <span class="float-md-end"><%= t('.tasting_supplement', default: 'Supplement (cents)') %></span>
+      </div>
+      <div class="col-9">
+        <div class="row g-2">
+          <div class="col-6">
+            <%= form.number_field :tasting_supplement_cents, class: 'form-control', min: 0, step: 1 %>
+          </div>
+          <div class="col-6">
+            <%= form.hidden_field :tasting_supplement_currency, value: menu.restaurant.currency %>
+            <input class="form-control" value="<%= menu.restaurant.currency %>" disabled>
+          </div>
+        </div>
+        <small class="text-muted"><%= t('.tasting_supplement_help', default: 'Leave blank or 0 for included; set an amount for add-on pricing.') %></small>
+      </div>
+    </div>
+    <div class="spacing-sm"></div>
+    <div class="form-group row">
+      <div class="col-3">
+        <span class="float-md-end"><%= t('.course_order', default: 'Course Order') %></span>
+      </div>
+      <div class="col-9">
+        <%= form.number_field :course_order, class: 'form-control', min: 1, step: 1 %>
+        <small class="text-muted"><%= t('.course_order_help', default: 'Optional: specify serving sequence within the tasting.') %></small>
+      </div>
+    </div>
+    <div class="spacing-sm"></div>
+    <div class="form-group row">
+      <div class="col-3">
+        <span class="float-md-end"><%= t('.visibility', default: 'Visibility') %></span>
+      </div>
+      <div class="col-9">
+        <div class="form-check">
+          <%= form.check_box :hidden, class: 'form-check-input', id: 'menuitem_hidden' %>
+          <label class="form-check-label" for="menuitem_hidden"><%= t('.hidden', default: 'Hidden (not shown on smartmenu)') %></label>
+        </div>
+        <div class="form-check mt-2">
+          <%= form.check_box :tasting_carrier, class: 'form-check-input', id: 'menuitem_tasting_carrier' %>
+          <label class="form-check-label" for="menuitem_tasting_carrier"><%= t('.tasting_carrier', default: 'Use as Tasting Carrier') %></label>
+          <div><small class="text-muted"><%= t('.tasting_carrier_help', default: 'Only one carrier per tasting section. Carrier items are automatically hidden.') %></small></div>
+        </div>
+      </div>
+    </div>
+    <div class="spacing-sm"></div>
+  <% end %>
   <div class="form-group row">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :preptime, class: 'col-form-label' %></span>

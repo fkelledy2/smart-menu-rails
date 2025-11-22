@@ -296,6 +296,9 @@ class MenuitemsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def menuitem_params
     params.require(:menuitem).permit(:name, :description, :itemtype, :sizesupport, :image, :status, :remove_image,
-                                     :calories, :sequence, :unitcost, :price, :menusection_id, :preptime, allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: [],)
+                                     :calories, :sequence, :unitcost, :price, :menusection_id, :preptime,
+                                     :tasting_optional, :tasting_supplement_cents, :tasting_supplement_currency, :course_order,
+                                     :hidden, :tasting_carrier,
+                                     allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: [],)
   end
 end

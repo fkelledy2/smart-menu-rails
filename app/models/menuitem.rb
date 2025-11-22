@@ -98,6 +98,33 @@ class Menuitem < ApplicationRecord
     image_url_or_fallback(:thumb)
   end
 
+  # Scopes
+  scope :tasting_items, -> { joins(:menusection).where(menusections: { tasting_menu: true }) }
+  scope :non_tasting_items, -> { joins(:menusection).where(menusections: { tasting_menu: false }) }
+  scope :visible, -> { where(hidden: [false, nil]) }
+  scope :hidden_items, -> { where(hidden: true) }
+  scope :carrier, -> { where(tasting_carrier: true) }
+
+  # Validations for tasting supplements and ordering
+  with_options if: -> { menusection&.tasting_menu? } do
+    validates :tasting_supplement_cents, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
+    validates :tasting_supplement_currency, presence: true, if: -> { tasting_supplement_cents.present? }
+    validates :course_order, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
+  end
+
+  # Only one carrier per tasting section
+  validates :tasting_carrier, inclusion: { in: [true, false] }
+  validates :hidden, inclusion: { in: [true, false] }
+  validates :tasting_carrier, uniqueness: { scope: :menusection_id, message: 'already set for this section' }, if: :tasting_carrier?
+
+  before_validation :ensure_hidden_when_carrier
+
+  def ensure_hidden_when_carrier
+    if tasting_carrier?
+      self.hidden = true
+    end
+  end
+
   def medium_url
     image_url_or_fallback(:medium)
   end

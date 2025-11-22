@@ -83,6 +83,27 @@
                     <%= section.name %>
                   </strong>
                   <span class="badge bg-secondary ms-2"><%= section_items.count %> items</span>
+                  <% if section.tasting_menu? %>
+                    <% 
+                      currency_symbols = {
+                        'USD' => '$', 'EUR' => '€', 'GBP' => '£', 'JPY' => '¥',
+                        'CNY' => '¥', 'INR' => '₹', 'AUD' => 'A$', 'CAD' => 'C$',
+                        'CHF' => 'CHF', 'SEK' => 'kr', 'NZD' => 'NZ$', 'MXN' => '$',
+                        'SGD' => 'S$', 'HKD' => 'HK$', 'NOK' => 'kr', 'KRW' => '₩',
+                        'TRY' => '₺', 'RUB' => '₽', 'BRL' => 'R$', 'ZAR' => 'R'
+                      }
+                      sym = currency_symbols[restaurant.currency] || restaurant.currency || '$'
+                      tasting_amount = (section.tasting_price_cents.to_i / 100.0)
+                    %>
+                    <span class="badge bg-warning text-dark ms-2">
+                      <i class="bi bi-award"></i>
+                      Tasting Menu
+                      <% if section.tasting_price_cents.present? %>
+                        · <%= number_to_currency(tasting_amount, unit: sym) %>
+                        <%= section.price_per == 'table' ? '(per table)' : '(per person)' %>
+                      <% end %>
+                    </span>
+                  <% end %>
                 </td>
               </tr>
               
@@ -118,20 +139,29 @@
                     </div>
                   </td>
                   <td class="text-end">
-                    <% if item.price.present? && item.price > 0 %>
-                      <% 
-                        currency_symbols = {
-                          'USD' => '$', 'EUR' => '€', 'GBP' => '£', 'JPY' => '¥',
-                          'CNY' => '¥', 'INR' => '₹', 'AUD' => 'A$', 'CAD' => 'C$',
-                          'CHF' => 'CHF', 'SEK' => 'kr', 'NZD' => 'NZ$', 'MXN' => '$',
-                          'SGD' => 'S$', 'HKD' => 'HK$', 'NOK' => 'kr', 'KRW' => '₩',
-                          'TRY' => '₺', 'RUB' => '₽', 'BRL' => 'R$', 'ZAR' => 'R'
-                        }
-                        currency_symbol = currency_symbols[restaurant.currency] || restaurant.currency || '$'
-                      %>
-                      <%= number_to_currency(item.price, unit: currency_symbol) %>
+                    <% 
+                      currency_symbols = {
+                        'USD' => '$', 'EUR' => '€', 'GBP' => '£', 'JPY' => '¥',
+                        'CNY' => '¥', 'INR' => '₹', 'AUD' => 'A$', 'CAD' => 'C$',
+                        'CHF' => 'CHF', 'SEK' => 'kr', 'NZD' => 'NZ$', 'MXN' => '$',
+                        'SGD' => 'S$', 'HKD' => 'HK$', 'NOK' => 'kr', 'KRW' => '₩',
+                        'TRY' => '₺', 'RUB' => '₽', 'BRL' => 'R$', 'ZAR' => 'R'
+                      }
+                      currency_symbol = currency_symbols[restaurant.currency] || restaurant.currency || '$'
+                    %>
+                    <% if section.tasting_menu? %>
+                      <% if item.tasting_supplement_cents.present? && item.tasting_supplement_cents.to_i > 0 %>
+                        <% supplement_amount = (item.tasting_supplement_cents.to_i / 100.0) %>
+                        <span class="text-nowrap text-warning fw-semibold">+ <%= number_to_currency(supplement_amount, unit: currency_symbol) %></span>
+                      <% else %>
+                        <span class="text-muted">Included</span>
+                      <% end %>
                     <% else %>
-                      <span class="text-muted">-</span>
+                      <% if item.price.present? && item.price > 0 %>
+                        <%= number_to_currency(item.price, unit: currency_symbol) %>
+                      <% else %>
+                        <span class="text-muted">-</span>
+                      <% end %>
                     <% end %>
                   </td>
                   <td class="text-end">

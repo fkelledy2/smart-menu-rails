@@ -9,6 +9,9 @@
                             <div class="card-img-overlay">
                                 <h3 class="card-title"><%= menusection.name %></h3>
                                 <p class="card-text"><%= menusection.description %></p>
+                                <% if menusection.tasting_menu? %>
+                                  <%# Controls moved into Courses panel header below %>
+                                <% end %>
                             </div>
                         </div>
                     <% else %>
@@ -26,14 +29,19 @@
                                     <% end %>
                                     <% if menusection.restricted == true %>
                                         <span class='float-end'>
-                                            <small class="text-muted">
-                                                <%= format_time_range(menusection.fromhour, menusection.frommin, menusection.tohour, menusection.tomin) %>
-                                                <div style='display:none' id="sectionFromOffset"><%= menusection.fromOffset %></div>
-                                                <div style='display:none' id="sectionToOffset"><%= menusection.toOffset %></div>
-                                            </small>
-                                        <span>
+                                            <div class="input-group input-group-sm" style="width: 140px;">
+                                              <button class="btn btn-outline-secondary tasting-qty-decr" type="button" aria-label="Decrease">-</button>
+                                              <input type="number" class="form-control text-center tasting-qty" value="1" min="1">
+                                              <button class="btn btn-outline-secondary tasting-qty-incr" type="button" aria-label="Increase">+</button>
+                                            </div>
+                                        </span>
                                     <% end %>
                                 </span>
+                                <% if menusection.restricted == true %>
+                                  <%= format_time_range(menusection.fromhour, menusection.frommin, menusection.tohour, menusection.tomin) %>
+                                  <div style='display:none' id="sectionFromOffset"><%= menusection.fromOffset %></div>
+                                  <div style='display:none' id="sectionToOffset"><%= menusection.toOffset %></div>
+                                <% end %>
                             </div>
                         </div>
                     <% end %>
@@ -52,24 +60,61 @@
                                     <% end %>
                                     <% if menusection.restricted == true %>
                                         <span class='float-end'>
-                                            <small class="text-muted">
-                                                <%= format_time_range(menusection.fromhour, menusection.frommin, menusection.tohour, menusection.tomin) %>
-                                                <div style='display:none' id="sectionFromOffset"><%= menusection.fromOffset %></div>
-                                                <div style='display:none' id="sectionToOffset"><%= menusection.toOffset %></div>
-                                            </small>
-                                        <span>
+                                          <small class="text-muted">
+                                            <%= format_time_range(menusection.fromhour, menusection.frommin, menusection.tohour, menusection.tomin) %>
+                                            <div style='display:none' id="sectionFromOffset"><%= menusection.fromOffset %></div>
+                                            <div style='display:none' id="sectionToOffset"><%= menusection.toOffset %></div>
+                                          </small>
+                                        </span>
                                     <% end %>
                                 </span>
                             </div>
                         </div>
                 <% end %>
-                <div class="row">
-                    <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).where(status: 'active').order(:sequence).each do |menuitem| %>
-                        <% if ordrparticipant == nil || ordrparticipant && (ordrparticipant.allergyns & menuitem.allergyns).empty? %>
+                <% if menusection.tasting_menu? %>
+                  <% 
+                    section_items = menusection.menuitems.where(status: 'active').order(:sequence)
+                    carrier = Menuitem.where(menusection_id: menusection.id, tasting_carrier: true).first
+                    tasting_meta = {
+                      section_id: menusection.id,
+                      section_name: menusection.name,
+                      price_per: menusection.price_per,
+                      tasting_price_cents: menusection.tasting_price_cents.to_i,
+                      allow_pairing: menusection.allow_pairing,
+                      pairing_price_cents: menusection.pairing_price_cents.to_i,
+                      carrier_id: carrier&.id,
+                      items: section_items.map { |it| { id: it.id, name: it.name, optional: it.tasting_optional, supplement_cents: it.tasting_supplement_cents.to_i } }
+                    }
+                  %>
+                  <div class="card border-secondary mt-2">
+                    <div class="card-body p-2">
+                      <div class="row opacity-75" style="pointer-events: none;" aria-disabled="true" title="Courses are part of the tasting menu bundle and cannot be added individually">
+                        <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).where(status: 'active').order(:sequence).each do |menuitem| %>
+                          <% next if menuitem.tasting_carrier || menuitem.hidden %>
+                          <% if ordrparticipant == nil || ordrparticipant && (ordrparticipant.allergyns & menuitem.allergyns).empty? %>
                             <%= render partial: "smartmenus/showMenuitemStaff", locals: { order: order, menu: menu, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, menuitem: menuitem, tablesetting: tablesetting } %>
+                          <% end %>
                         <% end %>
+                      </div>
+                    </div>
+                    <div class="card-footer py-0 d-flex align-items-stretch">
+                      <div class="ms-auto d-flex flex-wrap align-items-stretch gap-2"
+                           data-tasting-meta='<%= tasting_meta.to_json %>'
+                           data-section-id="<%= menusection.id %>">
+                        <% disabled_attr = ( defined?(order) && order.present? && (order.status != 'billrequested' && order.status != 'closed') ) ? '' : 'disabled' %>
+                        <button class="btn btn-lg btn-dark tasting-cta d-flex align-items-center h-100 align-self-stretch" type="button" style="border-radius: 0 0 0.25rem 0;" <%= disabled_attr %>>Add Tasting Menu</button>
+                      </div>
+                    </div>
+                  </div>
+                <% else %>
+                  <div class="row" data-testid="menu-items-row-<%= menusection.id %>">
+                    <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).where(status: 'active').order(:sequence).each do |menuitem| %>
+                      <% if ordrparticipant == nil || ordrparticipant && (ordrparticipant.allergyns & menuitem.allergyns).empty? %>
+                        <%= render partial: "smartmenus/showMenuitemStaff", locals: { order: order, menu: menu, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, menuitem: menuitem, tablesetting: tablesetting } %>
+                      <% end %>
                     <% end %>
-                </div>
+                  </div>
+                <% end %>
         <% end %>
         <%= render partial: "smartmenus/showAllergyns", locals: { allergyns: allergyns }  %>
         <%= render partial: "smartmenus/showCoverCharge", locals: { menu: menu, restaurantCurrency: restaurantCurrency } %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_16_174928) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_21_182000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -332,13 +332,22 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_16_174928) do
     t.integer "itemtype", default: 0
     t.boolean "sizesupport", default: false
     t.float "unitcost", default: 0.0
+    t.boolean "tasting_optional", default: false, null: false
+    t.integer "tasting_supplement_cents"
+    t.string "tasting_supplement_currency"
+    t.integer "course_order"
+    t.boolean "hidden", default: false, null: false
+    t.boolean "tasting_carrier", default: false, null: false
     t.index "lower((name)::text) varchar_pattern_ops", name: "index_menuitems_on_lower_name"
     t.index ["archived"], name: "index_menuitems_on_archived"
+    t.index ["course_order"], name: "index_menuitems_on_course_order"
     t.index ["created_at"], name: "index_menuitems_on_created_at"
+    t.index ["hidden"], name: "index_menuitems_on_hidden"
     t.index ["menusection_id", "sequence"], name: "index_menuitems_on_menusection_sequence"
     t.index ["menusection_id", "status", "sequence"], name: "index_menuitems_on_section_status_sequence", where: "(archived = false)"
     t.index ["menusection_id", "status"], name: "index_menuitems_on_menusection_status"
     t.index ["menusection_id", "status"], name: "index_menuitems_on_section_status_active", where: "(archived = false)"
+    t.index ["menusection_id", "tasting_carrier"], name: "index_menuitems_on_section_and_carrier"
     t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
     t.index ["sequence"], name: "index_menuitems_on_sequence"
     t.index ["status"], name: "index_menuitems_on_status"
@@ -422,9 +431,21 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_16_174928) do
     t.integer "tohour", default: 23
     t.integer "tomin", default: 59
     t.boolean "restricted", default: false
+    t.boolean "tasting_menu", default: false, null: false
+    t.integer "tasting_price_cents"
+    t.string "tasting_currency"
+    t.string "price_per", default: "person"
+    t.integer "min_party_size"
+    t.integer "max_party_size"
+    t.text "includes_description"
+    t.boolean "allow_substitutions", default: false, null: false
+    t.boolean "allow_pairing", default: false, null: false
+    t.integer "pairing_price_cents"
+    t.string "pairing_currency"
     t.index ["menu_id", "sequence"], name: "index_menusections_on_menu_and_sequence"
     t.index ["menu_id", "status", "sequence"], name: "index_menusections_on_menu_status_sequence", where: "(archived = false)"
     t.index ["menu_id"], name: "index_menusections_on_menu_id"
+    t.index ["tasting_menu"], name: "index_menusections_on_tasting_menu"
   end
 
   create_table "metrics", force: :cascade do |t|
