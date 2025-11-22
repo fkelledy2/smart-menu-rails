@@ -341,6 +341,10 @@ function refreshOrderJSLogic() {
     const addItemToOrderModal = document.getElementById('addItemToOrderModal');
     addItemToOrderModal.addEventListener('show.bs.modal', (event) => {
       const button = event.relatedTarget;
+      if (!button) {
+        // Programmatic show (e.g., tasting). Fields already set by ordrs.js
+        return;
+      }
       $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id'));
       $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
       $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
@@ -363,6 +367,101 @@ function refreshOrderJSLogic() {
       const addModal = document.getElementById('addItemToOrderModal');
       const isTasting = addModal?.dataset?.tasting === 'true';
 
+      // If tasting, perform the same multi-line posting as ordrs.js (kept in sync)
+      if (isTasting) {
+        try {
+          const ordrId = document.getElementById('currentOrder')?.textContent?.trim();
+          const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
+          if (!restaurantId || !ordrId || !statusStr || statusStr === 'billrequested' || statusStr === 'closed') {
+            console.error('[TASTING][channel] Order not active or status not allowed. Aborting add.');
+            return true;
+          }
+          if (window.__tastingPosting) {
+            console.warn('[TASTING][channel] Post already in progress, skipping duplicate');
+            return true;
+          }
+          window.__tastingPosting = true;
+
+          let base = {};
+          try {
+            base = JSON.parse(addModal.dataset.tastingBase || '{}');
+          } catch (e) {
+            console.error('[TASTING][channel] Invalid tasting base payload:', e);
+            window.__tastingPosting = false;
+            return true;
+          }
+
+          const qtyField = addModal.querySelector('#a2o_tasting_qty');
+          const pairingField = addModal.querySelector('#a2o_tasting_pairing');
+          const qty = Math.max(1, parseInt(qtyField?.value || '1'));
+          const includePairing = !!pairingField?.checked;
+
+          const tastingPrice = Number(base.tasting_price || 0);
+          const pairingPrice = Number(base.pairing_price || 0);
+          const allowPairing = !!base.allow_pairing;
+          const carrierId = base.carrier_id;
+          const pricePer = base.price_per;
+          const activeItems = Array.isArray(base.active_items) ? base.active_items : [];
+
+          const lines = [];
+          if (tastingPrice > 0 && carrierId) {
+            if (pricePer === 'table') {
+              lines.push({ menuitem_id: carrierId, price: tastingPrice });
+            } else {
+              for (let i = 0; i < qty; i++) {
+                lines.push({ menuitem_id: carrierId, price: tastingPrice });
+              }
+            }
+          }
+          if (includePairing && allowPairing && pairingPrice > 0 && carrierId) {
+            for (let i = 0; i < qty; i++) {
+              lines.push({ menuitem_id: carrierId, price: pairingPrice });
+            }
+          }
+          activeItems.forEach((it) => {
+            const suppCents = Number(it.supplement_cents || 0);
+            if (suppCents > 0 && it.id) {
+              const unitSupp = suppCents / 100.0;
+              for (let i = 0; i < qty; i++) {
+                lines.push({ menuitem_id: it.id, price: unitSupp });
+              }
+            }
+          });
+
+          const postOrdritem = (payload) => post(`/restaurants/${restaurantId}/ordritems`, payload);
+          const requests = lines.map((l) => ({
+            ordritem: {
+              ordr_id: ordrId,
+              menuitem_id: l.menuitem_id,
+              status: ORDRITEM_ADDED,
+              ordritemprice: Number(l.price).toFixed(2),
+            },
+          })).map(postOrdritem);
+
+          Promise.all(requests)
+            .then(() => {
+              // Clear tasting flags and hide modal
+              delete addModal.dataset.tasting;
+              delete addModal.dataset.tastingBase;
+              if (addModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                const addInstance = bootstrap.Modal.getInstance(addModal) || new bootstrap.Modal(addModal);
+                addInstance.hide();
+              }
+            })
+            .finally(() => {
+              window.__tastingPosting = false;
+            })
+            .catch((error) => {
+              console.error('[TASTING][channel] Error adding items:', error);
+            });
+          return true;
+        } catch (e) {
+          console.error('[TASTING][channel] Unexpected error:', e);
+          window.__tastingPosting = false;
+          return true;
+        }
+      }
+
       // Gating: require an active order and allowed status
       const ordrId = document.getElementById('currentOrder')?.textContent?.trim();
       const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
@@ -374,53 +473,7 @@ function refreshOrderJSLogic() {
       const postOrdritem = (payload) => post(`/restaurants/${restaurantId}/ordritems`, payload);
 
       let postPromise;
-      if (isTasting) {
-        // Build multiple line requests from dataset.tastingBase and current modal controls
-        let base = {};
-        try {
-          base = JSON.parse(addModal.dataset.tastingBase || '{}');
-        } catch (e) {
-          console.error('Invalid tasting base payload:', e);
-        }
-        const ordrId = $('#a2o_ordr_id').text();
-        const qtyField = addModal.querySelector('#a2o_tasting_qty');
-        const pairingField = addModal.querySelector('#a2o_tasting_pairing');
-        const qty = Math.max(1, parseInt(qtyField?.value || '1'));
-        const includePairing = !!pairingField?.checked;
-
-        const tastingPrice = Number(base.tasting_price || 0);
-        const pairingPrice = Number(base.pairing_price || 0);
-        const allowPairing = !!base.allow_pairing;
-        const carrierId = base.carrier_id;
-        const pricePer = base.price_per;
-        const activeItems = Array.isArray(base.active_items) ? base.active_items : [];
-
-        const baseMultiplier = pricePer === 'table' ? 1 : qty;
-        const lines = [];
-        if (tastingPrice > 0 && carrierId) {
-          lines.push({ menuitem_id: carrierId, price: tastingPrice * baseMultiplier });
-        }
-        if (includePairing && allowPairing && pairingPrice > 0 && carrierId) {
-          lines.push({ menuitem_id: carrierId, price: pairingPrice * qty });
-        }
-        activeItems.forEach((it) => {
-          const suppCents = Number(it.supplement_cents || 0);
-          if (suppCents > 0 && it.id) {
-            const lineTotal = (suppCents / 100.0) * qty;
-            lines.push({ menuitem_id: it.id, price: lineTotal });
-          }
-        });
-
-        const requests = lines.map((l) => ({
-          ordritem: {
-            ordr_id: ordrId,
-            menuitem_id: l.menuitem_id,
-            status: ORDRITEM_ADDED,
-            ordritemprice: Number(l.price).toFixed(2),
-          },
-        })).map(postOrdritem);
-        postPromise = Promise.all(requests);
-      } else {
+      {
         const ordritem = {
           ordritem: {
             ordr_id: $('#a2o_ordr_id').text(),
