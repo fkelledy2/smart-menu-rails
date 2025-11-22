@@ -41,7 +41,8 @@
         <input type="search"
                placeholder="Search <%= title.downcase %>..."
                class="form-control-2025"
-               style="width: 300px;">
+               style="width: 300px;"
+               autocomplete="off">
       <% end %>
 
       <% actions.each do |action| %>
@@ -110,8 +111,9 @@
             <div class="dropdown">
               <button class="btn-2025 btn-2025-ghost btn-2025-sm"
                       type="button"
-                      data-bs-toggle="dropdown">
-                <i class="bi bi-three-dots"></i>
+                      data-bs-toggle="dropdown"
+                      aria-label="Actions">
+                <i class="bi bi-three-dots" aria-hidden="true"></i>
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
                 <% if local_assigns[:item_actions] %>
