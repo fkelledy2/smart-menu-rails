@@ -15,7 +15,8 @@
               class: "form-control form-control-lg",
               placeholder: t('onboarding.menu_creation.menu_name_placeholder'),
               value: @onboarding&.menu_name || t('onboarding.menu_creation.menu_name_default'),
-              required: true %>
+              required: true,
+              autocomplete: "off" %>
           <div class="invalid-feedback">
             <%= t('onboarding.menu_creation.menu_name_required') %>
           </div>
@@ -28,7 +29,7 @@
           </div>
 
           <button type="button" class="btn btn-outline-primary" id="add-item-btn">
-            <i class="fas fa-plus me-2"></i>
+            <i class="fas fa-plus me-2" aria-hidden="true"></i>
             <%= t('onboarding.menu_creation.add_menu_item') %>
           </button>
 
@@ -44,28 +45,28 @@
             <div class="col-6">
               <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn"
                       data-template="italian">
-                <i class="fas fa-pizza-slice me-1"></i>
+                <i class="fas fa-pizza-slice me-1" aria-hidden="true"></i>
                 <%= t('onboarding.menu_creation.templates.italian') %>
               </button>
             </div>
             <div class="col-6">
               <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn"
                       data-template="american">
-                <i class="fas fa-hamburger me-1"></i>
+                <i class="fas fa-hamburger me-1" aria-hidden="true"></i>
                 <%= t('onboarding.menu_creation.templates.american') %>
               </button>
             </div>
             <div class="col-6">
               <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn"
                       data-template="mexican">
-                <i class="fas fa-pepper-hot me-1"></i>
+                <i class="fas fa-pepper-hot me-1" aria-hidden="true"></i>
                 <%= t('onboarding.menu_creation.templates.mexican') %>
               </button>
             </div>
             <div class="col-6">
               <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn"
                       data-template="asian">
-                <i class="fas fa-fish me-1"></i>
+                <i class="fas fa-fish me-1" aria-hidden="true"></i>
                 <%= t('onboarding.menu_creation.templates.asian') %>
               </button>
             </div>
@@ -75,13 +76,13 @@
 
         <div class="d-flex justify-content-between align-items-center mt-5">
           <%= link_to onboarding_step_path(3), class: "btn btn-outline-secondary btn-lg btn-wizard" do %>
-            <i class="fas fa-arrow-left me-2"></i>
+            <i class="fas fa-arrow-left me-2" aria-hidden="true"></i>
             <%= t('onboarding.menu_creation.back') %>
           <% end %>
 
           <button type="submit" class="btn btn-primary btn-lg btn-wizard" id="continue-btn" disabled>
             <%= t('onboarding.menu_creation.create_menu') %>
-            <i class="fas fa-arrow-right ms-2"></i>
+            <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i>
           </button>
         </div>
       <% end %>
@@ -91,12 +92,12 @@
   <div class="col-lg-6">
     <div class="sticky-top top-2rem">
       <h5 class="mb-3">
-        <i class="fas fa-eye me-2"></i>
+        <i class="fas fa-eye me-2" aria-hidden="true"></i>
         <%= t('onboarding.menu_creation.live_preview') %>
       </h5>
       <div class="menu-preview" id="menu-preview">
         <div class="text-center text-muted py-5">
-          <i class="fas fa-utensils fs-1 mb-3"></i>
+          <i class="fas fa-utensils fs-1 mb-3" aria-hidden="true"></i>
           <p><%= t('onboarding.menu_creation.preview_empty') %></p>
         </div>
       </div>
@@ -110,7 +111,7 @@
     <div class="d-flex justify-content-between align-items-start mb-2">
       <h6 class="mb-0"><%= t('onboarding.menu_creation.menu_item_title') %></h6>
       <button type="button" class="btn btn-sm btn-outline-danger remove-item-btn">
-        <i class="fas fa-times"></i>
+        <i class="fas fa-times" aria-hidden="true"></i>
       </button>
     </div>
 
@@ -120,7 +121,8 @@
                class="form-control item-name"
                placeholder="<%= t('onboarding.menu_creation.item_name_placeholder') %>"
                name="onboarding_session[menu_items][][name]"
-               required>
+               required
+               autocomplete="off">
       </div>
       <div class="col-md-6">
         <div class="input-group">
@@ -131,7 +133,8 @@
                  name="onboarding_session[menu_items][][price]"
                  step="0.01"
                  min="0"
-                 required>
+                 required
+                 autocomplete="off">
         </div>
       </div>
     </div>
@@ -140,7 +143,8 @@
       <textarea class="form-control item-description"
                 placeholder="<%= t('onboarding.menu_creation.item_description_placeholder') %>"
                 name="onboarding_session[menu_items][][description]"
-                rows="2"></textarea>
+                rows="2"
+                autocomplete="off"></textarea>
     </div>
   </div>
 </template>
