@@ -5,8 +5,8 @@
 <% end %>
 
 <% if @performance_data %>
-  <%= render 'shared/performance_dashboard', 
-      title: "Menu Performance Dashboard", 
+  <%= render 'shared/performance_dashboard',
+      title: "Menu Performance Dashboard",
       subtitle: "#{@performance_data[:menu][:name]} (#{@performance_data[:menu][:restaurant_name]})",
       performance_data: @performance_data,
       base_path: performance_restaurant_menu_path(@restaurant, @menu),

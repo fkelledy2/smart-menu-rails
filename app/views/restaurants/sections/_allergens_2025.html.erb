@@ -1,4 +1,4 @@
-<%# 
+<%#
   Restaurant Allergens Section
   Allergen management for menu items
 %>
@@ -11,9 +11,9 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions', default: 'Quick Actions') %>
   </h2>
-  
+
   <div class="quick-actions-grid">
-    <%= link_to new_restaurant_allergyn_path(restaurant), 
+    <%= link_to new_restaurant_allergyn_path(restaurant),
         class: 'quick-action-btn',
         data: { turbo_frame: '_top' } do %>
       <i class="bi bi-plus-circle"></i>
@@ -28,11 +28,11 @@
     <i class="bi bi-exclamation-triangle"></i>
     <%= t('.allergens', default: 'Allergens') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.allergens_description', default: 'Manage allergen information for your menu items to help customers make informed choices.') %>
   </p>
-  
+
   <div class="allergen-stats-card">
     <div class="allergen-stat">
       <div class="allergen-stat-value">
@@ -43,8 +43,8 @@
       </div>
     </div>
   </div>
-  
-  <%= link_to restaurant_allergyns_path(restaurant), 
+
+  <%= link_to restaurant_allergyns_path(restaurant),
       class: 'btn-2025 btn-2025-primary btn-2025-md mt-4',
       data: { turbo_frame: '_top' } do %>
     <i class="bi bi-pencil"></i> <%= t('.manage_allergens', default: 'Manage Allergens') %>
@@ -57,11 +57,11 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.common_templates', default: 'Common Templates') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.templates_description', default: 'Quickly add standard allergen sets') %>
   </p>
-  
+
   <div class="templates-list">
     <div class="template-card">
       <div class="template-header">
@@ -75,7 +75,7 @@
         <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
       </button>
     </div>
-    
+
     <div class="template-card">
       <div class="template-header">
         <h5><%= t('.eu_allergens', default: 'EU 14 Allergens') %></h5>
@@ -87,7 +87,7 @@
         <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
       </button>
     </div>
-    
+
     <div class="template-card">
       <div class="template-header">
         <h5><%= t('.common_dietary', default: 'Common Dietary Restrictions') %></h5>
@@ -109,7 +109,7 @@
       <i class="bi bi-list-check"></i>
       <%= t('.current_allergens', default: 'Current Allergens') %>
     </h2>
-    
+
     <div class="allergen-list">
       <% restaurant.allergyns.where(archived: false).order(:sequence).each do |allergen| %>
         <div class="allergen-item">
@@ -127,7 +127,7 @@
               <p class="text-muted small"><%= allergen.description %></p>
             <% end %>
           </div>
-          <%= link_to edit_restaurant_allergyn_path(restaurant, allergen), 
+          <%= link_to edit_restaurant_allergyn_path(restaurant, allergen),
               class: 'btn-2025 btn-2025-ghost btn-2025-sm',
               data: { turbo_frame: '_top' } do %>
             <i class="bi bi-pencil"></i>
@@ -148,56 +148,56 @@
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
   }
-  
+
   .allergen-stat {
     text-align: center;
   }
-  
+
   .allergen-stat-value {
     font-size: 2.5rem;
     font-weight: var(--font-bold);
     color: var(--color-primary);
     margin-bottom: var(--space-2);
   }
-  
+
   .allergen-stat-label {
     font-size: var(--text-sm);
     color: var(--color-gray-600);
     font-weight: var(--font-semibold);
   }
-  
+
   .templates-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--space-3);
   }
-  
+
   .template-card {
     padding: var(--space-4);
     background: var(--color-gray-50);
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
   }
-  
+
   .template-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--space-2);
   }
-  
+
   .template-header h5 {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     margin: 0;
   }
-  
+
   .allergen-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
   }
-  
+
   .allergen-item {
     display: flex;
     align-items: center;
@@ -208,12 +208,12 @@
     border-radius: var(--radius-md);
     transition: all var(--transition-base);
   }
-  
+
   .allergen-item:hover {
     background: white;
     box-shadow: var(--shadow-sm);
   }
-  
+
   .allergen-icon {
     width: 40px;
     height: 40px;
@@ -226,17 +226,17 @@
     font-size: 1.25rem;
     flex-shrink: 0;
   }
-  
+
   .allergen-info {
     flex: 1;
   }
-  
+
   .allergen-info h5 {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     margin: 0 0 var(--space-1) 0;
   }
-  
+
   .allergen-info p {
     margin: 0;
   }

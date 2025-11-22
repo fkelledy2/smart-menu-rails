@@ -24,7 +24,7 @@
                 <% if plan.pricePerYear %>
                     <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerYear, precision: 0) %><small class="text-body-secondary fw-light">/yr</small></h1>
                 <% else %>
-                    <h1 class="card-title pricing-card-title"><%=t(".contactUs")%><small class="text-body-secondary fw-light"></small></h1>
+                    <h1 class="card-title pricing-card-title"><%= t(".contactUs") %><small class="text-body-secondary fw-light"></small></h1>
                 <% end %>
             </div>
             <div class="text-start">
@@ -58,7 +58,7 @@
             <%= form_with(model: @userplan) do |f| %>
               <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1"><%= f.label :plan %></span>
-                <%= f.select :plan_id, options_for_select(Plan.limit(100).collect { |p| [t(p.key), p.id] }, f.object.plan_id), {}, { class: 'form-select'}%>
+                <%= f.select :plan_id, options_for_select(Plan.limit(100).collect { |p| [t(p.key), p.id] }, f.object.plan_id), {}, { class: 'form-select'} %>
                 <%# For large numbers of plans, consider AJAX/autocomplete for scalability %>
                 <%= f.hidden_field :user_id, value: @current_user.id %>
               </div>

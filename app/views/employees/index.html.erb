@@ -1,7 +1,7 @@
 <!-- 2025 Design System: Updated with new button styles -->
 <div class="row mb-4">
   <div class="col-6">
-    <h1><%=t(".employees")%></h1>
+    <h1><%= t(".employees") %></h1>
   </div>
   <div class="col-6 text-end">
     <% if @futureParentRestaurant %>
@@ -13,7 +13,7 @@
     <button id="deactivate-row" class='btn-2025 btn-2025-outline-danger btn-2025-sm' disabled><%= t('common.deactivate') %></button>
     <% restaurant_path = @futureParentRestaurant || current_user.restaurants.first %>
     <%= link_to new_restaurant_employee_path(restaurant_path), class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
-      <i class="bi bi-plus"></i> <%=t(".employee")%>
+      <i class="bi bi-plus"></i> <%= t(".employee") %>
     <% end %>
   </div>
 </div>

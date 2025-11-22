@@ -1,9 +1,9 @@
-<%# 
+<%#
   Turbo Frame wrapper for menu section content
   Used when responding to Turbo Frame navigation requests
 %>
 
 <%= turbo_frame_tag 'menu_content' do %>
-  <%= render "menus/sections/#{local_assigns[:partial_name]}", 
+  <%= render "menus/sections/#{local_assigns[:partial_name]}",
       menu: local_assigns[:menu] %>
 <% end %>

@@ -1,4 +1,4 @@
-<%# 
+<%#
   Restaurant Taxes & Tips Section
   Taxes and tips management
 %>
@@ -11,16 +11,16 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions', default: 'Quick Actions') %>
   </h2>
-  
+
   <div class="quick-actions-grid">
-    <%= link_to new_restaurant_tax_path(restaurant), 
+    <%= link_to new_restaurant_tax_path(restaurant),
         class: 'quick-action-btn',
         data: { turbo_frame: '_top' } do %>
       <i class="bi bi-receipt"></i>
       <span><%= t('.add_tax', default: 'Add Tax') %></span>
     <% end %>
-    
-    <%= link_to new_restaurant_tip_path(restaurant), 
+
+    <%= link_to new_restaurant_tip_path(restaurant),
         class: 'quick-action-btn',
         data: { turbo_frame: '_top' } do %>
       <i class="bi <%= currency_icon(restaurant.currency) %>"></i>
@@ -35,11 +35,11 @@
     <i class="bi bi-cash-coin"></i>
     <%= t('.taxes_and_tips', default: 'Taxes & Tips') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.taxes_and_tips_description', default: 'Manage taxes and tip configurations') %>
   </p>
-  
+
   <div class="catalog-grid">
     <!-- Taxes -->
     <div class="catalog-item">
@@ -52,13 +52,13 @@
           <%= restaurant.taxes.where(archived: false).where.not(status: :archived).count %> <%= t('.configured', default: 'configured') %>
         </p>
       </div>
-      <%= link_to restaurant_taxes_path(restaurant), 
+      <%= link_to restaurant_taxes_path(restaurant),
           class: 'btn-2025 btn-2025-secondary btn-2025-sm',
           data: { turbo_frame: '_top' } do %>
         <i class="bi bi-pencil"></i> <%= t('.manage', default: 'Manage') %>
       <% end %>
     </div>
-    
+
     <!-- Tips -->
     <div class="catalog-item">
       <div class="catalog-icon bg-success">
@@ -70,13 +70,13 @@
           <%= restaurant.tips.where(archived: false).where.not(status: :archived).count %> <%= t('.configured', default: 'configured') %>
         </p>
       </div>
-      <%= link_to restaurant_tips_path(restaurant), 
+      <%= link_to restaurant_tips_path(restaurant),
           class: 'btn-2025 btn-2025-secondary btn-2025-sm',
           data: { turbo_frame: '_top' } do %>
         <i class="bi bi-pencil"></i> <%= t('.manage', default: 'Manage') %>
       <% end %>
     </div>
-    
+
   </div>
 </div>
 
@@ -86,11 +86,11 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.tax_tip_templates', default: 'Tax & Tip Templates') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.templates_description', default: 'Pre-configured tax and tip sets for quick setup') %>
   </p>
-  
+
   <div class="templates-list">
     <div class="template-card">
       <div class="template-header">
@@ -104,7 +104,7 @@
         <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
       </button>
     </div>
-    
+
     <div class="template-card">
       <div class="template-header">
         <h5><%= t('.eu_restaurant', default: 'EU Restaurant') %></h5>
@@ -125,7 +125,7 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--space-4);
   }
-  
+
   .catalog-item {
     display: flex;
     align-items: center;
@@ -136,12 +136,12 @@
     border-radius: var(--radius-lg);
     transition: all var(--transition-base);
   }
-  
+
   .catalog-item:hover {
     background: white;
     box-shadow: var(--shadow-sm);
   }
-  
+
   .catalog-icon {
     width: 56px;
     height: 56px;
@@ -153,43 +153,43 @@
     font-size: 1.5rem;
     flex-shrink: 0;
   }
-  
+
   .catalog-info {
     flex: 1;
   }
-  
+
   .catalog-title {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     margin: 0 0 var(--space-1) 0;
   }
-  
+
   .catalog-count {
     font-size: var(--text-sm);
     color: var(--color-gray-600);
     margin: 0;
   }
-  
+
   .templates-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--space-3);
   }
-  
+
   .template-card {
     padding: var(--space-4);
     background: var(--color-gray-50);
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
   }
-  
+
   .template-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--space-2);
   }
-  
+
   .template-header h5 {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);

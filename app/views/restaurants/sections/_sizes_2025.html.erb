@@ -1,4 +1,4 @@
-<%# 
+<%#
   Restaurant Sizes Section
   Menu item size variants management
 %>
@@ -11,9 +11,9 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions', default: 'Quick Actions') %>
   </h2>
-  
+
   <div class="quick-actions-grid">
-    <%= link_to new_restaurant_size_path(restaurant), 
+    <%= link_to new_restaurant_size_path(restaurant),
         class: 'quick-action-btn',
         data: { turbo_frame: '_top' } do %>
       <i class="bi bi-plus-circle"></i>
@@ -28,11 +28,11 @@
     <i class="bi bi-rulers"></i>
     <%= t('.sizes', default: 'Menu Item Sizes') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.sizes_description', default: 'Define size variants for menu items like Small, Medium, Large, etc.') %>
   </p>
-  
+
   <div class="size-stats-card">
     <div class="size-stat">
       <div class="size-stat-value">
@@ -43,8 +43,8 @@
       </div>
     </div>
   </div>
-  
-  <%= link_to restaurant_sizes_path(restaurant), 
+
+  <%= link_to restaurant_sizes_path(restaurant),
       class: 'btn-2025 btn-2025-primary btn-2025-md mt-4',
       data: { turbo_frame: '_top' } do %>
     <i class="bi bi-pencil"></i> <%= t('.manage_sizes', default: 'Manage Sizes') %>
@@ -58,7 +58,7 @@
       <i class="bi bi-list-check"></i>
       <%= t('.current_sizes', default: 'Current Sizes') %>
     </h2>
-    
+
     <div class="size-list">
       <% restaurant.sizes.where(archived: false).where.not(status: :archived).order(:sequence).each do |size| %>
         <div class="size-item">
@@ -71,7 +71,7 @@
               <p class="text-muted small"><%= size.description %></p>
             <% end %>
           </div>
-          <%= link_to edit_restaurant_size_path(restaurant, size), 
+          <%= link_to edit_restaurant_size_path(restaurant, size),
               class: 'btn-2025 btn-2025-ghost btn-2025-sm',
               data: { turbo_frame: '_top' } do %>
             <i class="bi bi-pencil"></i>
@@ -88,11 +88,11 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.common_templates', default: 'Common Templates') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.templates_description', default: 'Quickly add standard size sets') %>
   </p>
-  
+
   <div class="templates-list">
     <div class="template-card">
       <div class="template-header">
@@ -106,7 +106,7 @@
         <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
       </button>
     </div>
-    
+
     <div class="template-card">
       <div class="template-header">
         <h5><%= t('.beverage_sizes', default: 'Beverage Sizes') %></h5>
@@ -131,56 +131,56 @@
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
   }
-  
+
   .size-stat {
     text-align: center;
   }
-  
+
   .size-stat-value {
     font-size: 2.5rem;
     font-weight: var(--font-bold);
     color: var(--color-warning);
     margin-bottom: var(--space-2);
   }
-  
+
   .size-stat-label {
     font-size: var(--text-sm);
     color: var(--color-gray-600);
     font-weight: var(--font-semibold);
   }
-  
+
   .templates-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--space-3);
   }
-  
+
   .template-card {
     padding: var(--space-4);
     background: var(--color-gray-50);
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
   }
-  
+
   .template-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--space-2);
   }
-  
+
   .template-header h5 {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     margin: 0;
   }
-  
+
   .size-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
   }
-  
+
   .size-item {
     display: flex;
     align-items: center;
@@ -191,12 +191,12 @@
     border-radius: var(--radius-md);
     transition: all var(--transition-base);
   }
-  
+
   .size-item:hover {
     background: white;
     box-shadow: var(--shadow-sm);
   }
-  
+
   .size-icon {
     width: 40px;
     height: 40px;
@@ -209,17 +209,17 @@
     font-size: 1.25rem;
     flex-shrink: 0;
   }
-  
+
   .size-info {
     flex: 1;
   }
-  
+
   .size-info h5 {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     margin: 0 0 var(--space-1) 0;
   }
-  
+
   .size-info p {
     margin: 0;
   }

@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-md-3">
       <div class="card bg-success text-white">
         <div class="card-body">
@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-md-3">
       <div class="card bg-<%= @metrics_summary[:error_rate] > 5 ? 'danger' : 'warning' %> text-white">
         <div class="card-body">
@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-md-3">
       <div class="card bg-info text-white">
         <div class="card-body">
@@ -71,7 +71,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-md-6">
       <div class="card">
         <div class="card-header">
@@ -80,22 +80,22 @@
         <div class="card-body">
           <% if @system_metrics[:memory_usage] %>
             <div class="mb-2">
-              <strong>Memory Usage:</strong> 
+              <strong>Memory Usage:</strong>
               <%= number_to_human_size(@system_metrics[:memory_usage][:value]) %>
             </div>
           <% end %>
-          
+
           <% if @system_metrics[:db_pool_size] %>
             <div class="mb-2">
-              <strong>DB Pool:</strong> 
-              <%= @system_metrics[:db_pool_checked_out]&.dig(:value) || 0 %> / 
+              <strong>DB Pool:</strong>
+              <%= @system_metrics[:db_pool_checked_out]&.dig(:value) || 0 %> /
               <%= @system_metrics[:db_pool_size][:value] %> connections
             </div>
           <% end %>
-          
+
           <% if @system_metrics[:active_users] %>
             <div class="mb-2">
-              <strong>Active Users:</strong> 
+              <strong>Active Users:</strong>
               <%= @system_metrics[:active_users][:value] %>
             </div>
           <% end %>
@@ -131,7 +131,7 @@
                   <% @recent_metrics.first(20).each do |metric_key, metric_data| %>
                     <tr>
                       <td>
-                        <%= link_to metric_key, admin_metric_path(metric_key.split('{').first), 
+                        <%= link_to metric_key, admin_metric_path(metric_key.split('{').first),
                             class: "text-decoration-none" %>
                       </td>
                       <td>
@@ -155,7 +155,7 @@
                 </tbody>
               </table>
             </div>
-            
+
             <% if @recent_metrics.size > 20 %>
               <p class="text-muted text-center mt-3">
                 Showing 20 of <%= @recent_metrics.size %> recent metrics

@@ -1,4 +1,4 @@
-<%# 
+<%#
   Restaurant Menus Section
   Menu list and management
 %>
@@ -6,7 +6,7 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 <% filter = local_assigns[:filter] || 'all' %>
 
-<% 
+<%
   menus = case filter
           when 'active'
             restaurant.menus.where(archived: false, status: 'active')
@@ -24,16 +24,16 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions', default: 'Quick Actions') %>
   </h2>
-  
+
   <div class="quick-actions-grid">
-    <%= link_to new_restaurant_menu_path(restaurant), 
+    <%= link_to new_restaurant_menu_path(restaurant),
         class: 'quick-action-btn',
         data: { testid: 'new-menu-btn', turbo_frame: '_top' } do %>
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.new_menu', default: 'New Menu') %></span>
     <% end %>
-    
-    <%= link_to edit_restaurant_path(restaurant, section: 'import'), 
+
+    <%= link_to edit_restaurant_path(restaurant, section: 'import'),
         class: 'quick-action-btn',
         data: { testid: 'import-menu-btn', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
       <i class="bi bi-file-earmark-arrow-up"></i>
@@ -48,38 +48,38 @@
     <i class="bi bi-menu-button-wide"></i>
     <%= t(".menus_#{filter}", default: filter.titleize + ' Menus') %>
   </h2>
-  
+
   <!-- Filter Tabs -->
   <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
-      <%= link_to edit_restaurant_path(restaurant, section: 'menus'), 
+      <%= link_to edit_restaurant_path(restaurant, section: 'menus'),
           class: "nav-link #{'active' if filter == 'all'}",
           data: { testid: 'menus-filter-all', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <%= t('.all', default: 'All') %> 
+        <%= t('.all', default: 'All') %>
         <span class="badge bg-secondary"><%= restaurant.menus.where(archived: false).count %></span>
       <% end %>
     </li>
     <li class="nav-item">
-      <%= link_to edit_restaurant_path(restaurant, section: 'menus_active'), 
+      <%= link_to edit_restaurant_path(restaurant, section: 'menus_active'),
           class: "nav-link #{'active' if filter == 'active'}",
           data: { testid: 'menus-filter-active', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <%= t('.active', default: 'Active') %> 
+        <%= t('.active', default: 'Active') %>
         <span class="badge bg-success"><%= restaurant.menus.where(archived: false, status: 'active').count %></span>
       <% end %>
     </li>
     <li class="nav-item">
-      <%= link_to edit_restaurant_path(restaurant, section: 'menus_inactive'), 
+      <%= link_to edit_restaurant_path(restaurant, section: 'menus_inactive'),
           class: "nav-link #{'active' if filter == 'inactive'}",
           data: { testid: 'menus-filter-inactive', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <%= t('.inactive', default: 'Inactive') %> 
+        <%= t('.inactive', default: 'Inactive') %>
         <span class="badge bg-warning"><%= restaurant.menus.where(archived: false, status: 'inactive').count %></span>
       <% end %>
     </li>
   </ul>
-  
+
   <% if menus.any? %>
     <!-- Menus List -->
-    <div class="menus-list" 
+    <div class="menus-list"
          data-testid="menus-list"
          data-controller="sortable"
          data-sortable-url-value="<%= update_sequence_restaurant_menus_path(restaurant) %>"
@@ -90,7 +90,7 @@
           <div class="drag-handle" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>">
             <i class="bi bi-grip-vertical"></i>
           </div>
-          
+
           <!-- Menu Info Section -->
           <div class="menu-card-main">
             <div class="menu-card-title-row">
@@ -105,7 +105,7 @@
                 </span>
               <% end %>
             </div>
-            
+
             <div class="menu-card-meta">
               <% if menu.description.present? %>
                 <span class="menu-card-description">
@@ -113,31 +113,31 @@
                 </span>
                 <span class="meta-separator">•</span>
               <% end %>
-              
+
               <span class="stat-badge">
                 <i class="bi bi-grid-3x3"></i>
                 <%= menu.menusections.count %> <%= t('.sections', default: 'sections') %>
               </span>
-              
+
               <span class="meta-separator">•</span>
-              
+
               <span class="stat-badge">
                 <i class="bi bi-list"></i>
                 <%= menu.menusections.joins(:menuitems).count('menuitems.id') %> <%= t('.items', default: 'items') %>
               </span>
             </div>
           </div>
-          
+
           <!-- Actions Section -->
           <div class="menu-card-actions">
-            <%= link_to edit_restaurant_menu_path(restaurant, menu), 
+            <%= link_to edit_restaurant_menu_path(restaurant, menu),
                 class: 'btn-2025 btn-2025-primary btn-2025-sm flex-fill',
                 data: { testid: "edit-menu-#{menu.id}-btn", turbo_frame: '_top' } do %>
               <i class="bi bi-pencil"></i> <%= t('.edit', default: 'Edit') %>
             <% end %>
-            
+
             <% if menu.smartmenu&.slug %>
-              <%= link_to smartmenu_path(menu.smartmenu.slug), 
+              <%= link_to smartmenu_path(menu.smartmenu.slug),
                   class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                   target: '_blank',
                   title: t('.preview', default: 'Preview Menu'),
@@ -145,16 +145,16 @@
                 <i class="bi bi-eye"></i>
               <% end %>
             <% else %>
-              <button class="btn-2025 btn-2025-ghost btn-2025-sm" 
+              <button class="btn-2025 btn-2025-ghost btn-2025-sm"
                       disabled
                       title="<%= t('.no_preview', default: 'Menu not published yet') %>">
                 <i class="bi bi-eye"></i>
               </button>
             <% end %>
-            
+
             <div class="dropdown">
-              <button class="btn-2025 btn-2025-ghost btn-2025-sm" 
-                      type="button" 
+              <button class="btn-2025 btn-2025-ghost btn-2025-sm"
+                      type="button"
                       data-bs-toggle="dropdown"
                       data-testid="menu-actions-#{menu.id}-btn">
                 <i class="bi bi-three-dots-vertical"></i>
@@ -167,7 +167,7 @@
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                  <%= link_to restaurant_menu_path(restaurant, menu), 
+                  <%= link_to restaurant_menu_path(restaurant, menu),
                       method: :delete,
                       data: { testid: "delete-menu-#{menu.id}-btn", confirm: t('.confirm_delete', default: 'Are you sure?') },
                       class: 'dropdown-item text-danger' do %>
@@ -190,7 +190,7 @@
       <p class="text-muted">
         <%= t('.no_menus_description', default: 'Create your first menu to get started') %>
       </p>
-      <%= link_to new_restaurant_menu_path(restaurant), 
+      <%= link_to new_restaurant_menu_path(restaurant),
           class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3',
           data: { turbo_frame: '_top' } do %>
         <i class="bi bi-plus-circle"></i>
@@ -207,7 +207,7 @@
     flex-direction: column;
     gap: var(--space-3);
   }
-  
+
   /* Menu Card - Horizontal Layout */
   .menu-card {
     display: flex;
@@ -219,23 +219,23 @@
     padding: var(--space-4);
     transition: all var(--transition-base);
   }
-  
+
   .menu-card:hover {
     box-shadow: var(--shadow-md);
     border-color: var(--color-gray-300);
   }
-  
+
   /* Sortable states */
   .sortable-ghost {
     opacity: 0.4;
     background: var(--color-gray-50);
   }
-  
+
   .sortable-drag {
     opacity: 1;
     box-shadow: var(--shadow-lg);
   }
-  
+
   /* Drag Handle */
   .drag-handle {
     cursor: grab;
@@ -249,15 +249,15 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   .drag-handle:hover {
     color: var(--color-gray-600);
   }
-  
+
   .drag-handle:active {
     cursor: grabbing;
   }
-  
+
   /* Main Content Area */
   .menu-card-main {
     flex: 1;
@@ -266,21 +266,21 @@
     flex-direction: column;
     gap: var(--space-2);
   }
-  
+
   .menu-card-title-row {
     display: flex;
     align-items: center;
     gap: var(--space-3);
     flex-wrap: wrap;
   }
-  
+
   .menu-card-title {
     font-size: var(--text-lg);
     font-weight: var(--font-semibold);
     color: var(--color-gray-900);
     margin: 0;
   }
-  
+
   .menu-card-meta {
     display: flex;
     align-items: center;
@@ -289,16 +289,16 @@
     font-size: var(--text-sm);
     color: var(--color-gray-600);
   }
-  
+
   .menu-card-description {
     color: var(--color-gray-600);
   }
-  
+
   .meta-separator {
     color: var(--color-gray-300);
     font-weight: bold;
   }
-  
+
   .stat-badge {
     display: inline-flex;
     align-items: center;
@@ -306,7 +306,7 @@
     color: var(--color-gray-600);
     white-space: nowrap;
   }
-  
+
   /* Actions Section */
   .menu-card-actions {
     display: flex;
@@ -314,7 +314,7 @@
     flex-shrink: 0;
     align-items: center;
   }
-  
+
   /* Mobile Responsive */
   @media (max-width: 768px) {
     .menu-card {
@@ -322,48 +322,48 @@
       align-items: stretch;
       gap: var(--space-3);
     }
-    
+
     .drag-handle {
       align-self: flex-start;
     }
-    
+
     .menu-card-actions {
       width: 100%;
       justify-content: stretch;
     }
-    
+
     .menu-card-actions .flex-fill {
       flex: 1;
     }
   }
-  
+
   @media (max-width: 480px) {
     .menu-card {
       padding: var(--space-3);
     }
-    
+
     .menu-card-title {
       font-size: var(--text-base);
     }
-    
+
     .menu-card-meta {
       font-size: var(--text-xs);
     }
   }
-  
+
   /* Mobile Card Actions - Better spacing */
   @media (max-width: 480px) {
     .menu-card-actions {
       padding: var(--space-2) var(--space-3);
       gap: var(--space-1);
     }
-    
+
     .menu-card-actions .btn-2025 {
       padding: var(--space-2);
       font-size: var(--text-xs);
     }
   }
-  
+
   /* Filter Tabs - Mobile Scrollable */
   @media (max-width: 768px) {
     .nav-tabs {
@@ -372,15 +372,15 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: thin;
     }
-    
+
     .nav-tabs .nav-item {
       flex-shrink: 0;
     }
-    
+
     .nav-tabs::-webkit-scrollbar {
       height: 3px;
     }
-    
+
     .nav-tabs::-webkit-scrollbar-thumb {
       background: var(--color-gray-300);
       border-radius: 3px;

@@ -1,4 +1,4 @@
-<%# 
+<%#
   Edit Menu - 2025 Design System
   Modern form layout with tab navigation
 %>
@@ -15,7 +15,7 @@
         <i class="bi bi-chevron-right"></i>
         <%= @menu.name %>
       </div>
-      
+
       <h1 class="text-2xl font-semibold text-gray-900 mb-1">
         <i class="bi bi-pencil"></i>
         <%= @menu.name %>
@@ -24,9 +24,9 @@
         <%= t('.description', default: 'Edit menu configuration and content') %>
       </p>
     </div>
-    
+
     <div class="d-flex gap-2">
-      <%= link_to edit_restaurant_path(@menu.restaurant, section: 'menus'), 
+      <%= link_to edit_restaurant_path(@menu.restaurant, section: 'menus'),
           class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
         <i class="bi bi-arrow-left"></i> <%= t('.back_to_menus', default: 'Back to Menus') %>
       <% end %>
@@ -47,16 +47,16 @@
               <i class="bi bi-translate"></i> <%= t('.localization_title', default: 'Menu Localization') %>
             </h6>
             <p class="text-sm text-gray-500 mb-0">
-              <%= t('.localization_description', 
+              <%= t('.localization_description',
                 default: "Translate this menu to all configured languages (#{active_locales.pluck(:locale).map(&:upcase).join(', ')})") %>
             </p>
           </div>
           <div>
-            <%= button_to localize_restaurant_menu_path(@menu.restaurant, @menu), 
+            <%= button_to localize_restaurant_menu_path(@menu.restaurant, @menu),
                 method: :post,
                 class: 'btn-2025 btn-2025-primary btn-2025-md',
-                data: { 
-                  turbo_confirm: t('.localization_confirm', 
+                data: {
+                  turbo_confirm: t('.localization_confirm',
                     default: "This will translate all menu sections and items to #{active_locales.count} language(s). Continue?")
                 } do %>
               <i class="bi bi-globe"></i> <%= t('.localize_button', default: 'Localize Menu') %>
@@ -70,13 +70,13 @@
 
 <ul class="nav nav-tabs overflow-auto flex-nowrap menu-tabs-main" id="menuTabs" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark active" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menuConfig" aria-selected="true"><%=t(".menu")%></button>
+    <button class="nav-link link-dark active" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menuConfig" aria-selected="true"><%= t(".menu") %></button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="menusection-tab" data-bs-toggle="tab" data-bs-target="#menusection" type="button" role="tab" aria-controls="menusectionConfig" aria-selected="false"><%=t(".sections")%></button>
+    <button class="nav-link link-dark" id="menusection-tab" data-bs-toggle="tab" data-bs-target="#menusection" type="button" role="tab" aria-controls="menusectionConfig" aria-selected="false"><%= t(".sections") %></button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="menuavailability-tab" data-bs-toggle="tab" data-bs-target="#menuavailability" type="button" role="tab" aria-controls="menuavailabilityConfig" aria-selected="false"><%=t(".availabilities")%></button>
+    <button class="nav-link link-dark" id="menuavailability-tab" data-bs-toggle="tab" data-bs-target="#menuavailability" type="button" role="tab" aria-controls="menuavailabilityConfig" aria-selected="false"><%= t(".availabilities") %></button>
   </li>
 </ul>
 
@@ -118,15 +118,15 @@
     font-size: 1.5rem;
     line-height: 2rem;
   }
-  
+
   .text-gray-900 {
     color: var(--color-gray-900);
   }
-  
+
   .text-gray-500 {
     color: var(--color-gray-500);
   }
-  
+
   .text-sm {
     font-size: 0.875rem;
   }

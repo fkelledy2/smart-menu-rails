@@ -24,28 +24,28 @@
   <div class="form-group row">
     <%= form.label :restaurant_id, class: 'col-2 col-form-label' %>
     <div class="col-10">
-        <%= form.collection_select :restaurant_id, Restaurant.all ,:id, :name, options = {:prompt => 'Select a Restaurant...'}, html_options = {class: "form-control" , disabled: 'disabled'}%>
+        <%= form.collection_select :restaurant_id, Restaurant.all ,:id, :name, options = {:prompt => 'Select a Restaurant...'}, html_options = {class: "form-control" , disabled: 'disabled'} %>
     </div>
   </div>
   <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :menu_id, class: 'col-2 col-form-label' %>
     <div class="col-10">
-        <%= form.collection_select :menu_id, Menu.all ,:id, :name, options = {:prompt => 'Select a Menu...'}, html_options = {class: "form-control" , disabled: 'disabled'}%>
+        <%= form.collection_select :menu_id, Menu.all ,:id, :name, options = {:prompt => 'Select a Menu...'}, html_options = {class: "form-control" , disabled: 'disabled'} %>
     </div>
   </div>
   <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :tablesetting_id, class: 'col-2 col-form-label' %>
     <div class="col-10">
-        <%= form.collection_select :tablesetting_id, Tablesetting.all ,:id, :name, options = {:prompt => 'Select a Table...'}, html_options = {class: "form-control" , disabled: 'disabled'}%>
+        <%= form.collection_select :tablesetting_id, Tablesetting.all ,:id, :name, options = {:prompt => 'Select a Table...'}, html_options = {class: "form-control" , disabled: 'disabled'} %>
     </div>
   </div>
   <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :employee_id, class: 'col-2 col-form-label' %>
     <div class="col-10">
-        <%= form.collection_select :employee_id, Employee.all ,:id, :name, options = {:prompt => 'Select a Employee...'}, html_options = {class: "form-control" , disabled: 'disabled'}%>
+        <%= form.collection_select :employee_id, Employee.all ,:id, :name, options = {:prompt => 'Select a Employee...'}, html_options = {class: "form-control" , disabled: 'disabled'} %>
     </div>
   </div>
   <div class="spacing-sm"></div>

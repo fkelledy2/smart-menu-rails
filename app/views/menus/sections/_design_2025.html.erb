@@ -1,4 +1,4 @@
-<%# 
+<%#
   Menu Design Section
   Images, PDF uploads, and visual settings
 %>
@@ -12,26 +12,26 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions', default: 'Quick Actions') %>
   </h2>
-  
+
   <div class="quick-actions-grid">
-    <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true), 
+    <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true),
         method: :post,
         class: 'quick-action-btn',
         data: { turbo: false, ai_generate: true, menu_id: menu.id } do %>
       <i class="bi bi-stars"></i>
       <span><%= t('.generate_images', default: 'Generate AI Images') %></span>
     <% end %>
-    
+
     <% if menu.smartmenu&.slug %>
-      <%= link_to smartmenu_path(menu.smartmenu.slug), 
+      <%= link_to smartmenu_path(menu.smartmenu.slug),
           class: 'quick-action-btn',
           target: '_blank',
           title: 'Preview menu as staff (authenticated view)' do %>
         <i class="bi bi-eye"></i>
         <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
       <% end %>
-      
-      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'), 
+
+      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'),
           class: 'quick-action-btn quick-action-btn-secondary',
           target: '_blank',
           rel: 'noopener noreferrer',
@@ -49,7 +49,7 @@
     <i class="bi bi-image"></i>
     <%= t('.menu_image', default: 'Menu Image') %>
   </h2>
-  
+
   <%= menu_form_with(menu, auto_save: true) do |form| %>
     <div class="row g-4">
       <% if menu.image.present? %>
@@ -59,7 +59,7 @@
           </div>
         </div>
       <% end %>
-      
+
       <div class="col-md-12">
         <div class="form-group-2025">
           <%= form.label :image, class: 'form-label-2025' do %>
@@ -72,7 +72,7 @@
           </div>
         </div>
       </div>
-      
+
       <% if menu.image.present? %>
         <div class="col-md-12">
           <div class="form-check">
@@ -91,11 +91,11 @@
     <i class="bi bi-file-pdf"></i>
     <%= t('.pdf_menu', default: 'PDF Menu') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.pdf_menu_desc', default: 'Upload a PDF version of your menu for customers to download') %>
   </p>
-  
+
   <%= menu_form_with(menu, auto_save: true) do |form| %>
     <div class="row g-4">
       <% if menu.pdf_menu_scan.attached? %>
@@ -107,7 +107,7 @@
               <div class="text-sm text-muted">
                 <%= number_to_human_size(menu.pdf_menu_scan.byte_size) %>
               </div>
-              <%= link_to rails_blob_path(menu.pdf_menu_scan, disposition: "attachment"), 
+              <%= link_to rails_blob_path(menu.pdf_menu_scan, disposition: "attachment"),
                   target: "_blank",
                   class: 'btn-2025 btn-2025-ghost btn-2025-sm mt-2' do %>
                 <i class="bi bi-download"></i> <%= t('.download', default: 'Download') %>
@@ -116,13 +116,13 @@
           </div>
         </div>
       <% end %>
-      
+
       <div class="col-md-12">
         <div class="form-group-2025">
           <%= form.label :pdf_menu_scan, class: 'form-label-2025' do %>
             <%= t('.upload_pdf', default: 'Upload PDF') %>
           <% end %>
-          <%= form.file_field :pdf_menu_scan, 
+          <%= form.file_field :pdf_menu_scan,
               class: 'form-control-2025',
               accept: 'application/pdf' %>
           <div class="form-help-2025">
@@ -130,7 +130,7 @@
           </div>
         </div>
       </div>
-      
+
       <% if menu.pdf_menu_scan.attached? %>
         <div class="col-md-12">
           <div class="form-check">
@@ -149,7 +149,7 @@
     <i class="bi bi-sliders"></i>
     <%= t('.display_settings', default: 'Display Settings') %>
   </h2>
-  
+
   <%= menu_form_with(menu, auto_save: true) do |form| %>
     <div class="features-grid">
       <!-- Show Images -->
@@ -166,8 +166,8 @@
         <div class="feature-card-toggle">
           <div class="form-check form-switch">
             <input type="hidden" name="menu[displayImages]" value="false">
-            <input class="form-check-input" 
-                   type="checkbox" 
+            <input class="form-check-input"
+                   type="checkbox"
                    name="menu[displayImages]"
                    id="menu_displayImages_toggle"
                    value="true"
@@ -176,7 +176,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Popup Images -->
       <div class="feature-card">
         <div class="feature-card-icon bg-success">
@@ -191,8 +191,8 @@
         <div class="feature-card-toggle">
           <div class="form-check form-switch">
             <input type="hidden" name="menu[displayImagesInPopup]" value="false">
-            <input class="form-check-input" 
-                   type="checkbox" 
+            <input class="form-check-input"
+                   type="checkbox"
                    name="menu[displayImagesInPopup]"
                    id="menu_displayImagesInPopup_toggle"
                    value="true"
@@ -210,7 +210,7 @@
     max-width: 600px;
     margin-bottom: var(--space-4);
   }
-  
+
   .pdf-preview {
     display: flex;
     align-items: center;
@@ -219,14 +219,14 @@
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
   }
-  
+
   /* Feature Grid Layout */
   .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--space-4);
   }
-  
+
   .feature-card {
     display: flex;
     flex-direction: column;
@@ -237,12 +237,12 @@
     border-radius: var(--radius-lg);
     transition: all var(--transition-base);
   }
-  
+
   .feature-card:hover {
     border-color: var(--color-gray-300);
     box-shadow: var(--shadow-sm);
   }
-  
+
   .feature-card-icon {
     width: 48px;
     height: 48px;
@@ -254,35 +254,35 @@
     font-size: 1.5rem;
     flex-shrink: 0;
   }
-  
+
   .feature-card-content {
     flex: 1;
   }
-  
+
   .feature-card-title {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     margin: 0 0 var(--space-2) 0;
     color: var(--color-gray-900);
   }
-  
+
   .feature-card-description {
     font-size: var(--text-sm);
     color: var(--color-gray-600);
     margin: 0;
     line-height: 1.5;
   }
-  
+
   .feature-card-toggle {
     padding-top: var(--space-2);
     border-top: 1px solid var(--color-gray-100);
   }
-  
+
   .feature-card-toggle .form-switch {
     display: flex;
     justify-content: flex-end;
   }
-  
+
   /* Mobile responsive */
   @media (max-width: 768px) {
     .features-grid {

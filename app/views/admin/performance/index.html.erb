@@ -6,11 +6,11 @@
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">Performance Monitoring</h1>
         <div>
-          <%= link_to "Reset Metrics", admin_performance_reset_path, 
-                      method: :post, 
+          <%= link_to "Reset Metrics", admin_performance_reset_path,
+                      method: :post,
                       class: "btn btn-outline-warning me-2",
                       confirm: "Are you sure you want to reset all performance metrics?" %>
-          <%= link_to "Export Data", admin_performance_export_path(format: :json), 
+          <%= link_to "Export Data", admin_performance_export_path(format: :json),
                       class: "btn btn-outline-primary" %>
         </div>
       </div>
@@ -34,7 +34,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-md-3">
       <div class="card bg-success text-white">
         <div class="card-body">
@@ -50,7 +50,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-md-3">
       <div class="card bg-info text-white">
         <div class="card-body">
@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-md-3">
       <div class="card bg-warning text-white">
         <div class="card-body">
@@ -144,7 +144,7 @@
                   <tr>
                     <td>Slow Requests</td>
                     <td>
-                      <%= @request_stats[:slow_requests_count] || 0 %> 
+                      <%= @request_stats[:slow_requests_count] || 0 %>
                       (<%= @request_stats[:slow_requests_percentage] || 0 %>%)
                     </td>
                   </tr>
@@ -153,7 +153,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="col-md-6">
           <div class="card">
             <div class="card-header">

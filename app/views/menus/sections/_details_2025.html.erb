@@ -1,4 +1,4 @@
-<%# 
+<%#
   Menu Details Section
   Core menu information and settings
 %>
@@ -12,9 +12,9 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions', default: 'Quick Actions') %>
   </h2>
-  
+
   <div class="quick-actions-grid">
-    <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true), 
+    <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true),
         method: :post,
         class: 'quick-action-btn',
         data: { turbo: false },
@@ -22,11 +22,11 @@
       <i class="bi bi-stars"></i>
       <span><%= t('.generate_images', default: 'Generate AI Images') %></span>
     <% end %>
-    
+
     <% active_locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active') %>
     <% if active_locales.any? %>
       <div class="btn-group">
-        <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false), 
+        <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false),
             method: :post,
             class: 'quick-action-btn',
             data: { turbo: false, testid: 'localize-menu-btn' },
@@ -39,7 +39,7 @@
         </button>
         <ul class="dropdown-menu">
           <li>
-            <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false), 
+            <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false),
                 method: :post,
                 class: 'dropdown-item text-start border-0 bg-transparent',
                 form: { style: 'display: inline;', data: { localize: true, turbo: false, menu_id: menu.id } },
@@ -48,7 +48,7 @@
             <% end %>
           </li>
           <li>
-            <%= button_to localize_restaurant_menu_path(restaurant, menu, force: true), 
+            <%= button_to localize_restaurant_menu_path(restaurant, menu, force: true),
                 method: :post,
                 class: 'dropdown-item text-start border-0 bg-transparent text-warning',
                 form: { style: 'display: inline;', data: { localize: true, turbo: false, menu_id: menu.id } },
@@ -59,17 +59,17 @@
         </ul>
       </div>
     <% end %>
-    
+
     <% if menu.smartmenu&.slug %>
-      <%= link_to smartmenu_path(menu.smartmenu.slug), 
+      <%= link_to smartmenu_path(menu.smartmenu.slug),
           class: 'quick-action-btn',
           target: '_blank',
           title: 'Preview menu as staff (authenticated view)' do %>
         <i class="bi bi-eye"></i>
         <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
       <% end %>
-      
-      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'), 
+
+      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'),
           class: 'quick-action-btn quick-action-btn-secondary',
           target: '_blank',
           rel: 'noopener noreferrer',
@@ -87,7 +87,7 @@
     <i class="bi bi-info-circle"></i>
     <%= t('.menu_details', default: 'Menu Details') %>
   </h2>
-  
+
   <%= menu_form_with(menu, auto_save: true) do |form| %>
     <div class="row g-4">
       <div class="col-md-12">
@@ -95,7 +95,7 @@
           <%= form.label :name, class: 'form-label-2025' do %>
             <%= t('.menu_name', default: 'Menu Name') %>
           <% end %>
-          <%= form.text_field :name, 
+          <%= form.text_field :name,
               class: 'form-control-2025',
               placeholder: t('.menu_name_placeholder', default: 'e.g., Dinner Menu, Lunch Specials') %>
           <div class="form-help-2025">
@@ -103,13 +103,13 @@
           </div>
         </div>
       </div>
-      
+
       <div class="col-md-12">
         <div class="form-group-2025">
           <%= form.label :description, class: 'form-label-2025' do %>
             <%= t('.description', default: 'Description') %>
           <% end %>
-          <%= form.text_area :description, 
+          <%= form.text_area :description,
               class: 'form-control-2025',
               rows: 4,
               placeholder: t('.description_placeholder', default: 'Describe this menu...') %>
@@ -118,7 +118,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="col-md-12">
         <div class="form-group-2025">
           <%= form.label :status, class: 'form-label-2025' do %>
@@ -147,7 +147,7 @@
     <i class="bi bi-bar-chart"></i>
     <%= t('.statistics', default: 'Menu Statistics') %>
   </h2>
-  
+
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon bg-primary">
@@ -158,7 +158,7 @@
         <div class="stat-label"><%= t('.sections', default: 'Sections') %></div>
       </div>
     </div>
-    
+
     <div class="stat-card">
       <div class="stat-icon bg-success">
         <i class="bi bi-list-ul"></i>
@@ -168,7 +168,7 @@
         <div class="stat-label"><%= t('.items', default: 'Items') %></div>
       </div>
     </div>
-    
+
     <div class="stat-card">
       <div class="stat-icon bg-warning">
         <i class="bi bi-calendar-check"></i>
@@ -187,7 +187,7 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--space-4);
   }
-  
+
   .stat-card {
     display: flex;
     align-items: center;
@@ -197,7 +197,7 @@
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
   }
-  
+
   .stat-icon {
     width: 48px;
     height: 48px;
@@ -209,14 +209,14 @@
     font-size: 1.25rem;
     flex-shrink: 0;
   }
-  
+
   .stat-value {
     font-size: var(--text-2xl);
     font-weight: var(--font-bold);
     color: var(--color-gray-900);
     line-height: 1;
   }
-  
+
   .stat-label {
     font-size: var(--text-sm);
     color: var(--color-gray-600);

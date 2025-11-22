@@ -1,4 +1,4 @@
-<%# 
+<%#
   New Tax - 2025 Design System
   Modern form layout with consistent styling
 %>
@@ -15,7 +15,7 @@
         <i class="bi bi-chevron-right"></i>
         <%= t('.new', default: 'New') %>
       </div>
-      
+
       <h1 class="text-2xl font-semibold text-gray-900 mb-1">
         <i class="bi bi-plus-circle"></i>
         <%= t('.new_tax', default: 'New Tax') %>
@@ -24,9 +24,9 @@
         <%= t('.description', default: 'Create a new tax rate for menu items') %>
       </p>
     </div>
-    
+
     <div class="d-flex gap-2">
-      <%= link_to restaurant_taxes_path(@tax.restaurant), 
+      <%= link_to restaurant_taxes_path(@tax.restaurant),
           class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
         <i class="bi bi-x-lg"></i> <%= t('.cancel', default: 'Cancel') %>
       <% end %>
@@ -40,7 +40,7 @@
     <i class="bi bi-receipt"></i>
     <%= t('.tax_details', default: 'Tax Details') %>
   </h2>
-  
+
   <%= render 'form', tax: @tax %>
 </div>
 
@@ -49,15 +49,15 @@
     font-size: 1.5rem;
     line-height: 2rem;
   }
-  
+
   .text-gray-900 {
     color: var(--color-gray-900);
   }
-  
+
   .text-gray-500 {
     color: var(--color-gray-500);
   }
-  
+
   .text-sm {
     font-size: 0.875rem;
   }

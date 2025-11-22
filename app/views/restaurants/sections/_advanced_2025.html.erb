@@ -1,4 +1,4 @@
-<%# 
+<%#
   Restaurant Advanced Settings Section
   Advanced features and experimental functionality
 %>
@@ -11,7 +11,7 @@
     <i class="bi bi-sliders"></i>
     <%= t('.advanced_features', default: 'Advanced Features') %>
   </h2>
-  
+
   <div class="features-grid">
     <div class="feature-card">
       <div class="feature-card-icon bg-primary">
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="feature-card">
       <div class="feature-card-icon bg-success">
         <i class="bi bi-cash-coin"></i>
@@ -46,7 +46,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="feature-card">
       <div class="feature-card-icon bg-warning">
         <i class="bi bi-lightbulb"></i>
@@ -63,7 +63,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="feature-card">
       <div class="feature-card-icon bg-danger">
         <i class="bi bi-shield-check"></i>
@@ -90,7 +90,7 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--space-4);
   }
-  
+
   .feature-card {
     display: flex;
     flex-direction: column;
@@ -101,12 +101,12 @@
     border-radius: var(--radius-lg);
     transition: all var(--transition-base);
   }
-  
+
   .feature-card:hover {
     border-color: var(--color-gray-300);
     box-shadow: var(--shadow-sm);
   }
-  
+
   .feature-card-icon {
     width: 48px;
     height: 48px;
@@ -118,48 +118,48 @@
     font-size: 1.5rem;
     flex-shrink: 0;
   }
-  
+
   .feature-card-content {
     flex: 1;
   }
-  
+
   .feature-card-title {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     margin: 0 0 var(--space-2) 0;
     color: var(--color-gray-900);
   }
-  
+
   .feature-card-description {
     font-size: var(--text-sm);
     color: var(--color-gray-600);
     margin: 0;
     line-height: 1.5;
   }
-  
+
   .feature-card-toggle {
     padding-top: var(--space-2);
     border-top: 1px solid var(--color-gray-100);
   }
-  
+
   .feature-card-toggle .form-switch {
     display: flex;
     justify-content: flex-end;
   }
-  
+
   /* Mobile responsive */
   @media (max-width: 768px) {
     .features-grid {
       grid-template-columns: 1fr;
     }
   }
-  
+
   .integrations-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--space-4);
   }
-  
+
   .integration-card {
     padding: var(--space-4);
     background: var(--color-gray-50);
@@ -167,19 +167,19 @@
     border-radius: var(--radius-lg);
     text-align: center;
   }
-  
+
   .integration-icon {
     font-size: 3rem;
     color: var(--color-gray-600);
     margin-bottom: var(--space-2);
   }
-  
+
   .integration-name {
     font-size: var(--text-lg);
     font-weight: var(--font-semibold);
     margin-bottom: var(--space-2);
   }
-  
+
   .integration-status {
     font-size: var(--text-sm);
     margin-bottom: var(--space-3);

@@ -1,13 +1,13 @@
 <div class="container-fluid py-4" data-controller="menu-import">
   <!-- Back Navigation -->
   <div class="mb-3">
-    <%= link_to edit_restaurant_path(@restaurant, section: 'import'), 
+    <%= link_to edit_restaurant_path(@restaurant, section: 'import'),
         class: 'btn btn-outline-secondary',
         data: { turbo_frame: '_top' } do %>
-      <i class="bi bi-arrow-left me-1"></i> <%= t('.back_to_imports', default: 'Back to Imports') %>
+      <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> <%= t('.back_to_imports', default: 'Back to Imports') %>
     <% end %>
   </div>
-  
+
   <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap">
     <div class="mb-3 mb-md-0">
       <h3 class="h3 mb-2 import-title-editable"
@@ -15,34 +15,34 @@
           data-update-url="<%= restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>">
         <%= @ocr_menu_import.name.presence || t('.default_title', id: @ocr_menu_import.id) %>
         <span class="edit-indicator text-secondary ms-2">
-          <i class="bi bi-pencil"></i>
+          <i class="bi bi-pencil" aria-hidden="true"></i>
         </span>
       </h3>
       <div class="d-flex flex-wrap gap-3 text-muted small">
         <div class="d-flex align-items-center">
-          <i class="bi bi-calendar3 me-1"></i>
+          <i class="bi bi-calendar3 me-1" aria-hidden="true"></i>
           <span><%= t('.imported_ago', time: time_ago_in_words(@ocr_menu_import.created_at)) %></span>
         </div>
         <div class="d-flex align-items-center">
-          <i class="bi bi-clock-history me-1"></i>
+          <i class="bi bi-clock-history me-1" aria-hidden="true"></i>
           <span><%= t('.updated_at', timestamp: @ocr_menu_import.updated_at.strftime('%B %d, %Y at %I:%M %p')) %></span>
         </div>
       </div>
     </div>
     <div class="d-flex gap-2">
       <% if @ocr_menu_import.may_process? %>
-        <%= button_to process_pdf_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), 
-            method: :post, 
+        <%= button_to process_pdf_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
+            method: :post,
             class: 'btn btn-primary',
             form: { data: { turbo_confirm: t('.process_confirm') } } do %>
-          <i class="bi bi-gear me-1"></i> <%= t('.process_pdf') %>
+          <i class="bi bi-gear me-1" aria-hidden="true"></i> <%= t('.process_pdf') %>
         <% end %>
       <% end %>
     </div>
   </div>
 
   <!-- Progress Slider -->
-  <% 
+  <%
     # Calculate progress percentage based on status
     progress_percent = if @ocr_menu_import.completed?
                         100
@@ -62,11 +62,11 @@
         <span class="text-muted small">100%</span>
       </div>
       <div class="progress-slider-container">
-        <input type="range" 
-               class="progress-slider" 
-               min="0" 
-               max="100" 
-               value="<%= progress_percent %>" 
+        <input type="range"
+               class="progress-slider"
+               min="0"
+               max="100"
+               value="<%= progress_percent %>"
                disabled
                style="width: 100%;">
         <div class="progress-slider-track">
@@ -86,7 +86,7 @@
         <% end %>
       </p>
     </div>
-    
+
     <div class="card-body">
       <% if @ocr_menu_import.processing? %>
         <div class="text-center py-4">
@@ -95,19 +95,19 @@
           </div>
           <p class="text-muted mb-2"><%= t('.processing_title') %></p>
           <p class="text-muted small mb-4"><%= t('.processing_page', current: (@ocr_menu_import.current_page || 1), total: (@ocr_menu_import.total_pages || '?')) %></p>
-          
+
           <div class="progress mb-2 progress-bar-10">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                 role="progressbar" 
-                 style="width: <%= @ocr_menu_import.progress || 0 %>%" 
-                 aria-valuenow="<%= @ocr_menu_import.progress || 0 %>" 
-                 aria-valuemin="0" 
+            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                 role="progressbar"
+                 style="width: <%= @ocr_menu_import.progress || 0 %>%"
+                 aria-valuenow="<%= @ocr_menu_import.progress || 0 %>"
+                 aria-valuemin="0"
                  aria-valuemax="100">
             </div>
           </div>
           <p class="text-muted small"><%= t('.progress_complete', percent: (@ocr_menu_import.progress || 0)) %></p>
         </div>
-        
+
         <%= turbo_stream_from @ocr_menu_import %>
           <div id="<%= dom_id(@ocr_menu_import) %>_status">
             <!-- Turbo will update this when the status changes -->
@@ -116,15 +116,15 @@
           <div class="alert alert-danger">
             <div class="d-flex">
               <div class="flex-shrink-0 me-3">
-                <i class="bi bi-exclamation-triangle-fill"></i>
+                <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
               </div>
               <div>
                 <h5 class="alert-heading"><%= t('.failed_heading') %></h5>
                 <p class="mb-0"><%= @ocr_menu_import.error_message %></p>
                 <div class="mt-3">
-                  <%= button_to t('.try_again'), 
-                      process_pdf_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), 
-                      method: :post, 
+                  <%= button_to t('.try_again'),
+                      process_pdf_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
+                      method: :post,
                       class: 'btn btn-outline-danger btn-sm' %>
                 </div>
               </div>
@@ -134,7 +134,7 @@
           <div class="alert alert-warning">
             <div class="d-flex">
               <div class="flex-shrink-0 me-3">
-                <i class="bi bi-info-circle-fill"></i>
+                <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
               </div>
               <div>
                 <h5 class="alert-heading"><%= t('.no_items_heading') %></h5>
@@ -146,9 +146,9 @@
                 </ul>
                 <div class="d-flex gap-2">
                   <% if @ocr_menu_import.may_process? %>
-                    <%= button_to t('.try_again'), 
-                        process_pdf_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), 
-                        method: :post, 
+                    <%= button_to t('.try_again'),
+                        process_pdf_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
+                        method: :post,
                         class: 'btn btn-outline-primary btn-sm' %>
                   <% end %>
                   <%= link_to t('.upload_clearer_pdf'), new_restaurant_ocr_menu_import_path(@restaurant), class: 'btn btn-outline-secondary btn-sm' %>
@@ -163,11 +163,11 @@
                 <h2 class="h4 mb-1"><%= t('.imported_menu_title') %></h2>
               </div>
               <div class="w-100 w-md-auto">
-                <button type="button" 
-                        class="btn btn-danger btn-lg w-100 w-md-auto publish-btn" 
-                        data-bs-toggle="modal" 
+                <button type="button"
+                        class="btn btn-danger btn-lg w-100 w-md-auto publish-btn"
+                        data-bs-toggle="modal"
                         data-bs-target="#confirmModal">
-                  <i class="bi bi-check-circle me-1"></i> <%= t('.publish') %>
+                  <i class="bi bi-check-circle me-1" aria-hidden="true"></i> <%= t('.publish') %>
                 </button>
               </div>
             </div>
@@ -219,8 +219,8 @@
                                 <h3 class="h5 mb-0"><%= section.name %></h3>
                               </div>
                               <span class="btn btn-sm btn-outline-secondary px-2 py-1">
-                                <i class="bi bi-chevron-down"></i>
-                                <i class="section-drag-handle bi bi-grip-vertical"></i>
+                                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                                <i class="section-drag-handle bi bi-grip-vertical" aria-hidden="true"></i>
                               </span>
                             </div>
 
@@ -287,22 +287,22 @@
                                         <div class="d-flex flex-wrap gap-1 mb-2">
                                           <% if item.respond_to?(:is_vegetarian) && item.is_vegetarian %>
                                             <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-                                              <i class="bi bi-egg-fried me-1"></i> Vegetarian
+                                              <i class="bi bi-egg-fried me-1" aria-hidden="true"></i> Vegetarian
                                             </span>
                                           <% end %>
                                           <% if item.respond_to?(:is_vegan) && item.is_vegan %>
                                             <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-                                              <i class="bi bi-flower1 me-1"></i> Vegan
+                                              <i class="bi bi-flower1 me-1" aria-hidden="true"></i> Vegan
                                             </span>
                                           <% end %>
                                           <% if item.respond_to?(:is_gluten_free) && item.is_gluten_free %>
                                             <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25">
-                                              <i class="bi bi-x-circle me-1"></i> Gluten Free
+                                              <i class="bi bi-x-circle me-1" aria-hidden="true"></i> Gluten Free
                                             </span>
                                           <% end %>
                                           <% if item.respond_to?(:is_dairy_free) && item.is_dairy_free %>
                                             <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25">
-                                              <i class="bi bi-droplet me-1"></i> Dairy Free
+                                              <i class="bi bi-droplet me-1" aria-hidden="true"></i> Dairy Free
                                             </span>
                                           <% end %>
                                         </div>
@@ -331,11 +331,11 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body text-center p-4">
-        <div class="d-flex justify-content-center mb-3">
+          <div class="d-flex justify-content-center mb-3">
           <div class="bg-success bg-opacity-10 rounded-circle p-3">
-            <i class="bi bi-check-circle-fill text-success text-2rem"></i>
+            <i class="bi bi-check-circle-fill text-success text-2rem" aria-hidden="true"></i>
           </div>
-        </div>
+          </div>
         <h5 class="modal-title mb-3" id="confirmModalLabel">Publish Menu</h5>
         <p class="text-muted mb-4">
           Confirm to publish your menu. You can optionally use Sync publish to archive any existing sections/items not present in this import.
@@ -365,27 +365,27 @@
       </div>
       <form id="editItemForm" data-menu-import-target="editItemForm">
         <input type="hidden" name="item_id" data-menu-import-target="editItemId">
-        
+
         <div class="modal-body">
           <div class="mb-3">
             <label for="item_name" class="form-label"><%= t('.item_name') %></label>
-            <input type="text" class="form-control" id="item_name" name="item_name" data-menu-import-target="editItemName">
+            <input type="text" class="form-control" id="item_name" name="item_name" data-menu-import-target="editItemName" autocomplete="off">
           </div>
-          
+
           <div class="mb-3">
             <label for="item_description" class="form-label"><%= t('.description') %></label>
             <textarea class="form-control" id="item_description" name="item_description" rows="3" data-menu-import-target="editItemDescription"></textarea>
           </div>
-          
+
           <div class="row g-3 mb-3">
             <div class="col-md-4">
               <label for="item_price" class="form-label"><%= t('.price') %></label>
               <div class="input-group">
                 <span class="input-group-text">$</span>
-                <input type="text" class="form-control" id="item_price" name="item_price" placeholder="0.00" data-menu-import-target="editItemPrice">
+                <input type="text" class="form-control" id="item_price" name="item_price" placeholder="0.00" data-menu-import-target="editItemPrice" autocomplete="off">
               </div>
             </div>
-            
+
             <div class="col-md-4">
               <label for="item_section" class="form-label"><%= t('.section') %></label>
               <select class="form-select" id="item_section" name="item_section" data-menu-import-target="editItemSection" disabled title="<%= t('.section_disabled_title') %>">
@@ -397,10 +397,10 @@
             </div>
             <div class="col-md-4">
               <label for="item_position" class="form-label"><%= t('.position') %></label>
-              <input type="number" class="form-control" id="item_position" name="item_position" data-menu-import-target="editItemPosition">
+              <input type="number" class="form-control" id="item_position" name="item_position" data-menu-import-target="editItemPosition" autocomplete="off">
             </div>
           </div>
-          
+
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label"><%= t('.dietary_information') %></label>
@@ -444,16 +444,16 @@
             </div>
           </div>
         </div>
-        
+
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-danger me-auto" data-action="click->menu-import#deleteItem">
-            <i class="bi bi-trash me-1"></i> <%= t('.delete') %>
+            <i class="bi bi-trash me-1" aria-hidden="true"></i> <%= t('.delete') %>
           </button>
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             <%= t('.cancel') %>
           </button>
           <button type="button" class="btn btn-primary" data-action="click->menu-import#saveItem">
-            <i class="bi bi-save me-1"></i> <%= t('.save_changes') %>
+            <i class="bi bi-save me-1" aria-hidden="true"></i> <%= t('.save_changes') %>
           </button>
         </div>
       </form>
@@ -469,20 +469,20 @@
     font-weight: 600;
     padding: 0.75rem 1.5rem;
   }
-  
+
   @media (max-width: 768px) {
     .publish-btn {
       min-height: 56px;
       font-size: 1.125rem;
     }
   }
-  
+
   /* Progress Slider Styling */
   .progress-slider-container {
     position: relative;
     width: 100%;
   }
-  
+
   .progress-slider {
     -webkit-appearance: none;
     appearance: none;
@@ -494,7 +494,7 @@
     position: relative;
     z-index: 2;
   }
-  
+
   .progress-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -505,7 +505,7 @@
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
-  
+
   .progress-slider::-moz-range-thumb {
     width: 20px;
     height: 20px;
@@ -515,7 +515,7 @@
     border: none;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
-  
+
   .progress-slider-track {
     position: absolute;
     top: 50%;
@@ -528,22 +528,22 @@
     pointer-events: none;
     z-index: 1;
   }
-  
+
   .progress-slider-fill {
     height: 100%;
     background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
     border-radius: 4px;
     transition: width 0.3s ease;
   }
-  
+
   .progress-slider:disabled {
     cursor: default;
   }
-  
+
   .progress-slider:disabled::-webkit-slider-thumb {
     cursor: default;
   }
-  
+
   .progress-slider:disabled::-moz-range-thumb {
     cursor: default;
   }

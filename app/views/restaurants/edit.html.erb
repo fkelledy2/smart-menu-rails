@@ -21,46 +21,46 @@
 </ul>
 <ul class="nav nav-tabs overflow-auto flex-nowrap restaurant-tabs-main" id="restaurantTabs" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark active" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true"><%= t(".restaurantTab")%></button>
+    <button class="nav-link link-dark active" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true"><%= t(".restaurantTab") %></button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menusConfig" aria-selected="false"><%= t(".menuTab")%></button>
+    <button class="nav-link link-dark" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menusConfig" aria-selected="false"><%= t(".menuTab") %></button>
   </li>
   <% if @current_employee && @current_employee.role == 'manager' %>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="tables-tab" data-bs-toggle="tab" data-bs-target="#table" type="button" role="tab" aria-controls="tablesConfig" aria-selected="false"><%= t(".tableTab")%></button>
+        <button class="nav-link link-dark" id="tables-tab" data-bs-toggle="tab" data-bs-target="#table" type="button" role="tab" aria-controls="tablesConfig" aria-selected="false"><%= t(".tableTab") %></button>
       </li>
   <% end %>
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark" id="smart-menu-tab" data-bs-toggle="tab" data-bs-target="#smartmenu" type="button" role="tab" aria-controls="smartMenusConfig" aria-selected="false"><%= t('.smartQRTab') %></button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="employees-tab" data-bs-toggle="tab" data-bs-target="#employee" type="button" role="tab" aria-controls="employeesConfig" aria-selected="false"><%= t(".employeesTab")%></button>
+    <button class="nav-link link-dark" id="employees-tab" data-bs-toggle="tab" data-bs-target="#employee" type="button" role="tab" aria-controls="employeesConfig" aria-selected="false"><%= t(".employeesTab") %></button>
   </li>
   <% if @current_employee && @current_employee.role == 'manager' %>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="tips-tab" data-bs-toggle="tab" data-bs-target="#locale" type="button" role="tab" aria-controls="localesConfig" aria-selected="false"><%= t(".localesTab")%></button>
+        <button class="nav-link link-dark" id="tips-tab" data-bs-toggle="tab" data-bs-target="#locale" type="button" role="tab" aria-controls="localesConfig" aria-selected="false"><%= t(".localesTab") %></button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="tips-tab" data-bs-toggle="tab" data-bs-target="#tip" type="button" role="tab" aria-controls="tipsConfig" aria-selected="false"><%= t(".tipsTab")%></button>
+        <button class="nav-link link-dark" id="tips-tab" data-bs-toggle="tab" data-bs-target="#tip" type="button" role="tab" aria-controls="tipsConfig" aria-selected="false"><%= t(".tipsTab") %></button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="taxes-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab" aria-controls="taxesConfig" aria-selected="false"><%= t(".taxesTab")%></button>
+        <button class="nav-link link-dark" id="taxes-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab" aria-controls="taxesConfig" aria-selected="false"><%= t(".taxesTab") %></button>
       </li>
       <li class="nav-item flex-nowrap" role="presentation">
-        <button class="nav-link link-dark" id="openinghours-tab" data-bs-toggle="tab" data-bs-target="#openinghour" type="button" role="tab" aria-controls="openinghoursConfig" aria-selected="false"><%= t(".openingsTab")%></button>
+        <button class="nav-link link-dark" id="openinghours-tab" data-bs-toggle="tab" data-bs-target="#openinghour" type="button" role="tab" aria-controls="openinghoursConfig" aria-selected="false"><%= t(".openingsTab") %></button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="allergyns-tab" data-bs-toggle="tab" data-bs-target="#allergyn" type="button" role="tab" aria-controls="allergynConfig" aria-selected="false"><%= t(".allergynsTab")%></button>
+        <button class="nav-link link-dark" id="allergyns-tab" data-bs-toggle="tab" data-bs-target="#allergyn" type="button" role="tab" aria-controls="allergynConfig" aria-selected="false"><%= t(".allergynsTab") %></button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="sizes-tab" data-bs-toggle="tab" data-bs-target="#size" type="button" role="tab" aria-controls="sizeConfig" aria-selected="false"><%= t(".sizesTab")%></button>
+        <button class="nav-link link-dark" id="sizes-tab" data-bs-toggle="tab" data-bs-target="#size" type="button" role="tab" aria-controls="sizeConfig" aria-selected="false"><%= t(".sizesTab") %></button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="ordrs-tab" data-bs-toggle="tab" data-bs-target="#ordr" type="button" role="tab" aria-controls="ordrConfig" aria-selected="false"><%= t(".ordersTab")%></button>
+        <button class="nav-link link-dark" id="ordrs-tab" data-bs-toggle="tab" data-bs-target="#ordr" type="button" role="tab" aria-controls="ordrConfig" aria-selected="false"><%= t(".ordersTab") %></button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="tracks-tab" data-bs-toggle="tab" data-bs-target="#track" type="button" role="tab" aria-controls="trackConfig" aria-selected="false"><%= t(".tracksTab")%></button>
+        <button class="nav-link link-dark" id="tracks-tab" data-bs-toggle="tab" data-bs-target="#track" type="button" role="tab" aria-controls="trackConfig" aria-selected="false"><%= t(".tracksTab") %></button>
       </li>
   <% end %>
 </ul>

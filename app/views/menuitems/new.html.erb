@@ -4,7 +4,7 @@
         <h2><%= t(".menuItem") %></h2>
     </div>
     <div class="col-2">
-      <% 
+      <%
         # Determine the menusection for the cancel link
         menusection = @menuitem.menusection || @futureParentMenuSection
         menu = menusection&.menu || @menu

@@ -1,4 +1,4 @@
-<%# 
+<%#
   Restaurant Localization Section
   Multi-language support and translations
 %>
@@ -11,9 +11,9 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions', default: 'Quick Actions') %>
   </h2>
-  
+
   <div class="quick-actions-grid">
-    <%= link_to new_restaurant_restaurantlocale_path(restaurant), 
+    <%= link_to new_restaurant_restaurantlocale_path(restaurant),
         class: 'quick-action-btn',
         data: { turbo_frame: '_top' } do %>
       <i class="bi bi-plus-circle"></i>
@@ -28,11 +28,11 @@
     <i class="bi bi-globe"></i>
     <%= t('.localization', default: 'Localization & Languages') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.localization_description', default: 'Manage translations for your menus in multiple languages') %>
   </p>
-  
+
   <% if restaurant.restaurantlocales.any? %>
     <!-- Desktop Table View -->
     <div class="table-responsive languages-table-view">
@@ -73,7 +73,7 @@
                 <% end %>
               </td>
               <td class="text-end">
-                <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale), 
+                <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale),
                     class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                     data: { turbo_frame: '_top' } do %>
                   <i class="bi bi-pencil"></i>
@@ -84,7 +84,7 @@
         </tbody>
       </table>
     </div>
-    
+
     <!-- Mobile Card View -->
     <div class="languages-cards-view">
       <% restaurant.restaurantlocales.each do |locale| %>
@@ -103,13 +103,13 @@
                 </div>
               </div>
             </div>
-            <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale), 
+            <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale),
                 class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                 data: { turbo_frame: '_top' } do %>
               <i class="bi bi-pencil"></i>
             <% end %>
           </div>
-          
+
           <div>
             <% if locale.active? %>
               <span class="badge bg-success">
@@ -143,11 +143,11 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.common_languages', default: 'Common Languages') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.common_languages_description', default: 'Quickly add popular language translations') %>
   </p>
-  
+
   <div class="languages-quick-grid">
     <div class="language-quick-card">
       <div class="language-flag">🇪🇸</div>
@@ -157,7 +157,7 @@
         <i class="bi bi-plus"></i> <%= t('.add', default: 'Add') %>
       </button>
     </div>
-    
+
     <div class="language-quick-card">
       <div class="language-flag">🇫🇷</div>
       <h5><%= t('.french', default: 'French') %></h5>
@@ -166,7 +166,7 @@
         <i class="bi bi-plus"></i> <%= t('.add', default: 'Add') %>
       </button>
     </div>
-    
+
     <div class="language-quick-card">
       <div class="language-flag">🇩🇪</div>
       <h5><%= t('.german', default: 'German') %></h5>
@@ -175,7 +175,7 @@
         <i class="bi bi-plus"></i> <%= t('.add', default: 'Add') %>
       </button>
     </div>
-    
+
     <div class="language-quick-card">
       <div class="language-flag">🇮🇹</div>
       <h5><%= t('.italian', default: 'Italian') %></h5>
@@ -184,7 +184,7 @@
         <i class="bi bi-plus"></i> <%= t('.add', default: 'Add') %>
       </button>
     </div>
-    
+
     <div class="language-quick-card">
       <div class="language-flag">🇨🇳</div>
       <h5><%= t('.chinese', default: 'Chinese') %></h5>
@@ -193,7 +193,7 @@
         <i class="bi bi-plus"></i> <%= t('.add', default: 'Add') %>
       </button>
     </div>
-    
+
     <div class="language-quick-card">
       <div class="language-flag">🇯🇵</div>
       <h5><%= t('.japanese', default: 'Japanese') %></h5>
@@ -219,27 +219,27 @@
     font-size: 1.25rem;
     flex-shrink: 0;
   }
-  
+
   /* Language Views - Responsive */
   .languages-table-view {
     display: block;
   }
-  
+
   .languages-cards-view {
     display: none;
   }
-  
+
   /* Mobile: Show cards, hide table */
   @media (max-width: 768px) {
     .languages-table-view {
       display: none;
     }
-    
+
     .languages-cards-view {
       display: block;
     }
   }
-  
+
   /* Mobile Language Card */
   .language-card-mobile {
     background: var(--color-gray-50);
@@ -249,29 +249,29 @@
     margin-bottom: var(--space-3);
     transition: all var(--transition-base);
   }
-  
+
   .language-card-mobile:hover {
     box-shadow: var(--shadow-sm);
     border-color: var(--color-gray-300);
   }
-  
+
   .language-card-mobile:last-child {
     margin-bottom: 0;
   }
-  
+
   /* Quick Languages Grid */
   .languages-quick-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: var(--space-3);
   }
-  
+
   @media (max-width: 768px) {
     .languages-quick-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
-  
+
   .language-quick-card {
     padding: var(--space-4);
     background: var(--color-gray-50);
@@ -280,17 +280,17 @@
     text-align: center;
     transition: all var(--transition-base);
   }
-  
+
   .language-quick-card:hover {
     background: white;
     box-shadow: var(--shadow-sm);
   }
-  
+
   .language-flag {
     font-size: 2.5rem;
     margin-bottom: var(--space-2);
   }
-  
+
   .language-quick-card h5 {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);

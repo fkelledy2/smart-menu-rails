@@ -1,4 +1,4 @@
-<%# 
+<%#
   Menu QR Code Section
   QR code generation and management
 %>
@@ -13,22 +13,22 @@
       <i class="bi bi-lightning-charge"></i>
       <%= t('.quick_actions', default: 'Quick Actions') %>
     </h2>
-    
+
     <div class="quick-actions-grid">
       <button class="quick-action-btn" onclick="copyToClipboard()">
         <i class="bi bi-clipboard"></i>
         <span><%= t('.copy_url', default: 'Copy URL') %></span>
       </button>
-      
-      <%= link_to smartmenu_path(menu.smartmenu.slug), 
+
+      <%= link_to smartmenu_path(menu.smartmenu.slug),
           class: 'quick-action-btn',
           target: '_blank',
           title: 'Preview menu as staff (authenticated view)' do %>
         <i class="bi bi-eye"></i>
         <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
       <% end %>
-      
-      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'), 
+
+      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'),
           class: 'quick-action-btn quick-action-btn-secondary',
           target: '_blank',
           rel: 'noopener noreferrer',
@@ -46,18 +46,18 @@
     <i class="bi bi-qr-code"></i>
     <%= t('.qr_code', default: 'QR Code') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.qr_code_description', default: 'Let customers scan this QR code to view your menu') %>
   </p>
-  
+
   <!-- Hidden data for QR code generation -->
   <% if menu.smartmenu&.slug %>
     <div id="qrHost" style="display: none;"><%= request.host_with_port %></div>
     <div class="qrSlug" style="display: none;"><%= menu.smartmenu.slug %></div>
     <div id="qrIcon" style="display: none;"><%= image_url('qr-icon.svg') %></div>
     <div id="qrProtocol" style="display: none;"><%= request.protocol %></div>
-    
+
     <!-- Centered QR Code -->
     <div class="d-flex justify-content-center">
       <div class="qr-preview">
@@ -81,11 +81,11 @@
     <i class="bi bi-download"></i>
     <%= t('.download_options', default: 'Download Options') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.download_description', default: 'Download your QR code in different formats for printing') %>
   </p>
-  
+
   <div class="download-grid">
     <div class="download-option">
       <div class="download-icon">
@@ -97,7 +97,7 @@
         <i class="bi bi-download"></i> <%= t('.download', default: 'Download') %>
       </button>
     </div>
-    
+
     <div class="download-option">
       <div class="download-icon">
         <i class="bi bi-file-earmark-code"></i>
@@ -108,7 +108,7 @@
         <i class="bi bi-download"></i> <%= t('.download', default: 'Download') %>
       </button>
     </div>
-    
+
     <div class="download-option">
       <div class="download-icon">
         <i class="bi bi-file-earmark-pdf"></i>
@@ -128,23 +128,23 @@
     <i class="bi bi-lightbulb"></i>
     <%= t('.usage_tips', default: 'Usage Tips') %>
   </h2>
-  
+
   <div class="tips-list">
     <div class="tip-item">
       <i class="bi bi-check-circle text-success"></i>
       <p><%= t('.tip_1', default: 'Print QR codes on table tents or placemats for easy customer access') %></p>
     </div>
-    
+
     <div class="tip-item">
       <i class="bi bi-check-circle text-success"></i>
       <p><%= t('.tip_2', default: 'Include QR code on receipts and business cards') %></p>
     </div>
-    
+
     <div class="tip-item">
       <i class="bi bi-check-circle text-success"></i>
       <p><%= t('.tip_3', default: 'Place QR codes near your entrance for takeout customers') %></p>
     </div>
-    
+
     <div class="tip-item">
       <i class="bi bi-check-circle text-success"></i>
       <p><%= t('.tip_4', default: 'Test the QR code regularly to ensure it works correctly') %></p>
@@ -162,24 +162,24 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   .qr-preview svg {
     max-width: 100%;
     height: auto;
   }
-  
+
   .qr-code-container {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
   }
-  
+
   .qr-code-container canvas {
     max-width: 100%;
     height: auto;
   }
-  
+
   .qr-placeholder {
     text-align: center;
     padding: var(--space-6);
@@ -189,17 +189,17 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   .qr-placeholder i {
     font-size: 4rem;
   }
-  
+
   .download-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--space-4);
   }
-  
+
   .download-option {
     padding: var(--space-4);
     background: var(--color-gray-50);
@@ -207,36 +207,36 @@
     border-radius: var(--radius-lg);
     text-align: center;
   }
-  
+
   .download-icon {
     font-size: 3rem;
     color: var(--color-primary);
     margin-bottom: var(--space-2);
   }
-  
+
   .download-option h5 {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     margin-bottom: var(--space-1);
   }
-  
+
   .tips-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
   }
-  
+
   .tip-item {
     display: flex;
     align-items-start;
     gap: var(--space-2);
   }
-  
+
   .tip-item i {
     font-size: 1.25rem;
     margin-top: 2px;
   }
-  
+
   .tip-item p {
     margin: 0;
     color: var(--color-gray-700);
@@ -258,14 +258,14 @@
       });
     }
   }
-  
+
   // Initialize styled QR code when section loads
   document.addEventListener('DOMContentLoaded', function() {
     if (typeof initialiseSlugs === 'function') {
       initialiseSlugs();
     }
   });
-  
+
   // Also initialize on Turbo Frame load
   document.addEventListener('turbo:frame-load', function() {
     if (typeof initialiseSlugs === 'function') {

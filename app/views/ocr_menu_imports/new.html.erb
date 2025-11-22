@@ -6,13 +6,13 @@
           <h3 class="h5 mb-0"><%= t('.title') %></h3>
           <p class="text-muted mb-0 small"><%= t('.subtitle') %></p>
         </div>
-        
+
         <div class="card-body">
           <%= form_with(model: [@restaurant, @ocr_menu_import], local: true, html: { class: 'needs-validation', novalidate: true }) do |f| %>
             <div class="mb-4">
               <%= f.label :name, t('.name_label'), class: 'form-label' %>
-              <%= f.text_field :name, 
-                  class: 'form-control', 
+              <%= f.text_field :name,
+                  class: 'form-control',
                   placeholder: t('.name_placeholder'),
                   required: true %>
               <div class="invalid-feedback">
@@ -29,10 +29,10 @@
                 <div class="mb-2">
                   <label for="file-upload" class="btn btn-outline-primary btn-sm">
                     <i class="bi bi-upload me-1"></i> <%= t('.choose_file') %>
-                    <%= f.file_field :pdf_file, 
-                        id: 'file-upload', 
-                        class: 'd-none', 
-                        accept: 'application/pdf', 
+                    <%= f.file_field :pdf_file,
+                        id: 'file-upload',
+                        class: 'd-none',
+                        accept: 'application/pdf',
                         required: true,
                         onchange: "document.getElementById('file-name').textContent = this.files[0]?.name || '#{I18n.t('ocr_menu_imports.new.no_file_chosen')}'" %>
                   </label>
@@ -54,7 +54,7 @@
           <% end %>
         </div>
       </div>
-    
+
       <div class="card mt-4">
         <div class="card-header">
           <h3 class="h5 mb-0"><%= t('.tips_title') %></h3>

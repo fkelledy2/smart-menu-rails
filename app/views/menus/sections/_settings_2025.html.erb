@@ -1,4 +1,4 @@
-<%# 
+<%#
   Menu Settings Section
   Core configuration toggles for individual menu
 %>
@@ -12,7 +12,7 @@
     <i class="bi bi-toggles"></i>
     <%= t('.general_settings', default: 'General Settings') %>
   </h2>
-  
+
   <%= menu_form_with(menu, auto_save: true) do |form| %>
     <div class="form-group-2025 mb-4">
       <%= form.label :status, class: 'form-label-2025' do %>
@@ -39,7 +39,7 @@
     <i class="bi bi-sliders"></i>
     <%= t('.feature_toggles', default: 'Feature Toggles') %>
   </h2>
-  
+
   <%= menu_form_with(menu, auto_save: true) do |form| %>
   <div class="features-grid">
     <!-- Display Images -->
@@ -63,8 +63,8 @@
         <% end %>
         <div class="form-check form-switch">
           <input type="hidden" name="menu[displayImages]" value="false">
-          <input class="form-check-input" 
-                 type="checkbox" 
+          <input class="form-check-input"
+                 type="checkbox"
                  name="menu[displayImages]"
                  id="menu_displayImages_settings"
                  value="true"
@@ -74,7 +74,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Display Images in Popup -->
     <div id="feature-card-popup" class="feature-card <%= 'feature-card-disabled' unless (restaurant.displayImagesInPopup && menu.displayImages) %>">
       <div class="feature-card-icon bg-success">
@@ -96,8 +96,8 @@
         <% end %>
         <div class="form-check form-switch">
           <input type="hidden" name="menu[displayImagesInPopup]" value="false">
-          <input class="form-check-input" 
-                 type="checkbox" 
+          <input class="form-check-input"
+                 type="checkbox"
                  name="menu[displayImagesInPopup]"
                  id="menu_displayImagesInPopup_settings"
                  value="true"
@@ -108,7 +108,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Allow Ordering -->
     <div class="feature-card <%= 'feature-card-disabled' unless restaurant.allowOrdering %>">
       <div class="feature-card-icon bg-warning">
@@ -130,8 +130,8 @@
         <% end %>
         <div class="form-check form-switch">
           <input type="hidden" name="menu[allowOrdering]" value="false">
-          <input class="form-check-input" 
-                 type="checkbox" 
+          <input class="form-check-input"
+                 type="checkbox"
                  name="menu[allowOrdering]"
                  id="menu_allowOrdering_settings"
                  value="true"
@@ -141,7 +141,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Inventory Tracking -->
     <div class="feature-card">
       <div class="feature-card-icon bg-danger">
@@ -155,8 +155,8 @@
       </div>
       <div class="feature-card-toggle">
         <div class="form-check form-switch">
-          <input class="form-check-input" 
-                 type="checkbox" 
+          <input class="form-check-input"
+                 type="checkbox"
                  name="menu[inventoryTracking]"
                  id="menu_inventoryTracking_settings"
                  value="true"
@@ -182,7 +182,7 @@
         <%= t('.settings_info_desc', default: 'These settings control functionality for this specific menu. Changes are saved automatically.') %>
       </p>
       <p class="text-sm text-muted mb-2">
-        <i class="bi bi-lock"></i> <strong><%= t('.parent_restriction', default: 'Note:') %></strong> 
+        <i class="bi bi-lock"></i> <strong><%= t('.parent_restriction', default: 'Note:') %></strong>
         <%= t('.parent_restriction_desc', default: 'Settings disabled at the restaurant level cannot be enabled for individual menus. Enable them at the restaurant level first.') %>
       </p>
       <ul class="text-sm text-muted mb-0 ps-3">
@@ -202,7 +202,7 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--space-4);
   }
-  
+
   .feature-card {
     display: flex;
     flex-direction: column;
@@ -213,12 +213,12 @@
     border-radius: var(--radius-lg);
     transition: all var(--transition-base);
   }
-  
+
   .feature-card:hover {
     border-color: var(--color-gray-300);
     box-shadow: var(--shadow-sm);
   }
-  
+
   .feature-card-icon {
     width: 48px;
     height: 48px;
@@ -230,25 +230,25 @@
     font-size: 1.5rem;
     flex-shrink: 0;
   }
-  
+
   .feature-card-content {
     flex: 1;
   }
-  
+
   .feature-card-title {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     margin: 0 0 var(--space-2) 0;
     color: var(--color-gray-900);
   }
-  
+
   .feature-card-description {
     font-size: var(--text-sm);
     color: var(--color-gray-600);
     margin: 0;
     line-height: 1.5;
   }
-  
+
   .feature-card-toggle {
     padding-top: var(--space-2);
     border-top: 1px solid var(--color-gray-100);
@@ -257,47 +257,47 @@
     justify-content: flex-end;
     gap: var(--space-2);
   }
-  
+
   .feature-card-toggle .form-switch {
     display: flex;
     justify-content: flex-end;
   }
-  
+
   /* Mobile responsive */
   @media (max-width: 768px) {
     .features-grid {
       grid-template-columns: 1fr;
     }
   }
-  
+
   .bg-light {
     background: var(--color-gray-50) !important;
   }
-  
+
   /* Disabled feature card styling */
   .feature-card-disabled {
     opacity: 0.7;
     background: var(--color-gray-50);
   }
-  
+
   .feature-card-disabled .feature-card-icon {
     opacity: 0.5;
   }
-  
+
   .feature-card-disabled .feature-card-title {
     color: var(--color-gray-600);
   }
-  
+
   .feature-card-disabled:hover {
     border-color: var(--color-gray-200);
     box-shadow: none;
     cursor: not-allowed;
   }
-  
+
   .feature-card-disabled .form-check-input:disabled {
     cursor: not-allowed;
   }
-  
+
   .badge {
     font-size: 0.7rem;
     padding: 0.25rem 0.5rem;

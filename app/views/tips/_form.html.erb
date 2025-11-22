@@ -4,7 +4,7 @@
   <% else %>
     <%= form.hidden_field :restaurant_id %>
   <% end %>
-  
+
   <!-- Percentage -->
   <div class="form-group-2025 mb-4">
     <%= form.label :percentage, class: 'form-label-2025' do %>
@@ -12,7 +12,7 @@
       <span class="text-danger">*</span>
     <% end %>
     <div class="input-group">
-      <%= form.number_field :percentage, 
+      <%= form.number_field :percentage,
           class: 'form-control-2025',
           placeholder: t('.percentage_placeholder', default: 'e.g., 15'),
           step: 0.01,
@@ -25,7 +25,7 @@
       <%= t('.percentage_help', default: 'Enter the tip percentage (0-100)') %>
     </div>
   </div>
-  
+
   <!-- Error Messages -->
   <% if tip.errors.any? %>
     <div class="alert alert-danger" role="alert">
@@ -40,15 +40,15 @@
       </ul>
     </div>
   <% end %>
-  
+
   <!-- Form Actions -->
   <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-    <%= link_to restaurant_tips_path(@restaurant || tip.restaurant), 
+    <%= link_to restaurant_tips_path(@restaurant || tip.restaurant),
         class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
       <%= t('common.cancel', default: 'Cancel') %>
     <% end %>
-    
-    <%= form.submit t('common.save', default: 'Save'), 
+
+    <%= form.submit t('common.save', default: 'Save'),
         class: 'btn-2025 btn-2025-primary btn-2025-md' %>
   </div>
 <% end %>

@@ -119,7 +119,7 @@
                 </span>
             </div>
         </div>
-        <div class="height-40"class="container-fluid">
+        <div class="height-40" class="container-fluid">
             <nav id="navbar-example2" class="position-relative-left-neg10 nav flex-nowrap overflow-auto">
               <ul class="position-relative-left-neg37 d-flex">
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
@@ -235,7 +235,7 @@
                                                             <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
                                                                 <%= allergyn.symbol %>
                                                             </button>
-                                                        <%end %>
+                                                        <% end %>
                                                     </div>
                                                 </span>
                                             </div>
@@ -246,9 +246,9 @@
                         </div>
                     </div>
                 <% end %>
-            <%end %>
+            <% end %>
         </div>
-    <%end %>
+    <% end %>
     <% if @allergyns && @allergyns.length > 0 %>
         <div class="section-spacing-top" id="menusection_allergyns"></div>
         <div class="card">

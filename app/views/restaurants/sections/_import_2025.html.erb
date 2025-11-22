@@ -1,4 +1,4 @@
-<%# 
+<%#
   OCR Menu Import Section
   Upload and process PDF menus
 %>
@@ -24,12 +24,12 @@
     <i class="bi bi-cloud-upload"></i>
     <%= t('.upload_title', default: 'Upload Menu PDF') %>
   </h2>
-  
+
   <%= form_with(model: [restaurant, restaurant.ocr_menu_imports.new], local: true, html: { class: 'needs-validation', novalidate: true }, data: { turbo_frame: '_top', testid: 'import-form' }) do |f| %>
     <div class="form-group-2025 mb-4">
       <%= f.label :name, t('.name_label', default: 'Menu Name'), class: 'form-label-2025' %>
-      <%= f.text_field :name, 
-          class: 'form-control-2025', 
+      <%= f.text_field :name,
+          class: 'form-control-2025',
           placeholder: t('.name_placeholder', default: 'e.g., Summer Menu 2024'),
           required: true,
           data: { testid: 'import-name-input' } %>
@@ -50,10 +50,10 @@
         <div class="file-upload-content">
           <label for="file-upload" class="btn btn-outline-primary btn-sm">
             <i class="bi bi-upload me-1"></i> <%= t('.choose_file', default: 'Choose File') %>
-            <%= f.file_field :pdf_file, 
-                id: 'file-upload', 
-                class: 'd-none', 
-                accept: 'application/pdf', 
+            <%= f.file_field :pdf_file,
+                id: 'file-upload',
+                class: 'd-none',
+                accept: 'application/pdf',
                 required: true,
                 onchange: "document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'",
                 data: { testid: 'import-pdf-input' } %>
@@ -83,15 +83,15 @@
   document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form[action*="ocr_menu_imports"]');
     if (!form) return;
-    
+
     const nameInput = form.querySelector('input[name="ocr_menu_import[name]"]');
     const fileInput = form.querySelector('input[name="ocr_menu_import[pdf_file]"]');
     const submitBtn = document.getElementById('upload-submit-btn');
-    
+
     function checkFormValidity() {
       const hasName = nameInput && nameInput.value.trim() !== '';
       const hasFile = fileInput && fileInput.files.length > 0;
-      
+
       if (hasName && hasFile) {
         submitBtn.disabled = false;
         submitBtn.classList.remove('btn-secondary');
@@ -102,17 +102,17 @@
         submitBtn.classList.add('btn-secondary');
       }
     }
-    
+
     // Check on input change
     if (nameInput) {
       nameInput.addEventListener('input', checkFormValidity);
       nameInput.addEventListener('blur', checkFormValidity);
     }
-    
+
     if (fileInput) {
       fileInput.addEventListener('change', checkFormValidity);
     }
-    
+
     // Initial check
     checkFormValidity();
   });
@@ -124,7 +124,7 @@
     <i class="bi bi-lightbulb"></i>
     <%= t('.tips_title', default: 'Tips for Best Results') %>
   </h2>
-  
+
   <div class="tips-list">
     <div class="tip-item">
       <div class="tip-icon">
@@ -137,7 +137,7 @@
         </p>
       </div>
     </div>
-    
+
     <div class="tip-item">
       <div class="tip-icon">
         <i class="bi bi-card-list text-primary"></i>
@@ -149,7 +149,7 @@
         </p>
       </div>
     </div>
-    
+
     <div class="tip-item">
       <div class="tip-icon">
         <i class="bi bi-clock-history text-warning"></i>
@@ -172,11 +172,11 @@
       <i class="bi bi-clock-history"></i>
       <%= t('.recent_imports', default: 'Recent Imports') %>
     </h2>
-    
+
     <div class="list-group list-group-flush">
       <% recent_imports.each do |import| %>
         <div class="list-group-item list-group-item-action d-flex align-items-center p-0 import-row" data-testid="import-row-<%= import.id %>">
-          <%= link_to restaurant_ocr_menu_import_path(restaurant, import), 
+          <%= link_to restaurant_ocr_menu_import_path(restaurant, import),
               class: "flex-grow-1 p-3 text-decoration-none text-reset",
               data: { testid: "import-link-#{import.id}", turbo_frame: '_top' } do %>
             <div class="d-flex w-100 justify-content-between align-items-center">
@@ -233,64 +233,64 @@
     background-color: #f9fafb;
     transition: all 0.2s;
   }
-  
+
   .file-upload-area:hover {
     border-color: #9ca3af;
     background-color: #f3f4f6;
   }
-  
+
   .file-upload-icon {
     font-size: 3rem;
     color: #9ca3af;
     margin-bottom: 1rem;
   }
-  
+
   .file-upload-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
   }
-  
+
   .file-upload-filename {
     font-size: 0.875rem;
     color: #6b7280;
     margin-top: 0.5rem;
   }
-  
+
   .file-upload-hint {
     font-size: 0.75rem;
     color: #9ca3af;
     margin: 0;
   }
-  
+
   .form-help-2025 {
     font-size: var(--text-sm);
     color: var(--color-gray-500);
     margin-top: var(--space-1);
   }
-  
+
   .tips-list {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
   }
-  
+
   .tip-item {
     display: flex;
     gap: 1rem;
   }
-  
+
   .tip-icon {
     font-size: 1.5rem;
     flex-shrink: 0;
   }
-  
+
   .tip-content h6 {
     font-weight: 600;
     margin-bottom: 0.25rem;
   }
-  
+
   /* Mobile-friendly button styling */
   #upload-submit-btn {
     min-height: 48px;
@@ -298,29 +298,29 @@
     font-weight: 600;
     padding: 0.75rem 1.5rem;
   }
-  
+
   @media (max-width: 768px) {
     #upload-submit-btn {
       min-height: 56px;
       font-size: 1.125rem;
     }
   }
-  
+
   /* Disabled state styling */
   #upload-submit-btn:disabled {
     cursor: not-allowed;
     opacity: 0.6;
   }
-  
+
   /* Import row and delete button styling */
   .import-row {
     transition: background-color 0.2s;
   }
-  
+
   .import-row:hover {
     background-color: #f9fafb;
   }
-  
+
   .delete-import-btn {
     padding: 0.75rem 1rem;
     font-size: 1.125rem;
@@ -329,16 +329,16 @@
     opacity: 0.6;
     transition: opacity 0.2s, background-color 0.2s;
   }
-  
+
   .delete-import-btn:hover {
     opacity: 1;
     background-color: #fee2e2;
   }
-  
+
   .delete-import-btn form {
     margin: 0;
   }
-  
+
   .import-row .delete-import-btn i {
     font-size: 1rem;
   }

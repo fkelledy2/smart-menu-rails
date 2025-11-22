@@ -20,56 +20,56 @@
   <div class="form-group row">
     <%= form.label :menusection_id, class: 'col-2 col-form-label' %>
     <div class="col-10">
-        <%= form.collection_select :menusection_id, Menusection.all ,:id, :name, options = {:prompt => t(".selectMenuSection")}, html_options = {disabled: 'disabled' }%>
+        <%= form.collection_select :menusection_id, Menusection.all ,:id, :name, options = {:prompt => t(".selectMenuSection")}, html_options = {disabled: 'disabled' } %>
     </div>
   </div>
   <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :name, class: 'col-2 col-form-label' %>
     <div class="col-10">
-      <%= form.text_field :name, class: 'form-control', disabled: 'disabled'  %>
+      <%= form.text_field :name, class: 'form-control', disabled: 'disabled' %>
     </div>
   </div>
   <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :description, class: 'col-2 col-form-label' %>
     <div class="col-10">
-      <%= form.text_area :description, class: 'form-control', disabled: 'disabled'  %>
+      <%= form.text_area :description, class: 'form-control', disabled: 'disabled' %>
     </div>
   </div>
   <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :image, class: 'col-2 col-form-label' %>
     <div class="col-10">
-        <%= form.text_field :image, class: 'form-control', disabled: 'disabled'  %>
+        <%= form.text_field :image, class: 'form-control', disabled: 'disabled' %>
     </div>
   </div>
   <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :status, class: 'col-2 col-form-label' %>
     <div class="col-10">
-      <%= form.select :status, options_for_select(Menuitem.statuses.keys.to_a, form.object.status), {}, disabled: 'disabled'  %>
+      <%= form.select :status, options_for_select(Menuitem.statuses.keys.to_a, form.object.status), {}, disabled: 'disabled' %>
     </div>
   </div>
   <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :sequence, class: 'col-2 col-form-label' %>
     <div class="col-10">
-        <%= form.text_field :sequence, class: 'form-control', disabled: 'disabled'  %>
+        <%= form.text_field :sequence, class: 'form-control', disabled: 'disabled' %>
     </div>
   </div>
   <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :calories, class: 'col-2 col-form-label' %>
     <div class="col-10">
-        <%= form.text_field :calories, class: 'form-control', disabled: 'disabled'  %>
+        <%= form.text_field :calories, class: 'form-control', disabled: 'disabled' %>
     </div>
   </div>
   <div class="spacing-sm"></div>
   <div class="form-group row">
     <%= form.label :price, class: 'col-2 col-form-label' %>
     <div class="col-10">
-        <%= form.text_field :price, class: 'form-control', disabled: 'disabled'  %>
+        <%= form.text_field :price, class: 'form-control', disabled: 'disabled' %>
     </div>
   </div>
   <div class="spacing-sm"></div>

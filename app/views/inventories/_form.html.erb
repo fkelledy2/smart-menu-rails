@@ -1,4 +1,4 @@
-<% 
+<%
   # Determine the restaurant for nested routing
   restaurant = if inventory.menuitem&.menusection&.menu&.restaurant
                  inventory.menuitem.menusection.menu.restaurant
@@ -14,7 +14,7 @@
       <span class="float-md-end"><%= form.label :menuItem, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.collection_select :menuitem_id, Menuitem.all ,:id, :name, options = {:prompt => t('.select_menu_item')}%>
+      <%= form.collection_select :menuitem_id, Menuitem.all ,:id, :name, options = {:prompt => t('.select_menu_item')} %>
     </div>
   </div>
   <div class="spacing-sm"></div>

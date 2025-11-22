@@ -1,4 +1,4 @@
-<% 
+<%
   # Determine the menu and restaurant for nested routing
   menu = menuavailability.menu || @futureParentMenu
   raise "No menu context available for menuavailability form" unless menu
@@ -61,7 +61,7 @@
       <span class="float-md-end"><%= form.label :menu_id, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= form.collection_select :menu_id, Menu.where( restaurant_id: @menuavailability.get_parent_restaurant).all ,:id, :name, options = {:prompt => t(".selectMenu")}%>
+      <%= form.collection_select :menu_id, Menu.where( restaurant_id: @menuavailability.get_parent_restaurant).all ,:id, :name, options = {:prompt => t(".selectMenu")} %>
     </div>
   </div>
   <div class="spacing-md"></div>

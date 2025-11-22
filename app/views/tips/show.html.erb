@@ -17,7 +17,7 @@
 <div class="page-header">
   <div class="row">
     <div class="col-10">
-        <h1><%=t('.tip')%></h1>
+        <h1><%= t('.tip') %></h1>
     </div>
     <div class="col-2">
         <span class="float-end">
@@ -39,5 +39,5 @@
         <%= form.text_field :percentage, class: 'form-control', disabled: 'disabled' %>
     </div>
   </div>
-  <%= form.hidden_field :restaurant_id%>
+  <%= form.hidden_field :restaurant_id %>
 <% end %>

@@ -9,7 +9,7 @@
   <% unless restaurantlocale.persisted? %>
     <%= form.hidden_field :status, value: 'active' %>
   <% end %>
-  
+
   <!-- Language/Locale -->
   <div class="form-group-2025 mb-4">
     <%= form.label :locale, class: 'form-label-2025' do %>
@@ -18,7 +18,7 @@
         <span class="text-danger">*</span>
       <% end %>
     <% end %>
-    
+
     <% if restaurantlocale.persisted? %>
       <!-- Show as read-only display on edit -->
       <%= form.hidden_field :locale %>
@@ -30,11 +30,11 @@
       </div>
     <% else %>
       <!-- Editable select on new -->
-      <%= form.select :locale, 
+      <%= form.select :locale,
           [
-            ['English', 'EN'], 
-            ['French', 'FR'], 
-            ['Italian', 'IT'], 
+            ['English', 'EN'],
+            ['French', 'FR'],
+            ['Italian', 'IT'],
             ['Spanish', 'ES'],
             ['German', 'DE'],
             ['Portuguese', 'PT'],
@@ -42,8 +42,8 @@
             ['Japanese', 'JA'],
             ['Korean', 'KO'],
             ['Arabic', 'AR']
-          ], 
-          {}, 
+          ],
+          {},
           { class: 'form-control-2025',
             required: true,
             data: { skip_tomselect: 'true' } } %>
@@ -52,21 +52,21 @@
       </div>
     <% end %>
   </div>
-  
+
   <!-- Default Language -->
   <div class="form-group-2025 mb-4">
     <%= form.label :dfault, class: 'form-label-2025' do %>
       <%= t('.default', default: 'Default Language') %>
     <% end %>
     <div class="form-check form-switch">
-      <%= form.check_box :dfault, 
+      <%= form.check_box :dfault,
           { class: 'form-check-input', role: 'switch', data: { skip_tomselect: 'true' } } %>
       <label class="form-check-label text-muted">
         <%= t('.default_help', default: 'Set as default language for your restaurant') %>
       </label>
     </div>
   </div>
-  
+
   <!-- Error Messages -->
   <% if restaurantlocale.errors.any? %>
     <div class="alert alert-danger" role="alert">
@@ -81,15 +81,15 @@
       </ul>
     </div>
   <% end %>
-  
+
   <!-- Form Actions -->
   <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-    <%= link_to edit_restaurant_path(restaurantlocale.restaurant, section: 'settings'), 
+    <%= link_to edit_restaurant_path(restaurantlocale.restaurant, section: 'settings'),
         class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
       <%= t('common.cancel', default: 'Cancel') %>
     <% end %>
-    
-    <%= form.submit t('common.save', default: 'Save'), 
+
+    <%= form.submit t('common.save', default: 'Save'),
         class: 'btn-2025 btn-2025-primary btn-2025-md' %>
   </div>
 <% end %>

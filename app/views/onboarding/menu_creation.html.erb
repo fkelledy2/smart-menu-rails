@@ -6,13 +6,13 @@
         <p class="text-muted"><%= t('onboarding.menu_creation.subtitle') %></p>
       </div>
 
-      <%= form_with model: @onboarding, url: onboarding_path, method: :patch, local: true, 
+      <%= form_with model: @onboarding, url: onboarding_path, method: :patch, local: true,
                     data: { step: 4, turbo_method: "patch" }, class: "needs-validation", novalidate: true do |f| %>
-        
+
         <div class="mb-4">
           <%= f.label :menu_name, t('onboarding.menu_creation.menu_name_label'), class: "form-label" %>
-          <%= f.text_field :menu_name, 
-              class: "form-control form-control-lg", 
+          <%= f.text_field :menu_name,
+              class: "form-control form-control-lg",
               placeholder: t('onboarding.menu_creation.menu_name_placeholder'),
               value: @onboarding&.menu_name || t('onboarding.menu_creation.menu_name_default'),
               required: true %>
@@ -26,12 +26,12 @@
           <div id="menu-items-container">
             <!-- Menu items will be added here -->
           </div>
-          
+
           <button type="button" class="btn btn-outline-primary" id="add-item-btn">
             <i class="fas fa-plus me-2"></i>
             <%= t('onboarding.menu_creation.add_menu_item') %>
           </button>
-          
+
           <div class="form-text mt-2">
             <%= t('onboarding.menu_creation.menu_items_help') %>
           </div>
@@ -42,28 +42,28 @@
           <label class="form-label"><%= t('onboarding.menu_creation.quick_start_label') %></label>
           <div class="row g-2">
             <div class="col-6">
-              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn" 
+              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn"
                       data-template="italian">
                 <i class="fas fa-pizza-slice me-1"></i>
                 <%= t('onboarding.menu_creation.templates.italian') %>
               </button>
             </div>
             <div class="col-6">
-              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn" 
+              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn"
                       data-template="american">
                 <i class="fas fa-hamburger me-1"></i>
                 <%= t('onboarding.menu_creation.templates.american') %>
               </button>
             </div>
             <div class="col-6">
-              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn" 
+              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn"
                       data-template="mexican">
                 <i class="fas fa-pepper-hot me-1"></i>
                 <%= t('onboarding.menu_creation.templates.mexican') %>
               </button>
             </div>
             <div class="col-6">
-              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn" 
+              <button type="button" class="btn btn-outline-secondary btn-sm w-100 template-btn"
                       data-template="asian">
                 <i class="fas fa-fish me-1"></i>
                 <%= t('onboarding.menu_creation.templates.asian') %>
@@ -78,7 +78,7 @@
             <i class="fas fa-arrow-left me-2"></i>
             <%= t('onboarding.menu_creation.back') %>
           <% end %>
-          
+
           <button type="submit" class="btn btn-primary btn-lg btn-wizard" id="continue-btn" disabled>
             <%= t('onboarding.menu_creation.create_menu') %>
             <i class="fas fa-arrow-right ms-2"></i>
@@ -87,7 +87,7 @@
       <% end %>
     </div>
   </div>
-  
+
   <div class="col-lg-6">
     <div class="sticky-top top-2rem">
       <h5 class="mb-3">
@@ -113,21 +113,21 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
-    
+
     <div class="row g-2">
       <div class="col-md-6">
-        <input type="text" 
-               class="form-control item-name" 
-               placeholder="<%= t('onboarding.menu_creation.item_name_placeholder') %>" 
+        <input type="text"
+               class="form-control item-name"
+               placeholder="<%= t('onboarding.menu_creation.item_name_placeholder') %>"
                name="onboarding_session[menu_items][][name]"
                required>
       </div>
       <div class="col-md-6">
         <div class="input-group">
           <span class="input-group-text">$</span>
-          <input type="number" 
-                 class="form-control item-price" 
-                 placeholder="<%= t('onboarding.menu_creation.item_price_placeholder') %>" 
+          <input type="number"
+                 class="form-control item-price"
+                 placeholder="<%= t('onboarding.menu_creation.item_price_placeholder') %>"
                  name="onboarding_session[menu_items][][price]"
                  step="0.01"
                  min="0"
@@ -135,9 +135,9 @@
         </div>
       </div>
     </div>
-    
+
     <div class="mt-2">
-      <textarea class="form-control item-description" 
+      <textarea class="form-control item-description"
                 placeholder="<%= t('onboarding.menu_creation.item_description_placeholder') %>"
                 name="onboarding_session[menu_items][][description]"
                 rows="2"></textarea>
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const addBtn = document.getElementById('add-item-btn');
   const continueBtn = document.getElementById('continue-btn');
   const menuPreview = document.getElementById('menu-preview');
-  
+
   // Menu templates
   const templates = {
     italian: [
@@ -176,45 +176,45 @@ document.addEventListener('DOMContentLoaded', function() {
       { name: '<%= j(t('onboarding.menu_creation.template_items.asian.spring_rolls.name')) %>', price: '7.99', description: '<%= j(t('onboarding.menu_creation.template_items.asian.spring_rolls.description')) %>' }
     ]
   };
-  
+
   // Add menu item
   function addMenuItem(itemData = {}) {
     const template = document.getElementById('menu-item-template');
     const clone = template.content.cloneNode(true);
-    
+
     // Set index
     const itemDiv = clone.querySelector('.menu-item-input');
     itemDiv.dataset.itemIndex = itemIndex;
-    
+
     // Fill data if provided
     if (itemData.name) clone.querySelector('.item-name').value = itemData.name;
     if (itemData.price) clone.querySelector('.item-price').value = itemData.price;
     if (itemData.description) clone.querySelector('.item-description').value = itemData.description;
-    
+
     // Update name attributes with index
     clone.querySelectorAll('input, textarea').forEach(input => {
       input.name = input.name.replace('[]', `[${itemIndex}]`);
     });
-    
+
     // Add remove functionality
     clone.querySelector('.remove-item-btn').addEventListener('click', function() {
       itemDiv.remove();
       updatePreview();
       updateContinueButton();
     });
-    
+
     // Add input listeners for live preview
     clone.querySelectorAll('input, textarea').forEach(input => {
       input.addEventListener('input', updatePreview);
     });
-    
+
     container.appendChild(clone);
     itemIndex++;
-    
+
     updatePreview();
     updateContinueButton();
   }
-  
+
   // Update menu preview
   function updatePreview() {
     const menuName = document.querySelector('#onboarding_session_menu_name').value || '<%= j(t('onboarding.menu_creation.menu_name_default')) %>';
@@ -225,11 +225,11 @@ document.addEventListener('DOMContentLoaded', function() {
         description: item.querySelector('.item-description').value
       };
     }).filter(item => item.name);
-    
+
     let html = `<div class="text-center mb-4">
                   <h4 class="text-primary">${menuName}</h4>
                 </div>`;
-    
+
     if (items.length === 0) {
       html += `<div class="text-center text-muted py-3">
                  <i class="fas fa-utensils fs-1 mb-3"></i>
@@ -250,33 +250,33 @@ document.addEventListener('DOMContentLoaded', function() {
                  </div>`;
       });
     }
-    
+
     menuPreview.innerHTML = html;
   }
-  
+
   // Update continue button state
   function updateContinueButton() {
     const itemCount = container.querySelectorAll('.menu-item-input').length;
     continueBtn.disabled = itemCount < 3;
-    
+
     if (itemCount < 3) {
       continueBtn.innerHTML = `<%= j(t('onboarding.menu_creation.need_more_items', count: '${3 - itemCount}')) %>`.replace('${3 - itemCount}', 3 - itemCount) + ' <i class="fas fa-arrow-right ms-2"></i>';
     } else {
       continueBtn.innerHTML = `<%= j(t('onboarding.menu_creation.create_menu')) %> <i class="fas fa-arrow-right ms-2"></i>`;
     }
   }
-  
+
   // Event listeners
   addBtn.addEventListener('click', () => addMenuItem());
-  
+
   document.querySelector('#onboarding_session_menu_name').addEventListener('input', updatePreview);
-  
+
   // Template buttons
   document.querySelectorAll('.template-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const templateName = this.dataset.template;
       const templateItems = templates[templateName];
-      
+
       // Track template usage
       fetch('/api/v1/analytics/track', {
         method: 'POST',
@@ -294,25 +294,25 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         })
       }).catch(error => console.log('Analytics tracking failed:', error));
-      
+
       // Clear existing items
       container.innerHTML = '';
       itemIndex = 0;
-      
+
       // Add template items
       templateItems.forEach(item => addMenuItem(item));
-      
+
       // Update button state
       this.classList.add('btn-success');
       this.innerHTML = `<i class="fas fa-check me-1"></i> <%= j(t('onboarding.menu_creation.template_added')) %>`;
-      
+
       setTimeout(() => {
         this.classList.remove('btn-success');
         this.innerHTML = this.innerHTML.replace('<%= j(t('onboarding.menu_creation.template_added')) %>', templateName.charAt(0).toUpperCase() + templateName.slice(1));
       }, 2000);
     });
   });
-  
+
   // Load existing items if any
   <% if @onboarding&.menu_items&.any? %>
     <% @onboarding.menu_items.each do |item| %>
@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add one empty item to start
     addMenuItem();
   <% end %>
-  
+
   // Form validation
   const form = document.querySelector('.needs-validation');
   form.addEventListener('submit', function(event) {

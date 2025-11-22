@@ -1,11 +1,11 @@
 <div class="row">
   <div class="col-6">
-    <h1><%=t(".inventories")%></h1>
+    <h1><%= t(".inventories") %></h1>
   </div>
   <div class="col-6 text-end">
     <% restaurant_path = @futureParentRestaurant || current_user.restaurants.first %>
     <%= link_to new_restaurant_inventory_path(restaurant_path), class: 'btn btn-sm btn-dark' do %>
-      <i class="bi bi-plus"></i> <%=t(".inventory")%>
+      <i class="bi bi-plus"></i> <%= t(".inventory") %>
     <% end %>
   </div>
 </div>

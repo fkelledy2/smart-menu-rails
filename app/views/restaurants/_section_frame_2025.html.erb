@@ -1,15 +1,15 @@
-<%# 
+<%#
   Turbo Frame wrapper for section content
   Used when responding to Turbo Frame navigation requests
 %>
 
 <%= turbo_frame_tag 'restaurant_content' do %>
-  <% 
+  <%
     # Determine filter for menu sections
     filter = local_assigns[:filter] || 'all'
   %>
-  
-  <%= render "restaurants/sections/#{local_assigns[:partial_name]}", 
+
+  <%= render "restaurants/sections/#{local_assigns[:partial_name]}",
       restaurant: local_assigns[:restaurant],
       filter: filter %>
 <% end %>

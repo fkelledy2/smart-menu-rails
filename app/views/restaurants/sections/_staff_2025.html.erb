@@ -1,4 +1,4 @@
-<%# 
+<%#
   Restaurant Staff Section
   Employee management
 %>
@@ -11,9 +11,9 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions', default: 'Quick Actions') %>
   </h2>
-  
+
   <div class="quick-actions-grid">
-    <%= link_to new_restaurant_employee_path(restaurant), 
+    <%= link_to new_restaurant_employee_path(restaurant),
         class: 'quick-action-btn' do %>
       <i class="bi bi-person-plus"></i>
       <span><%= t('.add_staff', default: 'Add Staff Member') %></span>
@@ -27,7 +27,7 @@
     <i class="bi bi-people"></i>
     <%= t('.staff', default: 'Staff Members') %>
   </h2>
-  
+
   <% if restaurant.employees.any? %>
     <!-- Desktop Table View -->
     <div class="table-responsive staff-table-view">
@@ -87,12 +87,12 @@
               </td>
               <td class="text-end">
                 <div class="btn-group">
-                  <%= link_to edit_restaurant_employee_path(restaurant, employee), 
+                  <%= link_to edit_restaurant_employee_path(restaurant, employee),
                       class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
                     <i class="bi bi-pencil"></i>
                   <% end %>
-                  
-                  <%= link_to restaurant_employee_path(restaurant, employee), 
+
+                  <%= link_to restaurant_employee_path(restaurant, employee),
                       method: :delete,
                       data: { confirm: t('.confirm_remove', default: 'Remove this staff member?') },
                       class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
@@ -105,7 +105,7 @@
         </tbody>
       </table>
     </div>
-    
+
     <!-- Mobile Card View -->
     <div class="staff-cards-view">
       <% restaurant.employees.includes(:user).order(created_at: :desc).each do |employee| %>
@@ -125,12 +125,12 @@
               </div>
             </div>
             <div class="btn-group">
-              <%= link_to edit_restaurant_employee_path(restaurant, employee), 
+              <%= link_to edit_restaurant_employee_path(restaurant, employee),
                   class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
                 <i class="bi bi-pencil"></i>
               <% end %>
-              
-              <%= link_to restaurant_employee_path(restaurant, employee), 
+
+              <%= link_to restaurant_employee_path(restaurant, employee),
                   method: :delete,
                   data: { confirm: t('.confirm_remove', default: 'Remove this staff member?') },
                   class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
@@ -138,7 +138,7 @@
               <% end %>
             </div>
           </div>
-          
+
           <div class="d-flex gap-2 flex-wrap">
             <% badge_class = case employee.role
                              when 'manager' then 'bg-primary'
@@ -149,7 +149,7 @@
             <span class="badge <%= badge_class %>">
               <%= employee.role&.titleize || t('.no_role', default: 'No role') %>
             </span>
-            
+
             <% if employee.active? %>
               <span class="badge bg-success">
                 <i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %>
@@ -173,7 +173,7 @@
       <p class="text-muted">
         <%= t('.no_staff_description', default: 'Add team members to collaborate on your restaurant') %>
       </p>
-      <%= link_to new_restaurant_employee_path(restaurant), 
+      <%= link_to new_restaurant_employee_path(restaurant),
           class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3' do %>
         <i class="bi bi-person-plus"></i>
         <%= t('.add_first_staff', default: 'Add Your First Staff Member') %>
@@ -188,11 +188,11 @@
     <i class="bi bi-shield-check"></i>
     <%= t('.roles_permissions', default: 'Roles & Permissions') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.roles_description', default: 'Define what each role can access and manage') %>
   </p>
-  
+
   <div class="roles-grid">
     <div class="role-card">
       <div class="role-icon bg-danger">
@@ -209,7 +209,7 @@
         <li><i class="bi bi-check text-success"></i> <%= t('.manage_orders', default: 'Manage orders') %></li>
       </ul>
     </div>
-    
+
     <div class="role-card">
       <div class="role-icon bg-primary">
         <i class="bi bi-pencil-fill"></i>
@@ -225,7 +225,7 @@
         <li><i class="bi bi-x text-danger"></i> <%= t('.no_analytics', default: 'No analytics') %></li>
       </ul>
     </div>
-    
+
     <div class="role-card">
       <div class="role-icon bg-info">
         <i class="bi bi-eye-fill"></i>
@@ -257,27 +257,27 @@
     justify-content: center;
     font-weight: var(--font-semibold);
   }
-  
+
   /* Staff Views - Responsive */
   .staff-table-view {
     display: block;
   }
-  
+
   .staff-cards-view {
     display: none;
   }
-  
+
   /* Mobile: Show cards, hide table */
   @media (max-width: 768px) {
     .staff-table-view {
       display: none;
     }
-    
+
     .staff-cards-view {
       display: block;
     }
   }
-  
+
   /* Mobile Staff Card */
   .staff-card-mobile {
     background: var(--color-gray-50);
@@ -287,36 +287,36 @@
     margin-bottom: var(--space-3);
     transition: all var(--transition-base);
   }
-  
+
   .staff-card-mobile:hover {
     box-shadow: var(--shadow-sm);
     border-color: var(--color-gray-300);
   }
-  
+
   .staff-card-mobile:last-child {
     margin-bottom: 0;
   }
-  
+
   /* Roles Grid */
   .roles-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--space-4);
   }
-  
+
   @media (max-width: 768px) {
     .roles-grid {
       grid-template-columns: 1fr;
     }
   }
-  
+
   .role-card {
     background: var(--color-gray-50);
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
     padding: var(--space-4);
   }
-  
+
   .role-icon {
     width: 48px;
     height: 48px;
@@ -328,25 +328,25 @@
     font-size: 1.25rem;
     margin-bottom: var(--space-3);
   }
-  
+
   .role-name {
     font-size: var(--text-lg);
     font-weight: var(--font-semibold);
     margin-bottom: var(--space-2);
   }
-  
+
   .role-description {
     font-size: var(--text-sm);
     color: var(--color-gray-600);
     margin-bottom: var(--space-3);
   }
-  
+
   .role-permissions {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  
+
   .role-permissions li {
     font-size: var(--text-sm);
     padding: var(--space-2) 0;

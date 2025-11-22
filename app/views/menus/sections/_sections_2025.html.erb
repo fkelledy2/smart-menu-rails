@@ -1,4 +1,4 @@
-<%# 
+<%#
   Menu Sections Section
   Manage menu sections (categories)
 %>
@@ -12,23 +12,23 @@
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions', default: 'Quick Actions') %>
   </h2>
-  
+
   <div class="quick-actions-grid">
     <%= link_to new_restaurant_menu_menusection_path(restaurant, menu), class: 'quick-action-btn' do %>
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.add_section', default: 'Add Section') %></span>
     <% end %>
-    
+
     <% if menu.smartmenu&.slug %>
-      <%= link_to smartmenu_path(menu.smartmenu.slug), 
+      <%= link_to smartmenu_path(menu.smartmenu.slug),
           class: 'quick-action-btn',
           target: '_blank',
           title: 'Preview menu as staff (authenticated view)' do %>
         <i class="bi bi-eye"></i>
         <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
       <% end %>
-      
-      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'), 
+
+      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'),
           class: 'quick-action-btn quick-action-btn-secondary',
           target: '_blank',
           rel: 'noopener noreferrer',
@@ -46,11 +46,11 @@
     <i class="bi bi-layout-text-sidebar"></i>
     <%= t('.menu_sections', default: 'Menu Sections') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.sections_description', default: 'Organize your menu into sections like Appetizers, Main Courses, Desserts, etc.') %>
   </p>
-  
+
   <% if menu.menusections.any? %>
     <!-- Sections Table -->
     <div class="table-responsive">
@@ -82,7 +82,7 @@
                 <%= section.menuitems.count %>
               </td>
               <td class="text-end">
-                <%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section), 
+                <%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section),
                     class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                     data: { turbo_frame: '_top' } do %>
                   <i class="bi bi-pencil"></i>
@@ -101,7 +101,7 @@
       <p class="text-muted">
         <%= t('.no_sections_desc', default: 'Add your first section to start building your menu') %>
       </p>
-      <%= link_to new_restaurant_menu_menusection_path(restaurant, menu), 
+      <%= link_to new_restaurant_menu_menusection_path(restaurant, menu),
           class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3' do %>
         <i class="bi bi-plus-circle"></i>
         <%= t('.add_first_section', default: 'Add First Section') %>
@@ -116,17 +116,17 @@
     cursor: grab;
     user-select: none;
   }
-  
+
   .section-handle:active {
     cursor: grabbing;
   }
-  
+
   /* Sortable states */
   .sortable-ghost {
     opacity: 0.4;
     background: var(--color-primary-light);
   }
-  
+
   .sortable-drag {
     opacity: 1;
     cursor: grabbing;

@@ -1,6 +1,5 @@
 
 
-
 <div class="row">
   <div class="col-sm-6">
     <h1>Ordrparticipants</h1>
@@ -23,24 +22,22 @@
             <th>Ordr</th>
             <th>Ordritem</th>
           <th></th>
-        
+
       </tr>
     </thead>
 
     <tbody>
       <% @ordrparticipants.each do |ordrparticipant| %>
         <%= content_tag :tr, id: dom_id(ordrparticipant), class: dom_class(ordrparticipant) do %>
-          
 
                       <td><%= ordrparticipant.sessionid %></td>
                       <td><%= ordrparticipant.role %></td>
                       <td><%= ordrparticipant.employee %></td>
                       <td><%= ordrparticipant.ordr %></td>
                       <td><%= ordrparticipant.ordritem %></td>
-          
-          
+
             <td><%= link_to 'Show', ordrparticipant %></td>
-          
+
         <% end %>
       <% end %>
     </tbody>

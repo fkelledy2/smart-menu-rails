@@ -5,8 +5,8 @@
 <% end %>
 
 <% if @analytics_data %>
-  <%= render 'shared/analytics_dashboard', 
-      title: "Restaurant Analytics Dashboard", 
+  <%= render 'shared/analytics_dashboard',
+      title: "Restaurant Analytics Dashboard",
       subtitle: "#{@analytics_data[:restaurant][:name]}",
       analytics_data: @analytics_data,
       base_path: analytics_restaurant_path(@restaurant),

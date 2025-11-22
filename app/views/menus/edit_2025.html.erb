@@ -1,4 +1,4 @@
-<%# 
+<%#
   2025 Menu Edit Page
   Modern sidebar navigation for menu management
   Applies same pattern as Restaurant Edit page
@@ -13,17 +13,17 @@
       <div>
         <!-- Breadcrumb -->
         <div class="text-gray-500 mb-2">
-          <%= link_to @menu.restaurant.name, 
-              edit_restaurant_path(@menu.restaurant), 
+          <%= link_to @menu.restaurant.name,
+              edit_restaurant_path(@menu.restaurant),
               class: 'text-primary' %>
           <i class="bi bi-chevron-right"></i>
           <%= t('.menus', default: 'Menus') %>
         </div>
-        
+
         <h1 class="text-2xl font-semibold text-gray-900 mb-1">
           <%= @menu.name %>
         </h1>
-        
+
         <div class="d-flex align-items-center gap-3 mt-2">
           <!-- Status Badge -->
           <% if @menu.active? %>
@@ -35,7 +35,7 @@
               <i class="bi bi-pencil"></i> <%= t('.inactive', default: 'Inactive') %>
             </span>
           <% end %>
-          
+
           <!-- Quick Stats -->
           <span class="text-sm text-gray-500">
             <%= @menu.menusections.count %> <%= t('.sections', default: 'sections') %>
@@ -45,9 +45,9 @@
           </span>
         </div>
       </div>
-      
+
       <!-- Mobile Sidebar Toggle -->
-      <button class="sidebar-toggle-btn" 
+      <button class="sidebar-toggle-btn"
               data-action="click->sidebar#toggle"
               aria-label="Toggle navigation">
         <i class="bi bi-list"></i>
@@ -58,14 +58,14 @@
   <!-- Sidebar + Content Layout -->
   <div class="sidebar-content-container">
     <!-- Sidebar Navigation -->
-    <%= render 'menus/sidebar_2025', 
-        menu: @menu, 
+    <%= render 'menus/sidebar_2025',
+        menu: @menu,
         current_section: @current_section %>
-    
+
     <!-- Main Content Area -->
     <div class="sidebar-main-content">
       <%= turbo_frame_tag 'menu_content' do %>
-        <% 
+        <%
           partial_name = case @current_section
                         when 'design' then 'design_2025'
                         when 'sections' then 'sections_2025'
@@ -88,16 +88,16 @@
     body {
       background: var(--color-gray-50);
     }
-    
+
     .text-2xl {
       font-size: 1.5rem;
       line-height: 2rem;
     }
-    
+
     .text-gray-900 {
       color: var(--color-gray-900);
     }
-    
+
     .text-gray-500 {
       color: var(--color-gray-500);
     }

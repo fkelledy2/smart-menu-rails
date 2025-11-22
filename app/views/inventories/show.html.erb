@@ -1,7 +1,7 @@
 <div class="page-header">
   <div class="row">
     <div class="col-10">
-      <h1><%=t(".inventory")%></h1>
+      <h1><%= t(".inventory") %></h1>
     </div>
     <div class="col-2">
         <span class="float-end">
@@ -20,7 +20,7 @@
   <div class="form-group row">
     <%= form.label :menuItem, class: 'col-2 col-form-label' %>
     <div class="col-10">
-        <%= form.collection_select :menuitem_id, Menuitem.all ,:id, :name, options = {:prompt => t('.select_menu_item')}, html_options = {disabled: 'disabled'}%>
+        <%= form.collection_select :menuitem_id, Menuitem.all ,:id, :name, options = {:prompt => t('.select_menu_item')}, html_options = {disabled: 'disabled'} %>
     </div>
   </div>
   <div class="spacing-sm"></div>

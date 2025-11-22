@@ -1,4 +1,4 @@
-<%# 
+<%#
   Restaurant Settings Section
   Core configuration toggles and preferences
 %>
@@ -11,7 +11,7 @@
     <i class="bi bi-toggles"></i>
     <%= t('.general_settings', default: 'General Settings') %>
   </h2>
-  
+
   <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
     <div class="form-group-2025 mb-4">
       <%= form.label :status, class: 'form-label-2025' do %>
@@ -39,7 +39,7 @@
     <i class="bi bi-sliders"></i>
     <%= t('.feature_toggles', default: 'Feature Toggles') %>
   </h2>
-  
+
   <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
   <div class="features-grid">
     <!-- Display Images -->
@@ -56,8 +56,8 @@
       <div class="feature-card-toggle">
         <div class="form-check form-switch">
           <input type="hidden" name="restaurant[displayImages]" value="false">
-          <input class="form-check-input" 
-                 type="checkbox" 
+          <input class="form-check-input"
+                 type="checkbox"
                  name="restaurant[displayImages]"
                  id="restaurant_displayImages"
                  value="true"
@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Display Images in Popup -->
     <div class="feature-card">
       <div class="feature-card-icon bg-success">
@@ -81,8 +81,8 @@
       <div class="feature-card-toggle">
         <div class="form-check form-switch">
           <input type="hidden" name="restaurant[displayImagesInPopup]" value="false">
-          <input class="form-check-input" 
-                 type="checkbox" 
+          <input class="form-check-input"
+                 type="checkbox"
                  name="restaurant[displayImagesInPopup]"
                  id="restaurant_displayImagesInPopup"
                  value="true"
@@ -91,7 +91,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Allow Ordering -->
     <div class="feature-card">
       <div class="feature-card-icon bg-warning">
@@ -106,8 +106,8 @@
       <div class="feature-card-toggle">
         <div class="form-check form-switch">
           <input type="hidden" name="restaurant[allowOrdering]" value="false">
-          <input class="form-check-input" 
-                 type="checkbox" 
+          <input class="form-check-input"
+                 type="checkbox"
                  name="restaurant[allowOrdering]"
                  id="restaurant_allowOrdering"
                  value="true"
@@ -116,7 +116,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Inventory Tracking -->
     <div class="feature-card">
       <div class="feature-card-icon bg-danger">
@@ -130,8 +130,8 @@
       </div>
       <div class="feature-card-toggle">
         <div class="form-check form-switch">
-          <input class="form-check-input" 
-                 type="checkbox" 
+          <input class="form-check-input"
+                 type="checkbox"
                  name="restaurant[inventoryTracking]"
                  id="restaurant_inventoryTracking"
                  value="true"
@@ -151,11 +151,11 @@
     <i class="bi bi-wifi"></i>
     <%= t('.wifi_configuration', default: 'WiFi Configuration') %>
   </h2>
-  
+
   <p class="text-muted mb-4">
     <%= t('.wifi_description', default: 'Configure WiFi settings to generate QR codes for customer access') %>
   </p>
-  
+
   <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
     <div class="row g-4">
       <!-- WiFi SSID -->
@@ -164,7 +164,7 @@
           <%= form.label :wifissid, class: 'form-label-2025' do %>
             <%= t('activerecord.attributes.restaurant.wifissid', default: 'WiFi Network Name (SSID)') %>
           <% end %>
-          <%= form.text_field :wifissid, 
+          <%= form.text_field :wifissid,
               class: 'form-control-2025',
               placeholder: t('.ssid_placeholder', default: 'Enter your WiFi network name') %>
           <div class="form-help-2025">
@@ -194,7 +194,7 @@
           <%= form.label :wifiEncryptionType, class: 'form-label-2025' do %>
             <%= t('activerecord.attributes.restaurant.wifiEncryptionType', default: 'Encryption Type') %>
           <% end %>
-          <%= form.select :wifiEncryptionType, 
+          <%= form.select :wifiEncryptionType,
               options_for_select(Restaurant.wifiEncryptionTypes.keys.to_a, form.object.wifiEncryptionType),
               { prompt: t('.select_encryption', default: 'Select encryption...') },
               { class: 'form-control-2025', **select_data_attributes(:default) } %>
@@ -210,9 +210,9 @@
           <%= form.label :wifiHidden, class: 'form-label-2025' do %>
             <%= t('activerecord.attributes.restaurant.wifiHidden', default: 'Hidden Network') %>
           <% end %>
-          <%= form.select :wifiHidden, 
+          <%= form.select :wifiHidden,
               [
-                [t('.no', default: 'No'), false], 
+                [t('.no', default: 'No'), false],
                 [t('.yes', default: 'Yes'), true]
               ],
               { prompt: t('.select_option', default: 'Select option...') },
@@ -253,7 +253,7 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--space-4);
   }
-  
+
   .feature-card {
     display: flex;
     flex-direction: column;
@@ -264,12 +264,12 @@
     border-radius: var(--radius-lg);
     transition: all var(--transition-base);
   }
-  
+
   .feature-card:hover {
     border-color: var(--color-gray-300);
     box-shadow: var(--shadow-sm);
   }
-  
+
   .feature-card-icon {
     width: 48px;
     height: 48px;
@@ -281,42 +281,42 @@
     font-size: 1.5rem;
     flex-shrink: 0;
   }
-  
+
   .feature-card-content {
     flex: 1;
   }
-  
+
   .feature-card-title {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     margin: 0 0 var(--space-2) 0;
     color: var(--color-gray-900);
   }
-  
+
   .feature-card-description {
     font-size: var(--text-sm);
     color: var(--color-gray-600);
     margin: 0;
     line-height: 1.5;
   }
-  
+
   .feature-card-toggle {
     padding-top: var(--space-2);
     border-top: 1px solid var(--color-gray-100);
   }
-  
+
   .feature-card-toggle .form-switch {
     display: flex;
     justify-content: flex-end;
   }
-  
+
   /* Mobile responsive */
   @media (max-width: 768px) {
     .features-grid {
       grid-template-columns: 1fr;
     }
   }
-  
+
   .bg-light {
     background: var(--color-gray-50) !important;
   }

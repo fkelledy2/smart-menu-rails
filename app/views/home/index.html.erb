@@ -42,7 +42,7 @@
                 <%= form_with(model: @userplan) do |f| %>
                   <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1"><%= f.label :plan %></span>
-                    <%= f.select :plan_id, options_for_select(Plan.all.collect { |p| [t(p.key), p.id] }), {}, { class: 'form-select'}%>
+                    <%= f.select :plan_id, options_for_select(Plan.all.collect { |p| [t(p.key), p.id] }), {}, { class: 'form-select'} %>
                     <%= f.hidden_field :user_id, value: @current_user.id %>
                   </div>
                   <div class="mb-3 d-grid">
@@ -53,7 +53,7 @@
 
       <% else %>
           <div class="col-6">
-            <h4><%=t(".restaurants")%> </h4>
+            <h4><%= t(".restaurants") %> </h4>
           </div>
           <div class="col-6 text-end">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
@@ -80,31 +80,31 @@
         </div>
       <% end %>
 <% else %>
-  <div class="hero-carousel" 
-       data-cta1-title="<%=t('.ctaTitle1')%>" 
-       data-cta1-body="<%=t('.ctaBody1')%>"
-       data-cta2-title="<%=t('.ctaTitle2')%>" 
-       data-cta2-body="<%=t('.ctaBody2')%>"
+  <div class="hero-carousel"
+       data-cta1-title="<%= t('.ctaTitle1') %>"
+       data-cta1-body="<%= t('.ctaBody1') %>"
+       data-cta2-title="<%= t('.ctaTitle2') %>"
+       data-cta2-body="<%= t('.ctaBody2') %>"
        data-hero-images="<%= @hero_images.map { |img| { url: img.image_url, alt: img.alt_text } }.to_json %>">
     <!-- Background images will be dynamically inserted by JavaScript -->
     <div class="hero-caption text-start">
-      <h1 data-cta-title><%=t(".ctaTitle1")%></h1>
-      <p data-cta-body><strong><%=t(".ctaBody1")%></strong></p>
+      <h1 data-cta-title><%= t(".ctaTitle1") %></h1>
+      <p data-cta-body><strong><%= t(".ctaBody1") %></strong></p>
       <p><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
     </div>
   </div>
   </div>
 
   <div class="container px-1 py-2">
-    <h2 class="pb-2 border-bottom"><%=t(".features")%></h2>
+    <h2 class="pb-2 border-bottom"><%= t(".features") %></h2>
     <div class="row g-4 py-3 px-3 row-cols-1 row-cols-lg-3">
       <div class="col d-flex align-items-start feature-card">
         <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
             <h2><i class="feature-icon bi bi-activity"></i></h2>
         </div>
         <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle2").html_safe %></h3>
-          <p class="feature-description"><%=t(".featureDescription2").html_safe %></p>
+          <h3 class="fs-2 text-body-emphasis"><%= t(".featureTitle2").html_safe %></h3>
+          <p class="feature-description"><%= t(".featureDescription2").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start feature-card">
@@ -112,8 +112,8 @@
             <h2><i class="feature-icon bi bi-bullseye"></i></h2>
         </div>
         <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle3").html_safe %></h3>
-          <p class="feature-description"><%=t(".featureDescription3").html_safe %></p>
+          <h3 class="fs-2 text-body-emphasis"><%= t(".featureTitle3").html_safe %></h3>
+          <p class="feature-description"><%= t(".featureDescription3").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start feature-card">
@@ -121,8 +121,8 @@
             <h2><i class="feature-icon bi bi-emoji-heart-eyes"></i></h2>
         </div>
         <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle4").html_safe %></h3>
-          <p class="feature-description"><%=t(".featureDescription4").html_safe %></p>
+          <h3 class="fs-2 text-body-emphasis"><%= t(".featureTitle4").html_safe %></h3>
+          <p class="feature-description"><%= t(".featureDescription4").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start feature-card">
@@ -130,8 +130,8 @@
             <h2><i class="feature-icon bi bi-graph-up-arrow"></i></h2>
         </div>
         <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle6").html_safe %></h3>
-          <p class="feature-description"><%=t(".featureDescription6").html_safe %></p>
+          <h3 class="fs-2 text-body-emphasis"><%= t(".featureTitle6").html_safe %></h3>
+          <p class="feature-description"><%= t(".featureDescription6").html_safe %></p>
         </div>
       </div>
       <div class="col d-flex align-items-start feature-card">
@@ -139,8 +139,8 @@
             <h2><i class="feature-icon bi bi-tree"></i></h2>
         </div>
         <div>
-          <h3 class="fs-2 text-body-emphasis"><%=t(".featureTitle5").html_safe %></h3>
-          <p class="feature-description"><%=t(".featureDescription5").html_safe %></p>
+          <h3 class="fs-2 text-body-emphasis"><%= t(".featureTitle5").html_safe %></h3>
+          <p class="feature-description"><%= t(".featureDescription5").html_safe %></p>
         </div>
       </div>
     </div>
@@ -150,7 +150,7 @@
     <span class="display-none" id="qrIcon"><%= image_url('qr-icon.svg') %></span>
     <span class="display-none" id="qrHost"><%= @qrHost %></span>
     <div id="demo-table" class="container px-1 py-2">
-      <h2 class="pb-2"><%=t(".demoMenu")%></h2>
+      <h2 class="pb-2"><%= t(".demoMenu") %></h2>
       <div class="row g-4 py-2 row-cols-12 row-cols-12 row-cols-lg-12 align-items-center">
             <span class="display-none qrSlug"><%= @demoMenu.slug %></span>
             <div class="padding-horizontal-0 col-sm-12 col-md-12 col-lg-8">
@@ -162,7 +162,7 @@
               </div>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-4">
-                <h6 class="text-center-padded"><%=t(".demoMenuTag").html_safe %></h6>
+                <h6 class="text-center-padded"><%= t(".demoMenuTag").html_safe %></h6>
                 <div class="d-flex justify-content-center">
                     <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
                         <div id="<%= @demoMenu.slug %>">
@@ -170,7 +170,7 @@
                     </a>
                 </div>
                 <h6 class="text-center-padded">
-                    <%=t(".demoMenuTagBrowse").html_safe %>
+                    <%= t(".demoMenuTagBrowse").html_safe %>
                 </h6>
                 <h6 class="text-center">
                     <%= link_to t(".browse"), smartmenus_path, class: "btn btn-danger" %>
@@ -181,13 +181,13 @@
   <% end %>
 
   <div id="metrics-table" class="display-none container px-1 py-2">
-    <h2 class="pb-2 border-bottom"><%=t(".numbers")%></h2>
-    <p class="text-justify"><%=t(".numbersTag")%></p>
+    <h2 class="pb-2 border-bottom"><%= t(".numbers") %></h2>
+    <p class="text-justify"><%= t(".numbersTag") %></p>
     <div class="row g-4 py-5 row-cols-2 row-cols-2 row-cols-lg-4">
       <div class="col d-flex align-items-start">
         <div class="card text-center width-full">
           <div class="card-header">
-            <h4 class="card-title"><%=t(".restaurants")%></h4>
+            <h4 class="card-title"><%= t(".restaurants") %></h4>
           </div>
           <div class="card-body">
             <h1 class="feature-icon" id="metrics-numberOfRestaurants"></h1>
@@ -197,7 +197,7 @@
       <div class="col d-flex align-items-start">
         <div class="card text-center width-full">
           <div class="card-header">
-            <h4 class="card-title"><%=t(".menus")%></h4>
+            <h4 class="card-title"><%= t(".menus") %></h4>
           </div>
           <div class="card-body">
             <h1 class="feature-icon" id="metrics-numberOfMenus"></h1>
@@ -207,7 +207,7 @@
       <div class="col d-flex align-items-start">
         <div class="card text-center width-full">
           <div class="card-header">
-            <h4 class="card-title"><%=t(".orders")%></h4>
+            <h4 class="card-title"><%= t(".orders") %></h4>
           </div>
           <div class="card-body">
             <h1 class="feature-icon" id="metrics-numberOfOrders"></h1>
@@ -217,7 +217,7 @@
       <div class="col d-flex align-items-start">
         <div class="card text-center width-full">
           <div class="card-header">
-            <h4 class="card-title"><%=t(".orderValue")%></h4>
+            <h4 class="card-title"><%= t(".orderValue") %></h4>
           </div>
           <div class="card-body">
             <h1 class="feature-icon">
@@ -230,8 +230,8 @@
   </div>
 
   <div class="container px-1 py-2">
-   <h2 class="pb-2 border-bottom"><%=t(".pricing")%></h2>
-   <p class="text-justify"><%=t(".pricingTag")%></p>
+   <h2 class="pb-2 border-bottom"><%= t(".pricing") %></h2>
+   <p class="text-justify"><%= t(".pricingTag") %></p>
    <div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
     <% @plans.each do |plan| %>
       <div class="col">
@@ -256,7 +256,7 @@
                 <% if plan.pricePerYear %>
                     <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerYear, precision: 0) %><small class="text-body-secondary fw-light">/yr</small></h1>
                 <% else %>
-                    <h1 class="card-title pricing-card-title"><%=t(".contactUs")%><small class="text-body-secondary fw-light"></small></h1>
+                    <h1 class="card-title pricing-card-title"><%= t(".contactUs") %><small class="text-body-secondary fw-light"></small></h1>
                 <% end %>
             </div>
             <div class="text-start">
@@ -321,8 +321,8 @@
 
   <% if @testimonials.size > 0 %>
       <div id="testimonials" class="container px-1 py-2">
-        <h2 class="pb-2 border-bottom"><%=t(".testimonials")%></h2>
-        <p class="text-justify"><%=t(".testimonialsTag")%></p>
+        <h2 class="pb-2 border-bottom"><%= t(".testimonials") %></h2>
+        <p class="text-justify"><%= t(".testimonialsTag") %></p>
         <div id="testimonialCarousel" class="carousel carousel-dark slide mb-6" data-bs-ride="carousel">
             <div class="carousel-indicators">
                 <% @testimonials.each_with_index do |testimonial, index| %>
@@ -373,14 +373,14 @@
   <div id="contact_us" class="container px-1 py-2" id="hanging-icons">
       <div class="row">
         <div class="col-12">
-            <h2 class="pb-2 border-bottom"><%=t(".contactUs")%></h2>
+            <h2 class="pb-2 border-bottom"><%= t(".contactUs") %></h2>
             <%= form_with(model: @contact, local: true) do |form| %>
 
               <div class="form-group row">
                 <div class="mb-3">
                   <%= form.label :email, class: 'col-form-label' %>
                   <%= form.email_field :email, class: 'form-control' %>
-                  <div id="emailHelp" class="form-text"><%=t(".emailAddressTag")%></div>
+                  <div id="emailHelp" class="form-text"><%= t(".emailAddressTag") %></div>
                 </div>
               </div>
               <div class="form-group row">

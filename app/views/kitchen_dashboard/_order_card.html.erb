@@ -12,7 +12,7 @@
       <i class="bi bi-clock"></i> <%= time_ago_in_words(order.created_at) %> ago
     </small>
   </div>
-  
+
   <div class="card-body py-2">
     <ul class="mb-0">
       <% order.ordritems.each do |item| %>
@@ -27,7 +27,7 @@
       <% end %>
     </ul>
   </div>
-  
+
   <div class="card-footer py-2 bg-white border-top">
     <% if order.status == 'ordered' %>
       <button class="btn btn-warning w-100 order-status-btn" data-order-id="<%= order.id %>" data-new-status="preparing">
