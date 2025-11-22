@@ -45,3 +45,6 @@ coverage
 /config/credentials/staging.key
 
 /config/credentials/test.key
+
+# macOS
+.DS_Store
