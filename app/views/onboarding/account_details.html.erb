@@ -13,6 +13,7 @@
           class: "form-control form-control-lg",
           placeholder: t('onboarding.account_details.full_name_placeholder'),
           required: true,
+          autocomplete: "name",
           value: current_user.name %>
       <div class="invalid-feedback">
         <%= t('onboarding.account_details.full_name_required') %>
@@ -33,6 +34,7 @@
           @onboarding&.restaurant_name,
           class: "form-control form-control-lg",
           placeholder: t('onboarding.account_details.restaurant_name_preview_placeholder'),
+          autocomplete: "organization",
           data: { preview: true } %>
       <div class="form-text"><%= t('onboarding.account_details.restaurant_name_preview_help') %></div>
     </div>
@@ -44,7 +46,7 @@
 
       <button type="submit" class="btn btn-primary btn-lg btn-wizard">
         <%= t('onboarding.account_details.continue') %>
-        <i class="fas fa-arrow-right ms-2"></i>
+        <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i>
       </button>
     </div>
   <% end %>
