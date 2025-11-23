@@ -239,13 +239,15 @@ function refreshOrderJSLogic() {
     const sectionFromOffset = parseInt($('#sectionFromOffset').html());
     const sectionToOffset = parseInt($('#sectionToOffset').html());
     const currentOffset = hour * 60 + minutes;
+    // Determine if items can be added: require an active order and allowed status
+    const currentOrderId = document.getElementById('currentOrder')?.textContent?.trim();
+    const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
+    const canAdd = !!currentOrderId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
     $('.addItemToOrder').each(function () {
       const fromOffeset = $(this).data('bs-menusection_from_offset');
       const toOffeset = $(this).data('bs-menusection_to_offset');
-      if (currentOffset >= fromOffeset && currentOffset <= toOffeset) {
-      } else {
-        $(this).attr('disabled', 'disabled');
-      }
+      const withinWindow = currentOffset >= fromOffeset && currentOffset <= toOffeset;
+      if (!withinWindow || !canAdd) { $(this).attr('disabled', 'disabled'); } else { $(this).removeAttr('disabled'); }
     });
   }
   $('#toggleFilters').click(function () {
@@ -362,7 +364,7 @@ function refreshOrderJSLogic() {
         alert(err);
       }
     });
-    $('#addItemToOrderButton').on('click', function () {
+    $('#addItemToOrderButton').on('click', function (evt) {
       const restaurantId = $('#currentRestaurant').text();
       const addModal = document.getElementById('addItemToOrderModal');
       const isTasting = addModal?.dataset?.tasting === 'true';
@@ -466,8 +468,18 @@ function refreshOrderJSLogic() {
       const ordrId = document.getElementById('currentOrder')?.textContent?.trim();
       const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
       if (!restaurantId || !ordrId || !statusStr || statusStr === 'billrequested' || statusStr === 'closed') {
-        console.error('Order not active or status not allowed. Aborting add.');
-        return true;
+        // Close add modal and open Start Order modal if available
+        if (addModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+          const addInstance = bootstrap.Modal.getInstance(addModal) || new bootstrap.Modal(addModal);
+          addInstance.hide();
+        }
+        const openOrderModal = document.getElementById('openOrderModal');
+        if (openOrderModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+          const openInstance = bootstrap.Modal.getInstance(openOrderModal) || new bootstrap.Modal(openOrderModal);
+          openInstance.show();
+        }
+        evt.preventDefault();
+        return false;
       }
 
       const postOrdritem = (payload) => post(`/restaurants/${restaurantId}/ordritems`, payload);

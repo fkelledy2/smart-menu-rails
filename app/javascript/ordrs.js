@@ -202,12 +202,18 @@ export function initOrders() {
       const sectionFromOffset = parseInt($('#sectionFromOffset').html());
       const sectionToOffset = parseInt($('#sectionToOffset').html());
       const currentOffset = hour * 60 + minutes;
+      // Determine if items can be added: require an active order and allowed status
+      const currentOrderId = document.getElementById('currentOrder')?.textContent?.trim();
+      const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
+      const canAdd = !!currentOrderId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
       $('.addItemToOrder').each(function () {
         const fromOffeset = $(this).data('bs-menusection_from_offset');
         const toOffeset = $(this).data('bs-menusection_to_offset');
-        if (currentOffset >= fromOffeset && currentOffset <= toOffeset) {
-        } else {
+        // Disable if outside time window or order not active
+        if (!(currentOffset >= fromOffeset && currentOffset <= toOffeset) || !canAdd) {
           $(this).attr('disabled', 'disabled');
+        } else {
+          $(this).removeAttr('disabled');
         }
       });
     }
@@ -419,8 +425,27 @@ export function initOrders() {
             return false;
           }
         }
+        // Gate: require active order before posting; if not, prompt Start Order
+        const currentOrderId = document.getElementById('currentOrder')?.textContent?.trim();
+        const currentStatus = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
+        const canAdd = !!currentOrderId && !!currentStatus && currentStatus !== 'billrequested' && currentStatus !== 'closed';
+        if (!canAdd) {
+          // Close add modal and open Start Order modal if available
+          if (addModalEl && window.bootstrap && window.bootstrap.Modal) {
+            const addInst = window.bootstrap.Modal.getInstance(addModalEl) || window.bootstrap.Modal.getOrCreateInstance(addModalEl);
+            addInst.hide();
+          }
+          const openOrderModal = document.getElementById('openOrderModal');
+          if (openOrderModal && window.bootstrap && window.bootstrap.Modal) {
+            const openInst = window.bootstrap.Modal.getInstance(openOrderModal) || window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
+            openInst.show();
+          }
+          evt.preventDefault();
+          return false;
+        }
+
         // Debug: Check if required elements exist
-        const ordrId = $('#a2o_ordr_id').text();
+        const ordrId = $('#a2o_ordr_id').text() || currentOrderId;
         const menuitemId = $('#a2o_menuitem_id').text();
         const price = $('#a2o_menuitem_price').text();
         const restaurantId = $('#currentRestaurant').text();

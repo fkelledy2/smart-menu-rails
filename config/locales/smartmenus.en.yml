@@ -87,3 +87,6 @@ en:
       restaurant: 'Restaurant:'
       slug: 'Slug:'
       tablesetting: 'Tablesetting:'
+
+    modal_footer_primary:
+      cancel: Cancel
