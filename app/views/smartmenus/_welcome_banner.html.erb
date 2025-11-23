@@ -47,7 +47,7 @@
     if (banner) {
       banner.classList.add('dismissing');
       setTimeout(() => {
-        banner.style.display = 'none';
+        banner.classList.add('d-none');
         // Store in localStorage so it doesn't show again
         localStorage.setItem('welcomeBannerDismissed_<%= @smartmenu&.id %>', 'true');
       }, 300);
@@ -59,13 +59,13 @@
     const dismissed = localStorage.getItem('welcomeBannerDismissed_<%= @smartmenu&.id %>');
     const banner = document.getElementById('welcomeBanner');
     if (dismissed && banner) {
-      banner.style.display = 'none';
+      banner.classList.add('d-none');
     }
   });
 </script>
 
 <%# Compact Welcome Banner (shown after first interaction) %>
-<div class="welcome-banner-compact" id="welcomeBannerCompact" style="display: none;" onclick="showWelcomeDetails()">
+<div class="welcome-banner-compact d-none" id="welcomeBannerCompact" onclick="showWelcomeDetails()">
   <div class="compact-icon">💡</div>
   <div class="compact-text">
     <div class="compact-title"><%= t('.need_help', default: 'Need Help?') %></div>
@@ -107,7 +107,7 @@
       if (tipBanner) {
         tipBanner.classList.add('dismissing');
         setTimeout(() => {
-          tipBanner.style.display = 'none';
+          tipBanner.classList.add('d-none');
         }, 300);
       }
     }
