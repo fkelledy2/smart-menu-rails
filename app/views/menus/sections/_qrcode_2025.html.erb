@@ -53,10 +53,10 @@
 
   <!-- Hidden data for QR code generation -->
   <% if menu.smartmenu&.slug %>
-    <div id="qrHost" style="display: none;"><%= request.host_with_port %></div>
-    <div class="qrSlug" style="display: none;"><%= menu.smartmenu.slug %></div>
-    <div id="qrIcon" style="display: none;"><%= image_url('qr-icon.svg') %></div>
-    <div id="qrProtocol" style="display: none;"><%= request.protocol %></div>
+    <div id="qrHost" class="d-none"><%= request.host_with_port %></div>
+    <div class="qrSlug d-none"><%= menu.smartmenu.slug %></div>
+    <div id="qrIcon" class="d-none"><%= image_url('qr-icon.svg') %></div>
+    <div id="qrProtocol" class="d-none"><%= request.protocol %></div>
 
     <!-- Centered QR Code -->
     <div class="d-flex justify-content-center">
