@@ -157,13 +157,13 @@
 
     if (isNaN(latitude) || isNaN(longitude)) return;
 
-    // Show loading state
+    // Show loading state (no inline styles)
     mapElement.innerHTML = `
-      <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; padding: 2rem;">
-        <div class="spinner-border text-primary" role="status" style="margin-bottom: 1rem;">
+      <div class="d-flex align-items-center justify-content-center h-100 flex-column p-4">
+        <div class="spinner-border text-primary mb-3" role="status">
           <span class="visually-hidden">Loading map...</span>
         </div>
-        <p style="color: #6b7280; margin: 0;">Loading map...</p>
+        <p class="text-muted mb-0">Loading map...</p>
       </div>
     `;
 
@@ -222,9 +222,9 @@
       // Add info window
       const infoWindow = new google.maps.InfoWindow({
         content: `
-          <div style="padding: 8px;">
-            <h6 style="margin: 0 0 4px 0; font-weight: 600;">${restaurantName}</h6>
-            <p style="margin: 0; font-size: 0.875rem; color: #6b7280;">
+          <div class="p-2">
+            <h6 class="mb-1 fw-semibold">${restaurantName}</h6>
+            <p class="mb-0 small text-muted">
               ${latitude.toFixed(6)}, ${longitude.toFixed(6)}
             </p>
           </div>
@@ -248,11 +248,11 @@
       // Fallback: Display coordinates if Google Maps fails to load
       console.error('[RestaurantMap] Failed to load Google Maps:', error);
       mapElement.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; padding: 2rem;">
-          <i class="bi bi-map" style="font-size: 3rem; color: #9ca3af; margin-bottom: 1rem;"></i>
-          <p style="color: #6b7280; margin: 0; font-weight: 500;">${restaurantName}</p>
-          <p style="color: #6b7280; margin: 0.5rem 0 0 0;">Location: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}</p>
-          <p style="color: #9ca3af; font-size: 0.875rem; margin-top: 0.5rem;">Map could not be loaded</p>
+        <div class="d-flex align-items-center justify-content-center h-100 flex-column p-4">
+          <i class="bi bi-map text-3rem text-muted mb-3"></i>
+          <p class="mb-0 fw-semibold text-muted">${restaurantName}</p>
+          <p class="mb-0 mt-2 text-muted">Location: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}</p>
+          <p class="mt-2 small text-muted">Map could not be loaded</p>
         </div>
       `;
     }

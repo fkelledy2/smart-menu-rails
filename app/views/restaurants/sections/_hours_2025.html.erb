@@ -45,7 +45,7 @@
       <div class="skeleton-shimmer"></div>
     </div>
 
-  <div class="hours-editor" style="opacity: 0; transition: opacity 0.3s ease;">
+  <div class="hours-editor opacity-0 transition-opacity-300">
     <% %w[monday tuesday wednesday thursday friday saturday sunday].each_with_index do |day, index| %>
       <% day_hours = restaurant.restaurantavailabilities.where(dayofweek: day).order(:sequence).first %>
       <% is_closed = day_hours.nil? || day_hours.closed? %>
