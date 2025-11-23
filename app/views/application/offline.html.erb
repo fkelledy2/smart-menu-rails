@@ -120,6 +120,19 @@
       margin-bottom: 0.25rem;
     }
 
+    .sw-notification {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(40, 167, 69, 0.9);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      z-index: 1000;
+    }
+
     @media (max-width: 480px) {
       .offline-container {
         padding: 1rem;
@@ -163,7 +176,7 @@
       </button>
     </div>
 
-    <div class="cached-data" id="cachedContent" style="display: none;">
+    <div class="cached-data d-none" id="cachedContent">
       <h3>Available Offline:</h3>
       <ul>
         <li>Restaurant information</li>
@@ -200,16 +213,16 @@
       const cachedEl = document.getElementById('cachedContent')
       const lastSyncEl = document.getElementById('lastSync')
 
-      if (cachedEl.style.display === 'none') {
-        cachedEl.style.display = 'block'
-
+      const isHidden = cachedEl.classList.contains('d-none')
+      if (isHidden) {
+        cachedEl.classList.remove('d-none')
         // Try to get last sync time from localStorage
         const lastSync = localStorage.getItem('lastSyncTime')
         if (lastSync) {
           lastSyncEl.textContent = new Date(lastSync).toLocaleString()
         }
       } else {
-        cachedEl.style.display = 'none'
+        cachedEl.classList.add('d-none')
       }
     }
 
@@ -224,20 +237,9 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'CACHE_UPDATED') {
-          // Show notification that cached content was updated
+          // Show notification that cached content was updated (no inline styles)
           const notification = document.createElement('div')
-          notification.style.cssText = `
-            position: fixed;
-            bottom: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(40, 167, 69, 0.9);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            z-index: 1000;
-          `
+          notification.className = 'sw-notification'
           notification.textContent = '✅ Content updated'
           document.body.appendChild(notification)
 
