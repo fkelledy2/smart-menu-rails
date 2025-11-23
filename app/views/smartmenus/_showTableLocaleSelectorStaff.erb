@@ -6,11 +6,16 @@
             <%= t(".table") %>
         <% end %>
     </button>
-    <ul class="dropdown-menu dropdown-menu-dark z-index-1000 dropdown-padding-y-05">
+    <ul class="dropdown-menu dropdown-menu-dark z-index-1000 dropdown-padding-y-05 table-dropdown-menu" style="max-height: 400px; overflow-y: auto;">
+        <li class="dropdown-search" style="position: sticky; top: 0; z-index: 1; background-color: var(--bs-dropdown-bg); border-bottom: 1px solid var(--bs-dropdown-divider-bg);">
+            <div class="px-3 py-2">
+                <input id="table-selector-search" type="text" class="form-control form-control-sm bg-dark text-white border-secondary" style="background-color: var(--bs-dropdown-bg); color: var(--bs-dropdown-color); border-color: var(--bs-dropdown-divider-bg); --bs-secondary-color: #ffffff;" placeholder="<%= t('smartmenus.find_table', default: 'Find table') %>" aria-label="Search tables">
+            </div>
+        </li>
         <% Smartmenu.where( restaurant_id: restaurant.id, menu_id: menu.id ).includes([:tablesetting]).order('id ASC').each do |smartmenu| %>
             <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
                 <li>
-                    <%= link_to smartmenu_path(smartmenu.slug), data: { turbo: false }, class: "dropdown-item min-h-44 d-flex align-items-center py-2 px-3" do %>
+                    <%= link_to smartmenu_path(smartmenu.slug), data: { turbo: false }, class: "dropdown-item min-h-44 d-flex align-items-center py-2 px-3", 'data-filter-text': smartmenu.tablesetting.name do %>
                         <%= smartmenu.tablesetting.name %>
                     <% end %>
                 </li>
