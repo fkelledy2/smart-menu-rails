@@ -44,7 +44,7 @@
       <div class="skeleton-shimmer"></div>
     </div>
 
-  <div class="availability-editor" style="opacity: 0; transition: opacity 0.3s ease;">
+  <div class="availability-editor opacity-0 transition-opacity-300">
     <% %w[monday tuesday wednesday thursday friday saturday sunday].each_with_index do |day, index| %>
       <% day_availability = menu.menuavailabilities.where(dayofweek: day).order(:sequence).first %>
       <% is_inactive = day_availability.nil? || day_availability.inactive? %>
