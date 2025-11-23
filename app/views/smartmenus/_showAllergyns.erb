@@ -1,5 +1,5 @@
 <% if allergyns && allergyns.length > 0 %>
-    <div style="padding-top:20px" id="menusection_allergyns"></div>
+    <div class="padding-top-lg" id="menusection_allergyns"></div>
     <div class="card">
         <div class="card-body mx-auto text-center text-warning">
             <div class="row ">
@@ -7,7 +7,7 @@
                     <h2><%= t(".allergyns") %></h2>
                     <% allergyns.each do |allergyn| %>
                         <% cache([allergyn.cache_key_with_version, I18n.locale]) do %>
-                            <span style='white-space:nowrap'>| <b><%= allergyn.symbol %></b>&nbsp;-&nbsp;<%= allergyn.name %> |&nbsp;&nbsp;</span>
+                            <span class='whitespace-nowrap'>| <b><%= allergyn.symbol %></b>&nbsp;-&nbsp;<%= allergyn.name %> |&nbsp;&nbsp;</span>
                         <% end %>
                     <% end %>
                 </div>

@@ -2,6 +2,8 @@
 // Common spacing, layout, and helper classes extracted from inline styles
 
 // Height spacers (common spacing patterns from extracted inline styles)
+.opacity-0 { opacity: 0; }
+.transition-opacity-300 { transition: opacity 0.3s ease; }
 .spacing-xs { height: 5px; }
 .spacing-sm { height: 10px; }
 .spacing-md { height: 15px; }
@@ -18,6 +20,9 @@
 .padding-right-md { padding-right: 15px; }
 .padding-bottom-sm { padding-bottom: 5px; }
 .padding-bottom-md { padding-bottom: 10px; }
+// Extra compact utility for 5px on all sides (used to remove multiple inline styles)
+.padding-5 { padding: 5px; }
+.m-0 { margin: 0 !important; }
 
 // Margin utilities
 .margin-top-sm { margin-top: 5px; }
@@ -39,6 +44,9 @@
 .position-absolute { position: absolute; }
 .position-fixed { position: fixed; }
 .position-sticky { position: sticky; }
+.left-0 { left: 0 !important; }
+.right-0 { right: 0 !important; }
+.bottom-0 { bottom: 0 !important; }
 
 // Width and height utilities
 .width-full { width: 100%; }
@@ -54,9 +62,15 @@
 .z-index-1000 { z-index: 1000; }
 .z-index-10000 { z-index: 10000; }
 .z-index-dropdown { z-index: 1070; }
+.z-index-7000 { z-index: 7000; }
+.z-index-7001 { z-index: 7001; }
 
 // Text utilities
 .text-justify { text-align: justify; }
+.whitespace-nowrap { white-space: nowrap; }
+.text-14px { font-size: 14px; }
+.text-3rem { font-size: 3rem; }
+.text-1_5rem { font-size: 1.5rem; }
 .text-left-force { text-align: left !important; }
 
 // Color utilities
@@ -68,6 +82,10 @@
 .overflow-x-hidden { overflow-x: hidden; }
 .overflow-y-hidden { overflow-y: hidden; }
 .overflow-scroll { overflow: scroll; }
+.cursor-grab { cursor: grab; }
+// Pointer events
+.pointer-events-none { pointer-events: none !important; }
+.pointer-events-auto { pointer-events: auto; }
 
 // Border radius utilities
 .border-radius-sm { border-radius: 4px; }
@@ -75,6 +93,8 @@
 .border-radius-lg { border-radius: 12px; }
 // Bottom-right only radius utility (replaces inline styles in tasting CTA)
 .br-bottom-right-4 { border-radius: 0 0 0.25rem 0; }
+// Generic corner radius pattern used in some dropdowns
+.br-0-0-8-8 { border-radius: 0 0 8px 8px; }
 
 // Box shadow utilities
 .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
@@ -209,12 +229,19 @@
   padding-right: 4px;
   padding-left: 4px;
 }
+// Dropdown padding-y custom utility
+.dropdown-padding-y-05 { --bs-dropdown-padding-y: 0.5rem; }
+.dropdown-min-w-0 { --bs-dropdown-min-width: 0em; }
+.min-w-60 { min-width: 60px !important; }
 
 // Additional utility classes for remaining patterns
 .w-60 { width: 60% !important; }
 .w-34 { width: 34% !important; }
 .w-22 { width: 22% !important; }
 .w-36px { width: 36px !important; }
+.w-40px { width: 40px !important; }
+.w-140px { width: 140px !important; }
+.max-width-100 { max-width: 100% !important; }
 .h-36px { height: 36px !important; }
 .menu-item-image { height: 150px; }
 .progress-custom { height: 8px; }
@@ -225,6 +252,7 @@
   height: 200px; 
   border-radius: 8px; 
 }
+.min-h-44 { min-height: 44px !important; }
 .sticky-offset { top: 2rem; }
 
 // Common inline style patterns extracted

@@ -1,16 +1,16 @@
 <div class="btn-group" role="group">
-    <button id="table-selector-staff" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 0px 0 8px 8px;">
+    <button id="table-selector-staff" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle br-0-0-8-8" data-bs-toggle="dropdown" aria-expanded="false">
         <% if tablesetting %>
             <%= tablesetting.name %>
         <% else %>
             <%= t(".table") %>
         <% end %>
     </button>
-    <ul class="dropdown-menu dropdown-menu-dark" style="z-index: 1050; --bs-dropdown-padding-y: 0.5rem;">
+    <ul class="dropdown-menu dropdown-menu-dark z-index-1000 dropdown-padding-y-05">
         <% Smartmenu.where( restaurant_id: restaurant.id, menu_id: menu.id ).includes([:tablesetting]).order('id ASC').each do |smartmenu| %>
             <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
                 <li>
-                    <%= link_to smartmenu_path(smartmenu.slug), data: { turbo: false }, class: "dropdown-item", style: "min-height: 44px; display: flex; align-items: center; padding: 8px 12px;" do %>
+                    <%= link_to smartmenu_path(smartmenu.slug), data: { turbo: false }, class: "dropdown-item min-h-44 d-flex align-items-center py-2 px-3" do %>
                         <%= smartmenu.tablesetting.name %>
                     <% end %>
                 </li>

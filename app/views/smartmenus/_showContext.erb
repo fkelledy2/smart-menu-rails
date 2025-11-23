@@ -1,25 +1,25 @@
 <div id="contextContainer">
-    <div style='display:none' id="currentSession"><%= session.id %></div>
+    <div class="d-none" id="currentSession"><%= session.id %></div>
     <% if order %>
-        <div style='display:none' id="currentOrder"><%= order.id %></div>
-        <div style='display:none' id="currentOrderStatus"><%= order.status %></div>
+        <div class="d-none" id="currentOrder"><%= order.id %></div>
+        <div class="d-none" id="currentOrderStatus"><%= order.status %></div>
     <% end %>
     <% if tablesetting %>
-        <div style='display:none' id="currentTable"><%= tablesetting.id %></div></div>
+        <div class="d-none" id="currentTable"><%= tablesetting.id %></div></div>
     <% end %>
     <% if current_employee %>
-        <div style='display:none' id="currentEmployee"><%= current_employee.id %></div>
+        <div class="d-none" id="currentEmployee"><%= current_employee.id %></div>
     <% end %>
     <% if menu %>
-        <div style='display:none' id="currentMenu"><%= menu.id %></div>
+        <div class="d-none" id="currentMenu"><%= menu.id %></div>
         <% if menu.restaurant %>
-            <div style='display:none' id="currentRestaurant"><%= menu.restaurant.id %></div>
+            <div class="d-none" id="currentRestaurant"><%= menu.restaurant.id %></div>
         <% end %>
     <% end %>
     <% if ordrparticipant %>
-        <div style='display:none' id="currentParticipant"><%= ordrparticipant.id %></div>
+        <div class="d-none" id="currentParticipant"><%= ordrparticipant.id %></div>
     <% end %>
     <% if menuparticipant %>
-        <div style='display:none' id="menuParticipant"><%= menuparticipant.id %></div>
+        <div class="d-none" id="menuParticipant"><%= menuparticipant.id %></div>
     <% end %>
 </div>

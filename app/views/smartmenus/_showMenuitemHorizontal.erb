@@ -1,7 +1,7 @@
     <div class="menu-item-card-mobile" data-name="<%= mi.name.to_s.downcase %>" data-description="<%= mi.description.to_s.downcase %>" data-testid="menu-item-<%= mi.id %>">
         <div class="card">
             <% if mi.name? %>
-                <div style='padding:5px' class="card-header">
+                <div class="card-header padding-5">
                     <span>
                         <% if ordrparticipant && ordrparticipant.preferredlocale %>
                             <%= mi.localised_name(ordrparticipant.preferredlocale) %>
@@ -33,8 +33,8 @@
                             ) %>
                         </div>
                     </div>
-                    <div style='' class="col-7">
-                        <h6 style='padding-left:5px; padding-top:5px;padding-right:5px;'>
+                    <div class="col-7">
+                        <h6 class='padding-5 padding-top-xs'>
                             <% if ordrparticipant && ordrparticipant.preferredlocale %>
                                 <small><%= mi.localised_description(ordrparticipant.preferredlocale) %></small>
                             <% else %>
@@ -61,7 +61,7 @@
             <% else %>
                 <div class="row">
                     <div class="col-12">
-                        <h6 style='padding-left:10px;padding-right:10px;padding-top:5px'>
+                        <h6 class='padding-left-md padding-right-md padding-top-xs'>
                             <% if ordrparticipant && ordrparticipant.preferredlocale %>
                                 <small><%= mi.localised_description(ordrparticipant.preferredlocale) %></small>
                             <% else %>

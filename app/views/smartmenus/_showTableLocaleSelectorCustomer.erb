@@ -1,6 +1,6 @@
 <div class="d-flex gap-1" role="group">
     <div class="btn-group" role="group">
-        <button id="table-selector-customer" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 0px 0 8px 8px;">
+        <button id="table-selector-customer" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle br-0-0-8-8" data-bs-toggle="dropdown" aria-expanded="false">
             <% if tablesetting %>
                 <%= tablesetting.name %>
             <% else %>
@@ -23,18 +23,18 @@
                 <% selected_locale = I18n.default_locale.to_s %>
             <% end %>
         <% end %>
-        <div class="btn-group" role="group" style="position: relative; z-index: 9999;">
-            <button id="lovale-actions" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 0px 0 8px 8px; min-width: 60px;">
+        <div class="btn-group position-relative z-index-10000" role="group">
+            <button id="lovale-actions" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle br-0-0-8-8 min-w-60" data-bs-toggle="dropdown" aria-expanded="false">
                     <% if selected_locale && restaurant.getLocale(selected_locale) %>
                         <img src="<%= restaurant.getLocale(selected_locale).flag %>" class="rounded-1 border border-white flag-icon-selected">
                     <% else %>
                         <i class="bi bi-translate"></i>
                     <% end %>
             </button>
-            <ul style="--bs-dropdown-padding-y: 0.5rem; --bs-dropdown-min-width: 0em; z-index: 9999;" class="dropdown-menu dropdown-menu-dark" aria-labelledby="locales">
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-padding-y-05 dropdown-min-w-0 z-index-10000" aria-labelledby="locales">
                 <% Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active').each do |restaurantlocale| %>
                     <li>
-                        <a style="padding: 8px 12px; min-height: 44px; display: flex; align-items: center;" class="dropdown-item" href="#">
+                        <a class="dropdown-item min-h-44 d-flex align-items-center py-2 px-3" href="#">
                             <img src="<%= restaurantlocale.flag %>" data-locale="<%= restaurantlocale.locale.downcase %>" tooltip="<%= restaurantlocale.language %>" class="setparticipantlocale rounded-1 border border-white flag-icon">
                         </a>
                     </li>
