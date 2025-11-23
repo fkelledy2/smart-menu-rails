@@ -149,34 +149,36 @@
   <% if @demoMenu %>
     <span class="display-none" id="qrIcon"><%= image_url('qr-icon.svg') %></span>
     <span class="display-none" id="qrHost"><%= @qrHost %></span>
-    <div id="demo-table" class="container px-1 py-2">
-      <h2 class="pb-2"><%= t(".demoMenu") %></h2>
-      <div class="row g-4 py-2 row-cols-12 row-cols-12 row-cols-lg-12 align-items-center">
-            <span class="display-none qrSlug"><%= @demoMenu.slug %></span>
-            <div class="padding-horizontal-0 col-sm-12 col-md-12 col-lg-8">
-              <div class="embed-responsive embed-responsive-16by9">
-                    <video width="100%" loop muted playsinline autoplay>
-                      <source src="<%= asset_path('smart-menu.mp4') %>" type="video/mp4">
-                      <%= t('.video_unsupported') %>
-                    </video>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-4">
-                <h6 class="text-center-padded"><%= t(".demoMenuTag").html_safe %></h6>
-                <div class="d-flex justify-content-center">
-                    <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
-                        <div id="<%= @demoMenu.slug %>">
-                        </div>
-                    </a>
+    <div class="container px-1 py-2">
+        <h2 class="pb-2 border-bottom"><%= t(".demoMenu") %></h2>
+        <div id="demo-table" class="container px-1 py-2">
+          <div class="row g-4 py-2 row-cols-12 row-cols-12 row-cols-lg-12 align-items-center">
+                <span class="display-none qrSlug"><%= @demoMenu.slug %></span>
+                <div class="padding-horizontal-2 col-sm-12 col-md-12 col-lg-8">
+                  <div class="embed-responsive embed-responsive-16by9">
+                        <video style='z-index:10000;' width="100%" loop muted playsinline autoplay>
+                          <source src="<%= asset_path('smart-menu.mp4') %>" type="video/mp4">
+                          <%= t('.video_unsupported') %>
+                        </video>
+                  </div>
                 </div>
-                <h6 class="text-center-padded">
-                    <%= t(".demoMenuTagBrowse").html_safe %>
-                </h6>
-                <h6 class="text-center">
-                    <%= link_to t(".browse"), smartmenus_path, class: "btn btn-danger" %>
-                </h6>
-            </div>
-      </div>
+                <div class="col-sm-12 col-md-12 col-lg-4">
+                    <h6 class="text-center-padded"><%= t(".demoMenuTag").html_safe %></h6>
+                    <div class="d-flex justify-content-center">
+                        <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
+                            <div id="<%= @demoMenu.slug %>">
+                            </div>
+                        </a>
+                    </div>
+                    <h6 class="text-center-padded">
+                        <%= t(".demoMenuTagBrowse").html_safe %>
+                    </h6>
+                    <h6 class="text-center">
+                        <%= link_to t(".browse"), smartmenus_path, class: "btn btn-danger" %>
+                    </h6>
+                </div>
+          </div>
+        </div>
     </div>
   <% end %>
 
