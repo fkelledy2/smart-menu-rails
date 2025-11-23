@@ -61,7 +61,7 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th style="width: 40px;"></th>
+            <th class="w-40px"></th>
             <th><%= t('.name', default: 'Name') %></th>
             <th class="text-end"><%= t('.price', default: 'Price') %></th>
             <th class="text-end">
@@ -114,7 +114,7 @@
                      data-sortable-handle-value=".item-handle">
               <% section_items.each do |item| %>
                 <tr data-sortable-id="<%= item.id %>" data-testid="menu-item-<%= item.id %>">
-                  <td class="item-handle" style="width: 40px; cursor: grab;">
+                  <td class="item-handle w-40px cursor-grab">
                     <i class="bi bi-grip-vertical text-muted"></i>
                   </td>
                   <td>
@@ -122,7 +122,7 @@
                       <div class="d-flex align-items-center gap-2">
                         <strong><%= item.name %></strong>
                         <% if item.image.present? %>
-                          <i class="bi bi-image text-primary" style="font-size: 14px;" title="Has image - hover to preview"></i>
+                          <i class="bi bi-image text-primary text-14px" title="Has image - hover to preview"></i>
                         <% end %>
                       </div>
                       <% if item.description.present? %>
@@ -182,7 +182,7 @@
   <% else %>
     <!-- Empty State -->
     <div class="text-center py-5" data-testid="menu-items-empty-state">
-      <i class="bi bi-list-ul text-muted" style="font-size: 4rem;"></i>
+      <i class="bi bi-list-ul text-muted text-3rem"></i>
       <h4 class="mt-3"><%= t('.no_items', default: 'No items yet') %></h4>
       <p class="text-muted">
         <%= t('.no_items_desc', default: 'Add sections first, then add items to those sections') %>
