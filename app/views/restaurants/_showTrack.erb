@@ -1,4 +1,4 @@
-    <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
+    <div class="col-12 col-md-6 col-lg-4 padding-top-lg">
         <div class="card">
             <div class="row">
                 <div class="col-12">
@@ -15,9 +15,9 @@
                         <%= render "/smartmenus/showImage", src: track.image, alt: track.name %>
                     </div>
                 </div>
-                <div style='padding-left:0px' class="col-7">
-                    <h6 style='padding-top:5px;padding-right:10px;' class="card-title"><strong><%= track.name %></strong></h6>
-                    <h6 style='padding-top:0px;padding-right:10px;' ><small><%= track.description %></small></h6>
+                <div class="col-7 ps-0">
+                    <h6 class="card-title padding-top-sm padding-right-sm"><strong><%= track.name %></strong></h6>
+                    <h6 class="pt-0 padding-right-sm"><small><%= track.description %></small></h6>
                 </div>
             </div>
         </div>
