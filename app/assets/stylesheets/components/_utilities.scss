@@ -86,6 +86,9 @@
 // Pointer events
 .pointer-events-none { pointer-events: none !important; }
 .pointer-events-auto { pointer-events: auto; }
+// Position helpers
+.pos-rel { position: relative !important; }
+.bottom-neg-12 { bottom: -12px !important; }
 
 // Border radius utilities
 .border-radius-sm { border-radius: 4px; }
@@ -95,6 +98,8 @@
 .br-bottom-right-4 { border-radius: 0 0 0.25rem 0; }
 // Generic corner radius pattern used in some dropdowns
 .br-0-0-8-8 { border-radius: 0 0 8px 8px; }
+// Specific mixed-corner radius used in menu size button
+.br-8-0-8-0 { border-radius: 8px 0 8px 0 !important; }
 
 // Box shadow utilities
 .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
@@ -105,6 +110,8 @@
 .flex-center { display: flex; justify-content: center; align-items: center; }
 .flex-between { display: flex; justify-content: space-between; }
 .flex-around { display: flex; justify-content: space-around; }
+// Reset helpers
+.btn-reset { background: none; border: none; padding: 0; }
 .flex-start { display: flex; justify-content: flex-start; }
 .flex-end { display: flex; justify-content: flex-end; }
 .flex-column { flex-direction: column; }
@@ -254,6 +261,9 @@
 }
 .min-h-44 { min-height: 44px !important; }
 .sticky-offset { top: 2rem; }
+// Additional min/max size helpers
+.min-h-100 { min-height: 100px !important; }
+.max-w-50px { max-width: 50px !important; }
 
 // Common inline style patterns extracted
 .table-container-spacing {

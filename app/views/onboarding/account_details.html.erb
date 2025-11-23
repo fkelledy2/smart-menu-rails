@@ -24,6 +24,7 @@
       <label class="form-label"><%= t('onboarding.account_details.email_label') %></label>
       <input type="email" class="form-control form-control-lg"
              value="<%= current_user.email %>"
+             autocomplete="email"
              disabled>
       <div class="form-text"><%= t('onboarding.account_details.email_help') %></div>
     </div>

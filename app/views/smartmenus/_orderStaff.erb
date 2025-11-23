@@ -14,13 +14,13 @@
                                         <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" data-testid="staff-view-order-btn">
                                             <i id="orderCart" class="bi bi-cart"></i>
                                             <%= t(".order") %>
-                                            <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm" role="status"></div>
+                                            <div id="orderCartSpinner" class="spinner-border spinner-border-sm d-none" role="status"></div>
                                         </button>
                                     <% else %>
                                         <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
                                             <i id="orderCart" class="bi bi-cart"></i>
                                             <%= t(".order") %>
-                                            <div id="orderCartSpinner" style='display:none' class="spinner-border spinner-border-sm" role="status"></div>
+                                            <div id="orderCartSpinner" class="spinner-border spinner-border-sm d-none" role="status"></div>
                                         </button>
                                     <% end %>
                                 <% else %>
