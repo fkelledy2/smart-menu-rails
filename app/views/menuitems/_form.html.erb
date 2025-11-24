@@ -140,6 +140,35 @@
       <%= form.select :itemtype, options_for_select(Menuitem.itemtypes.keys.to_a, form.object.itemtype), {} %>
     </div>
   </div>
+  <div class="spacing-sm"></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :calories, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.text_field :calories, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="spacing-sm"></div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :unitcost, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.text_field :unitcost, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-3">
+      <span class="float-md-end"><%= form.label :price, class: 'col-form-label' %></span>
+    </div>
+    <div class="col-9">
+      <%= form.text_field :price, class: 'form-control' %>
+      <% if menusection.tasting_menu? %>
+        <small class="text-muted">This price is ignored in tasting menu sections. Use supplement below.</small>
+      <% end %>
+    </div>
+  </div>
   <!-- Alcohol Settings -->
   <div class="spacing-sm"></div>
   <div class="form-group row">
@@ -202,36 +231,6 @@
     </div>
   </div>
   <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :calories, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :calories, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :unitcost, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :unitcost, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :price, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :price, class: 'form-control' %>
-      <% if menusection.tasting_menu? %>
-        <small class="text-muted">This price is ignored in tasting menu sections. Use supplement below.</small>
-      <% end %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-
   <% if menusection.tasting_menu? %>
     <div class="form-group row">
       <div class="col-12">
