@@ -108,36 +108,35 @@ class LocalizeMenuService
 
       was_new_record = menu_locale.new_record?
 
-      # Always compute localized text so that content changes get propagated.
-      # This also allows us to count an update even if values remain the same (idempotent run).
-      translation_result = localize_text_with_tracking(menu.name, locale_code, is_default)
-      description_result = localize_text_with_tracking(menu.description, locale_code, is_default)
-
-      menu_locale.assign_attributes(
-        status: restaurant_locale.status,
-        name: translation_result[:text],
-        description: description_result[:text],
-      )
-
-      # Track rate-limited items
-      if translation_result[:rate_limited]
-        stats[:rate_limited_items] << { type: 'menu', id: menu.id, field: 'name', locale: locale_code, text: menu.name }
-      end
-      if description_result[:rate_limited]
-        stats[:rate_limited_items] << { type: 'menu', id: menu.id, field: 'description', locale: locale_code, text: menu.description }
-      end
-
-      if was_new_record
-        menu_locale.save!
-        stats[:menu_locales_created] += 1
-      else
-        if menu_locale.changed?
-          menu_locale.save!
-        else
-          # Touch to reflect a processed update even if attributes are identical
-          menu_locale.touch if menu_locale.respond_to?(:touch)
+      # Skip if already localized and force is false
+      should_translate = force || was_new_record || menu_locale.name.blank?
+      
+      if should_translate
+        translation_result = localize_text_with_tracking(menu.name, locale_code, is_default)
+        description_result = localize_text_with_tracking(menu.description, locale_code, is_default)
+        
+        menu_locale.assign_attributes(
+          status: restaurant_locale.status,
+          name: translation_result[:text],
+          description: description_result[:text],
+        )
+        
+        # Track rate-limited items
+        if translation_result[:rate_limited]
+          stats[:rate_limited_items] << { type: 'menu', id: menu.id, field: 'name', locale: locale_code, text: menu.name }
         end
-        stats[:menu_locales_updated] += 1
+        if description_result[:rate_limited]
+          stats[:rate_limited_items] << { type: 'menu', id: menu.id, field: 'description', locale: locale_code, text: menu.description }
+        end
+      end
+
+      if menu_locale.changed?
+        menu_locale.save!
+        if was_new_record
+          stats[:menu_locales_created] += 1
+        else
+          stats[:menu_locales_updated] += 1
+        end
       end
 
       # Localize all sections

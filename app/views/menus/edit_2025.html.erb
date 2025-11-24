@@ -193,7 +193,7 @@
     let pendingForm = null;
     let pollTimer = null;
     let currentJobId = null;
-    let currentMode = 'ai'; // 'ai' or 'localize'
+    let currentMode = 'ai'; // 'ai' | 'localize' | 'polish'
 
     // Global auto-save: submit any form marked with data-auto-save on input changes
     function bindAutosave(){
@@ -216,7 +216,7 @@
 
     function showModalForConfirmation(form){
       pendingForm = form;
-      currentMode = (form.dataset.localize === 'true') ? 'localize' : 'ai';
+      currentMode = (form.dataset.localize === 'true') ? 'localize' : (form.dataset.polish === 'true' ? 'polish' : 'ai');
       const modalEl = document.getElementById('aiProgressModal');
       // Move modal to body once to avoid stacking context issues (e.g., navbar dropdown overlap)
       if (modalEl && !modalEl.dataset.movedToBody) {
@@ -225,19 +225,25 @@
       }
       const confirmPane = document.getElementById('ai-confirm-pane');
       const progressPane = document.getElementById('ai-progress-pane');
+      // Show confirm, hide progress (must remove/add d-none due to !important in Bootstrap)
+      confirmPane.classList.remove('d-none');
       confirmPane.style.display = '';
+      progressPane.classList.add('d-none');
       progressPane.style.display = 'none';
       // Set modal title per mode
       const titleEl = modalEl.querySelector('.modal-title');
       if (titleEl) {
-        titleEl.textContent = (currentMode === 'localize') ? 'Localize Menu' : 'Generate AI Images';
+        titleEl.textContent = (currentMode === 'localize') ? 'Localize Menu' : (currentMode === 'polish' ? 'AI Polish Menu' : 'Generate AI Images');
       }
       // Set confirmation text per mode
-      confirmPane.querySelector('p').textContent = (currentMode === 'localize')
+      confirmText = (currentMode === 'localize')
         ? 'This will localize your menu to active restaurant locales and may consume API credits. Proceed?'
-        : 'This will generate new AI images for your menu items and may consume API credits. Proceed?';
+        : (currentMode === 'polish'
+            ? 'This will clean up item names/descriptions, generate missing descriptions with AI, assess allergens/alcohol and reorder sections. Proceed?'
+            : 'This will generate new AI images for your menu items and may consume API credits. Proceed?');
+      confirmPane.querySelector('p').textContent = confirmText;
       // Hide image preview for localization mode, show for AI mode
-      document.getElementById('ai-preview').style.display = (currentMode === 'localize') ? 'none' : '';
+      document.getElementById('ai-preview').style.display = (currentMode === 'localize' || currentMode === 'polish') ? 'none' : '';
       document.getElementById('ai-confirm-btn').disabled = false;
       const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
       modal.show();
@@ -246,9 +252,13 @@
     async function startJob(){
       if(!pendingForm) return;
       // Swap to progress pane
-      document.getElementById('ai-confirm-pane').style.display = 'none';
-      document.getElementById('ai-progress-pane').style.display = '';
-      document.getElementById('ai-progress-text').textContent = (currentMode === 'localize') ? 'Queued localization…' : 'Queued…';
+      const confirmPane = document.getElementById('ai-confirm-pane');
+      const progressPane = document.getElementById('ai-progress-pane');
+      confirmPane.classList.add('d-none');
+      confirmPane.style.display = 'none';
+      progressPane.classList.remove('d-none');
+      progressPane.style.display = '';
+      document.getElementById('ai-progress-text').textContent = (currentMode === 'localize') ? 'Queued localization…' : (currentMode === 'polish' ? 'Queued polishing…' : 'Queued…');
       updateBar(0);
 
       const url = pendingForm.action;
@@ -274,6 +284,8 @@
           currentJobId = data.job_id;
           if (currentMode === 'localize') {
             pollLocalizationProgress(pendingForm, currentJobId);
+          } else if (currentMode === 'polish') {
+            pollPolishProgress(pendingForm, currentJobId);
           } else {
             pollProgress(pendingForm, currentJobId);
           }
@@ -359,6 +371,46 @@
       }, 1500);
     }
 
+    async function pollPolishProgress(form, jobId){
+      const base = new URL(form.action, window.location.origin);
+      base.pathname = base.pathname.replace(/\/(polish)(\.json)?$/, '/polish_progress');
+      base.searchParams.set('job_id', jobId);
+      const url = base.toString();
+
+      if(pollTimer){ clearInterval(pollTimer); }
+      pollTimer = setInterval(async () => {
+        try{
+          const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+          if(!resp.ok) return;
+          const p = await resp.json();
+          const current = p.current || 0;
+          const total = p.total || 0;
+          const status = p.status || 'running';
+          const name = p.current_item_name || '';
+          const msg = p.message || status;
+          const baseMsg = name || msg;
+          document.getElementById('ai-progress-text').textContent = total > 0 ? `${baseMsg} — ${current}/${total}` : baseMsg;
+          const percent = total > 0 ? Math.floor((current / total) * 100) : (status === 'completed' ? 100 : 0);
+          updateBar(percent);
+
+          if(status === 'completed' || status === 'failed'){
+            clearInterval(pollTimer);
+            pollTimer = null;
+            if(status === 'completed'){
+              document.getElementById('ai-progress-text').textContent = 'Completed';
+              updateBar(100);
+              setTimeout(() => {
+                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('aiProgressModal'));
+                modal.hide();
+              }, 900);
+            }
+          }
+        } catch(e){
+          console.warn('Polish progress poll failed', e);
+        }
+      }, 1500);
+    }
+
     async function pollLocalizationProgress(form, jobId){
       const base = new URL(form.action, window.location.origin);
       base.pathname = base.pathname.replace(/\/localize(\.json)?$/, '/localization_progress');
@@ -409,7 +461,7 @@
 
     document.addEventListener('submit', function(e){
       const form = e.target;
-      if(form && form.matches && (form.matches('form[data-ai-generate="true"]') || form.matches('form[data-localize="true"]'))){
+      if(form && form.matches && (form.matches('form[data-ai-generate="true"]') || form.matches('form[data-localize="true"]') || form.matches('form[data-polish="true"]'))){
         e.preventDefault();
         showModalForConfirmation(form);
       }
@@ -420,7 +472,7 @@
       const btn = e.target.closest('button[type="submit"], input[type="submit"]');
       if(!btn) return;
       const form = btn.form;
-      if(form && form.matches && (form.matches('form[data-ai-generate="true"]') || form.matches('form[data-localize="true"]'))){
+      if(form && form.matches && (form.matches('form[data-ai-generate="true"]') || form.matches('form[data-localize="true"]') || form.matches('form[data-polish="true"]'))){
         // Prevent immediate submission; show confirm modal instead
         e.preventDefault();
         showModalForConfirmation(form);

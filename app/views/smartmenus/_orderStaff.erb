@@ -35,7 +35,15 @@
                                         <i class="bi bi-receipt"></i>
                                         <%= t(".bill") %>
                                     </button>
-                                    <%= button_to t('smartmenus.alcohol.acknowledge_btn', default: 'Acknowledge age check'), ack_alcohol_restaurant_ordr_path(menu.restaurant, order), method: :post, class: 'btn btn-touch-secondary btn-touch-sm ms-2' %>
+                                    <% if AlcoholOrderEvent.where(ordr_id: order.id, age_check_acknowledged: false).exists? %>
+                                      <%= button_to ack_alcohol_restaurant_ordr_path(menu.restaurant, order, return_to: smartmenu_path(menu.smartmenu.slug)),
+                                          method: :post,
+                                          class: 'btn-touch-secondary btn-touch-sm ms-2',
+                                          data: { testid: 'ack-age-check-btn' } do %>
+                                        <i class="bi bi-check2"></i>
+                                        <span><%= t('smartmenus.alcohol.age_check', default: 'Age check') %></span>
+                                      <% end %>
+                                    <% end %>
                                     <% if order.addedCount > 0 %>
                                         <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal">
                                             <i id="orderCart" class="bi bi-cart"></i>

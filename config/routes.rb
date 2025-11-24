@@ -209,6 +209,8 @@ Rails.application.routes.draw do
         post :regenerate_images
         get :image_generation_progress
         get :localization_progress
+        post :polish, to: 'menus#polish'
+        get :polish_progress, to: 'menus#polish_progress'
         post :localize
         patch :update_availabilities
         get :tablesettings, to: 'menus#show'

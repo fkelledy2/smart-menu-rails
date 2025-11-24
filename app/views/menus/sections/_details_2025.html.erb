@@ -78,6 +78,15 @@
         <span><%= t('.preview_customer', default: 'Preview (Customer)') %></span>
       <% end %>
     <% end %>
+
+    <%= button_to polish_restaurant_menu_path(restaurant, menu),
+        method: :post,
+        class: 'quick-action-btn quick-action-btn-secondary',
+        data: { turbo: false, testid: 'polish-menu-btn' },
+        form: { data: { turbo: false, polish: true, menu_id: menu.id } } do %>
+      <i class="bi bi-magic"></i>
+      <span><%= t('.ai_polish', default: 'AI Polish') %></span>
+    <% end %>
   </div>
 </div>
 

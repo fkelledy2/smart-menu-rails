@@ -5,7 +5,7 @@ class MenusController < ApplicationController
 
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_restaurant
-  before_action :set_menu, only: %i[show edit update destroy regenerate_images image_generation_progress localize localization_progress performance update_availabilities]
+  before_action :set_menu, only: %i[show edit update destroy regenerate_images image_generation_progress localize localization_progress performance update_availabilities polish polish_progress]
 
   # Pundit authorization
   after_action :verify_authorized, except: %i[index performance update_sequence]
@@ -129,6 +129,61 @@ class MenusController < ApplicationController
       end
     rescue => e
       Rails.logger.warn("[MenusController] Progress read failed for #{jid}: #{e.message}")
+      payload ||= {}
+    end
+
+    payload ||= {}
+    payload['job_id'] = jid
+    payload['menu_id'] ||= @menu.id
+
+    render json: payload
+  end
+
+  # POST /restaurants/:restaurant_id/menus/:id/polish
+  def polish
+    authorize @menu, :update?
+
+    total = @menu.menuitems.count
+    jid = AiMenuPolisherJob.perform_async(@menu.id)
+
+    begin
+      Sidekiq.redis do |r|
+        r.setex("polish:#{jid}", 24 * 3600, {
+          status: 'queued',
+          current: 0,
+          total: total,
+          message: 'Queued AI menu polishing',
+          menu_id: @menu.id
+        }.to_json)
+      end
+    rescue => e
+      Rails.logger.warn("[MenusController] Failed to init polish progress for #{jid}: #{e.message}")
+    end
+
+    respond_to do |format|
+      format.html do
+        flash[:notice] = t('menus.controller.polish_queued', default: 'AI menu polishing has been queued.')
+        redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu, section: 'details')
+      end
+      format.json do
+        render json: { job_id: jid, total: total, status: 'queued' }
+      end
+    end
+  end
+
+  # GET /restaurants/:restaurant_id/menus/:id/polish_progress
+  def polish_progress
+    authorize @menu, :update?
+
+    jid = params[:job_id].to_s
+    payload = nil
+    begin
+      Sidekiq.redis do |r|
+        json = r.get("polish:#{jid}")
+        payload = json.present? ? JSON.parse(json) : {}
+      end
+    rescue => e
+      Rails.logger.warn("[MenusController] Polish progress read failed for #{jid}: #{e.message}")
       payload ||= {}
     end
 
