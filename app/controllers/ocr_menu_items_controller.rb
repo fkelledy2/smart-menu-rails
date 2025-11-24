@@ -75,6 +75,28 @@ class OcrMenuItemsController < ApplicationController
       return render json: { ok: false, errors: guard_errors }, status: :unprocessable_entity
     end
 
+    # Merge metadata overrides (alcohol flags) if provided
+    if params.dig(:ocr_menu_item, :metadata).present?
+      md = params[:ocr_menu_item][:metadata].to_unsafe_h.symbolize_keys rescue {}
+      safe_md = {}
+      if md.key?(:alcohol_override)
+        # expected values: 'alcoholic', 'non_alcoholic', 'undecided'
+        safe_md[:alcohol_override] = md[:alcohol_override].to_s
+      end
+      safe_md[:alcohol_abv] = md[:alcohol_abv] if md.key?(:alcohol_abv)
+      safe_md[:alcohol_classification] = md[:alcohol_classification].to_s if md.key?(:alcohol_classification)
+      @item.metadata ||= {}
+      @item.metadata.merge!(safe_md)
+    end
+
+    # Allow flat params too (from simple inline editors)
+    if params.key?(:alcohol_override) || params.key?(:alcohol_abv) || params.key?(:alcohol_classification)
+      @item.metadata ||= {}
+      @item.metadata[:alcohol_override] = params[:alcohol_override].to_s if params.key?(:alcohol_override)
+      @item.metadata[:alcohol_abv] = params[:alcohol_abv] if params.key?(:alcohol_abv)
+      @item.metadata[:alcohol_classification] = params[:alcohol_classification].to_s if params.key?(:alcohol_classification)
+    end
+
     if @item.update(attrs)
       render json: { ok: true, item: serialize_item(@item) }
     else

@@ -5,7 +5,7 @@
         <div class="d-none" id="currentOrderStatus"><%= order.status %></div>
     <% end %>
     <% if tablesetting %>
-        <div class="d-none" id="currentTable"><%= tablesetting.id %></div></div>
+        <div class="d-none" id="currentTable"><%= tablesetting.id %></div>
     <% end %>
     <% if current_employee %>
         <div class="d-none" id="currentEmployee"><%= current_employee.id %></div>
@@ -14,6 +14,11 @@
         <div class="d-none" id="currentMenu"><%= menu.id %></div>
         <% if menu.restaurant %>
             <div class="d-none" id="currentRestaurant"><%= menu.restaurant.id %></div>
+            <div class="d-none" id="currentRestaurantAllowAlcohol"><%= menu.restaurant.allow_alcohol ? '1' : '0' %></div>
+            <div class="d-none" id="alcoholAllowedNow"><%= menu.restaurant.alcohol_allowed_now? ? '1' : '0' %></div>
+            <div class="d-none" id="alcoholVerifyAgeText"><%= t('smartmenus.alcohol.verify_age') %></div>
+            <div class="d-none" id="alcoholSalesDisabledText"><%= t('smartmenus.alcohol.sales_disabled') %></div>
+            <div class="d-none" id="alcoholPolicyBlockedText"><%= t('smartmenus.alcohol.policy_blocked', default: 'Alcohol not available at this time.') %></div>
         <% end %>
     <% end %>
     <% if ordrparticipant %>

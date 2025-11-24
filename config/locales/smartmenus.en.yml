@@ -90,3 +90,20 @@ en:
 
     modal_footer_primary:
       cancel: Cancel
+
+    alcohol:
+      flag: "Alcohol"
+      non_alcoholic: "Non-alcoholic"
+      zero_abv_short: "0.0%"
+      verify_age: "Please verify the customer's age before serving alcoholic beverages."
+      sales_disabled: "Alcohol sales are disabled for this restaurant."
+      policy_blocked: "Alcohol sales are currently blocked by policy."
+      acknowledge_btn: "Acknowledge age check"
+      acknowledged: "Age check acknowledged"
+    ocr:
+      alcohol:
+        override_label: "Alcohol"
+        abv: "ABV"
+        classification: "Class"
+        review_needed: "Needs review"
+        overrides_hint: "Overrides apply at publish."

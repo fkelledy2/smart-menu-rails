@@ -30,7 +30,13 @@
                         <div class="row">
                             <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
                                 <div class="col-12">
-                                    <h6 class="card-title"><strong><%= menuitem.name %></strong></h6>
+                                    <h6 class="card-title d-flex align-items-center gap-2"><strong><%= menuitem.name %></strong>
+                                      <% if menuitem.respond_to?(:alcoholic?) && menuitem.alcoholic? %>
+                                        <span class="badge bg-danger" title="<%= t('smartmenus.alcohol.flag') %>"><%= t('smartmenus.alcohol.flag') %></span>
+                                      <% elsif menuitem.respond_to?(:alcohol_classification) && menuitem.alcohol_classification == 'non_alcoholic' %>
+                                        <span class="badge bg-secondary" title="<%= t('smartmenus.alcohol.non_alcoholic') %>"><%= t('smartmenus.alcohol.zero_abv_short') %></span>
+                                      <% end %>
+                                    </h6>
                                     <span style="position:relative;top:-100px" class="float-end">
                                         <div class="btn-group" role="group" aria-label="<%= t('.allergyns') %>">
                                             <% menuitem.allergyns.each do |allergyn| %>
@@ -43,7 +49,13 @@
                                 </div>
                             <% else %>
                                 <div class="col-9">
-                                    <h6 style='padding-top:5px' class="card-title"><strong><%= menuitem.name %></strong></h6>
+                                    <h6 style='padding-top:5px' class="card-title d-flex align-items-center gap-2"><strong><%= menuitem.name %></strong>
+                                      <% if menuitem.respond_to?(:alcoholic?) && menuitem.alcoholic? %>
+                                        <span class="badge bg-danger" title="<%= t('smartmenus.alcohol.flag') %>"><%= t('smartmenus.alcohol.flag') %></span>
+                                      <% elsif menuitem.respond_to?(:alcohol_classification) && menuitem.alcohol_classification == 'non_alcoholic' %>
+                                        <span class="badge bg-secondary" title="<%= t('smartmenus.alcohol.non_alcoholic') %>"><%= t('smartmenus.alcohol.zero_abv_short') %></span>
+                                      <% end %>
+                                    </h6>
                                 </div>
                                 <div class="col-3">
                                     <span class="float-end">
@@ -80,6 +92,7 @@
                                             data-bs-menuitem_price="<%= menuitem.price %>"
                                             data-bs-menuitem_description="<%= menuitem.description %>"
                                             data-bs-menuitem_image="<%= menuitem.image_url %>"
+                                            data-bs-menuitem_alcoholic="<%= (menuitem.respond_to?(:alcoholic?) && menuitem.alcoholic?) ? '1' : '0' %>"
                                             title="<%= t('.add_to_order') %>">
                                         <i class="bi bi-plus"></i>
                                     </button>

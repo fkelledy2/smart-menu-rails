@@ -4,7 +4,7 @@ class RestaurantsController < ApplicationController
   include CachePerformanceMonitoring
 
   before_action :authenticate_user!
-  before_action :set_restaurant, only: %i[show edit update destroy performance analytics user_activity update_hours]
+  before_action :set_restaurant, only: %i[show edit update destroy performance analytics user_activity update_hours update_alcohol_policy alcohol_status]
   before_action :set_currency, only: %i[show index]
   before_action :disable_turbo, only: [:edit]
 
@@ -34,6 +34,43 @@ class RestaurantsController < ApplicationController
       'SPOTIFY_REDIRECT_URI', nil,
     )}&scope=#{scopes}"
     redirect_to spotify_auth_url, allow_other_host: true
+  end
+
+  # PATCH /restaurants/:id/update_alcohol_policy
+  def update_alcohol_policy
+    authorize @restaurant
+    payload = params.permit(
+      allowed_days_of_week: [],
+      allowed_time_ranges: [:from_min, :to_min],
+      blackout_dates: [],
+    )
+
+    policy = @restaurant.alcohol_policy || @restaurant.build_alcohol_policy
+
+    # Normalize inputs
+    days = Array(payload[:allowed_days_of_week]).map { |d| d.to_i }.uniq.sort
+    ranges = Array(payload[:allowed_time_ranges]).map do |r|
+      h = r.is_a?(ActionController::Parameters) ? r.to_unsafe_h : r
+      { 'from_min' => h['from_min'].to_i, 'to_min' => h['to_min'].to_i }
+    end
+    dates = Array(payload[:blackout_dates]).map { |d| Date.parse(d) rescue nil }.compact.uniq.sort
+
+    policy.allowed_days_of_week = days
+    policy.allowed_time_ranges = ranges
+    policy.blackout_dates = dates
+
+    if policy.save
+      AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id) if defined?(AdvancedCacheService)
+      render json: { success: true, allowed_now: @restaurant.alcohol_allowed_now? }, status: :ok
+    else
+      render json: { success: false, errors: policy.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  # GET /restaurants/:id/alcohol_status
+  def alcohol_status
+    authorize @restaurant
+    render json: { allowed_now: @restaurant.alcohol_allowed_now? }
   end
 
   def spotify_callback
@@ -1030,7 +1067,7 @@ class RestaurantsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def restaurant_params
     permitted = params.require(:restaurant).permit(:name, :description, :address1, :address2, :state, :city, :postcode, :country,
-                                       :image, :remove_image, :status, :sequence, :capacity, :user_id, :displayImages, :displayImagesInPopup, :allowOrdering, :inventoryTracking, :currency, :genid, :latitude, :longitude, :imagecontext, :image_style_profile, :wifissid, :wifiEncryptionType, :wifiPassword, :wifiHidden, :spotifyuserid,)
+                                       :image, :remove_image, :status, :sequence, :capacity, :user_id, :displayImages, :displayImagesInPopup, :allowOrdering, :allow_alcohol, :inventoryTracking, :currency, :genid, :latitude, :longitude, :imagecontext, :image_style_profile, :wifissid, :wifiEncryptionType, :wifiPassword, :wifiHidden, :spotifyuserid,)
     
     # Convert status to integer if it's a string (from select dropdown)
     if permitted[:status].present? && permitted[:status].is_a?(String)

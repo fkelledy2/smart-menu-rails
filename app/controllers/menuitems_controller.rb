@@ -299,6 +299,7 @@ class MenuitemsController < ApplicationController
                                      :calories, :sequence, :unitcost, :price, :menusection_id, :preptime,
                                      :tasting_optional, :tasting_supplement_cents, :tasting_supplement_currency, :course_order,
                                      :hidden, :tasting_carrier,
+                                     :alcoholic, :abv, :alcohol_classification,
                                      allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: [],)
   end
 end

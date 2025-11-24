@@ -67,6 +67,181 @@
       </div>
     </div>
 
+    <!-- Alcohol Policy -->
+    <div class="feature-card" id="alcohol-policy-editor" data-endpoint="<%= update_alcohol_policy_restaurant_path(restaurant) %>" data-status-endpoint="<%= alcohol_status_restaurant_path(restaurant) %>">
+      <div class="feature-card-icon bg-danger">
+        <i class="bi bi-shield-exclamation"></i>
+      </div>
+      <div class="feature-card-content">
+        <h5 class="feature-card-title"><%= t('.alcohol_policy', default: 'Alcohol Policy') %></h5>
+        <p class="feature-card-description">
+          <%= t('.alcohol_policy_help', default: 'Configure allowed days/times and blackout dates for alcohol sales.') %>
+        </p>
+        <div class="mt-3">
+          <!-- Status preview -->
+          <div class="mb-3">
+            <span id="alcohol-policy-status" class="badge <%= restaurant.alcohol_allowed_now? ? 'bg-success' : 'bg-secondary' %>">
+              <%= restaurant.alcohol_allowed_now? ? t('.allowed_now', default: 'Allowed now') : t('.blocked_now', default: 'Blocked now') %>
+            </span>
+          </div>
+
+          <!-- Days of week -->
+          <div class="mb-3">
+            <label class="form-label-2025"><%= t('.allowed_days', default: 'Allowed Days') %></label>
+            <div class="d-flex flex-wrap gap-3" id="alcohol-days">
+              <% days = %w[Sun Mon Tue Wed Thu Fri Sat] %>
+              <% selected_days = restaurant.alcohol_policy&.allowed_days_of_week || [] %>
+              <% days.each_with_index do |d, i| %>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="<%= i %>" id="alcohol-day-<%= i %>" <%= 'checked' if selected_days.include?(i) %> />
+                  <label class="form-check-label" for="alcohol-day-<%= i %>"><%= d %></label>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Time ranges -->
+          <div class="mb-3">
+            <label class="form-label-2025"><%= t('.time_ranges', default: 'Allowed Time Ranges') %></label>
+            <div id="alcohol-time-ranges" class="d-flex flex-column gap-2">
+              <% (restaurant.alcohol_policy&.allowed_time_ranges || []).each_with_index do |r, idx| %>
+                <div class="input-group" data-range-index="<%= idx %>">
+                  <span class="input-group-text"><%= t('.from', default: 'From') %></span>
+                  <input type="time" class="form-control" value="<%= format('%02d:%02d', (r['from_min'].to_i/60), (r['from_min'].to_i%60)) %>" />
+                  <span class="input-group-text"><%= t('.to', default: 'To') %></span>
+                  <input type="time" class="form-control" value="<%= format('%02d:%02d', (r['to_min'].to_i/60), (r['to_min'].to_i%60)) %>" />
+                  <button type="button" class="btn btn-outline-danger remove-range"><i class="bi bi-x"></i></button>
+                </div>
+              <% end %>
+            </div>
+            <div class="mt-2">
+              <button type="button" class="btn btn-sm btn-outline-primary" id="add-time-range"><i class="bi bi-plus"></i> <%= t('.add_range', default: 'Add range') %></button>
+            </div>
+          </div>
+
+          <!-- Blackout dates -->
+          <div class="mb-3">
+            <label class="form-label-2025"><%= t('.blackout_dates', default: 'Blackout Dates (YYYY-MM-DD, comma-separated)') %></label>
+            <input type="text" class="form-control" id="alcohol-blackouts" value="<%= (restaurant.alcohol_policy&.blackout_dates || []).map(&:to_s).join(', ') %>" placeholder="2025-12-25, 2025-01-01" />
+          </div>
+        </div>
+      </div>
+      
+      <script>
+        (function(){
+          const card = document.getElementById('alcohol-policy-editor');
+          if (!card) return;
+          const statusBadge = card.querySelector('#alcohol-policy-status');
+          const daysContainer = card.querySelector('#alcohol-days');
+          const rangesContainer = card.querySelector('#alcohol-time-ranges');
+          const addRangeBtn = card.querySelector('#add-time-range');
+          const blackoutsInput = card.querySelector('#alcohol-blackouts');
+          const saveBtn = card.querySelector('#save-alcohol-policy');
+          const endpoint = card.getAttribute('data-endpoint');
+          const statusEndpoint = card.getAttribute('data-status-endpoint');
+
+          const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
+          const toMin = (hhmm) => { if(!hhmm) return 0; const [h,m] = hhmm.split(':').map(x=>parseInt(x,10)||0); return (h*60)+m; };
+          const fmt = (n) => String(n).padStart(2,'0');
+          const toHHMM = (mins) => `${fmt(Math.floor(mins/60))}:${fmt(mins%60)}`;
+
+          const gather = () => {
+            const allowed_days_of_week = Array.from(daysContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>parseInt(cb.value,10));
+            const allowed_time_ranges = Array.from(rangesContainer.querySelectorAll('.input-group')).map(g=>{
+              const inputs = g.querySelectorAll('input[type="time"]');
+              return { from_min: toMin(inputs[0]?.value), to_min: toMin(inputs[1]?.value) };
+            });
+            const blackout_dates = (blackoutsInput.value||'').split(',').map(s=>s.trim()).filter(Boolean);
+            return { allowed_days_of_week, allowed_time_ranges, blackout_dates };
+          };
+
+          let saving = false; let t;
+          const updateStatus = (allowed_now) => {
+            if (!statusBadge) return;
+            statusBadge.textContent = allowed_now ? '<%= j t('.allowed_now', default: 'Allowed now') %>' : '<%= j t('.blocked_now', default: 'Blocked now') %>';
+            statusBadge.classList.remove('bg-success','bg-secondary');
+            statusBadge.classList.add(allowed_now ? 'bg-success' : 'bg-secondary');
+          };
+
+          const fetchStatus = () => {
+            if (!statusEndpoint) return;
+            fetch(statusEndpoint, { headers: { 'Accept': 'application/json' }})
+              .then(r=>r.json()).then(j=>{ if ('allowed_now' in j) updateStatus(!!j.allowed_now); }).catch(()=>{});
+          };
+
+          const save = () => {
+            if (saving) return; saving = true;
+            const body = gather();
+            fetch(endpoint, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf, 'Accept': 'application/json' },
+              body: JSON.stringify(body)
+            }).then(r=>r.json()).then(j=>{
+              if (j && typeof j.allowed_now !== 'undefined') updateStatus(!!j.allowed_now); else fetchStatus();
+            }).catch(()=>{ /* noop */ }).finally(()=>{ saving = false; });
+          };
+
+          const debounce = (fn, ms=600) => { let tm; return (...args)=>{ clearTimeout(tm); tm = setTimeout(()=>fn.apply(null,args), ms); }; };
+          const autoSave = debounce(save, 700);
+
+          card.addEventListener('change', (e)=>{
+            if (e.target.closest('#alcohol-days') || e.target.id === 'alcohol-blackouts' || e.target.type === 'time') {
+              autoSave();
+            }
+          });
+
+          addRangeBtn?.addEventListener('click', ()=>{
+            const div = document.createElement('div');
+            div.className = 'input-group';
+            div.innerHTML = `
+              <span class="input-group-text"><%= j t('.from', default: 'From') %></span>
+              <input type="time" class="form-control" value="08:00" />
+              <span class="input-group-text"><%= j t('.to', default: 'To') %></span>
+              <input type="time" class="form-control" value="22:00" />
+              <button type="button" class="btn btn-outline-danger remove-range"><i class="bi bi-x"></i></button>
+            `;
+            rangesContainer.appendChild(div);
+            autoSave();
+          });
+
+          rangesContainer.addEventListener('click', (e)=>{
+            if (e.target.closest('.remove-range')) {
+              const grp = e.target.closest('.input-group');
+              grp?.remove();
+              autoSave();
+            }
+          });
+
+          // No explicit save button; auto-save on changes is enabled.
+        })();
+      </script>
+    </div>
+
+    <!-- Allow Alcohol -->
+    <div class="feature-card">
+      <div class="feature-card-icon bg-danger">
+        <i class="bi bi-cup-straw"></i>
+      </div>
+      <div class="feature-card-content">
+        <h5 class="feature-card-title"><%= t('.allow_alcohol', default: 'Allow Alcohol Sales') %></h5>
+        <p class="feature-card-description">
+          <%= t('.allow_alcohol_help', default: 'Enable selling alcoholic beverages. You are responsible for legal compliance.') %>
+        </p>
+      </div>
+      <div class="feature-card-toggle">
+        <div class="form-check form-switch">
+          <input type="hidden" name="restaurant[allow_alcohol]" value="false">
+          <input class="form-check-input"
+                 type="checkbox"
+                 name="restaurant[allow_alcohol]"
+                 id="restaurant_allow_alcohol"
+                 value="true"
+                 <%= 'checked' if restaurant.allow_alcohol %>
+                 data-skip-tomselect="true">
+        </div>
+      </div>
+    </div>
+
     <!-- Display Images in Popup -->
     <div class="feature-card">
       <div class="feature-card-icon bg-success">

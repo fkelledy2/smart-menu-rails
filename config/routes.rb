@@ -118,6 +118,8 @@ Rails.application.routes.draw do
     member do
       get 'kitchen', to: 'kitchen_dashboard#index', as: :kitchen_dashboard
       patch 'update_hours', to: 'restaurants#update_hours'
+      patch 'update_alcohol_policy', to: 'restaurants#update_alcohol_policy'
+      get 'alcohol_status', to: 'restaurants#alcohol_status'
     end
     
     # Restaurant configuration
@@ -147,8 +149,10 @@ Rails.application.routes.draw do
     resources :ordrs do
       member do
         get :analytics
+        post :ack_alcohol, to: 'ordrs#ack_alcohol'
       end
     end
+    resources :alcohol_order_events, only: [:index]
     resources :ordritems
     resources :ordritemnotes
     resources :ordrparticipants

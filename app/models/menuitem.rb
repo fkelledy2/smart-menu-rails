@@ -214,8 +214,22 @@ class Menuitem < ApplicationRecord
   validates :preptime, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :price, presence: true, numericality: { only_float: true, greater_than_or_equal_to: 0 }
   validates :calories, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  # Alcohol fields
+  validates :abv, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }, allow_nil: true
+  validate :abv_must_be_nil_or_zero_when_non_alcoholic
+
+  def alcoholic?
+    self[:alcoholic] == true && alcohol_classification != 'non_alcoholic'
+  end
 
   private
+
+  def abv_must_be_nil_or_zero_when_non_alcoholic
+    return if alcoholic?
+    return if abv.blank? || abv.to_d == 0.to_d
+
+    errors.add(:abv, :non_alcoholic_must_be_zero)
+  end
 
   # Append updated_at timestamp to bust browser caches when images change
   def cache_busted(url)

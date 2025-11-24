@@ -110,6 +110,7 @@ class ImportToMenu
             preptime: 0,
             calories: 0,
           )
+          apply_alcohol_detection!(menuitem, section_name: section.name, item_name: item.name, item_description: item.description, overrides: (item.respond_to?(:metadata) ? item.metadata : nil))
           if menuitem.new_record?
             menuitem.save!
             stats[:items_created] += 1
@@ -227,6 +228,8 @@ class ImportToMenu
             calories: 0,
             # Dietary flags are not stored on Menuitem in current schema; omit mapping
           )
+          apply_alcohol_detection!(menuitem, section_name: section.name, item_name: item.name, item_description: item.description)
+          menuitem.save! if menuitem.changed?
           # Link allergyns for this item based on OCR allergens
           begin
             map_item_allergyns!(menuitem, Array(item.allergens), @restaurant)
@@ -257,6 +260,46 @@ class ImportToMenu
 
   def default_menu_description
     "Imported from PDF on #{Time.current.strftime('%B %d, %Y')}"
+  end
+
+  # Detect alcohol attributes from OCR data and set on Menuitem.
+  def apply_alcohol_detection!(menuitem, section_name:, item_name:, item_description:, overrides: nil)
+    begin
+      det = AlcoholDetectionService.detect(
+        section_name: safe_text(section_name),
+        item_name: safe_text(item_name),
+        item_description: safe_text(item_description),
+      )
+      # Apply overrides from OCR metadata if provided
+      if overrides.is_a?(Hash)
+        ov = overrides.with_indifferent_access
+        case ov[:alcohol_override].to_s
+        when 'alcoholic'
+          det = { decided: true, alcoholic: true, classification: ov[:alcohol_classification].presence || det[:classification], abv: ov[:alcohol_abv].presence || det[:abv], confidence: 1.0, note: 'override' }
+        when 'non_alcoholic'
+          det = { decided: true, alcoholic: false, classification: 'non_alcoholic', abv: ov[:alcohol_abv].presence || det[:abv], confidence: 1.0, note: 'override' }
+        when 'undecided'
+          # keep detection as-is
+        end
+      end
+
+      # Log low-confidence or undecided for later ML analysis
+      if det && (!det[:decided] || det[:confidence].to_f < 0.5)
+        Rails.logger.info("[AlcoholDetection] low_confidence item='#{item_name}' section='#{section_name}' conf=#{det[:confidence]} decided=#{det[:decided]}")
+      end
+
+      return unless det && det[:decided]
+
+      menuitem.alcoholic = det[:alcoholic]
+      menuitem.abv = det[:abv] if det.key?(:abv)
+      menuitem.alcohol_classification = det[:classification] if det[:classification].present?
+      if det[:note].present?
+        notes = [menuitem.alcohol_notes.presence, det[:note]].compact.join(' ')
+        menuitem.alcohol_notes = notes
+      end
+    rescue StandardError => e
+      Rails.logger.warn("[ImportToMenu] alcohol detection failed for '#{item_name}': #{e.class}: #{e.message}")
+    end
   end
 
   # Collect a unique, normalized set of allergen names from confirmed sections/items

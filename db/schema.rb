@@ -42,6 +42,38 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_21_182000) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "alcohol_order_events", force: :cascade do |t|
+    t.bigint "ordr_id", null: false
+    t.bigint "ordritem_id", null: false
+    t.bigint "menuitem_id", null: false
+    t.bigint "restaurant_id", null: false
+    t.integer "employee_id"
+    t.string "customer_sessionid"
+    t.boolean "alcoholic", default: false, null: false
+    t.decimal "abv", precision: 5, scale: 2
+    t.string "alcohol_classification"
+    t.boolean "age_check_acknowledged", default: false, null: false
+    t.datetime "acknowledged_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_sessionid"], name: "index_alcohol_order_events_on_customer_sessionid"
+    t.index ["employee_id"], name: "index_alcohol_order_events_on_employee_id"
+    t.index ["menuitem_id"], name: "index_alcohol_order_events_on_menuitem_id"
+    t.index ["ordr_id"], name: "index_alcohol_order_events_on_ordr_id"
+    t.index ["ordritem_id"], name: "index_alcohol_order_events_on_ordritem_id"
+    t.index ["restaurant_id"], name: "index_alcohol_order_events_on_restaurant_id"
+  end
+
+  create_table "alcohol_policies", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.integer "allowed_days_of_week", default: [], array: true
+    t.jsonb "allowed_time_ranges", default: []
+    t.date "blackout_dates", default: [], array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_alcohol_policies_on_restaurant_id"
+  end
+
   create_table "allergyns", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -338,7 +370,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_21_182000) do
     t.integer "course_order"
     t.boolean "hidden", default: false, null: false
     t.boolean "tasting_carrier", default: false, null: false
+    t.boolean "alcoholic", default: false, null: false
+    t.decimal "abv", precision: 5, scale: 2
+    t.string "alcohol_classification"
+    t.text "alcohol_notes"
     t.index "lower((name)::text) varchar_pattern_ops", name: "index_menuitems_on_lower_name"
+    t.index ["alcohol_classification"], name: "index_menuitems_on_alcohol_classification"
+    t.index ["alcoholic"], name: "index_menuitems_on_alcoholic"
     t.index ["archived"], name: "index_menuitems_on_archived"
     t.index ["course_order"], name: "index_menuitems_on_course_order"
     t.index ["created_at"], name: "index_menuitems_on_created_at"
@@ -906,6 +944,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_21_182000) do
     t.string "spotifyrefreshtoken"
     t.boolean "displayImagesInPopup", default: false
     t.text "image_style_profile"
+    t.boolean "allow_alcohol", default: false, null: false
     t.index ["user_id", "status"], name: "index_restaurants_on_user_status_active", where: "(archived = false)"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
@@ -1095,6 +1134,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_21_182000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "alcohol_order_events", "menuitems"
+  add_foreign_key "alcohol_order_events", "ordritems"
+  add_foreign_key "alcohol_order_events", "ordrs"
+  add_foreign_key "alcohol_order_events", "restaurants"
+  add_foreign_key "alcohol_policies", "restaurants"
   add_foreign_key "allergyns", "restaurants"
   add_foreign_key "employees", "restaurants"
   add_foreign_key "employees", "users"

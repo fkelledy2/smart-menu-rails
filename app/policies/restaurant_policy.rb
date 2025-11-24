@@ -19,6 +19,14 @@ class RestaurantPolicy < ApplicationPolicy
     owner? || employee_admin?
   end
 
+  def update_alcohol_policy?
+    owner? || employee_admin?
+  end
+
+  def alcohol_status?
+    owner? || employee_admin?
+  end
+
   def destroy?
     owner? # Only owners can delete restaurants
   end

@@ -3,7 +3,7 @@ class OrdrsController < ApplicationController
 
   before_action :authenticate_user!, except: %i[show create update] # Allow customers to create/update orders
   before_action :set_restaurant
-  before_action :set_ordr, only: %i[show edit update destroy analytics]
+  before_action :set_ordr, only: %i[show edit update destroy analytics ack_alcohol]
   before_action :set_currency
 
   # Pundit authorization
@@ -317,6 +317,32 @@ class OrdrsController < ApplicationController
         redirect_to restaurant_ordrs_url(@restaurant), alert: t('common.flash.action_failed', error: e.message)
       end
       format.json { render json: { error: e.message }, status: :unprocessable_entity }
+    end
+  end
+
+  # POST /restaurants/:restaurant_id/ordrs/:id/ack_alcohol
+  # Acknowledge that age check was performed for alcohol items on this order
+  def ack_alcohol
+    authorize @ordr, :update?
+
+    employee_id = @current_employee&.id
+    acknowledged_count = 0
+
+    AlcoholOrderEvent.where(ordr_id: @ordr.id, age_check_acknowledged: false).find_each do |evt|
+      evt.update(
+        age_check_acknowledged: true,
+        acknowledged_at: Time.zone.now,
+        employee_id: employee_id || evt.employee_id,
+      )
+      acknowledged_count += 1
+    end
+
+    respond_to do |format|
+      format.html do
+        redirect_to restaurant_ordr_path(@restaurant || @ordr.restaurant, @ordr),
+                    notice: I18n.t('smartmenus.alcohol.acknowledged', default: 'Age check acknowledged')
+      end
+      format.json { render json: { ok: true, acknowledged: acknowledged_count } }
     end
   end
 

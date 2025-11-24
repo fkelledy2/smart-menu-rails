@@ -643,6 +643,8 @@ it:
     show:
       menu: Visualizza Menu
       table: Tavolo
+    alcoholic: "Alcolico"
+    alcoholic_tooltip: "Contiene alcol"
     showMenuBanner:
       table: Tavolo
   tablesettings:

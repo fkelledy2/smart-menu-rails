@@ -362,6 +362,32 @@ export function initOrders() {
         } catch (err) {
           console.log(err);
         }
+
+        // Alcohol Phase 1: capture alcoholic flag and provide staff reminder
+        const alcoholicFlag = getAttr('data-bs-menuitem_alcoholic') === '1';
+        if (alcoholicFlag) {
+          addItemToOrderModal.dataset.alcoholic = '1';
+        } else {
+          delete addItemToOrderModal.dataset.alcoholic;
+        }
+
+        // Non-blocking reminder for staff if alcoholic
+        try {
+          const isStaff = !!document.getElementById('currentEmployee');
+          const modalBody = addItemToOrderModal.querySelector('.modal-body');
+          if (isStaff && alcoholicFlag && modalBody) {
+            if (!addItemToOrderModal.querySelector('.alcohol-age-reminder')) {
+              const note = document.createElement('div');
+              note.className = 'alcohol-age-reminder alert alert-warning py-2 px-3 mb-2';
+              note.role = 'alert';
+              note.textContent = (document.getElementById('alcoholVerifyAgeText')?.textContent || 'Contains alcohol — verify legal age where applicable.');
+              modalBody.prepend(note);
+            }
+          } else {
+            const existing = addItemToOrderModal.querySelector('.alcohol-age-reminder');
+            if (existing) existing.remove();
+          }
+        } catch (_) {}
       });
       $('#addItemToOrderButton').on('click', function (evt) {
         console.log('[A2O] Confirm clicked');
@@ -472,6 +498,25 @@ export function initOrders() {
           evt.preventDefault();
           return false;
         }
+
+        // Alcohol Phase 1: block alcoholic items if restaurant does not allow alcohol
+        try {
+          const allowAlcohol = document.getElementById('currentRestaurantAllowAlcohol')?.textContent === '1';
+          const isAlcoholicItem = !!(addModalEl && addModalEl.dataset && addModalEl.dataset.alcoholic === '1');
+          if (isAlcoholicItem && !allowAlcohol) {
+            // Non-blocking UX: disable action and show message
+            alert(document.getElementById('alcoholSalesDisabledText')?.textContent || 'Alcohol sales are disabled for this restaurant.');
+            evt.preventDefault();
+            return false;
+          }
+          // Phase 2: time/day policy enforcement
+          const allowedNow = document.getElementById('alcoholAllowedNow')?.textContent === '1';
+          if (isAlcoholicItem && allowAlcohol && !allowedNow) {
+            alert(document.getElementById('alcoholPolicyBlockedText')?.textContent || 'Alcohol not available at this time.');
+            evt.preventDefault();
+            return false;
+          }
+        } catch (_) {}
 
         // Debug: Check if required elements exist
         const ordrId = $('#a2o_ordr_id').text() || currentOrderId;

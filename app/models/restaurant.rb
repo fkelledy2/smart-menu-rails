@@ -1,4 +1,10 @@
+  def alcohol_allowed_now?(now: Time.zone.now)
+    return false if respond_to?(:allow_alcohol) && !allow_alcohol
+    return true unless alcohol_policy
+    alcohol_policy.allowed_now?(now: now)
+  end
 class Restaurant < ApplicationRecord
+  has_one :alcohol_policy, dependent: :destroy
   include ImageUploader::Attachment(:image)
   include IdentityCache
   include L2Cacheable
@@ -9,6 +15,13 @@ class Restaurant < ApplicationRecord
   has_many :tablesettings, dependent: :delete_all
   has_many :menus, dependent: :delete_all
   has_many :employees, dependent: :delete_all
+
+  def alcohol_allowed_now?(now: Time.zone.now)
+    return false if respond_to?(:allow_alcohol) && !allow_alcohol
+    return true unless alcohol_policy
+    alcohol_policy.allowed_now?(now: now)
+  end
+
   has_many :ordrs, dependent: :delete_all
   has_many :taxes, dependent: :delete_all
   has_many :tips, dependent: :delete_all

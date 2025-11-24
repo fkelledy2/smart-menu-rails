@@ -1,7 +1,14 @@
 <div class="card-footer text-muted" style="padding: 12px; padding-right: 0px; min-height: 56px;">
     <div class="d-flex justify-content-between align-items-center">
         <div class="allergen-badges <%= 'has-many' if mi.allergyns.count >= 5 %>">
-            <div class="d-flex gap-1" role="group" aria-label="<%= t('.allergyns') %>">
+            <div class="d-flex gap-1 align-items-center" role="group" aria-label="<%= t('.allergyns') %>">
+                <%# Alcoholic indicator badge (similar styling to allergens) %>
+                <% if mi.alcoholic? %>
+                  <span class="badge bg-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= [t('smartmenus.alcoholic_tooltip', default: 'Contains alcohol'), mi.alcohol_classification.presence, (mi.abv.present? ? "#{mi.abv}%" : nil)].compact.join(' · ') %>">
+                    <%= t('smartmenus.alcoholic', default: 'Alcoholic') %>
+                  </span>
+                <% end %>
+
                 <% mi.allergyns.each do |allergyn| %>
                     <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
                         <%= allergyn.symbol %>

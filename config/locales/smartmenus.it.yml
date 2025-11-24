@@ -87,3 +87,21 @@ it:
       restaurant: 'Ristorante:'
       slug: 'Slug:'
       tablesetting: 'Tavolo:'
+    modal_footer_primary:
+      cancel: Annulla
+    alcohol:
+      flag: "Alcol"
+      non_alcoholic: "Analcolico"
+      zero_abv_short: "0,0%"
+      verify_age: "Verifica l'età del cliente prima di servire bevande alcoliche."
+      sales_disabled: "La vendita di alcol è disabilitata per questo ristorante."
+      policy_blocked: "La vendita di alcol è attualmente bloccata dalla policy."
+      acknowledge_btn: "Conferma controllo età"
+      acknowledged: "Controllo età confermato"
+    ocr:
+      alcohol:
+        override_label: "Alcol"
+        abv: "ABV"
+        classification: "Classe"
+        review_needed: "Da verificare"
+        overrides_hint: "Le modifiche verranno applicate alla pubblicazione."

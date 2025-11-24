@@ -41,6 +41,26 @@ class OrdritemsController < ApplicationController
     respond_to do |format|
       ActiveRecord::Base.transaction do
         if @ordritem.save
+          begin
+            mi = @ordritem.menuitem
+            if mi && (mi.respond_to?(:alcoholic?) ? mi.alcoholic? : mi.alcoholic)
+              AlcoholOrderEvent.create!(
+                ordr: @ordritem.ordr,
+                ordritem: @ordritem,
+                menuitem: mi,
+                restaurant: @ordritem.ordr.restaurant,
+                employee_id: @current_employee&.id,
+                customer_sessionid: session.id.to_s,
+                alcoholic: true,
+                abv: mi.try(:abv),
+                alcohol_classification: mi.try(:alcohol_classification),
+                age_check_acknowledged: @current_employee.present?,
+                acknowledged_at: (@current_employee.present? ? Time.zone.now : nil),
+              )
+            end
+          rescue StandardError => e
+            Rails.logger.warn("[AlcoholOrderEvent] failed to create event: #{e.class}: #{e.message}")
+          end
           adjust_inventory(@ordritem.menuitem&.inventory, -1)
           @ordrparticipant = find_or_create_participant(@ordritem.ordr)
           Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)

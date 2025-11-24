@@ -693,6 +693,11 @@ en:
     show:
       menu: View Menu
       table: Table
+    alcoholic: "Alcoholic"
+    alcoholic_tooltip: "Contains alcohol"
+    alcohol:
+      acknowledge_btn: "Acknowledge age check"
+      acknowledged: "Age check acknowledged"
     showAllergyns:
       allergyns: Allergens
     showCoverCharge:
