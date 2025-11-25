@@ -37,6 +37,7 @@
 //= link controllers/auto_save_controller.js
 //= link controllers/sidebar_controller.js
 //= link controllers/sortable_controller.js
+//= link controllers/ocr_upload_controller.js
 
 // Application entry point
 //= link application.js

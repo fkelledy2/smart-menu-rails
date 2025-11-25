@@ -46,7 +46,7 @@
       <div class="card-2025 mb-4">
         <%= form_with(model: [@restaurant, @ocr_menu_import],
                       local: true,
-                      html: { class: 'needs-validation', novalidate: true, id: 'ocr-upload-form' }) do |f| %>
+                      html: { class: 'needs-validation', novalidate: true, id: 'ocr-upload-form', data: { controller: 'ocr-upload' } }) do |f| %>
 
           <div class="card-2025-body">
             <!-- Menu Name Input -->
@@ -56,7 +56,7 @@
                   class: 'form-control-2025',
                   placeholder: t('.name_placeholder', default: 'e.g., Summer Menu 2024'),
                   required: true,
-                  data: { target: 'ocr-upload.nameInput' } %>
+                  data: { ocr_upload_target: 'nameInput' } %>
               <div class="form-help-2025">
                 <%= t('.name_help', default: 'Give your menu a descriptive name for easy identification') %>
               </div>
@@ -93,7 +93,7 @@
                       class: 'd-none',
                       accept: 'application/pdf',
                       required: true,
-                      data: { target: 'dropzone.fileInput' } %>
+                      data: { target: 'dropzone.fileInput', ocr_upload_target: 'fileInput' } %>
                   <p class="upload-hint-2025 mt-3">
                     <%= t('.pdf_hint', default: 'PDF up to 10MB. Clear scans work best.') %>
                   </p>
@@ -142,6 +142,7 @@
                 <button type="submit"
                         class="btn-2025 btn-2025-primary btn-2025-md"
                         id="submit-button"
+                        data-ocr-upload-target="submitButton"
                         disabled>
                   <i class="bi bi-magic"></i> <%= t('.start_processing', default: 'Start Processing') %>
                 </button>

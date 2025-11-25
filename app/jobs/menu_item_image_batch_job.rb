@@ -9,7 +9,28 @@ class MenuItemImageBatchJob
     Rails.logger.info "[MenuItemImageBatchJob] 🎨 Starting AI image generation for #{menu_name}"
     Rails.logger.info '=' * 80
 
-    # Call the rake task logic directly
+    # Ensure there is a Genimage record per menuitem (seed missing ones)
+    if menu
+      begin
+        created = 0
+        menu.menuitems.includes(:menusection).find_each do |mi|
+          next if mi.itemtype == 'wine' # we never generate for wines
+          next if mi.genimage.present?
+          Genimage.create!(
+            restaurant: menu.restaurant,
+            menu: menu,
+            menusection: mi.menusection,
+            menuitem: mi,
+          )
+          created += 1
+        end
+        Rails.logger.info "[MenuItemImageBatchJob] Seeded #{created} missing genimage records for menu #{menu.id}"
+      rescue => e
+        Rails.logger.warn "[MenuItemImageBatchJob] Failed seeding genimages for menu #{menu_id}: #{e.message}"
+      end
+    end
+
+    # Prepare processing scope after seeding
     scope = Genimage.where(menu_id: menu_id)
     total = scope.count
 

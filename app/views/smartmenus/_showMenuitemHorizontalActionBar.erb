@@ -10,7 +10,8 @@
                 <% end %>
 
                 <% mi.allergyns.each do |allergyn| %>
-                    <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">
+                    <% display_name = Allergyn::STANDARD_ALLERGENS[allergyn.symbol] || allergyn.name %>
+                    <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= display_name %>">
                         <%= allergyn.symbol %>
                     </span>
                 <% end %>
