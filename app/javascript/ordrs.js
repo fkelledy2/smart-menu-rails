@@ -601,33 +601,37 @@ export function initOrders() {
     }
     if ($('#start-order').length) {
       $(document).off('click.startOrder').on('click.startOrder', '#start-order:not([disabled])', function () {
-        const ordercapacity = document.getElementById('orderCapacity').value;
+        const ordercapacity = document.getElementById('orderCapacity')?.value || 1;
+        const restaurantId = getRestaurantId();
+        const tablesettingId = getCurrentTableId();
+        const menuId = getCurrentMenuId();
+        if (!restaurantId || !tablesettingId || !menuId) {
+          console.warn('[StartOrder] Missing required ids; aborting', { restaurantId, tablesettingId, menuId });
+          alert('Please select a table before starting an order.');
+          return;
+        }
         if ($('#currentEmployee').length) {
           const ordr = {
             ordr: {
-              tablesetting_id: $('#currentTable').text(),
+              tablesetting_id: tablesettingId,
               employee_id: $('#currentEmployee').text(),
-              restaurant_id: getRestaurantId(),
-              menu_id: $('#currentMenu').text(),
+              restaurant_id: restaurantId,
+              menu_id: menuId,
               ordercapacity: ordercapacity,
               status: ORDR_OPENED,
             },
           };
-          const restaurantId = getRestaurantId();
-          if (!restaurantId) { console.warn('[StartOrder] Missing restaurant id; aborting'); return; }
           post(`/restaurants/${restaurantId}/ordrs`, ordr);
         } else {
           const ordr = {
             ordr: {
-              tablesetting_id: $('#currentTable').text(),
-              restaurant_id: getRestaurantId(),
-              menu_id: $('#currentMenu').text(),
+              tablesetting_id: tablesettingId,
+              restaurant_id: restaurantId,
+              menu_id: menuId,
               ordercapacity: ordercapacity,
               status: ORDR_OPENED,
             },
           };
-          const restaurantId = getRestaurantId();
-          if (!restaurantId) { console.warn('[StartOrder] Missing restaurant id; aborting'); return; }
           post(`/restaurants/${restaurantId}/ordrs`, ordr);
         }
       });

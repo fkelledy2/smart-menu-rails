@@ -9,6 +9,20 @@ function post(url, body) {
   if (!csrfToken) {
     console.error('CSRF token not found');
   }
+// Resolve current table id
+function getCurrentTableId() {
+  const el = document.getElementById('currentTable');
+  const txt = el && (el.textContent || '').trim();
+  if (txt) return txt;
+  return null;
+}
+// Resolve current menu id
+function getCurrentMenuId() {
+  const el = document.getElementById('currentMenu');
+  const txt = el && (el.textContent || '').trim();
+  if (txt) return txt;
+  return null;
+}
   
   // Dispatch event for testing: request started
   window.dispatchEvent(new CustomEvent('ordr:request:start', { 
@@ -593,41 +607,39 @@ function refreshOrderJSLogic() {
     });
   }
   if ($('#start-order').length) {
-    $('#start-order').on('click', function () {
+    $(document).off('click.startOrderChannel').on('click.startOrderChannel', '#start-order:not([disabled])', function () {
       const orderCapacityEl = document.getElementById('orderCapacity');
       const ordercapacity = orderCapacityEl && orderCapacityEl.value ? orderCapacityEl.value : 1;
+      const restaurantId = getRestaurantId();
+      const tablesettingId = getCurrentTableId();
+      const menuId = getCurrentMenuId();
+      if (!restaurantId || !tablesettingId || !menuId) {
+        console.warn('[StartOrder][channel] Missing required ids; aborting', { restaurantId, tablesettingId, menuId });
+        alert('Please select a table before starting an order.');
+        return;
+      }
       if ($('#currentEmployee').length) {
         const ordr = {
           ordr: {
-            tablesetting_id: $('#currentTable').text(),
+            tablesetting_id: tablesettingId,
             employee_id: $('#currentEmployee').text(),
-            restaurant_id: getRestaurantId(),
-            menu_id: $('#currentMenu').text(),
+            restaurant_id: restaurantId,
+            menu_id: menuId,
             ordercapacity: ordercapacity,
             status: ORDR_OPENED,
           },
         };
-        const restaurantId = getRestaurantId();
-        if (!restaurantId) {
-          console.warn('[StartOrder] Missing restaurant id; aborting POST');
-          return;
-        }
         post(`/restaurants/${restaurantId}/ordrs`, ordr);
       } else {
         const ordr = {
           ordr: {
-            tablesetting_id: $('#currentTable').text(),
-            restaurant_id: getRestaurantId(),
-            menu_id: $('#currentMenu').text(),
+            tablesetting_id: tablesettingId,
+            restaurant_id: restaurantId,
+            menu_id: menuId,
             ordercapacity: ordercapacity,
             status: ORDR_OPENED,
           },
         };
-        const restaurantId = getRestaurantId();
-        if (!restaurantId) {
-          console.warn('[StartOrder] Missing restaurant id; aborting POST');
-          return;
-        }
         post(`/restaurants/${restaurantId}/ordrs`, ordr);
       }
     });
