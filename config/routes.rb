@@ -108,6 +108,7 @@ Rails.application.routes.draw do
   namespace :payments do
     post :create_payment_link, controller: 'base'
     post :generate_qr, controller: 'base'
+    post :create_intent, to: 'intents#create'
   end
   
   # ============================================================================

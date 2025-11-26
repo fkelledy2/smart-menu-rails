@@ -469,6 +469,18 @@
                                 </div>
                                 <div class="row">
                                     <p></p>
+                                    <div class="row">
+                  <p></p>
+                  <div style='display: flex;justify-content: center;' class="col-12">
+                    <div id="wallet-button-container"
+                         data-controller="stripe-wallet"
+                         data-stripe-wallet-open-order-id-value="<%= order&.id %>"
+                         data-stripe-wallet-amount-cents-value="<%= order&.grossInCents %>"
+                         data-stripe-wallet-currency-value="<%= restaurantCurrency.code %>"></div>
+                  </div>
+                </div>
+                                <div class="row">
+                                    <p></p>
                                     <p></p>
                                     <div style='display: flex;justify-content: center;' class="col-12">
                                         <input type="hidden" id="openOrderId" value="<%= order.id %>">

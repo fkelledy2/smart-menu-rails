@@ -111,6 +111,26 @@ export function initOrders() {
 
   let restaurantCurrencySymbol = '$';
 
+  // --- Robust resolvers for dynamic IDs (DOM may re-render) ---
+  function getRestaurantId() {
+    const fromHidden = document.getElementById('currentRestaurant')?.textContent?.trim();
+    if (fromHidden) return fromHidden;
+    const fromContext = document.querySelector('#contextContainer')?.dataset?.restaurantId;
+    if (fromContext) return fromContext;
+    const fromBody = document.body?.dataset?.restaurantId;
+    if (fromBody) return fromBody;
+    const any = document.querySelector('[data-restaurant-id]')?.dataset?.restaurantId;
+    if (any) return any;
+    return null;
+  }
+  function getCurrentOrderId() {
+    const fromHidden = document.getElementById('currentOrder')?.textContent?.trim();
+    if (fromHidden) return fromHidden;
+    const fromPay = document.getElementById('openOrderId')?.value?.trim();
+    if (fromPay) return fromPay;
+    return null;
+  }
+
   if (document.getElementById('openOrderModalLabel')) {
     document.getElementById('openOrderModalLabel').addEventListener('shown.bs.modal', () => {
       document.getElementById('backgroundContent').setAttribute('inert', '');
@@ -303,7 +323,8 @@ export function initOrders() {
             preferredlocale: locale,
           },
         };
-        const restaurantId = $('#currentRestaurant').text();
+        const restaurantId = getRestaurantId();
+        if (!restaurantId) { console.warn('[Locale] Missing restaurant id; aborting'); return; }
         const menuId = $('#currentMenu').text();
         const menuParticipantId = $('#menuParticipant').text();
         patch(
@@ -321,7 +342,8 @@ export function initOrders() {
           ordritemprice: 0,
         },
       };
-      const restaurantId = $('#currentRestaurant').text();
+      const restaurantId = getRestaurantId();
+      if (!restaurantId) { console.warn('[RemoveItem] Missing restaurant id; aborting'); return true; }
       patch(`/restaurants/${restaurantId}/ordritems/${ordrItemId}`, ordritem);
       $('#confirm-order').click();
       return true;
@@ -400,8 +422,8 @@ export function initOrders() {
           }
           window.__tastingPosting = true;
           try {
-            const restaurantId = document.getElementById('currentRestaurant')?.textContent;
-            const ordrId = document.getElementById('currentOrder')?.textContent;
+            const restaurantId = getRestaurantId();
+            const ordrId = getCurrentOrderId();
             const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
             if (!restaurantId || !ordrId || !statusStr || statusStr === 'billrequested' || statusStr === 'closed') {
               console.error('[TASTING] Order not active or status not allowed.');
@@ -585,116 +607,32 @@ export function initOrders() {
             ordr: {
               tablesetting_id: $('#currentTable').text(),
               employee_id: $('#currentEmployee').text(),
-              restaurant_id: $('#currentRestaurant').text(),
+              restaurant_id: getRestaurantId(),
               menu_id: $('#currentMenu').text(),
               ordercapacity: ordercapacity,
               status: ORDR_OPENED,
             },
           };
-          const restaurantId = $('#currentRestaurant').text();
+          const restaurantId = getRestaurantId();
+          if (!restaurantId) { console.warn('[StartOrder] Missing restaurant id; aborting'); return; }
           post(`/restaurants/${restaurantId}/ordrs`, ordr);
         } else {
           const ordr = {
             ordr: {
               tablesetting_id: $('#currentTable').text(),
-              restaurant_id: $('#currentRestaurant').text(),
+              restaurant_id: getRestaurantId(),
               menu_id: $('#currentMenu').text(),
               ordercapacity: ordercapacity,
               status: ORDR_OPENED,
             },
           };
-          const restaurantId = $('#currentRestaurant').text();
+          const restaurantId = getRestaurantId();
+          if (!restaurantId) { console.warn('[StartOrder] Missing restaurant id; aborting'); return; }
           post(`/restaurants/${restaurantId}/ordrs`, ordr);
-        }
-      });
-    }
-    if ($('#confirm-order').length) {
-      $('#confirm-order').on('click', function () {
-        if ($('#currentEmployee').length) {
-          const ordr = {
-            ordr: {
-              tablesetting_id: $('#currentTable').text(),
-              employee_id: $('#currentEmployee').text(),
-              restaurant_id: $('#currentRestaurant').text(),
-              menu_id: $('#currentMenu').text(),
-              status: ORDR_ORDERED,
-            },
-          };
-          const restaurantId = $('#currentRestaurant').text();
-          patch(`/restaurants/${restaurantId}/ordrs/` + $('#currentOrder').text(), ordr);
-        } else {
-          const ordr = {
-            ordr: {
-              tablesetting_id: $('#currentTable').text(),
-              restaurant_id: $('#currentRestaurant').text(),
-              menu_id: $('#currentMenu').text(),
-              status: ORDR_ORDERED,
-            },
-          };
-          const restaurantId = $('#currentRestaurant').text();
-          patch(`/restaurants/${restaurantId}/ordrs/` + $('#currentOrder').text(), ordr);
-        }
-      });
-    }
-    if ($('#request-bill').length) {
-      $('#request-bill').on('click', function () {
-        if ($('#currentEmployee').length) {
-          const ordr = {
-            ordr: {
-              tablesetting_id: $('#currentTable').text(),
-              employee_id: $('#currentEmployee').text(),
-              restaurant_id: $('#currentRestaurant').text(),
-              menu_id: $('#currentMenu').text(),
-              status: ORDR_BILLREQUESTED,
-            },
-          };
-          const restaurantId = $('#currentRestaurant').text();
-          patch(`/restaurants/${restaurantId}/ordrs/` + $('#currentOrder').text(), ordr);
-        } else {
-          const ordr = {
-            ordr: {
-              tablesetting_id: $('#currentTable').text(),
-              restaurant_id: $('#currentRestaurant').text(),
-              menu_id: $('#currentMenu').text(),
-              status: ORDR_BILLREQUESTED,
-            },
-          };
-          const restaurantId = $('#currentRestaurant').text();
-          patch(`/restaurants/${restaurantId}/ordrs/` + $('#currentOrder').text(), ordr);
         }
       });
     }
     if ($('#pay-order').length) {
-      if (document.getElementById('refreshPaymentLink')) {
-        document.getElementById('refreshPaymentLink').addEventListener('click', async () => {
-          const amount = document.getElementById('paymentAmount').value;
-          const currency = document.getElementById('paymentCurrency').value;
-          const restaurantName = document.getElementById('paymentRestaurantName').value;
-          const restaurantId = document.getElementById('paymentRestaurantId').value;
-          const openOrderId = document.getElementById('openOrderId').value;
-          try {
-            const response = await fetch('/payments/create_payment_link', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-              },
-              body: JSON.stringify({ openOrderId, amount, currency, restaurantName, restaurantId }),
-            });
-            const data = await response.json();
-            if (data.payment_link) {
-              $('#paymentlink').text(data.payment_link);
-              $('#paymentAnchor').prop('href', data.payment_link);
-              fetchQR(data.payment_link);
-            } else {
-              alert('Failed to generate payment link.');
-            }
-          } catch (error) {
-            console.error('Error:', error);
-            alert('Something went wrong.');
-          }
-        });
-      }
       $('#pay-order').on('click', function () {
         let tip = 0;
         if ($('#tipNumberField').length > 0) {
@@ -705,26 +643,30 @@ export function initOrders() {
             ordr: {
               tablesetting_id: $('#currentTable').text(),
               employee_id: $('#currentEmployee').text(),
-              restaurant_id: $('#currentRestaurant').text(),
+              restaurant_id: getRestaurantId(),
               tip: tip,
               menu_id: $('#currentMenu').text(),
               status: ORDR_CLOSED,
             },
           };
-          const restaurantId = $('#currentRestaurant').text();
-          patch(`/restaurants/${restaurantId}/ordrs/` + $('#currentOrder').text(), ordr, false);
+          const restaurantId = getRestaurantId();
+          const orderId = getCurrentOrderId();
+          if (!restaurantId || !orderId) { console.warn('[PayOrder] Missing id; aborting', { restaurantId, orderId }); return; }
+          patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr, false);
         } else {
           const ordr = {
             ordr: {
               tablesetting_id: $('#currentTable').text(),
-              restaurant_id: $('#currentRestaurant').text(),
+              restaurant_id: getRestaurantId(),
               tip: tip,
               menu_id: $('#currentMenu').text(),
               status: ORDR_CLOSED,
             },
           };
-          const restaurantId = $('#currentRestaurant').text();
-          patch(`/restaurants/${restaurantId}/ordrs/` + $('#currentOrder').text(), ordr, false);
+          const restaurantId = getRestaurantId();
+          const orderId = getCurrentOrderId();
+          if (!restaurantId || !orderId) { console.warn('[PayOrder] Missing id; aborting', { restaurantId, orderId }); return; }
+          patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr, false);
         }
       });
     }
@@ -755,8 +697,8 @@ export function initOrders() {
         try {
           console.log('[TASTING] CTA clicked');
           const meta = JSON.parse(container.getAttribute('data-tasting-meta'));
-          const restaurantId = document.getElementById('currentRestaurant')?.textContent;
-          const ordrId = document.getElementById('currentOrder')?.textContent;
+          const restaurantId = getRestaurantId();
+          const ordrId = getCurrentOrderId();
           const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
           if (!restaurantId || !ordrId || !statusStr || statusStr === 'billrequested' || statusStr === 'closed') {
             console.error('Missing restaurant or order id');

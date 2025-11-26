@@ -1,4 +1,4 @@
-<div id="contextContainer">
+<div id="contextContainer" data-restaurant-id="<%= menu&.restaurant&.id %>">
     <div class="d-none" id="currentSession"><%= session.id %></div>
     <% if order %>
         <div class="d-none" id="currentOrder"><%= order.id %></div>

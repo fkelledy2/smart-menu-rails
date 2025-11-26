@@ -81,19 +81,47 @@ class SmartmenusController < ApplicationController
     @menuparticipant.update(smartmenu: @smartmenu) unless @menuparticipant.smartmenu == @smartmenu
 
     # HTTP caching with ETags for better performance
-    # Cache is invalidated when menu, restaurant, or participant locale is updated
-    # Include participant locale in ETag to ensure cache invalidation on locale switch
+    # IMPORTANT: Include order context + session in cache key to avoid serving stale pages
+    # that drop order context after hard refresh.
     participant_locale = @ordrparticipant&.preferredlocale || @menuparticipant&.preferredlocale
+
+    # Build conservative last_modified including order and items where possible
+    order_items_last_modified = nil
+    if @openOrder && @openOrder.respond_to?(:ordritems)
+      # Safe query for maximum updated_at across order items
+      order_items_last_modified = @openOrder.ordritems.maximum(:updated_at)
+    end
+
+    last_modified_candidates = [
+      @smartmenu&.updated_at,
+      @menu&.updated_at,
+      @restaurant&.updated_at,
+      @tablesetting&.updated_at,
+      @ordrparticipant&.updated_at,
+      @menuparticipant&.updated_at,
+      @openOrder&.updated_at,
+      order_items_last_modified,
+    ].compact
+
+    etag_parts = [
+      @smartmenu,
+      @menu,
+      @restaurant,
+      @tablesetting,
+      @openOrder,
+      @ordrparticipant,
+      participant_locale,
+      "sid:#{session.id}",
+    ]
+
+    # Enforce private, per-session caching and language variance
+    response.headers['Cache-Control'] = 'private, must-revalidate, max-age=0'
+    response.headers['Vary'] = [response.headers['Vary'], 'Cookie', 'Accept-Language'].compact.join(', ')
+
     fresh_when(
-      etag: [@smartmenu, @menu, @restaurant, participant_locale],
-      last_modified: [
-        @smartmenu.updated_at,
-        @menu.updated_at,
-        @restaurant.updated_at,
-        @ordrparticipant&.updated_at,
-        @menuparticipant&.updated_at,
-      ].compact.max,
-      public: false, # Set to false since it varies by session/participant
+      etag: etag_parts,
+      last_modified: last_modified_candidates.max,
+      public: false,
     )
   end
 

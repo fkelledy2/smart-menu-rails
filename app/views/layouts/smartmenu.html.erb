@@ -5,9 +5,12 @@
     <%= render 'shared/head' %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
     <%= javascript_system_tags %>
+    <meta name="stripe-publishable-key" content="<%= Rails.application.credentials.stripe_publishable_key %>">
+    <script src="https://js.stripe.com/v3"></script>
   </head>
   <body class="d-flex flex-column min-vh-100"
       data-smartmenu-id="<%= @smartmenu.slug %>"
+      data-restaurant-id="<%= @restaurant&.id %>"
       data-page="<%= controller.controller_name %><%= "-#{controller.action_name}" if controller.action_name.present? %>">
     <div id="backgroundContent" class="layout-container">
         <main class="flex-wrapper">
