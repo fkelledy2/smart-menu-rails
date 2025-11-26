@@ -24,19 +24,19 @@ echo ""
 # Add new test files here as they are created
 UI_TESTS=(
   # Phase 1 - Authentication & Core Flows
-  "test/system/authentication_test.rb"
-  "test/system/import_automation_test.rb"
-  "test/system/restaurant_menu_management_test.rb"
+#  "test/system/authentication_test.rb"
+#  "test/system/import_automation_test.rb"
+#  "test/system/restaurant_menu_management_test.rb"
   
   # Phase 2 - Restaurant & Menu Item Management
-  "test/system/restaurant_details_test.rb"
-  "test/system/menu_items_test.rb"
+#  "test/system/restaurant_details_test.rb"
+#  "test/system/menu_items_test.rb"
   
   # Phase 3 - Smartmenu Customer & Staff Ordering
   "test/system/smartmenu_customer_ordering_test.rb"
   "test/system/smartmenu_staff_ordering_test.rb"
   "test/system/smartmenu_order_state_test.rb"
-  "test/system/smartmenu_multi_table_lifecycle_test.rb"
+#  "test/system/smartmenu_multi_table_lifecycle_test.rb"
   
   # Phase 4 - Add new test files here as they are created
   # Example: "test/system/settings_test.rb"

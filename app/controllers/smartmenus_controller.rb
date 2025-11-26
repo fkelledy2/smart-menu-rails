@@ -46,8 +46,6 @@ class SmartmenusController < ApplicationController
         status: [0, 20, 22, 24, 25, 30], # opened, ordered, preparing, ready, delivered, billrequested
       ).first
 
-      # Do not auto-create orders here; order should be created explicitly via Start Order action
-
       if @openOrder
         if current_user
           @ordrparticipant = Ordrparticipant.find_or_create_by(
@@ -56,6 +54,7 @@ class SmartmenusController < ApplicationController
             role: 1,
             sessionid: session.id.to_s,
           )
+          Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 1) if @ordrparticipant&.id
         else
           @ordrparticipant = Ordrparticipant.find_or_create_by(
             ordr_id: @openOrder.id,
@@ -68,9 +67,7 @@ class SmartmenusController < ApplicationController
             @ordrparticipant.update(preferredlocale: @menuparticipant.preferredlocale)
             @ordrparticipant.save
           end
-          if @ordrparticipant.id
-            Ordraction.create(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 0)
-          end
+          Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 0) if @ordrparticipant&.id
         end
       end
     end

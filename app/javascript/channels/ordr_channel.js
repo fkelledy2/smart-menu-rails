@@ -58,8 +58,14 @@ function getCurrentMenuId() {
             console.error('[POST Error]', { url, status: response.status, body });
           }
         }
+        throw new Error('Network response was not ok.');
       }
-      return response;
+      // Success: parse JSON
+      try {
+        return await response.json();
+      } catch (_) {
+        return {};
+      }
     })
     .catch(function (err) {
       console.info(err + ' url: ' + url);
@@ -445,7 +451,7 @@ function refreshOrderJSLogic() {
         alert(err);
       }
     });
-    $('#addItemToOrderButton').on('click', function (evt) {
+    $('#addItemToOrderButton').on('click', async function (evt) {
       const restaurantId = $('#currentRestaurant').text();
       const addModal = document.getElementById('addItemToOrderModal');
       const isTasting = addModal?.dataset?.tasting === 'true';
@@ -545,11 +551,11 @@ function refreshOrderJSLogic() {
         }
       }
 
-      // Gating: require an active order and allowed status
-      const ordrId = document.getElementById('currentOrder')?.textContent?.trim();
-      const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
-      if (!restaurantId || !ordrId || !statusStr || statusStr === 'billrequested' || statusStr === 'closed') {
-        // Close add modal and open Start Order modal if available
+      // Require active order; if missing, prompt Start Order
+      let ordrId = document.getElementById('currentOrder')?.textContent?.trim();
+      let statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
+      const canAdd = !!restaurantId && !!ordrId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
+      if (!canAdd) {
         if (addModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
           const addInstance = bootstrap.Modal.getInstance(addModal) || new bootstrap.Modal(addModal);
           addInstance.hide();
@@ -567,9 +573,10 @@ function refreshOrderJSLogic() {
 
       let postPromise;
       {
+        const resolvedOrderId = $('#a2o_ordr_id').text() || ordrId;
         const ordritem = {
           ordritem: {
-            ordr_id: $('#a2o_ordr_id').text(),
+            ordr_id: resolvedOrderId,
             menuitem_id: $('#a2o_menuitem_id').text(),
             status: ORDRITEM_ADDED,
             ordritemprice: $('#a2o_menuitem_price').text(),
@@ -577,6 +584,7 @@ function refreshOrderJSLogic() {
         };
         console.log('=== ADD ITEM TO ORDER ===');
         console.log('Restaurant ID:', restaurantId);
+        console.log('Order ID:', resolvedOrderId);
         console.log('Order item data:', ordritem);
         console.log('POST URL:', `/restaurants/${restaurantId}/ordritems`);
         console.log('========================');

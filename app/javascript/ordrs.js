@@ -131,6 +131,20 @@ export function initOrders() {
     return null;
   }
 
+  // Resolve current table id from context partials
+  function getCurrentTableId() {
+    const fromHidden = document.getElementById('currentTable')?.textContent?.trim();
+    if (fromHidden) return fromHidden;
+    return null;
+  }
+
+  // Resolve current menu id from context partials
+  function getCurrentMenuId() {
+    const fromHidden = document.getElementById('currentMenu')?.textContent?.trim();
+    if (fromHidden) return fromHidden;
+    return null;
+  }
+
   if (document.getElementById('openOrderModalLabel')) {
     document.getElementById('openOrderModalLabel').addEventListener('shown.bs.modal', () => {
       document.getElementById('backgroundContent').setAttribute('inert', '');
@@ -411,7 +425,7 @@ export function initOrders() {
           }
         } catch (_) {}
       });
-      $('#addItemToOrderButton').on('click', function (evt) {
+      $('#addItemToOrderButton').on('click', async function (evt) {
         console.log('[A2O] Confirm clicked');
         const addModalEl = document.getElementById('addItemToOrderModal');
         const isTasting = addModalEl && addModalEl.dataset && addModalEl.dataset.tasting === 'true';
@@ -600,7 +614,13 @@ export function initOrders() {
       });
     }
     if ($('#start-order').length) {
-      $(document).off('click.startOrder').on('click.startOrder', '#start-order:not([disabled])', function () {
+      $(document).off('click.startOrder').on('click.startOrder', '#start-order:not([disabled])', function (evt) {
+        try {
+          evt.preventDefault();
+          evt.stopPropagation();
+        } catch (_) {}
+        const btn = this;
+        btn.setAttribute('disabled', 'disabled');
         const ordercapacity = document.getElementById('orderCapacity')?.value || 1;
         const restaurantId = getRestaurantId();
         const tablesettingId = getCurrentTableId();
@@ -608,32 +628,34 @@ export function initOrders() {
         if (!restaurantId || !tablesettingId || !menuId) {
           console.warn('[StartOrder] Missing required ids; aborting', { restaurantId, tablesettingId, menuId });
           alert('Please select a table before starting an order.');
-          return;
+          btn.removeAttribute('disabled');
+          return false;
         }
+        const payload = {
+          ordr: {
+            tablesetting_id: tablesettingId,
+            restaurant_id: restaurantId,
+            menu_id: menuId,
+            ordercapacity: ordercapacity,
+            status: ORDR_OPENED,
+          },
+        };
         if ($('#currentEmployee').length) {
-          const ordr = {
-            ordr: {
-              tablesetting_id: tablesettingId,
-              employee_id: $('#currentEmployee').text(),
-              restaurant_id: restaurantId,
-              menu_id: menuId,
-              ordercapacity: ordercapacity,
-              status: ORDR_OPENED,
-            },
-          };
-          post(`/restaurants/${restaurantId}/ordrs`, ordr);
-        } else {
-          const ordr = {
-            ordr: {
-              tablesetting_id: tablesettingId,
-              restaurant_id: restaurantId,
-              menu_id: menuId,
-              ordercapacity: ordercapacity,
-              status: ORDR_OPENED,
-            },
-          };
-          post(`/restaurants/${restaurantId}/ordrs`, ordr);
+          payload.ordr.employee_id = $('#currentEmployee').text();
         }
+        post(`/restaurants/${restaurantId}/ordrs`, payload)
+          .then(() => {
+            // Close modal programmatically to avoid Bootstrap backdrop issues
+            const modalEl = document.getElementById('openOrderModal');
+            if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+              const inst = window.bootstrap.Modal.getInstance(modalEl) || window.bootstrap.Modal.getOrCreateInstance(modalEl);
+              inst.hide();
+            }
+          })
+          .finally(() => {
+            btn.removeAttribute('disabled');
+          });
+        return false;
       });
     }
     if ($('#pay-order').length) {
