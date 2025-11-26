@@ -502,7 +502,7 @@ function refreshOrderJSLogic() {
         postPromise = postOrdritem(ordritem);
       }
 
-      // Post and then close modal and redirect back to SmartMenu (no View Order popup)
+      // Post and then close modal; do NOT redirect or open View Order (match ordrs.js behavior)
       postPromise
         .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
         .then(() => {
@@ -515,16 +515,8 @@ function refreshOrderJSLogic() {
             const addInstance = bootstrap.Modal.getInstance(addModal) || new bootstrap.Modal(addModal);
             addInstance.hide();
           }
-          // Small delay to allow modal to fully close before navigation
+          // Small delay to allow modal to fully close
           return new Promise(resolve => setTimeout(resolve, 300));
-        })
-        .then(() => {
-          try {
-            const currentUrl = window.location.href.replace(/#.*$/, '');
-            window.location.replace(currentUrl);
-          } catch (e) {
-            console.warn('[A2O] Redirect failed, staying on page:', e);
-          }
         })
         .catch((error) => {
           console.error('Error adding item to order:', error);
