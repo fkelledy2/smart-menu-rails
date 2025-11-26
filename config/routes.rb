@@ -103,6 +103,11 @@ Rails.application.routes.draw do
   resources :userplans
   resources :testimonials
   resources :hero_images
+  resources :hero_images do
+    collection do
+      post :clear_cache
+    end
+  end
   
   # Payment processing (secure namespace)
   namespace :payments do

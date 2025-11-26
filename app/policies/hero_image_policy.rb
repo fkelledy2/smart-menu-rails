@@ -19,6 +19,10 @@ class HeroImagePolicy < ApplicationPolicy
     user.present? && user.admin?
   end
 
+  def clear_cache?
+    user.present? && user.admin?
+  end
+
   class Scope < Scope
     def resolve
       if user&.admin?

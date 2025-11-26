@@ -13,6 +13,16 @@ class HeroImagesController < ApplicationController
     @hero_images = policy_scope(HeroImage).ordered
   end
 
+  # POST /hero_images/clear_cache
+  def clear_cache
+    authorize HeroImage, :clear_cache?
+    ClearCacheJob.perform_async
+    respond_to do |format|
+      format.html { redirect_to hero_images_path, notice: 'Cache clear enqueued' }
+      format.json { render json: { status: 'enqueued' } }
+    end
+  end
+
   # GET /hero_images/1 or /hero_images/1.json
   def show
     authorize @hero_image
