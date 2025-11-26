@@ -600,7 +600,7 @@ export function initOrders() {
       });
     }
     if ($('#start-order').length) {
-      $('#start-order').on('click', function () {
+      $(document).off('click.startOrder').on('click.startOrder', '#start-order:not([disabled])', function () {
         const ordercapacity = document.getElementById('orderCapacity').value;
         if ($('#currentEmployee').length) {
           const ordr = {
@@ -633,7 +633,7 @@ export function initOrders() {
       });
     }
     if ($('#pay-order').length) {
-      $('#pay-order').on('click', function () {
+      $(document).off('click.payOrder').on('click.payOrder', '#pay-order:not([disabled])', function () {
         let tip = 0;
         if ($('#tipNumberField').length > 0) {
           tip = $('#tipNumberField').val();

@@ -632,38 +632,37 @@ function refreshOrderJSLogic() {
       }
     });
   }
-  if ($('#confirm-order').length) {
-    $('#confirm-order').on('click', function () {
-      if ($('#currentEmployee').length) {
-        const ordr = {
-          ordr: {
-            tablesetting_id: $('#currentTable').text(),
-            employee_id: $('#currentEmployee').text(),
-            restaurant_id: getRestaurantId(),
-            menu_id: $('#currentMenu').text(),
-            status: ORDR_ORDERED,
-          },
-        };
-        const restaurantId = getRestaurantId();
-        const orderId = getCurrentOrderId();
-        if (!restaurantId || !orderId) { console.warn('[ConfirmOrder] Missing id; aborting', { restaurantId, orderId }); return; }
-        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr);
-      } else {
-        const ordr = {
-          ordr: {
-            tablesetting_id: $('#currentTable').text(),
-            restaurant_id: getRestaurantId(),
-            menu_id: $('#currentMenu').text(),
-            status: ORDR_ORDERED,
-          },
-        };
-        const restaurantId = getRestaurantId();
-        const orderId = getCurrentOrderId();
-        if (!restaurantId || !orderId) { console.warn('[ConfirmOrder] Missing id; aborting', { restaurantId, orderId }); return; }
-        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr);
-      }
-    });
-  }
+  // Delegated handler so replacements of modal content don't drop the binding
+  $(document).off('click.confirmOrder').on('click.confirmOrder', '#confirm-order:not([disabled])', function () {
+    if ($('#currentEmployee').length) {
+      const ordr = {
+        ordr: {
+          tablesetting_id: $('#currentTable').text(),
+          employee_id: $('#currentEmployee').text(),
+          restaurant_id: getRestaurantId(),
+          menu_id: $('#currentMenu').text(),
+          status: ORDR_ORDERED,
+        },
+      };
+      const restaurantId = getRestaurantId();
+      const orderId = getCurrentOrderId();
+      if (!restaurantId || !orderId) { console.warn('[ConfirmOrder] Missing id; aborting', { restaurantId, orderId }); return; }
+      patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr);
+    } else {
+      const ordr = {
+        ordr: {
+          tablesetting_id: $('#currentTable').text(),
+          restaurant_id: getRestaurantId(),
+          menu_id: $('#currentMenu').text(),
+          status: ORDR_ORDERED,
+        },
+      };
+      const restaurantId = getRestaurantId();
+      const orderId = getCurrentOrderId();
+      if (!restaurantId || !orderId) { console.warn('[ConfirmOrder] Missing id; aborting', { restaurantId, orderId }); return; }
+      patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr);
+    }
+  });
   if ($('#request-bill').length) {
     $('#request-bill').on('click', function () {
       if ($('#currentEmployee').length) {
