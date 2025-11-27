@@ -49,11 +49,9 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
   # ORDER CREATION & MANAGEMENT TESTS
   # ===================
 
-  test 'staff can add first item which creates new order' do
+  test 'staff can start order and add first item' do
     visit smartmenu_path(@smartmenu.slug)
-    
-    # Note: Order is auto-created on page visit when allowOrdering is true
-    # This is production behavior in smartmenus_controller
+    start_order_if_needed
     
     # Add first item
     add_item_to_order(@burger.id)
@@ -72,6 +70,7 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
 
   test 'staff can add multiple items to existing order' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add first item - creates order
     add_item_to_order(@burger.id)
@@ -92,6 +91,7 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
 
   test 'staff can view order items in database after adding' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add items
     add_item_to_order(@burger.id)
@@ -108,6 +108,7 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
 
   test 'staff can calculate order total from database' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add items
     add_item_to_order(@burger.id)
@@ -127,6 +128,7 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
 
   test 'staff can submit order by changing status to ordered' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add items
     add_item_to_order(@burger.id)
@@ -146,6 +148,7 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
 
   test 'staff can verify all order attributes after creation' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add items
     add_item_to_order(@burger.id)
@@ -169,6 +172,7 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
 
   test 'staff order persists across page reloads' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Create order with one item
     add_item_to_order(@burger.id)
@@ -188,6 +192,7 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
 
   test 'staff order items persist in database' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add items
     add_item_to_order(@burger.id)
@@ -228,12 +233,13 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
     add_item_to_order(@burger.id)
     order1 = Ordr.where(tablesetting_id: @table.id).last
     
-    # Visit second smartmenu - separate order should be created for table 2
+    # Visit second smartmenu and explicitly start order for table 2
     visit smartmenu_path(smartmenu2.slug)
+    start_order_if_needed
     order2 = Ordr.where(tablesetting_id: table2.id).last
     
-    # Verify order for table 2 exists (auto-created on visit)
-    assert order2.present?, "Order should be auto-created for table 2"
+    # Verify order for table 2 exists (explicitly started)
+    assert order2.present?, "Order should exist for table 2 after starting"
     
     # Add item to table 2's order
     add_item_to_order(@pasta.id)
@@ -251,6 +257,7 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
 
   test 'staff order creation follows same pattern as customer' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Staff adds items
     add_item_to_order(@burger.id)

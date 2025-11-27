@@ -22,6 +22,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
   test 'new order starts in opened status' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add item to create order
     add_item_to_order(@burger.id)
@@ -32,6 +33,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
   test 'empty order remains in opened state' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Create order by adding item
     add_item_to_order(@burger.id)
@@ -46,6 +48,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
   test 'order transitions from opened to ordered on submission' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Create order
     add_item_to_order(@burger.id)
@@ -87,6 +90,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
   test 'order persists for same session across page reloads' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Create order
     add_item_to_order(@burger.id)
@@ -107,6 +111,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
   test 'order maintains items across different statuses' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Create order
     add_item_to_order(@burger.id)
@@ -127,6 +132,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
   test 'submitted order can receive additional items' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Create order and submit it
     add_item_to_order(@burger.id)
@@ -153,6 +159,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
   test 'order item count reflects actual items' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add items
     add_item_to_order(@burger.id)
@@ -170,6 +177,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
   test 'order items maintain correct prices' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add items
     add_item_to_order(@burger.id)
@@ -187,6 +195,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
   test 'order total calculated correctly' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add items
     add_item_to_order(@burger.id)
@@ -207,6 +216,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
   test 'order total calculated from database is correct' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add items
     add_item_to_order(@burger.id)
@@ -227,6 +237,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
   test 'order tracks participants correctly' do
     visit smartmenu_path(@smartmenu.slug)
+    start_order_if_needed
     
     # Add item to create order
     add_item_to_order(@burger.id)

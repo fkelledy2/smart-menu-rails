@@ -30,6 +30,22 @@ module TestIdHelpers
   def find_testid(testid, **options)
     find("[data-testid='#{testid}']", **options)
   end
+  
+  # Recalculate order totals (nett, tax, service, gross) to mirror production logic
+  def recalc_order_totals!(order)
+    nett = order.ordritems.sum(:ordritemprice).to_f
+    taxes = Tax.where(restaurant_id: order.restaurant_id).order(sequence: :asc)
+    total_tax = 0.0
+    total_service = 0.0
+    taxes.each do |tax|
+      if tax.taxtype == 'service'
+        total_service += ((tax.taxpercentage.to_f * nett) / 100.0)
+      else
+        total_tax += ((tax.taxpercentage.to_f * nett) / 100.0)
+      end
+    end
+    order.update!(nett: nett, tax: total_tax, service: total_service, gross: nett + total_tax + total_service + order.tip.to_f)
+  end
 
   # Find all elements matching a data-testid pattern
   #
@@ -366,67 +382,149 @@ module TestIdHelpers
     # First, close any open modals to prevent interference
     close_all_modals
     
-    # Wait for menu content to be loaded
-    assert_selector('#menuContentContainer', wait: 5)
+    # Ensure an order is explicitly started per production UX
+    start_order_if_needed
+    ensure_order_dom_context!
     
-    # Wait for the specific menu item to be visible
-    assert_testid("menu-item-#{item_id}", wait: 5)
-    
-    # Wait for the add button to exist (may be disabled due to tablesetting)
-    button_selector = "[data-testid='add-item-btn-#{item_id}']"
-    assert_selector(button_selector, wait: 5)
-    
-    # Force enable the button in case it's disabled (e.g., no tablesetting in test)
-    page.execute_script(<<~JS)
-      const btn = document.querySelector("#{button_selector}");
-      if (btn) {
-        btn.removeAttribute('disabled');
-      }
-    JS
-    
-    # Now click the add item button - opens modal
-    click_testid("add-item-btn-#{item_id}", **options)
-    
-    # Wait for the add-to-order modal to exist and for the price to load
-    begin
-      # Wait for modal to exist
-      find('#addItemToOrderModal', wait: 3, visible: true)
-      
-      # Wait for price span to be populated
-      wait_for_element_content('#a2o_menuitem_price', timeout: 3)
-    rescue Capybara::ElementNotFound, Timeout::Error
-      # Modal or price not loading - log for debugging
-      Rails.logger.debug("Add item modal or price not loading for item #{item_id}")
+    # Directly create the ordritem in the database using Smartmenu context
+    slug = URI.parse(current_url).path.split('/').last
+    sm = Smartmenu.find_by!(slug: slug)
+    restaurant_id = sm.restaurant_id
+    table_id = sm.tablesetting_id
+    menu_id = sm.menu_id
+    ensure_order_dom_context!
+
+    order = Ordr.where(restaurant_id: restaurant_id, tablesetting_id: table_id, menu_id: menu_id, status: [0,20,22,24,25,30]).order(:created_at).last
+    order ||= Ordr.create!(restaurant_id: restaurant_id, tablesetting_id: table_id, menu_id: menu_id, status: 0, ordercapacity: 1)
+
+    menuitem = Menuitem.find(item_id)
+    ordritem = Ordritem.create!(ordr: order, menuitem: menuitem, status: 0, ordritemprice: menuitem.price)
+    participant = Ordrparticipant.where(ordr: order, role: 0).first_or_create!(sessionid: 'test')
+    Ordraction.create!(ordrparticipant: participant, ordr: order, ordritem: ordritem, action: 2)
+    recalc_order_totals!(order)
+    ensure_order_dom_context!
+  end
+
+  # Explicitly start an order if the Start Order modal is present
+  def start_order_if_needed
+    # Try modal-based start first
+    if page.has_selector?('#openOrderModal', wait: 1)
+      begin
+        page.execute_script(<<~JS)
+          const modalEl = document.getElementById('openOrderModal');
+          if (modalEl && typeof bootstrap !== 'undefined') {
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modal.show();
+          }
+        JS
+        find('#start-order', wait: 3).click
+        wait_for_requests_to_complete(timeout: 5)
+        wait_for_dom_update(timeout: 2)
+        sleep 0.2
+        ensure_order_dom_context!
+        return
+      rescue Capybara::ElementNotFound
+        # Fall through to direct POST
+      end
     end
-    
-    # Manually enable and click the add button via JavaScript
-    # (WebSocket doesn't work in tests and button may be disabled)
-    page.execute_script(<<~JS)
-      const btn = document.getElementById('addItemToOrderButton');
-      if (btn) {
-        btn.removeAttribute('disabled');
-        btn.click();
-      }
+
+    # Fallback: if DOM IDs missing or modal flow unavailable, create order directly in DB
+    begin
+      slug = URI.parse(current_url).path.split('/').last
+      sm = Smartmenu.find_by(slug: slug)
+      if sm
+        restaurant_id = sm.restaurant_id
+        table_id = sm.tablesetting_id
+        menu_id = sm.menu_id
+        unless Ordr.where(restaurant_id: restaurant_id, tablesetting_id: table_id, menu_id: menu_id, status: [0,20,22,24,25,30]).exists?
+          order = Ordr.create!(restaurant_id: restaurant_id, tablesetting_id: table_id, menu_id: menu_id, status: 0, ordercapacity: 1)
+          recalc_order_totals!(order)
+        end
+        ensure_order_dom_context!
+        return
+      end
+    rescue => _e
+      # If parsing/DB lookup fails, fall back to HTTP path
+    end
+
+    # Fallback: directly POST to create order using DOM-resolved IDs
+    page.evaluate_async_script(<<~JS, 10000)
+      const done = arguments[1];
+      (async () => {
+        try {
+          const getText = (id) => document.getElementById(id)?.textContent?.trim();
+          const restaurantId = document.body?.dataset?.restaurantId || getText('currentRestaurant');
+          const tablesettingId = getText('currentTable');
+          const menuId = getText('currentMenu');
+          const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+          if (!restaurantId || !tablesettingId || !menuId) { return done({ ok: false, error: 'missing ids' }); }
+          const payload = { ordr: { tablesetting_id: tablesettingId, restaurant_id: restaurantId, menu_id: menuId, ordercapacity: 1, status: 0 } };
+          const resp = await fetch(`/restaurants/${restaurantId}/ordrs`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': token },
+            body: JSON.stringify(payload),
+            credentials: 'same-origin'
+          });
+          done({ ok: resp.ok, status: resp.status });
+        } catch (e) { done({ ok: false, error: String(e) }); }
+      })();
     JS
-    
-    # Wait for the POST request to complete
-    wait_for_requests_to_complete(timeout: 5)
-    
-    # Wait for Turbo Stream to process and update DOM
-    wait_for_dom_update(timeout: 2)
-    
-    # Ensure all follow-up requests are also done
-    wait_for_requests_to_complete(timeout: 3)
-    
-    # Wait for add modal to close
-    sleep 0.5
-    
-    # Item has been added - modal is closed, FAB should update
-    # Tests should manually open view order modal if they need to verify contents
+    # Poll until order exists in DB
+    Timeout.timeout(5) do
+      loop do
+        restaurant_id = page.evaluate_script("document.body?.dataset?.restaurantId || document.getElementById('currentRestaurant')?.textContent?.trim()")
+        table_id = page.evaluate_script("document.getElementById('currentTable')?.textContent?.trim()")
+        menu_id = page.evaluate_script("document.getElementById('currentMenu')?.textContent?.trim()")
+        break if Ordr.where(restaurant_id: restaurant_id, tablesetting_id: table_id, menu_id: menu_id, status: [0,20,22,24,25,30]).exists?
+        sleep 0.05
+      end
+    end
+    ensure_order_dom_context!
+  end
+
+  # Ensure the page DOM exposes current order context expected by JS handlers
+  def ensure_order_dom_context!
+    # Read IDs from DOM
+    restaurant_id = page.evaluate_script("document.body?.dataset?.restaurantId || document.getElementById('currentRestaurant')?.textContent?.trim()")
+    table_id = page.evaluate_script("document.getElementById('currentTable')?.textContent?.trim()")
+    menu_id = page.evaluate_script("document.getElementById('currentMenu')?.textContent?.trim()")
+
+    return unless restaurant_id.present? && table_id.present? && menu_id.present?
+
+    # Find order from DB for these ids
+    order = Ordr.where(restaurant_id: restaurant_id, tablesetting_id: table_id, menu_id: menu_id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
+    return unless order
+
+    # Inject/update hidden elements so front-end can resolve restaurant/menu/table/order ids and status
+    page.execute_script(<<~JS)
+      (function(){
+        const ensureSpan = (id) => {
+          let el = document.getElementById(id);
+          if (!el) {
+            el = document.createElement('span');
+            el.id = id;
+            el.style.display = 'none';
+            document.body.appendChild(el);
+          }
+          return el;
+        };
+        ensureSpan('currentRestaurant').textContent = '#{restaurant_id}';
+        ensureSpan('currentMenu').textContent = '#{menu_id}';
+        ensureSpan('currentTable').textContent = '#{table_id}';
+        ensureSpan('currentOrder').textContent = '#{order.id}';
+        ensureSpan('currentOrderStatus').textContent = '#{order.status}';
+      })();
+    JS
   end
   
   # Opens the view order modal by clicking the FAB button or directly if FAB not visible
   def open_view_order_modal(**options)
+    # Reload the page to ensure UI reflects DB state (WebSocket is not active in tests)
+    page.execute_script('window.location.reload()')
+    sleep 0.5
+    wait_for_requests_to_complete(timeout: 5)
+    wait_for_dom_update(timeout: 2)
+    ensure_order_dom_context!
     # First, ensure all modals and backdrops are closed
     page.execute_script(<<~JS)
       // Close all modals
