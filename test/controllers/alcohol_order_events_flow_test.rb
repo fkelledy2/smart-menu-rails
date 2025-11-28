@@ -7,7 +7,16 @@ class AlcoholOrderEventsFlowTest < ActionDispatch::IntegrationTest
     @user = users(:one)
     sign_in @user
     @restaurant = restaurants(:one)
-    @order = ordrs(:one)
+    # Ensure policy allows updates: make the signed-in user the owner
+    @restaurant.update!(user: @user)
+    # Create an order that belongs to this restaurant to satisfy policy checks
+    @order = Ordr.create!(
+      restaurant: @restaurant,
+      menu: menus(:ordering_menu),
+      tablesetting: tablesettings(:table_one),
+      status: :opened,
+      nett: 0, tip: 0, service: 0, tax: 0, gross: 0,
+    )
     @menuitem = menuitems(:one)
     # Ensure the menuitem is alcoholic for this test
     @menuitem.update_columns(alcoholic: true, abv: 12.5, alcohol_classification: 'wine') if @menuitem.respond_to?(:alcoholic)
@@ -20,7 +29,7 @@ class AlcoholOrderEventsFlowTest < ActionDispatch::IntegrationTest
           ordr_id: @order.id,
           menuitem_id: @menuitem.id,
           ordritemprice: 9.99,
-          status: 'pending',
+          status: 'opened',
         },
       }, as: :json
       assert_response :success

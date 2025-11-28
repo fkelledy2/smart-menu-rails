@@ -280,6 +280,38 @@ export function initOrders() {
         }
       });
     }
+    // Delegated handler so replacements of modal content don't drop the binding
+    $(document).off('click.confirmOrderMain').on('click.confirmOrderMain', '#confirm-order:not([disabled])', function () {
+      const ORDR_ORDERED = 20;
+      if ($('#currentEmployee').length) {
+        const ordr = {
+          ordr: {
+            tablesetting_id: $('#currentTable').text(),
+            employee_id: $('#currentEmployee').text(),
+            restaurant_id: getRestaurantId(),
+            menu_id: $('#currentMenu').text(),
+            status: ORDR_ORDERED,
+          },
+        };
+        const restaurantId = getRestaurantId();
+        const orderId = getCurrentOrderId();
+        if (!restaurantId || !orderId) { console.warn('[ConfirmOrderMain] Missing id; aborting', { restaurantId, orderId }); return; }
+        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr);
+      } else {
+        const ordr = {
+          ordr: {
+            tablesetting_id: $('#currentTable').text(),
+            restaurant_id: getRestaurantId(),
+            menu_id: $('#currentMenu').text(),
+            status: ORDR_ORDERED,
+          },
+        };
+        const restaurantId = getRestaurantId();
+        const orderId = getCurrentOrderId();
+        if (!restaurantId || !orderId) { console.warn('[ConfirmOrderMain] Missing id; aborting', { restaurantId, orderId }); return; }
+        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr);
+      }
+    });
     $('#toggleFilters').click(function () {
       $(':checkbox').prop('checked', this.checked);
     });

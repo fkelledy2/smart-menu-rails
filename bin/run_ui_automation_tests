@@ -41,6 +41,7 @@ UI_TESTS=(
   # Phase 4 - Add new test files here as they are created
   # Example: "test/system/settings_test.rb"
   # Example: "test/system/staff_management_test.rb"
+  "test/system/smartmenu_locale_switching_test.rb"
 )
 
 # Track results

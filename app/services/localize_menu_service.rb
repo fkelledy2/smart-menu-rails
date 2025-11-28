@@ -108,8 +108,14 @@ class LocalizeMenuService
 
       was_new_record = menu_locale.new_record?
 
-      # Skip if already localized and force is false
-      should_translate = force || was_new_record || menu_locale.name.blank?
+      # Re-translate when forced, when record is new/missing, when blank,
+      # or when the source content changed since last localization
+      needs_source_update = begin
+        menu_locale.persisted? && menu.updated_at && menu_locale.updated_at && (menu.updated_at > menu_locale.updated_at)
+      rescue StandardError
+        false
+      end
+      should_translate = force || was_new_record || menu_locale.name.blank? || needs_source_update
       
       if should_translate
         translation_result = localize_text_with_tracking(menu.name, locale_code, is_default)
@@ -128,6 +134,11 @@ class LocalizeMenuService
         if description_result[:rate_limited]
           stats[:rate_limited_items] << { type: 'menu', id: menu.id, field: 'description', locale: locale_code, text: menu.description }
         end
+      end
+
+      # Always sync status with restaurant locale even if not translating
+      if menu_locale.status != restaurant_locale.status
+        menu_locale.status = restaurant_locale.status
       end
 
       if menu_locale.changed?
@@ -170,8 +181,13 @@ class LocalizeMenuService
 
       was_new_record = section_locale.new_record?
 
-      # Skip if already localized and force is false
-      should_translate = force || was_new_record || section_locale.name.blank?
+      # Re-translate when forced/new/blank or source changed
+      needs_source_update = begin
+        section_locale.persisted? && section.updated_at && section_locale.updated_at && (section.updated_at > section_locale.updated_at)
+      rescue StandardError
+        false
+      end
+      should_translate = force || was_new_record || section_locale.name.blank? || needs_source_update
       
       if should_translate
         translation_result = localize_text_with_tracking(section.name, locale_code, is_default)
@@ -190,6 +206,11 @@ class LocalizeMenuService
         if description_result[:rate_limited]
           stats[:rate_limited_items] << { type: 'section', id: section.id, field: 'description', locale: locale_code, text: section.description }
         end
+      end
+
+      # Always sync status with restaurant locale even if not translating
+      if section_locale.status != restaurant_locale.status
+        section_locale.status = restaurant_locale.status
       end
 
       if section_locale.changed?
@@ -226,8 +247,13 @@ class LocalizeMenuService
 
       was_new_record = item_locale.new_record?
 
-      # Skip if already localized and force is false
-      should_translate = force || was_new_record || item_locale.name.blank?
+      # Re-translate when forced/new/blank or source changed
+      needs_source_update = begin
+        item_locale.persisted? && item.updated_at && item_locale.updated_at && (item.updated_at > item_locale.updated_at)
+      rescue StandardError
+        false
+      end
+      should_translate = force || was_new_record || item_locale.name.blank? || needs_source_update
       
       if should_translate
         translation_result = localize_text_with_tracking(item.name, locale_code, is_default)
@@ -246,6 +272,11 @@ class LocalizeMenuService
         if description_result[:rate_limited]
           stats[:rate_limited_items] << { type: 'item', id: item.id, field: 'description', locale: locale_code, text: item.description }
         end
+      end
+
+      # Always sync status with restaurant locale even if not translating
+      if item_locale.status != restaurant_locale.status
+        item_locale.status = restaurant_locale.status
       end
 
       if item_locale.changed?

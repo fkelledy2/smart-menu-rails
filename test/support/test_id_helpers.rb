@@ -493,6 +493,17 @@ module TestIdHelpers
 
     # Find order from DB for these ids
     order = Ordr.where(restaurant_id: restaurant_id, tablesetting_id: table_id, menu_id: menu_id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
+    # Also ensure a Menuparticipant exists for this smartmenu/session to allow pre-order locale persistence
+    begin
+      slug = URI.parse(current_url).path.split('/').last
+      sm = Smartmenu.find_by(slug: slug)
+      if sm
+        menup = Menuparticipant.find_or_create_by!(smartmenu_id: sm.id, sessionid: session.id.to_s)
+        @__menu_participant_id = menup.id
+      end
+    rescue StandardError
+      # ignore
+    end
     return unless order
 
     # Inject/update hidden elements so front-end can resolve restaurant/menu/table/order ids and status
@@ -513,6 +524,13 @@ module TestIdHelpers
         ensureSpan('currentTable').textContent = '#{table_id}';
         ensureSpan('currentOrder').textContent = '#{order.id}';
         ensureSpan('currentOrderStatus').textContent = '#{order.status}';
+        #{ @__menu_participant_id ? "ensureSpan('menuParticipant').textContent = '#{@__menu_participant_id}';" : '' }
+        #{ begin
+             cp = Ordr.find(order.id).ordrparticipants.where(role: 0).first
+             cp ? "ensureSpan('currentParticipant').textContent = '#{cp.id}';" : ''
+           rescue StandardError
+             ''
+           end }
       })();
     JS
   end

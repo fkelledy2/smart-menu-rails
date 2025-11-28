@@ -2,6 +2,7 @@ class OrdrsController < ApplicationController
   include CachePerformanceMonitoring
 
   before_action :authenticate_user!, except: %i[show create update] # Allow customers to create/update orders
+  skip_before_action :verify_authenticity_token, only: %i[ack_alcohol], if: -> { request.format.json? }
   before_action :set_restaurant
   before_action :set_ordr, only: %i[show edit update destroy analytics ack_alcohol]
   before_action :set_currency
@@ -371,6 +372,16 @@ class OrdrsController < ApplicationController
 
       # Set order if this is a new record
       participant.ordr = ordr if participant.new_record?
+
+      # Transfer preferredlocale from Menuparticipant if present and participant has none
+      begin
+        mp = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
+        if mp&.preferredlocale.present? && participant.preferredlocale.blank?
+          participant.preferredlocale = mp.preferredlocale.to_s.downcase
+        end
+      rescue StandardError
+        # No-op
+      end
 
       # Save the participant first to get an ID
       if participant.save!

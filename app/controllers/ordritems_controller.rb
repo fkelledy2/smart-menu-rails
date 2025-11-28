@@ -1,5 +1,6 @@
 class OrdritemsController < ApplicationController
   before_action :authenticate_user!, except: %i[create update destroy] # Allow customers to manage order items
+  skip_before_action :verify_authenticity_token, only: %i[create update destroy], if: -> { request.format.json? }
   before_action :set_restaurant
   before_action :set_ordritem, only: %i[show edit update destroy]
   before_action :set_currency
