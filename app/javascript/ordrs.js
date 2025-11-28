@@ -54,7 +54,7 @@ export function initOrders() {
         };
         const restaurantId = getRestaurantId();
         const orderId = getCurrentOrderId();
-        if (!restaurantId || !orderId) { console.warn('[RequestBillMain] Missing id; aborting', { restaurantId, orderId }); return; }
+        if (!restaurantId || !orderId) { console.warn('[RequestBillMain] Missing id; aborting', { restaurantId, orderId }); window.__requestBillPosting = false; return; }
         patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
           .finally(() => setTimeout(() => { window.__requestBillPosting = false; }, 500));
       } else {
@@ -68,7 +68,7 @@ export function initOrders() {
         };
         const restaurantId = getRestaurantId();
         const orderId = getCurrentOrderId();
-        if (!restaurantId || !orderId) { console.warn('[RequestBillMain] Missing id; aborting', { restaurantId, orderId }); return; }
+        if (!restaurantId || !orderId) { console.warn('[RequestBillMain] Missing id; aborting', { restaurantId, orderId }); window.__requestBillPosting = false; return; }
         patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
           .finally(() => setTimeout(() => { window.__requestBillPosting = false; }, 500));
       }
@@ -121,7 +121,7 @@ export function initOrders() {
   function patch(url, body) {
     $('#orderCart').hide();
     $('#orderCartSpinner').show();
-    fetch(url, {
+    return fetch(url, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -140,18 +140,20 @@ export function initOrders() {
         console.log('PATCH Success:', data);
         $('#orderCartSpinner').hide();
         $('#orderCart').show();
+        return data;
       })
       .catch((error) => {
         console.error('PATCH Error:', error);
         $('#orderCartSpinner').hide();
         $('#orderCart').show();
+        throw error;
       });
   }
 
   function del(url) {
     $('#orderCart').hide();
     $('#orderCartSpinner').show();
-    fetch(url, {
+    return fetch(url, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -167,11 +169,13 @@ export function initOrders() {
         }
         $('#orderCartSpinner').hide();
         $('#orderCart').show();
+        return true;
       })
       .catch((error) => {
         console.error('DELETE Error:', error);
         $('#orderCartSpinner').hide();
         $('#orderCart').show();
+        throw error;
       });
   }
 
