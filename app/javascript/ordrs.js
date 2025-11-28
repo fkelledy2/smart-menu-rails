@@ -36,6 +36,7 @@ export function initOrders() {
         $('#orderCart').show();
         throw error;
       });
+  }
     // Delegated handler for Request Bill to survive partial refreshes
     $(document).off('click.requestBillMain2').on('click.requestBillMain2', '#request-bill:not([disabled])', function () {
       if (window.__requestBillPosting) { return; }
