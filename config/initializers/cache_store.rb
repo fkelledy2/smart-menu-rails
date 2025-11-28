@@ -2,6 +2,16 @@
 # Unified cache-store setup optimized for Heroku Redis deployment
 
 Rails.application.config.to_prepare do
+  # Global kill-switch to disable caching entirely (e.g., align prod with dev)
+  if ENV.fetch("DISABLE_CACHE", "false") == "true"
+    Rails.logger.warn("[cache] DISABLE_CACHE=true -> using :null_store (no caching)")
+    Rails.application.config.cache_store = :null_store
+    if Rails.application.config.respond_to?(:action_controller)
+      Rails.application.config.action_controller.perform_caching = false
+    end
+    next
+  end
+
   # Feature flag: allow quick rollback to Rails' native store if needed
   use_redis_store = ENV.fetch("USE_REDIS_STORE", "true") == "true"
 
