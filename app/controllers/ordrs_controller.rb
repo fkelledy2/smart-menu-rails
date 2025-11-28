@@ -399,7 +399,10 @@ class OrdrsController < ApplicationController
 
   def calculate_order_totals(ordr)
     ordr.nett = ordr.runningTotal
-    ordr.covercharge = ordr.ordercapacity * ordr.menu.covercharge
+    # In some production edge cases the order may not have an associated menu loaded
+    # or the menu may not define a covercharge. Default to 0 to avoid exceptions.
+    cover_per = ordr.menu&.covercharge.to_f
+    ordr.covercharge = ordr.ordercapacity.to_i * cover_per
 
     # Use Rails.cache to avoid repeated tax queries for the same restaurant
     cache_key = "restaurant_taxes:#{ordr.restaurant_id}:#{Date.current}"
@@ -411,7 +414,7 @@ class OrdrsController < ApplicationController
 
     total_tax = 0
     total_service = 0
-    taxable_amount = ordr.nett + ordr.covercharge
+    taxable_amount = ordr.nett.to_f + ordr.covercharge.to_f
 
     # Process cached tax data instead of ActiveRecord objects
     taxes.each do |tax_percentage, tax_type|
