@@ -6,6 +6,23 @@ class CacheKeyService
   MAX_KEY_LENGTH = 250
 
   class << self
+    # Best-effort current assets digest for cache-keying HTML with JS
+    def assets_digest
+      if Rails.application.config.respond_to?(:assets) && Rails.application.config.assets.respond_to?(:version)
+        ver = Rails.application.config.assets.version
+        return ver.to_s if ver.present?
+      end
+
+      if defined?(Rails.application.assets_manifest) && Rails.application.assets_manifest.respond_to?(:digest)
+        dig = Rails.application.assets_manifest.digest
+        return dig.to_s if dig.present?
+      end
+
+      return ENV['ASSETS_DIGEST'] if ENV['ASSETS_DIGEST'].present?
+      return (Rails.respond_to?(:revision) ? Rails.revision : nil).to_s
+    rescue StandardError
+      nil
+    end
     # Generate optimized cache key for menu content
     def menu_content_key(ordr:, menu:, participant: nil, **options)
       base_key = "menu_content:#{menu.id}:#{menu.updated_at.to_i}"
@@ -25,6 +42,13 @@ class CacheKeyService
 
       if options[:allergyns_updated_at]
         base_key += ":allergyns:#{options[:allergyns_updated_at].to_i}"
+      end
+      if options[:locale]
+        base_key += ":locale:#{options[:locale]}"
+      end
+      digest = options[:assets_digest] || assets_digest
+      if digest.present?
+        base_key += ":assets:#{digest}"
       end
 
       # Use MD5 hash for very long keys to prevent Redis key length issues

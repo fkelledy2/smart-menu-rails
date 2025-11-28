@@ -36,7 +36,86 @@ export function initOrders() {
         $('#orderCart').show();
         throw error;
       });
-  }
+    // Delegated handler for Request Bill to survive partial refreshes
+    $(document).off('click.requestBillMain2').on('click.requestBillMain2', '#request-bill:not([disabled])', function () {
+      if (window.__requestBillPosting) { return; }
+      window.__requestBillPosting = true;
+      const ORDR_BILLREQUESTED = 30;
+      if ($('#currentEmployee').length) {
+        const ordr = {
+          ordr: {
+            tablesetting_id: $('#currentTable').text(),
+            employee_id: $('#currentEmployee').text(),
+            restaurant_id: getRestaurantId(),
+            menu_id: $('#currentMenu').text(),
+            status: ORDR_BILLREQUESTED,
+          },
+        };
+        const restaurantId = getRestaurantId();
+        const orderId = getCurrentOrderId();
+        if (!restaurantId || !orderId) { console.warn('[RequestBillMain] Missing id; aborting', { restaurantId, orderId }); return; }
+        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
+          .finally(() => setTimeout(() => { window.__requestBillPosting = false; }, 500));
+      } else {
+        const ordr = {
+          ordr: {
+            tablesetting_id: $('#currentTable').text(),
+            restaurant_id: getRestaurantId(),
+            menu_id: $('#currentMenu').text(),
+            status: ORDR_BILLREQUESTED,
+          },
+        };
+        const restaurantId = getRestaurantId();
+        const orderId = getCurrentOrderId();
+        if (!restaurantId || !orderId) { console.warn('[RequestBillMain] Missing id; aborting', { restaurantId, orderId }); return; }
+        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
+          .finally(() => setTimeout(() => { window.__requestBillPosting = false; }, 500));
+      }
+    });
+    // Delegated handler for Request Bill to survive partial refreshes
+    $(document).off('click.requestBillMain').on('click.requestBillMain', '#request-bill:not([disabled])', function () {
+      if (window.__requestBillPosting) { return; }
+      window.__requestBillPosting = true;
+      const ORDR_BILLREQUESTED = 30;
+      if ($('#currentEmployee').length) {
+        const ordr = {
+          ordr: {
+            tablesetting_id: $('#currentTable').text(),
+            employee_id: $('#currentEmployee').text(),
+            restaurant_id: getRestaurantId(),
+            menu_id: $('#currentMenu').text(),
+            status: ORDR_BILLREQUESTED,
+          },
+        };
+        const restaurantId = getRestaurantId();
+        const orderId = getCurrentOrderId();
+        if (!restaurantId || !orderId) { 
+          console.warn('[RequestBillMain] Missing id; aborting', { restaurantId, orderId }); 
+          window.__requestBillPosting = false; 
+          return; 
+        }
+        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
+          .finally(() => setTimeout(() => { window.__requestBillPosting = false; }, 500));
+      } else {
+        const ordr = {
+          ordr: {
+            tablesetting_id: $('#currentTable').text(),
+            restaurant_id: getRestaurantId(),
+            menu_id: $('#currentMenu').text(),
+            status: ORDR_BILLREQUESTED,
+          },
+        };
+        const restaurantId = getRestaurantId();
+        const orderId = getCurrentOrderId();
+        if (!restaurantId || !orderId) { 
+          console.warn('[RequestBillMain] Missing id; aborting', { restaurantId, orderId }); 
+          window.__requestBillPosting = false; 
+          return; 
+        }
+        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
+          .finally(() => setTimeout(() => { window.__requestBillPosting = false; }, 500));
+      }
+    });
 
   function patch(url, body) {
     $('#orderCart').hide();
@@ -194,11 +273,18 @@ export function initOrders() {
     });
   }
   if (document.getElementById('addNameToParticipantModal')) {
-    document.getElementById('addNameToParticipantModal').addEventListener('shown.bs.modal', () => {
-      document.getElementById('backgroundContent').setAttribute('inert', '');
+    document.getElementById('addNameToParticipantModal').addEventListener('shown.bs.modal', (event) => {
+      const button = event.relatedTarget;
     });
-    document.getElementById('addNameToParticipantModal').addEventListener('hidden.bs.modal', () => {
-      document.getElementById('backgroundContent').removeAttribute('inert');
+    // Delegated to survive modal re-renders
+    $(document).off('click.addNameToParticipant').on('click.addNameToParticipant', '#addNameToParticipantButton', function (event) {
+      const ordrparticipant = {
+        ordrparticipant: {
+          name: addNameToParticipantModal.querySelector('#name').value,
+        },
+      };
+      patch('/ordrparticipants/' + $('#currentParticipant').text(), ordrparticipant);
+      event.preventDefault();
     });
   }
 
@@ -282,6 +368,8 @@ export function initOrders() {
     }
     // Delegated handler so replacements of modal content don't drop the binding
     $(document).off('click.confirmOrderMain').on('click.confirmOrderMain', '#confirm-order:not([disabled])', function () {
+      if (window.__confirmOrderPosting) { return; }
+      window.__confirmOrderPosting = true;
       const ORDR_ORDERED = 20;
       if ($('#currentEmployee').length) {
         const ordr = {
@@ -295,8 +383,13 @@ export function initOrders() {
         };
         const restaurantId = getRestaurantId();
         const orderId = getCurrentOrderId();
-        if (!restaurantId || !orderId) { console.warn('[ConfirmOrderMain] Missing id; aborting', { restaurantId, orderId }); return; }
-        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr);
+        if (!restaurantId || !orderId) {
+          console.warn('[ConfirmOrderMain] Missing id; aborting', { restaurantId, orderId });
+          window.__confirmOrderPosting = false;
+          return;
+        }
+        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
+          .finally(() => setTimeout(() => { window.__confirmOrderPosting = false; }, 500));
       } else {
         const ordr = {
           ordr: {
@@ -308,25 +401,14 @@ export function initOrders() {
         };
         const restaurantId = getRestaurantId();
         const orderId = getCurrentOrderId();
-        if (!restaurantId || !orderId) { console.warn('[ConfirmOrderMain] Missing id; aborting', { restaurantId, orderId }); return; }
-        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr);
+        if (!restaurantId || !orderId) {
+          console.warn('[ConfirmOrderMain] Missing id; aborting', { restaurantId, orderId });
+          window.__confirmOrderPosting = false;
+          return;
+        }
+        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
+          .finally(() => setTimeout(() => { window.__confirmOrderPosting = false; }, 500));
       }
-    });
-    $('#toggleFilters').click(function () {
-      $(':checkbox').prop('checked', this.checked);
-    });
-    $('.tipPreset').click(function () {
-      const presetTipPercentage = parseFloat($(this).text());
-      const gross = parseFloat($('#orderGross').text());
-      const tip = ((gross / 100) * presetTipPercentage).toFixed(2);
-      $('#tipNumberField').val(tip);
-      const total = parseFloat(parseFloat(tip) + parseFloat(gross)).toFixed(2);
-      $('#orderGrandTotal').text($('#restaurantCurrency').text() + parseFloat(total).toFixed(2));
-      $('#paymentAmount').val(parseFloat(total).toFixed(2) * 100);
-      $('#paymentlink').text('');
-      $('#paymentAnchor').prop('href', '');
-      $('#paymentQR').html('');
-      $('#paymentQR').text('');
     });
     $('#tipNumberField').change(function () {
       $(this).val(parseFloat($(this).val()).toFixed(2));
@@ -343,7 +425,8 @@ export function initOrders() {
       addNameToParticipantModal.addEventListener('show.bs.modal', (event) => {
         const button = event.relatedTarget;
       });
-      $('#addNameToParticipantButton').on('click', function (event) {
+      // Delegated to survive modal re-renders
+      $(document).off('click.addNameToParticipant').on('click.addNameToParticipant', '#addNameToParticipantButton', function (event) {
         const ordrparticipant = {
           ordrparticipant: {
             name: addNameToParticipantModal.querySelector('#name').value,
@@ -380,7 +463,8 @@ export function initOrders() {
       }
       event.preventDefault();
     });
-    $('.removeItemFromOrderButton').on('click', function (event) {
+    // Delegated to survive modal/content replacements
+    $(document).off('click.removeItemFromOrder').on('click.removeItemFromOrder', '.removeItemFromOrderButton', function (event) {
       const ordrItemId = $(this).attr('data-bs-ordritem_id');
       const ordritem = {
         ordritem: {
@@ -457,7 +541,8 @@ export function initOrders() {
           }
         } catch (_) {}
       });
-      $('#addItemToOrderButton').on('click', async function (evt) {
+      // Delegated to survive modal re-renders
+      $(document).off('click.addItemToOrder').on('click.addItemToOrder', '#addItemToOrderButton', async function (evt) {
         console.log('[A2O] Confirm clicked');
         const addModalEl = document.getElementById('addItemToOrderModal');
         const isTasting = addModalEl && addModalEl.dataset && addModalEl.dataset.tasting === 'true';

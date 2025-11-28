@@ -476,6 +476,14 @@ class OrdrsController < ApplicationController
     restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
     ordrparticipant.preferredlocale = menuparticipant.preferredlocale if menuparticipant&.preferredlocale
 
+    # Determine locale to render with
+    render_locale = (
+      ordrparticipant&.preferredlocale.presence ||
+      menuparticipant&.preferredlocale.presence ||
+      restaurant&.defaultLocale&.locale.presence ||
+      I18n.default_locale
+    ).to_s.downcase
+
     partials = {
       context: compress_string(
         ApplicationController.renderer.render(
@@ -498,6 +506,7 @@ class OrdrsController < ApplicationController
             tablesetting: tablesetting,
             participant: menuparticipant,
             currency: restaurant_currency,
+            locale: render_locale,
           ),
           expires_in: 30.minutes,
         ) do
@@ -523,6 +532,7 @@ class OrdrsController < ApplicationController
             participant: ordrparticipant,
             currency: restaurant_currency,
             allergyns_updated_at: allergyns.maximum(:updated_at),
+            locale: render_locale,
           ),
           expires_in: 30.minutes,
         ) do
@@ -541,15 +551,17 @@ class OrdrsController < ApplicationController
         end,
       ),
       menuContentCustomer: compress_string(
-        Rails.cache.fetch([
-          :menu_content_customer,
-          ordr.cache_key_with_version,
-          menu.cache_key_with_version,
-          allergyns.maximum(:updated_at),
-          restaurant_currency.code,
-          ordrparticipant.try(:id),
-          menuparticipant.try(:id),
-        ]) do
+        Rails.cache.fetch(
+          CacheKeyService.menu_content_key(
+            ordr: ordr,
+            menu: menu,
+            participant: ordrparticipant || menuparticipant,
+            currency: restaurant_currency,
+            allergyns_updated_at: allergyns.maximum(:updated_at),
+            locale: render_locale,
+          ),
+          expires_in: 30.minutes,
+        ) do
           ApplicationController.renderer.render(
             partial: 'smartmenus/showMenuContentCustomer',
             locals: {
