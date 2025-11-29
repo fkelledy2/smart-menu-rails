@@ -1,45 +1,10 @@
+import { post as commonsPost, patch as commonsPatch, getCurrentOrderId as commonsGetCurrentOrderId, getCurrentTableId as commonsGetCurrentTableId, getCurrentMenuId as commonsGetCurrentMenuId } from './ordr_commons';
+
 export function initOrders() {
   // Define utility functions first
-  function post(url, body) {
-    $('#orderCart').hide();
-    $('#orderCartSpinner').show();
-
-    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
-    if (!csrfToken) {
-      console.error('CSRF token not found');
-    }
-
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'X-CSRF-Token': csrfToken || '',
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error('Network response was not ok.');
-      })
-      .then((data) => {
-        console.log('Success:', data);
-        $('#orderCartSpinner').hide();
-        $('#orderCart').show();
-        return data;
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        $('#orderCartSpinner').hide();
-        $('#orderCart').show();
-        throw error;
-      });
-  }
-    // Delegated handler for Request Bill to survive partial refreshes
-    $(document).off('click.requestBillMain2').on('click.requestBillMain2', '#request-bill:not([disabled])', function () {
-      if (window.__requestBillPosting) { return; }
+  function post(url, body) { return commonsPost(url, body); }
+  // Delegated handler for Request Bill to survive partial refreshes
+  $(document).off('click.requestBillMain2').on('click.requestBillMain2', '#request-bill:not([disabled])', function () {
       window.__requestBillPosting = true;
       const ORDR_BILLREQUESTED = 30;
       if ($('#currentEmployee').length) {
@@ -118,37 +83,7 @@ export function initOrders() {
       }
     });
 
-  function patch(url, body) {
-    $('#orderCart').hide();
-    $('#orderCartSpinner').show();
-    return fetch(url, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'X-CSRF-Token': document.querySelector("meta[name='csrf-token']").content,
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error('Network response was not ok.');
-      })
-      .then((data) => {
-        console.log('PATCH Success:', data);
-        $('#orderCartSpinner').hide();
-        $('#orderCart').show();
-        return data;
-      })
-      .catch((error) => {
-        console.error('PATCH Error:', error);
-        $('#orderCartSpinner').hide();
-        $('#orderCart').show();
-        throw error;
-      });
-  }
+  function patch(url, body) { return commonsPatch(url, body); }
 
   function del(url) {
     $('#orderCart').hide();
@@ -207,27 +142,13 @@ export function initOrders() {
     if (any) return any;
     return null;
   }
-  function getCurrentOrderId() {
-    const fromHidden = document.getElementById('currentOrder')?.textContent?.trim();
-    if (fromHidden) return fromHidden;
-    const fromPay = document.getElementById('openOrderId')?.value?.trim();
-    if (fromPay) return fromPay;
-    return null;
-  }
+  function getCurrentOrderId() { return commonsGetCurrentOrderId(); }
 
   // Resolve current table id from context partials
-  function getCurrentTableId() {
-    const fromHidden = document.getElementById('currentTable')?.textContent?.trim();
-    if (fromHidden) return fromHidden;
-    return null;
-  }
+  function getCurrentTableId() { return commonsGetCurrentTableId(); }
 
   // Resolve current menu id from context partials
-  function getCurrentMenuId() {
-    const fromHidden = document.getElementById('currentMenu')?.textContent?.trim();
-    if (fromHidden) return fromHidden;
-    return null;
-  }
+  function getCurrentMenuId() { return commonsGetCurrentMenuId(); }
 
   if (document.getElementById('openOrderModalLabel')) {
     document.getElementById('openOrderModalLabel').addEventListener('shown.bs.modal', () => {
