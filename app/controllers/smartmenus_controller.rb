@@ -47,6 +47,15 @@ class SmartmenusController < ApplicationController
       ).first
 
       if @openOrder
+        # Eager load ordritems and their menuitems/locales for state JSON and to avoid N+1
+        begin
+          @openOrder = Ordr.includes(
+            ordritems: { menuitem: :menuitemlocales },
+            ordractions: [:ordrparticipant, { ordritem: { menuitem: :menuitemlocales } }]
+          ).find(@openOrder.id)
+        rescue => e
+          Rails.logger.warn("[SmartmenusController#show] failed to eager load order #{ @openOrder&.id }: #{e.class}: #{e.message}")
+        end
         if current_user
           @ordrparticipant = Ordrparticipant.find_or_create_by(
             ordr: @openOrder,
@@ -77,49 +86,76 @@ class SmartmenusController < ApplicationController
     end
     @menuparticipant.update(smartmenu: @smartmenu) unless @menuparticipant.smartmenu == @smartmenu
 
-    # HTTP caching with ETags for better performance
+    # HTTP caching with ETags for better performance (HTML only).
     # IMPORTANT: Include order context + session in cache key to avoid serving stale pages
     # that drop order context after hard refresh.
-    participant_locale = @ordrparticipant&.preferredlocale || @menuparticipant&.preferredlocale
+    # We intentionally skip conditional caching for JSON so the state endpoint always returns
+    # a fresh payload (and logs), avoiding 304 for XHRs.
+    if request.format.html?
+      participant_locale = @ordrparticipant&.preferredlocale || @menuparticipant&.preferredlocale
 
-    # Build conservative last_modified including order and items where possible
-    order_items_last_modified = nil
-    if @openOrder && @openOrder.respond_to?(:ordritems)
-      # Safe query for maximum updated_at across order items
-      order_items_last_modified = @openOrder.ordritems.maximum(:updated_at)
+      # Build conservative last_modified including order and items where possible
+      order_items_last_modified = nil
+      if @openOrder && @openOrder.respond_to?(:ordritems)
+        # Safe query for maximum updated_at across order items
+        order_items_last_modified = @openOrder.ordritems.maximum(:updated_at)
+      end
+
+      last_modified_candidates = [
+        @smartmenu&.updated_at,
+        @menu&.updated_at,
+        @restaurant&.updated_at,
+        @tablesetting&.updated_at,
+        @ordrparticipant&.updated_at,
+        @menuparticipant&.updated_at,
+        @openOrder&.updated_at,
+        order_items_last_modified,
+      ].compact
+
+      etag_parts = [
+        @smartmenu,
+        @menu,
+        @restaurant,
+        @tablesetting,
+        @openOrder,
+        @ordrparticipant,
+        participant_locale,
+        "sid:#{session.id}",
+      ]
+
+      # Enforce private, per-session caching and language variance
+      response.headers['Cache-Control'] = 'private, must-revalidate, max-age=0'
+      response.headers['Vary'] = [response.headers['Vary'], 'Cookie', 'Accept-Language'].compact.join(', ')
+
+      fresh_when(
+        etag: etag_parts,
+        last_modified: last_modified_candidates.max,
+        public: false,
+      )
     end
-
-    last_modified_candidates = [
-      @smartmenu&.updated_at,
-      @menu&.updated_at,
-      @restaurant&.updated_at,
-      @tablesetting&.updated_at,
-      @ordrparticipant&.updated_at,
-      @menuparticipant&.updated_at,
-      @openOrder&.updated_at,
-      order_items_last_modified,
-    ].compact
-
-    etag_parts = [
-      @smartmenu,
-      @menu,
-      @restaurant,
-      @tablesetting,
-      @openOrder,
-      @ordrparticipant,
-      participant_locale,
-      "sid:#{session.id}",
-    ]
-
-    # Enforce private, per-session caching and language variance
-    response.headers['Cache-Control'] = 'private, must-revalidate, max-age=0'
-    response.headers['Vary'] = [response.headers['Vary'], 'Cookie', 'Accept-Language'].compact.join(', ')
-
-    fresh_when(
-      etag: etag_parts,
-      last_modified: last_modified_candidates.max,
-      public: false,
-    )
+    
+    respond_to do |format|
+      format.html
+      format.json do
+        payload = SmartmenuState.for_context(
+          menu: @menu,
+          restaurant: @restaurant,
+          tablesetting: @tablesetting,
+          open_order: @openOrder,
+          ordrparticipant: @ordrparticipant,
+          menuparticipant: @menuparticipant,
+          session_id: session.id.to_s
+        )
+        begin
+          items_len = payload.dig(:order, :items)&.length || 0
+          item_ids = Array(payload.dig(:order, :items)).map { |i| i[:id] }.compact.take(20)
+          Rails.logger.info("[SmartmenusController#show][JSON] order_id=#{payload.dig(:order, :id)} items=#{items_len} ids=#{item_ids.inspect} totals=#{payload[:totals] ? 'present' : 'nil'}")
+        rescue => e
+          Rails.logger.warn("[SmartmenusController#show][JSON] logging failed: #{e.class}: #{e.message}")
+        end
+        render json: payload
+      end
+    end
   end
 
   # GET /smartmenus/new

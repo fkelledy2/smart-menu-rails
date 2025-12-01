@@ -1,6 +1,5 @@
 <div id="modalsContainer">
 
-    <% unless order %>
     <div class="modal fade" id="openOrderModal" tabindex="-1" aria-labelledby="openOrderModalLabel">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
             <div class="modal-content">
@@ -19,7 +18,6 @@
             </div>
         </div>
     </div>
-    <% end %>
 
     <div class="modal fade" id="addItemToOrderModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel">
       <% if menu.displayImages == true && menu.restaurant.displayImages == true %>
@@ -120,7 +118,7 @@
         </div>
     </div>
     <% end %>
-    <div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" data-testid="view-order-modal">
+    <div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" data-testid="view-order-modal" data-controller="order-totals">
       <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
         <div class="modal-content">
           <div class="modal-header">
@@ -259,7 +257,7 @@
       </div>
     </div>
 
-    <div class="modal fade" id="requestBillModal" tabindex="-1" aria-labelledby="requestBillModalLabel">
+    <div class="modal fade" id="requestBillModal" tabindex="-1" aria-labelledby="requestBillModalLabel" data-controller="order-totals">
       <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
         <div class="modal-content">
           <div class="modal-header">
@@ -343,12 +341,12 @@
                     </div>
                 <% end %>
           </div>
-          <%= render partial: "smartmenus/modal_footer_primary", locals: { primary_id: 'request-bill', primary_text: t('.requestBill'), disabled: !(order && order.gross.to_f > 0) } %>
+          <%= render partial: "smartmenus/modal_footer_primary", locals: { primary_id: 'request-bill-confirm', primary_text: t('.requestBill'), disabled: !(order && order.gross.to_f > 0) } %>
         </div>
       </div>
     </div>
 
-    <div class="modal fade" id="payOrderModal" tabindex="-1" aria-labelledby="payOrderModalLabel">
+    <div class="modal fade" id="payOrderModal" tabindex="-1" aria-labelledby="payOrderModalLabel" data-controller="order-totals">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
@@ -375,7 +373,7 @@
                                         </div>
                                         <div class="col-2">
                                           <span class="float-end">
-                                            <%= number_to_currency(order.covercharge, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
+                                            <span id="orderCoverCharge"><%= number_to_currency(order.covercharge, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></span>
                                           </span>
                                         </div>
                                     </div>
@@ -386,7 +384,7 @@
                                     </div>
                                     <div class="col-3">
                                         <span class="float-end">
-                                            <%= number_to_currency(order.nett, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
+                                            <span id="orderNett"><%= number_to_currency(order.nett, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></span>
                                         </span>
                                     </div>
                                 </div>
@@ -397,7 +395,7 @@
                                         </div>
                                         <div class="col-3">
                                             <span class="float-end">
-                                                <%= number_to_currency(order.service, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
+                                                <span id="orderService"><%= number_to_currency(order.service, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></span>
                                             </span>
                                         </div>
                                     </div>
@@ -409,7 +407,7 @@
                                         </div>
                                         <div class="col-3">
                                             <span class="float-end">
-                                                <%= number_to_currency(order.tax, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
+                                                <span id="orderTax"><%= number_to_currency(order.tax, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></span>
                                             </span>
                                         </div>
                                     </div>
@@ -501,7 +499,7 @@
                         </div>
                     </form>
                 </div>
-                <%= render partial: "smartmenus/modal_footer_primary", locals: { primary_id: 'pay-order', primary_text: t('.confirmPayment'), disabled: !(order && order.gross.to_f > 0) } %>
+                <%= render partial: "smartmenus/modal_footer_primary", locals: { primary_id: 'pay-order-confirm', primary_text: t('.confirmPayment'), disabled: !(order && order.gross.to_f > 0) } %>
             </div>
         </div>
     </div>

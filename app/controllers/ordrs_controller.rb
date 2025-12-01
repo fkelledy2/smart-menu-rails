@@ -1,3 +1,48 @@
+  def broadcast_state(ordr, tablesetting, ordrparticipant)
+    begin
+      menu = ordr.menu
+      restaurant = menu.restaurant
+      menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
+
+      Rails.logger.info("[BroadcastState][Ordrs] Building payload for order=#{ordr.id} table=#{tablesetting&.id} session=#{session.id}")
+
+      payload = SmartmenuState.for_context(
+        menu: menu,
+        restaurant: restaurant,
+        tablesetting: tablesetting,
+        open_order: ordr,
+        ordrparticipant: ordrparticipant,
+        menuparticipant: menuparticipant,
+        session_id: session.id.to_s
+      )
+
+      begin
+        keys = payload.is_a?(Hash) ? payload.keys : payload.class
+        Rails.logger.info("[BroadcastState][Ordrs] Payload summary keys=#{keys} orderId=#{payload.dig(:order, :id)} totals?=#{!!payload[:totals]}")
+      rescue StandardError => ie
+        Rails.logger.info("[BroadcastState][Ordrs] Payload summary failed: #{ie.class}: #{ie.message}")
+      end
+
+      # Broadcast to both order_id channel and slug channel for compatibility
+      channel_order = "ordr_#{ordr.id}_channel"
+      Rails.logger.info("[BroadcastState][Ordrs] Broadcasting to #{channel_order}")
+      ActionCable.server.broadcast(channel_order, { state: payload })
+
+      if menuparticipant&.smartmenu&.slug
+        channel_slug = "ordr_#{menuparticipant.smartmenu.slug}_channel"
+        Rails.logger.info("[BroadcastState][Ordrs] Broadcasting to #{channel_slug}")
+        ActionCable.server.broadcast(channel_slug, { state: payload })
+      end
+    rescue => e
+      Rails.logger.warn("[SmartmenuState] Broadcast failed: #{e.class}: #{e.message}")
+      begin
+        Rails.logger.warn("[SmartmenuState] Backtrace:\n#{e.backtrace.join("\n")}")
+      rescue StandardError
+        # ignore
+      end
+    end
+  end
+
 class OrdrsController < ApplicationController
   include CachePerformanceMonitoring
 
@@ -215,6 +260,7 @@ class OrdrsController < ApplicationController
         if ordr_params[:status].to_i.zero?
           update_tablesetting_status(@tablesetting, 0)
           broadcast_partials(@ordr, @tablesetting, @ordrparticipant, false)
+          broadcast_state(@ordr, @tablesetting, @ordrparticipant)
         end
 
         respond_to do |format|
@@ -244,6 +290,19 @@ class OrdrsController < ApplicationController
     begin
       ActiveRecord::Base.transaction do
         @ordr.assign_attributes(ordr_params)
+
+        # Ensure any newly added items are promoted from 'opened' to 'ordered' when submitting,
+        # even if the overall order status was already 'ordered'.
+        if ordr_params[:status].to_i == 20
+          # 0 => opened, 20 => ordered (consistent with client usage)
+          begin
+            @ordr.ordritems.where(status: 0).update_all(status: 20)
+          rescue => e
+            Rails.logger.warn("[OrdrsController#update] Failed to promote opened ordritems to ordered for order=#{@ordr.id}: #{e.class}: #{e.message}")
+          end
+        end
+
+        # Now that items may have changed status, recalculate totals
         calculate_order_totals(@ordr)
 
         if @ordr.status_changed?
@@ -268,6 +327,7 @@ class OrdrsController < ApplicationController
               render :show, status: :ok, location: restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr)
             end
             broadcast_partials(@ordr, @tablesetting, @ordrparticipant, full_refresh)
+            broadcast_state(@ordr, @tablesetting, @ordrparticipant)
           end
         else
           respond_to do |format|

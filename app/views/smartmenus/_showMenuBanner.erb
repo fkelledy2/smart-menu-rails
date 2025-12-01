@@ -18,7 +18,7 @@
   </div>
 
   <!-- Order Controls -->
-  <div class="header-order-row" id="openOrderContainer">
+  <div class="header-order-row" id="openOrderContainer" data-controller="order-header">
     <% if @openOrder %>
       <% if current_user %>
         <%= render partial: "orderStaff", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @openOrder.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>

@@ -5,6 +5,7 @@
     <%= render 'shared/head' %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
     <%= javascript_system_tags %>
+    <script>window.USE_JSON_STATE = true;</script>
     <meta name="stripe-publishable-key" content="<%= Rails.application.credentials.stripe_publishable_key %>">
     <script src="https://js.stripe.com/v3"></script>
   </head>
@@ -27,8 +28,6 @@
       <%= render 'shared/footer' %>
     </div>
     <%= render partial: "smartmenus/showModals", locals: { order: @openOrder, menu: @menu, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting, current_employee: @current_employee } %>
-    <div id="contextContainer">
-      <%= render partial: "smartmenus/showContext", locals: { order: @openOrder, menu: @menu, current_employee: @current_employee, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting } %>
-    </div>
+    <%= render partial: "smartmenus/showContext", locals: { order: @openOrder, menu: @menu, current_employee: @current_employee, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting } %>
   </body>
 </html>

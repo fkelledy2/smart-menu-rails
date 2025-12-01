@@ -39,6 +39,9 @@
 //= link controllers/sortable_controller.js
 //= link controllers/ocr_upload_controller.js
 //= link controllers/stripe_wallet_controller.js
+//= link controllers/state_controller.js
+//= link controllers/order_header_controller.js
+//= link controllers/order_totals_controller.js
 
 // Application entry point
 //= link application.js

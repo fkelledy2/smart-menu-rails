@@ -1,3 +1,47 @@
+  def broadcast_state(ordr, tablesetting, ordrparticipant)
+    begin
+      menu = ordr.menu
+      restaurant = menu.restaurant
+      menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
+
+      Rails.logger.info("[BroadcastState][Ordritems] Building payload for order=#{ordr.id} table=#{tablesetting&.id} session=#{session.id}")
+
+      payload = SmartmenuState.for_context(
+        menu: menu,
+        restaurant: restaurant,
+        tablesetting: tablesetting,
+        open_order: ordr,
+        ordrparticipant: ordrparticipant,
+        menuparticipant: menuparticipant,
+        session_id: session.id.to_s
+      )
+
+      begin
+        keys = payload.is_a?(Hash) ? payload.keys : payload.class
+        Rails.logger.info("[BroadcastState][Ordritems] Payload summary keys=#{keys} orderId=#{payload.dig(:order, :id)} totals?=#{!!payload[:totals]}")
+      rescue StandardError => ie
+        Rails.logger.info("[BroadcastState][Ordritems] Payload summary failed: #{ie.class}: #{ie.message}")
+      end
+
+      channel_order = "ordr_#{ordr.id}_channel"
+      Rails.logger.info("[BroadcastState][Ordritems] Broadcasting to #{channel_order}")
+      ActionCable.server.broadcast(channel_order, { state: payload })
+
+      if menuparticipant&.smartmenu&.slug
+        channel_slug = "ordr_#{menuparticipant.smartmenu.slug}_channel"
+        Rails.logger.info("[BroadcastState][Ordritems] Broadcasting to #{channel_slug}")
+        ActionCable.server.broadcast(channel_slug, { state: payload })
+      end
+    rescue => e
+      Rails.logger.warn("[SmartmenuState] Broadcast failed: #{e.class}: #{e.message}")
+      begin
+        Rails.logger.warn("[SmartmenuState] Backtrace:\n#{e.backtrace.join("\n")}")
+      rescue StandardError
+        # ignore
+      end
+    end
+  end
+
 class OrdritemsController < ApplicationController
   before_action :authenticate_user!, except: %i[create update destroy] # Allow customers to manage order items
   skip_before_action :verify_authenticity_token, only: %i[create update destroy], if: -> { request.format.json? }
@@ -35,6 +79,21 @@ class OrdritemsController < ApplicationController
 
   # POST /ordritems or /ordritems.json
   def create
+    # Guard: require a valid existing order; never create wrapper orders implicitly
+    begin
+      target_order_id = ordritem_params[:ordr_id]
+      @ordr = Ordr.find(target_order_id)
+    rescue ActiveRecord::RecordNotFound, NoMethodError
+      respond_to do |format|
+        format.html do
+          redirect_back fallback_location: root_path,
+                        alert: I18n.t('ordritems.errors.order_missing', default: 'Cannot add item: order does not exist')
+        end
+        format.json { render json: { error: 'order_not_found' }, status: :unprocessable_entity }
+      end
+      return
+    end
+
     @ordritem = Ordritem.new(ordritem_params)
     # Always authorize - policy handles public vs private access
     authorize @ordritem
@@ -67,6 +126,7 @@ class OrdritemsController < ApplicationController
           Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
           update_ordr(@ordritem.ordr)
           broadcast_partials(@ordritem.ordr, @ordritem.ordr.tablesetting, @ordrparticipant)
+          broadcast_state(@ordritem.ordr, @ordritem.ordr.tablesetting, @ordrparticipant)
           format.html do
             redirect_to restaurant_ordrs_path(@restaurant || @ordritem.ordr.restaurant),
                         notice: 'Ordritem was successfully created.'
@@ -102,7 +162,9 @@ class OrdritemsController < ApplicationController
             adjust_inventory(@ordritem.menuitem&.inventory, -1)
           end
           update_ordr(@ordritem.ordr)
-          broadcast_partials(@ordritem.ordr, @ordritem.ordr.tablesetting, find_or_create_participant(@ordritem.ordr))
+          participant = find_or_create_participant(@ordritem.ordr)
+          broadcast_partials(@ordritem.ordr, @ordritem.ordr.tablesetting, participant)
+          broadcast_state(@ordritem.ordr, @ordritem.ordr.tablesetting, participant)
           format.json do
             render :show, status: :ok,
                           location: restaurant_ordritem_url(@restaurant || @ordritem.ordr.restaurant, @ordritem)
@@ -128,6 +190,7 @@ class OrdritemsController < ApplicationController
       ordrparticipant = find_or_create_participant(order)
       Ordraction.create!(ordrparticipant: ordrparticipant, ordr: order, ordritem: @ordritem, action: 3)
       broadcast_partials(order, order.tablesetting, ordrparticipant)
+      broadcast_state(order, order.tablesetting, ordrparticipant)
       respond_to do |format|
         format.html do
           redirect_to restaurant_ordrs_path(@restaurant || order.restaurant),

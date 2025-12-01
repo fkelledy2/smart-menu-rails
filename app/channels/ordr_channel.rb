@@ -1,7 +1,10 @@
 class OrdrChannel < ApplicationCable::Channel
   def subscribed
-    order_id = params[:order_id]
-    stream_from "ordr_#{order_id}_channel"
+    # Support subscribing by order_id (numeric) or by smartmenu slug (string)
+    identifier = params[:order_id].presence || params[:slug].presence
+    return unless identifier.present?
+
+    stream_from "ordr_#{identifier}_channel"
   end
 
   def unsubscribed

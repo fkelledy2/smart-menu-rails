@@ -1,6 +1,5 @@
 import consumer from './consumer';
-import pako from 'pako';
-import { post as commonsPost, patch as commonsPatch, getCurrentOrderId as commonsGetCurrentOrderId, getCurrentTableId as commonsGetCurrentTableId, getCurrentMenuId as commonsGetCurrentMenuId } from '../ordr_commons';
+import { post as commonsPost, patch as commonsPatch, getCurrentOrderId as commonsGetCurrentOrderId, getCurrentTableId as commonsGetCurrentTableId, getCurrentMenuId as commonsGetCurrentMenuId, initOrderBindings as commonsInitOrderBindings } from '../ordr_commons';
 
 function post(url, body) {
   return commonsPost(url, body);
@@ -111,25 +110,7 @@ const updateConnectionStatus = (status, message) => {
   }
 };
 
-function decompressPartial(compressed) {
-  if (!compressed || typeof compressed !== 'string') return '';
-  try {
-    // Decode the Base64 string to a binary string
-    const binaryString = window.atob(compressed);
-    const len = binaryString.length;
-    // Convert the binary string to a Uint8Array
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    // Decompress using pako (which handles zlib format)
-    const decompressed = pako.inflate(bytes, { to: 'string' });
-    return decompressed;
-  } catch (error) {
-    console.error('Error decompressing partial:', error);
-    return '';
-  }
-}
+// (HTML partial decompression removed — JSON-only mode)
 
 const ORDR_OPENED = 0;
 const ORDR_ORDERED = 20;
@@ -513,44 +494,8 @@ function refreshOrderJSLogic() {
       return true;
     });
   }
-  if ($('#start-order').length) {
-    $(document).off('click.startOrderChannel').on('click.startOrderChannel', '#start-order:not([disabled])', function () {
-      const orderCapacityEl = document.getElementById('orderCapacity');
-      const ordercapacity = orderCapacityEl && orderCapacityEl.value ? orderCapacityEl.value : 1;
-      const restaurantId = getRestaurantId();
-      const tablesettingId = getCurrentTableId();
-      const menuId = getCurrentMenuId();
-      if (!restaurantId || !tablesettingId || !menuId) {
-        console.warn('[StartOrder][channel] Missing required ids; aborting', { restaurantId, tablesettingId, menuId });
-        alert('Please select a table before starting an order.');
-        return;
-      }
-      if ($('#currentEmployee').length) {
-        const ordr = {
-          ordr: {
-            tablesetting_id: tablesettingId,
-            employee_id: $('#currentEmployee').text(),
-            restaurant_id: restaurantId,
-            menu_id: menuId,
-            ordercapacity: ordercapacity,
-            status: ORDR_OPENED,
-          },
-        };
-        post(`/restaurants/${restaurantId}/ordrs`, ordr);
-      } else {
-        const ordr = {
-          ordr: {
-            tablesetting_id: tablesettingId,
-            restaurant_id: restaurantId,
-            menu_id: menuId,
-            ordercapacity: ordercapacity,
-            status: ORDR_OPENED,
-          },
-        };
-        post(`/restaurants/${restaurantId}/ordrs`, ordr);
-      }
-    });
-  }
+  // Start Order click is handled centrally in ordr_commons.js (capture-phase).
+  // Removed legacy bubbling handler here to avoid duplicate POSTs.
   // Delegated handler so replacements of modal content don't drop the binding
   $(document).off('click.confirmOrder').on('click.confirmOrder', '#confirm-order:not([disabled])', function () {
     if (window.__confirmOrderPosting) { return; }
@@ -584,41 +529,6 @@ function refreshOrderJSLogic() {
       if (!restaurantId || !orderId) { console.warn('[ConfirmOrder] Missing id; aborting', { restaurantId, orderId }); window.__confirmOrderPosting = false; return; }
       patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
         .finally(() => setTimeout(() => { window.__confirmOrderPosting = false; }, 500));
-    }
-  });
-  // Delegated handler for Request Bill so replacements don't drop binding
-  $(document).off('click.requestBill').on('click.requestBill', '#request-bill:not([disabled])', function () {
-    if (window.__requestBillPosting) { return; }
-    window.__requestBillPosting = true;
-    if ($('#currentEmployee').length) {
-      const ordr = {
-        ordr: {
-          tablesetting_id: $('#currentTable').text(),
-          employee_id: $('#currentEmployee').text(),
-          restaurant_id: getRestaurantId(),
-          menu_id: $('#currentMenu').text(),
-          status: ORDR_BILLREQUESTED,
-        },
-      };
-      const restaurantId = getRestaurantId();
-      const orderId = getCurrentOrderId();
-      if (!restaurantId || !orderId) { console.warn('[RequestBill] Missing id; aborting', { restaurantId, orderId }); window.__requestBillPosting = false; return; }
-      patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
-        .finally(() => setTimeout(() => { window.__requestBillPosting = false; }, 500));
-    } else {
-      const ordr = {
-        ordr: {
-          tablesetting_id: $('#currentTable').text(),
-          restaurant_id: getRestaurantId(),
-          menu_id: $('#currentMenu').text(),
-          status: ORDR_BILLREQUESTED,
-        },
-      };
-      const restaurantId = getRestaurantId();
-      const orderId = getCurrentOrderId();
-      if (!restaurantId || !orderId) { console.warn('[RequestBill] Missing id; aborting', { restaurantId, orderId }); window.__requestBillPosting = false; return; }
-      patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
-        .finally(() => setTimeout(() => { window.__requestBillPosting = false; }, 500));
     }
   });
   if ($('#pay-order').length) {
@@ -694,210 +604,40 @@ function refreshOrderJSLogic() {
       }
     });
   }
+
 }
-
-// ============================================================================
-// MODAL PRESERVATION FUNCTIONS
-// ============================================================================
-// These functions preserve modal state during WebSocket updates to prevent
-// the modal overlay bug where backdrops remain after DOM updates
-
-/**
- * Captures the current state of all open modals
- * @returns {Array} Array of modal state objects
- */
-function preserveModalState() {
-  const openModals = [];
-  
-  // Modals that should NOT be preserved (they should always close after action)
-  const doNotPreserveModals = ['addItemToOrderModal'];
-
-  try {
-    const modalElements = document.querySelectorAll('.modal.show');
-
-    modalElements.forEach((modalEl) => {
-      try {
-        // Skip modals that should not be preserved
-        if (doNotPreserveModals.includes(modalEl.id)) {
-          console.log(`[Modal Preservation] Skipping modal (should close): ${modalEl.id}`);
-          const modalInstance = bootstrap.Modal.getInstance(modalEl);
-          if (modalInstance) {
-            modalInstance.hide();
-          }
-          return;
-        }
-        
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-        if (modalInstance) {
-          console.log(`[Modal Preservation] Preserving modal: ${modalEl.id}`);
-
-          // Store modal state
-          openModals.push({
-            id: modalEl.id,
-            scrollTop: modalEl.querySelector('.modal-body')?.scrollTop || 0,
-            formData: captureFormData(modalEl),
-          });
-
-          // Properly hide modal (this removes the backdrop)
-          modalInstance.hide();
-        }
-      } catch (error) {
-        console.error(`[Modal Preservation] Error preserving modal ${modalEl.id}:`, error);
-      }
-    });
-
-    if (openModals.length > 0) {
-      console.log(`[Modal Preservation] Preserved ${openModals.length} modal(s)`);
-    }
-  } catch (error) {
-    console.error('[Modal Preservation] Error in preserveModalState:', error);
-  }
-
-  return openModals;
-}
-
-/**
- * Captures form data from a modal element
- * @param {HTMLElement} modalEl - The modal element
- * @returns {Object} Object containing form field values
- */
-function captureFormData(modalEl) {
-  const formData = {};
-
-  try {
-    const inputs = modalEl.querySelectorAll('input, select, textarea');
-    inputs.forEach((input) => {
-      if (input.id) {
-        if (input.type === 'checkbox') {
-          formData[input.id] = input.checked;
-        } else if (input.type === 'radio') {
-          if (input.checked) {
-            formData[input.id] = input.value;
-          }
-        } else {
-          formData[input.id] = input.value;
-        }
-      }
-    });
-  } catch (error) {
-    console.error('[Modal Preservation] Error capturing form data:', error);
-  }
-
-  return formData;
-}
-
-/**
- * Restores previously open modals after DOM update
- * @param {Array} openModals - Array of modal state objects
- */
-function restoreModalState(openModals) {
-  if (!openModals || openModals.length === 0) {
-    return;
-  }
-
-  try {
-    console.log(`[Modal Preservation] Restoring ${openModals.length} modal(s)`);
-
-    openModals.forEach((modalState) => {
-      try {
-        const modalEl = document.getElementById(modalState.id);
-        if (!modalEl) {
-          console.warn(`[Modal Preservation] Modal element not found: ${modalState.id}`);
-          return;
-        }
-
-        // Restore form data
-        Object.keys(modalState.formData).forEach((inputId) => {
-          const input = document.getElementById(inputId);
-          if (input) {
-            if (input.type === 'checkbox') {
-              input.checked = modalState.formData[inputId];
-            } else {
-              input.value = modalState.formData[inputId];
-            }
-          }
-        });
-
-        // Restore scroll position
-        const modalBody = modalEl.querySelector('.modal-body');
-        if (modalBody && modalState.scrollTop > 0) {
-          modalBody.scrollTop = modalState.scrollTop;
-        }
-
-        // Re-show modal
-        const modalInstance = new bootstrap.Modal(modalEl);
-        modalInstance.show();
-
-        console.log(`[Modal Preservation] Restored modal: ${modalState.id}`);
-      } catch (error) {
-        console.error(`[Modal Preservation] Error restoring modal ${modalState.id}:`, error);
-      }
-    });
-  } catch (error) {
-    console.error('[Modal Preservation] Error in restoreModalState:', error);
-  }
-}
-
-/**
- * Fallback function to force close all modals and clean up backdrops
- * Used if modal preservation fails
- */
-function closeAllModalsProper() {
-  try {
-    console.log('[Modal Cleanup] Force closing all modals');
-
-    const modalElements = document.querySelectorAll('.modal.show');
-
-    modalElements.forEach((modalEl) => {
-      try {
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-        if (modalInstance) {
-          modalInstance.hide();
-        }
-      } catch (error) {
-        console.error('[Modal Cleanup] Error closing modal:', error);
-      }
-    });
-
-    // Force remove any lingering backdrops
-    document.querySelectorAll('.modal-backdrop').forEach((backdrop) => {
-      backdrop.remove();
-    });
-
-    // Remove modal-open class from body
-    document.body.classList.remove('modal-open');
-    document.body.style.removeProperty('overflow');
-    document.body.style.removeProperty('padding-right');
-
-    console.log('[Modal Cleanup] Cleanup complete');
-  } catch (error) {
-    console.error('[Modal Cleanup] Error in closeAllModalsProper:', error);
-  }
-}
-
-// ============================================================================
-// END MODAL PRESERVATION FUNCTIONS
-// ============================================================================
 
 // Initialize the order channel subscription
 function initializeOrderChannel() {
   if (!isBrowser || !document.body) return null;
 
-  const orderId = document.body.dataset.smartmenuId;
-  if (!orderId) return null;
-
+  let currentOrderId = (function () {
+    try { return (typeof commonsGetCurrentOrderId === 'function') ? commonsGetCurrentOrderId() : null; } catch (_) { return null; }
+  })();
+  const getSlug = () => { try { return document.body?.dataset?.smartmenuId || null; } catch (_) { return null; } };
+  let currentIdentifier = currentOrderId || getSlug();
+  let usingSlug = !currentOrderId && !!currentIdentifier;
   let subscription = null;
 
   const subscribeToChannel = () => {
+    const orderId = (function () { try { return (typeof commonsGetCurrentOrderId === 'function') ? commonsGetCurrentOrderId() : null; } catch (_) { return null; } })();
+    const slug = getSlug();
+    const identifier = orderId || slug;
+    if (!identifier) return null;
     if (subscription) {
       subscription.unsubscribe();
     }
 
+    currentIdentifier = identifier;
+    usingSlug = !orderId && !!slug;
+
+    const params = usingSlug ? { channel: 'OrdrChannel', slug } : { channel: 'OrdrChannel', order_id: orderId };
+
     subscription = consumer.subscriptions.create(
-      { channel: 'OrdrChannel', order_id: orderId },
+      params,
       {
         connected() {
-          console.log('Connected to OrdrChannel');
+          console.log('Connected to OrdrChannel', usingSlug ? `(slug=${slug})` : `(order_id=${orderId})`);
           updateConnectionStatus('connected', 'Connected');
         },
 
@@ -912,148 +652,14 @@ function initializeOrderChannel() {
         },
 
         received(data) {
-          console.log('Received WebSocket message with keys:', Object.keys(data));
-
           try {
-            // STEP 1: Preserve modal state before any DOM updates
-            let preservedModals = [];
-
-            // Map WebSocket data keys to their corresponding DOM selectors
-            const partialsToUpdate = [
-              { key: 'context', selector: '#contextContainer' },
-              { key: 'modals', selector: '#modalsContainer' },
-              {
-                key: 'menuContentStaff',
-                selector: '#menuContentContainer',
-                // For staff content, we need to check if we're in staff mode
-                shouldUpdate: () => document.getElementById('menuu') !== null,
-              },
-              {
-                key: 'menuContentCustomer',
-                selector: '#menuContentContainer',
-                // For customer content, we check if we're in customer mode
-                shouldUpdate: () => document.getElementById('menuc') !== null,
-              },
-              {
-                key: 'orderCustomer',
-                selector: '#openOrderContainer',
-                shouldUpdate: () => document.getElementById('menuc') !== null,
-              },
-              {
-                key: 'orderStaff',
-                selector: '#openOrderContainer',
-                shouldUpdate: () => document.getElementById('menuu') !== null,
-              },
-              {
-                key: 'tableLocaleSelectorStaff',
-                selector: '#tableLocaleSelectorContainer',
-                shouldUpdate: () => document.getElementById('menuu') !== null,
-              },
-              {
-                key: 'tableLocaleSelectorCustomer',
-                selector: '#tableLocaleSelectorContainer',
-                shouldUpdate: () => document.getElementById('menuc') !== null,
-              },
-            ];
-
-            // Update each partial if it exists in the data and should be updated
-            partialsToUpdate.forEach(({ key, selector, shouldUpdate }) => {
-              // Skip if the key doesn't exist in the data or shouldn't be updated
-              if (!data[key] || (shouldUpdate && !shouldUpdate())) {
-                return;
-              }
-              
-              // Skip updating modals if we're closing the add item modal
-              if (key === 'modals' && window.closingAddItemModal) {
-                console.log('[Modal Update] Skipping modal update - addItemToOrderModal is closing');
-                return;
-              }
-
-              console.log(`Updating partial: ${key}`);
-              const element = document.querySelector(selector);
-
-              if (element) {
-                try {
-                  // STEP 2: If updating modals, preserve state first
-                  if (key === 'modals') {
-                    preservedModals = preserveModalState();
-                  }
-
-                  const decompressed = decompressPartial(data[key]);
-
-                  // Special handling for menu content to replace the entire container
-                  if (key === 'menuContentStaff' || key === 'menuContentCustomer') {
-                    element.innerHTML = decompressed;
-                  } else {
-                    // For other elements, replace the content
-                    element.innerHTML = decompressed;
-                  }
-
-                  // STEP 3: If we updated modals, restore state after DOM is ready
-                  if (key === 'modals' && preservedModals.length > 0) {
-                    // Use setTimeout to ensure DOM is fully updated
-                    setTimeout(() => {
-                      try {
-                        restoreModalState(preservedModals);
-                      } catch (restoreError) {
-                        console.error(
-                          '[Modal Preservation] Failed to restore modals, using fallback:',
-                          restoreError
-                        );
-                        closeAllModalsProper();
-                      }
-                    }, 100);
-                  }
-
-                  console.log(`Updated ${key} with ${decompressed.length} characters`);
-                } catch (error) {
-                  console.error(`Error processing ${key}:`, error);
-                  // If modal update failed, ensure cleanup
-                  if (key === 'modals') {
-                    closeAllModalsProper();
-                  }
-                }
-              } else {
-                console.warn(`Element not found for selector: ${selector} (key: ${key})`);
-              }
-            });
-
-            // Handle full page refresh if needed
-            if (data.fullPageRefresh && data.fullPageRefresh.refresh === true) {
-              console.log('Full page refresh requested');
-              window.location.reload();
-            }
-
-            // Refresh any order-related logic
-            refreshOrderJSLogic();
-            
-            // Dispatch custom event for test synchronization
-            // Tests can wait for this event instead of arbitrary sleeps
-            window.dispatchEvent(new CustomEvent('ordr:updated', { 
-              detail: { 
-                keys: Object.keys(data),
-                timestamp: new Date().getTime()
-              }
-            }));
-            
-            // Also dispatch specific events for different update types
-            if (data.menuContentStaff || data.menuContentCustomer) {
-              window.dispatchEvent(new CustomEvent('ordr:menu:updated', { 
-                detail: { timestamp: new Date().getTime() }
-              }));
-            }
-            if (data.orderStaff || data.orderCustomer) {
-              window.dispatchEvent(new CustomEvent('ordr:order:updated', { 
-                detail: { timestamp: new Date().getTime() }
-              }));
-            }
-            if (data.modals) {
-              window.dispatchEvent(new CustomEvent('ordr:modals:updated', { 
-                detail: { timestamp: new Date().getTime() }
-              }));
-            }
+            const payload = data && (data.state || data);
+            if (!payload) return;
+            // JSON state only
+            document.dispatchEvent(new CustomEvent('state:update', { detail: payload }));
+            updateConnectionStatus('connected', 'State updated');
           } catch (error) {
-            console.error('Error processing received data:', error);
+            console.error('Error processing received state:', error);
             updateConnectionStatus('error', 'Error processing update');
           }
         },
@@ -1063,7 +669,7 @@ function initializeOrderChannel() {
     return subscription;
   };
 
-  // Initial subscription
+  // Initial subscription (slug fallback if no order yet)
   subscribeToChannel();
 
   // Handle page visibility changes
@@ -1080,6 +686,16 @@ function initializeOrderChannel() {
   window.addEventListener('beforeunload', () => {
     if (subscription) {
       subscription.unsubscribe();
+    }
+  });
+
+  // Re-subscribe when order id appears/changes via state
+  document.addEventListener('state:order', (e) => {
+    const nextId = e.detail && e.detail.id ? String(e.detail.id) : null;
+    if (!nextId) return;
+    if (nextId !== currentOrderId) {
+      currentOrderId = nextId;
+      subscribeToChannel();
     }
   });
 
@@ -1112,8 +728,9 @@ function initializeOrderChannel() {
 // Initialize the order channel when the document is ready
 if (isBrowser) {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeOrderChannel);
+    document.addEventListener('DOMContentLoaded', () => { try { commonsInitOrderBindings(); } catch (_) {} initializeOrderChannel(); });
   } else {
+    try { commonsInitOrderBindings(); } catch (_) {}
     initializeOrderChannel();
   }
 }
