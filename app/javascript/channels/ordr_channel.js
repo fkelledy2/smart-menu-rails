@@ -310,10 +310,62 @@ function refreshOrderJSLogic() {
     const addItemToOrderModal = document.getElementById('addItemToOrderModal');
     addItemToOrderModal.addEventListener('show.bs.modal', (event) => {
       const button = event.relatedTarget;
+      // Utility to toggle tasting-specific controls
+      const setTastingControlsVisible = (modalEl, visible, opts = {}) => {
+        try {
+          const container = modalEl.querySelector('#a2o_tasting_controls');
+          const qty = modalEl.querySelector('#a2o_tasting_qty');
+          const pairing = modalEl.querySelector('#a2o_tasting_pairing');
+          const pairingWrap = modalEl.querySelector('#a2o_tasting_pairing_wrap');
+          const elems = [qty, pairing];
+          elems.forEach((el) => {
+            if (!el) return;
+            const group = el.closest('.form-group') || el.closest('.mb-3') || el.parentElement;
+            const target = group || el;
+            target.style.display = visible ? '' : 'none';
+          });
+          if (container) {
+            container.hidden = !visible;
+            container.style.display = visible ? '' : 'none';
+          }
+          // Control pairing visibility based on allow_pairing opt when visible
+          if (pairingWrap) {
+            if (!visible) {
+              pairingWrap.hidden = true;
+              pairingWrap.style.display = 'none';
+            } else {
+              const allow = !!opts.allowPairing;
+              pairingWrap.hidden = !allow;
+              pairingWrap.style.display = allow ? '' : 'none';
+            }
+          }
+        } catch (_) {}
+      };
+
+      // Always start hidden to avoid stale state
+      setTastingControlsVisible(addItemToOrderModal, false);
+
       if (!button) {
-        // Programmatic show (e.g., tasting). Fields already set by ordrs.js
+        // Programmatic show (e.g., tasting). Ensure tasting controls are visible when flagged
+        const isTasting = addItemToOrderModal?.dataset?.tasting === 'true';
+        let base = {};
+        try { base = JSON.parse(addItemToOrderModal?.dataset?.tastingBase || '{}'); } catch (_) {}
+        const allowPairing = !!base.allow_pairing;
+        setTastingControlsVisible(addItemToOrderModal, !!isTasting, { allowPairing });
         return;
       }
+
+      // Opened via regular button => non-tasting. Clear any stale tasting flags and hide controls.
+      delete addItemToOrderModal.dataset.tasting;
+      delete addItemToOrderModal.dataset.tastingBase;
+      // Hide and reset tasting UI for regular items (already hidden above, but reset values)
+      setTastingControlsVisible(addItemToOrderModal, false);
+      try {
+        const qty = addItemToOrderModal.querySelector('#a2o_tasting_qty');
+        const pairing = addItemToOrderModal.querySelector('#a2o_tasting_pairing');
+        if (qty) qty.value = '1';
+        if (pairing) pairing.checked = false;
+      } catch (_) {}
       $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id'));
       $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
       $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
@@ -330,6 +382,28 @@ function refreshOrderJSLogic() {
       } catch (err) {
         alert(err);
       }
+    });
+    // Always reset tasting controls when modal is fully hidden
+    addItemToOrderModal.addEventListener('hidden.bs.modal', () => {
+      try {
+        delete addItemToOrderModal.dataset.tasting;
+        delete addItemToOrderModal.dataset.tastingBase;
+        const container = addItemToOrderModal.querySelector('#a2o_tasting_controls');
+        const pairingWrap = addItemToOrderModal.querySelector('#a2o_tasting_pairing_wrap');
+        const qty = addItemToOrderModal.querySelector('#a2o_tasting_qty');
+        const pairing = addItemToOrderModal.querySelector('#a2o_tasting_pairing');
+        if (container) container.hidden = true;
+        if (pairingWrap) pairingWrap.hidden = true;
+        if (qty) qty.value = '1';
+        if (pairing) pairing.checked = false;
+        // Also hide any form group wrappers explicitly
+        [qty, pairing].forEach((el) => {
+          if (!el) return;
+          const group = el.closest('.form-group') || el.closest('.mb-3') || el.parentElement;
+          const target = group || el;
+          target.style.display = 'none';
+        });
+      } catch (_) {}
     });
     $('#addItemToOrderButton').on('click', async function (evt) {
       const restaurantId = $('#currentRestaurant').text();

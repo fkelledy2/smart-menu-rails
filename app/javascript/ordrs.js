@@ -239,12 +239,51 @@ export function initOrders() {
     if ($('#addItemToOrderModal').length) {
       const addItemToOrderModal = document.getElementById('addItemToOrderModal');
       addItemToOrderModal.addEventListener('show.bs.modal', (event) => {
-        const isTasting = addItemToOrderModal?.dataset?.tasting === 'true';
         const button = event.relatedTarget;
+        const setTastingControlsVisible = (modalEl, visible, opts = {}) => {
+          try {
+            const container = modalEl.querySelector('#a2o_tasting_controls');
+            const qty = modalEl.querySelector('#a2o_tasting_qty');
+            const pairing = modalEl.querySelector('#a2o_tasting_pairing');
+            const pairingWrap = modalEl.querySelector('#a2o_tasting_pairing_wrap');
+            const elems = [qty, pairing];
+            elems.forEach((el) => {
+              if (!el) return;
+              const group = el.closest('.form-group') || el.closest('.mb-3') || el.parentElement;
+              const target = group || el;
+              target.style.display = visible ? '' : 'none';
+            });
+            if (container) container.hidden = !visible;
+            if (pairingWrap) {
+              if (!visible) {
+                pairingWrap.hidden = true;
+              } else {
+                const allow = !!opts.allowPairing;
+                pairingWrap.hidden = !allow;
+              }
+            }
+          } catch (_) {}
+        };
+
         if (!button) {
-          // Modal opened programmatically (e.g., tasting). Fields already set; nothing to pull from button.
+          // Programmatic show (e.g., tasting). Ensure tasting controls are visible only when flagged
+          const isTasting = addItemToOrderModal?.dataset?.tasting === 'true';
+          let base = {};
+          try { base = JSON.parse(addItemToOrderModal?.dataset?.tastingBase || '{}'); } catch (_) {}
+          const allowPairing = !!base.allow_pairing;
+          setTastingControlsVisible(addItemToOrderModal, !!isTasting, { allowPairing });
           return;
         }
+        // Opened via regular button => non-tasting. Clear any stale tasting flags and hide controls.
+        delete addItemToOrderModal.dataset.tasting;
+        delete addItemToOrderModal.dataset.tastingBase;
+        setTastingControlsVisible(addItemToOrderModal, false);
+        try {
+          const qty = addItemToOrderModal.querySelector('#a2o_tasting_qty');
+          const pairing = addItemToOrderModal.querySelector('#a2o_tasting_pairing');
+          if (qty) qty.value = '1';
+          if (pairing) pairing.checked = false;
+        } catch (_) {}
         // Standard flow: populate from triggering button attributes
         const getAttr = (name) => button.getAttribute(name);
         const priceAttr = getAttr('data-bs-menuitem_price');
