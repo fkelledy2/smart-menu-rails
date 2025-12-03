@@ -22,7 +22,8 @@ export default class extends Controller {
     return {
       order: { id: d.orderId || null, status: (d.orderStatus || '').toLowerCase() || null },
       restaurant: { id: d.restaurantId || null },
-      menuId: d.menuId || null
+      menuId: d.menuId || null,
+      tableId: d.tableId || null
     };
   }
 
@@ -32,6 +33,7 @@ export default class extends Controller {
       const hasOrder = !!(state.order && state.order.id);
       const restaurantId = state.restaurant?.id || this.extractState().restaurant?.id;
       const menuId = state.menuId || this.extractState().menuId;
+      const tableId = state.tableId || this.extractState().tableId;
 
       // Prefer global JSON state flags
       const gs = window.__SM_STATE || {};
@@ -43,6 +45,10 @@ export default class extends Controller {
       btnGroup.className = 'order-button-group';
 
       if (!hasOrder) {
+        // Only show Start Order if tableId is present (smartmenu tied to a table)
+        if (!tableId) {
+          // Render nothing (besides optional menu-name span preserved later)
+        } else {
         // Start Order button
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -53,6 +59,7 @@ export default class extends Controller {
         btn.setAttribute('data-bs-target', '#openOrderModal');
         btn.innerHTML = '<i class="bi bi-plus-circle"></i> Start Order';
         btnGroup.appendChild(btn);
+        }
       } else {
         // Minimal customer CTA set: View, Request Bill, Pay
         if (!hydrated) {
@@ -90,17 +97,33 @@ export default class extends Controller {
           billBtn.className = 'btn-touch-primary btn-touch-sm me-2';
           billBtn.setAttribute('data-bs-toggle', 'modal');
           billBtn.setAttribute('data-bs-target', '#requestBillModal');
-          billBtn.textContent = 'Request Bill';
+          billBtn.innerHTML = '<i class="bi bi-receipt"></i> Bill';
           btnGroup.appendChild(billBtn);
         }
         if (hydrated && orderStatus === 'billrequested') {
+          const currencyToIcon = (code) => {
+            const c = String(code || '').toUpperCase();
+            switch (c) {
+              case 'EUR': return 'bi-currency-euro';
+              case 'GBP': return 'bi-currency-pound';
+              case 'JPY': return 'bi-currency-yen';
+              case 'CNY': return 'bi-currency-yen';
+              case 'INR': return 'bi-currency-rupee';
+              case 'BTC': return 'bi-currency-bitcoin';
+              case 'USD':
+              default: return 'bi-currency-dollar';
+            }
+          };
+          const currencyCode = (window.__SM_STATE && window.__SM_STATE.totals && window.__SM_STATE.totals.currency && window.__SM_STATE.totals.currency.code) || null;
+          const iconClass = currencyToIcon(currencyCode);
+
           const payBtn = document.createElement('button');
           payBtn.type = 'button';
           payBtn.id = 'pay-order';
           payBtn.className = 'btn-touch-dark btn-touch-sm';
           payBtn.setAttribute('data-bs-toggle', 'modal');
           payBtn.setAttribute('data-bs-target', '#payOrderModal');
-          payBtn.textContent = 'Pay';
+          payBtn.innerHTML = `<i class="bi ${iconClass}"></i> Pay`;
           btnGroup.appendChild(payBtn);
         }
       }
