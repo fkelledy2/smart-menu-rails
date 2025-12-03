@@ -15,10 +15,16 @@
         <%= render partial: "showTableLocaleSelectorCustomer", locals: { menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
       <% end %>
     </div>
+  <noscript>
+    <style>
+      /* If JS is disabled, keep header visible */
+      .header-order-row { visibility: visible !important; }
+    </style>
+  </noscript>
   </div>
 
   <!-- Order Controls -->
-  <div class="header-order-row" id="openOrderContainer" data-controller="order-header">
+  <div class="header-order-row" id="openOrderContainer" data-controller="order-header" style="visibility:hidden">
     <% if @openOrder %>
       <% if current_user %>
         <%= render partial: "orderStaff", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @openOrder.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>

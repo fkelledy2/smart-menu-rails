@@ -29,84 +29,29 @@ function fetchQR(paymentLink) {
 // Check if we're in a browser environment
 const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
-// Connection status element to show to users
-const createConnectionStatusElement = () => {
-  if (!isBrowser) return null;
-
-  // Check if element already exists
-  let statusEl = document.getElementById('connection-status');
-  if (statusEl) return statusEl;
-
-  // Create new element if it doesn't exist
-  statusEl = document.createElement('div');
-  statusEl.id = 'connection-status';
-  statusEl.style.position = 'fixed';
-  statusEl.style.bottom = '5px';
-  statusEl.style.right = '5px';
-  statusEl.style.padding = '5px 10px';
-  statusEl.style.borderRadius = '4px';
-  statusEl.style.zIndex = '9999';
-  statusEl.style.transition = 'all 0.3s ease';
-  statusEl.style.display = 'none';
-
-  // Add to body if it exists
-  if (document.body) {
-    document.body.appendChild(statusEl);
-  } else {
-    document.addEventListener('DOMContentLoaded', () => {
-      document.body.appendChild(statusEl);
-    });
-  }
-
-  return statusEl;
+// Replace toast with a brief green flash on table selector button
+const flashTableSelector = (durationMs = 2000) => {
+  if (!isBrowser) return;
+  try {
+    const el = document.getElementById('table-selector-staff') || document.getElementById('table-selector-customer');
+    if (!el) return;
+    const prev = el.getAttribute('style') || '';
+    // Apply temporary green background + white text
+    el.style.transition = el.style.transition || 'background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease';
+    el.style.backgroundColor = '#4CAF50';
+    el.style.color = '#ffffff';
+    el.style.boxShadow = '0 0 0 0.15rem rgba(76,175,80,.35)';
+    setTimeout(() => {
+      el.setAttribute('style', prev);
+    }, durationMs);
+  } catch (_) {}
 };
 
-const connectionStatus = isBrowser ? createConnectionStatusElement() : null;
-
-const updateConnectionStatus = (status, message) => {
-  if (!connectionStatus || !isBrowser) return;
-
-  try {
-    // Ensure the element is in the DOM
-    if (!document.body.contains(connectionStatus) && document.body) {
-      document.body.appendChild(connectionStatus);
-    }
-
-    connectionStatus.textContent = message;
-    connectionStatus.style.display = 'block';
-
-    // Clear previous classes
-    connectionStatus.className = '';
-
-    switch (status) {
-      case 'connected':
-        connectionStatus.style.backgroundColor = '#4CAF50';
-        connectionStatus.style.color = 'white';
-        // Hide after 3 seconds if connected
-        setTimeout(() => {
-          if (connectionStatus && connectionStatus.textContent === message) {
-            connectionStatus.style.display = 'none';
-          }
-        }, 3000);
-        break;
-      case 'disconnected':
-        connectionStatus.style.backgroundColor = '#f44336';
-        connectionStatus.style.color = 'white';
-        break;
-      case 'reconnecting':
-        connectionStatus.style.backgroundColor = '#FFC107';
-        connectionStatus.style.color = 'black';
-        break;
-      case 'error':
-        connectionStatus.style.backgroundColor = '#9C27B0';
-        connectionStatus.style.color = 'white';
-        break;
-      default:
-        connectionStatus.style.backgroundColor = '#9E9E9E';
-        connectionStatus.style.color = 'white';
-    }
-  } catch (e) {
-    console.error('Error updating connection status:', e);
+const updateConnectionStatus = (status, _message) => {
+  if (!isBrowser) return;
+  // Only flash on successful connect/state update; no UI for other statuses
+  if (status === 'connected') {
+    flashTableSelector(2000);
   }
 };
 
@@ -712,17 +657,17 @@ function initializeOrderChannel() {
       {
         connected() {
           console.log('Connected to OrdrChannel', usingSlug ? `(slug=${slug})` : `(order_id=${orderId})`);
-          updateConnectionStatus('connected', 'Connected');
+          updateConnectionStatus('connected');
         },
 
         disconnected() {
           console.log('Disconnected from OrdrChannel');
-          updateConnectionStatus('disconnected', 'Disconnected');
+          updateConnectionStatus('disconnected');
         },
 
         rejected() {
           console.error('Connection to OrdrChannel was rejected');
-          updateConnectionStatus('error', 'Connection rejected');
+          updateConnectionStatus('error');
         },
 
         received(data) {
@@ -731,7 +676,7 @@ function initializeOrderChannel() {
             if (!payload) return;
             // JSON state only
             document.dispatchEvent(new CustomEvent('state:update', { detail: payload }));
-            updateConnectionStatus('connected', 'State updated');
+            updateConnectionStatus('connected');
           } catch (error) {
             console.error('Error processing received state:', error);
             updateConnectionStatus('error', 'Error processing update');

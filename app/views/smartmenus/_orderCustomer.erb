@@ -35,7 +35,7 @@
                                         </button>
                                     <% end %>
                                 <% else %>
-                                    <button type="button" class="btn-touch-secondary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" disabled>
+                                    <button type="button" class="btn-touch-secondary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" data-testid="view-order-btn" disabled>
                                         <i id="orderCart" class="bi bi-cart"></i>
                                         <%= t(".order") %>
                                     </button>
@@ -80,6 +80,11 @@
                                     <%= t(".startOrder") %>
                                 </button>
                             <% end %>
+                            <%# Always render view-order button for tests/UX; disable if ordering disabled %>
+                            <button type="button" class="btn-touch-secondary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= menu.restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#viewOrderModal" data-testid="view-order-btn" <%= 'disabled' unless (menu.allowOrdering == true && menu.restaurant.allowOrdering == true) %>>
+                                <i id="orderCart" class="bi bi-cart"></i>
+                                <%= t(".order") %>
+                            </button>
                         <% end %>
                     <% end %>
         </div>

@@ -183,6 +183,35 @@ function getCurrentOrderStatus() {
 
 // Central initializer for all delegated bindings and UI logic that must survive partial updates
 export function initOrderBindings() {
+  // Prevent CTA flicker: hide header order row until first state arrives
+  (function preventHeaderCtaFlicker() {
+    try {
+      const header = document.querySelector('.header-order-row');
+      if (!header) return;
+      // If no state present yet, hide until we receive one
+      const hasState = !!(window.__SM_STATE && (window.__SM_STATE.order || window.__SM_STATE.flags));
+      if (!hasState) { header.style.visibility = 'hidden'; }
+
+      // Debounced reveal when state includes an order status (stable)
+      let t;
+      const tryReveal = () => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          try {
+            const s = window.__SM_STATE || {};
+            const ok = !!(s.order && typeof s.order.status !== 'undefined');
+            if (ok) {
+              header.style.visibility = '';
+              document.removeEventListener('state:update', tryReveal);
+              document.removeEventListener('state:changed', tryReveal);
+            }
+          } catch (_) {}
+        }, 80);
+      };
+      document.addEventListener('state:update', tryReveal);
+      document.addEventListener('state:changed', tryReveal);
+    } catch (_) {}
+  })();
   // Search filter on menu items
   (function bindSearch() {
     const searchInput = document.getElementById('menu-item-search');
@@ -325,7 +354,7 @@ export function initOrderBindings() {
     document.addEventListener('click', (evt) => {
       const target = evt.target instanceof Element ? evt.target : null;
       if (!target) return;
-      const btn = target.closest && target.closest('#request-bill-confirm');
+      const btn = target.closest && (target.closest('#request-bill') || target.closest('#request-bill-confirm'));
       if (!btn || btn.hasAttribute('disabled')) return;
       try { console.debug('[RequestBill][capture] click intercepted'); } catch (_) {}
       evt.stopPropagation();

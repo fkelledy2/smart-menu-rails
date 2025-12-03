@@ -341,7 +341,7 @@
                     </div>
                 <% end %>
           </div>
-          <%= render partial: "smartmenus/modal_footer_primary", locals: { primary_id: 'request-bill-confirm', primary_text: t('.requestBill'), disabled: !(order && order.gross.to_f > 0) } %>
+          <%= render partial: "smartmenus/modal_footer_primary", locals: { primary_id: 'request-bill', primary_text: t('.requestBill'), disabled: !(order && order.gross.to_f > 0) } %>
         </div>
       </div>
     </div>

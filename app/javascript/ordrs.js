@@ -186,14 +186,30 @@ export function initOrders() {
       const sectionFromOffset = parseInt($('#sectionFromOffset').html());
       const sectionToOffset = parseInt($('#sectionToOffset').html());
       const currentOffset = hour * 60 + minutes;
-      // Determine if items can be added: require an active order and allowed status
+      // Determine if items can be added
       const currentOrderId = document.getElementById('currentOrder')?.textContent?.trim();
       const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
-      const canAdd = !!currentOrderId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
+      // Detect staff context (employee id present in context container)
+      const ctx = document.getElementById('contextContainer');
+      const isStaff = !!(ctx && ctx.getAttribute('data-employee-id'));
+      const hasTable = !!(ctx && ctx.getAttribute('data-table-id'));
+      // For customers: need an active order and allowed status
+      // For staff: allow enabling buttons when a table is set even before an order exists
+      const canAddBase = !!currentOrderId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
+      const canAdd = isStaff ? hasTable : canAddBase;
       $('.addItemToOrder').each(function () {
         const fromOffeset = $(this).data('bs-menusection_from_offset');
         const toOffeset = $(this).data('bs-menusection_to_offset');
-        // Disable if outside time window or order not active
+        // Staff view: keep buttons enabled when a table is set regardless of time window
+        if (isStaff) {
+          if (hasTable) {
+            $(this).removeAttr('disabled');
+          } else {
+            $(this).attr('disabled', 'disabled');
+          }
+          return;
+        }
+        // Customer view: disable if outside time window or order not active
         if (!(currentOffset >= fromOffeset && currentOffset <= toOffeset) || !canAdd) {
           $(this).attr('disabled', 'disabled');
         } else {
