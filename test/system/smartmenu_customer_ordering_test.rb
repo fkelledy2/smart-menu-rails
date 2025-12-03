@@ -133,8 +133,8 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     add_item_to_order(@pasta.id)
     add_item_to_order(@spring_rolls.id)
     
-    # Verify all in database
-    order = Ordr.last
+    # Verify all in database (context-scoped)
+    order = Ordr.where(restaurant_id: @restaurant.id, tablesetting_id: @table.id, menu_id: @menu.id, status: [0,20,22,24,25,30]).order(:created_at).last
     assert_equal 3, order.ordritems.count
     
     # Open modal to verify UI
@@ -171,8 +171,8 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     add_item_to_order(@burger.id)
     add_item_to_order(@burger.id)
     
-    # Verify in database
-    order = Ordr.last
+    # Verify in database (context-scoped)
+    order = Ordr.where(restaurant_id: @restaurant.id, tablesetting_id: @table.id, menu_id: @menu.id, status: [0,20,22,24,25,30]).order(:created_at).last
     assert_equal 2, order.ordritems.count
     
     # Verify in UI
@@ -242,14 +242,14 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     add_item_to_order(@burger.id)
     add_item_to_order(@pasta.id)
     
-    order_id = Ordr.last.id
+    order_id = Ordr.where(restaurant_id: @restaurant.id, tablesetting_id: @table.id, menu_id: @menu.id, status: [0,20,22,24,25,30]).order(:created_at).last.id
     
     # Reload page
     visit smartmenu_path(@smartmenu.slug)
     
     # Verify order still exists in database
-    assert_equal order_id, Ordr.last.id
-    order = Ordr.find(order_id)
+    assert_equal order_id, Ordr.where(restaurant_id: @restaurant.id, tablesetting_id: @table.id, menu_id: @menu.id, status: [0,20,22,24,25,30]).order(:created_at).last.id
+    order = Ordr.where(id: order_id).take!
     assert_equal 2, order.ordritems.count
     
     # Verify items are correct in database
@@ -266,7 +266,7 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     
     # Add first item
     add_item_to_order(@burger.id)
-    order_id = Ordr.last.id
+    order_id = Ordr.where(restaurant_id: @restaurant.id, tablesetting_id: @table.id, menu_id: @menu.id, status: [0,20,22,24,25,30]).order(:created_at).last.id
     
     # Reload page
     visit smartmenu_path(@smartmenu.slug)
@@ -275,8 +275,8 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     add_item_to_order(@pasta.id)
     
     # Verify same order
-    assert_equal order_id, Ordr.last.id
-    assert_equal 2, Ordr.find(order_id).ordritems.count
+    assert_equal order_id, Ordr.where(restaurant_id: @restaurant.id, tablesetting_id: @table.id, menu_id: @menu.id, status: [0,20,22,24,25,30]).order(:created_at).last.id
+    assert_equal 2, Ordr.where(id: order_id).take!.ordritems.count
   end
 
   # ===================

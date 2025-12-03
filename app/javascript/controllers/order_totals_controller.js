@@ -125,6 +125,9 @@ export default class extends Controller {
       const body = this.element.querySelector('[data-testid="order-modal-body"]');
       if (!body) return;
       if (!order) { body.innerHTML = ''; return; }
+      // If totals are not yet available, do not overwrite server-rendered content.
+      // This preserves the server totals row with data-testid until JSON state hydrates.
+      if (typeof totals === 'undefined' || totals === null) { return; }
       const currency = totals?.currency?.symbol || '';
 
       const opened = (order.items || []).filter(i => (i.status || '').toLowerCase() === 'opened');
@@ -179,9 +182,13 @@ export default class extends Controller {
         });
       }
 
-      // Totals row (nett)
+      // Totals row (nett) — include test id to match server-rendered markup for tests
       if (typeof totals?.nett !== 'undefined') {
-        html += row(col(8, '') + col(2, '<b>Total:</b>') + col(2, `<span class="float-end"><b>${price(totals.nett)}</b></span>`));
+        html += row(
+          col(8, '') +
+          col(2, '<b>Total:</b>') +
+          col(2, `<span class="float-end" data-testid="order-total-amount"><b>${price(totals.nett)}</b></span>`)
+        );
       }
 
       body.innerHTML = html;
