@@ -284,6 +284,24 @@ Devise.setup do |config|
     app-remote-control
   ).join(' ')
 
+  # Social login providers
+  if ENV['GOOGLE_CLIENT_ID'].present? && ENV['GOOGLE_CLIENT_SECRET'].present?
+    config.omniauth :google_oauth2,
+                    ENV['GOOGLE_CLIENT_ID'],
+                    ENV['GOOGLE_CLIENT_SECRET'],
+                    scope: 'email,profile'
+  end
+
+  if ENV['APPLE_CLIENT_ID'].present? && ENV['APPLE_TEAM_ID'].present? && ENV['APPLE_KEY_ID'].present? && ENV['APPLE_P8_KEY'].present?
+    config.omniauth :apple,
+                    ENV['APPLE_CLIENT_ID'],
+                    '',
+                    scope: 'email name',
+                    team_id: ENV['APPLE_TEAM_ID'],
+                    key_id: ENV['APPLE_KEY_ID'],
+                    pem: ENV['APPLE_P8_KEY']
+  end
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

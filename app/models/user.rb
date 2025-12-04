@@ -3,7 +3,7 @@ class User < ApplicationRecord
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :omniauthable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :omniauthable, omniauth_providers: %i[google_oauth2 apple]
 
   has_one_attached :avatar
   has_person_name
@@ -62,6 +62,27 @@ class User < ApplicationRecord
     parts = full_name.to_s.split(' ', 2)
     self.first_name = parts[0]
     self.last_name = parts[1] if parts.length > 1
+  end
+
+  def self.from_omniauth(auth)
+    user = find_by(provider: auth.provider, uid: auth.uid)
+
+    user ||= find_by(email: auth.info.email)&.tap do |u|
+      if u.provider.blank?
+        u.update(provider: auth.provider, uid: auth.uid)
+      end
+    end
+
+    user ||= create!(
+      first_name: (auth.info.first_name.presence || auth.info.name.to_s.split(' ').first),
+      last_name: (auth.info.last_name.presence || auth.info.name.to_s.split(' ', 2).last),
+      email: auth.info.email,
+      password: Devise.friendly_token[0, 32],
+      provider: auth.provider,
+      uid: auth.uid
+    )
+
+    user
   end
 
   private

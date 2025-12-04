@@ -21,6 +21,14 @@ module Users
       handle_auth 'Github'
     end
 
+    def google_oauth2
+      handle_auth 'Google'
+    end
+
+    def apple
+      handle_auth 'Apple'
+    end
+
     private
 
     def handle_auth(kind)
