@@ -517,12 +517,27 @@ class MenusController < ApplicationController
         SmartMenuGeneratorJob.perform_async(@menu.restaurant.id)
         Rails.logger.debug 'SmartMenuGeneratorJob.end'
         format.html do
-          redirect_to edit_restaurant_path(id: @menu.restaurant.id),
-                      notice: t('common.flash.updated', resource: t('activerecord.models.menu'))
+          if turbo_frame_request_id == 'menu_content'
+            @current_section = 'settings'
+            render partial: 'menus/section_frame_2025',
+                   locals: { menu: @menu, partial_name: menu_section_partial_name(@current_section) }
+          else
+            redirect_to edit_restaurant_path(id: @menu.restaurant.id),
+                        notice: t('common.flash.updated', resource: t('activerecord.models.menu'))
+          end
         end
         format.json { render :show, status: :ok, location: restaurant_menu_url(@restaurant || @menu.restaurant, @menu) }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html do
+          if turbo_frame_request_id == 'menu_content'
+            @current_section = 'settings'
+            render partial: 'menus/section_frame_2025',
+                   locals: { menu: @menu, partial_name: menu_section_partial_name(@current_section) },
+                   status: :unprocessable_entity
+          else
+            render :edit, status: :unprocessable_entity
+          end
+        end
         format.json { render json: @menu.errors, status: :unprocessable_entity }
       end
     end

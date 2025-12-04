@@ -477,7 +477,7 @@ class RestaurantsController < ApplicationController
           @restaurant.genimage.save
         end
         format.html do
-          redirect_to edit_restaurant_path(@restaurant),
+          redirect_to edit_restaurant_path(@restaurant, section: 'settings'),
                       notice: t('common.flash.updated', resource: t('activerecord.models.restaurant'))
         end
         format.json { 

@@ -131,51 +131,10 @@
           <!-- Actions Section -->
           <div class="menu-card-actions">
             <%= link_to edit_restaurant_menu_path(restaurant, menu),
-                class: 'btn-2025 btn-2025-primary btn-2025-sm flex-fill',
+                class: 'btn-2025 btn-2025-primary btn-2025-sm',
                 data: { testid: "edit-menu-#{menu.id}-btn", turbo_frame: '_top' } do %>
               <i class="bi bi-pencil"></i> <%= t('.edit', default: 'Edit') %>
             <% end %>
-
-            <% if menu.smartmenu&.slug %>
-              <%= link_to smartmenu_path(menu.smartmenu.slug),
-                  class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                  target: '_blank',
-                  title: t('.preview', default: 'Preview Menu'),
-                  data: { testid: "preview-menu-#{menu.id}-btn" } do %>
-                <i class="bi bi-eye"></i>
-              <% end %>
-            <% else %>
-              <button class="btn-2025 btn-2025-ghost btn-2025-sm"
-                      disabled
-                      title="<%= t('.no_preview', default: 'Menu not published yet') %>">
-                <i class="bi bi-eye"></i>
-              </button>
-            <% end %>
-
-            <div class="dropdown">
-              <button class="btn-2025 btn-2025-ghost btn-2025-sm"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      data-testid="menu-actions-#{menu.id}-btn">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                  <%= link_to '#', class: 'dropdown-item' do %>
-                    <i class="bi bi-files"></i> <%= t('.duplicate', default: 'Duplicate') %>
-                  <% end %>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                  <%= link_to restaurant_menu_path(restaurant, menu),
-                      method: :delete,
-                      data: { testid: "delete-menu-#{menu.id}-btn", confirm: t('.confirm_delete', default: 'Are you sure?') },
-                      class: 'dropdown-item text-danger' do %>
-                    <i class="bi bi-trash"></i> <%= t('.delete', default: 'Delete') %>
-                  <% end %>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       <% end %>
