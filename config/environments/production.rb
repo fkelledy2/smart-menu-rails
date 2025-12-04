@@ -7,13 +7,15 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.delivery_method = :smtp
+  smtp_user = ENV['SMTP_USER'].presence || Rails.application.credentials.gmail_user_name
+  smtp_pass = ENV['SMTP_PASS'].presence || Rails.application.credentials.gmail_app_password
   config.action_mailer.smtp_settings = {
       address:              'smtp.gmail.com',
       port:                 587,
       domain:               'gmail.com',
-      user_name:            Rails.application.credentials.gmail_user_name,
-      password:             Rails.application.credentials.gmail_app_password,
-      authentication:       'plain',
+      user_name:            smtp_user,
+      password:             smtp_pass,
+      authentication:       (smtp_user.present? && smtp_pass.present?) ? 'plain' : nil,
       enable_starttls_auto: true
   }
 

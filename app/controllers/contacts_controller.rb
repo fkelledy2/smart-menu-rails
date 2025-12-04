@@ -22,8 +22,12 @@ class ContactsController < ApplicationController
     @contact = Contact.new(contact_params)
     authorize @contact
     if @contact.save
-      ContactMailer.receipt(@contact).deliver_now
-      ContactMailer.notification(@contact).deliver_now
+      begin
+        ContactMailer.receipt(@contact).deliver_later
+        ContactMailer.notification(@contact).deliver_later
+      rescue => e
+        Rails.logger.error("[ContactsController#create] Mail delivery failed: #{e.class}: #{e.message}")
+      end
 
       # Track successful contact form submission
       anonymous_id = session[:session_id] ||= SecureRandom.uuid
