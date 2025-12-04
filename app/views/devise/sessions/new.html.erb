@@ -9,8 +9,7 @@
       </div>
 
       <!-- Sign In Card -->
-      <div class="card shadow-sm border-0 mb-4" data-testid="login-card">
-        <div class="card-body px-4 py-4 px-md-5 py-md-5">
+      <div data-testid="login-card">
           <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { data: { testid: 'login-form' } }) do |f| %>
 
             <!-- Email Field -->
@@ -73,7 +72,6 @@
           <div class="d-grid">
             <%= link_to "Create Account", new_user_registration_path, class: "btn btn-outline-dark btn-lg", data: { testid: 'signup-link' } %>
           </div>
-        </div>
       </div>
 
       <!-- Additional Links -->

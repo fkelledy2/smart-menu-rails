@@ -9,8 +9,7 @@
       </div>
 
       <!-- Reset Password Card -->
-      <div class="card shadow-sm border-0 mb-4" data-testid="forgot-password-card">
-        <div class="card-body px-4 py-4 px-md-5 py-md-5">
+      <div data-testid="forgot-password-card">
           <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, data: { testid: 'forgot-password-form' } }) do |f| %>
 
             <!-- Error Messages -->
@@ -49,7 +48,6 @@
           <div class="d-grid">
             <%= link_to "Back to Sign In", new_user_session_path, class: "btn btn-outline-dark btn-lg", data: { testid: 'back-to-login-link' } %>
           </div>
-        </div>
       </div>
 
       <!-- Additional Links -->

@@ -9,8 +9,7 @@
       </div>
 
       <!-- Sign Up Card -->
-      <div class="card shadow-sm border-0 mb-4" data-testid="signup-card">
-        <div class="card-body px-4 py-4 px-md-5 py-md-5">
+      <div data-testid="signup-card">
           <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { data: { testid: 'signup-form' } }) do |f| %>
 
             <!-- Error Messages -->
@@ -87,7 +86,6 @@
           <div class="d-grid">
             <%= link_to "Sign In", new_user_session_path, class: "btn btn-outline-dark btn-lg", data: { testid: 'login-link' } %>
           </div>
-        </div>
       </div>
 
       <!-- Additional Links -->
