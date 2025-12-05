@@ -80,42 +80,54 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form[action*="ocr_menu_imports"]');
-    if (!form) return;
+  (function() {
+    function initImportForm(scope) {
+      const root = scope || document;
+      const form = root.querySelector('[data-testid="import-form"]') || root.querySelector('form[action*="ocr_menu_imports"]');
+      if (!form || form.dataset.importInit === 'true') return;
+      form.dataset.importInit = 'true';
 
-    const nameInput = form.querySelector('input[name="ocr_menu_import[name]"]');
-    const fileInput = form.querySelector('input[name="ocr_menu_import[pdf_file]"]');
-    const submitBtn = document.getElementById('upload-submit-btn');
+      const nameInput = form.querySelector('input[name="ocr_menu_import[name]"]');
+      const fileInput = form.querySelector('input[name="ocr_menu_import[pdf_file]"]');
+      const submitBtn = root.getElementById ? root.getElementById('upload-submit-btn') : document.getElementById('upload-submit-btn');
+      if (!submitBtn) return;
 
-    function checkFormValidity() {
-      const hasName = nameInput && nameInput.value.trim() !== '';
-      const hasFile = fileInput && fileInput.files.length > 0;
+      function checkFormValidity() {
+        const hasName = nameInput && nameInput.value.trim() !== '';
+        const hasFile = fileInput && fileInput.files.length > 0;
 
-      if (hasName && hasFile) {
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('btn-secondary');
-        submitBtn.classList.add('btn-danger');
-      } else {
-        submitBtn.disabled = true;
-        submitBtn.classList.remove('btn-danger');
-        submitBtn.classList.add('btn-secondary');
+        if (hasName && hasFile) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('btn-secondary');
+          submitBtn.classList.add('btn-danger');
+        } else {
+          submitBtn.disabled = true;
+          submitBtn.classList.remove('btn-danger');
+          submitBtn.classList.add('btn-secondary');
+        }
       }
+
+      if (nameInput) {
+        nameInput.addEventListener('input', checkFormValidity);
+        nameInput.addEventListener('blur', checkFormValidity);
+      }
+      if (fileInput) {
+        fileInput.addEventListener('change', checkFormValidity);
+      }
+      // Initial check
+      checkFormValidity();
     }
 
-    // Check on input change
-    if (nameInput) {
-      nameInput.addEventListener('input', checkFormValidity);
-      nameInput.addEventListener('blur', checkFormValidity);
-    }
-
-    if (fileInput) {
-      fileInput.addEventListener('change', checkFormValidity);
-    }
-
-    // Initial check
-    checkFormValidity();
-  });
+    // Initialize on classic load and Turbo navigations
+    document.addEventListener('DOMContentLoaded', function() { initImportForm(document); });
+    document.addEventListener('turbo:load', function() { initImportForm(document); });
+    document.addEventListener('turbo:frame-load', function(e) {
+      // Re-init when the restaurant content frame is replaced
+      if (e.target && (e.target.id === 'restaurant_content' || e.target.closest && e.target.closest('#restaurant_content'))) {
+        initImportForm(e.target);
+      }
+    });
+  })();
 </script>
 
 <!-- Tips Card -->
