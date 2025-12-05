@@ -129,12 +129,23 @@
           </div>
 
           <!-- Actions Section -->
-          <div class="menu-card-actions">
-            <%= link_to edit_restaurant_menu_path(restaurant, menu),
-                class: 'btn-2025 btn-2025-primary btn-2025-sm',
-                data: { testid: "edit-menu-#{menu.id}-btn", turbo_frame: '_top' } do %>
-              <i class="bi bi-pencil"></i> <%= t('.edit', default: 'Edit') %>
-            <% end %>
+          <div class="menu-card-actions ms-auto">
+            <div class="dropdown">
+              <button class="btn-2025 btn-2025-ghost btn-2025-sm"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      data-testid="menu-actions-<%= menu.id %>-btn">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <%= link_to edit_restaurant_menu_path(restaurant, menu), class: 'dropdown-item', data: { turbo_frame: '_top', testid: "edit-menu-#{menu.id}-btn" } do %>
+                    <i class="bi bi-pencil"></i> <%= t('.edit', default: 'Edit') %>
+                  <% end %>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       <% end %>

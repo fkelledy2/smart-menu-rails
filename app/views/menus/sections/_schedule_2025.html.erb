@@ -39,8 +39,8 @@
 
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
 
-    <!-- Loading skeleton -->
-    <div class="availability-loading-skeleton">
+    <!-- Loading skeleton (hidden by default to avoid flash) -->
+    <div class="availability-loading-skeleton hidden">
       <div class="skeleton-shimmer"></div>
     </div>
 
@@ -313,9 +313,20 @@
 <script>
   let menuAvailabilityRetries = 0;
   const MAX_AVAILABILITY_RETRIES = 50;
+  let availabilityInitStarted = false;
+  let availabilityEditorReady = false;
+
+  function showEditorFallback() {
+    console.warn('[MenuAvailabilities] Falling back without sliders; revealing editor');
+    const editor = document.querySelector('.availability-editor');
+    const skeleton = document.querySelector('.availability-loading-skeleton');
+    if (skeleton) skeleton.classList.add('hidden');
+    if (editor) editor.style.opacity = '1';
+  }
 
   function initializeMenuAvailabilities() {
     console.log('[MenuAvailabilities] Initializing with auto-save');
+    availabilityInitStarted = true;
 
     // Check if noUiSlider is loaded
     if (typeof noUiSlider === 'undefined') {
@@ -326,6 +337,8 @@
         return;
       } else {
         console.error('[MenuAvailabilities] Failed to load noUiSlider after max retries');
+        // Reveal the editor so users can still view current values and toggles
+        showEditorFallback();
         return;
       }
     }
@@ -482,6 +495,7 @@
     if (editor) {
       editor.style.opacity = '1';
     }
+    availabilityEditorReady = true;
   }
 
   // Helper function for formatting
@@ -507,4 +521,16 @@
   document.addEventListener('turbo:render', initializeMenuAvailabilities);
 
   console.log('[MenuAvailabilities] Event listeners registered for DOMContentLoaded, turbo:load, turbo:frame-load, and turbo:render');
+
+  // Delay-show the skeleton only if init takes noticeable time (>250ms)
+  setTimeout(function() {
+    if (!availabilityEditorReady) {
+      const skeleton = document.querySelector('.availability-loading-skeleton');
+      if (skeleton && !availabilityInitStarted) {
+        // still not started? do nothing, another init will handle it
+        return;
+      }
+      if (skeleton) skeleton.classList.remove('hidden');
+    }
+  }, 250);
 </script>

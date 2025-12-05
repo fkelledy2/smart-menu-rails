@@ -82,11 +82,24 @@
                 <%= section.menuitems.count %>
               </td>
               <td class="text-end">
-                <%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section),
-                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                    data: { turbo_frame: '_top' } do %>
-                  <i class="bi bi-pencil"></i>
-                <% end %>
+                <div class="dropdown d-inline-block">
+                  <button class="btn-2025 btn-2025-ghost btn-2025-sm"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                          data-testid="menusection-actions-<%= section.id %>-btn">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section),
+                                  class: 'dropdown-item',
+                                  data: { turbo_frame: '_top', testid: "edit-menusection-#{section.id}-btn" } do %>
+                        <i class="bi bi-pencil"></i> <%= t('.edit', default: 'Edit') %>
+                      <% end %>
+                    </li>
+                  </ul>
+                </div>
               </td>
             </tr>
           <% end %>

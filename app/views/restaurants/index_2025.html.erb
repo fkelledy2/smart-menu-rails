@@ -1,0 +1,32 @@
+<%# 2025 Restaurants Index - Cards + Tabs with Turbo Frame %>
+<% content_for :title, t('.title', default: 'Your Restaurants') %>
+
+<div class="container-fluid px-0 py-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+    <div>
+      <h1 class="text-2xl fw-semibold mb-1"><%= t('.heading', default: 'Restaurants') %></h1>
+      <p class="text-muted mb-0"><%= t('.subtitle', default: 'Manage locations, menus and staff') %></p>
+    </div>
+  </div>
+
+  <!-- Quick Actions Card -->
+  <div class="quick-actions-card mb-4" data-testid="restaurants-quick-actions">
+    <h2 class="quick-actions-title">
+      <i class="bi bi-lightning-charge"></i>
+      <%= t('.quick_actions', default: 'Quick Actions') %>
+    </h2>
+
+    <div class="quick-actions-grid">
+      <%= link_to new_restaurant_path,
+          class: 'quick-action-btn',
+          data: { turbo_frame: '_top', testid: 'new-restaurant-btn' } do %>
+        <i class="bi bi-plus-circle"></i>
+        <span><%= t('.new_restaurant', default: 'New Restaurant') %></span>
+      <% end %>
+    </div>
+  </div>
+
+  <%= turbo_frame_tag 'restaurants_content' do %>
+    <%= render 'restaurants/index_frame_2025', restaurants: @restaurants, filter: @filter, q: @q, counts: @counts %>
+  <% end %>
+</div>

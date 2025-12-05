@@ -37,17 +37,12 @@
   </h2>
 
   <div class="overview-stats-grid">
-    <div class="stat-item">
+    <%= link_to edit_restaurant_path(restaurant, section: 'menus'),
+                class: 'stat-item text-decoration-none',
+                data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'overview-menus-link' } do %>
       <span class="stat-value"><%= restaurant.menus.count %></span>
       <span class="stat-label"><%= t('.menus', default: 'Menus') %></span>
-    </div>
-
-    <div class="stat-item">
-      <span class="stat-value">
-        <%= restaurant.menus.joins(:menusections).joins(:menuitems).distinct.count(:menuitems) rescue 0 %>
-      </span>
-      <span class="stat-label"><%= t('.items', default: 'Items') %></span>
-    </div>
+    <% end %>
 
     <div class="stat-item">
       <span class="stat-value"><%= restaurant.tablesettings.count %></span>

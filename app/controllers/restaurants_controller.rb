@@ -142,13 +142,51 @@ class RestaurantsController < ApplicationController
     authorize Restaurant
 
     if current_user.plan
+      # Filter handling for 2025 UI
+      filter = params[:filter].presence || 'all'
+      base_scope = policy_scope(Restaurant)
+      # Search
+      q = params[:q].to_s.strip
+      scope = base_scope
+      # Use enum-based status filtering; avoid relying on any archived boolean
+      case filter
+      when 'active'
+        scope = scope.where(status: Restaurant.statuses[:active])
+      when 'inactive'
+        scope = scope.where(status: Restaurant.statuses[:inactive])
+      when 'archived'
+        scope = scope.where(status: Restaurant.statuses[:archived])
+      else # 'all'
+        scope = scope.where.not(status: Restaurant.statuses[:archived])
+      end
+      if q.present?
+        scope = scope.where('restaurants.name ILIKE ?', "%#{q}%")
+      end
+      @filter = filter
+      @q = q
+
+      # Counts for tabs (based on current user scope)
+      counts_scope = base_scope
+      @counts = {
+        all: counts_scope.where.not(status: Restaurant.statuses[:archived]).count,
+        active: counts_scope.where(status: Restaurant.statuses[:active]).count,
+        inactive: counts_scope.where(status: Restaurant.statuses[:inactive]).count,
+        archived: counts_scope.where(status: Restaurant.statuses[:archived]).count,
+      }
+
+      # Pagination
+      @page = params[:page].to_i
+      @page = 1 if @page < 1
+      @per_page = params[:per].to_i
+      @per_page = 20 if @per_page <= 0 || @per_page > 100
+      @total_count = scope.count
+      @total_pages = (@total_count / @per_page.to_f).ceil
+
       # Optimize query based on request format
       @restaurants = if request.format.json?
-                       # JSON: Minimal data without expensive associations
-                       current_user.restaurants.where(archived: false).order(:sequence)
+                       scope.order(:sequence).limit(@per_page).offset((@page - 1) * @per_page)
                      else
-                       # HTML: Full data as needed
-                       policy_scope(Restaurant).where(archived: false)
+                       scope.order(:sequence).limit(@per_page).offset((@page - 1) * @per_page)
                      end
 
       AnalyticsService.track_user_event(current_user, 'restaurants_viewed', {
@@ -161,10 +199,17 @@ class RestaurantsController < ApplicationController
       redirect_to root_url
     end
 
-    # Use minimal JSON view for better performance
+    # Use minimal JSON view for better performance and Turbo Frame support for 2025 UI
     respond_to do |format|
-      format.html # Default HTML view
-      format.json { render 'index_minimal' } # Use optimized minimal JSON view
+      format.html do
+        if request.headers["Turbo-Frame"] == 'restaurants_content'
+          render partial: 'restaurants/index_frame_wrapper_2025',
+                 locals: { restaurants: @restaurants, filter: @filter, q: @q, counts: @counts, page: @page, per_page: @per_page, total_pages: @total_pages, total_count: @total_count }
+        else
+          render :index_2025
+        end
+      end
+      format.json { render 'index_minimal' }
     end
   end
 
