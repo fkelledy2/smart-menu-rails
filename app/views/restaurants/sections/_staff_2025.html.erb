@@ -21,6 +21,19 @@
   </div>
 </div>
 
+<style>
+  /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
+  .quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+  .quick-actions-grid .quick-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+</style>
+
 <!-- Staff Management -->
 <div class="content-card-2025">
   <h2 class="content-card-title mb-4">

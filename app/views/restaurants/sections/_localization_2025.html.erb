@@ -206,6 +206,16 @@
 </div>
 
 <style>
+  /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
+  .quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+  .quick-actions-grid .quick-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
   /* Language Avatar */
   .language-avatar {
     width: 40px;

@@ -42,6 +42,19 @@
   </div>
 </div>
 
+<style>
+  /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
+  .quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+  .quick-actions-grid .quick-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+</style>
+
 <!-- Menus List -->
 <div class="content-card-2025" data-testid="menus-list-card">
   <h2 class="content-card-title mb-0">
@@ -95,15 +108,6 @@
           <div class="menu-card-main">
             <div class="menu-card-title-row">
               <h3 class="menu-card-title"><%= menu.name %></h3>
-              <% if menu.active? %>
-                <span class="badge bg-success">
-                  <i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %>
-                </span>
-              <% elsif menu.inactive? %>
-                <span class="badge bg-warning text-dark">
-                  <i class="bi bi-pencil"></i> <%= t('.inactive', default: 'Inactive') %>
-                </span>
-              <% end %>
             </div>
 
             <div class="menu-card-meta">
@@ -130,6 +134,18 @@
 
           <!-- Actions Section -->
           <div class="menu-card-actions ms-auto">
+            <!-- Status badge floated to top-right, above dropdown -->
+            <div class="menu-status-badge mb-2">
+              <% if menu.active? %>
+                <span class="badge bg-success">
+                  <i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %>
+                </span>
+              <% elsif menu.inactive? %>
+                <span class="badge bg-warning text-dark">
+                  <i class="bi bi-pencil"></i> <%= t('.inactive', default: 'Inactive') %>
+                </span>
+              <% end %>
+            </div>
             <div class="dropdown">
               <button class="btn-2025 btn-2025-ghost btn-2025-sm"
                       type="button"
@@ -169,6 +185,14 @@
     </div>
   <% end %>
 </div>
+
+<style>
+  /* Align actions in a column at the right so the badge sits above the dropdown */
+  .menu-card { display: flex; align-items: stretch; gap: 12px; }
+  .menu-card-main { flex: 1 1 auto; }
+  .menu-card-actions { display: flex; flex-direction: column; align-items: flex-end; }
+  .menu-status-badge { line-height: 1; }
+</style>
 
 <style>
   /* Menus List - Single Column */
