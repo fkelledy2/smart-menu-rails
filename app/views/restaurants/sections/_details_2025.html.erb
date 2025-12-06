@@ -26,8 +26,57 @@
       <i class="bi bi-file-earmark-arrow-up"></i>
       <span><%= t('.import_menu', default: 'Import Menu') %></span>
     <% end %>
+
+    <!-- Status Toggle Quick Action -->
+    <%= form_with model: restaurant,
+          url: restaurant_path(restaurant),
+          method: :patch,
+          local: true,
+          data: { turbo: false },
+          html: { class: 'd-inline' } do |f| %>
+      <%= hidden_field_tag :return_to, 'restaurant_edit' %>
+      <% if restaurant.respond_to?(:active?) ? restaurant.active? : (restaurant.status.to_s == 'active' || restaurant.status_before_type_cast.to_i == 1) %>
+        <%= hidden_field_tag 'restaurant[status]', 'inactive' %>
+        <%= hidden_field_tag :status, 'inactive' %>
+        <button type="submit" class="quick-action-btn quick-action-btn-secondary" data-testid="restaurant-status-toggle-btn">
+          <i class="bi bi-toggle2-off"></i>
+          <span><%= t('.active', default: 'Active') %></span>
+        </button>
+      <% else %>
+        <%= hidden_field_tag 'restaurant[status]', 'active' %>
+        <%= hidden_field_tag :status, 'active' %>
+        <button type="submit" class="quick-action-btn" data-testid="restaurant-status-toggle-btn">
+          <i class="bi bi-toggle2-on"></i>
+          <span><%= t('.inactive', default: 'Inactive') %></span>
+        </button>
+      <% end %>
+    <% end %>
   </div>
 </div>
+
+<script>
+  (function(){
+    function __cleanupRestaurantStatusTomSelect(){
+      try {
+        const tsCtrl = document.getElementById('restaurant_status-ts-control');
+        if (tsCtrl) {
+          const wrap = tsCtrl.closest('.ts-wrapper');
+          if (wrap) wrap.remove();
+        }
+        const sel = document.getElementById('restaurant_status');
+        if (sel) {
+          if (sel.tomselect && typeof sel.tomselect.destroy === 'function') {
+            try { sel.tomselect.destroy(); } catch(_) {}
+          }
+          sel.remove();
+        }
+      } catch(_) {}
+    }
+    __cleanupRestaurantStatusTomSelect();
+    document.addEventListener('turbo:load', __cleanupRestaurantStatusTomSelect);
+    document.addEventListener('turbo:frame-load', __cleanupRestaurantStatusTomSelect);
+  })();
+</script>
 
 <!-- Overview Stats Card -->
 <div class="overview-stats-card" data-testid="overview-stats-card">
@@ -44,15 +93,19 @@
       <span class="stat-label"><%= t('.menus', default: 'Menus') %></span>
     <% end %>
 
-    <div class="stat-item">
+    <%= link_to edit_restaurant_path(restaurant, section: 'tables'),
+                class: 'stat-item text-decoration-none',
+                data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'overview-tables-link' } do %>
       <span class="stat-value"><%= restaurant.tablesettings.count %></span>
       <span class="stat-label"><%= t('.tables', default: 'Tables') %></span>
-    </div>
+    <% end %>
 
-    <div class="stat-item">
+    <%= link_to edit_restaurant_path(restaurant, section: 'staff'),
+                class: 'stat-item text-decoration-none',
+                data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'overview-staff-link' } do %>
       <span class="stat-value"><%= restaurant.employees.count %></span>
       <span class="stat-label"><%= t('.staff', default: 'Staff') %></span>
-    </div>
+    <% end %>
   </div>
 </div>
 

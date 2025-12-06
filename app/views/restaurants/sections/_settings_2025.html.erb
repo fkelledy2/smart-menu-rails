@@ -5,33 +5,7 @@
 
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
-<!-- General Settings -->
-<div class="content-card-2025 py-4">
-  <h2 class="content-card-title">
-    <i class="bi bi-toggles"></i>
-    <%= t('.general_settings', default: 'General Settings') %>
-  </h2>
-
-  <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
-    <div class="form-group-2025 mb-4">
-      <%= form.label :status, class: 'form-label-2025' do %>
-        <%= t('activerecord.attributes.restaurant.status', default: 'Restaurant Status') %>
-      <% end %>
-      <%= form.select :status,
-          options_for_select([
-            [t('.status_active', default: 'Active - Restaurant is open and visible'), 1],
-            [t('.status_inactive', default: 'Inactive - Restaurant is temporarily closed'), 0],
-            [t('.status_archived', default: 'Archived - Restaurant is permanently closed'), 2]
-          ], restaurant.status_before_type_cast),
-          {},
-          class: 'form-control-2025',
-          **select_data_attributes(:default) %>
-      <div class="form-help-2025">
-        <%= t('.status_help', default: 'Controls whether your restaurant is visible to customers') %>
-      </div>
-    </div>
-  <% end %>
-</div>
+<!-- General Settings card removed: status managed via Quick Actions -->
 
 <!-- Feature Toggles -->
 <div class="content-card-2025">

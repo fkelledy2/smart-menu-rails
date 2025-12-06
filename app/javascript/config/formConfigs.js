@@ -46,11 +46,6 @@ export const FORM_FIELD_CONFIGS = {
   restaurant: {
     selects: [
       {
-        selector: '#restaurant_status',
-        config: SelectConfigs.default,
-        validation: { required: true },
-      },
-      {
         selector: '#restaurant_wifiEncryptionType',
         config: SelectConfigs.default,
       },
@@ -114,11 +109,6 @@ export const FORM_FIELD_CONFIGS = {
 
   menu: {
     selects: [
-      {
-        selector: '#menu_status',
-        config: SelectConfigs.default,
-        validation: { required: true },
-      },
       {
         selector: '#menu_displayImages',
         config: SelectConfigs.default,

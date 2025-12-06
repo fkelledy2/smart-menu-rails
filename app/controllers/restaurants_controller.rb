@@ -497,7 +497,26 @@ class RestaurantsController < ApplicationController
     authorize @restaurant
 
     respond_to do |format|
-      if @restaurant.update(restaurant_params)
+      # Build attributes for update (supports quick-action status-only submissions)
+      raw_restaurant = params[:restaurant]
+      status_value = params.dig(:restaurant, :status) || params[:status]
+      attrs = {}
+      if raw_restaurant.is_a?(ActionController::Parameters)
+        begin
+          attrs.merge!(restaurant_params.to_h)
+        rescue => e
+          Rails.logger.warn("[RestaurantsController#update] restaurant_params error: #{e.message}")
+        end
+      end
+      attrs[:status] = status_value if status_value.present?
+
+      Rails.logger.info("[RestaurantsController#update] raw_restaurant=#{raw_restaurant.inspect} built_attrs=#{attrs.inspect}")
+
+      @restaurant.assign_attributes(attrs)
+      updated = @restaurant.changed? ? @restaurant.save : true
+      Rails.logger.info("[RestaurantsController#update] save_result=#{updated} persisted_status=#{@restaurant.status}")
+
+      if updated
         # Invalidate AdvancedCacheService caches for this restaurant
         AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id)
 
@@ -522,8 +541,13 @@ class RestaurantsController < ApplicationController
           @restaurant.genimage.save
         end
         format.html do
-          redirect_to edit_restaurant_path(@restaurant, section: 'settings'),
-                      notice: t('common.flash.updated', resource: t('activerecord.models.restaurant'))
+          if params[:return_to] == 'restaurant_edit'
+            redirect_to edit_restaurant_path(@restaurant, section: 'details'),
+                        notice: t('common.flash.updated', resource: t('activerecord.models.restaurant'))
+          else
+            redirect_to edit_restaurant_path(@restaurant, section: 'settings'),
+                        notice: t('common.flash.updated', resource: t('activerecord.models.restaurant'))
+          end
         end
         format.json { 
           # For AJAX/auto-save requests, return simple success response
@@ -534,7 +558,13 @@ class RestaurantsController < ApplicationController
           end
         }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html do
+          if params[:return_to] == 'restaurant_edit'
+            redirect_to edit_restaurant_path(@restaurant, section: 'details'), alert: @restaurant.errors.full_messages.presence || 'Failed to update restaurant'
+          else
+            render :edit, status: :unprocessable_entity
+          end
+        end
         format.json { render json: @restaurant.errors, status: :unprocessable_entity }
       end
     end

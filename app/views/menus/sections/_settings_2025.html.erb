@@ -6,32 +6,7 @@
 <% menu = local_assigns[:menu] || @menu %>
 <% restaurant = menu.restaurant %>
 
-<!-- General Settings -->
-<div class="content-card-2025 py-4">
-  <h2 class="content-card-title">
-    <i class="bi bi-toggles"></i>
-    <%= t('.general_settings', default: 'General Settings') %>
-  </h2>
-
-  <%= menu_form_with(menu, auto_save: true) do |form| %>
-    <div class="form-group-2025 mb-4">
-      <%= form.label :status, class: 'form-label-2025' do %>
-        <%= t('activerecord.attributes.menu.status', default: 'Menu Status') %>
-      <% end %>
-      <%= form.select :status,
-          options_for_select([
-            [t('.status_active', default: 'Active - Menu is visible to customers'), 'active'],
-            [t('.status_inactive', default: 'Inactive - Menu is hidden from customers'), 'inactive']
-          ], menu.status),
-          {},
-          class: 'form-control-2025',
-          **select_data_attributes(:default) %>
-      <div class="form-help-2025">
-        <%= t('.status_help', default: 'Controls whether this menu is visible to customers') %>
-      </div>
-    </div>
-  <% end %>
-</div>
+<!-- General Settings card removed: status moved to Quick Actions -->
 
 <!-- Feature Toggles -->
 <div class="content-card-2025">

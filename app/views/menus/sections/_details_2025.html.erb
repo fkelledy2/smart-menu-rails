@@ -20,44 +20,19 @@
         data: { turbo: false },
         form: { data: { turbo: false, ai_generate: true, menu_id: menu.id } } do %>
       <i class="bi bi-stars"></i>
-      <span><%= t('.generate_images', default: 'Generate AI Images') %></span>
+      <span><%= t('.generate_images', default: 'Generate Images') %></span>
     <% end %>
 
     <% active_locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active') %>
     <% if active_locales.any? %>
-      <div class="btn-group">
-        <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false),
-            method: :post,
-            class: 'quick-action-btn',
-            data: { turbo: false, testid: 'localize-menu-btn' },
-            form: { data: { turbo: false, localize: true, menu_id: menu.id } } do %>
-          <i class="bi bi-translate"></i>
-          <span><%= t('.localize_menu', default: 'Localize Menu') %></span>
-        <% end %>
-        <button type="button" class="quick-action-btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="visually-hidden">Toggle Dropdown</span>
-        </button>
-        <ul class="dropdown-menu">
-          <li>
-            <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false),
-                method: :post,
-                class: 'dropdown-item text-start border-0 bg-transparent',
-                form: { style: 'display: inline;', data: { localize: true, turbo: false, menu_id: menu.id } },
-                data: { testid: 'localize-missing-btn' } do %>
-              <i class="bi bi-magic"></i> <%= t('.localize_missing', default: 'Localize Missing Only') %>
-            <% end %>
-          </li>
-          <li>
-            <%= button_to localize_restaurant_menu_path(restaurant, menu, force: true),
-                method: :post,
-                class: 'dropdown-item text-start border-0 bg-transparent text-warning',
-                form: { style: 'display: inline;', data: { localize: true, turbo: false, menu_id: menu.id } },
-                data: { testid: 'localize-force-btn' } do %>
-              <i class="bi bi-arrow-repeat"></i> <%= t('.localize_force', default: 'Force Re-translate All') %>
-            <% end %>
-          </li>
-        </ul>
-      </div>
+      <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false),
+          method: :post,
+          class: 'quick-action-btn',
+          data: { turbo: false, testid: 'localize-menu-btn' },
+          form: { data: { turbo: false, localize: true, menu_id: menu.id } } do %>
+        <i class="bi bi-translate"></i>
+        <span><%= t('.localize_menu', default: 'Translations') %></span>
+      <% end %>
     <% end %>
 
     <% if menu.smartmenu&.slug %>
@@ -66,7 +41,7 @@
           target: '_blank',
           title: 'Preview menu as staff (authenticated view)' do %>
         <i class="bi bi-eye"></i>
-        <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
+        <span><%= t('.preview_staff', default: 'Staff View') %></span>
       <% end %>
 
       <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'),
@@ -75,7 +50,7 @@
           rel: 'noopener noreferrer',
           title: 'Preview menu as customers see it (authenticated as staff but viewing customer interface)' do %>
         <i class="bi bi-eye-slash"></i>
-        <span><%= t('.preview_customer', default: 'Preview (Customer)') %></span>
+        <span><%= t('.preview_customer', default: 'Customer View') %></span>
       <% end %>
     <% end %>
 
@@ -86,6 +61,31 @@
         form: { data: { turbo: false, polish: true, menu_id: menu.id } } do %>
       <i class="bi bi-magic"></i>
       <span><%= t('.ai_polish', default: 'AI Polish') %></span>
+    <% end %>
+
+    <!-- Status Toggle Quick Action -->
+    <%= form_with model: menu,
+          url: restaurant_menu_path(restaurant, menu),
+          method: :patch,
+          local: true,
+          data: { turbo: false },
+          html: { class: 'd-inline' } do |f| %>
+      <%= hidden_field_tag :return_to, 'menu_edit' %>
+      <% if menu.active? %>
+        <%= hidden_field_tag 'menu[status]', 'inactive' %>
+        <%= hidden_field_tag :status, 'inactive' %>
+        <button type="submit" class="quick-action-btn quick-action-btn-secondary" data-testid="menu-status-toggle-btn">
+          <i class="bi bi-toggle2-off"></i>
+          <span><%= t('.active', default: 'Active') %></span>
+        </button>
+      <% else %>
+        <%= hidden_field_tag 'menu[status]', 'active' %>
+        <%= hidden_field_tag :status, 'active' %>
+        <button type="submit" class="quick-action-btn" data-testid="menu-status-toggle-btn">
+          <i class="bi bi-toggle2-on"></i>
+          <span><%= t('.inactive', default: 'Inactive') %></span>
+        </button>
+      <% end %>
     <% end %>
   </div>
 </div>
@@ -128,24 +128,7 @@
         </div>
       </div>
 
-      <div class="col-md-12">
-        <div class="form-group-2025">
-          <%= form.label :status, class: 'form-label-2025' do %>
-            <%= t('.status', default: 'Status') %>
-          <% end %>
-          <%= form.select :status,
-              options_for_select([
-                [t('.active', default: 'Active'), 'active'],
-                [t('.inactive', default: 'Inactive'), 'inactive']
-              ], menu.status),
-              {},
-              class: 'form-control-2025',
-              **select_data_attributes(:default) %>
-          <div class="form-help-2025">
-            <%= t('.status_help', default: 'Only active menus are visible to customers') %>
-          </div>
-        </div>
-      </div>
+      
     </div>
   <% end %>
 </div>
@@ -158,7 +141,9 @@
   </h2>
 
   <div class="stats-grid">
-    <div class="stat-card">
+    <%= link_to edit_restaurant_menu_path(restaurant, menu, section: 'sections'),
+                class: 'stat-card text-decoration-none',
+                data: { turbo_frame: 'menu_content', turbo_action: 'advance', testid: 'menu-stats-sections-link' } do %>
       <div class="stat-icon bg-primary">
         <i class="bi bi-layout-text-sidebar"></i>
       </div>
@@ -166,9 +151,11 @@
         <div class="stat-value"><%= menu.menusections.count %></div>
         <div class="stat-label"><%= t('.sections', default: 'Sections') %></div>
       </div>
-    </div>
+    <% end %>
 
-    <div class="stat-card">
+    <%= link_to edit_restaurant_menu_path(restaurant, menu, section: 'items'),
+                class: 'stat-card text-decoration-none',
+                data: { turbo_frame: 'menu_content', turbo_action: 'advance', testid: 'menu-stats-items-link' } do %>
       <div class="stat-icon bg-success">
         <i class="bi bi-list-ul"></i>
       </div>
@@ -176,9 +163,11 @@
         <div class="stat-value"><%= menu.menuitems.count %></div>
         <div class="stat-label"><%= t('.items', default: 'Items') %></div>
       </div>
-    </div>
+    <% end %>
 
-    <div class="stat-card">
+    <%= link_to edit_restaurant_menu_path(restaurant, menu, section: 'schedule'),
+                class: 'stat-card text-decoration-none',
+                data: { turbo_frame: 'menu_content', turbo_action: 'advance', testid: 'menu-stats-schedules-link' } do %>
       <div class="stat-icon bg-warning">
         <i class="bi bi-calendar-check"></i>
       </div>
@@ -186,7 +175,7 @@
         <div class="stat-value"><%= menu.menuavailabilities.count %></div>
         <div class="stat-label"><%= t('.schedules', default: 'Schedules') %></div>
       </div>
-    </div>
+    <% end %>
   </div>
 </div>
 

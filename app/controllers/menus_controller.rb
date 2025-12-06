@@ -438,7 +438,7 @@ class MenusController < ApplicationController
 
     respond_to do |format|
       # Remove PDF if requested
-      if (params[:menu][:remove_pdf_menu_scan] == '1') && @menu.pdf_menu_scan.attached?
+      if (params.dig(:menu, :remove_pdf_menu_scan) == '1') && @menu.pdf_menu_scan.attached?
         @menu.pdf_menu_scan.purge
       end
       if @menu.save
@@ -489,10 +489,31 @@ class MenusController < ApplicationController
 
     respond_to do |format|
       # Remove PDF if requested
-      if (params[:menu][:remove_pdf_menu_scan] == '1') && @menu.pdf_menu_scan.attached?
+      if (params.dig(:menu, :remove_pdf_menu_scan) == '1') && @menu.pdf_menu_scan.attached?
         @menu.pdf_menu_scan.purge
       end
-      if @menu.update(menu_params)
+      # Build attributes once and save
+      raw_menu = params[:menu]
+      status_value = params.dig(:menu, :status) || params[:status]
+      attrs = {}
+      if raw_menu.is_a?(ActionController::Parameters)
+        begin
+          attrs.merge!(menu_params.to_h)
+        rescue => e
+          Rails.logger.warn("[MenusController#update] menu_params error: #{e.message}")
+        end
+      end
+      attrs[:status] = status_value if status_value.present?
+
+      Rails.logger.info("[MenusController#update] raw_menu=#{raw_menu.inspect} built_attrs=#{attrs.inspect}")
+
+      @menu.assign_attributes(attrs)
+      updated = @menu.changed? ? @menu.save : true
+      Rails.logger.info("[MenusController#update] save_result=#{updated} persisted_status=#{@menu.status}")
+
+      @menu.reload if updated
+
+      if updated
         # Invalidate AdvancedCacheService caches for this menu
         AdvancedCacheService.invalidate_menu_caches(@menu.id)
         AdvancedCacheService.invalidate_restaurant_caches(@menu.restaurant.id)
@@ -521,6 +542,9 @@ class MenusController < ApplicationController
             @current_section = 'settings'
             render partial: 'menus/section_frame_2025',
                    locals: { menu: @menu, partial_name: menu_section_partial_name(@current_section) }
+          elsif params[:return_to] == 'menu_edit'
+            redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu),
+                        notice: t('common.flash.updated', resource: t('activerecord.models.menu'))
           else
             redirect_to edit_restaurant_path(id: @menu.restaurant.id),
                         notice: t('common.flash.updated', resource: t('activerecord.models.menu'))
@@ -528,6 +552,7 @@ class MenusController < ApplicationController
         end
         format.json { render :show, status: :ok, location: restaurant_menu_url(@restaurant || @menu.restaurant, @menu) }
       else
+        Rails.logger.warn("[MenusController#update] Update failed for menu=#{@menu.id} errors=#{@menu.errors.full_messages}")
         format.html do
           if turbo_frame_request_id == 'menu_content'
             @current_section = 'settings'
@@ -535,7 +560,12 @@ class MenusController < ApplicationController
                    locals: { menu: @menu, partial_name: menu_section_partial_name(@current_section) },
                    status: :unprocessable_entity
           else
-            render :edit, status: :unprocessable_entity
+            # Redirect back to menu edit with alert for quick-action UX
+            if params[:return_to] == 'menu_edit'
+              redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), alert: @menu.errors.full_messages.presence || 'Failed to update menu'
+            else
+              render :edit, status: :unprocessable_entity
+            end
           end
         end
         format.json { render json: @menu.errors, status: :unprocessable_entity }

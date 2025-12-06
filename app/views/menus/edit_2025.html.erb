@@ -149,6 +149,21 @@
       <div class="modal-body">
         <div id="ai-confirm-pane">
           <p>This will generate new AI images for your menu items and may consume API credits. Proceed?</p>
+          <!-- Localization options (visible only for Translate Menu) -->
+          <div id="localize-options" class="mt-3" style="display: none;">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="localizeMode" id="localize-missing" value="missing" checked>
+              <label class="form-check-label" for="localize-missing">
+                Localize Missing Only
+              </label>
+            </div>
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="radio" name="localizeMode" id="localize-force" value="force">
+              <label class="form-check-label" for="localize-force">
+                Force Re-translate All
+              </label>
+            </div>
+          </div>
         </div>
         <div id="ai-progress-pane" class="d-none">
           <div class="mb-2">
@@ -189,6 +204,29 @@
 
 <script>
   (function(){
+    // Defensive cleanup for any lingering TomSelect wrapper for menu status (Turbo cache safety)
+    function __cleanupMenuStatusTomSelect(){
+      try {
+        const tsCtrl = document.getElementById('menu_status-ts-control');
+        if (tsCtrl) {
+          const wrap = tsCtrl.closest('.ts-wrapper');
+          if (wrap) wrap.remove();
+        }
+        const sel = document.getElementById('menu_status');
+        if (sel) {
+          if (sel.tomselect && typeof sel.tomselect.destroy === 'function') {
+            try { sel.tomselect.destroy(); } catch(_) {}
+          }
+          sel.remove();
+        }
+      } catch(_) {}
+    }
+
+    // Run immediately and on Turbo swaps
+    __cleanupMenuStatusTomSelect();
+    document.addEventListener('turbo:load', __cleanupMenuStatusTomSelect);
+    document.addEventListener('turbo:frame-load', __cleanupMenuStatusTomSelect);
+
     const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
     let pendingForm = null;
     let pollTimer = null;
@@ -233,17 +271,29 @@
       // Set modal title per mode
       const titleEl = modalEl.querySelector('.modal-title');
       if (titleEl) {
-        titleEl.textContent = (currentMode === 'localize') ? 'Localize Menu' : (currentMode === 'polish' ? 'AI Polish Menu' : 'Generate AI Images');
+        titleEl.textContent = (currentMode === 'localize') ? 'Translate Menu' : (currentMode === 'polish' ? 'AI Polish Menu' : 'Generate AI Images');
       }
       // Set confirmation text per mode
       confirmText = (currentMode === 'localize')
-        ? 'This will localize your menu to active restaurant locales and may consume API credits. Proceed?'
+        ? 'This will translate your menu to active restaurant locales and may consume API credits. Proceed?'
         : (currentMode === 'polish'
             ? 'This will clean up item names/descriptions, generate missing descriptions with AI, assess allergens/alcohol and reorder sections. Proceed?'
             : 'This will generate new AI images for your menu items and may consume API credits. Proceed?');
       confirmPane.querySelector('p').textContent = confirmText;
       // Hide image preview for localization mode, show for AI mode
       document.getElementById('ai-preview').style.display = (currentMode === 'localize' || currentMode === 'polish') ? 'none' : '';
+      // Show localization options only in localize mode
+      const locOpts = document.getElementById('localize-options');
+      if (locOpts) {
+        locOpts.style.display = (currentMode === 'localize') ? '' : 'none';
+        // default selection
+        const missingRadio = document.getElementById('localize-missing');
+        const forceRadio = document.getElementById('localize-force');
+        if (currentMode === 'localize') {
+          if (missingRadio) missingRadio.checked = true;
+          if (forceRadio) forceRadio.checked = false;
+        }
+      }
       document.getElementById('ai-confirm-btn').disabled = false;
       const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
       modal.show();
@@ -267,6 +317,11 @@
         // Ensure .json is appended before query string
         const u = new URL(url, window.location.origin);
         u.pathname = u.pathname.endsWith('.json') ? u.pathname : (u.pathname + '.json');
+        // Add localization mode if needed
+        if (currentMode === 'localize') {
+          const selected = document.querySelector('input[name="localizeMode"]:checked')?.value || 'missing';
+          u.searchParams.set('force', selected === 'force' ? 'true' : 'false');
+        }
         const jsonUrl = u.toString();
         const resp = await fetch(jsonUrl, {
           method: 'POST',

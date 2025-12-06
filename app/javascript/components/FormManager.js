@@ -59,6 +59,18 @@ export class FormManager extends ComponentBase {
       return null;
     }
 
+    // Skip menu status selects globally (handled via Quick Action toggle)
+    try {
+      const id = element.id || '';
+      const name = element.name || '';
+      if (
+        id === 'menu_status' || name === 'menu[status]' ||
+        id === 'restaurant_status' || name === 'restaurant[status]'
+      ) {
+        return null;
+      }
+    } catch(_) {}
+
     try {
       // Parse options from data attribute
       const dataOptions = element.dataset.tomSelectOptions
