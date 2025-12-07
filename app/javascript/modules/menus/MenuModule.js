@@ -16,6 +16,8 @@ export class MenuModule extends ComponentBase {
     this.formManager = null;
     this.tableManager = null;
     this.activeTabStorage = 'activeMenuPillId';
+    // Map of slug -> QRCodeStyling instances
+    this.qrCodes = new Map();
   }
 
   /**
@@ -31,6 +33,8 @@ export class MenuModule extends ComponentBase {
     this.initializeScrollSpy();
     this.initializeTabs();
     this.bindEvents();
+    // Initialize QR codes for the QR section (if present)
+    this.initializeQRCodes();
 
     EventBus.emit(AppEvents.COMPONENT_READY, {
       component: 'MenuModule',
@@ -38,6 +42,67 @@ export class MenuModule extends ComponentBase {
     });
 
     return this;
+  }
+
+  /**
+   * Initialize QR code generation (menu QR section)
+   */
+  initializeQRCodes() {
+    const qrElements = this.findAll('.qrSlug');
+    if (!qrElements || qrElements.length === 0) return;
+
+    qrElements.forEach((element) => {
+      this.generateQRCode(element);
+    });
+  }
+
+  /**
+   * Generate a QR code for a given slug element and append into the nearest card
+   */
+  generateQRCode(element) {
+    const qrSlug = element.textContent.trim();
+    const qrHost = this.find('#qrHost')?.textContent || window.location.host;
+    const qrIcon = this.find('#qrIcon')?.textContent || '';
+
+    if (!qrSlug || typeof window.QRCodeStyling !== 'function') return;
+
+    try {
+      const qrCode = new window.QRCodeStyling({
+        type: 'canvas',
+        shape: 'square',
+        width: 300,
+        height: 300,
+        data: `https://${qrHost}/smartmenus/${qrSlug}`,
+        margin: 0,
+        qrOptions: { typeNumber: '0', mode: 'Byte', errorCorrectionLevel: 'Q' },
+        imageOptions: { saveAsBlob: true, hideBackgroundDots: true, imageSize: 0.4, margin: 0 },
+        dotsOptions: { type: 'extra-rounded', color: '#000000', roundSize: true },
+        backgroundOptions: { round: 0, color: '#ffffff' },
+        image: qrIcon,
+        dotsOptionsHelper: {
+          colorType: { single: true, gradient: false },
+          gradient: { linear: true, radial: false, color1: '#6a1a4c', color2: '#6a1a4c', rotation: '0' },
+        },
+        cornersSquareOptions: { type: 'extra-rounded', color: '#000000' },
+        cornersDotOptions: { type: 'extra-rounded', color: '#000000' },
+      });
+
+      this.qrCodes.set(qrSlug, qrCode);
+
+      const container = element.closest('.qr-container') || element.parentElement;
+      if (container) {
+        const target = container.querySelector(`#${CSS.escape(qrSlug)}`) || document.createElement('div');
+        if (!target.id) {
+          target.id = qrSlug;
+          target.className = 'qr-code-display mt-2';
+          container.appendChild(target);
+        }
+        target.innerHTML = '';
+        qrCode.append(target);
+      }
+    } catch (error) {
+      console.error('Failed to generate QR code:', error);
+    }
   }
 
   /**

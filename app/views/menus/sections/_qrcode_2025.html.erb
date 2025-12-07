@@ -6,73 +6,132 @@
 <% menu = local_assigns[:menu] || @menu %>
 <% restaurant = menu.restaurant %>
 
-<!-- Quick Actions Card -->
-<% if menu.smartmenu&.slug %>
-  <div class="quick-actions-card">
-    <h2 class="quick-actions-title">
-      <i class="bi bi-lightning-charge"></i>
-      <%= t('.quick_actions', default: 'Quick Actions') %>
-    </h2>
+ 
 
-    <div class="quick-actions-grid">
-      <button class="quick-action-btn" onclick="copyToClipboard()">
-        <i class="bi bi-clipboard"></i>
-        <span><%= t('.copy_url', default: 'Copy URL') %></span>
-      </button>
 
-      <%= link_to smartmenu_path(menu.smartmenu.slug),
-          class: 'quick-action-btn',
-          target: '_blank',
-          title: 'Preview menu as staff (authenticated view)' do %>
-        <i class="bi bi-eye"></i>
-        <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
-      <% end %>
 
-      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'),
-          class: 'quick-action-btn quick-action-btn-secondary',
-          target: '_blank',
-          rel: 'noopener noreferrer',
-          title: 'Preview menu as customers see it (authenticated as staff but viewing customer interface)' do %>
-        <i class="bi bi-eye-slash"></i>
-        <span><%= t('.preview_customer', default: 'Preview (Customer)') %></span>
-      <% end %>
-    </div>
-  </div>
-<% end %>
-
-<!-- QR Code Preview -->
+<!-- All QR Codes for this Menu -->
 <div class="content-card-2025 py-4">
   <h2 class="content-card-title">
-    <i class="bi bi-qr-code"></i>
-    <%= t('.qr_code', default: 'QR Code') %>
+    <i class="bi bi-grid"></i>
+    <%= t('.all_qr_codes_for_menu', default: 'All QR Codes for this Menu') %>
   </h2>
 
   <p class="text-muted mb-4">
-    <%= t('.qr_code_description', default: 'Let customers scan this QR code to view your menu') %>
+    <%= t('.all_qr_codes_for_menu_desc', default: 'Includes the general menu QR (no table) and one QR per table for this menu.') %>
   </p>
 
-  <!-- Hidden data for QR code generation -->
-  <% if menu.smartmenu&.slug %>
-    <div id="qrHost" class="d-none"><%= request.host_with_port %></div>
-    <div class="qrSlug d-none"><%= menu.smartmenu.slug %></div>
-    <div id="qrIcon" class="d-none"><%= image_url('qr-icon.svg') %></div>
-    <div id="qrProtocol" class="d-none"><%= request.protocol %></div>
+  <!-- Provide shared data for QR generation (used by RestaurantModule / legacy initialiser) -->
+  <div id="qrHost" class="d-none"><%= request.host_with_port %></div>
+  <div id="qrIcon" class="d-none"><%= image_url('qr-icon.svg') %></div>
 
-    <!-- Centered QR Code -->
-    <div class="d-flex justify-content-center">
-      <div class="qr-preview">
-        <!-- Styled QR code will be inserted here by JavaScript -->
-        <div id="<%= menu.smartmenu.slug %>" class="qr-code-container"></div>
+  <% smartmenus = Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id).includes(:tablesetting) %>
+
+  <!-- Menu-only QR (no table) -->
+  <% menu_only = smartmenus.find { |sm| sm.tablesetting_id.nil? } %>
+  <% menu_only_slug = menu_only&.slug || menu.smartmenu&.slug %>
+  <% if menu_only_slug %>
+    <h3 class="mt-2 mb-2"><i class="bi bi-list-ul me-2"></i><%= t('.menu_only_qr', default: 'Menu QR (All Tables)') %></h3>
+    <div class="qr-cards-grid">
+      <div class="qr-card qr-container">
+        <div class="qr-card-header">
+          <div class="qr-meta">
+            <div class="qr-meta-line qr-restaurant-name"><%= restaurant.name %></div>
+            <div class="qr-meta-line qr-menu-name"><%= menu.name %></div>
+            <div class="qr-meta-line qr-table-name"><%= t('.all_tables', default: 'All Tables') %></div>
+          </div>
+        </div>
+        <div class="d-none qrSlug"><%= menu_only_slug %></div>
+        <div class="qr-card-body">
+          <a class="qr-clickable" href="<%= smartmenu_path(menu_only_slug) %>" target="_blank" rel="noopener">
+            <div id="<%= menu_only_slug %>" class="qr-code-container"></div>
+          </a>
+        </div>
+        <div class="qr-card-footer">
+          <div class="qr-actions">
+            <button type="button" class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2" onclick="printQrCard(this)">
+              <i class="bi bi-printer"></i> <%= t('.print', default: 'Print') %>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  <% else %>
-    <div class="qr-placeholder">
-      <i class="bi bi-qr-code"></i>
-      <p class="mt-2">
-        <%= t('.qr_not_available', default: 'QR code will appear here once menu is published') %>
-      </p>
+  <% end %>
+
+  <!-- Per-table QRs for this menu -->
+  <% per_table = smartmenus.select { |sm| sm.tablesetting_id.present? } %>
+  <% if per_table.any? %>
+    <h3 class="mt-4 mb-2"><i class="bi bi-grid-3x3-gap me-2"></i><%= t('.menu_table_qr', default: 'Table QR Codes for this Menu') %></h3>
+    <div class="qr-cards-grid">
+      <% per_table.each do |sm| %>
+        <div class="qr-card qr-container">
+          <div class="qr-card-header">
+            <div class="qr-meta">
+              <div class="qr-meta-line qr-restaurant-name"><%= restaurant.name %></div>
+              <div class="qr-meta-line qr-menu-name"><%= menu.name %></div>
+              <div class="qr-meta-line qr-table-name"><%= sm.tablesetting&.name || '-' %></div>
+            </div>
+          </div>
+          <div class="d-none qrSlug"><%= sm.slug %></div>
+          <div class="qr-card-body">
+            <a class="qr-clickable" href="<%= smartmenu_path(sm.slug) %>" target="_blank" rel="noopener">
+              <div id="<%= sm.slug %>" class="qr-code-container"></div>
+            </a>
+          </div>
+          <div class="qr-card-footer">
+            <div class="qr-actions">
+              <button type="button" class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2" onclick="printQrCard(this)">
+                <i class="bi bi-printer"></i> <%= t('.print', default: 'Print') %>
+              </button>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
   <% end %>
+
+  <% if !menu_only && per_table.blank? %>
+    <div class="alert alert-info mt-3">
+      <i class="bi bi-info-circle me-2"></i>
+      <%= t('.no_qr_found', default: 'No QR codes found yet. Ensure Smartmenus are generated for this menu and tables.') %>
+    </div>
+  <% end %>
+
+  <style>
+    .qr-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--space-4);
+    }
+    .qr-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .qr-card-header { width: 100%; text-align: center; margin-bottom: var(--space-2); }
+    .qr-meta { width: 100%; text-align: center; }
+    .qr-meta-line { line-height: 1.2; }
+    .qr-restaurant-name { font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+    .qr-menu-name { font-weight: 600; margin-top: 2px; }
+    .qr-table-name { font-weight: 600; font-size: var(--text-sm); color: var(--color-gray-700); margin-top: 2px; }
+    .qr-card-body { min-height: 320px; display: flex; align-items: center; justify-content: center; width: 100%; }
+    .qr-card-footer { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-top: var(--space-2); }
+    .qr-actions { display: flex; gap: var(--space-2); width: 100%; }
+    .qr-clickable { text-decoration: none; display: inline-block; }
+
+    @media print {
+      .sidebar-2025, .header-2025, .quick-actions-card, .customization-option, .btn-2025 { display: none !important; }
+      .qr-card { page-break-inside: avoid; border: none; }
+      .qr-card-footer { justify-content: flex-start; gap: var(--space-4); }
+      /* Print-optimized, high-contrast labels */
+      .qr-meta { border-bottom: 1px solid #000; padding-bottom: 6px; margin-bottom: 8px; }
+      .qr-restaurant-name, .qr-menu-name, .qr-table-name { color: #000 !important; }
+    }
+  </style>
 </div>
 
 <!-- Download Options -->
@@ -162,7 +221,6 @@
     align-items: center;
     justify-content: center;
   }
-
   .qr-preview svg {
     max-width: 100%;
     height: auto;
@@ -272,4 +330,145 @@
       initialiseSlugs();
     }
   });
+
+  // Print only the selected QR card (global)
+  window.printQrCard = function(btn) {
+    try {
+      const card = btn.closest('.qr-card');
+      if (!card) { window.print(); return; }
+
+      // Clone the card and strip non-print elements
+      const clone = card.cloneNode(true);
+      clone.querySelectorAll('.qr-actions, .btn-2025').forEach(el => el.remove());
+      // Explicitly remove hidden slug element (bootstrap d-none won't exist in iframe)
+      clone.querySelectorAll('.qrSlug').forEach(el => el.remove());
+      // Unwrap anchors to avoid browsers printing link URLs (which can show the UUID)
+      clone.querySelectorAll('a.qr-clickable').forEach(a => {
+        const firstChild = a.firstElementChild || a.firstChild;
+        if (firstChild) {
+          a.parentNode.insertBefore(firstChild, a);
+          a.remove();
+        } else {
+          a.remove();
+        }
+      });
+
+      // Remove any visible occurrences of the slug/UUID text from the clone
+      const slugEl = card.querySelector('.qrSlug');
+      const slug = slugEl ? slugEl.textContent.trim() : '';
+      // Remove text-only elements that contain the slug
+      const uuidRe = /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i;
+      clone.querySelectorAll('*').forEach(el => {
+        try {
+          if (!el) return;
+          const hasVisual = el.querySelector('canvas, img, svg');
+          const text = (el.textContent || '').trim();
+          if (!hasVisual && text && ((slug && text.includes(slug)) || uuidRe.test(text))) {
+            el.remove();
+            return;
+          }
+          // Also strip title attributes that might include slug/uuid
+          if (el.hasAttribute && el.hasAttribute('title')) {
+            const t = el.getAttribute('title') || '';
+            if ((slug && t.includes(slug)) || uuidRe.test(t)) el.removeAttribute('title');
+          }
+        } catch (_) {}
+      });
+
+      // Scrub any remaining text nodes containing the slug/uuid
+      try {
+        const walker = document.createTreeWalker(clone, NodeFilter.SHOW_TEXT, null);
+        const toClean = [];
+        while (walker.nextNode()) {
+          const n = walker.currentNode;
+          if (!n || typeof n.nodeValue !== 'string') continue;
+          if ((slug && n.nodeValue.includes(slug)) || uuidRe.test(n.nodeValue)) {
+            toClean.push(n);
+          }
+        }
+        toClean.forEach(n => {
+          if (slug) n.nodeValue = n.nodeValue.replaceAll(slug, '');
+          n.nodeValue = n.nodeValue.replace(uuidRe, '');
+        });
+      } catch (_) {}
+
+      // Convert canvases (QR code) to images for reliable print output
+      const canvases = card.querySelectorAll('canvas');
+      const cloneCanvases = clone.querySelectorAll('canvas');
+      canvases.forEach((canvas, idx) => {
+        try {
+          const dataURL = canvas.toDataURL('image/png');
+          const img = document.createElement('img');
+          img.src = dataURL;
+          img.style.maxWidth = '100%';
+          img.style.height = 'auto';
+          const targetCanvas = cloneCanvases[idx];
+          if (targetCanvas && targetCanvas.parentNode) {
+            targetCanvas.parentNode.replaceChild(img, targetCanvas);
+          }
+        } catch (e) {}
+      });
+
+      // Create a hidden iframe to isolate print content (no visible new tab)
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = '0';
+      iframe.style.visibility = 'hidden';
+      document.body.appendChild(iframe);
+
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write(`<!doctype html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Print QR</title>
+            <style>
+              :root { --space-2: 8px; --space-3: 12px; --space-4: 16px; }
+              html, body { height: 100%; }
+              body {
+                margin: 0;
+                padding: 16px;
+                font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+              }
+              /* Prevent browsers from appending URLs after links when printing */
+              a[href]:after { content: none !important; }
+              .qr-card { border: none; box-shadow: none; padding: var(--space-3); page-break-inside: avoid; max-width: 90vw; }
+              .qr-card-header { text-align: center; margin-bottom: var(--space-2); }
+              .qr-meta { border-bottom: 1px solid #000; padding-bottom: 6px; margin-bottom: 8px; text-align: center; }
+              .qr-meta-line { line-height: 1.2; }
+              .qr-restaurant-name, .qr-menu-name, .qr-table-name { color: #000 !important; }
+              .qr-actions, .btn-2025 { display: none !important; }
+              .qrSlug { display: none !important; }
+              @page { margin: 12mm; }
+            </style>
+          </head>
+          <body></body>
+        </html>`);
+      doc.close();
+
+      doc.body.appendChild(clone);
+
+      // Wait a tick to allow layout, then print and clean up
+      setTimeout(() => {
+        try {
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+        } finally {
+          setTimeout(() => iframe.remove(), 250);
+        }
+      }, 150);
+    } catch (e) {
+      window.print();
+    }
+  };
 </script>

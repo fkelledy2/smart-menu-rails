@@ -1124,8 +1124,6 @@ class RestaurantsController < ApplicationController
       'settings_2025'
     when 'taxes_and_tips', 'financials', 'catalog'
       'catalog_2025'
-    when 'qrcodes'
-      'qrcodes_2025'
     when 'jukebox'
       'jukebox_2025'
     when 'tables'

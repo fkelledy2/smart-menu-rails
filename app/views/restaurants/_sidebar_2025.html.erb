@@ -172,12 +172,6 @@
       <span><%= t('.settings', default: 'Settings') %></span>
     <% end %>
 
-    <%= link_to edit_restaurant_path(restaurant, section: 'qrcodes'),
-        class: "sidebar-link #{'active' if current_section == 'qrcodes'}",
-        data: { testid: 'sidebar-qrcodes-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick' } do %>
-      <i class="bi bi-qr-code"></i>
-      <span><%= t('.qr_codes', default: 'QR Codes') %></span>
-    <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'jukebox'),
         class: "sidebar-link #{'active' if current_section == 'jukebox'}",
