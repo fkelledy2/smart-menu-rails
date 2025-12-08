@@ -29,9 +29,14 @@ module ApplicationHelper
     return '' unless restaurant
 
     content_for :head do
-      tag.meta(name: 'restaurant-id', content: restaurant.id) +
-        tag.meta(name: 'current-restaurant', content: restaurant.id) +
-        tag.meta(property: 'restaurant:id', content: restaurant.id)
+      tags = []
+      tags << tag.meta(name: 'restaurant-id', content: restaurant.id)
+      tags << tag.meta(name: 'current-restaurant', content: restaurant.id)
+      tags << tag.meta(property: 'restaurant:id', content: restaurant.id)
+      if restaurant.respond_to?(:currency) && restaurant.currency.present?
+        tags << tag.meta(name: 'restaurant-currency', content: restaurant.currency)
+      end
+      safe_join(tags)
     end
   end
 

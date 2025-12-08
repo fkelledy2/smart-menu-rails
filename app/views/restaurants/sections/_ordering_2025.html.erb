@@ -5,122 +5,193 @@
 
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
-<\!-- Ordering Settings - Coming Soon -->
-<div class="content-card-2025">
-  <h2 class="content-card-title">
-    <i class="bi bi-cart-check"></i>
-    <%= t('.ordering_settings', default: 'Ordering Settings') %>
+<!-- Ordering Dashboard -->
+<div id="ordering-dashboard" class="content-card-2025 py-4" data-restaurant-id="<%= restaurant.id %>" data-currency-code="<%= restaurant.respond_to?(:currency) ? (restaurant.currency.presence || 'USD') : 'USD' %>" data-controller="ordering">
+  <h2 class="content-card-title d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <span>
+      <i class="bi bi-graph-up"></i>
+      <%= t('.ordering_dashboard', default: 'Ordering Dashboard') %>
+    </span>
+    <div class="d-flex align-items-center gap-2">
+      <select class="form-select form-select-sm" id="od-time-range">
+        <option value="today"><%= t('.today', default: 'Today') %></option>
+        <option value="yesterday"><%= t('.yesterday', default: 'Yesterday') %></option>
+        <option value="last7"><%= t('.last_7_days', default: 'Last 7 Days') %></option>
+        <option value="last28" selected><%= t('.last_28_days', default: 'Last 28 Days') %></option>
+        <option value="mtd"><%= t('.mtd', default: 'Month to Date') %></option>
+        <option value="last_month"><%= t('.last_month', default: 'Last Month') %></option>
+        <option value="custom"><%= t('.custom', default: 'Custom…') %></option>
+      </select>
+      <div id="od-custom-range" class="d-none">
+        <input type="date" class="form-control form-control-sm" id="od-start">
+        <input type="date" class="form-control form-control-sm" id="od-end">
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="od-compare">
+        <label class="form-check-label" for="od-compare"><%= t('.compare', default: 'Compare previous period') %></label>
+      </div>
+    </div>
   </h2>
 
-  <div class="text-center py-5">
-    <i class="bi bi-cart-check text-muted text-3rem"></i>
-    <h3 class="mt-3 text-muted">
-      <%= t('.coming_soon', default: 'Online Ordering Coming Soon') %>
-    </h3>
-    <p class="text-muted mb-4">
-      <%= t('.coming_soon_desc', default: 'We\'re working on adding online ordering capabilities to your smart menu. This feature will allow customers to place orders directly through your digital menu.') %>
-    </p>
-    <div class="d-flex justify-content-center flex-wrap gap-2">
-      <span class="badge bg-primary">
-        <i class="bi bi-check-circle me-1"></i> <%= t('.feature_1', default: 'Order Management') %>
-      </span>
-      <span class="badge bg-primary">
-        <i class="bi bi-check-circle me-1"></i> <%= t('.feature_2', default: 'Payment Integration') %>
-      </span>
-      <span class="badge bg-primary">
-        <i class="bi bi-check-circle me-1"></i> <%= t('.feature_3', default: 'Real-time Notifications') %>
-      </span>
+  <!-- Filters row -->
+  <div class="row g-2 mb-3">
+    <div class="col-12 col-md-3">
+      <label class="form-label mb-1"><%= t('.menu', default: 'Menu') %></label>
+      <select class="form-select form-select-sm" id="od-filter-menu">
+        <option value="all"><%= t('.all', default: 'All') %></option>
+        <% restaurant.menus.each do |m| %>
+          <option value="<%= m.id %>"><%= m.name %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="col-12 col-md-3">
+      <label class="form-label mb-1"><%= t('.employee', default: 'Employee') %></label>
+      <select class="form-select form-select-sm" id="od-filter-employee">
+        <option value="all"><%= t('.all', default: 'All') %></option>
+        <% restaurant.employees.each do |e| %>
+          <option value="<%= e.id %>"><%= e.user&.name || e.user&.email || "##{e.id}" %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="col-12 col-md-3">
+      <label class="form-label mb-1"><%= t('.table', default: 'Table') %></label>
+      <select class="form-select form-select-sm" id="od-filter-table">
+        <option value="all"><%= t('.all', default: 'All') %></option>
+        <% restaurant.tablesettings.each do |tset| %>
+          <option value="<%= tset.id %>"><%= tset.name %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="col-12 col-md-3">
+      <label class="form-label mb-1"><%= t('.status', default: 'Status') %></label>
+      <select class="form-select form-select-sm" id="od-filter-status">
+        <option value="completed"><%= t('.completed', default: 'Completed') %></option>
+        <option value="open"><%= t('.open', default: 'Open') %></option>
+        <option value="cancelled"><%= t('.cancelled', default: 'Cancelled') %></option>
+        <option value="all" selected><%= t('.all', default: 'All') %></option>
+      </select>
     </div>
   </div>
-</div>
 
-<\!-- Planned Features -->
-<div class="content-card-2025">
-  <h2 class="content-card-title">
-    <i class="bi bi-star"></i>
-    <%= t('.planned_features', default: 'Planned Features') %>
-  </h2>
+  <!-- KPI cards -->
+  <div class="od-kpi-grid mb-3">
+    <% [
+      ['gross', 'Gross Revenue'],
+      ['net', 'Net Revenue'],
+      ['taxes', 'Taxes'],
+      ['tips', 'Tips'],
+      ['service', 'Service Charges'],
+      ['orders', 'Orders'],
+      ['items', 'Items Sold'],
+      ['aov', 'AOV']
+    ].each do |key, title| %>
+      <div class="od-kpi-card" data-kpi="<%= key %>">
+        <div class="od-kpi-title"><%= t(".kpi_#{key}", default: title) %></div>
+        <div class="od-kpi-value" data-kpi-value>—</div>
+        <div class="od-kpi-delta text-muted" data-kpi-delta>—</div>
+      </div>
+    <% end %>
+  </div>
 
-  <div class="row g-4">
-    <div class="col-md-6">
-      <div class="feature-preview-card">
-        <div class="feature-icon bg-primary">
-          <i class="bi bi-cart-check"></i>
-        </div>
-        <h4><%= t('.table_ordering', default: 'Table Ordering') %></h4>
-        <p class="text-muted">
-          <%= t('.table_ordering_desc', default: 'Customers scan QR codes at tables to browse menus and place orders directly from their phones.') %>
-        </p>
+  <!-- Charts -->
+  <div class="row g-3">
+    <div class="col-12 col-xl-6">
+      <div class="od-chart-card">
+        <div class="od-chart-title"><%= t('.revenue_over_time', default: 'Revenue Over Time') %></div>
+        <canvas class="od-chart-canvas" id="od-chart-revenue"></canvas>
       </div>
     </div>
-
-    <div class="col-md-6">
-      <div class="feature-preview-card">
-        <div class="feature-icon bg-success">
-          <i class="bi bi-credit-card"></i>
-        </div>
-        <h4><%= t('.payment_integration', default: 'Payment Integration') %></h4>
-        <p class="text-muted">
-          <%= t('.payment_integration_desc', default: 'Integrated payment processing with support for cards, digital wallets, and cash.') %>
-        </p>
+    <div class="col-12 col-xl-6">
+      <div class="od-chart-card">
+        <div class="od-chart-title"><%= t('.orders_over_time', default: 'Orders Over Time') %></div>
+        <canvas class="od-chart-canvas" id="od-chart-orders"></canvas>
       </div>
     </div>
-
-    <div class="col-md-6">
-      <div class="feature-preview-card">
-        <div class="feature-icon bg-warning">
-          <i class="bi bi-bell"></i>
-        </div>
-        <h4><%= t('.real_time_notifications', default: 'Real-time Notifications') %></h4>
-        <p class="text-muted">
-          <%= t('.real_time_notifications_desc', default: 'Instant alerts for new orders via email, SMS, and in-app notifications.') %>
-        </p>
+    <div class="col-12 col-xl-6">
+      <div class="od-chart-card">
+        <div class="od-chart-title"><%= t('.menu_mix', default: 'Menu Mix') %></div>
+        <canvas class="od-chart-canvas" id="od-chart-menu-mix"></canvas>
       </div>
     </div>
-
-    <div class="col-md-6">
-      <div class="feature-preview-card">
-        <div class="feature-icon bg-info">
-          <i class="bi bi-graph-up"></i>
-        </div>
-        <h4><%= t('.order_analytics', default: 'Order Analytics') %></h4>
-        <p class="text-muted">
-          <%= t('.order_analytics_desc', default: 'Track order volumes, popular items, peak times, and customer preferences.') %>
-        </p>
+    <div class="col-12 col-xl-6">
+      <div class="od-chart-card">
+        <div class="od-chart-title"><%= t('.top_items', default: 'Top Items') %></div>
+        <canvas class="od-chart-canvas" id="od-chart-top-items"></canvas>
+      </div>
+    </div>
+    <div class="col-12 col-xl-6">
+      <div class="od-chart-card">
+        <div class="od-chart-title"><%= t('.staff_performance', default: 'Staff Performance') %></div>
+        <canvas class="od-chart-canvas" id="od-chart-staff"></canvas>
+      </div>
+    </div>
+    <div class="col-12 col-xl-6">
+      <div class="od-chart-card">
+        <div class="od-chart-title"><%= t('.table_utilization', default: 'Table Utilization') %></div>
+        <canvas class="od-chart-canvas" id="od-chart-tables"></canvas>
       </div>
     </div>
   </div>
+
+  <!-- Breakdown tables -->
+  <div class="row g-3 mt-2">
+    <div class="col-12">
+      <div class="od-table-card">
+        <div class="od-table-title d-flex justify-content-between align-items-center">
+          <span><%= t('.orders_table', default: 'Orders') %></span>
+          <button id="od-export-orders" class="btn-2025 btn-2025-outline btn-2025-sm"><%= t('.export_csv', default: 'Export CSV') %></button>
+        </div>
+        <div id="od-table-orders"></div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="od-table-card">
+        <div class="od-table-title d-flex justify-content-between align-items-center">
+          <span><%= t('.items_table', default: 'Items') %></span>
+          <button id="od-export-items" class="btn-2025 btn-2025-outline btn-2025-sm"><%= t('.export_csv', default: 'Export CSV') %></button>
+        </div>
+        <div id="od-table-items"></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .od-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-3); }
+    .od-kpi-card { border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); padding: var(--space-3); background: var(--color-white); }
+    .od-kpi-title { font-size: var(--text-sm); color: var(--color-gray-600); }
+    .od-kpi-value { font-size: 1.5rem; font-weight: var(--font-semibold); }
+    .od-chart-card { border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); padding: var(--space-3); background: var(--color-white); min-height: 260px; }
+    .od-chart-title { font-weight: var(--font-semibold); margin-bottom: var(--space-2); }
+    /* Use block-level canvas to avoid flex resize loops causing re-renders */
+    .od-chart-canvas { width: 100% !important; height: 220px !important; background: var(--color-gray-50); border-radius: var(--radius-md); display: block; }
+    .od-table-card { border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); padding: var(--space-3); background: var(--color-white); }
+    .od-table-title { font-weight: var(--font-semibold); margin-bottom: var(--space-2); }
+    .od-table-placeholder { min-height: 160px; display: flex; align-items: center; justify-content: center; background: var(--color-gray-50); border-radius: var(--radius-md); }
+  </style>
+
+  <script data-turbo-eval="true">
+    // Load Chart.js via CDN (temporary; move to asset pipeline later)
+    (function ensureChartJs(){
+      if (!window.Chart) {
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+        s.defer = true;
+        document.head.appendChild(s);
+      }
+    })();
+    // Initial stub: show chosen range and reveal custom inputs
+    (function() {
+      const range = document.getElementById('od-time-range');
+      const custom = document.getElementById('od-custom-range');
+      if (!range || !custom) return;
+      function updateCustom() { custom.classList.toggle('d-none', range.value !== 'custom'); }
+      range.addEventListener('change', updateCustom);
+      updateCustom();
+      // Placeholders in chart canvases
+      // Leave canvases empty; Chart.js will render
+    })();
+
+    // Initialization handled by Stimulus (data-controller="ordering") and application.js observer.
+  </script>
 </div>
 
-<style>
-  .feature-preview-card {
-    padding: var(--space-4);
-    background: var(--color-gray-50);
-    border: 1px solid var(--color-gray-200);
-    border-radius: var(--radius-lg);
-    height: 100%;
-  }
-
-  .feature-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-    margin-bottom: var(--space-3);
-  }
-
-  .feature-preview-card h4 {
-    font-size: var(--text-lg);
-    font-weight: var(--font-semibold);
-    margin-bottom: var(--space-2);
-  }
-
-  .feature-preview-card p {
-    font-size: var(--text-sm);
-    margin-bottom: 0;
-  }
-</style>

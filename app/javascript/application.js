@@ -84,6 +84,7 @@ import { DateTime } from 'luxon';
 import '@rails/request.js';
 import './add_jquery';
 import './channels';
+import { OrderingModule } from './modules/restaurants/OrderingModule.js';
 
 // Import hero carousel for homepage
 import './modules/hero_carousel.js';
@@ -100,6 +101,7 @@ window.bootstrap = bootstrap;
 window.Tabulator = Tabulator;
 window.TomSelect = TomSelect;
 window.QRCodeStyling = QRCodeStyling;
+window.OrderingModule = OrderingModule;
 
 // Make initialization functions available globally for inline scripts
 window.initialiseSlugs = initialiseSlugs;
@@ -626,6 +628,34 @@ class ApplicationManager {
         await this.loadModule(rule.module);
       }
     }
+
+    // Ordering dashboard: initialize charts module if present
+    try {
+      const odRoot = document.querySelector('#ordering-dashboard');
+      if (odRoot && window.OrderingModule) {
+        if (odRoot.dataset.odInitialized !== 'true') {
+          odRoot.dataset.odInitialized = 'true';
+          console.log('[SmartMenu] Initializing OrderingModule via auto-detect');
+          window.OrderingModule.init(document);
+        }
+      }
+
+      // Observe DOM for later insertion (e.g., Turbo Frames) and initialize once
+      if (!window.__odObserverAttached) {
+        window.__odObserverAttached = true;
+        const observer = new MutationObserver(() => {
+          const el = document.querySelector('#ordering-dashboard');
+          if (el && window.OrderingModule && el.dataset.odInitialized !== 'true') {
+            el.dataset.odInitialized = 'true';
+            console.log('[SmartMenu] Initializing OrderingModule via MutationObserver');
+            try { window.OrderingModule.init(document); } catch (e) { console.warn('OrderingModule init via observer failed', e); }
+          }
+        });
+        observer.observe(document.documentElement || document.body, { childList: true, subtree: true });
+      }
+    } catch (e) {
+      console.warn('[SmartMenu] OrderingModule auto-init failed', e);
+    }
   }
 
   /**
@@ -957,9 +987,67 @@ const turboLoadHandler = async (event) => {
 // Add the event listener
 document.addEventListener('turbo:load', turboLoadHandler);
 
+// Also initialize OrderingModule when a Turbo Frame finishes loading and contains the dashboard
+document.addEventListener('turbo:frame-load', (event) => {
+  try {
+    const frame = event.target;
+    if (!(frame instanceof Element)) return;
+    const el = frame.querySelector && frame.querySelector('#ordering-dashboard');
+    if (el && window.OrderingModule && el.dataset.odInitialized !== 'true') {
+      el.dataset.odInitialized = 'true';
+      console.log('[SmartMenu] Initializing OrderingModule via turbo:frame-load');
+      window.OrderingModule.init(document);
+    }
+  } catch (e) {
+    console.warn('[SmartMenu] OrderingModule turbo:frame-load init failed', e);
+  }
+});
+
 // Log when the script first loads
 console.log('Application JavaScript loaded. Waiting for turbo:load events...');
 console.log('[SmartMenu] Application script loaded');
 console.log('[SmartMenu] Current URL:', window.location.href);
 console.log('[SmartMenu] Bootstrap available:', typeof window.bootstrap !== 'undefined');
 console.log('[SmartMenu] jQuery available:', typeof window.$ !== 'undefined');
+
+// Final safety: on full window load, initialize OrderingModule if ordering dashboard exists
+window.addEventListener('load', () => {
+  try {
+    const odRoot = document.querySelector('#ordering-dashboard');
+    if (odRoot && window.OrderingModule && odRoot.dataset.odInitialized !== 'true') {
+      odRoot.dataset.odInitialized = 'true';
+      console.log('[SmartMenu] Initializing OrderingModule via window load');
+      window.OrderingModule.init(document);
+    }
+    // Retry once shortly after load in case of late DOM injections
+    setTimeout(() => {
+      const el = document.querySelector('#ordering-dashboard');
+      if (el && window.OrderingModule && el.dataset.odInitialized !== 'true') {
+        el.dataset.odInitialized = 'true';
+        console.log('[SmartMenu] Initializing OrderingModule via post-load retry');
+        try { window.OrderingModule.init(document); } catch (e) { console.warn('OrderingModule init retry failed', e); }
+      }
+    }, 250);
+
+    // If we're on the ordering section URL, poll briefly for the dashboard then init once
+    const isOrderingPage = /[?&]section=ordering\b/.test(window.location.search);
+    if (isOrderingPage) {
+      let tries = 0;
+      const max = 30; // ~3s at 100ms
+      const iv = setInterval(() => {
+        tries++;
+        const el = document.querySelector('#ordering-dashboard');
+        if (el && window.OrderingModule && el.dataset.odInitialized !== 'true') {
+          el.dataset.odInitialized = 'true';
+          console.log('[SmartMenu] Initializing OrderingModule via ordering-page poll');
+          try { window.OrderingModule.init(document); } catch (e) { console.warn('OrderingModule init poll failed', e); }
+          clearInterval(iv);
+        } else if (tries >= max) {
+          clearInterval(iv);
+        }
+      }, 100);
+    }
+  } catch (e) {
+    console.warn('[SmartMenu] OrderingModule window-load init failed', e);
+  }
+});

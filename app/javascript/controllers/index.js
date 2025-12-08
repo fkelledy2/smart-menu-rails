@@ -12,6 +12,7 @@ import StripeWalletController from "./stripe_wallet_controller"
 import StateController from "./state_controller"
 import OrderHeaderController from "./order_header_controller"
 import OrderTotalsController from "./order_totals_controller"
+import OrderingController from "./ordering_controller"
 
 application.register("sortable", SortableController)
 application.register("auto-save", AutoSaveController)
@@ -23,5 +24,6 @@ application.register("stripe-wallet", StripeWalletController)
 application.register("state", StateController)
 application.register("order-header", OrderHeaderController)
 application.register("order-totals", OrderTotalsController)
+application.register("ordering", OrderingController)
 
-console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals'])
+console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering'])

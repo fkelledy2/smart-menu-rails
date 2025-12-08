@@ -126,6 +126,16 @@ Rails.application.routes.draw do
       patch 'update_hours', to: 'restaurants#update_hours'
       patch 'update_alcohol_policy', to: 'restaurants#update_alcohol_policy'
       get 'alcohol_status', to: 'restaurants#alcohol_status'
+
+      # Analytics for Ordering dashboard (JSON)
+      get 'analytics/kpis',               to: 'restaurant_analytics#kpis'
+      get 'analytics/timeseries',         to: 'restaurant_analytics#timeseries'
+      get 'analytics/menu_mix',           to: 'restaurant_analytics#menu_mix'
+      get 'analytics/top_items',          to: 'restaurant_analytics#top_items'
+      get 'analytics/staff_performance',  to: 'restaurant_analytics#staff_performance'
+      get 'analytics/table_performance',  to: 'restaurant_analytics#table_performance'
+      get 'analytics/orders',             to: 'restaurant_analytics#orders'
+      get 'analytics/items',              to: 'restaurant_analytics#items'
     end
     
     # Restaurant configuration
