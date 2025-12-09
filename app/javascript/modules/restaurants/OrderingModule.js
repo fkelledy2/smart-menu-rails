@@ -91,16 +91,12 @@ export const OrderingModule = {
     const expOrders = this.q('#od-export-orders');
     const expItems = this.q('#od-export-items');
     expOrders && expOrders.addEventListener('click', () => {
-      if (this.tables?.orders) {
-        const fname = `orders_${(new Date()).toISOString().slice(0,10)}.csv`;
-        this.tables.orders.download('csv', fname);
-      }
+      const url = `/restaurants/${this.restaurantId}/analytics/orders.csv?${this.params()}`;
+      window.open(url, '_blank');
     });
     expItems && expItems.addEventListener('click', () => {
-      if (this.tables?.items) {
-        const fname = `items_${(new Date()).toISOString().slice(0,10)}.csv`;
-        this.tables.items.download('csv', fname);
-      }
+      const url = `/restaurants/${this.restaurantId}/analytics/items.csv?${this.params()}`;
+      window.open(url, '_blank');
     });
     this._odBound = true;
   },
@@ -456,10 +452,19 @@ export const OrderingModule = {
     };
     // Build Tabulator
     this.tables.orders = new window.Tabulator(container, {
-      layout: 'fitColumns',
+      layout: 'fitDataStretch',
       height: 300,
+      rowClick: (e, row) => {
+        try {
+          const data = row.getData();
+          if (data && data.id) {
+            const url = `/restaurants/${this.restaurantId}/ordrs/${data.id}`;
+            window.open(url, '_blank');
+          }
+        } catch(_) {}
+      },
       columns: [
-        { title: 'Date', field: 'created_at', sorter: 'datetime', width: 150 },
+        { title: 'ID', field: 'id', sorter: 'number', width: 90, frozen: true, hozAlign: 'right' },
         { title: 'Status', field: 'status', sorter: 'string', width: 110 },
         { title: 'Menu', field: 'menu', sorter: 'string' },
         { title: 'Table', field: 'table', sorter: 'string' },
@@ -469,9 +474,37 @@ export const OrderingModule = {
         { title: 'Service', field: 'service', hozAlign: 'right', sorter: 'number', formatter: twoDp },
         { title: 'Tip', field: 'tip', hozAlign: 'right', sorter: 'number', formatter: twoDp },
         { title: 'Gross', field: 'gross', hozAlign: 'right', sorter: 'number', formatter: twoDp },
+        { title: 'Date', field: 'created_at', sorter: 'datetime', width: 160, frozen: true, frozenPosition: 'right', hozAlign: 'right', resizable: false, formatter: (cell) => {
+            const v = cell.getValue();
+            if (!v) return '';
+            const d = new Date(v);
+            if (isNaN(d)) return String(v);
+            const pad = (n) => String(n).padStart(2, '0');
+            const yyyy = d.getFullYear();
+            const mm = pad(d.getMonth() + 1);
+            const dd = pad(d.getDate());
+            const hh = pad(d.getHours());
+            const mi = pad(d.getMinutes());
+            return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+          }
+        },
       ],
       data: rows,
       placeholder: 'No orders',
+    });
+    // Server-side sorting reload
+    const ordersSortMap = { created_at: 'created_at', status: 'status', gross: 'gross', net: 'nett', nett: 'nett', tax: 'tax', service: 'service', tip: 'tip' };
+    this.tables.orders.on('sortChanged', async (sorters) => {
+      try {
+        const s = Array.isArray(sorters) && sorters[0] ? sorters[0] : null;
+        const field = s?.field;
+        const dir = (s?.dir || '').toUpperCase();
+        const apiField = ordersSortMap[field] || 'created_at';
+        const url = `/restaurants/${this.restaurantId}/analytics/orders.json?${this.params()}&sort=${encodeURIComponent(apiField)}&dir=${encodeURIComponent(dir)}`;
+        const json = await this.fetchJSON(url);
+        const rows = Array.isArray(json?.rows) ? json.rows : [];
+        this.tables.orders.setData(rows);
+      } catch (e) { console.warn('orders sort reload failed', e); }
     });
   },
 
@@ -489,16 +522,44 @@ export const OrderingModule = {
       return new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
     };
     this.tables.items = new window.Tabulator(container, {
-      layout: 'fitColumns',
+      layout: 'fitDataStretch',
       height: 300,
       columns: [
-        { title: 'Date', field: 'created_at', sorter: 'datetime', width: 150 },
-        { title: 'Order', field: 'ordr_id', sorter: 'number', width: 100 },
+        { title: 'ID', field: 'id', sorter: 'number', width: 90, frozen: true, hozAlign: 'right' },
+        { title: 'Order', field: 'ordr_id', sorter: 'number', width: 110, hozAlign: 'right' },
         { title: 'Item', field: 'item', sorter: 'string' },
         { title: 'Revenue', field: 'revenue', hozAlign: 'right', sorter: 'number', formatter: twoDp },
+        { title: 'Date', field: 'created_at', sorter: 'datetime', width: 160, frozen: true, frozenPosition: 'right', hozAlign: 'right', resizable: false, formatter: (cell) => {
+            const v = cell.getValue();
+            if (!v) return '';
+            const d = new Date(v);
+            if (isNaN(d)) return String(v);
+            const pad = (n) => String(n).padStart(2, '0');
+            const yyyy = d.getFullYear();
+            const mm = pad(d.getMonth() + 1);
+            const dd = pad(d.getDate());
+            const hh = pad(d.getHours());
+            const mi = pad(d.getMinutes());
+            return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+          }
+        },
       ],
       data: rows,
       placeholder: 'No items',
+    });
+    // Server-side sorting reload
+    const itemsSortMap = { created_at: 'created_at', revenue: 'revenue', ordr_id: 'ordr_id' };
+    this.tables.items.on('sortChanged', async (sorters) => {
+      try {
+        const s = Array.isArray(sorters) && sorters[0] ? sorters[0] : null;
+        const field = s?.field;
+        const dir = (s?.dir || '').toUpperCase();
+        const apiField = itemsSortMap[field] || 'created_at';
+        const url = `/restaurants/${this.restaurantId}/analytics/items.json?${this.params()}&sort=${encodeURIComponent(apiField)}&dir=${encodeURIComponent(dir)}`;
+        const json = await this.fetchJSON(url);
+        const rows = Array.isArray(json?.rows) ? json.rows : [];
+        this.tables.items.setData(rows);
+      } catch (e) { console.warn('items sort reload failed', e); }
     });
   },
 };

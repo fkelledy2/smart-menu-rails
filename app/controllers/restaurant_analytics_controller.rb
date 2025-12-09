@@ -1,3 +1,5 @@
+require 'csv'
+
 class RestaurantAnalyticsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_restaurant
@@ -98,6 +100,21 @@ class RestaurantAnalyticsController < ApplicationController
     range = compute_range
     scope = filtered_orders.where(created_at: range[:current_start]..range[:current_end])
 
+    # Sorting
+    sort = params[:sort].presence&.to_s
+    dir  = params[:dir].to_s.upcase == 'ASC' ? 'ASC' : 'DESC'
+    allowed_order_cols = {
+      'created_at' => 'ordrs.created_at',
+      'status'     => 'ordrs.status',
+      'gross'      => 'ordrs.gross',
+      'nett'       => 'ordrs.nett',
+      'tax'        => 'ordrs.tax',
+      'service'    => 'ordrs.service',
+      'tip'        => 'ordrs.tip',
+    }
+    order_sql = allowed_order_cols[sort] || 'ordrs.created_at'
+
+    # Pagination
     page = params[:page].to_i
     page = 1 if page <= 0
     per = params[:per].to_i
@@ -110,7 +127,7 @@ class RestaurantAnalyticsController < ApplicationController
       .left_joins(:menu, :tablesetting)
       .joins('LEFT JOIN employees ON employees.id = ordrs.employee_id')
       .joins('LEFT JOIN users ON users.id = employees.user_id')
-      .order(created_at: :desc)
+      .order(Arel.sql("#{order_sql} #{dir}"))
       .limit(per)
       .offset(offset)
       .select('ordrs.id, ordrs.created_at, ordrs.status, ordrs.nett, ordrs.tax, ordrs.service, ordrs.tip, ordrs.gross, menus.name AS menu_name, tablesettings.name AS table_name, users.email AS employee_email')
@@ -131,11 +148,24 @@ class RestaurantAnalyticsController < ApplicationController
       }
     end
 
-    render json: {
-      period: period_payload.merge(range),
-      rows: rows,
-      pagination: { page: page, per: per, total_pages: total_pages, total_count: total_count }
-    }
+    respond_to do |format|
+      format.json do
+        render json: {
+          period: period_payload.merge(range),
+          rows: rows,
+          pagination: { page: page, per: per, total_pages: total_pages, total_count: total_count }
+        }
+      end
+      format.csv do
+        csv = CSV.generate(headers: true) do |c|
+          c << %w[id created_at status menu table employee net tax service tip gross]
+          rows.each do |row|
+            c << [row[:id], row[:created_at], row[:status], row[:menu], row[:table], row[:employee], row[:net], row[:tax], row[:service], row[:tip], row[:gross]]
+          end
+        end
+        send_data csv, filename: "orders_#{Date.today}.csv"
+      end
+    end
   end
 
   def items
@@ -143,6 +173,17 @@ class RestaurantAnalyticsController < ApplicationController
     range = compute_range
     scope = filtered_orders.where(created_at: range[:current_start]..range[:current_end])
 
+    # Sorting
+    sort = params[:sort].presence&.to_s
+    dir  = params[:dir].to_s.upcase == 'ASC' ? 'ASC' : 'DESC'
+    allowed_item_cols = {
+      'created_at' => 'ordritems.created_at',
+      'revenue'    => 'ordritems.ordritemprice',
+      'ordr_id'    => 'ordritems.ordr_id',
+    }
+    order_sql = allowed_item_cols[sort] || 'ordritems.created_at'
+
+    # Pagination
     page = params[:page].to_i
     page = 1 if page <= 0
     per = params[:per].to_i
@@ -157,7 +198,7 @@ class RestaurantAnalyticsController < ApplicationController
     offset = (page - 1) * per
 
     rows_sql = base
-      .order('ordritems.created_at DESC')
+      .order(Arel.sql("#{order_sql} #{dir}"))
       .limit(per)
       .offset(offset)
       .select('ordritems.id, ordritems.ordr_id, ordritems.created_at, menuitems.name AS item_name, ordritems.ordritemprice AS price')
@@ -166,11 +207,24 @@ class RestaurantAnalyticsController < ApplicationController
       { id: r.id, ordr_id: r.ordr_id, created_at: r.created_at, item: r.item_name, revenue: r.price.to_f }
     end
 
-    render json: {
-      period: period_payload.merge(range),
-      rows: rows,
-      pagination: { page: page, per: per, total_pages: total_pages, total_count: total_count }
-    }
+    respond_to do |format|
+      format.json do
+        render json: {
+          period: period_payload.merge(range),
+          rows: rows,
+          pagination: { page: page, per: per, total_pages: total_pages, total_count: total_count }
+        }
+      end
+      format.csv do
+        csv = CSV.generate(headers: true) do |c|
+          c << %w[id ordr_id created_at item revenue]
+          rows.each do |row|
+            c << [row[:id], row[:ordr_id], row[:created_at], row[:item], row[:revenue]]
+          end
+        end
+        send_data csv, filename: "items_#{Date.today}.csv"
+      end
+    end
   end
 
   private
