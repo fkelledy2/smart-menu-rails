@@ -1,5 +1,18 @@
 <%= render 'shared/currency' %>
 
+<%# Optional debug output for allergen query/results: ?debug=allergyns %>
+<% if params[:debug] == 'allergyns' && defined?(@debug_allergyns_info) && @debug_allergyns_info.present? %>
+  <div class="container my-2">
+    <div class="alert alert-warning small" role="alert">
+      <strong>Allergyns Debug</strong>
+      <div><strong>SQL:</strong> <code><%= @debug_allergyns_info[:sql] %></code></div>
+      <div><strong>Count:</strong> <%= @debug_allergyns_info[:count] %></div>
+      <div><strong>IDs:</strong> <%= Array(@debug_allergyns_info[:ids]).join(', ') %></div>
+      <div><strong>Names:</strong> <%= Array(@debug_allergyns_info[:names]).join(', ') %></div>
+    </div>
+  </div>
+<% end %>
+
 <%
   # Determine view type: allow explicit override via params[:view]
   # - ?view=customer forces customer view

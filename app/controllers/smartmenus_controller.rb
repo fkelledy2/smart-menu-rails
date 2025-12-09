@@ -36,7 +36,38 @@ class SmartmenusController < ApplicationController
     # Allows staff to preview menu as customers see it
     @force_customer_view = params[:view] == 'customer'
 
-    @allergyns = Allergyn.where(restaurant_id: @menu.restaurant_id)
+    # Allergens must be those actually used by items in this menu
+    allergyns_relation = @menu.allergyns
+                              .where(archived: false)
+                              .where(status: :active)
+                              .order(Arel.sql('allergyns.sequence NULLS LAST, allergyns.name'))
+
+    Rails.logger.warn("[SmartmenusController#show] allergyns SQL: #{allergyns_relation.to_sql}")
+    @allergyns = allergyns_relation.to_a
+    Rails.logger.warn(
+      "[SmartmenusController#show] allergyns result count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}"
+    )
+
+    @debug_allergyns_info = {
+      sql: allergyns_relation.to_sql,
+      count: @allergyns.size,
+      ids: @allergyns.map(&:id),
+      names: @allergyns.map(&:name),
+    }
+
+    if @allergyns.empty?
+      fallback_relation = @restaurant.allergyns
+                                     .where(archived: false)
+                                     .where(status: :active)
+                                     .order(Arel.sql('allergyns.sequence NULLS LAST, allergyns.name'))
+      Rails.logger.warn("[SmartmenusController#show] allergyns empty for menu; using restaurant fallback SQL: #{fallback_relation.to_sql}")
+      @allergyns = fallback_relation.to_a
+      Rails.logger.warn(
+        "[SmartmenusController#show] fallback allergyns count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}"
+      )
+      @debug_allergyns_info[:fallback_sql] = fallback_relation.to_sql
+      @debug_allergyns_info[:fallback_count] = @allergyns.size
+    end
 
     if @tablesetting
       @openOrder = Ordr.where(
