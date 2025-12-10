@@ -146,22 +146,13 @@
                 </span>
               <% end %>
             </div>
-            <div class="dropdown">
-              <button class="btn-2025 btn-2025-ghost btn-2025-sm"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                      data-testid="menu-actions-<%= menu.id %>-btn">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                  <%= link_to edit_restaurant_menu_path(restaurant, menu), class: 'dropdown-item', data: { turbo_frame: '_top', testid: "edit-menu-#{menu.id}-btn" } do %>
-                    <i class="bi bi-pencil"></i> <%= t('.edit', default: 'Edit') %>
-                  <% end %>
-                </li>
-              </ul>
-            </div>
+            <%= link_to edit_restaurant_menu_path(restaurant, menu),
+                class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                title: t('.edit', default: 'Edit'),
+                aria: { label: t('.edit', default: 'Edit') },
+                data: { turbo_frame: '_top', testid: "edit-menu-#{menu.id}-btn" } do %>
+              <i class="bi bi-pencil"></i>
+            <% end %>
           </div>
         </div>
       <% end %>

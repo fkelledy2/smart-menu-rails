@@ -75,25 +75,45 @@
       <%= t('.current_sizes', default: 'Current Sizes') %>
     </h2>
 
-    <div class="size-list">
-      <% restaurant.sizes.where(archived: false).where.not(status: :archived).order(:sequence).each do |size| %>
-        <div class="size-item">
-          <div class="size-icon">
-            <i class="bi bi-rulers"></i>
-          </div>
-          <div class="size-info">
-            <h5><%= size.name %></h5>
-            <% if size.description.present? %>
-              <p class="text-muted small"><%= size.description %></p>
-            <% end %>
-          </div>
-          <%= link_to edit_restaurant_size_path(restaurant, size),
-              class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-              data: { turbo_frame: '_top' } do %>
-            <i class="bi bi-pencil"></i>
+    <!-- Desktop Table View (styled like Table Settings) -->
+    <div class="table-responsive sizes-table-view">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th class="w-40px"></th>
+            <th><%= t('.name', default: 'Name') %></th>
+            <th class="text-end">
+              <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                <i class="bi bi-gear"></i>
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% restaurant.sizes.where(archived: false).where.not(status: :archived).order(:sequence).each do |size| %>
+            <tr>
+              <td class="w-40px">
+                <i class="bi bi-grip-vertical text-muted"></i>
+              </td>
+              <td>
+                <strong><%= size.name %></strong>
+                <% if size.description.present? %>
+                  <div class="text-sm text-muted"><%= size.description %></div>
+                <% end %>
+              </td>
+              <td class="text-end">
+                <%= link_to edit_restaurant_size_path(restaurant, size),
+                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                    title: t('.edit', default: 'Edit'),
+                    aria: { label: t('.edit', default: 'Edit') },
+                    data: { turbo_frame: '_top' } do %>
+                  <i class="bi bi-pencil"></i>
+                <% end %>
+              </td>
+            </tr>
           <% end %>
-        </div>
-      <% end %>
+        </tbody>
+      </table>
     </div>
   </div>
 <% end %>

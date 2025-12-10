@@ -76,30 +76,50 @@
       <%= t('.current_allergens', default: 'Current Allergens') %>
     </h2>
 
-    <div class="allergen-list">
-      <% restaurant.allergyns.where(archived: false).order(:sequence).each do |allergen| %>
-        <div class="allergen-item">
-          <div class="allergen-icon">
-            <i class="bi bi-exclamation-triangle"></i>
-          </div>
-          <div class="allergen-info">
-            <h5>
-              <%= allergen.name %>
-              <% if allergen.status == 'inactive' %>
-                <span class="badge bg-secondary ms-2"><%= t('.inactive', default: 'Inactive') %></span>
-              <% end %>
-            </h5>
-            <% if allergen.description.present? %>
-              <p class="text-muted small"><%= allergen.description %></p>
-            <% end %>
-          </div>
-          <%= link_to edit_restaurant_allergyn_path(restaurant, allergen),
-              class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-              data: { turbo_frame: '_top' } do %>
-            <i class="bi bi-pencil"></i>
+    <!-- Desktop Table View (styled like Table Settings) -->
+    <div class="table-responsive allergens-table-view">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th class="w-40px"></th>
+            <th><%= t('.name', default: 'Name') %></th>
+            <th class="text-end">
+              <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                <i class="bi bi-gear"></i>
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% restaurant.allergyns.where(archived: false).order(:sequence).each do |allergen| %>
+            <tr>
+              <td class="w-40px">
+                <i class="bi bi-grip-vertical text-muted"></i>
+              </td>
+              <td>
+                <strong>
+                  <%= allergen.name %>
+                  <% if allergen.status == 'inactive' %>
+                    <span class="badge bg-secondary ms-2"><%= t('.inactive', default: 'Inactive') %></span>
+                  <% end %>
+                </strong>
+                <% if allergen.description.present? %>
+                  <div class="text-sm text-muted"><%= allergen.description %></div>
+                <% end %>
+              </td>
+              <td class="text-end">
+                <%= link_to edit_restaurant_allergyn_path(restaurant, allergen),
+                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                    title: t('.edit', default: 'Edit'),
+                    aria: { label: t('.edit', default: 'Edit') },
+                    data: { turbo_frame: '_top' } do %>
+                  <i class="bi bi-pencil"></i>
+                <% end %>
+              </td>
+            </tr>
           <% end %>
-        </div>
-      <% end %>
+        </tbody>
+      </table>
     </div>
   </div>
 <% end %>

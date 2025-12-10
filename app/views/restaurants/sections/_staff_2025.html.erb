@@ -67,38 +67,38 @@
   </h2>
 
   <% if restaurant.employees.any? %>
-    <!-- Desktop Table View -->
+    <!-- Desktop Table View (styled like Menu Sections list) -->
     <div class="table-responsive staff-table-view">
       <table class="table table-hover align-middle">
         <thead>
           <tr>
+            <th class="w-40px"></th>
             <th><%= t('.name', default: 'Name') %></th>
-            <th><%= t('.email', default: 'Email') %></th>
-            <th><%= t('.role', default: 'Role') %></th>
-            <th><%= t('.status', default: 'Status') %></th>
-            <th><%= t('.joined', default: 'Joined') %></th>
-            <th class="text-end"><%= t('.actions', default: 'Actions') %></th>
+            <th class="text-end"><%= t('.role', default: 'Role') %></th>
+            <th class="text-end">
+              <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                <i class="bi bi-gear"></i>
+              </span>
+            </th>
           </tr>
         </thead>
         <tbody>
           <% restaurant.employees.includes(:user).order(created_at: :desc).each do |employee| %>
             <tr>
+              <td class="w-40px">
+                <i class="bi bi-grip-vertical text-muted"></i>
+              </td>
               <td>
                 <div class="d-flex align-items-center gap-2">
                   <div class="avatar-circle">
                     <%= employee.user&.email&.first&.upcase || '?' %>
                   </div>
-                  <div>
-                    <div class="fw-semibold">
-                      <%= employee.user&.email&.split('@')&.first || t('.unnamed', default: 'Unnamed') %>
-                    </div>
+                  <div class="fw-semibold">
+                    <%= employee.user&.email&.split('@')&.first || t('.unnamed', default: 'Unnamed') %>
                   </div>
                 </div>
               </td>
-              <td class="text-muted">
-                <%= employee.user&.email || '-' %>
-              </td>
-              <td>
+              <td class="text-end">
                 <% badge_class = case employee.role
                                  when 'manager' then 'bg-primary'
                                  when 'staff' then 'bg-info'
@@ -109,34 +109,14 @@
                   <%= employee.role&.titleize || t('.no_role', default: 'No role') %>
                 </span>
               </td>
-              <td>
-                <% if employee.active? %>
-                  <span class="badge bg-success">
-                    <i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %>
-                  </span>
-                <% else %>
-                  <span class="badge bg-secondary">
-                    <i class="bi bi-dash-circle"></i> <%= t('.inactive', default: 'Inactive') %>
-                  </span>
-                <% end %>
-              </td>
-              <td class="text-muted">
-                <%= l(employee.created_at, format: :short) if employee.created_at %>
-              </td>
               <td class="text-end">
-                <div class="btn-group">
-                  <%= link_to edit_restaurant_employee_path(restaurant, employee),
-                      class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
-                    <i class="bi bi-pencil"></i>
-                  <% end %>
-
-                  <%= link_to restaurant_employee_path(restaurant, employee),
-                      method: :delete,
-                      data: { confirm: t('.confirm_remove', default: 'Remove this staff member?') },
-                      class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
-                    <i class="bi bi-trash"></i>
-                  <% end %>
-                </div>
+                <%= link_to edit_restaurant_employee_path(restaurant, employee),
+                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                    title: t('.edit', default: 'Edit'),
+                    aria: { label: t('.edit', default: 'Edit') },
+                    data: { turbo_frame: '_top' } do %>
+                  <i class="bi bi-pencil"></i>
+                <% end %>
               </td>
             </tr>
           <% end %>
@@ -164,15 +144,9 @@
             </div>
             <div class="btn-group">
               <%= link_to edit_restaurant_employee_path(restaurant, employee),
-                  class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
+                  class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                  data: { turbo_frame: '_top' } do %>
                 <i class="bi bi-pencil"></i>
-              <% end %>
-
-              <%= link_to restaurant_employee_path(restaurant, employee),
-                  method: :delete,
-                  data: { confirm: t('.confirm_remove', default: 'Remove this staff member?') },
-                  class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
-                <i class="bi bi-trash"></i>
               <% end %>
             </div>
           </div>

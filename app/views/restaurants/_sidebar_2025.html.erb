@@ -102,22 +102,22 @@
       <span><%= t('.sizes', default: 'Sizes') %></span>
     <% end %>
 
-    <%= link_to edit_restaurant_path(restaurant, section: 'import'),
-        class: "sidebar-link #{'active' if current_section == 'import'} #{disabled_class_for('import', onboarding_next)}",
-        data: { testid: 'sidebar-import-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('import', onboarding_next) } do %>
-      <i class="bi bi-file-earmark-arrow-up"></i>
-      <span><%= t('.import', default: 'Import') %></span>
+    <%= link_to edit_restaurant_path(restaurant, section: 'settings'),
+        class: "sidebar-link #{'active' if current_section == 'settings'} #{disabled_class_for('settings', onboarding_next)}",
+        data: { testid: 'sidebar-settings-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('settings', onboarding_next) } do %>
+      <i class="bi bi-toggles"></i>
+      <span><%= t('.settings', default: 'Settings') %></span>
     <% end %>
   </div>
 
-  <!-- TABLES SECTION -->
-  <% if @current_employee && @current_employee.role == 'manager' %>
-    <div class="sidebar-section">
-      <div class="sidebar-section-title">
-        <i class="bi bi-layout-wtf"></i>
-        <%= t('.tables', default: 'TABLES') %>
-      </div>
+  <!-- OPERATIONS (Tables + Staff) -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">
+      <i class="bi bi-gear-wide-connected"></i>
+      <%= t('.operations', default: 'OPERATIONS') %>
+    </div>
 
+    <% if @current_employee && @current_employee.role == 'manager' %>
       <%= link_to edit_restaurant_path(restaurant, section: 'tables'),
           class: "sidebar-link #{'active' if current_section == 'tables'} #{disabled_class_for('tables', onboarding_next)}",
           data: { testid: 'sidebar-tables-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('tables', onboarding_next) } do %>
@@ -127,15 +127,7 @@
           <span class="sidebar-link-badge"><%= tables_count %></span>
         <% end %>
       <% end %>
-    </div>
-  <% end %>
-
-  <!-- TEAM SECTION -->
-  <div class="sidebar-section">
-    <div class="sidebar-section-title">
-      <i class="bi bi-people"></i>
-      <%= t('.team', default: 'TEAM') %>
-    </div>
+    <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'staff'),
         class: "sidebar-link #{'active' if current_section == 'staff'} #{disabled_class_for('staff', onboarding_next)}",
@@ -146,14 +138,6 @@
         <span class="sidebar-link-badge"><%= staff_count %></span>
       <% end %>
     <% end %>
-  </div>
-
-  <!-- FINANCIALS SECTION -->
-  <div class="sidebar-section">
-    <div class="sidebar-section-title">
-      <i class="bi bi-cash-stack"></i>
-      <%= t('.financials', default: 'FINANCIALS') %>
-    </div>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'taxes_and_tips'),
         class: "sidebar-link #{'active' if current_section == 'taxes_and_tips'} #{disabled_class_for('taxes_and_tips', onboarding_next)}",
@@ -176,22 +160,6 @@
         <span><%= t('.ordering', default: 'Ordering') %></span>
       <% end %>
     <% end %>
-  </div>
-
-  <!-- SETUP SECTION -->
-  <div class="sidebar-section">
-    <div class="sidebar-section-title">
-      <i class="bi bi-gear"></i>
-      <%= t('.setup', default: 'SETUP') %>
-    </div>
-
-    <%= link_to edit_restaurant_path(restaurant, section: 'settings'),
-        class: "sidebar-link #{'active' if current_section == 'settings'} #{disabled_class_for('settings', onboarding_next)}",
-        data: { testid: 'sidebar-settings-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('settings', onboarding_next) } do %>
-      <i class="bi bi-toggles"></i>
-      <span><%= t('.settings', default: 'Settings') %></span>
-    <% end %>
-
 
     <%= link_to edit_restaurant_path(restaurant, section: 'jukebox'),
         class: "sidebar-link #{'active' if current_section == 'jukebox'} #{disabled_class_for('jukebox', onboarding_next)}",
@@ -200,15 +168,17 @@
       <span><%= t('.jukebox', default: 'Jukebox') %></span>
     <% end %>
 
-    <% if @current_employee && @current_employee.role == 'manager' %>
-      <%= link_to edit_restaurant_path(restaurant, section: 'advanced'),
-          class: "sidebar-link #{'active' if current_section == 'advanced'} #{disabled_class_for('advanced', onboarding_next)}",
-          data: { testid: 'sidebar-advanced-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('advanced', onboarding_next) } do %>
-        <i class="bi bi-sliders"></i>
-        <span><%= t('.advanced', default: 'Advanced') %></span>
-      <% end %>
+    <%= link_to edit_restaurant_path(restaurant, section: 'wifi'),
+        class: "sidebar-link #{'active' if current_section == 'wifi'} #{disabled_class_for('wifi', onboarding_next)}",
+        data: { testid: 'sidebar-wifi-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('wifi', onboarding_next) } do %>
+      <i class="bi bi-wifi"></i>
+      <span><%= t('.wifi', default: 'WiFi') %></span>
     <% end %>
   </div>
+
+  
+
+  
 </aside>
 
 <!-- Mobile Overlay -->

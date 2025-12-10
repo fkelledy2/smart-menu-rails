@@ -1,0 +1,87 @@
+<%#
+  WiFi Configuration Section
+  Moved out from Settings into its own section
+%>
+
+<% restaurant = local_assigns[:restaurant] || @restaurant %>
+
+<!-- WiFi Configuration -->
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-wifi"></i>
+    <%= t('.wifi_configuration', default: 'WiFi Configuration') %>
+  </h2>
+
+  <p class="text-muted mb-4">
+    <%= t('.wifi_description', default: 'Configure WiFi settings to generate QR codes for customer access') %>
+  </p>
+
+  <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
+    <div class="row g-4">
+      <!-- WiFi SSID -->
+      <div class="col-md-6">
+        <div class="form-group-2025">
+          <%= form.label :wifissid, class: 'form-label-2025' do %>
+            <%= t('activerecord.attributes.restaurant.wifissid', default: 'WiFi Network Name (SSID)') %>
+          <% end %>
+          <%= form.text_field :wifissid,
+              class: 'form-control-2025',
+              placeholder: t('.ssid_placeholder', default: 'Enter your WiFi network name') %>
+          <div class="form-help-2025">
+            <%= t('.ssid_help', default: 'The name of your WiFi network that customers will connect to') %>
+          </div>
+        </div>
+      </div>
+
+      <!-- WiFi Password -->
+      <div class="col-md-6">
+        <div class="form-group-2025">
+          <%= form.label :wifiPassword, class: 'form-label-2025' do %>
+            <%= t('activerecord.attributes.restaurant.wifiPassword', default: 'WiFi Password') %>
+          <% end %>
+          <%= form.password_field :wifiPassword,
+              class: 'form-control-2025',
+              placeholder: t('.password_placeholder', default: 'Enter WiFi password') %>
+          <div class="form-help-2025">
+            <%= t('.password_help', default: 'The password customers will need to connect') %>
+          </div>
+        </div>
+      </div>
+
+      <!-- WiFi Encryption Type -->
+      <div class="col-md-6">
+        <div class="form-group-2025">
+          <%= form.label :wifiEncryptionType, class: 'form-label-2025' do %>
+            <%= t('activerecord.attributes.restaurant.wifiEncryptionType', default: 'Encryption Type') %>
+          <% end %>
+          <%= form.select :wifiEncryptionType,
+              options_for_select(Restaurant.wifiEncryptionTypes.keys.to_a, form.object.wifiEncryptionType),
+              { prompt: t('.select_encryption', default: 'Select encryption...') },
+              { class: 'form-control-2025', **select_data_attributes(:default) } %>
+          <div class="form-help-2025">
+            <%= t('.encryption_help', default: 'The security protocol used by your WiFi network') %>
+          </div>
+        </div>
+      </div>
+
+      <!-- WiFi Hidden -->
+      <div class="col-md-6">
+        <div class="form-group-2025">
+          <%= form.label :wifiHidden, class: 'form-label-2025' do %>
+            <%= t('activerecord.attributes.restaurant.wifiHidden', default: 'Hidden Network') %>
+          <% end %>
+          <%= form.select :wifiHidden,
+              [
+                [t('.no', default: 'No'), false],
+                [t('.yes', default: 'Yes'), true]
+              ],
+              { prompt: t('.select_option', default: 'Select option...') },
+              { class: 'form-control-2025', **select_data_attributes(:default) } %>
+          <div class="form-help-2025">
+            <%= t('.hidden_help', default: 'Whether the network name is broadcast publicly') %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

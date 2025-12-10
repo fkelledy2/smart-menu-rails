@@ -68,78 +68,41 @@
       <%= t('.table_settings', default: 'Table Settings') %>
     </h2>
 
-    <!-- Desktop Table View -->
+    <!-- Desktop Table View (styled like Menu Sections list) -->
     <div class="table-responsive tables-table-view">
       <table class="table table-hover align-middle">
         <thead>
           <tr>
-            <th><%= t('.table_number', default: 'Table #') %></th>
+            <th class="w-40px"></th>
             <th><%= t('.table_name', default: 'Name') %></th>
-            <th><%= t('.capacity', default: 'Capacity') %></th>
-            <th><%= t('.status', default: 'Status') %></th>
-            <th><%= t('.qr_code', default: 'QR Code') %></th>
-            <th class="text-end"><%= t('.actions', default: 'Actions') %></th>
+            <th class="text-end"><%= t('.capacity', default: 'Seats') %></th>
+            <th class="text-end">
+              <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                <i class="bi bi-gear"></i>
+              </span>
+            </th>
           </tr>
         </thead>
         <tbody>
           <% restaurant.tablesettings.order(:name).each do |table| %>
             <tr>
-              <td>
-                <span class="badge bg-primary fs-6"><%= table.name %></span>
+              <td class="w-40px">
+                <i class="bi bi-grip-vertical text-muted"></i>
               </td>
               <td>
                 <strong><%= table.name %></strong>
               </td>
-              <td>
-                <i class="bi bi-people"></i>
-                <%= table.capacity || '-' %>
-              </td>
-              <td>
-                <% if table.free? %>
-                  <span class="badge bg-success">
-                    <i class="bi bi-check-circle"></i> <%= t('.free', default: 'Free') %>
-                  </span>
-                <% elsif table.occupied? %>
-                  <span class="badge bg-warning">
-                    <i class="bi bi-person-fill"></i> <%= t('.occupied', default: 'Occupied') %>
-                  </span>
-                <% elsif table.archived? %>
-                  <span class="badge bg-secondary">
-                    <i class="bi bi-archive"></i> <%= t('.archived', default: 'Archived') %>
-                  </span>
-                <% end %>
-              </td>
-              <td>
-                <% table_smartmenu = Smartmenu.find_by(tablesetting_id: table.id) %>
-                <% if table_smartmenu&.slug %>
-                  <%= link_to smartmenu_path(table_smartmenu.slug),
-                      class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                      target: '_blank',
-                      title: t('.view_qr_code', default: 'View QR Code for this table') do %>
-                    <i class="bi bi-qr-code"></i> <%= t('.view', default: 'View') %>
-                  <% end %>
-                <% else %>
-                  <button class="btn-2025 btn-2025-ghost btn-2025-sm"
-                          disabled
-                          title="<%= t('.no_smartmenu', default: 'No QR code generated yet') %>">
-                    <i class="bi bi-qr-code"></i> <%= t('.view', default: 'View') %>
-                  </button>
-                <% end %>
+              <td class="text-end">
+                <%= table.capacity.present? ? table.capacity : '-' %>
               </td>
               <td class="text-end">
-                <div class="btn-group">
-                  <%= link_to edit_restaurant_tablesetting_path(restaurant, table),
-                      class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
-                    <i class="bi bi-pencil"></i>
-                  <% end %>
-
-                  <%= link_to restaurant_tablesetting_path(restaurant, table),
-                      method: :delete,
-                      data: { confirm: t('.confirm_delete', default: 'Delete this table?') },
-                      class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
-                    <i class="bi bi-trash"></i>
-                  <% end %>
-                </div>
+                <%= link_to edit_restaurant_tablesetting_path(restaurant, table),
+                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                    title: t('.edit', default: 'Edit'),
+                    aria: { label: t('.edit', default: 'Edit') },
+                    data: { turbo_frame: '_top' } do %>
+                  <i class="bi bi-pencil"></i>
+                <% end %>
               </td>
             </tr>
           <% end %>
@@ -169,47 +132,10 @@
                   class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
                 <i class="bi bi-pencil"></i>
               <% end %>
-
-              <%= link_to restaurant_tablesetting_path(restaurant, table),
-                  method: :delete,
-                  data: { confirm: t('.confirm_delete', default: 'Delete this table?') },
-                  class: 'btn-2025 btn-2025-ghost btn-2025-sm text-danger' do %>
-                <i class="bi bi-trash"></i>
-              <% end %>
             </div>
           </div>
 
-          <div class="d-flex gap-2 align-items-center flex-wrap">
-            <% if table.free? %>
-              <span class="badge bg-success">
-                <i class="bi bi-check-circle"></i> <%= t('.free', default: 'Free') %>
-              </span>
-            <% elsif table.occupied? %>
-              <span class="badge bg-warning">
-                <i class="bi bi-person-fill"></i> <%= t('.occupied', default: 'Occupied') %>
-              </span>
-            <% elsif table.archived? %>
-              <span class="badge bg-secondary">
-                <i class="bi bi-archive"></i> <%= t('.archived', default: 'Archived') %>
-              </span>
-            <% end %>
-
-            <% table_smartmenu = Smartmenu.find_by(tablesetting_id: table.id) %>
-            <% if table_smartmenu&.slug %>
-              <%= link_to smartmenu_path(table_smartmenu.slug),
-                  class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                  target: '_blank',
-                  title: t('.view_qr_code', default: 'View QR Code for this table') do %>
-                <i class="bi bi-qr-code"></i> <%= t('.view_qr', default: 'View QR') %>
-              <% end %>
-            <% else %>
-              <button class="btn-2025 btn-2025-ghost btn-2025-sm"
-                      disabled
-                      title="<%= t('.no_smartmenu', default: 'No QR code generated yet') %>">
-                <i class="bi bi-qr-code"></i> <%= t('.view_qr', default: 'View QR') %>
-              </button>
-            <% end %>
-          </div>
+          <div class="d-flex gap-2 align-items-center flex-wrap"></div>
         </div>
       <% end %>
     </div>

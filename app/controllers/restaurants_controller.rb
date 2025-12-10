@@ -1143,6 +1143,8 @@ class RestaurantsController < ApplicationController
       'tables_2025'
     when 'ordering'
       'ordering_2025'
+    when 'wifi'
+      'wifi_2025'
     when 'advanced'
       'advanced_2025'
     else
