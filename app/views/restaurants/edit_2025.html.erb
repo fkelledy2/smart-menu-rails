@@ -38,6 +38,26 @@
 
     <!-- Main Content Area -->
     <div class="sidebar-main-content">
+      <% if @onboarding_next.present? %>
+        <div class="alert alert-warning d-flex align-items-start gap-2 mb-3" role="alert" data-testid="onboarding-guidance">
+          <i class="bi bi-exclamation-triangle-fill mt-1"></i>
+          <div>
+            <% required_text = case @onboarding_next
+              when 'details'
+                t('.onboarding_need_details', default: 'To continue setup, please add a description, select a currency, and provide your address/location.')
+              when 'tables'
+                t('.onboarding_need_tables', default: 'Add at least one table to your restaurant to continue setup.')
+              when 'taxes_and_tips'
+                t('.onboarding_need_taxes_tips', default: 'Add at least one tax and one tip to continue setup.')
+              when 'localization'
+                t('.onboarding_need_localization', default: 'Add at least one language and set a default language to continue setup.')
+              else
+                t('.onboarding_continue', default: 'Continue the required setup to proceed.')
+              end %>
+            <strong><%= t('.onboarding_required_step', default: 'Required step') %>:</strong> <%= required_text %>
+          </div>
+        </div>
+      <% end %>
       <%= turbo_frame_tag 'restaurant_content' do %>
         <%
           partial_name = case @current_section
@@ -87,6 +107,13 @@
 
     .text-gray-500 {
       color: var(--color-gray-500);
+    }
+
+    /* Visually disable links that are not allowed during onboarding */
+    .sidebar-2025 .sidebar-link.link-disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      cursor: not-allowed;
     }
   </style>
 <% end %>

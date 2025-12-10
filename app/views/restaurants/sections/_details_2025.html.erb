@@ -6,7 +6,7 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
 <!-- Quick Actions Card -->
-<div class="quick-actions-card">
+<div class="quick-actions-card<%= ' is-disabled' if restaurant.onboarding_quick_actions_blocked? %>">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions', default: 'Quick Actions') %>
@@ -15,14 +15,18 @@
   <div class="quick-actions-grid">
     <%= link_to new_restaurant_menu_path(restaurant),
         class: 'quick-action-btn',
-        data: { turbo_frame: '_top' } do %>
+        data: { turbo_frame: '_top' },
+        aria: { disabled: restaurant.onboarding_quick_actions_blocked? },
+        tabindex: (restaurant.onboarding_quick_actions_blocked? ? -1 : nil) do %>
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.new_menu', default: 'New Menu') %></span>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'import'),
         class: 'quick-action-btn',
-        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' },
+        aria: { disabled: restaurant.onboarding_quick_actions_blocked? },
+        tabindex: (restaurant.onboarding_quick_actions_blocked? ? -1 : nil) do %>
       <i class="bi bi-file-earmark-arrow-up"></i>
       <span><%= t('.import_menu', default: 'Import Menu') %></span>
     <% end %>
@@ -38,14 +42,14 @@
       <% if restaurant.respond_to?(:active?) ? restaurant.active? : (restaurant.status.to_s == 'active' || restaurant.status_before_type_cast.to_i == 1) %>
         <%= hidden_field_tag 'restaurant[status]', 'inactive' %>
         <%= hidden_field_tag :status, 'inactive' %>
-        <button type="submit" class="quick-action-btn quick-action-btn-secondary" data-testid="restaurant-status-toggle-btn">
+        <button type="submit" class="quick-action-btn quick-action-btn-secondary" data-testid="restaurant-status-toggle-btn" <%= 'disabled' if restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>>
           <i class="bi bi-toggle2-off"></i>
           <span><%= t('.active', default: 'Active') %></span>
         </button>
       <% else %>
         <%= hidden_field_tag 'restaurant[status]', 'active' %>
         <%= hidden_field_tag :status, 'active' %>
-        <button type="submit" class="quick-action-btn" data-testid="restaurant-status-toggle-btn">
+        <button type="submit" class="quick-action-btn" data-testid="restaurant-status-toggle-btn" <%= 'disabled' if restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>>
           <i class="bi bi-toggle2-on"></i>
           <span><%= t('.inactive', default: 'Inactive') %></span>
         </button>
@@ -116,7 +120,19 @@
     <%= t('.restaurant_details', default: 'Restaurant Details') %>
   </h2>
 
-  <%= restaurant_form_with(restaurant, auto_save: true, validate: true, html: { data: { testid: 'restaurant-details-form' } }) do |form| %>
+  <%= restaurant_form_with(
+        restaurant,
+        auto_save: true,
+        validate: true,
+        html: {
+          data: {
+            testid: 'restaurant-details-form',
+            controller: 'auto-save',
+            auto_save_url_value: restaurant_path(restaurant),
+            auto_save_method_value: 'patch'
+          }
+        }
+      ) do |form| %>
     <div class="form-group-2025 mb-4">
       <%= form.label :name, class: 'form-label-2025' do %>
         <%= t('activerecord.attributes.restaurant.name', default: 'Restaurant Name') %>
@@ -133,8 +149,9 @@
     </div>
 
     <div class="form-group-2025 mb-4">
-      <%= form.label :description, class: 'form-label-2025' do %>
+      <%= form.label :description, class: 'form-label-2025 d-inline-flex align-items-center gap-2' do %>
         <%= t('activerecord.attributes.restaurant.description', default: 'Description') %>
+        <span class="form-autosave-inline small text-muted"></span>
       <% end %>
       <%= form.text_area :description,
           class: 'form-control-2025',
@@ -147,50 +164,13 @@
     </div>
 
     <div class="form-group-2025 mb-4">
-      <%= form.label :currency, class: 'form-label-2025' do %>
+      <%= form.label :currency, class: 'form-label-2025 d-inline-flex align-items-center gap-2' do %>
         <%= t('activerecord.attributes.restaurant.currency', default: 'Currency') %>
+        <span class="form-autosave-inline small text-muted"></span>
       <% end %>
       <%= currency_select(form, :currency) %>
       <div class="form-help-2025">
         <%= t('.currency_help', default: 'Currency for all prices') %>
-      </div>
-    </div>
-  <% end %>
-</div>
-
-<!-- Image Context Details Section -->
-<div class="content-card-2025" data-testid="image-context-card">
-  <h2 class="content-card-title">
-    <i class="bi bi-image"></i>
-    <%= t('.image_context_details', default: 'Image Context Details') %>
-  </h2>
-
-  <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
-    <div class="form-group-2025 mb-4">
-      <%= form.label :imagecontext, class: 'form-label-2025' do %>
-        <%= t('activerecord.attributes.restaurant.imagecontext', default: 'Image Context') %>
-      <% end %>
-      <%= form.text_area :imagecontext,
-          class: 'form-control-2025',
-          rows: 3,
-          placeholder: t('.imagecontext_placeholder', default: 'e.g., Modern Italian restaurant with rustic decor...'),
-          data: { testid: 'restaurant-imagecontext-input' } %>
-      <div class="form-help-2025">
-        <%= t('.imagecontext_help', default: 'Describe your restaurant\'s style and atmosphere to help AI generate appropriate menu item images') %>
-      </div>
-    </div>
-
-    <div class="form-group-2025 mb-4">
-      <%= form.label :image_style_profile, class: 'form-label-2025' do %>
-        <%= t('activerecord.attributes.restaurant.image_style_profile', default: 'Image Style Profile') %>
-      <% end %>
-      <%= form.text_area :image_style_profile,
-          class: 'form-control-2025',
-          rows: 4,
-          placeholder: t('.image_style_profile_placeholder', default: 'e.g., Professional food photography, well-lit, white background, top-down view...'),
-          data: { testid: 'restaurant-image-style-input' } %>
-      <div class="form-help-2025">
-        <%= t('.image_style_profile_help', default: 'Specify the style and presentation preferences for AI-generated menu item images') %>
       </div>
     </div>
   <% end %>
@@ -205,9 +185,10 @@
 
   <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
     <div class="form-group-2025 mb-4">
-      <%= form.label :address1, class: 'form-label-2025' do %>
+      <%= form.label :address1, class: 'form-label-2025 d-inline-flex align-items-center gap-2' do %>
         <%= t('activerecord.attributes.restaurant.address', default: 'Street Address') %>
         <span class="text-danger">*</span>
+        <span class="form-autosave-inline small text-muted"></span>
       <% end %>
       <%= form.text_field :address1,
           class: 'form-control-2025',
@@ -238,9 +219,10 @@
     <div class="row g-3 mb-4">
       <div class="col-md-6">
         <div class="form-group-2025">
-          <%= form.label :city, class: 'form-label-2025' do %>
+          <%= form.label :city, class: 'form-label-2025 d-inline-flex align-items-center gap-2' do %>
             <%= t('activerecord.attributes.restaurant.city', default: 'City') %>
             <span class="text-danger">*</span>
+            <span class="form-autosave-inline small text-muted"></span>
           <% end %>
           <%= form.text_field :city,
               class: 'form-control-2025',
@@ -290,6 +272,46 @@
   <% end %>
 </div>
 
+<!-- Image Context Details Section -->
+<div class="content-card-2025" data-testid="image-context-card">
+  <h2 class="content-card-title">
+    <i class="bi bi-image"></i>
+    <%= t('.image_context_details', default: 'Image Context Details') %>
+  </h2>
+
+  <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
+    <div class="form-group-2025 mb-4">
+      <%= form.label :imagecontext, class: 'form-label-2025' do %>
+        <%= t('activerecord.attributes.restaurant.imagecontext', default: 'Image Context') %>
+      <% end %>
+      <%= form.text_area :imagecontext,
+          class: 'form-control-2025',
+          rows: 3,
+          placeholder: t('.imagecontext_placeholder', default: 'e.g., Modern Italian restaurant with rustic decor...'),
+          data: { testid: 'restaurant-imagecontext-input' } %>
+      <div class="form-help-2025">
+        <%= t('.imagecontext_help', default: 'Describe your restaurant\'s style and atmosphere to help AI generate appropriate menu item images') %>
+      </div>
+    </div>
+
+    <div class="form-group-2025 mb-4">
+      <%= form.label :image_style_profile, class: 'form-label-2025' do %>
+        <%= t('activerecord.attributes.restaurant.image_style_profile', default: 'Image Style Profile') %>
+      <% end %>
+      <%= form.text_area :image_style_profile,
+          class: 'form-control-2025',
+          rows: 4,
+          placeholder: t('.image_style_profile_placeholder', default: 'e.g., Professional food photography, well-lit, white background, top-down view...'),
+          data: { testid: 'restaurant-image-style-input' } %>
+      <div class="form-help-2025">
+        <%= t('.image_style_profile_help', default: 'Specify the style and presentation preferences for AI-generated menu item images') %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+ 
+
 <style>
   /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
   .quick-actions-grid {
@@ -300,6 +322,13 @@
   .quick-actions-grid .quick-action-btn {
     width: 100%;
     justify-content: center;
+  }
+  .quick-actions-card.is-disabled {
+    opacity: 0.6;
+  }
+  .quick-actions-card.is-disabled .quick-action-btn {
+    pointer-events: none;
+    cursor: not-allowed;
   }
   .form-help-2025 {
     font-size: var(--text-sm);

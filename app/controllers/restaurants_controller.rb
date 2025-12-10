@@ -426,6 +426,19 @@ class RestaurantsController < ApplicationController
     
     # Set current section for 2025 UI
     @current_section = params[:section] || 'details'
+    @onboarding_mode = ActiveModel::Type::Boolean.new.cast(params[:onboarding])
+    @onboarding_next = @restaurant.onboarding_next_section
+
+    # Guided onboarding: force user through required setup sequence
+    begin
+      next_section = @onboarding_next
+      if next_section.present? && @current_section != next_section
+        flash[:notice] = I18n.t('onboarding.restaurant_guidance.redirecting', default: 'Please complete this setup step first.')
+        return redirect_to edit_restaurant_path(@restaurant, section: next_section, onboarding: (@onboarding_mode ? 'true' : nil))
+      end
+    rescue => e
+      Rails.logger.warn("[RestaurantsController#edit] onboarding guidance error: #{e.message}")
+    end
 
     AnalyticsService.track_user_event(current_user, 'restaurant_edit_started', {
       restaurant_id: @restaurant.id,

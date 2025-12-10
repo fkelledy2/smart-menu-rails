@@ -19,6 +19,13 @@
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.add_allergen', default: 'Add Allergen') %></span>
     <% end %>
+
+    <%= link_to restaurant_allergyns_path(restaurant),
+        class: 'quick-action-btn',
+        data: { turbo_frame: '_top' } do %>
+      <i class="bi bi-pencil"></i>
+      <span><%= t('.manage_allergens', default: 'Manage Allergens') %></span>
+    <% end %>
   </div>
 </div>
 
@@ -57,63 +64,9 @@
     </div>
   </div>
 
-  <%= link_to restaurant_allergyns_path(restaurant),
-      class: 'btn-2025 btn-2025-primary btn-2025-md mt-4',
-      data: { turbo_frame: '_top' } do %>
-    <i class="bi bi-pencil"></i> <%= t('.manage_allergens', default: 'Manage Allergens') %>
-  <% end %>
+  
 </div>
 
-<!-- Common Allergen Templates -->
-<div class="content-card-2025">
-  <h2 class="content-card-title">
-    <i class="bi bi-lightning-charge"></i>
-    <%= t('.common_templates', default: 'Common Templates') %>
-  </h2>
-
-  <p class="text-muted mb-4">
-    <%= t('.templates_description', default: 'Quickly add standard allergen sets') %>
-  </p>
-
-  <div class="templates-list">
-    <div class="template-card">
-      <div class="template-header">
-        <h5><%= t('.fda_top_8', default: 'FDA Top 8 Allergens') %></h5>
-        <span class="badge bg-primary"><%= t('.recommended', default: 'Recommended') %></span>
-      </div>
-      <p class="text-sm text-muted mb-3">
-        <%= t('.fda_top_8_desc', default: 'Milk, Eggs, Fish, Shellfish, Tree Nuts, Peanuts, Wheat, Soybeans') %>
-      </p>
-      <button class="btn-2025 btn-2025-outline btn-2025-sm">
-        <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
-      </button>
-    </div>
-
-    <div class="template-card">
-      <div class="template-header">
-        <h5><%= t('.eu_allergens', default: 'EU 14 Allergens') %></h5>
-      </div>
-      <p class="text-sm text-muted mb-3">
-        <%= t('.eu_allergens_desc', default: 'All 14 major allergens as per EU regulation') %>
-      </p>
-      <button class="btn-2025 btn-2025-outline btn-2025-sm">
-        <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
-      </button>
-    </div>
-
-    <div class="template-card">
-      <div class="template-header">
-        <h5><%= t('.common_dietary', default: 'Common Dietary Restrictions') %></h5>
-      </div>
-      <p class="text-sm text-muted mb-3">
-        <%= t('.common_dietary_desc', default: 'Gluten-Free, Vegan, Vegetarian, Halal, Kosher') %>
-      </p>
-      <button class="btn-2025 btn-2025-outline btn-2025-sm">
-        <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
-      </button>
-    </div>
-  </div>
-</div>
 
 <!-- Allergen List -->
 <% if restaurant.allergyns.where(archived: false).any? %>

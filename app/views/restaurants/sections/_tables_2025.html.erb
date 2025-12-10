@@ -14,7 +14,8 @@
 
   <div class="quick-actions-grid">
     <%= link_to new_restaurant_tablesetting_path(restaurant),
-        class: 'quick-action-btn' do %>
+        class: 'quick-action-btn',
+        data: { turbo_frame: '_top' } do %>
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.add_table', default: 'Add Table') %></span>
     <% end %>
@@ -33,6 +34,31 @@
     justify-content: center;
   }
 </style>
+
+<!-- Tables Overview -->
+<div class="content-card-2025 py-4">
+  <h2 class="content-card-title">
+    <i class="bi bi-rulers"></i>
+    <%= t('.tables_overview', default: 'Tables') %>
+  </h2>
+
+  <p class="text-muted mb-4">
+    <%= t('.tables_description', default: 'Manage your restaurant tables to enable QR codes and ordering by table.') %>
+  </p>
+
+  <div class="size-stats-card">
+    <div class="size-stat">
+      <div class="size-stat-value">
+        <%= restaurant.tablesettings.count %>
+      </div>
+      <div class="size-stat-label">
+        <%= t('.total_tables', default: 'Total Tables') %>
+      </div>
+    </div>
+  </div>
+
+  
+</div>
 
 <!-- Table Settings -->
 <% if restaurant.tablesettings.any? %>
@@ -240,5 +266,28 @@
 
   .table-card-mobile:last-child {
     margin-bottom: 0;
+  }
+
+  /* Stats card styling (match Sizes panel) */
+  .size-stats-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+  }
+  .size-stat { text-align: center; }
+  .size-stat-value {
+    font-size: 2.5rem;
+    font-weight: var(--font-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-2);
+  }
+  .size-stat-label {
+    font-size: var(--text-sm);
+    color: var(--color-gray-600);
+    font-weight: var(--font-semibold);
   }
 </style>

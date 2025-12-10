@@ -176,12 +176,6 @@
       <p class="text-muted">
         <%= t('.no_menus_description', default: 'Create your first menu to get started') %>
       </p>
-      <%= link_to new_restaurant_menu_path(restaurant),
-          class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3',
-          data: { turbo_frame: '_top' } do %>
-        <i class="bi bi-plus-circle"></i>
-        <%= t('.create_first_menu', default: 'Create Your First Menu') %>
-      <% end %>
     </div>
   <% end %>
 </div>

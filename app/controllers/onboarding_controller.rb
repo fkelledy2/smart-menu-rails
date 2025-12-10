@@ -88,23 +88,61 @@ class OnboardingController < ApplicationController
   end
 
   def handle_account_details
-    if current_user.update(account_params)
-      @onboarding.account_created!
-
-      # Track successful step completion
-      AnalyticsService.track_onboarding_step_completed(current_user, 1, {
-        name: current_user.name,
-        email: current_user.email,
-      },)
-
-      redirect_to onboarding_step_path(2), status: :see_other
-    else
-      # Track step failure
+    # Update user's basic info first (name)
+    unless current_user.update(account_params)
       AnalyticsService.track_onboarding_step_failed(current_user, 1, current_user.errors.full_messages.join(', '))
-
       @step = 1
-      render :account_details
+      return render :account_details
     end
+
+    # Require a restaurant name at step 1
+    restaurant_name = params.dig(:onboarding_session, :restaurant_name).to_s.strip
+    if restaurant_name.blank?
+      AnalyticsService.track_onboarding_step_failed(current_user, 1, 'restaurant_name missing')
+      @step = 1
+      flash.now[:alert] = I18n.t('onboarding.account_details.restaurant_name_required', default: 'Please enter a restaurant name to continue.')
+      return render :account_details
+    end
+
+    # Find or create the restaurant for this user
+    restaurant = current_user.restaurants.where('LOWER(name) = ?', restaurant_name.downcase).first
+    new_restaurant = false
+    unless restaurant
+      restaurant = current_user.restaurants.create!(
+        name: restaurant_name,
+        archived: false,
+        status: 0,
+      )
+      new_restaurant = true
+    end
+
+    # Link onboarding to restaurant and mark progress
+    @onboarding.update!(restaurant: restaurant)
+    @onboarding.account_created!
+
+    # Provision current user as an employee manager for newly created restaurants
+    if new_restaurant
+      Employee.create!(
+        user: current_user,
+        restaurant: restaurant,
+        name: current_user.name.presence || 'Manager',
+        role: :manager,
+        status: :active,
+        eid: SecureRandom.hex(6),
+      )
+    end
+
+    # Track successful step completion
+    AnalyticsService.track_onboarding_step_completed(current_user, 1, {
+      name: current_user.name,
+      email: current_user.email,
+      restaurant_id: restaurant.id,
+      restaurant_new: new_restaurant,
+    },)
+
+    # Redirect directly to the restaurant edit page to guide remaining steps
+    flash[:notice] = I18n.t('onboarding.next_steps.restaurant_edit_notice', default: 'Great! Now complete your restaurant details, address and set up your tables.')
+    redirect_to edit_restaurant_path(restaurant), status: :see_other
   end
 
   def handle_restaurant_details

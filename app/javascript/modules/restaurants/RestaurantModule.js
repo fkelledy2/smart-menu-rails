@@ -342,6 +342,15 @@ export class RestaurantModule extends ComponentBase {
         this.handleRestaurantDelete(e);
       });
     });
+
+    // Re-initialize form auto-save when Turbo loads/replaces content
+    const refreshForms = () => {
+      if (this.formManager && typeof this.formManager.refresh === 'function') {
+        this.formManager.refresh();
+      }
+    };
+    document.addEventListener('turbo:frame-load', refreshForms);
+    document.addEventListener('turbo:load', refreshForms);
   }
 
   /**

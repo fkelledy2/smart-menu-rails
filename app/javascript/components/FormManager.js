@@ -402,6 +402,7 @@ export class FormManager extends ComponentBase {
    */
   async autoSaveForm(form) {
     try {
+      this.updateInlineStatus(form, 'saving');
       const formData = new FormData(form);
       const response = await fetch(form.action || window.location.href, {
         method: 'PATCH',
@@ -413,11 +414,49 @@ export class FormManager extends ComponentBase {
       });
 
       if (response.ok) {
+        this.updateInlineStatus(form, 'saved');
         this.emit('form:auto-saved', { form, response });
       }
     } catch (error) {
       console.error('Auto-save failed:', error);
+      this.updateInlineStatus(form, 'error');
     }
+  }
+
+  /**
+   * Update inline auto-save status for a form
+   */
+  updateInlineStatus(form, state) {
+    const inlineEls = form.querySelectorAll('.form-autosave-inline');
+    if (!inlineEls || inlineEls.length === 0) return;
+
+    inlineEls.forEach((el) => {
+      el.classList.remove('saving', 'saved', 'error');
+      if (state === 'saving') {
+        el.textContent = 'Saving…';
+        el.classList.add('saving');
+      } else if (state === 'saved') {
+        el.textContent = 'Saved';
+        el.classList.add('saved');
+        // Clear after 2s
+        setTimeout(() => {
+          if (el.classList.contains('saved')) {
+            el.textContent = '';
+            el.classList.remove('saved');
+          }
+        }, 2000);
+      } else if (state === 'error') {
+        el.textContent = 'Save failed';
+        el.classList.add('error');
+        // Clear after 4s
+        setTimeout(() => {
+          if (el.classList.contains('error')) {
+            el.textContent = '';
+            el.classList.remove('error');
+          }
+        }, 4000);
+      }
+    });
   }
 
   /**

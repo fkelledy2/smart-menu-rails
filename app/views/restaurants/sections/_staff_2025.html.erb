@@ -34,6 +34,31 @@
   }
 </style>
 
+<!-- Staff Overview (Stats) -->
+<div class="content-card-2025 py-4">
+  <h2 class="content-card-title">
+    <i class="bi bi-people"></i>
+    <%= t('.staff_overview', default: 'Staff') %>
+  </h2>
+
+  <p class="text-muted mb-4">
+    <%= t('.staff_overview_desc', default: 'Manage your team to collaborate on your restaurant.') %>
+  </p>
+
+  <div class="size-stats-card">
+    <div class="size-stat">
+      <div class="size-stat-value">
+        <%= restaurant.employees.count %>
+      </div>
+      <div class="size-stat-label">
+        <%= t('.total_staff', default: 'Total Employees') %>
+      </div>
+    </div>
+  </div>
+
+  
+</div>
+
 <!-- Staff Management -->
 <div class="content-card-2025">
   <h2 class="content-card-title mb-4">
@@ -308,6 +333,29 @@
 
   .staff-card-mobile:last-child {
     margin-bottom: 0;
+  }
+
+  /* Stats card styling (match Sizes panel) */
+  .size-stats-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+  }
+  .size-stat { text-align: center; }
+  .size-stat-value {
+    font-size: 2.5rem;
+    font-weight: var(--font-bold);
+    color: var(--color-warning);
+    margin-bottom: var(--space-2);
+  }
+  .size-stat-label {
+    font-size: var(--text-sm);
+    color: var(--color-gray-600);
+    font-weight: var(--font-semibold);
   }
 
   /* Roles Grid */

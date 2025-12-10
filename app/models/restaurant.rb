@@ -126,6 +126,51 @@ class Restaurant < ApplicationRecord
   validates :country, presence: false
   validates :status, presence: true
 
+  # Onboarding guidance helpers
+  def onboarding_next_section
+    # 1) Details: require description, currency, and some address/location info
+    details_ok = description.present? && currency.present? && (address1.present? || city.present? || postcode.present? || country.present?)
+    return 'details' unless details_ok
+
+    # 2) Tables: require at least one table setting
+    return 'tables' unless tablesettings.any?
+
+    # 3) Taxes and Tips: require at least one tax and one tip
+    return 'taxes_and_tips' unless taxes.any? && tips.any?
+
+    # 4) Localization: require at least one language and a default language set
+    has_locales = restaurantlocales.any?
+    has_default_locale = restaurantlocales.where(status: 'active', dfault: true).exists?
+    return 'localization' unless has_locales && has_default_locale
+
+    nil
+  end
+
+  def onboarding_incomplete?
+    onboarding_next_section.present?
+  end
+
+  # Returns true if any required onboarding setup is missing for enabling Quick Actions
+  def onboarding_quick_actions_blocked?
+    return true if name.blank?
+    return true if description.blank?
+    return true if currency.blank?
+    address_ok = address1.present? || city.present? || postcode.present? || country.present?
+    return true unless address_ok
+    # Context and image style profile
+    return true if respond_to?(:imagecontext) && imagecontext.blank?
+    return true if respond_to?(:image_style_profile) && image_style_profile.blank?
+    # Tables, employees, taxes, tips, and localization
+    return true unless tablesettings.any?
+    return true unless employees.any?
+    has_locales = restaurantlocales.any?
+    has_default_locale = restaurantlocales.where(status: 'active', dfault: true).exists?
+    return true unless has_locales && has_default_locale
+    return true unless taxes.any?
+    return true unless tips.any?
+    false
+  end
+
   # L2 cached complex queries
   def dashboard_summary
     self.class.cached_query("restaurant:#{id}:dashboard", cache_type: :dashboard) do

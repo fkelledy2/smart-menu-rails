@@ -6,6 +6,7 @@
 
   <%= form_with model: current_user, url: onboarding_path, method: :patch, local: true,
                 data: { step: 1 }, class: "needs-validation", novalidate: true do |f| %>
+    <%= hidden_field_tag :step, 1 %>
 
     <div class="mb-4">
       <%= f.label :name, t('onboarding.account_details.full_name_label'), class: "form-label" %>
@@ -30,13 +31,14 @@
     </div>
 
     <div class="mb-4">
-      <%= label_tag :restaurant_name_preview, t('onboarding.account_details.restaurant_name_preview_label'), class: "form-label" %>
-      <%= text_field_tag :restaurant_name_preview,
+      <%= label_tag 'onboarding_session[restaurant_name]', t('onboarding.account_details.restaurant_name_preview_label'), class: "form-label" %>
+      <%= text_field_tag 'onboarding_session[restaurant_name]',
           @onboarding&.restaurant_name,
           class: "form-control form-control-lg",
           placeholder: t('onboarding.account_details.restaurant_name_preview_placeholder'),
+          required: true,
           autocomplete: "organization",
-          data: { preview: true } %>
+          data: { testid: 'restaurant-name' } %>
       <div class="form-text"><%= t('onboarding.account_details.restaurant_name_preview_help') %></div>
     </div>
 
@@ -45,7 +47,7 @@
         <!-- No back button on first step -->
       </div>
 
-      <button type="submit" class="btn btn-primary btn-lg btn-wizard">
+      <button type="submit" class="btn btn-primary btn-lg btn-wizard" id="continue-btn" disabled>
         <%= t('onboarding.account_details.continue') %>
         <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i>
       </button>
@@ -88,13 +90,24 @@ document.addEventListener('DOMContentLoaded', function() {
     form.classList.add('was-validated');
   });
 
-  // Restaurant name preview
-  const previewInput = document.querySelector('[data-preview="true"]');
-  if (previewInput) {
-    previewInput.addEventListener('input', function() {
-      // Store in session storage for next step
-      sessionStorage.setItem('restaurant_name_preview', this.value);
-    });
+  // Gate continue until both user name and restaurant name are present
+  const continueBtn = document.getElementById('continue-btn');
+  const nameInput = document.querySelector('input[name="user[name]"]');
+  const restaurantInput = document.querySelector('input[name="onboarding_session[restaurant_name]"]');
+
+  function updateContinueState() {
+    const nameOk = nameInput && nameInput.value.trim().length > 0;
+    const restaurantOk = restaurantInput && restaurantInput.value.trim().length > 0;
+    continueBtn.disabled = !(nameOk && restaurantOk);
   }
+
+  [nameInput, restaurantInput].forEach(function(el) {
+    if (el) {
+      el.addEventListener('input', updateContinueState);
+      el.addEventListener('change', updateContinueState);
+    }
+  });
+
+  updateContinueState();
 });
 </script>
