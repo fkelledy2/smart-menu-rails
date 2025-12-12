@@ -91,71 +91,64 @@
   </ul>
 
   <% if menus.any? %>
-    <!-- Menus List -->
-    <div class="menus-list"
+    <!-- Menus List (styled like Table Settings) -->
+    <div class="table-responsive menus-table-view"
          data-testid="menus-list"
          data-controller="sortable"
          data-sortable-url-value="<%= update_sequence_restaurant_menus_path(restaurant) %>"
          data-sortable-handle-value=".drag-handle">
-      <% menus.each do |menu| %>
-        <div class="menu-card" data-sortable-id="<%= menu.id %>" data-testid="menu-card-<%= menu.id %>">
-          <!-- Drag Handle -->
-          <div class="drag-handle" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>">
-            <i class="bi bi-grip-vertical"></i>
-          </div>
-
-          <!-- Menu Info Section -->
-          <div class="menu-card-main">
-            <div class="menu-card-title-row">
-              <h3 class="menu-card-title"><%= menu.name %></h3>
-            </div>
-
-            <div class="menu-card-meta">
-              <% if menu.description.present? %>
-                <span class="menu-card-description">
-                  <%= truncate(menu.description, length: 80) %>
-                </span>
-                <span class="meta-separator">•</span>
-              <% end %>
-
-              <span class="stat-badge">
-                <i class="bi bi-grid-3x3"></i>
-                <%= menu.menusections.count %> <%= t('.sections', default: 'sections') %>
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th class="w-40px"></th>
+            <th><%= t('.menu_name', default: 'Name') %></th>
+            <th class="text-end">
+              <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                <i class="bi bi-gear"></i>
               </span>
-
-              <span class="meta-separator">•</span>
-
-              <span class="stat-badge">
-                <i class="bi bi-list"></i>
-                <%= menu.menusections.joins(:menuitems).count('menuitems.id') %> <%= t('.items', default: 'items') %>
-              </span>
-            </div>
-          </div>
-
-          <!-- Actions Section -->
-          <div class="menu-card-actions ms-auto">
-            <!-- Status badge floated to top-right, above dropdown -->
-            <div class="menu-status-badge mb-2">
-              <% if menu.active? %>
-                <span class="badge bg-success">
-                  <i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %>
-                </span>
-              <% elsif menu.inactive? %>
-                <span class="badge bg-warning text-dark">
-                  <i class="bi bi-pencil"></i> <%= t('.inactive', default: 'Inactive') %>
-                </span>
-              <% end %>
-            </div>
-            <%= link_to edit_restaurant_menu_path(restaurant, menu),
-                class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                title: t('.edit', default: 'Edit'),
-                aria: { label: t('.edit', default: 'Edit') },
-                data: { turbo_frame: '_top', testid: "edit-menu-#{menu.id}-btn" } do %>
-              <i class="bi bi-pencil"></i>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% menus.each do |menu| %>
+            <tr data-sortable-id="<%= menu.id %>" data-testid="menu-row-<%= menu.id %>">
+              <td class="w-40px">
+                <i class="bi bi-grip-vertical text-muted drag-handle" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>"></i>
+              </td>
+              <td>
+                <div class="fw-semibold"><%= menu.name %></div>
+                <% if menu.description.present? %>
+                  <div class="text-muted small"><%= truncate(menu.description, length: 80) %></div>
+                <% end %>
+                <div class="text-muted small">
+                  <i class="bi bi-grid-3x3"></i>
+                  <%= menu.menusections.count %> <%= t('.sections', default: 'sections') %>
+                </div>
+              </td>
+              <td class="text-end">
+                <div class="menu-status-badge mb-2">
+                  <% if menu.active? %>
+                    <span class="badge bg-success">
+                      <i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %>
+                    </span>
+                  <% elsif menu.inactive? %>
+                    <span class="badge bg-warning text-dark">
+                      <i class="bi bi-pencil"></i> <%= t('.inactive', default: 'Inactive') %>
+                    </span>
+                  <% end %>
+                </div>
+                <%= link_to edit_restaurant_menu_path(restaurant, menu),
+                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                    title: t('.edit', default: 'Edit'),
+                    aria: { label: t('.edit', default: 'Edit') },
+                    data: { turbo_frame: '_top', testid: "edit-menu-#{menu.id}-btn" } do %>
+                  <i class="bi bi-pencil"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   <% else %>
     <!-- Empty State -->
@@ -258,6 +251,9 @@
     font-weight: var(--font-semibold);
     color: var(--color-gray-900);
     margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .menu-card-meta {
@@ -309,10 +305,15 @@
     .menu-card-actions {
       width: 100%;
       justify-content: stretch;
+      align-items: stretch;
     }
 
     .menu-card-actions .flex-fill {
       flex: 1;
+    }
+
+    .menu-card-meta {
+      gap: var(--space-1);
     }
   }
 
@@ -335,11 +336,37 @@
     .menu-card-actions {
       padding: var(--space-2) var(--space-3);
       gap: var(--space-1);
+      align-items: stretch;
     }
 
     .menu-card-actions .btn-2025 {
-      padding: var(--space-2);
+      padding: 0.625rem 0.875rem; /* enlarge tap target */
+      font-size: var(--text-sm);
+      min-height: 44px; /* iOS recommended min tap height */
+      width: 100%;
+    }
+
+    /* Make drag handle a bit larger for easier grab on mobile */
+    .drag-handle {
+      font-size: 1.75rem;
+      padding: var(--space-1) var(--space-2);
+      margin: 0;
+    }
+
+    /* Hide long descriptions on very small screens */
+    .menu-card-description {
+      display: none;
+    }
+
+    /* Keep meta compact */
+    .stat-badge {
       font-size: var(--text-xs);
+    }
+
+    /* Keep status badge aligned to top on mobile */
+    .menu-status-badge {
+      align-self: flex-start;
+      margin-bottom: 0.25rem;
     }
   }
 

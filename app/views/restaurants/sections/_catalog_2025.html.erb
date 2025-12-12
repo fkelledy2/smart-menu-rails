@@ -93,44 +93,7 @@
   </div>
 </div>
 
-<!-- Tax & Tip Templates -->
-<div class="content-card-2025">
-  <h2 class="content-card-title">
-    <i class="bi bi-lightning-charge"></i>
-    <%= t('.tax_tip_templates', default: 'Tax & Tip Templates') %>
-  </h2>
-
-  <p class="text-muted mb-4">
-    <%= t('.templates_description', default: 'Pre-configured tax and tip sets for quick setup') %>
-  </p>
-
-  <div class="templates-list">
-    <div class="template-card">
-      <div class="template-header">
-        <h5><%= t('.us_restaurant', default: 'US Restaurant') %></h5>
-        <span class="badge bg-primary"><%= t('.recommended', default: 'Recommended') %></span>
-      </div>
-      <p class="text-sm text-muted">
-        <%= t('.us_restaurant_desc', default: 'Sales tax + tip suggestions (15%, 18%, 20%)') %>
-      </p>
-      <button class="btn-2025 btn-2025-outline btn-2025-sm">
-        <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
-      </button>
-    </div>
-
-    <div class="template-card">
-      <div class="template-header">
-        <h5><%= t('.eu_restaurant', default: 'EU Restaurant') %></h5>
-      </div>
-      <p class="text-sm text-muted">
-        <%= t('.eu_restaurant_desc', default: 'VAT + service charge included') %>
-      </p>
-      <button class="btn-2025 btn-2025-outline btn-2025-sm">
-        <i class="bi bi-download"></i> <%= t('.load_template', default: 'Load Template') %>
-      </button>
-    </div>
-  </div>
-</div>
+<!-- Tax & Tip Templates removed -->
 
 <style>
   .catalog-grid {
@@ -183,29 +146,5 @@
     margin: 0;
   }
 
-  .templates-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--space-3);
-  }
-
-  .template-card {
-    padding: var(--space-4);
-    background: var(--color-gray-50);
-    border: 1px solid var(--color-gray-200);
-    border-radius: var(--radius-lg);
-  }
-
-  .template-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-2);
-  }
-
-  .template-header h5 {
-    font-size: var(--text-base);
-    font-weight: var(--font-semibold);
-    margin: 0;
-  }
+  /* Templates styles removed */
 </style>

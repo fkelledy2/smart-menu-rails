@@ -126,7 +126,7 @@
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" /></noscript>
 
 <!-- Load noUiSlider if not already loaded -->
-<script data-turbo-track="reload">
+<script data-turbo-track="reload" data-turbo-eval="true">
   // Check if noUiSlider is already loaded
   if (typeof noUiSlider === 'undefined') {
     console.log('[HoursEditor] Loading noUiSlider from CDN...');
@@ -331,7 +331,7 @@
   }
 </style>
 
-<script>
+<script data-turbo-eval="true">
   // Track retry attempts
   let noUiSliderRetries = 0;
   const MAX_RETRIES = 50; // 5 seconds maximum wait (50 * 100ms)
@@ -504,6 +504,8 @@
     }
 
     if (editor) {
+      // Remove any utility class that forces opacity 0
+      editor.classList.remove('opacity-0');
       editor.style.opacity = '1';
     }
   }
