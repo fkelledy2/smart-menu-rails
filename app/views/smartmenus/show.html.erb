@@ -44,7 +44,7 @@
       <%= render partial: "smartmenus/showMenuBanner" %>
   </div>
 <% else %>
-  <% cache [@smartmenu, @menu, @restaurant, show_customer_view ? 'customer' : 'staff'], expires_in: 1.hour do %>
+  <% cache [@smartmenu, @menu, @restaurant, @header_cache_buster, show_customer_view ? 'customer' : 'staff'], expires_in: 1.hour do %>
   <% if show_customer_view %>
   <div id="menuc" class="menu-sticky-header menu-sticky-header-mobile" data-testid="smartmenu-customer-view">
   <% else %>

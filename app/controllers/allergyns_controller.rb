@@ -64,6 +64,12 @@ class AllergynsController < ApplicationController
 
     respond_to do |format|
       if @allergyn.save
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('allergens_new_allergyn', ''),
+            turbo_stream.replace('restaurant_content', partial: 'restaurants/sections/allergens_2025', locals: { restaurant: @allergyn.restaurant, filter: 'all' })
+          ]
+        end
         format.html do
           redirect_to edit_restaurant_path(id: @allergyn.restaurant.id),
                       notice: t('common.flash.created', resource: t('activerecord.models.allergyn'))
@@ -72,6 +78,7 @@ class AllergynsController < ApplicationController
           render :show, status: :created, location: restaurant_allergyn_url(@allergyn.restaurant, @allergyn)
         end
       else
+        format.turbo_stream { render :new, status: :unprocessable_entity }
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @allergyn.errors, status: :unprocessable_entity }
       end

@@ -15,19 +15,17 @@
   <div class="quick-actions-grid">
     <%= link_to new_restaurant_size_path(restaurant),
         class: 'quick-action-btn',
-        data: { turbo_frame: '_top' } do %>
+        data: { turbo_frame: 'sizes_new_size' } do %>
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.add_size', default: 'Add Size') %></span>
     <% end %>
-
-    <%= link_to restaurant_sizes_path(restaurant),
-        class: 'quick-action-btn',
-        data: { turbo_frame: '_top' } do %>
-      <i class="bi bi-pencil"></i>
-      <span><%= t('.manage_sizes', default: 'Manage Sizes') %></span>
-    <% end %>
   </div>
 </div>
+
+<!-- Inline New Size Frame -->
+<%= turbo_frame_tag 'sizes_new_size' do %>
+  <!-- New Size form will render here inline -->
+<% end %>
 
 <style>
   /* Force Quick Actions into two columns on all viewports (including mobile portrait) */

@@ -1,3 +1,5 @@
+require 'securerandom'
+
 class TablesettingsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show] # Allow public viewing for customers
   before_action :set_tablesetting, only: %i[show edit update destroy]
@@ -59,6 +61,13 @@ class TablesettingsController < ApplicationController
 
     respond_to do |format|
       if @tablesetting.save
+        ensure_smartmenus_for_new_table!(@tablesetting)
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('tables_new_tablesetting', ''),
+            turbo_stream.replace('restaurant_content', partial: 'restaurants/sections/tables_2025', locals: { restaurant: @tablesetting.restaurant, filter: 'all' })
+          ]
+        end
         format.html do
           redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id),
                       notice: t('common.flash.created', resource: t('activerecord.models.tablesetting'))
@@ -68,6 +77,7 @@ class TablesettingsController < ApplicationController
           render :show, status: :created, location: restaurant_tablesetting_url(@restaurant, @tablesetting)
         end
       else
+        format.turbo_stream { render :new, status: :unprocessable_entity }
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @tablesetting.errors, status: :unprocessable_entity }
       end
@@ -107,6 +117,28 @@ class TablesettingsController < ApplicationController
   end
 
   private
+
+  def ensure_smartmenus_for_new_table!(tablesetting)
+    restaurant = tablesetting.restaurant
+
+    Menu.where(restaurant_id: restaurant.id).find_each do |menu|
+      Smartmenu.find_or_create_by!(
+        restaurant_id: restaurant.id,
+        menu_id: menu.id,
+        tablesetting_id: tablesetting.id
+      ) do |sm|
+        sm.slug = SecureRandom.uuid
+      end
+    end
+
+    Smartmenu.find_or_create_by!(
+      restaurant_id: restaurant.id,
+      menu_id: nil,
+      tablesetting_id: tablesetting.id
+    ) do |sm|
+      sm.slug = SecureRandom.uuid
+    end
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_tablesetting

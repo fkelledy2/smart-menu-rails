@@ -15,12 +15,17 @@
   <div class="quick-actions-grid">
     <%= link_to new_restaurant_restaurantlocale_path(restaurant),
         class: 'quick-action-btn',
-        data: { turbo_frame: '_top' } do %>
+        data: { turbo_frame: 'localization_new_locale' } do %>
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.add_language', default: 'Add Language') %></span>
     <% end %>
   </div>
 </div>
+
+<!-- Inline New Language Frame -->
+<%= turbo_frame_tag 'localization_new_locale' do %>
+  <!-- New Language form will render here inline -->
+<% end %>
 
 <!-- Localization & Languages -->
 <div class="content-card-2025 py-4">

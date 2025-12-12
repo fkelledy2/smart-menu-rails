@@ -15,7 +15,7 @@
   <div class="quick-actions-grid">
     <%= link_to new_restaurant_allergyn_path(restaurant),
         class: 'quick-action-btn',
-        data: { turbo_frame: '_top' } do %>
+        data: { turbo_frame: 'allergens_new_allergyn' } do %>
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.add_allergen', default: 'Add Allergen') %></span>
     <% end %>
@@ -28,6 +28,11 @@
     <% end %>
   </div>
 </div>
+
+<!-- Inline New Allergen Frame -->
+<%= turbo_frame_tag 'allergens_new_allergyn' do %>
+  <!-- New Allergen form will render here inline -->
+<% end %>
 
 <style>
   /* Force Quick Actions into two columns on all viewports (including mobile portrait) */

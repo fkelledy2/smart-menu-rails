@@ -3,46 +3,52 @@
   Modern form layout with consistent styling
 %>
 
+<% in_frame = defined?(turbo_frame_request?) && turbo_frame_request? %>
+
 <!-- Page Header -->
-<div class="container-fluid px-0 pb-4">
-  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
-    <div>
-      <!-- Breadcrumb -->
-      <div class="text-sm text-gray-500 mb-2">
-        <%= link_to @allergyn.restaurant.name, edit_restaurant_path(@allergyn.restaurant), class: 'text-primary' %>
-        <i class="bi bi-chevron-right"></i>
-        <%= link_to t('.allergyns', default: 'Allergens'), restaurant_allergyns_path(@allergyn.restaurant), class: 'text-primary' %>
-        <i class="bi bi-chevron-right"></i>
-        <%= t('.new', default: 'New') %>
+<% unless in_frame %>
+  <div class="container-fluid px-0 pb-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+      <div>
+        <!-- Breadcrumb -->
+        <div class="text-sm text-gray-500 mb-2">
+          <%= link_to @allergyn.restaurant.name, edit_restaurant_path(@allergyn.restaurant), class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= link_to t('.allergyns', default: 'Allergens'), restaurant_allergyns_path(@allergyn.restaurant), class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= t('.new', default: 'New') %>
+        </div>
+
+        <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+          <i class="bi bi-plus-circle"></i>
+          <%= t('.new_allergyn', default: 'New Allergen') %>
+        </h1>
+        <p class="text-sm text-gray-500">
+          <%= t('.description', default: 'Create a new allergen for menu items') %>
+        </p>
       </div>
 
-      <h1 class="text-2xl font-semibold text-gray-900 mb-1">
-        <i class="bi bi-plus-circle"></i>
-        <%= t('.new_allergyn', default: 'New Allergen') %>
-      </h1>
-      <p class="text-sm text-gray-500">
-        <%= t('.description', default: 'Create a new allergen for menu items') %>
-      </p>
-    </div>
-
-    <div class="d-flex gap-2">
-      <%= link_to restaurant_allergyns_path(@allergyn.restaurant),
-          class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
-        <i class="bi bi-x-lg"></i> <%= t('.cancel', default: 'Cancel') %>
-      <% end %>
+      <div class="d-flex gap-2">
+        <%= link_to restaurant_allergyns_path(@allergyn.restaurant),
+            class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+          <i class="bi bi-x-lg"></i> <%= t('.cancel', default: 'Cancel') %>
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
+<% end %>
 
 <!-- Form Card -->
-<div class="content-card-2025">
-  <h2 class="content-card-title">
-    <i class="bi bi-egg-fried"></i>
-    <%= t('.allergyn_details', default: 'Allergen Details') %>
-  </h2>
+<%= turbo_frame_tag 'allergens_new_allergyn' do %>
+  <div class="content-card-2025" data-skip-form-manager="true">
+    <h2 class="content-card-title">
+      <i class="bi bi-egg-fried"></i>
+      <%= t('.allergyn_details', default: 'Allergen Details') %>
+    </h2>
 
-  <%= render 'form', allergyn: @allergyn %>
-</div>
+    <%= render 'form', allergyn: @allergyn %>
+  </div>
+<% end %>
 
 <style>
   .text-2xl {

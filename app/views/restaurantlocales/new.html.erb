@@ -3,46 +3,52 @@
   Modern form layout with consistent styling
 %>
 
-<!-- Page Header -->
-<div class="container-fluid px-0 pb-4">
-  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
-    <div>
-      <!-- Breadcrumb -->
-      <div class="text-sm text-gray-500 mb-2">
-        <%= link_to @restaurantlocale.restaurant.name, edit_restaurant_path(@restaurantlocale.restaurant), class: 'text-primary' %>
-        <i class="bi bi-chevron-right"></i>
-        <%= link_to t('.settings', default: 'Settings'), edit_restaurant_path(@restaurantlocale.restaurant, section: 'settings'), class: 'text-primary' %>
-        <i class="bi bi-chevron-right"></i>
-        <%= t('.new_locale', default: 'New Language') %>
+<% in_frame = defined?(turbo_frame_request?) && turbo_frame_request? %>
+
+<!-- Page Header (hidden when rendering inside a Turbo Frame) -->
+<% unless in_frame %>
+  <div class="container-fluid px-0 pb-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+      <div>
+        <!-- Breadcrumb -->
+        <div class="text-sm text-gray-500 mb-2">
+          <%= link_to @restaurantlocale.restaurant.name, edit_restaurant_path(@restaurantlocale.restaurant), class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= link_to t('.settings', default: 'Settings'), edit_restaurant_path(@restaurantlocale.restaurant, section: 'settings'), class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= t('.new_locale', default: 'New Language') %>
+        </div>
+
+        <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+          <i class="bi bi-plus-circle"></i>
+          <%= t('.add_locale', default: 'Add Language') %>
+        </h1>
+        <p class="text-sm text-gray-500">
+          <%= t('.description', default: 'Add a new language for your restaurant') %>
+        </p>
       </div>
 
-      <h1 class="text-2xl font-semibold text-gray-900 mb-1">
-        <i class="bi bi-plus-circle"></i>
-        <%= t('.add_locale', default: 'Add Language') %>
-      </h1>
-      <p class="text-sm text-gray-500">
-        <%= t('.description', default: 'Add a new language for your restaurant') %>
-      </p>
-    </div>
-
-    <div class="d-flex gap-2">
-      <%= link_to edit_restaurant_path(@restaurantlocale.restaurant, section: 'settings'),
-          class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
-        <i class="bi bi-arrow-left"></i> <%= t('.back', default: 'Back to Settings') %>
-      <% end %>
+      <div class="d-flex gap-2">
+        <%= link_to edit_restaurant_path(@restaurantlocale.restaurant, section: 'settings'),
+            class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+          <i class="bi bi-arrow-left"></i> <%= t('.back', default: 'Back to Settings') %>
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
+<% end %>
 
-<!-- Form Card -->
-<div class="content-card-2025" data-skip-form-manager="true">
-  <h2 class="content-card-title">
-    <i class="bi bi-globe"></i>
-    <%= t('.locale_details', default: 'Language Details') %>
-  </h2>
+<!-- Form Card (wrapped in Turbo Frame for inline rendering) -->
+<%= turbo_frame_tag 'localization_new_locale' do %>
+  <div class="content-card-2025" data-skip-form-manager="true">
+    <h2 class="content-card-title">
+      <i class="bi bi-globe"></i>
+      <%= t('.locale_details', default: 'Language Details') %>
+    </h2>
 
-  <%= render 'form', restaurantlocale: @restaurantlocale %>
-</div>
+    <%= render 'form', restaurantlocale: @restaurantlocale %>
+  </div>
+<% end %>
 
 <script>
   // Prevent TomSelect initialization on this form

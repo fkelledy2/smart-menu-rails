@@ -15,12 +15,17 @@
   <div class="quick-actions-grid">
     <%= link_to new_restaurant_tablesetting_path(restaurant),
         class: 'quick-action-btn',
-        data: { turbo_frame: '_top' } do %>
+        data: { turbo_frame: 'tables_new_tablesetting' } do %>
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.add_table', default: 'Add Table') %></span>
     <% end %>
   </div>
 </div>
+
+<!-- Inline New Table Frame -->
+<%= turbo_frame_tag 'tables_new_tablesetting' do %>
+  <!-- New Table form will render here inline -->
+<% end %>
 
 <style>
   /* Force Quick Actions into two columns on all viewports (including mobile portrait) */

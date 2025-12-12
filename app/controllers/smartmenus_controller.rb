@@ -28,6 +28,25 @@ class SmartmenusController < ApplicationController
   def show
     load_menu_associations_for_show
 
+    # Cache-buster for the header/table selector.
+    # The header fragment cache key previously ignored newly created Smartmenus/Tablesettings,
+    # causing stale table dropdown contents (e.g., missing newly added tables).
+    begin
+      latest_smartmenu_update = Smartmenu.where(
+        restaurant_id: @restaurant&.id,
+        menu_id: @menu&.id,
+      ).maximum(:updated_at)
+
+      latest_tablesetting_update = Tablesetting.where(
+        restaurant_id: @restaurant&.id,
+      ).maximum(:updated_at)
+
+      @header_cache_buster = [latest_smartmenu_update, latest_tablesetting_update].compact.max
+    rescue => e
+      Rails.logger.warn("[SmartmenusController#show] header cache buster error: #{e.class}: #{e.message}")
+      @header_cache_buster = nil
+    end
+
     if @menu.restaurant != @restaurant
       redirect_to root_url and return
     end

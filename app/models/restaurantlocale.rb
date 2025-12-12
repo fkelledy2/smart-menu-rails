@@ -19,26 +19,32 @@ class Restaurantlocale < ApplicationRecord
   cache_belongs_to :restaurant
 
   def flag
-    case locale&.upcase
+    code = locale.to_s.split(/[-_]/).first.upcase
+    case code
     when 'IT'
       'https://flagcdn.com/w40/it.png'
     when 'FR'
       'https://flagcdn.com/w40/fr.png'
     when 'ES'
       'https://flagcdn.com/w40/es.png'
+    when 'PT'
+      'https://flagcdn.com/w40/pt.png'
     else
       'https://flagcdn.com/w40/gb.png'
     end
   end
 
   def language
-    case locale&.upcase
+    code = locale.to_s.split(/[-_]/).first.upcase
+    case code
     when 'IT'
       'Italian'
     when 'FR'
       'French'
     when 'ES'
       'Spanish'
+    when 'PT'
+      'Portuguese'
     else
       'English'
     end

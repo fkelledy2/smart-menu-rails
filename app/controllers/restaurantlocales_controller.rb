@@ -55,12 +55,31 @@ class RestaurantlocalesController < ApplicationController
           end
         end
         MenuLocalizationJob.perform_async(@restaurantlocale.id)
+        format.turbo_stream do
+          @restaurant = @restaurantlocale.restaurant
+          render turbo_stream: [
+            turbo_stream.replace('localization_new_locale', ''),
+            turbo_stream.replace('restaurant_content', partial: 'restaurants/sections/localization_2025', locals: { restaurant: @restaurant, filter: 'all' })
+          ]
+        end
         format.html do
           redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id),
                       notice: t('restaurantlocales.controller.created')
         end
         format.json { render :show, status: :created, location: @restaurantlocale }
       else
+        format.turbo_stream do
+          @restaurant = @restaurantlocale.restaurant || Restaurant.find_by(id: params.dig(:restaurantlocale, :restaurant_id))
+          render turbo_stream: turbo_stream.replace(
+            'localization_new_locale',
+            ApplicationController.render(
+              partial: 'restaurantlocales/form',
+              assigns: { restaurantlocale: @restaurantlocale },
+              formats: [:html]
+            )
+          ), status: :unprocessable_entity
+        end
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @menu.errors, status: :unprocessable_entity }
       end
     end
