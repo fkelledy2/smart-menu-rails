@@ -14,12 +14,16 @@
 
   <div class="quick-actions-grid">
     <%= link_to new_restaurant_employee_path(restaurant),
-        class: 'quick-action-btn' do %>
+        class: 'quick-action-btn',
+        data: { turbo_frame: 'staff_new_employee' } do %>
       <i class="bi bi-person-plus"></i>
       <span><%= t('.add_staff', default: 'Add Staff Member') %></span>
     <% end %>
   </div>
 </div>
+
+<%= turbo_frame_tag 'staff_new_employee' do %>
+<% end %>
 
 <style>
   /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
@@ -58,6 +62,18 @@
 
   
 </div>
+
+<%= turbo_frame_tag 'staff_edit_employee' do %>
+<% end %>
+
+<script>
+  document.addEventListener('turbo:frame-load', function (event) {
+    const frame = event.target
+    if (!frame || frame.id !== 'staff_edit_employee') return
+    if (frame.innerHTML.trim() === '') return
+    frame.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+</script>
 
 <!-- Staff Management -->
 <div class="content-card-2025">
@@ -114,7 +130,7 @@
                     class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                     title: t('.edit', default: 'Edit'),
                     aria: { label: t('.edit', default: 'Edit') },
-                    data: { turbo_frame: '_top' } do %>
+                    data: { turbo_frame: 'staff_edit_employee' } do %>
                   <i class="bi bi-pencil"></i>
                 <% end %>
               </td>
@@ -145,7 +161,7 @@
             <div class="btn-group">
               <%= link_to edit_restaurant_employee_path(restaurant, employee),
                   class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                  data: { turbo_frame: '_top' } do %>
+                  data: { turbo_frame: 'staff_edit_employee' } do %>
                 <i class="bi bi-pencil"></i>
               <% end %>
             </div>

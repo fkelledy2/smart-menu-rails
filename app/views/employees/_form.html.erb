@@ -1,81 +1,101 @@
 <%= form_with(model: [employee.restaurant, employee]) do |form| %>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :name, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :eid, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :eid, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :user_id, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.collection_select :user_id, User.all ,:id, :email, options = {:prompt => t(".selectUser")} %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :role, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.select :role, options_for_select(Employee.roles.keys.to_a, form.object.role), {} %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.select :status, options_for_select(Employee.statuses.keys.to_a, form.object.status), {} %>
-    </div>
-  </div>
   <% if @futureParentRestaurant %>
-      <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
+    <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
   <% else %>
-      <%= form.hidden_field :restaurant_id %>
+    <%= form.hidden_field :restaurant_id %>
   <% end %>
-  <div class="spacing-md"></div>
-  <!-- 2025 Design System: Updated with new button styles -->
-  <div class="row">
-    <div class="col-3">
-    </div>
-    <div class="col-9">
-        <div class="d-flex justify-content-end gap-3">
-        <% if employee.persisted? %>
-          <%= link_to t('common.delete'), restaurant_employee_path(employee.restaurant, employee), method: :delete, class: "btn-2025 btn-2025-outline-danger btn-2025-md", data: { confirm: t('common.confirm') } %>
-        <% end %>
-        <%= form.submit value: t('common.save'), class: 'btn-2025 btn-2025-primary btn-2025-md' %>
-        </div>
-    </div>
+
+  <div class="form-group-2025 mb-4">
+    <%= form.label :name, class: 'form-label-2025' do %>
+      <%= t('.name', default: 'Name') %>
+      <span class="text-danger">*</span>
+    <% end %>
+    <%= form.text_field :name,
+        class: 'form-control-2025',
+        required: true %>
   </div>
-  <div class="spacing-sm"></div>
+
+  <div class="form-group-2025 mb-4">
+    <%= form.label :eid, class: 'form-label-2025' do %>
+      <%= t('.eid', default: 'Id') %>
+      <span class="text-danger">*</span>
+    <% end %>
+    <%= form.text_field :eid,
+        class: 'form-control-2025',
+        required: true %>
+  </div>
+
+  <div class="form-group-2025 mb-4">
+    <%= form.label :user_id, class: 'form-label-2025' do %>
+      <%= t('.user', default: 'User') %>
+      <span class="text-danger">*</span>
+    <% end %>
+    <%= form.collection_select :user_id,
+        User.all,
+        :id,
+        :email,
+        { prompt: t('.selectUser') },
+        { class: 'form-control-2025', required: true } %>
+  </div>
+
+  <div class="form-group-2025 mb-4">
+    <%= form.label :role, class: 'form-label-2025' do %>
+      <%= t('.role', default: 'Role') %>
+      <span class="text-danger">*</span>
+    <% end %>
+    <%= form.select :role,
+        options_for_select(Employee.roles.keys.to_a, form.object.role),
+        { include_blank: true },
+        class: 'form-control-2025',
+        required: true %>
+  </div>
+
+  <div class="form-group-2025 mb-4">
+    <%= form.label :status, class: 'form-label-2025' do %>
+      <%= t('.status', default: 'Status') %>
+    <% end %>
+    <%= form.select :status,
+        options_for_select(Employee.statuses.keys.to_a, form.object.status),
+        {},
+        class: 'form-control-2025' %>
+  </div>
+
   <% if employee.errors.any? %>
-  <div class="row">
-    <div class="col-3">
-      <span class="float-md-end"><%= t('common.errors') %></span>
-    </div>
-    <div class="col-9">
-      <ul>
-          <% employee.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
+    <div class="alert alert-danger" role="alert">
+      <h6 class="alert-heading">
+        <i class="bi bi-exclamation-triangle"></i>
+        <%= t('common.errors', default: 'Errors') %>
+      </h6>
+      <ul class="mb-0">
+        <% employee.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
-  </div>
   <% end %>
+
+  <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+    <% if employee.persisted? %>
+      <%= link_to t('common.cancel', default: 'Cancel'),
+          edit_restaurant_path(employee.restaurant, section: 'staff'),
+          class: 'btn-2025 btn-2025-ghost btn-2025-md',
+          data: { turbo_frame: 'restaurant_content' } %>
+
+      <%= link_to t('common.delete'),
+          restaurant_employee_path(employee.restaurant, employee),
+          method: :delete,
+          class: 'btn-2025 btn-2025-outline-danger btn-2025-md',
+          data: { confirm: t('common.confirm') } %>
+    <% else %>
+      <%= link_to t('common.cancel', default: 'Cancel'),
+          edit_restaurant_path(employee.restaurant, section: 'staff'),
+          class: 'btn-2025 btn-2025-ghost btn-2025-md',
+          data: { turbo_frame: 'restaurant_content' } %>
+    <% end %>
+
+    <%= form.submit t('common.save', default: 'Save'),
+        class: 'btn-2025 btn-2025-primary btn-2025-md',
+        disabled: !employee.persisted?,
+        data: { disable_until_valid: (!employee.persisted?).to_s } %>
+  </div>
 <% end %>

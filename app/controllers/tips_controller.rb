@@ -44,11 +44,22 @@ class TipsController < ApplicationController
     authorize @tip
     respond_to do |format|
       if @tip.save
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('tips_new_tip', ''),
+            turbo_stream.replace(
+              'restaurant_content',
+              partial: 'restaurants/sections/catalog_2025',
+              locals: { restaurant: @tip.restaurant, filter: 'all' }
+            )
+          ]
+        end
         format.html do
           redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.created')
         end
         format.json { render :show, status: :created, location: restaurant_tip_url(@tip.restaurant, @tip) }
       else
+        format.turbo_stream { render :new, status: :unprocessable_entity }
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @tip.errors, status: :unprocessable_entity }
       end
@@ -58,6 +69,7 @@ class TipsController < ApplicationController
     @tip = Tip.new
     @tip.errors.add(:status, e.message)
     respond_to do |format|
+      format.turbo_stream { render :new, status: :unprocessable_entity }
       format.html { render :new, status: :unprocessable_entity }
       format.json { render json: @tip.errors, status: :unprocessable_entity }
     end
@@ -69,11 +81,22 @@ class TipsController < ApplicationController
 
     respond_to do |format|
       if @tip.update(tip_params)
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('tips_edit_tip', ''),
+            turbo_stream.replace(
+              'restaurant_content',
+              partial: 'restaurants/sections/catalog_2025',
+              locals: { restaurant: @tip.restaurant, filter: 'all' }
+            )
+          ]
+        end
         format.html do
           redirect_to edit_restaurant_path(id: @tip.restaurant.id), notice: t('tips.controller.updated')
         end
         format.json { render :show, status: :ok, location: restaurant_tip_url(@tip.restaurant, @tip) }
       else
+        format.turbo_stream { render :edit, status: :unprocessable_entity }
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @tip.errors, status: :unprocessable_entity }
       end

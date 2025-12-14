@@ -1,33 +1,36 @@
-<div class="page-header">
-  <div class="row">
-    <div class="col-12">
-      <h4>
+<% in_frame = defined?(turbo_frame_request?) && turbo_frame_request? %>
+
+<% unless in_frame %>
+  <div class="page-header">
+    <div class="row">
+      <div class="col-12">
+        <h4>
+          <%= link_to edit_restaurant_path(@employee.restaurant, section: 'staff'), class: "link-dark" do %>
+            <%= @employee.restaurant.name %>
+          <% end %>
+        </h4>
+      </div>
+    </div>
+  </div>
+  <ul class="nav-tabs-height nav nav-tabs overflow-auto flex-nowrap" id="enployeeTabsBack" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link link-dark">
         <%= link_to edit_restaurant_path(@employee.restaurant, section: 'staff'), class: "link-dark" do %>
-          <%= @employee.restaurant.name %>
+          <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
         <% end %>
-      </h4>
-    </div>
-  </div>
-</div>
-<ul class="nav-tabs-height nav nav-tabs overflow-auto flex-nowrap" id="enployeeTabsBack" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark">
-      <%= link_to edit_restaurant_path(@employee.restaurant, section: 'staff'), class: "link-dark" do %>
-        <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
-      <% end %>
-    </button>
-  </li>
-</ul>
-<p>
-<div class="page-header">
-  <div class="row">
-    <div class="col-12">
-        <h4><%= t(".employee") %></h4>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-12">
+      </button>
+    </li>
+  </ul>
+  <p>
+<% end %>
+
+<%= turbo_frame_tag 'staff_edit_employee' do %>
+  <div class="content-card-2025" data-skip-form-manager="true">
+    <h2 class="content-card-title">
+      <i class="bi bi-person"></i>
+      Edit Staff
+    </h2>
+
     <%= render 'form', employee: @employee %>
   </div>
-</div>
+<% end %>

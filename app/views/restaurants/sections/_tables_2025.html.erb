@@ -65,6 +65,18 @@
   
 </div>
 
+<%= turbo_frame_tag 'tables_edit_tablesetting' do %>
+<% end %>
+
+<script>
+  document.addEventListener('turbo:frame-load', function (event) {
+    const frame = event.target
+    if (!frame || frame.id !== 'tables_edit_tablesetting') return
+    if (frame.innerHTML.trim() === '') return
+    frame.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+</script>
+
 <!-- Table Settings -->
 <% if restaurant.tablesettings.any? %>
   <div class="content-card-2025">
@@ -105,7 +117,7 @@
                     class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                     title: t('.edit', default: 'Edit'),
                     aria: { label: t('.edit', default: 'Edit') },
-                    data: { turbo_frame: '_top' } do %>
+                    data: { turbo_frame: 'tables_edit_tablesetting' } do %>
                   <i class="bi bi-pencil"></i>
                 <% end %>
               </td>
@@ -134,7 +146,8 @@
             </div>
             <div class="btn-group">
               <%= link_to edit_restaurant_tablesetting_path(restaurant, table),
-                  class: 'btn-2025 btn-2025-ghost btn-2025-sm' do %>
+                  class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                  data: { turbo_frame: 'tables_edit_tablesetting' } do %>
                 <i class="bi bi-pencil"></i>
               <% end %>
             </div>

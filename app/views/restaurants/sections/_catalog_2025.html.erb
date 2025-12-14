@@ -15,32 +15,43 @@
   <div class="quick-actions-grid">
     <%= link_to new_restaurant_tax_path(restaurant),
         class: 'quick-action-btn',
-        data: { turbo_frame: '_top' } do %>
+        data: { turbo_frame: 'taxes_new_tax' } do %>
       <i class="bi bi-receipt"></i>
       <span><%= t('.add_tax', default: 'Add Tax') %></span>
     <% end %>
 
     <%= link_to new_restaurant_tip_path(restaurant),
         class: 'quick-action-btn',
-        data: { turbo_frame: '_top' } do %>
+        data: { turbo_frame: 'tips_new_tip' } do %>
       <i class="bi <%= currency_icon(restaurant.currency) %>"></i>
       <span><%= t('.add_tip', default: 'Add Tip') %></span>
     <% end %>
   </div>
 </div>
 
-<style>
-  /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
-  .quick-actions-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-3);
-  }
-  .quick-actions-grid .quick-action-btn {
-    width: 100%;
-    justify-content: center;
-  }
-</style>
+<%= turbo_frame_tag 'taxes_new_tax' do %>
+<% end %>
+
+<%= turbo_frame_tag 'tips_new_tip' do %>
+<% end %>
+
+<%= turbo_frame_tag 'taxes_edit_tax' do %>
+<% end %>
+
+<%= turbo_frame_tag 'tips_edit_tip' do %>
+<% end %>
+
+<script>
+  document.addEventListener('turbo:frame-load', function (event) {
+    const frame = event.target
+    if (!frame) return
+
+    if (frame.id === 'taxes_edit_tax' || frame.id === 'tips_edit_tip') {
+      if (frame.innerHTML.trim() === '') return
+      frame.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  })
+</script>
 
 <!-- Taxes & Tips Overview -->
 <div class="content-card-2025 py-4">
@@ -54,44 +65,146 @@
   </p>
 
   <div class="catalog-grid">
-    <!-- Taxes -->
-    <div class="catalog-item">
-      <div class="catalog-icon bg-primary">
-        <i class="bi bi-receipt"></i>
-      </div>
-      <div class="catalog-info">
-        <h4 class="catalog-title"><%= t('.taxes', default: 'Taxes') %></h4>
-        <p class="catalog-count">
-          <%= restaurant.taxes.where(archived: false).where.not(status: :archived).count %> <%= t('.configured', default: 'configured') %>
-        </p>
-      </div>
-      <%= link_to restaurant_taxes_path(restaurant),
-          class: 'btn-2025 btn-2025-secondary btn-2025-sm',
-          data: { turbo_frame: '_top' } do %>
-        <i class="bi bi-pencil"></i> <%= t('.manage', default: 'Manage') %>
-      <% end %>
-    </div>
-
-    <!-- Tips -->
-    <div class="catalog-item">
-      <div class="catalog-icon bg-success">
-        <i class="bi <%= currency_icon(restaurant.currency) %>"></i>
-      </div>
-      <div class="catalog-info">
-        <h4 class="catalog-title"><%= t('.tips', default: 'Tips') %></h4>
-        <p class="catalog-count">
-          <%= restaurant.tips.where(archived: false).where.not(status: :archived).count %> <%= t('.configured', default: 'configured') %>
-        </p>
-      </div>
-      <%= link_to restaurant_tips_path(restaurant),
-          class: 'btn-2025 btn-2025-secondary btn-2025-sm',
-          data: { turbo_frame: '_top' } do %>
-        <i class="bi bi-pencil"></i> <%= t('.manage', default: 'Manage') %>
-      <% end %>
-    </div>
-
   </div>
 </div>
+
+<% taxes = restaurant.taxes.where(archived: false).where.not(status: :archived) %>
+<% tips = restaurant.tips.where(archived: false).where.not(status: :archived) %>
+
+<div class="taxes-tips-lists-grid">
+  <% if taxes.any? %>
+    <div class="content-card-2025">
+      <h2 class="content-card-title">
+        <i class="bi bi-list-check"></i>
+        <%= t('.current_taxes', default: 'Current Taxes') %>
+      </h2>
+
+      <div class="table-responsive taxes-table-view">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th class="w-40px"></th>
+              <th><%= t('.name', default: 'Name') %></th>
+              <th class="text-end"><%= t('.rate', default: 'Rate') %></th>
+              <th class="text-end"><%= t('.status', default: 'Status') %></th>
+              <th class="text-end">
+                <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                  <i class="bi bi-gear"></i>
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% taxes.order(:sequence, :id).each do |tax| %>
+              <tr>
+                <td class="w-40px">
+                  <i class="bi bi-grip-vertical text-muted"></i>
+                </td>
+                <td>
+                  <strong>
+                    <%= tax.name %>
+                  </strong>
+                  <div class="text-sm text-muted">
+                    <%= tax.taxtype.to_s.titleize %>
+                  </div>
+                </td>
+                <td class="text-end">
+                  <strong><%= tax.taxpercentage %>%</strong>
+                </td>
+                <td class="text-end">
+                  <% if tax.status.to_s == 'inactive' %>
+                    <span class="badge bg-secondary"><%= t('.inactive', default: 'Inactive') %></span>
+                  <% else %>
+                    <span class="badge bg-success"><%= t('.active', default: 'Active') %></span>
+                  <% end %>
+                </td>
+                <td class="text-end">
+                  <%= link_to edit_restaurant_tax_path(restaurant, tax),
+                      class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                      title: t('.edit', default: 'Edit'),
+                      aria: { label: t('.edit', default: 'Edit') },
+                      data: { turbo_frame: 'taxes_edit_tax' } do %>
+                    <i class="bi bi-pencil"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+
+  <% if tips.any? %>
+    <div class="content-card-2025">
+      <h2 class="content-card-title">
+        <i class="bi bi-list-check"></i>
+        <%= t('.current_tips', default: 'Current Tips') %>
+      </h2>
+
+      <div class="table-responsive tips-table-view">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th class="w-40px"></th>
+              <th><%= t('.tip', default: 'Tip') %></th>
+              <th class="text-end">
+                <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                  <i class="bi bi-gear"></i>
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% tips.order(:sequence, :id).each do |tip| %>
+              <tr>
+                <td class="w-40px">
+                  <i class="bi bi-grip-vertical text-muted"></i>
+                </td>
+                <td>
+                  <strong>
+                    <%= tip.percentage %>%
+                    <% if tip.status.to_s == 'inactive' %>
+                      <span class="badge bg-secondary ms-2"><%= t('.inactive', default: 'Inactive') %></span>
+                    <% end %>
+                  </strong>
+                </td>
+                <td class="text-end">
+                  <%= link_to edit_restaurant_tip_path(restaurant, tip),
+                      class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                      title: t('.edit', default: 'Edit'),
+                      aria: { label: t('.edit', default: 'Edit') },
+                      data: { turbo_frame: 'tips_edit_tip' } do %>
+                    <i class="bi bi-pencil"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
+  .quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+  .quick-actions-grid .quick-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .taxes-tips-lists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: var(--space-4);
+  }
+</style>
 
 <!-- Tax & Tip Templates removed -->
 

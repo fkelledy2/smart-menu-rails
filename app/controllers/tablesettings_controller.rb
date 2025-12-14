@@ -90,12 +90,23 @@ class TablesettingsController < ApplicationController
 
     respond_to do |format|
       if @tablesetting.update(tablesetting_params)
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('tables_edit_tablesetting', ''),
+            turbo_stream.replace(
+              'restaurant_content',
+              partial: 'restaurants/sections/tables_2025',
+              locals: { restaurant: @tablesetting.restaurant, filter: 'all' }
+            )
+          ]
+        end
         format.html do
           redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id),
                       notice: t('common.flash.updated', resource: t('activerecord.models.tablesetting'))
         end
         format.json { render :show, status: :ok, location: restaurant_tablesetting_url(@restaurant, @tablesetting) }
       else
+        format.turbo_stream { render :edit, status: :unprocessable_entity }
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @tablesetting.errors, status: :unprocessable_entity }
       end

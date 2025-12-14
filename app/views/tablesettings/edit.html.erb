@@ -1,34 +1,44 @@
 <%= render 'shared/customcss' %>
-<div class="page-header">
-  <div class="row">
-    <div class="col-12">
-      <h4>
+<% in_frame = defined?(turbo_frame_request?) && turbo_frame_request? %>
+
+<% unless in_frame %>
+  <div class="page-header">
+    <div class="row">
+      <div class="col-12">
+        <h4>
+          <%= link_to edit_restaurant_path(@tablesetting.restaurant, section: 'tables'), class: "link-dark" do %>
+            <%= @tablesetting.restaurant.name %>
+          <% end %>
+        </h4>
+      </div>
+    </div>
+  </div>
+  <ul class="nav-tabs-height nav nav-tabs overflow-auto flex-nowrap" id="tablesettingTabsBack" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link link-dark">
         <%= link_to edit_restaurant_path(@tablesetting.restaurant, section: 'tables'), class: "link-dark" do %>
-          <%= @tablesetting.restaurant.name %>
+          <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
         <% end %>
-      </h4>
+      </button>
+    </li>
+  </ul>
+  <p>
+  <div class="page-header">
+    <div class="row">
+      <div class="col-12">
+          <h4><%= t(".tablesetting") %></h4>
+      </div>
     </div>
   </div>
-</div>
-<ul class="nav-tabs-height nav nav-tabs overflow-auto flex-nowrap" id="tablesettingTabsBack" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark">
-      <%= link_to edit_restaurant_path(@tablesetting.restaurant, section: 'tables'), class: "link-dark" do %>
-        <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
-      <% end %>
-    </button>
-  </li>
-</ul>
-<p>
-<div class="page-header">
-  <div class="row">
-    <div class="col-12">
-        <h4><%= t(".tablesetting") %></h4>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-12">
+<% end %>
+
+<%= turbo_frame_tag 'tables_edit_tablesetting' do %>
+  <div class="content-card-2025" data-skip-form-manager="true">
+    <h2 class="content-card-title">
+      <i class="bi bi-grid-3x3-gap"></i>
+      <%= t(".tablesetting") %>
+    </h2>
+
     <%= render 'form', tablesetting: @tablesetting %>
   </div>
-</div>
+<% end %>

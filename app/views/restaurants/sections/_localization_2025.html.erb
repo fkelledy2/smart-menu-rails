@@ -75,7 +75,7 @@
                     class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                     title: t('.edit', default: 'Edit'),
                     aria: { label: t('.edit', default: 'Edit') },
-                    data: { turbo_frame: '_top' } do %>
+                    data: { turbo_frame: 'localization_edit_locale' } do %>
                   <i class="bi bi-pencil"></i>
                 <% end %>
               </td>
@@ -103,7 +103,7 @@
                 class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                 title: t('.edit', default: 'Edit'),
                 aria: { label: t('.edit', default: 'Edit') },
-                data: { turbo_frame: '_top' } do %>
+                data: { turbo_frame: 'localization_edit_locale' } do %>
               <i class="bi bi-pencil"></i>
             <% end %>
           </div>
@@ -122,6 +122,9 @@
     </div>
   <% end %>
 </div>
+
+<%= turbo_frame_tag 'localization_edit_locale' do %>
+<% end %>
 
 <style>
   /* Force Quick Actions into two columns on all viewports (including mobile portrait) */

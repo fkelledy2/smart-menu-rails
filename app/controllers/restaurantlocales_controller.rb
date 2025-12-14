@@ -96,12 +96,24 @@ class RestaurantlocalesController < ApplicationController
         end
       end
       if @restaurantlocale.update(restaurantlocale_params)
+        format.turbo_stream do
+          @restaurant = @restaurantlocale.restaurant
+          render turbo_stream: [
+            turbo_stream.replace('localization_edit_locale', ''),
+            turbo_stream.replace(
+              'restaurant_content',
+              partial: 'restaurants/sections/localization_2025',
+              locals: { restaurant: @restaurant, filter: 'all' }
+            )
+          ]
+        end
         format.html do
           redirect_to edit_restaurant_path(id: @restaurantlocale.restaurant.id),
                       notice: t('restaurantlocales.controller.updated')
         end
         format.json { render :show, status: :ok, location: @restaurantlocale }
       else
+        format.turbo_stream { render :edit, status: :unprocessable_entity }
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @menu.errors, status: :unprocessable_entity }
       end

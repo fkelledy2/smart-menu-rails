@@ -67,9 +67,17 @@
 
   <!-- Form Actions -->
   <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-    <%= link_to restaurant_sizes_path(@restaurant),
-        class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
-      <%= t('common.cancel', default: 'Cancel') %>
+    <% if defined?(turbo_frame_request?) && turbo_frame_request? %>
+      <%= link_to edit_restaurant_path((@restaurant || size.restaurant), section: 'sizes'),
+          class: 'btn-2025 btn-2025-ghost btn-2025-md',
+          data: { turbo_frame: 'restaurant_content' } do %>
+        <%= t('common.cancel', default: 'Cancel') %>
+      <% end %>
+    <% else %>
+      <%= link_to restaurant_sizes_path(@restaurant),
+          class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+        <%= t('common.cancel', default: 'Cancel') %>
+      <% end %>
     <% end %>
 
     <%= form.submit t('common.save', default: 'Save'),

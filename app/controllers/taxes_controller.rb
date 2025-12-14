@@ -30,6 +30,7 @@ class TaxesController < ApplicationController
         @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
         @tax.restaurant = @futureParentRestaurant
       end
+      authorize @tax
     else
       redirect_to root_url
     end
@@ -46,14 +47,26 @@ class TaxesController < ApplicationController
   def create
     if current_user
       @tax = Tax.new(tax_params)
+      authorize @tax
       respond_to do |format|
         if @tax.save
+          format.turbo_stream do
+            render turbo_stream: [
+              turbo_stream.replace('taxes_new_tax', ''),
+              turbo_stream.replace(
+                'restaurant_content',
+                partial: 'restaurants/sections/catalog_2025',
+                locals: { restaurant: @tax.restaurant, filter: 'all' }
+              )
+            ]
+          end
           format.html do
             redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: t('taxes.controller.created')
           end
           # format.html { redirect_to @return_url, notice: "Tax was successfully created." }
           format.json { render :show, status: :created, location: @tax }
         else
+          format.turbo_stream { render :new, status: :unprocessable_entity }
           format.html { render :new, status: :unprocessable_entity }
           format.json { render json: @tax.errors, status: :unprocessable_entity }
         end
@@ -68,12 +81,23 @@ class TaxesController < ApplicationController
     if current_user
       respond_to do |format|
         if @tax.update(tax_params)
+          format.turbo_stream do
+            render turbo_stream: [
+              turbo_stream.replace('taxes_edit_tax', ''),
+              turbo_stream.replace(
+                'restaurant_content',
+                partial: 'restaurants/sections/catalog_2025',
+                locals: { restaurant: @tax.restaurant, filter: 'all' }
+              )
+            ]
+          end
           format.html do
             redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: t('taxes.controller.updated')
           end
           # format.html { redirect_to tax_url(@tax), notice: "Tax was successfully updated." }
           format.json { render :show, status: :ok, location: @tax }
         else
+          format.turbo_stream { render :edit, status: :unprocessable_entity }
           format.html { render :edit, status: :unprocessable_entity }
           format.json { render json: @tax.errors, status: :unprocessable_entity }
         end

@@ -78,12 +78,23 @@ class SizesController < ApplicationController
 
     respond_to do |format|
       if @size.update(size_params)
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('sizes_edit_size', ''),
+            turbo_stream.replace(
+              'restaurant_content',
+              partial: 'restaurants/sections/sizes_2025',
+              locals: { restaurant: @size.restaurant, filter: 'all' }
+            )
+          ]
+        end
         format.html do
           redirect_to edit_restaurant_path(@size.restaurant),
                       notice: t('common.flash.updated', resource: t('activerecord.models.size'))
         end
         format.json { render :show, status: :ok, location: restaurant_size_url(@restaurant, @size) }
       else
+        format.turbo_stream { render :edit, status: :unprocessable_entity }
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @size.errors, status: :unprocessable_entity }
       end

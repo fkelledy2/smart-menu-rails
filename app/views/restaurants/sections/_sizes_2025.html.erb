@@ -27,6 +27,18 @@
   <!-- New Size form will render here inline -->
 <% end %>
 
+<%= turbo_frame_tag 'sizes_edit_size' do %>
+<% end %>
+
+<script>
+  document.addEventListener('turbo:frame-load', function (event) {
+    const frame = event.target
+    if (!frame || frame.id !== 'sizes_edit_size') return
+    if (frame.innerHTML.trim() === '') return
+    frame.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+</script>
+
 <style>
   /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
   .quick-actions-grid {
@@ -104,7 +116,7 @@
                     class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                     title: t('.edit', default: 'Edit'),
                     aria: { label: t('.edit', default: 'Edit') },
-                    data: { turbo_frame: '_top' } do %>
+                    data: { turbo_frame: 'sizes_edit_size' } do %>
                   <i class="bi bi-pencil"></i>
                 <% end %>
               </td>

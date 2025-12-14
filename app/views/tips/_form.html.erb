@@ -11,7 +11,7 @@
       <%= t('.percentage', default: 'Tip Percentage') %>
       <span class="text-danger">*</span>
     <% end %>
-    <div class="input-group">
+    <div class="input-group flex-nowrap">
       <%= form.number_field :percentage,
           class: 'form-control-2025',
           placeholder: t('.percentage_placeholder', default: 'e.g., 15'),
@@ -43,9 +43,17 @@
 
   <!-- Form Actions -->
   <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-    <%= link_to restaurant_tips_path(@restaurant || tip.restaurant),
-        class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
-      <%= t('common.cancel', default: 'Cancel') %>
+    <% if defined?(turbo_frame_request?) && turbo_frame_request? %>
+      <%= link_to edit_restaurant_path((@restaurant || tip.restaurant), section: 'taxes_and_tips'),
+          class: 'btn-2025 btn-2025-ghost btn-2025-md',
+          data: { turbo_frame: 'restaurant_content' } do %>
+        <%= t('common.cancel', default: 'Cancel') %>
+      <% end %>
+    <% else %>
+      <%= link_to restaurant_tips_path(@restaurant || tip.restaurant),
+          class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+        <%= t('common.cancel', default: 'Cancel') %>
+      <% end %>
     <% end %>
 
     <%= form.submit t('common.save', default: 'Save'),

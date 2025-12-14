@@ -157,9 +157,20 @@ class EmployeesController < ApplicationController
         format.html do
           redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: t('employees.controller.created')
         end
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('staff_new_employee', ''),
+            turbo_stream.replace(
+              'restaurant_content',
+              partial: 'restaurants/sections/staff_2025',
+              locals: { restaurant: @employee.restaurant, filter: 'all' }
+            )
+          ]
+        end
         format.json { render :show, status: :created, location: @employee }
       else
         format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream { render :new, status: :unprocessable_entity }
         format.json { render json: @employee.errors, status: :unprocessable_entity }
       end
     end
@@ -177,12 +188,23 @@ class EmployeesController < ApplicationController
         AdvancedCacheService.invalidate_user_caches(@employee.restaurant.user_id) if @employee.restaurant.user_id
 
         @employee.email = @employee.user.email
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('staff_edit_employee', ''),
+            turbo_stream.replace(
+              'restaurant_content',
+              partial: 'restaurants/sections/staff_2025',
+              locals: { restaurant: @employee.restaurant, filter: 'all' }
+            )
+          ]
+        end
         format.html do
           redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: t('employees.controller.updated')
         end
         # format.html { redirect_to @return_url, notice: "Employee was successfully updated." }
         format.json { render :show, status: :ok, location: @employee }
       else
+        format.turbo_stream { render :edit, status: :unprocessable_entity }
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @employee.errors, status: :unprocessable_entity }
       end

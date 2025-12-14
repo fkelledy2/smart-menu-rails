@@ -72,6 +72,18 @@
   
 </div>
 
+<%= turbo_frame_tag 'allergens_edit_allergyn' do %>
+<% end %>
+
+<script>
+  document.addEventListener('turbo:frame-load', function (event) {
+    const frame = event.target
+    if (!frame || frame.id !== 'allergens_edit_allergyn') return
+    if (frame.innerHTML.trim() === '') return
+    frame.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+</script>
+
 
 <!-- Allergen List -->
 <% if restaurant.allergyns.where(archived: false).any? %>
@@ -117,7 +129,7 @@
                     class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                     title: t('.edit', default: 'Edit'),
                     aria: { label: t('.edit', default: 'Edit') },
-                    data: { turbo_frame: '_top' } do %>
+                    data: { turbo_frame: 'allergens_edit_allergyn' } do %>
                   <i class="bi bi-pencil"></i>
                 <% end %>
               </td>
