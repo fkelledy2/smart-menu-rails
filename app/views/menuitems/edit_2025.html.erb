@@ -48,10 +48,201 @@
 
 <!-- Main Content -->
 <div class="container-2025 py-4">
-  <div class="content-card-2025 py-4">
-    <%= render 'form', menuitem: @menuitem %>
+  <%= render 'form', menuitem: @menuitem %>
+</div>
+
+<div class="modal fade z-index-7000" id="menuitemAiImageModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog ai-bottom-sheet z-index-7001 position-fixed bottom-0 left-0 right-0 m-0 width-full max-width-100">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Generate Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="menuitem-ai-confirm-pane">
+          <p>This will generate a new AI image for this menu item and may consume API credits. Proceed?</p>
+        </div>
+        <div id="menuitem-ai-progress-pane" class="d-none">
+          <div class="mb-2">
+            <div class="small text-muted">Status:</div>
+            <div id="menuitem-ai-progress-text" class="fw-semibold">Queued…</div>
+          </div>
+          <div class="progress">
+            <div id="menuitem-ai-progress-bar" class="progress-bar" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+
+          <div class="mt-3 d-none" id="menuitem-ai-preview">
+            <div class="small text-muted mb-2">Image preview:</div>
+            <img id="menuitem-ai-preview-img" src="" alt="Generated menu item image" class="img-fluid w-100 rounded border" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="menuitem-ai-confirm-btn" class="btn btn-primary">Confirm & Start</button>
+      </div>
+    </div>
   </div>
 </div>
+
+<script>
+  (function(){
+    let pending = null;
+    let pollTimer = null;
+    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
+
+    if (document.documentElement.dataset.menuitemAiModalBound === 'true') return;
+
+    function setProgress(percent){
+      const bar = document.getElementById('menuitem-ai-progress-bar');
+      if (!bar) return;
+      bar.style.width = percent + '%';
+      bar.setAttribute('aria-valuenow', percent);
+    }
+
+    function resetModalUI(){
+      const confirmPane = document.getElementById('menuitem-ai-confirm-pane');
+      const progressPane = document.getElementById('menuitem-ai-progress-pane');
+      const text = document.getElementById('menuitem-ai-progress-text');
+      const previewWrap = document.getElementById('menuitem-ai-preview');
+      const previewImg = document.getElementById('menuitem-ai-preview-img');
+      if (confirmPane) confirmPane.classList.remove('d-none');
+      if (progressPane) progressPane.classList.add('d-none');
+      if (text) text.textContent = 'Queued…';
+      if (previewWrap) previewWrap.classList.add('d-none');
+      if (previewImg) previewImg.src = '';
+      setProgress(15);
+      const btn = document.getElementById('menuitem-ai-confirm-btn');
+      if (btn) btn.disabled = false;
+    }
+
+    function clearPendingState(){
+      pending = null;
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    }
+
+    async function startGenerate(){
+      if (!pending) return;
+      const confirmPane = document.getElementById('menuitem-ai-confirm-pane');
+      const progressPane = document.getElementById('menuitem-ai-progress-pane');
+      const text = document.getElementById('menuitem-ai-progress-text');
+      const btn = document.getElementById('menuitem-ai-confirm-btn');
+      if (btn) btn.disabled = true;
+      if (confirmPane) confirmPane.classList.add('d-none');
+      if (progressPane) progressPane.classList.remove('d-none');
+      if (text) text.textContent = 'Starting…';
+      setProgress(25);
+
+      try {
+        const resp = await fetch(pending.generateUrl, {
+          method: 'POST',
+          headers: {
+            'X-CSRF-Token': csrfToken,
+            'Accept': 'application/json'
+          }
+        });
+        if (!resp.ok) {
+          if (text) text.textContent = `Failed to start (HTTP ${resp.status})`;
+          setProgress(100);
+          if (btn) btn.disabled = false;
+          return;
+        }
+        if (text) text.textContent = 'Queued…';
+        setProgress(35);
+        pollStatus();
+      } catch(e) {
+        if (text) text.textContent = 'Error starting generation';
+        setProgress(100);
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function pollStatus(){
+      if (!pending) return;
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+      const text = document.getElementById('menuitem-ai-progress-text');
+      const previewWrap = document.getElementById('menuitem-ai-preview');
+      const previewImg = document.getElementById('menuitem-ai-preview-img');
+      const initialImageUrl = (pending.initialImageUrl || '').toString();
+      const initialUpdatedAt = parseInt(pending.initialUpdatedAt || 0, 10);
+
+      pollTimer = setInterval(async () => {
+        try {
+          const resp = await fetch(pending.statusUrl, { headers: { 'Accept': 'application/json' } });
+          if (!resp.ok) return;
+          const data = await resp.json();
+          const updatedAt = parseInt(data.updated_at || 0, 10);
+          const hasImage = !!data.has_image;
+          const imageUrl = (data.image_url || '').toString();
+          if (text) text.textContent = hasImage ? 'Generating…' : 'Queued…';
+          setProgress(hasImage ? 80 : 55);
+
+          const imageChanged = imageUrl && (imageUrl !== initialImageUrl);
+          const recordAdvanced = updatedAt > initialUpdatedAt;
+          if (imageChanged && recordAdvanced && previewWrap && previewImg) {
+            const normalized = imageUrl.replace(/\\u0026/g, '&');
+            let finalUrl = normalized;
+            try {
+              const u = new URL(normalized, window.location.origin);
+              const hasS3Sig = u.search.includes('X-Amz-') || u.searchParams.has('X-Amz-Signature');
+              if (!hasS3Sig) u.searchParams.set('t', Date.now().toString());
+              finalUrl = u.toString();
+            } catch(_) {
+              finalUrl = normalized + (normalized.includes('?') ? '&' : '?') + 't=' + Date.now().toString();
+            }
+            previewImg.src = finalUrl;
+            previewWrap.classList.remove('d-none');
+          }
+
+          if (recordAdvanced && hasImage) {
+            clearInterval(pollTimer);
+            pollTimer = null;
+            if (text) text.textContent = 'Completed';
+            setProgress(100);
+            const btn = document.getElementById('menuitem-ai-confirm-btn');
+            if (btn) btn.disabled = false;
+          }
+        } catch(_) {}
+      }, 1500);
+    }
+
+    function bind(){
+      document.addEventListener('click', function(e){
+        const link = e.target.closest('a[data-menuitem-ai-generate="true"]');
+        if (!link) return;
+        e.preventDefault();
+
+        pending = {
+          generateUrl: link.dataset.generateUrl,
+          statusUrl: link.dataset.statusUrl,
+          initialUpdatedAt: parseInt(link.dataset.initialUpdatedAt || '0', 10),
+          initialImageUrl: (link.dataset.initialImageUrl || '').toString(),
+        };
+
+        resetModalUI();
+        const modalEl = document.getElementById('menuitemAiImageModal');
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.show();
+      });
+
+      const confirmBtn = document.getElementById('menuitem-ai-confirm-btn');
+      if (confirmBtn) confirmBtn.addEventListener('click', startGenerate);
+
+      const modalEl = document.getElementById('menuitemAiImageModal');
+      if (modalEl) {
+        modalEl.addEventListener('hidden.bs.modal', function(){
+          clearPendingState();
+          resetModalUI();
+        });
+      }
+    }
+
+    document.addEventListener('turbo:load', bind);
+    bind();
+
+    document.documentElement.dataset.menuitemAiModalBound = 'true';
+  })();
+</script>
 
 <% content_for :head do %>
   <style>

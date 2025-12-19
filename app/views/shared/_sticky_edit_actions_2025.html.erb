@@ -1,0 +1,25 @@
+<div class="sticky-actions-2025 d-md-none">
+  <div class="container-2025">
+    <div class="d-grid gap-2">
+      <button type="submit" class="btn-2025 btn-2025-primary btn-2025-lg btn-2025-block">
+        <i class="bi bi-check2"></i>
+        <%= t('common.save') %>
+      </button>
+
+      <%= link_to back_url, class: 'btn-2025 btn-2025-secondary btn-2025-lg btn-2025-block' do %>
+        <i class="bi bi-arrow-left"></i>
+        <%= t('common.back', default: 'Back') %>
+      <% end %>
+
+      <% if local_assigns[:delete_url].present? %>
+        <%= link_to delete_url,
+            method: :delete,
+            class: 'btn-2025 btn-2025-outline-danger btn-2025-md btn-2025-block',
+            data: { confirm: (local_assigns[:delete_confirm] || t('common.confirm')) } do %>
+          <i class="bi bi-trash"></i>
+          <%= local_assigns[:delete_label] || t('common.delete') %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

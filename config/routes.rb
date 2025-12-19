@@ -212,6 +212,8 @@ Rails.application.routes.draw do
           
           member do
             get :analytics
+            post :generate_ai_image
+            get :image_status
           end
         end
       end

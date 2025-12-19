@@ -32,205 +32,261 @@
           <%= form.hidden_field :menusection_id %>
       <% end %>
   </div>
-  <div class="form-group row">
-    <div class="col-12">
-      <h4><%= t(".details") %></h4>
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :name, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :description, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_area :description, class: 'form-control' %>
-    </div>
-  </div>
-  <% if menuitem.itemtype != 'wine' %>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-12">
-        <p>
-        <h4><%= t(".imageSettings") %></h4>
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <div class="row">
-        <div class="col-10">
-          <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
-          <%= form.file_field :image, multiple: false, accept:'image/*;capture=camera', class: 'form-control' %>
+  <div class="form-with-sticky-actions-2025 form-stack-2025">
+    <% if menuitem.errors.any? %>
+      <div class="card-2025 mb-3">
+        <div class="card-2025-header">
+          <h4 class="card-2025-title mb-0"><%= t('common.errors') %></h4>
         </div>
-        <div class="col-2">
-          <span class="position-relative-top-neg5 float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
+        <div class="card-2025-body">
+          <ul class="mb-0">
+              <% menuitem.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+          </ul>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="row">
-        <div class="col-3">
+    <% end %>
+
+    <div class="card-2025 mb-3">
+      <div class="card-2025-header">
+        <h4 class="card-2025-title mb-0"><%= t(".details") %></h4>
+      </div>
+      <div class="card-2025-body">
+        <div class="form-group row">
+          <div class="col-12">
+            <%= form.label :name, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <%= form.text_field :name, class: 'form-control' %>
+          </div>
         </div>
-        <div class="col-9">
-          <%= image_tag menuitem.image_url, :class => "img-thumbnail" if menuitem.image %>
-        </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-    </div>
-    <div class="col-9">
-      <div class="row">
-        <div class="col-10">
-        </div>
-        <div class="col-2">
-          <div class="float-end btn-group" role="group" aria-label="Button group with nested dropdown">
-            <div class="btn-group" role="group">
-              <button id="menuitem-image-actions" type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <%= t('common.actions') %>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="allergyn-actions">
-                <li>
-                    <span class="float-end">
-                        <% if menuitem.genimage %>
-                        <%= link_to t(".generateImage"), restaurant_genimage_path(menuitem.menusection.menu.restaurant, menuitem.genimage, genimage: { id: menuitem.genimage.id }), method: 'patch', class: 'dropdown-item' %>
-                        <% end %>
-                    </span>
-                </li>
-             </ul>
-            </div>
+        <div class="spacing-sm"></div>
+        <div class="form-group row">
+          <div class="col-12">
+            <%= form.label :description, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <%= form.text_area :description, class: 'form-control' %>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <% end %>
+    <% if menuitem.itemtype != 'wine' %>
+      <div class="card-2025 mb-3">
+        <div class="card-2025-header">
+          <h4 class="card-2025-title mb-0"><%= t(".imageSettings") %></h4>
+        </div>
+        <div class="card-2025-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <% if menuitem.image %>
+                <%
+                  image_src = (menuitem.webp_url(:medium) || menuitem.medium_url || menuitem.image_url)
+                  if image_src.present?
+                    begin
+                      uri = URI.parse(image_src)
+                      has_s3_sig = (uri.query.to_s.include?('X-Amz-') || uri.query.to_s.include?('X-Amz-Signature'))
+                      image_src = has_s3_sig ? image_src : "#{image_src}#{image_src.include?('?') ? '&' : '?'}v=#{menuitem.updated_at.to_i}"
+                    rescue
+                      image_src = "#{image_src}#{image_src.include?('?') ? '&' : '?'}v=#{menuitem.updated_at.to_i}"
+                    end
+                  end
+                %>
+                <%= image_tag image_src, class: 'img-thumbnail menuitem-image-preview-2025', alt: menuitem.name %>
+              <% else %>
+                <div class="text-muted">
+                  <%= t('.no_image', default: 'No image yet') %>
+                </div>
+              <% end %>
+            </div>
 
-  <div class="form-group row">
-    <div class="col-12">
-      <h4><%= t(".settings") %></h4>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.select :status, options_for_select(Menuitem.statuses.keys.to_a, form.object.status), {} %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :itemtype, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.select :itemtype, options_for_select(Menuitem.itemtypes.keys.to_a, form.object.itemtype), {} %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :calories, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :calories, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :unitcost, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :unitcost, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :price, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :price, class: 'form-control' %>
-      <% if menusection.tasting_menu? %>
-        <small class="text-muted">This price is ignored in tasting menu sections. Use supplement below.</small>
-      <% end %>
-    </div>
-  </div>
-  <!-- Alcohol Settings -->
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-12">
-      <h5 class="mt-3"><%= t('.alcohol_settings', default: 'Alcohol Settings') %></h5>
-    </div>
-  </div>
-  <div class="form-group row align-items-center">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :alcoholic, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <div class="form-check form-switch">
-        <%= form.check_box :alcoholic, class: 'form-check-input', role: 'switch' %>
-        <small class="text-muted d-block"><%= t('.alcoholic_help', default: 'Check if this item contains alcohol.') %></small>
+            <div class="col-12">
+              <div class="form-group row">
+                <div class="col-12">
+                  <%= form.label :image, class: 'col-form-label' %>
+                </div>
+                <div class="col-12">
+                  <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
+                  <%= form.file_field :image, multiple: false, accept:'image/*;capture=camera', class: 'form-control' %>
+                </div>
+              </div>
+
+              <div class="spacing-sm"></div>
+
+              <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+                <div class="form-check">
+                  <%= form.check_box :remove_image, class: 'form-check-input' %>
+                  <%= form.label :remove_image, class: 'form-check-label' do %>
+                    <i class="bi bi-trash"></i>
+                    <%= t('common.remove', default: 'Remove') %>
+                  <% end %>
+                </div>
+
+                <% if menuitem.genimage %>
+                  <%
+                    initial_image_url = (menuitem.webp_url(:medium) || menuitem.medium_url || menuitem.image_url)
+                  %>
+                  <%= link_to generate_ai_image_restaurant_menu_menusection_menuitem_path(
+                        menuitem.menusection.menu.restaurant,
+                        menuitem.menusection.menu,
+                        menuitem.menusection,
+                        menuitem,
+                      ),
+                      class: 'btn-2025 btn-2025-secondary btn-2025-md',
+                      data: {
+                        turbo: false,
+                        menuitem_ai_generate: true,
+                        generate_url: generate_ai_image_restaurant_menu_menusection_menuitem_path(
+                          menuitem.menusection.menu.restaurant,
+                          menuitem.menusection.menu,
+                          menuitem.menusection,
+                          menuitem,
+                        ),
+                        status_url: image_status_restaurant_menu_menusection_menuitem_path(
+                          menuitem.menusection.menu.restaurant,
+                          menuitem.menusection.menu,
+                          menuitem.menusection,
+                          menuitem,
+                        ),
+                        initial_updated_at: menuitem.updated_at.to_i,
+                        initial_image_url: initial_image_url,
+                      } do %>
+                    <i class="bi bi-stars"></i>
+                    <%= t('.generateImage', default: 'Generate with AI') %>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="card-2025 mb-3">
+      <div class="card-2025-header">
+        <h4 class="card-2025-title mb-0"><%= t(".settings") %></h4>
+      </div>
+      <div class="card-2025-body">
+        <div class="form-group row">
+          <div class="col-12">
+            <%= form.label :status, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <%= form.select :status, options_for_select(Menuitem.statuses.keys.to_a, form.object.status), {} %>
+          </div>
+        </div>
+        <div class="spacing-sm"></div>
+        <div class="form-group row">
+          <div class="col-12">
+            <%= form.label :itemtype, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <%= form.select :itemtype, options_for_select(Menuitem.itemtypes.keys.to_a, form.object.itemtype), {} %>
+          </div>
+        </div>
+        <div class="spacing-sm"></div>
+        <div class="form-group row">
+          <div class="col-12">
+            <%= form.label :calories, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <%= form.text_field :calories, class: 'form-control' %>
+          </div>
+        </div>
+        <div class="spacing-sm"></div>
+        <div class="form-group row">
+          <div class="col-12">
+            <%= form.label :unitcost, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <%= form.text_field :unitcost, class: 'form-control' %>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-12">
+            <%= form.label :price, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <%= form.text_field :price, class: 'form-control' %>
+            <% if menusection.tasting_menu? %>
+              <small class="text-muted">This price is ignored in tasting menu sections. Use supplement below.</small>
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :abv, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <div class="input-group">
-        <%= form.number_field :abv, class: 'form-control', step: 0.1, min: 0, max: 100, placeholder: 'e.g. 13.5' %>
-        <span class="input-group-text">%</span>
+
+    <div class="card-2025 mb-3">
+      <div class="card-2025-header">
+        <h4 class="card-2025-title mb-0"><%= t('.alcohol_settings', default: 'Alcohol Settings') %></h4>
       </div>
-      <small class="text-muted"><%= t('.abv_help', default: 'Alcohol by volume (0–100). Leave blank for non-alcoholic.') %></small>
+      <div class="card-2025-body">
+        <div class="form-group row">
+          <div class="col-12">
+            <%= form.label :preptime, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <%= form.text_field :preptime, class: 'form-control' %>
+          </div>
+        </div>
+        <div class="spacing-sm"></div>
+        <div class="form-group row align-items-center">
+          <div class="col-12">
+            <%= form.label :alcoholic, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <div class="form-check form-switch">
+              <%= form.check_box :alcoholic, class: 'form-check-input', role: 'switch' %>
+              <small class="text-muted d-block"><%= t('.alcoholic_help', default: 'Check if this item contains alcohol.') %></small>
+            </div>
+          </div>
+        </div>
+        <div class="spacing-sm"></div>
+        <div class="form-group row">
+          <div class="col-12">
+            <%= form.label :abv, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <div class="input-group">
+              <%= form.number_field :abv, class: 'form-control', step: 0.1, min: 0, max: 100, placeholder: 'e.g. 13.5' %>
+              <span class="input-group-text">%</span>
+            </div>
+            <small class="text-muted"><%= t('.abv_help', default: 'Alcohol by volume (0–100). Leave blank for non-alcoholic.') %></small>
+          </div>
+        </div>
+        <div class="spacing-sm"></div>
+        <div class="form-group row">
+          <div class="col-12">
+            <%= form.label :alcohol_classification, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <%= form.select :alcohol_classification,
+                  options_for_select([
+                    ['wine','wine'],
+                    ['beer','beer'],
+                    ['spirit','spirit'],
+                    ['cocktail','cocktail'],
+                    ['liqueur','liqueur'],
+                    ['other','other'],
+                    ['non_alcoholic','non_alcoholic']
+                  ], form.object.alcohol_classification),
+                  { include_blank: true },
+                  { class: 'form-control' } %>
+            <small class="text-muted"><%= t('.classification_help', default: 'Choose a category. Use non_alcoholic for 0.0% variants.') %></small>
+          </div>
+        </div>
+        <div class="spacing-sm"></div>
+        <div class="form-group row">
+          <div class="col-12">
+            <%= form.label :alcohol_notes, class: 'col-form-label' %>
+          </div>
+          <div class="col-12">
+            <%= form.text_area :alcohol_notes, class: 'form-control', placeholder: t('.alcohol_notes_ph', default: 'Optional notes, e.g. contains rum') %>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :alcohol_classification, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.select :alcohol_classification,
-            options_for_select([
-              ['wine','wine'],
-              ['beer','beer'],
-              ['spirit','spirit'],
-              ['cocktail','cocktail'],
-              ['liqueur','liqueur'],
-              ['other','other'],
-              ['non_alcoholic','non_alcoholic']
-            ], form.object.alcohol_classification),
-            { include_blank: true },
-            { class: 'form-control' } %>
-      <small class="text-muted"><%= t('.classification_help', default: 'Choose a category. Use non_alcoholic for 0.0% variants.') %></small>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :alcohol_notes, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_area :alcohol_notes, class: 'form-control', placeholder: t('.alcohol_notes_ph', default: 'Optional notes, e.g. contains rum') %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
   <% if menusection.tasting_menu? %>
     <div class="form-group row">
       <div class="col-12">
@@ -239,10 +295,10 @@
     </div>
     <div class="spacing-sm"></div>
     <div class="form-group row">
-      <div class="col-3">
-        <span class="float-md-end"><%= t('.tasting_optional', default: 'Optional Course') %></span>
+      <div class="col-12">
+        <span><%= t('.tasting_optional', default: 'Optional Course') %></span>
       </div>
-      <div class="col-9">
+      <div class="col-12">
         <div class="form-check form-switch">
           <%= form.check_box :tasting_optional, class: 'form-check-input', role: 'switch' %>
           <small class="text-muted"><%= t('.tasting_optional_help', default: 'If checked, this course is optional (guest may skip).') %></small>
@@ -251,10 +307,10 @@
     </div>
     <div class="spacing-sm"></div>
     <div class="form-group row">
-      <div class="col-3">
-        <span class="float-md-end"><%= t('.tasting_supplement', default: 'Supplement (cents)') %></span>
+      <div class="col-12">
+        <span><%= t('.tasting_supplement', default: 'Supplement (cents)') %></span>
       </div>
-      <div class="col-9">
+      <div class="col-12">
         <div class="row g-2">
           <div class="col-6">
             <%= form.number_field :tasting_supplement_cents, class: 'form-control', min: 0, step: 1 %>
@@ -269,20 +325,20 @@
     </div>
     <div class="spacing-sm"></div>
     <div class="form-group row">
-      <div class="col-3">
-        <span class="float-md-end"><%= t('.course_order', default: 'Course Order') %></span>
+      <div class="col-12">
+        <span><%= t('.course_order', default: 'Course Order') %></span>
       </div>
-      <div class="col-9">
+      <div class="col-12">
         <%= form.number_field :course_order, class: 'form-control', min: 1, step: 1 %>
         <small class="text-muted"><%= t('.course_order_help', default: 'Optional: specify serving sequence within the tasting.') %></small>
       </div>
     </div>
     <div class="spacing-sm"></div>
     <div class="form-group row">
-      <div class="col-3">
-        <span class="float-md-end"><%= t('.visibility', default: 'Visibility') %></span>
+      <div class="col-12">
+        <span><%= t('.visibility', default: 'Visibility') %></span>
       </div>
-      <div class="col-9">
+      <div class="col-12">
         <div class="form-check">
           <%= form.check_box :hidden, class: 'form-check-input', id: 'menuitem_hidden' %>
           <label class="form-check-label" for="menuitem_hidden"><%= t('.hidden', default: 'Hidden (not shown on smartmenu)') %></label>
@@ -296,21 +352,13 @@
     </div>
     <div class="spacing-sm"></div>
   <% end %>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :preptime, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :preptime, class: 'form-control' %>
-    </div>
-  </div>
   <% if Allergyn.where( restaurant: menu.restaurant ).count > 0 %>
       <div class="spacing-sm"></div>
       <div class="form-group row">
-        <div class="col-3">
-          <span class="float-md-end"><%= form.label :allergyns, class: 'col-form-label' %></span>
+        <div class="col-12">
+          <%= form.label :allergyns, class: 'col-form-label' %>
         </div>
-        <div class="col-9">
+        <div class="col-12">
             <div class="form-control">
                 <span class="position-relative-right-25">
                 <%= form.collection_check_boxes :allergyn_ids, Allergyn.where( restaurant_id: menu.restaurant.id ), :id, :name, { hide_label: true } do |b| %>
@@ -328,20 +376,20 @@
   <% end %>
   <div class="spacing-sm"></div>
   <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :sizesupport, class: 'col-form-label' %></span>
+    <div class="col-12">
+      <%= form.label :sizesupport, class: 'col-form-label' %>
     </div>
-    <div class="col-9">
+    <div class="col-12">
       <%= form.select :sizesupport, [[t('.true'), true], [t('.false'), false]], {} %>
     </div>
   </div>
   <% if menuitem.sizesupport && Size.where( restaurant_id: menu.restaurant.id ).count > 0 %>
       <div class="spacing-sm"></div>
       <div class="form-group row">
-        <div class="col-3">
-          <span class="float-md-end"><%= form.label :sizes, class: 'col-form-label' %></span>
+        <div class="col-12">
+          <%= form.label :sizes, class: 'col-form-label' %>
         </div>
-        <div class="col-9">
+        <div class="col-12">
             <div class="form-control">
                 <span class="position-relative-right-25">
                 <%= form.collection_check_boxes :size_ids, Size.where( restaurant_id: menu.restaurant.id ), :id, :name, { hide_label: true } do |size| %>
@@ -357,35 +405,22 @@
         </div>
       </div>
   <% end %>
-  <div class="spacing-md"></div>
-  <div class="row">
-    <div class="col-3">
+    <div class="form-actions-2025 form-actions-2025-end d-none d-md-flex">
+      <% if menuitem.persisted? %>
+        <%= link_to t('common.delete'),
+            restaurant_menu_menusection_menuitem_path(menuitem.menusection.menu.restaurant, menuitem.menusection.menu, menuitem.menusection, menuitem),
+            method: :delete,
+            class: 'btn-2025 btn-2025-outline-danger btn-2025-md',
+            data: { confirm: t('common.confirm') } %>
+      <% end %>
+      <%= form.submit value: t('common.save'), class: 'btn-2025 btn-2025-primary btn-2025-md' %>
     </div>
-    <div class="col-9">
-        <span class="float-end">
-        <% if menuitem.persisted? %>
-          <div class="btn btn-dark ">
-            <%= link_to t('common.delete'), restaurant_menu_menusection_menuitem_path(menuitem.menusection.menu.restaurant, menuitem.menusection.menu, menuitem.menusection, menuitem), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
-          </div>
-        <% end %>
-        <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
-        </span>
-    </div>
+
+    <%= render 'shared/sticky_edit_actions_2025',
+        back_url: edit_restaurant_menu_path(menu.restaurant, menu, section: 'items'),
+        delete_url: (menuitem.persisted? ? restaurant_menu_menusection_menuitem_path(menuitem.menusection.menu.restaurant, menuitem.menusection.menu, menuitem.menusection, menuitem) : nil),
+        delete_confirm: t('common.confirm') %>
   </div>
-  <% if menuitem.errors.any? %>
-  <div class="row">
-    <div class="col-3">
-      <span class="float-md-end"><%= t('common.errors') %></span>
-    </div>
-    <div class="col-9">
-      <ul>
-          <% menuitem.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-      </ul>
-    </div>
-  </div>
-  <% end %>
 <% end %>
   <% if menuitem.menuitem_size_mappings.count > 0 %>
       <div class="form-group row">

@@ -17,12 +17,28 @@ if Rails.env.test?
 else
   # Use S3 in production or if explicitly configured in development
   require "shrine/storage/s3"
+  require "aws-sdk-s3"
   
-  s3_options = {
-    bucket:            Rails.application.credentials.dig(:aws, :bucket),
+  ca_bundle = ENV['AWS_CA_BUNDLE'].presence || ENV['SSL_CERT_FILE'].presence
+  if ca_bundle.blank?
+    ['/etc/ssl/cert.pem', '/usr/local/etc/openssl@3/cert.pem', '/opt/homebrew/etc/openssl@3/cert.pem'].each do |p|
+      if File.exist?(p)
+        ca_bundle = p
+        break
+      end
+    end
+  end
+
+  aws_client_options = {
+    region:            Rails.application.credentials.dig(:aws, :region),
     access_key_id:     Rails.application.credentials.dig(:aws, :access_key_id),
     secret_access_key: Rails.application.credentials.dig(:aws, :secret_access_key),
-    region:            Rails.application.credentials.dig(:aws, :region),
+  }
+  aws_client_options[:ssl_ca_bundle] = ca_bundle if ca_bundle.present?
+
+  s3_options = {
+    bucket: Rails.application.credentials.dig(:aws, :bucket),
+    client: Aws::S3::Client.new(**aws_client_options),
   }
   
   Shrine.storages = {

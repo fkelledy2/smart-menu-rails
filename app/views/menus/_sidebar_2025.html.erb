@@ -35,13 +35,6 @@
       <span><%= t('.details', default: 'Details') %></span>
     <% end %>
 
-    <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'design'),
-        class: "sidebar-link #{'active' if current_section == 'design'}",
-        data: { turbo_frame: 'menu_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick' } do %>
-      <i class="bi bi-palette"></i>
-      <span><%= t('.design', default: 'Design') %></span>
-    <% end %>
-
     <%= link_to edit_restaurant_menu_path(menu.restaurant, menu, section: 'schedule'),
         class: "sidebar-link #{'active' if current_section == 'schedule'}",
         data: { turbo_frame: 'menu_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick' } do %>

@@ -1,6 +1,6 @@
 class MenuitemsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_menuitem, only: %i[show edit update destroy analytics]
+  before_action :set_menuitem, only: %i[show edit update destroy analytics generate_ai_image image_status]
   before_action :set_currency
 
   # Pundit authorization
@@ -68,6 +68,52 @@ class MenuitemsController < ApplicationController
       format.html # Default HTML view
       format.json { render 'index_minimal' } # Use optimized minimal JSON view
     end
+  end
+
+  # POST /restaurants/:restaurant_id/menus/:menu_id/menusections/:menusection_id/menuitems/:id/generate_ai_image
+  def generate_ai_image
+    authorize @menuitem, :update?
+
+    # Ensure there's a genimage record for this item
+    if @menuitem.genimage.nil?
+      @genimage = Genimage.new
+      @genimage.restaurant = @menuitem.menusection.menu.restaurant
+      @genimage.menu = @menuitem.menusection.menu
+      @genimage.menusection = @menuitem.menusection
+      @genimage.menuitem = @menuitem
+      @genimage.created_at = DateTime.current
+      @genimage.updated_at = DateTime.current
+      @genimage.save
+    end
+
+    if @menuitem.itemtype != 'wine' && @menuitem.genimage.present?
+      MenuItemImageGeneratorJob.perform_async(@menuitem.genimage.id)
+    end
+
+    respond_to do |format|
+      format.html do
+        redirect_to edit_restaurant_menu_menusection_menuitem_path(
+          @menuitem.menusection.menu.restaurant,
+          @menuitem.menusection.menu,
+          @menuitem.menusection,
+          @menuitem,
+        )
+      end
+      format.json { render json: { status: 'queued' } }
+    end
+  end
+
+  # GET /restaurants/:restaurant_id/menus/:menu_id/menusections/:menusection_id/menuitems/:id/image_status
+  def image_status
+    authorize @menuitem, :show?
+
+    image_url = @menuitem.webp_url(:medium) || @menuitem.medium_url || @menuitem.image_url
+    render json: {
+      menuitem_id: @menuitem.id,
+      updated_at: @menuitem.updated_at.to_i,
+      has_image: @menuitem.image.present?,
+      image_url: image_url,
+    }
   end
 
   # GET /menuitems/1 or /menuitems/1.json

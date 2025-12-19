@@ -77,6 +77,56 @@
   }
 }
 
+.sticky-actions-2025 {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--z-fixed);
+  background-color: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--color-gray-200);
+  box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06);
+  padding: var(--space-3) 0;
+  padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
+}
+
+.form-with-sticky-actions-2025 {
+  padding-bottom: calc(var(--space-12) + env(safe-area-inset-bottom));
+}
+
+.form-stack-2025 {
+  .form-group.row {
+    flex-direction: column;
+    margin-left: 0;
+    margin-right: 0;
+
+    .col-3,
+    .col-9 {
+      flex: 0 0 100%;
+      max-width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .float-md-end {
+      float: none !important;
+    }
+
+    .col-form-label {
+      display: block;
+      margin-bottom: var(--space-2);
+    }
+  }
+}
+
+.menuitem-image-preview-2025 {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 // Textarea
 textarea.form-control-2025 {
   min-height: 100px;

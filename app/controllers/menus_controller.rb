@@ -825,7 +825,6 @@ class MenusController < ApplicationController
   def menu_section_partial_name(section)
     case section
     when 'details' then 'details_2025'
-    when 'design' then 'design_2025'
     when 'sections' then 'sections_2025'
     when 'items' then 'items_2025'
     when 'schedule' then 'schedule_2025'
