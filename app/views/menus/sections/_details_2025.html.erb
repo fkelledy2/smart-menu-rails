@@ -160,7 +160,7 @@
         <i class="bi bi-list-ul"></i>
       </div>
       <div class="stat-info">
-        <div class="stat-value"><%= menu.menuitems.count %></div>
+        <div class="stat-value"><%= (defined?(@menuItemCount) && menu == @menu && @menuItemCount.present?) ? @menuItemCount : menu.menuitems.count %></div>
         <div class="stat-label"><%= t('.items', default: 'Items') %></div>
       </div>
     <% end %>

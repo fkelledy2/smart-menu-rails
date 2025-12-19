@@ -1,14 +1,15 @@
 <%#
-  Sidebar Navigation for Menu Configuration
+  Menu Sidebar Navigation - 2025 UI
+  Menu Configuration
   Groups menu management into 3 logical sections
 %>
 
+<%# Calculate counts for badges %>
 <%
-  # Calculate counts for badges
   menu = local_assigns[:menu] || @menu
-  sections_count = menu.menusections.count rescue 0
-  items_count = menu.menuitems.count rescue 0
-  schedules_count = menu.menuavailabilities.count rescue 0
+  sections_count = local_assigns[:sections_count] || (@_menu_sections_count ||= (menu.menusections.count rescue 0))
+  items_count = local_assigns[:items_count] || (@_menu_items_count ||= (menu.menuitems.count rescue 0))
+  schedules_count = local_assigns[:schedules_count] || (@_menu_schedules_count ||= (menu.menuavailabilities.count rescue 0))
   current_section = local_assigns[:current_section] || 'details'
 %>
 

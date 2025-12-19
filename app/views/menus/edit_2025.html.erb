@@ -37,12 +37,14 @@
           <% end %>
 
           <!-- Quick Stats -->
-          <span class="text-sm text-gray-500">
-            <%= @menu.menusections.count %> <%= t('.sections', default: 'sections') %>
-          </span>
-          <span class="text-sm text-gray-500">
-            <%= @menu.menuitems.count %> <%= t('.items', default: 'items') %>
-          </span>
+          <div class="d-flex align-items-center gap-3">
+            <span class="text-sm text-gray-500">
+              <%= @menu.menusections.count %> <%= t('.sections', default: 'sections') %>
+            </span>
+            <span class="text-sm text-gray-500">
+              <%= defined?(@menuItemCount) && @menuItemCount.present? ? @menuItemCount : @menu.menuitems.count %> <%= t('.items', default: 'items') %>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -172,6 +174,10 @@
           <div class="progress">
             <div id="ai-progress-bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
+          <div id="ai-progress-log" class="mt-3 d-none" style="max-height: 220px; overflow: auto;">
+            <div class="small text-muted mb-2">Progress log</div>
+            <div id="ai-progress-log-items" class="small"></div>
+          </div>
           <div class="mt-3 d-none" id="ai-preview">
             <div class="mb-2">
               <span class="small text-muted me-1">Last Image:</span>
@@ -281,6 +287,14 @@
       confirmPane.querySelector('p').textContent = confirmText;
       // Hide image preview for localization mode, show for AI mode
       document.getElementById('ai-preview').style.display = (currentMode === 'localize' || currentMode === 'polish') ? 'none' : '';
+
+      const logWrap = document.getElementById('ai-progress-log');
+      const logItems = document.getElementById('ai-progress-log-items');
+      if (logItems) logItems.innerHTML = '';
+      if (logWrap) {
+        logWrap.classList.toggle('d-none', !(currentMode === 'localize' || currentMode === 'polish'));
+      }
+
       // Show localization options only in localize mode
       const locOpts = document.getElementById('localize-options');
       if (locOpts) {
@@ -309,6 +323,9 @@
       progressPane.style.display = '';
       document.getElementById('ai-progress-text').textContent = (currentMode === 'localize') ? 'Queued localization…' : (currentMode === 'polish' ? 'Queued polishing…' : 'Queued…');
       updateBar(0);
+
+      const logItems = document.getElementById('ai-progress-log-items');
+      if (logItems) logItems.innerHTML = '';
 
       const url = pendingForm.action;
       const formData = new FormData(pendingForm);
@@ -368,6 +385,8 @@
       base.searchParams.set('job_id', jobId);
       const url = base.toString();
 
+      let lastLogStamp = null;
+
       // Clear any existing timer
       if(pollTimer){ clearInterval(pollTimer); }
 
@@ -383,6 +402,23 @@
           document.getElementById('ai-progress-text').textContent = name || (p.message || status);
           const percent = total > 0 ? Math.floor((current / total) * 100) : (status === 'completed' ? 100 : 0);
           updateBar(percent);
+
+          const logItemsEl = document.getElementById('ai-progress-log-items');
+          if (logItemsEl && Array.isArray(p.log) && p.log.length > 0) {
+            const newest = p.log[p.log.length - 1];
+            const newestStamp = newest && (newest.at || newest.message);
+            if (newestStamp && newestStamp !== lastLogStamp) {
+              lastLogStamp = newestStamp;
+              logItemsEl.innerHTML = p.log
+                .slice(-50)
+                .map((row) => {
+                  const msg = (row && row.message) ? row.message : '';
+                  return `<div class="mb-1">${msg.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</div>`;
+                })
+                .join('');
+              logItemsEl.scrollTop = logItemsEl.scrollHeight;
+            }
+          }
 
           // Update preview if we have an image URL
           const previewWrap = document.getElementById('ai-preview');
@@ -404,6 +440,7 @@
               abs.searchParams.set('v', v);
             }
             previewImg.src = abs.toString();
+            previewWrap.classList.remove('d-none');
             previewWrap.style.display = '';
           }
           if(status === 'completed' || status === 'failed'){
@@ -431,6 +468,8 @@
       base.searchParams.set('job_id', jobId);
       const url = base.toString();
 
+      let lastLogStamp = null;
+
       if(pollTimer){ clearInterval(pollTimer); }
       pollTimer = setInterval(async () => {
         try{
@@ -446,6 +485,23 @@
           document.getElementById('ai-progress-text').textContent = total > 0 ? `${baseMsg} — ${current}/${total}` : baseMsg;
           const percent = total > 0 ? Math.floor((current / total) * 100) : (status === 'completed' ? 100 : 0);
           updateBar(percent);
+
+          const logItemsEl = document.getElementById('ai-progress-log-items');
+          if (logItemsEl && Array.isArray(p.log) && p.log.length > 0) {
+            const newest = p.log[p.log.length - 1];
+            const newestStamp = newest && (newest.at || newest.message);
+            if (newestStamp && newestStamp !== lastLogStamp) {
+              lastLogStamp = newestStamp;
+              logItemsEl.innerHTML = p.log
+                .slice(-50)
+                .map((row) => {
+                  const msg = (row && row.message) ? row.message : '';
+                  return `<div class="mb-1">${msg.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</div>`;
+                })
+                .join('');
+              logItemsEl.scrollTop = logItemsEl.scrollHeight;
+            }
+          }
 
           if(status === 'completed' || status === 'failed'){
             clearInterval(pollTimer);
@@ -471,6 +527,8 @@
       base.searchParams.set('job_id', jobId);
       const url = base.toString();
 
+      let lastLogStamp = null;
+
       if(pollTimer){ clearInterval(pollTimer); }
       pollTimer = setInterval(async () => {
         try{
@@ -493,6 +551,24 @@
           })();
           const baseMsg = p.message || (locale ? `Localized ${displayLocale}` : status);
           document.getElementById('ai-progress-text').textContent = total > 0 ? `${baseMsg} — ${current}/${total}` : baseMsg;
+
+          const logItemsEl = document.getElementById('ai-progress-log-items');
+          if (logItemsEl && Array.isArray(p.log) && p.log.length > 0) {
+            const newest = p.log[p.log.length - 1];
+            const newestStamp = newest && (newest.at || newest.message);
+            if (newestStamp && newestStamp !== lastLogStamp) {
+              lastLogStamp = newestStamp;
+              logItemsEl.innerHTML = p.log
+                .slice(-50)
+                .map((row) => {
+                  const msg = (row && row.message) ? row.message : '';
+                  return `<div class="mb-1">${msg.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</div>`;
+                })
+                .join('');
+              logItemsEl.scrollTop = logItemsEl.scrollHeight;
+            }
+          }
+
           const percent = total > 0 ? Math.floor((current / total) * 100) : (status === 'completed' ? 100 : 0);
           updateBar(percent);
           if(status === 'completed' || status === 'failed'){

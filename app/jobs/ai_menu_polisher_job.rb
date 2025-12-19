@@ -150,15 +150,52 @@ class AiMenuPolisherJob
 
   private
 
-  def set_progress(status, current, total, menu_id, message: nil, extra: nil)
+  def update_progress(payload)
     Sidekiq.redis do |r|
-      r.setex("polish:#{jid}", 24 * 3600, {
-        status: status,
-        current: current,
-        total: total,
-        message: message || 'AI polishing in progress',
-        menu_id: menu_id
-      }.merge(extra.is_a?(Hash) ? extra : {}).to_json)
+      existing = {}
+      begin
+        json = r.get("polish:#{jid}")
+        existing = json.present? ? JSON.parse(json) : {}
+      rescue StandardError
+        existing = {}
+      end
+
+      merged = existing.merge(payload.stringify_keys)
+      r.setex("polish:#{jid}", 24 * 3600, merged.to_json)
+    end
+  rescue => e
+    Rails.logger.warn("[AIMenuPolisherJob] Failed to write progress for #{jid}: #{e.class}: #{e.message}")
+  end
+
+  def append_progress_log(message)
+    Sidekiq.redis do |r|
+      json = r.get("polish:#{jid}")
+      payload = json.present? ? JSON.parse(json) : {}
+      log = Array(payload['log'])
+      log << { at: Time.current.iso8601, message: message }
+      payload['log'] = log.last(50)
+      r.setex("polish:#{jid}", 24 * 3600, payload.to_json)
+    end
+  rescue => e
+    Rails.logger.warn("[AIMenuPolisherJob] Failed to append progress log for #{jid}: #{e.class}: #{e.message}")
+  end
+
+  def set_progress(status, current, total, menu_id, message: nil, extra: nil)
+    payload = {
+      status: status,
+      current: current,
+      total: total,
+      message: message || 'AI polishing in progress',
+      menu_id: menu_id
+    }.merge(extra.is_a?(Hash) ? extra : {})
+
+    update_progress(payload)
+
+    msg = payload[:message].to_s
+    if payload[:current_item_name].present?
+      append_progress_log("#{payload[:current_item_name]} — #{msg}")
+    elsif msg.present?
+      append_progress_log(msg)
     end
   rescue => e
     Rails.logger.warn("[AIMenuPolisherJob] Failed to set progress: #{e.message}")

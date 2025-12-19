@@ -143,7 +143,7 @@ class MenusController < ApplicationController
   def polish
     authorize @menu, :update?
 
-    total = @menu.menuitems.count
+    total = (@menuItemCount.presence || @menu.menuitems.count)
     jid = AiMenuPolisherJob.perform_async(@menu.id)
 
     begin
@@ -210,7 +210,8 @@ class MenusController < ApplicationController
     force = params[:force].to_s == 'true'
     
     # Trigger the background job to localize the menu
-    total = active_locales.count * @menu.menuitems.count
+    items_count = (@menuItemCount.presence || @menu.menuitems.count)
+    total = active_locales.count * items_count
     jid = MenuLocalizationJob.perform_async('menu', @menu.id, force)
 
     # Initialize localization progress in Redis
@@ -908,7 +909,7 @@ class MenusController < ApplicationController
       @restaurantCurrency = ISO4217::Currency.from_code(@menu.restaurant.currency || 'USD')
       @canAddMenuItem = false
       if current_user
-        @menuItemCount = @menu.menuitems.count
+        @menuItemCount ||= @menu.menuitems.count
         if @menuItemCount < current_user.plan.itemspermenu || current_user.plan.itemspermenu == -1
           @canAddMenuItem = true
         end

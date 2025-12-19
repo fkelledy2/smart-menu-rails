@@ -286,16 +286,17 @@ class LocalizeMenuService
         else
           stats[:item_locales_updated] += 1
         end
-        # Notify progress callback
-        if block_given?
-          yield({
-            item_id: item.id,
-            item_name: item.name,
-            locale: locale_code,
-            translated_name: item_locale.name,
-            translated_description: item_locale.description
-          })
-        end
+      end
+
+      if block_given?
+        yield({
+          item_id: item.id,
+          item_name: item.name,
+          locale: locale_code,
+          translated_name: item_locale.name,
+          translated_description: item_locale.description,
+          changed: item_locale.previous_changes.present?,
+        })
       end
 
       stats

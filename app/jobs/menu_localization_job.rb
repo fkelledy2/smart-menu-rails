@@ -43,20 +43,87 @@ class MenuLocalizationJob
 
   private
 
+  def update_progress(payload)
+    Sidekiq.redis do |r|
+      existing = {}
+      begin
+        json = r.get("localize:#{jid}")
+        existing = json.present? ? JSON.parse(json) : {}
+      rescue StandardError
+        existing = {}
+      end
+
+      merged = existing.merge(payload.stringify_keys)
+      r.setex("localize:#{jid}", 24 * 3600, merged.to_json)
+    end
+  rescue StandardError => e
+    Rails.logger.warn("[MenuLocalizationJob] Failed to write progress for #{jid}: #{e.class}: #{e.message}")
+  end
+
+  def append_progress_log(message)
+    Sidekiq.redis do |r|
+      json = r.get("localize:#{jid}")
+      payload = json.present? ? JSON.parse(json) : {}
+      log = Array(payload['log'])
+      log << { at: Time.current.iso8601, message: message }
+      log = log.last(50)
+      payload['log'] = log
+      r.setex("localize:#{jid}", 24 * 3600, payload.to_json)
+    end
+  rescue StandardError => e
+    Rails.logger.warn("[MenuLocalizationJob] Failed to append progress log for #{jid}: #{e.class}: #{e.message}")
+  end
+
   # Use Case 1: Localize a specific menu to all restaurant locales
   def localize_menu(menu_id, force: false)
     menu = Menu.find(menu_id)
-    # Log with exact phrase expected by tests
     Rails.logger.info("[MenuLocalizationJob] Localizing menu ##{menu_id} (force: #{force})")
     Rails.logger.info("[MenuLocalizationJob] Delegating menu ##{menu_id} localization (force: #{force}) to LocalizeMenuService")
 
-    # Delegate to service method as tested; ignore `force` here to satisfy expected arity
-    stats = LocalizeMenuService.localize_menu_to_all_locales(menu)
+    update_progress(
+      status: 'running',
+      current: 0,
+      message: "Starting menu localization#{force ? ' (force)' : ''}",
+      menu_id: menu_id
+    )
+
+    stats = LocalizeMenuService.localize_menu_to_all_locales(menu, force: force) do |evt|
+      begin
+        Sidekiq.redis do |r|
+          json = r.get("localize:#{jid}")
+          payload = json.present? ? JSON.parse(json) : {}
+          payload['status'] ||= 'running'
+          payload['current'] = payload.fetch('current', 0).to_i + 1
+          payload['current_locale'] = evt[:locale]
+          verb = evt[:changed] ? 'Localized' : 'Checked'
+          payload['message'] = "#{verb} #{evt[:item_name]}"
+          payload['menu_id'] ||= menu_id
+          log = Array(payload['log'])
+          status_tag = evt[:changed] ? 'localized' : 'skipped'
+          log << { at: Time.current.iso8601, message: "#{evt[:locale].to_s.upcase}: #{evt[:item_name]} (#{status_tag})" }
+          payload['log'] = log.last(50)
+          r.setex("localize:#{jid}", 24 * 3600, payload.to_json)
+        end
+      rescue StandardError => e
+        Rails.logger.warn("[MenuLocalizationJob] Progress update failed for #{jid}: #{e.class}: #{e.message}")
+      end
+    end
+
+    update_progress(
+      status: 'completed',
+      message: 'Completed'
+    )
+
     Rails.logger.info("[MenuLocalizationJob] Completed menu ##{menu_id} localization: #{stats}")
     stats
   rescue ActiveRecord::RecordNotFound => e
     Rails.logger.warn("[MenuLocalizationJob] Menu ##{menu_id} not found (likely deleted): #{e.message}")
+    update_progress(status: 'failed', message: "Menu ##{menu_id} not found")
     { locales_processed: 0, menu_locales_created: 0, errors: ["Menu ##{menu_id} not found"] }
+  rescue StandardError => e
+    update_progress(status: 'failed', message: "Failed: #{e.class}: #{e.message}")
+    append_progress_log("ERROR: #{e.class}: #{e.message}")
+    raise
   end
 
   # Use Case 2: Localize all restaurant menus to a newly added locale
