@@ -4,6 +4,33 @@ export function initSmartmenus() {
   
   // Initialize time-based menu restrictions
   initMenuTimeRestrictions();
+
+  // Locale switcher (customer view)
+  // Some Smartmenu pages do not load order/channel modules; bind locale switching here so it always works.
+  (function bindLocaleSwitcher() {
+    if (window.__SM_LOCALE_SWITCH_BOUND) return;
+    window.__SM_LOCALE_SWITCH_BOUND = true;
+
+    document.addEventListener('click', (evt) => {
+      try {
+        const el = evt.target instanceof Element ? evt.target : null;
+        if (!el) return;
+
+        const img = el.closest && el.closest('.setparticipantlocale');
+        if (!img) return;
+
+        const locale = (img.getAttribute('data-locale') || '').toLowerCase();
+        if (!locale) return;
+
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        const url = new URL(window.location.href);
+        url.searchParams.set('locale', locale);
+        window.location.assign(url.toString());
+      } catch (_) {}
+    }, true);
+  })();
   
   function smlink(cell, formatterParams) {
     const id = cell.getValue();

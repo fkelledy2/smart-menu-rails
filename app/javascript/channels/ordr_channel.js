@@ -203,30 +203,39 @@ function refreshOrderJSLogic() {
     });
   }
   $(document).on('click', '.setparticipantlocale', function (event) {
-    const locale = $(this).data('locale');
-    if ($('#currentParticipant').text()) {
-      const ordrparticipant = {
-        ordrparticipant: {
-          preferredlocale: locale,
-        },
-      };
-      patch('/ordrparticipants/' + $('#currentParticipant').text(), ordrparticipant);
+    const $target = $(event.target);
+    const locale = $target.data('locale') || $target.closest('[data-locale]').data('locale') || $(this).data('locale');
+    const ctx = document.getElementById('contextContainer');
+    const ctxParticipantId = ctx && ctx.dataset ? (ctx.dataset.participantId || '') : '';
+    const ctxMenuParticipantId = ctx && ctx.dataset ? (ctx.dataset.menuParticipantId || '') : '';
+    const menuId = getCurrentMenuId() || (ctx && ctx.dataset ? (ctx.dataset.menuId || '') : '');
+
+    const requests = [];
+
+    if (ctxParticipantId) {
+      const ordrparticipant = { ordrparticipant: { preferredlocale: locale } };
+      requests.push(patch(`/ordrparticipants/${ctxParticipantId}`, ordrparticipant));
     }
-    if ($('#menuParticipant').text()) {
-      const menuparticipant = {
-        menuparticipant: {
-          preferredlocale: locale,
-        },
-      };
+
+    if (ctxMenuParticipantId) {
+      const menuparticipant = { menuparticipant: { preferredlocale: locale } };
       const restaurantId = getRestaurantId();
-      if (!restaurantId) { console.warn('[Locale] Missing restaurant id; aborting'); return; }
-      const menuId = $('#currentMenu').text();
-      const menuParticipantId = $('#menuParticipant').text();
-      patch(
-        `/restaurants/${restaurantId}/menus/${menuId}/menuparticipants/${menuParticipantId}`,
-        menuparticipant
-      );
+      if (!restaurantId || !menuId) { return; }
+      requests.push(patch(`/restaurants/${restaurantId}/menus/${menuId}/menuparticipants/${ctxMenuParticipantId}`, menuparticipant));
     }
+
+    // The Smartmenu UI is server-rendered; locale changes are broadcast as HTML partials in some paths,
+    // but the current client only consumes JSON state updates. To ensure the visible menu language
+    // updates immediately in customer view, refresh the page after the PATCH completes.
+    Promise.allSettled(requests).then(() => {
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set('locale', String(locale || '').toLowerCase());
+        window.location.replace(url.toString());
+      } catch (_) {
+        window.location.reload();
+      }
+    });
     event.preventDefault();
   });
   $('.removeItemFromOrderButton').on('click', function (event) {

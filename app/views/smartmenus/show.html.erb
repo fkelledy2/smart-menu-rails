@@ -44,7 +44,8 @@
       <%= render partial: "smartmenus/showMenuBanner" %>
   </div>
 <% else %>
-  <% cache [@smartmenu, @menu, @restaurant, @header_cache_buster, show_customer_view ? 'customer' : 'staff'], expires_in: 1.hour do %>
+  <% participant_locale = (@ordrparticipant&.preferredlocale || @menuparticipant&.preferredlocale).to_s.downcase.presence %>
+  <% cache [@smartmenu, @menu, @restaurant, @header_cache_buster, I18n.locale, participant_locale, show_customer_view ? 'customer' : 'staff'], expires_in: 1.hour do %>
   <% if show_customer_view %>
   <div id="menuc" class="menu-sticky-header menu-sticky-header-mobile" data-testid="smartmenu-customer-view">
   <% else %>
@@ -64,7 +65,8 @@
             <%= render partial: "smartmenus/showMenuContentStaff", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, tablesetting: @tablesetting } %>
         <% end %>
     <% else %>
-        <% cache_key = [@smartmenu, @menu, @allergyns.maximum(:updated_at), @openOrder&.updated_at, show_customer_view ? 'customer' : 'staff'] %>
+        <% participant_locale = (@ordrparticipant&.preferredlocale || @menuparticipant&.preferredlocale).to_s.downcase.presence %>
+        <% cache_key = [@smartmenu, @menu, @allergyns.maximum(:updated_at), @openOrder&.updated_at, I18n.locale, participant_locale, show_customer_view ? 'customer' : 'staff'] %>
         <% cache cache_key, expires_in: 30.minutes do %>
         <% if show_customer_view %>
             <%= render partial: "smartmenus/showMenuContentCustomer", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, tablesetting: @tablesetting } %>

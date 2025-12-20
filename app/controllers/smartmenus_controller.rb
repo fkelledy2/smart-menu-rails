@@ -61,31 +61,41 @@ class SmartmenusController < ApplicationController
                               .where(status: :active)
                               .order(Arel.sql('allergyns.sequence NULLS LAST, allergyns.name'))
 
-    Rails.logger.warn("[SmartmenusController#show] allergyns SQL: #{allergyns_relation.to_sql}")
+    if params[:debug_allergyns].to_s == 'true'
+      Rails.logger.warn("[SmartmenusController#show] allergyns SQL: #{allergyns_relation.to_sql}")
+    end
     @allergyns = allergyns_relation.to_a
-    Rails.logger.warn(
-      "[SmartmenusController#show] allergyns result count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}"
-    )
 
-    @debug_allergyns_info = {
-      sql: allergyns_relation.to_sql,
-      count: @allergyns.size,
-      ids: @allergyns.map(&:id),
-      names: @allergyns.map(&:name),
-    }
+    if params[:debug_allergyns].to_s == 'true'
+      Rails.logger.warn(
+        "[SmartmenusController#show] allergyns result count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}"
+      )
+
+      @debug_allergyns_info = {
+        sql: allergyns_relation.to_sql,
+        count: @allergyns.size,
+        ids: @allergyns.map(&:id),
+        names: @allergyns.map(&:name),
+      }
+    end
 
     if @allergyns.empty?
       fallback_relation = @restaurant.allergyns
                                      .where(archived: false)
                                      .where(status: :active)
                                      .order(Arel.sql('allergyns.sequence NULLS LAST, allergyns.name'))
-      Rails.logger.warn("[SmartmenusController#show] allergyns empty for menu; using restaurant fallback SQL: #{fallback_relation.to_sql}")
+      if params[:debug_allergyns].to_s == 'true'
+        Rails.logger.warn("[SmartmenusController#show] allergyns empty for menu; using restaurant fallback SQL: #{fallback_relation.to_sql}")
+      end
       @allergyns = fallback_relation.to_a
-      Rails.logger.warn(
-        "[SmartmenusController#show] fallback allergyns count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}"
-      )
-      @debug_allergyns_info[:fallback_sql] = fallback_relation.to_sql
-      @debug_allergyns_info[:fallback_count] = @allergyns.size
+      if params[:debug_allergyns].to_s == 'true'
+        Rails.logger.warn(
+          "[SmartmenusController#show] fallback allergyns count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}"
+        )
+        @debug_allergyns_info ||= {}
+        @debug_allergyns_info[:fallback_sql] = fallback_relation.to_sql
+        @debug_allergyns_info[:fallback_count] = @allergyns.size
+      end
     end
 
     if @tablesetting
@@ -135,6 +145,15 @@ class SmartmenusController < ApplicationController
       mp.smartmenu = @smartmenu
     end
     @menuparticipant.update(smartmenu: @smartmenu) unless @menuparticipant.smartmenu == @smartmenu
+
+    if params[:locale].present?
+      requested = params[:locale].to_s.downcase
+      if I18n.available_locales.map(&:to_s).include?(requested)
+        if @menuparticipant.preferredlocale.to_s.downcase != requested
+          @menuparticipant.update(preferredlocale: requested)
+        end
+      end
+    end
 
     # HTTP caching with ETags for better performance (HTML only).
     # IMPORTANT: Include order context + session in cache key to avoid serving stale pages
@@ -272,7 +291,7 @@ class SmartmenusController < ApplicationController
     @smartmenu = Smartmenu.where(slug: params[:id]).includes(
       :restaurant,
       :tablesetting,
-      menu: [restaurant: :user],
+      menu: [restaurant: %i[user restaurantlocales]],
     ).first
     if @smartmenu
       @restaurant = @smartmenu.restaurant
@@ -295,7 +314,7 @@ class SmartmenusController < ApplicationController
     # This loads all associations needed for rendering the smartmenu view
     # Only load active menu items for public-facing smart menu
     @menu = Menu.includes(
-      :restaurant,
+      { restaurant: :restaurantlocales },
       :menulocales,
       :menuavailabilities,
       menusections: [

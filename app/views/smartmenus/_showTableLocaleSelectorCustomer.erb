@@ -8,7 +8,8 @@
             <% end %>
         </button>
     </div>
-    <% if Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active').count > 0 %>
+    <% active_locales = restaurant.restaurantlocales.where(status: 'active') %>
+    <% if active_locales.any? %>
         <% available_locales = I18n.available_locales.map(&:to_s) %>
         <% selected_locale = nil %>
         <% if ordrparticipant && ordrparticipant.preferredlocale.present? && available_locales.include?(ordrparticipant.preferredlocale.downcase) %>
@@ -32,7 +33,7 @@
                     <% end %>
             </button>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-padding-y-05 dropdown-min-w-0 z-index-10000" aria-labelledby="locales">
-                <% Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active').each do |restaurantlocale| %>
+                <% active_locales.each do |restaurantlocale| %>
                     <li>
                         <a class="dropdown-item min-h-44 d-flex align-items-center py-2 px-3" href="#">
                             <img src="<%= restaurantlocale.flag %>" data-locale="<%= restaurantlocale.locale.downcase %>" tooltip="<%= restaurantlocale.language %>" class="setparticipantlocale rounded-1 border border-white flag-icon">
