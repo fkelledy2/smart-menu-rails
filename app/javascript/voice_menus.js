@@ -470,9 +470,31 @@ async function startRecording(locale) {
     },
   };
 
+  if (!navigator.mediaDevices?.getUserMedia) {
+    throw new Error('Microphone not supported in this browser.');
+  }
+
   const stream = await navigator.mediaDevices.getUserMedia(constraints);
-  const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
-  const recorder = new MediaRecorder(stream, { mimeType });
+
+  // Mobile Safari often does not support audio/webm; forcing it causes MediaRecorder to throw.
+  // Pick the first supported mimeType; if none are supported, omit the option and let the browser decide.
+  const candidates = [
+    'audio/webm;codecs=opus',
+    'audio/webm',
+    'audio/mp4',
+    'audio/aac',
+  ];
+  const supported = candidates.find((t) => {
+    try { return typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t); } catch (_) { return false; }
+  }) || null;
+
+  let recorder;
+  try {
+    recorder = supported ? new MediaRecorder(stream, { mimeType: supported }) : new MediaRecorder(stream);
+  } catch (e) {
+    try { stream.getTracks().forEach((t) => t.stop()); } catch (_) {}
+    throw e;
+  }
   const chunks = [];
 
   recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
@@ -509,6 +531,9 @@ export function initVoiceMenus() {
   if (!btn) return;
   if (btn.__voiceBound) return;
   btn.__voiceBound = true;
+
+  // Help mobile browsers treat this as a deliberate gesture (avoid scroll/pinch interfering).
+  try { btn.style.touchAction = 'none'; } catch (_) {}
 
   try { commonsInitOrderBindings(); } catch (_) {}
 
@@ -574,7 +599,17 @@ export function initVoiceMenus() {
     }
   };
 
-  btn.addEventListener('pointerdown', (e) => { e.preventDefault(); onDown(); });
-  btn.addEventListener('pointerup', (e) => { e.preventDefault(); onUp(); });
-  btn.addEventListener('pointercancel', (e) => { e.preventDefault(); onUp(); });
+  // Prefer Pointer Events; add touch/mouse fallbacks for older/mobile browsers.
+  const bind = (name, fn, opts) => { try { btn.addEventListener(name, fn, opts); } catch (_) {} };
+
+  bind('pointerdown', (e) => { try { e.preventDefault(); } catch (_) {} onDown(); }, { passive: false });
+  bind('pointerup', (e) => { try { e.preventDefault(); } catch (_) {} onUp(); }, { passive: false });
+  bind('pointercancel', (e) => { try { e.preventDefault(); } catch (_) {} onUp(); }, { passive: false });
+
+  bind('touchstart', (e) => { try { e.preventDefault(); } catch (_) {} onDown(); }, { passive: false });
+  bind('touchend', (e) => { try { e.preventDefault(); } catch (_) {} onUp(); }, { passive: false });
+  bind('touchcancel', (e) => { try { e.preventDefault(); } catch (_) {} onUp(); }, { passive: false });
+
+  bind('mousedown', (e) => { try { e.preventDefault(); } catch (_) {} onDown(); }, false);
+  bind('mouseup', (e) => { try { e.preventDefault(); } catch (_) {} onUp(); }, false);
 }
