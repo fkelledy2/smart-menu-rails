@@ -2,6 +2,52 @@ import { post as commonsPost, getCurrentOrderId, getCurrentMenuId, getRestaurant
 
 function qs(sel) { return document.querySelector(sel); }
 
+let __voiceMicStream = null;
+let __voiceMicReleaseTimer = null;
+
+function stopMicStream() {
+  try {
+    if (__voiceMicReleaseTimer) {
+      clearTimeout(__voiceMicReleaseTimer);
+      __voiceMicReleaseTimer = null;
+    }
+  } catch (_) {}
+
+  try {
+    if (__voiceMicStream) {
+      try { __voiceMicStream.getTracks().forEach((t) => t.stop()); } catch (_) {}
+    }
+  } finally {
+    __voiceMicStream = null;
+  }
+}
+
+async function getOrCreateMicStream(constraints) {
+  if (__voiceMicStream) {
+    try {
+      if (__voiceMicReleaseTimer) {
+        clearTimeout(__voiceMicReleaseTimer);
+        __voiceMicReleaseTimer = null;
+      }
+    } catch (_) {}
+    return __voiceMicStream;
+  }
+
+  __voiceMicStream = await navigator.mediaDevices.getUserMedia(constraints);
+  return __voiceMicStream;
+}
+
+function scheduleMicRelease(ms = 45000) {
+  // Keep the mic stream alive briefly to avoid mobile Chrome re-showing the permission banner
+  // on every press/hold. Release after idle to avoid keeping the mic on indefinitely.
+  try {
+    if (__voiceMicReleaseTimer) clearTimeout(__voiceMicReleaseTimer);
+    __voiceMicReleaseTimer = setTimeout(() => {
+      stopMicStream();
+    }, ms);
+  } catch (_) {}
+}
+
 function ensureUi() {
   if (document.getElementById('voice-ptt')) return;
   const host = document.body || document.documentElement;
@@ -80,6 +126,46 @@ function ensureUi() {
   wrap.appendChild(out);
   wrap.appendChild(btn);
   host.appendChild(wrap);
+
+  // iOS Chrome/Safari: when the browser toolbar collapses/expands on scroll, `position: fixed; bottom: 0`
+  // can appear to "float" above the true bottom. Use VisualViewport to keep it pinned.
+  (function bindVisualViewportPinning() {
+    if (wrap.__vvBound) return;
+    wrap.__vvBound = true;
+
+    const wrapHeight = 70;
+    let raf = null;
+
+    const positionToVisualViewport = () => {
+      raf = null;
+      try {
+        const vv = window.visualViewport;
+        if (!vv) return;
+
+        // Place wrapper at the bottom of the *visual* viewport.
+        const top = Math.max(0, Math.round(vv.offsetTop + vv.height - wrapHeight));
+        wrap.style.top = `${top}px`;
+        wrap.style.bottom = 'auto';
+      } catch (_) {}
+    };
+
+    const schedule = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(positionToVisualViewport);
+    };
+
+    try {
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', schedule);
+        window.visualViewport.addEventListener('scroll', schedule);
+      }
+      window.addEventListener('orientationchange', schedule);
+      window.addEventListener('resize', schedule);
+    } catch (_) {}
+
+    // Initial position
+    schedule();
+  })();
 }
 
 function setPttButtonState(listening) {
@@ -474,7 +560,7 @@ async function startRecording(locale) {
     throw new Error('Microphone not supported in this browser.');
   }
 
-  const stream = await navigator.mediaDevices.getUserMedia(constraints);
+  const stream = await getOrCreateMicStream(constraints);
 
   // Mobile Safari often does not support audio/webm; forcing it causes MediaRecorder to throw.
   // Pick the first supported mimeType; if none are supported, omit the option and let the browser decide.
@@ -492,7 +578,8 @@ async function startRecording(locale) {
   try {
     recorder = supported ? new MediaRecorder(stream, { mimeType: supported }) : new MediaRecorder(stream);
   } catch (e) {
-    try { stream.getTracks().forEach((t) => t.stop()); } catch (_) {}
+    // If MediaRecorder cannot be created, release mic so we don't leave it open.
+    stopMicStream();
     throw e;
   }
   const chunks = [];
@@ -504,7 +591,9 @@ async function startRecording(locale) {
   return {
     stop: () => new Promise((resolve) => {
       recorder.onstop = () => {
-        try { stream.getTracks().forEach((t) => t.stop()); } catch (_) {}
+        // Do not stop the underlying mic stream immediately; keep it briefly to avoid
+        // repeated mobile permission banners on every press/hold.
+        scheduleMicRelease();
         const blob = new Blob(chunks, { type: mimeType });
         resolve(blob);
       };
@@ -537,6 +626,21 @@ export function initVoiceMenus() {
   try { btn.style.touchAction = 'none'; } catch (_) {}
 
   try { commonsInitOrderBindings(); } catch (_) {}
+
+  // Ensure we don't keep the mic stream alive when the page is backgrounded/navigated away.
+  (function bindMicCleanup() {
+    if (window.__VOICE_MIC_CLEANUP_BOUND) return;
+    window.__VOICE_MIC_CLEANUP_BOUND = true;
+
+    try {
+      window.addEventListener('pagehide', () => { try { stopMicStream(); } catch (_) {} }, { passive: true });
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState !== 'visible') {
+          try { stopMicStream(); } catch (_) {}
+        }
+      }, { passive: true });
+    } catch (_) {}
+  })();
 
   let stopSpeech = null;
   let recorder = null;
