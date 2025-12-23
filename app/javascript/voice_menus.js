@@ -515,11 +515,12 @@ async function startRecording(locale) {
 
 export function initVoiceMenus() {
   try {
+    const isCustomerView = !!document.querySelector('[data-testid="smartmenu-customer-view"]');
     const ctx = document.getElementById('contextContainer');
     const allowOrdering = (ctx?.dataset?.menuAllowOrdering || '') === '1';
     const voiceOrderingEnabled = (ctx?.dataset?.menuVoiceOrderingEnabled || '') === '1';
 
-    if (!(allowOrdering && voiceOrderingEnabled)) {
+    if (!(isCustomerView && allowOrdering && voiceOrderingEnabled)) {
       try { document.getElementById('voice-menu-ui')?.remove(); } catch (_) {}
       return;
     }

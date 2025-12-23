@@ -9,8 +9,9 @@ export function initSmartmenus() {
     const ctx = document.getElementById('contextContainer');
     const allowOrdering = (ctx?.dataset?.menuAllowOrdering || '') === '1';
     const voiceOrderingEnabled = (ctx?.dataset?.menuVoiceOrderingEnabled || '') === '1';
+    const isCustomerView = !!document.querySelector('[data-testid="smartmenu-customer-view"]');
 
-    if (allowOrdering && voiceOrderingEnabled) {
+    if (isCustomerView && allowOrdering && voiceOrderingEnabled) {
       import('./voice_menus.js').then((m) => {
         try { m.initVoiceMenus(); } catch (_) {}
       });
