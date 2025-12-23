@@ -262,7 +262,9 @@ Rails.application.routes.draw do
   # ============================================================================
   # SMART MENU SYSTEM
   # ============================================================================
-  resources :smartmenus
+  resources :smartmenus do
+    resources :voice_commands, only: %i[create show], controller: 'smartmenus_voice_commands'
+  end
   patch 'smartmenus/:smartmenu_id/locale', to: 'smartmenus_locale#update', as: :smartmenu_locale
   
   # ============================================================================

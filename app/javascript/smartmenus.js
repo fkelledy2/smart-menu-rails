@@ -5,6 +5,18 @@ export function initSmartmenus() {
   // Initialize time-based menu restrictions
   initMenuTimeRestrictions();
 
+  try {
+    const ctx = document.getElementById('contextContainer');
+    const allowOrdering = (ctx?.dataset?.menuAllowOrdering || '') === '1';
+    const voiceOrderingEnabled = (ctx?.dataset?.menuVoiceOrderingEnabled || '') === '1';
+
+    if (allowOrdering && voiceOrderingEnabled) {
+      import('./voice_menus.js').then((m) => {
+        try { m.initVoiceMenus(); } catch (_) {}
+      });
+    }
+  } catch (_) {}
+
   // Locale switcher (customer view)
   // Some Smartmenu pages do not load order/channel modules; bind locale switching here so it always works.
   (function bindLocaleSwitcher() {

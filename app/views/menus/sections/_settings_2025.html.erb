@@ -117,6 +117,39 @@
       </div>
     </div>
 
+    <!-- Voice Ordering -->
+    <div id="feature-card-voice-ordering" class="feature-card <%= 'feature-card-disabled' unless (restaurant.allowOrdering && menu.allowOrdering) %>">
+      <div class="feature-card-icon bg-info">
+        <i class="bi bi-mic-fill"></i>
+      </div>
+      <div class="feature-card-content">
+        <h5 class="feature-card-title">
+          <%= t('.voice_ordering', default: 'Voice Ordering') %>
+        </h5>
+        <p class="feature-card-description">
+          <%= t('.voice_ordering_help', default: 'Enable customers to order using voice commands on this menu') %>
+        </p>
+      </div>
+      <div class="feature-card-toggle">
+        <% unless restaurant.allowOrdering %>
+          <span class="badge bg-warning text-dark">
+            <i class="bi bi-lock"></i> <%= t('.disabled_at_restaurant', default: 'Disabled at restaurant level') %>
+          </span>
+        <% end %>
+        <div class="form-check form-switch">
+          <input type="hidden" name="menu[voiceOrderingEnabled]" value="false">
+          <input class="form-check-input"
+                 type="checkbox"
+                 name="menu[voiceOrderingEnabled]"
+                 id="menu_voiceOrderingEnabled_settings"
+                 value="true"
+                 <%= 'checked' if menu.voiceOrderingEnabled %>
+                 <%= 'disabled' unless (restaurant.allowOrdering && menu.allowOrdering) %>
+                 data-skip-tomselect="true">
+        </div>
+      </div>
+    </div>
+
     <%# Inventory Tracking temporarily hidden %>
     <% if false %>
       <!-- Inventory Tracking -->
@@ -168,6 +201,7 @@
         <li><strong><%= t('.display_images', default: 'Display Images') %>:</strong> <%= t('.images_info', default: 'Toggle menu item photos') %></li>
         <li><strong><%= t('.display_images_popup', default: 'Images in Popup') %>:</strong> <%= t('.popup_info', default: 'Full-screen image viewing') %></li>
         <li><strong><%= t('.allow_ordering', default: 'Allow Ordering') %>:</strong> <%= t('.ordering_info', default: 'Enable customer orders') %></li>
+        <li><strong><%= t('.voice_ordering', default: 'Voice Ordering') %>:</strong> <%= t('.voice_ordering_info', default: 'Enable voice commands for ordering') %></li>
       </ul>
     </div>
   </div>

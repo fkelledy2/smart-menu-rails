@@ -7,6 +7,17 @@
                 <%= t(".table") %>
             <% end %>
         </button>
+        <ul class="dropdown-menu dropdown-menu-dark z-index-1000 dropdown-padding-y-05 table-dropdown-menu" style="max-height: 400px; overflow-y: auto;">
+            <% Smartmenu.where( restaurant_id: restaurant.id, menu_id: menu.id ).includes([:tablesetting]).order('id ASC').each do |smartmenu| %>
+                <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
+                    <li>
+                        <%= link_to smartmenu_path(smartmenu.slug), data: { turbo: false }, class: "dropdown-item min-h-44 d-flex align-items-center py-2 px-3", 'data-filter-text': smartmenu.tablesetting.name do %>
+                            <%= smartmenu.tablesetting.name %>
+                        <% end %>
+                    </li>
+                <% end %>
+            <% end %>
+        </ul>
     </div>
     <% active_locales = restaurant.restaurantlocales.where(status: 'active') %>
     <% if active_locales.any? %>

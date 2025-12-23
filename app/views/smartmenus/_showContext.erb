@@ -3,7 +3,7 @@
   <% if order %> data-order-id="<%= order.id %>" data-order-status="<%= order.status %>" <% end %>
   <% if tablesetting %> data-table-id="<%= tablesetting.id %>" <% end %>
   <% if current_employee %> data-employee-id="<%= current_employee.id %>" <% end %>
-  <% if menu %> data-menu-id="<%= menu.id %>" <% end %>
+  <% if menu %> data-menu-id="<%= menu.id %>" data-menu-allow-ordering="<%= menu.allowOrdering ? '1' : '0' %>" data-menu-voice-ordering-enabled="<%= menu.voiceOrderingEnabled ? '1' : '0' %>" <% end %>
   <% if menu&.restaurant %>
     data-restaurant-id="<%= menu.restaurant.id %>"
     data-allow-alcohol="<%= menu.restaurant.allow_alcohol ? '1' : '0' %>"

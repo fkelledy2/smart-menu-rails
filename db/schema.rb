@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_21_182000) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_23_181100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -431,6 +431,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_21_182000) do
     t.boolean "displayImagesInPopup", default: false
     t.float "covercharge", default: 0.0
     t.bigint "menu_import_id"
+    t.boolean "voiceOrderingEnabled", default: false
     t.index ["archived"], name: "index_menus_on_archived"
     t.index ["menu_import_id"], name: "index_menus_on_menu_import_id"
     t.index ["restaurant_id", "created_at"], name: "index_menus_on_restaurant_created_at"
@@ -1132,6 +1133,23 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_21_182000) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "voice_commands", force: :cascade do |t|
+    t.bigint "smartmenu_id", null: false
+    t.string "session_id", null: false
+    t.string "status", default: "queued", null: false
+    t.string "locale"
+    t.text "transcript"
+    t.jsonb "intent"
+    t.jsonb "result"
+    t.text "error_message"
+    t.jsonb "context"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["smartmenu_id", "session_id", "created_at"], name: "idx_on_smartmenu_id_session_id_created_at_dc50bab09c"
+    t.index ["smartmenu_id"], name: "index_voice_commands_on_smartmenu_id"
+    t.index ["status"], name: "index_voice_commands_on_status"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "alcohol_order_events", "menuitems"
@@ -1220,4 +1238,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_21_182000) do
   add_foreign_key "user_sessions", "users"
   add_foreign_key "userplans", "plans"
   add_foreign_key "userplans", "users"
+  add_foreign_key "voice_commands", "smartmenus"
 end
