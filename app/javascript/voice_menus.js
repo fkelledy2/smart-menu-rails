@@ -73,6 +73,36 @@ function ensureUi() {
     document.head.appendChild(style);
   })();
 
+  // If table selection changes after init, hide/show voice UI accordingly.
+  (function bindTableSelectionWatcher() {
+    if (window.__VOICE_TABLE_WATCH_BOUND) return;
+    window.__VOICE_TABLE_WATCH_BOUND = true;
+
+    const ctx = document.getElementById('contextContainer');
+    if (!ctx) return;
+
+    const apply = () => {
+      try {
+        const hasTable = !!(ctx?.dataset?.tableId && String(ctx.dataset.tableId).trim().length);
+        const wrap = document.getElementById('voice-menu-ui');
+        if (!hasTable) {
+          try { wrap?.remove(); } catch (_) {}
+          try { stopMicStream(); } catch (_) {}
+        } else {
+          // If the UI was removed and voice is enabled, re-init.
+          if (!document.getElementById('voice-ptt')) {
+            try { initVoiceMenus(); } catch (_) {}
+          }
+        }
+      } catch (_) {}
+    };
+
+    try {
+      const obs = new MutationObserver(apply);
+      obs.observe(ctx, { attributes: true, attributeFilter: ['data-table-id'] });
+    } catch (_) {}
+  })();
+
   const wrap = document.createElement('div');
   wrap.id = 'voice-menu-ui';
   wrap.style.position = 'fixed';
@@ -608,9 +638,11 @@ export function initVoiceMenus() {
     const ctx = document.getElementById('contextContainer');
     const allowOrdering = (ctx?.dataset?.menuAllowOrdering || '') === '1';
     const voiceOrderingEnabled = (ctx?.dataset?.menuVoiceOrderingEnabled || '') === '1';
+    const hasTableSelected = !!(ctx?.dataset?.tableId && String(ctx.dataset.tableId).trim().length);
 
-    if (!(isCustomerView && allowOrdering && voiceOrderingEnabled)) {
+    if (!(isCustomerView && allowOrdering && voiceOrderingEnabled && hasTableSelected)) {
       try { document.getElementById('voice-menu-ui')?.remove(); } catch (_) {}
+      try { stopMicStream(); } catch (_) {}
       return;
     }
   } catch (_) {}

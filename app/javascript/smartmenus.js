@@ -10,11 +10,38 @@ export function initSmartmenus() {
     const allowOrdering = (ctx?.dataset?.menuAllowOrdering || '') === '1';
     const voiceOrderingEnabled = (ctx?.dataset?.menuVoiceOrderingEnabled || '') === '1';
     const isCustomerView = !!document.querySelector('[data-testid="smartmenu-customer-view"]');
+    const hasTableSelected = !!(ctx?.dataset?.tableId && String(ctx.dataset.tableId).trim().length);
 
-    if (isCustomerView && allowOrdering && voiceOrderingEnabled) {
-      import('./voice_menus.js').then((m) => {
-        try { m.initVoiceMenus(); } catch (_) {}
-      });
+    const maybeInitVoice = () => {
+      try {
+        const allow = isCustomerView && allowOrdering && voiceOrderingEnabled;
+        const tableOk = !!(ctx?.dataset?.tableId && String(ctx.dataset.tableId).trim().length);
+        if (!(allow && tableOk)) {
+          try { document.getElementById('voice-menu-ui')?.remove(); } catch (_) {}
+          return;
+        }
+
+        if (window.__VOICE_MENUS_INIT_REQUESTED) return;
+        window.__VOICE_MENUS_INIT_REQUESTED = true;
+        import('./voice_menus.js').then((m) => {
+          try { m.initVoiceMenus(); } catch (_) {}
+        });
+      } catch (_) {}
+    };
+
+    if (hasTableSelected) maybeInitVoice();
+
+    // Table selection can change without a full page load; observe context changes.
+    if (ctx && !window.__VOICE_TABLE_OBSERVER_BOUND) {
+      window.__VOICE_TABLE_OBSERVER_BOUND = true;
+      try {
+        const obs = new MutationObserver(() => {
+          // Allow re-init attempts if table becomes selected later.
+          window.__VOICE_MENUS_INIT_REQUESTED = false;
+          maybeInitVoice();
+        });
+        obs.observe(ctx, { attributes: true, attributeFilter: ['data-table-id'] });
+      } catch (_) {}
     }
   } catch (_) {}
 

@@ -87,7 +87,10 @@ class MenuLocalizationJob
       menu_id: menu_id
     )
 
-    stats = LocalizeMenuService.localize_menu_to_all_locales(menu, force: force) do |evt|
+    service_args = [menu]
+    service_kwargs = force ? { force: true } : {}
+
+    stats = LocalizeMenuService.localize_menu_to_all_locales(*service_args, **service_kwargs) do |evt|
       begin
         Sidekiq.redis do |r|
           json = r.get("localize:#{jid}")
