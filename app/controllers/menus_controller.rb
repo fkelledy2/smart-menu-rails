@@ -7,8 +7,10 @@ class MenusController < ApplicationController
   before_action :set_restaurant
   before_action :set_menu, only: %i[show edit update destroy regenerate_images image_generation_progress localize localization_progress performance update_availabilities polish polish_progress]
 
+  skip_around_action :switch_locale, only: %i[update_sequence bulk_update]
+
   # Pundit authorization
-  after_action :verify_authorized, except: %i[index performance update_sequence]
+  after_action :verify_authorized, except: %i[index performance update_sequence bulk_update]
   after_action :verify_policy_scoped, only: [:index], unless: :skip_policy_scope?
 
   # GET	/restaurants/:restaurant_id/menus
@@ -805,9 +807,26 @@ class MenusController < ApplicationController
     
     ActiveRecord::Base.transaction do
       order.each do |item|
-        Rails.logger.info "Processing item: #{item.inspect}"
-        menu = @restaurant.menus.find(item[:id])
-        menu.update_column(:sequence, item[:sequence])
+        item_hash = if item.is_a?(ActionController::Parameters)
+          item.to_unsafe_h
+        elsif item.is_a?(Hash)
+          item
+        else
+          Rails.logger.warn("[MenusController#update_sequence] skipping non-hash item item_class=#{item.class} item=#{item.inspect}")
+          next
+        end
+
+        id = item_hash[:id] || item_hash['id']
+        seq = item_hash[:sequence] || item_hash['sequence']
+        if id.blank? || seq.nil?
+          Rails.logger.warn("[MenusController#update_sequence] skipping invalid item item=#{item_hash.inspect}")
+          next
+        end
+
+        Rails.logger.info "Processing item: #{item_hash.inspect}"
+        menu = @restaurant.menus.find(id)
+        authorize menu, :update?
+        menu.update_column(:sequence, seq.to_i)
       end
     end
     
@@ -818,6 +837,47 @@ class MenusController < ApplicationController
   rescue StandardError => e
     Rails.logger.error "Update sequence error: #{e.message}\n#{e.backtrace.join("\n")}"
     render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+  end
+
+  # PATCH /restaurants/:restaurant_id/menus/bulk_update
+  def bulk_update
+    ids = Array(params[:menu_ids]).map(&:to_s).reject(&:blank?)
+    status = params[:status].to_s
+
+    if ids.empty? || status.blank?
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            'restaurant_content',
+            partial: 'restaurants/sections/menus_2025',
+            locals: { restaurant: @restaurant, filter: 'all' }
+          )
+        end
+        format.html do
+          redirect_to edit_restaurant_path(@restaurant, section: 'menus')
+        end
+      end
+      return
+    end
+
+    menus = policy_scope(Menu).where(restaurant_id: @restaurant.id, archived: false).where(id: ids)
+    menus.find_each do |menu|
+      authorize menu, :update?
+      menu.update(status: status)
+    end
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          'restaurant_content',
+          partial: 'restaurants/sections/menus_2025',
+          locals: { restaurant: @restaurant, filter: 'all' }
+        )
+      end
+      format.html do
+        redirect_to edit_restaurant_path(@restaurant, section: 'menus')
+      end
+    end
   end
 
   private

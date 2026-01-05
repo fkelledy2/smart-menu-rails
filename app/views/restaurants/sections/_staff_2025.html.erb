@@ -4,6 +4,8 @@
 %>
 
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
+<% employees = restaurant.employees.includes(:user).where(archived: false)
+  .order(Arel.sql('CASE WHEN sequence IS NULL THEN 1 ELSE 0 END, sequence ASC')) %>
 
 <!-- Quick Actions Card -->
 <div class="quick-actions-card">
@@ -82,67 +84,104 @@
     <%= t('.staff', default: 'Staff Members') %>
   </h2>
 
-  <% if restaurant.employees.any? %>
+  <% if employees.any? %>
     <!-- Desktop Table View (styled like Menu Sections list) -->
-    <div class="table-responsive staff-table-view">
-      <table class="table table-hover align-middle">
-        <thead>
-          <tr>
-            <th class="w-40px"></th>
-            <th><%= t('.name', default: 'Name') %></th>
-            <th class="text-end"><%= t('.role', default: 'Role') %></th>
-            <th class="text-end">
-              <span class="btn-2025 btn-2025-ghost btn-2025-sm">
-                <i class="bi bi-gear"></i>
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <% restaurant.employees.includes(:user).order(created_at: :desc).each do |employee| %>
+    <div data-controller="localization-bulk">
+      <%= form_with url: bulk_update_restaurant_employees_path(restaurant), method: :patch, data: { turbo: true, action: 'submit->localization-bulk#beforeSubmit' } do |f| %>
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+          <div class="d-flex align-items-center gap-2">
+            <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
+            <span class="text-muted small"><%= t('.select_all', default: 'Select all') %></span>
+          </div>
+
+          <div class="d-flex align-items-center gap-2 ms-auto">
+            <%= f.select :status,
+                [
+                  [t('.status_active', default: 'Active'), 'active'],
+                  [t('.status_inactive', default: 'Inactive'), 'inactive'],
+                  [t('.status_archived', default: 'Archived'), 'archived'],
+                ],
+                { include_blank: t('.set_status', default: 'Set status...') },
+                { class: 'form-select form-select-sm', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
+            <%= f.submit t('.apply', default: 'Apply'), class: 'btn-2025 btn-2025-primary btn-2025-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
+          </div>
+        </div>
+
+      <div class="table-responsive staff-table-view">
+        <table class="table table-hover align-middle">
+          <thead>
             <tr>
-              <td class="w-40px">
-                <i class="bi bi-grip-vertical text-muted"></i>
-              </td>
-              <td>
-                <div class="d-flex align-items-center gap-2">
-                  <div class="avatar-circle">
-                    <%= employee.user&.email&.first&.upcase || '?' %>
-                  </div>
+              <th class="w-40px"></th>
+              <th class="w-40px"></th>
+              <th><%= t('.name', default: 'Name') %></th>
+              <th class="text-end"><%= t('.role', default: 'Role') %></th>
+              <th class="text-end"><%= t('.status', default: 'Status') %></th>
+              <th class="text-end">
+                <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                  <i class="bi bi-gear"></i>
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody data-controller="sortable"
+                 data-sortable-url-value="<%= reorder_restaurant_employees_path(restaurant) %>"
+                 data-sortable-handle-value=".employee-handle">
+            <% employees.each do |employee| %>
+              <tr data-sortable-id="<%= employee.id %>">
+                <td class="w-40px">
+                  <input type="checkbox" name="employee_ids[]" value="<%= employee.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
+                </td>
+                <td class="w-40px employee-handle cursor-grab">
+                  <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>"></i>
+                </td>
+                <td>
                   <div class="fw-semibold">
                     <%= employee.user&.email&.split('@')&.first || t('.unnamed', default: 'Unnamed') %>
                   </div>
-                </div>
-              </td>
-              <td class="text-end">
-                <% badge_class = case employee.role
-                                 when 'manager' then 'bg-primary'
-                                 when 'staff' then 'bg-info'
-                                 when 'admin' then 'bg-danger'
-                                 else 'bg-secondary'
-                                 end %>
-                <span class="badge <%= badge_class %>">
-                  <%= employee.role&.titleize || t('.no_role', default: 'No role') %>
-                </span>
-              </td>
-              <td class="text-end">
-                <%= link_to edit_restaurant_employee_path(restaurant, employee),
-                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                    title: t('.edit', default: 'Edit'),
-                    aria: { label: t('.edit', default: 'Edit') },
-                    data: { turbo_frame: 'staff_edit_employee' } do %>
-                  <i class="bi bi-pencil"></i>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+                </td>
+                <td class="text-end">
+                  <% badge_class = case employee.role
+                                   when 'manager' then 'bg-primary'
+                                   when 'staff' then 'bg-info'
+                                   when 'admin' then 'bg-danger'
+                                   else 'bg-secondary'
+                                   end %>
+                  <span class="badge <%= badge_class %>">
+                    <%= employee.role&.titleize || t('.no_role', default: 'No role') %>
+                  </span>
+                </td>
+                <td class="text-end">
+                  <% status_badge_class = case employee.status
+                                          when 'active' then 'bg-success'
+                                          when 'inactive' then 'bg-secondary'
+                                          when 'archived' then 'bg-dark'
+                                          else 'bg-secondary'
+                                          end %>
+                  <span class="badge <%= status_badge_class %>">
+                    <%= employee.status.to_s.titleize %>
+                  </span>
+                </td>
+                <td class="text-end">
+                  <%= link_to edit_restaurant_employee_path(restaurant, employee),
+                      class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                      title: t('.edit', default: 'Edit'),
+                      aria: { label: t('.edit', default: 'Edit') },
+                      data: { turbo_frame: 'staff_edit_employee' } do %>
+                    <i class="bi bi-pencil"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <% end %>
     </div>
 
     <!-- Mobile Card View -->
     <div class="staff-cards-view">
-      <% restaurant.employees.includes(:user).order(created_at: :desc).each do |employee| %>
+      <% employees.each do |employee| %>
         <div class="staff-card-mobile">
           <div class="d-flex align-items-start justify-content-between mb-3">
             <div class="d-flex align-items-center gap-2">

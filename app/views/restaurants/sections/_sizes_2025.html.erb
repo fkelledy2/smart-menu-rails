@@ -4,6 +4,8 @@
 %>
 
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
+<% sizes = restaurant.sizes.where(archived: false).where.not(status: :archived)
+  .order(Arel.sql('CASE WHEN sequence IS NULL THEN 1 ELSE 0 END, sequence ASC')) %>
 
 <!-- Quick Actions Card -->
 <div class="quick-actions-card">
@@ -78,7 +80,7 @@
 </div>
 
 <!-- Size List -->
-<% if restaurant.sizes.where(archived: false).where.not(status: :archived).any? %>
+<% if sizes.any? %>
   <div class="content-card-2025">
     <h2 class="content-card-title">
       <i class="bi bi-list-check"></i>
@@ -86,44 +88,74 @@
     </h2>
 
     <!-- Desktop Table View (styled like Table Settings) -->
-    <div class="table-responsive sizes-table-view">
-      <table class="table table-hover align-middle">
-        <thead>
-          <tr>
-            <th class="w-40px"></th>
-            <th><%= t('.name', default: 'Name') %></th>
-            <th class="text-end">
-              <span class="btn-2025 btn-2025-ghost btn-2025-sm">
-                <i class="bi bi-gear"></i>
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <% restaurant.sizes.where(archived: false).where.not(status: :archived).order(:sequence).each do |size| %>
+    <div data-controller="localization-bulk">
+      <%= form_with url: bulk_update_restaurant_sizes_path(restaurant), method: :patch, data: { turbo: true, action: 'submit->localization-bulk#beforeSubmit' } do |f| %>
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+          <div class="d-flex align-items-center gap-2">
+            <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
+            <span class="text-muted small"><%= t('.select_all', default: 'Select all') %></span>
+          </div>
+
+          <div class="d-flex align-items-center gap-2 ms-auto">
+            <%= f.select :status,
+                [
+                  [t('.status_active', default: 'Active'), 'active'],
+                  [t('.status_inactive', default: 'Inactive'), 'inactive'],
+                  [t('.status_archived', default: 'Archived'), 'archived'],
+                ],
+                { include_blank: t('.set_status', default: 'Set status...') },
+                { class: 'form-select form-select-sm', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
+            <%= f.submit t('.apply', default: 'Apply'), class: 'btn-2025 btn-2025-primary btn-2025-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
+          </div>
+        </div>
+
+      <div class="table-responsive sizes-table-view">
+        <table class="table table-hover align-middle">
+          <thead>
             <tr>
-              <td class="w-40px">
-                <i class="bi bi-grip-vertical text-muted"></i>
-              </td>
-              <td>
-                <strong><%= size.name %></strong>
-                <% if size.description.present? %>
-                  <div class="text-sm text-muted"><%= size.description %></div>
-                <% end %>
-              </td>
-              <td class="text-end">
-                <%= link_to edit_restaurant_size_path(restaurant, size),
-                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                    title: t('.edit', default: 'Edit'),
-                    aria: { label: t('.edit', default: 'Edit') },
-                    data: { turbo_frame: 'sizes_edit_size' } do %>
-                  <i class="bi bi-pencil"></i>
-                <% end %>
-              </td>
+              <th class="w-40px"></th>
+              <th class="w-40px"></th>
+              <th><%= t('.name', default: 'Name') %></th>
+              <th class="text-end">
+                <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                  <i class="bi bi-gear"></i>
+                </span>
+              </th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody data-controller="sortable"
+                 data-sortable-url-value="<%= reorder_restaurant_sizes_path(restaurant) %>"
+                 data-sortable-handle-value=".size-handle">
+            <% sizes.each do |size| %>
+              <tr data-sortable-id="<%= size.id %>">
+                <td class="w-40px">
+                  <input type="checkbox" name="size_ids[]" value="<%= size.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
+                </td>
+                <td class="w-40px size-handle cursor-grab">
+                  <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>"></i>
+                </td>
+                <td>
+                  <strong><%= size.name %></strong>
+                  <% if size.description.present? %>
+                    <div class="text-sm text-muted"><%= size.description %></div>
+                  <% end %>
+                </td>
+                <td class="text-end">
+                  <%= link_to edit_restaurant_size_path(restaurant, size),
+                      class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                      title: t('.edit', default: 'Edit'),
+                      aria: { label: t('.edit', default: 'Edit') },
+                      data: { turbo_frame: 'sizes_edit_size' } do %>
+                    <i class="bi bi-pencil"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <% end %>
     </div>
   </div>
 <% end %>

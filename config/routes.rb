@@ -145,19 +145,48 @@ Rails.application.routes.draw do
         patch :reorder
       end
     end
-    resources :tablesettings
+    resources :tablesettings do
+      collection do
+        patch :bulk_update
+        patch :reorder
+      end
+    end
     resources :restaurantavailabilities
     
     # Restaurant catalog management
-    resources :taxes
-    resources :sizes
-    resources :tips
+    resources :taxes do
+      collection do
+        patch :bulk_update
+        patch :reorder
+      end
+    end
+    resources :sizes do
+      collection do
+        patch :bulk_update
+        patch :reorder
+      end
+    end
+    resources :tips do
+      collection do
+        patch :bulk_update
+        patch :reorder
+      end
+    end
     resources :tags
-    resources :allergyns
+    resources :allergyns do
+      collection do
+        patch :bulk_update
+        patch :reorder
+      end
+    end
     resources :genimages
     
     # Staff management
     resources :employees do
+      collection do
+        patch :bulk_update
+        patch :reorder
+      end
       member do
         get :analytics
       end
@@ -198,6 +227,7 @@ Rails.application.routes.draw do
     resources :menus do
       collection do
         patch :update_sequence
+        patch :bulk_update
       end
       
       # Menu configuration
