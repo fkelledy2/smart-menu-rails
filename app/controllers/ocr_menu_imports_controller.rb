@@ -266,7 +266,7 @@ class OcrMenuImportsController < ApplicationController
   end
 
   def ocr_menu_import_params
-    params.require(:ocr_menu_import).permit(:name, :pdf_file)
+    params.require(:ocr_menu_import).permit(:name, :pdf_file, :source_locale)
   end
 
   def authorize_import

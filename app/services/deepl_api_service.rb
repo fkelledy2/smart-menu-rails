@@ -7,9 +7,12 @@ class DeeplApiService
   base_uri 'https://api-free.deepl.com/v2'
 
   def self.translate(text, to: 'FR', from: 'EN')
+    api_key = Rails.application.credentials.dig(:deepl, :api_key) || ENV['DEEPL_API_KEY']
+    raise 'DEEPL_API_KEY missing' if api_key.to_s.strip == ''
+
     response = post('/translate', {
       body: {
-        auth_key: '9079cde6-1153-4f72-a220-306de587c58e:fx',
+        auth_key: api_key,
         text: text,
         source_lang: from,
         target_lang: to,

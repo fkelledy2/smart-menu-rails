@@ -355,6 +355,12 @@ Rails.application.routes.draw do
           get :keys
         end
       end
+
+      resources :menu_item_search, only: [:index] do
+        collection do
+          post :reindex
+        end
+      end
     end
   end
 end

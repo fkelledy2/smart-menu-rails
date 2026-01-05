@@ -506,6 +506,7 @@ GEM
       ruby-rc4
       ttfunk
     pg (1.5.9)
+    pgvector (0.3.2)
     pp (0.6.2)
       prettyprint
     prawn (2.5.0)
@@ -845,6 +846,7 @@ DEPENDENCIES
   pay (~> 8.0)
   pdf-reader
   pg (~> 1.1)
+  pgvector
   pretender (~> 0.3.4)
   puma (~> 7.0.3)
   pundit (~> 2.1)

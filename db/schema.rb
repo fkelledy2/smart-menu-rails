@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_23_181100) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_05_113200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "vector"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -254,6 +255,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_23_181100) do
     t.index ["status"], name: "index_menu_imports_on_status"
     t.index ["user_id"], name: "index_menu_imports_on_user_id"
   end
+
+# Could not dump table "menu_item_search_documents" because of following StandardError
+#   Unknown type 'vector(1024)' for column 'embedding'
+
 
   create_table "menu_items", force: :cascade do |t|
     t.string "name"
@@ -535,10 +540,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_23_181100) do
     t.datetime "failed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "source_locale"
     t.index ["menu_id"], name: "index_ocr_menu_imports_on_menu_id"
     t.index ["restaurant_id", "status", "created_at"], name: "index_ocr_imports_on_restaurant_status_created"
     t.index ["restaurant_id", "status"], name: "index_ocr_menu_imports_on_restaurant_and_status"
     t.index ["restaurant_id"], name: "index_ocr_menu_imports_on_restaurant_id"
+    t.index ["source_locale"], name: "index_ocr_menu_imports_on_source_locale"
     t.index ["status"], name: "index_ocr_menu_imports_on_status"
   end
 

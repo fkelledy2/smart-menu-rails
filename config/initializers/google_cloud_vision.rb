@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 # Configure Google Cloud Vision
-require "google/cloud/vision"
+begin
+  require "google/cloud/vision"
+rescue LoadError
+  # Gem not installed (e.g., during assets:precompile on CI) — skip configuring
+end
 
 # Initialize the Vision client with credentials from environment variables
-Google::Cloud::Vision.configure do |config|
+if defined?(Google::Cloud::Vision)
+  Google::Cloud::Vision.configure do |config|
   # Path to the service account JSON key file
   creds = nil
 
@@ -51,6 +56,7 @@ Google::Cloud::Vision.configure do |config|
   #   multiplier: 2.0,
   #   retry_codes: ["UNAVAILABLE", "DEADLINE_EXCEEDED"]
   # }
+  end
 end
 
 # Create a module to wrap the Vision API calls

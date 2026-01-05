@@ -1,9 +1,15 @@
-require 'google/cloud/vision'
+begin
+  require 'google/cloud/vision'
+rescue LoadError
+end
 require 'mini_magick'
 require 'json'
 require 'pdf/reader'
 require 'ostruct'
-require 'openai'
+begin
+  require 'openai'
+rescue LoadError
+end
 
 class PdfMenuProcessor
   class ProcessingError < StandardError; end
@@ -15,12 +21,54 @@ class PdfMenuProcessor
     @vision_client = vision_client
   end
 
+  def detect_source_locale(text)
+    sample = text.to_s.strip
+    return nil if sample.blank?
+
+    sample = sample[0, 4000]
+
+    prompt = <<~PROMPT
+      Detect the primary language of the following restaurant menu text.
+      Reply ONLY with a two-letter ISO 639-1 language code from this set: en, fr, it, es.
+
+      MENU TEXT:
+      #{sample}
+    PROMPT
+
+    response = ask_chatgpt(prompt)
+    content = begin
+      if response.is_a?(Hash)
+        response.dig('choices', 0, 'message', 'content')
+      else
+        response.parsed_response.dig('choices', 0, 'message', 'content')
+      end
+    rescue StandardError
+      nil
+    end
+
+    code = content.to_s.strip.downcase
+    code = code[/\b(en|fr|it|es)\b/, 1]
+    code
+  end
+
   def process
     return unless @ocr_menu_import.pdf_file.attached?
 
     begin
       # Extract text from PDF (handles text-based and image-based PDFs)
       pdf_text = extract_text_from_pdf
+
+      begin
+        if @ocr_menu_import.respond_to?(:source_locale) && @ocr_menu_import.source_locale.to_s.strip == ''
+          detected = detect_source_locale(pdf_text)
+          if detected.present?
+            @ocr_menu_import.update!(source_locale: detected)
+            ensure_restaurant_locale!(detected)
+          end
+        end
+      rescue StandardError => e
+        Rails.logger.warn "PdfMenuProcessor: source locale detection failed: #{e.class}: #{e.message}"
+      end
 
       # Parse menu structure using ChatGPT
       menu_data = parse_menu_with_chatgpt(pdf_text)
@@ -36,6 +84,32 @@ class PdfMenuProcessor
   end
 
   private
+
+  def ensure_restaurant_locale!(locale)
+    code = locale.to_s.strip
+    return if code.blank?
+
+    code = code.split(/[-_]/).first.to_s.upcase
+    return if code.blank?
+
+    existing = Restaurantlocale.where(restaurant_id: @restaurant.id)
+                              .where('LOWER(locale) = ?', code.downcase)
+                              .first
+
+    if existing
+      existing.update!(status: 'active') if existing.status != 'active'
+      return
+    end
+
+    Restaurantlocale.create!(
+      restaurant_id: @restaurant.id,
+      locale: code,
+      status: 'active',
+      dfault: false,
+    )
+  rescue StandardError
+    nil
+  end
 
   # Extract text from PDF with dual strategy:
   # 1) If the PDF contains selectable text, extract directly.
@@ -107,7 +181,11 @@ class PdfMenuProcessor
       end
 
       # OCR each generated image file using Google Cloud Vision (injectable for tests)
-      image_annotator = @vision_client || Google::Cloud::Vision.image_annotator
+      image_annotator = @vision_client
+      if image_annotator.nil?
+        raise ProcessingError, 'Google Cloud Vision is not available' unless defined?(Google::Cloud::Vision)
+        image_annotator = Google::Cloud::Vision.image_annotator
+      end
       processed = 0
       Dir[File.join(dir, 'page-*.png')].sort_by do |p|
         p[/page-(\d+)\.png/, 1].to_i
@@ -217,6 +295,15 @@ class PdfMenuProcessor
     # Fallback when OpenAI key is not configured
     if api_key.blank?
       Rails.logger.warn 'PdfMenuProcessor: openai_api_key missing; using fallback empty menu structure'
+      return OpenStruct.new(parsed_response: {
+        'choices' => [
+          { 'message' => { 'content' => { sections: [] }.to_json } },
+        ],
+      })
+    end
+
+    unless defined?(OpenAI)
+      Rails.logger.warn 'PdfMenuProcessor: OpenAI gem not available; using fallback empty menu structure'
       return OpenStruct.new(parsed_response: {
         'choices' => [
           { 'message' => { 'content' => { sections: [] }.to_json } },

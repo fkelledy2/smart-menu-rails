@@ -11,6 +11,8 @@ class AiMenuPolisherJob
     return unless menu
 
     restaurant = menu.restaurant
+    source_locale = menu_source_locale(menu)
+    source_language = locale_to_language(source_locale)
     total_items = menu.menuitems.count
     processed = 0
 
@@ -41,7 +43,8 @@ class AiMenuPolisherJob
               gen = generate_description_via_llm(
                 item_name: mi.name,
                 section_name: section.name,
-                section_description: section.description
+                section_description: section.description,
+                language: source_language
               )
               mi.description = gen if gen.present?
             rescue => e
@@ -275,14 +278,18 @@ class AiMenuPolisherJob
 
   # Use the configured OpenAI chat client to generate a concise description
   # Returns nil if client not configured or response empty
-  def generate_description_via_llm(item_name:, section_name:, section_description: nil)
+  def generate_description_via_llm(item_name:, section_name:, section_description: nil, language: nil)
     client = Rails.configuration.x.openai_client
     return nil unless client
 
-    system_msg = 'You are a culinary copywriter. Write a concise, appetizing, single-sentence menu description (max 24 words). No emojis. No allergens. No pricing.'
+    language_str = language.to_s.strip
+    language_hint = language_str.present? ? " Write in #{language_str}." : ''
+
+    system_msg = "You are a culinary copywriter. Write a concise, appetizing, single-sentence menu description (max 24 words). No emojis. No allergens. No pricing.#{language_hint}"
     context_bits = []
     context_bits << "Section: #{section_name}." if section_name.present?
     context_bits << "Section description: #{section_description}." if section_description.present?
+    context_bits << "Language: #{language_str}." if language_str.present?
     user_msg = <<~PROMPT.strip
       Create a description for this menu item name:
       Name: #{item_name}
@@ -367,5 +374,43 @@ class AiMenuPolisherJob
 
   def llm_alcohol_forced?
     ENV['AI_POLISH_FORCE_LLM_ALCOHOL'].to_s.downcase == 'true'
+  end
+
+  def menu_source_locale(menu)
+    s = begin
+      if menu&.id.present?
+        OcrMenuImport.where(menu_id: menu.id).order(created_at: :desc).limit(1).pluck(:source_locale).first.to_s
+      else
+        ''
+      end
+    rescue StandardError
+      ''
+    end
+
+    if s.blank?
+      rl = menu&.restaurant&.defaultLocale
+      s = rl&.locale.to_s
+    end
+
+    s = s.split(/[-_]/).first.to_s.downcase
+    s.presence || 'en'
+  rescue StandardError
+    'en'
+  end
+
+  def locale_to_language(locale)
+    code = locale.to_s.split(/[-_]/).first.to_s.upcase
+    case code
+    when 'IT'
+      'Italian'
+    when 'FR'
+      'French'
+    when 'ES'
+      'Spanish'
+    when 'PT'
+      'Portuguese'
+    else
+      'English'
+    end
   end
 end

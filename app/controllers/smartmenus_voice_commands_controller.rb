@@ -1,6 +1,8 @@
 class SmartmenusVoiceCommandsController < ApplicationController
   skip_before_action :authenticate_user!, raise: false
 
+  before_action :ensure_voice_enabled
+
   def create
     smartmenu = Smartmenu.find_by(slug: params[:smartmenu_id]) || Smartmenu.find(params[:smartmenu_id])
 
@@ -38,5 +40,12 @@ class SmartmenusVoiceCommandsController < ApplicationController
       result: vc.result,
       error: vc.error_message,
     }
+  end
+
+  private
+
+  def ensure_voice_enabled
+    enabled = ENV['SMART_MENU_VOICE_ENABLED'].to_s.downcase == 'true'
+    head :not_found unless enabled
   end
 end

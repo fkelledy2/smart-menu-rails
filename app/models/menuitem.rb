@@ -39,6 +39,8 @@ class Menuitem < ApplicationRecord
   after_update :invalidate_menuitem_caches
   after_destroy :invalidate_menuitem_caches
 
+  after_commit :enqueue_menu_item_search_reindex, on: %i[create update destroy]
+
   def localised_name(locale)
     # Case-insensitive locale lookup
     mil = Menuitemlocale.where(menuitem_id: id).where('LOWER(locale) = ?', locale.to_s.downcase).first
@@ -260,5 +262,23 @@ class Menuitem < ApplicationRecord
     AdvancedCacheService.invalidate_menuitem_caches(id)
     AdvancedCacheService.invalidate_menu_caches(menusection.menu.id)
     AdvancedCacheService.invalidate_restaurant_caches(menusection.menu.restaurant.id)
+  end
+
+  def enqueue_menu_item_search_reindex
+    menu_id = menusection&.menu_id
+    return if menu_id.blank?
+
+    v = ENV['SMART_MENU_VECTOR_SEARCH_ENABLED']
+    vector_enabled = if v.nil? || v.to_s.strip == ''
+                       true
+                     else
+                       v.to_s.downcase == 'true'
+                     end
+    return unless vector_enabled
+    return if ENV['SMART_MENU_ML_URL'].to_s.strip == ''
+
+    MenuItemSearchIndexJob.perform_async(menu_id)
+  rescue StandardError
+    nil
   end
 end

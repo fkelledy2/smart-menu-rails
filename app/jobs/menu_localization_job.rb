@@ -117,6 +117,12 @@ class MenuLocalizationJob
       message: 'Completed'
     )
 
+    begin
+      MenuItemSearchIndexJob.perform_async(menu_id)
+    rescue StandardError
+      nil
+    end
+
     Rails.logger.info("[MenuLocalizationJob] Completed menu ##{menu_id} localization: #{stats}")
     stats
   rescue ActiveRecord::RecordNotFound => e

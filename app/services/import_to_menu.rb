@@ -37,6 +37,8 @@ class ImportToMenu
       Rails.logger.warn("[ImportToMenu.call] Failed to enqueue localization: #{e.class}: #{e.message}")
     end
 
+    enqueue_menu_item_search_reindex(menu)
+
     menu
   end
 
@@ -175,10 +177,30 @@ class ImportToMenu
       Rails.logger.warn("[ImportToMenu.upsert] Failed to enqueue localization: #{e.class}: #{e.message}")
     end
 
+    enqueue_menu_item_search_reindex(menu)
+
     [menu, stats]
   end
 
   private
+
+  def enqueue_menu_item_search_reindex(menu)
+    return unless menu&.id.present?
+
+    v = ENV['SMART_MENU_VECTOR_SEARCH_ENABLED']
+    vector_enabled = if v.nil? || v.to_s.strip == ''
+                       true
+                     else
+                       v.to_s.downcase == 'true'
+                     end
+    return unless vector_enabled
+    return if ENV['SMART_MENU_ML_URL'].to_s.strip == ''
+
+    MenuItemSearchIndexJob.perform_async(menu.id)
+  rescue StandardError => e
+    Rails.logger.warn("[ImportToMenu] Failed to enqueue menu item search reindex: #{e.class}: #{e.message}")
+    nil
+  end
 
   def validate_import!(allow_existing_menu: false)
     raise StandardError, 'Menu already created for this import' if @import.menu_id.present? && !allow_existing_menu

@@ -24,6 +24,26 @@
     "WEBPACKER_PRECOMPILE": {
       "description": "Enable Webpacker precompilation",
       "value": "true"
+    },
+    "SMART_MENU_VOICE_ENABLED": {
+      "description": "Enable public voice command endpoints and processing",
+      "value": "false"
+    },
+    "SMART_MENU_VOICE_WHISPER_ENABLED": {
+      "description": "Enable OpenAI Whisper audio transcription (requires OPENAI_API_KEY)",
+      "value": "false"
+    },
+    "SMART_MENU_DEEPL_ENABLED": {
+      "description": "Enable DeepL translation fallback (requires DEEPL_API_KEY)",
+      "value": "false"
+    },
+    "SMART_MENU_VECTOR_SEARCH_ENABLED": {
+      "description": "Enable semantic menu item matching (requires pgvector + SMART_MENU_ML_URL)",
+      "value": "false"
+    },
+    "SMART_MENU_ML_RERANK_ENABLED": {
+      "description": "Enable ML reranking step for semantic match (requires SMART_MENU_ML_URL)",
+      "value": "false"
     }
   },
   "formation": {

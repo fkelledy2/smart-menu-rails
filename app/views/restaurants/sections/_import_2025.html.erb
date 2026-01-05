@@ -42,6 +42,24 @@
     </div>
 
     <div class="form-group-2025 mb-4">
+      <%= f.label :source_locale, t('.source_language_label', default: 'Menu language'), class: 'form-label-2025' %>
+      <%= f.select :source_locale,
+          options_for_select(
+            [[t('.auto_detect', default: 'Auto-detect'), '']] +
+              restaurant.restaurantlocales
+                        .select { |rl| rl.status.to_s == 'active' }
+                        .sort_by { |rl| rl.locale.to_s }
+                        .map { |rl| [rl.language.to_s, rl.locale.to_s.split(/[-_]/).first.to_s.downcase] },
+            f.object.source_locale.to_s
+          ),
+          {},
+          class: 'form-control-2025' %>
+      <div class="form-help-2025">
+        <%= t('.source_language_help', default: 'Used to preserve the original language when generating missing descriptions.') %>
+      </div>
+    </div>
+
+    <div class="form-group-2025 mb-4">
       <%= f.label :pdf_file, t('.pdf_label', default: 'Menu PDF'), class: 'form-label-2025' %>
       <div class="file-upload-area">
         <div class="file-upload-icon">

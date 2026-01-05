@@ -2,6 +2,94 @@ import { post as commonsPost, getCurrentOrderId, getCurrentMenuId, getRestaurant
 
 function qs(sel) { return document.querySelector(sel); }
 
+function normalizeUiLocale(raw) {
+  const s = String(raw || '').trim().toLowerCase().replace('_', '-');
+  const base = (s.split('-')[0] || '').trim();
+  if (base === 'fr' || base === 'it' || base === 'es' || base === 'en') return base;
+  return 'en';
+}
+
+function getUiLocale() {
+  return normalizeUiLocale(document.querySelector('meta[name="current-locale"]')?.content || '');
+}
+
+const VOICE_UI_I18N = {
+  en: {
+    failed_submit: 'Failed to submit voice command.',
+    speech_failed: 'Speech recognition failed.',
+    no_audio_recorded: 'No audio recorded.',
+    did_not_hear: 'I did not hear anything.',
+    didnt_understand: "Sorry, I didn't understand: %{transcript}",
+    couldnt_find_item: "Couldn't find an item matching: %{query}",
+    cannot_submit_order_yet: 'Cannot submit order yet.',
+    cannot_request_bill_yet: 'Cannot request bill yet.',
+    missing_context_refresh: 'Missing context. Please refresh the menu.',
+    cannot_start_order: 'Cannot start an order on this page.',
+    no_active_order_to_close: 'No active order to close.',
+    please_start_order_first: 'Please start an order first, then try again.',
+    no_items_to_remove: 'No items to remove.',
+    no_matching_item_to_remove: 'No matching item to remove.',
+  },
+  fr: {
+    failed_submit: "Échec de l’envoi de la commande vocale.",
+    speech_failed: 'La reconnaissance vocale a échoué.',
+    no_audio_recorded: 'Aucun audio enregistré.',
+    did_not_hear: "Je n’ai rien entendu.",
+    didnt_understand: "Désolé, je n’ai pas compris : %{transcript}",
+    couldnt_find_item: "Impossible de trouver un article correspondant : %{query}",
+    cannot_submit_order_yet: 'Impossible de valider la commande pour le moment.',
+    cannot_request_bill_yet: "Impossible de demander l’addition pour le moment.",
+    missing_context_refresh: 'Contexte manquant. Veuillez actualiser le menu.',
+    cannot_start_order: 'Impossible de démarrer une commande sur cette page.',
+    no_active_order_to_close: 'Aucune commande active à clôturer.',
+    please_start_order_first: "Veuillez d’abord démarrer une commande, puis réessayer.",
+    no_items_to_remove: 'Aucun article à retirer.',
+    no_matching_item_to_remove: "Aucun article correspondant à retirer.",
+  },
+  it: {
+    failed_submit: 'Invio del comando vocale non riuscito.',
+    speech_failed: 'Il riconoscimento vocale non è riuscito.',
+    no_audio_recorded: 'Nessun audio registrato.',
+    did_not_hear: 'Non ho sentito nulla.',
+    didnt_understand: 'Mi dispiace, non ho capito: %{transcript}',
+    couldnt_find_item: 'Non riesco a trovare un elemento corrispondente: %{query}',
+    cannot_submit_order_yet: 'Impossibile inviare l’ordine al momento.',
+    cannot_request_bill_yet: 'Impossibile richiedere il conto al momento.',
+    missing_context_refresh: 'Contesto mancante. Aggiorna il menu.',
+    cannot_start_order: 'Impossibile avviare un ordine su questa pagina.',
+    no_active_order_to_close: 'Nessun ordine attivo da chiudere.',
+    please_start_order_first: 'Avvia prima un ordine, poi riprova.',
+    no_items_to_remove: 'Nessun elemento da rimuovere.',
+    no_matching_item_to_remove: 'Nessun elemento corrispondente da rimuovere.',
+  },
+  es: {
+    failed_submit: 'No se pudo enviar el comando de voz.',
+    speech_failed: 'Falló el reconocimiento de voz.',
+    no_audio_recorded: 'No se grabó audio.',
+    did_not_hear: 'No escuché nada.',
+    didnt_understand: 'Lo siento, no entendí: %{transcript}',
+    couldnt_find_item: 'No pude encontrar un artículo que coincida: %{query}',
+    cannot_submit_order_yet: 'No se puede enviar el pedido todavía.',
+    cannot_request_bill_yet: 'No se puede pedir la cuenta todavía.',
+    missing_context_refresh: 'Falta contexto. Actualiza el menú.',
+    cannot_start_order: 'No se puede iniciar un pedido en esta página.',
+    no_active_order_to_close: 'No hay un pedido activo para cerrar.',
+    please_start_order_first: 'Primero inicia un pedido y vuelve a intentarlo.',
+    no_items_to_remove: 'No hay artículos para eliminar.',
+    no_matching_item_to_remove: 'No hay ningún artículo coincidente para eliminar.',
+  },
+};
+
+function tUi(key, vars) {
+  const loc = getUiLocale();
+  const table = VOICE_UI_I18N[loc] || VOICE_UI_I18N.en;
+  const tpl = table[key] || VOICE_UI_I18N.en[key] || String(key);
+  const v = vars || {};
+  return String(tpl)
+    .replace(/%\{transcript\}/g, String(v.transcript || ''))
+    .replace(/%\{query\}/g, String(v.query || ''));
+}
+
 let __voiceMicStream = null;
 let __voiceMicReleaseTimer = null;
 
@@ -291,11 +379,23 @@ function tokenOverlapScore(query, candidate) {
   return hits / qTokens.length;
 }
 
-function bestMenuItemMatch(query) {
+function isElementInViewport(el) {
+  try {
+    if (!el || !(el instanceof Element)) return false;
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight || 0;
+    const vw = window.innerWidth || document.documentElement.clientWidth || 0;
+    if (!vh || !vw) return false;
+    // Consider "visible" if it intersects the viewport.
+    return r.bottom > 0 && r.right > 0 && r.top < vh && r.left < vw;
+  } catch (_) {
+    return false;
+  }
+}
+
+function bestMenuItemMatchInNodes(query, nodes, { visibleBias = false } = {}) {
   const q = normalizeForMatch(query);
   if (!q) return null;
-
-  const nodes = document.querySelectorAll('[data-bs-menuitem_id][data-bs-menuitem_name]');
   let best = null;
 
   for (const n of nodes) {
@@ -317,6 +417,11 @@ function bestMenuItemMatch(query) {
       score = Math.max(dice * 0.75 + tok * 0.25, tok * 0.7);
     }
 
+    if (visibleBias && score > 0) {
+      // Mild boost for items the customer can currently see.
+      if (isElementInViewport(n)) score += 0.08;
+    }
+
     if (!best || score > best.score) {
       const rawPrice = n.getAttribute('data-bs-menuitem_price');
       const price = rawPrice != null && rawPrice !== '' ? Number(rawPrice) : 0;
@@ -334,6 +439,22 @@ function bestMenuItemMatch(query) {
   return best;
 }
 
+function bestMenuItemMatch(query, { preferVisible = false } = {}) {
+  const all = document.querySelectorAll('[data-bs-menuitem_id][data-bs-menuitem_name]');
+  if (!preferVisible) return bestMenuItemMatchInNodes(query, all);
+
+  // First try visible items only.
+  const visible = Array.from(all).filter((n) => isElementInViewport(n));
+  if (visible.length) {
+    const m1 = bestMenuItemMatchInNodes(query, visible, { visibleBias: true });
+    // If we got a strong visible match, take it.
+    if (m1 && m1.score >= 0.55) return m1;
+  }
+
+  // Fall back to entire menu, still applying a mild visibility bias.
+  return bestMenuItemMatchInNodes(query, all, { visibleBias: true });
+}
+
 async function pollVoiceCommand(slug, id) {
   const url = `/smartmenus/${encodeURIComponent(slug)}/voice_commands/${id}`;
   for (let i = 0; i < 40; i++) {
@@ -347,13 +468,13 @@ async function pollVoiceCommand(slug, id) {
   return null;
 }
 
-function findMenuItemIdByQuery(query) {
-  const m = bestMenuItemMatch(query);
+function findMenuItemIdByQuery(query, opts) {
+  const m = bestMenuItemMatch(query, opts);
   return m ? m.id : null;
 }
 
-function resolveMenuItemByQuery(query) {
-  const m = bestMenuItemMatch(query);
+function resolveMenuItemByQuery(query, opts) {
+  const m = bestMenuItemMatch(query, opts);
   return m ? { id: m.id, price: m.price } : null;
 }
 
@@ -361,16 +482,14 @@ async function executeIntent(payload) {
   const intent = payload?.intent || {};
   const type = intent.type;
 
-  if (type === 'empty') { showMessage('I did not hear anything.'); hideMessageSoon(); return; }
-  if (type === 'unknown') { showMessage(`Sorry, I didn't understand: ${payload.transcript || ''}`); hideMessageSoon(); return; }
+  if (type === 'empty') { showMessage(tUi('did_not_hear')); hideMessageSoon(); return; }
+  if (type === 'unknown') { showMessage(tUi('didnt_understand', { transcript: payload.transcript || '' })); hideMessageSoon(); return; }
 
   if (type === 'start_order') {
     // Prefer clicking the visible Start Order CTA (it opens #openOrderModal)
     const startCta = document.querySelector('[data-bs-target="#openOrderModal"]');
     if (startCta) {
       startCta.click();
-      showMessage('Starting order…');
-      hideMessageSoon();
       return;
     }
     // Fallback: show modal directly
@@ -378,11 +497,9 @@ async function executeIntent(payload) {
     if (openOrderModal && window.bootstrap && window.bootstrap.Modal) {
       const inst = window.bootstrap.Modal.getInstance(openOrderModal) || window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
       inst.show();
-      showMessage('Starting order…');
-      hideMessageSoon();
       return;
     }
-    showMessage('Cannot start an order on this page.');
+    showMessage(tUi('cannot_start_order'));
     hideMessageSoon();
     return;
   }
@@ -392,15 +509,13 @@ async function executeIntent(payload) {
     const closeBtn = qs('#close-order');
     if (closeBtn && !closeBtn.hasAttribute('disabled')) {
       closeBtn.click();
-      showMessage('Closing order…');
-      hideMessageSoon();
       return;
     }
 
     const orderId = getCurrentOrderId();
     const restaurantId = getRestaurantId();
     if (!restaurantId || !orderId) {
-      showMessage('No active order to close.');
+      showMessage(tUi('no_active_order_to_close'));
       hideMessageSoon();
       return;
     }
@@ -415,8 +530,6 @@ async function executeIntent(payload) {
       },
       body: JSON.stringify({ ordr: { status: 40 } }),
     });
-    showMessage('Order closed.');
-    hideMessageSoon();
     return;
   }
 
@@ -426,41 +539,44 @@ async function executeIntent(payload) {
   const menuId = getCurrentMenuId();
 
   if (!restaurantId || !menuId) {
-    showMessage('Missing context. Please refresh the menu.');
+    showMessage(tUi('missing_context_refresh'));
     hideMessageSoon();
     return;
   }
 
   if (type === 'submit_order') {
     const btn = qs('#confirm-order');
-    if (btn) { btn.click(); showMessage('Submitting order…'); hideMessageSoon(); return; }
-    showMessage('Cannot submit order yet.'); hideMessageSoon();
+    if (btn) { btn.click(); return; }
+    showMessage(tUi('cannot_submit_order_yet')); hideMessageSoon();
     return;
   }
 
   if (type === 'request_bill') {
     const btn = qs('#request-bill');
-    if (btn) { btn.click(); showMessage('Requesting bill…'); hideMessageSoon(); return; }
-    showMessage('Cannot request bill yet.'); hideMessageSoon();
+    if (btn) { btn.click(); return; }
+    showMessage(tUi('cannot_request_bill_yet')); hideMessageSoon();
     return;
   }
 
   if (!orderId) {
-    showMessage('Please start an order first, then try again.');
+    showMessage(tUi('please_start_order_first'));
     hideMessageSoon();
     return;
   }
 
   if (type === 'add_item') {
-    const resolved = resolveMenuItemByQuery(intent.query) || resolveMenuItemByQuery((payload.transcript || '').toLowerCase());
-    if (!resolved || !resolved.id) {
-      showMessage(`Couldn't find an item matching: ${intent.query}`);
-      hideMessageSoon();
-      return;
+    let menuitemId = intent.menuitem_id;
+    let ordritemprice = 0;
+    if (!menuitemId) {
+      const resolved = resolveMenuItemByQuery(intent.query, { preferVisible: true }) || resolveMenuItemByQuery((payload.transcript || '').toLowerCase(), { preferVisible: true });
+      if (!resolved || !resolved.id) {
+        showMessage(tUi('couldnt_find_item', { query: intent.query }));
+        hideMessageSoon();
+        return;
+      }
+      menuitemId = resolved.id;
+      ordritemprice = resolved.price;
     }
-
-    const menuitemId = resolved.id;
-    const ordritemprice = resolved.price;
 
     const qty = typeof intent.qty === 'number' ? intent.qty : 1;
     for (let i = 0; i < qty; i++) {
@@ -473,19 +589,17 @@ async function executeIntent(payload) {
         },
       });
     }
-
-    showMessage(`Added ${qty} item(s).`);
-    hideMessageSoon();
     return;
   }
 
   if (type === 'remove_item') {
     // Remove by matching existing state order items to the resolved query
     const items = (window.__SM_STATE && window.__SM_STATE.order && Array.isArray(window.__SM_STATE.order.items)) ? window.__SM_STATE.order.items : [];
-    if (!items.length) { showMessage('No items to remove.'); hideMessageSoon(); return; }
+    if (!items.length) { showMessage(tUi('no_items_to_remove')); hideMessageSoon(); return; }
 
-    const targetMenuitemId = findMenuItemIdByQuery(intent.query);
-    if (!targetMenuitemId) { showMessage(`Couldn't find an item matching: ${intent.query}`); hideMessageSoon(); return; }
+    let targetMenuitemId = intent.menuitem_id;
+    if (!targetMenuitemId) targetMenuitemId = findMenuItemIdByQuery(intent.query);
+    if (!targetMenuitemId) { showMessage(tUi('couldnt_find_item', { query: intent.query })); hideMessageSoon(); return; }
 
     const qty = typeof intent.qty === 'number' ? intent.qty : 1;
     let removed = 0;
@@ -505,8 +619,10 @@ async function executeIntent(payload) {
       removed++;
     }
 
-    showMessage(removed ? `Removed ${removed} item(s).` : 'No matching item to remove.');
-    hideMessageSoon();
+    if (!removed) {
+      showMessage(tUi('no_matching_item_to_remove'));
+      hideMessageSoon();
+    }
     return;
   }
 }
@@ -624,7 +740,8 @@ async function startRecording(locale) {
         // Do not stop the underlying mic stream immediately; keep it briefly to avoid
         // repeated mobile permission banners on every press/hold.
         scheduleMicRelease();
-        const blob = new Blob(chunks, { type: mimeType });
+        const blobType = supported || recorder.mimeType || '';
+        const blob = blobType ? new Blob(chunks, { type: blobType }) : new Blob(chunks);
         resolve(blob);
       };
       try { recorder.stop(); } catch (_) { resolve(null); }
@@ -682,19 +799,16 @@ export function initVoiceMenus() {
   const onDown = async () => {
     btn.disabled = true;
     setPttButtonState(true);
-    showMessage('Listening…');
 
     try {
       if (canUseWebSpeech()) {
         stopSpeech = startWebSpeech(locale, async (transcript) => {
-          showMessage(`Heard: ${transcript}`);
           const created = await sendTranscript(transcript, locale);
-          if (!created || !created.id) { showMessage('Failed to submit voice command.'); hideMessageSoon(); return; }
-          showMessage('Processing…');
+          if (!created || !created.id) { showMessage(tUi('failed_submit')); hideMessageSoon(); return; }
           const payload = await pollVoiceCommand(getSmartmenuSlug(), created.id);
           await executeIntent(payload);
         }, (e) => {
-          showMessage('Speech recognition failed.');
+          showMessage(tUi('speech_failed'));
           hideMessageSoon();
         });
       } else {
@@ -718,16 +832,14 @@ export function initVoiceMenus() {
       if (!recorder) return;
 
       btn.disabled = true;
-      showMessage('Uploading…');
       const blob = await recorder.stop();
       recorder = null;
 
-      if (!blob) { showMessage('No audio recorded.'); hideMessageSoon(); return; }
+      if (!blob) { showMessage(tUi('no_audio_recorded')); hideMessageSoon(); return; }
 
       const created = await sendAudio(blob, locale);
-      if (!created || !created.id) { showMessage('Failed to submit voice command.'); hideMessageSoon(); return; }
+      if (!created || !created.id) { showMessage(tUi('failed_submit')); hideMessageSoon(); return; }
 
-      showMessage('Processing…');
       const payload = await pollVoiceCommand(getSmartmenuSlug(), created.id);
       await executeIntent(payload);
     } finally {
