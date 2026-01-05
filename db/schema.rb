@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_05_113200) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_05_152500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -913,7 +913,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_05_113200) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "dfault"
+    t.integer "sequence", default: 0, null: false
     t.index ["restaurant_id", "locale"], name: "index_restaurantlocales_on_restaurant_locale"
+    t.index ["restaurant_id", "sequence"], name: "index_restaurantlocales_on_restaurant_id_and_sequence"
     t.index ["restaurant_id", "status", "dfault"], name: "index_restaurantlocales_on_restaurant_status_default"
     t.index ["restaurant_id"], name: "index_restaurantlocales_on_restaurant_id"
   end

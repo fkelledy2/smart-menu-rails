@@ -4,6 +4,8 @@ class Restaurantlocale < ApplicationRecord
   # Standard ActiveRecord associations
   belongs_to :restaurant
 
+  before_create :assign_sequence
+
   # Enums
   enum :status, {
     inactive: 0,
@@ -48,5 +50,14 @@ class Restaurantlocale < ApplicationRecord
     else
       'English'
     end
+  end
+
+  private
+
+  def assign_sequence
+    return if sequence.present?
+    return if restaurant_id.blank?
+
+    self.sequence = Restaurantlocale.where(restaurant_id: restaurant_id).maximum(:sequence).to_i + 1
   end
 end

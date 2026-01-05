@@ -2,8 +2,10 @@ class RestaurantlocalesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_restaurantlocale, only: %i[show edit update destroy]
 
+  skip_around_action :switch_locale, only: %i[reorder bulk_update]
+
   # Pundit authorization
-  after_action :verify_authorized, except: [:index]
+  after_action :verify_authorized, except: %i[index reorder bulk_update]
   after_action :verify_policy_scoped, only: [:index]
 
   # GET	/restaurants/:restaurant_id/menus
@@ -11,9 +13,9 @@ class RestaurantlocalesController < ApplicationController
   def index
     if params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
-      @restaurantlocales = policy_scope(Restaurantlocale).where(restaurant_id: @restaurant.id).order(:locale)
+      @restaurantlocales = policy_scope(Restaurantlocale).where(restaurant_id: @restaurant.id).order(:sequence)
     else
-      @restaurantlocales = policy_scope(Restaurantlocale).where(archived: false).order(:locale)
+      @restaurantlocales = policy_scope(Restaurantlocale).where(archived: false).order(:sequence)
     end
   end
 
@@ -142,6 +144,130 @@ class RestaurantlocalesController < ApplicationController
         format.json { head :no_content }
       end
     end
+  end
+
+  # PATCH /restaurants/:restaurant_id/restaurantlocales/bulk_update
+  def bulk_update
+    @restaurant = Restaurant.find(params[:restaurant_id])
+    restaurantlocales = policy_scope(Restaurantlocale).where(restaurant_id: @restaurant.id)
+
+    ids = Array(params[:restaurantlocale_ids]).map(&:to_s).reject(&:blank?)
+    status = params[:status].to_s
+
+    if ids.empty? || status.blank?
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            'restaurant_content',
+            partial: 'restaurants/sections/localization_2025',
+            locals: { restaurant: @restaurant, filter: 'all' }
+          )
+        end
+        format.html do
+          redirect_to edit_restaurant_path(@restaurant, section: 'localization')
+        end
+      end
+      return
+    end
+
+    to_update = restaurantlocales.where(id: ids)
+    to_update.find_each do |rl|
+      authorize rl, :update?
+      next if rl.respond_to?(:dfault) && rl.dfault
+
+      rl.update(status: status)
+    end
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          'restaurant_content',
+          partial: 'restaurants/sections/localization_2025',
+          locals: { restaurant: @restaurant, filter: 'all' }
+        )
+      end
+      format.html do
+        redirect_to edit_restaurant_path(@restaurant, section: 'localization'),
+                    notice: t('restaurantlocales.controller.updated')
+      end
+    end
+  end
+
+  # PATCH /restaurants/:restaurant_id/restaurantlocales/reorder
+  def reorder
+    @restaurant = Restaurant.find(params[:restaurant_id])
+    restaurantlocales = policy_scope(Restaurantlocale).where(restaurant_id: @restaurant.id)
+
+    order = params[:order]
+    $stdout.sync = true
+    puts(
+      "[Restaurantlocales#reorder] hit pid=#{Process.pid} env=#{Rails.env} restaurant_id=#{@restaurant.id} order_class=#{order.class} order=#{order.inspect}"
+    )
+    Rails.logger.info(
+      "Restaurantlocales#reorder hit restaurant_id=#{@restaurant.id} order_class=#{order.class} order=#{order.inspect}"
+    )
+    unless order.is_a?(Array)
+      Rails.logger.warn(
+        "Restaurantlocales#reorder invalid payload restaurant_id=#{@restaurant.id} order=#{order.inspect}"
+      )
+      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_entity
+    end
+
+    Restaurantlocale.transaction do
+      order.each do |item|
+        item_hash = if item.is_a?(ActionController::Parameters)
+          item.to_unsafe_h
+        elsif item.is_a?(Hash)
+          item
+        else
+          puts("[Restaurantlocales#reorder] skipping non-hash item pid=#{Process.pid} item_class=#{item.class} item=#{item.inspect}")
+          Rails.logger.warn("Restaurantlocales#reorder skipping non-hash item item_class=#{item.class} item=#{item.inspect}")
+          next
+        end
+
+        id = item_hash[:id] || item_hash['id']
+        seq = item_hash[:sequence] || item_hash['sequence']
+        if id.blank? || seq.nil?
+          puts("[Restaurantlocales#reorder] skipping invalid item pid=#{Process.pid} item=#{item_hash.inspect}")
+          Rails.logger.warn("Restaurantlocales#reorder skipping invalid item item=#{item_hash.inspect}")
+          next
+        end
+
+        rl = restaurantlocales.find(id)
+        authorize rl, :update?
+        old_seq = rl.sequence
+        new_seq = seq.to_i
+        rl.update_column(:sequence, new_seq)
+        puts(
+          "[Restaurantlocales#reorder] updated pid=#{Process.pid} restaurantlocale_id=#{rl.id} old_sequence=#{old_seq.inspect} new_sequence=#{new_seq}"
+        )
+        Rails.logger.info(
+          "Restaurantlocales#reorder updated restaurantlocale_id=#{rl.id} old_sequence=#{old_seq.inspect} new_sequence=#{new_seq}"
+        )
+      end
+    end
+
+    response_body = { status: 'success', message: 'Languages reordered successfully' }
+    if Rails.env.development?
+      db_config = ActiveRecord::Base.connection_db_config
+      response_body[:debug] = {
+        pid: Process.pid,
+        env: Rails.env,
+        database: db_config&.database,
+        host: db_config&.host,
+        adapter: db_config&.adapter,
+      }
+    end
+
+    render json: response_body, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    Rails.logger.warn(
+      "Restaurantlocales#reorder record not found restaurant_id=#{params[:restaurant_id]} order=#{params[:order].inspect}"
+    )
+    render json: { status: 'error', message: 'Language not found' }, status: :not_found
+  rescue StandardError => e
+    Rails.logger.error("Restaurantlocales reorder error: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
+    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
   end
 
   private

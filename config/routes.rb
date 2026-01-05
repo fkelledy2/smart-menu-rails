@@ -139,7 +139,12 @@ Rails.application.routes.draw do
     end
     
     # Restaurant configuration
-    resources :restaurantlocales
+    resources :restaurantlocales do
+      collection do
+        patch :bulk_update
+        patch :reorder
+      end
+    end
     resources :tablesettings
     resources :restaurantavailabilities
     

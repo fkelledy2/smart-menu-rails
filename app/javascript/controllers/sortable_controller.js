@@ -29,13 +29,22 @@ export default class extends Controller {
       await this.loadSortableScript()
     }
     
-    this.sortable = new window.Sortable(this.element, {
+    const isTbody = this.element && this.element.tagName === 'TBODY'
+
+    if (!this.urlValue) {
+      console.warn('Sortable missing urlValue on element:', this.element)
+    }
+
+    const options = {
       animation: this.animationValue,
       handle: this.handleValue,
       ghostClass: 'sortable-ghost',
       dragClass: 'sortable-drag',
       onEnd: this.onEnd.bind(this)
-    })
+    }
+    if (isTbody) options.draggable = 'tr'
+
+    this.sortable = new window.Sortable(this.element, options)
     
     console.log('Sortable connected', this.urlValue)
   }
@@ -57,12 +66,30 @@ export default class extends Controller {
   }
   
   async onEnd(event) {
+    if (!this.urlValue) {
+      console.warn('Sortable onEnd fired but urlValue is missing; skipping save', this.element)
+      return
+    }
+
+    console.log('Sortable onEnd event', {
+      oldIndex: event?.oldIndex,
+      newIndex: event?.newIndex,
+      from: event?.from,
+      to: event?.to,
+      item: event?.item,
+    })
+
     // Get all items in new order
     const items = Array.from(this.element.children)
     const order = items.map((item, index) => ({
       id: item.dataset.sortableId,
-      sequence: index
+      sequence: index + 1
     }))
+
+    if (order.some((x) => !x.id)) {
+      console.warn('Sortable missing data-sortable-id on one or more children; skipping save', order)
+      return
+    }
     
     console.log('New order:', order)
     
@@ -72,9 +99,11 @@ export default class extends Controller {
   
   async saveOrder(order) {
     try {
-      console.log('Sending order to:', this.urlValue)
-      console.log('CSRF Token:', this.csrfToken())
-      console.log('Order data:', order)
+      console.log('Sortable PATCH (reorder) begin', {
+        url: this.urlValue,
+        csrfPresent: Boolean(this.csrfToken()),
+        order,
+      })
       
       const response = await fetch(this.urlValue, {
         method: 'PATCH',
@@ -86,14 +115,36 @@ export default class extends Controller {
         },
         body: JSON.stringify({ order: order })
       })
-      
-      const data = await response.json()
-      console.log('Response:', response.status, data)
+
+      const contentType = response.headers.get('content-type')
+      const rawText = await response.text()
+      let data = null
+      try {
+        data = rawText ? JSON.parse(rawText) : null
+      } catch (e) {
+        console.warn('Sortable reorder response was not valid JSON', {
+          contentType,
+          status: response.status,
+          rawText,
+        })
+      }
+
+      console.log('Sortable PATCH (reorder) response', {
+        status: response.status,
+        ok: response.ok,
+        contentType,
+        data,
+        rawText,
+      })
       
       if (response.ok) {
         this.showSuccess()
       } else {
-        console.error('Save failed:', response.status, data)
+        console.error('Sortable reorder save failed', {
+          status: response.status,
+          data,
+          rawText,
+        })
         this.showError()
       }
     } catch (error) {
