@@ -531,6 +531,8 @@ class OrdrsController < ApplicationController
       .where(sessionid: session.id.to_s)
       .first
 
+    smartmenu = menuparticipant&.smartmenu
+
     # Allergyns already loaded via restaurant association
     allergyns = restaurant.allergyns
     restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
@@ -659,6 +661,7 @@ class OrdrsController < ApplicationController
             restaurant: restaurant,
             tablesetting: tablesetting,
             ordrparticipant: ordrparticipant,
+            smartmenu: smartmenu,
           },
         ),
       ),

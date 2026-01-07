@@ -9,7 +9,7 @@ WORKDIR /app
 
 # System deps (kept minimal). git is occasionally required by model downloads.
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git && \
+    apt-get install --no-install-recommends -y build-essential git libgomp1 libstdc++6 && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt ./

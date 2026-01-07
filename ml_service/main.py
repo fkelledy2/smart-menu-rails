@@ -9,9 +9,10 @@ from pydantic import BaseModel, Field
 
 try:
     from sentence_transformers import SentenceTransformer, CrossEncoder
-except Exception:  # pragma: no cover
+except Exception as e:  # pragma: no cover
     SentenceTransformer = None
     CrossEncoder = None
+    _SENTENCE_TRANSFORMERS_IMPORT_ERROR = repr(e)
 
 
 APP_NAME = "smart-menu-ml"
@@ -97,6 +98,9 @@ def _load_models() -> None:
     global _embedder, _reranker
 
     if SentenceTransformer is None:
+        import_err = globals().get("_SENTENCE_TRANSFORMERS_IMPORT_ERROR")
+        if import_err:
+            raise RuntimeError(f"sentence-transformers not available: {import_err}")
         raise RuntimeError("sentence-transformers not available")
 
     # NOTE: we keep a single process per dyno to avoid loading models multiple times.
