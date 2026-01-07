@@ -4,6 +4,9 @@ class Menu < ApplicationRecord
 
   # Standard ActiveRecord associations
   belongs_to :restaurant
+  belongs_to :owner_restaurant, class_name: 'Restaurant', optional: true
+  has_many :restaurant_menus
+  has_many :restaurants, through: :restaurant_menus
   has_many :menusections
   has_many :menuavailabilities
   has_many :menuitems, through: :menusections
@@ -21,6 +24,7 @@ class Menu < ApplicationRecord
   # IdentityCache configuration
   cache_index :id
   cache_index :restaurant_id
+  cache_index :owner_restaurant_id
 
   # Cache associations
   cache_has_many :menusections, embed: :ids
@@ -30,6 +34,7 @@ class Menu < ApplicationRecord
   cache_has_many :menulocales, embed: :ids
   cache_has_one :genimage, embed: :id
   cache_belongs_to :restaurant
+  cache_belongs_to :owner_restaurant
 
   # Cache invalidation hooks
   after_update :invalidate_menu_caches

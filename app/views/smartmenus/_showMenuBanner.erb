@@ -1,18 +1,18 @@
   <!-- Restaurant Name & Locale Selector -->
   <div class="header-restaurant-row">
     <% if current_user %>
-      <%= link_to edit_restaurant_menu_path(@menu.restaurant, @menu), class: 'restaurant-name' do %>
-        <%= @menu.restaurant.name %>
+      <%= link_to edit_restaurant_menu_path(@restaurant, @menu), class: 'restaurant-name' do %>
+        <%= @restaurant.name %>
       <% end %>
     <% else %>
-      <span class="restaurant-name"><%= @menu.restaurant.name %></span>
+      <span class="restaurant-name"><%= @restaurant.name %></span>
     <% end %>
     
     <div class="locale-selector" id="tableLocaleSelectorContainer">
       <% if current_user %>
-        <%= render partial: "showTableLocaleSelectorStaff", locals: { menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+        <%= render partial: "showTableLocaleSelectorStaff", locals: { menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
       <% else %>
-        <%= render partial: "showTableLocaleSelectorCustomer", locals: { menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+        <%= render partial: "showTableLocaleSelectorCustomer", locals: { menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
       <% end %>
     </div>
   <noscript>
@@ -27,15 +27,15 @@
   <div class="header-order-row" id="openOrderContainer" data-controller="order-header" style="visibility:hidden">
     <% if @openOrder %>
       <% if current_user %>
-        <%= render partial: "orderStaff", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @openOrder.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+        <%= render partial: "orderStaff", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
       <% else %>
-        <%= render partial: "orderCustomer", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @openOrder.menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+        <%= render partial: "orderCustomer", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
       <% end %>
     <% else %>
       <% if current_user %>
-        <%= render partial: "orderStaff", locals: { order: nil, menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+        <%= render partial: "orderStaff", locals: { order: nil, menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
       <% else %>
-        <%= render partial: "orderCustomer", locals: { order: nil, menu: @menu, restaurant: @menu.restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+        <%= render partial: "orderCustomer", locals: { order: nil, menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
       <% end %>
     <% end %>
   </div>
@@ -53,7 +53,7 @@
           <button type="button" 
                   class="filter-button" 
                   data-bs-toggle="modal" 
-                  data-bs-restaurant="<%= @menu.restaurant.id %>" 
+                  data-bs-restaurant="<%= @restaurant.id %>" 
                   data-bs-menu="<%= @menu.id %>" 
                   data-bs-target="#filterOrderModal"
                   aria-label="<%= t('.filter_allergens', default: 'Filter allergens') %>">

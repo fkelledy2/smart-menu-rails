@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_05_152500) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_06_170800) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -437,8 +437,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_05_152500) do
     t.float "covercharge", default: 0.0
     t.bigint "menu_import_id"
     t.boolean "voiceOrderingEnabled", default: false
+    t.bigint "owner_restaurant_id"
     t.index ["archived"], name: "index_menus_on_archived"
     t.index ["menu_import_id"], name: "index_menus_on_menu_import_id"
+    t.index ["owner_restaurant_id"], name: "index_menus_on_owner_restaurant_id"
     t.index ["restaurant_id", "created_at"], name: "index_menus_on_restaurant_created_at"
     t.index ["restaurant_id", "status"], name: "index_menus_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id", "updated_at"], name: "index_menus_on_restaurant_updated_at"
@@ -881,6 +883,20 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_05_152500) do
     t.index ["user_id"], name: "index_resource_locks_on_user_id"
   end
 
+  create_table "restaurant_menus", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.bigint "menu_id", null: false
+    t.integer "sequence"
+    t.integer "status", default: 1, null: false
+    t.boolean "availability_override_enabled", default: false, null: false
+    t.integer "availability_state", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id"], name: "index_restaurant_menus_on_menu_id"
+    t.index ["restaurant_id", "menu_id"], name: "index_restaurant_menus_on_restaurant_id_and_menu_id", unique: true
+    t.index ["restaurant_id"], name: "index_restaurant_menus_on_restaurant_id"
+  end
+
   create_table "restaurant_onboardings", force: :cascade do |t|
     t.bigint "restaurant_id", null: false
     t.integer "status", default: 0
@@ -1197,6 +1213,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_05_152500) do
   add_foreign_key "menuparticipants", "smartmenus"
   add_foreign_key "menus", "menu_imports"
   add_foreign_key "menus", "restaurants"
+  add_foreign_key "menus", "restaurants", column: "owner_restaurant_id"
   add_foreign_key "menusectionlocales", "menusections"
   add_foreign_key "menusections", "menus"
   add_foreign_key "ocr_menu_imports", "menus"
@@ -1229,6 +1246,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_05_152500) do
   add_foreign_key "performance_metrics", "users"
   add_foreign_key "push_subscriptions", "users"
   add_foreign_key "resource_locks", "users"
+  add_foreign_key "restaurant_menus", "menus"
+  add_foreign_key "restaurant_menus", "restaurants"
   add_foreign_key "restaurant_onboardings", "restaurants"
   add_foreign_key "restaurantavailabilities", "restaurants"
   add_foreign_key "restaurantlocales", "restaurants"

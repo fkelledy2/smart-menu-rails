@@ -14,6 +14,8 @@ class Restaurant < ApplicationRecord
 
   has_many :tablesettings, dependent: :delete_all
   has_many :menus, dependent: :delete_all
+  has_many :restaurant_menus, dependent: :delete_all
+  has_many :shared_menus, through: :restaurant_menus, source: :menu
   has_many :employees, dependent: :delete_all
 
   def alcohol_allowed_now?(now: Time.zone.now)

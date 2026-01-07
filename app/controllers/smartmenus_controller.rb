@@ -47,7 +47,7 @@ class SmartmenusController < ApplicationController
       @header_cache_buster = nil
     end
 
-    if @menu.restaurant != @restaurant
+    unless @menu.restaurant_id == @restaurant.id || RestaurantMenu.exists?(restaurant_id: @restaurant.id, menu_id: @menu.id)
       redirect_to root_url and return
     end
 
@@ -297,9 +297,6 @@ class SmartmenusController < ApplicationController
       @restaurant = @smartmenu.restaurant
       @menu = @smartmenu.menu
       @tablesetting = @smartmenu.tablesetting
-      if current_user && (@menu.nil? || (@menu.restaurant.user != current_user))
-        redirect_to root_url
-      end
       @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency || 'USD')
     end
   rescue ActiveRecord::RecordNotFound

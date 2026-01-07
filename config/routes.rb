@@ -224,7 +224,23 @@ Rails.application.routes.draw do
     end
     
     # Menu management (full operations within restaurant context)
+    resources :restaurant_menus, only: [] do
+      collection do
+        patch :reorder
+        patch :bulk_update
+        patch :bulk_availability
+      end
+      member do
+        patch :availability
+      end
+    end
+
     resources :menus do
+      member do
+        post :attach
+        post :share
+        delete :detach
+      end
       collection do
         patch :update_sequence
         patch :bulk_update

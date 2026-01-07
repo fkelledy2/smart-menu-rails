@@ -140,6 +140,7 @@ class OrdrparticipantsController < ApplicationController
             locals: {
               order: ordr,
               menu: menu,
+              restaurant: restaurant,
               ordrparticipant: ordrparticipant,
               tablesetting: tablesetting,
               menuparticipant: menuparticipant,
@@ -153,6 +154,7 @@ class OrdrparticipantsController < ApplicationController
             locals: {
               order: ordr,
               menu: menu,
+              restaurant: restaurant,
               ordrparticipant: ordrparticipant,
               tablesetting: tablesetting,
               menuparticipant: menuparticipant,

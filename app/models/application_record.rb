@@ -11,15 +11,15 @@ class ApplicationRecord < ActiveRecord::Base
   class << self
     # Execute block on read replica with fallback to primary
     def on_replica(&)
-      connected_to(role: :reading, &)
+      ActiveRecord::Base.connected_to(role: :reading, &)
     rescue ActiveRecord::ConnectionNotEstablished => e
       Rails.logger.warn "Read replica unavailable, falling back to primary: #{e.message}"
-      connected_to(role: :writing, &)
+      ActiveRecord::Base.connected_to(role: :writing, &)
     end
 
     # Execute block on primary database
     def on_primary(&)
-      connected_to(role: :writing, &)
+      ActiveRecord::Base.connected_to(role: :writing, &)
     end
 
     # Check if currently connected to replica

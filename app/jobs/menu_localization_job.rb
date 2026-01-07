@@ -76,7 +76,12 @@ class MenuLocalizationJob
 
   # Use Case 1: Localize a specific menu to all restaurant locales
   def localize_menu(menu_id, force: false)
-    menu = Menu.find(menu_id)
+    menu = Menu.find_by(id: menu_id)
+    unless menu
+      update_progress(status: 'skipped', message: "Menu ##{menu_id} not found", menu_id: menu_id)
+      return { locales_processed: 0, menu_locales_created: 0, errors: [] }
+    end
+
     Rails.logger.info("[MenuLocalizationJob] Localizing menu ##{menu_id} (force: #{force})")
     Rails.logger.info("[MenuLocalizationJob] Delegating menu ##{menu_id} localization (force: #{force}) to LocalizeMenuService")
 
@@ -125,10 +130,6 @@ class MenuLocalizationJob
 
     Rails.logger.info("[MenuLocalizationJob] Completed menu ##{menu_id} localization: #{stats}")
     stats
-  rescue ActiveRecord::RecordNotFound => e
-    Rails.logger.warn("[MenuLocalizationJob] Menu ##{menu_id} not found (likely deleted): #{e.message}")
-    update_progress(status: 'failed', message: "Menu ##{menu_id} not found")
-    { locales_processed: 0, menu_locales_created: 0, errors: ["Menu ##{menu_id} not found"] }
   rescue StandardError => e
     update_progress(status: 'failed', message: "Failed: #{e.class}: #{e.message}")
     append_progress_log("ERROR: #{e.class}: #{e.message}")

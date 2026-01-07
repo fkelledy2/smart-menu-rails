@@ -1,11 +1,10 @@
 require 'rqrcode'
 
 class MenusController < ApplicationController
-  include CachePerformanceMonitoring
-
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_restaurant
   before_action :set_menu, only: %i[show edit update destroy regenerate_images image_generation_progress localize localization_progress performance update_availabilities polish polish_progress]
+  before_action :ensure_owner_restaurant_context!, only: %i[update destroy regenerate_images localize update_availabilities polish]
 
   skip_around_action :switch_locale, only: %i[update_sequence bulk_update]
 
@@ -23,19 +22,16 @@ class MenusController < ApplicationController
     if current_user
       # Optimize query based on request format and restaurant scope
       @menus = if @restaurant
-                 # For restaurant-specific requests, we already verified ownership in set_restaurant
-                 # so we can skip the expensive policy scope joins
+                 base = Menu.joins(:restaurant_menus)
+                   .where(restaurant_menus: { restaurant_id: @restaurant.id })
+                   .for_management_display
+                   .where(archived: false)
+                   .order(Arel.sql('CASE WHEN restaurant_menus.sequence IS NULL THEN 1 ELSE 0 END, restaurant_menus.sequence ASC'))
+
                  if request.format.json?
-                   # JSON: Eager load associations to avoid N+1 queries
-                   # Include nested menuitems since JSON view renders full hierarchy
-                   @restaurant.menus.for_management_display
-                     .includes(menusections: :menuitems, menuavailabilities: [])
-                     .order(:sequence)
+                   base.includes(menusections: :menuitems, menuavailabilities: [])
                  else
-                   # HTML: Full data as needed
-                   policy_scope(Menu).where(restaurant_id: @restaurant.id)
-                     .for_management_display
-                     .order(:sequence)
+                   base
                  end
                else
                  # For all-menus requests, use policy scope
@@ -52,8 +48,11 @@ class MenusController < ApplicationController
       end
     elsif params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
-      @menus = Menu.where(restaurant: @restaurant)
+      @menus = Menu.joins(:restaurant_menus)
+        .where(restaurant_menus: { restaurant_id: @restaurant.id, status: RestaurantMenu.statuses[:active] })
         .for_customer_display
+        .where(archived: false)
+        .order(Arel.sql('CASE WHEN restaurant_menus.sequence IS NULL THEN 1 ELSE 0 END, restaurant_menus.sequence ASC'))
       @tablesettings = @restaurant.tablesettings
       anonymous_id = session[:session_id] ||= SecureRandom.uuid
       AnalyticsService.track_anonymous_event(anonymous_id, 'menus_viewed_anonymous', {
@@ -68,6 +67,135 @@ class MenusController < ApplicationController
       format.html # Default HTML view
       format.json { render 'index_minimal' } # Use optimized minimal JSON view
     end
+  end
+
+  # POST /restaurants/:restaurant_id/menus/:id/attach
+  def attach
+    menu = Menu.find(params[:id])
+    restaurant_menu = RestaurantMenu.new(restaurant: @restaurant, menu: menu)
+    authorize restaurant_menu, :attach?
+
+    restaurant_menu.sequence ||= (@restaurant.restaurant_menus.maximum(:sequence).to_i + 1)
+    restaurant_menu.status ||= :active
+    restaurant_menu.availability_override_enabled = false if restaurant_menu.availability_override_enabled.nil?
+    restaurant_menu.availability_state ||= :available
+    restaurant_menu.save!
+
+    ensure_smartmenus_for_restaurant_menu!(@restaurant, menu)
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          'restaurant_content',
+          partial: 'restaurants/sections/menus_2025',
+          locals: { restaurant: @restaurant, filter: 'all' },
+        )
+      end
+      format.html do
+        redirect_to edit_restaurant_path(@restaurant, section: 'menus')
+      end
+    end
+  rescue ActiveRecord::RecordInvalid
+    redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Unable to attach menu'
+  end
+
+  # POST /restaurants/:restaurant_id/menus/:id/share
+  def share
+    menu = Menu.find(params[:id])
+    owner_restaurant_id = menu.owner_restaurant_id.presence || menu.restaurant_id
+    unless owner_restaurant_id == @restaurant.id
+      return redirect_to(edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Only the owner restaurant can share this menu')
+    end
+
+    Restaurant.where(user_id: current_user.id).where.not(id: @restaurant.id)
+
+    raw_target_ids = []
+    raw_target_ids.concat(Array(params[:target_restaurant_ids])) if params.key?(:target_restaurant_ids)
+    raw_target_ids << params[:target_restaurant_id] if params.key?(:target_restaurant_id)
+    raw_target_ids = raw_target_ids.map(&:to_s).map(&:strip).reject(&:blank?)
+
+    other_restaurant_ids = Restaurant.on_primary do
+      Restaurant.where(user_id: current_user.id).where.not(id: @restaurant.id).pluck(:id)
+    end
+
+    target_ids = if raw_target_ids.include?('all')
+                   other_restaurant_ids
+                 else
+                   raw_target_ids.map(&:to_i).reject(&:zero?)
+                 end
+
+    target_restaurants = Restaurant.on_primary do
+      Restaurant.where(user_id: current_user.id).where(id: target_ids).to_a
+    end
+
+    if target_restaurants.empty?
+      return redirect_to(edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Restaurant not found')
+    end
+
+    target_restaurants.each do |target_restaurant|
+      restaurant_menu = RestaurantMenu.find_or_initialize_by(restaurant: target_restaurant, menu: menu)
+      authorize restaurant_menu, :attach?
+
+      next if restaurant_menu.persisted?
+
+      restaurant_menu.sequence ||= (target_restaurant.restaurant_menus.maximum(:sequence).to_i + 1)
+      restaurant_menu.status ||= :active
+      restaurant_menu.availability_override_enabled = false if restaurant_menu.availability_override_enabled.nil?
+      restaurant_menu.availability_state ||= :available
+      restaurant_menu.save!
+
+      ensure_smartmenus_for_restaurant_menu!(target_restaurant, menu)
+    end
+
+    redirect_to edit_restaurant_path(@restaurant, section: 'menus')
+  rescue ActiveRecord::RecordNotFound
+    redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Restaurant not found'
+  rescue ActiveRecord::RecordInvalid
+    redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Unable to share menu'
+  end
+
+  def ensure_smartmenus_for_restaurant_menu!(restaurant, menu)
+    Smartmenu.on_primary do
+      if Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id, tablesetting_id: nil).first.nil?
+        Smartmenu.create!(restaurant: restaurant, menu: menu, tablesetting: nil, slug: SecureRandom.uuid)
+      end
+
+      restaurant.tablesettings.order(:id).each do |tablesetting|
+        next unless Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id, tablesetting_id: tablesetting.id).first.nil?
+
+        Smartmenu.create!(restaurant: restaurant, menu: menu, tablesetting: tablesetting, slug: SecureRandom.uuid)
+      end
+    end
+  end
+
+  # DELETE /restaurants/:restaurant_id/menus/:id/detach
+  def detach
+    menu = Menu.find(params[:id])
+
+    owner_restaurant_id = menu.owner_restaurant_id.presence || menu.restaurant_id
+    if owner_restaurant_id.present? && owner_restaurant_id == @restaurant.id
+      return redirect_to(edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Owner restaurant cannot detach its own menu')
+    end
+
+    restaurant_menu = RestaurantMenu.find_by!(restaurant_id: @restaurant.id, menu_id: menu.id)
+    authorize restaurant_menu, :detach?
+
+    restaurant_menu.destroy!
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          'restaurant_content',
+          partial: 'restaurants/sections/menus_2025',
+          locals: { restaurant: @restaurant, filter: 'all' },
+        )
+      end
+      format.html do
+        redirect_to edit_restaurant_path(@restaurant, section: 'menus')
+      end
+    end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Menu not attached'
   end
 
   # POST /menus/:id/regenerate_images
@@ -92,10 +220,10 @@ class MenusController < ApplicationController
             current: 0,
             total: total,
             message: 'Queued AI image generation',
-            menu_id: @menu.id
-          }.to_json)
+            menu_id: @menu.id,
+          }.to_json,)
         end
-      rescue => e
+      rescue StandardError => e
         Rails.logger.warn("[MenusController] Failed to init progress for #{jid}: #{e.message}")
       end
 
@@ -129,7 +257,7 @@ class MenusController < ApplicationController
         json = r.get("image_gen:#{jid}")
         payload = json.present? ? JSON.parse(json) : {}
       end
-    rescue => e
+    rescue StandardError => e
       Rails.logger.warn("[MenusController] Progress read failed for #{jid}: #{e.message}")
       payload ||= {}
     end
@@ -145,7 +273,7 @@ class MenusController < ApplicationController
   def polish
     authorize @menu, :update?
 
-    total = (@menuItemCount.presence || @menu.menuitems.count)
+    total = @menuItemCount.presence || @menu.menuitems.count
     jid = AiMenuPolisherJob.perform_async(@menu.id)
 
     begin
@@ -155,10 +283,10 @@ class MenusController < ApplicationController
           current: 0,
           total: total,
           message: 'Queued AI menu polishing',
-          menu_id: @menu.id
-        }.to_json)
+          menu_id: @menu.id,
+        }.to_json,)
       end
-    rescue => e
+    rescue StandardError => e
       Rails.logger.warn("[MenusController] Failed to init polish progress for #{jid}: #{e.message}")
     end
 
@@ -184,7 +312,7 @@ class MenusController < ApplicationController
         json = r.get("polish:#{jid}")
         payload = json.present? ? JSON.parse(json) : {}
       end
-    rescue => e
+    rescue StandardError => e
       Rails.logger.warn("[MenusController] Polish progress read failed for #{jid}: #{e.message}")
       payload ||= {}
     end
@@ -210,9 +338,9 @@ class MenusController < ApplicationController
 
     # Get force parameter (default: false - only translate missing localizations)
     force = params[:force].to_s == 'true'
-    
+
     # Trigger the background job to localize the menu
-    items_count = (@menuItemCount.presence || @menu.menuitems.count)
+    items_count = @menuItemCount.presence || @menu.menuitems.count
     total = active_locales.count * items_count
     jid = MenuLocalizationJob.perform_async('menu', @menu.id, force)
 
@@ -224,22 +352,22 @@ class MenusController < ApplicationController
           current: 0,
           total: total,
           message: 'Queued menu localization',
-          menu_id: @menu.id
-        }.to_json)
+          menu_id: @menu.id,
+        }.to_json,)
       end
-    rescue => e
+    rescue StandardError => e
       Rails.logger.warn("[MenusController] Failed to init localization progress for #{jid}: #{e.message}")
     end
 
     respond_to do |format|
       format.html do
         flash_message = if force
-          t('menus.controller.localization_queued_force', 
-            default: "Menu re-translation has been queued. This will process #{total} item translations across #{active_locales.count} locale(s).")
-        else
-          t('menus.controller.localization_queued', 
-            default: "Menu localization has been queued. This will process up to #{total} item translations across #{active_locales.count} locale(s).")
-        end
+                          t('menus.controller.localization_queued_force',
+                            default: "Menu re-translation has been queued. This will process #{total} item translations across #{active_locales.count} locale(s).",)
+                        else
+                          t('menus.controller.localization_queued',
+                            default: "Menu localization has been queued. This will process up to #{total} item translations across #{active_locales.count} locale(s).",)
+                        end
         flash[:notice] = flash_message
         redirect_to edit_restaurant_menu_path(restaurant, @menu)
       end
@@ -260,7 +388,7 @@ class MenusController < ApplicationController
         json = r.get("localize:#{jid}")
         payload = json.present? ? JSON.parse(json) : {}
       end
-    rescue => e
+    rescue StandardError => e
       Rails.logger.warn("[MenusController] Localization progress read failed for #{jid}: #{e.message}")
       payload ||= {}
     end
@@ -422,7 +550,10 @@ class MenusController < ApplicationController
             render partial: 'menus/section_frame_2025',
                    locals: {
                      menu: @menu,
-                     partial_name: menu_section_partial_name(@current_section)
+                     partial_name: menu_section_partial_name(@current_section),
+                     restaurant: @restaurant || @menu.restaurant,
+                     restaurant_menu: @restaurant_menu,
+                     read_only: @read_only_menu_context,
                    }
           else
             render :edit_2025
@@ -502,7 +633,7 @@ class MenusController < ApplicationController
       if raw_menu.is_a?(ActionController::Parameters)
         begin
           attrs.merge!(menu_params.to_h)
-        rescue => e
+        rescue StandardError => e
           Rails.logger.warn("[MenusController#update] menu_params error: #{e.message}")
         end
       end
@@ -562,13 +693,11 @@ class MenusController < ApplicationController
             render partial: 'menus/section_frame_2025',
                    locals: { menu: @menu, partial_name: menu_section_partial_name(@current_section) },
                    status: :unprocessable_entity
-          else
+          elsif params[:return_to] == 'menu_edit'
             # Redirect back to menu edit with alert for quick-action UX
-            if params[:return_to] == 'menu_edit'
-              redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), alert: @menu.errors.full_messages.presence || 'Failed to update menu'
-            else
-              render :edit, status: :unprocessable_entity
-            end
+            redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), alert: @menu.errors.full_messages.presence || 'Failed to update menu'
+          else
+            render :edit, status: :unprocessable_entity
           end
         end
         format.json { render json: @menu.errors, status: :unprocessable_entity }
@@ -579,81 +708,81 @@ class MenusController < ApplicationController
   # PATCH /restaurants/:restaurant_id/menus/:id/update_availabilities
   def update_availabilities
     authorize @menu
-    
+
     Rails.logger.info "[UpdateAvailabilities] Received request for menu #{@menu.id}"
     Rails.logger.info "[UpdateAvailabilities] Availabilities params: #{params[:availabilities].inspect}"
     Rails.logger.info "[UpdateAvailabilities] Inactive params: #{params[:inactive].inspect}"
-    
+
     availabilities_params = params[:availabilities] || {}
-    
+
     # Process each day's availabilities
     availabilities_params.each do |day, times|
       Rails.logger.info "[UpdateAvailabilities] Processing day: #{day}, times: #{times.inspect}"
-      
+
       # Find or create menuavailability for this day
       availability = @menu.menuavailabilities.find_or_initialize_by(
         dayofweek: day,
-        sequence: 1  # Default sequence for primary availability
+        sequence: 1, # Default sequence for primary availability
       )
-      
+
       Rails.logger.info "[UpdateAvailabilities] Found/Created availability: #{availability.inspect}"
-      
+
       # Parse times (handle both symbol and string keys from FormData)
       start_time = times[:start] || times['start']
       end_time = times[:end] || times['end']
-      
+
       if start_time.present? && end_time.present?
         start_parts = start_time.split(':')
         end_parts = end_time.split(':')
-        
+
         availability.starthour = start_parts[0].to_i
         availability.startmin = start_parts[1].to_i
         availability.endhour = end_parts[0].to_i
         availability.endmin = end_parts[1].to_i
-        availability.status = :active  # Use enum symbol
-        
+        availability.status = :active # Use enum symbol
+
         Rails.logger.info "[UpdateAvailabilities] Setting times: #{availability.starthour}:#{availability.startmin} - #{availability.endhour}:#{availability.endmin}"
       else
         Rails.logger.warn "[UpdateAvailabilities] No time data for #{day}: start=#{start_time.inspect}, end=#{end_time.inspect}"
       end
-      
+
       if availability.save
         Rails.logger.info "[UpdateAvailabilities] Saved availability for #{day}: #{availability.id}"
       else
         Rails.logger.error "[UpdateAvailabilities] Failed to save availability for #{day}: #{availability.errors.full_messages}"
       end
     end
-    
+
     # Handle inactive days (checkboxes that are checked)
     if params[:inactive].is_a?(Hash)
       params[:inactive].each do |day, is_inactive|
         Rails.logger.info "[UpdateAvailabilities] Processing inactive day: #{day} = #{is_inactive}"
-        if is_inactive == '1'
-          availability = @menu.menuavailabilities.find_or_initialize_by(
-            dayofweek: day,
-            sequence: 1
-          )
-          availability.status = :inactive  # Use enum symbol
-          if availability.save
-            Rails.logger.info "[UpdateAvailabilities] Marked #{day} as inactive"
-          else
-            Rails.logger.error "[UpdateAvailabilities] Failed to mark #{day} as inactive: #{availability.errors.full_messages}"
-          end
+        next unless is_inactive == '1'
+
+        availability = @menu.menuavailabilities.find_or_initialize_by(
+          dayofweek: day,
+          sequence: 1,
+        )
+        availability.status = :inactive # Use enum symbol
+        if availability.save
+          Rails.logger.info "[UpdateAvailabilities] Marked #{day} as inactive"
+        else
+          Rails.logger.error "[UpdateAvailabilities] Failed to mark #{day} as inactive: #{availability.errors.full_messages}"
         end
       end
     end
-    
-    Rails.logger.info "[UpdateAvailabilities] Finished processing all availabilities"
-    
+
+    Rails.logger.info '[UpdateAvailabilities] Finished processing all availabilities'
+
     # Invalidate caches
     AdvancedCacheService.invalidate_menu_caches(@menu.id) if defined?(AdvancedCacheService)
     AdvancedCacheService.invalidate_restaurant_caches(@menu.restaurant.id) if defined?(AdvancedCacheService)
-    
+
     respond_to do |format|
       format.json { render json: { success: true, message: 'Availabilities saved successfully' }, status: :ok }
       format.html { redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'schedule'), notice: 'Availabilities updated successfully' }
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error("Error updating availabilities: #{e.message}")
     respond_to do |format|
       format.json { render json: { error: e.message }, status: :unprocessable_entity }
@@ -794,27 +923,27 @@ class MenusController < ApplicationController
     unless @restaurant.user_id == current_user.id
       return render json: { status: 'error', message: 'Unauthorized' }, status: :forbidden
     end
-    
+
     Rails.logger.info "Received params: #{params.inspect}"
-    
+
     order = params[:order] || []
-    
+
     Rails.logger.info "Order array: #{order.inspect}"
-    
+
     if order.blank?
       return render json: { status: 'error', message: 'No order data provided' }, status: :unprocessable_entity
     end
-    
+
     ActiveRecord::Base.transaction do
       order.each do |item|
         item_hash = if item.is_a?(ActionController::Parameters)
-          item.to_unsafe_h
-        elsif item.is_a?(Hash)
-          item
-        else
-          Rails.logger.warn("[MenusController#update_sequence] skipping non-hash item item_class=#{item.class} item=#{item.inspect}")
-          next
-        end
+                      item.to_unsafe_h
+                    elsif item.is_a?(Hash)
+                      item
+                    else
+                      Rails.logger.warn("[MenusController#update_sequence] skipping non-hash item item_class=#{item.class} item=#{item.inspect}")
+                      next
+                    end
 
         id = item_hash[:id] || item_hash['id']
         seq = item_hash[:sequence] || item_hash['sequence']
@@ -824,12 +953,14 @@ class MenusController < ApplicationController
         end
 
         Rails.logger.info "Processing item: #{item_hash.inspect}"
-        menu = @restaurant.menus.find(id)
+        menu = Menu.joins(:restaurant_menus)
+          .where(restaurant_menus: { restaurant_id: @restaurant.id })
+          .find(id)
         authorize menu, :update?
         menu.update_column(:sequence, seq.to_i)
       end
     end
-    
+
     render json: { status: 'success', message: 'Menus reordered successfully' }, status: :ok
   rescue ActiveRecord::RecordNotFound => e
     Rails.logger.error "Menu not found: #{e.message}"
@@ -850,7 +981,7 @@ class MenusController < ApplicationController
           render turbo_stream: turbo_stream.replace(
             'restaurant_content',
             partial: 'restaurants/sections/menus_2025',
-            locals: { restaurant: @restaurant, filter: 'all' }
+            locals: { restaurant: @restaurant, filter: 'all' },
           )
         end
         format.html do
@@ -860,7 +991,11 @@ class MenusController < ApplicationController
       return
     end
 
-    menus = policy_scope(Menu).where(restaurant_id: @restaurant.id, archived: false).where(id: ids)
+    menus = policy_scope(Menu)
+      .joins(:restaurant_menus)
+      .where(restaurant_menus: { restaurant_id: @restaurant.id })
+      .where(archived: false)
+      .where(id: ids)
     menus.find_each do |menu|
       authorize menu, :update?
       menu.update(status: status)
@@ -871,7 +1006,7 @@ class MenusController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           'restaurant_content',
           partial: 'restaurants/sections/menus_2025',
-          locals: { restaurant: @restaurant, filter: 'all' }
+          locals: { restaurant: @restaurant, filter: 'all' },
         )
       end
       format.html do
@@ -881,6 +1016,16 @@ class MenusController < ApplicationController
   end
 
   private
+
+  def ensure_owner_restaurant_context!
+    return unless @restaurant && @menu
+
+    owner_restaurant_id = @menu.owner_restaurant_id.presence || @menu.restaurant_id
+    return if owner_restaurant_id.blank?
+    return if @restaurant.id == owner_restaurant_id
+
+    redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'This menu is read-only for this restaurant'
+  end
 
   # Map section names to partial names for 2025 UI
   def menu_section_partial_name(section)
@@ -950,23 +1095,29 @@ class MenusController < ApplicationController
     end
 
     @menu = if @restaurant
-              @restaurant.menus.find(menu_id)
+              Menu.joins(:restaurant_menus)
+                .where(restaurant_menus: { restaurant_id: @restaurant.id })
+                .find(menu_id)
             else
               Menu.find(menu_id)
             end
 
+    if @restaurant && @menu
+      @restaurant_menu = RestaurantMenu.find_by(restaurant_id: @restaurant.id, menu_id: @menu.id)
+      owner_restaurant_id = @menu.owner_restaurant_id.presence || @menu.restaurant_id
+      @read_only_menu_context = owner_restaurant_id.present? && @restaurant.id != owner_restaurant_id
+
+      ensure_smartmenus_for_restaurant_menu!(@restaurant, @menu)
+    end
+
     Rails.logger.debug { "[MenusController] Found menu: #{@menu&.id} - #{@menu&.name}" }
 
-    # Check ownership
-    if current_user && (@menu.nil? || (@menu.restaurant.user != current_user))
-      Rails.logger.warn "[MenusController] Menu access denied for user #{current_user.id}"
-      redirect_to restaurants_path, alert: 'Menu not found or access denied'
-      return
-    end
+    # Access to menu is already scoped to an attached restaurant for nested routes.
 
     # Set up additional menu context
     if @menu
-      @restaurantCurrency = ISO4217::Currency.from_code(@menu.restaurant.currency || 'USD')
+      restaurant_currency_code = @restaurant&.currency || @menu.restaurant.currency || 'USD'
+      @restaurantCurrency = ISO4217::Currency.from_code(restaurant_currency_code)
       @canAddMenuItem = false
       if current_user
         @menuItemCount ||= @menu.menuitems.count

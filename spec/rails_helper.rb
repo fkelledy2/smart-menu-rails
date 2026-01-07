@@ -51,6 +51,14 @@ RSpec.configure do |config|
   # Devise helpers for request specs
   config.include Devise::Test::IntegrationHelpers, type: :request
 
+  config.around(:each, type: :request) do |example|
+    original = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = false
+    example.run
+  ensure
+    ActionController::Base.allow_forgery_protection = original
+  end
+
   # Devise helpers for controller specs
   config.include Devise::Test::ControllerHelpers, type: :controller
 

@@ -2,7 +2,7 @@ require "shrine"
 require "shrine/storage/file_system"
 require "shrine/storage/memory"
 
-# Use file system for development and test, S3 for production
+# Use file system for development and test, S3 for production (or when explicitly enabled)
 if Rails.env.test?
   Shrine.storages = {
     cache: Shrine::Storage::Memory.new,
@@ -14,7 +14,8 @@ else
   aws_key = Rails.application.credentials.dig(:aws, :access_key_id)
   aws_secret = Rails.application.credentials.dig(:aws, :secret_access_key)
 
-  use_s3 = aws_bucket.present? && aws_region.present? && aws_key.present? && aws_secret.present?
+  enable_s3 = ENV['USE_S3_STORAGE'].to_s.downcase == 'true'
+  use_s3 = (Rails.env.production? || enable_s3) && aws_bucket.present? && aws_region.present? && aws_key.present? && aws_secret.present?
 
   if use_s3
     begin

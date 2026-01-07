@@ -27,7 +27,7 @@
         </main>
       <%= render 'shared/footer' %>
     </div>
-    <%= render partial: "smartmenus/showModals", locals: { order: @openOrder, menu: @menu, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting, current_employee: @current_employee } %>
-    <%= render partial: "smartmenus/showContext", locals: { order: @openOrder, menu: @menu, current_employee: @current_employee, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting } %>
+    <%= render partial: "smartmenus/showModals", locals: { order: @openOrder, menu: @menu, restaurant: @restaurant, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting, current_employee: @current_employee } %>
+    <%= render partial: "smartmenus/showContext", locals: { order: @openOrder, menu: @menu, restaurant: @restaurant, current_employee: @current_employee, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting } %>
   </body>
 </html>

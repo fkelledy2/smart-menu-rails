@@ -58,7 +58,10 @@ class LocalizeMenuService
                 item_locales_created: 0, item_locales_updated: 0, 
                 rate_limited_items: [], errors: [], }
 
-      restaurant.menus.find_each do |menu|
+      Menu.joins(:restaurant_menus)
+        .where(restaurant_menus: { restaurant_id: restaurant.id })
+        .distinct
+        .find_each do |menu|
         menu_stats = localize_menu_to_locale(menu, restaurant_locale, force: force, &on_item)
         stats[:menus_processed] += 1
         stats[:menu_locales_created] += menu_stats[:menu_locales_created]

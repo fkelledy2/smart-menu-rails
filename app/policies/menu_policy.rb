@@ -42,28 +42,33 @@ class MenuPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      # Include menus from restaurants owned by user
-      owned_ids = scope.joins(:restaurant).where(restaurants: { user_id: user.id }).pluck(:id)
+      return scope.none unless user.present?
 
-      # Include menus from restaurants where user is an employee
-      employee_ids = scope.joins(restaurant: :employees)
-        .where(employees: { user: user, status: :active }).pluck(:id)
+      owned_restaurant_ids = Restaurant.where(user_id: user.id).select(:id)
+      employee_restaurant_ids = Employee.where(user: user, status: :active).select(:restaurant_id)
 
-      # Combine both ID arrays and filter
-      all_ids = (owned_ids + employee_ids).uniq
+      accessible_restaurant_ids = Restaurant.where(id: owned_restaurant_ids)
+        .or(Restaurant.where(id: employee_restaurant_ids))
+        .select(:id)
 
-      return scope.none if all_ids.empty?
-
-      scope.where(id: all_ids)
+      scope
+        .left_joins(:restaurant_menus)
+        .where(
+          'menus.restaurant_id IN (?) OR restaurant_menus.restaurant_id IN (?)',
+          accessible_restaurant_ids,
+          accessible_restaurant_ids,
+        )
+        .distinct
     end
   end
 
   private
 
   def owner?
-    return false unless user && record.respond_to?(:restaurant) && record.restaurant
+    owner_restaurant = record.respond_to?(:owner_restaurant) && record.owner_restaurant.present? ? record.owner_restaurant : record.restaurant
+    return false unless user && owner_restaurant
 
-    record.restaurant.user_id == user.id
+    owner_restaurant.user_id == user.id
   end
 
   def owner_of_restaurant?
@@ -74,21 +79,24 @@ class MenuPolicy < ApplicationPolicy
   end
 
   def authorized_employee?
-    return false unless user.present? && record.respond_to?(:restaurant) && record.restaurant
+    owner_restaurant = record.respond_to?(:owner_restaurant) && record.owner_restaurant.present? ? record.owner_restaurant : record.restaurant
+    return false unless user.present? && owner_restaurant
 
-    user.employees.exists?(restaurant_id: record.restaurant.id, status: :active)
+    user.employees.exists?(restaurant_id: owner_restaurant.id, status: :active)
   end
 
   def employee_admin?
-    return false unless user.present? && record.respond_to?(:restaurant) && record.restaurant
+    owner_restaurant = record.respond_to?(:owner_restaurant) && record.owner_restaurant.present? ? record.owner_restaurant : record.restaurant
+    return false unless user.present? && owner_restaurant
 
-    user.employees.exists?(restaurant_id: record.restaurant.id, role: :admin, status: :active)
+    user.employees.exists?(restaurant_id: owner_restaurant.id, role: :admin, status: :active)
   end
 
   def employee_manager?
-    return false unless user.present? && record.respond_to?(:restaurant) && record.restaurant
+    owner_restaurant = record.respond_to?(:owner_restaurant) && record.owner_restaurant.present? ? record.owner_restaurant : record.restaurant
+    return false unless user.present? && owner_restaurant
 
-    user.employees.exists?(restaurant_id: record.restaurant.id, role: %i[manager admin], status: :active)
+    user.employees.exists?(restaurant_id: owner_restaurant.id, role: %i[manager admin], status: :active)
   end
 
   def employee_admin_of_restaurant?

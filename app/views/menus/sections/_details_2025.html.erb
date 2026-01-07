@@ -4,91 +4,153 @@
 %>
 
 <% menu = local_assigns[:menu] || @menu %>
-<% restaurant = menu.restaurant %>
+<% restaurant = local_assigns[:restaurant] || @restaurant || menu.restaurant %>
+<% restaurant_menu = local_assigns[:restaurant_menu] || @restaurant_menu %>
+<% read_only = local_assigns[:read_only] ? true : false %>
 
-<!-- Quick Actions Card -->
-<div class="quick-actions-card">
-  <h2 class="quick-actions-title">
-    <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions', default: 'Quick Actions') %>
-  </h2>
+<% menu_smartmenu_slug = Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id, tablesetting_id: nil).first&.slug %>
 
-  <div class="quick-actions-grid">
-    <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true),
-        method: :post,
-        class: 'quick-action-btn',
-        data: { turbo: false },
-        form: { data: { turbo: false, ai_generate: true, menu_id: menu.id } } do %>
-      <i class="bi bi-stars"></i>
-      <span><%= t('.generate_images', default: 'Generate Images') %></span>
-    <% end %>
+<% if read_only %>
+  <% if menu_smartmenu_slug.present? %>
+    <div class="quick-actions-card">
+      <h2 class="quick-actions-title">
+        <i class="bi bi-lightning-charge"></i>
+        <%= t('.quick_actions', default: 'Quick Actions') %>
+      </h2>
 
-    <% active_locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active') %>
-    <% if active_locales.any? %>
-      <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false),
+      <div class="quick-actions-grid">
+        <%= link_to smartmenu_path(menu_smartmenu_slug),
+            class: 'quick-action-btn',
+            target: '_blank',
+            title: 'Preview menu as staff (authenticated view)' do %>
+          <i class="bi bi-eye"></i>
+          <span><%= t('.preview_staff', default: 'Staff View') %></span>
+        <% end %>
+
+        <%= link_to smartmenu_path(menu_smartmenu_slug, view: 'customer'),
+            class: 'quick-action-btn quick-action-btn-secondary',
+            target: '_blank',
+            rel: 'noopener noreferrer',
+            title: 'Preview menu as customers see it (authenticated as staff but viewing customer interface)' do %>
+          <i class="bi bi-eye-slash"></i>
+          <span><%= t('.preview_customer', default: 'Customer View') %></span>
+        <% end %>
+      </div>
+
+      <% if restaurant_menu.present? %>
+        <div class="mt-3">
+          <h3 class="quick-actions-title" style="font-size: 1rem; margin-bottom: 0.75rem;">
+            <i class="bi bi-calendar-check"></i>
+            <%= t('.availability', default: 'Availability') %>
+          </h3>
+
+          <% availability_value = if restaurant_menu.availability_override_enabled?
+            restaurant_menu.availability_state.to_s
+          else
+            'default'
+          end %>
+
+          <%= form_with url: availability_restaurant_restaurant_menu_path(restaurant, restaurant_menu),
+                method: :patch,
+                data: { turbo_frame: '_top' },
+                class: 'd-inline' do |f| %>
+            <input type="hidden" name="availability_override_enabled" value="<%= availability_value == 'default' ? 'false' : 'true' %>" />
+            <input type="hidden" name="availability_state" value="<%= availability_value == 'default' ? 'available' : availability_value %>" />
+            <select class="form-select form-select-sm"
+                    name="availability_select"
+                    onchange="this.form.querySelector('input[name=availability_override_enabled]').value=(this.value==='default'?'false':'true'); this.form.querySelector('input[name=availability_state]').value=(this.value==='default'?'available':this.value); this.form.requestSubmit();">
+              <option value="default" <%= 'selected' if availability_value == 'default' %>><%= t('.default', default: 'Default') %></option>
+              <option value="available" <%= 'selected' if availability_value == 'available' %>><%= t('.available', default: 'Available') %></option>
+              <option value="unavailable" <%= 'selected' if availability_value == 'unavailable' %>><%= t('.unavailable', default: 'Unavailable') %></option>
+            </select>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="quick-actions-card">
+    <h2 class="quick-actions-title">
+      <i class="bi bi-lightning-charge"></i>
+      <%= t('.quick_actions', default: 'Quick Actions') %>
+    </h2>
+
+    <div class="quick-actions-grid">
+      <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true),
           method: :post,
           class: 'quick-action-btn',
-          data: { turbo: false, testid: 'localize-menu-btn' },
-          form: { data: { turbo: false, localize: true, menu_id: menu.id } } do %>
-        <i class="bi bi-translate"></i>
-        <span><%= t('.localize_menu', default: 'Translations') %></span>
-      <% end %>
-    <% end %>
-
-    <% if menu.smartmenu&.slug %>
-      <%= link_to smartmenu_path(menu.smartmenu.slug),
-          class: 'quick-action-btn',
-          target: '_blank',
-          title: 'Preview menu as staff (authenticated view)' do %>
-        <i class="bi bi-eye"></i>
-        <span><%= t('.preview_staff', default: 'Staff View') %></span>
-      <% end %>
-
-      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'),
-          class: 'quick-action-btn quick-action-btn-secondary',
-          target: '_blank',
-          rel: 'noopener noreferrer',
-          title: 'Preview menu as customers see it (authenticated as staff but viewing customer interface)' do %>
-        <i class="bi bi-eye-slash"></i>
-        <span><%= t('.preview_customer', default: 'Customer View') %></span>
-      <% end %>
-    <% end %>
-
-    <%= button_to polish_restaurant_menu_path(restaurant, menu),
-        method: :post,
-        class: 'quick-action-btn quick-action-btn-secondary',
-        data: { turbo: false, testid: 'polish-menu-btn' },
-        form: { data: { turbo: false, polish: true, menu_id: menu.id } } do %>
-      <i class="bi bi-magic"></i>
-      <span><%= t('.ai_polish', default: 'AI Polish') %></span>
-    <% end %>
-
-    <!-- Status Toggle Quick Action -->
-    <%= form_with model: menu,
-          url: restaurant_menu_path(restaurant, menu),
-          method: :patch,
-          local: true,
           data: { turbo: false },
-          html: { class: 'd-inline' } do |f| %>
-      <%= hidden_field_tag :return_to, 'menu_edit' %>
-      <% if menu.active? %>
-        <%= hidden_field_tag 'menu[status]', 'inactive' %>
-        <%= hidden_field_tag :status, 'inactive' %>
-        <button type="submit" class="quick-action-btn quick-action-btn-secondary" data-testid="menu-status-toggle-btn">
-          <i class="bi bi-toggle2-off"></i>
-          <span><%= t('.active', default: 'Active') %></span>
-        </button>
-      <% else %>
-        <%= hidden_field_tag 'menu[status]', 'active' %>
-        <%= hidden_field_tag :status, 'active' %>
-        <button type="submit" class="quick-action-btn" data-testid="menu-status-toggle-btn">
-          <i class="bi bi-toggle2-on"></i>
-          <span><%= t('.inactive', default: 'Inactive') %></span>
-        </button>
+          form: { data: { turbo: false, ai_generate: true, menu_id: menu.id } } do %>
+        <i class="bi bi-stars"></i>
+        <span><%= t('.generate_images', default: 'Generate Images') %></span>
       <% end %>
-    <% end %>
+
+      <% active_locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active') %>
+      <% if active_locales.any? %>
+        <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false),
+            method: :post,
+            class: 'quick-action-btn',
+            data: { turbo: false, testid: 'localize-menu-btn' },
+            form: { data: { turbo: false, localize: true, menu_id: menu.id } } do %>
+          <i class="bi bi-translate"></i>
+          <span><%= t('.localize_menu', default: 'Translations') %></span>
+        <% end %>
+      <% end %>
+
+      <% if menu_smartmenu_slug.present? %>
+        <%= link_to smartmenu_path(menu_smartmenu_slug),
+            class: 'quick-action-btn',
+            target: '_blank',
+            title: 'Preview menu as staff (authenticated view)' do %>
+          <i class="bi bi-eye"></i>
+          <span><%= t('.preview_staff', default: 'Staff View') %></span>
+        <% end %>
+
+        <%= link_to smartmenu_path(menu_smartmenu_slug, view: 'customer'),
+            class: 'quick-action-btn quick-action-btn-secondary',
+            target: '_blank',
+            rel: 'noopener noreferrer',
+            title: 'Preview menu as customers see it (authenticated as staff but viewing customer interface)' do %>
+          <i class="bi bi-eye-slash"></i>
+          <span><%= t('.preview_customer', default: 'Customer View') %></span>
+        <% end %>
+      <% end %>
+
+      <%= button_to polish_restaurant_menu_path(restaurant, menu),
+          method: :post,
+          class: 'quick-action-btn quick-action-btn-secondary',
+          data: { turbo: false, testid: 'polish-menu-btn' },
+          form: { data: { turbo: false, polish: true, menu_id: menu.id } } do %>
+        <i class="bi bi-magic"></i>
+        <span><%= t('.ai_polish', default: 'AI Polish') %></span>
+      <% end %>
+
+      <%= form_with model: menu,
+            url: restaurant_menu_path(restaurant, menu),
+            method: :patch,
+            local: true,
+            data: { turbo: false },
+            html: { class: 'd-inline' } do |f| %>
+        <%= hidden_field_tag :return_to, 'menu_edit' %>
+        <% if menu.active? %>
+          <%= hidden_field_tag 'menu[status]', 'inactive' %>
+          <%= hidden_field_tag :status, 'inactive' %>
+          <button type="submit" class="quick-action-btn quick-action-btn-secondary" data-testid="menu-status-toggle-btn">
+            <i class="bi bi-toggle2-off"></i>
+            <span><%= t('.active', default: 'Active') %></span>
+          </button>
+        <% else %>
+          <%= hidden_field_tag 'menu[status]', 'active' %>
+          <%= hidden_field_tag :status, 'active' %>
+          <button type="submit" class="quick-action-btn" data-testid="menu-status-toggle-btn">
+            <i class="bi bi-toggle2-on"></i>
+            <span><%= t('.inactive', default: 'Inactive') %></span>
+          </button>
+        <% end %>
+      <% end %>
+    </div>
   </div>
-</div>
+<% end %>
 
 <!-- Menu Overview -->
 <div class="content-card-2025">
@@ -97,39 +159,55 @@
     <%= t('.menu_details', default: 'Menu Details') %>
   </h2>
 
-  <%= menu_form_with(menu, auto_save: true) do |form| %>
+  <% if read_only %>
     <div class="row g-4">
       <div class="col-md-12">
         <div class="form-group-2025">
-          <%= form.label :name, class: 'form-label-2025' do %>
-            <%= t('.menu_name', default: 'Menu Name') %>
-          <% end %>
-          <%= form.text_field :name,
-              class: 'form-control-2025',
-              placeholder: t('.menu_name_placeholder', default: 'e.g., Dinner Menu, Lunch Specials') %>
-          <div class="form-help-2025">
-            <%= t('.menu_name_help', default: 'The name customers will see') %>
-          </div>
+          <div class="form-label-2025"><%= t('.menu_name', default: 'Menu Name') %></div>
+          <div class="fw-semibold"><%= menu.name %></div>
         </div>
       </div>
 
       <div class="col-md-12">
         <div class="form-group-2025">
-          <%= form.label :description, class: 'form-label-2025' do %>
-            <%= t('.description', default: 'Description') %>
-          <% end %>
-          <%= form.text_area :description,
-              class: 'form-control-2025',
-              rows: 4,
-              placeholder: t('.description_placeholder', default: 'Describe this menu...') %>
-          <div class="form-help-2025">
-            <%= t('.description_help', default: 'Optional description to help customers understand this menu') %>
+          <div class="form-label-2025"><%= t('.description', default: 'Description') %></div>
+          <div class="text-muted"><%= menu.description.presence || '-' %></div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <%= menu_form_with(menu, auto_save: true) do |form| %>
+      <div class="row g-4">
+        <div class="col-md-12">
+          <div class="form-group-2025">
+            <%= form.label :name, class: 'form-label-2025' do %>
+              <%= t('.menu_name', default: 'Menu Name') %>
+            <% end %>
+            <%= form.text_field :name,
+                class: 'form-control-2025',
+                placeholder: t('.menu_name_placeholder', default: 'e.g., Dinner Menu, Lunch Specials') %>
+            <div class="form-help-2025">
+              <%= t('.menu_name_help', default: 'The name customers will see') %>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group-2025">
+            <%= form.label :description, class: 'form-label-2025' do %>
+              <%= t('.description', default: 'Description') %>
+            <% end %>
+            <%= form.text_area :description,
+                class: 'form-control-2025',
+                rows: 4,
+                placeholder: t('.description_placeholder', default: 'Describe this menu...') %>
+            <div class="form-help-2025">
+              <%= t('.description_help', default: 'Optional description to help customers understand this menu') %>
+            </div>
           </div>
         </div>
       </div>
-
-      
-    </div>
+    <% end %>
   <% end %>
 </div>
 

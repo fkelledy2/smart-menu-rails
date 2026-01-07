@@ -6,8 +6,8 @@
 <%
   # Calculate counts for badges
   restaurant = local_assigns[:restaurant] || @restaurant
-  active_menus_count = restaurant.menus.where(archived: false, status: 'active').count rescue 0
-  inactive_menus_count = restaurant.menus.where(archived: false, status: 'inactive').count rescue 0
+  active_menus_count = restaurant.restaurant_menus.where(status: 'active').count rescue 0
+  inactive_menus_count = restaurant.restaurant_menus.where(status: 'inactive').count rescue 0
   staff_count = restaurant.employees.count rescue 0
   tables_count = restaurant.tablesettings.count rescue 0
   allergens_count = restaurant.allergyns.where(archived: false).count rescue 0
@@ -82,7 +82,7 @@
         data: { testid: 'sidebar-menus-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('menus', onboarding_next) } do %>
       <i class="bi bi-grid-3x3"></i>
       <span><%= t('.all_menus', default: 'All Menus') %></span>
-      <span class="sidebar-link-badge"><%= restaurant.menus.count %></span>
+      <span class="sidebar-link-badge"><%= restaurant.restaurant_menus.count %></span>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'allergens'),

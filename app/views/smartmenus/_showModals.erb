@@ -88,12 +88,12 @@
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="filterOrderModalLabel"><%= t(".filterAllergyns") %></h1>
                 </div>
-                <%= form_with(model: [menu.restaurant, ordrparticipant]) do |form| %>
+                <%= form_with(model: [restaurant, ordrparticipant]) do |form| %>
                     <div class="modal-body">
                         <div class="form-group row">
                             <div class="col-8">
                                 <div style="max-height: 60vh; overflow-y: auto; padding-right: 8px;">
-                                    <%= form.collection_check_boxes :allergyn_ids, Allergyn.where(restaurant_id: menu.restaurant.id), :id, :name, { hide_label: true } do |b| %>
+                                    <%= form.collection_check_boxes :allergyn_ids, Allergyn.where(restaurant_id: restaurant.id), :id, :name, { hide_label: true } do |b| %>
                                         <div class="form-check">
                                             <%= b.check_box %>
                                             <label class="form-check-label">

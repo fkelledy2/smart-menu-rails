@@ -524,7 +524,7 @@ class OrdrsController < ApplicationController
     ).find(ordr.id)
 
     menu = ordr.menu
-    restaurant = menu.restaurant
+    restaurant = ordr.restaurant
 
     # Use single query with includes instead of separate find_by
     menuparticipant = Menuparticipant.includes(:smartmenu)
@@ -551,6 +551,7 @@ class OrdrsController < ApplicationController
           locals: {
             order: ordr,
             menu: menu,
+            restaurant: restaurant,
             ordrparticipant: ordrparticipant,
             tablesetting: tablesetting,
             menuparticipant: menuparticipant,
@@ -575,6 +576,7 @@ class OrdrsController < ApplicationController
             locals: {
               order: ordr,
               menu: menu,
+              restaurant: restaurant,
               ordrparticipant: ordrparticipant,
               tablesetting: tablesetting,
               menuparticipant: menuparticipant,

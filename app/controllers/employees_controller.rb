@@ -151,13 +151,26 @@ class EmployeesController < ApplicationController
   # POST /employees or /employees.json
   def create
     @employee = Employee.new(employee_params)
+
+    restaurant_id = params.dig(:employee, :restaurant_id).presence || params[:restaurant_id].presence
+    if restaurant_id.present?
+      @futureParentRestaurant = Restaurant.find(restaurant_id)
+      @employee.restaurant = @futureParentRestaurant
+    end
+
+    user_id = params.dig(:employee, :user_id).presence
+    @employee.user_id = user_id if user_id.present?
+
+    role = params.dig(:employee, :role).presence
+    @employee.role = role if role.present?
+
     authorize @employee
 
     respond_to do |format|
       if @employee.save
         @employee.email = @employee.user.email
         format.html do
-          redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: t('employees.controller.created')
+          redirect_to edit_restaurant_path(@employee.restaurant, section: 'staff'), notice: t('employees.controller.created')
         end
         format.turbo_stream do
           render turbo_stream: [
@@ -172,7 +185,7 @@ class EmployeesController < ApplicationController
         format.json { render :show, status: :created, location: @employee }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.turbo_stream { render :new, status: :unprocessable_entity }
+        format.turbo_stream { render :new, formats: [:html], status: :unprocessable_entity }
         format.json { render json: @employee.errors, status: :unprocessable_entity }
       end
     end

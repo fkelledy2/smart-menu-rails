@@ -4,41 +4,45 @@
 %>
 
 <% menu = local_assigns[:menu] || @menu %>
-<% restaurant = menu.restaurant %>
+<% restaurant = local_assigns[:restaurant] || @restaurant || menu.restaurant %>
+<% read_only = local_assigns[:read_only] ? true : false %>
 
-<!-- Quick Actions Card -->
-<div class="quick-actions-card">
-  <h2 class="quick-actions-title">
-    <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions', default: 'Quick Actions') %>
-  </h2>
+<% menu_smartmenu_slug = Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id, tablesetting_id: nil).first&.slug %>
 
-  <div class="quick-actions-grid">
-    <%= link_to new_restaurant_menu_menusection_path(restaurant, menu), class: 'quick-action-btn' do %>
-      <i class="bi bi-plus-circle"></i>
-      <span><%= t('.add_section', default: 'Add Section') %></span>
-    <% end %>
+<% unless read_only %>
+  <div class="quick-actions-card">
+    <h2 class="quick-actions-title">
+      <i class="bi bi-lightning-charge"></i>
+      <%= t('.quick_actions', default: 'Quick Actions') %>
+    </h2>
 
-    <% if menu.smartmenu&.slug %>
-      <%= link_to smartmenu_path(menu.smartmenu.slug),
-          class: 'quick-action-btn',
-          target: '_blank',
-          title: 'Preview menu as staff (authenticated view)' do %>
-        <i class="bi bi-eye"></i>
-        <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
+    <div class="quick-actions-grid">
+      <%= link_to new_restaurant_menu_menusection_path(restaurant, menu), class: 'quick-action-btn' do %>
+        <i class="bi bi-plus-circle"></i>
+        <span><%= t('.add_section', default: 'Add Section') %></span>
       <% end %>
 
-      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'),
-          class: 'quick-action-btn quick-action-btn-secondary',
-          target: '_blank',
-          rel: 'noopener noreferrer',
-          title: 'Preview menu as customers see it (authenticated as staff but viewing customer interface)' do %>
-        <i class="bi bi-eye-slash"></i>
-        <span><%= t('.preview_customer', default: 'Preview (Customer)') %></span>
+      <% if menu_smartmenu_slug.present? %>
+        <%= link_to smartmenu_path(menu_smartmenu_slug),
+            class: 'quick-action-btn',
+            target: '_blank',
+            title: 'Preview menu as staff (authenticated view)' do %>
+          <i class="bi bi-eye"></i>
+          <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
+        <% end %>
+
+        <%= link_to smartmenu_path(menu_smartmenu_slug, view: 'customer'),
+            class: 'quick-action-btn quick-action-btn-secondary',
+            target: '_blank',
+            rel: 'noopener noreferrer',
+            title: 'Preview menu as customers see it (authenticated as staff but viewing customer interface)' do %>
+          <i class="bi bi-eye-slash"></i>
+          <span><%= t('.preview_customer', default: 'Preview (Customer)') %></span>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
   </div>
-</div>
+<% end %>
 
 <!-- Sections List -->
 <div class="content-card-2025 py-4">
@@ -60,36 +64,50 @@
             <th class="w-40px"></th>
             <th><%= t('.name', default: 'Name') %></th>
             <th class="text-end"><%= t('.items', default: 'Items') %></th>
-            <th class="text-end">
-              <span class="btn-2025 btn-2025-ghost btn-2025-sm">
-                <i class="bi bi-gear"></i>
-              </span>
-            </th>
+            <% unless read_only %>
+              <th class="text-end">
+                <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                  <i class="bi bi-gear"></i>
+                </span>
+              </th>
+            <% end %>
           </tr>
         </thead>
-        <tbody data-controller="sortable"
-               data-sortable-url-value="<%= reorder_restaurant_menu_menusections_path(restaurant, menu) %>"
-               data-sortable-handle-value=".section-handle">
+        <tbody
+          <% unless read_only %>
+            data-controller="sortable"
+            data-sortable-url-value="<%= reorder_restaurant_menu_menusections_path(restaurant, menu) %>"
+            data-sortable-handle-value=".section-handle"
+          <% end %>
+        >
           <% menu.menusections.order(:sequence).each do |section| %>
             <tr data-sortable-id="<%= section.id %>">
-              <td class="section-handle w-40px cursor-grab">
-                <i class="bi bi-grip-vertical text-muted"></i>
-              </td>
+              <% if read_only %>
+                <td class="w-40px" style="cursor: not-allowed; opacity: 0.55;">
+                  <i class="bi bi-grip-vertical text-muted"></i>
+                </td>
+              <% else %>
+                <td class="section-handle w-40px cursor-grab">
+                  <i class="bi bi-grip-vertical text-muted"></i>
+                </td>
+              <% end %>
               <td>
                 <strong><%= section.name %></strong>
               </td>
               <td class="text-end">
                 <%= section.menuitems.count %>
               </td>
-              <td class="text-end">
-                <%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section),
-                            class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                            title: t('.edit', default: 'Edit'),
-                            aria: { label: t('.edit', default: 'Edit') },
-                            data: { turbo_frame: '_top', testid: "edit-menusection-#{section.id}-btn" } do %>
-                  <i class="bi bi-pencil"></i>
-                <% end %>
-              </td>
+              <% unless read_only %>
+                <td class="text-end">
+                  <%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section),
+                              class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                              title: t('.edit', default: 'Edit'),
+                              aria: { label: t('.edit', default: 'Edit') },
+                              data: { turbo_frame: '_top', testid: "edit-menusection-#{section.id}-btn" } do %>
+                    <i class="bi bi-pencil"></i>
+                  <% end %>
+                </td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>

@@ -4,7 +4,9 @@
 %>
 
 <% menu = local_assigns[:menu] || @menu %>
-<% restaurant = menu.restaurant %>
+<% restaurant = local_assigns[:restaurant] || @restaurant || menu.restaurant %>
+
+<% menu_smartmenu_slug = Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id, tablesetting_id: nil).first&.slug %>
 
 <!-- Quick Actions Card -->
 <div class="quick-actions-card">
@@ -22,8 +24,8 @@
       <span><%= t('.generate_images', default: 'Generate AI Images') %></span>
     <% end %>
 
-    <% if menu.smartmenu&.slug %>
-      <%= link_to smartmenu_path(menu.smartmenu.slug),
+    <% if menu_smartmenu_slug.present? %>
+      <%= link_to smartmenu_path(menu_smartmenu_slug),
           class: 'quick-action-btn',
           target: '_blank',
           title: 'Preview menu as staff (authenticated view)' do %>
@@ -31,7 +33,7 @@
         <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
       <% end %>
 
-      <%= link_to smartmenu_path(menu.smartmenu.slug, view: 'customer'),
+      <%= link_to smartmenu_path(menu_smartmenu_slug, view: 'customer'),
           class: 'quick-action-btn quick-action-btn-secondary',
           target: '_blank',
           rel: 'noopener noreferrer',

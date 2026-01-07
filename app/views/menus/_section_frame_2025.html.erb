@@ -5,5 +5,8 @@
 
 <%= turbo_frame_tag 'menu_content' do %>
   <%= render "menus/sections/#{local_assigns[:partial_name]}",
-      menu: local_assigns[:menu] %>
+      menu: local_assigns[:menu],
+      restaurant: local_assigns[:restaurant],
+      restaurant_menu: local_assigns[:restaurant_menu],
+      read_only: local_assigns[:read_only] %>
 <% end %>
