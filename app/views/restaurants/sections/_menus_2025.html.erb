@@ -57,6 +57,20 @@
     width: 100%;
     justify-content: center;
   }
+
+  tr.menu-row-shared {
+    background: rgba(13, 110, 253, 0.03);
+    border-left: 3px solid rgba(13, 110, 253, 0.25);
+  }
+
+  tr.menu-row-owned {
+    border-left: 3px solid transparent;
+  }
+
+  .menu-origin-badge {
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
 </style>
 
 <!-- Menus List -->
@@ -138,7 +152,7 @@
           <% restaurant_menus.includes(:menu).each do |restaurant_menu| %>
             <% menu = restaurant_menu.menu %>
             <% owner_restaurant_id = menu.owner_restaurant_id.presence || menu.restaurant_id %>
-            <tr data-sortable-id="<%= restaurant_menu.id %>" data-testid="menu-row-<%= menu.id %>">
+            <tr data-sortable-id="<%= restaurant_menu.id %>" data-testid="menu-row-<%= menu.id %>" class="<%= owner_restaurant_id == restaurant.id ? 'menu-row-owned' : 'menu-row-shared' %>">
               <td class="w-40px">
                 <input type="checkbox" name="restaurant_menu_ids[]" value="<%= restaurant_menu.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
               </td>
@@ -146,7 +160,15 @@
                 <i class="bi bi-grip-vertical text-muted drag-handle" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>"></i>
               </td>
               <td>
-                <div class="fw-semibold"><%= menu.name %></div>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <div class="fw-semibold"><%= menu.name %></div>
+                  <% unless owner_restaurant_id == restaurant.id %>
+                    <span class="badge bg-light text-primary menu-origin-badge">
+                      <i class="bi bi-link-45deg"></i>
+                      <%= t('.shared', default: 'Shared') %>
+                    </span>
+                  <% end %>
+                </div>
                 <% if menu.description.present? %>
                   <div class="text-muted small"><%= truncate(menu.description, length: 80) %></div>
                 <% end %>
