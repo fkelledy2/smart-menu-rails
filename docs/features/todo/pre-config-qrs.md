@@ -24,9 +24,9 @@ Today, the QR code system is tightly coupled to `/smartmenus/:slug`, where the Q
 
 For marketing, we need the ability to:
 
-- Generate QR codes *before* the menu/table context is known.
-- Have those QR codes safely route to a holding experience until linked.
-- Later “activate” them by linking to a specific Menu or Table.
+- [ ] Generate QR codes *before* the menu/table context is known.
+- [ ] Have those QR codes safely route to a holding experience until linked.
+- [ ] Later “activate” them by linking to a specific Menu or Table.
 
 **Key goal**: decouple QR generation from menu deployment while remaining compatible with the current Smartmenu-based QR system.
 
@@ -40,34 +40,34 @@ For marketing, we need the ability to:
 - QR code styling should be branded (logo, colors) consistent with existing menu QR styling (`QRCodeStyling` usage).
 
 #### **2. Later link marketing QR codes to a menu or a table**
-- An admin should be able to select:
-  - a `Restaurant`
-  - either:
-    - a `Menu` (menu-level / all tables)
-    - or a specific `Tablesetting` (table-specific)
-- After linking, scanning the marketing QR should route to the correct end destination.
+- [ ] An admin should be able to select:
+  - [ ] a `Restaurant`
+  - [ ] either:
+    - [ ] a `Menu` (menu-level / all tables)
+    - [ ] or a specific `Tablesetting` (table-specific)
+- [ ] After linking, scanning the marketing QR should route to the correct end destination.
 
 #### **3. Decouple printing from deployment**
-- QR codes can be printed and distributed immediately.
-- Activation can happen later without regenerating the QR code.
+- [ ] QR codes can be printed and distributed immediately.
+- [ ] Activation can happen later without regenerating the QR code.
 
 #### **4. Compatibility with existing `/smartmenus` logic**
-- Existing QR codes that encode `/smartmenus/:slug` must remain unchanged.
-- The new marketing QR codes should integrate by ultimately routing **into** the Smartmenu flow whenever possible.
-- We should avoid duplicating menu rendering logic; `/smartmenus` should remain the canonical public menu rendering endpoint.
+- [ ] Existing QR codes that encode `/smartmenus/:slug` must remain unchanged.
+- [ ] The new marketing QR codes should integrate by ultimately routing **into** the Smartmenu flow whenever possible.
+- [ ] We should avoid duplicating menu rendering logic; `/smartmenus` should remain the canonical public menu rendering endpoint.
 
 #### **5. Admin-only access restriction**
-- Only users with email addresses ending in `@mellow.menu` can:
-  - create/generate marketing QR codes
-  - link/unlink marketing QR codes
-  - download/print marketing QR codes
+- [ ] Only users with email addresses ending in `@mellow.menu` can:
+  - [ ] create/generate marketing QR codes
+  - [ ] link/unlink marketing QR codes
+  - [ ] download/print marketing QR codes
 
 ### **Secondary Requirements (Nice-to-have / Later)**
 
-- **Audit trail** of QR creation, linking, unlinking, prints/downloads.
-- **Bulk generation** (e.g., generate 100 codes for a campaign).
-- **Campaign metadata** (name, channel, venue, partner).
-- **Analytics** (scan counts, unique devices, last scanned time, geo breakdown).
+- [ ] **Audit trail** of QR creation, linking, unlinking, prints/downloads.
+- [ ] **Bulk generation** (e.g., generate 100 codes for a campaign).
+- [ ] **Campaign metadata** (name, channel, venue, partner).
+- [ ] **Analytics** (scan counts, unique devices, last scanned time, geo breakdown).
 
 ## 🧩 Proposed Solution (High-Level Design)
 
@@ -119,15 +119,15 @@ Add a public endpoint:
 
 Resolution rules:
 
-- If `status=unlinked`:
-  - Redirect to `holding_url` if present
-  - Else render a default holding page (e.g., “Menu coming soon”)
+- [ ] If `status=unlinked`:
+  - [ ] Redirect to `holding_url` if present
+  - [ ] Else render a default holding page (e.g., “Menu coming soon”)
 
-- If `status=linked`:
-  - Resolve to a Smartmenu slug based on linking fields:
-    - if linked to menu only: find/create Smartmenu for `(restaurant_id, menu_id, tablesetting_id=nil)`
-    - if linked to table: find/create Smartmenu for `(restaurant_id, menu_id, tablesetting_id=table_id)`
-  - Redirect to `/smartmenus/:slug`
+- [ ] If `status=linked`:
+  - [ ] Resolve to a Smartmenu slug based on linking fields:
+    - [ ] if linked to menu only: find/create Smartmenu for `(restaurant_id, menu_id, tablesetting_id=nil)`
+    - [ ] if linked to table: find/create Smartmenu for `(restaurant_id, menu_id, tablesetting_id=table_id)`
+  - [ ] Redirect to `/smartmenus/:slug`
 
 Important: This preserves `/smartmenus` as the rendering surface.
 
@@ -162,8 +162,8 @@ Implement a simple helper:
 
 Enforce via:
 
-- controller `before_action :require_mellow_admin!`
-- optional Pundit policy (recommended if you want consistent authorization patterns)
+- [ ] controller `before_action :require_mellow_admin!`
+- [ ] optional Pundit policy (recommended if you want consistent authorization patterns)
 
 This is consistent with other feature requests that identify mellow admins by email domain.
 
@@ -184,56 +184,56 @@ This preserves:
 ## 🗺️ Implementation Plan
 
 ### **Phase 0: Discovery / Alignment (1-2 days)**
-- Confirm expected “holding experience”:
-  - redirect to marketing site?
-  - or render a mellow “coming soon” page?
-- Confirm whether linking should allow:
-  - menu-only
-  - table-only
-  - menu+table (recommended)
+- [ ] Confirm expected “holding experience”:
+  - [ ] redirect to marketing site?
+  - [ ] or render a mellow “coming soon” page?
+- [ ] Confirm whether linking should allow:
+  - [ ] menu-only
+  - [ ] table-only
+  - [ ] menu+table (recommended)
 
 ### **Phase 1: Backend foundation (3-5 days)**
-- Add `MarketingQrCode` model + migration
-- Add `MarketingQrCodesController#resolve` (public endpoint)
-- Implement Smartmenu resolution logic:
-  - reuse or call existing Smartmenu generation (SmartMenuGeneratorJob patterns)
-  - ensure idempotent find-or-create
+- [ ] Add `MarketingQrCode` model + migration
+- [ ] Add `MarketingQrCodesController#resolve` (public endpoint)
+- [ ] Implement Smartmenu resolution logic:
+  - [ ] reuse or call existing Smartmenu generation (SmartMenuGeneratorJob patterns)
+  - [ ] ensure idempotent find-or-create
 
 ### **Phase 2: Admin-only management UI (5-10 days)**
-- Admin controller + views
-- List view with statuses
-- Create/generate flow
-- Link/unlink flow with restaurant/menu/table selectors
-- Print view (HTML optimized for printing)
+- [ ] Admin controller + views
+- [ ] List view with statuses
+- [ ] Create/generate flow
+- [ ] Link/unlink flow with restaurant/menu/table selectors
+- [ ] Print view (HTML optimized for printing)
 
 ### **Phase 3: QR rendering + printing (3-5 days)**
-- Reuse existing QR card components + `QRCodeStyling`
-- Ensure correct encoded URL
-- Provide download (PNG/SVG) if needed
+- [ ] Reuse existing QR card components + `QRCodeStyling`
+- [ ] Ensure correct encoded URL
+- [ ] Provide download (PNG/SVG) if needed
 
 ### **Phase 4: Hardening (3-5 days)**
-- Add audit logging
-- Add validations (linked must have restaurant + target)
-- Add basic rate limiting / abuse prevention on `/m/:token` if needed
+- [ ] Add audit logging
+- [ ] Add validations (linked must have restaurant + target)
+- [ ] Add basic rate limiting / abuse prevention on `/m/:token` if needed
 
 ## 🧪 Testing Plan
 
-- Model tests:
-  - token uniqueness
-  - linking validations
-- Request specs:
-  - `/m/:token` unlinked → holding
-  - `/m/:token` linked → redirects to `/smartmenus/:slug`
-  - idempotent Smartmenu creation
-- Authorization tests:
-  - non-`@mellow.menu` users cannot access admin endpoints
+- [ ] Model tests:
+  - [ ] token uniqueness
+  - [ ] linking validations
+- [ ] Request specs:
+  - [ ] `/m/:token` unlinked → holding
+  - [ ] `/m/:token` linked → redirects to `/smartmenus/:slug`
+  - [ ] idempotent Smartmenu creation
+- [ ] Authorization tests:
+  - [ ] non-`@mellow.menu` users cannot access admin endpoints
 
 ## 🚧 Risks / Considerations
 
-- **Scanning domain**: If you plan to print QR codes for production, ensure the encoded host is stable (e.g., `mellow.menu`), not an environment-specific host.
-- **Slug stability**: Marketing token is immutable. Smartmenu slug can be created at link time.
-- **Table/menu existence**: linking UI should validate that referenced menu/table exists and belongs to the restaurant.
-- **Analytics**: If scan tracking is required, we should log at the `/m/:token` endpoint.
+- [ ] **Scanning domain**: If you plan to print QR codes for production, ensure the encoded host is stable (e.g., `mellow.menu`), not an environment-specific host.
+- [ ] **Slug stability**: Marketing token is immutable. Smartmenu slug can be created at link time.
+- [ ] **Table/menu existence**: linking UI should validate that referenced menu/table exists and belongs to the restaurant.
+- [ ] **Analytics**: If scan tracking is required, we should log at the `/m/:token` endpoint.
 
 ## ✅ Success Criteria
 

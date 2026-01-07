@@ -15,44 +15,44 @@
 ## 📝 **Detailed Requirements**
 
 ### **Primary User Stories**
-1. **As a customer**, I want to rate my overall restaurant experience so others know about service quality
-2. **As a customer**, I want to review specific staff members who provided excellent service
-3. **As a customer**, I want to leave detailed feedback about food quality, ambiance, and service
-4. **As a restaurant owner**, I want to see customer reviews to improve my business
-5. **As a staff member**, I want to see my individual reviews to understand my performance
-6. **As a potential customer**, I want to read reviews before choosing a restaurant
+- [ ] **As a customer**, I want to rate my overall restaurant experience so others know about service quality
+- [ ] **As a customer**, I want to review specific staff members who provided excellent service
+- [ ] **As a customer**, I want to leave detailed feedback about food quality, ambiance, and service
+- [ ] **As a restaurant owner**, I want to see customer reviews to improve my business
+- [ ] **As a staff member**, I want to see my individual reviews to understand my performance
+- [ ] **As a potential customer**, I want to read reviews before choosing a restaurant
 
 ### **Functional Requirements**
 
 #### **Core Review Functionality**
-- **Restaurant Reviews**: Overall restaurant experience rating and feedback
-- **Staff Reviews**: Individual staff member performance reviews
-- **Rating System**: 5-star rating scale with detailed criteria
-- **Written Feedback**: Optional detailed text reviews
-- **Review Timing**: Prompt customers at meal completion
-- **Anonymous Option**: Allow anonymous reviews for honest feedback
+- [ ] **Restaurant Reviews**: Overall restaurant experience rating and feedback
+- [ ] **Staff Reviews**: Individual staff member performance reviews
+- [ ] **Rating System**: 5-star rating scale with detailed criteria
+- [ ] **Written Feedback**: Optional detailed text reviews
+- [ ] **Review Timing**: Prompt customers at meal completion
+- [ ] **Anonymous Option**: Allow anonymous reviews for honest feedback
 
 #### **Review Types and Categories**
 
 ### **1. Restaurant Reviews** 🏪
-- **Overall Experience** (1-5 stars)
-- **Food Quality** (1-5 stars)
-- **Service Quality** (1-5 stars)
-- **Ambiance/Atmosphere** (1-5 stars)
-- **Value for Money** (1-5 stars)
-- **Cleanliness** (1-5 stars)
-- **Written Review** (optional, 500 char limit)
-- **Recommendation** (Yes/No - would recommend to others)
+- [ ] **Overall Experience** (1-5 stars)
+- [ ] **Food Quality** (1-5 stars)
+- [ ] **Service Quality** (1-5 stars)
+- [ ] **Ambiance/Atmosphere** (1-5 stars)
+- [ ] **Value for Money** (1-5 stars)
+- [ ] **Cleanliness** (1-5 stars)
+- [ ] **Written Review** (optional, 500 char limit)
+- [ ] **Recommendation** (Yes/No - would recommend to others)
 
 ### **2. Staff Reviews** 👥
-- **Individual Staff Rating** (1-5 stars)
-- **Service Categories**:
-  - Friendliness & Courtesy
-  - Knowledge & Helpfulness
-  - Efficiency & Speed
-  - Professionalism
-- **Specific Feedback** (optional, 300 char limit)
-- **Staff Recognition** (highlight exceptional service)
+- [ ] **Individual Staff Rating** (1-5 stars)
+- [ ] **Service Categories**:
+  - [ ] Friendliness & Courtesy
+  - [ ] Knowledge & Helpfulness
+  - [ ] Efficiency & Speed
+  - [ ] Professionalism
+- [ ] **Specific Feedback** (optional, 300 char limit)
+- [ ] **Staff Recognition** (highlight exceptional service)
 
 ## 🏗️ **Technical Implementation**
 
@@ -707,48 +707,48 @@ end
 ## 🚀 **Implementation Phases**
 
 ### **Phase 1: Core Review System (2-3 weeks)**
-- Database schema and models
-- Basic review creation and display
-- Star rating interface
-- Restaurant review functionality
+- [ ] Database schema and models
+- [ ] Basic review creation and display
+- [ ] Star rating interface
+- [ ] Restaurant review functionality
 
 ### **Phase 2: Staff Reviews (2 weeks)**
-- Staff review system
-- Employee performance tracking
-- Staff recognition features
-- Review linking and association
+- [ ] Staff review system
+- [ ] Employee performance tracking
+- [ ] Staff recognition features
+- [ ] Review linking and association
 
 ### **Phase 3: Moderation & Analytics (2 weeks)**
-- Review moderation system
-- Analytics dashboard
-- Reporting features
-- Performance metrics
+- [ ] Review moderation system
+- [ ] Analytics dashboard
+- [ ] Reporting features
+- [ ] Performance metrics
 
 ### **Phase 4: Enhancement & Integration (1-2 weeks)**
-- Mobile optimization
-- Email notifications
-- Review prompts after meals
-- Integration with existing systems
+- [ ] Mobile optimization
+- [ ] Email notifications
+- [ ] Review prompts after meals
+- [ ] Integration with existing systems
 
 ## 💰 **Business Value**
 
 ### **Customer Benefits**
-- **Informed Decisions** - Read authentic reviews before dining
-- **Voice Heard** - Share experiences and feedback
-- **Staff Recognition** - Highlight exceptional service
-- **Community Building** - Connect with other diners
+- [ ] **Informed Decisions** - Read authentic reviews before dining
+- [ ] **Voice Heard** - Share experiences and feedback
+- [ ] **Staff Recognition** - Highlight exceptional service
+- [ ] **Community Building** - Connect with other diners
 
 ### **Restaurant Benefits**
-- **Customer Insights** - Understand satisfaction levels
-- **Staff Performance** - Track individual employee performance
-- **Marketing Tool** - Showcase positive reviews
-- **Improvement Areas** - Identify areas needing attention
+- [ ] **Customer Insights** - Understand satisfaction levels
+- [ ] **Staff Performance** - Track individual employee performance
+- [ ] **Marketing Tool** - Showcase positive reviews
+- [ ] **Improvement Areas** - Identify areas needing attention
 
 ### **Revenue Impact**
-- **Trust Building** - Reviews increase customer confidence
-- **Staff Motivation** - Recognition improves service quality
-- **Reputation Management** - Address issues proactively
-- **Competitive Advantage** - Stand out with excellent reviews
+- [ ] **Trust Building** - Reviews increase customer confidence
+- [ ] **Staff Motivation** - Recognition improves service quality
+- [ ] **Reputation Management** - Address issues proactively
+- [ ] **Competitive Advantage** - Stand out with excellent reviews
 
 ## 📋 **Acceptance Criteria**
 

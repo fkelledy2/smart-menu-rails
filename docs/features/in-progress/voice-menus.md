@@ -3,35 +3,35 @@
 ## Goals
 Enable customers on Smartmenu customer pages (e.g. `/smartmenus/:slug`) to interact via **push-to-talk** voice commands:
 
-- Add an item to an order (by name/description).
-- Remove an item from an order (by name/description).
-- Submit/confirm the order.
-- Request the bill.
+- [x] Add an item to an order (by name/description).
+- [x] Remove an item from an order (by name/description).
+- [x] Submit/confirm the order.
+- [x] Request the bill.
 
 Constraints:
 
-- **Browser agnostic** as much as feasible.
-- Works in existing Smartmenu context (Rails + browser UI).
-- Avoid “always listening”; use press-and-hold push-to-talk.
-- Prefer device/OS voice isolation features where possible.
-- Visual responses are acceptable initially.
-- Consider bandwidth constraints (3G/4G/5G/WiFi).
-- Consider capturing interactions for future model training.
+- [x] **Browser agnostic** as much as feasible. (Hybrid: Web Speech API when available, audio upload fallback)
+- [x] Works in existing Smartmenu context (Rails + browser UI).
+- [x] Avoid “always listening”; use press-and-hold push-to-talk.
+- [x] Prefer device/OS voice isolation features where possible. (uses `echoCancellation`, `noiseSuppression`, `autoGainControl` constraints)
+- [x] Visual responses are acceptable initially.
+- [x] Consider bandwidth constraints (3G/4G/5G/WiFi). (audio mime-type negotiation + short-utterance model; implemented client-side)
+- [x] Consider capturing interactions for future model training. (VoiceCommand persistence exists)
 
 ---
 
 ## High-level approach
 Voice control has three separable components:
 
-1. **Capture UI + audio capture** (push-to-talk, mic permissions, UX cues).
-2. **Speech-to-text (STT)** (in-browser, OS-provided, or server-side).
-3. **Intent parsing + action execution** (map transcript -> Smartmenu actions -> existing endpoints).
+1. [x] **Capture UI + audio capture** (push-to-talk, mic permissions, UX cues).
+2. [x] **Speech-to-text (STT)** (in-browser, OS-provided, or server-side).
+3. [x] **Intent parsing + action execution** (map transcript -> Smartmenu actions -> existing endpoints).
 
 We should implement this with a feature flag and a progressive enhancement strategy:
 
-- If advanced STT isn’t available, fall back to manual UI.
-- If the device/browser supports high-quality on-device STT, use it.
-- Otherwise fall back to server-side STT.
+- [x] If advanced STT isn’t available, fall back to manual UI. (voice UI is gated; standard UI remains)
+- [x] If the device/browser supports high-quality on-device STT, use it. (Web Speech API)
+- [x] Otherwise fall back to server-side STT. (audio upload + Whisper)
 
 ---
 
@@ -93,8 +93,8 @@ Try client-side STT first; if unavailable, fall back to server-side STT.
 ### Decision
 We will implement **Option C** up-front.
 
-- **Primary path**: Client-side STT where supported (text-only to server).
-- **Fallback path**: Push-to-talk audio capture -> upload to Rails -> server-side STT -> intent parsing.
+- [x] **Primary path**: Client-side STT where supported (text-only to server).
+- [x] **Fallback path**: Push-to-talk audio capture -> upload to Rails -> server-side STT -> intent parsing.
 
 This meets the “browser agnostic” requirement by always having a server-side path.
 
@@ -103,9 +103,9 @@ This meets the “browser agnostic” requirement by always having a server-side
 ## Heroku deployment considerations (production)
 The solution must run on existing Heroku infrastructure. This favors:
 
-- External STT vendors (no GPU required).
-- Short-lived request/response workflows (avoid long-running dyno requests).
-- Background jobs (Sidekiq) for any heavier processing.
+- [x] External STT vendors (no GPU required). (OpenAI Whisper API)
+- [x] Short-lived request/response workflows (avoid long-running dyno requests). (controller responds `202 Accepted`, work is async)
+- [x] Background jobs (Sidekiq) for any heavier processing. (`VoiceCommandTranscriptionJob`)
 
 ### Recommended Heroku add-ons
 - **Heroku Postgres**
@@ -180,6 +180,13 @@ Accepts either JSON transcript or multipart audio.
   - `intent`: `{ type: 'add_item'|'remove_item'|'submit_order'|'request_bill', ... }`
   - `result`: `{ ok: boolean, message: string, matched_items: [...] }`
 
+- [x] `POST /smartmenus/:slug/voice_commands` exists and returns `{ id, status }` (`202 Accepted`).
+- [x] `GET /smartmenus/:slug/voice_commands/:id` exists for polling results.
+- [x] Accepts JSON transcript.
+- [x] Accepts multipart audio upload.
+- [x] Async processing via Sidekiq (returns quickly to avoid Heroku timeouts).
+- [ ] Optional: enqueue + return job id for polling (instead of VoiceCommand id). (current polling is by VoiceCommand id)
+
 Implementation notes:
 
 - Keep request handling under Heroku router timeouts (short utterances).
@@ -189,30 +196,30 @@ Implementation notes:
 
 ## Data capture for training / back propagation
 ### What we can capture
-- transcript
-- resolved intent
-- whether it succeeded
-- matched menuitem ids
-- latency metrics
-- device/browser metadata (coarse)
+- [x] transcript
+- [x] resolved intent
+- [x] whether it succeeded (stored in `result` + status)
+- [x] matched menuitem ids (intent enrichment can attach `menuitem_id`; client also resolves)
+- [ ] latency metrics
+- [ ] device/browser metadata (coarse)
 
 ### Audio storage
 Storing raw audio is possible but should be **opt-in**.
 
-- Default: store transcript only.
-- Opt-in: store audio via ActiveStorage + strict retention window.
+- [ ] Default: store transcript only. (audio can be attached when provided)
+- [ ] Opt-in: store audio via ActiveStorage + strict retention window.
 
 ### Consent
-- Provide an explicit customer-facing consent toggle.
-- If disabled, do not store audio and consider hashing/anonymizing transcripts.
+- [ ] Provide an explicit customer-facing consent toggle.
+- [ ] If disabled, do not store audio and consider hashing/anonymizing transcripts.
 
 ---
 
 ## Push-to-talk UX design
 ### Interaction model
-- A floating microphone button (bottom-right) on customer pages.
-- **Press and hold** to record.
-- Release to stop recording and submit.
+- [x] A floating microphone button on customer pages.
+- [x] **Press and hold** to record.
+- [x] Release to stop recording and submit.
 
 ### Visual cues
 - Button state:
@@ -228,17 +235,20 @@ Storing raw audio is possible but should be **opt-in**.
   - “Order submitted”
   - “Bill requested”
 
+- [x] Visual feedback for success/error is implemented (toast-style overlay messages).
+- [ ] Explicit “Processing” state is shown.
+
 ### Accessibility
-- Ensure button has `aria-label` and supports keyboard activation.
+- [ ] Ensure button has `aria-label` and supports keyboard activation.
 
 ---
 
 ## Audio quality / “voice isolation” considerations
 Browsers can request audio processing constraints from the OS:
 
-- `echoCancellation: true`
-- `noiseSuppression: true`
-- `autoGainControl: true`
+- [x] `echoCancellation: true`
+- [x] `noiseSuppression: true`
+- [x] `autoGainControl: true`
 
 These leverage platform audio processing where available.
 
@@ -251,16 +261,16 @@ For more advanced isolation:
 
 ## Bandwidth considerations (3G/4G/5G/WiFi)
 ### If using client-side STT
-- Only text transmitted (tiny).
+- [x] Only text transmitted (tiny).
 
 ### If using server-side STT
-- Audio upload size depends on codec and duration.
+- [x] Audio upload size depends on codec and duration.
 
 Recommendations:
 
-- Use **Opus** in WebM where supported (high quality/low bitrate).
-- Cap recording duration (e.g. 6–10 seconds per utterance).
-- Prefer mono, 16kHz–48kHz.
+- [x] Use **Opus** in WebM where supported (high quality/low bitrate). (prefers `audio/webm;codecs=opus`)
+- [ ] Cap recording duration (e.g. 6–10 seconds per utterance).
+- [ ] Prefer mono, 16kHz–48kHz.
 
 Rule of thumb:
 
@@ -306,6 +316,10 @@ If multiple items match:
 
 - “I found 3 matches: … Tap to choose.”
 
+- [x] Intent parsing supports: add/remove/submit/request bill.
+- [x] Intent parsing also supports: start order / close order.
+- [ ] Disambiguation UI when multiple items match.
+
 ---
 
 ## Item matching strategy (name + description)
@@ -334,6 +348,10 @@ We can build a client-side index:
 ### Matching algorithm (v2)
 Use an embeddings-based match server-side (e.g. pgvector) for high-quality matching.
 
+- [x] Client-side matching (v1) is implemented (DOM dataset matching + fuzzy scoring).
+- [x] Server-side match enrichment is implemented when vector search is enabled (`MenuItemMatcherService`).
+- [ ] Pure server-side embeddings-based match (pgvector) as the primary matcher.
+
 ---
 
 ## Action execution (integrate with existing Rails endpoints)
@@ -348,41 +366,41 @@ Likely existing calls:
 
 Voice layer should only:
 
-- Resolve the intended action.
-- Call the same JS helpers already used by buttons (preferably through shared functions).
+- [x] Resolve the intended action.
+- [x] Call the same JS helpers already used by buttons (through `ordr_commons`).
+- [ ] Execute actions server-side (so voice_commands response includes action result without requiring client to apply it).
 
 ---
 
 ## Proposed implementation plan (incremental)
 ### Phase 0: UX + feature flag
-- Add `Voice` button UI to Smartmenu customer view.
-- Gate behind feature flag (env var or DB-driven).
+- [x] Add `Voice` button UI to Smartmenu customer view.
+- [x] Gate behind feature flag (env var + per-menu enable).
 
 ### Phase 1: Client-side STT POC (Option A)
-- Push-to-talk button starts/stops speech recognition.
-- Display transcript.
-- Implement minimal intent parsing (add/remove/submit/bill).
-- Hook into existing JS order actions.
+- [x] Push-to-talk button starts/stops speech recognition.
+- [ ] Display transcript.
+- [x] Implement minimal intent parsing (add/remove/submit/bill).
+- [x] Hook into existing JS order actions.
 
 ### Phase 2: Hybrid fallback (Option C)
-- If Web Speech API unavailable, capture audio and POST to Rails.
-- Rails returns `{ transcript, intent, action_result }`.
+- [x] If Web Speech API unavailable, capture audio and POST to Rails.
+- [ ] Rails returns `{ transcript, intent, action_result }`. (currently returns `{ id, status }`; details via polling)
 
 ### Phase 3: Server-side STT (Option B)
-- Implement `/smartmenus/:slug/voice_commands` endpoint:
-  - Accept audio blob
-  - Run STT
-  - Parse
-  - Return action + result
-- Add rate limiting and abuse prevention.
+- [x] Implement `/smartmenus/:slug/voice_commands` endpoint.
+  - [x] Accept audio blob
+  - [x] Run STT (Whisper)
+  - [x] Parse intent
+  - [ ] Return action + result in the immediate response (async polling used instead)
+- [ ] Add rate limiting and abuse prevention.
 
 ### Phase 4: Analytics + training data capture
-- Store:
-  - transcript
-  - resolved intent
-  - whether it succeeded
-  - anonymized context (menu_id, restaurant_id)
-  - optionally audio (with explicit consent)
+- [x] Store transcript.
+- [x] Store resolved intent.
+- [x] Store status/success + error.
+- [x] Store anonymized-ish context (`menu_id`, `restaurant_id`, `order_id` in `context`).
+- [ ] Optionally store audio (with explicit consent).
 
 ---
 
@@ -390,20 +408,19 @@ Voice layer should only:
 Capturing voice for training is possible, but needs explicit design.
 
 ### Recommended default
-- Store **transcripts + intent outcomes only**.
-- Do not store raw audio by default.
+- [ ] Store **transcripts + intent outcomes only**.
+- [ ] Do not store raw audio by default.
 
 ### Optional (opt-in)
-- Provide “Help improve voice ordering” toggle.
-- If enabled:
-  - store audio + transcript
-  - store language/locale
-  - store device/browser info
+- [ ] Provide “Help improve voice ordering” toggle.
+- [ ] If enabled: store audio + transcript.
+- [x] Store language/locale.
+- [ ] Store device/browser info.
 
 ### Security
-- Encrypt audio at rest.
-- Strict retention policy (e.g. 30–90 days) unless explicitly extended.
-- Redact PII if detected.
+- [ ] Encrypt audio at rest.
+- [ ] Strict retention policy (e.g. 30–90 days) unless explicitly extended.
+- [ ] Redact PII if detected.
 
 ---
 
@@ -416,6 +433,9 @@ Capturing voice for training is possible, but needs explicit design.
 
 ### Rate limiting / abuse prevention
 - `rack-attack`
+
+- [ ] Implement per-session + per-IP throttling (e.g. `rack-attack`).
+- [ ] Hard caps on request size and duration.
 
 ### Storage
 - ActiveStorage for audio blobs.
@@ -442,3 +462,9 @@ Capturing voice for training is possible, but needs explicit design.
 - UI shows what was heard and what action was taken.
 - Works with poor connectivity (short utterances, retry UX).
 - Logging/analytics respects privacy and consent.
+
+- [x] Add/remove/submit/request bill are supported end-to-end.
+- [x] UI shows what action was taken (via messages).
+- [ ] UI shows what was heard (explicit transcript preview).
+- [ ] Poor connectivity UX (retry/backoff UI) beyond polling loop.
+- [ ] Privacy/consent controls for logging/analytics.

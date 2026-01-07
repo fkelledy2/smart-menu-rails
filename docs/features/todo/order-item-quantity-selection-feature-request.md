@@ -15,39 +15,39 @@
 ## 📝 **Detailed Requirements**
 
 ### **Primary User Stories**
-1. **As a customer**, I want to select quantity when adding menu items so I can order multiple of the same item quickly
-2. **As a server**, I want to input quantities for customer orders so I can take orders more efficiently
-3. **As a customer**, I want to modify quantities in my cart so I can adjust my order before confirming
-4. **As a manager**, I want to see quantity-based analytics so I can understand popular item volumes
-5. **As kitchen staff**, I want to see clear quantities on orders so I can prepare the correct amounts
+- [ ] **As a customer**, I want to select quantity when adding menu items so I can order multiple of the same item quickly
+- [ ] **As a server**, I want to input quantities for customer orders so I can take orders more efficiently
+- [ ] **As a customer**, I want to modify quantities in my cart so I can adjust my order before confirming
+- [ ] **As a manager**, I want to see quantity-based analytics so I can understand popular item volumes
+- [ ] **As kitchen staff**, I want to see clear quantities on orders so I can prepare the correct amounts
 
 ### **Functional Requirements**
 
 #### **Core Functionality**
-- **Quantity Input**: Number input field (1-99) when adding items to order
-- **Default Quantity**: Default to 1, but allow easy modification
-- **Quantity Validation**: Prevent invalid quantities (0, negative, excessive)
-- **Cart Management**: Update quantities in cart without removing/re-adding items
-- **Price Calculation**: Automatically calculate total price based on quantity
-- **Inventory Awareness**: Check availability for requested quantities
+- [ ] **Quantity Input**: Number input field (1-99) when adding items to order
+- [ ] **Default Quantity**: Default to 1, but allow easy modification
+- [ ] **Quantity Validation**: Prevent invalid quantities (0, negative, excessive)
+- [ ] **Cart Management**: Update quantities in cart without removing/re-adding items
+- [ ] **Price Calculation**: Automatically calculate total price based on quantity
+- [ ] **Inventory Awareness**: Check availability for requested quantities
 
 #### **User Interface Requirements**
-1. **Menu Item Selection**
-   - Quantity selector prominently displayed
-   - Plus/minus buttons for easy adjustment
-   - Direct number input for large quantities
-   - Visual feedback for quantity changes
+- [ ] **Menu Item Selection**
+  - [ ] Quantity selector prominently displayed
+  - [ ] Plus/minus buttons for easy adjustment
+  - [ ] Direct number input for large quantities
+  - [ ] Visual feedback for quantity changes
 
-2. **Shopping Cart Display**
-   - Clear quantity display for each item
-   - Easy quantity modification in cart
-   - Subtotal calculation per item line
-   - Total order calculation
+- [ ] **Shopping Cart Display**
+  - [ ] Clear quantity display for each item
+  - [ ] Easy quantity modification in cart
+  - [ ] Subtotal calculation per item line
+  - [ ] Total order calculation
 
-3. **Order Confirmation**
-   - Quantity clearly shown in order summary
-   - Line-item pricing with quantities
-   - Final total calculation
+- [ ] **Order Confirmation**
+  - [ ] Quantity clearly shown in order summary
+  - [ ] Line-item pricing with quantities
+  - [ ] Final total calculation
 
 ## 🏗️ **Technical Implementation**
 
@@ -632,22 +632,22 @@ end
 ## 💰 **Business Value**
 
 ### **User Experience Benefits**
-- **Faster Ordering** - Reduce clicks from 6 to 2 for multiple items
-- **Reduced Friction** - Eliminate repetitive item selection
-- **Clear Pricing** - Transparent quantity-based pricing
-- **Better Cart Management** - Easy quantity adjustments
+- [ ] **Faster Ordering** - Reduce clicks from 6 to 2 for multiple items
+- [ ] **Reduced Friction** - Eliminate repetitive item selection
+- [ ] **Clear Pricing** - Transparent quantity-based pricing
+- [ ] **Better Cart Management** - Easy quantity adjustments
 
 ### **Operational Benefits**
-- **Improved Efficiency** - Servers can take orders faster
-- **Better Analytics** - Understand quantity preferences
-- **Inventory Management** - Track high-quantity items
-- **Revenue Insights** - Identify bulk ordering patterns
+- [ ] **Improved Efficiency** - Servers can take orders faster
+- [ ] **Better Analytics** - Understand quantity preferences
+- [ ] **Inventory Management** - Track high-quantity items
+- [ ] **Revenue Insights** - Identify bulk ordering patterns
 
 ### **Revenue Impact**
-- **Increased Order Size** - Easier to order multiple items
-- **Reduced Abandonment** - Smoother ordering process
-- **Upselling Opportunities** - Suggest quantity discounts
-- **Customer Satisfaction** - Better user experience
+- [ ] **Increased Order Size** - Easier to order multiple items
+- [ ] **Reduced Abandonment** - Smoother ordering process
+- [ ] **Upselling Opportunities** - Suggest quantity discounts
+- [ ] **Customer Satisfaction** - Better user experience
 
 ## 📋 **Acceptance Criteria**
 
