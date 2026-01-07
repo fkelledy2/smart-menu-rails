@@ -132,7 +132,7 @@ bundle exec rails test # Note coverage percentage
 bundle exec brakeman --format json > baseline/brakeman.json
 
 # Document current state
-echo "Baseline established: $(date)" > baseline/README.md
+echo "Baseline established: $(date)" > baseline/voiceApp.md
 ```
 
 ### **3. Progress Tracking**

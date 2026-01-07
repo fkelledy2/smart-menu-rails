@@ -2,6 +2,7 @@ class MenuitemsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_menuitem, only: %i[show edit update destroy analytics generate_ai_image image_status]
   before_action :set_currency
+  before_action :ensure_owner_restaurant_context_for_menu!, only: %i[new edit create update destroy reorder generate_ai_image]
 
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
@@ -319,6 +320,28 @@ class MenuitemsController < ApplicationController
   end
 
   private
+
+  def ensure_owner_restaurant_context_for_menu!
+    return if params[:restaurant_id].blank?
+
+    menu = if defined?(@menuitem) && @menuitem&.menusection&.menu
+      @menuitem.menusection.menu
+    elsif params[:menusection_id]
+      Menusection.find_by(id: params[:menusection_id])&.menu
+    elsif params.dig(:menuitem, :menusection_id)
+      Menusection.find_by(id: params.dig(:menuitem, :menusection_id))&.menu
+    elsif params[:menu_id]
+      Menu.find_by(id: params[:menu_id])
+    end
+
+    return unless menu
+
+    owner_restaurant_id = menu.owner_restaurant_id.presence || menu.restaurant_id
+    return if owner_restaurant_id.blank?
+    return if params[:restaurant_id].to_i == owner_restaurant_id
+
+    redirect_to edit_restaurant_path(params[:restaurant_id], section: 'menus'), alert: 'This menu is read-only for this restaurant'
+  end
 
   # Skip policy scope verification for optimized JSON requests
   def skip_policy_scope_for_json?

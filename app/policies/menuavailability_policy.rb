@@ -38,9 +38,13 @@ class MenuavailabilityPolicy < ApplicationPolicy
   private
 
   def owns_menu_availability?
-    return false unless user && record.menu&.restaurant
+    return false unless user && record.menu
 
-    # Check if user owns the restaurant that the menu belongs to
-    user.restaurants.exists?(id: record.menu.restaurant_id)
+    menu = record.menu
+    owner_restaurant = menu.owner_restaurant || menu.restaurant
+    return false unless owner_restaurant
+
+    # Check if user owns the owner restaurant that controls this menu
+    user.restaurants.exists?(id: owner_restaurant.id)
   end
 end

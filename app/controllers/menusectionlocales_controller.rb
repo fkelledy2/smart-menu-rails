@@ -1,6 +1,7 @@
 class MenusectionlocalesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_menusectionlocale, only: %i[show edit update destroy]
+  before_action :ensure_owner_restaurant_context_for_menu!, only: %i[new edit create update destroy]
 
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
@@ -64,6 +65,26 @@ class MenusectionlocalesController < ApplicationController
   end
 
   private
+
+  def ensure_owner_restaurant_context_for_menu!
+    return if params[:restaurant_id].blank?
+
+    menu = if defined?(@menusectionlocale) && @menusectionlocale&.menusection&.menu
+      @menusectionlocale.menusection.menu
+    elsif params[:menu_id]
+      Menu.find_by(id: params[:menu_id])
+    elsif params.dig(:menusectionlocale, :menusection_id)
+      Menusection.find_by(id: params.dig(:menusectionlocale, :menusection_id))&.menu
+    end
+
+    return unless menu
+
+    owner_restaurant_id = menu.owner_restaurant_id.presence || menu.restaurant_id
+    return if owner_restaurant_id.blank?
+    return if params[:restaurant_id].to_i == owner_restaurant_id
+
+    redirect_to edit_restaurant_path(params[:restaurant_id], section: 'menus'), alert: 'This menu is read-only for this restaurant'
+  end
 
   def set_menusectionlocale
     @menusectionlocale = Menusectionlocale.find(params[:id])

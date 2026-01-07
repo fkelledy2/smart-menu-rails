@@ -378,7 +378,7 @@ docs/ui-ux/REDESIGN_COMPLETE_SUMMARY.md
 docs/project-management/development_roadmap.md
 
 # Database optimization
-docs/database/README.md
+docs/database/voiceApp.md
 
 # Localization gaps
 docs/localization/COMPLETE_LOCALIZATION_AUDIT.md

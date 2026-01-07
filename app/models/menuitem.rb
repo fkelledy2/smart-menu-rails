@@ -261,7 +261,14 @@ class Menuitem < ApplicationRecord
   def invalidate_menuitem_caches
     AdvancedCacheService.invalidate_menuitem_caches(id)
     AdvancedCacheService.invalidate_menu_caches(menusection.menu.id)
-    AdvancedCacheService.invalidate_restaurant_caches(menusection.menu.restaurant.id)
+
+    menu = menusection.menu
+    attached_restaurant_ids = menu.restaurant_menus.pluck(:restaurant_id)
+    attached_restaurant_ids = [menu.restaurant_id] if attached_restaurant_ids.empty?
+
+    attached_restaurant_ids.uniq.each do |rid|
+      AdvancedCacheService.invalidate_restaurant_caches(rid)
+    end
   end
 
   def enqueue_menu_item_search_reindex

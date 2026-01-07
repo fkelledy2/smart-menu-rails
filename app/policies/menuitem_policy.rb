@@ -31,6 +31,8 @@ class MenuitemPolicy < ApplicationPolicy
   def owner?
     return false unless user && record.respond_to?(:menusection)
 
-    record.menusection&.menu&.restaurant&.user_id == user.id
+    menu = record.menusection&.menu
+    owner_restaurant = menu&.owner_restaurant || menu&.restaurant
+    owner_restaurant&.user_id == user.id
   end
 end

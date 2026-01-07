@@ -16,19 +16,23 @@ class MenuItemSearchIndexJob
     return unless ml.enabled?
 
     menu = Menu.find(menu_id)
-    restaurant = menu.restaurant
 
-    locales = if locale.present?
-                [normalize_locale(locale)]
-              else
-                Restaurantlocale.where(restaurant_id: restaurant.id, status: 1).pluck(:locale).map { |l| normalize_locale(l) }
-              end
+    restaurant_ids = RestaurantMenu.where(menu_id: menu.id).pluck(:restaurant_id)
+    restaurant_ids = [menu.restaurant_id] if restaurant_ids.empty?
 
-    locales = locales.map(&:presence).compact.uniq
-    locales = ['en'] if locales.empty?
+    restaurant_ids.uniq.each do |restaurant_id|
+      locales = if locale.present?
+                  [normalize_locale(locale)]
+                else
+                  Restaurantlocale.where(restaurant_id: restaurant_id, status: 1).pluck(:locale).map { |l| normalize_locale(l) }
+                end
 
-    locales.each do |loc|
-      index_menu_locale(menu, loc, ml)
+      locales = locales.map(&:presence).compact.uniq
+      locales = ['en'] if locales.empty?
+
+      locales.each do |loc|
+        index_menu_locale(menu, loc, ml, restaurant_id)
+      end
     end
   end
 
@@ -49,7 +53,7 @@ class MenuItemSearchIndexJob
     end
   end
 
-  def index_menu_locale(menu, locale, ml)
+  def index_menu_locale(menu, locale, ml, restaurant_id)
     items = Menuitem.joins(:menusection).where(menusections: { menu_id: menu.id }).includes(:menusection)
 
     docs = []
@@ -66,7 +70,7 @@ class MenuItemSearchIndexJob
 
       docs << {
         menuitem_id: mi.id,
-        restaurant_id: menu.restaurant_id,
+        restaurant_id: restaurant_id,
         menu_id: menu.id,
         locale: locale,
         document_text: doc_text,
@@ -76,7 +80,7 @@ class MenuItemSearchIndexJob
 
     return if docs.empty?
 
-    existing = MenuItemSearchDocument.where(menu_id: menu.id, locale: locale).pluck(:menuitem_id, :content_hash).to_h
+    existing = MenuItemSearchDocument.where(menu_id: menu.id, restaurant_id: restaurant_id, locale: locale).pluck(:menuitem_id, :content_hash).to_h
 
     to_index = docs.select { |d| existing[d[:menuitem_id]].to_s != d[:content_hash].to_s }
     return if to_index.empty?
@@ -109,7 +113,7 @@ class MenuItemSearchIndexJob
         attrs[:embedding] = nil
       end
 
-      rec = MenuItemSearchDocument.where(menu_id: menu.id, menuitem_id: row[:menuitem_id], locale: locale).first
+      rec = MenuItemSearchDocument.where(menu_id: menu.id, restaurant_id: restaurant_id, menuitem_id: row[:menuitem_id], locale: locale).first
       if rec
         rec.update!(attrs)
       else

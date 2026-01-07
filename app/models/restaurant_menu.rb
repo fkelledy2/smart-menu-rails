@@ -2,6 +2,8 @@ class RestaurantMenu < ApplicationRecord
   belongs_to :restaurant
   belongs_to :menu
 
+  after_commit :invalidate_restaurant_caches, on: %i[create update destroy]
+
   enum :status, {
     inactive: 0,
     active: 1,
@@ -22,5 +24,13 @@ class RestaurantMenu < ApplicationRecord
     return availability_state == 'available' if availability_override_enabled
 
     true
+  end
+
+  private
+
+  def invalidate_restaurant_caches
+    AdvancedCacheService.invalidate_restaurant_caches(restaurant_id)
+  rescue StandardError
+    nil
   end
 end

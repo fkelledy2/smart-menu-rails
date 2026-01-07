@@ -184,29 +184,19 @@
                   'default'
                 end %>
 
-                <% if owner_restaurant_id == restaurant.id %>
-                  <%= form_with url: availability_restaurant_restaurant_menu_path(restaurant, restaurant_menu),
-                        method: :patch,
-                        data: { turbo_frame: '_top' },
-                        class: 'd-inline' do %>
-                    <input type="hidden" name="availability_override_enabled" value="<%= availability_value == 'default' ? 'false' : 'true' %>" />
-                    <input type="hidden" name="availability_state" value="<%= availability_value == 'default' ? 'available' : availability_value %>" />
-                    <select class="form-select form-select-sm d-inline-block w-auto"
-                            name="availability_select"
-                            onchange="this.form.querySelector('input[name=availability_override_enabled]').value=(this.value==='default'?'false':'true'); this.form.querySelector('input[name=availability_state]').value=(this.value==='default'?'available':this.value); this.form.requestSubmit();">
-                      <option value="default" <%= 'selected' if availability_value == 'default' %>><%= t('.default', default: 'Default') %></option>
-                      <option value="available" <%= 'selected' if availability_value == 'available' %>><%= t('.available', default: 'Available') %></option>
-                      <option value="unavailable" <%= 'selected' if availability_value == 'unavailable' %>><%= t('.unavailable', default: 'Unavailable') %></option>
-                    </select>
-                  <% end %>
-                <% else %>
-                  <% if availability_value == 'available' %>
-                    <span class="badge bg-success"><%= t('.available', default: 'Available') %></span>
-                  <% elsif availability_value == 'unavailable' %>
-                    <span class="badge bg-dark"><%= t('.unavailable', default: 'Unavailable') %></span>
-                  <% else %>
-                    <span class="badge bg-secondary"><%= t('.default', default: 'Default') %></span>
-                  <% end %>
+                <%= form_with url: availability_restaurant_restaurant_menu_path(restaurant, restaurant_menu),
+                      method: :patch,
+                      data: { turbo_frame: '_top' },
+                      class: 'd-inline' do %>
+                  <input type="hidden" name="availability_override_enabled" value="<%= availability_value == 'default' ? 'false' : 'true' %>" />
+                  <input type="hidden" name="availability_state" value="<%= availability_value == 'default' ? 'available' : availability_value %>" />
+                  <select class="form-select form-select-sm d-inline-block w-auto"
+                          name="availability_select"
+                          onchange="this.form.querySelector('input[name=availability_override_enabled]').value=(this.value==='default'?'false':'true'); this.form.querySelector('input[name=availability_state]').value=(this.value==='default'?'available':this.value); this.form.requestSubmit();">
+                    <option value="default" <%= 'selected' if availability_value == 'default' %>><%= t('.default', default: 'Default') %></option>
+                    <option value="available" <%= 'selected' if availability_value == 'available' %>><%= t('.available', default: 'Available') %></option>
+                    <option value="unavailable" <%= 'selected' if availability_value == 'unavailable' %>><%= t('.unavailable', default: 'Unavailable') %></option>
+                  </select>
                 <% end %>
               </td>
               <td class="text-end">

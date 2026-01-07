@@ -39,9 +39,13 @@ class MenusectionlocalePolicy < ApplicationPolicy
   private
 
   def owns_menusection_locale?
-    return false unless user && record.menusection&.menu&.restaurant
+    return false unless user && record.menusection&.menu
 
-    # Check if user owns the restaurant that the menu section belongs to
-    user.restaurants.exists?(id: record.menusection.menu.restaurant_id)
+    menu = record.menusection.menu
+    owner_restaurant = menu.owner_restaurant || menu.restaurant
+    return false unless owner_restaurant
+
+    # Check if user owns the owner restaurant that controls this menu
+    user.restaurants.exists?(id: owner_restaurant.id)
   end
 end

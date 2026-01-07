@@ -129,7 +129,13 @@ class Menu < ApplicationRecord
 
   def invalidate_menu_caches
     AdvancedCacheService.invalidate_menu_caches(id)
-    AdvancedCacheService.invalidate_restaurant_caches(restaurant_id)
+
+    attached_restaurant_ids = restaurant_menus.pluck(:restaurant_id)
+    attached_restaurant_ids = [restaurant_id] if attached_restaurant_ids.empty?
+
+    attached_restaurant_ids.uniq.each do |rid|
+      AdvancedCacheService.invalidate_restaurant_caches(rid)
+    end
   end
 
   # Enqueue background job to localize this menu to all restaurant locales
