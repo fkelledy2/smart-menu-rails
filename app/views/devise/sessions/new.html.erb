@@ -1,11 +1,11 @@
-<div class="container px-4 py-5">
+<div class="container px-3 py-4">
   <div class="row justify-content-center">
-    <div class="col-12 col-sm-11 col-md-9 col-lg-6 col-xl-5">
+    <div class="col-12 col-sm-11 col-md-8 col-lg-6 col-xl-5">
 
       <!-- Header Section -->
       <div class="text-center mb-4">
         <h1 class="pb-2 border-bottom d-inline-block"><%= t(".login") %></h1>
-        <p class="text-muted mt-3">Welcome back! Please sign in to your account.</p>
+        <p class="text-muted mt-3">Welcome back.</p>
       </div>
 
       <!-- Sign In Card -->
@@ -13,9 +13,9 @@
           <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { data: { testid: 'login-form' } }) do |f| %>
 
             <!-- Email Field -->
-            <div class="mb-4">
-              <label for="user_email" class="form-label fw-semibold">
-                <i class="bi bi-envelope me-2"></i>Email Address
+            <div class="mb-3">
+              <label for="user_email" class="visually-hidden">
+                Email Address
               </label>
               <%= f.email_field :email,
                   autofocus: true,
@@ -26,9 +26,9 @@
             </div>
 
             <!-- Password Field -->
-            <div class="mb-4">
-              <label for="user_password" class="form-label fw-semibold">
-                <i class="bi bi-lock me-2"></i>Password
+            <div class="mb-3">
+              <label for="user_password" class="visually-hidden">
+                Password
               </label>
               <%= f.password_field :password,
                   autocomplete: "current-password",
@@ -38,8 +38,8 @@
                   data: { testid: 'login-password-input' } %>
             </div>
 
-            <!-- Remember Me & Forgot Password Row -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Remember Me Row -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
               <% if devise_mapping.rememberable? %>
                 <div class="form-check">
                   <%= f.check_box :remember_me, class: "form-check-input", data: { testid: 'login-remember-checkbox' } %>
@@ -48,69 +48,24 @@
                   </label>
                 </div>
               <% end %>
-
-              <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
-                <%= link_to t("devise.shared.links.forgotYourPassword"), new_password_path(resource_name), class: "text-decoration-none", data: { testid: 'forgot-password-link' } %>
-              <% end %>
             </div>
 
             <!-- Submit Button -->
             <div class="d-grid mb-3">
               <%= f.submit t(".login"), class: "btn btn-danger btn-lg", data: { testid: 'login-submit-btn' } %>
             </div>
+
+            <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+              <div class="text-center mb-4">
+                <%= link_to t("devise.shared.links.forgotYourPassword"), new_password_path(resource_name), class: "text-decoration-none", data: { testid: 'forgot-password-link' } %>
+              </div>
+            <% end %>
           <% end %>
 
           <!-- Divider -->
-          <div class="position-relative my-4">
-            <hr>
-            <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">
-              or
-            </span>
-          </div>
-          <!-- Social Sign-In -->
-          <div class="my-3">
-          <div class="row g-2">
-            <div class="col-6">
-              <%= button_to user_google_oauth2_omniauth_authorize_path,
-                            method: :post,
-                            class: 'btn btn-lg w-100 d-flex align-items-center justify-content-center gap-2 border bg-white text-dark',
-                            data: { testid: 'signin-google-btn' } do %>
-                <!-- Google G icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
-                  <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.591 31.91 29.195 35 24 35c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.869 5.053 29.73 3 24 3 12.955 3 4 11.955 4 23s8.955 20 20 20 19-8.955 19-20c0-1.341-.138-2.651-.389-3.917z"/>
-                  <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 16.144 18.961 13 24 13c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.869 5.053 29.73 3 24 3 16.318 3 9.656 7.337 6.306 14.691z"/>
-                  <path fill="#4CAF50" d="M24 43c5.136 0 9.8-1.969 13.313-5.178l-6.147-5.195C29.104 34.336 26.671 35 24 35c-5.176 0-9.563-3.072-11.292-7.438l-6.54 5.037C9.49 39.734 16.227 43 24 43z"/>
-                  <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-1.082 3.154-3.365 5.647-6.137 7.072.002-.001.003-.001.005-.002l6.147 5.195C33.135 41.024 38 38 41 33c2-3 2.611-6.917 2.611-12.917z"/>
-                </svg>
-                <span class="fw-semibold">Sign in with Google</span>
-              <% end %>
-            </div>
-            <div class="col-6">
-              <%= button_to user_apple_omniauth_authorize_path,
-                            method: :post,
-                            class: 'btn btn-lg w-100 d-flex align-items-center justify-content-center gap-2 bg-black text-white',
-                            data: { testid: 'signin-apple-btn' } do %>
-                <!-- Apple logo -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M16.365 1.43c.06.074.11.163.147.268.037.104.06.225.06.362 0 .21-.04.43-.123.66a2.96 2.96 0 0 1-.41.74 3.02 3.02 0 0 1-.6.61c-.21.17-.4.3-.57.39-.24.12-.48.2-.72.25-.12.02-.25.04-.39.05-.14.01-.26.02-.37.02-.08-.12-.14-.27-.19-.45a1.5 1.5 0 0 1-.06-.42c0-.21.04-.43.13-.66.09-.22.2-.43.35-.63.2-.27.46-.51.78-.74.32-.23.65-.38 1-.45.11-.02.24-.04.38-.05.14-.02.27-.02.39-.02.17 0 .32.02.44.07.12.05.22.11.3.19zM20.45 17.07c-.14.33-.31.65-.5.96-.22.36-.4.61-.53.77-.21.27-.42.52-.62.75-.26.28-.52.51-.77.68-.32.23-.66.41-1.02.54-.41.14-.83.21-1.27.21-.33 0-.71-.06-1.14-.19-.43-.13-.89-.19-1.38-.19-.5 0-.97.06-1.4.19-.43.13-.79.19-1.09.19-.44 0-.87-.07-1.29-.21a3.7 3.7 0 0 1-1.02-.54 4.41 4.41 0 0 1-.77-.68 9.7 9.7 0 0 1-.62-.75 8.86 8.86 0 0 1-.53-.77 8.56 8.56 0 0 1-.75-1.77A6.6 6.6 0 0 1 4 14.09c0-1.1.24-2.04.73-2.82.37-.59.86-1.05 1.47-1.39.61-.34 1.29-.51 2.06-.51.4 0 .92.12 1.57.36.65.24 1.07.36 1.28.36.17 0 .64-.13 1.42-.38.76-.25 1.4-.35 1.9-.3 1.4.11 2.46.69 3.17 1.73-1.26.76-1.88 1.84-1.88 3.26 0 1.09.41 2.01 1.22 2.75.36.34.78.6 1.25.77-.1.28-.21.56-.35.83z"/>
-                </svg>
-                <span class="fw-semibold">Sign in with Apple</span>
-              <% end %>
-            </div>
-          </div>
-        </div>
-
-          <!-- Divider -->
-          <div class="position-relative my-4">
-            <hr>
-            <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">
-              Don't have an account?
-            </span>
-          </div>
-
-          <!-- Sign Up Link -->
-          <div class="d-grid">
-            <%= link_to "Create Account", new_user_registration_path, class: "btn btn-outline-dark btn-lg", data: { testid: 'signup-link' } %>
+          <div class="text-center">
+            <span class="text-muted">Don’t have an account?</span>
+            <%= link_to "Create account", new_user_registration_path, class: "text-decoration-none fw-semibold", data: { testid: 'signup-link' } %>
           </div>
       </div>
 
@@ -118,3 +73,7 @@
       <div class="text-center text-muted small">
         <%= render "devise/shared/links" %>
       </div>
+
+    </div>
+  </div>
+</div>
