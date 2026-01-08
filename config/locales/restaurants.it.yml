@@ -130,12 +130,27 @@ it:
       staff: Staff
       financials: FINANZE
       taxes_and_tips: Tasse e Mance
+      taxes: Tasse
+      tips: Mance
       ordering: Ordinazioni
       setup: CONFIGURAZIONE
       settings: Impostazioni
       qr_codes: Codici QR
       jukebox: Jukebox
       advanced: Avanzate
+    index_frame_2025:
+      all: Tutti
+      active: Attivi
+      inactive: Inattivi
+      archived: Archiviati
+      pagination_aria_label: Paginazione ristoranti
+      no_restaurants: Nessun ristorante trovato
+      no_results_for: Nessun risultato per
+      clear_search: Cancella ricerca
+      menus_count_label: menù
+      staff_count_label: staff
+      edit: Modifica
+      menus_action: Menù
     sections:
       details_2025:
         quick_actions: Azioni Rapide

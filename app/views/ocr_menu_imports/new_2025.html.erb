@@ -11,10 +11,10 @@
       <!-- Header with Progress Indicator -->
       <div class="mb-5">
         <h1 class="text-2xl font-semibold text-gray-900 mb-2">
-          <%= t('.title', default: 'Import Your Menu') %>
+          <%= t('.title') %>
         </h1>
         <p class="text-base text-gray-600">
-          <%= t('.subtitle', default: 'Upload a PDF menu and our AI will extract all items automatically') %>
+          <%= t('.subtitle') %>
         </p>
 
         <!-- Progress Steps -->
@@ -23,21 +23,21 @@
             <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-medium">
               1
             </div>
-            <span class="text-sm font-medium text-gray-900">Upload</span>
+            <span class="text-sm font-medium text-gray-900"><%= t('.step_upload') %></span>
           </div>
           <div class="flex-1 h-px bg-gray-300"></div>
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-medium">
               2
             </div>
-            <span class="text-sm text-gray-500">Process</span>
+            <span class="text-sm text-gray-500"><%= t('.step_process') %></span>
           </div>
           <div class="flex-1 h-px bg-gray-300"></div>
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-medium">
               3
             </div>
-            <span class="text-sm text-gray-500">Review</span>
+            <span class="text-sm text-gray-500"><%= t('.step_review') %></span>
           </div>
         </div>
       </div>
@@ -51,37 +51,37 @@
           <div class="card-2025-body">
             <!-- Menu Name Input -->
             <div class="form-group-2025 mb-6">
-              <%= f.label :name, t('.name_label', default: 'Menu Name'), class: 'form-label-2025' %>
+              <%= f.label :name, t('.name_label'), class: 'form-label-2025' %>
               <%= f.text_field :name,
                   class: 'form-control-2025',
-                  placeholder: t('.name_placeholder', default: 'e.g., Summer Menu 2024'),
+                  placeholder: t('.name_placeholder'),
                   required: true,
                   data: { ocr_upload_target: 'nameInput' } %>
               <div class="form-help-2025">
-                <%= t('.name_help', default: 'Give your menu a descriptive name for easy identification') %>
+                <%= t('.name_help') %>
               </div>
             </div>
 
             <div class="form-group-2025 mb-6">
-              <%= f.label :source_locale, t('.source_language_label', default: 'Menu language'), class: 'form-label-2025' %>
+              <%= f.label :source_locale, t('.source_language_label'), class: 'form-label-2025' %>
               <%= f.select :source_locale,
                   options_for_select([
-                    [t('.auto_detect', default: 'Auto-detect'), ''],
-                    ['English', 'en'],
-                    ['French', 'fr'],
-                    ['Italian', 'it'],
-                    ['Spanish', 'es'],
+                    [t('.auto_detect'), ''],
+                    [t('.language_en'), 'en'],
+                    [t('.language_fr'), 'fr'],
+                    [t('.language_it'), 'it'],
+                    [t('.language_es'), 'es'],
                   ], f.object.source_locale.to_s),
                   {},
                   class: 'form-control-2025' %>
               <div class="form-help-2025">
-                <%= t('.source_language_help', default: 'Used to preserve the original language when generating missing descriptions.') %>
+                <%= t('.source_language_help') %>
               </div>
             </div>
 
             <!-- Drag and Drop Upload Area -->
             <div class="form-group-2025">
-              <%= f.label :pdf_file, t('.pdf_label', default: 'Menu PDF'), class: 'form-label-2025' %>
+              <%= f.label :pdf_file, t('.pdf_label'), class: 'form-label-2025' %>
 
               <!-- Drop Zone -->
               <div class="upload-dropzone-2025"
@@ -97,13 +97,13 @@
                     </svg>
                   </div>
                   <h3 class="upload-title-2025">
-                    <%= t('.drop_title', default: 'Drag and drop your PDF here') %>
+                    <%= t('.drop_title') %>
                   </h3>
                   <p class="upload-subtitle-2025">
-                    <%= t('.drop_subtitle', default: 'or') %>
+                    <%= t('.drop_subtitle') %>
                   </p>
                   <label for="pdf-file-input" class="btn-2025 btn-2025-primary btn-2025-md">
-                    <i class="bi bi-folder"></i> <%= t('.browse_files', default: 'Browse Files') %>
+                    <i class="bi bi-folder"></i> <%= t('.browse_files') %>
                   </label>
                   <%= f.file_field :pdf_file,
                       id: 'pdf-file-input',
@@ -112,7 +112,7 @@
                       required: true,
                       data: { target: 'dropzone.fileInput', ocr_upload_target: 'fileInput' } %>
                   <p class="upload-hint-2025 mt-3">
-                    <%= t('.pdf_hint', default: 'PDF up to 10MB. Clear scans work best.') %>
+                    <%= t('.pdf_hint') %>
                   </p>
                 </div>
 
@@ -131,7 +131,7 @@
                     <button type="button"
                             class="btn-2025 btn-2025-ghost btn-2025-sm"
                             id="remove-file"
-                            aria-label="Remove file">
+                            aria-label="<%= t('.remove_file_aria') %>">
                       <i class="bi bi-x-lg"></i>
                     </button>
                   </div>
@@ -150,10 +150,10 @@
             <div class="d-flex justify-content-between align-items-center">
               <div class="text-sm text-gray-500">
                 <i class="bi bi-clock"></i>
-                <%= t('.estimated_time', default: 'Processing takes ~2-5 minutes') %>
+                <%= t('.estimated_time') %>
               </div>
               <div class="d-flex gap-3">
-                <%= link_to t('.cancel', default: 'Cancel'),
+                <%= link_to t('.cancel'),
                     restaurant_ocr_menu_imports_path(@restaurant),
                     class: 'btn-2025 btn-2025-secondary btn-2025-md' %>
                 <button type="submit"
@@ -161,7 +161,7 @@
                         id="submit-button"
                         data-ocr-upload-target="submitButton"
                         disabled>
-                  <i class="bi bi-magic"></i> <%= t('.start_processing', default: 'Start Processing') %>
+                  <i class="bi bi-magic"></i> <%= t('.start_processing') %>
                 </button>
               </div>
             </div>
@@ -174,7 +174,7 @@
         <div class="card-2025-header">
           <h3 class="card-2025-title">
             <i class="bi bi-lightbulb text-warning"></i>
-            <%= t('.tips_title', default: 'Tips for Best Results') %>
+            <%= t('.tips_title') %>
           </h3>
         </div>
         <div class="card-2025-body">
@@ -185,10 +185,10 @@
               </div>
               <div>
                 <h4 class="tip-title-2025">
-                  <%= t('.tip_quality_title', default: 'Use High-Quality Scans') %>
+                  <%= t('.tip_quality_title') %>
                 </h4>
                 <p class="tip-text-2025">
-                  <%= t('.tip_quality_text', default: 'Clear, high-resolution PDFs with good contrast work best. Avoid blurry or low-quality photos.') %>
+                  <%= t('.tip_quality_text') %>
                 </p>
               </div>
             </div>
@@ -199,10 +199,10 @@
               </div>
               <div>
                 <h4 class="tip-title-2025">
-                  <%= t('.tip_format_title', default: 'Standard Menu Layout') %>
+                  <%= t('.tip_format_title') %>
                 </h4>
                 <p class="tip-text-2025">
-                  <%= t('.tip_format_text', default: 'Menus with clear sections and item names separated from prices work best. Our AI can handle most layouts.') %>
+                  <%= t('.tip_format_text') %>
                 </p>
               </div>
             </div>
@@ -213,10 +213,10 @@
               </div>
               <div>
                 <h4 class="tip-title-2025">
-                  <%= t('.tip_language_title', default: 'Multiple Languages Supported') %>
+                  <%= t('.tip_language_title') %>
                 </h4>
                 <p class="tip-text-2025">
-                  <%= t('.tip_language_text', default: 'We support menus in English, Italian, Spanish, French, and more. Multi-language menus work too!') %>
+                  <%= t('.tip_language_text') %>
                 </p>
               </div>
             </div>
@@ -410,7 +410,7 @@ document.addEventListener('turbo:load', function() {
 
   function handleFile(file) {
     if (file.type !== 'application/pdf') {
-      alert('Please select a PDF file');
+      alert('<%= j t('.pdf_invalid_js') %>');
       return;
     }
 

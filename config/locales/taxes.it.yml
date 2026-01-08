@@ -6,17 +6,35 @@ it:
       deleted: Tassa eliminata con successo.
       updated: Tassa aggiornata con successo.
     edit:
-      tax: Tassa
-    form:
-      delete: Elimina
-      errors: Errori
-      save: Salva
-      sure: Sei sicuro?
-    index:
-      tax: Tassa
       taxes: Tasse
+      edit_tax: Modifica Tassa
+      description: Aggiorna i dettagli della tassa
+      cancel: Annulla
+      confirm_delete: Eliminare questa tassa?
+      delete: Elimina
+      tax_details: Dettagli Tassa
+    form:
+      name: Nome tassa
+      name_placeholder: es. IVA, Tassa vendita, GST
+      name_help: Nome visualizzato per questa tassa
+      tax_type: Tipo tassa
+      tax_type_help: Seleziona il tipo di tassa
+      tax_percentage: Percentuale tassa
+      tax_percentage_placeholder: es. 8,5
+      tax_percentage_help: Inserisci l'aliquota come percentuale (0-100)
+    index:
+      taxes: Tasse
+      description: Gestisci le aliquote fiscali applicate agli articoli del menù
+      back: Indietro
+      new_tax: Nuova Tassa
+      all_taxes: Tutte le Tasse
     new:
-      tax: Tassa
+      taxes: Tasse
+      new: Nuovo
+      new_tax: Nuova Tassa
+      description: Crea una nuova aliquota fiscale per gli articoli del menù
+      cancel: Annulla
+      tax_details: Dettagli Tassa
     show:
       selectRestaurant: Seleziona un ristorante
       tax: Tassa

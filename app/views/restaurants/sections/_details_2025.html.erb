@@ -9,7 +9,7 @@
 <div class="quick-actions-card<%= ' is-disabled' if restaurant.onboarding_quick_actions_blocked? %>">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions', default: 'Quick Actions') %>
+    <%= t('.quick_actions') %>
   </h2>
 
   <div class="quick-actions-grid">
@@ -19,7 +19,7 @@
         aria: { disabled: restaurant.onboarding_quick_actions_blocked? },
         tabindex: (restaurant.onboarding_quick_actions_blocked? ? -1 : nil) do %>
       <i class="bi bi-plus-circle"></i>
-      <span><%= t('.new_menu', default: 'New Menu') %></span>
+      <span><%= t('.new_menu') %></span>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'import'),
@@ -28,7 +28,7 @@
         aria: { disabled: restaurant.onboarding_quick_actions_blocked? },
         tabindex: (restaurant.onboarding_quick_actions_blocked? ? -1 : nil) do %>
       <i class="bi bi-file-earmark-arrow-up"></i>
-      <span><%= t('.import_menu', default: 'Import Menu') %></span>
+      <span><%= t('.import_menu') %></span>
     <% end %>
 
     <!-- Status Toggle Quick Action -->
@@ -44,14 +44,14 @@
         <%= hidden_field_tag :status, 'inactive' %>
         <button type="submit" class="quick-action-btn quick-action-btn-secondary" data-testid="restaurant-status-toggle-btn" <%= 'disabled' if restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>>
           <i class="bi bi-toggle2-off"></i>
-          <span><%= t('.active', default: 'Active') %></span>
+          <span><%= t('.active') %></span>
         </button>
       <% else %>
         <%= hidden_field_tag 'restaurant[status]', 'active' %>
         <%= hidden_field_tag :status, 'active' %>
         <button type="submit" class="quick-action-btn" data-testid="restaurant-status-toggle-btn" <%= 'disabled' if restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>>
           <i class="bi bi-toggle2-on"></i>
-          <span><%= t('.inactive', default: 'Inactive') %></span>
+          <span><%= t('.inactive') %></span>
         </button>
       <% end %>
     <% end %>
@@ -86,7 +86,7 @@
 <div class="overview-stats-card" data-testid="overview-stats-card">
   <h2 class="quick-actions-title">
     <i class="bi bi-graph-up"></i>
-    <%= t('.overview', default: 'Overview') %>
+    <%= t('.overview') %>
   </h2>
 
   <div class="overview-stats-grid">
@@ -94,21 +94,21 @@
                 class: 'stat-item text-decoration-none',
                 data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'overview-menus-link' } do %>
       <span class="stat-value"><%= restaurant.menus.count %></span>
-      <span class="stat-label"><%= t('.menus', default: 'Menus') %></span>
+      <span class="stat-label"><%= t('.menus') %></span>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'tables'),
                 class: 'stat-item text-decoration-none',
                 data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'overview-tables-link' } do %>
       <span class="stat-value"><%= restaurant.tablesettings.count %></span>
-      <span class="stat-label"><%= t('.tables', default: 'Tables') %></span>
+      <span class="stat-label"><%= t('.tables') %></span>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'staff'),
                 class: 'stat-item text-decoration-none',
                 data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'overview-staff-link' } do %>
       <span class="stat-value"><%= restaurant.employees.count %></span>
-      <span class="stat-label"><%= t('.staff', default: 'Staff') %></span>
+      <span class="stat-label"><%= t('.staff') %></span>
     <% end %>
   </div>
 </div>
@@ -117,7 +117,7 @@
 <div class="content-card-2025" data-testid="restaurant-details-card">
   <h2 class="content-card-title">
     <i class="bi bi-building"></i>
-    <%= t('.restaurant_details', default: 'Restaurant Details') %>
+    <%= t('.restaurant_details') %>
   </h2>
 
   <%= restaurant_form_with(
@@ -135,42 +135,42 @@
       ) do |form| %>
     <div class="form-group-2025 mb-4">
       <%= form.label :name, class: 'form-label-2025' do %>
-        <%= t('activerecord.attributes.restaurant.name', default: 'Restaurant Name') %>
+        <%= t('activerecord.attributes.restaurant.name') %>
         <span class="text-danger">*</span>
       <% end %>
       <%= form.text_field :name,
           class: 'form-control-2025',
-          placeholder: t('.name_placeholder', default: 'e.g., Pizza Place'),
+          placeholder: t('.name_placeholder'),
           required: true,
           data: { testid: 'restaurant-name-input' } %>
       <div class="form-help-2025">
-        <%= t('.name_help', default: 'This is how customers will see your restaurant') %>
+        <%= t('.name_help') %>
       </div>
     </div>
 
     <div class="form-group-2025 mb-4">
       <%= form.label :description, class: 'form-label-2025 d-inline-flex align-items-center gap-2' do %>
-        <%= t('activerecord.attributes.restaurant.description', default: 'Description') %>
+        <%= t('activerecord.attributes.restaurant.description') %>
         <span class="form-autosave-inline small text-muted"></span>
       <% end %>
       <%= form.text_area :description,
           class: 'form-control-2025',
           rows: 4,
-          placeholder: t('.description_placeholder', default: 'Describe your restaurant, cuisine, and what makes it special...'),
+          placeholder: t('.description_placeholder'),
           data: { testid: 'restaurant-description-input' } %>
       <div class="form-help-2025">
-        <%= t('.description_help', default: 'A brief description that appears on your menu') %>
+        <%= t('.description_help') %>
       </div>
     </div>
 
     <div class="form-group-2025 mb-4">
       <%= form.label :currency, class: 'form-label-2025 d-inline-flex align-items-center gap-2' do %>
-        <%= t('activerecord.attributes.restaurant.currency', default: 'Currency') %>
+        <%= t('activerecord.attributes.restaurant.currency') %>
         <span class="form-autosave-inline small text-muted"></span>
       <% end %>
       <%= currency_select(form, :currency) %>
       <div class="form-help-2025">
-        <%= t('.currency_help', default: 'Currency for all prices') %>
+        <%= t('.currency_help') %>
       </div>
     </div>
   <% end %>
@@ -180,39 +180,39 @@
 <div class="content-card-2025 py-4" data-testid="restaurant-address-card">
   <h2 class="content-card-title">
     <i class="bi bi-geo-alt"></i>
-    <%= t('.location', default: 'Location & Address') %>
+    <%= t('.location') %>
   </h2>
 
   <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
     <div class="form-group-2025 mb-4">
       <%= form.label :address1, class: 'form-label-2025 d-inline-flex align-items-center gap-2' do %>
-        <%= t('activerecord.attributes.restaurant.address', default: 'Street Address') %>
+        <%= t('activerecord.attributes.restaurant.address') %>
         <span class="text-danger">*</span>
         <span class="form-autosave-inline small text-muted"></span>
       <% end %>
       <%= form.text_field :address1,
           class: 'form-control-2025',
-          placeholder: t('.address_placeholder', default: '123 Main Street'),
+          placeholder: t('.address_placeholder'),
           required: true,
           data: { testid: 'restaurant-address1-input' } %>
       <%= form.hidden_field :latitude %>
       <%= form.hidden_field :longitude %>
       <%= form.hidden_field :country %>
       <div class="form-help-2025">
-        <%= t('.address_help', default: 'Your restaurant\'s street address') %>
+        <%= t('.address_help') %>
       </div>
     </div>
 
     <div class="form-group-2025 mb-4">
       <%= form.label :address2, class: 'form-label-2025' do %>
-        <%= t('activerecord.attributes.restaurant.address2', default: 'Apartment, suite, etc.') %>
+        <%= t('activerecord.attributes.restaurant.address2') %>
       <% end %>
       <%= form.text_field :address2,
           class: 'form-control-2025',
-          placeholder: t('.address2_placeholder', default: 'Suite 100 (optional)'),
+          placeholder: t('.address2_placeholder'),
           data: { testid: 'restaurant-address2-input' } %>
       <div class="form-help-2025">
-        <%= t('.address2_help', default: 'Additional address details') %>
+        <%= t('.address2_help') %>
       </div>
     </div>
 
@@ -220,7 +220,7 @@
       <div class="col-md-6">
         <div class="form-group-2025">
           <%= form.label :city, class: 'form-label-2025 d-inline-flex align-items-center gap-2' do %>
-            <%= t('activerecord.attributes.restaurant.city', default: 'City') %>
+            <%= t('activerecord.attributes.restaurant.city') %>
             <span class="text-danger">*</span>
             <span class="form-autosave-inline small text-muted"></span>
           <% end %>
@@ -234,7 +234,7 @@
       <div class="col-md-3">
         <div class="form-group-2025">
           <%= form.label :state, class: 'form-label-2025' do %>
-            <%= t('activerecord.attributes.restaurant.state', default: 'State/Province') %>
+            <%= t('activerecord.attributes.restaurant.state') %>
           <% end %>
           <%= form.text_field :state,
               class: 'form-control-2025',
@@ -245,7 +245,7 @@
       <div class="col-md-3">
         <div class="form-group-2025">
           <%= form.label :postcode, class: 'form-label-2025' do %>
-            <%= t('activerecord.attributes.restaurant.postcode', default: 'ZIP/Postal Code') %>
+            <%= t('activerecord.attributes.restaurant.postcode') %>
           <% end %>
           <%= form.text_field :postcode,
               class: 'form-control-2025',
@@ -259,7 +259,7 @@
         <div class="location-map-header">
           <i class="bi bi-check-circle-fill text-success me-2"></i>
           <span class="text-success fw-semibold">
-            <%= t('.location_verified', default: 'Location verified') %>
+            <%= t('.location_verified') %>
           </span>
         </div>
         <div id="restaurant-map" class="restaurant-map"
@@ -276,35 +276,35 @@
 <div class="content-card-2025" data-testid="image-context-card">
   <h2 class="content-card-title">
     <i class="bi bi-image"></i>
-    <%= t('.image_context_details', default: 'Image Context Details') %>
+    <%= t('.image_context_details') %>
   </h2>
 
   <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
     <div class="form-group-2025 mb-4">
       <%= form.label :imagecontext, class: 'form-label-2025' do %>
-        <%= t('activerecord.attributes.restaurant.imagecontext', default: 'Image Context') %>
+        <%= t('activerecord.attributes.restaurant.imagecontext') %>
       <% end %>
       <%= form.text_area :imagecontext,
           class: 'form-control-2025',
           rows: 3,
-          placeholder: t('.imagecontext_placeholder', default: 'e.g., Modern Italian restaurant with rustic decor...'),
+          placeholder: t('.imagecontext_placeholder'),
           data: { testid: 'restaurant-imagecontext-input' } %>
       <div class="form-help-2025">
-        <%= t('.imagecontext_help', default: 'Describe your restaurant\'s style and atmosphere to help AI generate appropriate menu item images') %>
+        <%= t('.imagecontext_help') %>
       </div>
     </div>
 
     <div class="form-group-2025 mb-4">
       <%= form.label :image_style_profile, class: 'form-label-2025' do %>
-        <%= t('activerecord.attributes.restaurant.image_style_profile', default: 'Image Style Profile') %>
+        <%= t('activerecord.attributes.restaurant.image_style_profile') %>
       <% end %>
       <%= form.text_area :image_style_profile,
           class: 'form-control-2025',
           rows: 4,
-          placeholder: t('.image_style_profile_placeholder', default: 'e.g., Professional food photography, well-lit, white background, top-down view...'),
+          placeholder: t('.image_style_profile_placeholder'),
           data: { testid: 'restaurant-image-style-input' } %>
       <div class="form-help-2025">
-        <%= t('.image_style_profile_help', default: 'Specify the style and presentation preferences for AI-generated menu item images') %>
+        <%= t('.image_style_profile_help') %>
       </div>
     </div>
   <% end %>
@@ -377,9 +377,9 @@
     mapElement.innerHTML = `
       <div class="d-flex align-items-center justify-content-center h-100 flex-column p-4">
         <div class="spinner-border text-primary mb-3" role="status">
-          <span class="visually-hidden"><%= t('.loading_map', default: 'Loading map...') %></span>
+          <span class="visually-hidden"><%= t('.loading_map') %></span>
         </div>
-        <p class="text-muted mb-0"><%= t('.loading_map', default: 'Loading map...') %></p>
+        <p class="text-muted mb-0"><%= t('.loading_map') %></p>
       </div>
     `;
 
@@ -467,8 +467,8 @@
         <div class="d-flex align-items-center justify-content-center h-100 flex-column p-4">
           <i class="bi bi-map text-3rem text-muted mb-3"></i>
           <p class="mb-0 fw-semibold text-muted">${restaurantName}</p>
-          <p class="mb-0 mt-2 text-muted"><%= t('.location_label', default: 'Location:') %> ${latitude.toFixed(6)}, ${longitude.toFixed(6)}</p>
-          <p class="mt-2 small text-muted"><%= t('.map_error', default: 'Map could not be loaded') %></p>
+          <p class="mb-0 mt-2 text-muted"><%= t('.location_label') %> ${latitude.toFixed(6)}, ${longitude.toFixed(6)}</p>
+          <p class="mt-2 small text-muted"><%= t('.map_error') %></p>
         </div>
       `;
     }

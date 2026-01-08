@@ -9,15 +9,15 @@
 <div class="quick-actions-card">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions', default: 'Quick Actions') %>
+    <%= t('.quick_actions') %>
   </h2>
 
   <div class="quick-actions-grid">
     <button type="button"
             class="quick-action-btn copy-monday-btn"
-            data-copied-text="<%= t('.copied_success', default: 'Copied!') %>">
+            data-copied-text="<%= t('.copied_success') %>">
       <i class="bi bi-files"></i>
-      <span><%= t('.copy_to_all', default: 'Copy Monday to All Days') %></span>
+      <span><%= t('.copy_to_all') %></span>
     </button>
   </div>
 </div>
@@ -26,11 +26,11 @@
 <div class="content-card-2025 py-4">
   <h2 class="content-card-title">
     <i class="bi bi-clock"></i>
-    <%= t('.operating_hours', default: 'Operating Hours') %>
+    <%= t('.operating_hours') %>
   </h2>
 
   <p class="text-muted mb-4">
-    <%= t('.hours_description', default: 'Set your restaurant\'s regular business hours') %>
+    <%= t('.hours_description') %>
   </p>
 
   <form data-controller="auto-save"
@@ -71,7 +71,7 @@
                    <%= 'checked' if is_closed %>
                    data-day="<%= day %>" />
             <label class="form-check-label text-muted" for="closed_<%= day %>">
-              <%= t('.closed', default: 'Closed') %>
+              <%= t('.closed') %>
             </label>
           </div>
         </div>
@@ -482,7 +482,7 @@
         // Show success message
         const btn = this;
         const originalText = btn.innerHTML;
-        const copiedText = btn.dataset.copiedText || 'Copied!';
+        const copiedText = btn.dataset.copiedText || '<%= j t('.copied_success') %>';
         btn.innerHTML = `<i class="bi bi-check-circle-fill"></i> ${copiedText}`;
         btn.classList.remove('btn-2025-secondary');
         btn.classList.add('btn-2025-primary');

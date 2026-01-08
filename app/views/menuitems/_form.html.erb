@@ -96,7 +96,7 @@
                 <%= image_tag image_src, class: 'img-thumbnail menuitem-image-preview-2025', alt: menuitem.name %>
               <% else %>
                 <div class="text-muted">
-                  <%= t('.no_image', default: 'No image yet') %>
+                  <%= t('.no_image') %>
                 </div>
               <% end %>
             </div>
@@ -119,7 +119,7 @@
                   <%= form.check_box :remove_image, class: 'form-check-input' %>
                   <%= form.label :remove_image, class: 'form-check-label' do %>
                     <i class="bi bi-trash"></i>
-                    <%= t('common.remove', default: 'Remove') %>
+                    <%= t('common.remove') %>
                   <% end %>
                 </div>
 
@@ -153,7 +153,7 @@
                         initial_image_url: initial_image_url,
                       } do %>
                     <i class="bi bi-stars"></i>
-                    <%= t('.generateImage', default: 'Generate with AI') %>
+                    <%= t('.generateImage') %>
                   <% end %>
                 <% end %>
               </div>
@@ -210,7 +210,7 @@
           <div class="col-12">
             <%= form.text_field :price, class: 'form-control' %>
             <% if menusection.tasting_menu? %>
-              <small class="text-muted">This price is ignored in tasting menu sections. Use supplement below.</small>
+              <small class="text-muted"><%= t('.tasting_price_ignored') %></small>
             <% end %>
           </div>
         </div>
@@ -219,7 +219,7 @@
 
     <div class="card-2025 mb-3">
       <div class="card-2025-header">
-        <h4 class="card-2025-title mb-0"><%= t('.alcohol_settings', default: 'Alcohol Settings') %></h4>
+        <h4 class="card-2025-title mb-0"><%= t('.alcohol_settings') %></h4>
       </div>
       <div class="card-2025-body">
         <div class="form-group row">
@@ -238,7 +238,7 @@
           <div class="col-12">
             <div class="form-check form-switch">
               <%= form.check_box :alcoholic, class: 'form-check-input', role: 'switch' %>
-              <small class="text-muted d-block"><%= t('.alcoholic_help', default: 'Check if this item contains alcohol.') %></small>
+              <small class="text-muted d-block"><%= t('.alcoholic_help') %></small>
             </div>
           </div>
         </div>
@@ -249,10 +249,10 @@
           </div>
           <div class="col-12">
             <div class="input-group">
-              <%= form.number_field :abv, class: 'form-control', step: 0.1, min: 0, max: 100, placeholder: 'e.g. 13.5' %>
+              <%= form.number_field :abv, class: 'form-control', step: 0.1, min: 0, max: 100, placeholder: t('.abv_placeholder') %>
               <span class="input-group-text">%</span>
             </div>
-            <small class="text-muted"><%= t('.abv_help', default: 'Alcohol by volume (0–100). Leave blank for non-alcoholic.') %></small>
+            <small class="text-muted"><%= t('.abv_help') %></small>
           </div>
         </div>
         <div class="spacing-sm"></div>
@@ -263,17 +263,17 @@
           <div class="col-12">
             <%= form.select :alcohol_classification,
                   options_for_select([
-                    ['wine','wine'],
-                    ['beer','beer'],
-                    ['spirit','spirit'],
-                    ['cocktail','cocktail'],
-                    ['liqueur','liqueur'],
-                    ['other','other'],
-                    ['non_alcoholic','non_alcoholic']
+                    [t('.classification_wine'), 'wine'],
+                    [t('.classification_beer'), 'beer'],
+                    [t('.classification_spirit'), 'spirit'],
+                    [t('.classification_cocktail'), 'cocktail'],
+                    [t('.classification_liqueur'), 'liqueur'],
+                    [t('.classification_other'), 'other'],
+                    [t('.classification_non_alcoholic'), 'non_alcoholic']
                   ], form.object.alcohol_classification),
                   { include_blank: true },
                   { class: 'form-control' } %>
-            <small class="text-muted"><%= t('.classification_help', default: 'Choose a category. Use non_alcoholic for 0.0% variants.') %></small>
+            <small class="text-muted"><%= t('.classification_help') %></small>
           </div>
         </div>
         <div class="spacing-sm"></div>
@@ -282,7 +282,7 @@
             <%= form.label :alcohol_notes, class: 'col-form-label' %>
           </div>
           <div class="col-12">
-            <%= form.text_area :alcohol_notes, class: 'form-control', placeholder: t('.alcohol_notes_ph', default: 'Optional notes, e.g. contains rum') %>
+            <%= form.text_area :alcohol_notes, class: 'form-control', placeholder: t('.alcohol_notes_ph') %>
           </div>
         </div>
       </div>
@@ -290,25 +290,25 @@
   <% if menusection.tasting_menu? %>
     <div class="form-group row">
       <div class="col-12">
-        <h4><%= t('.tasting_item_settings', default: 'Tasting Item Settings') %></h4>
+        <h4><%= t('.tasting_item_settings') %></h4>
       </div>
     </div>
     <div class="spacing-sm"></div>
     <div class="form-group row">
       <div class="col-12">
-        <span><%= t('.tasting_optional', default: 'Optional Course') %></span>
+        <span><%= t('.tasting_optional') %></span>
       </div>
       <div class="col-12">
         <div class="form-check form-switch">
           <%= form.check_box :tasting_optional, class: 'form-check-input', role: 'switch' %>
-          <small class="text-muted"><%= t('.tasting_optional_help', default: 'If checked, this course is optional (guest may skip).') %></small>
+          <small class="text-muted"><%= t('.tasting_optional_help') %></small>
         </div>
       </div>
     </div>
     <div class="spacing-sm"></div>
     <div class="form-group row">
       <div class="col-12">
-        <span><%= t('.tasting_supplement', default: 'Supplement (cents)') %></span>
+        <span><%= t('.tasting_supplement') %></span>
       </div>
       <div class="col-12">
         <div class="row g-2">
@@ -320,33 +320,33 @@
             <input class="form-control" value="<%= menu.restaurant.currency %>" disabled>
           </div>
         </div>
-        <small class="text-muted"><%= t('.tasting_supplement_help', default: 'Leave blank or 0 for included; set an amount for add-on pricing.') %></small>
+        <small class="text-muted"><%= t('.tasting_supplement_help') %></small>
       </div>
     </div>
     <div class="spacing-sm"></div>
     <div class="form-group row">
       <div class="col-12">
-        <span><%= t('.course_order', default: 'Course Order') %></span>
+        <span><%= t('.course_order') %></span>
       </div>
       <div class="col-12">
         <%= form.number_field :course_order, class: 'form-control', min: 1, step: 1 %>
-        <small class="text-muted"><%= t('.course_order_help', default: 'Optional: specify serving sequence within the tasting.') %></small>
+        <small class="text-muted"><%= t('.course_order_help') %></small>
       </div>
     </div>
     <div class="spacing-sm"></div>
     <div class="form-group row">
       <div class="col-12">
-        <span><%= t('.visibility', default: 'Visibility') %></span>
+        <span><%= t('.visibility') %></span>
       </div>
       <div class="col-12">
         <div class="form-check">
           <%= form.check_box :hidden, class: 'form-check-input', id: 'menuitem_hidden' %>
-          <label class="form-check-label" for="menuitem_hidden"><%= t('.hidden', default: 'Hidden (not shown on smartmenu)') %></label>
+          <label class="form-check-label" for="menuitem_hidden"><%= t('.hidden') %></label>
         </div>
         <div class="form-check mt-2">
           <%= form.check_box :tasting_carrier, class: 'form-check-input', id: 'menuitem_tasting_carrier' %>
-          <label class="form-check-label" for="menuitem_tasting_carrier"><%= t('.tasting_carrier', default: 'Use as Tasting Carrier') %></label>
-          <div><small class="text-muted"><%= t('.tasting_carrier_help', default: 'Only one carrier per tasting section. Carrier items are automatically hidden.') %></small></div>
+          <label class="form-check-label" for="menuitem_tasting_carrier"><%= t('.tasting_carrier') %></label>
+          <div><small class="text-muted"><%= t('.tasting_carrier_help') %></small></div>
         </div>
       </div>
     </div>

@@ -10,17 +10,17 @@
   <h2 class="content-card-title d-flex align-items-center justify-content-between flex-wrap gap-2">
     <span>
       <i class="bi bi-graph-up"></i>
-      <%= t('.ordering_dashboard', default: 'Ordering Dashboard') %>
+      <%= t('.ordering_dashboard') %>
     </span>
     <div class="d-flex align-items-center gap-2">
       <select class="form-select form-select-sm" id="od-time-range">
-        <option value="today"><%= t('.today', default: 'Today') %></option>
-        <option value="yesterday"><%= t('.yesterday', default: 'Yesterday') %></option>
-        <option value="last7"><%= t('.last_7_days', default: 'Last 7 Days') %></option>
-        <option value="last28" selected><%= t('.last_28_days', default: 'Last 28 Days') %></option>
-        <option value="mtd"><%= t('.mtd', default: 'Month to Date') %></option>
-        <option value="last_month"><%= t('.last_month', default: 'Last Month') %></option>
-        <option value="custom"><%= t('.custom', default: 'Custom…') %></option>
+        <option value="today"><%= t('.today') %></option>
+        <option value="yesterday"><%= t('.yesterday') %></option>
+        <option value="last7"><%= t('.last_7_days') %></option>
+        <option value="last28" selected><%= t('.last_28_days') %></option>
+        <option value="mtd"><%= t('.mtd') %></option>
+        <option value="last_month"><%= t('.last_month') %></option>
+        <option value="custom"><%= t('.custom') %></option>
       </select>
       <div id="od-custom-range" class="d-none">
         <input type="date" class="form-control form-control-sm" id="od-start">
@@ -28,7 +28,7 @@
       </div>
       <div class="form-check form-switch">
         <input class="form-check-input" type="checkbox" id="od-compare">
-        <label class="form-check-label" for="od-compare"><%= t('.compare', default: 'Compare previous period') %></label>
+        <label class="form-check-label" for="od-compare"><%= t('.compare') %></label>
       </div>
     </div>
   </h2>
@@ -36,39 +36,39 @@
   <!-- Filters row -->
   <div class="row g-2 mb-3">
     <div class="col-12 col-md-3">
-      <label class="form-label mb-1"><%= t('.menu', default: 'Menu') %></label>
+      <label class="form-label mb-1"><%= t('.menu') %></label>
       <select class="form-select form-select-sm" id="od-filter-menu">
-        <option value="all"><%= t('.all', default: 'All') %></option>
+        <option value="all"><%= t('.all') %></option>
         <% restaurant.menus.each do |m| %>
           <option value="<%= m.id %>"><%= m.name %></option>
         <% end %>
       </select>
     </div>
     <div class="col-12 col-md-3">
-      <label class="form-label mb-1"><%= t('.employee', default: 'Employee') %></label>
+      <label class="form-label mb-1"><%= t('.employee') %></label>
       <select class="form-select form-select-sm" id="od-filter-employee">
-        <option value="all"><%= t('.all', default: 'All') %></option>
+        <option value="all"><%= t('.all') %></option>
         <% restaurant.employees.each do |e| %>
           <option value="<%= e.id %>"><%= e.user&.name || e.user&.email || "##{e.id}" %></option>
         <% end %>
       </select>
     </div>
     <div class="col-12 col-md-3">
-      <label class="form-label mb-1"><%= t('.table', default: 'Table') %></label>
+      <label class="form-label mb-1"><%= t('.table') %></label>
       <select class="form-select form-select-sm" id="od-filter-table">
-        <option value="all"><%= t('.all', default: 'All') %></option>
+        <option value="all"><%= t('.all') %></option>
         <% restaurant.tablesettings.each do |tset| %>
           <option value="<%= tset.id %>"><%= tset.name %></option>
         <% end %>
       </select>
     </div>
     <div class="col-12 col-md-3">
-      <label class="form-label mb-1"><%= t('.status', default: 'Status') %></label>
+      <label class="form-label mb-1"><%= t('.status') %></label>
       <select class="form-select form-select-sm" id="od-filter-status">
-        <option value="completed"><%= t('.completed', default: 'Completed') %></option>
-        <option value="open"><%= t('.open', default: 'Open') %></option>
-        <option value="cancelled"><%= t('.cancelled', default: 'Cancelled') %></option>
-        <option value="all" selected><%= t('.all', default: 'All') %></option>
+        <option value="completed"><%= t('.completed') %></option>
+        <option value="open"><%= t('.open') %></option>
+        <option value="cancelled"><%= t('.cancelled') %></option>
+        <option value="all" selected><%= t('.all') %></option>
       </select>
     </div>
   </div>
@@ -76,17 +76,17 @@
   <!-- KPI cards -->
   <div class="od-kpi-grid mb-3">
     <% [
-      ['gross', 'Gross Revenue'],
-      ['net', 'Net Revenue'],
-      ['taxes', 'Taxes'],
-      ['tips', 'Tips'],
-      ['service', 'Service Charges'],
-      ['orders', 'Orders'],
-      ['items', 'Items Sold'],
-      ['aov', 'AOV']
-    ].each do |key, title| %>
+      'gross',
+      'net',
+      'taxes',
+      'tips',
+      'service',
+      'orders',
+      'items',
+      'aov'
+    ].each do |key| %>
       <div class="od-kpi-card" data-kpi="<%= key %>">
-        <div class="od-kpi-title"><%= t(".kpi_#{key}", default: title) %></div>
+        <div class="od-kpi-title"><%= t(".kpi_#{key}") %></div>
         <div class="od-kpi-value" data-kpi-value>—</div>
         <div class="od-kpi-delta text-muted" data-kpi-delta>—</div>
       </div>
@@ -97,37 +97,37 @@
   <div class="row g-3">
     <div class="col-12 col-xl-6">
       <div class="od-chart-card">
-        <div class="od-chart-title"><%= t('.revenue_over_time', default: 'Revenue Over Time') %></div>
+        <div class="od-chart-title"><%= t('.revenue_over_time') %></div>
         <canvas class="od-chart-canvas" id="od-chart-revenue"></canvas>
       </div>
     </div>
     <div class="col-12 col-xl-6">
       <div class="od-chart-card">
-        <div class="od-chart-title"><%= t('.orders_over_time', default: 'Orders Over Time') %></div>
+        <div class="od-chart-title"><%= t('.orders_over_time') %></div>
         <canvas class="od-chart-canvas" id="od-chart-orders"></canvas>
       </div>
     </div>
     <div class="col-12 col-xl-6">
       <div class="od-chart-card">
-        <div class="od-chart-title"><%= t('.menu_mix', default: 'Menu Mix') %></div>
+        <div class="od-chart-title"><%= t('.menu_mix') %></div>
         <canvas class="od-chart-canvas" id="od-chart-menu-mix"></canvas>
       </div>
     </div>
     <div class="col-12 col-xl-6">
       <div class="od-chart-card">
-        <div class="od-chart-title"><%= t('.top_items', default: 'Top Items') %></div>
+        <div class="od-chart-title"><%= t('.top_items') %></div>
         <canvas class="od-chart-canvas" id="od-chart-top-items"></canvas>
       </div>
     </div>
     <div class="col-12 col-xl-6">
       <div class="od-chart-card">
-        <div class="od-chart-title"><%= t('.staff_performance', default: 'Staff Performance') %></div>
+        <div class="od-chart-title"><%= t('.staff_performance') %></div>
         <canvas class="od-chart-canvas" id="od-chart-staff"></canvas>
       </div>
     </div>
     <div class="col-12 col-xl-6">
       <div class="od-chart-card">
-        <div class="od-chart-title"><%= t('.table_utilization', default: 'Table Utilization') %></div>
+        <div class="od-chart-title"><%= t('.table_utilization') %></div>
         <canvas class="od-chart-canvas" id="od-chart-tables"></canvas>
       </div>
     </div>
@@ -138,8 +138,8 @@
     <div class="col-12">
       <div class="od-table-card">
         <div class="od-table-title d-flex justify-content-between align-items-center">
-          <span><%= t('.orders_table', default: 'Orders') %></span>
-          <button id="od-export-orders" class="btn-2025 btn-2025-outline btn-2025-sm"><%= t('.export_csv', default: 'Export CSV') %></button>
+          <span><%= t('.orders_table') %></span>
+          <button id="od-export-orders" class="btn-2025 btn-2025-outline btn-2025-sm"><%= t('.export_csv') %></button>
         </div>
         <div id="od-table-orders"></div>
       </div>
@@ -147,8 +147,8 @@
     <div class="col-12">
       <div class="od-table-card">
         <div class="od-table-title d-flex justify-content-between align-items-center">
-          <span><%= t('.items_table', default: 'Items') %></span>
-          <button id="od-export-items" class="btn-2025 btn-2025-outline btn-2025-sm"><%= t('.export_csv', default: 'Export CSV') %></button>
+          <span><%= t('.items_table') %></span>
+          <button id="od-export-items" class="btn-2025 btn-2025-outline btn-2025-sm"><%= t('.export_csv') %></button>
         </div>
         <div id="od-table-items"></div>
       </div>

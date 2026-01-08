@@ -14,11 +14,11 @@
 <div class="content-card-2025 py-4">
   <h2 class="content-card-title">
     <i class="bi bi-grid"></i>
-    <%= t('.all_qr_codes_for_menu', default: 'All QR Codes for this Menu') %>
+    <%= t('.all_qr_codes_for_menu') %>
   </h2>
 
   <p class="text-muted mb-4">
-    <%= t('.all_qr_codes_for_menu_desc', default: 'Includes the general menu QR (no table) and one QR per table for this menu.') %>
+    <%= t('.all_qr_codes_for_menu_desc') %>
   </p>
 
   <!-- Provide shared data for QR generation (used by RestaurantModule / legacy initialiser) -->
@@ -31,14 +31,14 @@
   <% menu_only = smartmenus.find { |sm| sm.tablesetting_id.nil? } %>
   <% menu_only_slug = menu_only&.slug || menu.smartmenu&.slug %>
   <% if menu_only_slug %>
-    <h3 class="mt-2 mb-2"><i class="bi bi-list-ul me-2"></i><%= t('.menu_only_qr', default: 'Menu QR (All Tables)') %></h3>
+    <h3 class="mt-2 mb-2"><i class="bi bi-list-ul me-2"></i><%= t('.menu_only_qr') %></h3>
     <div class="qr-cards-grid">
       <div class="qr-card qr-container">
         <div class="qr-card-header">
           <div class="qr-meta">
             <div class="qr-meta-line qr-restaurant-name"><%= restaurant.name %></div>
             <div class="qr-meta-line qr-menu-name"><%= menu.name %></div>
-            <div class="qr-meta-line qr-table-name"><%= t('.all_tables', default: 'All Tables') %></div>
+            <div class="qr-meta-line qr-table-name"><%= t('.all_tables') %></div>
           </div>
         </div>
         <div class="d-none qrSlug"><%= menu_only_slug %></div>
@@ -50,7 +50,7 @@
         <div class="qr-card-footer">
           <div class="qr-actions">
             <button type="button" class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2" onclick="printQrCard(this)">
-              <i class="bi bi-printer"></i> <%= t('.print', default: 'Print') %>
+              <i class="bi bi-printer"></i> <%= t('.print') %>
             </button>
           </div>
         </div>
@@ -61,7 +61,7 @@
   <!-- Per-table QRs for this menu -->
   <% per_table = smartmenus.select { |sm| sm.tablesetting_id.present? } %>
   <% if per_table.any? %>
-    <h3 class="mt-4 mb-2"><i class="bi bi-grid-3x3-gap me-2"></i><%= t('.menu_table_qr', default: 'Table QR Codes for this Menu') %></h3>
+    <h3 class="mt-4 mb-2"><i class="bi bi-grid-3x3-gap me-2"></i><%= t('.menu_table_qr') %></h3>
     <div class="qr-cards-grid">
       <% per_table.each do |sm| %>
         <div class="qr-card qr-container">
@@ -81,7 +81,7 @@
           <div class="qr-card-footer">
             <div class="qr-actions">
               <button type="button" class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2" onclick="printQrCard(this)">
-                <i class="bi bi-printer"></i> <%= t('.print', default: 'Print') %>
+                <i class="bi bi-printer"></i> <%= t('.print') %>
               </button>
             </div>
           </div>
@@ -93,7 +93,7 @@
   <% if !menu_only && per_table.blank? %>
     <div class="alert alert-info mt-3">
       <i class="bi bi-info-circle me-2"></i>
-      <%= t('.no_qr_found', default: 'No QR codes found yet. Ensure Smartmenus are generated for this menu and tables.') %>
+      <%= t('.no_qr_found') %>
     </div>
   <% end %>
 
@@ -138,11 +138,11 @@
 <div class="content-card-2025 py-4">
   <h2 class="content-card-title">
     <i class="bi bi-download"></i>
-    <%= t('.download_options', default: 'Download Options') %>
+    <%= t('.download_options') %>
   </h2>
 
   <p class="text-muted mb-4">
-    <%= t('.download_description', default: 'Download your QR code in different formats for printing') %>
+    <%= t('.download_description') %>
   </p>
 
   <div class="download-grid">
@@ -150,10 +150,10 @@
       <div class="download-icon">
         <i class="bi bi-file-earmark-image"></i>
       </div>
-      <h5><%= t('.png_format', default: 'PNG Image') %></h5>
-      <p class="text-sm text-muted"><%= t('.png_desc', default: 'High quality for digital use') %></p>
+      <h5><%= t('.png_format') %></h5>
+      <p class="text-sm text-muted"><%= t('.png_desc') %></p>
       <button class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2">
-        <i class="bi bi-download"></i> <%= t('.download', default: 'Download') %>
+        <i class="bi bi-download"></i> <%= t('.download') %>
       </button>
     </div>
 
@@ -161,10 +161,10 @@
       <div class="download-icon">
         <i class="bi bi-file-earmark-code"></i>
       </div>
-      <h5><%= t('.svg_format', default: 'SVG Vector') %></h5>
-      <p class="text-sm text-muted"><%= t('.svg_desc', default: 'Scalable for any size') %></p>
+      <h5><%= t('.svg_format') %></h5>
+      <p class="text-sm text-muted"><%= t('.svg_desc') %></p>
       <button class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2">
-        <i class="bi bi-download"></i> <%= t('.download', default: 'Download') %>
+        <i class="bi bi-download"></i> <%= t('.download') %>
       </button>
     </div>
 
@@ -172,10 +172,10 @@
       <div class="download-icon">
         <i class="bi bi-file-earmark-pdf"></i>
       </div>
-      <h5><%= t('.pdf_format', default: 'PDF Document') %></h5>
-      <p class="text-sm text-muted"><%= t('.pdf_desc', default: 'Print-ready format') %></p>
+      <h5><%= t('.pdf_format') %></h5>
+      <p class="text-sm text-muted"><%= t('.pdf_desc') %></p>
       <button class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2">
-        <i class="bi bi-download"></i> <%= t('.download', default: 'Download') %>
+        <i class="bi bi-download"></i> <%= t('.download') %>
       </button>
     </div>
   </div>
@@ -185,28 +185,28 @@
 <div class="content-card-2025 py-4">
   <h2 class="content-card-title">
     <i class="bi bi-lightbulb"></i>
-    <%= t('.usage_tips', default: 'Usage Tips') %>
+    <%= t('.usage_tips') %>
   </h2>
 
   <div class="tips-list">
     <div class="tip-item">
       <i class="bi bi-check-circle text-success"></i>
-      <p><%= t('.tip_1', default: 'Print QR codes on table tents or placemats for easy customer access') %></p>
+      <p><%= t('.tip_1') %></p>
     </div>
 
     <div class="tip-item">
       <i class="bi bi-check-circle text-success"></i>
-      <p><%= t('.tip_2', default: 'Include QR code on receipts and business cards') %></p>
+      <p><%= t('.tip_2') %></p>
     </div>
 
     <div class="tip-item">
       <i class="bi bi-check-circle text-success"></i>
-      <p><%= t('.tip_3', default: 'Place QR codes near your entrance for takeout customers') %></p>
+      <p><%= t('.tip_3') %></p>
     </div>
 
     <div class="tip-item">
       <i class="bi bi-check-circle text-success"></i>
-      <p><%= t('.tip_4', default: 'Test the QR code regularly to ensure it works correctly') %></p>
+      <p><%= t('.tip_4') %></p>
     </div>
   </div>
 </div>
@@ -312,7 +312,7 @@
       const cleanProtocol = protocol.textContent.trim().replace(/:$/, '');
       const url = `${cleanProtocol}://${host.textContent.trim()}/m/${slug.textContent.trim()}`;
       navigator.clipboard.writeText(url).then(() => {
-        alert('<%= t('.url_copied', default: 'URL copied to clipboard!') %>');
+        alert('<%= j t('.url_copied') %>');
       });
     }
   }
@@ -427,7 +427,7 @@
           <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Print QR</title>
+            <title><%= j t('.print_qr_title') %></title>
             <style>
               :root { --space-2: 8px; --space-3: 12px; --space-4: 16px; }
               html, body { height: 100%; }

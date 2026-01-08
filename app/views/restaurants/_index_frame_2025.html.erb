@@ -13,7 +13,7 @@
     <%= link_to restaurants_path(filter: 'all', q: q),
         class: "nav-link #{'active' if filter == 'all'}",
         data: { turbo_frame: 'restaurants_content', turbo_action: 'advance', testid: 'restaurants-filter-all' } do %>
-      <%= t('.all', default: 'All') %>
+      <%= t('.all') %>
       <span class="badge bg-secondary ms-1"><%= counts[:all] %></span>
     <% end %>
   </li>
@@ -21,7 +21,7 @@
     <%= link_to restaurants_path(filter: 'active', q: q),
         class: "nav-link #{'active' if filter == 'active'}",
         data: { turbo_frame: 'restaurants_content', turbo_action: 'advance', testid: 'restaurants-filter-active' } do %>
-      <%= t('.active', default: 'Active') %>
+      <%= t('.active') %>
       <span class="badge bg-success ms-1"><%= counts[:active] %></span>
     <% end %>
   </li>
@@ -29,7 +29,7 @@
     <%= link_to restaurants_path(filter: 'inactive', q: q),
         class: "nav-link #{'active' if filter == 'inactive'}",
         data: { turbo_frame: 'restaurants_content', turbo_action: 'advance', testid: 'restaurants-filter-inactive' } do %>
-      <%= t('.inactive', default: 'Inactive') %>
+      <%= t('.inactive') %>
       <span class="badge bg-warning text-dark ms-1"><%= counts[:inactive] %></span>
     <% end %>
   </li>
@@ -37,7 +37,7 @@
     <%= link_to restaurants_path(filter: 'archived', q: q),
         class: "nav-link #{'active' if filter == 'archived'}",
         data: { turbo_frame: 'restaurants_content', turbo_action: 'advance', testid: 'restaurants-filter-archived' } do %>
-      <%= t('.archived', default: 'Archived') %>
+      <%= t('.archived') %>
       <span class="badge bg-secondary ms-1"><%= counts[:archived] %></span>
     <% end %>
   </li>
@@ -48,10 +48,10 @@
   <% if restaurants.blank? %>
     <div class="text-center py-5">
       <i class="bi bi-shop text-muted" style="font-size:2rem;"></i>
-      <h4 class="mt-2 text-muted"><%= t('.no_restaurants', default: 'No restaurants found') %></h4>
+      <h4 class="mt-2 text-muted"><%= t('.no_restaurants') %></h4>
       <% if q.present? %>
-        <p class="text-muted"><%= t('.no_results_for', default: 'No results for') %> "<%= q %>"</p>
-        <%= link_to t('.clear_search', default: 'Clear search'), restaurants_path(filter: filter), class: 'btn btn-sm btn-outline-secondary', data: { turbo_frame: 'restaurants_content' } %>
+        <p class="text-muted"><%= t('.no_results_for') %> "<%= q %>"</p>
+        <%= link_to t('.clear_search'), restaurants_path(filter: filter), class: 'btn btn-sm btn-outline-secondary', data: { turbo_frame: 'restaurants_content' } %>
       <% end %>
     </div>
   <% end %>
@@ -64,7 +64,7 @@
 
 <!-- Pagination -->
 <% if total_pages.to_i > 1 %>
-  <nav class="mt-3" aria-label="Restaurants pagination">
+  <nav class="mt-3" aria-label="<%= t('.pagination_aria_label') %>">
     <ul class="pagination mb-0">
       <% prev_page = page.to_i - 1 %>
       <li class="page-item <%= 'disabled' if prev_page < 1 %>">
@@ -84,9 +84,9 @@
 <% end %>
 
         <div class="menu-card-meta">
-          <span class="stat-badge"><i class="bi bi-menu-button-wide"></i> <%= restaurant.menus.count %> <%= t('.menus', default: 'menus') %></span>
+          <span class="stat-badge"><i class="bi bi-menu-button-wide"></i> <%= restaurant.menus.count %> <%= t('.menus_count_label') %></span>
           <span class="meta-separator">•</span>
-          <span class="stat-badge"><i class="bi bi-people"></i> <%= restaurant.employees.count %> <%= t('.staff', default: 'staff') %></span>
+          <span class="stat-badge"><i class="bi bi-people"></i> <%= restaurant.employees.count %> <%= t('.staff_count_label') %></span>
         </div>
       </div>
 
@@ -94,11 +94,11 @@
         <!-- Status badge floated to top-right, above dropdown -->
         <div class="menu-status-badge mb-2">
           <% if restaurant.status_before_type_cast == 1 %>
-            <span class="badge bg-success"><i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %></span>
+            <span class="badge bg-success"><i class="bi bi-check-circle"></i> <%= t('.active') %></span>
           <% elsif restaurant.status_before_type_cast == 0 %>
-            <span class="badge bg-warning text-dark"><i class="bi bi-pause"></i> <%= t('.inactive', default: 'Inactive') %></span>
+            <span class="badge bg-warning text-dark"><i class="bi bi-pause"></i> <%= t('.inactive') %></span>
           <% else %>
-            <span class="badge bg-secondary"><i class="bi bi-archive"></i> <%= t('.archived', default: 'Archived') %></span>
+            <span class="badge bg-secondary"><i class="bi bi-archive"></i> <%= t('.archived') %></span>
           <% end %>
         </div>
         <div class="dropdown">
@@ -112,12 +112,12 @@
           <ul class="dropdown-menu dropdown-menu-end">
             <li>
               <%= link_to edit_restaurant_path(restaurant), class: 'dropdown-item', data: { turbo_frame: '_top', testid: "edit-restaurant-#{restaurant.id}-btn" } do %>
-                <i class="bi bi-pencil"></i> <%= t('.edit', default: 'Edit') %>
+                <i class="bi bi-pencil"></i> <%= t('.edit') %>
               <% end %>
             </li>
             <li>
               <%= link_to edit_restaurant_path(restaurant, section: 'menus'), class: 'dropdown-item', data: { turbo_frame: '_top', testid: "restaurant-menus-#{restaurant.id}-btn" } do %>
-                <i class="bi bi-menu-button-wide"></i> <%= t('.menus', default: 'Menus') %>
+                <i class="bi bi-menu-button-wide"></i> <%= t('.menus_action') %>
               <% end %>
             </li>
           </ul>

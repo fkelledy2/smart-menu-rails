@@ -1,0 +1,143 @@
+en:
+  menus:
+    sections:
+      details_2025:
+        quick_actions: Quick Actions
+        preview_staff: Staff View
+        preview_customer: Customer View
+        preview_staff_title: Preview menu as staff (authenticated view)
+        preview_customer_title: Preview menu as customers see it (authenticated as staff but viewing customer interface)
+        availability: Availability
+        default: Default
+        available: Available
+        unavailable: Unavailable
+        generate_images: Generate Images
+        localize_menu: Translations
+        ai_polish: AI Polish
+        active: Active
+        inactive: Inactive
+        menu_details: Menu Details
+        menu_name: Menu Name
+        menu_name_placeholder: e.g., Dinner Menu, Lunch Specials
+        menu_name_help: The name customers will see
+        description: Description
+        description_placeholder: Describe this menu...
+        description_help: Optional description to help customers understand this menu
+        statistics: Menu Statistics
+        sections: Sections
+        items: Items
+        schedules: Schedules
+      settings_2025:
+        feature_toggles: Feature Toggles
+        display_images: Display Images
+        display_images_help: Show menu item images in this menu
+        disabled_at_restaurant: Disabled at restaurant level
+        display_images_popup: Display Images in Popup
+        display_images_popup_help: Open menu item images in a popup modal when clicked
+        allow_ordering: Allow Ordering
+        allow_ordering_help: Enable online ordering for this menu
+        voice_ordering: Voice Ordering
+        voice_ordering_help: Enable customers to order using voice commands on this menu
+        inventory_tracking: Inventory Tracking
+        inventory_tracking_help: Track stock levels for menu items (Coming Soon)
+        settings_info_title: About Menu Settings
+        settings_info_desc: These settings control functionality for this specific menu. Changes are saved automatically.
+        parent_restriction: "Note:"
+        parent_restriction_desc: Settings disabled at the restaurant level cannot be enabled for individual menus. Enable them at the restaurant level first.
+        status: Status
+        status_info: Controls menu visibility
+        images_info: Toggle menu item photos
+        popup_info: Full-screen image viewing
+        ordering_info: Enable customer orders
+        voice_ordering_info: Enable voice commands for ordering
+      sections_2025:
+        quick_actions: Quick Actions
+        add_section: Add Section
+        preview_staff: Preview (Staff)
+        preview_customer: Preview (Customer)
+        preview_staff_title: Preview menu as staff (authenticated view)
+        preview_customer_title: Preview menu as customers see it (authenticated as staff but viewing customer interface)
+        menu_sections: Menu Sections
+        sections_description: Organize your menu into sections like Appetizers, Main Courses, Desserts, etc.
+        name: Name
+        items: Items
+        edit: Edit
+        no_sections: No sections yet
+        no_sections_desc: Add your first section to start building your menu
+        add_first_section: Add First Section
+      items_2025:
+        quick_actions: Quick Actions
+        add_item: Add Menu Item
+        preview_staff: Preview (Staff)
+        preview_customer: Preview (Customer)
+        preview_staff_title: Preview menu as staff (authenticated view)
+        preview_customer_title: Preview menu as customers see it (authenticated as staff but viewing customer interface)
+        menu_items: Menu Items
+        items_description: View and manage all menu items across all sections
+        name: Name
+        price: Price
+        items_count:
+          one: "1 item"
+          other: "%{count} items"
+        tasting_menu: Tasting Menu
+        per_table: (per table)
+        per_person: (per person)
+        has_image_title: Has image - hover to preview
+        included: Included
+        edit: Edit
+        no_items: No items yet
+        no_items_desc: Add sections first, then add items to those sections
+        go_to_sections: Go to Sections
+      design_2025:
+        quick_actions: Quick Actions
+        generate_images: Generate AI Images
+        preview_staff: Preview (Staff)
+        preview_customer: Preview (Customer)
+        preview_staff_title: Preview menu as staff (authenticated view)
+        preview_customer_title: Preview menu as customers see it (authenticated as staff but viewing customer interface)
+        menu_image: Menu Image
+        upload_image: Upload Image
+        image_help: "Hero image for your menu (recommended: 1200x600px)"
+        remove_image: Remove current image
+        pdf_menu: PDF Menu
+        pdf_menu_desc: Upload a PDF version of your menu for customers to download
+        download: Download
+        upload_pdf: Upload PDF
+        pdf_help: Upload a PDF version of your menu
+        remove_pdf: Remove current PDF
+        display_settings: Display Settings
+        show_images: Show Images
+        show_images_desc: Display item images in menu
+        popup_images: Popup Images
+        popup_images_desc: Show larger image when tapped
+      qrcode_2025:
+        all_qr_codes_for_menu: All QR Codes for this Menu
+        all_qr_codes_for_menu_desc: Includes the general menu QR (no table) and one QR per table for this menu.
+        menu_only_qr: Menu QR (All Tables)
+        all_tables: All Tables
+        print: Print
+        menu_table_qr: Table QR Codes for this Menu
+        no_qr_found: No QR codes found yet. Ensure Smartmenus are generated for this menu and tables.
+        download_options: Download Options
+        download_description: Download your QR code in different formats for printing
+        png_format: PNG Image
+        png_desc: High quality for digital use
+        svg_format: SVG Vector
+        svg_desc: Scalable for any size
+        pdf_format: PDF Document
+        pdf_desc: Print-ready format
+        download: Download
+        usage_tips: Usage Tips
+        tip_1: Print QR codes on table tents or placemats for easy customer access
+        tip_2: Include QR code on receipts and business cards
+        tip_3: Place QR codes near your entrance for takeout customers
+        tip_4: Test the QR code regularly to ensure it works correctly
+        url_copied: URL copied to clipboard!
+        print_qr_title: Print QR
+      schedule_2025:
+        quick_actions: Quick Actions
+        copy_to_all: Copy Monday to All Days
+        menu_availabilities: Menu Availabilities
+        availabilities_description: Set when this menu is available to customers throughout the week
+        unavailable: Unavailable
+        copied_success: Copied!

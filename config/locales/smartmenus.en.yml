@@ -107,3 +107,23 @@ en:
         classification: "Class"
         review_needed: "Needs review"
         overrides_hint: "Overrides apply at publish."
+
+    empty_states:
+      no_menu_items: No Menu Items Yet
+      no_menu_description: "We're still adding items to our menu. Please check back soon!"
+      refresh: Refresh
+      cart_empty: Your Cart is Empty
+      cart_empty_description: Start adding delicious items from our menu!
+      browse_menu: Browse Menu
+      no_results: No Results Found
+      no_results_description: "We couldn't find any items matching your search. Try different keywords."
+      no_items_filtered: No Items Match Your Filters
+      no_items_filtered_description: Try adjusting your allergen filters to see more items.
+      adjust_filters: Adjust Filters
+      no_table_selected: Select Your Table
+      no_table_description: Please select a table to start your order.
+      order_complete: Order Submitted!
+      order_complete_description: Your order has been sent to the kitchen. Enjoy your meal!
+      error_occurred: Something Went Wrong
+      error_description: "We're having trouble loading this content. Please try again."
+      try_again: Try Again

@@ -10,12 +10,12 @@
   <div class="mb-4">
     <h2 class="content-card-title mb-0">
       <i class="bi bi-music-note-beamed"></i>
-      <%= t('.jukebox', default: 'Jukebox') %>
+      <%= t('.jukebox') %>
     </h2>
   </div>
 
   <p class="text-muted mb-4">
-    <%= t('.jukebox_description', default: 'Integrate with Spotify to play music in your restaurant and create the perfect atmosphere') %>
+    <%= t('.jukebox_description') %>
   </p>
 
   <!-- Spotify Integration -->
@@ -26,15 +26,15 @@
           <i class="bi bi-spotify"></i>
         </div>
         <div>
-          <h5 class="mb-1"><%= t('.spotify', default: 'Spotify') %></h5>
+          <h5 class="mb-1"><%= t('.spotify') %></h5>
           <p class="text-muted small mb-0">
             <% if restaurant.spotifyaccesstoken.present? %>
               <span class="text-success">
-                <i class="bi bi-check-circle"></i> <%= t('.connected', default: 'Connected') %>
+                <i class="bi bi-check-circle"></i> <%= t('.connected') %>
               </span>
             <% else %>
               <span class="text-muted">
-                <i class="bi bi-x-circle"></i> <%= t('.not_connected', default: 'Not Connected') %>
+                <i class="bi bi-x-circle"></i> <%= t('.not_connected') %>
               </span>
             <% end %>
           </p>
@@ -43,7 +43,7 @@
       <%= link_to "#{restaurant.spotifyAuthUrl}&return_to=#{CGI.escape(edit_restaurant_path(restaurant, section: 'jukebox'))}",
           class: 'btn-2025 btn-2025-outline btn-2025-sm',
           data: { turbo: false } do %>
-        <i class="bi bi-spotify"></i> <%= t('.connect', default: 'Connect') %>
+        <i class="bi bi-spotify"></i> <%= t('.connect') %>
       <% end %>
     </div>
 
@@ -53,13 +53,13 @@
         <div class="col-md-6">
           <div class="form-group-2025">
             <%= form.label :spotifyuserid, class: 'form-label-2025' do %>
-              <%= t('activerecord.attributes.restaurant.spotifyuserid', default: 'Spotify User ID') %>
+              <%= t('activerecord.attributes.restaurant.spotifyuserid') %>
             <% end %>
             <%= form.text_field :spotifyuserid,
                 class: 'form-control-2025',
                 readonly: true,
                 disabled: true,
-                placeholder: t('.not_connected', default: 'Not Connected') %>
+                placeholder: t('.not_connected') %>
           </div>
         </div>
 
@@ -67,13 +67,13 @@
         <div class="col-md-6">
           <div class="form-group-2025">
             <%= form.label :spotifyaccesstoken, class: 'form-label-2025' do %>
-              <%= t('activerecord.attributes.restaurant.spotifyaccesstoken', default: 'Access Token') %>
+              <%= t('activerecord.attributes.restaurant.spotifyaccesstoken') %>
             <% end %>
             <%= form.text_field :spotifyaccesstoken,
                 class: 'form-control-2025',
                 readonly: true,
                 disabled: true,
-                placeholder: t('.not_connected', default: 'Not Connected') %>
+                placeholder: t('.not_connected') %>
           </div>
         </div>
 
@@ -81,13 +81,13 @@
         <div class="col-md-12">
           <div class="form-group-2025">
             <%= form.label :spotifyrefreshtoken, class: 'form-label-2025' do %>
-              <%= t('activerecord.attributes.restaurant.spotifyrefreshtoken', default: 'Refresh Token') %>
+              <%= t('activerecord.attributes.restaurant.spotifyrefreshtoken') %>
             <% end %>
             <%= form.text_field :spotifyrefreshtoken,
                 class: 'form-control-2025',
                 readonly: true,
                 disabled: true,
-                placeholder: t('.not_connected', default: 'Not Connected') %>
+                placeholder: t('.not_connected') %>
           </div>
         </div>
       </div>
@@ -103,7 +103,7 @@
             <div>
               <h5 class="track-title"><%= track.name %></h5>
               <p class="track-artist text-muted">
-                <%= track.artist || t('.unknown_artist', default: 'Unknown Artist') %>
+                <%= track.artist || t('.unknown_artist') %>
               </p>
             </div>
           </div>
@@ -114,10 +114,10 @@
     <div class="text-center py-4">
       <i class="bi bi-music-note-beamed text-muted" style="font-size: 3rem;"></i>
       <p class="text-muted mt-3">
-        <%= t('.no_tracks', default: 'No tracks configured') %>
+        <%= t('.no_tracks') %>
       </p>
       <p class="text-muted">
-        <%= t('.spotify_integration', default: 'Connect your Spotify account to manage your restaurant playlist') %>
+        <%= t('.spotify_integration') %>
       </p>
     </div>
   <% end %>

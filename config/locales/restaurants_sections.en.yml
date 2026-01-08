@@ -2,6 +2,94 @@
 en:
   restaurants:
     sections:
+      details_2025:
+        quick_actions: Quick Actions
+        new_menu: New Menu
+        import_menu: Import Menu
+        active: Active
+        inactive: Inactive
+        overview: Overview
+        menus: Menus
+        tables: Tables
+        staff: Staff
+        restaurant_details: Restaurant Details
+        name_placeholder: e.g., Pizza Place
+        name_help: This is how customers will see your restaurant
+        description_placeholder: Describe your restaurant, cuisine, and what makes it special...
+        description_help: A brief description that appears on your menu
+        currency_help: Currency for all prices
+        location: Location & Address
+        address_placeholder: 123 Main Street
+        address_help: Your restaurant's street address
+        address2_placeholder: Suite 100 (optional)
+        address2_help: Additional address details
+        location_verified: Location verified
+        image_context_details: Image Context Details
+        imagecontext_placeholder: e.g., Modern Italian restaurant with rustic decor...
+        imagecontext_help: Describe your restaurant's style and atmosphere to help AI generate appropriate menu item images
+        image_style_profile_placeholder: e.g., Professional food photography, well-lit, white background, top-down view...
+        image_style_profile_help: Specify the style and presentation preferences for AI-generated menu item images
+        loading_map: Loading map...
+        location_label: "Location:"
+        map_error: Map could not be loaded
+      address_2025:
+        location: Location & Address
+        address_placeholder: 123 Main Street
+        address_help: Your restaurant's street address
+        address2_placeholder: Suite 100 (optional)
+        address2_help: Additional address details
+        location_verified: Location verified
+        delivery_zones: Delivery Zones
+        delivery_zones_help: Define areas where you offer delivery service
+        add_zone: Add Delivery Zone
+        map_loading: Loading map...
+        map_location_label: "Location:"
+        map_load_error: Map could not be loaded
+      wifi_2025:
+        wifi_configuration: WiFi Configuration
+        wifi_description: Configure WiFi settings to generate QR codes for customer access
+        ssid_placeholder: Enter your WiFi network name
+        ssid_help: The name of your WiFi network that customers will connect to
+        password_placeholder: Enter WiFi password
+        password_help: The password customers will need to connect
+        select_encryption: Select encryption...
+        encryption_help: The security protocol used by your WiFi network
+        select_option: Select option...
+        no: No
+        yes: Yes
+        hidden_help: Whether the network name is broadcast publicly
+      import_2025:
+        info_title: AI-Powered Menu Import
+        info_text: Upload your PDF menu and our AI will automatically extract all items, sections, prices, and descriptions.
+        upload_title: Upload Menu PDF
+        name_label: Menu Name
+        name_placeholder: e.g., Summer Menu 2024
+        name_help: Give this menu a descriptive name
+        name_invalid: Please provide a menu name
+        source_language_label: Menu language
+        auto_detect: Auto-detect
+        source_language_help: Used to preserve the original language when generating missing descriptions.
+        pdf_label: Menu PDF
+        choose_file: Choose File
+        no_file_chosen: No file chosen
+        pdf_hint: PDF up to 10MB. Clear scans work best.
+        pdf_invalid: Please select a PDF file
+        upload_process: Upload & Process
+        tips_title: Tips for Best Results
+        tip_quality_title: High Quality PDF
+        tip_quality_text: Use a clear, high-resolution PDF for best OCR accuracy. Scanned menus should be crisp and readable.
+        tip_format_title: Structured Format
+        tip_format_text: Menus with clear sections, item names, and prices work best. Avoid complex layouts or multiple columns.
+        tip_processing_title: Processing Time
+        tip_processing_text: Large menus may take a few minutes to process. You will be notified when the import is ready for review.
+        recent_imports: Recent Imports
+        ago: ago
+        status_completed: Completed
+        status_failed: Failed
+        status_processing: Processing
+        status_pending: Pending
+        confirm_delete: Are you sure you want to delete this import?
+        delete_import: Delete import
       menus_2025:
         quick_actions: Quick Actions
         new_menu: New Menu
@@ -15,6 +103,8 @@ en:
         sections: sections
         items: items
         edit: Edit
+        view: View
+        detach: Detach
         preview: Preview Menu
         no_preview: Menu not published yet
         duplicate: Duplicate
@@ -24,9 +114,58 @@ en:
         no_menus_description: Create your first menu to get started
         create_first_menu: Create Your First Menu
         drag_to_reorder: Drag to reorder
+        select_all: Select all
+        set_status: Set status...
+        apply: Apply
+        menu_name: Name
+        availability: Availability
+        shared: Shared
+        default: Default
+        available: Available
+        unavailable: Unavailable
+        share: Share
+        share_to_all: All restaurants
+      ordering_2025:
+        ordering_dashboard: Ordering Dashboard
+        today: Today
+        yesterday: Yesterday
+        last_7_days: Last 7 Days
+        last_28_days: Last 28 Days
+        mtd: Month to Date
+        last_month: Last Month
+        custom: Custom…
+        compare: Compare previous period
+        menu: Menu
+        all: All
+        employee: Employee
+        table: Table
+        status: Status
+        completed: Completed
+        open: Open
+        cancelled: Cancelled
+        kpi_gross: Gross Revenue
+        kpi_net: Net Revenue
+        kpi_taxes: Taxes
+        kpi_tips: Tips
+        kpi_service: Service Charges
+        kpi_orders: Orders
+        kpi_items: Items Sold
+        kpi_aov: AOV
+        revenue_over_time: Revenue Over Time
+        orders_over_time: Orders Over Time
+        menu_mix: Menu Mix
+        top_items: Top Items
+        staff_performance: Staff Performance
+        table_utilization: Table Utilization
+        orders_table: Orders
+        items_table: Items
+        export_csv: Export CSV
       tables_2025:
         quick_actions: Quick Actions
         add_table: Add Table
+        tables_overview: Tables
+        tables_description: Manage tables and generate table-specific QR codes for ordering.
+        total_tables: Total tables
         table_settings: Table Settings
         table_number: Table #
         table_name: Name
@@ -34,6 +173,11 @@ en:
         status: Status
         qr_code: QR Code
         actions: Actions
+        select_all: Select all
+        set_status: Set status...
+        apply: Apply
+        drag_to_reorder: Drag to reorder
+        edit: Edit
         free: Free
         occupied: Occupied
         archived: Archived
@@ -64,7 +208,18 @@ en:
         common_dietary_desc: Gluten-Free, Vegan, Vegetarian, Halal, Kosher
         load_template: Load Template
         current_allergens: Current Allergens
+        select_all: Select all
+        status_active: Active
+        status_inactive: Inactive
+        status_archived: Archived
+        set_status: Set status...
+        apply: Apply
+        name: Name
+        drag_to_reorder: Drag to reorder
+        active: Active
         inactive: Inactive
+        archived: Archived
+        edit: Edit
       sizes_2025:
         quick_actions: Quick Actions
         add_size: Add Size
@@ -81,6 +236,25 @@ en:
         beverage_sizes: Beverage Sizes
         beverage_sizes_desc: Small, Medium, Large, Extra Large
         load_template: Load Template
+        select_all: Select all
+        status_active: Active
+        status_inactive: Inactive
+        status_archived: Archived
+        set_status: Set status...
+        apply: Apply
+        name: Name
+        drag_to_reorder: Drag to reorder
+        edit: Edit
+      jukebox_2025:
+        jukebox: Jukebox
+        jukebox_description: Integrate with Spotify to play music in your restaurant and create the perfect atmosphere
+        spotify: Spotify
+        connected: Connected
+        not_connected: Not Connected
+        connect: Connect
+        unknown_artist: Unknown Artist
+        no_tracks: No tracks configured
+        spotify_integration: Connect your Spotify account to manage your restaurant playlist
       catalog_2025:
         quick_actions: Quick Actions
         add_tax: Add Tax
@@ -99,9 +273,29 @@ en:
         eu_restaurant: EU Restaurant
         eu_restaurant_desc: VAT + service charge included
         load_template: Load Template
+        current_taxes: Current Taxes
+        current_tips: Current Tips
+        select_all: Select all
+        status_active: Active
+        status_inactive: Inactive
+        status_archived: Archived
+        set_status: Set status...
+        apply: Apply
+        name: Name
+        rate: Rate
+        status: Status
+        drag_to_reorder: Drag to reorder
+        inactive: Inactive
+        archived: Archived
+        active: Active
+        edit: Edit
+        tip: Tip
       staff_2025:
         quick_actions: Quick Actions
         add_staff: Add Staff Member
+        staff_overview: Staff
+        staff_overview_desc: Manage your team to collaborate on your restaurant.
+        total_staff: Total Employees
         staff: Staff Members
         name: Name
         email: Email
@@ -109,6 +303,15 @@ en:
         status: Status
         joined: Joined
         actions: Actions
+        select_all: Select all
+        status_active: Active
+        status_inactive: Inactive
+        status_archived: Archived
+        status_open: Open
+        set_status: Set status...
+        apply: Apply
+        drag_to_reorder: Drag to reorder
+        edit: Edit
         unnamed: Unnamed
         no_role: No role
         active: Active
@@ -145,6 +348,20 @@ en:
         feature_toggles: Feature Toggles
         display_images: Display Images
         display_images_help: Show menu item images in your digital menu
+        alcohol_policy: Alcohol Policy
+        alcohol_policy_help: Configure allowed days/times and blackout dates for alcohol sales.
+        allowed_now: Allowed now
+        blocked_now: Blocked now
+        allowed_days: Allowed Days
+        time_ranges: Allowed Time Ranges
+        from: From
+        to: To
+        add_range: Add range
+        blackout_dates: Blackout Dates (YYYY-MM-DD, comma-separated)
+        age_verification: Age Verification
+        age_verification_desc: Require age verification for alcohol items
+        allow_alcohol: Allow Alcohol Sales
+        allow_alcohol_help: Enable selling alcoholic beverages. You are responsible for legal compliance.
         display_images_popup: Display Images in Popup
         display_images_popup_help: Open menu item images in a popup modal when clicked
         allow_ordering: Allow Ordering
@@ -219,6 +436,15 @@ en:
         locale_code: Code
         status: Status
         actions: Actions
+        select_all: Select all
+        status_active: Active
+        status_inactive: Inactive
+        status_archived: Archived
+        set_status: Set status...
+        apply: Apply
+        drag_to_reorder: Drag to reorder
+        default: Default
+        edit: Edit
         active: Active
         inactive: Inactive
         no_locales: No additional languages configured

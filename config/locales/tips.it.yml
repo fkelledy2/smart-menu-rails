@@ -6,14 +6,29 @@ it:
       deleted: Mancia eliminata con successo.
       updated: Mancia aggiornata con successo.
     edit:
-      tip: Mancia
-    form:
-      delete: Elimina
-      save: Salva
-      sure: Sei sicuro?
-    index:
       tips: Mance
+      edit_tip: Modifica Opzione Mancia
+      description: Aggiorna i dettagli della percentuale di mancia
+      cancel: Annulla
+      confirm_delete: Eliminare questa opzione di mancia?
+      delete: Elimina
+      tip_details: Dettagli Mancia
+    form:
+      percentage: Percentuale Mancia
+      percentage_placeholder: es. 15
+      percentage_help: Inserisci la percentuale di mancia (0-100)
+    index:
+      tips: Opzioni Mancia
+      description: Gestisci le percentuali di mancia disponibili ai clienti al checkout
+      back: Indietro
+      new_tip: Nuova Opzione Mancia
+      all_tips: Tutte le Opzioni Mancia
     new:
-      tip: Mancia
+      tips: Mance
+      new: Nuovo
+      new_tip: Nuova Opzione Mancia
+      description: Crea una nuova percentuale di mancia per i clienti
+      cancel: Annulla
+      tip_details: Dettagli Mancia
     show:
       tip: Mancia

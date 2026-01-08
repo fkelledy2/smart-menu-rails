@@ -6,14 +6,29 @@ en:
       deleted: Tip was successfully deleted.
       updated: Tip was successfully updated.
     edit:
-      tip: Tip
-    form:
-      delete: Delete
-      save: Save
-      sure: Are you sure?
-    index:
       tips: Tips
+      edit_tip: Edit Tip Option
+      description: Update tip percentage details
+      cancel: Cancel
+      confirm_delete: Delete this tip option?
+      delete: Delete
+      tip_details: Tip Details
+    form:
+      percentage: Tip Percentage
+      percentage_placeholder: e.g., 15
+      percentage_help: Enter the tip percentage (0-100)
+    index:
+      tips: Tip Options
+      description: Manage tip percentages available to customers at checkout
+      back: Back
+      new_tip: New Tip Option
+      all_tips: All Tip Options
     new:
-      tip: Tip
+      tips: Tips
+      new: New
+      new_tip: New Tip Option
+      description: Create a new tip percentage for customers
+      cancel: Cancel
+      tip_details: Tip Details
     show:
       tip: Tip

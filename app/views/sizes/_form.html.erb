@@ -8,7 +8,7 @@
   <!-- Size Type -->
   <div class="form-group-2025 mb-4">
     <%= form.label :size, class: 'form-label-2025' do %>
-      <%= t('.size_type', default: 'Size Type') %>
+      <%= t('.size_type') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.select :size,
@@ -17,36 +17,36 @@
         class: 'form-control-2025',
         required: true %>
     <div class="form-help-2025">
-      <%= t('.size_type_help', default: 'Select the general size category') %>
+      <%= t('.size_type_help') %>
     </div>
   </div>
 
   <!-- Name -->
   <div class="form-group-2025 mb-4">
     <%= form.label :name, class: 'form-label-2025' do %>
-      <%= t('.name', default: 'Display Name') %>
+      <%= t('.name') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.text_field :name,
         class: 'form-control-2025',
-        placeholder: t('.name_placeholder', default: 'e.g., Large, 16oz, Family Size'),
+        placeholder: t('.name_placeholder'),
         required: true %>
     <div class="form-help-2025">
-      <%= t('.name_help', default: 'This is how the size will appear to customers') %>
+      <%= t('.name_help') %>
     </div>
   </div>
 
   <!-- Description -->
   <div class="form-group-2025 mb-4">
     <%= form.label :description, class: 'form-label-2025' do %>
-      <%= t('.description', default: 'Description') %>
+      <%= t('.description') %>
     <% end %>
     <%= form.text_area :description,
         class: 'form-control-2025',
         rows: 3,
-        placeholder: t('.description_placeholder', default: 'Optional details about this size...') %>
+        placeholder: t('.description_placeholder') %>
     <div class="form-help-2025">
-      <%= t('.description_help', default: 'Optional: Add any additional details') %>
+      <%= t('.description_help') %>
     </div>
   </div>
 
@@ -55,7 +55,7 @@
     <div class="alert alert-danger" role="alert">
       <h6 class="alert-heading">
         <i class="bi bi-exclamation-triangle"></i>
-        <%= t('common.errors', default: 'Errors') %>
+        <%= t('common.errors') %>
       </h6>
       <ul class="mb-0">
         <% size.errors.full_messages.each do |message| %>
@@ -71,16 +71,16 @@
       <%= link_to edit_restaurant_path((@restaurant || size.restaurant), section: 'sizes'),
           class: 'btn-2025 btn-2025-ghost btn-2025-md',
           data: { turbo_frame: 'restaurant_content' } do %>
-        <%= t('common.cancel', default: 'Cancel') %>
+        <%= t('common.cancel') %>
       <% end %>
     <% else %>
       <%= link_to restaurant_sizes_path(@restaurant),
           class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
-        <%= t('common.cancel', default: 'Cancel') %>
+        <%= t('common.cancel') %>
       <% end %>
     <% end %>
 
-    <%= form.submit t('common.save', default: 'Save'),
+    <%= form.submit t('common.save'),
         class: 'btn-2025 btn-2025-primary btn-2025-md' %>
   </div>
 <% end %>

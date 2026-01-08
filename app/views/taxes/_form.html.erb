@@ -8,22 +8,22 @@
   <!-- Name -->
   <div class="form-group-2025 mb-4">
     <%= form.label :name, class: 'form-label-2025' do %>
-      <%= t('.name', default: 'Tax Name') %>
+      <%= t('.name') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.text_field :name,
         class: 'form-control-2025',
-        placeholder: t('.name_placeholder', default: 'e.g., Sales Tax, VAT, GST'),
+        placeholder: t('.name_placeholder'),
         required: true %>
     <div class="form-help-2025">
-      <%= t('.name_help', default: 'Display name for this tax') %>
+      <%= t('.name_help') %>
     </div>
   </div>
 
   <!-- Tax Type -->
   <div class="form-group-2025 mb-4">
     <%= form.label :taxtype, class: 'form-label-2025' do %>
-      <%= t('.tax_type', default: 'Tax Type') %>
+      <%= t('.tax_type') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.select :taxtype,
@@ -32,20 +32,20 @@
         class: 'form-control-2025',
         required: true %>
     <div class="form-help-2025">
-      <%= t('.tax_type_help', default: 'Select the type of tax') %>
+      <%= t('.tax_type_help') %>
     </div>
   </div>
 
   <!-- Tax Percentage -->
   <div class="form-group-2025 mb-4">
     <%= form.label :taxpercentage, class: 'form-label-2025' do %>
-      <%= t('.tax_percentage', default: 'Tax Percentage') %>
+      <%= t('.tax_percentage') %>
       <span class="text-danger">*</span>
     <% end %>
     <div class="input-group flex-nowrap">
       <%= form.number_field :taxpercentage,
           class: 'form-control-2025',
-          placeholder: t('.tax_percentage_placeholder', default: 'e.g., 8.5'),
+          placeholder: t('.tax_percentage_placeholder'),
           step: 0.01,
           min: 0,
           max: 100,
@@ -53,7 +53,7 @@
       <span class="input-group-text">%</span>
     </div>
     <div class="form-help-2025">
-      <%= t('.tax_percentage_help', default: 'Enter the tax rate as a percentage (0-100)') %>
+      <%= t('.tax_percentage_help') %>
     </div>
   </div>
 
@@ -62,7 +62,7 @@
     <div class="alert alert-danger" role="alert">
       <h6 class="alert-heading">
         <i class="bi bi-exclamation-triangle"></i>
-        <%= t('common.errors', default: 'Errors') %>
+        <%= t('common.errors') %>
       </h6>
       <ul class="mb-0">
         <% tax.errors.full_messages.each do |message| %>
@@ -78,16 +78,16 @@
       <%= link_to edit_restaurant_path(tax.restaurant, section: 'taxes_and_tips'),
           class: 'btn-2025 btn-2025-ghost btn-2025-md',
           data: { turbo_frame: 'restaurant_content' } do %>
-        <%= t('common.cancel', default: 'Cancel') %>
+        <%= t('common.cancel') %>
       <% end %>
     <% else %>
       <%= link_to restaurant_taxes_path(tax.restaurant),
           class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
-        <%= t('common.cancel', default: 'Cancel') %>
+        <%= t('common.cancel') %>
       <% end %>
     <% end %>
 
-    <%= form.submit t('common.save', default: 'Save'),
+    <%= form.submit t('common.save'),
         class: 'btn-2025 btn-2025-primary btn-2025-md' %>
   </div>
 <% end %>

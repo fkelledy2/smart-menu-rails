@@ -11,7 +11,7 @@
 <div class="content-card-2025">
   <h2 class="content-card-title">
     <i class="bi bi-sliders"></i>
-    <%= t('.feature_toggles', default: 'Feature Toggles') %>
+    <%= t('.feature_toggles') %>
   </h2>
 
   <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
@@ -22,9 +22,9 @@
         <i class="bi bi-image"></i>
       </div>
       <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.display_images', default: 'Display Images') %></h5>
+        <h5 class="feature-card-title"><%= t('.display_images') %></h5>
         <p class="feature-card-description">
-          <%= t('.display_images_help', default: 'Show menu item images in your digital menu') %>
+          <%= t('.display_images_help') %>
         </p>
       </div>
       <div class="feature-card-toggle">
@@ -47,23 +47,23 @@
         <i class="bi bi-shield-exclamation"></i>
       </div>
       <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.alcohol_policy', default: 'Alcohol Policy') %></h5>
+        <h5 class="feature-card-title"><%= t('.alcohol_policy') %></h5>
         <p class="feature-card-description">
-          <%= t('.alcohol_policy_help', default: 'Configure allowed days/times and blackout dates for alcohol sales.') %>
+          <%= t('.alcohol_policy_help') %>
         </p>
         <div class="mt-3">
           <!-- Status preview -->
           <div class="mb-3">
             <span id="alcohol-policy-status" class="badge <%= restaurant.alcohol_allowed_now? ? 'bg-success' : 'bg-secondary' %>">
-              <%= restaurant.alcohol_allowed_now? ? t('.allowed_now', default: 'Allowed now') : t('.blocked_now', default: 'Blocked now') %>
+              <%= restaurant.alcohol_allowed_now? ? t('.allowed_now') : t('.blocked_now') %>
             </span>
           </div>
 
           <!-- Days of week -->
           <div class="mb-3">
-            <label class="form-label-2025"><%= t('.allowed_days', default: 'Allowed Days') %></label>
+            <label class="form-label-2025"><%= t('.allowed_days') %></label>
             <div class="d-flex flex-wrap gap-3" id="alcohol-days">
-              <% days = %w[Sun Mon Tue Wed Thu Fri Sat] %>
+              <% days = Array(I18n.t('date.abbr_day_names')) %>
               <% selected_days = restaurant.alcohol_policy&.allowed_days_of_week || [] %>
               <% days.each_with_index do |d, i| %>
                 <div class="form-check">
@@ -76,26 +76,26 @@
 
           <!-- Time ranges -->
           <div class="mb-3">
-            <label class="form-label-2025"><%= t('.time_ranges', default: 'Allowed Time Ranges') %></label>
+            <label class="form-label-2025"><%= t('.time_ranges') %></label>
             <div id="alcohol-time-ranges" class="d-flex flex-column gap-2">
               <% (restaurant.alcohol_policy&.allowed_time_ranges || []).each_with_index do |r, idx| %>
                 <div class="input-group" data-range-index="<%= idx %>">
-                  <span class="input-group-text"><%= t('.from', default: 'From') %></span>
+                  <span class="input-group-text"><%= t('.from') %></span>
                   <input type="time" class="form-control" value="<%= format('%02d:%02d', (r['from_min'].to_i/60), (r['from_min'].to_i%60)) %>" />
-                  <span class="input-group-text"><%= t('.to', default: 'To') %></span>
+                  <span class="input-group-text"><%= t('.to') %></span>
                   <input type="time" class="form-control" value="<%= format('%02d:%02d', (r['to_min'].to_i/60), (r['to_min'].to_i%60)) %>" />
                   <button type="button" class="btn btn-outline-danger remove-range"><i class="bi bi-x"></i></button>
                 </div>
               <% end %>
             </div>
             <div class="mt-2">
-              <button type="button" class="btn btn-sm btn-outline-primary" id="add-time-range"><i class="bi bi-plus"></i> <%= t('.add_range', default: 'Add range') %></button>
+              <button type="button" class="btn btn-sm btn-outline-primary" id="add-time-range"><i class="bi bi-plus"></i> <%= t('.add_range') %></button>
             </div>
           </div>
 
           <!-- Blackout dates -->
           <div class="mb-3">
-            <label class="form-label-2025"><%= t('.blackout_dates', default: 'Blackout Dates (YYYY-MM-DD, comma-separated)') %></label>
+            <label class="form-label-2025"><%= t('.blackout_dates') %></label>
             <input type="text" class="form-control" id="alcohol-blackouts" value="<%= (restaurant.alcohol_policy&.blackout_dates || []).map(&:to_s).join(', ') %>" placeholder="2025-12-25, 2025-01-01" />
           </div>
         </div>
@@ -132,7 +132,7 @@
           let saving = false; let t;
           const updateStatus = (allowed_now) => {
             if (!statusBadge) return;
-            statusBadge.textContent = allowed_now ? '<%= j t('.allowed_now', default: 'Allowed now') %>' : '<%= j t('.blocked_now', default: 'Blocked now') %>';
+            statusBadge.textContent = allowed_now ? '<%= j t('.allowed_now') %>' : '<%= j t('.blocked_now') %>';
             statusBadge.classList.remove('bg-success','bg-secondary');
             statusBadge.classList.add(allowed_now ? 'bg-success' : 'bg-secondary');
           };
@@ -168,9 +168,9 @@
             const div = document.createElement('div');
             div.className = 'input-group';
             div.innerHTML = `
-              <span class="input-group-text"><%= j t('.from', default: 'From') %></span>
+              <span class="input-group-text"><%= j t('.from') %></span>
               <input type="time" class="form-control" value="08:00" />
-              <span class="input-group-text"><%= j t('.to', default: 'To') %></span>
+              <span class="input-group-text"><%= j t('.to') %></span>
               <input type="time" class="form-control" value="22:00" />
               <button type="button" class="btn btn-outline-danger remove-range"><i class="bi bi-x"></i></button>
             `;
@@ -197,9 +197,9 @@
         <i class="bi bi-shield-check"></i>
       </div>
       <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.age_verification', default: 'Age Verification') %></h5>
+        <h5 class="feature-card-title"><%= t('.age_verification') %></h5>
         <p class="feature-card-description">
-          <%= t('.age_verification_desc', default: 'Require age verification for alcohol items') %>
+          <%= t('.age_verification_desc') %>
         </p>
       </div>
       <div class="feature-card-toggle">
@@ -215,9 +215,9 @@
         <i class="bi bi-cup-straw"></i>
       </div>
       <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.allow_alcohol', default: 'Allow Alcohol Sales') %></h5>
+        <h5 class="feature-card-title"><%= t('.allow_alcohol') %></h5>
         <p class="feature-card-description">
-          <%= t('.allow_alcohol_help', default: 'Enable selling alcoholic beverages. You are responsible for legal compliance.') %>
+          <%= t('.allow_alcohol_help') %>
         </p>
       </div>
       <div class="feature-card-toggle">
@@ -240,9 +240,9 @@
         <i class="bi bi-window-stack"></i>
       </div>
       <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.display_images_popup', default: 'Display Images in Popup') %></h5>
+        <h5 class="feature-card-title"><%= t('.display_images_popup') %></h5>
         <p class="feature-card-description">
-          <%= t('.display_images_popup_help', default: 'Open menu item images in a popup modal when clicked') %>
+          <%= t('.display_images_popup_help') %>
         </p>
       </div>
       <div class="feature-card-toggle">
@@ -265,9 +265,9 @@
         <i class="bi bi-cart-check"></i>
       </div>
       <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.allow_ordering', default: 'Allow Ordering') %></h5>
+        <h5 class="feature-card-title"><%= t('.allow_ordering') %></h5>
         <p class="feature-card-description">
-          <%= t('.allow_ordering_help', default: 'Enable online ordering for customers') %>
+          <%= t('.allow_ordering_help') %>
         </p>
       </div>
       <div class="feature-card-toggle">
@@ -292,9 +292,9 @@
           <i class="bi bi-boxes"></i>
         </div>
         <div class="feature-card-content">
-          <h5 class="feature-card-title"><%= t('.inventory_tracking', default: 'Inventory Tracking') %></h5>
+          <h5 class="feature-card-title"><%= t('.inventory_tracking') %></h5>
           <p class="feature-card-description">
-            <%= t('.inventory_tracking_help', default: 'Track stock levels for menu items (Coming Soon)') %>
+            <%= t('.inventory_tracking_help') %>
           </p>
         </div>
         <div class="feature-card-toggle">

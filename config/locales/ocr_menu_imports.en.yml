@@ -52,6 +52,39 @@ en:
       tips_title: Tips for Best Results
       title: Import Menu from PDF
       upload_process: Upload & Process
+    new_2025:
+      title: Import Your Menu
+      subtitle: Upload a PDF menu and our AI will extract all items automatically
+      step_upload: Upload
+      step_process: Process
+      step_review: Review
+      name_label: Menu Name
+      name_placeholder: e.g., Summer Menu 2024
+      name_help: Give your menu a descriptive name for easy identification
+      source_language_label: Menu language
+      auto_detect: Auto-detect
+      language_en: English
+      language_fr: French
+      language_it: Italian
+      language_es: Spanish
+      source_language_help: Used to preserve the original language when generating missing descriptions.
+      pdf_label: Menu PDF
+      drop_title: Drag and drop your PDF here
+      drop_subtitle: or
+      browse_files: Browse Files
+      pdf_hint: PDF up to 10MB. Clear scans work best.
+      remove_file_aria: Remove file
+      estimated_time: Processing takes ~2-5 minutes
+      cancel: Cancel
+      start_processing: Start Processing
+      tips_title: Tips for Best Results
+      tip_quality_title: Use High-Quality Scans
+      tip_quality_text: Clear, high-resolution PDFs with good contrast work best. Avoid blurry or low-quality photos.
+      tip_format_title: Standard Menu Layout
+      tip_format_text: Menus with clear sections and item names separated from prices work best. Our AI can handle most layouts.
+      tip_language_title: Multiple Languages Supported
+      tip_language_text: We support menus in English, Italian, Spanish, French, and more. Multi-language menus work too!
+      pdf_invalid_js: Please select a PDF file
     show:
       allergens: Allergens
       approve_sections_items: Approve Sections and Items

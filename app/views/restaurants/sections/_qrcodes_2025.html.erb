@@ -9,7 +9,7 @@
 <div class="quick-actions-card">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions', default: 'Quick Actions') %>
+    <%= t('.quick_actions') %>
   </h2>
 
   <div class="quick-actions-grid">
@@ -17,7 +17,7 @@
         class: 'quick-action-btn',
         target: '_blank' do %>
       <i class="bi bi-eye"></i>
-      <span><%= t('.view_all_qr', default: 'View All QR Codes') %></span>
+      <span><%= t('.view_all_qr') %></span>
     <% end %>
   </div>
 </div>
@@ -39,11 +39,11 @@
 <div class="content-card-2025">
   <h2 class="content-card-title mb-4">
     <i class="bi bi-qr-code"></i>
-    <%= t('.qr_codes', default: 'QR Codes') %>
+    <%= t('.qr_codes') %>
   </h2>
 
   <p class="text-muted mb-4">
-    <%= t('.qr_description', default: 'Generate QR codes for your menus. Customers can scan these to view your digital menu.') %>
+    <%= t('.qr_description') %>
   </p>
 
   <!-- QR Code Types -->
@@ -53,14 +53,14 @@
       <div class="qr-icon bg-primary">
         <i class="bi bi-qr-code"></i>
       </div>
-      <h4 class="qr-type-title"><%= t('.general_qr', default: 'General Menu QR') %></h4>
+      <h4 class="qr-type-title"><%= t('.general_qr') %></h4>
       <p class="qr-type-description">
-        <%= t('.general_qr_desc', default: 'Single QR code for all menus. Best for small restaurants with one location.') %>
+        <%= t('.general_qr_desc') %>
       </p>
       <%= link_to smartmenus_path,
           class: 'btn-2025 btn-2025-secondary btn-2025-sm w-100',
           target: '_blank' do %>
-        <i class="bi bi-download"></i> <%= t('.download', default: 'Download') %>
+        <i class="bi bi-download"></i> <%= t('.download') %>
       <% end %>
     </div>
 
@@ -69,13 +69,13 @@
       <div class="qr-icon bg-success">
         <i class="bi bi-grid-3x3"></i>
       </div>
-      <h4 class="qr-type-title"><%= t('.table_qr', default: 'Table-Specific QR') %></h4>
+      <h4 class="qr-type-title"><%= t('.table_qr') %></h4>
       <p class="qr-type-description">
-        <%= t('.table_qr_desc', default: 'Unique QR code for each table. Enables table ordering and tracking.') %>
+        <%= t('.table_qr_desc') %>
       </p>
       <%= link_to edit_restaurant_path(restaurant, section: 'tables'),
           class: 'btn-2025 btn-2025-secondary btn-2025-sm w-100' do %>
-        <i class="bi bi-gear"></i> <%= t('.manage_tables', default: 'Manage Tables') %>
+        <i class="bi bi-gear"></i> <%= t('.manage_tables') %>
       <% end %>
     </div>
 
@@ -84,14 +84,14 @@
       <div class="qr-icon bg-warning">
         <i class="bi bi-menu-button-wide"></i>
       </div>
-      <h4 class="qr-type-title"><%= t('.menu_qr', default: 'Menu-Specific QR') %></h4>
+      <h4 class="qr-type-title"><%= t('.menu_qr') %></h4>
       <p class="qr-type-description">
-        <%= t('.menu_qr_desc', default: 'Separate QR codes for each menu. Great for breakfast, lunch, dinner menus.') %>
+        <%= t('.menu_qr_desc') %>
       </p>
       <%= link_to smartmenus_path,
           class: 'btn-2025 btn-2025-secondary btn-2025-sm w-100',
           target: '_blank' do %>
-        <i class="bi bi-list"></i> <%= t('.view_menus', default: 'View Menus') %>
+        <i class="bi bi-list"></i> <%= t('.view_menus') %>
       <% end %>
     </div>
   </div>
@@ -101,34 +101,34 @@
 <div class="content-card-2025">
   <h2 class="content-card-title">
     <i class="bi bi-palette"></i>
-    <%= t('.qr_customization', default: 'QR Code Customization') %>
+    <%= t('.qr_customization') %>
   </h2>
 
   <p class="text-muted mb-4">
-    <%= t('.customization_description', default: 'Customize the appearance of your QR codes to match your brand.') %>
+    <%= t('.customization_description') %>
   </p>
 
   <div class="row g-4">
     <div class="col-md-6">
       <div class="customization-option">
-        <h5><i class="bi bi-palette me-2"></i><%= t('.logo', default: 'Logo') %></h5>
+        <h5><i class="bi bi-palette me-2"></i><%= t('.logo') %></h5>
         <p class="text-sm text-muted mb-3">
-          <%= t('.logo_desc', default: 'Add your restaurant logo to the center of QR codes') %>
+          <%= t('.logo_desc') %>
         </p>
         <button class="btn-2025 btn-2025-outline btn-2025-sm">
-          <i class="bi bi-upload"></i> <%= t('.upload_logo', default: 'Upload Logo') %>
+          <i class="bi bi-upload"></i> <%= t('.upload_logo') %>
         </button>
       </div>
     </div>
 
     <div class="col-md-6">
       <div class="customization-option">
-        <h5><i class="bi bi-droplet me-2"></i><%= t('.colors', default: 'Colors') %></h5>
+        <h5><i class="bi bi-droplet me-2"></i><%= t('.colors') %></h5>
         <p class="text-sm text-muted mb-3">
-          <%= t('.colors_desc', default: 'Choose custom colors for your QR codes') %>
+          <%= t('.colors_desc') %>
         </p>
         <button class="btn-2025 btn-2025-outline btn-2025-sm">
-          <i class="bi bi-palette"></i> <%= t('.customize_colors', default: 'Customize Colors') %>
+          <i class="bi bi-palette"></i> <%= t('.customize_colors') %>
         </button>
       </div>
     </div>

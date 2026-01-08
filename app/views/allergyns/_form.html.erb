@@ -8,43 +8,43 @@
   <!-- Name -->
   <div class="form-group-2025 mb-4">
     <%= form.label :name, class: 'form-label-2025' do %>
-      <%= t('.name', default: 'Allergen Name') %>
+      <%= t('.name') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.text_field :name,
         class: 'form-control-2025',
-        placeholder: t('.name_placeholder', default: 'e.g., Peanuts, Dairy, Gluten'),
+        placeholder: t('.name_placeholder'),
         required: true %>
     <div class="form-help-2025">
-      <%= t('.name_help', default: 'The name of the allergen') %>
+      <%= t('.name_help') %>
     </div>
   </div>
 
   <!-- Description -->
   <div class="form-group-2025 mb-4">
     <%= form.label :description, class: 'form-label-2025' do %>
-      <%= t('.description', default: 'Description') %>
+      <%= t('.description') %>
     <% end %>
     <%= form.text_area :description,
         class: 'form-control-2025',
         rows: 3,
-        placeholder: t('.description_placeholder', default: 'Optional details about this allergen...') %>
+        placeholder: t('.description_placeholder') %>
     <div class="form-help-2025">
-      <%= t('.description_help', default: 'Optional: Additional information about the allergen') %>
+      <%= t('.description_help') %>
     </div>
   </div>
 
   <!-- Symbol -->
   <div class="form-group-2025 mb-4">
     <%= form.label :symbol, class: 'form-label-2025' do %>
-      <%= t('.symbol', default: 'Symbol') %>
+      <%= t('.symbol') %>
     <% end %>
     <%= form.text_field :symbol,
         class: 'form-control-2025',
-        placeholder: t('.symbol_placeholder', default: 'e.g., 🥜, 🥛, 🌾'),
+        placeholder: t('.symbol_placeholder'),
         maxlength: 10 %>
     <div class="form-help-2025">
-      <%= t('.symbol_help', default: 'Optional: Emoji or short symbol to represent this allergen') %>
+      <%= t('.symbol_help') %>
     </div>
   </div>
 
@@ -53,7 +53,7 @@
     <div class="alert alert-danger" role="alert">
       <h6 class="alert-heading">
         <i class="bi bi-exclamation-triangle"></i>
-        <%= t('common.errors', default: 'Errors') %>
+        <%= t('common.errors') %>
       </h6>
       <ul class="mb-0">
         <% allergyn.errors.full_messages.each do |message| %>
@@ -69,16 +69,16 @@
       <%= link_to edit_restaurant_path(allergyn.restaurant, section: 'allergens'),
           class: 'btn-2025 btn-2025-ghost btn-2025-md',
           data: { turbo_frame: 'restaurant_content' } do %>
-        <%= t('common.cancel', default: 'Cancel') %>
+        <%= t('common.cancel') %>
       <% end %>
     <% else %>
       <%= link_to restaurant_allergyns_path(allergyn.restaurant),
           class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
-        <%= t('common.cancel', default: 'Cancel') %>
+        <%= t('common.cancel') %>
       <% end %>
     <% end %>
 
-    <%= form.submit t('common.save', default: 'Save'),
+    <%= form.submit t('common.save'),
         class: 'btn-2025 btn-2025-primary btn-2025-md' %>
   </div>
 <% end %>

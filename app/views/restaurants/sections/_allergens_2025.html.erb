@@ -10,7 +10,7 @@
 <div class="quick-actions-card">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions', default: 'Quick Actions') %>
+    <%= t('.quick_actions') %>
   </h2>
 
   <div class="quick-actions-grid">
@@ -18,14 +18,14 @@
         class: 'quick-action-btn',
         data: { turbo_frame: 'allergens_new_allergyn' } do %>
       <i class="bi bi-plus-circle"></i>
-      <span><%= t('.add_allergen', default: 'Add Allergen') %></span>
+      <span><%= t('.add_allergen') %></span>
     <% end %>
 
     <%= link_to restaurant_allergyns_path(restaurant),
         class: 'quick-action-btn',
         data: { turbo_frame: '_top' } do %>
       <i class="bi bi-pencil"></i>
-      <span><%= t('.manage_allergens', default: 'Manage Allergens') %></span>
+      <span><%= t('.manage_allergens') %></span>
     <% end %>
   </div>
 </div>
@@ -52,11 +52,11 @@
 <div class="content-card-2025 py-4">
   <h2 class="content-card-title">
     <i class="bi bi-exclamation-triangle"></i>
-    <%= t('.allergens', default: 'Allergens') %>
+    <%= t('.allergens') %>
   </h2>
 
   <p class="text-muted mb-4">
-    <%= t('.allergens_description', default: 'Manage allergen information for your menu items to help customers make informed choices.') %>
+    <%= t('.allergens_description') %>
   </p>
 
   <div class="allergen-stats-card">
@@ -65,7 +65,7 @@
         <%= restaurant.allergyns.where(archived: false).count %>
       </div>
       <div class="allergen-stat-label">
-        <%= t('.total_allergens', default: 'Total Allergens') %>
+        <%= t('.total_allergens') %>
       </div>
     </div>
   </div>
@@ -91,7 +91,7 @@
   <div class="content-card-2025">
     <h2 class="content-card-title">
       <i class="bi bi-list-check"></i>
-      <%= t('.current_allergens', default: 'Current Allergens') %>
+      <%= t('.current_allergens') %>
     </h2>
 
     <!-- Desktop Table View (styled like Table Settings) -->
@@ -100,19 +100,19 @@
         <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
           <div class="d-flex align-items-center gap-2">
             <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
-            <span class="text-muted small"><%= t('.select_all', default: 'Select all') %></span>
+            <span class="text-muted small"><%= t('.select_all') %></span>
           </div>
 
           <div class="d-flex align-items-center gap-2 ms-auto">
             <%= f.select :status,
                 [
-                  [t('.status_active', default: 'Active'), 'active'],
-                  [t('.status_inactive', default: 'Inactive'), 'inactive'],
-                  [t('.status_archived', default: 'Archived'), 'archived'],
+                  [t('.status_active'), 'active'],
+                  [t('.status_inactive'), 'inactive'],
+                  [t('.status_archived'), 'archived'],
                 ],
-                { include_blank: t('.set_status', default: 'Set status...') },
+                { include_blank: t('.set_status') },
                 { class: 'form-select form-select-sm', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
-            <%= f.submit t('.apply', default: 'Apply'), class: 'btn-2025 btn-2025-primary btn-2025-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
+            <%= f.submit t('.apply'), class: 'btn-2025 btn-2025-primary btn-2025-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
           </div>
         </div>
 
@@ -122,7 +122,7 @@
             <tr>
               <th class="w-40px"></th>
               <th class="w-40px"></th>
-              <th><%= t('.name', default: 'Name') %></th>
+              <th><%= t('.name') %></th>
               <th class="text-end">
                 <span class="btn-2025 btn-2025-ghost btn-2025-sm">
                   <i class="bi bi-gear"></i>
@@ -139,18 +139,18 @@
                   <input type="checkbox" name="allergyn_ids[]" value="<%= allergen.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
                 </td>
                 <td class="w-40px allergen-handle cursor-grab">
-                  <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>"></i>
+                  <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
                 </td>
                 <td>
                   <div class="d-flex justify-content-between align-items-start gap-2">
                     <strong><%= allergen.name %></strong>
                     <span>
                       <% if allergen.status == 'active' %>
-                        <span class="badge bg-success"><%= t('.active', default: 'Active') %></span>
+                        <span class="badge bg-success"><%= t('.active') %></span>
                       <% elsif allergen.status == 'inactive' %>
-                        <span class="badge bg-secondary"><%= t('.inactive', default: 'Inactive') %></span>
+                        <span class="badge bg-secondary"><%= t('.inactive') %></span>
                       <% elsif allergen.status == 'archived' %>
-                        <span class="badge bg-dark"><%= t('.archived', default: 'Archived') %></span>
+                        <span class="badge bg-dark"><%= t('.archived') %></span>
                       <% end %>
                     </span>
                   </div>
@@ -161,8 +161,8 @@
                 <td class="text-end">
                   <%= link_to edit_restaurant_allergyn_path(restaurant, allergen),
                       class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                      title: t('.edit', default: 'Edit'),
-                      aria: { label: t('.edit', default: 'Edit') },
+                      title: t('.edit'),
+                      aria: { label: t('.edit') },
                       data: { turbo_frame: 'allergens_edit_allergyn' } do %>
                     <i class="bi bi-pencil"></i>
                   <% end %>

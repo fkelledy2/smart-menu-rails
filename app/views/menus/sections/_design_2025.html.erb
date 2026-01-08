@@ -12,7 +12,7 @@
 <div class="quick-actions-card">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions', default: 'Quick Actions') %>
+    <%= t('.quick_actions') %>
   </h2>
 
   <div class="quick-actions-grid">
@@ -21,25 +21,25 @@
         class: 'quick-action-btn',
         data: { turbo: false, ai_generate: true, menu_id: menu.id } do %>
       <i class="bi bi-stars"></i>
-      <span><%= t('.generate_images', default: 'Generate AI Images') %></span>
+      <span><%= t('.generate_images') %></span>
     <% end %>
 
     <% if menu_smartmenu_slug.present? %>
       <%= link_to smartmenu_path(menu_smartmenu_slug),
           class: 'quick-action-btn',
           target: '_blank',
-          title: 'Preview menu as staff (authenticated view)' do %>
+          title: t('.preview_staff_title') do %>
         <i class="bi bi-eye"></i>
-        <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
+        <span><%= t('.preview_staff') %></span>
       <% end %>
 
       <%= link_to smartmenu_path(menu_smartmenu_slug, view: 'customer'),
           class: 'quick-action-btn quick-action-btn-secondary',
           target: '_blank',
           rel: 'noopener noreferrer',
-          title: 'Preview menu as customers see it (authenticated as staff but viewing customer interface)' do %>
+          title: t('.preview_customer_title') do %>
         <i class="bi bi-eye-slash"></i>
-        <span><%= t('.preview_customer', default: 'Preview (Customer)') %></span>
+        <span><%= t('.preview_customer') %></span>
       <% end %>
     <% end %>
   </div>
@@ -50,7 +50,7 @@
 <div class="content-card-2025">
   <h2 class="content-card-title">
     <i class="bi bi-image"></i>
-    <%= t('.menu_image', default: 'Menu Image') %>
+    <%= t('.menu_image') %>
   </h2>
 
   <%= menu_form_with(menu, auto_save: true) do |form| %>
@@ -66,12 +66,12 @@
       <div class="col-md-12">
         <div class="form-group-2025">
           <%= form.label :image, class: 'form-label-2025' do %>
-            <%= t('.upload_image', default: 'Upload Image') %>
+            <%= t('.upload_image') %>
           <% end %>
           <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
           <%= form.file_field :image, class: 'form-control-2025' %>
           <div class="form-help-2025">
-            <%= t('.image_help', default: 'Hero image for your menu (recommended: 1200x600px)') %>
+            <%= t('.image_help') %>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@
         <div class="col-md-12">
           <div class="form-check">
             <%= form.check_box :remove_image, class: 'form-check-input' %>
-            <%= form.label :remove_image, t('.remove_image', default: 'Remove current image'), class: 'form-check-label' %>
+            <%= form.label :remove_image, t('.remove_image'), class: 'form-check-label' %>
           </div>
         </div>
       <% end %>
@@ -94,11 +94,11 @@
 <div class="content-card-2025">
   <h2 class="content-card-title">
     <i class="bi bi-file-pdf"></i>
-    <%= t('.pdf_menu', default: 'PDF Menu') %>
+    <%= t('.pdf_menu') %>
   </h2>
 
   <p class="text-muted mb-4">
-    <%= t('.pdf_menu_desc', default: 'Upload a PDF version of your menu for customers to download') %>
+    <%= t('.pdf_menu_desc') %>
   </p>
 
   <%= menu_form_with(menu, auto_save: true) do |form| %>
@@ -115,7 +115,7 @@
               <%= link_to rails_blob_path(menu.pdf_menu_scan, disposition: "attachment"),
                   target: "_blank",
                   class: 'btn-2025 btn-2025-ghost btn-2025-sm mt-2' do %>
-                <i class="bi bi-download"></i> <%= t('.download', default: 'Download') %>
+                <i class="bi bi-download"></i> <%= t('.download') %>
               <% end %>
             </div>
           </div>
@@ -125,13 +125,13 @@
       <div class="col-md-12">
         <div class="form-group-2025">
           <%= form.label :pdf_menu_scan, class: 'form-label-2025' do %>
-            <%= t('.upload_pdf', default: 'Upload PDF') %>
+            <%= t('.upload_pdf') %>
           <% end %>
           <%= form.file_field :pdf_menu_scan,
               class: 'form-control-2025',
               accept: 'application/pdf' %>
           <div class="form-help-2025">
-            <%= t('.pdf_help', default: 'Upload a PDF version of your menu') %>
+            <%= t('.pdf_help') %>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@
         <div class="col-md-12">
           <div class="form-check">
             <%= check_box_tag 'menu[remove_pdf_menu_scan]', '1', false, class: 'form-check-input' %>
-            <%= label_tag 'menu[remove_pdf_menu_scan]', t('.remove_pdf', default: 'Remove current PDF'), class: 'form-check-label' %>
+            <%= label_tag 'menu[remove_pdf_menu_scan]', t('.remove_pdf'), class: 'form-check-label' %>
           </div>
         </div>
       <% end %>
@@ -153,7 +153,7 @@
 <div class="content-card-2025">
   <h2 class="content-card-title">
     <i class="bi bi-sliders"></i>
-    <%= t('.display_settings', default: 'Display Settings') %>
+    <%= t('.display_settings') %>
   </h2>
 
   <%= menu_form_with(menu, auto_save: true) do |form| %>
@@ -164,9 +164,9 @@
           <i class="bi bi-image"></i>
         </div>
         <div class="feature-card-content">
-          <h5 class="feature-card-title"><%= t('.show_images', default: 'Show Images') %></h5>
+          <h5 class="feature-card-title"><%= t('.show_images') %></h5>
           <p class="feature-card-description">
-            <%= t('.show_images_desc', default: 'Display item images in menu') %>
+            <%= t('.show_images_desc') %>
           </p>
         </div>
         <div class="feature-card-toggle">
@@ -189,9 +189,9 @@
           <i class="bi bi-window-stack"></i>
         </div>
         <div class="feature-card-content">
-          <h5 class="feature-card-title"><%= t('.popup_images', default: 'Popup Images') %></h5>
+          <h5 class="feature-card-title"><%= t('.popup_images') %></h5>
           <p class="feature-card-description">
-            <%= t('.popup_images_desc', default: 'Show larger image when tapped') %>
+            <%= t('.popup_images_desc') %>
           </p>
         </div>
         <div class="feature-card-toggle">

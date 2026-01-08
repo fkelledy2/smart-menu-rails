@@ -26,7 +26,7 @@
 <div class="quick-actions-card" data-testid="menus-quick-actions">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions', default: 'Quick Actions') %>
+    <%= t('.quick_actions') %>
   </h2>
 
   <div class="quick-actions-grid">
@@ -34,14 +34,14 @@
         class: 'quick-action-btn',
         data: { testid: 'new-menu-btn', turbo_frame: '_top' } do %>
       <i class="bi bi-plus-circle"></i>
-      <span><%= t('.new_menu', default: 'New Menu') %></span>
+      <span><%= t('.new_menu') %></span>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'import'),
         class: 'quick-action-btn',
         data: { testid: 'import-menu-btn', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
       <i class="bi bi-file-earmark-arrow-up"></i>
-      <span><%= t('.import_menu', default: 'Import Menu') %></span>
+      <span><%= t('.import_menu') %></span>
     <% end %>
   </div>
 </div>
@@ -77,7 +77,7 @@
 <div class="content-card-2025" data-testid="menus-list-card">
   <h2 class="content-card-title mb-0">
     <i class="bi bi-menu-button-wide"></i>
-    <%= t(".menus_#{filter}", default: filter.titleize + ' Menus') %>
+    <%= t(".menus_#{filter}") %>
   </h2>
 
   <!-- Filter Tabs -->
@@ -86,7 +86,7 @@
       <%= link_to edit_restaurant_path(restaurant, section: 'menus'),
           class: "nav-link #{'active' if filter == 'all'}",
           data: { testid: 'menus-filter-all', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <%= t('.all', default: 'All') %>
+        <%= t('.all') %>
         <span class="badge bg-secondary"><%= restaurant.restaurant_menus.joins(:menu).where(menus: { archived: false }).count %></span>
       <% end %>
     </li>
@@ -94,7 +94,7 @@
       <%= link_to edit_restaurant_path(restaurant, section: 'menus_active'),
           class: "nav-link #{'active' if filter == 'active'}",
           data: { testid: 'menus-filter-active', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <%= t('.active', default: 'Active') %>
+        <%= t('.active') %>
         <span class="badge bg-success"><%= restaurant.restaurant_menus.joins(:menu).where(menus: { archived: false }, status: 'active').count %></span>
       <% end %>
     </li>
@@ -102,7 +102,7 @@
       <%= link_to edit_restaurant_path(restaurant, section: 'menus_inactive'),
           class: "nav-link #{'active' if filter == 'inactive'}",
           data: { testid: 'menus-filter-inactive', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <%= t('.inactive', default: 'Inactive') %>
+        <%= t('.inactive') %>
         <span class="badge bg-warning"><%= restaurant.restaurant_menus.joins(:menu).where(menus: { archived: false }, status: 'inactive').count %></span>
       <% end %>
     </li>
@@ -115,18 +115,18 @@
         <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
           <div class="d-flex align-items-center gap-2">
             <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
-            <span class="text-muted small"><%= t('.select_all', default: 'Select all') %></span>
+            <span class="text-muted small"><%= t('.select_all') %></span>
           </div>
 
           <div class="d-flex align-items-center gap-2 ms-auto">
             <%= f.select :status,
                 [
-                  [t('.status_active', default: 'Active'), 'active'],
-                  [t('.status_inactive', default: 'Inactive'), 'inactive'],
+                  [t('.active'), 'active'],
+                  [t('.inactive'), 'inactive'],
                 ],
-                { include_blank: t('.set_status', default: 'Set status...') },
+                { include_blank: t('.set_status') },
                 { class: 'form-select form-select-sm', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
-            <%= f.submit t('.apply', default: 'Apply'), class: 'btn-2025 btn-2025-primary btn-2025-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
+            <%= f.submit t('.apply'), class: 'btn-2025 btn-2025-primary btn-2025-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
           </div>
         </div>
 
@@ -137,8 +137,8 @@
           <tr>
             <th class="w-40px"></th>
             <th class="w-40px"></th>
-            <th><%= t('.menu_name', default: 'Name') %></th>
-            <th class="text-end"><%= t('.availability', default: 'Availability') %></th>
+            <th><%= t('.menu_name') %></th>
+            <th class="text-end"><%= t('.availability') %></th>
             <th class="text-end">
               <span class="btn-2025 btn-2025-ghost btn-2025-sm">
                 <i class="bi bi-gear"></i>
@@ -157,7 +157,7 @@
                 <input type="checkbox" name="restaurant_menu_ids[]" value="<%= restaurant_menu.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
               </td>
               <td class="w-40px">
-                <i class="bi bi-grip-vertical text-muted drag-handle" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>"></i>
+                <i class="bi bi-grip-vertical text-muted drag-handle" title="<%= t('.drag_to_reorder') %>"></i>
               </td>
               <td>
                 <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -165,7 +165,7 @@
                   <% unless owner_restaurant_id == restaurant.id %>
                     <span class="badge bg-light text-primary menu-origin-badge">
                       <i class="bi bi-link-45deg"></i>
-                      <%= t('.shared', default: 'Shared') %>
+                      <%= t('.shared') %>
                     </span>
                   <% end %>
                 </div>
@@ -174,7 +174,7 @@
                 <% end %>
                 <div class="text-muted small">
                   <i class="bi bi-grid-3x3"></i>
-                  <%= menu.menusections.count %> <%= t('.sections', default: 'sections') %>
+                  <%= menu.menusections.count %> <%= t('.sections') %>
                 </div>
               </td>
               <td class="text-end">
@@ -193,9 +193,9 @@
                   <select class="form-select form-select-sm d-inline-block w-auto"
                           name="availability_select"
                           onchange="this.form.querySelector('input[name=availability_override_enabled]').value=(this.value==='default'?'false':'true'); this.form.querySelector('input[name=availability_state]').value=(this.value==='default'?'available':this.value); this.form.requestSubmit();">
-                    <option value="default" <%= 'selected' if availability_value == 'default' %>><%= t('.default', default: 'Default') %></option>
-                    <option value="available" <%= 'selected' if availability_value == 'available' %>><%= t('.available', default: 'Available') %></option>
-                    <option value="unavailable" <%= 'selected' if availability_value == 'unavailable' %>><%= t('.unavailable', default: 'Unavailable') %></option>
+                    <option value="default" <%= 'selected' if availability_value == 'default' %>><%= t('.default') %></option>
+                    <option value="available" <%= 'selected' if availability_value == 'available' %>><%= t('.available') %></option>
+                    <option value="unavailable" <%= 'selected' if availability_value == 'unavailable' %>><%= t('.unavailable') %></option>
                   </select>
                 <% end %>
               </td>
@@ -203,34 +203,34 @@
                 <div class="menu-status-badge mb-2">
                   <% if restaurant_menu.active? %>
                     <span class="badge bg-success">
-                      <i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %>
+                      <i class="bi bi-check-circle"></i> <%= t('.active') %>
                     </span>
                   <% elsif restaurant_menu.inactive? %>
                     <span class="badge bg-warning text-dark">
-                      <i class="bi bi-pencil"></i> <%= t('.inactive', default: 'Inactive') %>
+                      <i class="bi bi-pencil"></i> <%= t('.inactive') %>
                     </span>
                   <% end %>
                 </div>
                 <% if owner_restaurant_id == restaurant.id %>
                   <%= link_to edit_restaurant_menu_path(restaurant, menu),
                       class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                      title: t('.edit', default: 'Edit'),
-                      aria: { label: t('.edit', default: 'Edit') },
+                      title: t('.edit'),
+                      aria: { label: t('.edit') },
                       data: { turbo_frame: '_top', testid: "edit-menu-#{menu.id}-btn" } do %>
                     <i class="bi bi-pencil"></i>
                   <% end %>
                 <% else %>
                   <%= link_to edit_restaurant_menu_path(restaurant, menu),
                       class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                      title: t('.view', default: 'View'),
-                      aria: { label: t('.view', default: 'View') },
+                      title: t('.view'),
+                      aria: { label: t('.view') },
                       data: { turbo_frame: '_top', testid: "view-menu-#{menu.id}-btn" } do %>
                     <i class="bi bi-eye"></i>
                   <% end %>
                 <% end %>
 
                 <% unless owner_restaurant_id == restaurant.id %>
-                  <%= button_to t('.detach', default: 'Detach'),
+                  <%= button_to t('.detach'),
                       detach_restaurant_menu_path(restaurant, menu),
                       method: :delete,
                       form: { data: { turbo_frame: '_top' } },
@@ -242,20 +242,20 @@
                   <% if other_restaurants.any? %>
                     <%= form_with url: share_restaurant_menu_path(restaurant, menu), method: :post, data: { turbo_frame: '_top' } do |f| %>
                       <div class="d-flex justify-content-end mt-1">
-                        <div class="btn-group" role="group" aria-label="<%= t('.share', default: 'Share') %>">
+                        <div class="btn-group" role="group" aria-label="<%= t('.share') %>">
                           <select class="form-select form-select-sm"
                                   name="target_restaurant_ids[]"
                                   multiple
                                   size="1">
-                            <option value="all"><%= t('.share_to_all', default: 'All restaurants') %></option>
+                            <option value="all"><%= t('.share_to_all') %></option>
                             <% other_restaurants.each do |r| %>
                               <option value="<%= r.id %>"><%= r.name %></option>
                             <% end %>
                           </select>
                           <button type="submit"
                                   class="btn-2025 btn-2025-ghost btn-2025-sm"
-                                  title="<%= t('.share', default: 'Share') %>"
-                                  aria-label="<%= t('.share', default: 'Share') %>">
+                                  title="<%= t('.share') %>"
+                                  aria-label="<%= t('.share') %>">
                             <i class="bi bi-send"></i>
                           </button>
                         </div>
@@ -277,10 +277,10 @@
     <div class="text-center py-5">
       <i class="bi bi-menu-button-wide text-muted text-3rem"></i>
       <h3 class="mt-3 text-muted">
-        <%= t('.no_menus', default: 'No menus found') %>
+        <%= t('.no_menus') %>
       </h3>
       <p class="text-muted">
-        <%= t('.no_menus_description', default: 'Create your first menu to get started') %>
+        <%= t('.no_menus_description') %>
       </p>
     </div>
   <% end %>

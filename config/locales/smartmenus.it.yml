@@ -105,3 +105,23 @@ it:
         classification: "Classe"
         review_needed: "Da verificare"
         overrides_hint: "Le modifiche verranno applicate alla pubblicazione."
+
+    empty_states:
+      no_menu_items: Nessun articolo nel menù
+      no_menu_description: "Stiamo ancora aggiungendo articoli al menù. Riprova più tardi!"
+      refresh: Aggiorna
+      cart_empty: Il tuo carrello è vuoto
+      cart_empty_description: Inizia ad aggiungere deliziosi articoli dal menù!
+      browse_menu: Sfoglia il menù
+      no_results: Nessun risultato trovato
+      no_results_description: "Non abbiamo trovato articoli che corrispondono alla tua ricerca. Prova parole chiave diverse."
+      no_items_filtered: Nessun articolo corrisponde ai filtri
+      no_items_filtered_description: Prova a modificare i filtri sugli allergeni per vedere più articoli.
+      adjust_filters: Modifica filtri
+      no_table_selected: Seleziona il tuo tavolo
+      no_table_description: Seleziona un tavolo per iniziare l'ordine.
+      order_complete: Ordine inviato!
+      order_complete_description: Il tuo ordine è stato inviato in cucina. Buon appetito!
+      error_occurred: Qualcosa è andato storto
+      error_description: "Stiamo avendo problemi a caricare questo contenuto. Riprova."
+      try_again: Riprova

@@ -130,12 +130,27 @@ en:
       staff: Staff
       financials: FINANCIALS
       taxes_and_tips: Taxes & Tips
+      taxes: Taxes
+      tips: Tips
       ordering: Ordering
       setup: SETUP
       settings: Settings
       qr_codes: QR Codes
       jukebox: Jukebox
       advanced: Advanced
+    index_frame_2025:
+      all: All
+      active: Active
+      inactive: Inactive
+      archived: Archived
+      pagination_aria_label: Restaurants pagination
+      no_restaurants: No restaurants found
+      no_results_for: No results for
+      clear_search: Clear search
+      menus_count_label: menus
+      staff_count_label: staff
+      edit: Edit
+      menus_action: Menus
     sections:
       details_2025:
         quick_actions: Quick Actions

@@ -11,7 +11,7 @@
 <div class="quick-actions-card">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions', default: 'Quick Actions') %>
+    <%= t('.quick_actions') %>
   </h2>
 
   <div class="quick-actions-grid">
@@ -19,7 +19,7 @@
         class: 'quick-action-btn',
         data: { turbo_frame: 'tables_new_tablesetting' } do %>
       <i class="bi bi-plus-circle"></i>
-      <span><%= t('.add_table', default: 'Add Table') %></span>
+      <span><%= t('.add_table') %></span>
     <% end %>
   </div>
 </div>
@@ -46,11 +46,11 @@
 <div class="content-card-2025 py-4">
   <h2 class="content-card-title">
     <i class="bi bi-rulers"></i>
-    <%= t('.tables_overview', default: 'Tables') %>
+    <%= t('.tables_overview') %>
   </h2>
 
   <p class="text-muted mb-4">
-    <%= t('.tables_description', default: 'Manage your restaurant tables to enable QR codes and ordering by table.') %>
+    <%= t('.tables_description') %>
   </p>
 
   <div class="size-stats-card">
@@ -59,7 +59,7 @@
         <%= restaurant.tablesettings.count %>
       </div>
       <div class="size-stat-label">
-        <%= t('.total_tables', default: 'Total Tables') %>
+        <%= t('.total_tables') %>
       </div>
     </div>
   </div>
@@ -84,7 +84,7 @@
   <div class="content-card-2025">
     <h2 class="content-card-title mb-4">
       <i class="bi bi-layout-wtf"></i>
-      <%= t('.table_settings', default: 'Table Settings') %>
+      <%= t('.table_settings') %>
     </h2>
 
     <!-- Desktop Table View (styled like Menu Sections list) -->
@@ -93,19 +93,19 @@
         <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
           <div class="d-flex align-items-center gap-2">
             <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
-            <span class="text-muted small"><%= t('.select_all', default: 'Select all') %></span>
+            <span class="text-muted small"><%= t('.select_all') %></span>
           </div>
 
           <div class="d-flex align-items-center gap-2 ms-auto">
             <%= f.select :status,
                 [
-                  [t('.status_free', default: 'Free'), 'free'],
-                  [t('.status_occupied', default: 'Occupied'), 'occupied'],
-                  [t('.status_archived', default: 'Archived'), 'archived'],
+                  [t('.free'), 'free'],
+                  [t('.occupied'), 'occupied'],
+                  [t('.archived'), 'archived'],
                 ],
-                { include_blank: t('.set_status', default: 'Set status...') },
+                { include_blank: t('.set_status') },
                 { class: 'form-select form-select-sm', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
-            <%= f.submit t('.apply', default: 'Apply'), class: 'btn-2025 btn-2025-primary btn-2025-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
+            <%= f.submit t('.apply'), class: 'btn-2025 btn-2025-primary btn-2025-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
           </div>
         </div>
 
@@ -115,8 +115,8 @@
             <tr>
               <th class="w-40px"></th>
               <th class="w-40px"></th>
-              <th><%= t('.table_name', default: 'Name') %></th>
-              <th class="text-end"><%= t('.capacity', default: 'Seats') %></th>
+              <th><%= t('.table_name') %></th>
+              <th class="text-end"><%= t('.capacity') %></th>
               <th class="text-end">
                 <span class="btn-2025 btn-2025-ghost btn-2025-sm">
                   <i class="bi bi-gear"></i>
@@ -133,7 +133,7 @@
                   <input type="checkbox" name="tablesetting_ids[]" value="<%= table.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
                 </td>
                 <td class="w-40px table-handle cursor-grab">
-                  <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>"></i>
+                  <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
                 </td>
                 <td>
                   <strong><%= table.name %></strong>
@@ -144,8 +144,8 @@
                 <td class="text-end">
                   <%= link_to edit_restaurant_tablesetting_path(restaurant, table),
                       class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                      title: t('.edit', default: 'Edit'),
-                      aria: { label: t('.edit', default: 'Edit') },
+                      title: t('.edit'),
+                      aria: { label: t('.edit') },
                       data: { turbo_frame: 'tables_edit_tablesetting' } do %>
                     <i class="bi bi-pencil"></i>
                   <% end %>
@@ -172,7 +172,7 @@
                 <div class="fw-semibold"><%= table.name %></div>
                 <div class="text-muted small">
                   <i class="bi bi-people"></i>
-                  <%= table.capacity ? "#{table.capacity} #{t('.seats', default: 'seats')}" : t('.no_capacity', default: 'Capacity not set') %>
+                  <%= table.capacity ? "#{table.capacity} #{t('.seats')}" : t('.no_capacity') %>
                 </div>
               </div>
             </div>
@@ -195,10 +195,10 @@
     <div class="text-center py-5">
       <i class="bi bi-layout-wtf text-muted" style="font-size: 3rem;"></i>
       <h3 class="mt-3 text-muted">
-        <%= t('.no_tables', default: 'No tables configured yet') %>
+        <%= t('.no_tables') %>
       </h3>
       <p class="text-muted">
-        <%= t('.no_tables_description', default: 'Set up your restaurant tables to enable table-specific QR codes and ordering.') %>
+        <%= t('.no_tables_description') %>
       </p>
     </div>
   </div>

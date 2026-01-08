@@ -13,31 +13,31 @@
   <div class="quick-actions-card">
     <h2 class="quick-actions-title">
       <i class="bi bi-lightning-charge"></i>
-      <%= t('.quick_actions', default: 'Quick Actions') %>
+      <%= t('.quick_actions') %>
     </h2>
 
     <div class="quick-actions-grid">
       <%= link_to new_restaurant_menu_menusection_path(restaurant, menu), class: 'quick-action-btn' do %>
         <i class="bi bi-plus-circle"></i>
-        <span><%= t('.add_section', default: 'Add Section') %></span>
+        <span><%= t('.add_section') %></span>
       <% end %>
 
       <% if menu_smartmenu_slug.present? %>
         <%= link_to smartmenu_path(menu_smartmenu_slug),
             class: 'quick-action-btn',
             target: '_blank',
-            title: 'Preview menu as staff (authenticated view)' do %>
+            title: t('.preview_staff_title') do %>
           <i class="bi bi-eye"></i>
-          <span><%= t('.preview_staff', default: 'Preview (Staff)') %></span>
+          <span><%= t('.preview_staff') %></span>
         <% end %>
 
         <%= link_to smartmenu_path(menu_smartmenu_slug, view: 'customer'),
             class: 'quick-action-btn quick-action-btn-secondary',
             target: '_blank',
             rel: 'noopener noreferrer',
-            title: 'Preview menu as customers see it (authenticated as staff but viewing customer interface)' do %>
+            title: t('.preview_customer_title') do %>
           <i class="bi bi-eye-slash"></i>
-          <span><%= t('.preview_customer', default: 'Preview (Customer)') %></span>
+          <span><%= t('.preview_customer') %></span>
         <% end %>
       <% end %>
     </div>
@@ -48,11 +48,11 @@
 <div class="content-card-2025 py-4">
   <h2 class="content-card-title">
     <i class="bi bi-layout-text-sidebar"></i>
-    <%= t('.menu_sections', default: 'Menu Sections') %>
+    <%= t('.menu_sections') %>
   </h2>
 
   <p class="text-muted mb-4">
-    <%= t('.sections_description', default: 'Organize your menu into sections like Appetizers, Main Courses, Desserts, etc.') %>
+    <%= t('.sections_description') %>
   </p>
 
   <% if menu.menusections.any? %>
@@ -62,8 +62,8 @@
         <thead>
           <tr>
             <th class="w-40px"></th>
-            <th><%= t('.name', default: 'Name') %></th>
-            <th class="text-end"><%= t('.items', default: 'Items') %></th>
+            <th><%= t('.name') %></th>
+            <th class="text-end"><%= t('.items') %></th>
             <% unless read_only %>
               <th class="text-end">
                 <span class="btn-2025 btn-2025-ghost btn-2025-sm">
@@ -101,8 +101,8 @@
                 <td class="text-end">
                   <%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section),
                               class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                              title: t('.edit', default: 'Edit'),
-                              aria: { label: t('.edit', default: 'Edit') },
+                              title: t('.edit'),
+                              aria: { label: t('.edit') },
                               data: { turbo_frame: '_top', testid: "edit-menusection-#{section.id}-btn" } do %>
                     <i class="bi bi-pencil"></i>
                   <% end %>
@@ -117,14 +117,14 @@
     <!-- Empty State -->
     <div class="text-center py-5">
       <i class="bi bi-layout-text-sidebar text-muted text-3rem"></i>
-      <h4 class="mt-3"><%= t('.no_sections', default: 'No sections yet') %></h4>
+      <h4 class="mt-3"><%= t('.no_sections') %></h4>
       <p class="text-muted">
-        <%= t('.no_sections_desc', default: 'Add your first section to start building your menu') %>
+        <%= t('.no_sections_desc') %>
       </p>
       <%= link_to new_restaurant_menu_menusection_path(restaurant, menu),
           class: 'btn-2025 btn-2025-primary btn-2025-lg mt-3' do %>
         <i class="bi bi-plus-circle"></i>
-        <%= t('.add_first_section', default: 'Add First Section') %>
+        <%= t('.add_first_section') %>
       <% end %>
     </div>
   <% end %>

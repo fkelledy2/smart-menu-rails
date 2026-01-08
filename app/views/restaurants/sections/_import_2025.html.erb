@@ -10,9 +10,9 @@
   <div class="d-flex align-items-start">
     <i class="bi bi-info-circle me-3 text-1_5rem"></i>
     <div>
-      <h6 class="mb-1"><%= t('.info_title', default: 'AI-Powered Menu Import') %></h6>
+      <h6 class="mb-1"><%= t('.info_title') %></h6>
       <p class="mb-0 small">
-        <%= t('.info_text', default: 'Upload your PDF menu and our AI will automatically extract all items, sections, prices, and descriptions.') %>
+        <%= t('.info_text') %>
       </p>
     </div>
   </div>
@@ -22,30 +22,30 @@
 <div class="content-card-2025" data-testid="import-form-card">
   <h2 class="content-card-title">
     <i class="bi bi-cloud-upload"></i>
-    <%= t('.upload_title', default: 'Upload Menu PDF') %>
+    <%= t('.upload_title') %>
   </h2>
 
   <%= form_with(model: [restaurant, restaurant.ocr_menu_imports.new], local: true, html: { class: 'needs-validation', novalidate: true }, data: { turbo_frame: '_top', testid: 'import-form' }) do |f| %>
     <div class="form-group-2025 mb-4">
-      <%= f.label :name, t('.name_label', default: 'Menu Name'), class: 'form-label-2025' %>
+      <%= f.label :name, t('.name_label'), class: 'form-label-2025' %>
       <%= f.text_field :name,
           class: 'form-control-2025',
-          placeholder: t('.name_placeholder', default: 'e.g., Summer Menu 2024'),
+          placeholder: t('.name_placeholder'),
           required: true,
           data: { testid: 'import-name-input' } %>
       <div class="form-help-2025">
-        <%= t('.name_help', default: 'Give this menu a descriptive name') %>
+        <%= t('.name_help') %>
       </div>
       <div class="invalid-feedback">
-        <%= t('.name_invalid', default: 'Please provide a menu name') %>
+        <%= t('.name_invalid') %>
       </div>
     </div>
 
     <div class="form-group-2025 mb-4">
-      <%= f.label :source_locale, t('.source_language_label', default: 'Menu language'), class: 'form-label-2025' %>
+      <%= f.label :source_locale, t('.source_language_label'), class: 'form-label-2025' %>
       <%= f.select :source_locale,
           options_for_select(
-            [[t('.auto_detect', default: 'Auto-detect'), '']] +
+            [[t('.auto_detect'), '']] +
               restaurant.restaurantlocales
                         .select { |rl| rl.status.to_s == 'active' }
                         .sort_by { |rl| rl.locale.to_s }
@@ -55,43 +55,43 @@
           {},
           class: 'form-control-2025' %>
       <div class="form-help-2025">
-        <%= t('.source_language_help', default: 'Used to preserve the original language when generating missing descriptions.') %>
+        <%= t('.source_language_help') %>
       </div>
     </div>
 
     <div class="form-group-2025 mb-4">
-      <%= f.label :pdf_file, t('.pdf_label', default: 'Menu PDF'), class: 'form-label-2025' %>
+      <%= f.label :pdf_file, t('.pdf_label'), class: 'form-label-2025' %>
       <div class="file-upload-area">
         <div class="file-upload-icon">
           <i class="bi bi-file-earmark-pdf"></i>
         </div>
         <div class="file-upload-content">
           <label for="file-upload" class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-upload me-1"></i> <%= t('.choose_file', default: 'Choose File') %>
+            <i class="bi bi-upload me-1"></i> <%= t('.choose_file') %>
             <%= f.file_field :pdf_file,
                 id: 'file-upload',
                 class: 'd-none',
                 accept: 'application/pdf',
                 required: true,
-                onchange: "document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'",
+                onchange: "document.getElementById('file-name').textContent = this.files[0]?.name || '#{j t('.no_file_chosen')}'",
                 data: { testid: 'import-pdf-input' } %>
           </label>
           <div id="file-name" class="file-upload-filename" data-testid="import-filename-display">
-            <%= t('.no_file_chosen', default: 'No file chosen') %>
+            <%= t('.no_file_chosen') %>
           </div>
           <p class="file-upload-hint">
-            <%= t('.pdf_hint', default: 'PDF up to 10MB. Clear scans work best.') %>
+            <%= t('.pdf_hint') %>
           </p>
         </div>
       </div>
       <div class="invalid-feedback">
-        <%= t('.pdf_invalid', default: 'Please select a PDF file') %>
+        <%= t('.pdf_invalid') %>
       </div>
     </div>
 
     <div class="d-flex justify-content-end gap-2 pt-3 border-top">
       <button type="submit" id="upload-submit-btn" class="btn btn-danger btn-lg w-100 w-md-auto" disabled data-testid="import-submit-btn">
-        <i class="bi bi-upload me-1"></i> <%= t('.upload_process', default: 'Upload & Process') %>
+        <i class="bi bi-upload me-1"></i> <%= t('.upload_process') %>
       </button>
     </div>
   <% end %>
@@ -152,7 +152,7 @@
 <div class="content-card-2025 mt-4" data-testid="import-tips-card">
   <h2 class="content-card-title">
     <i class="bi bi-lightbulb"></i>
-    <%= t('.tips_title', default: 'Tips for Best Results') %>
+    <%= t('.tips_title') %>
   </h2>
 
   <div class="tips-list">
@@ -161,9 +161,9 @@
         <i class="bi bi-check-circle text-success"></i>
       </div>
       <div class="tip-content">
-        <h6><%= t('.tip_quality_title', default: 'High Quality PDF') %></h6>
+        <h6><%= t('.tip_quality_title') %></h6>
         <p class="text-muted small mb-0">
-          <%= t('.tip_quality_text', default: 'Use a clear, high-resolution PDF for best OCR accuracy. Scanned menus should be crisp and readable.') %>
+          <%= t('.tip_quality_text') %>
         </p>
       </div>
     </div>
@@ -173,9 +173,9 @@
         <i class="bi bi-card-list text-primary"></i>
       </div>
       <div class="tip-content">
-        <h6><%= t('.tip_format_title', default: 'Structured Format') %></h6>
+        <h6><%= t('.tip_format_title') %></h6>
         <p class="text-muted small mb-0">
-          <%= t('.tip_format_text', default: 'Menus with clear sections, item names, and prices work best. Avoid complex layouts or multiple columns.') %>
+          <%= t('.tip_format_text') %>
         </p>
       </div>
     </div>
@@ -185,9 +185,9 @@
         <i class="bi bi-clock-history text-warning"></i>
       </div>
       <div class="tip-content">
-        <h6><%= t('.tip_processing_title', default: 'Processing Time') %></h6>
+        <h6><%= t('.tip_processing_title') %></h6>
         <p class="text-muted small mb-0">
-          <%= t('.tip_processing_text', default: 'Large menus may take a few minutes to process. You will be notified when the import is ready for review.') %>
+          <%= t('.tip_processing_text') %>
         </p>
       </div>
     </div>
@@ -200,7 +200,7 @@
   <div class="content-card-2025 mt-4" data-testid="recent-imports-card">
     <h2 class="content-card-title">
       <i class="bi bi-clock-history"></i>
-      <%= t('.recent_imports', default: 'Recent Imports') %>
+      <%= t('.recent_imports') %>
     </h2>
 
     <div class="list-group list-group-flush">
@@ -213,25 +213,25 @@
               <div>
                 <h6 class="mb-1"><%= import.name %></h6>
                 <p class="mb-0 small text-muted">
-                  <%= time_ago_in_words(import.created_at) %> ago
+                  <%= time_ago_in_words(import.created_at) %> <%= t('.ago') %>
                 </p>
               </div>
               <div>
                 <% if import.completed? %>
                   <span class="badge bg-success">
-                    <i class="bi bi-check-circle"></i> Completed
+                    <i class="bi bi-check-circle"></i> <%= t('.status_completed') %>
                   </span>
                 <% elsif import.failed? %>
                   <span class="badge bg-danger">
-                    <i class="bi bi-x-circle"></i> Failed
+                    <i class="bi bi-x-circle"></i> <%= t('.status_failed') %>
                   </span>
                 <% elsif import.processing? %>
                   <span class="badge bg-primary">
-                    <i class="bi bi-arrow-repeat"></i> Processing
+                    <i class="bi bi-arrow-repeat"></i> <%= t('.status_processing') %>
                   </span>
                 <% else %>
                   <span class="badge bg-secondary">
-                    <i class="bi bi-pause-circle"></i> Pending
+                    <i class="bi bi-pause-circle"></i> <%= t('.status_pending') %>
                   </span>
                 <% end %>
               </div>
@@ -243,9 +243,9 @@
               data: {
                 testid: "delete-import-#{import.id}",
                 turbo_frame: '_top',
-                turbo_confirm: t('.confirm_delete', default: 'Are you sure you want to delete this import?')
+                turbo_confirm: t('.confirm_delete')
               },
-              title: t('.delete_import', default: 'Delete import') do %>
+              title: t('.delete_import') do %>
             <i class="bi bi-trash"></i>
           <% end %>
         </div>

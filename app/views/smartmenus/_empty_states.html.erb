@@ -4,15 +4,15 @@
 <% if defined?(empty_type) && empty_type == 'menu' %>
   <div class="empty-state empty-menu">
     <div class="empty-icon"></div>
-    <h2 class="empty-title"><%= t('.no_menu_items', default: 'No Menu Items Yet') %></h2>
+    <h2 class="empty-title"><%= t('smartmenus.empty_states.no_menu_items') %></h2>
     <p class="empty-description">
-      <%= t('.no_menu_description', default: "We're still adding items to our menu. Please check back soon!") %>
+      <%= t('smartmenus.empty_states.no_menu_description') %>
     </p>
     <% if defined?(show_action) && show_action %>
       <div class="empty-action">
         <button type="button" class="btn-touch-primary" onclick="location.reload()">
           <i class="bi bi-arrow-clockwise"></i>
-          <%= t('.refresh', default: 'Refresh') %>
+          <%= t('smartmenus.empty_states.refresh') %>
         </button>
       </div>
     <% end %>
@@ -23,14 +23,14 @@
 <% if defined?(empty_type) && empty_type == 'cart' %>
   <div class="empty-state empty-cart">
     <div class="empty-icon"></div>
-    <h2 class="empty-title"><%= t('.cart_empty', default: 'Your Cart is Empty') %></h2>
+    <h2 class="empty-title"><%= t('smartmenus.empty_states.cart_empty') %></h2>
     <p class="empty-description">
-      <%= t('.cart_empty_description', default: 'Start adding delicious items from our menu!') %>
+      <%= t('smartmenus.empty_states.cart_empty_description') %>
     </p>
     <div class="empty-action">
       <button type="button" class="btn-touch-primary" data-bs-dismiss="modal">
         <i class="bi bi-arrow-left"></i>
-        <%= t('.browse_menu', default: 'Browse Menu') %>
+        <%= t('smartmenus.empty_states.browse_menu') %>
       </button>
     </div>
   </div>
@@ -40,9 +40,9 @@
 <% if defined?(empty_type) && empty_type == 'search' %>
   <div class="empty-state empty-search">
     <div class="empty-icon"></div>
-    <h2 class="empty-title"><%= t('.no_results', default: 'No Results Found') %></h2>
+    <h2 class="empty-title"><%= t('smartmenus.empty_states.no_results') %></h2>
     <p class="empty-description">
-      <%= t('.no_results_description', default: "We couldn't find any items matching your search. Try different keywords.") %>
+      <%= t('smartmenus.empty_states.no_results_description') %>
     </p>
   </div>
 <% end %>
@@ -51,14 +51,14 @@
 <% if defined?(empty_type) && empty_type == 'filter' %>
   <div class="empty-state empty-filter">
     <div class="empty-icon"></div>
-    <h2 class="empty-title"><%= t('.no_items_filtered', default: 'No Items Match Your Filters') %></h2>
+    <h2 class="empty-title"><%= t('smartmenus.empty_states.no_items_filtered') %></h2>
     <p class="empty-description">
-      <%= t('.no_items_filtered_description', default: 'Try adjusting your allergen filters to see more items.') %>
+      <%= t('smartmenus.empty_states.no_items_filtered_description') %>
     </p>
     <div class="empty-action">
       <button type="button" class="btn-touch-secondary" data-bs-toggle="modal" data-bs-target="#filterOrderModal">
         <i class="bi bi-funnel"></i>
-        <%= t('.adjust_filters', default: 'Adjust Filters') %>
+        <%= t('smartmenus.empty_states.adjust_filters') %>
       </button>
     </div>
   </div>
@@ -68,9 +68,9 @@
 <% if defined?(empty_type) && empty_type == 'table' %>
   <div class="empty-state empty-table">
     <div class="empty-icon"></div>
-    <h2 class="empty-title"><%= t('.no_table_selected', default: 'Select Your Table') %></h2>
+    <h2 class="empty-title"><%= t('smartmenus.empty_states.no_table_selected') %></h2>
     <p class="empty-description">
-      <%= t('.no_table_description', default: 'Please select a table to start your order.') %>
+      <%= t('smartmenus.empty_states.no_table_description') %>
     </p>
   </div>
 <% end %>
@@ -79,9 +79,9 @@
 <% if defined?(empty_type) && empty_type == 'complete' %>
   <div class="empty-state order-complete">
     <div class="empty-icon"></div>
-    <h2 class="empty-title"><%= t('.order_complete', default: 'Order Submitted!') %></h2>
+    <h2 class="empty-title"><%= t('smartmenus.empty_states.order_complete') %></h2>
     <p class="empty-description">
-      <%= t('.order_complete_description', default: 'Your order has been sent to the kitchen. Enjoy your meal!') %>
+      <%= t('smartmenus.empty_states.order_complete_description') %>
     </p>
   </div>
 <% end %>
@@ -90,14 +90,14 @@
 <% if defined?(empty_type) && empty_type == 'error' %>
   <div class="empty-state empty-error">
     <div class="empty-icon"></div>
-    <h2 class="empty-title"><%= t('.error_occurred', default: 'Something Went Wrong') %></h2>
+    <h2 class="empty-title"><%= t('smartmenus.empty_states.error_occurred') %></h2>
     <p class="empty-description">
-      <%= defined?(error_message) ? error_message : t('.error_description', default: "We're having trouble loading this content. Please try again.") %>
+      <%= defined?(error_message) ? error_message : t('smartmenus.empty_states.error_description') %>
     </p>
     <div class="empty-action">
       <button type="button" class="btn-touch-primary" onclick="location.reload()">
         <i class="bi bi-arrow-clockwise"></i>
-        <%= t('.try_again', default: 'Try Again') %>
+        <%= t('smartmenus.empty_states.try_again') %>
       </button>
     </div>
   </div>
