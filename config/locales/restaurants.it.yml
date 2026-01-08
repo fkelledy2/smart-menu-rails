@@ -126,6 +126,8 @@ it:
       allergens: Allergeni
       sizes: Dimensioni
       tables: TAVOLI
+      operations: OPERAZIONI
+      wifi: WiFi
       team: TEAM
       staff: Staff
       financials: FINANZE
