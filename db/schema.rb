@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_06_170800) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_09_180630) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -616,6 +616,21 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_06_170800) do
     t.index ["user_id"], name: "index_onboarding_sessions_on_user_id"
   end
 
+  create_table "ordr_station_tickets", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.bigint "ordr_id", null: false
+    t.integer "station", null: false
+    t.integer "status", default: 20, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "sequence", default: 1, null: false
+    t.datetime "submitted_at"
+    t.index ["ordr_id", "station", "sequence"], name: "index_station_tickets_on_order_station_sequence", unique: true
+    t.index ["ordr_id"], name: "index_ordr_station_tickets_on_ordr_id"
+    t.index ["restaurant_id", "station", "status"], name: "index_station_tickets_on_restaurant_station_status"
+    t.index ["restaurant_id"], name: "index_ordr_station_tickets_on_restaurant_id"
+  end
+
   create_table "ordractions", force: :cascade do |t|
     t.integer "action"
     t.bigint "ordrparticipant_id", null: false
@@ -643,12 +658,14 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_06_170800) do
     t.datetime "updated_at", null: false
     t.float "ordritemprice", default: 0.0
     t.integer "status", default: 0
+    t.bigint "ordr_station_ticket_id"
     t.index ["created_at"], name: "index_ordritems_on_created_at"
     t.index ["menuitem_id", "status"], name: "index_ordritems_on_menuitem_status"
     t.index ["menuitem_id"], name: "index_ordritems_on_menuitem_id"
     t.index ["ordr_id", "created_at"], name: "index_ordritems_on_ordr_created_at"
     t.index ["ordr_id", "status"], name: "index_ordritems_on_ordr_status"
     t.index ["ordr_id"], name: "index_ordritems_on_ordr_id"
+    t.index ["ordr_station_ticket_id"], name: "index_ordritems_on_ordr_station_ticket_id"
     t.index ["status"], name: "index_ordritems_on_status"
   end
 
@@ -1227,10 +1244,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_06_170800) do
   add_foreign_key "onboarding_sessions", "menus"
   add_foreign_key "onboarding_sessions", "restaurants"
   add_foreign_key "onboarding_sessions", "users"
+  add_foreign_key "ordr_station_tickets", "ordrs"
+  add_foreign_key "ordr_station_tickets", "restaurants"
   add_foreign_key "ordractions", "ordritems"
   add_foreign_key "ordractions", "ordrparticipants"
   add_foreign_key "ordritemnotes", "ordritems"
   add_foreign_key "ordritems", "menuitems"
+  add_foreign_key "ordritems", "ordr_station_tickets"
   add_foreign_key "ordrparticipant_allergyn_filters", "allergyns"
   add_foreign_key "ordrparticipant_allergyn_filters", "ordrparticipants"
   add_foreign_key "ordrparticipants", "employees"

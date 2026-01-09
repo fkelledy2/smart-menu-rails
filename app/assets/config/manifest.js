@@ -28,6 +28,7 @@
 //= link channels/presence_channel.js
 //= link channels/menu_editing_channel.js
 //= link kitchen_dashboard.js
+//= link station_dashboard.js
 //= link dw_orders_mv.js
 //= link smartmenus.js
 //= link restaurantlocales.js

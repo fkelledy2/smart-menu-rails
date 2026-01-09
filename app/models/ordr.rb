@@ -39,6 +39,7 @@ class Ordr < ApplicationRecord
   after_create :broadcast_new_order
   after_update :broadcast_status_change, if: :saved_change_to_status?
   after_update :cascade_status_to_items, if: :saved_change_to_status?
+  after_update :clear_station_tickets_if_terminal, if: :saved_change_to_status?
 
   # Standard ActiveRecord associations
   belongs_to :employee, optional: true
@@ -49,6 +50,7 @@ class Ordr < ApplicationRecord
   has_many :ordritems, dependent: :destroy
   has_many :ordrparticipants, dependent: :destroy
   has_many :ordractions, dependent: :destroy
+  has_many :ordr_station_tickets, dependent: :destroy
 
   # Optimized associations to prevent N+1 queries
   has_many :ordered_items_with_details, lambda {
@@ -112,6 +114,12 @@ class Ordr < ApplicationRecord
     paid: 35,
     closed: 40,
   }
+
+  def clear_station_tickets_if_terminal
+    return unless status.in?(%w[delivered billrequested paid closed])
+
+    ordr_station_tickets.destroy_all
+  end
 
   def grossInCents
     (gross || 0) * 100

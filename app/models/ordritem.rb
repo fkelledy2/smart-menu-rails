@@ -4,6 +4,7 @@ class Ordritem < ApplicationRecord
   # Standard ActiveRecord associations
   belongs_to :ordr
   belongs_to :menuitem
+  belongs_to :ordr_station_ticket, optional: true
   has_one :ordrparticipant
   has_many :ordritemnotes, dependent: :destroy
 

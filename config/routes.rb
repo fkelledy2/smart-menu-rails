@@ -123,6 +123,7 @@ Rails.application.routes.draw do
     # Kitchen Dashboard
     member do
       get 'kitchen', to: 'kitchen_dashboard#index', as: :kitchen_dashboard
+      get 'bar', to: 'bar_dashboard#index', as: :bar_dashboard
       patch 'update_hours', to: 'restaurants#update_hours'
       patch 'update_alcohol_policy', to: 'restaurants#update_alcohol_policy'
       get 'alcohol_status', to: 'restaurants#alcohol_status'
@@ -202,6 +203,7 @@ Rails.application.routes.draw do
         post :ack_alcohol, to: 'ordrs#ack_alcohol'
       end
     end
+    resources :ordr_station_tickets, only: [:update]
     resources :alcohol_order_events, only: [:index]
     resources :ordritems
     resources :ordritemnotes

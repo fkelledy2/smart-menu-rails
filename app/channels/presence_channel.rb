@@ -2,10 +2,22 @@ class PresenceChannel < ApplicationCable::Channel
   def subscribed
     stream_from 'presence_channel'
 
+    resource_type = params[:resource_type].presence
+    resource_id = params[:resource_id].presence
+
+    if resource_type && resource_id
+      stream_from "#{resource_type.to_s.downcase}_#{resource_id}_presence"
+    end
+
     # Mark user as online
     if current_user
       session_id = connection.connection_identifier
-      PresenceService.user_online(current_user, session_id)
+      PresenceService.user_online(
+        current_user,
+        session_id,
+        resource_type: resource_type,
+        resource_id: resource_id,
+      )
     end
   end
 

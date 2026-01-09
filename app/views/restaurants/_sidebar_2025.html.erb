@@ -139,6 +139,26 @@
       <% end %>
     <% end %>
 
+    <%= link_to kitchen_dashboard_restaurant_path(restaurant),
+        class: 'sidebar-link',
+        target: '_blank',
+        rel: 'noopener',
+        data: { testid: 'sidebar-kitchen-dashboard-link', turbo: false } do %>
+      <i class="bi bi-fire"></i>
+      <span><%= t('.kitchen_dashboard') %></span>
+      <i class="bi bi-box-arrow-up-right ms-auto"></i>
+    <% end %>
+
+    <%= link_to bar_dashboard_restaurant_path(restaurant),
+        class: 'sidebar-link',
+        target: '_blank',
+        rel: 'noopener',
+        data: { testid: 'sidebar-bar-dashboard-link', turbo: false } do %>
+      <i class="bi bi-cup-straw"></i>
+      <span><%= t('.bar_dashboard') %></span>
+      <i class="bi bi-box-arrow-up-right ms-auto"></i>
+    <% end %>
+
     <%= link_to edit_restaurant_path(restaurant, section: 'taxes_and_tips'),
         class: "sidebar-link #{'active' if current_section == 'taxes_and_tips'} #{disabled_class_for('taxes_and_tips', onboarding_next)}",
         data: { testid: 'sidebar-taxes-tips-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('taxes_and_tips', onboarding_next) } do %>

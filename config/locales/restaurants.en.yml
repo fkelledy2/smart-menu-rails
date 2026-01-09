@@ -127,6 +127,8 @@ en:
       sizes: Sizes
       tables: Tables
       operations: OPERATIONS
+      kitchen_dashboard: Kitchen
+      bar_dashboard: Bar
       wifi: WiFi
       team: TEAM
       staff: Staff

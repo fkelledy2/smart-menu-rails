@@ -1,12 +1,12 @@
-class KitchenDashboardController < ApplicationController
+class BarDashboardController < ApplicationController
   before_action :authenticate_user!
   before_action :set_restaurant
 
   def index
-    @station = 'kitchen'
+    @station = 'bar'
 
     tickets = @restaurant.ordr_station_tickets
-      .where(station: :kitchen)
+      .where(station: :bar)
       .where.not(status: 'collected')
       .includes({ ordritems: %i[menuitem ordritemnotes] }, ordr: [:tablesetting])
 
@@ -18,8 +18,6 @@ class KitchenDashboardController < ApplicationController
       total_pending: @pending_tickets.count,
       total_preparing: @preparing_tickets.count,
       total_ready: @ready_tickets.count,
-      avg_prep_time: calculate_avg_prep_time,
-      orders_today: @restaurant.ordrs.where(created_at: Time.current.beginning_of_day..).count,
     }
   end
 
@@ -32,23 +30,5 @@ class KitchenDashboardController < ApplicationController
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to root_path, alert: 'Restaurant not found'
-  end
-
-  def calculate_avg_prep_time
-    completed_today = @restaurant.ordrs
-      .where(created_at: Time.current.beginning_of_day..)
-      .where(status: %w[ready delivered paid])
-
-    return 0 if completed_today.empty?
-
-    total_time = completed_today.sum do |order|
-      if order.updated_at && order.created_at
-        (order.updated_at - order.created_at) / 60 # in minutes
-      else
-        0
-      end
-    end
-
-    (total_time / completed_today.count).round
   end
 end

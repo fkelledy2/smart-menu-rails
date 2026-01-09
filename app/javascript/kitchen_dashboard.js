@@ -8,6 +8,7 @@ class KitchenDashboard {
 
     this.initializeClock();
     this.initializeKitchenChannel();
+    this.initializePresenceChannel();
     this.initializeNotificationSound();
     this.initializeOrderStatusButtons();
     this.initializeSortButtons();
@@ -20,6 +21,7 @@ class KitchenDashboard {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
+        hour12: false,
       });
       const dateString = now.toLocaleDateString('en-US', {
         weekday: 'long',
@@ -64,6 +66,140 @@ class KitchenDashboard {
         },
       }
     );
+  }
+
+  initializePresenceChannel() {
+    if (!window.App || !window.App.cable) {
+      return;
+    }
+
+    this.presenceState = new Map();
+
+    this.presenceChannel = window.App.cable.subscriptions.create(
+      {
+        channel: 'PresenceChannel',
+        resource_type: 'Restaurant',
+        resource_id: this.restaurantId,
+      },
+      {
+        connected: () => {
+          this.renderPresence();
+        },
+        disconnected: () => {
+          // Keep the last known state rendered; no-op
+        },
+        received: (data) => {
+          this.handlePresenceMessage(data);
+        },
+      }
+    );
+
+    // Activity / idle tracking
+    this.attachPresenceActivityListeners();
+  }
+
+  attachPresenceActivityListeners() {
+    const pingAppear = () => {
+      try {
+        if (this.presenceChannel) {
+          this.presenceChannel.perform('appear');
+        }
+      } catch (_) {}
+    };
+
+    // Basic user activity signals
+    ['mousemove', 'keydown', 'click', 'touchstart'].forEach((evt) => {
+      document.addEventListener(evt, this.debounce(pingAppear, 1000), { passive: true });
+    });
+
+    // Periodic heartbeat to keep sessions fresh on wall displays
+    this.presenceHeartbeatTimer = setInterval(() => {
+      pingAppear();
+    }, 60 * 1000);
+
+    // Idle detection
+    if (this.idleTimer) {
+      clearTimeout(this.idleTimer);
+    }
+    const resetIdleTimer = () => {
+      if (this.idleTimer) clearTimeout(this.idleTimer);
+      this.idleTimer = setTimeout(() => {
+        try {
+          if (this.presenceChannel) {
+            this.presenceChannel.perform('away');
+          }
+        } catch (_) {}
+      }, 5 * 60 * 1000);
+    };
+    resetIdleTimer();
+    ['mousemove', 'keydown', 'click', 'touchstart'].forEach((evt) => {
+      document.addEventListener(evt, this.debounce(resetIdleTimer, 1000), { passive: true });
+    });
+  }
+
+  handlePresenceMessage(data) {
+    // Expect payload from PresenceService
+    if (!data || !data.user_id) return;
+
+    const userId = String(data.user_id);
+    const prev = this.presenceState.get(userId);
+
+    // Store most recent event for user
+    this.presenceState.set(userId, {
+      user_id: userId,
+      email: data.email,
+      status: data.status,
+      event: data.event,
+      timestamp: data.timestamp,
+    });
+
+    // Avoid excessive re-render if nothing changed
+    if (prev && prev.status === data.status && prev.event === data.event) return;
+    this.renderPresence();
+  }
+
+  renderPresence() {
+    const countEl = document.getElementById('kitchen-presence-count');
+    const listEl = document.getElementById('kitchen-presence-list');
+    if (!countEl || !listEl) return;
+
+    const users = Array.from(this.presenceState.values())
+      .filter((u) => u.status && u.status !== 'offline')
+      .sort((a, b) => {
+        const sa = a.status || '';
+        const sb = b.status || '';
+        // active first, then idle
+        const rank = (s) => (s === 'active' ? 0 : s === 'idle' ? 1 : 2);
+        return rank(sa) - rank(sb);
+      });
+
+    countEl.textContent = String(users.length);
+
+    // Show a short list of emails with status badges
+    listEl.innerHTML = users
+      .slice(0, 5)
+      .map((u) => {
+        const label = (u.email || '').split('@')[0] || `User ${u.user_id}`;
+        const badgeClass = u.status === 'active' ? 'bg-success' : 'bg-warning text-dark';
+        const statusLabel = u.status === 'active' ? 'active' : 'idle';
+        return `<span class="badge ${badgeClass} me-1">${label} • ${statusLabel}</span>`;
+      })
+      .join('');
+
+    if (users.length > 5) {
+      listEl.insertAdjacentHTML(
+        'beforeend',
+        `<span class="ms-1">+${users.length - 5} more</span>`
+      );
+    }
+  }
+
+  debounce(fn, waitMs) {
+    let t = null;
+    return (...args) => {
+      if (t) clearTimeout(t);
+      t = setTimeout(() => fn(...args), waitMs);
+    };
   }
 
   handleKitchenMessage(data) {
@@ -164,6 +300,7 @@ class KitchenDashboard {
     const column = document.getElementById(columnId);
     if (!column) return;
 
+    const emptyState = column.querySelector('.empty-state');
     const cards = Array.from(column.querySelectorAll('.order-card'));
 
     cards.sort((a, b) => {
@@ -179,7 +316,12 @@ class KitchenDashboard {
 
     // Clear and re-append sorted cards
     column.innerHTML = '';
+    if (emptyState) column.appendChild(emptyState);
     cards.forEach((card) => column.appendChild(card));
+
+    if (columnName) {
+      this.updateEmptyState(columnName);
+    }
   }
 
   playNotificationSound() {
@@ -212,11 +354,6 @@ class KitchenDashboard {
     }
   }
 
-  showConnectionStatus(connected) {
-    // Could add a visual indicator for connection status
-    console.log('Connection status:', connected ? 'Connected' : 'Disconnected');
-  }
-
   addOrderToColumn(order, columnType) {
     // columnType is 'pending', 'preparing', or 'ready'
     const columnId = `${columnType}-orders`;
@@ -233,8 +370,16 @@ class KitchenDashboard {
     const orderCard = this.createOrderCardElement(order);
     orderCard.classList.add('new-order');
 
-    // Add to top of column
-    column.insertBefore(orderCard, column.firstChild);
+    // Insert after empty-state if present, otherwise at top
+    const emptyState = column.querySelector(`.empty-state[data-empty-for="${columnType}"]`);
+    if (emptyState) {
+      emptyState.insertAdjacentElement('afterend', orderCard);
+    } else {
+      column.insertBefore(orderCard, column.firstChild);
+    }
+
+    this.updateColumnBadge(columnType);
+    this.updateEmptyState(columnType);
 
     // Remove new-order animation after 3 seconds
     setTimeout(() => {
@@ -242,7 +387,21 @@ class KitchenDashboard {
     }, 3000);
   }
 
+  updateEmptyState(columnType) {
+    const columnId = `${columnType}-orders`;
+    const column = document.getElementById(columnId);
+    if (!column) return;
+
+    const emptyState = column.querySelector(`.empty-state[data-empty-for="${columnType}"]`);
+    if (!emptyState) return;
+
+    const hasOrders = column.querySelectorAll('.order-card').length > 0;
+    emptyState.style.display = hasOrders ? 'none' : '';
+  }
+
   moveOrderBetweenColumns(orderId, oldStatus, newStatus) {
+    const oldColumnType = this.getColumnType(oldStatus);
+    const newColumnType = this.getColumnType(newStatus);
     const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
 
     // If card doesn't exist and new status is kitchen-relevant, fetch and create it
@@ -257,6 +416,11 @@ class KitchenDashboard {
     // If status is delivered, billrequested, paid, or closed, remove from dashboard
     if (['delivered', 'billrequested', 'paid', 'closed'].includes(newStatus)) {
       orderCard.remove();
+
+      if (oldColumnType) {
+        this.updateColumnBadge(oldColumnType);
+        this.updateEmptyState(oldColumnType);
+      }
       return;
     }
 
@@ -304,6 +468,15 @@ class KitchenDashboard {
     const newColumn = document.getElementById(newColumnId);
     if (newColumn) {
       newColumn.appendChild(orderCard);
+    }
+
+    if (oldColumnType) {
+      this.updateColumnBadge(oldColumnType);
+      this.updateEmptyState(oldColumnType);
+    }
+    if (newColumnType) {
+      this.updateColumnBadge(newColumnType);
+      this.updateEmptyState(newColumnType);
     }
   }
 

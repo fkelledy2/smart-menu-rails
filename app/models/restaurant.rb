@@ -1,8 +1,3 @@
-  def alcohol_allowed_now?(now: Time.zone.now)
-    return false if respond_to?(:allow_alcohol) && !allow_alcohol
-    return true unless alcohol_policy
-    alcohol_policy.allowed_now?(now: now)
-  end
 class Restaurant < ApplicationRecord
   has_one :alcohol_policy, dependent: :destroy
   include ImageUploader::Attachment(:image)
@@ -25,6 +20,7 @@ class Restaurant < ApplicationRecord
   end
 
   has_many :ordrs, dependent: :delete_all
+  has_many :ordr_station_tickets, dependent: :delete_all
   has_many :taxes, dependent: :delete_all
   has_many :tips, dependent: :delete_all
   has_many :restaurantavailabilities, dependent: :delete_all

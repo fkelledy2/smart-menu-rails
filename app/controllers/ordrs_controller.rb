@@ -296,9 +296,10 @@ class OrdrsController < ApplicationController
         if ordr_params[:status].to_i == 20
           # 0 => opened, 20 => ordered (consistent with client usage)
           begin
-            @ordr.ordritems.where(status: 0).update_all(status: 20)
+            # Items are promoted + assigned to station tickets during submission
+            OrdrStationTicketService.submit_unsubmitted_items!(@ordr)
           rescue => e
-            Rails.logger.warn("[OrdrsController#update] Failed to promote opened ordritems to ordered for order=#{@ordr.id}: #{e.class}: #{e.message}")
+            Rails.logger.warn("[OrdrsController#update] Failed to submit unsubmitted items for order=#{@ordr.id}: #{e.class}: #{e.message}")
           end
         end
 

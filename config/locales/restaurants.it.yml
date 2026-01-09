@@ -127,6 +127,8 @@ it:
       sizes: Dimensioni
       tables: TAVOLI
       operations: OPERAZIONI
+      kitchen_dashboard: Cucina
+      bar_dashboard: Bar
       wifi: WiFi
       team: TEAM
       staff: Staff
