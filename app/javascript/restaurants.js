@@ -196,6 +196,40 @@ export function initRestaurants() {
   $(document).on('keydown', 'form', function (event) {
     return event.key != 'Enter';
   });
+
+  // Clickable rows/cards: navigate to edit when clicking background.
+  // Ignore clicks on interactive elements within the row.
+  $(document).on('click', '.clickable-row[data-href]', function (event) {
+    const $target = $(event.target);
+    if (
+      $target.closest('a, button, input, select, textarea, label, .drag-handle, .form-check-input').length > 0
+    ) {
+      return;
+    }
+
+    const frame = this.getAttribute('data-turbo-frame');
+
+    const primaryLink = this.querySelector('a[data-row-primary-link]');
+    if (primaryLink) {
+      const href = primaryLink.getAttribute('href');
+      if (href && frame && window.Turbo && typeof window.Turbo.visit === 'function') {
+        window.Turbo.visit(href, { frame });
+        return;
+      }
+      primaryLink.click();
+      return;
+    }
+
+    const href = this.getAttribute('data-href');
+    if (!href) return;
+
+    if (frame && window.Turbo && typeof window.Turbo.visit === 'function') {
+      window.Turbo.visit(href, { frame });
+      return;
+    }
+
+    window.location.href = href;
+  });
   if (
     ($('#restaurantTabs').length || $('#newRestaurant').length) &&
     window.google &&

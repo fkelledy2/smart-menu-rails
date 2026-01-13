@@ -2,7 +2,7 @@ class MenuitemsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_menuitem, only: %i[show edit update destroy analytics generate_ai_image image_status]
   before_action :set_currency
-  before_action :ensure_owner_restaurant_context_for_menu!, only: %i[new edit create update destroy reorder generate_ai_image]
+  before_action :ensure_owner_restaurant_context_for_menu!, only: %i[new edit create update destroy reorder generate_ai_image bulk_update]
 
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
@@ -69,6 +69,130 @@ class MenuitemsController < ApplicationController
       format.html # Default HTML view
       format.json { render 'index_minimal' } # Use optimized minimal JSON view
     end
+  end
+
+  # PATCH /restaurants/:restaurant_id/menus/:menu_id/menuitems/bulk_update
+  def bulk_update
+    @menu = Menu.find(params[:menu_id])
+    @restaurant = @menu.restaurant
+    authorize @menu, :update?
+
+    menuitem_ids = Array(params[:menuitem_ids]).compact_blank.map(&:to_i)
+    operation = params[:operation].to_s
+    value = params[:value]
+
+    Rails.logger.info({
+      event: 'menuitems.bulk_update.request',
+      user_id: current_user&.id,
+      restaurant_id: @restaurant.id,
+      menu_id: @menu.id,
+      operation: operation,
+      value: value,
+      menuitem_ids_count: menuitem_ids.size,
+      menuitem_ids_sample: menuitem_ids.first(20),
+    }.to_json)
+
+    items = policy_scope(@menu.menuitems).where(id: menuitem_ids)
+
+    if menuitem_ids.blank? || items.blank?
+      Rails.logger.info({
+        event: 'menuitems.bulk_update.no_selection',
+        user_id: current_user&.id,
+        restaurant_id: @restaurant.id,
+        menu_id: @menu.id,
+        operation: operation,
+        value: value,
+      }.to_json)
+      return redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'items'),
+                         alert: 'No items selected'
+    end
+
+    case operation
+    when 'archive'
+      # No additional value required; operation is the intent.
+      nil
+    when 'set_status'
+      status = value.to_s
+      return redirect_to(edit_restaurant_menu_path(@restaurant, @menu, section: 'items'), alert: 'Invalid status') unless Menuitem.statuses.key?(status)
+    when 'set_itemtype'
+      itemtype = value.to_s
+      return redirect_to(edit_restaurant_menu_path(@restaurant, @menu, section: 'items'), alert: 'Invalid food type') unless Menuitem.itemtypes.key?(itemtype)
+    when 'set_alcoholic'
+      return redirect_to(edit_restaurant_menu_path(@restaurant, @menu, section: 'items'), alert: 'Invalid alcoholic value') if value.nil? || value.to_s == ''
+    else
+      return redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'items'),
+                         alert: 'Invalid bulk operation'
+    end
+
+    updated = 0
+    archived_ids = []
+    Menuitem.transaction do
+      case operation
+      when 'archive'
+        items.find_each do |item|
+          item.update!(status: :archived, archived: true)
+          archived_ids << item.id
+          updated += 1
+        end
+      when 'set_status'
+        status = value.to_s
+        items.find_each do |item|
+          item.update!(status: status)
+          updated += 1
+        end
+      when 'set_itemtype'
+        itemtype = value.to_s
+        items.find_each do |item|
+          item.update!(itemtype: itemtype)
+          updated += 1
+        end
+      when 'set_alcoholic'
+        bool = ActiveModel::Type::Boolean.new.cast(value)
+        items.find_each do |item|
+          attrs = { alcoholic: bool }
+          if bool
+            if item.alcohol_classification.to_s == 'non_alcoholic'
+              attrs[:alcohol_classification] = 'alcoholic'
+            end
+          else
+            attrs[:alcohol_classification] = 'non_alcoholic'
+            attrs[:abv] = 0
+          end
+          item.update!(attrs)
+          updated += 1
+        end
+      else
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    # Invalidate caches once per menu/restaurant (avoid per-item invalidation cost)
+    begin
+      archived_ids.each do |id|
+        AdvancedCacheService.invalidate_menuitem_caches(id)
+      end
+      AdvancedCacheService.invalidate_menu_caches(@menu.id)
+      AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id)
+    rescue StandardError
+      nil
+    end
+
+    redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'items'),
+                notice: "Updated #{updated} item#{updated == 1 ? '' : 's'}"
+  rescue ActiveRecord::RecordNotFound
+    redirect_to edit_restaurant_path(params[:restaurant_id], section: 'menus'), alert: 'Menu not found'
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'items'), alert: e.record.errors.full_messages.first
+  ensure
+    Rails.logger.info({
+      event: 'menuitems.bulk_update.complete',
+      user_id: current_user&.id,
+      restaurant_id: @restaurant&.id,
+      menu_id: @menu&.id,
+      operation: operation,
+      value: value,
+      updated_count: defined?(updated) ? updated : nil,
+    }.to_json)
   end
 
   # POST /restaurants/:restaurant_id/menus/:menu_id/menusections/:menusection_id/menuitems/:id/generate_ai_image
@@ -258,11 +382,10 @@ class MenuitemsController < ApplicationController
           @menuitem.save
         end
         format.html do
-          redirect_to edit_restaurant_menu_menusection_menuitem_url(
+          redirect_to edit_restaurant_menu_path(
             @menuitem.menusection.menu.restaurant,
             @menuitem.menusection.menu,
-            @menuitem.menusection,
-            @menuitem,
+            section: 'items',
           ), notice: t('common.flash.updated', resource: t('activerecord.models.menuitem'))
         end
         format.json do
@@ -280,7 +403,7 @@ class MenuitemsController < ApplicationController
   def destroy
     authorize @menuitem
 
-    @menuitem.update(archived: true)
+    @menuitem.update(status: :archived, archived: true)
 
     # Invalidate AdvancedCacheService caches for this menuitem
     AdvancedCacheService.invalidate_menuitem_caches(@menuitem.id)
@@ -289,11 +412,11 @@ class MenuitemsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to edit_restaurant_menu_menusection_path(
+        redirect_to edit_restaurant_menu_path(
           @menuitem.menusection.menu.restaurant,
           @menuitem.menusection.menu,
-          @menuitem.menusection,
-        ), notice: t('common.flash.deleted', resource: t('activerecord.models.menuitem'))
+          section: 'items',
+        ), notice: t('common.flash.updated', resource: t('activerecord.models.menuitem'))
       end
       format.json { head :no_content }
     end

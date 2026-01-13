@@ -5,6 +5,10 @@ import { Modal } from 'bootstrap';
 export default class extends Controller {
   static targets = [
     'confirmModal',
+    'confirmButton',
+    'confirmSyncCheckbox',
+    'confirmStatus',
+    'confirmError',
     'editItemModal',
     'editItemForm',
     'editItemId',
@@ -12,14 +16,23 @@ export default class extends Controller {
     'editItemDescription',
     'editItemPrice',
     'editItemSection',
-    'editItemPosition',
     'editItemAllergens',
     'editItemVegetarian',
     'editItemVegan',
     'editItemGlutenFree',
     'editItemDairyFree',
     'editItemNutFree',
+    'overallPercent',
+    'overallSlider',
+    'overallFill',
+    'phaseText',
+    'pageText',
+    'phasePercent',
   ];
+
+  static values = {
+    progressUrl: String,
+  };
 
   connect() {
     // Initialize modals
@@ -33,11 +46,103 @@ export default class extends Controller {
 
     // Add event listener for keyboard shortcuts
     document.addEventListener('keydown', this.handleKeyDown.bind(this));
+
+    this.progressTimer = null;
+    this.startProgressPolling();
   }
 
   disconnect() {
     // Clean up event listeners
     document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+    this.stopProgressPolling();
+  }
+
+  startProgressPolling() {
+    if (!this.hasProgressUrlValue) return;
+    if (this.progressTimer) return;
+
+    const statusBadge = document.querySelector('.card-header .badge');
+    const statusText = (statusBadge && statusBadge.textContent) ? statusBadge.textContent.toLowerCase() : '';
+    const shouldPoll = statusText.includes('processing') || statusText.includes('pending');
+    if (!shouldPoll) return;
+
+    const tick = async () => {
+      try {
+        const res = await fetch(this.progressUrlValue, { headers: { Accept: 'application/json' }, credentials: 'same-origin' });
+        if (!res.ok) return;
+        const data = await res.json();
+        this.applyProgress(data);
+
+        if (data.status === 'completed') {
+          this.onImportCompleted();
+        }
+        if (data.status === 'failed') {
+          this.stopProgressPolling();
+        }
+      } catch (_) {
+      }
+    };
+
+    tick();
+    this.progressTimer = window.setInterval(tick, 2000);
+  }
+
+  stopProgressPolling() {
+    if (this.progressTimer) {
+      window.clearInterval(this.progressTimer);
+      this.progressTimer = null;
+    }
+  }
+
+  applyProgress(data) {
+    const percent = Number(data.percent || 0);
+
+    if (this.hasOverallPercentTarget) this.overallPercentTarget.textContent = `${Math.round(percent)}%`;
+    if (this.hasOverallSliderTarget) this.overallSliderTarget.value = String(Math.round(percent));
+    if (this.hasOverallFillTarget) this.overallFillTarget.style.width = `${Math.round(percent)}%`;
+
+    const phase = String(data.phase || '').toLowerCase();
+
+    if (this.hasPhaseTextTarget) {
+      if (phase === 'extracting_pages') {
+        this.phaseTextTarget.textContent = 'Extracting PDF pages…';
+      } else if (phase === 'parsing_menu') {
+        this.phaseTextTarget.textContent = 'Parsing menu structure…';
+      } else if (phase === 'saving_menu') {
+        this.phaseTextTarget.textContent = 'Saving menu items…';
+      }
+    }
+
+    if (this.hasPageTextTarget && data.pages) {
+      const p = data.pages;
+      const total = p.total == null ? '?' : p.total;
+      const processed = p.processed == null ? 0 : p.processed;
+      this.pageTextTarget.textContent = `Page ${processed} of ${total}`;
+    }
+
+    if (this.hasPhasePercentTarget) {
+      if (phase === 'saving_menu' && data.parsing) {
+        const parsed = data.parsing.items_processed || 0;
+        const total = data.parsing.items_total || 0;
+        if (total > 0) {
+          this.phasePercentTarget.textContent = `${Math.round(data.parsing.percent || 0)}% (${parsed}/${total} items)`;
+        } else {
+          this.phasePercentTarget.textContent = `${Math.round(percent)}%`;
+        }
+      } else {
+        this.phasePercentTarget.textContent = `${Math.round(percent)}%`;
+      }
+    }
+  }
+
+  onImportCompleted() {
+    this.stopProgressPolling();
+
+    try {
+      if (this.confirmModal) this.confirmModal.hide();
+    } catch (_) {}
+
+    window.location.reload();
   }
 
   handleKeyDown(event) {
@@ -80,7 +185,6 @@ export default class extends Controller {
     const itemDescription = event.currentTarget.dataset.itemDescription || '';
     const itemPrice = event.currentTarget.dataset.itemPrice || '';
     const itemSection = event.currentTarget.dataset.itemSection || '';
-    const itemPosition = event.currentTarget.dataset.itemPosition || '';
 
     // Parse allergens and dietary restrictions from data attributes
     let allergens = [];
@@ -103,7 +207,6 @@ export default class extends Controller {
     this.editItemDescriptionTarget.value = itemDescription;
     this.editItemPriceTarget.value = itemPrice;
     if (this.hasEditItemSectionTarget) this.editItemSectionTarget.value = itemSection;
-    if (this.hasEditItemPositionTarget) this.editItemPositionTarget.value = itemPosition;
 
     // Set allergens (TomSelect if present, fallback to native/jQuery)
     if (this.hasEditItemAllergensTarget) {

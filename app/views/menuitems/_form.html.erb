@@ -407,11 +407,10 @@
   <% end %>
     <div class="form-actions-2025 form-actions-2025-end d-none d-md-flex">
       <% if menuitem.persisted? %>
-        <%= link_to t('common.delete'),
+        <%= link_to t('common.archive', default: 'Archive'),
             restaurant_menu_menusection_menuitem_path(menuitem.menusection.menu.restaurant, menuitem.menusection.menu, menuitem.menusection, menuitem),
-            method: :delete,
             class: 'btn-2025 btn-2025-outline-danger btn-2025-md',
-            data: { confirm: t('common.confirm') } %>
+            data: { turbo_method: :delete, turbo_confirm: t('common.confirm') } %>
       <% end %>
       <%= form.submit value: t('common.save'), class: 'btn-2025 btn-2025-primary btn-2025-md' %>
     </div>
@@ -419,6 +418,7 @@
     <%= render 'shared/sticky_edit_actions_2025',
         back_url: edit_restaurant_menu_path(menu.restaurant, menu, section: 'items'),
         delete_url: (menuitem.persisted? ? restaurant_menu_menusection_menuitem_path(menuitem.menusection.menu.restaurant, menuitem.menusection.menu, menuitem.menusection, menuitem) : nil),
+        delete_label: t('common.archive', default: 'Archive'),
         delete_confirm: t('common.confirm') %>
   </div>
 <% end %>

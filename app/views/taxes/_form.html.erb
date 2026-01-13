@@ -73,7 +73,19 @@
   <% end %>
 
   <!-- Form Actions -->
-  <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+  <div class="d-flex justify-content-between align-items-center gap-2 pt-3 border-top">
+    <div>
+      <% if tax.persisted? %>
+        <%= link_to restaurant_tax_path(tax.restaurant, tax),
+            method: :delete,
+            data: { confirm: t('taxes.edit.confirm_delete', default: 'Are you sure?') },
+            class: 'btn-2025 btn-2025-ghost btn-2025-md text-danger' do %>
+          <i class="bi bi-trash"></i> <%= t('taxes.edit.delete', default: 'Delete') %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
     <% if defined?(turbo_frame_request?) && turbo_frame_request? %>
       <%= link_to edit_restaurant_path(tax.restaurant, section: 'taxes_and_tips'),
           class: 'btn-2025 btn-2025-ghost btn-2025-md',
@@ -89,5 +101,6 @@
 
     <%= form.submit t('common.save'),
         class: 'btn-2025 btn-2025-primary btn-2025-md' %>
+    </div>
   </div>
 <% end %>

@@ -128,6 +128,9 @@ Rails.application.routes.draw do
       patch 'update_alcohol_policy', to: 'restaurants#update_alcohol_policy'
       get 'alcohol_status', to: 'restaurants#alcohol_status'
 
+      get 'beverage_review_queue', to: 'beverage_review_queues#show'
+      patch 'beverage_review_queue/menuitems/:menuitem_id/review', to: 'beverage_review_queues#review', as: :beverage_review_queue_review
+
       # Analytics for Ordering dashboard (JSON)
       get 'analytics/kpis',               to: 'restaurant_analytics#kpis'
       get 'analytics/timeseries',         to: 'restaurant_analytics#timeseries'
@@ -272,7 +275,11 @@ Rails.application.routes.draw do
       end
       
       # Menu-level menuitem operations
-      resources :menuitems, only: [:index]  # Bulk operations across all menusections
+      resources :menuitems, only: [:index] do  # Bulk operations across all menusections
+        collection do
+          patch :bulk_update
+        end
+      end
       resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
       
       # Menu actions and analytics
@@ -295,6 +302,7 @@ Rails.application.routes.draw do
       member do
         post :process_pdf
         post :confirm_import
+        get :progress
         patch :reorder_sections
         patch :reorder_items
         patch :toggle_section_confirmation

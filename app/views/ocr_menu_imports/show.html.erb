@@ -1,4 +1,4 @@
-<div class="container-fluid py-4" data-controller="menu-import">
+<div class="container-fluid py-4" data-controller="menu-import" data-menu-import-progress-url-value="<%= progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>">
   <!-- Back Navigation -->
   <div class="mb-3">
     <%= link_to edit_restaurant_path(@restaurant, section: 'import'),
@@ -58,7 +58,7 @@
     <div class="card-body py-4">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <span class="text-muted small">0%</span>
-        <span class="fw-bold"><%= progress_percent %>%</span>
+        <span class="fw-bold" data-menu-import-target="overallPercent"><%= progress_percent %>%</span>
         <span class="text-muted small">100%</span>
       </div>
       <div class="progress-slider-container">
@@ -69,9 +69,10 @@
                value="<%= progress_percent %>"
                autocomplete="off"
                disabled
+               data-menu-import-target="overallSlider"
                style="width: 100%;">
         <div class="progress-slider-track">
-          <div class="progress-slider-fill" style="width: <%= progress_percent %>%;"></div>
+          <div class="progress-slider-fill" data-menu-import-target="overallFill" style="width: <%= progress_percent %>%;"></div>
         </div>
       </div>
     </div>
@@ -94,8 +95,8 @@
           <div class="spinner-border text-primary mb-2" role="status">
             <span class="visually-hidden"><%= t('.progress_loading') %></span>
           </div>
-          <p class="text-muted mb-2"><%= t('.processing_title') %></p>
-          <p class="text-muted small mb-4"><%= t('.processing_page', current: (@ocr_menu_import.current_page || 1), total: (@ocr_menu_import.total_pages || '?')) %></p>
+          <p class="text-muted mb-2" data-menu-import-target="phaseText"><%= t('.processing_title') %></p>
+          <p class="text-muted small mb-4" data-menu-import-target="pageText"><%= t('.processing_page', current: (@ocr_menu_import.current_page || 1), total: (@ocr_menu_import.total_pages || '?')) %></p>
 
           <div class="progress mb-2 progress-bar-10">
             <div class="progress-bar progress-bar-striped progress-bar-animated"
@@ -106,7 +107,7 @@
                  aria-valuemax="100">
             </div>
           </div>
-          <p class="text-muted small"><%= t('.progress_complete', percent: (@ocr_menu_import.progress || 0)) %></p>
+          <p class="text-muted small" data-menu-import-target="phasePercent"><%= t('.progress_complete', percent: (@ocr_menu_import.progress || 0)) %></p>
         </div>
 
         <%= turbo_stream_from @ocr_menu_import %>
@@ -205,11 +206,13 @@
                           </div>
                         </div>
                         <div class="col-11">
-                          <div class="section-container sortable-section card mb-3"
+                          <% section_alcohol_class = AlcoholDetectionService.section_class_from_text(section.name) %>
+                          <% show_alcohol_ui = section_alcohol_class.present? %>
+                          <div class="card shadow-sm mb-3"
                                data-controller="menu-section"
-                               data-menu-section-section-id="<%= section.id %>"
-                               data-section-id="<%= section.id %>"
-                               draggable="true">
+                                data-menu-section-section-id="<%= section.id %>"
+                                data-section-id="<%= section.id %>"
+                                draggable="true">
                             <div class="card-header d-flex justify-content-between align-items-start"
                                  role="button"
                                  data-bs-toggle="collapse"
@@ -235,9 +238,9 @@
                               <div class="card-body">
                                 <div class="vstack gap-3">
                                   <% section.ocr_menu_items.ordered.each do |item| %>
-                                    <% det = AlcoholDetectionService.detect(section_name: section.name, item_name: item.name, item_description: item.description) %>
+                                    <% det = show_alcohol_ui ? AlcoholDetectionService.detect(section_name: section.name, item_name: item.name, item_description: item.description) : nil %>
                                     <% ov = (item.metadata || {}) %>
-                                    <% effective = det || {}; if ov['alcohol_override'].present? %>
+                                    <% effective = det || {}; if show_alcohol_ui && ov['alcohol_override'].present? %>
                                       <% case ov['alcohol_override'].to_s %>
                                       <% when 'alcoholic' %>
                                         <% effective = { decided: true, alcoholic: true, classification: ov['alcohol_classification'].presence || det&.dig(:classification), abv: ov['alcohol_abv'].presence || det&.dig(:abv), confidence: 1.0, note: 'override' } %>
@@ -249,17 +252,19 @@
                                       <div class="d-flex justify-content-between align-items-start mb-1">
                                         <div class="me-4 fw-semibold d-flex align-items-center gap-2 flex-wrap">
                                           <span><%= item.name %></span>
-                                          <% if effective && effective[:decided] %>
-                                            <% if effective[:alcoholic] %>
-                                              <span class="badge bg-danger" title="<%= t('smartmenus.alcohol.flag', default: 'Alcohol') %>"><%= t('smartmenus.alcohol.flag', default: 'Alcohol') %></span>
+                                          <% if show_alcohol_ui %>
+                                            <% if effective && effective[:decided] %>
+                                              <% if effective[:alcoholic] %>
+                                                <span class="badge bg-danger" title="<%= t('smartmenus.alcohol.flag', default: 'Alcohol') %>"><%= t('smartmenus.alcohol.flag', default: 'Alcohol') %></span>
+                                              <% else %>
+                                                <span class="badge bg-secondary" title="<%= t('smartmenus.alcohol.non_alcoholic', default: 'Non-alcoholic') %>"><%= t('smartmenus.alcohol.non_alcoholic', default: 'Non-alcoholic') %></span>
+                                              <% end %>
+                                              <% if effective[:abv] %>
+                                                <span class="badge bg-light text-dark border"><%= sprintf('%.1f%%', effective[:abv].to_f) %></span>
+                                              <% end %>
                                             <% else %>
-                                              <span class="badge bg-secondary" title="<%= t('smartmenus.alcohol.non_alcoholic', default: 'Non-alcoholic') %>"><%= t('smartmenus.alcohol.non_alcoholic', default: 'Non-alcoholic') %></span>
+                                              <span class="badge bg-warning text-dark" title="<%= t('smartmenus.ocr.alcohol.review_needed', default: 'Needs review') %>"><%= t('smartmenus.ocr.alcohol.review_needed', default: 'Needs review') %></span>
                                             <% end %>
-                                            <% if effective[:abv] %>
-                                              <span class="badge bg-light text-dark border"><%= sprintf('%.1f%%', effective[:abv].to_f) %></span>
-                                            <% end %>
-                                          <% else %>
-                                            <span class="badge bg-warning text-dark" title="<%= t('smartmenus.ocr.alcohol.review_needed', default: 'Needs review') %>"><%= t('smartmenus.ocr.alcohol.review_needed', default: 'Needs review') %></span>
                                           <% end %>
                                         </div>
                                         <span class="text-nowrap px-0 py-1">
@@ -293,31 +298,33 @@
                                         <div class="text-muted small mb-2"><%= item.description %></div>
                                       <% end %>
                                       <!-- Alcohol override controls -->
-                                      <div class="d-flex flex-wrap align-items-center gap-2 mb-2" data-role="alcohol-override" data-update-url="<%= ocr_menu_item_path(item) %>">
-                                        <label class="form-label mb-0"><%= t('smartmenus.ocr.alcohol.override_label', default: 'Alcohol') %>:</label>
-                                        <select class="form-select form-select-sm w-auto" data-field="alcohol_override">
-                                          <% current_override = ov['alcohol_override'].presence || 'undecided' %>
-                                          <option value="undecided" <%= 'selected' if current_override == 'undecided' %>>Undecided</option>
-                                          <option value="alcoholic" <%= 'selected' if current_override == 'alcoholic' %>>Alcoholic</option>
-                                          <option value="non_alcoholic" <%= 'selected' if current_override == 'non_alcoholic' %>>Non-alcoholic</option>
-                                        </select>
-                                        <label class="form-label mb-0"><%= t('smartmenus.ocr.alcohol.abv', default: 'ABV') %></label>
-                                        <input type="number" step="0.1" min="0" max="100" class="form-control form-control-sm w-auto" data-field="alcohol_abv" value="<%= ov['alcohol_abv'].presence || effective[:abv] %>">
-                                        <label class="form-label mb-0"><%= t('smartmenus.ocr.alcohol.classification', default: 'Class') %></label>
-                                        <select class="form-select form-select-sm w-auto" data-field="alcohol_classification">
-                                          <% klass = ov['alcohol_classification'].presence || effective[:classification] %>
-                                          <% ['wine','beer','spirit','cocktail','liqueur','other','non_alcoholic',nil].each do |c| %>
-                                            <% next if c.nil? %>
-                                            <option value="<%= c %>" <%= 'selected' if klass.to_s == c %>><%= c %></option>
-                                          <% end %>
-                                        </select>
-                                        <small class="text-muted"><%= t('smartmenus.ocr.alcohol.overrides_hint', default: 'Overrides apply at publish.') %></small>
-                                      </div>
+                                      <% if show_alcohol_ui %>
+                                        <div class="d-flex flex-wrap align-items-center gap-2 mb-2" data-role="alcohol-override" data-update-url="<%= ocr_menu_item_path(item) %>">
+                                          <label class="form-label mb-0"><%= t('smartmenus.ocr.alcohol.override_label', default: 'Alcohol') %>:</label>
+                                          <select class="form-select form-select-sm w-auto" data-field="alcohol_override">
+                                            <% current_override = ov['alcohol_override'].presence || 'undecided' %>
+                                            <option value="undecided" <%= 'selected' if current_override == 'undecided' %>>Undecided</option>
+                                            <option value="alcoholic" <%= 'selected' if current_override == 'alcoholic' %>>Alcoholic</option>
+                                            <option value="non_alcoholic" <%= 'selected' if current_override == 'non_alcoholic' %>>Non-alcoholic</option>
+                                          </select>
+                                          <label class="form-label mb-0"><%= t('smartmenus.ocr.alcohol.abv', default: 'ABV') %></label>
+                                          <input type="number" step="0.1" min="0" max="100" class="form-control form-control-sm w-auto" data-field="alcohol_abv" value="<%= ov['alcohol_abv'].presence || effective[:abv] %>">
+                                          <label class="form-label mb-0"><%= t('smartmenus.ocr.alcohol.classification', default: 'Class') %></label>
+                                          <select class="form-select form-select-sm w-auto" data-field="alcohol_classification">
+                                            <% klass = ov['alcohol_classification'].presence || effective[:classification] %>
+                                            <% ['wine','beer','spirit','cocktail','liqueur','other','non_alcoholic',nil].each do |c| %>
+                                              <% next if c.nil? %>
+                                              <option value="<%= c %>" <%= 'selected' if klass.to_s == c %>><%= c %></option>
+                                            <% end %>
+                                          </select>
+                                          <small class="text-muted"><%= t('smartmenus.ocr.alcohol.overrides_hint', default: 'Overrides apply at publish.') %></small>
+                                        </div>
+                                      <% end %>
                                       <% if item.allergens.any? %>
                                         <div class="d-flex flex-wrap gap-1 mb-2">
-                                          <% item.allergens.each do |allergen| %>
+                                          <% allergen_labels(item.allergens).each do |allergen| %>
                                             <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
-                                              <%= allergen.to_s.titleize %>
+                                              <%= allergen %>
                                             </span>
                                           <% end %>
                                         </div>
@@ -411,7 +418,7 @@
         <p class="text-muted mb-4">
           Confirm to publish your menu. You can optionally use Sync publish to archive any existing sections/items not present in this import.
         </p>
-        <%= form_with url: confirm_import_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), method: :post, html: { class: 'mb-0' } do %>
+        <%= form_with url: confirm_import_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), method: :post, data: { turbo: false }, html: { class: 'mb-0' } do %>
           <div class="form-check d-flex align-items-center justify-content-center mb-3">
             <%= check_box_tag :sync, '1', false, id: 'sync_publish', class: 'form-check-input me-2' %>
             <%= label_tag :sync_publish, 'Sync publish (archive sections/items not in this import)', class: 'form-check-label' %>
@@ -452,7 +459,7 @@
             <div class="col-md-4">
               <label for="item_price" class="form-label"><%= t('.price') %></label>
               <div class="input-group">
-                <span class="input-group-text">$</span>
+                <span class="input-group-text"><%= @restaurantCurrency&.symbol || "$" %></span>
                 <input type="text" class="form-control" id="item_price" name="item_price" placeholder="0.00" data-menu-import-target="editItemPrice" autocomplete="off">
               </div>
             </div>
@@ -466,10 +473,7 @@
               </select>
               <div class="form-text text-muted"><%= t('.reorder_hint') %></div>
             </div>
-            <div class="col-md-4">
-              <label for="item_position" class="form-label"><%= t('.position') %></label>
-              <input type="number" class="form-control" id="item_position" name="item_position" data-menu-import-target="editItemPosition" autocomplete="off">
-            </div>
+            <div class="col-md-4"></div>
           </div>
 
           <div class="row g-3">
@@ -508,7 +512,7 @@
               <% allergen_options = (default_allergens + existing_allergens).compact.map { |a| a.to_s.strip.downcase }.reject(&:blank?).uniq %>
               <select class="form-select" id="item_allergens" name="item_allergens[]" multiple data-menu-import-target="editItemAllergens">
                 <% allergen_options.each do |allergen| %>
-                  <option value="<%= allergen %>"><%= allergen.titleize %></option>
+                  <option value="<%= allergen %>"><%= allergen_label(allergen) %></option>
                 <% end %>
               </select>
               <div class="form-text"><%= t('.hold_multi_select') %></div>
@@ -516,7 +520,7 @@
           </div>
         </div>
 
-        <div class="modal-footer">
+        <div class="modal-footer gap-2">
           <button type="button" class="btn btn-outline-danger me-auto" data-action="click->menu-import#deleteItem">
             <i class="bi bi-trash me-1" aria-hidden="true"></i> <%= t('.delete') %>
           </button>

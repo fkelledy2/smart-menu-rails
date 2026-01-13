@@ -134,7 +134,10 @@
                  data-sortable-url-value="<%= reorder_restaurant_allergyns_path(restaurant) %>"
                  data-sortable-handle-value=".allergen-handle">
             <% allergens.each do |allergen| %>
-              <tr data-sortable-id="<%= allergen.id %>">
+              <tr data-sortable-id="<%= allergen.id %>"
+                  class="clickable-row row-status-<%= allergen.status.to_s %>"
+                  data-href="<%= edit_restaurant_allergyn_path(restaurant, allergen) %>"
+                  title="<%= t(".status_#{allergen.status}") %>">
                 <td class="w-40px">
                   <input type="checkbox" name="allergyn_ids[]" value="<%= allergen.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
                 </td>
@@ -144,15 +147,6 @@
                 <td>
                   <div class="d-flex justify-content-between align-items-start gap-2">
                     <strong><%= allergen.name %></strong>
-                    <span>
-                      <% if allergen.status == 'active' %>
-                        <span class="badge bg-success"><%= t('.active') %></span>
-                      <% elsif allergen.status == 'inactive' %>
-                        <span class="badge bg-secondary"><%= t('.inactive') %></span>
-                      <% elsif allergen.status == 'archived' %>
-                        <span class="badge bg-dark"><%= t('.archived') %></span>
-                      <% end %>
-                    </span>
                   </div>
                   <% if allergen.description.present? %>
                     <div class="text-sm text-muted"><%= allergen.description %></div>
@@ -163,8 +157,8 @@
                       class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                       title: t('.edit'),
                       aria: { label: t('.edit') },
-                      data: { turbo_frame: 'allergens_edit_allergyn' } do %>
-                    <i class="bi bi-pencil"></i>
+                      data: { turbo_frame: 'allergens_edit_allergyn', row_primary_link: true } do %>
+                    <i class="bi bi-chevron-right"></i>
                   <% end %>
                 </td>
               </tr>

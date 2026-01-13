@@ -1,5 +1,8 @@
 ---
 en:
+  common:
+    remove: Remove
+    archive: Archive
   activerecord:
     attributes:
       allergyn:

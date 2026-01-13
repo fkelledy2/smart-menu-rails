@@ -1,4 +1,51 @@
 module OcrMenuImportsHelper
+  ALLERGEN_CODE_MAP = {
+    'glu' => 'Gluten',
+    'gl' => 'Gluten',
+    'whe' => 'Wheat',
+    'mlk' => 'Milk',
+    'mil' => 'Milk',
+    'dai' => 'Dairy',
+    'egg' => 'Egg',
+    'eg' => 'Egg',
+    'pnt' => 'Peanut',
+    'pea' => 'Peanut',
+    'pn' => 'Peanut',
+    'tn' => 'Tree Nut',
+    'nut' => 'Tree Nut',
+    'soy' => 'Soy',
+    'so' => 'Soy',
+    'ses' => 'Sesame',
+    'sem' => 'Sesame',
+    'fis' => 'Fish',
+    'fish' => 'Fish',
+    'cru' => 'Crustacean',
+    'crs' => 'Crustacean',
+    'shr' => 'Crustacean',
+    'shf' => 'Shellfish',
+    'mol' => 'Mollusc',
+    'mtd' => 'Mustard',
+    'cel' => 'Celery',
+    'sul' => 'Sulphites',
+    'sulph' => 'Sulphites',
+    'lup' => 'Lupin',
+    'gar' => 'Garlic',
+    'oni' => 'Onion',
+  }.freeze
+
+  def allergen_label(raw)
+    key = raw.to_s.strip.downcase
+    return '' if key.blank?
+
+    return ALLERGEN_CODE_MAP[key] if ALLERGEN_CODE_MAP.key?(key)
+
+    key.tr('_', ' ').titleize
+  end
+
+  def allergen_labels(arr)
+    Array(arr).map { |a| allergen_label(a) }.compact_blank
+  end
+
   # Returns the appropriate Tailwind classes for a status badge
   def status_badge_classes(status)
     base_classes = 'px-2.5 py-0.5 rounded-full text-xs font-medium inline-flex items-center'

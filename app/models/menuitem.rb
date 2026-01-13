@@ -77,6 +77,7 @@ class Menuitem < ApplicationRecord
     food: 0,
     beverage: 1,
     wine: 2,
+    spirits: 3,
   }
 
   def genImageId

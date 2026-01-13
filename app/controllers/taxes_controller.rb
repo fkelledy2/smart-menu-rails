@@ -43,6 +43,8 @@ class TaxesController < ApplicationController
     unless current_user
       redirect_to root_url
     end
+
+    authorize @tax
   end
 
   # POST /taxes or /taxes.json
@@ -81,6 +83,7 @@ class TaxesController < ApplicationController
   # PATCH/PUT /taxes/1 or /taxes/1.json
   def update
     if current_user
+      authorize @tax
       respond_to do |format|
         if @tax.update(tax_params)
           format.turbo_stream do

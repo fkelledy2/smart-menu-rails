@@ -3,3 +3,9 @@
   - [limited, 2]
   - [default, 1]
   - [low_priority, 1]
+
+:schedule:
+  product_enrichment_refresh:
+    cron: "0 * * * *"  # hourly
+    class: "ProductEnrichmentRefreshJob"
+    queue: "low_priority"

@@ -1036,8 +1036,18 @@ class AdvancedCacheService
 
     def invalidate_menu_caches(menu_id)
       Rails.cache.delete_matched("menu_full:#{menu_id}:*")
+      Rails.cache.delete_matched("menu_items:#{menu_id}:*")
       Rails.cache.delete_matched("menu_performance:#{menu_id}:*")
       Rails.cache.delete_matched("menu_analytics:#{menu_id}:*")
+
+      begin
+        section_ids = Menusection.where(menu_id: menu_id).pluck(:id)
+        section_ids.each do |section_id|
+          Rails.cache.delete("section_items:#{section_id}")
+        end
+      rescue StandardError
+        nil
+      end
 
       Rails.logger.info("Invalidated caches for menu #{menu_id}")
     end

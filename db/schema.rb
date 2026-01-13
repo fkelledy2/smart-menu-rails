@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_09_180630) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_12_190000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -96,6 +96,24 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_09_180630) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "beverage_pipeline_runs", force: :cascade do |t|
+    t.bigint "menu_id", null: false
+    t.bigint "restaurant_id", null: false
+    t.string "status", default: "running", null: false
+    t.string "current_step"
+    t.text "error_summary"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.integer "items_processed", default: 0, null: false
+    t.integer "needs_review_count", default: 0, null: false
+    t.integer "unresolved_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id", "status"], name: "index_beverage_pipeline_runs_on_menu_id_and_status"
+    t.index ["menu_id"], name: "index_beverage_pipeline_runs_on_menu_id"
+    t.index ["restaurant_id"], name: "index_beverage_pipeline_runs_on_restaurant_id"
   end
 
   create_table "contacts", force: :cascade do |t|
@@ -256,6 +274,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_09_180630) do
     t.index ["user_id"], name: "index_menu_imports_on_user_id"
   end
 
+  create_table "menu_item_product_links", force: :cascade do |t|
+    t.bigint "menuitem_id", null: false
+    t.bigint "product_id", null: false
+    t.decimal "resolution_confidence", precision: 5, scale: 4
+    t.text "explanations"
+    t.boolean "locked", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menuitem_id", "product_id"], name: "index_menu_item_product_links_on_menuitem_id_and_product_id", unique: true
+    t.index ["menuitem_id"], name: "index_menu_item_product_links_on_menuitem_id"
+    t.index ["product_id"], name: "index_menu_item_product_links_on_product_id"
+  end
+
 # Could not dump table "menu_item_search_documents" because of following StandardError
 #   Unknown type 'vector(1024)' for column 'embedding'
 
@@ -379,6 +410,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_09_180630) do
     t.decimal "abv", precision: 5, scale: 2
     t.string "alcohol_classification"
     t.text "alcohol_notes"
+    t.string "sommelier_category"
+    t.decimal "sommelier_classification_confidence", precision: 5, scale: 4
+    t.jsonb "sommelier_parsed_fields", default: {}, null: false
+    t.decimal "sommelier_parse_confidence", precision: 5, scale: 4
+    t.boolean "sommelier_needs_review", default: false, null: false
     t.index "lower((name)::text) varchar_pattern_ops", name: "index_menuitems_on_lower_name"
     t.index ["alcohol_classification"], name: "index_menuitems_on_alcohol_classification"
     t.index ["alcoholic"], name: "index_menuitems_on_alcoholic"
@@ -393,6 +429,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_09_180630) do
     t.index ["menusection_id", "tasting_carrier"], name: "index_menuitems_on_section_and_carrier"
     t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
     t.index ["sequence"], name: "index_menuitems_on_sequence"
+    t.index ["sommelier_category"], name: "index_menuitems_on_sommelier_category"
+    t.index ["sommelier_needs_review"], name: "index_menuitems_on_sommelier_needs_review"
     t.index ["status"], name: "index_menuitems_on_status"
     t.index ["updated_at"], name: "index_menuitems_on_updated_at"
   end
@@ -871,6 +909,29 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_09_180630) do
     t.integer "menusperlocation", default: 0
   end
 
+  create_table "product_enrichments", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.string "source", null: false
+    t.string "external_id"
+    t.jsonb "payload_json", default: {}, null: false
+    t.datetime "fetched_at"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id", "source"], name: "index_product_enrichments_on_product_id_and_source"
+    t.index ["product_id"], name: "index_product_enrichments_on_product_id"
+    t.index ["source", "external_id"], name: "index_product_enrichments_on_source_and_external_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "product_type", null: false
+    t.string "canonical_name", null: false
+    t.jsonb "attributes_json", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_type", "canonical_name"], name: "index_products_on_product_type_and_canonical_name", unique: true
+  end
+
   create_table "push_subscriptions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "endpoint", null: false
@@ -1200,6 +1261,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_09_180630) do
   add_foreign_key "alcohol_order_events", "restaurants"
   add_foreign_key "alcohol_policies", "restaurants"
   add_foreign_key "allergyns", "restaurants"
+  add_foreign_key "beverage_pipeline_runs", "menus"
+  add_foreign_key "beverage_pipeline_runs", "restaurants"
   add_foreign_key "employees", "restaurants"
   add_foreign_key "employees", "users"
   add_foreign_key "features_plans", "features"
@@ -1213,6 +1276,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_09_180630) do
   add_foreign_key "menu_edit_sessions", "users"
   add_foreign_key "menu_imports", "restaurants"
   add_foreign_key "menu_imports", "users"
+  add_foreign_key "menu_item_product_links", "menuitems"
+  add_foreign_key "menu_item_product_links", "products"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "menus"
   add_foreign_key "menuavailabilities", "menus"
@@ -1264,6 +1329,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_09_180630) do
   add_foreign_key "pay_payment_methods", "pay_customers", column: "customer_id"
   add_foreign_key "pay_subscriptions", "pay_customers", column: "customer_id"
   add_foreign_key "performance_metrics", "users"
+  add_foreign_key "product_enrichments", "products"
   add_foreign_key "push_subscriptions", "users"
   add_foreign_key "resource_locks", "users"
   add_foreign_key "restaurant_menus", "menus"

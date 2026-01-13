@@ -55,6 +55,7 @@ class PdfMenuProcessor
     return unless @ocr_menu_import.pdf_file.attached?
 
     begin
+      @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'extracting_pages'))
       # Extract text from PDF (handles text-based and image-based PDFs)
       pdf_text = extract_text_from_pdf
 
@@ -71,10 +72,14 @@ class PdfMenuProcessor
       end
 
       # Parse menu structure using ChatGPT
+      @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'parsing_menu'))
       menu_data = parse_menu_with_chatgpt(pdf_text)
 
       # Save parsed data to the database
+      @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu'))
       save_menu_structure(menu_data)
+
+      @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'completed'))
 
       true
     rescue StandardError => e
@@ -130,6 +135,7 @@ class PdfMenuProcessor
       reader = PDF::Reader.new(pdf_path)
       total_pages = reader.page_count
       @ocr_menu_import.update!(total_pages: total_pages, processed_pages: 0)
+      @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'extracting_pages', 'pages_total' => total_pages, 'pages_processed' => 0))
 
       extracted_text = []
       empty_text_pages = 0
@@ -146,6 +152,7 @@ class PdfMenuProcessor
         extracted_text.each_with_index do |t, idx|
           text_pages << t
           @ocr_menu_import.update!(processed_pages: idx + 1)
+          @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'extracting_pages', 'pages_total' => total_pages, 'pages_processed' => (idx + 1)))
         end
       else
         # Treat as image-based PDF: render pages to images and OCR them
@@ -200,6 +207,7 @@ class PdfMenuProcessor
       ensure
         processed += 1
         @ocr_menu_import.update!(processed_pages: [processed, total_pages].min)
+        @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'extracting_pages', 'pages_total' => total_pages, 'pages_processed' => [processed, total_pages].min))
       end
     end
     text_pages
@@ -372,8 +380,14 @@ class PdfMenuProcessor
   end
 
   def save_menu_structure(menu_data)
+    sections = Array(menu_data[:sections])
+    sections_total = sections.size
+    items_total = sections.sum { |s| Array(s[:items]).size }
+    @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu', 'sections_total' => sections_total, 'sections_processed' => 0, 'items_total' => items_total, 'items_processed' => 0))
+
     OcrMenuImport.transaction do
-      menu_data[:sections].each_with_index do |section_data, section_index|
+      items_processed = 0
+      sections.each_with_index do |section_data, section_index|
         section = @ocr_menu_import.ocr_menu_sections.create!(
           name: section_data[:name],
           description: section_data[:description],
@@ -381,7 +395,7 @@ class PdfMenuProcessor
           is_confirmed: false,
         )
 
-        section_data[:items].each_with_index do |item_data, item_index|
+        Array(section_data[:items]).each_with_index do |item_data, item_index|
           section.ocr_menu_items.create!(
             name: item_data[:name],
             description: item_data[:description],
@@ -394,7 +408,14 @@ class PdfMenuProcessor
             sequence: item_index + 1,
             is_confirmed: false,
           )
+
+          items_processed += 1
+          if items_processed % 5 == 0 || items_processed == items_total
+            @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu', 'sections_total' => sections_total, 'sections_processed' => section_index, 'items_total' => items_total, 'items_processed' => items_processed))
+          end
         end
+
+        @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu', 'sections_total' => sections_total, 'sections_processed' => (section_index + 1), 'items_total' => items_total, 'items_processed' => items_processed))
       end
     end
   end

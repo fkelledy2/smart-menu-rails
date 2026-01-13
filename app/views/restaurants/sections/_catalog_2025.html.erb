@@ -110,7 +110,6 @@
                 <th class="w-40px"></th>
                 <th><%= t('.name') %></th>
                 <th class="text-end"><%= t('.rate') %></th>
-                <th class="text-end"><%= t('.status') %></th>
                 <th class="text-end">
                   <span class="btn-2025 btn-2025-ghost btn-2025-sm">
                     <i class="bi bi-gear"></i>
@@ -122,7 +121,10 @@
                    data-sortable-url-value="<%= reorder_restaurant_taxes_path(restaurant) %>"
                    data-sortable-handle-value=".tax-handle">
               <% taxes.each do |tax| %>
-                <tr data-sortable-id="<%= tax.id %>">
+                <tr data-sortable-id="<%= tax.id %>"
+                    class="clickable-row row-status-<%= tax.status.to_s %>"
+                    data-href="<%= edit_restaurant_tax_path(restaurant, tax) %>"
+                    title="<%= t(".status_#{tax.status}") %>">
                   <td class="w-40px">
                     <input type="checkbox" name="tax_ids[]" value="<%= tax.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
                   </td>
@@ -141,21 +143,12 @@
                     <strong><%= tax.taxpercentage %>%</strong>
                   </td>
                   <td class="text-end">
-                    <% if tax.status.to_s == 'inactive' %>
-                      <span class="badge bg-secondary"><%= t('.inactive') %></span>
-                    <% elsif tax.status.to_s == 'archived' %>
-                      <span class="badge bg-dark"><%= t('.archived') %></span>
-                    <% else %>
-                      <span class="badge bg-success"><%= t('.active') %></span>
-                    <% end %>
-                  </td>
-                  <td class="text-end">
                     <%= link_to edit_restaurant_tax_path(restaurant, tax),
                         class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                         title: t('.edit'),
                         aria: { label: t('.edit') },
-                        data: { turbo_frame: 'taxes_edit_tax' } do %>
-                      <i class="bi bi-pencil"></i>
+                        data: { turbo_frame: 'taxes_edit_tax', row_primary_link: true } do %>
+                      <i class="bi bi-chevron-right"></i>
                     <% end %>
                   </td>
                 </tr>
@@ -204,7 +197,6 @@
                 <th class="w-40px"></th>
                 <th class="w-40px"></th>
                 <th><%= t('.tip') %></th>
-                <th class="text-end"><%= t('.status') %></th>
                 <th class="text-end">
                   <span class="btn-2025 btn-2025-ghost btn-2025-sm">
                     <i class="bi bi-gear"></i>
@@ -216,7 +208,10 @@
                    data-sortable-url-value="<%= reorder_restaurant_tips_path(restaurant) %>"
                    data-sortable-handle-value=".tip-handle">
               <% tips.each do |tip| %>
-                <tr data-sortable-id="<%= tip.id %>">
+                <tr data-sortable-id="<%= tip.id %>"
+                    class="clickable-row row-status-<%= tip.status.to_s %>"
+                    data-href="<%= edit_restaurant_tip_path(restaurant, tip) %>"
+                    title="<%= t(".status_#{tip.status}") %>">
                   <td class="w-40px">
                     <input type="checkbox" name="tip_ids[]" value="<%= tip.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
                   </td>
@@ -229,21 +224,12 @@
                     </strong>
                   </td>
                   <td class="text-end">
-                    <% if tip.status.to_s == 'inactive' %>
-                      <span class="badge bg-secondary"><%= t('.inactive') %></span>
-                    <% elsif tip.status.to_s == 'archived' %>
-                      <span class="badge bg-dark"><%= t('.archived') %></span>
-                    <% else %>
-                      <span class="badge bg-success"><%= t('.active') %></span>
-                    <% end %>
-                  </td>
-                  <td class="text-end">
                     <%= link_to edit_restaurant_tip_path(restaurant, tip),
                         class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                         title: t('.edit'),
                         aria: { label: t('.edit') },
-                        data: { turbo_frame: 'tips_edit_tip' } do %>
-                      <i class="bi bi-pencil"></i>
+                        data: { turbo_frame: 'tips_edit_tip', row_primary_link: true } do %>
+                      <i class="bi bi-chevron-right"></i>
                     <% end %>
                   </td>
                 </tr>

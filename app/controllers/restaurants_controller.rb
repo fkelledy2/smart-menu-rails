@@ -423,6 +423,30 @@ class RestaurantsController < ApplicationController
 
     @qrHost = request.host_with_port
     @current_employee = @restaurant.employees.find_by(user: current_user)
+
+    begin
+      owned_menu_ids = @restaurant.menus.where(archived: false).pluck(:id)
+      existing_menu_ids = @restaurant.restaurant_menus.where(menu_id: owned_menu_ids).pluck(:menu_id)
+      missing_menu_ids = owned_menu_ids - existing_menu_ids
+      if missing_menu_ids.any?
+        next_sequence = @restaurant.restaurant_menus.maximum(:sequence).to_i
+        RestaurantMenu.transaction do
+          missing_menu_ids.each do |menu_id|
+            next_sequence += 1
+            RestaurantMenu.create!(
+              restaurant_id: @restaurant.id,
+              menu_id: menu_id,
+              sequence: next_sequence,
+              status: :active,
+              availability_override_enabled: false,
+              availability_state: :available,
+            )
+          end
+        end
+      end
+    rescue StandardError
+      nil
+    end
     
     # Set current section for 2025 UI
     @current_section = params[:section] || 'details'

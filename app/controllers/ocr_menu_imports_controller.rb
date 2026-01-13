@@ -61,6 +61,75 @@ class OcrMenuImportsController < ApplicationController
     end
   end
 
+  # GET /restaurants/:restaurant_id/ocr_menu_imports/:id/progress
+  def progress
+    authorize @ocr_menu_import
+
+    meta = (@ocr_menu_import.metadata || {}).with_indifferent_access
+    phase = meta[:phase].presence || (@ocr_menu_import.processing? ? 'processing' : @ocr_menu_import.status)
+
+    total_pages = @ocr_menu_import.total_pages
+    processed_pages = @ocr_menu_import.processed_pages
+
+    sections_total = meta[:sections_total].to_i
+    sections_processed = meta[:sections_processed].to_i
+    items_total = meta[:items_total].to_i
+    items_processed = meta[:items_processed].to_i
+
+    page_percent = begin
+      if total_pages.to_i.positive?
+        (processed_pages.to_f / total_pages.to_f * 100.0)
+      else
+        0.0
+      end
+    rescue StandardError
+      0.0
+    end
+
+    parse_denom = (items_total.positive? ? items_total : (sections_total.positive? ? sections_total : 0))
+    parse_num = (items_total.positive? ? items_processed : sections_processed)
+    parse_percent = begin
+      if parse_denom.to_i.positive?
+        (parse_num.to_f / parse_denom.to_f * 100.0)
+      else
+        0.0
+      end
+    rescue StandardError
+      0.0
+    end
+
+    overall = if @ocr_menu_import.completed?
+                100.0
+              elsif @ocr_menu_import.failed?
+                0.0
+              else
+                # Weight pages heavily, then parsing/saving
+                (page_percent * 0.7) + (parse_percent * 0.3)
+              end
+
+    render json: {
+      id: @ocr_menu_import.id,
+      status: @ocr_menu_import.status,
+      phase: phase,
+      percent: overall.round(2),
+      pages: {
+        processed: processed_pages,
+        total: total_pages,
+        percent: page_percent.round(2),
+      },
+      parsing: {
+        sections_processed: sections_processed,
+        sections_total: sections_total,
+        items_processed: items_processed,
+        items_total: items_total,
+        percent: parse_percent.round(2),
+      },
+      error_message: @ocr_menu_import.error_message,
+      completed_at: @ocr_menu_import.completed_at,
+      updated_at: @ocr_menu_import.updated_at,
+    }
+  end
+
   # GET /restaurants/:restaurant_id/ocr_menu_imports/new
   def new
     @ocr_menu_import = @restaurant.ocr_menu_imports.new
@@ -149,11 +218,11 @@ class OcrMenuImportsController < ApplicationController
         if stats.present?
           notice << " (sections: +#{stats[:sections_created]}/~#{stats[:sections_updated]}#{", -#{stats[:sections_archived]}" if sync}, items: +#{stats[:items_created]}/~#{stats[:items_updated]}#{", -#{stats[:items_archived]}" if sync})"
         end
-        redirect_to edit_restaurant_menu_path(@restaurant, menu), notice: notice
+        redirect_to edit_restaurant_path(@restaurant, section: 'menus'), notice: notice, status: :see_other
       else
         # First-time publish: create a new menu from confirmed content
         menu = service.call
-        redirect_to edit_restaurant_menu_path(@restaurant, menu), notice: t('ocr_menu_imports.controller.published')
+        redirect_to edit_restaurant_path(@restaurant, section: 'menus'), notice: t('ocr_menu_imports.controller.published'), status: :see_other
       end
     rescue StandardError => e
       Rails.logger.error("Error creating menu from import ##{@ocr_menu_import.id}: #{e.class}: #{e.message}")

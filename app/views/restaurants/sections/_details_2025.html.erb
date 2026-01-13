@@ -93,7 +93,7 @@
     <%= link_to edit_restaurant_path(restaurant, section: 'menus'),
                 class: 'stat-item text-decoration-none',
                 data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'overview-menus-link' } do %>
-      <span class="stat-value"><%= restaurant.menus.count %></span>
+      <span class="stat-value"><%= restaurant.restaurant_menus.joins(:menu).where(menus: { archived: false }).count %></span>
       <span class="stat-label"><%= t('.menus') %></span>
     <% end %>
 

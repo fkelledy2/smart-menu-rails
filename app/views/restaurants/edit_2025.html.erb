@@ -64,7 +64,7 @@
                         when 'details', 'address' then 'details_2025'
                         when 'hours' then 'hours_2025'
                         when 'localization' then 'localization_2025'
-                        when 'menus', 'menus_active', 'menus_inactive' then 'menus_2025'
+                        when 'menus' then 'menus_2025'
                         when 'allergens' then 'allergens_2025'
                         when 'sizes' then 'sizes_2025'
                         when 'import' then 'import_2025'
@@ -79,12 +79,9 @@
                         else 'details_2025'
                         end
 
-          filter = @current_section.include?('menus') ? @current_section.sub('menus_', '') : 'all'
-          filter = 'all' if @current_section == 'menus'
         %>
         <%= render "restaurants/sections/#{partial_name}",
-            restaurant: @restaurant,
-            filter: filter %>
+            restaurant: @restaurant %>
       <% end %>
     </div>
   </div>

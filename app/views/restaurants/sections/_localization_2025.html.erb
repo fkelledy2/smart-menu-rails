@@ -73,7 +73,6 @@
             <th class="w-40px"></th>
             <th class="w-40px"></th>
             <th><%= t('.language') %></th>
-            <th><%= t('.status') %></th>
             <th class="text-end">
               <span class="btn-2025 btn-2025-ghost btn-2025-sm">
                 <i class="bi bi-gear"></i>
@@ -85,7 +84,11 @@
                data-sortable-url-value="<%= reorder_restaurant_restaurantlocales_path(restaurant) %>"
                data-sortable-handle-value=".locale-handle">
           <% locales.each do |locale| %>
-            <tr data-sortable-id="<%= locale.id %>">
+            <tr data-sortable-id="<%= locale.id %>"
+                class="clickable-row row-status-<%= locale.status.to_s %>"
+                data-href="<%= edit_restaurant_restaurantlocale_path(restaurant, locale) %>"
+                data-turbo-frame="localization_edit_locale"
+                title="<%= t(".status_#{locale.status}") %>">
               <td class="w-40px">
                 <input type="checkbox" name="restaurantlocale_ids[]" value="<%= locale.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" <%= 'disabled' if locale.respond_to?(:dfault) && locale.dfault %> />
               </td>
@@ -94,28 +97,22 @@
               </td>
               <td>
                 <div>
-                  <div class="fw-semibold"><%= locale.language %></div>
+                  <div class="fw-semibold d-flex align-items-center gap-2">
+                    <span><%= locale.language %></span>
+                    <% if locale.respond_to?(:dfault) && locale.dfault %>
+                      <span class="badge bg-info"><%= t('.default') %></span>
+                    <% end %>
+                  </div>
                   <div class="text-muted small"><code><%= locale.locale %></code></div>
                 </div>
-              </td>
-              <td>
-                <% status_class = case locale.status.to_s
-                                 when 'active' then 'bg-success'
-                                 when 'inactive' then 'bg-secondary'
-                                 else 'bg-dark'
-                                 end %>
-                <span class="badge <%= status_class %>"><%= t(".status_#{locale.status}") %></span>
-                <% if locale.respond_to?(:dfault) && locale.dfault %>
-                  <span class="badge bg-info"><%= t('.default') %></span>
-                <% end %>
               </td>
               <td class="text-end">
                 <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale),
                     class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                     title: t('.edit'),
                     aria: { label: t('.edit') },
-                    data: { turbo_frame: 'localization_edit_locale' } do %>
-                  <i class="bi bi-pencil"></i>
+                    data: { turbo_frame: 'localization_edit_locale', row_primary_link: true } do %>
+                  <i class="bi bi-chevron-right"></i>
                 <% end %>
               </td>
             </tr>
@@ -130,22 +127,21 @@
     <!-- Mobile Card View -->
     <div class="languages-cards-view">
       <% locales.each do |locale| %>
-        <div class="language-card-mobile">
+        <div class="language-card-mobile clickable-row row-status-<%= locale.status.to_s %>"
+             data-href="<%= edit_restaurant_restaurantlocale_path(restaurant, locale) %>"
+             data-turbo-frame="localization_edit_locale"
+             title="<%= t(".status_#{locale.status}") %>">
           <div class="d-flex align-items-start justify-content-between mb-3">
             <div class="d-flex align-items-center gap-2">
               <div>
-                <div class="fw-semibold"><%= locale.language %></div>
-                <div class="text-muted small"><code><%= locale.locale %></code></div>
-                <% status_class = case locale.status.to_s
-                                 when 'active' then 'bg-success'
-                                 when 'inactive' then 'bg-secondary'
-                                 else 'bg-dark'
-                                 end %>
-                <div class="mt-1">
-                  <span class="badge <%= status_class %>"><%= t(".status_#{locale.status}") %></span>
+                <div class="fw-semibold d-flex align-items-center gap-2">
+                  <span><%= locale.language %></span>
                   <% if locale.respond_to?(:dfault) && locale.dfault %>
                     <span class="badge bg-info"><%= t('.default') %></span>
                   <% end %>
+                </div>
+                <div class="text-muted small"><code><%= locale.locale %></code></div>
+                <div class="mt-1">
                 </div>
               </div>
             </div>
@@ -153,8 +149,8 @@
                 class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                 title: t('.edit'),
                 aria: { label: t('.edit') },
-                data: { turbo_frame: 'localization_edit_locale' } do %>
-              <i class="bi bi-pencil"></i>
+                data: { turbo_frame: 'localization_edit_locale', row_primary_link: true } do %>
+              <i class="bi bi-chevron-right"></i>
             <% end %>
           </div>
         </div>

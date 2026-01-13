@@ -46,8 +46,9 @@ class ApplicationController < ActionController::Base
     end
     
     I18n.with_locale(@locale, &)
-  rescue StandardError => e
-    # Safety net: if anything goes wrong with locale switching, use default
+  rescue I18n::InvalidLocale => e
+    # Safety net: if the requested locale is invalid, fall back to default.
+    # IMPORTANT: Do not swallow unrelated exceptions raised inside the request.
     Rails.logger.error "Locale switching error: #{e.message}, falling back to default locale"
     @locale = I18n.default_locale
     I18n.with_locale(@locale, &)

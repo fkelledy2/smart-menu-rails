@@ -1,0 +1,71 @@
+<h1>Beverage Review Queue</h1>
+
+<h3>Recent pipeline runs</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Created</th>
+      <th>Menu</th>
+      <th>Status</th>
+      <th>Step</th>
+      <th>Processed</th>
+      <th>Needs review</th>
+      <th>Unresolved</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @latest_runs.each do |run| %>
+      <tr>
+        <td><%= l(run.created_at, format: :short) rescue run.created_at %></td>
+        <td><%= run.menu_id %></td>
+        <td><%= run.status %></td>
+        <td><%= run.current_step %></td>
+        <td><%= run.items_processed %></td>
+        <td><%= run.needs_review_count %></td>
+        <td><%= run.unresolved_count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h3>Items needing review</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Menu</th>
+      <th>Section</th>
+      <th>Item</th>
+      <th>Category</th>
+      <th>Class conf</th>
+      <th>Parse conf</th>
+      <th>Parsed</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @needs_review_items.each do |mi| %>
+      <tr>
+        <td><%= mi.menusection&.menu&.name %></td>
+        <td><%= mi.menusection&.name %></td>
+        <td><%= mi.name %></td>
+        <td><%= mi.sommelier_category %></td>
+        <td><%= mi.sommelier_classification_confidence %></td>
+        <td><%= mi.sommelier_parse_confidence %></td>
+        <td><%= mi.sommelier_parsed_fields.to_json %></td>
+        <td>
+          <%= button_to 'Mark reviewed',
+                        beverage_review_queue_review_restaurant_path(@restaurant, menuitem_id: mi.id),
+                        method: :patch,
+                        form: { data: { turbo: false } },
+                        class: 'btn btn-sm btn-outline-primary' %>
+
+          <%= button_to 'Mark + lock',
+                        beverage_review_queue_review_restaurant_path(@restaurant, menuitem_id: mi.id, lock: true),
+                        method: :patch,
+                        form: { data: { turbo: false } },
+                        class: 'btn btn-sm btn-outline-secondary mt-1' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

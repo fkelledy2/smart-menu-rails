@@ -11,9 +11,9 @@
                         Would you like to start an order for <input class="modal-input-width" type="number" id="orderCapacity" value=<%= tablesetting.capacity%> oninput="validateIntegerInput(this)"> at this table?
                     <% end %>
                 </div>
-                <div class="modal-footer" style="padding: 16px; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
-                    <button id="start-order" type="button" data-bs-dismiss="modal" class="btn-touch-primary"><%= t(".start") %></button>
+                <div class="modal-footer gap-2">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
+                    <button id="start-order" type="button" data-bs-dismiss="modal" class="btn btn-primary"><%= t(".start") %></button>
                 </div>
             </div>
         </div>
@@ -111,9 +111,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer modal-footer-spaced">
-                        <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="Close"><%= t(".cancel") %></button>
-                        <%= form.submit value: t(".filterBy"), class: 'btn-touch-primary' %>
+                    <div class="modal-footer gap-2">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
+                        <%= form.submit value: t(".filterBy"), class: 'btn btn-primary' %>
                     </div>
                 <% end %>
             </div>
@@ -247,12 +247,12 @@
                 </div>
             <% end %>
           </div>
-          <div class="modal-footer" style="padding: 16px; gap: 12px; justify-content: flex-end;">
-            <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t('.cancel') %></button>
+          <div class="modal-footer gap-2">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t('.cancel') %></button>
             <% if order && order.addedCount > 0 %>
-              <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn-touch-primary" data-testid="submit-order-btn"><%= t('.submit') %></button>
+              <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary" data-testid="submit-order-btn"><%= t('.submit') %></button>
             <% else %>
-              <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn-touch-primary" disabled data-testid="submit-order-btn"><%= t('.submit') %></button>
+              <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary" disabled data-testid="submit-order-btn"><%= t('.submit') %></button>
             <% end %>
           </div>
         </div>
@@ -525,9 +525,9 @@
                           </div>
                     </form>
                 </div>
-                <div class="modal-footer modal-footer-spaced">
-                    <button type="button" class="btn-touch-secondary" data-bs-dismiss="modal" aria-label="Close"><%= t(".cancel") %></button>
-                    <button id="addNameToParticipantButton" type="button" class="btn-touch-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> <%= t(".add") %></button>
+                <div class="modal-footer gap-2">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
+                    <button id="addNameToParticipantButton" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-plus"></i> <%= t(".add") %></button>
                 </div>
             </div>
         </div>

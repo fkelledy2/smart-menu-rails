@@ -22,7 +22,9 @@ class MenusController < ApplicationController
     if current_user
       # Optimize query based on request format and restaurant scope
       @menus = if @restaurant
-                 base = Menu.joins(:restaurant_menus)
+                 base = policy_scope(Menu)
+                   .distinct(false)
+                   .joins(:restaurant_menus)
                    .where(restaurant_menus: { restaurant_id: @restaurant.id })
                    .for_management_display
                    .where(archived: false)

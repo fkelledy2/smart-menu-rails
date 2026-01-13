@@ -13,9 +13,8 @@
 
       <% if local_assigns[:delete_url].present? %>
         <%= link_to delete_url,
-            method: :delete,
             class: 'btn-2025 btn-2025-outline-danger btn-2025-md btn-2025-block',
-            data: { confirm: (local_assigns[:delete_confirm] || t('common.confirm')) } do %>
+            data: { turbo_method: :delete, turbo_confirm: (local_assigns[:delete_confirm] || t('common.confirm')) } do %>
           <i class="bi bi-trash"></i>
           <%= local_assigns[:delete_label] || t('common.delete') %>
         <% end %>

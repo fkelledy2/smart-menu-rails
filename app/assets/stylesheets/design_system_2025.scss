@@ -135,6 +135,45 @@
   --z-tooltip: 1070;
 }
 
+.clickable-row.row-status-inactive {
+  background-color: var(--color-gray-50) !important;
+  opacity: 0.8;
+}
+
+.clickable-row.row-status-active {
+  background-color: var(--color-success-light) !important;
+}
+
+.table tbody tr.clickable-row.row-status-active > * {
+  background-color: var(--color-success-light) !important;
+}
+
+.table-hover tbody tr.clickable-row.row-status-active:hover > * {
+  background-color: rgba(16, 185, 129, 0.22) !important;
+}
+
+// Bootstrap tables apply row backgrounds via cells; ensure tint is visible.
+.table tbody tr.clickable-row.row-status-inactive > * {
+  background-color: var(--color-gray-50) !important;
+}
+
+.table-hover tbody tr.clickable-row.row-status-inactive:hover > * {
+  background-color: var(--color-gray-100) !important;
+}
+
+.clickable-row.row-status-archived {
+  background-color: var(--color-gray-100) !important;
+  opacity: 0.6;
+}
+
+.table tbody tr.clickable-row.row-status-archived > * {
+  background-color: var(--color-gray-100) !important;
+}
+
+.table-hover tbody tr.clickable-row.row-status-archived:hover > * {
+  background-color: var(--color-gray-200) !important;
+}
+
 // ============================================
 // BASE RESETS
 // ============================================

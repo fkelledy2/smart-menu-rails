@@ -94,6 +94,7 @@ en:
         quick_actions: Quick Actions
         new_menu: New Menu
         import_menu: Import Menu
+        menus: Menus
         all: All
         active: Active
         inactive: Inactive
@@ -124,6 +125,7 @@ en:
         available: Available
         unavailable: Unavailable
         share: Share
+        share_menu: Share menu
         share_to_all: All restaurants
       ordering_2025:
         ordering_dashboard: Ordering Dashboard

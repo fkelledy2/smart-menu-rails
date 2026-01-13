@@ -9,6 +9,7 @@ class ImportToMenu
     menu = nil
     ActiveRecord::Base.transaction do
       menu = build_menu!
+      ensure_restaurant_menu_attachment!(menu)
       build_sections_and_items!(menu)
       # Sync restaurant allergen list based on this import's confirmed items
       begin
@@ -25,6 +26,14 @@ class ImportToMenu
         Rails.logger.warn("[ImportToMenu.call] cache expire warning: #{e.class}: #{e.message}")
       end
       @import.update!(menu: menu)
+    end
+
+    begin
+      if defined?(Menu::BeveragePipelineStartJob) && menu&.id.present?
+        Menu::BeveragePipelineStartJob.perform_async(menu.id, @restaurant.id, 'ocr_first_publish')
+      end
+    rescue StandardError => e
+      Rails.logger.warn("[ImportToMenu.call] Failed to enqueue beverage pipeline: #{e.class}: #{e.message}")
     end
 
     # Trigger localization after transaction commits
@@ -169,6 +178,14 @@ class ImportToMenu
       end
     end
 
+    begin
+      if defined?(Menu::BeveragePipelineStartJob) && menu&.id.present?
+        Menu::BeveragePipelineStartJob.perform_async(menu.id, @restaurant.id, 'ocr_republish')
+      end
+    rescue StandardError => e
+      Rails.logger.warn("[ImportToMenu.upsert] Failed to enqueue beverage pipeline: #{e.class}: #{e.message}")
+    end
+
     # Re-localize updated menu to all locales to reflect changes
     begin
       MenuLocalizationJob.perform_async('menu', menu.id)
@@ -218,6 +235,37 @@ class ImportToMenu
       description: default_menu_description,
       status: 'active',
     )
+  end
+
+  def ensure_restaurant_menu_attachment!(menu)
+    return if menu.blank?
+
+    rm = RestaurantMenu.find_or_initialize_by(restaurant: @restaurant, menu: menu)
+    return if rm.persisted?
+
+    rm.sequence ||= (@restaurant.restaurant_menus.maximum(:sequence).to_i + 1)
+    rm.status ||= :active
+    rm.availability_override_enabled = false if rm.availability_override_enabled.nil?
+    rm.availability_state ||= :available
+    rm.save!
+
+    ensure_smartmenus_for_restaurant_menu!(menu)
+  end
+
+  def ensure_smartmenus_for_restaurant_menu!(menu)
+    Smartmenu.on_primary do
+      if Smartmenu.where(restaurant_id: @restaurant.id, menu_id: menu.id, tablesetting_id: nil).first.nil?
+        Smartmenu.create!(restaurant: @restaurant, menu: menu, tablesetting: nil, slug: SecureRandom.uuid)
+      end
+
+      @restaurant.tablesettings.order(:id).each do |tablesetting|
+        next unless Smartmenu.where(restaurant_id: @restaurant.id, menu_id: menu.id, tablesetting_id: tablesetting.id).first.nil?
+
+        Smartmenu.create!(restaurant: @restaurant, menu: menu, tablesetting: tablesetting, slug: SecureRandom.uuid)
+      end
+    end
+  rescue StandardError
+    nil
   end
 
   def build_sections_and_items!(menu)

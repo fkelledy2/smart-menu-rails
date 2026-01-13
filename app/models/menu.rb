@@ -43,6 +43,8 @@ class Menu < ApplicationRecord
   # Localization hook - trigger localization after menu is created
   after_commit :enqueue_localization, on: :create
 
+  after_commit :ensure_owner_restaurant_menu, on: :create
+
   # Optimized scopes to prevent N+1 queries
   scope :with_availabilities_and_sections, lambda {
     includes(
@@ -105,6 +107,19 @@ class Menu < ApplicationRecord
   end
 
   private
+
+  def ensure_owner_restaurant_menu
+    return if restaurant_id.blank?
+
+    RestaurantMenu.find_or_create_by!(restaurant_id: restaurant_id, menu_id: id) do |rm|
+      rm.sequence = RestaurantMenu.where(restaurant_id: restaurant_id).maximum(:sequence).to_i + 1
+      rm.status = :active
+      rm.availability_override_enabled = false if rm.availability_override_enabled.nil?
+      rm.availability_state = :available
+    end
+  rescue StandardError
+    nil
+  end
 
   def pdf_menu_scan_format
     return unless pdf_menu_scan.attached?

@@ -27,20 +27,6 @@
           <%= t('.description') %>
         </p>
       </div>
-
-      <div class="d-flex gap-2">
-        <%= link_to restaurant_taxes_path(@tax.restaurant),
-            class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
-          <i class="bi bi-x-lg"></i> <%= t('.cancel') %>
-        <% end %>
-
-        <%= link_to restaurant_tax_path(@tax.restaurant, @tax),
-            method: :delete,
-            data: { confirm: t('.confirm_delete') },
-            class: 'btn-2025 btn-2025-ghost btn-2025-md text-danger' do %>
-          <i class="bi bi-trash"></i> <%= t('.delete') %>
-        <% end %>
-      </div>
     </div>
   </div>
 <% end %>
