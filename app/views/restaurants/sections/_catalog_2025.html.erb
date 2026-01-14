@@ -128,7 +128,7 @@
                   <td class="w-40px">
                     <input type="checkbox" name="tax_ids[]" value="<%= tax.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
                   </td>
-                  <td class="w-40px tax-handle cursor-grab">
+                  <td class="w-40px tax-handle drag-handle cursor-grab">
                     <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
                   </td>
                   <td>
@@ -157,9 +157,55 @@
           </table>
         </div>
 
+        <div class="taxes-cards-view"
+             data-controller="sortable"
+             data-sortable-url-value="<%= reorder_restaurant_taxes_path(restaurant) %>"
+             data-sortable-handle-value=".tax-handle">
+          <% taxes.each do |tax| %>
+            <div class="tax-card-mobile clickable-row row-status-<%= tax.status.to_s %>"
+                 data-sortable-id="<%= tax.id %>"
+                 data-href="<%= edit_restaurant_tax_path(restaurant, tax) %>"
+                 title="<%= t(".status_#{tax.status}") %>">
+              <div class="tax-row-mobile">
+                <div class="tax-row-mobile-left">
+                  <input type="checkbox"
+                         name="tax_ids[]"
+                         value="<%= tax.id %>"
+                         data-localization-bulk-target="checkbox"
+                         data-action="change->localization-bulk#sync" />
+
+                  <span class="tax-handle drag-handle cursor-grab" aria-hidden="true">
+                    <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
+                  </span>
+
+                  <div class="tax-row-mobile-text">
+                    <div class="fw-semibold d-flex align-items-center gap-2">
+                      <span class="tax-name"><%= tax.name %></span>
+                    </div>
+                    <div class="text-muted small"><%= tax.taxtype.to_s.titleize %></div>
+                  </div>
+                </div>
+
+                <div class="tax-row-mobile-actions">
+                  <span class="badge bg-light text-dark"><%= tax.taxpercentage %>%</span>
+
+                  <%= link_to edit_restaurant_tax_path(restaurant, tax),
+                      class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                      title: t('.edit'),
+                      aria: { label: t('.edit') },
+                      data: { turbo_frame: 'taxes_edit_tax', row_primary_link: true } do %>
+                    <i class="bi bi-chevron-right"></i>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
         <% end %>
       </div>
     </div>
+  </div>
   <% end %>
 
   <% if tips.any? %>
@@ -215,7 +261,7 @@
                   <td class="w-40px">
                     <input type="checkbox" name="tip_ids[]" value="<%= tip.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
                   </td>
-                  <td class="w-40px tip-handle cursor-grab">
+                  <td class="w-40px tip-handle drag-handle cursor-grab">
                     <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
                   </td>
                   <td>
@@ -236,6 +282,50 @@
               <% end %>
             </tbody>
           </table>
+        </div>
+
+        <div class="tips-cards-view"
+             data-controller="sortable"
+             data-sortable-url-value="<%= reorder_restaurant_tips_path(restaurant) %>"
+             data-sortable-handle-value=".tip-handle">
+          <% tips.each do |tip| %>
+            <div class="tip-card-mobile clickable-row row-status-<%= tip.status.to_s %>"
+                 data-sortable-id="<%= tip.id %>"
+                 data-href="<%= edit_restaurant_tip_path(restaurant, tip) %>"
+                 title="<%= t(".status_#{tip.status}") %>">
+              <div class="tip-row-mobile">
+                <div class="tip-row-mobile-left">
+                  <input type="checkbox"
+                         name="tip_ids[]"
+                         value="<%= tip.id %>"
+                         data-localization-bulk-target="checkbox"
+                         data-action="change->localization-bulk#sync" />
+
+                  <span class="tip-handle drag-handle cursor-grab" aria-hidden="true">
+                    <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
+                  </span>
+
+                  <div class="tip-row-mobile-text">
+                    <div class="fw-semibold d-flex align-items-center gap-2">
+                      <span class="tip-name"><%= t('.tip') %></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tip-row-mobile-actions">
+                  <span class="badge bg-light text-dark"><%= tip.percentage %>%</span>
+
+                  <%= link_to edit_restaurant_tip_path(restaurant, tip),
+                      class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                      title: t('.edit'),
+                      aria: { label: t('.edit') },
+                      data: { turbo_frame: 'tips_edit_tip', row_primary_link: true } do %>
+                    <i class="bi bi-chevron-right"></i>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </div>
 
         <% end %>
@@ -260,6 +350,110 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
     gap: var(--space-4);
+  }
+
+  @media (max-width: 768px) {
+    .taxes-tips-lists-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* Taxes & Tips Views - Responsive */
+  .taxes-table-view,
+  .tips-table-view {
+    display: block;
+  }
+
+  .taxes-cards-view,
+  .tips-cards-view {
+    display: none;
+  }
+
+  /* Mobile: Show cards, hide tables */
+  @media (max-width: 768px) {
+    .taxes-table-view,
+    .tips-table-view {
+      display: none;
+    }
+
+    .taxes-cards-view,
+    .tips-cards-view {
+      display: block;
+    }
+  }
+
+  .tax-card-mobile,
+  .tip-card-mobile {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-3);
+    margin-bottom: var(--space-2);
+    transition: all var(--transition-base);
+  }
+
+  .tax-card-mobile:hover,
+  .tip-card-mobile:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-gray-300);
+  }
+
+  .tax-card-mobile:last-child,
+  .tip-card-mobile:last-child {
+    margin-bottom: 0;
+  }
+
+  .tax-row-mobile,
+  .tip-row-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .tax-row-mobile-actions,
+  .tip-row-mobile-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  .tax-row-mobile-left,
+  .tip-row-mobile-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    flex: 1;
+  }
+
+  .tax-row-mobile-text,
+  .tip-row-mobile-text {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .tax-row-mobile-text .tax-name {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Table density tweaks (desktop) */
+  .taxes-table-view .table > :not(caption) > * > * ,
+  .tips-table-view .table > :not(caption) > * > * {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Reduce wasted width for checkbox / drag columns */
+  .taxes-table-view .w-40px,
+  .tips-table-view .w-40px {
+    width: 32px;
   }
 </style>
 

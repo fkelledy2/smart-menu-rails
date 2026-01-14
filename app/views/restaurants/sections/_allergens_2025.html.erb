@@ -141,7 +141,7 @@
                 <td class="w-40px">
                   <input type="checkbox" name="allergyn_ids[]" value="<%= allergen.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
                 </td>
-                <td class="w-40px allergen-handle cursor-grab">
+                <td class="w-40px allergen-handle drag-handle cursor-grab">
                   <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
                 </td>
                 <td>
@@ -165,6 +165,49 @@
             <% end %>
           </tbody>
         </table>
+      </div>
+
+      <div class="allergens-cards-view"
+           data-controller="sortable"
+           data-sortable-url-value="<%= reorder_restaurant_allergyns_path(restaurant) %>"
+           data-sortable-handle-value=".allergen-handle">
+        <% allergens.each do |allergen| %>
+          <div class="allergen-card-mobile clickable-row row-status-<%= allergen.status.to_s %>"
+               data-sortable-id="<%= allergen.id %>"
+               data-href="<%= edit_restaurant_allergyn_path(restaurant, allergen) %>"
+               title="<%= t(".status_#{allergen.status}") %>">
+            <div class="allergen-row-mobile">
+              <div class="allergen-row-mobile-left">
+                <input type="checkbox"
+                       name="allergyn_ids[]"
+                       value="<%= allergen.id %>"
+                       data-localization-bulk-target="checkbox"
+                       data-action="change->localization-bulk#sync" />
+
+                <span class="allergen-handle drag-handle cursor-grab" aria-hidden="true">
+                  <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
+                </span>
+
+                <div class="allergen-row-mobile-text">
+                  <div class="fw-semibold">
+                    <span class="allergen-name"><%= allergen.name %></span>
+                  </div>
+                  <% if allergen.description.present? %>
+                    <div class="text-muted small"><%= allergen.description %></div>
+                  <% end %>
+                </div>
+              </div>
+
+              <%= link_to edit_restaurant_allergyn_path(restaurant, allergen),
+                  class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                  title: t('.edit'),
+                  aria: { label: t('.edit') },
+                  data: { turbo_frame: 'allergens_edit_allergyn', row_primary_link: true } do %>
+                <i class="bi bi-chevron-right"></i>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
       </div>
 
       <% end %>
@@ -273,5 +316,78 @@
 
   .allergen-info p {
     margin: 0;
+  }
+
+  .allergens-table-view {
+    display: block;
+  }
+
+  .allergens-cards-view {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .allergens-table-view {
+      display: none;
+    }
+
+    .allergens-cards-view {
+      display: block;
+    }
+  }
+
+  .allergen-card-mobile {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-3);
+    margin-bottom: var(--space-2);
+    transition: all var(--transition-base);
+  }
+
+  .allergen-card-mobile:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-gray-300);
+  }
+
+  .allergen-card-mobile:last-child {
+    margin-bottom: 0;
+  }
+
+  .allergen-row-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .allergen-row-mobile-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    flex: 1;
+  }
+
+  .allergen-row-mobile-text {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .allergen-row-mobile-text .allergen-name {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .allergens-table-view .table > :not(caption) > * > * {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .allergens-table-view .w-40px {
+    width: 32px;
   }
 </style>

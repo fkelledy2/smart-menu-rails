@@ -148,7 +148,15 @@
   background-color: var(--color-success-light) !important;
 }
 
+.table tbody tr.row-status-active > * {
+  background-color: var(--color-success-light) !important;
+}
+
 .table-hover tbody tr.clickable-row.row-status-active:hover > * {
+  background-color: rgba(16, 185, 129, 0.22) !important;
+}
+
+.table-hover tbody tr.row-status-active:hover > * {
   background-color: rgba(16, 185, 129, 0.22) !important;
 }
 
@@ -157,7 +165,15 @@
   background-color: var(--color-gray-50) !important;
 }
 
+.table tbody tr.row-status-inactive > * {
+  background-color: var(--color-gray-50) !important;
+}
+
 .table-hover tbody tr.clickable-row.row-status-inactive:hover > * {
+  background-color: var(--color-gray-100) !important;
+}
+
+.table-hover tbody tr.row-status-inactive:hover > * {
   background-color: var(--color-gray-100) !important;
 }
 
@@ -170,7 +186,15 @@
   background-color: var(--color-gray-100) !important;
 }
 
+.table tbody tr.row-status-archived > * {
+  background-color: var(--color-gray-100) !important;
+}
+
 .table-hover tbody tr.clickable-row.row-status-archived:hover > * {
+  background-color: var(--color-gray-200) !important;
+}
+
+.table-hover tbody tr.row-status-archived:hover > * {
   background-color: var(--color-gray-200) !important;
 }
 

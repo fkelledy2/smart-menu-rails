@@ -66,47 +66,96 @@
           </div>
         </div>
 
-    <div class="table-responsive languages-table-view">
-      <table class="table table-hover align-middle">
-        <thead>
-          <tr>
-            <th class="w-40px"></th>
-            <th class="w-40px"></th>
-            <th><%= t('.language') %></th>
-            <th class="text-end">
-              <span class="btn-2025 btn-2025-ghost btn-2025-sm">
-                <i class="bi bi-gear"></i>
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody data-controller="sortable"
-               data-sortable-url-value="<%= reorder_restaurant_restaurantlocales_path(restaurant) %>"
-               data-sortable-handle-value=".locale-handle">
-          <% locales.each do |locale| %>
-            <tr data-sortable-id="<%= locale.id %>"
-                class="clickable-row row-status-<%= locale.status.to_s %>"
-                data-href="<%= edit_restaurant_restaurantlocale_path(restaurant, locale) %>"
-                data-turbo-frame="localization_edit_locale"
-                title="<%= t(".status_#{locale.status}") %>">
-              <td class="w-40px">
-                <input type="checkbox" name="restaurantlocale_ids[]" value="<%= locale.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" <%= 'disabled' if locale.respond_to?(:dfault) && locale.dfault %> />
-              </td>
-              <td class="w-40px locale-handle cursor-grab">
-                <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
-              </td>
-              <td>
-                <div>
-                  <div class="fw-semibold d-flex align-items-center gap-2">
-                    <span><%= locale.language %></span>
-                    <% if locale.respond_to?(:dfault) && locale.dfault %>
-                      <span class="badge bg-info"><%= t('.default') %></span>
+        <div class="table-responsive languages-table-view">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th class="w-40px"></th>
+                <th class="w-40px"></th>
+                <th><%= t('.language') %></th>
+                <th class="text-end">
+                  <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                    <i class="bi bi-gear"></i>
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody data-controller="sortable"
+                   data-sortable-url-value="<%= reorder_restaurant_restaurantlocales_path(restaurant) %>"
+                   data-sortable-handle-value=".locale-handle">
+              <% locales.each do |locale| %>
+                <tr data-sortable-id="<%= locale.id %>"
+                    class="clickable-row row-status-<%= locale.status.to_s %>"
+                    data-href="<%= edit_restaurant_restaurantlocale_path(restaurant, locale) %>"
+                    data-turbo-frame="localization_edit_locale"
+                    title="<%= t(".status_#{locale.status}") %>">
+                  <td class="w-40px">
+                    <input type="checkbox" name="restaurantlocale_ids[]" value="<%= locale.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" <%= 'disabled' if locale.respond_to?(:dfault) && locale.dfault %> />
+                  </td>
+                  <td class="w-40px locale-handle drag-handle cursor-grab">
+                    <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
+                  </td>
+                  <td>
+                    <div>
+                      <div class="fw-semibold d-flex align-items-center gap-2">
+                        <span><%= locale.language %></span>
+                        <% if locale.respond_to?(:dfault) && locale.dfault %>
+                          <span class="badge bg-info"><%= t('.default') %></span>
+                        <% end %>
+                      </div>
+                      <div class="text-muted small"><code><%= locale.locale %></code></div>
+                    </div>
+                  </td>
+                  <td class="text-end">
+                    <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale),
+                        class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                        title: t('.edit'),
+                        aria: { label: t('.edit') },
+                        data: { turbo_frame: 'localization_edit_locale', row_primary_link: true } do %>
+                      <i class="bi bi-chevron-right"></i>
                     <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="languages-cards-view"
+             data-controller="sortable"
+             data-sortable-url-value="<%= reorder_restaurant_restaurantlocales_path(restaurant) %>"
+             data-sortable-handle-value=".locale-handle">
+          <% locales.each do |locale| %>
+            <div class="language-card-mobile clickable-row row-status-<%= locale.status.to_s %>"
+                 data-sortable-id="<%= locale.id %>"
+                 data-href="<%= edit_restaurant_restaurantlocale_path(restaurant, locale) %>"
+                 data-turbo-frame="localization_edit_locale"
+                 title="<%= t(".status_#{locale.status}") %>">
+              <div class="language-row-mobile">
+                <div class="language-row-mobile-left">
+                  <input type="checkbox"
+                         name="restaurantlocale_ids[]"
+                         value="<%= locale.id %>"
+                         data-localization-bulk-target="checkbox"
+                         data-action="change->localization-bulk#sync"
+                         <%= 'disabled' if locale.respond_to?(:dfault) && locale.dfault %> />
+
+                  <span class="locale-handle drag-handle cursor-grab" aria-hidden="true">
+                    <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
+                  </span>
+
+                  <div class="language-row-mobile-text">
+                    <div class="fw-semibold d-flex align-items-center gap-2">
+                      <span class="language-name"><%= locale.language %></span>
+                      <% if locale.respond_to?(:dfault) && locale.dfault %>
+                        <span class="badge bg-info"><%= t('.default') %></span>
+                      <% end %>
+                    </div>
+                    <div class="text-muted small language-locale"><code><%= locale.locale %></code></div>
                   </div>
-                  <div class="text-muted small"><code><%= locale.locale %></code></div>
                 </div>
-              </td>
-              <td class="text-end">
+
                 <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale),
                     class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                     title: t('.edit'),
@@ -114,48 +163,14 @@
                     data: { turbo_frame: 'localization_edit_locale', row_primary_link: true } do %>
                   <i class="bi bi-chevron-right"></i>
                 <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-
-      <% end %>
-    </div>
-
-    <!-- Mobile Card View -->
-    <div class="languages-cards-view">
-      <% locales.each do |locale| %>
-        <div class="language-card-mobile clickable-row row-status-<%= locale.status.to_s %>"
-             data-href="<%= edit_restaurant_restaurantlocale_path(restaurant, locale) %>"
-             data-turbo-frame="localization_edit_locale"
-             title="<%= t(".status_#{locale.status}") %>">
-          <div class="d-flex align-items-start justify-content-between mb-3">
-            <div class="d-flex align-items-center gap-2">
-              <div>
-                <div class="fw-semibold d-flex align-items-center gap-2">
-                  <span><%= locale.language %></span>
-                  <% if locale.respond_to?(:dfault) && locale.dfault %>
-                    <span class="badge bg-info"><%= t('.default') %></span>
-                  <% end %>
-                </div>
-                <div class="text-muted small"><code><%= locale.locale %></code></div>
-                <div class="mt-1">
-                </div>
               </div>
             </div>
-            <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale),
-                class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                title: t('.edit'),
-                aria: { label: t('.edit') },
-                data: { turbo_frame: 'localization_edit_locale', row_primary_link: true } do %>
-              <i class="bi bi-chevron-right"></i>
-            <% end %>
-          </div>
+          <% end %>
         </div>
+
       <% end %>
     </div>
+
   <% else %>
     <div class="text-center py-5">
       <i class="bi bi-globe text-muted text-3rem"></i>
@@ -222,9 +237,48 @@
     background: var(--color-gray-50);
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
-    padding: var(--space-4);
-    margin-bottom: var(--space-3);
+    padding: var(--space-3);
+    margin-bottom: var(--space-2);
     transition: all var(--transition-base);
+  }
+
+  .language-row-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .language-row-mobile-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    flex: 1;
+  }
+
+  .language-row-mobile-text {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .language-row-mobile-text .language-name {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Table density tweaks (desktop) */
+  .languages-table-view .table > :not(caption) > * > * {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Reduce wasted width for checkbox / drag columns */
+  .languages-table-view .w-40px {
+    width: 32px;
   }
 
   .language-card-mobile:hover {

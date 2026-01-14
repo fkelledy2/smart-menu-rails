@@ -107,41 +107,99 @@
           </div>
         </div>
 
-      <div class="table-responsive staff-table-view">
-        <table class="table table-hover align-middle">
-          <thead>
-            <tr>
-              <th class="w-40px"></th>
-              <th class="w-40px"></th>
-              <th><%= t('.name') %></th>
-              <th class="text-end"><%= t('.role') %></th>
-              <th class="text-end">
-                <span class="btn-2025 btn-2025-ghost btn-2025-sm">
-                  <i class="bi bi-gear"></i>
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody data-controller="sortable"
-                 data-sortable-url-value="<%= reorder_restaurant_employees_path(restaurant) %>"
-                 data-sortable-handle-value=".employee-handle">
-            <% employees.each do |employee| %>
-              <tr data-sortable-id="<%= employee.id %>"
-                  class="clickable-row row-status-<%= employee.status.to_s %>"
-                  data-href="<%= edit_restaurant_employee_path(restaurant, employee) %>"
-                  title="<%= t(".status_#{employee.status}") %>">
-                <td class="w-40px">
-                  <input type="checkbox" name="employee_ids[]" value="<%= employee.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
-                </td>
-                <td class="w-40px employee-handle cursor-grab">
-                  <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
-                </td>
-                <td>
-                  <div class="fw-semibold">
-                    <%= employee.user&.email&.split('@')&.first || t('.unnamed') %>
+        <div class="table-responsive staff-table-view">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th class="w-40px"></th>
+                <th class="w-40px"></th>
+                <th><%= t('.name') %></th>
+                <th class="text-end"><%= t('.role') %></th>
+                <th class="text-end">
+                  <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                    <i class="bi bi-gear"></i>
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody data-controller="sortable"
+                   data-sortable-url-value="<%= reorder_restaurant_employees_path(restaurant) %>"
+                   data-sortable-handle-value=".employee-handle">
+              <% employees.each do |employee| %>
+                <tr data-sortable-id="<%= employee.id %>"
+                    class="clickable-row row-status-<%= employee.status.to_s %>"
+                    data-href="<%= edit_restaurant_employee_path(restaurant, employee) %>"
+                    title="<%= t(".status_#{employee.status}") %>">
+                  <td class="w-40px">
+                    <input type="checkbox" name="employee_ids[]" value="<%= employee.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
+                  </td>
+                  <td class="w-40px employee-handle drag-handle cursor-grab">
+                    <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
+                  </td>
+                  <td>
+                    <div class="fw-semibold">
+                      <%= employee.user&.email&.split('@')&.first || t('.unnamed') %>
+                    </div>
+                  </td>
+                  <td class="text-end">
+                    <% badge_class = case employee.role
+                                     when 'manager' then 'bg-primary'
+                                     when 'staff' then 'bg-info'
+                                     when 'admin' then 'bg-danger'
+                                     else 'bg-secondary'
+                                     end %>
+                    <span class="badge <%= badge_class %>">
+                      <%= employee.role&.titleize || t('.no_role') %>
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <%= link_to edit_restaurant_employee_path(restaurant, employee),
+                        class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                        title: t('.edit'),
+                        aria: { label: t('.edit') },
+                        data: { turbo_frame: 'staff_edit_employee', row_primary_link: true } do %>
+                      <i class="bi bi-chevron-right"></i>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="staff-cards-view"
+             data-controller="sortable"
+             data-sortable-url-value="<%= reorder_restaurant_employees_path(restaurant) %>"
+             data-sortable-handle-value=".employee-handle">
+          <% employees.each do |employee| %>
+            <div class="staff-card-mobile clickable-row row-status-<%= employee.status.to_s %>"
+                 data-sortable-id="<%= employee.id %>"
+                 data-href="<%= edit_restaurant_employee_path(restaurant, employee) %>"
+                 title="<%= t(".status_#{employee.status}") %>">
+              <div class="staff-row-mobile">
+                <div class="staff-row-mobile-left">
+                  <input type="checkbox"
+                         name="employee_ids[]"
+                         value="<%= employee.id %>"
+                         data-localization-bulk-target="checkbox"
+                         data-action="change->localization-bulk#sync" />
+
+                  <span class="employee-handle drag-handle cursor-grab" aria-hidden="true">
+                    <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
+                  </span>
+
+                  <div class="staff-row-mobile-text">
+                    <div class="fw-semibold">
+                      <span class="staff-name"><%= employee.user&.email&.split('@')&.first || t('.unnamed') %></span>
+                    </div>
+                    <div class="text-muted small">
+                      <%= employee.user&.email || '-' %>
+                    </div>
                   </div>
-                </td>
-                <td class="text-end">
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
                   <% badge_class = case employee.role
                                    when 'manager' then 'bg-primary'
                                    when 'staff' then 'bg-info'
@@ -151,8 +209,7 @@
                   <span class="badge <%= badge_class %>">
                     <%= employee.role&.titleize || t('.no_role') %>
                   </span>
-                </td>
-                <td class="text-end">
+
                   <%= link_to edit_restaurant_employee_path(restaurant, employee),
                       class: 'btn-2025 btn-2025-ghost btn-2025-sm',
                       title: t('.edit'),
@@ -160,57 +217,12 @@
                       data: { turbo_frame: 'staff_edit_employee', row_primary_link: true } do %>
                     <i class="bi bi-chevron-right"></i>
                   <% end %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-
-      <% end %>
-    </div>
-
-    <!-- Mobile Card View -->
-    <div class="staff-cards-view">
-      <% employees.each do |employee| %>
-        <div class="staff-card-mobile clickable-row row-status-<%= employee.status.to_s %>"
-             data-href="<%= edit_restaurant_employee_path(restaurant, employee) %>"
-             title="<%= t(".status_#{employee.status}") %>">
-          <div class="d-flex align-items-start justify-content-between mb-3">
-            <div class="d-flex align-items-center gap-2">
-              <div class="avatar-circle">
-                <%= employee.user&.email&.first&.upcase || '?' %>
-              </div>
-              <div>
-                <div class="fw-semibold">
-                  <%= employee.user&.email&.split('@')&.first || t('.unnamed') %>
-                </div>
-                <div class="text-muted small">
-                  <%= employee.user&.email || '-' %>
                 </div>
               </div>
             </div>
-            <div class="btn-group">
-              <%= link_to edit_restaurant_employee_path(restaurant, employee),
-                  class: 'btn-2025 btn-2025-ghost btn-2025-sm',
-                  data: { turbo_frame: 'staff_edit_employee', row_primary_link: true } do %>
-                <i class="bi bi-chevron-right"></i>
-              <% end %>
-            </div>
-          </div>
-
-          <div class="d-flex gap-2 flex-wrap">
-            <% badge_class = case employee.role
-                             when 'manager' then 'bg-primary'
-                             when 'staff' then 'bg-info'
-                             when 'admin' then 'bg-danger'
-                             else 'bg-secondary'
-                             end %>
-            <span class="badge <%= badge_class %>">
-              <%= employee.role&.titleize || t('.no_role') %>
-            </span>
-          </div>
+          <% end %>
         </div>
+
       <% end %>
     </div>
   <% else %>
@@ -333,8 +345,8 @@
     background: var(--color-gray-50);
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
-    padding: var(--space-4);
-    margin-bottom: var(--space-3);
+    padding: var(--space-3);
+    margin-bottom: var(--space-2);
     transition: all var(--transition-base);
   }
 

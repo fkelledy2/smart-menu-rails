@@ -151,7 +151,9 @@
                      <% end %>
               >
               <% section_items.each do |item| %>
-                <tr data-sortable-id="<%= item.id %>" data-testid="menu-item-<%= item.id %>">
+                <% row_status_class = item.active? ? 'row-status-active' : 'row-status-inactive' %>
+                <% row_status_title = item.active? ? t('menus.sections.details_2025.active', default: 'Active') : t('menus.sections.details_2025.inactive', default: 'Inactive') %>
+                <tr data-sortable-id="<%= item.id %>" data-testid="menu-item-<%= item.id %>" class="<%= row_status_class %>" title="<%= row_status_title %>">
                   <% unless read_only %>
                     <td class="w-40px">
                       <input type="checkbox" name="menuitem_ids[]" value="<%= item.id %>" data-menuitems-bulk-target="checkbox" data-action="change->menuitems-bulk#sync" />
@@ -227,7 +229,7 @@
                                   title: t('.edit'),
                                   aria: { label: t('.edit') },
                                   data: { turbo_frame: '_top', testid: "edit-item-#{item.id}-btn" } do %>
-                        <i class="bi bi-pencil"></i>
+                        <i class="bi bi-chevron-right"></i>
                       <% end %>
                     </td>
                   <% end %>
