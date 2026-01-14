@@ -31,43 +31,4 @@
   size_class = size_classes[size] || size_classes['md']
 %>
 
-<span class="badge-2025 badge-2025-<%= color %> <%= size_class %>">
-  <%= label %>
-</span>
-
-<style>
-  .badge-2025 {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    font-weight: var(--font-medium);
-    border-radius: var(--radius-full);
-    white-space: nowrap;
-    line-height: 1;
-  }
-
-  .badge-2025-success {
-    background-color: var(--color-success-light);
-    color: var(--color-success);
-  }
-
-  .badge-2025-warning {
-    background-color: var(--color-warning-light);
-    color: #92400E;
-  }
-
-  .badge-2025-danger {
-    background-color: var(--color-danger-light);
-    color: var(--color-danger);
-  }
-
-  .badge-2025-info {
-    background-color: var(--color-info-light);
-    color: var(--color-info);
-  }
-
-  .badge-2025-secondary {
-    background-color: var(--color-gray-100);
-    color: var(--color-gray-600);
-  }
-</style>
+<span class="badge text-bg-<%= color %> <%= size_class %>"><%= label %></span>

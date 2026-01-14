@@ -8,21 +8,22 @@
 <!-- Quick Info Banner -->
 
 <!-- Upload Form Card -->
-<div class="content-card-2025" data-testid="import-form-card">
-  <h2 class="content-card-title">
-    <i class="bi bi-cloud-upload"></i>
-    <%= t('.upload_title') %>
-  </h2>
+<div class="card" data-testid="import-form-card">
+  <div class="card-body">
+    <h2 class="h5 mb-3">
+      <i class="bi bi-cloud-upload"></i>
+      <%= t('.upload_title') %>
+    </h2>
 
   <%= form_with(model: [restaurant, restaurant.ocr_menu_imports.new], local: true, html: { class: 'needs-validation', novalidate: true }, data: { turbo_frame: '_top', testid: 'import-form' }) do |f| %>
-    <div class="form-group-2025 mb-4">
-      <%= f.label :name, t('.name_label'), class: 'form-label-2025' %>
+    <div class="mb-4">
+      <%= f.label :name, t('.name_label'), class: 'form-label' %>
       <%= f.text_field :name,
-          class: 'form-control-2025',
+          class: 'form-control',
           placeholder: t('.name_placeholder'),
           required: true,
           data: { testid: 'import-name-input' } %>
-      <div class="form-help-2025">
+      <div class="form-text">
         <%= t('.name_help') %>
       </div>
       <div class="invalid-feedback">
@@ -30,8 +31,8 @@
       </div>
     </div>
 
-    <div class="form-group-2025 mb-4">
-      <%= f.label :source_locale, t('.source_language_label'), class: 'form-label-2025' %>
+    <div class="mb-4">
+      <%= f.label :source_locale, t('.source_language_label'), class: 'form-label' %>
       <%= f.select :source_locale,
           options_for_select(
             [[t('.auto_detect'), '']] +
@@ -42,14 +43,14 @@
             f.object.source_locale.to_s
           ),
           {},
-          class: 'form-control-2025' %>
-      <div class="form-help-2025">
+          class: 'form-select' %>
+      <div class="form-text">
         <%= t('.source_language_help') %>
       </div>
     </div>
 
-    <div class="form-group-2025 mb-4">
-      <%= f.label :pdf_file, t('.pdf_label'), class: 'form-label-2025' %>
+    <div class="mb-4">
+      <%= f.label :pdf_file, t('.pdf_label'), class: 'form-label' %>
       <div class="file-upload-area">
         <div class="file-upload-icon">
           <i class="bi bi-file-earmark-pdf"></i>
@@ -84,6 +85,8 @@
       </button>
     </div>
   <% end %>
+
+  </div>
 </div>
 
 <script>
@@ -142,11 +145,12 @@
 <!-- Recent Imports -->
 <% recent_imports = restaurant.ocr_menu_imports.order(created_at: :desc).limit(5) %>
 <% if recent_imports.any? %>
-  <div class="content-card-2025 mt-4" data-testid="recent-imports-card">
-    <h2 class="content-card-title">
-      <i class="bi bi-clock-history"></i>
-      <%= t('.recent_imports') %>
-    </h2>
+  <div class="card mt-3" data-testid="recent-imports-card">
+    <div class="card-body">
+      <h2 class="h5 mb-3">
+        <i class="bi bi-clock-history"></i>
+        <%= t('.recent_imports') %>
+      </h2>
 
     <%= form_with url: bulk_destroy_restaurant_ocr_menu_imports_path(restaurant),
         method: :delete,
@@ -160,7 +164,7 @@
           <div class="d-flex align-items-center gap-2 ms-auto">
             <%= f.hidden_field :confirm, value: '1' %>
             <div class="dropdown">
-              <button class="btn-2025 btn-2025-ghost btn-2025-sm dropdown-toggle"
+              <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
                       type="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
@@ -200,13 +204,13 @@
                     <span class="text-truncate" style="min-width: 0;"><%= import.name.presence || t('.default_title', id: import.id) %></span>
                     <div class="flex-shrink-0 text-end">
                       <% if import.completed? %>
-                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> <%= t('.status_completed') %></span>
+                        <span class="badge text-bg-success"><i class="bi bi-check-circle"></i> <%= t('.status_completed') %></span>
                       <% elsif import.failed? %>
-                        <span class="badge bg-danger"><i class="bi bi-x-circle"></i> <%= t('.status_failed') %></span>
+                        <span class="badge text-bg-danger"><i class="bi bi-x-circle"></i> <%= t('.status_failed') %></span>
                       <% elsif import.processing? %>
-                        <span class="badge bg-primary"><i class="bi bi-arrow-repeat"></i> <%= t('.status_processing') %></span>
+                        <span class="badge text-bg-primary"><i class="bi bi-arrow-repeat"></i> <%= t('.status_processing') %></span>
                       <% else %>
-                        <span class="badge bg-secondary"><i class="bi bi-pause-circle"></i> <%= t('.status_pending') %></span>
+                        <span class="badge text-bg-secondary"><i class="bi bi-pause-circle"></i> <%= t('.status_pending') %></span>
                       <% end %>
                     </div>
                   </div>
@@ -214,7 +218,7 @@
                 </div>
 
                 <%= link_to restaurant_ocr_menu_import_path(restaurant, import),
-                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                    class: 'btn btn-sm btn-outline-secondary',
                     title: t('.view', default: 'View'),
                     aria: { label: t('.view', default: 'View') },
                     data: { turbo_frame: '_top', row_primary_link: true } do %>
@@ -225,6 +229,7 @@
           <% end %>
         </div>
     <% end %>
+    </div>
   </div>
 <% end %>
 

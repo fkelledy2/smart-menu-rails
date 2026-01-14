@@ -62,7 +62,7 @@
                 ],
                 { include_blank: t('.set_status') },
                 { class: 'form-select form-select-sm', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
-            <%= f.submit t('.apply'), class: 'btn-2025 btn-2025-primary btn-2025-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
+            <%= f.submit t('.apply'), class: 'btn btn-primary btn-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
           </div>
         </div>
 
@@ -74,7 +74,7 @@
                 <th class="w-40px"></th>
                 <th><%= t('.language') %></th>
                 <th class="text-end">
-                  <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                  <span class="btn btn-sm btn-outline-secondary">
                     <i class="bi bi-gear"></i>
                   </span>
                 </th>
@@ -100,7 +100,7 @@
                       <div class="fw-semibold d-flex align-items-center gap-2">
                         <span><%= locale.language %></span>
                         <% if locale.respond_to?(:dfault) && locale.dfault %>
-                          <span class="badge bg-info"><%= t('.default') %></span>
+                          <span class="badge text-bg-info"><%= t('.default') %></span>
                         <% end %>
                       </div>
                       <div class="text-muted small"><code><%= locale.locale %></code></div>
@@ -108,7 +108,7 @@
                   </td>
                   <td class="text-end">
                     <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale),
-                        class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                        class: 'btn btn-sm btn-outline-secondary',
                         title: t('.edit'),
                         aria: { label: t('.edit') },
                         data: { turbo_frame: 'localization_edit_locale', row_primary_link: true } do %>
@@ -149,7 +149,7 @@
                     <div class="fw-semibold d-flex align-items-center gap-2">
                       <span class="language-name"><%= locale.language %></span>
                       <% if locale.respond_to?(:dfault) && locale.dfault %>
-                        <span class="badge bg-info"><%= t('.default') %></span>
+                        <span class="badge text-bg-info"><%= t('.default') %></span>
                       <% end %>
                     </div>
                     <div class="text-muted small language-locale"><code><%= locale.locale %></code></div>
@@ -157,7 +157,7 @@
                 </div>
 
                 <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale),
-                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                    class: 'btn btn-sm btn-outline-secondary',
                     title: t('.edit'),
                     aria: { label: t('.edit') },
                     data: { turbo_frame: 'localization_edit_locale', row_primary_link: true } do %>

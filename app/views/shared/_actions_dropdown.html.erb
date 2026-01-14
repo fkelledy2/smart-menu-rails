@@ -1,0 +1,39 @@
+<%
+  aria_label ||= local_assigns[:aria_label] || 'Actions'
+  button_class ||= local_assigns[:button_class] || 'btn btn-sm btn-outline-secondary'
+  menu_class ||= local_assigns[:menu_class] || 'dropdown-menu-end'
+  items ||= Array(local_assigns[:items])
+%>
+
+<div class="dropdown">
+  <button class="<%= button_class %>"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-label="<%= aria_label %>">
+    <i class="bi bi-three-dots" aria-hidden="true"></i>
+  </button>
+
+  <ul class="dropdown-menu <%= menu_class %>">
+    <% items.each do |item| %>
+      <li>
+        <% label = item[:label] %>
+        <% href = item[:href] || item[:path] %>
+        <% method = item[:method] %>
+        <% data = item[:data] || {} %>
+        <% klass = item[:class] %>
+
+        <% if method.present? %>
+          <%= link_to label,
+              href,
+              class: "dropdown-item #{klass}",
+              data: data.merge(turbo_method: method) %>
+        <% else %>
+          <%= link_to label,
+              href,
+              class: "dropdown-item #{klass}",
+              data: data %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

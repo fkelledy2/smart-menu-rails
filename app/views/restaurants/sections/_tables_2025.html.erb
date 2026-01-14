@@ -8,19 +8,21 @@
   .order(Arel.sql('CASE WHEN sequence IS NULL THEN 1 ELSE 0 END, sequence ASC')) %>
 
 <!-- Quick Actions Card -->
-<div class="quick-actions-card">
-  <h2 class="quick-actions-title">
-    <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions') %>
-  </h2>
+<div class="card mb-3">
+  <div class="card-body">
+    <h2 class="h5 mb-3">
+      <i class="bi bi-lightning-charge"></i>
+      <%= t('.quick_actions') %>
+    </h2>
 
-  <div class="quick-actions-grid">
-    <%= link_to new_restaurant_tablesetting_path(restaurant),
-        class: 'quick-action-btn',
-        data: { turbo_frame: 'tables_new_tablesetting' } do %>
-      <i class="bi bi-plus-circle"></i>
-      <span><%= t('.add_table') %></span>
-    <% end %>
+    <div class="quick-actions-grid">
+      <%= link_to new_restaurant_tablesetting_path(restaurant),
+          class: 'btn btn-primary quick-action-btn',
+          data: { turbo_frame: 'tables_new_tablesetting' } do %>
+        <i class="bi bi-plus-circle"></i>
+        <span><%= t('.add_table') %></span>
+      <% end %>
+    </div>
   </div>
 </div>
 
@@ -43,8 +45,9 @@
 </style>
 
 <!-- Tables Overview -->
-<div class="content-card-2025 py-4">
-  <h2 class="content-card-title">
+<div class="card mb-3">
+  <div class="card-body">
+  <h2 class="h5 mb-3">
     <i class="bi bi-rulers"></i>
     <%= t('.tables_overview') %>
   </h2>
@@ -53,18 +56,14 @@
     <%= t('.tables_description') %>
   </p>
 
-  <div class="size-stats-card">
-    <div class="size-stat">
-      <div class="size-stat-value">
-        <%= restaurant.tablesettings.count %>
-      </div>
-      <div class="size-stat-label">
-        <%= t('.total_tables') %>
-      </div>
+  <div class="card bg-light border-0">
+    <div class="card-body p-3">
+      <div class="h3 mb-0"><%= restaurant.tablesettings.count %></div>
+      <div class="text-muted"><%= t('.total_tables') %></div>
     </div>
   </div>
 
-  
+  </div>
 </div>
 
 <%= turbo_frame_tag 'tables_edit_tablesetting' do %>
@@ -81,11 +80,12 @@
 
 <!-- Table Settings -->
 <% if tables.any? %>
-  <div class="content-card-2025">
-    <h2 class="content-card-title mb-4">
-      <i class="bi bi-layout-wtf"></i>
-      <%= t('.table_settings') %>
-    </h2>
+  <div class="card">
+    <div class="card-body">
+      <h2 class="h5 mb-4">
+        <i class="bi bi-layout-wtf"></i>
+        <%= t('.table_settings') %>
+      </h2>
 
     <!-- Desktop Table View (styled like Menu Sections list) -->
     <div data-controller="localization-bulk">
@@ -105,7 +105,7 @@
                 ],
                 { include_blank: t('.set_status') },
                 { class: 'form-select form-select-sm', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
-            <%= f.submit t('.apply'), class: 'btn-2025 btn-2025-primary btn-2025-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
+            <%= f.submit t('.apply'), class: 'btn btn-primary btn-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
           </div>
         </div>
 
@@ -118,7 +118,7 @@
                 <th><%= t('.table_name') %></th>
                 <th class="text-end"><%= t('.capacity') %></th>
                 <th class="text-end">
-                  <span class="btn-2025 btn-2025-ghost btn-2025-sm">
+                  <span class="btn btn-sm btn-outline-secondary">
                     <i class="bi bi-gear"></i>
                   </span>
                 </th>
@@ -147,7 +147,7 @@
                   </td>
                   <td class="text-end">
                     <%= link_to edit_restaurant_tablesetting_path(restaurant, table),
-                        class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                        class: 'btn btn-sm btn-outline-secondary',
                         title: t('.edit'),
                         aria: { label: t('.edit') },
                         data: { turbo_frame: 'tables_edit_tablesetting', row_primary_link: true } do %>
@@ -195,7 +195,7 @@
                 </div>
 
                 <%= link_to edit_restaurant_tablesetting_path(restaurant, table),
-                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                    class: 'btn btn-sm btn-outline-secondary',
                     title: t('.edit'),
                     aria: { label: t('.edit') },
                     data: { turbo_frame: 'tables_edit_tablesetting', row_primary_link: true } do %>
@@ -209,9 +209,11 @@
         <% end %>
       </div>
     </div>
+    </div>
   </div>
 <% else %>
-  <div class="content-card-2025">
+  <div class="card">
+    <div class="card-body">
     <div class="text-center py-5">
       <i class="bi bi-layout-wtf text-muted" style="font-size: 3rem;"></i>
       <h3 class="mt-3 text-muted">
@@ -220,6 +222,7 @@
       <p class="text-muted">
         <%= t('.no_tables_description') %>
       </p>
+    </div>
     </div>
   </div>
 <% end %>

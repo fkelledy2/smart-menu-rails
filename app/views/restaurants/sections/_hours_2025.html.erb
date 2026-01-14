@@ -14,7 +14,7 @@
 
   <div class="quick-actions-grid">
     <button type="button"
-            class="quick-action-btn copy-monday-btn"
+            class="btn btn-outline-secondary quick-action-btn copy-monday-btn"
             data-copied-text="<%= t('.copied_success') %>">
       <i class="bi bi-files"></i>
       <span><%= t('.copy_to_all') %></span>
@@ -484,13 +484,13 @@
         const originalText = btn.innerHTML;
         const copiedText = btn.dataset.copiedText || '<%= j t('.copied_success') %>';
         btn.innerHTML = `<i class="bi bi-check-circle-fill"></i> ${copiedText}`;
-        btn.classList.remove('btn-2025-secondary');
-        btn.classList.add('btn-2025-primary');
+        btn.classList.remove('btn-outline-secondary');
+        btn.classList.add('btn-primary');
 
         setTimeout(() => {
           btn.innerHTML = originalText;
-          btn.classList.remove('btn-2025-primary');
-          btn.classList.add('btn-2025-secondary');
+          btn.classList.remove('btn-primary');
+          btn.classList.add('btn-outline-secondary');
         }, 2000);
       });
     }

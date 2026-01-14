@@ -1,0 +1,28 @@
+<%
+  status ||= local_assigns[:status]
+  label ||= local_assigns[:label] || status.to_s.titleize
+  size ||= local_assigns[:size] || 'md'
+
+  variant_map = {
+    'active' => 'success',
+    'inactive' => 'secondary',
+    'draft' => 'warning',
+    'archived' => 'danger',
+    'pending' => 'info',
+    'processing' => 'info',
+    'completed' => 'success',
+    'failed' => 'danger'
+  }
+
+  variant = variant_map[status.to_s.downcase] || 'secondary'
+
+  size_classes = {
+    'sm' => 'small',
+    'md' => '',
+    'lg' => 'fs-6'
+  }
+
+  size_class = size_classes[size] || ''
+%>
+
+<span class="badge text-bg-<%= variant %> <%= size_class %>"><%= label %></span>

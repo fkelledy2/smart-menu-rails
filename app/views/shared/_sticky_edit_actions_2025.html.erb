@@ -1,19 +1,19 @@
 <div class="sticky-actions-2025 d-md-none">
   <div class="container-2025">
     <div class="d-grid gap-2">
-      <button type="submit" class="btn-2025 btn-2025-primary btn-2025-lg btn-2025-block">
+      <button type="submit" class="btn btn-primary btn-lg w-100">
         <i class="bi bi-check2"></i>
         <%= t('common.save') %>
       </button>
 
-      <%= link_to back_url, class: 'btn-2025 btn-2025-secondary btn-2025-lg btn-2025-block' do %>
+      <%= link_to back_url, class: 'btn btn-outline-secondary btn-lg w-100' do %>
         <i class="bi bi-arrow-left"></i>
         <%= t('common.back', default: 'Back') %>
       <% end %>
 
       <% if local_assigns[:delete_url].present? %>
         <%= link_to delete_url,
-            class: 'btn-2025 btn-2025-outline-danger btn-2025-md btn-2025-block',
+            class: 'btn btn-outline-danger btn-md w-100',
             data: { turbo_method: :delete, turbo_confirm: (local_assigns[:delete_confirm] || t('common.confirm')) } do %>
           <i class="bi bi-trash"></i>
           <%= local_assigns[:delete_label] || t('common.delete') %>
