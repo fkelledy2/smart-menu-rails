@@ -314,6 +314,34 @@ class OcrMenuImportsController < ApplicationController
                 notice: t('ocr_menu_imports.controller.deleted')
   end
 
+  # DELETE /restaurants/:restaurant_id/ocr_menu_imports/bulk_destroy
+  def bulk_destroy
+    imports = policy_scope(OcrMenuImport).where(restaurant_id: @restaurant.id)
+    ids = Array(params[:ocr_menu_import_ids]).map(&:to_s).reject(&:blank?)
+
+    if ids.any?
+      to_destroy = imports.where(id: ids)
+      to_destroy.find_each do |import|
+        authorize import, :destroy?
+        import.destroy
+      end
+    end
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          'restaurant_content',
+          partial: 'restaurants/sections/import_2025',
+          locals: { restaurant: @restaurant }
+        )
+      end
+      format.html do
+        redirect_to edit_restaurant_path(@restaurant, section: 'import'),
+                    notice: t('ocr_menu_imports.controller.deleted')
+      end
+    end
+  end
+
   private
 
   def set_restaurant

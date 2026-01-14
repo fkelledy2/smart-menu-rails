@@ -299,6 +299,9 @@ Rails.application.routes.draw do
     
     # OCR menu import functionality
     resources :ocr_menu_imports, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
+      collection do
+        delete :bulk_destroy
+      end
       member do
         post :process_pdf
         post :confirm_import

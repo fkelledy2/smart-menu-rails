@@ -90,6 +90,10 @@ en:
         status_pending: Pending
         confirm_delete: Are you sure you want to delete this import?
         delete_import: Delete import
+        select_all: Select all
+        delete_selected: Delete selected
+        view: View
+        default_title: "Import #%{id}"
       menus_2025:
         quick_actions: Quick Actions
         new_menu: New Menu

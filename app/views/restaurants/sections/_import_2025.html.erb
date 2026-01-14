@@ -6,17 +6,6 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
 <!-- Quick Info Banner -->
-<div class="alert alert-info mb-4" data-testid="import-info-banner">
-  <div class="d-flex align-items-start">
-    <i class="bi bi-info-circle me-3 text-1_5rem"></i>
-    <div>
-      <h6 class="mb-1"><%= t('.info_title') %></h6>
-      <p class="mb-0 small">
-        <%= t('.info_text') %>
-      </p>
-    </div>
-  </div>
-</div>
 
 <!-- Upload Form Card -->
 <div class="content-card-2025" data-testid="import-form-card">
@@ -149,50 +138,6 @@
 </script>
 
 <!-- Tips Card -->
-<div class="content-card-2025 mt-4" data-testid="import-tips-card">
-  <h2 class="content-card-title">
-    <i class="bi bi-lightbulb"></i>
-    <%= t('.tips_title') %>
-  </h2>
-
-  <div class="tips-list">
-    <div class="tip-item">
-      <div class="tip-icon">
-        <i class="bi bi-check-circle text-success"></i>
-      </div>
-      <div class="tip-content">
-        <h6><%= t('.tip_quality_title') %></h6>
-        <p class="text-muted small mb-0">
-          <%= t('.tip_quality_text') %>
-        </p>
-      </div>
-    </div>
-
-    <div class="tip-item">
-      <div class="tip-icon">
-        <i class="bi bi-card-list text-primary"></i>
-      </div>
-      <div class="tip-content">
-        <h6><%= t('.tip_format_title') %></h6>
-        <p class="text-muted small mb-0">
-          <%= t('.tip_format_text') %>
-        </p>
-      </div>
-    </div>
-
-    <div class="tip-item">
-      <div class="tip-icon">
-        <i class="bi bi-clock-history text-warning"></i>
-      </div>
-      <div class="tip-content">
-        <h6><%= t('.tip_processing_title') %></h6>
-        <p class="text-muted small mb-0">
-          <%= t('.tip_processing_text') %>
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Recent Imports -->
 <% recent_imports = restaurant.ocr_menu_imports.order(created_at: :desc).limit(5) %>
@@ -203,54 +148,83 @@
       <%= t('.recent_imports') %>
     </h2>
 
-    <div class="list-group list-group-flush">
-      <% recent_imports.each do |import| %>
-        <div class="list-group-item list-group-item-action d-flex align-items-center p-0 import-row" data-testid="import-row-<%= import.id %>">
-          <%= link_to restaurant_ocr_menu_import_path(restaurant, import),
-              class: "flex-grow-1 p-3 text-decoration-none text-reset",
-              data: { testid: "import-link-#{import.id}", turbo_frame: '_top' } do %>
-            <div class="d-flex w-100 justify-content-between align-items-center">
-              <div>
-                <h6 class="mb-1"><%= import.name %></h6>
-                <p class="mb-0 small text-muted">
-                  <%= time_ago_in_words(import.created_at) %> <%= t('.ago') %>
-                </p>
-              </div>
-              <div>
-                <% if import.completed? %>
-                  <span class="badge bg-success">
-                    <i class="bi bi-check-circle"></i> <%= t('.status_completed') %>
-                  </span>
-                <% elsif import.failed? %>
-                  <span class="badge bg-danger">
-                    <i class="bi bi-x-circle"></i> <%= t('.status_failed') %>
-                  </span>
-                <% elsif import.processing? %>
-                  <span class="badge bg-primary">
-                    <i class="bi bi-arrow-repeat"></i> <%= t('.status_processing') %>
-                  </span>
-                <% else %>
-                  <span class="badge bg-secondary">
-                    <i class="bi bi-pause-circle"></i> <%= t('.status_pending') %>
-                  </span>
+    <%= form_with url: bulk_destroy_restaurant_ocr_menu_imports_path(restaurant),
+        method: :delete,
+        data: { controller: 'localization-bulk', turbo: true, action: 'submit->localization-bulk#beforeSubmit' } do |f| %>
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+          <div class="d-flex align-items-center gap-2">
+            <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
+            <span class="text-muted small"><%= t('.select_all') %></span>
+          </div>
+
+          <div class="d-flex align-items-center gap-2 ms-auto">
+            <%= f.hidden_field :confirm, value: '1' %>
+            <div class="dropdown">
+              <button class="btn-2025 btn-2025-ghost btn-2025-sm dropdown-toggle"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      disabled
+                      data-localization-bulk-target="submit">
+                <%= t('.actions', default: 'Actions') %>
+              </button>
+
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <%= f.button t('.delete', default: 'Delete'),
+                      type: 'submit',
+                      class: 'dropdown-item text-danger',
+                      data: { turbo_confirm: t('.confirm_delete') } %>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="list-group list-group-flush">
+          <% recent_imports.each do |import| %>
+            <div class="list-group-item list-group-item-action p-0 clickable-row import-row"
+                 data-testid="import-row-<%= import.id %>"
+                 data-href="<%= restaurant_ocr_menu_import_path(restaurant, import) %>">
+              <div class="d-flex align-items-center gap-2 p-3">
+                <div class="w-40px flex-shrink-0">
+                  <input type="checkbox"
+                         name="ocr_menu_import_ids[]"
+                         value="<%= import.id %>"
+                         data-localization-bulk-target="checkbox"
+                         data-action="change->localization-bulk#sync" />
+                </div>
+
+                <div class="flex-grow-1" style="min-width: 0;">
+                  <div class="fw-semibold d-flex align-items-center justify-content-between gap-2">
+                    <span class="text-truncate" style="min-width: 0;"><%= import.name.presence || t('.default_title', id: import.id) %></span>
+                    <div class="flex-shrink-0 text-end">
+                      <% if import.completed? %>
+                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> <%= t('.status_completed') %></span>
+                      <% elsif import.failed? %>
+                        <span class="badge bg-danger"><i class="bi bi-x-circle"></i> <%= t('.status_failed') %></span>
+                      <% elsif import.processing? %>
+                        <span class="badge bg-primary"><i class="bi bi-arrow-repeat"></i> <%= t('.status_processing') %></span>
+                      <% else %>
+                        <span class="badge bg-secondary"><i class="bi bi-pause-circle"></i> <%= t('.status_pending') %></span>
+                      <% end %>
+                    </div>
+                  </div>
+                  <div class="text-muted small"><%= time_ago_in_words(import.created_at) %> <%= t('.ago') %></div>
+                </div>
+
+                <%= link_to restaurant_ocr_menu_import_path(restaurant, import),
+                    class: 'btn-2025 btn-2025-ghost btn-2025-sm',
+                    title: t('.view', default: 'View'),
+                    aria: { label: t('.view', default: 'View') },
+                    data: { turbo_frame: '_top', row_primary_link: true } do %>
+                  <i class="bi bi-chevron-right"></i>
                 <% end %>
               </div>
             </div>
           <% end %>
-          <%= button_to restaurant_ocr_menu_import_path(restaurant, import),
-              method: :delete,
-              class: 'btn btn-link text-danger delete-import-btn',
-              data: {
-                testid: "delete-import-#{import.id}",
-                turbo_frame: '_top',
-                turbo_confirm: t('.confirm_delete')
-              },
-              title: t('.delete_import') do %>
-            <i class="bi bi-trash"></i>
-          <% end %>
         </div>
-      <% end %>
-    </div>
+    <% end %>
   </div>
 <% end %>
 

@@ -22,7 +22,9 @@ export default class extends Controller {
   sync() {
     const enabled = this.enabledCheckboxes()
     const anySelected = enabled.some((cb) => cb.checked)
-    const statusSelected = (this.statusSelectTarget && this.statusSelectTarget.value || "").length > 0
+    const statusSelected = this.hasStatusSelectTarget
+      ? ((this.statusSelectTarget.value || "").length > 0)
+      : true
 
     if (this.submitTarget) {
       this.submitTarget.disabled = !(anySelected && statusSelected)
@@ -41,7 +43,9 @@ export default class extends Controller {
   beforeSubmit(event) {
     // Prevent submits that would no-op (UX safety)
     const anySelected = this.enabledCheckboxes().some((cb) => cb.checked)
-    const statusSelected = (this.statusSelectTarget && this.statusSelectTarget.value || "").length > 0
+    const statusSelected = this.hasStatusSelectTarget
+      ? ((this.statusSelectTarget.value || "").length > 0)
+      : true
     if (!(anySelected && statusSelected)) {
       event.preventDefault()
     }

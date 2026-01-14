@@ -1,12 +1,36 @@
-<div class="container-fluid py-4" data-controller="menu-import" data-menu-import-progress-url-value="<%= progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>">
-  <!-- Back Navigation -->
-  <div class="mb-3">
-    <%= link_to edit_restaurant_path(@restaurant, section: 'import'),
-        class: 'btn btn-outline-secondary',
-        data: { turbo_frame: '_top' } do %>
-      <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> <%= t('.back_to_imports', default: 'Back to Imports') %>
-    <% end %>
+<div data-controller="sidebar">
+  <div class="container-fluid px-0 py-3 bg-white border-bottom sticky-header">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+          <%= @restaurant.name %>
+        </h1>
+        <p class="text-sm text-gray-500">
+          <%= t('restaurants.edit_2025.subtitle', default: 'Manage your restaurant configuration') %>
+        </p>
+      </div>
+
+      <button type="button"
+              class="sidebar-toggle-btn"
+              data-action="click->sidebar#toggle"
+              aria-label="<%= t('restaurants.edit_2025.toggle_navigation', default: 'Toggle navigation') %>">
+        <i class="bi bi-list" style="pointer-events: none;"></i>
+      </button>
+    </div>
   </div>
+
+  <div class="sidebar-content-container">
+    <%= render 'restaurants/sidebar_2025', restaurant: @restaurant, current_section: 'import' %>
+
+    <div class="sidebar-main-content">
+      <div class="py-4 px-3 px-md-4" data-controller="menu-import" data-menu-import-progress-url-value="<%= progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>">
+        <div class="mb-3 d-flex justify-content-end">
+          <%= link_to edit_restaurant_path(@restaurant, section: 'import'),
+              class: 'btn btn-outline-secondary',
+              data: { turbo_frame: '_top' } do %>
+            <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> <%= t('.back_to_imports', default: 'Back to Imports') %>
+          <% end %>
+        </div>
 
   <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap">
     <div class="mb-3 mb-md-0">
@@ -623,3 +647,8 @@
     cursor: default;
   }
 </style>
+
+      </div>
+    </div>
+  </div>
+</div>

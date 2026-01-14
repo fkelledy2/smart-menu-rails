@@ -90,6 +90,10 @@ it:
         status_pending: In attesa
         confirm_delete: Sei sicuro di voler eliminare questa importazione?
         delete_import: Elimina importazione
+        select_all: Seleziona tutto
+        delete_selected: Elimina selezionati
+        view: Visualizza
+        default_title: "Importazione #%{id}"
       menus_2025:
         quick_actions: Azioni Rapide
         new_menu: Nuovo Menù
