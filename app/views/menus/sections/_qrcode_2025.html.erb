@@ -11,11 +11,12 @@
 
 
 <!-- All QR Codes for this Menu -->
-<div class="content-card-2025 py-4">
-  <h2 class="content-card-title">
-    <i class="bi bi-grid"></i>
-    <%= t('.all_qr_codes_for_menu') %>
-  </h2>
+<div class="card">
+  <div class="card-body">
+  <h2 class="h5 mb-3">
+      <i class="bi bi-grid"></i>
+      <%= t('.all_qr_codes_for_menu') %>
+    </h2>
 
   <p class="text-muted mb-4">
     <%= t('.all_qr_codes_for_menu_desc') %>
@@ -49,7 +50,7 @@
         </div>
         <div class="qr-card-footer">
           <div class="qr-actions">
-            <button type="button" class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2" onclick="printQrCard(this)">
+            <button type="button" class="btn btn-outline-secondary btn-sm w-100 mt-2" onclick="printQrCard(this)">
               <i class="bi bi-printer"></i> <%= t('.print') %>
             </button>
           </div>
@@ -80,7 +81,7 @@
           </div>
           <div class="qr-card-footer">
             <div class="qr-actions">
-              <button type="button" class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2" onclick="printQrCard(this)">
+              <button type="button" class="btn btn-outline-secondary btn-sm w-100 mt-2" onclick="printQrCard(this)">
                 <i class="bi bi-printer"></i> <%= t('.print') %>
               </button>
             </div>
@@ -124,7 +125,7 @@
     .qr-clickable { text-decoration: none; display: inline-block; }
 
     @media print {
-      .sidebar-2025, .header-2025, .quick-actions-card, .customization-option, .btn-2025 { display: none !important; }
+      .sidebar-2025, .header-2025, .quick-actions-card, .customization-option, .btn { display: none !important; }
       .qr-card { page-break-inside: avoid; border: none; }
       .qr-card-footer { justify-content: flex-start; gap: var(--space-4); }
       /* Print-optimized, high-contrast labels */
@@ -132,14 +133,16 @@
       .qr-restaurant-name, .qr-menu-name, .qr-table-name { color: #000 !important; }
     }
   </style>
+  </div>
 </div>
 
 <!-- Download Options -->
-<div class="content-card-2025 py-4">
-  <h2 class="content-card-title">
-    <i class="bi bi-download"></i>
-    <%= t('.download_options') %>
-  </h2>
+<div class="card mt-3">
+  <div class="card-body">
+  <h2 class="h5 mb-3">
+      <i class="bi bi-download"></i>
+      <%= t('.download_options') %>
+    </h2>
 
   <p class="text-muted mb-4">
     <%= t('.download_description') %>
@@ -152,7 +155,7 @@
       </div>
       <h5><%= t('.png_format') %></h5>
       <p class="text-sm text-muted"><%= t('.png_desc') %></p>
-      <button class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2">
+      <button class="btn btn-outline-secondary btn-sm w-100 mt-2">
         <i class="bi bi-download"></i> <%= t('.download') %>
       </button>
     </div>
@@ -163,7 +166,7 @@
       </div>
       <h5><%= t('.svg_format') %></h5>
       <p class="text-sm text-muted"><%= t('.svg_desc') %></p>
-      <button class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2">
+      <button class="btn btn-outline-secondary btn-sm w-100 mt-2">
         <i class="bi bi-download"></i> <%= t('.download') %>
       </button>
     </div>
@@ -174,19 +177,21 @@
       </div>
       <h5><%= t('.pdf_format') %></h5>
       <p class="text-sm text-muted"><%= t('.pdf_desc') %></p>
-      <button class="btn-2025 btn-2025-outline btn-2025-sm w-100 mt-2">
+      <button class="btn btn-outline-secondary btn-sm w-100 mt-2">
         <i class="bi bi-download"></i> <%= t('.download') %>
       </button>
     </div>
   </div>
+  </div>
 </div>
 
 <!-- QR Code Usage Tips -->
-<div class="content-card-2025 py-4">
-  <h2 class="content-card-title">
-    <i class="bi bi-lightbulb"></i>
-    <%= t('.usage_tips') %>
-  </h2>
+<div class="card mt-3">
+  <div class="card-body">
+  <h2 class="h5 mb-3">
+      <i class="bi bi-lightbulb"></i>
+      <%= t('.usage_tips') %>
+    </h2>
 
   <div class="tips-list">
     <div class="tip-item">
@@ -208,6 +213,7 @@
       <i class="bi bi-check-circle text-success"></i>
       <p><%= t('.tip_4') %></p>
     </div>
+  </div>
   </div>
 </div>
 
@@ -339,18 +345,14 @@
 
       // Clone the card and strip non-print elements
       const clone = card.cloneNode(true);
-      clone.querySelectorAll('.qr-actions, .btn-2025').forEach(el => el.remove());
+      clone.querySelectorAll('.qr-actions, .btn').forEach(el => el.remove());
       // Explicitly remove hidden slug element (bootstrap d-none won't exist in iframe)
       clone.querySelectorAll('.qrSlug').forEach(el => el.remove());
       // Unwrap anchors to avoid browsers printing link URLs (which can show the UUID)
       clone.querySelectorAll('a.qr-clickable').forEach(a => {
-        const firstChild = a.firstElementChild || a.firstChild;
-        if (firstChild) {
-          a.parentNode.insertBefore(firstChild, a);
-          a.remove();
-        } else {
-          a.remove();
-        }
+        const parent = a.parentNode;
+        while (a.firstChild) parent.insertBefore(a.firstChild, a);
+        parent.removeChild(a);
       });
 
       // Remove any visible occurrences of the slug/UUID text from the clone
@@ -447,7 +449,7 @@
               .qr-meta { border-bottom: 1px solid #000; padding-bottom: 6px; margin-bottom: 8px; text-align: center; }
               .qr-meta-line { line-height: 1.2; }
               .qr-restaurant-name, .qr-menu-name, .qr-table-name { color: #000 !important; }
-              .qr-actions, .btn-2025 { display: none !important; }
+              .qr-actions, .btn { display: none !important; }
               .qrSlug { display: none !important; }
               @page { margin: 12mm; }
             </style>

@@ -102,7 +102,7 @@
                   <p class="upload-subtitle-2025">
                     <%= t('.drop_subtitle') %>
                   </p>
-                  <label for="pdf-file-input" class="btn-2025 btn-2025-primary btn-2025-md">
+                  <label for="pdf-file-input" class="btn btn-primary">
                     <i class="bi bi-folder"></i> <%= t('.browse_files') %>
                   </label>
                   <%= f.file_field :pdf_file,
@@ -129,7 +129,7 @@
                       </div>
                     </div>
                     <button type="button"
-                            class="btn-2025 btn-2025-ghost btn-2025-sm"
+                            class="btn btn-sm btn-outline-secondary"
                             id="remove-file"
                             aria-label="<%= t('.remove_file_aria') %>">
                       <i class="bi bi-x-lg"></i>
@@ -155,9 +155,9 @@
               <div class="d-flex gap-3">
                 <%= link_to t('.cancel'),
                     restaurant_ocr_menu_imports_path(@restaurant),
-                    class: 'btn-2025 btn-2025-secondary btn-2025-md' %>
+                    class: 'btn btn-outline-secondary' %>
                 <button type="submit"
-                        class="btn-2025 btn-2025-primary btn-2025-md"
+                        class="btn btn-primary"
                         id="submit-button"
                         data-ocr-upload-target="submitButton"
                         disabled>

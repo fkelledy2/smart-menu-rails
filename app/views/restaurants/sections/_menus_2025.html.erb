@@ -19,7 +19,7 @@
 %>
 
 <!-- Quick Actions Card -->
-<div class="quick-actions-card" data-testid="menus-quick-actions">
+<div class="mb-3 p-3" data-testid="menus-quick-actions">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions') %>
@@ -70,49 +70,50 @@
 </style>
 
 <!-- Menus List -->
-<div class="content-card-2025" data-testid="menus-list-card">
-  <h2 class="content-card-title mb-0">
-    <i class="bi bi-menu-button-wide"></i>
-    <%= t('.menus') %>
-  </h2>
+<div class="mb-3 p-3" data-testid="menus-list-card">
+  <h2 class="h5 mb-3">
+      <i class="bi bi-grid-3x3"></i>
+      <%= t('.menus') %>
+    </h2>
 
   <% if restaurant_menus.any? %>
     <!-- Menus List (styled like Table Settings) -->
     <div data-controller="localization-bulk">
-      <%= form_with url: bulk_update_restaurant_restaurant_menus_path(restaurant), method: :patch, data: { turbo: true, action: 'submit->localization-bulk#beforeSubmit' } do |f| %>
-        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-          <div class="d-flex align-items-center gap-2">
-            <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
-            <span class="text-muted small"><%= t('.select_all') %></span>
-          </div>
-
-          <div class="d-flex align-items-center gap-2 ms-auto">
-            <%= f.select :status,
-                [
-                  [t('.active'), 'active'],
-                  [t('.inactive'), 'inactive'],
-                ],
-                { include_blank: t('.set_status') },
-                { class: 'form-select form-select-sm', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
-            <%= f.submit t('.apply'), class: 'btn btn-primary btn-sm', disabled: true, data: { localization_bulk_target: 'submit' } %>
-          </div>
-        </div>
-
+    <%= form_with url: bulk_update_restaurant_restaurant_menus_path(restaurant), method: :patch, data: { turbo: true, action: 'submit->localization-bulk#beforeSubmit' } do |f| %>
       <div class="table-responsive menus-table-view"
            data-testid="menus-list">
         <table class="table table-hover align-middle">
         <thead>
           <tr>
-            <th class="w-20px menu-compact-cell"></th>
+            <th class="w-20px menu-compact-cell">
+              <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
+            </th>
             <th class="w-20px menu-compact-cell"></th>
             <th><%= t('.menu_name') %></th>
             <% if show_availability_column %>
               <th class="text-end"><%= t('.availability') %></th>
             <% end %>
             <th class="text-end">
-              <span class="btn btn-sm btn-outline-secondary">
-                <i class="bi bi-gear"></i>
-              </span>
+              <div class="d-flex justify-content-end">
+                <div class="input-group input-group-sm" style="width: auto;">
+                  <%= f.select :status,
+                      [
+                        [t('.active'), 'active'],
+                        [t('.inactive'), 'inactive'],
+                      ],
+                      { include_blank: t('.set_status') },
+                      { class: 'form-select form-select-sm w-auto', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
+                  <button type="submit"
+                          class="btn btn-primary"
+                          title="<%= t('.apply') %>"
+                          aria-label="<%= t('.apply') %>"
+                          disabled
+                          data-localization-bulk-target="submit">
+                    <i class="bi bi-check2"></i>
+                    <span class="visually-hidden"><%= t('.apply') %></span>
+                  </button>
+                </div>
+              </div>
             </th>
           </tr>
         </thead>
@@ -362,6 +363,52 @@
     .menus-cards-view {
       display: block;
     }
+  }
+
+  .menu-card-mobile {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-3);
+    margin-bottom: var(--space-2);
+    transition: all var(--transition-base);
+  }
+
+  .menu-card-mobile:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-gray-300);
+  }
+
+  .menu-card-mobile:last-child {
+    margin-bottom: 0;
+  }
+
+  .menu-row-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .menu-row-mobile-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    flex: 1;
+  }
+
+  .menu-row-mobile-text {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .menu-row-mobile-text .menu-name {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   @media (max-width: 480px) {

@@ -36,11 +36,12 @@
 </style>
 
 <!-- QR Code Management -->
-<div class="content-card-2025">
-  <h2 class="content-card-title mb-4">
-    <i class="bi bi-qr-code"></i>
-    <%= t('.qr_codes') %>
-  </h2>
+<div class="card">
+  <div class="card-body">
+  <h2 class="h5 mb-4">
+      <i class="bi bi-qr-code"></i>
+      <%= t('.qr_codes') %>
+    </h2>
 
   <p class="text-muted mb-4">
     <%= t('.qr_description') %>
@@ -58,7 +59,7 @@
         <%= t('.general_qr_desc') %>
       </p>
       <%= link_to smartmenus_path,
-          class: 'btn-2025 btn-2025-secondary btn-2025-sm w-100',
+          class: 'btn btn-outline-secondary btn-sm w-100',
           target: '_blank' do %>
         <i class="bi bi-download"></i> <%= t('.download') %>
       <% end %>
@@ -74,7 +75,7 @@
         <%= t('.table_qr_desc') %>
       </p>
       <%= link_to edit_restaurant_path(restaurant, section: 'tables'),
-          class: 'btn-2025 btn-2025-secondary btn-2025-sm w-100' do %>
+          class: 'btn btn-outline-secondary btn-sm w-100' do %>
         <i class="bi bi-gear"></i> <%= t('.manage_tables') %>
       <% end %>
     </div>
@@ -89,20 +90,22 @@
         <%= t('.menu_qr_desc') %>
       </p>
       <%= link_to smartmenus_path,
-          class: 'btn-2025 btn-2025-secondary btn-2025-sm w-100',
+          class: 'btn btn-outline-secondary btn-sm w-100',
           target: '_blank' do %>
         <i class="bi bi-list"></i> <%= t('.view_menus') %>
       <% end %>
     </div>
   </div>
+  </div>
 </div>
 
 <!-- QR Code Customization -->
-<div class="content-card-2025">
-  <h2 class="content-card-title">
-    <i class="bi bi-palette"></i>
-    <%= t('.qr_customization') %>
-  </h2>
+<div class="card mt-3">
+  <div class="card-body">
+  <h2 class="h5 mb-3">
+      <i class="bi bi-palette"></i>
+      <%= t('.qr_customization') %>
+    </h2>
 
   <p class="text-muted mb-4">
     <%= t('.customization_description') %>
@@ -115,7 +118,7 @@
         <p class="text-sm text-muted mb-3">
           <%= t('.logo_desc') %>
         </p>
-        <button class="btn-2025 btn-2025-outline btn-2025-sm">
+        <button class="btn btn-outline-secondary btn-sm">
           <i class="bi bi-upload"></i> <%= t('.upload_logo') %>
         </button>
       </div>
@@ -127,11 +130,12 @@
         <p class="text-sm text-muted mb-3">
           <%= t('.colors_desc') %>
         </p>
-        <button class="btn-2025 btn-2025-outline btn-2025-sm">
+        <button class="btn btn-outline-secondary btn-sm">
           <i class="bi bi-palette"></i> <%= t('.customize_colors') %>
         </button>
       </div>
     </div>
+  </div>
   </div>
 </div>
 

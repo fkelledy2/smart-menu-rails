@@ -6,13 +6,14 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
 <!-- Jukebox Overview -->
-<div class="content-card-2025 py-4">
+<div class="card">
+  <div class="card-body">
   <div class="mb-4">
-    <h2 class="content-card-title mb-0">
-      <i class="bi bi-music-note-beamed"></i>
-      <%= t('.jukebox') %>
-    </h2>
-  </div>
+    <h2 class="h5 mb-0">
+        <i class="bi bi-music-note-beamed"></i>
+        <%= t('.jukebox') %>
+      </h2>
+    </div>
 
   <p class="text-muted mb-4">
     <%= t('.jukebox_description') %>
@@ -41,7 +42,7 @@
         </div>
       </div>
       <%= link_to "#{restaurant.spotifyAuthUrl}&return_to=#{CGI.escape(edit_restaurant_path(restaurant, section: 'jukebox'))}",
-          class: 'btn-2025 btn-2025-outline btn-2025-sm',
+          class: 'btn btn-outline-secondary btn-sm',
           data: { turbo: false } do %>
         <i class="bi bi-spotify"></i> <%= t('.connect') %>
       <% end %>
@@ -51,12 +52,12 @@
       <div class="row g-3">
         <!-- Spotify User ID -->
         <div class="col-md-6">
-          <div class="form-group-2025">
-            <%= form.label :spotifyuserid, class: 'form-label-2025' do %>
+          <div>
+            <%= form.label :spotifyuserid, class: 'form-label' do %>
               <%= t('activerecord.attributes.restaurant.spotifyuserid') %>
             <% end %>
             <%= form.text_field :spotifyuserid,
-                class: 'form-control-2025',
+                class: 'form-control',
                 readonly: true,
                 disabled: true,
                 placeholder: t('.not_connected') %>
@@ -65,12 +66,12 @@
 
         <!-- Spotify Access Token -->
         <div class="col-md-6">
-          <div class="form-group-2025">
-            <%= form.label :spotifyaccesstoken, class: 'form-label-2025' do %>
+          <div>
+            <%= form.label :spotifyaccesstoken, class: 'form-label' do %>
               <%= t('activerecord.attributes.restaurant.spotifyaccesstoken') %>
             <% end %>
             <%= form.text_field :spotifyaccesstoken,
-                class: 'form-control-2025',
+                class: 'form-control',
                 readonly: true,
                 disabled: true,
                 placeholder: t('.not_connected') %>
@@ -79,12 +80,12 @@
 
         <!-- Spotify Refresh Token -->
         <div class="col-md-12">
-          <div class="form-group-2025">
-            <%= form.label :spotifyrefreshtoken, class: 'form-label-2025' do %>
+          <div>
+            <%= form.label :spotifyrefreshtoken, class: 'form-label' do %>
               <%= t('activerecord.attributes.restaurant.spotifyrefreshtoken') %>
             <% end %>
             <%= form.text_field :spotifyrefreshtoken,
-                class: 'form-control-2025',
+                class: 'form-control',
                 readonly: true,
                 disabled: true,
                 placeholder: t('.not_connected') %>
@@ -121,6 +122,7 @@
       </p>
     </div>
   <% end %>
+  </div>
 </div>
 
 <style>

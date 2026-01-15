@@ -64,6 +64,10 @@ jobs:
           bundle exec rubocop --format json --out tmp/rubocop.json
           bundle exec rubocop
 
+      - name: Run UI/UX lint guardrails
+        run: |
+          bundle exec rake uiux:lint
+
       - name: Upload RuboCop results
         uses: actions/upload-artifact@v3
         if: always()

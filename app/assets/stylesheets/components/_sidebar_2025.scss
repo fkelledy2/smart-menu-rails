@@ -279,7 +279,8 @@
   border-radius: var(--radius-lg);
   padding: var(--space-5); // Reduced from space-6 (24px) to space-5 (20px)
   margin-bottom: var(--space-4); // Reduced vertical spacing
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
+  border: none;
   
   @media (max-width: 768px) {
     padding: var(--space-4);

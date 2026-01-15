@@ -6,8 +6,9 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
 <!-- Ordering Dashboard -->
-<div id="ordering-dashboard" class="content-card-2025 py-4" data-restaurant-id="<%= restaurant.id %>" data-currency-code="<%= restaurant.respond_to?(:currency) ? (restaurant.currency.presence || 'USD') : 'USD' %>" data-controller="ordering">
-  <h2 class="content-card-title d-flex align-items-center justify-content-between flex-wrap gap-2">
+<div id="ordering-dashboard" class="card" data-restaurant-id="<%= restaurant.id %>" data-currency-code="<%= restaurant.respond_to?(:currency) ? (restaurant.currency.presence || 'USD') : 'USD' %>" data-controller="ordering">
+  <div class="card-body">
+  <h2 class="h5 d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
     <span>
       <i class="bi bi-graph-up"></i>
       <%= t('.ordering_dashboard') %>
@@ -139,7 +140,7 @@
       <div class="od-table-card">
         <div class="od-table-title d-flex justify-content-between align-items-center">
           <span><%= t('.orders_table') %></span>
-          <button id="od-export-orders" class="btn-2025 btn-2025-outline btn-2025-sm"><%= t('.export_csv') %></button>
+          <button id="od-export-orders" class="btn btn-outline-secondary btn-sm"><%= t('.export_csv') %></button>
         </div>
         <div id="od-table-orders"></div>
       </div>
@@ -148,7 +149,7 @@
       <div class="od-table-card">
         <div class="od-table-title d-flex justify-content-between align-items-center">
           <span><%= t('.items_table') %></span>
-          <button id="od-export-items" class="btn-2025 btn-2025-outline btn-2025-sm"><%= t('.export_csv') %></button>
+          <button id="od-export-items" class="btn btn-outline-secondary btn-sm"><%= t('.export_csv') %></button>
         </div>
         <div id="od-table-items"></div>
       </div>
@@ -193,5 +194,6 @@
 
     // Initialization handled by Stimulus (data-controller="ordering") and application.js observer.
   </script>
+  </div>
 </div>
 
