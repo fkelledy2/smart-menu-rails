@@ -7,7 +7,7 @@
 <% restaurant = menu.restaurant %>
 
 <!-- Quick Actions Card -->
-<div class="quick-actions-card">
+<div class="mb-3 p-3">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
     <%= t('.quick_actions') %>
@@ -22,8 +22,7 @@
 </div>
 
 <!-- Menu Availabilities -->
-<div class="card">
-  <div class="card-body">
+<div class="mb-3 p-3" data-menu-availabilities-root>
   <h2 class="h5 mb-3">
       <i class="bi bi-calendar-check"></i>
       <%= t('.menu_availabilities') %>
@@ -45,7 +44,7 @@
       <div class="skeleton-shimmer"></div>
     </div>
 
-  <div class="availability-editor opacity-0 transition-opacity-300">
+  <div class="availability-editor transition-opacity-300">
     <% %w[monday tuesday wednesday thursday friday saturday sunday].each_with_index do |day, index| %>
       <% day_availability = menu.menuavailabilities.where(dayofweek: day).order(:sequence).first %>
       <% is_inactive = day_availability.nil? || day_availability.inactive? %>
@@ -119,7 +118,6 @@
   </div>
 
   </form>
-  </div>
 </div>
 
 <!-- Preload noUiSlider CSS for faster loading -->
@@ -127,7 +125,7 @@
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" /></noscript>
 
 <!-- Load noUiSlider -->
-<script data-turbo-track="reload">
+<script data-turbo-track="reload" data-turbo-eval="true">
   if (typeof noUiSlider === 'undefined') {
     console.log('[MenuAvailabilities] Loading noUiSlider from CDN...');
     const script = document.createElement('script');
@@ -312,21 +310,30 @@
   }
 </style>
 
-<script>
+<script data-turbo-eval="true">
   let menuAvailabilityRetries = 0;
   const MAX_AVAILABILITY_RETRIES = 50;
   let availabilityInitStarted = false;
   let availabilityEditorReady = false;
 
+  function menuAvailabilitiesRoot() {
+    return document.querySelector('[data-menu-availabilities-root]');
+  }
+
   function showEditorFallback() {
     console.warn('[MenuAvailabilities] Falling back without sliders; revealing editor');
-    const editor = document.querySelector('.availability-editor');
-    const skeleton = document.querySelector('.availability-loading-skeleton');
+    const root = menuAvailabilitiesRoot();
+    if (!root) return;
+    const editor = root.querySelector('.availability-editor');
+    const skeleton = root.querySelector('.availability-loading-skeleton');
     if (skeleton) skeleton.classList.add('hidden');
     if (editor) editor.style.opacity = '1';
   }
 
   function initializeMenuAvailabilities() {
+    const root = menuAvailabilitiesRoot();
+    if (!root) return;
+
     console.log('[MenuAvailabilities] Initializing with auto-save');
     availabilityInitStarted = true;
 
@@ -350,13 +357,13 @@
     console.log('[MenuAvailabilities] noUiSlider is available, proceeding with initialization');
 
     // Verify auto-save controller is attached
-    const form = document.querySelector('[data-controller*="auto-save"]');
+    const form = root.querySelector('form[data-controller*="auto-save"]');
     if (!form) {
       console.error('[MenuAvailabilities] Auto-save form NOT found!');
     }
 
     // Initialize all time sliders
-    const sliders = document.querySelectorAll('.time-range-slider');
+    const sliders = root.querySelectorAll('.time-range-slider');
 
     // Destroy existing sliders first to prevent duplicates
     sliders.forEach((sliderElement) => {
@@ -368,6 +375,10 @@
     sliders.forEach((sliderElement) => {
       const day = sliderElement.id.replace('availability_slider_', '');
       const dayRow = sliderElement.closest('.day-row');
+      if (!dayRow) {
+        console.warn('[MenuAvailabilities] Slider is missing .day-row ancestor; skipping', sliderElement);
+        return;
+      }
       const startMinutes = parseInt(sliderElement.dataset.start) || 0; // 00:00
       const endMinutes = parseInt(sliderElement.dataset.end) || 1439; // 23:59
 
@@ -393,11 +404,11 @@
         if (handle === 0) {
           // Start time
           const startTime = dayRow.querySelector('.start-time .time-value');
-          startTime.textContent = timeString;
+          if (startTime) startTime.textContent = timeString;
         } else {
           // End time
           const endTime = dayRow.querySelector('.end-time .time-value');
-          endTime.textContent = timeString;
+          if (endTime) endTime.textContent = timeString;
         }
       });
 
@@ -413,10 +424,12 @@
         if (handle === 0) {
           // Start time
           input = dayRow.querySelector('.start-time-input');
+          if (!input) return;
           input.value = timeString;
         } else {
           // End time
           input = dayRow.querySelector('.end-time-input');
+          if (!input) return;
           input.value = timeString;
         }
 
@@ -427,10 +440,14 @@
     });
 
     // Handle inactive toggle
-    document.querySelectorAll('.inactive-toggle').forEach((toggle) => {
+    root.querySelectorAll('.inactive-toggle').forEach((toggle) => {
+      if (toggle.dataset.menuAvailabilitiesBound === '1') return;
+      toggle.dataset.menuAvailabilitiesBound = '1';
       toggle.addEventListener('change', function() {
         const dayRow = this.closest('.day-row');
+        if (!dayRow) return;
         const container = dayRow.querySelector('.time-slider-container');
+        if (!container) return;
 
         if (this.checked) {
           container.classList.add('disabled');
@@ -441,8 +458,12 @@
     });
 
     // Copy Monday to all days
-    const copyButton = document.querySelector('.copy-monday-btn');
+    const copyButton = root.querySelector('.copy-monday-btn');
     if (copyButton) {
+      if (copyButton.dataset.menuAvailabilitiesBound === '1') {
+        // already bound
+      } else {
+        copyButton.dataset.menuAvailabilitiesBound = '1';
       copyButton.addEventListener('click', function(e) {
         e.preventDefault();
 
@@ -484,11 +505,12 @@
           btn.classList.add('btn-outline-secondary');
         }, 2000);
       });
+      }
     }
 
     // Show the editor and hide skeleton now that sliders are initialized
-    const editor = document.querySelector('.availability-editor');
-    const skeleton = document.querySelector('.availability-loading-skeleton');
+    const editor = root.querySelector('.availability-editor');
+    const skeleton = root.querySelector('.availability-loading-skeleton');
 
     if (skeleton) {
       skeleton.classList.add('hidden');
@@ -527,7 +549,8 @@
   // Delay-show the skeleton only if init takes noticeable time (>250ms)
   setTimeout(function() {
     if (!availabilityEditorReady) {
-      const skeleton = document.querySelector('.availability-loading-skeleton');
+      const root = menuAvailabilitiesRoot();
+      const skeleton = root ? root.querySelector('.availability-loading-skeleton') : null;
       if (skeleton && !availabilityInitStarted) {
         // still not started? do nothing, another init will handle it
         return;

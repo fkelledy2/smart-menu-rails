@@ -1,7 +1,7 @@
 class MenusectionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_menusection, only: %i[show edit update destroy]
-  before_action :ensure_owner_restaurant_context_for_menu!, only: %i[new edit create update destroy reorder]
+  before_action :ensure_owner_restaurant_context_for_menu!, only: %i[new edit create update destroy reorder bulk_update]
 
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
@@ -158,6 +158,61 @@ class MenusectionsController < ApplicationController
     render json: { status: 'success' }, status: :ok
   rescue => e
     render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+  end
+
+  # PATCH /restaurants/:restaurant_id/menus/:menu_id/menusections/bulk_update
+  def bulk_update
+    @menu = Menu.find(params[:menu_id])
+    @restaurant = @menu.restaurant
+    authorize @menu, :update?
+
+    menusection_ids = Array(params[:menusection_ids]).compact_blank.map(&:to_i)
+    operation = params[:operation].to_s
+    value = params[:value]
+
+    sections = policy_scope(@menu.menusections).where(id: menusection_ids)
+
+    if menusection_ids.blank? || sections.blank?
+      return redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'sections'), alert: 'No sections selected'
+    end
+
+    case operation
+    when 'archive'
+      nil
+    when 'set_status'
+      status = value.to_s
+      unless Menusection.statuses.key?(status)
+        return redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'sections'), alert: 'Invalid status'
+      end
+    else
+      return redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'sections'), alert: 'Invalid bulk operation'
+    end
+
+    updated = 0
+    Menusection.transaction do
+      case operation
+      when 'archive'
+        sections.find_each do |section|
+          section.update!(status: :archived, archived: true)
+          updated += 1
+        end
+      when 'set_status'
+        status = value.to_s
+        sections.find_each do |section|
+          section.update!(status: status)
+          updated += 1
+        end
+      else
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'sections'),
+                notice: "Updated #{updated} section#{updated == 1 ? '' : 's'}"
+  rescue ActiveRecord::RecordNotFound
+    redirect_to edit_restaurant_path(params[:restaurant_id], section: 'menus'), alert: 'Menu not found'
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'sections'), alert: e.record.errors.full_messages.first
   end
 
   private

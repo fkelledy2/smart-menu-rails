@@ -46,6 +46,7 @@
 //= link controllers/ordering_controller.js
 //= link controllers/localization_bulk_controller.js
 //= link controllers/menuitems_bulk_controller.js
+//= link controllers/menusections_bulk_controller.js
 
 // Application entry point
 //= link application.js

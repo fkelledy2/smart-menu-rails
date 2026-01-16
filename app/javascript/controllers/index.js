@@ -15,6 +15,7 @@ import OrderTotalsController from "./order_totals_controller"
 import OrderingController from "./ordering_controller"
 import LocalizationBulkController from "./localization_bulk_controller"
 import MenuitemsBulkController from "./menuitems_bulk_controller"
+import MenusectionsBulkController from "./menusections_bulk_controller"
 
 application.register("sortable", SortableController)
 application.register("auto-save", AutoSaveController)
@@ -29,5 +30,6 @@ application.register("order-totals", OrderTotalsController)
 application.register("ordering", OrderingController)
 application.register("localization-bulk", LocalizationBulkController)
 application.register("menuitems-bulk", MenuitemsBulkController)
+application.register("menusections-bulk", MenusectionsBulkController)
 
-console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk'])
+console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk'])

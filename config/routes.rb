@@ -258,6 +258,7 @@ Rails.application.routes.draw do
       # Menu structure and content
       resources :menusections do
         collection do
+          patch :bulk_update
           patch :reorder
         end
         

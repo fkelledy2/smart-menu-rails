@@ -32,28 +32,21 @@
           <%= form.hidden_field :menusection_id %>
       <% end %>
   </div>
-  <div class="form-with-sticky-actions-2025 form-stack-2025">
+  <div class="form-with-sticky-actions-2025 form-stack-2025" data-menuitem-form-root>
     <% if menuitem.errors.any? %>
-      <div class="card-2025 mb-3">
-        <div class="card-2025-header">
-          <h4 class="card-2025-title mb-0"><%= t('common.errors') %></h4>
-        </div>
-        <div class="card-2025-body">
-          <ul class="mb-0">
-              <% menuitem.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-              <% end %>
-          </ul>
-        </div>
+      <div class="alert alert-danger mb-3">
+        <div class="fw-semibold mb-2"><%= t('common.errors') %></div>
+        <ul class="mb-0">
+            <% menuitem.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+        </ul>
       </div>
     <% end %>
 
-    <div class="card-2025 mb-3">
-      <div class="card-2025-header">
-        <h4 class="card-2025-title mb-0"><%= t(".details") %></h4>
-      </div>
-      <div class="card-2025-body">
-        <div class="form-group row">
+    <div class="mb-3 p-3">
+      <h2 class="h5 mb-3"><%= t(".details") %></h2>
+      <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :name, class: 'col-form-label' %>
           </div>
@@ -61,24 +54,19 @@
             <%= form.text_field :name, class: 'form-control' %>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-0">
           <div class="col-12">
             <%= form.label :description, class: 'col-form-label' %>
           </div>
           <div class="col-12">
-            <%= form.text_area :description, class: 'form-control' %>
+            <%= form.text_area :description, class: 'form-control', rows: 2 %>
           </div>
         </div>
-      </div>
     </div>
     <% if menuitem.itemtype != 'wine' %>
-      <div class="card-2025 mb-3">
-        <div class="card-2025-header">
-          <h4 class="card-2025-title mb-0"><%= t(".imageSettings") %></h4>
-        </div>
-        <div class="card-2025-body">
-          <div class="row g-3">
+      <div class="mb-3 p-3">
+        <h2 class="h5 mb-3"><%= t(".imageSettings") %></h2>
+        <div class="row g-3">
             <div class="col-12">
               <% if menuitem.image %>
                 <%
@@ -112,7 +100,7 @@
                 </div>
               </div>
 
-              <div class="spacing-sm"></div>
+              <div class="mb-2"></div>
 
               <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
                 <div class="form-check">
@@ -159,34 +147,28 @@
               </div>
             </div>
           </div>
-        </div>
       </div>
     <% end %>
 
-    <div class="card-2025 mb-3">
-      <div class="card-2025-header">
-        <h4 class="card-2025-title mb-0"><%= t(".settings") %></h4>
-      </div>
-      <div class="card-2025-body">
-        <div class="form-group row">
+    <div class="mb-3 p-3">
+      <h2 class="h5 mb-3"><%= t(".settings") %></h2>
+      <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :status, class: 'col-form-label' %>
           </div>
           <div class="col-12">
-            <%= form.select :status, options_for_select(Menuitem.statuses.keys.to_a, form.object.status), {} %>
+            <%= form.select :status, options_for_select(Menuitem.statuses.keys.to_a, form.object.status), {}, class: 'form-control' %>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :itemtype, class: 'col-form-label' %>
           </div>
           <div class="col-12">
-            <%= form.select :itemtype, options_for_select(Menuitem.itemtypes.keys.to_a, form.object.itemtype), {} %>
+            <%= form.select :itemtype, options_for_select(Menuitem.itemtypes.keys.to_a, form.object.itemtype), {}, class: 'form-control' %>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :calories, class: 'col-form-label' %>
           </div>
@@ -194,8 +176,7 @@
             <%= form.text_field :calories, class: 'form-control' %>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :unitcost, class: 'col-form-label' %>
           </div>
@@ -203,7 +184,7 @@
             <%= form.text_field :unitcost, class: 'form-control' %>
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row mb-0">
           <div class="col-12">
             <%= form.label :price, class: 'col-form-label' %>
           </div>
@@ -214,15 +195,11 @@
             <% end %>
           </div>
         </div>
-      </div>
     </div>
 
-    <div class="card-2025 mb-3">
-      <div class="card-2025-header">
-        <h4 class="card-2025-title mb-0"><%= t('.alcohol_settings') %></h4>
-      </div>
-      <div class="card-2025-body">
-        <div class="form-group row">
+    <div class="mb-3 p-3">
+      <h2 class="h5 mb-3"><%= t('.alcohol_settings') %></h2>
+      <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :preptime, class: 'col-form-label' %>
           </div>
@@ -230,8 +207,7 @@
             <%= form.text_field :preptime, class: 'form-control' %>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row align-items-center">
+        <div class="form-group row align-items-center mb-3">
           <div class="col-12">
             <%= form.label :alcoholic, class: 'col-form-label' %>
           </div>
@@ -242,8 +218,7 @@
             </div>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :abv, class: 'col-form-label' %>
           </div>
@@ -255,8 +230,7 @@
             <small class="text-muted"><%= t('.abv_help') %></small>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :alcohol_classification, class: 'col-form-label' %>
           </div>
@@ -276,134 +250,128 @@
             <small class="text-muted"><%= t('.classification_help') %></small>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-0">
           <div class="col-12">
             <%= form.label :alcohol_notes, class: 'col-form-label' %>
           </div>
           <div class="col-12">
-            <%= form.text_area :alcohol_notes, class: 'form-control', placeholder: t('.alcohol_notes_ph') %>
+            <%= form.text_area :alcohol_notes, class: 'form-control', placeholder: t('.alcohol_notes_ph'), rows: 2 %>
           </div>
         </div>
-      </div>
     </div>
   <% if menusection.tasting_menu? %>
-    <div class="form-group row">
-      <div class="col-12">
-        <h4><%= t('.tasting_item_settings') %></h4>
-      </div>
-    </div>
-    <div class="spacing-sm"></div>
-    <div class="form-group row">
-      <div class="col-12">
-        <span><%= t('.tasting_optional') %></span>
-      </div>
-      <div class="col-12">
-        <div class="form-check form-switch">
-          <%= form.check_box :tasting_optional, class: 'form-check-input', role: 'switch' %>
-          <small class="text-muted"><%= t('.tasting_optional_help') %></small>
+    <div class="mb-3 p-3">
+      <h2 class="h5 mb-3"><%= t('.tasting_item_settings') %></h2>
+
+      <div class="form-group row mb-3">
+        <div class="col-12">
+          <span><%= t('.tasting_optional') %></span>
         </div>
-      </div>
-    </div>
-    <div class="spacing-sm"></div>
-    <div class="form-group row">
-      <div class="col-12">
-        <span><%= t('.tasting_supplement') %></span>
-      </div>
-      <div class="col-12">
-        <div class="row g-2">
-          <div class="col-6">
-            <%= form.number_field :tasting_supplement_cents, class: 'form-control', min: 0, step: 1 %>
-          </div>
-          <div class="col-6">
-            <%= form.hidden_field :tasting_supplement_currency, value: menu.restaurant.currency %>
-            <input class="form-control" value="<%= menu.restaurant.currency %>" disabled>
+        <div class="col-12">
+          <div class="form-check form-switch">
+            <%= form.check_box :tasting_optional, class: 'form-check-input', role: 'switch' %>
+            <small class="text-muted"><%= t('.tasting_optional_help') %></small>
           </div>
         </div>
-        <small class="text-muted"><%= t('.tasting_supplement_help') %></small>
       </div>
-    </div>
-    <div class="spacing-sm"></div>
-    <div class="form-group row">
-      <div class="col-12">
-        <span><%= t('.course_order') %></span>
-      </div>
-      <div class="col-12">
-        <%= form.number_field :course_order, class: 'form-control', min: 1, step: 1 %>
-        <small class="text-muted"><%= t('.course_order_help') %></small>
-      </div>
-    </div>
-    <div class="spacing-sm"></div>
-    <div class="form-group row">
-      <div class="col-12">
-        <span><%= t('.visibility') %></span>
-      </div>
-      <div class="col-12">
-        <div class="form-check">
-          <%= form.check_box :hidden, class: 'form-check-input', id: 'menuitem_hidden' %>
-          <label class="form-check-label" for="menuitem_hidden"><%= t('.hidden') %></label>
+
+      <div class="form-group row mb-3">
+        <div class="col-12">
+          <span><%= t('.tasting_supplement') %></span>
         </div>
-        <div class="form-check mt-2">
-          <%= form.check_box :tasting_carrier, class: 'form-check-input', id: 'menuitem_tasting_carrier' %>
-          <label class="form-check-label" for="menuitem_tasting_carrier"><%= t('.tasting_carrier') %></label>
-          <div><small class="text-muted"><%= t('.tasting_carrier_help') %></small></div>
+        <div class="col-12">
+          <div class="row g-2">
+            <div class="col-6">
+              <%= form.number_field :tasting_supplement_cents, class: 'form-control', min: 0, step: 1 %>
+            </div>
+            <div class="col-6">
+              <%= form.hidden_field :tasting_supplement_currency, value: menu.restaurant.currency %>
+              <input class="form-control" value="<%= menu.restaurant.currency %>" disabled>
+            </div>
+          </div>
+          <small class="text-muted"><%= t('.tasting_supplement_help') %></small>
         </div>
       </div>
+
+      <div class="form-group row mb-3">
+        <div class="col-12">
+          <span><%= t('.course_order') %></span>
+        </div>
+        <div class="col-12">
+          <%= form.number_field :course_order, class: 'form-control', min: 1, step: 1 %>
+          <small class="text-muted"><%= t('.course_order_help') %></small>
+        </div>
+      </div>
+
+      <div class="form-group row mb-0">
+        <div class="col-12">
+          <span><%= t('.visibility') %></span>
+        </div>
+        <div class="col-12">
+          <div class="form-check">
+            <%= form.check_box :hidden, class: 'form-check-input', id: 'menuitem_hidden' %>
+            <label class="form-check-label" for="menuitem_hidden"><%= t('.hidden') %></label>
+          </div>
+          <div class="form-check mt-2">
+            <%= form.check_box :tasting_carrier, class: 'form-check-input', id: 'menuitem_tasting_carrier' %>
+            <label class="form-check-label" for="menuitem_tasting_carrier"><%= t('.tasting_carrier') %></label>
+            <div><small class="text-muted"><%= t('.tasting_carrier_help') %></small></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="spacing-sm"></div>
   <% end %>
   <% if Allergyn.where( restaurant: menu.restaurant ).count > 0 %>
-      <div class="spacing-sm"></div>
-      <div class="form-group row">
+    <div class="mb-3 p-3">
+      <h2 class="h5 mb-3"><%= form.label :allergyns, class: 'col-form-label' %></h2>
+
+      <div class="form-group row mb-0">
         <div class="col-12">
-          <%= form.label :allergyns, class: 'col-form-label' %>
-        </div>
-        <div class="col-12">
-            <div class="form-control">
-                <span class="position-relative-right-25">
-                <%= form.collection_check_boxes :allergyn_ids, Allergyn.where( restaurant_id: menu.restaurant.id ), :id, :name, { hide_label: true } do |b| %>
-                    <div class="form-check">
-                      <%= b.check_box %>
-                      <label class="form-check-label">
-                        <%= b.label %>
-                      </label>
-                    </div>
-                <% end %>
-                </span>
-            </div>
+          <div class="form-control">
+            <span class="position-relative-right-25">
+              <%= form.collection_check_boxes :allergyn_ids, Allergyn.where( restaurant_id: menu.restaurant.id ), :id, :name, { hide_label: true } do |b| %>
+                <div class="form-check">
+                  <%= b.check_box %>
+                  <label class="form-check-label">
+                    <%= b.label %>
+                  </label>
+                </div>
+              <% end %>
+            </span>
+          </div>
         </div>
       </div>
+    </div>
   <% end %>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
+  <div class="form-group row mb-3">
     <div class="col-12">
       <%= form.label :sizesupport, class: 'col-form-label' %>
     </div>
     <div class="col-12">
-      <%= form.select :sizesupport, [[t('.true'), true], [t('.false'), false]], {} %>
+      <%= form.select :sizesupport, [[t('.true'), true], [t('.false'), false]], {}, class: 'form-control' %>
     </div>
   </div>
   <% if menuitem.sizesupport && Size.where( restaurant_id: menu.restaurant.id ).count > 0 %>
-      <div class="spacing-sm"></div>
-      <div class="form-group row">
+    <div class="mb-3 p-3">
+      <h2 class="h5 mb-3"><%= form.label :sizes, class: 'col-form-label' %></h2>
+
+      <div class="form-group row mb-0">
         <div class="col-12">
-          <%= form.label :sizes, class: 'col-form-label' %>
-        </div>
-        <div class="col-12">
-            <div class="form-control">
-                <span class="position-relative-right-25">
-                <%= form.collection_check_boxes :size_ids, Size.where( restaurant_id: menu.restaurant.id ), :id, :name, { hide_label: true } do |size| %>
-                    <div class="form-check">
-                      <%= size.check_box %>
-                      <label class="form-check-label">
-                        <%= size.label %>
-                      </label>
-                    </div>
-                <% end %>
-                </span>
-            </div>
+          <div class="form-control">
+            <span class="position-relative-right-25">
+              <%= form.collection_check_boxes :size_ids, Size.where( restaurant_id: menu.restaurant.id ), :id, :name, { hide_label: true } do |size| %>
+                <div class="form-check">
+                  <%= size.check_box %>
+                  <label class="form-check-label">
+                    <%= size.label %>
+                  </label>
+                </div>
+              <% end %>
+            </span>
+          </div>
         </div>
       </div>
+    </div>
   <% end %>
     <div class="form-actions-2025 form-actions-2025-end d-none d-md-flex">
       <% if menuitem.persisted? %>
@@ -422,28 +390,27 @@
         delete_confirm: t('common.confirm') %>
   </div>
 <% end %>
-  <% if menuitem.menuitem_size_mappings.count > 0 %>
-      <div class="form-group row">
-          <div class="col-12">
-            <h4><%= t(".variantPricing") %></h4>
+
+<% if menuitem.menuitem_size_mappings.count > 0 %>
+  <div class="mb-3 p-3">
+    <h2 class="h5 mb-3"><%= t(".variantPricing") %></h2>
+
+    <% menuitem.menuitem_size_mappings.each do |menuitemSizeMapping| %>
+      <%= form_with(model: [menu.restaurant, menu, menuitemSizeMapping]) do |menuitemSizeMappingForm| %>
+        <div class="form-group row mb-2">
+          <div class="col-4">
+            <span class="float-md-end"><%= menuitemSizeMapping.sizeName %></span>
           </div>
-      </div>
-  <% end %>
-  <% menuitem.menuitem_size_mappings.each do |menuitemSizeMapping| %>
-    <%= form_with(model: [menu.restaurant, menu, menuitemSizeMapping]) do |menuitemSizeMappingForm| %>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
-            <div class="col-4">
-                <span class="float-md-end"><%= menuitemSizeMapping.sizeName %></span>
-            </div>
-            <div class="col-4">
-                <%= menuitemSizeMappingForm.text_field :price, class: 'form-control' %>
-            </div>
-            <div class="col-4">
-                <span class="float-end">
-                    <%= menuitemSizeMappingForm.submit value: t('common.update'), class: 'btn btn-sm btn-dark' %>
-                </span>
-            </div>
+          <div class="col-4">
+            <%= menuitemSizeMappingForm.text_field :price, class: 'form-control' %>
+          </div>
+          <div class="col-4">
+            <span class="float-end">
+              <%= menuitemSizeMappingForm.submit value: t('common.update'), class: 'btn btn-sm btn-dark' %>
+            </span>
+          </div>
         </div>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
+<% end %>

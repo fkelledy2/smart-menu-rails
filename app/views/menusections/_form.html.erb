@@ -6,28 +6,21 @@
   raise "No restaurant context available for menusection form" unless restaurant
 %>
 <%= form_with(model: [restaurant, menu, menusection], html: { data: { turbo_frame: '_top' } }) do |form| %>
-  <div class="form-with-sticky-actions-2025 form-stack-2025">
+  <div class="form-with-sticky-actions-2025 form-stack-2025" data-menusection-form-root>
     <% if menusection.errors.any? %>
-      <div class="card-2025 mb-3">
-        <div class="card-2025-header">
-          <h4 class="card-2025-title mb-0"><%= t('common.errors') %></h4>
-        </div>
-        <div class="card-2025-body">
+      <div class="alert alert-danger mb-3">
+        <div class="fw-semibold mb-2"><%= t('common.errors') %></div>
           <ul class="mb-0">
               <% menusection.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
               <% end %>
           </ul>
-        </div>
       </div>
     <% end %>
 
-    <div class="card-2025 mb-3">
-      <div class="card-2025-header">
-        <h4 class="card-2025-title mb-0"><%= t(".details") %></h4>
-      </div>
-      <div class="card-2025-body">
-        <div class="form-group row">
+    <div class="mb-3 p-3">
+      <h2 class="h5 mb-3"><%= t(".details") %></h2>
+      <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :name, class: 'col-form-label' %>
           </div>
@@ -35,23 +28,18 @@
             <%= form.text_field :name, class: 'form-control' %>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-0">
           <div class="col-12">
             <%= form.label :description, class: 'col-form-label' %>
           </div>
           <div class="col-12">
-            <%= form.text_area :description, class: 'form-control' %>
+            <%= form.text_area :description, class: 'form-control', rows: 2 %>
           </div>
         </div>
-      </div>
     </div>
 
-    <div class="card-2025 mb-3">
-      <div class="card-2025-header">
-        <h4 class="card-2025-title mb-0"><%= t('.availability_time', default: 'Availability Time') %></h4>
-      </div>
-      <div class="card-2025-body">
+    <div class="mb-3 p-3">
+      <h2 class="h5 mb-3"><%= t('.availability_time', default: 'Availability Time') %></h2>
         <!-- Hidden fields for time values -->
         <%= form.hidden_field :fromhour, class: 'from-hour-field' %>
         <%= form.hidden_field :frommin, class: 'from-min-field' %>
@@ -84,24 +72,19 @@
           </div>
         </div>
 
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-0">
           <div class="col-12">
             <%= form.label :restricted, class: 'col-form-label' %>
           </div>
           <div class="col-12">
-            <%= form.select :restricted, [['on', true], ['off', false]], {} %>
+            <%= form.select :restricted, [['on', true], ['off', false]], {}, class: 'form-control' %>
           </div>
         </div>
-      </div>
     </div>
 
-    <div class="card-2025 mb-3">
-      <div class="card-2025-header">
-        <h4 class="card-2025-title mb-0"><%= t(".settings") %></h4>
-      </div>
-      <div class="card-2025-body">
-        <div class="form-group row">
+    <div class="mb-3 p-3">
+      <h2 class="h5 mb-3"><%= t(".settings") %></h2>
+      <div class="form-group row mb-0">
           <div class="col-12">
             <%= form.label :status, class: 'col-form-label' %>
           </div>
@@ -109,15 +92,11 @@
             <%= form.select :status, options_for_select(Menusection.statuses.keys.to_a, form.object.status), {}, class: 'form-control' %>
           </div>
         </div>
-      </div>
     </div>
 
-    <div class="card-2025 mb-3">
-      <div class="card-2025-header">
-        <h4 class="card-2025-title mb-0"><%= t('.tasting_menu_settings', default: 'Tasting Menu Settings') %></h4>
-      </div>
-      <div class="card-2025-body">
-        <div class="form-group row">
+    <div class="mb-3 p-3">
+      <h2 class="h5 mb-3"><%= t('.tasting_menu_settings', default: 'Tasting Menu Settings') %></h2>
+      <div class="form-group row mb-2">
           <div class="col-12">
             <%= form.label :tasting_menu, class: 'col-form-label' %>
           </div>
@@ -126,7 +105,9 @@
             <small class="text-muted"><%= t('.tasting_menu_help', default: 'When enabled, this section is a fixed-price tasting. Item prices are hidden; supplements may be added per item.') %></small>
           </div>
         </div>
-        <div class="form-group row">
+
+      <div data-tasting-menu-advanced class="<%= menusection.tasting_menu? ? '' : 'd-none' %>">
+        <div class="form-group row mb-2">
           <div class="col-12">
             <small class="text-muted">
               <i class="bi bi-info-circle"></i>
@@ -134,8 +115,7 @@
             </small>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
           <div class="col-12">
             <span><%= t('.tasting_price', default: 'Tasting Price') %></span>
           </div>
@@ -151,8 +131,7 @@
             <small class="text-muted"><%= t('.tasting_price_help', default: 'Enter the fixed price in the restaurant currency. Currency is inferred from restaurant settings.') %></small>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :price_per, class: 'col-form-label' %>
           </div>
@@ -160,8 +139,7 @@
             <%= form.select :price_per, options_for_select([['Per Person', 'person'], ['Per Table', 'table']], form.object.price_per || 'person'), {}, class: 'form-control' %>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
           <div class="col-12">
             <span><%= t('.party_size', default: 'Party Size (optional)') %></span>
           </div>
@@ -176,17 +154,15 @@
             </div>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
           <div class="col-12">
             <span><%= t('.includes_description', default: 'Includes (description)') %></span>
           </div>
           <div class="col-12">
-            <%= form.text_area :includes_description, class: 'form-control', rows: 3 %>
+            <%= form.text_area :includes_description, class: 'form-control', rows: 2 %>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :allow_substitutions, class: 'col-form-label' %>
           </div>
@@ -194,8 +170,7 @@
             <%= form.check_box :allow_substitutions %>
           </div>
         </div>
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
           <div class="col-12">
             <%= form.label :allow_pairing, class: 'col-form-label' %>
           </div>
@@ -205,8 +180,7 @@
           </div>
         </div>
 
-        <div class="spacing-sm"></div>
-        <div class="form-group row">
+        <div class="form-group row mb-0">
           <div class="col-12">
             <span><%= t('.pairing_price', default: 'Pairing Price') %></span>
           </div>
@@ -223,6 +197,27 @@
         </div>
       </div>
     </div>
+
+    <script data-turbo-eval="true">
+      (function() {
+        const root = document.querySelector('[data-menusection-form-root]');
+        if (!root) return;
+
+        const checkbox = root.querySelector('input[name="menusection[tasting_menu]"]');
+        const advanced = root.querySelector('[data-tasting-menu-advanced]');
+        if (!checkbox || !advanced) return;
+
+        if (checkbox.dataset.tastingMenuBound === '1') return;
+        checkbox.dataset.tastingMenuBound = '1';
+
+        const sync = function() {
+          advanced.classList.toggle('d-none', !checkbox.checked);
+        };
+
+        sync();
+        checkbox.addEventListener('change', sync);
+      })();
+    </script>
 
     <div class="form-actions-2025 form-actions-2025-end d-none d-md-flex">
           <% if menusection.persisted? %>

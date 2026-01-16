@@ -10,8 +10,8 @@
 <% menu_smartmenu_slug = Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id, tablesetting_id: nil).first&.slug %>
 
 <% unless read_only %>
-  <div class="quick-actions-card">
-    <h2 class="quick-actions-title">
+  <div class="mb-3 p-3">
+    <h2 class="h5 mb-3">
       <i class="bi bi-lightning-charge"></i>
       <%= t('.quick_actions') %>
     </h2>
@@ -45,79 +45,142 @@
 <% end %>
 
 <!-- Sections List -->
-<div class="card">
-  <div class="card-body">
+<div class="mb-3 p-3">
   <h2 class="h5 mb-3">
       <i class="bi bi-layout-text-sidebar"></i>
       <%= t('.menu_sections') %>
     </h2>
 
-  <p class="text-muted mb-4">
-    <%= t('.sections_description') %>
-  </p>
+  	<p class="text-muted mb-4">
+		<%= t('.sections_description') %>
+	</p>
 
-  <% if menu.menusections.any? %>
-    <!-- Sections Table -->
-    <div class="table-responsive">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th class="w-40px"></th>
-            <th><%= t('.name') %></th>
-            <th class="text-end"><%= t('.items') %></th>
-            <% unless read_only %>
-              <th class="text-end">
-                <span class="btn btn-sm btn-outline-secondary">
-                  <i class="bi bi-gear"></i>
-                </span>
-              </th>
-            <% end %>
-          </tr>
-        </thead>
-        <tbody
-          <% unless read_only %>
-            data-controller="sortable"
-            data-sortable-url-value="<%= reorder_restaurant_menu_menusections_path(restaurant, menu) %>"
-            data-sortable-handle-value=".section-handle"
-          <% end %>
-        >
-          <% menu.menusections.order(:sequence).each do |section| %>
-            <tr data-sortable-id="<%= section.id %>">
-              <% if read_only %>
-                <td class="w-40px" style="cursor: not-allowed; opacity: 0.55;">
-                  <i class="bi bi-grip-vertical text-muted"></i>
-                </td>
-              <% else %>
-                <td class="section-handle w-40px cursor-grab">
-                  <i class="bi bi-grip-vertical text-muted"></i>
-                </td>
-              <% end %>
-              <td>
-                <strong><%= section.name %></strong>
-              </td>
-              <td class="text-end">
-                <%= section.menuitems.count %>
-              </td>
-              <% unless read_only %>
-                <td class="text-end">
-                  <%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section),
-                              class: 'btn btn-sm btn-outline-secondary',
-                              title: t('.edit'),
-                              aria: { label: t('.edit') },
-                              data: { turbo_frame: '_top', testid: "edit-menusection-#{section.id}-btn" } do %>
-                    <i class="bi bi-pencil"></i>
-                  <% end %>
-                </td>
-              <% end %>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  <% else %>
-    <!-- Empty State -->
-    <div class="text-center py-5">
-      <i class="bi bi-layout-text-sidebar text-muted text-3rem"></i>
+	<% if menu.menusections.any? %>
+		<div data-controller="menusections-bulk">
+			<%= form_with url: bulk_update_restaurant_menu_menusections_path(restaurant, menu), method: :patch, data: { turbo: true, action: 'submit->menusections-bulk#beforeSubmit' } do |f| %>
+				<%= hidden_field_tag :operation, '', data: { menusections_bulk_target: 'operation' } %>
+				<%= hidden_field_tag :value, '', data: { menusections_bulk_target: 'value' } %>
+				<!-- Sections Table -->
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<% unless read_only %>
+									<th class="w-40px">
+										<input type="checkbox" data-menusections-bulk-target="selectAll" data-action="change->menusections-bulk#toggleAll" />
+									</th>
+								<% end %>
+								<th class="w-40px"></th>
+								<th><%= t('.name') %></th>
+								<th class="text-end"><%= t('.items') %></th>
+								<% unless read_only %>
+									<th class="text-end">
+										<div class="d-flex justify-content-end">
+											<div class="input-group input-group-sm" style="width: auto;">
+												<select class="form-select form-select-sm w-auto" data-menusections-bulk-target="actionSelect" data-action="change->menusections-bulk#sync">
+													<option value=""><%= t('.bulk_action', default: 'Bulk action…') %></option>
+													<option value="set_status"><%= t('.bulk_set_status', default: 'Set status') %></option>
+													<option value="archive"><%= t('.bulk_archive', default: 'Archive') %></option>
+												</select>
+												<button type="submit"
+															class="btn btn-primary"
+														title="<%= t('.apply', default: 'Apply') %>"
+														aria-label="<%= t('.apply', default: 'Apply') %>"
+														disabled
+														data-menusections-bulk-target="apply"
+														data-action="click->menusections-bulk#apply">
+														<i class="bi bi-check2"></i>
+														<span class="visually-hidden"><%= t('.apply', default: 'Apply') %></span>
+													</button>
+											</div>
+										</div>
+									</th>
+								<% end %>
+							</tr>
+						</thead>
+						<tbody
+							<% unless read_only %>
+								data-controller="sortable"
+								data-sortable-url-value="<%= reorder_restaurant_menu_menusections_path(restaurant, menu) %>"
+								data-sortable-handle-value=".section-handle"
+							<% end %>
+						>
+							<% menu.menusections.order(:sequence).each do |section| %>
+								<tr data-sortable-id="<%= section.id %>">
+									<% unless read_only %>
+										<td class="w-40px">
+											<input type="checkbox" name="menusection_ids[]" value="<%= section.id %>" data-menusections-bulk-target="checkbox" data-action="change->menusections-bulk#sync" />
+										</td>
+									<% end %>
+									<% if read_only %>
+										<td class="w-40px" style="cursor: not-allowed; opacity: 0.55;">
+											<i class="bi bi-grip-vertical text-muted"></i>
+										</td>
+									<% else %>
+										<td class="section-handle w-40px cursor-grab">
+											<i class="bi bi-grip-vertical text-muted"></i>
+										</td>
+									<% end %>
+									<td>
+										<strong><%= section.name %></strong>
+									</td>
+									<td class="text-end">
+										<%= section.menuitems.count %>
+									</td>
+									<% unless read_only %>
+										<td class="text-end">
+											<%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section),
+														class: 'btn btn-sm btn-outline-secondary',
+													title: t('.edit'),
+													aria: { label: t('.edit') },
+													data: { turbo_frame: '_top', testid: "edit-menusection-#{section.id}-btn" } do %>
+												<i class="bi bi-pencil"></i>
+											<% end %>
+										</td>
+									<% end %>
+								</tr>
+							<% end %>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="modal fade" tabindex="-1" aria-hidden="true" data-menusections-bulk-target="modal">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" data-menusections-bulk-target="modalTitle">Bulk edit</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div class="d-none" data-menusections-bulk-target="modalBodyArchive">
+									<p class="mb-0">
+										<%= t('.archive_confirm', default: 'This will archive the selected menu sections. Archived sections will no longer appear in this list.') %>
+									</p>
+								</div>
+
+								<div class="d-none" data-menusections-bulk-target="modalBodyStatus">
+									<label class="form-label"><%= t('.status', default: 'Status') %></label>
+									<select class="form-select" data-menusections-bulk-target="modalStatusSelect">
+										<option value=""><%= t('.choose_status', default: 'Choose…') %></option>
+										<% Menusection.statuses.keys.each do |k| %>
+											<option value="<%= k %>"><%= k.to_s.humanize %></option>
+										<% end %>
+									</select>
+								</div>
+							</div>
+							<div class="modal-footer gap-2">
+								<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><%= t('common.cancel', default: 'Cancel') %></button>
+								<button type="button" class="btn btn-primary" data-menusections-bulk-target="modalApply" data-action="click->menusections-bulk#confirmModalApply"><%= t('.apply', default: 'Apply') %></button>
+							</div>
+						</div>
+					</div>
+				</div>
+			<% end %>
+		</div>
+	<% else %>
+		<!-- Empty State -->
+		<div class="text-center py-5">
+			<i class="bi bi-layout-text-sidebar text-muted text-3rem"></i>
       <h4 class="mt-3"><%= t('.no_sections') %></h4>
       <p class="text-muted">
         <%= t('.no_sections_desc') %>
@@ -129,7 +192,6 @@
       <% end %>
     </div>
   <% end %>
-  </div>
 </div>
 
 <style>
