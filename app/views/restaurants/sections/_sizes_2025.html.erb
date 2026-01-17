@@ -81,40 +81,38 @@
     <!-- Desktop Table View (styled like Table Settings) -->
     <div data-controller="localization-bulk">
       <%= form_with url: bulk_update_restaurant_sizes_path(restaurant), method: :patch, data: { turbo: true, action: 'submit->localization-bulk#beforeSubmit' } do |f| %>
-      <div class="table-responsive sizes-table-view">
-        <table class="table table-hover align-middle">
-          <thead>
-            <tr>
-              <th class="w-40px">
-                <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
-              </th>
-              <th class="w-40px"></th>
-              <th><%= t('.name') %></th>
-              <th class="text-end">
-                <div class="d-flex justify-content-end">
-                  <div class="input-group input-group-sm" style="width: auto;">
-                    <%= f.select :status,
-                        [
-                          [t('.status_active'), 'active'],
-                          [t('.status_inactive'), 'inactive'],
-                          [t('.status_archived'), 'archived'],
-                        ],
-                        { include_blank: t('.set_status') },
-                        { class: 'form-select form-select-sm w-auto', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
-                    <button type="submit"
-                            class="btn btn-primary"
-                            title="<%= t('.apply') %>"
-                            aria-label="<%= t('.apply') %>"
-                            disabled
-                            data-localization-bulk-target="submit">
-                      <i class="bi bi-check2"></i>
-                      <span class="visually-hidden"><%= t('.apply') %></span>
-                    </button>
-                  </div>
-                </div>
-              </th>
-            </tr>
-          </thead>
+      		<div class="table-responsive sizes-table-view">
+		  <table class="table table-hover align-middle">
+			<thead>
+			  <tr>
+				<th class="w-40px">
+				  <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
+				</th>
+				<th class="text-end text-nowrap" colspan="3">
+				  <div class="d-flex justify-content-end flex-nowrap">
+					<div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
+					  <%= f.select :status,
+						  [
+							[t('.status_active'), 'active'],
+							[t('.status_inactive'), 'inactive'],
+							[t('.status_archived'), 'archived'],
+						  ],
+						  { include_blank: t('.set_status') },
+						  { class: 'form-select form-select-sm', disabled: true, style: 'min-width: 0;', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
+					  <button type="submit"
+							  class="btn btn-primary"
+							  title="<%= t('.apply') %>"
+							  aria-label="<%= t('.apply') %>"
+							  disabled
+							  data-localization-bulk-target="submit">
+						<i class="bi bi-check2"></i>
+						<span class="visually-hidden"><%= t('.apply') %></span>
+					  </button>
+					</div>
+				  </div>
+				</th>
+			  </tr>
+			</thead>
           <tbody data-controller="sortable"
                  data-sortable-url-value="<%= reorder_restaurant_sizes_path(restaurant) %>"
                  data-sortable-handle-value=".size-handle">
@@ -137,7 +135,7 @@
                 </td>
                 <td class="text-end">
                   <%= link_to edit_restaurant_size_path(restaurant, size),
-                      class: 'btn btn-sm btn-outline-secondary',
+                      class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
                       title: t('.edit'),
                       aria: { label: t('.edit') },
                       data: { turbo_frame: 'sizes_edit_size', row_primary_link: true } do %>

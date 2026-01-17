@@ -6,7 +6,7 @@
 <% menu = local_assigns[:menu] || @menu %>
 <% restaurant = local_assigns[:restaurant] || @restaurant || menu.restaurant %>
 <% read_only = local_assigns[:read_only] ? true : false %>
-<% column_count = read_only ? 3 : 5 %>
+<% column_count = read_only ? 3 : 4 %>
 
 <% menu_smartmenu_slug = Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id, tablesetting_id: nil).first&.slug %>
 
@@ -69,19 +69,18 @@
           <table class="table table-hover">
             <thead>
               <tr>
-                <% unless read_only %>
+                <% if read_only %>
+                  <th class="w-40px"></th>
+                  <th></th>
+                  <th class="text-end"></th>
+                <% else %>
                   <th class="w-40px">
                     <input type="checkbox" data-menuitems-bulk-target="selectAll" data-action="change->menuitems-bulk#toggleAll" />
                   </th>
-                <% end %>
-                <th class="w-40px"></th>
-                <th><%= t('.name') %></th>
-                <th class="text-end"><%= t('.price') %></th>
-                <% unless read_only %>
-                  <th class="text-end">
-                    <div class="d-flex justify-content-end">
-                      <div class="input-group input-group-sm" style="width: auto;">
-                        <select class="form-select form-select-sm w-auto" data-menuitems-bulk-target="actionSelect" data-action="change->menuitems-bulk#sync">
+                  <th class="text-end text-nowrap" colspan="3">
+                    <div class="d-flex justify-content-end flex-nowrap">
+                      <div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
+                        <select class="form-select form-select-sm" style="min-width: 0;" data-menuitems-bulk-target="actionSelect" data-action="change->menuitems-bulk#sync">
                           <option value=""><%= t('.bulk_action', default: 'Bulk action…') %></option>
                           <option value="set_status"><%= t('.bulk_set_status', default: 'Set status') %></option>
                           <option value="set_itemtype"><%= t('.bulk_set_food_type', default: 'Set food type') %></option>
@@ -220,18 +219,19 @@
                             <span class="text-muted">-</span>
                           <% end %>
                         <% end %>
+
+                        <% unless read_only %>
+                          <div class="mt-1">
+                            <%= link_to edit_restaurant_menu_menusection_menuitem_path(restaurant, menu, section, item),
+                                        class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
+                                        title: t('.edit'),
+                                        aria: { label: t('.edit') },
+                                        data: { turbo_frame: '_top', testid: "edit-item-#{item.id}-btn" } do %>
+                              <i class="bi bi-chevron-right"></i>
+                            <% end %>
+                          </div>
+                        <% end %>
                       </td>
-                      <% unless read_only %>
-                        <td class="text-end">
-                          <%= link_to edit_restaurant_menu_menusection_menuitem_path(restaurant, menu, section, item),
-                                      class: 'btn btn-sm btn-outline-secondary',
-                                      title: t('.edit'),
-                                      aria: { label: t('.edit') },
-                                      data: { turbo_frame: '_top', testid: "edit-item-#{item.id}-btn" } do %>
-                            <i class="bi bi-chevron-right"></i>
-                          <% end %>
-                        </td>
-                      <% end %>
                     </tr>
                   <% end %>
                 </tbody>

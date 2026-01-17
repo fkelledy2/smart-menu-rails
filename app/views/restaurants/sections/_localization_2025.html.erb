@@ -66,11 +66,9 @@
                     <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
                   </div>
                 </th>
-                <th class="w-40px"></th>
-                <th><%= t('.language') %></th>
-                <th class="text-end">
-                  <div class="d-flex justify-content-end">
-                    <div class="input-group input-group-sm" style="width: auto;">
+                <th class="text-end text-nowrap" colspan="3">
+                  <div class="d-flex justify-content-end flex-nowrap">
+                    <div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
                       <%= f.select :status,
                           [
                             [t('.status_active'), 'active'],
@@ -78,7 +76,7 @@
                             [t('.status_archived'), 'archived'],
                           ],
                           { include_blank: t('.set_status') },
-                          { class: 'form-select form-select-sm w-auto', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
+                          { class: 'form-select form-select-sm', disabled: true, style: 'min-width: 0;', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
                       <button type="submit"
                               class="btn btn-primary"
                               title="<%= t('.apply') %>"
@@ -105,7 +103,7 @@
                   <td class="w-40px">
                     <input type="checkbox" name="restaurantlocale_ids[]" value="<%= locale.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" <%= 'disabled' if locale.respond_to?(:dfault) && locale.dfault %> />
                   </td>
-                  <td class="w-40px locale-handle drag-handle cursor-grab">
+                  <td class="locale-handle drag-handle cursor-grab">
                     <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
                   </td>
                   <td>
@@ -121,7 +119,7 @@
                   </td>
                   <td class="text-end">
                     <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale),
-                        class: 'btn btn-sm btn-outline-secondary',
+                        class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
                         title: t('.edit'),
                         aria: { label: t('.edit') },
                         data: { turbo_frame: 'localization_edit_locale', row_primary_link: true } do %>
@@ -170,7 +168,7 @@
                 </div>
 
                 <%= link_to edit_restaurant_restaurantlocale_path(restaurant, locale),
-                    class: 'btn btn-sm btn-outline-secondary',
+                    class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
                     title: t('.edit'),
                     aria: { label: t('.edit') },
                     data: { turbo_frame: 'localization_edit_locale', row_primary_link: true } do %>
@@ -248,11 +246,11 @@
   /* Mobile: Show cards, hide table */
   @media (max-width: 768px) {
     .languages-table-view {
-      display: none;
+      display: block;
     }
 
     .languages-cards-view {
-      display: block;
+      display: none;
     }
   }
 

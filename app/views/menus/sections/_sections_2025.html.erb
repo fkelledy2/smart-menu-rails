@@ -65,33 +65,32 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<% unless read_only %>
+								<% if read_only %>
+									<th class="w-40px"></th>
+									<th></th>
+									<th class="text-end"></th>
+								<% else %>
 									<th class="w-40px">
 										<input type="checkbox" data-menusections-bulk-target="selectAll" data-action="change->menusections-bulk#toggleAll" />
 									</th>
-								<% end %>
-								<th class="w-40px"></th>
-								<th><%= t('.name') %></th>
-								<th class="text-end"><%= t('.items') %></th>
-								<% unless read_only %>
-									<th class="text-end">
-										<div class="d-flex justify-content-end">
-											<div class="input-group input-group-sm" style="width: auto;">
-												<select class="form-select form-select-sm w-auto" data-menusections-bulk-target="actionSelect" data-action="change->menusections-bulk#sync">
+									<th class="text-end text-nowrap" colspan="4">
+										<div class="d-flex justify-content-end flex-nowrap">
+											<div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
+												<select class="form-select form-select-sm" style="min-width: 0;" data-menusections-bulk-target="actionSelect" data-action="change->menusections-bulk#sync">
 													<option value=""><%= t('.bulk_action', default: 'Bulk action…') %></option>
 													<option value="set_status"><%= t('.bulk_set_status', default: 'Set status') %></option>
 													<option value="archive"><%= t('.bulk_archive', default: 'Archive') %></option>
 												</select>
 												<button type="submit"
-															class="btn btn-primary"
-														title="<%= t('.apply', default: 'Apply') %>"
-														aria-label="<%= t('.apply', default: 'Apply') %>"
-														disabled
-														data-menusections-bulk-target="apply"
-														data-action="click->menusections-bulk#apply">
-														<i class="bi bi-check2"></i>
-														<span class="visually-hidden"><%= t('.apply', default: 'Apply') %></span>
-													</button>
+																class="btn btn-primary"
+													title="<%= t('.apply', default: 'Apply') %>"
+													aria-label="<%= t('.apply', default: 'Apply') %>"
+													disabled
+													data-menusections-bulk-target="apply"
+													data-action="click->menusections-bulk#apply">
+													<i class="bi bi-check2"></i>
+													<span class="visually-hidden"><%= t('.apply', default: 'Apply') %></span>
+												</button>
 											</div>
 										</div>
 									</th>
@@ -106,7 +105,9 @@
 							<% end %>
 						>
 							<% menu.menusections.order(:sequence).each do |section| %>
-								<tr data-sortable-id="<%= section.id %>">
+								<% row_status_class = section.active? ? 'row-status-active' : (section.archived? ? 'row-status-archived' : 'row-status-inactive') %>
+								<% row_status_title = section.active? ? t('menus.sections.details_2025.active', default: 'Active') : (section.archived? ? t('menus.sections.details_2025.archived', default: 'Archived') : t('menus.sections.details_2025.inactive', default: 'Inactive')) %>
+								<tr data-sortable-id="<%= section.id %>" class="<%= row_status_class %>" title="<%= row_status_title %>">
 									<% unless read_only %>
 										<td class="w-40px">
 											<input type="checkbox" name="menusection_ids[]" value="<%= section.id %>" data-menusections-bulk-target="checkbox" data-action="change->menusections-bulk#sync" />
@@ -130,11 +131,11 @@
 									<% unless read_only %>
 										<td class="text-end">
 											<%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section),
-														class: 'btn btn-sm btn-outline-secondary',
+														class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
 													title: t('.edit'),
 													aria: { label: t('.edit') },
 													data: { turbo_frame: '_top', testid: "edit-menusection-#{section.id}-btn" } do %>
-												<i class="bi bi-pencil"></i>
+												<i class="bi bi-chevron-right"></i>
 											<% end %>
 										</td>
 									<% end %>

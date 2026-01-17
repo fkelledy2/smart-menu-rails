@@ -82,11 +82,9 @@
               <th class="w-40px">
                 <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
               </th>
-              <th class="w-40px"></th>
-              <th><%= t('.name') %></th>
-              <th class="text-end">
-                <div class="d-flex justify-content-end">
-                  <div class="input-group input-group-sm" style="width: auto;">
+              <th class="text-end text-nowrap" colspan="3">
+                <div class="d-flex justify-content-end flex-nowrap">
+                  <div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
                     <%= f.select :status,
                         [
                           [t('.status_active'), 'active'],
@@ -94,7 +92,7 @@
                           [t('.status_archived'), 'archived'],
                         ],
                         { include_blank: t('.set_status') },
-                        { class: 'form-select form-select-sm w-auto', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
+                        { class: 'form-select form-select-sm', disabled: true, style: 'min-width: 0;', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
                     <button type="submit"
                             class="btn btn-primary"
                             title="<%= t('.apply') %>"
@@ -133,7 +131,7 @@
                 </td>
                 <td class="text-end">
                   <%= link_to edit_restaurant_allergyn_path(restaurant, allergen),
-                      class: 'btn btn-sm btn-outline-secondary',
+                      class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
                       title: t('.edit'),
                       aria: { label: t('.edit') },
                       data: { turbo_frame: 'allergens_edit_allergyn', row_primary_link: true } do %>
@@ -178,7 +176,7 @@
               </div>
 
               <%= link_to edit_restaurant_allergyn_path(restaurant, allergen),
-                  class: 'btn btn-sm btn-outline-secondary',
+                  class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
                   title: t('.edit'),
                   aria: { label: t('.edit') },
                   data: { turbo_frame: 'allergens_edit_allergyn', row_primary_link: true } do %>
@@ -319,11 +317,11 @@
 
   @media (max-width: 768px) {
     .allergens-table-view {
-      display: none;
+      display: block;
     }
 
     .allergens-cards-view {
-      display: block;
+      display: none;
     }
   }
 

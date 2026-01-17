@@ -22,6 +22,14 @@ export default class extends Controller {
   sync() {
     const enabled = this.enabledCheckboxes()
     const anySelected = enabled.some((cb) => cb.checked)
+
+    if (this.hasStatusSelectTarget) {
+      if (!anySelected) {
+        this.statusSelectTarget.value = ""
+      }
+      this.statusSelectTarget.disabled = !anySelected
+    }
+
     const statusSelected = this.hasStatusSelectTarget
       ? ((this.statusSelectTarget.value || "").length > 0)
       : true

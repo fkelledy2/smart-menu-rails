@@ -54,6 +54,13 @@ export default class extends Controller {
     const action = this.hasActionSelectTarget ? this.actionSelectTarget.value : "";
     const anySelected = selected.length > 0;
 
+    if (this.hasActionSelectTarget) {
+      if (!anySelected) {
+        this.actionSelectTarget.value = "";
+      }
+      this.actionSelectTarget.disabled = !anySelected;
+    }
+
     if (this.hasOperationTarget) this.operationTarget.value = "";
     if (this.hasValueTarget) this.valueTarget.value = "";
 
