@@ -315,6 +315,11 @@ class LocalizeMenuService
       return text if text.blank?
       return text if is_default
 
+      unless DeeplApiService.configured?
+        log_deepl_missing_api_key_once
+        return text
+      end
+
       translate_with_fallback(text, locale_code)
     end
     
@@ -329,7 +334,19 @@ class LocalizeMenuService
       return { text: text, rate_limited: false } if text.blank?
       return { text: text, rate_limited: false } if is_default
 
+      unless DeeplApiService.configured?
+        log_deepl_missing_api_key_once
+        return { text: text, rate_limited: false }
+      end
+
       translate_with_rate_limit_tracking(text, locale_code)
+    end
+
+    def log_deepl_missing_api_key_once
+      return if @deepl_missing_api_key_logged
+
+      @deepl_missing_api_key_logged = true
+      Rails.logger.warn('[LocalizeMenuService] DeepL disabled (DEEPL_API_KEY missing). Skipping translations and using original text.')
     end
 
     # Translate text with fallback to original on error

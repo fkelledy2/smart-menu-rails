@@ -57,6 +57,13 @@ class MenuLocalizationRetryJob
 
   private
 
+  def log_deepl_missing_api_key_once
+    return if @deepl_missing_api_key_logged
+
+    @deepl_missing_api_key_logged = true
+    Rails.logger.warn('[MenuLocalizationRetryJob] DeepL disabled (DEEPL_API_KEY missing). Skipping translation retries and using original text.')
+  end
+
   # Retry translating a single item
   def retry_item_translation(item, stats)
     locale_code = item[:locale]
@@ -86,6 +93,11 @@ class MenuLocalizationRetryJob
   # Translate text with rate limit tracking
   def translate_with_tracking(text, target_locale, source_locale: 'en')
     return { text: text, rate_limited: false } if text.blank?
+
+    unless DeeplApiService.configured?
+      log_deepl_missing_api_key_once
+      return { text: text, rate_limited: false }
+    end
 
     max_retries = 2
     retry_count = 0
