@@ -360,9 +360,13 @@ class ImportToMenu
 
       return unless det && det[:decided]
 
-      menuitem.alcoholic = det[:alcoholic]
-      menuitem.abv = det[:abv] if det.key?(:abv)
-      menuitem.alcohol_classification = det[:classification] if det[:classification].present?
+      if det[:alcoholic]
+        menuitem.alcohol_classification = det[:classification].presence || 'other'
+        menuitem.abv = det[:abv] if det.key?(:abv)
+      else
+        menuitem.alcohol_classification = 'non_alcoholic'
+        menuitem.abv = 0
+      end
       if det[:note].present?
         notes = [menuitem.alcohol_notes.presence, det[:note]].compact.join(' ')
         menuitem.alcohol_notes = notes

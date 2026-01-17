@@ -84,6 +84,15 @@
            data-testid="menus-list">
         <table class="table table-hover align-middle">
         <thead>
+          <% if show_availability_column %>
+            <tr class="small text-muted">
+              <th class="w-20px menu-compact-cell"></th>
+              <th class="w-20px menu-compact-cell"></th>
+              <th></th>
+              <th class="text-end"><%= t('.availability', default: 'Availability') %></th>
+              <th></th>
+            </tr>
+          <% end %>
           <tr>
             <th class="w-20px menu-compact-cell">
               <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />

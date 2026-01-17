@@ -30,9 +30,8 @@ class RestaurantMenuPolicyTest < ActiveSupport::TestCase
       status: :active,
     )
 
-    @rm_a = RestaurantMenu.create!(
-      restaurant: @restaurant_a,
-      menu: @menu,
+    @rm_a = RestaurantMenu.find_by!(restaurant: @restaurant_a, menu: @menu)
+    @rm_a.update!(
       status: :active,
       availability_override_enabled: false,
       availability_state: :available,

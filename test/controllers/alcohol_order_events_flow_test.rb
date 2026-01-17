@@ -19,7 +19,7 @@ class AlcoholOrderEventsFlowTest < ActionDispatch::IntegrationTest
     )
     @menuitem = menuitems(:one)
     # Ensure the menuitem is alcoholic for this test
-    @menuitem.update_columns(alcoholic: true, abv: 12.5, alcohol_classification: 'wine') if @menuitem.respond_to?(:alcoholic)
+    @menuitem.update_columns(abv: 12.5, alcohol_classification: 'wine')
   end
 
   test 'creates AlcoholOrderEvent when alcoholic item is added' do

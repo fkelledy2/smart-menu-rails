@@ -151,10 +151,8 @@ class MenuPolicyTest < ActiveSupport::TestCase
   end
 
   test 'should return empty scope for anonymous user' do
-    # Anonymous user scope will fail because user is nil
-    assert_raises(NoMethodError) do
-      MenuPolicy::Scope.new(nil, Menu).resolve
-    end
+    scope = MenuPolicy::Scope.new(nil, Menu).resolve
+    assert_equal 0, scope.count
   end
 
   test 'should handle user with no restaurant menus' do

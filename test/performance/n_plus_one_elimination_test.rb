@@ -251,6 +251,7 @@ class NPlusOneEliminationTest < ActiveSupport::TestCase
     end
     @test_items&.each(&:destroy)
     @test_menus&.each do |menu|
+      menu.restaurant_menus.destroy_all
       menu.menuavailabilities.destroy_all
       menu.menusections.each do |section|
         section.menuitems.destroy_all

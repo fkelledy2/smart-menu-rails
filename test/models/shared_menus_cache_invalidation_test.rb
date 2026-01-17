@@ -27,9 +27,8 @@ class SharedMenusCacheInvalidationTest < ActiveSupport::TestCase
       status: :active,
     )
 
-    RestaurantMenu.create!(
-      restaurant: @restaurant_a,
-      menu: @menu,
+    owner_rm = RestaurantMenu.find_by!(restaurant: @restaurant_a, menu: @menu)
+    owner_rm.update!(
       status: :active,
       availability_override_enabled: false,
       availability_state: :available,

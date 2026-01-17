@@ -79,7 +79,7 @@ class MenuLocalizationJob
     menu = Menu.find_by(id: menu_id)
     unless menu
       update_progress(status: 'skipped', message: "Menu ##{menu_id} not found", menu_id: menu_id)
-      return { locales_processed: 0, menu_locales_created: 0, errors: [] }
+      return { locales_processed: 0, menu_locales_created: 0, errors: ["Menu ##{menu_id} not found"] }
     end
 
     Rails.logger.info("[MenuLocalizationJob] Localizing menu ##{menu_id} (force: #{force})")

@@ -65,6 +65,8 @@ class MenuPolicy < ApplicationPolicy
   private
 
   def owner?
+    return false unless record
+
     owner_restaurant = record.respond_to?(:owner_restaurant) && record.owner_restaurant.present? ? record.owner_restaurant : record.restaurant
     return false unless user && owner_restaurant
 
@@ -79,6 +81,8 @@ class MenuPolicy < ApplicationPolicy
   end
 
   def authorized_employee?
+    return false unless record
+
     owner_restaurant = record.respond_to?(:owner_restaurant) && record.owner_restaurant.present? ? record.owner_restaurant : record.restaurant
     return false unless user.present? && owner_restaurant
 
@@ -86,6 +90,8 @@ class MenuPolicy < ApplicationPolicy
   end
 
   def employee_admin?
+    return false unless record
+
     owner_restaurant = record.respond_to?(:owner_restaurant) && record.owner_restaurant.present? ? record.owner_restaurant : record.restaurant
     return false unless user.present? && owner_restaurant
 
@@ -93,6 +99,8 @@ class MenuPolicy < ApplicationPolicy
   end
 
   def employee_manager?
+    return false unless record
+
     owner_restaurant = record.respond_to?(:owner_restaurant) && record.owner_restaurant.present? ? record.owner_restaurant : record.restaurant
     return false unless user.present? && owner_restaurant
 

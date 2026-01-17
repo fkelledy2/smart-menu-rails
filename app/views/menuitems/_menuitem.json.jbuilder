@@ -8,7 +8,7 @@ json.sequence menuitem.sequence
 json.preptime menuitem.preptime
 json.calories menuitem.calories
 json.price menuitem.price
-json.alcoholic menuitem.alcoholic
+json.alcoholic menuitem.alcoholic?
 json.abv menuitem.abv
 json.alcohol_classification menuitem.alcohol_classification
 json.alcohol_notes menuitem.alcohol_notes

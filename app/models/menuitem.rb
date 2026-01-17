@@ -221,8 +221,13 @@ class Menuitem < ApplicationRecord
   validates :abv, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }, allow_nil: true
   validate :abv_must_be_nil_or_zero_when_non_alcoholic
 
+  def alcoholic_from_classification?
+    cls = alcohol_classification.to_s.strip.downcase
+    cls.present? && cls != 'non_alcoholic'
+  end
+
   def alcoholic?
-    self[:alcoholic] == true && alcohol_classification != 'non_alcoholic'
+    alcoholic_from_classification?
   end
 
   private

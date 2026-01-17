@@ -84,6 +84,7 @@ class AiMenuPolisherJob
                              else
                                llm_det && llm_det[:classification].presence
                              end
+              chosen_class = chosen_class.presence || 'other'
               chosen_abv = if heur_says == true && det.key?(:abv)
                              det[:abv]
                            else
@@ -103,9 +104,8 @@ class AiMenuPolisherJob
               Rails.logger.warn("[AIMenuPolisherJob] alcohol(#{source})=true item=##{mi.id} name='#{mi.name}' section='#{section.name}' class='#{chosen_class}' abv='#{chosen_abv}'")
               set_progress('running', processed, total_items, menu_id, message: "Alcohol detected (#{source})", extra: { current_item_name: mi.name })
 
-              mi.alcoholic = true
               mi.abv = chosen_abv if !chosen_abv.nil?
-              mi.alcohol_classification = chosen_class if chosen_class.present?
+              mi.alcohol_classification = chosen_class
             else
               # Neither heuristics nor LLM flagged alcoholic; try fallback by section hints
               sec_name = section.name.to_s
@@ -113,10 +113,8 @@ class AiMenuPolisherJob
               if sec_class.present? || sec_name.to_s.downcase.match?(/\b(drinks?|beverages?)\b/)
                 Rails.logger.warn("[AIMenuPolisherJob] alcohol(fallback)=true item=##{mi.id} name='#{mi.name}' section='#{section.name}' class='#{sec_class.presence || 'other'}'")
                 set_progress('running', processed, total_items, menu_id, message: "Alcohol detected (fallback)", extra: { current_item_name: mi.name })
-                mi.alcoholic = true
                 mi.alcohol_classification = (sec_class.presence || 'other')
               else
-                mi.alcoholic = false
                 # keep silence per requirement (log only when alcoholic)
               end
             end

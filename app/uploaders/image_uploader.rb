@@ -11,6 +11,9 @@ class ImageUploader < Shrine
   end
 
   Attacher.promote_block do |attacher|
+    next unless attacher.file
+
+    attacher.atomic_promote
     GenerateImageDerivativesJob.perform_later(attacher.record.class.name, attacher.record.id)
   end
 

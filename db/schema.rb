@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_12_190000) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_17_100300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -406,7 +406,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_12_190000) do
     t.integer "course_order"
     t.boolean "hidden", default: false, null: false
     t.boolean "tasting_carrier", default: false, null: false
-    t.boolean "alcoholic", default: false, null: false
     t.decimal "abv", precision: 5, scale: 2
     t.string "alcohol_classification"
     t.text "alcohol_notes"
@@ -417,7 +416,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_12_190000) do
     t.boolean "sommelier_needs_review", default: false, null: false
     t.index "lower((name)::text) varchar_pattern_ops", name: "index_menuitems_on_lower_name"
     t.index ["alcohol_classification"], name: "index_menuitems_on_alcohol_classification"
-    t.index ["alcoholic"], name: "index_menuitems_on_alcoholic"
     t.index ["archived"], name: "index_menuitems_on_archived"
     t.index ["course_order"], name: "index_menuitems_on_course_order"
     t.index ["created_at"], name: "index_menuitems_on_created_at"

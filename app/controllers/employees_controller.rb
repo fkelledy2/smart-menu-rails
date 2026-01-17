@@ -12,6 +12,8 @@ class EmployeesController < ApplicationController
   def index
     respond_to do |format|
       format.html do
+        policy_scope(Employee)
+
         if params[:restaurant_id]
           @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
 

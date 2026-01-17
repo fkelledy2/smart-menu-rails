@@ -103,7 +103,7 @@ class OrdritemsController < ApplicationController
         if @ordritem.save
           begin
             mi = @ordritem.menuitem
-            if mi && (mi.respond_to?(:alcoholic?) ? mi.alcoholic? : mi.alcoholic)
+            if mi&.alcoholic?
               AlcoholOrderEvent.create!(
                 ordr: @ordritem.ordr,
                 ordritem: @ordritem,

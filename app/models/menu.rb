@@ -5,7 +5,7 @@ class Menu < ApplicationRecord
   # Standard ActiveRecord associations
   belongs_to :restaurant
   belongs_to :owner_restaurant, class_name: 'Restaurant', optional: true
-  has_many :restaurant_menus
+  has_many :restaurant_menus, dependent: :destroy
   has_many :restaurants, through: :restaurant_menus
   has_many :menusections
   has_many :menuavailabilities

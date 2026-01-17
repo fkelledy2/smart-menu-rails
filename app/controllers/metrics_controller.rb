@@ -10,10 +10,12 @@ class MetricsController < ApplicationController
 
   # GET /metrics or /metrics.json
   def index
+    scope = policy_scope(Metric)
+
     # Cache user-scoped metrics list
     @metrics = cache_query(cache_type: :user_analytics, key_parts: ['metrics_list'],
                            force_refresh: force_cache_refresh?,) do
-      policy_scope(Metric).limit(100).to_a
+      scope.limit(100).to_a
     end
   end
 

@@ -92,9 +92,14 @@ class MenuitemsController < ApplicationController
       menuitem_ids_sample: menuitem_ids.first(20),
     }.to_json)
 
-    items = policy_scope(@menu.menuitems).where(id: menuitem_ids)
+    selected_ids = Menuitem.on_primary do
+      Menuitem.joins(:menusection)
+        .where(menusections: { menu_id: @menu.id })
+        .where(id: menuitem_ids)
+        .pluck(:id)
+    end
 
-    if menuitem_ids.blank? || items.blank?
+    if menuitem_ids.blank? || selected_ids.blank?
       Rails.logger.info({
         event: 'menuitems.bulk_update.no_selection',
         user_id: current_user&.id,
@@ -126,43 +131,45 @@ class MenuitemsController < ApplicationController
 
     updated = 0
     archived_ids = []
-    Menuitem.transaction do
-      case operation
-      when 'archive'
-        items.find_each do |item|
-          item.update!(status: :archived, archived: true)
-          archived_ids << item.id
-          updated += 1
-        end
-      when 'set_status'
-        status = value.to_s
-        items.find_each do |item|
-          item.update!(status: status)
-          updated += 1
-        end
-      when 'set_itemtype'
-        itemtype = value.to_s
-        items.find_each do |item|
-          item.update!(itemtype: itemtype)
-          updated += 1
-        end
-      when 'set_alcoholic'
-        bool = ActiveModel::Type::Boolean.new.cast(value)
-        items.find_each do |item|
-          attrs = { alcoholic: bool }
-          if bool
-            if item.alcohol_classification.to_s == 'non_alcoholic'
-              attrs[:alcohol_classification] = 'alcoholic'
-            end
-          else
-            attrs[:alcohol_classification] = 'non_alcoholic'
-            attrs[:abv] = 0
+    Menuitem.on_primary do
+      Menuitem.transaction do
+        items = Menuitem.where(id: selected_ids)
+
+        case operation
+        when 'archive'
+          archived_ids = selected_ids
+          archived_status_value = Menuitem.statuses['archived']
+          updated = items.update_all(status: archived_status_value, archived: true, updated_at: Time.current)
+        when 'set_status'
+          status = value.to_s
+          items.find_each do |item|
+            item.update!(status: status)
+            updated += 1
           end
-          item.update!(attrs)
-          updated += 1
+        when 'set_itemtype'
+          itemtype = value.to_s
+          items.find_each do |item|
+            item.update!(itemtype: itemtype)
+            updated += 1
+          end
+        when 'set_alcoholic'
+          bool = ActiveModel::Type::Boolean.new.cast(value)
+          items.find_each do |item|
+            attrs = {}
+            if bool
+              if item.alcohol_classification.to_s == 'non_alcoholic' || item.alcohol_classification.to_s.strip == ''
+                attrs[:alcohol_classification] = 'other'
+              end
+            else
+              attrs[:alcohol_classification] = 'non_alcoholic'
+              attrs[:abv] = 0
+            end
+            item.update!(attrs)
+            updated += 1
+          end
+        else
+          raise ActiveRecord::Rollback
         end
-      else
-        raise ActiveRecord::Rollback
       end
     end
 
@@ -491,7 +498,7 @@ class MenuitemsController < ApplicationController
                                      :calories, :sequence, :unitcost, :price, :menusection_id, :preptime,
                                      :tasting_optional, :tasting_supplement_cents, :tasting_supplement_currency, :course_order,
                                      :hidden, :tasting_carrier,
-                                     :alcoholic, :abv, :alcohol_classification,
+                                     :abv, :alcohol_classification,
                                      allergyn_ids: [], tag_ids: [], size_ids: [], ingredient_ids: [],)
   end
 end

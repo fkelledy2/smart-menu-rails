@@ -533,32 +533,34 @@ class MenusController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        # Generate QR code for public menu URL (smartmenu slug)
-        if @menu.smartmenu&.slug
-          @qrURL = Rails.application.routes.url_helpers.smartmenu_url(@menu.smartmenu.slug, host: request.host_with_port)
-          @qrURL.sub! 'http', 'https'
-          @qr = RQRCode::QRCode.new(@qrURL)
-        end
+        ActiveRecord::Base.connected_to(role: :writing) do
+          # Generate QR code for public menu URL (smartmenu slug)
+          if @menu.smartmenu&.slug
+            @qrURL = Rails.application.routes.url_helpers.smartmenu_url(@menu.smartmenu.slug, host: request.host_with_port)
+            @qrURL.sub! 'http', 'https'
+            @qr = RQRCode::QRCode.new(@qrURL)
+          end
 
-        # Set current section for 2025 UI
-        @current_section = params[:section] || 'details'
+          # Set current section for 2025 UI
+          @current_section = params[:section] || 'details'
 
-        # 2025 UI is now the default
-        # Provides modern sidebar navigation
-        # Use ?old_ui=true to access legacy UI if needed
-        unless params[:old_ui] == 'true'
-          # Handle Turbo Frame requests for section content
-          if turbo_frame_request_id == 'menu_content'
-            render partial: 'menus/section_frame_2025',
-                   locals: {
-                     menu: @menu,
-                     partial_name: menu_section_partial_name(@current_section),
-                     restaurant: @restaurant || @menu.restaurant,
-                     restaurant_menu: @restaurant_menu,
-                     read_only: @read_only_menu_context,
-                   }
-          else
-            render :edit_2025
+          # 2025 UI is now the default
+          # Provides modern sidebar navigation
+          # Use ?old_ui=true to access legacy UI if needed
+          unless params[:old_ui] == 'true'
+            # Handle Turbo Frame requests for section content
+            if turbo_frame_request_id == 'menu_content'
+              render partial: 'menus/section_frame_2025',
+                     locals: {
+                       menu: @menu,
+                       partial_name: menu_section_partial_name(@current_section),
+                       restaurant: @restaurant || @menu.restaurant,
+                       restaurant_menu: @restaurant_menu,
+                       read_only: @read_only_menu_context,
+                     }
+            else
+              render :edit_2025
+            end
           end
         end
       end
@@ -1044,7 +1046,7 @@ class MenusController < ApplicationController
 
   # Skip policy scope verification for optimized restaurant-specific JSON requests
   def skip_policy_scope?
-    @restaurant.present? && request.format.json? && current_user.present?
+    current_user.blank? || (@restaurant.present? && request.format.json? && current_user.present?)
   end
 
   # Set restaurant from nested route parameter - optimized for fast failure

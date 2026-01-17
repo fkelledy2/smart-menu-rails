@@ -51,9 +51,8 @@ class SharedMenusWorkflowTest < ActionDispatch::IntegrationTest
     get new_restaurant_menu_path(@restaurant_a)
     assert_response :success
 
-    RestaurantMenu.create!(
-      restaurant: @restaurant_a,
-      menu: @menu,
+    owner_rm = RestaurantMenu.find_by!(restaurant: @restaurant_a, menu: @menu)
+    owner_rm.update!(
       status: :active,
       availability_override_enabled: false,
       availability_state: :available,
@@ -137,9 +136,8 @@ class SharedMenusWorkflowTest < ActionDispatch::IntegrationTest
     )
 
     rm_a_1 = RestaurantMenu.find_by!(restaurant_id: @restaurant_a.id, menu_id: @menu.id)
-    rm_a_2 = RestaurantMenu.create!(
-      restaurant: @restaurant_a,
-      menu: menu2,
+    rm_a_2 = RestaurantMenu.find_by!(restaurant_id: @restaurant_a.id, menu_id: menu2.id)
+    rm_a_2.update!(
       status: :active,
       availability_override_enabled: false,
       availability_state: :available,

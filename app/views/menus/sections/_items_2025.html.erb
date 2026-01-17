@@ -456,7 +456,7 @@
 
     itemCells.forEach(cell => {
       // Only add touch handling if the cell has an image tooltip
-      if (cell.querySelector('.item-image-tooltip'))      
+      if (cell.querySelector('.item-image-tooltip')) {
         // Handle touch/click on mobile
         cell.addEventListener('click', function(e) {
           // Don't interfere with edit button clicks
