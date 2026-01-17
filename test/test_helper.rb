@@ -38,7 +38,9 @@ module ActiveSupport
     include ActionDispatch::TestProcess::FixtureFile
 
     def log_in(user)
-      if integration_test?
+      if defined?(ActionDispatch::SystemTestCase) && is_a?(ActionDispatch::SystemTestCase)
+        login_as(user, scope: :user)
+      elsif respond_to?(:integration_test?) && integration_test?
         login_as(user, scope: :user)
       else
         sign_in(user)

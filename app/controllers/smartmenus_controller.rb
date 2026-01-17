@@ -117,26 +117,42 @@ class SmartmenusController < ApplicationController
           Rails.logger.warn("[SmartmenusController#show] failed to eager load order #{ @openOrder&.id }: #{e.class}: #{e.message}")
         end
         if current_user
-          @ordrparticipant = Ordrparticipant.find_or_create_by(
-            ordr: @openOrder,
-            employee: @current_employee,
-            role: 1,
-            sessionid: session.id.to_s,
-          )
-          Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 1) if @ordrparticipant&.id
-        else
-          @ordrparticipant = Ordrparticipant.find_or_create_by(
-            ordr_id: @openOrder.id,
-            role: 0,
-            sessionid: session.id.to_s,
-          )
-          @ordrparticipant.save
-          @menuparticipant = Menuparticipant.find_by(sessionid: session.id.to_s)
-          if @menuparticipant
-            @ordrparticipant.update(preferredlocale: @menuparticipant.preferredlocale)
-            @ordrparticipant.save
+          Ordrparticipant.on_primary do
+            @ordrparticipant = Ordrparticipant.find_or_create_by!(
+              ordr: @openOrder,
+              employee: @current_employee,
+              role: :staff,
+              sessionid: session.id.to_s,
+            )
+            if @ordrparticipant.persisted?
+              begin
+                @ordrparticipant.reload
+                Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: :openorder)
+              rescue ActiveRecord::InvalidForeignKey, ActiveRecord::RecordNotFound => e
+                Rails.logger.warn("[SmartmenusController#show] skipped ordraction create (staff): #{e.class}: #{e.message}")
+              end
+            end
           end
-          Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: 0) if @ordrparticipant&.id
+        else
+          Ordrparticipant.on_primary do
+            @ordrparticipant = Ordrparticipant.find_or_create_by!(
+              ordr: @openOrder,
+              role: :customer,
+              sessionid: session.id.to_s,
+            )
+            @menuparticipant = Menuparticipant.find_by(sessionid: session.id.to_s)
+            if @menuparticipant && @ordrparticipant.preferredlocale != @menuparticipant.preferredlocale
+              @ordrparticipant.update!(preferredlocale: @menuparticipant.preferredlocale)
+            end
+            if @ordrparticipant.persisted?
+              begin
+                @ordrparticipant.reload
+                Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: :participate)
+              rescue ActiveRecord::InvalidForeignKey, ActiveRecord::RecordNotFound => e
+                Rails.logger.warn("[SmartmenusController#show] skipped ordraction create (customer): #{e.class}: #{e.message}")
+              end
+            end
+          end
         end
       end
     end

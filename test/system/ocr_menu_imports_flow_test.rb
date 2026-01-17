@@ -9,7 +9,17 @@ class OcrMenuImportsFlowTest < ApplicationSystemTestCase
     end
 
     # Minimal data graph
-    @restaurant = Restaurant.create!(name: 'Test Resto', slug: 'test-resto')
+    user = User.first
+    @restaurant = Restaurant.create!(
+      name: 'Test Resto',
+      description: 'Test',
+      address1: 'Addr',
+      city: 'City',
+      country: 'US',
+      currency: 'USD',
+      status: :active,
+      user: user,
+    )
     @import = OcrMenuImport.create!(restaurant: @restaurant, name: 'Test Import', status: 'completed')
     @section = OcrMenuSection.create!(ocr_menu_import: @import, name: 'Starters', sequence: 1)
     @item = OcrMenuItem.create!(ocr_menu_section: @section, name: 'Soup', description: 'Tasty', sequence: 1,

@@ -6,6 +6,12 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
 <!-- Quick Info Banner -->
+<div class="alert alert-info d-flex align-items-start gap-2" role="alert" data-testid="import-info-banner">
+  <i class="bi bi-stars mt-1"></i>
+  <div>
+    <strong><%= t('.ai_powered_menu_import', default: 'AI-Powered Menu Import') %></strong>
+  </div>
+</div>
 
 <!-- Upload Form Card -->
 <div class="card" data-testid="import-form-card">
@@ -141,6 +147,17 @@
 </script>
 
 <!-- Tips Card -->
+<div class="card mt-3" data-testid="import-tips-card">
+  <div class="card-body">
+    <h2 class="h5 mb-3">
+      <i class="bi bi-lightbulb"></i>
+      <%= t('.tips_title', default: 'Tips') %>
+    </h2>
+    <div class="text-muted">
+      <%= t('.tips_body', default: 'Upload a clear PDF for best results.') %>
+    </div>
+  </div>
+</div>
 
 <!-- Recent Imports -->
 <% recent_imports = restaurant.ocr_menu_imports.order(created_at: :desc).limit(5) %>
@@ -152,38 +169,42 @@
         <%= t('.recent_imports') %>
       </h2>
 
+    <% bulk_form_id = 'bulk-destroy-ocr-menu-imports-form' %>
+
     <%= form_with url: bulk_destroy_restaurant_ocr_menu_imports_path(restaurant),
         method: :delete,
+        html: { id: bulk_form_id },
         data: { controller: 'localization-bulk', turbo: true, action: 'submit->localization-bulk#beforeSubmit' } do |f| %>
-        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-          <div class="d-flex align-items-center gap-2">
-            <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
-            <span class="text-muted small"><%= t('.select_all') %></span>
-          </div>
+      <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+        <div class="d-flex align-items-center gap-2">
+          <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
+          <span class="text-muted small"><%= t('.select_all') %></span>
+        </div>
 
-          <div class="d-flex align-items-center gap-2 ms-auto">
-            <%= f.hidden_field :confirm, value: '1' %>
-            <div class="dropdown">
-              <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                      disabled
-                      data-localization-bulk-target="submit">
-                <%= t('.actions', default: 'Actions') %>
-              </button>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+          <%= f.hidden_field :confirm, value: '1' %>
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    disabled
+                    data-localization-bulk-target="submit">
+              <%= t('.actions', default: 'Actions') %>
+            </button>
 
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                  <%= f.button t('.delete', default: 'Delete'),
-                      type: 'submit',
-                      class: 'dropdown-item text-danger',
-                      data: { turbo_confirm: t('.confirm_delete') } %>
-                </li>
-              </ul>
-            </div>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <%= f.button t('.delete', default: 'Delete'),
+                    type: 'submit',
+                    class: 'dropdown-item text-danger',
+                    data: { turbo_confirm: t('.confirm_delete') } %>
+              </li>
+            </ul>
           </div>
         </div>
+      </div>
+    <% end %>
 
         <div class="list-group list-group-flush">
           <% recent_imports.each do |import| %>
@@ -195,6 +216,7 @@
                   <input type="checkbox"
                          name="ocr_menu_import_ids[]"
                          value="<%= import.id %>"
+                         form="<%= bulk_form_id %>"
                          data-localization-bulk-target="checkbox"
                          data-action="change->localization-bulk#sync" />
                 </div>
@@ -221,14 +243,25 @@
                     class: 'btn btn-sm btn-outline-secondary',
                     title: t('.view', default: 'View'),
                     aria: { label: t('.view', default: 'View') },
-                    data: { turbo_frame: '_top', row_primary_link: true } do %>
+                    data: { turbo_frame: '_top', row_primary_link: true },
+                    "data-testid": "import-link-#{import.id}" do %>
                   <i class="bi bi-chevron-right"></i>
+                <% end %>
+
+                <%= button_to restaurant_ocr_menu_import_path(restaurant, import),
+                    method: :delete,
+                    class: 'btn btn-sm btn-outline-danger delete-import-btn',
+                    title: t('.delete', default: 'Delete'),
+                    aria: { label: t('.delete', default: 'Delete') },
+                    form: { data: { turbo_frame: '_top' } },
+                    data: { turbo_confirm: t('.confirm_delete', default: 'Are you sure?') },
+                    "data-testid": "delete-import-#{import.id}" do %>
+                  <i class="bi bi-trash"></i>
                 <% end %>
               </div>
             </div>
           <% end %>
         </div>
-    <% end %>
     </div>
   </div>
 <% end %>

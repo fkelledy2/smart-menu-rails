@@ -1,11 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  locale: MyString
-  status: 0
+  locale: en
+  status: 1
+  dfault: true
   restaurant: one
 
 two:
-  locale: MyString
+  locale: it
   status: 1
+  dfault: true
   restaurant: two

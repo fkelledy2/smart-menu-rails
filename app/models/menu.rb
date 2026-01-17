@@ -15,7 +15,7 @@ class Menu < ApplicationRecord
   has_many :allergyns, -> { distinct }, through: :menuitem_allergyn_mappings
   has_many :menulocales
   has_one :genimage, dependent: :destroy
-  has_one :smartmenu, dependent: :destroy
+  has_many :smartmenus, dependent: :destroy
   has_one_attached :pdf_menu_scan
 
   # Validations
@@ -78,6 +78,10 @@ class Menu < ApplicationRecord
     else
       ''
     end
+  end
+
+  def smartmenu
+    smartmenus.where(tablesetting_id: nil).first
   end
 
   def localised_name(locale)

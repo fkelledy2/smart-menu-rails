@@ -183,11 +183,11 @@ export default class extends Controller {
       }
 
       // Totals row (nett) — include test id to match server-rendered markup for tests
-      if (typeof totals?.nett !== 'undefined') {
+      if (typeof totals?.gross !== 'undefined') {
         html += row(
           col(8, '') +
           col(2, '<b>Total:</b>') +
-          col(2, `<span class="float-end" data-testid="order-total-amount"><b>${price(totals.nett)}</b></span>`)
+          col(2, `<span class="float-end" data-testid="order-total-amount"><b>${price(totals.gross)}</b></span>`)
         );
       }
 

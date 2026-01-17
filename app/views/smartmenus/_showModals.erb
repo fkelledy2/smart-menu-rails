@@ -242,7 +242,12 @@
                         <b><%= t(".total")%>:</b>
                     </div>
                     <div class="col-2">
-                        <span class="float-end" data-testid="order-total-amount"><b><%= number_to_currency(order.nett, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></b></span>
+                        <% order_total = begin
+                          order.ordritems.sum(:ordritemprice)
+                        rescue StandardError
+                          order.nett
+                        end %>
+                        <span class="float-end" data-testid="order-total-amount"><b><%= number_to_currency(order_total, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></b></span>
                     </div>
                 </div>
             <% end %>

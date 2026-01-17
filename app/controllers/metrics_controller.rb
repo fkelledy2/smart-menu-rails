@@ -27,6 +27,8 @@ class MetricsController < ApplicationController
       authorize metric
       metric
     end
+
+    authorize @metric
   end
 
   # GET /metrics/new

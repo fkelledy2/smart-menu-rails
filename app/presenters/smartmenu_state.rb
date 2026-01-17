@@ -124,13 +124,36 @@ class SmartmenuState
   def self.totals_for(order, restaurant)
     return nil unless order && restaurant
     currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
+
+    nett = order.nett.to_f
+    tax = order.tax.to_f
+    service = order.service.to_f
+    covercharge = order.covercharge.to_f
+    tip = order.tip.to_f
+    gross = order.gross.to_f
+
+    if gross <= 0
+      begin
+        items_total = if order.respond_to?(:ordritems)
+                        order.ordritems.sum(:ordritemprice).to_f
+                      else
+                        0.0
+                      end
+        if items_total.positive?
+          nett = items_total
+          gross = items_total
+        end
+      rescue StandardError
+        nil
+      end
+    end
     {
-      nett: order.nett.to_f,
-      tax: order.tax.to_f,
-      service: order.service.to_f,
-      covercharge: order.covercharge.to_f,
-      tip: order.tip.to_f,
-      gross: order.gross.to_f,
+      nett: nett,
+      tax: tax,
+      service: service,
+      covercharge: covercharge,
+      tip: tip,
+      gross: gross,
       currency: {
         code: currency.code,
         symbol: currency.symbol.to_s
