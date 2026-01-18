@@ -130,7 +130,11 @@ class Ordr < ApplicationRecord
   end
 
   def orderedItemsCount
-    ordritems.where(status: 20).count
+    if association(:ordritems).loaded?
+      ordritems.count { |it| it.status.to_s == 'ordered' }
+    else
+      ordritems.where(status: 20).count
+    end
   end
 
   def preparedItems
@@ -138,11 +142,19 @@ class Ordr < ApplicationRecord
   end
 
   def preparedItemsCount
-    ordritems.where(status: 22).count
+    if association(:ordritems).loaded?
+      ordritems.count { |it| it.status.to_s == 'preparing' }
+    else
+      ordritems.where(status: 22).count
+    end
   end
 
   def totalItemsCount
-    ordritems.where(status: [0, 20, 22, 24, 25]).count
+    if association(:ordritems).loaded?
+      ordritems.count { |it| %w[opened ordered preparing ready delivered].include?(it.status.to_s) }
+    else
+      ordritems.where(status: [0, 20, 22, 24, 25]).count
+    end
   end
 
   def deliveredItems
@@ -150,7 +162,11 @@ class Ordr < ApplicationRecord
   end
 
   def deliveredItemsCount
-    ordritems.where(status: 25).count
+    if association(:ordritems).loaded?
+      ordritems.count { |it| it.status.to_s == 'delivered' }
+    else
+      ordritems.where(status: 25).count
+    end
   end
 
   def ordrDate
@@ -166,11 +182,23 @@ class Ordr < ApplicationRecord
   end
 
   def orderedCount
-    ordractions.joins(:ordritem).where(ordritems: { status: [20, 22, 24, 25] }).count
+    if association(:ordritems).loaded?
+      ordritems.count { |it| %w[ordered preparing ready delivered].include?(it.status.to_s) }
+    elsif association(:ordractions).loaded?
+      ordractions.map(&:ordritem).compact.count { |it| %w[ordered preparing ready delivered].include?(it.status.to_s) }
+    else
+      ordractions.joins(:ordritem).where(ordritems: { status: [20, 22, 24, 25] }).count
+    end
   end
 
   def addedCount
-    ordractions.joins(:ordritem).where(ordritems: { status: 0 }).count
+    if association(:ordritems).loaded?
+      ordritems.count { |it| it.status.to_s == 'opened' }
+    elsif association(:ordractions).loaded?
+      ordractions.map(&:ordritem).compact.count { |it| it.status.to_s == 'opened' }
+    else
+      ordractions.joins(:ordritem).where(ordritems: { status: 0 }).count
+    end
   end
 
   private

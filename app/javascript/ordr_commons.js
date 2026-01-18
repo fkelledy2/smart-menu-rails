@@ -1,5 +1,7 @@
 // Common order helpers shared by ordrs.js and channels/ordr_channel.js
 
+import $ from 'jquery';
+
 // Fetch the Smartmenu JSON state and dispatch it to the store
 function fetchAndDispatchState() {
   try {

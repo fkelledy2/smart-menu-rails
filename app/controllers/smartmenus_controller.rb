@@ -32,16 +32,9 @@ class SmartmenusController < ApplicationController
     # The header fragment cache key previously ignored newly created Smartmenus/Tablesettings,
     # causing stale table dropdown contents (e.g., missing newly added tables).
     begin
-      latest_smartmenu_update = Smartmenu.where(
-        restaurant_id: @restaurant&.id,
-        menu_id: @menu&.id,
-      ).maximum(:updated_at)
-
-      latest_tablesetting_update = Tablesetting.where(
-        restaurant_id: @restaurant&.id,
-      ).maximum(:updated_at)
-
-      @header_cache_buster = [latest_smartmenu_update, latest_tablesetting_update].compact.max
+      # Smartmenu and Tablesetting both touch restaurant, so restaurant.updated_at reflects
+      # changes that should invalidate the header cache without needing per-request MAX() queries.
+      @header_cache_buster = @restaurant&.updated_at
     rescue => e
       Rails.logger.warn("[SmartmenusController#show] header cache buster error: #{e.class}: #{e.message}")
       @header_cache_buster = nil
@@ -54,6 +47,28 @@ class SmartmenusController < ApplicationController
     # Force customer view if query parameter is present
     # Allows staff to preview menu as customers see it
     @force_customer_view = params[:view] == 'customer'
+
+    begin
+      @table_smartmenus = if @restaurant&.id && @menu&.id
+                            Smartmenu.includes(:tablesetting)
+                                     .where(restaurant_id: @restaurant.id, menu_id: @menu.id)
+                                     .order(:id)
+                                     .to_a
+                          else
+                            []
+                          end
+    rescue StandardError
+      @table_smartmenus = []
+    end
+
+    begin
+      restaurantlocales = Array(@restaurant&.restaurantlocales)
+      @active_locales = restaurantlocales.select { |rl| rl.status.to_s == 'active' }
+      @default_locale = @active_locales.find { |rl| rl.dfault == true }
+    rescue StandardError
+      @active_locales = []
+      @default_locale = nil
+    end
 
     # Allergens must be those actually used by items in this menu
     allergyns_relation = @menu.allergyns
@@ -127,6 +142,7 @@ class SmartmenusController < ApplicationController
             if @ordrparticipant.persisted?
               begin
                 @ordrparticipant.reload
+                @ordrparticipant = Ordrparticipant.includes(:ordrparticipant_allergyn_filters).find(@ordrparticipant.id)
                 Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: :openorder)
               rescue ActiveRecord::InvalidForeignKey, ActiveRecord::RecordNotFound => e
                 Rails.logger.warn("[SmartmenusController#show] skipped ordraction create (staff): #{e.class}: #{e.message}")
@@ -147,6 +163,7 @@ class SmartmenusController < ApplicationController
             if @ordrparticipant.persisted?
               begin
                 @ordrparticipant.reload
+                @ordrparticipant = Ordrparticipant.includes(:ordrparticipant_allergyn_filters).find(@ordrparticipant.id)
                 Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: :participate)
               rescue ActiveRecord::InvalidForeignKey, ActiveRecord::RecordNotFound => e
                 Rails.logger.warn("[SmartmenusController#show] skipped ordraction create (customer): #{e.class}: #{e.message}")
@@ -155,6 +172,12 @@ class SmartmenusController < ApplicationController
           end
         end
       end
+    end
+
+    begin
+      @needs_age_check = !!(@openOrder && AlcoholOrderEvent.where(ordr_id: @openOrder.id, age_check_acknowledged: false).exists?)
+    rescue StandardError
+      @needs_age_check = false
     end
 
     @menuparticipant = Menuparticipant.find_or_create_by(sessionid: session.id.to_s) do |mp|
@@ -305,9 +328,9 @@ class SmartmenusController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_smartmenu
     @smartmenu = Smartmenu.where(slug: params[:id]).includes(
-      :restaurant,
       :tablesetting,
-      menu: [restaurant: %i[user restaurantlocales]],
+      restaurant: %i[user restaurantlocales tips alcohol_policy],
+      menu: [restaurant: %i[user restaurantlocales tips alcohol_policy]],
     ).first
     if @smartmenu
       @restaurant = @smartmenu.restaurant
@@ -327,18 +350,15 @@ class SmartmenusController < ApplicationController
     # This loads all associations needed for rendering the smartmenu view
     # Only load active menu items for public-facing smart menu
     @menu = Menu.includes(
-      { restaurant: :restaurantlocales },
+      { restaurant: %i[restaurantlocales tips alcohol_policy] },
       :menulocales,
       :menuavailabilities,
       menusections: [
         :menusectionlocales,
-        { menuitems: %i[
-          menuitemlocales
-          allergyns
-          ingredients
-          sizes
-          menuitem_allergyn_mappings
-          menuitem_ingredient_mappings
+        { menuitems: [
+          :menuitemlocales,
+          :allergyns,
+          { menuitem_size_mappings: :size },
         ] },
       ],
     ).find(@menu.id)

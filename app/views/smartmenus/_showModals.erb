@@ -93,7 +93,7 @@
                         <div class="form-group row">
                             <div class="col-8">
                                 <div style="max-height: 60vh; overflow-y: auto; padding-right: 8px;">
-                                    <%= form.collection_check_boxes :allergyn_ids, Allergyn.where(restaurant_id: restaurant.id), :id, :name, { hide_label: true } do |b| %>
+                                    <%= form.collection_check_boxes :allergyn_ids, allergyns, :id, :name, { hide_label: true } do |b| %>
                                         <div class="form-check">
                                             <%= b.check_box %>
                                             <label class="form-check-label">
@@ -148,7 +148,7 @@
                             <hr>
                         </div>
                     </div>
-                    <% order.ordractions.includes([:ordritem]).each do |ordraction| %>
+                    <% order.ordractions.each do |ordraction| %>
                         <% if ordraction.ordritem && ordraction.ordritem.status == 'opened' && ordraction.ordritem.in?(order.ordritems) %>
                             <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row" data-testid="order-item-<%= ordraction.ordritem.id %>">
                                 <div class="col-8">
@@ -197,7 +197,7 @@
                             <hr>
                         </div>
                     </div>
-                    <% order.ordractions.includes([:ordritem]).each do |ordraction| %>
+                    <% order.ordractions.each do |ordraction| %>
                         <% if ordraction.ordritem && (ordraction.ordritem.status == 'ordered' || ordraction.ordritem.status == 'preparing' || ordraction.ordritem.status == 'ready'  || ordraction.ordritem.status == 'delivered') && ordraction.ordritem.in?(order.ordritems) %>
                             <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
                                 <div class="col-8">
@@ -243,7 +243,7 @@
                     </div>
                     <div class="col-2">
                         <% order_total = begin
-                          order.ordritems.sum(:ordritemprice)
+                          order.ordritems.sum { |it| it.ordritemprice.to_f }
                         rescue StandardError
                           order.nett
                         end %>
@@ -442,7 +442,7 @@
                                         <span class="float-end">
                                             <div style="position:relative;left:15px" class="btn-toolbar btn-toolbar-sm mb-3" role="toolbar" aria-label="<%= t('.tip_options') %>">
                                                 <div class="btn-group btn-group-sm mr-2" role="group" aria-label="First group">
-                                                    <% order.menu.restaurant.tips.sort_by(&:percentage).each do |tip| %>
+                                                    <% restaurant.tips.sort_by(&:percentage).each do |tip| %>
                                                         <button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset"><%= tip.percentage %></span>%</button>
                                                     <% end %>
                                                     <input id="tipNumberField" style="width:80px" type="number" min="0.00" max="<%= number_to_currency(order.gross, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>" class="form-control float-end text-end" id="tip" value="0.00">

@@ -1,5 +1,7 @@
 import consumer from './consumer';
 import { post as commonsPost, patch as commonsPatch, getCurrentOrderId as commonsGetCurrentOrderId, getCurrentTableId as commonsGetCurrentTableId, getCurrentMenuId as commonsGetCurrentMenuId, initOrderBindings as commonsInitOrderBindings } from '../ordr_commons';
+import $ from 'jquery';
+import * as bootstrap from 'bootstrap';
 
 function post(url, body) {
   return commonsPost(url, body);

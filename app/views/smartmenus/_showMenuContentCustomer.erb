@@ -1,6 +1,6 @@
     <div class="row">
         <div class="col-12 col-md-12 col-lg-12 scrollspy-example" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" tabindex="0" data-testid="menu-sections-container">
-            <% menu.menusections.order(:sequence).each do |menusection| %>
+            <% menu.menusections.sort_by { |s| s.sequence.to_i }.each do |menusection| %>
                 <div class="padding-top-lg" id="menusection_<%= menusection.id %>" data-testid="menu-section-<%= menusection.id %>"></div>
                 <% if menu.displayImages == true && menu.restaurant.displayImages == true %>
                     <% if menusection.image %>
@@ -85,8 +85,8 @@
                 <% end %>
                 <% if menusection.tasting_menu? %>
                   <% 
-                    section_items = menusection.menuitems.where(status: 'active').order(:sequence)
-                    carrier = Menuitem.where(menusection_id: menusection.id, tasting_carrier: true).first
+                    section_items = menusection.menuitems.sort_by { |it| it.sequence.to_i }
+                    carrier = section_items.find(&:tasting_carrier?)
                     tasting_meta = {
                       section_id: menusection.id,
                       section_name: menusection.name,
@@ -95,13 +95,13 @@
                       allow_pairing: menusection.allow_pairing,
                       pairing_price_cents: menusection.pairing_price_cents.to_i,
                       carrier_id: carrier&.id,
-                      items: section_items.map { |it| { id: it.id, name: it.name, optional: it.tasting_optional, supplement_cents: it.tasting_supplement_cents.to_i } }
+                      items: section_items.reject(&:hidden).map { |it| { id: it.id, name: it.name, optional: it.tasting_optional, supplement_cents: it.tasting_supplement_cents.to_i } }
                     }
                   %>
                   <div class="card border-secondary mt-2">
                     <div class="card-body p-2">
                       <div class="row opacity-75 pointer-events-none" aria-disabled="true" title="Courses are part of the tasting menu bundle and cannot be added individually">
-                        <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).where(status: 'active').order(:sequence).each do |mi| %>
+                        <% menusection.menuitems.sort_by { |it| it.sequence.to_i }.each do |mi| %>
                           <% next if mi.tasting_carrier || mi.hidden %>
                           <% if ordrparticipant == nil || ordrparticipant && (ordrparticipant.allergyns & mi.allergyns).empty? %>
                             <%= render partial: "smartmenus/showMenuitemHorizontal", locals: { order: order, menu: menu, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, mi: mi, restaurantCurrency: restaurantCurrency, tablesetting: tablesetting, hide_add_button: true } %>
@@ -113,7 +113,7 @@
                   </div>
                 <% else %>
                   <div class="row" data-testid="menu-items-row-<%= menusection.id %>">
-                    <% menusection.menuitems.includes([:allergyns,:menuitem_size_mappings]).where(status: 'active').order(:sequence).each do |mi| %>
+                    <% menusection.menuitems.sort_by { |it| it.sequence.to_i }.each do |mi| %>
                       <% if ordrparticipant == nil || ordrparticipant && (ordrparticipant.allergyns & mi.allergyns).empty? %>
                         <%= render partial: "smartmenus/showMenuitemHorizontal", locals: { order: order, menu: menu, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, mi: mi, restaurantCurrency: restaurantCurrency, tablesetting: tablesetting } %>
                       <% end %>

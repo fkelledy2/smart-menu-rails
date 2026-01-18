@@ -2,7 +2,7 @@ class Smartmenu < ApplicationRecord
   include IdentityCache
 
   # Standard ActiveRecord associations
-  belongs_to :restaurant
+  belongs_to :restaurant, touch: true
   belongs_to :menu, optional: true
   belongs_to :tablesetting, optional: true
 

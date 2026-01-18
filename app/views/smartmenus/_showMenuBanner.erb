@@ -10,9 +10,9 @@
     
     <div class="locale-selector" id="tableLocaleSelectorContainer">
       <% if current_user %>
-        <%= render partial: "showTableLocaleSelectorStaff", locals: { menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+        <%= render partial: "showTableLocaleSelectorStaff", locals: { menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, table_smartmenus: @table_smartmenus } %>
       <% else %>
-        <%= render partial: "showTableLocaleSelectorCustomer", locals: { menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+        <%= render partial: "showTableLocaleSelectorCustomer", locals: { menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, table_smartmenus: @table_smartmenus, active_locales: @active_locales, default_locale: @default_locale } %>
       <% end %>
     </div>
   <noscript>
@@ -27,13 +27,13 @@
   <div class="header-order-row" id="openOrderContainer" data-controller="order-header" style="visibility:hidden">
     <% if @openOrder %>
       <% if current_user %>
-        <%= render partial: "orderStaff", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+        <%= render partial: "orderStaff", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, needs_age_check: @needs_age_check } %>
       <% else %>
         <%= render partial: "orderCustomer", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
       <% end %>
     <% else %>
       <% if current_user %>
-        <%= render partial: "orderStaff", locals: { order: nil, menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
+        <%= render partial: "orderStaff", locals: { order: nil, menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, needs_age_check: @needs_age_check } %>
       <% else %>
         <%= render partial: "orderCustomer", locals: { order: nil, menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
       <% end %>
@@ -79,7 +79,7 @@
     <!-- Section Tabs -->
     <div class="sections-tabs-container">
       <nav id="navbar-example2" class="sections-tabs">
-        <% @menu.menusections.order(:sequence).each do |menusection| %>
+        <% @menu.menusections.sort_by { |s| s.sequence.to_i }.each do |menusection| %>
           <a class="section-tab sectionnav" href="#menusection_<%= menusection.id %>">
             <% if @ordrparticipant && @ordrparticipant.preferredlocale %>
               <%= menusection.localised_name(@ordrparticipant.preferredlocale) %>

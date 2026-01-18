@@ -107,14 +107,23 @@ class Restaurant < ApplicationRecord
   end
 
   def defaultLocale
-    Restaurantlocale.where(restaurant_id: id, status: 'active', dfault: true).first
+    if association(:restaurantlocales).loaded?
+      restaurantlocales.find { |rl| rl.status.to_s == 'active' && rl.dfault == true }
+    else
+      Restaurantlocale.where(restaurant_id: id, status: 'active', dfault: true).first
+    end
   end
 
   def getLocale(locale)
-    # Case-insensitive lookup to handle both 'it' and 'IT'
-    Restaurantlocale.where(restaurant_id: id, status: 'active')
-                    .where('LOWER(locale) = ?', locale.to_s.downcase)
-                    .first
+    requested = locale.to_s.downcase
+    if association(:restaurantlocales).loaded?
+      restaurantlocales.find { |rl| rl.status.to_s == 'active' && rl.locale.to_s.downcase == requested }
+    else
+      # Case-insensitive lookup to handle both 'it' and 'IT'
+      Restaurantlocale.where(restaurant_id: id, status: 'active')
+                      .where('LOWER(locale) = ?', requested)
+                      .first
+    end
   end
 
   validates :name, presence: true

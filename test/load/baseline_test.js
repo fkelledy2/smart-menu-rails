@@ -31,7 +31,10 @@ export const options = {
   stages: LOAD_PATTERNS.baseline,
   thresholds: THRESHOLDS,
   
-  // Additional options
+  noCookiesReset: true,
+
+  summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
+  
   userAgent: 'k6-load-test/1.0',
   insecureSkipTLSVerify: true, // For local testing
   

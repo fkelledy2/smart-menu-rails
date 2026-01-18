@@ -35,7 +35,7 @@
                                         <i class="bi bi-receipt"></i>
                                         <%= t(".bill") %>
                                     </button>
-                                    <% if AlcoholOrderEvent.where(ordr_id: order.id, age_check_acknowledged: false).exists? %>
+                                    <% if needs_age_check %>
                                       <% return_to_path = (defined?(smartmenu) && smartmenu.present?) ? smartmenu_path(smartmenu) : nil %>
                                       <%= button_to ack_alcohol_restaurant_ordr_path(restaurant, order, return_to: return_to_path),
                                           method: :post,

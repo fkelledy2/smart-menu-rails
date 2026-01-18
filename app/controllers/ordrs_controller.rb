@@ -536,8 +536,40 @@ class OrdrsController < ApplicationController
 
     # Allergyns already loaded via restaurant association
     allergyns = restaurant.allergyns
+
+    table_smartmenus = begin
+      if restaurant&.id && menu&.id
+        Smartmenu.includes(:tablesetting)
+          .where(restaurant_id: restaurant.id, menu_id: menu.id)
+          .order(:id)
+          .to_a
+      else
+        []
+      end
+    rescue StandardError
+      []
+    end
+
+    active_locales = []
+    default_locale = nil
+    begin
+      restaurantlocales = Array(restaurant&.restaurantlocales)
+      active_locales = restaurantlocales.select { |rl| rl.status.to_s == 'active' }
+      default_locale = active_locales.find { |rl| rl.dfault == true }
+    rescue StandardError
+      active_locales = []
+      default_locale = nil
+    end
+
     restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
     ordrparticipant.preferredlocale = menuparticipant.preferredlocale if menuparticipant&.preferredlocale
+
+    needs_age_check = false
+    begin
+      needs_age_check = !!(ordr && AlcoholOrderEvent.where(ordr_id: ordr.id, age_check_acknowledged: false).exists?)
+    rescue StandardError
+      needs_age_check = false
+    end
 
     # Determine locale to render with
     render_locale = (
@@ -580,6 +612,7 @@ class OrdrsController < ApplicationController
               order: ordr,
               menu: menu,
               restaurant: restaurant,
+              allergyns: allergyns,
               ordrparticipant: ordrparticipant,
               tablesetting: tablesetting,
               menuparticipant: menuparticipant,
@@ -663,6 +696,7 @@ class OrdrsController < ApplicationController
             tablesetting: tablesetting,
             ordrparticipant: ordrparticipant,
             smartmenu: smartmenu,
+            needs_age_check: needs_age_check,
           },
         ),
       ),
@@ -675,6 +709,7 @@ class OrdrsController < ApplicationController
             tablesetting: tablesetting,
             ordrparticipant: ordrparticipant,
             menuparticipant: menuparticipant,
+            table_smartmenus: table_smartmenus,
           },
         ),
       ),
@@ -687,6 +722,9 @@ class OrdrsController < ApplicationController
             tablesetting: tablesetting,
             ordrparticipant: ordrparticipant,
             menuparticipant: menuparticipant,
+            table_smartmenus: table_smartmenus,
+            active_locales: active_locales,
+            default_locale: default_locale,
           },
         ),
       ),

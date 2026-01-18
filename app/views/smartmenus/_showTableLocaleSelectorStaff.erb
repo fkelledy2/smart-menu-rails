@@ -12,7 +12,7 @@
                 <input id="table-selector-search" type="text" class="form-control form-control-sm bg-dark text-white border-secondary" style="background-color: var(--bs-dropdown-bg); color: var(--bs-dropdown-color); border-color: var(--bs-dropdown-divider-bg); --bs-secondary-color: #ffffff;" placeholder="<%= t('smartmenus.find_table', default: 'Find table') %>" aria-label="Search tables">
             </div>
         </li>
-        <% Smartmenu.where( restaurant_id: restaurant.id, menu_id: menu.id ).includes([:tablesetting]).order('id ASC').each do |smartmenu| %>
+        <% Array(table_smartmenus).each do |smartmenu| %>
             <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
                 <li>
                     <%= link_to smartmenu_path(smartmenu.slug), data: { turbo: false }, class: "dropdown-item min-h-44 d-flex align-items-center py-2 px-3", 'data-filter-text': smartmenu.tablesetting.name do %>

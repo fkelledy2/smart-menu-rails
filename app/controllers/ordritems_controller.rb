@@ -245,6 +245,31 @@ class OrdritemsController < ApplicationController
     restaurant = menu.restaurant
     menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
     allergyns = Allergyn.where(restaurant_id: restaurant.id)
+
+    table_smartmenus = begin
+      if restaurant&.id && menu&.id
+        Smartmenu.includes(:tablesetting)
+          .where(restaurant_id: restaurant.id, menu_id: menu.id)
+          .order(:id)
+          .to_a
+      else
+        []
+      end
+    rescue StandardError
+      []
+    end
+
+    active_locales = []
+    default_locale = nil
+    begin
+      restaurantlocales = Array(restaurant&.restaurantlocales)
+      active_locales = restaurantlocales.select { |rl| rl.status.to_s == 'active' }
+      default_locale = active_locales.find { |rl| rl.dfault == true }
+    rescue StandardError
+      active_locales = []
+      default_locale = nil
+    end
+
     restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
     full_refresh = ordr.status == 'closed'
     ordrparticipant.preferredlocale = menuparticipant.preferredlocale if menuparticipant
@@ -293,6 +318,7 @@ class OrdritemsController < ApplicationController
               order: ordr,
               menu: menu,
               restaurant: restaurant,
+              allergyns: allergyns,
               ordrparticipant: ordrparticipant,
               tablesetting: tablesetting,
               menuparticipant: menuparticipant,
@@ -362,6 +388,7 @@ class OrdritemsController < ApplicationController
               tablesetting: tablesetting,
               ordrparticipant: ordrparticipant,
               menuparticipant: menuparticipant,
+              table_smartmenus: table_smartmenus,
             },
           ),
         ),
@@ -374,6 +401,9 @@ class OrdritemsController < ApplicationController
               tablesetting: tablesetting,
               ordrparticipant: customer_ordrparticipant,
               menuparticipant: menuparticipant,
+              table_smartmenus: table_smartmenus,
+              active_locales: active_locales,
+              default_locale: default_locale,
             },
           ),
         ),

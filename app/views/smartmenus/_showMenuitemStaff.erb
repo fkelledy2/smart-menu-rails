@@ -1,6 +1,6 @@
  <div class="col-6 col-md-4 col-lg-4 menu-item-card" data-name="<%= menuitem.name.to_s.downcase %>" data-description="<%= menuitem.description.to_s.downcase %>" data-testid="menu-item-<%= menuitem.id %>">
-    <div class="card">
-        <% if !order || ( order.status != 'billrequested' && order.status != 'closed' ) %>
+   <div class="card">
+       <% if !order || ( order.status != 'billrequested' && order.status != 'closed' ) %>
                             <div class="d-grid gap-2">
                                 <div class="btn-group min-h-100">
                                     <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
@@ -15,14 +15,14 @@
                                                 data-testid="add-item-btn-<%= menuitem.id %>">
                                                     <%= menuitem.name %>
                                     </button>
-                                    <% if menuitem.menuitem_size_mappings.count > 0 %>
+                                    <% if menuitem.menuitem_size_mappings.any? %>
                                         <button type="button" class="addItemToOrder btn btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split max-w-50px" data-bs-toggle="dropdown" aria-expanded="false"
                                                             data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
                                                             data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>">
                                             <span class="visually-hidden">Toggle Dropdown</span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <% menuitem.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
+                                            <% menuitem.menuitem_size_mappings.each do |menuitemsize| %>
                                                 <li>
                                                     <a class="dropdown-item" href="#">
                                                         <button type="button" class="addItemToOrder pos-rel bottom-neg-12 br-8-0-8-0 btn-reset" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
@@ -49,12 +49,12 @@
                             <button class="btn btn-sm btn-dark" disabled>
                                 <%= menuitem.name %>
                             </button>
-                            <% if menuitem.menuitem_size_mappings.count > 0 %>
+                            <% if menuitem.menuitem_size_mappings.any? %>
                                 <button class="btn btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split max-w-50px" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                                     <span class="visually-hidden">Toggle Dropdown</span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <% menuitem.menuitem_size_mappings.includes([:size]).each do |menuitemsize| %>
+                                    <% menuitem.menuitem_size_mappings.each do |menuitemsize| %>
                                         <li>
                                             <a class="dropdown-item" href="#">
                                                 <button class="btn-reset" disabled>

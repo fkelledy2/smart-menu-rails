@@ -2,7 +2,7 @@ class Tablesetting < ApplicationRecord
   include IdentityCache
 
   # Standard ActiveRecord associations
-  belongs_to :restaurant
+  belongs_to :restaurant, touch: true
 
   # Enums
   enum :status, {

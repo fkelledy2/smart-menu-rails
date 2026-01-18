@@ -17,7 +17,10 @@ class LocalizeMenuService
                 item_locales_created: 0, item_locales_updated: 0, 
                 rate_limited_items: [], errors: [], }
 
-      restaurant.restaurantlocales.active.find_each do |restaurant_locale|
+      restaurant_locales = restaurant.restaurantlocales.active.order(dfault: :desc, id: :asc).to_a
+      restaurant_locales = restaurant_locales.uniq { |rl| rl.locale.to_s.upcase }
+
+      restaurant_locales.each do |restaurant_locale|
         locale_stats = localize_menu_to_locale(menu, restaurant_locale, force: force, &on_item)
         stats[:locales_processed] += 1
         stats[:menu_locales_created] += locale_stats[:menu_locales_created]
@@ -96,7 +99,7 @@ class LocalizeMenuService
     # @param force [Boolean] If true, re-translate all strings. If false, only translate missing localizations.
     # @return [Hash] Statistics about this specific localization
     def localize_menu_to_locale(menu, restaurant_locale, force: false, &on_item)
-      locale_code = restaurant_locale.locale
+      locale_code = restaurant_locale.locale.to_s.upcase
       is_default = restaurant_locale.dfault
       stats = { menu_locales_created: 0, menu_locales_updated: 0,
                 section_locales_created: 0, section_locales_updated: 0,
@@ -170,7 +173,7 @@ class LocalizeMenuService
 
     # Localize a menu section to a specific locale
     def localize_section_to_locale(section, restaurant_locale, force: false, &on_item)
-      locale_code = restaurant_locale.locale
+      locale_code = restaurant_locale.locale.to_s.upcase
       is_default = restaurant_locale.dfault
       stats = { section_locales_created: 0, section_locales_updated: 0,
                 item_locales_created: 0, item_locales_updated: 0,
@@ -238,7 +241,7 @@ class LocalizeMenuService
 
     # Localize a menu item to a specific locale
     def localize_item_to_locale(item, restaurant_locale, force: false, &on_item)
-      locale_code = restaurant_locale.locale
+      locale_code = restaurant_locale.locale.to_s.upcase
       is_default = restaurant_locale.dfault
       stats = { item_locales_created: 0, item_locales_updated: 0, rate_limited_items: [] }
 

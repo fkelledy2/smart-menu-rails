@@ -66,7 +66,8 @@
         <% end %>
     <% else %>
         <% participant_locale = (@ordrparticipant&.preferredlocale || @menuparticipant&.preferredlocale).to_s.downcase.presence %>
-        <% cache_key = [@smartmenu, @menu, @allergyns.maximum(:updated_at), @openOrder&.updated_at, I18n.locale, participant_locale, show_customer_view ? 'customer' : 'staff'] %>
+        <% allergyns_updated_at = @allergyns.map(&:updated_at).compact.max %>
+        <% cache_key = [@smartmenu, @menu, allergyns_updated_at, I18n.locale, participant_locale, show_customer_view ? 'customer' : 'staff'] %>
         <% cache cache_key, expires_in: 30.minutes do %>
         <% if show_customer_view %>
             <%= render partial: "smartmenus/showMenuContentCustomer", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, tablesetting: @tablesetting } %>

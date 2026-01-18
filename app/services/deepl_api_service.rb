@@ -11,13 +11,18 @@ class DeeplApiService
   class MissingApiKeyError < StandardError; end
 
   def self.api_key
-    key = Rails.application.credentials.dig(:deepl, :api_key) || ENV['DEEPL_API_KEY']
-    key = TEST_API_KEY if key.to_s.strip == '' && Rails.env.test?
-    key.to_s.strip
+    (Rails.application.credentials.dig(:deepl, :api_key) || ENV['DEEPL_API_KEY']).to_s.strip
+  end
+
+  def self.api_key_with_test_fallback
+    key = api_key
+    return TEST_API_KEY if key.blank? && Rails.env.test?
+
+    key
   end
 
   def self.configured?
-    api_key.present?
+    api_key_with_test_fallback.present?
   end
 
   def self.translate(text, to: 'FR', from: 'EN')

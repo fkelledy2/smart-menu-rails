@@ -9,13 +9,13 @@ export const BASE_URL = __ENV.BASE_URL || 'http://localhost:3000';
 // Test data
 export const TEST_DATA = {
   // Sample restaurant ID (update with actual test data)
-  restaurantId: __ENV.RESTAURANT_ID || 'test-restaurant-id',
+  restaurantId: __ENV.RESTAURANT_ID || '',
   
   // Sample menu ID
-  menuId: __ENV.MENU_ID || 'test-menu-id',
+  menuId: __ENV.MENU_ID || '',
   
   // Sample table ID
-  tableId: __ENV.TABLE_ID || 'test-table-id',
+  tableId: __ENV.TABLE_ID || '',
   
   // Sample smartmenu ID
   smartmenuId: __ENV.SMARTMENU_ID || '8d95bbb1-f4c6-4034-97c8-2aafc663353b',
@@ -54,6 +54,13 @@ export const LOAD_PATTERNS = {
     { duration: '1m', target: 10 },   // Ramp up to 10 users
     { duration: '5m', target: 10 },   // Stay at 10 users
     { duration: '1m', target: 0 }     // Ramp down
+  ],
+
+  peakHourLocal: [
+    { duration: '1m', target: 10 },
+    { duration: '2m', target: 25 },
+    { duration: '5m', target: 25 },
+    { duration: '2m', target: 0 }
   ],
   
   // Peak hour: Simulates restaurant rush hour

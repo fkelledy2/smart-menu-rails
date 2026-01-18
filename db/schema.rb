@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_17_100300) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_17_160000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -452,6 +452,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_17_100300) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["sessionid", "preferredlocale"], name: "index_menuparticipants_on_session_locale"
+    t.index ["sessionid"], name: "index_menuparticipants_on_sessionid"
     t.index ["smartmenu_id"], name: "index_menuparticipants_on_smartmenu_id"
   end
 
@@ -726,6 +727,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_17_100300) do
     t.bigint "employee_id"
     t.string "preferredlocale"
     t.index ["employee_id"], name: "index_ordrparticipants_on_employee_id"
+    t.index ["ordr_id", "role", "employee_id"], name: "index_ordrparticipants_on_ordr_role_employee"
+    t.index ["ordr_id", "role", "sessionid"], name: "index_ordrparticipants_on_ordr_role_session"
     t.index ["ordr_id"], name: "index_ordrparticipants_on_ordr_id"
     t.index ["ordritem_id"], name: "index_ordrparticipants_on_ordritem_id"
     t.index ["sessionid", "preferredlocale"], name: "index_ordrparticipants_on_session_locale"
