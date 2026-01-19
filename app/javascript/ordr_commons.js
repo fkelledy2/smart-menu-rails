@@ -356,7 +356,7 @@ export function initOrderBindings() {
     document.addEventListener('click', (evt) => {
       const target = evt.target instanceof Element ? evt.target : null;
       if (!target) return;
-      const btn = target.closest && (target.closest('#request-bill') || target.closest('#request-bill-confirm'));
+      const btn = target.closest && target.closest('#request-bill-confirm');
       if (!btn || btn.hasAttribute('disabled')) return;
       try { console.debug('[RequestBill][capture] click intercepted'); } catch (_) {}
       evt.stopPropagation();

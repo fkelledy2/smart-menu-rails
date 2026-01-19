@@ -321,7 +321,11 @@ export class OrderModule extends ComponentBase {
     // Request bill button
     const requestBillBtn = this.find('#request-bill');
     if (requestBillBtn) {
-      this.addEventListener(requestBillBtn, 'click', () => {
+      this.addEventListener(requestBillBtn, 'click', (e) => {
+        try {
+          const isModalOpener = requestBillBtn.getAttribute('data-bs-toggle') === 'modal';
+          if (isModalOpener) return;
+        } catch (_) {}
         this.requestBill();
       });
     }
