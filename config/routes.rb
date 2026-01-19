@@ -307,6 +307,8 @@ Rails.application.routes.draw do
         post :process_pdf
         post :confirm_import
         get :progress
+        post :polish
+        get :polish_progress
         patch :reorder_sections
         patch :reorder_items
         patch :toggle_section_confirmation

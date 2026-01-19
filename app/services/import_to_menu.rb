@@ -114,6 +114,7 @@ class ImportToMenu
           menuitem.assign_attributes(
             name: safe_text(item.name),
             description: safe_text(item.description),
+            image_prompt: safe_text(item.respond_to?(:image_prompt) ? item.image_prompt : nil),
             price: safe_price(item.price),
             sequence: item.sequence,
             status: 'active',
@@ -290,6 +291,7 @@ class ImportToMenu
           menuitem = menusection.menuitems.create!(
             name: safe_text(item.name),
             description: safe_text(item.description),
+            image_prompt: safe_text(item.respond_to?(:image_prompt) ? item.image_prompt : nil),
             price: safe_price(item.price),
             sequence: item.sequence,
             status: 'active',
@@ -452,7 +454,11 @@ class ImportToMenu
   # For a given menuitem, ensure its MenuitemAllergynMapping set matches the provided allergen names
   def map_item_allergyns!(menuitem, allergen_names, restaurant)
     desired = Array(allergen_names).map { |n| n.to_s.strip.downcase }.compact_blank.uniq
-    return if desired.empty?
+
+    if desired.empty?
+      MenuitemAllergynMapping.where(menuitem_id: menuitem.id).delete_all
+      return
+    end
 
     # Ensure Allergyns exist/are active for these names (leverages same normalization as restaurant sync)
     sync_allergyns!(restaurant, desired)

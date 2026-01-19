@@ -5,6 +5,8 @@ class OcrMenuImportPolicy < ApplicationPolicy
   def destroy? = owner?
   def process_pdf? = owner?
   def confirm_import? = owner?
+  def polish? = owner?
+  def polish_progress? = owner?
   def reorder_sections? = owner?
   def reorder_items? = owner?
   def toggle_section_confirmation? = owner?

@@ -14,6 +14,7 @@ export default class extends Controller {
     'editItemId',
     'editItemName',
     'editItemDescription',
+    'editItemImagePrompt',
     'editItemPrice',
     'editItemSection',
     'editItemAllergens',
@@ -28,10 +29,13 @@ export default class extends Controller {
     'phaseText',
     'pageText',
     'phasePercent',
+    'polishButton',
   ];
 
   static values = {
     progressUrl: String,
+    polishUrl: String,
+    polishProgressUrl: String,
   };
 
   connect() {
@@ -183,6 +187,7 @@ export default class extends Controller {
     const itemId = event.currentTarget.dataset.itemId;
     const itemName = event.currentTarget.dataset.itemName || '';
     const itemDescription = event.currentTarget.dataset.itemDescription || '';
+    const itemImagePrompt = event.currentTarget.dataset.itemImagePrompt || '';
     const itemPrice = event.currentTarget.dataset.itemPrice || '';
     const itemSection = event.currentTarget.dataset.itemSection || '';
 
@@ -205,6 +210,7 @@ export default class extends Controller {
     this.editItemIdTarget.value = itemId;
     this.editItemNameTarget.value = itemName;
     this.editItemDescriptionTarget.value = itemDescription;
+    if (this.hasEditItemImagePromptTarget) this.editItemImagePromptTarget.value = itemImagePrompt;
     this.editItemPriceTarget.value = itemPrice;
     if (this.hasEditItemSectionTarget) this.editItemSectionTarget.value = itemSection;
 
@@ -329,6 +335,7 @@ export default class extends Controller {
       ocr_menu_item: {
         name: formData.get('item_name'),
         description: formData.get('item_description'),
+        image_prompt: formData.get('item_image_prompt'),
         price: parseFloat(formData.get('item_price')) || 0,
         allergens: allergens,
         dietary_restrictions: dietaryRestrictions,
@@ -455,6 +462,7 @@ export default class extends Controller {
             if (editIcon) {
               editIcon.dataset.itemName = item.name || '';
               editIcon.dataset.itemDescription = item.description || '';
+              editIcon.dataset.itemImagePrompt = item.image_prompt || '';
               editIcon.dataset.itemPrice = item.price || '';
               editIcon.dataset.itemAllergens = JSON.stringify(item.allergens || []);
               const diet = [];
@@ -534,5 +542,64 @@ export default class extends Controller {
     if (itemsContainer) {
       itemsContainer.classList.toggle('hidden');
     }
+  }
+
+  async startPolish(event) {
+    event.preventDefault();
+    if (!this.hasPolishUrlValue || !this.hasPolishProgressUrlValue) return;
+    if (!this.hasPolishButtonTarget) return;
+
+    const btn = this.polishButtonTarget;
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Polishing…';
+
+    let jobId = null;
+    try {
+      const res = await fetch(this.polishUrlValue, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content,
+        },
+        credentials: 'same-origin',
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      jobId = data.job_id;
+    } catch (e) {
+      btn.disabled = false;
+      btn.innerHTML = originalHtml;
+      return;
+    }
+
+    const poll = async () => {
+      try {
+        const u = new URL(this.polishProgressUrlValue, window.location.origin);
+        u.searchParams.set('job_id', jobId);
+        const res = await fetch(u.toString(), { headers: { Accept: 'application/json' }, credentials: 'same-origin' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const status = String(data.status || 'running');
+        const msg = data.message || '';
+
+        if (status === 'completed') {
+          window.location.reload();
+          return;
+        }
+        if (status === 'failed') {
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+          return;
+        }
+
+        if (msg) {
+          btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> ${msg}`;
+        }
+      } catch (_) {}
+    };
+
+    poll();
+    window.setInterval(poll, 1500);
   }
 }

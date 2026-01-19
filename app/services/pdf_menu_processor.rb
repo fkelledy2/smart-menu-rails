@@ -77,7 +77,7 @@ class PdfMenuProcessor
 
       # Save parsed data to the database
       @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu'))
-      save_menu_structure(menu_data)
+      save_menu_structure(menu_data, source_text: pdf_text)
 
       @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'completed'))
 
@@ -379,11 +379,13 @@ class PdfMenuProcessor
     response
   end
 
-  def save_menu_structure(menu_data)
+  def save_menu_structure(menu_data, source_text: nil)
     sections = Array(menu_data[:sections])
     sections_total = sections.size
     items_total = sections.sum { |s| Array(s[:items]).size }
     @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu', 'sections_total' => sections_total, 'sections_processed' => 0, 'items_total' => items_total, 'items_processed' => 0))
+
+    normalized_source_text = normalize_allergen_source_text(source_text)
 
     OcrMenuImport.transaction do
       items_processed = 0
@@ -400,7 +402,7 @@ class PdfMenuProcessor
             name: item_data[:name],
             description: item_data[:description],
             price: item_data[:price],
-            allergens: item_data[:allergens] || [],
+            allergens: filter_allergens_from_source(item_data[:allergens] || [], normalized_source_text),
             is_vegetarian: item_data[:is_vegetarian] || false,
             is_vegan: item_data[:is_vegan] || false,
             is_gluten_free: item_data[:is_gluten_free] || false,
@@ -417,6 +419,22 @@ class PdfMenuProcessor
 
         @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu', 'sections_total' => sections_total, 'sections_processed' => (section_index + 1), 'items_total' => items_total, 'items_processed' => items_processed))
       end
+    end
+  end
+
+  def normalize_allergen_source_text(text)
+    s = text.to_s.downcase
+    s = s.gsub(/[^a-z0-9\s]/, ' ')
+    s.gsub(/\s+/, ' ').strip
+  end
+
+  def filter_allergens_from_source(allergens, normalized_source_text)
+    return [] if normalized_source_text.blank?
+
+    Array(allergens).map { |a| a.to_s.downcase.strip }.compact_blank.uniq.select do |a|
+      token = a.gsub(/[^a-z0-9\s]/, ' ').gsub(/\s+/, ' ').strip
+      next false if token.blank?
+      normalized_source_text.match?(/\b#{Regexp.escape(token)}\b/)
     end
   end
 end

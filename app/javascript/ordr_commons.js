@@ -452,6 +452,73 @@ export function initOrderBindings() {
     $('#orderGrandTotal').text($('#restaurantCurrency').text() + parseFloat(total).toFixed(2));
   });
 
+  // Start Order modal: party size selector (no typing)
+  (function bindOrderCapacityUi() {
+    function clamp(n, min, max) {
+      const nn = Number.isFinite(n) ? n : parseInt(String(n || ''), 10);
+      const safe = Number.isFinite(nn) ? nn : min;
+      return Math.max(min, Math.min(max, safe));
+    }
+
+    function getBounds() {
+      const input = document.getElementById('orderCapacity');
+      const min = parseInt(input?.dataset?.min || '1', 10) || 1;
+      const max = parseInt(input?.dataset?.max || '1', 10) || 1;
+      return { input, min, max };
+    }
+
+    function setCapacity(nextValue) {
+      const { input, min, max } = getBounds();
+      if (!input) return;
+      const value = clamp(nextValue, min, max);
+      input.value = String(value);
+      const label = document.getElementById('orderCapacityValue');
+      if (label) label.textContent = String(value);
+      const dec = document.getElementById('orderCapacityDecrement');
+      const inc = document.getElementById('orderCapacityIncrement');
+      if (dec) dec.toggleAttribute('disabled', value <= min);
+      if (inc) inc.toggleAttribute('disabled', value >= max);
+    }
+
+    $(document)
+      .off('click.orderCapacityPreset.core')
+      .on('click.orderCapacityPreset.core', '.orderCapacityPreset', function (evt) {
+        evt.preventDefault();
+        const cap = parseInt(String($(this).data('capacity') || ''), 10);
+        setCapacity(cap);
+      });
+
+    $(document)
+      .off('click.orderCapacityInc.core')
+      .on('click.orderCapacityInc.core', '#orderCapacityIncrement', function (evt) {
+        evt.preventDefault();
+        const { input, min, max } = getBounds();
+        if (!input) return;
+        const current = clamp(input.value, min, max);
+        setCapacity(current + 1);
+      });
+
+    $(document)
+      .off('click.orderCapacityDec.core')
+      .on('click.orderCapacityDec.core', '#orderCapacityDecrement', function (evt) {
+        evt.preventDefault();
+        const { input, min, max } = getBounds();
+        if (!input) return;
+        const current = clamp(input.value, min, max);
+        setCapacity(current - 1);
+      });
+
+    // Reset to min each time the modal opens (keeps intent explicit)
+    const modalEl = document.getElementById('openOrderModal');
+    if (modalEl && !modalEl.__orderCapacityBound) {
+      modalEl.__orderCapacityBound = true;
+      modalEl.addEventListener('shown.bs.modal', () => {
+        const { min } = getBounds();
+        setCapacity(min);
+      });
+    }
+  })();
+
   // Modal inert toggles for accessibility
   (function bindModalInert() {
     const ids = ['openOrderModalLabel','addItemToOrderModalLabel','filterOrderModalLabel','viewOrderModalLabel','requestBillModalLabel','payOrderModalLabel'];

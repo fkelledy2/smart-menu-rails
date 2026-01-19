@@ -75,6 +75,18 @@
       <%= t('.quick_actions') %>
     </h2>
 
+    <% missing_image_prompt_count = begin
+      menu.menuitems.where.not(itemtype: Menuitem.itemtypes[:wine]).where("COALESCE(image_prompt,'') = ''").count
+    rescue StandardError
+      0
+    end %>
+
+    <% if missing_image_prompt_count.to_i > 0 %>
+      <div class="alert alert-warning mb-3">
+        AI Polish is strongly recommended before generating images. #{missing_image_prompt_count} items are missing an image prompt.
+      </div>
+    <% end %>
+
     <div class="quick-actions-grid">
       <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true),
           method: :post,

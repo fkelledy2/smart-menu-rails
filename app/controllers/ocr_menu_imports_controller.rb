@@ -8,10 +8,10 @@ class OcrMenuImportsController < ApplicationController
   before_action :set_restaurant
   before_action :set_ocr_menu_import,
                 only: %i[show edit update destroy process_pdf confirm_import reorder_sections reorder_items toggle_section_confirmation
-                         toggle_all_confirmation]
+                         toggle_all_confirmation polish polish_progress]
   before_action :authorize_import,
                 only: %i[show edit update destroy process_pdf confirm_import reorder_sections reorder_items toggle_section_confirmation
-                         toggle_all_confirmation]
+                         toggle_all_confirmation polish polish_progress]
 
   # GET /restaurants/:restaurant_id/ocr_menu_imports
   def index
@@ -128,6 +128,60 @@ class OcrMenuImportsController < ApplicationController
       completed_at: @ocr_menu_import.completed_at,
       updated_at: @ocr_menu_import.updated_at,
     }
+  end
+
+  # POST /restaurants/:restaurant_id/ocr_menu_imports/:id/polish
+  def polish
+    authorize @ocr_menu_import, :polish?
+
+    total = @ocr_menu_import.ocr_menu_items.count
+    jid = OcrMenuImportPolisherJob.perform_async(@ocr_menu_import.id)
+
+    begin
+      Sidekiq.redis do |r|
+        r.setex("ocr_polish:#{jid}", 24 * 3600, {
+          status: 'queued',
+          current: 0,
+          total: total,
+          message: 'Queued AI polish',
+          import_id: @ocr_menu_import.id,
+        }.to_json)
+      end
+    rescue StandardError => e
+      Rails.logger.warn("[OcrMenuImportsController] Failed to init polish progress for #{jid}: #{e.message}")
+    end
+
+    respond_to do |format|
+      format.html do
+        redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import), notice: 'AI Polish has been queued.'
+      end
+      format.json do
+        render json: { job_id: jid, total: total, status: 'queued' }
+      end
+    end
+  end
+
+  # GET /restaurants/:restaurant_id/ocr_menu_imports/:id/polish_progress
+  def polish_progress
+    authorize @ocr_menu_import, :polish_progress?
+
+    jid = params[:job_id].to_s
+    payload = nil
+    begin
+      Sidekiq.redis do |r|
+        json = r.get("ocr_polish:#{jid}")
+        payload = json.present? ? JSON.parse(json) : {}
+      end
+    rescue StandardError => e
+      Rails.logger.warn("[OcrMenuImportsController] Polish progress read failed for #{jid}: #{e.message}")
+      payload ||= {}
+    end
+
+    payload ||= {}
+    payload['job_id'] = jid
+    payload['import_id'] ||= @ocr_menu_import.id
+
+    render json: payload
   end
 
   # GET /restaurants/:restaurant_id/ocr_menu_imports/new

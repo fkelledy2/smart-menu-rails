@@ -55,6 +55,7 @@ en:
       confirmPayment: Confirm Payment
       cover_charge: Cover Charge
       customiseOrderWithName: Add your name to the order
+      partySize: Party size
       excluding_tip: excl. tip
       filterAllergyns: Filter Allergens
       filterBy: Filter

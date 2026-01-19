@@ -8,7 +8,35 @@
                 </div>
                 <div class="modal-body">
                     <% if tablesetting %>
-                        Would you like to start an order for <input class="modal-input-width" type="number" id="orderCapacity" value=<%= tablesetting.capacity%> oninput="validateIntegerInput(this)"> at this table?
+                        <div class="d-flex flex-column gap-3">
+                            <div class="text-center">
+                                <div class="fs-4 fw-bold"><%= t(".partySize") %></div>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-center gap-3">
+                                <button type="button" class="btn btn-outline-secondary btn-lg" id="orderCapacityDecrement">-</button>
+                                <div class="text-center" style="min-width: 120px;">
+                                    <div id="orderCapacityValue" class="display-4 mb-0">1</div>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" id="orderCapacityIncrement">+</button>
+                            </div>
+
+                            <input type="hidden" id="orderCapacity" value="1" data-min="1" data-max="<%= tablesetting.capacity %>">
+
+                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                                <button type="button" class="btn btn-outline-primary orderCapacityPreset" data-capacity="1">1</button>
+                                <% if tablesetting.capacity.to_i >= 2 %>
+                                    <button type="button" class="btn btn-outline-primary orderCapacityPreset" data-capacity="2">2</button>
+                                <% end %>
+                                <% if tablesetting.capacity.to_i >= 4 %>
+                                    <button type="button" class="btn btn-outline-primary orderCapacityPreset" data-capacity="4">4</button>
+                                <% end %>
+                                <% if tablesetting.capacity.to_i >= 6 %>
+                                    <button type="button" class="btn btn-outline-primary orderCapacityPreset" data-capacity="6">6</button>
+                                <% end %>
+                                <button type="button" class="btn btn-outline-primary orderCapacityPreset" data-capacity="<%= tablesetting.capacity %>">Full (<%= tablesetting.capacity %>)</button>
+                            </div>
+                        </div>
                     <% end %>
                 </div>
                 <div class="modal-footer gap-2">

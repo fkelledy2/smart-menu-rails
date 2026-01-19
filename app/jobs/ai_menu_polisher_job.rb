@@ -11,8 +11,8 @@ class AiMenuPolisherJob
     return unless menu
 
     restaurant = menu.restaurant
-    source_locale = menu_source_locale(menu)
-    source_language = locale_to_language(source_locale)
+    target_locale = restaurant_default_locale(menu)
+    target_language = locale_to_language(target_locale)
     total_items = menu.menuitems.count
     processed = 0
 
@@ -24,8 +24,6 @@ class AiMenuPolisherJob
       reorder_sections!(menu)
 
       # 2) Polish sections and items
-      allergyn_catalog = Allergyn.where(restaurant: restaurant).to_a
-
       menu.menusections.order(:sequence).each do |section|
         section.name = normalize_title(section.name)
         section.description = normalize_sentence(section.description)
@@ -44,7 +42,7 @@ class AiMenuPolisherJob
                 item_name: mi.name,
                 section_name: section.name,
                 section_description: section.description,
-                language: source_language
+                language: target_language
               )
               mi.description = gen if gen.present?
             rescue => e
@@ -52,6 +50,21 @@ class AiMenuPolisherJob
             end
           end
           mi.description = normalize_sentence(mi.description)
+
+          if mi.image_prompt.to_s.strip.blank?
+            begin
+              img_prompt = generate_image_prompt_via_llm(
+                item_name: mi.name,
+                item_description: mi.description,
+                section_name: section.name,
+                section_description: section.description,
+                language: target_language
+              )
+              mi.image_prompt = img_prompt if img_prompt.present?
+            rescue => e
+              Rails.logger.warn("[AIMenuPolisherJob] LLM image_prompt failed for item ##{mi.id}: #{e.class}: #{e.message}")
+            end
+          end
 
           # Alcohol detection
           begin
@@ -63,7 +76,7 @@ class AiMenuPolisherJob
             )
             # Decide whether to call LLM: always when forced, otherwise only if undecided
             llm_det = nil
-            if llm_alcohol_enabled? && (llm_alcohol_forced? || !(det && det[:decided]))
+            if llm_alcohol_enabled? && (llm_alcohol_forced? || (det && !det[:decided] && det[:confidence].to_f >= 0.5))
               llm_det = generate_alcohol_decision_via_llm(
                 item_name: mi.name.to_s,
                 item_description: mi.description.to_s,
@@ -107,27 +120,10 @@ class AiMenuPolisherJob
               mi.abv = chosen_abv if !chosen_abv.nil?
               mi.alcohol_classification = chosen_class
             else
-              # Neither heuristics nor LLM flagged alcoholic; try fallback by section hints
-              sec_name = section.name.to_s
-              sec_class = AlcoholDetectionService.section_class_from_text(sec_name)
-              if sec_class.present? || sec_name.to_s.downcase.match?(/\b(drinks?|beverages?)\b/)
-                Rails.logger.warn("[AIMenuPolisherJob] alcohol(fallback)=true item=##{mi.id} name='#{mi.name}' section='#{section.name}' class='#{sec_class.presence || 'other'}'")
-                set_progress('running', processed, total_items, menu_id, message: "Alcohol detected (fallback)", extra: { current_item_name: mi.name })
-                mi.alcohol_classification = (sec_class.presence || 'other')
-              else
-                # keep silence per requirement (log only when alcoholic)
-              end
+              nil
             end
           rescue => e
             Rails.logger.warn("[AIMenuPolisherJob] alcohol detect failed for item ##{mi.id}: #{e.class}: #{e.message}")
-          end
-
-          # Allergen mapping: naive keyword match against catalog names
-          begin
-            desired_names = detect_allergens_from_text(allergyn_catalog, mi)
-            map_item_allergyns!(mi, desired_names, restaurant)
-          rescue => e
-            Rails.logger.warn("[AIMenuPolisherJob] allergen map failed for item ##{mi.id}: #{e.class}: #{e.message}")
           end
 
           mi.save! if mi.changed?
@@ -283,7 +279,7 @@ class AiMenuPolisherJob
     language_str = language.to_s.strip
     language_hint = language_str.present? ? " Write in #{language_str}." : ''
 
-    system_msg = "You are a culinary copywriter. Write a concise, appetizing, single-sentence menu description (max 24 words). No emojis. No allergens. No pricing.#{language_hint}"
+    system_msg = "You are a culinary copywriter. Write a concise, customer-facing, single-sentence menu description (max 24 words). No emojis. No allergens. No pricing. Do not invent ingredients or claims not explicitly present in the provided name/context.#{language_hint}"
     context_bits = []
     context_bits << "Section: #{section_name}." if section_name.present?
     context_bits << "Section description: #{section_description}." if section_description.present?
@@ -310,6 +306,48 @@ class AiMenuPolisherJob
       content.gsub(/[\s\n]+/, ' ').strip
     rescue => e
       Rails.logger.warn("[AIMenuPolisherJob] OpenAI chat error: #{e.message}")
+      nil
+    end
+  end
+
+  def generate_image_prompt_via_llm(item_name:, item_description:, section_name:, section_description: nil, language: nil)
+    client = Rails.configuration.x.openai_client
+    return nil unless client
+
+    language_str = language.to_s.strip
+    language_hint = language_str.present? ? " Write in #{language_str}." : ''
+
+    system_msg = "You write short internal prompts for photorealistic food image generation. Be specific about visible presentation (plating, texture, color) but conservative. Do not invent ingredients, garnishes, sauces, or claims not explicitly present in the provided text. Do not mention allergens. Do not mention camera, lens, lighting, text, logos, or people. Output a single sentence (max 30 words).#{language_hint}"
+    context_bits = []
+    context_bits << "Section: #{section_name}." if section_name.present?
+    context_bits << "Section description: #{section_description}." if section_description.present?
+    context_bits << "Language: #{language_str}." if language_str.present?
+
+    user_msg = <<~PROMPT.strip
+      Create an internal image prompt for this menu item.
+      Use ONLY details explicitly present in these fields; if unclear, stay generic.
+
+      Item name: #{item_name}
+      Customer description: #{item_description}
+      Context: #{context_bits.join(' ')}
+    PROMPT
+
+    params = {
+      model: ENV['OPENAI_MODEL'].presence || 'gpt-3.5-turbo',
+      temperature: 0.5,
+      messages: [
+        { role: 'system', content: system_msg },
+        { role: 'user', content: user_msg }
+      ]
+    }
+
+    begin
+      resp = client.chat(parameters: params)
+      content = resp.dig('choices', 0, 'message', 'content').to_s.strip
+      return nil if content.blank?
+      content.gsub(/[\s\n]+/, ' ').strip
+    rescue => e
+      Rails.logger.warn("[AIMenuPolisherJob] OpenAI image_prompt error: #{e.message}")
       nil
     end
   end
@@ -372,6 +410,15 @@ class AiMenuPolisherJob
 
   def llm_alcohol_forced?
     ENV['AI_POLISH_FORCE_LLM_ALCOHOL'].to_s.downcase == 'true'
+  end
+
+  def restaurant_default_locale(menu)
+    rl = menu&.restaurant&.defaultLocale
+    s = rl&.locale.to_s
+    s = s.split(/[-_]/).first.to_s.downcase
+    s.presence || 'en'
+  rescue StandardError
+    'en'
   end
 
   def menu_source_locale(menu)

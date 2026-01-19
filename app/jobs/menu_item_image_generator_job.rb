@@ -1,5 +1,6 @@
 require 'sidekiq'
 require 'limiter/mixin'
+require 'digest'
 
 class MenuItemImageGeneratorJob
   include Sidekiq::Worker
@@ -9,6 +10,16 @@ class MenuItemImageGeneratorJob
   extend Limiter::Mixin
 
   limit_method :expensive_api_call, rate: 4, interval: 60, balanced: true
+
+  def self.build_prompt_and_fingerprint(genimage)
+    job = new
+    job.instance_variable_set(:@genimage, genimage)
+    job.instance_variable_set(:@menuitem, genimage&.menuitem)
+
+    prompt = job.send(:use_prompt_v2?) ? job.send(:build_prompt_v2) : job.send(:build_prompt)
+    fingerprint = Digest::SHA256.hexdigest(prompt.to_s)
+    [prompt, fingerprint]
+  end
 
   def perform(genimage_id)
     expensive_api_call(genimage_id)
@@ -29,7 +40,17 @@ class MenuItemImageGeneratorJob
       return
     end
 
+    if @menuitem.image_prompt.to_s.strip == ''
+      Rails.logger.info({
+        event: 'menuitem.image_generation.missing_image_prompt',
+        menuitem_id: @menuitem.id,
+        genimage_id: @genimage.id,
+        menusection_id: @menuitem.menusection_id,
+      }.to_json)
+    end
+
     prompt = use_prompt_v2? ? build_prompt_v2 : build_prompt
+    prompt_fingerprint = Digest::SHA256.hexdigest(prompt.to_s)
     Rails.logger.warn("[MenuItemImageGeneratorJob] Prompt for Menuitem #{@menuitem.id} (genimage #{@genimage.id}): #{prompt}")
     response = generate_image(prompt, 1, default_image_size)
     if response.success?
@@ -38,7 +59,11 @@ class MenuItemImageGeneratorJob
       begin
         downloaded_image = URI.parse(image_url).open
         # Update genimage with seed
-        @genimage.update(name: seed)
+        if @genimage.respond_to?(:prompt_fingerprint)
+          @genimage.update(name: seed, prompt_fingerprint: prompt_fingerprint)
+        else
+          @genimage.update(name: seed)
+        end
         # Attach the image to menuitem
         @menuitem.image = downloaded_image
         @menuitem.save!
@@ -73,6 +98,7 @@ class MenuItemImageGeneratorJob
 
     item_name    = @menuitem.name.to_s.strip
     item_desc    = @menuitem.description.to_s.strip.truncate(100)
+    item_img_txt = @menuitem.image_prompt.to_s.strip.truncate(160)
     sec_name     = section&.name.to_s.strip
     rest_name    = restaurant&.name.to_s.strip
     rest_desc    = restaurant&.try(:description).to_s.strip.truncate(150)
@@ -84,7 +110,15 @@ class MenuItemImageGeneratorJob
     style_profile = resolve_style_profile(restaurant).truncate(100)
 
     parts = []
-    parts << "Photorealistic #{item_name}#{" - #{item_desc}" if item_desc.present?}"
+    if item_img_txt.present?
+      if item_name.present? && item_img_txt.downcase.include?(item_name.downcase)
+        parts << "Photorealistic #{item_img_txt}"
+      else
+        parts << "Photorealistic #{item_name}#{" - #{item_img_txt}" if item_img_txt.present?}"
+      end
+    else
+      parts << "Photorealistic #{item_name}#{" - #{item_desc}" if item_desc.present?}"
+    end
     parts << "#{sec_name} section" if sec_name.present?
     parts << "Restaurant: #{rest_name}" if rest_name.present?
 
@@ -132,7 +166,7 @@ class MenuItemImageGeneratorJob
     restaurant   = menu&.restaurant
 
     item_name    = sanitize_text(@menuitem.name, 80)
-    item_desc    = sanitize_text(@menuitem.description, 160)
+    item_desc    = sanitize_text(@menuitem.image_prompt.presence || @menuitem.description, 160)
     sec_name     = sanitize_text(section&.name, 60)
 
     # Keep brand/style concise and consistent

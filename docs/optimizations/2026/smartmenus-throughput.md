@@ -76,23 +76,23 @@ Given websockets handle order-state UI updates, coupling menu HTML to order chan
 
 #### A1) Move all query logic out of the templates
 
-- Stop calling `.where`, `.order`, `.count` in ERB on `menuitems`.
-- Prepare prefiltered structures in the controller (or a dedicated presenter/service), e.g.:
-  - `active_items_by_section_id`
-  - `tasting_carrier_by_section_id`
-  - `has_sizes_by_menuitem_id`
+- [ ] Stop calling `.where`, `.order`, `.count` in ERB on `menuitems`.
+- [ ] Prepare prefiltered structures in the controller (or a dedicated presenter/service), e.g.:
+  - [ ] `active_items_by_section_id`
+  - [ ] `tasting_carrier_by_section_id`
+  - [ ] `has_sizes_by_menuitem_id`
 
 This should make “menu render queries” closer to O(1) rather than O(sections + items).
 
 #### A2) Refactor localization to use preloaded associations
 
-- If `menuitem.menuitemlocales` is loaded, search that in-memory collection.
-- Same for `menusection.menusectionlocales` and `menu.menulocales`.
+- [ ] If `menuitem.menuitemlocales` is loaded, search that in-memory collection.
+- [ ] Same for `menusection.menusectionlocales` and `menu.menulocales`.
 
 Also:
 
-- Stop using `LOWER(locale)` in SQL.
-- Normalize stored locale to lowercase at write time and query with `where(locale: locale.downcase)`.
+- [ ] Stop using `LOWER(locale)` in SQL.
+- [ ] Normalize stored locale at write time and query with direct equality (case strategy must be consistent across app).
 
 This improves:
 
@@ -106,11 +106,11 @@ It currently loads ingredients and mapping tables for all menu items. If these a
 
 Recommended approach:
 
-- Create “smartmenu render preload” scopes tuned for customer/staff views.
-- Only preload associations actually referenced in templates:
-  - sections + items
-  - locales
-  - allergens + size mappings
+- [ ] Create “smartmenu render preload” scopes tuned for customer/staff views.
+- [ ] Only preload associations actually referenced in templates:
+  - [ ] sections + items
+  - [ ] locales
+  - [ ] allergens + size mappings
 
 ### B) Caching (aligned with websocket delivery)
 
@@ -118,8 +118,8 @@ Recommended approach:
 
 Since order state updates arrive via websockets:
 
-- Menu HTML fragments should depend on menu versioning signals (e.g., `@menu.updated_at`, locale, view type).
-- Do not include `@openOrder.updated_at` in menu cache keys.
+- [ ] Menu HTML fragments should depend on menu versioning signals (e.g., `@menu.updated_at`, locale, view type).
+- [ ] Do not include `@openOrder.updated_at` in menu cache keys.
 
 This prevents large menu fragment invalidation when orders change.
 
@@ -129,8 +129,8 @@ Under heavy service activity, rapid sequential broadcasts can compute identical 
 
 A safe starting point:
 
-- cache key: `order_id + order.updated_at + locale + participant_id`
-- TTL: 5–15 seconds
+- [ ] cache key: `order_id + order.updated_at + locale + participant_id`
+- [ ] TTL: 5–15 seconds
 
 #### B3) Replace per-request “max(updated_at)” cache busters with touch propagation
 
@@ -140,6 +140,8 @@ The show action computes header cache busters via:
 - `Tablesetting.maximum(:updated_at)`
 
 Consider `touch: true` propagation so you can use a single stable timestamp (e.g. `@restaurant.updated_at` or `@menu.updated_at`) as a cache version.
+
+- [ ] Replace per-request `maximum(:updated_at)` cache busters with touch propagation / stable cache version.
 
 ### C) Indexing
 
@@ -151,8 +153,8 @@ Current usage:
 
 Recommendation:
 
-- If slugs are intended globally unique, add a **unique** index on `smartmenus.slug`.
-- If slugs are only unique per restaurant, enforce uniqueness on `(restaurant_id, slug)` and adjust lookup accordingly.
+- [ ] If slugs are intended globally unique, add a **unique** index on `smartmenus.slug`.
+- [ ] If slugs are only unique per restaurant, enforce uniqueness on `(restaurant_id, slug)` and adjust lookup accordingly.
 
 #### C2) Participant lookups (`find_or_create_by`) should be backed by composite indexes
 
@@ -163,9 +165,9 @@ High-frequency patterns:
 
 Recommended indexes:
 
-- `menuparticipants(sessionid)` (optionally unique)
-- `ordrparticipants(ordr_id, role, sessionid)` (unique for customer)
-- `ordrparticipants(ordr_id, role, employee_id)` (staff)
+- [ ] `menuparticipants(sessionid)` (optionally unique)
+- [ ] `ordrparticipants(ordr_id, role, sessionid)` (unique for customer)
+- [ ] `ordrparticipants(ordr_id, role, employee_id)` (staff)
 
 These reduce contention and speed up participant creation under load.
 
@@ -184,6 +186,8 @@ SELECT extname FROM pg_extension WHERE extname = 'pg_stat_statements';
 SHOW shared_preload_libraries;
 ```
 
+- [ ] Verify `pg_stat_statements` extension is installed and `shared_preload_libraries` includes it.
+
 ### Top queries by total time
 
 ```sql
@@ -197,6 +201,8 @@ FROM pg_stat_statements
 ORDER BY total_exec_time DESC
 LIMIT 50;
 ```
+
+- [ ] Capture top queries by total time during load test window.
 
 ### Narrow to smartmenu-related tables
 
@@ -223,6 +229,8 @@ ORDER BY total_exec_time DESC
 LIMIT 100;
 ```
 
+- [ ] Capture smartmenu-related queries during load test window.
+
 ## Production evidence: `heroku pg:outliers`
 
 `heroku pg:outliers` surfaced mostly **system catalog / driver introspection** queries (e.g., `pg_attribute`, `pg_type`, `pg_index`). These often come from tooling/ORM metadata lookups and are typically not the throughput bottleneck for `/smartmenus`.
@@ -248,8 +256,8 @@ Both patterns can trigger a SQL `COUNT(*)` per rendered menu item.
 
 ### Fix applied
 
-- Replace `association.count` with `association.size` (uses preloaded association when available, otherwise may still query).
-- Replace `association.count > 0` with `association.any?` (translates to an efficient `EXISTS` query if not loaded).
+- [x] Replace `association.count` with `association.size` (uses preloaded association when available, otherwise may still query).
+- [x] Replace `association.count > 0` with `association.any?` (translates to an efficient `EXISTS` query if not loaded).
 
 Files updated:
 
@@ -265,19 +273,19 @@ Files updated:
 
 ### Quick wins (highest impact, low risk)
 
-- Refactor localization helpers to use preloaded associations.
-- Remove view-level `.where/.order/.count` calls and compute these once server-side.
-- Decouple menu fragment cache keys from `@openOrder.updated_at`.
+- [ ] Refactor localization helpers to use preloaded associations.
+- [ ] Remove view-level `.where/.order/.count` calls and compute these once server-side.
+- [ ] Decouple menu fragment cache keys from `@openOrder.updated_at`.
 
 ### Medium effort
 
-- Reduce preload breadth in `load_menu_associations_for_show`.
-- Add composite indexes for participant lookup patterns.
+- [ ] Reduce preload breadth in `load_menu_associations_for_show`.
+- [ ] Add composite indexes for participant lookup patterns.
 
 ### Longer-term
 
-- Treat menu render data as a “cached artifact” keyed by a single menu cache version.
-- Add instrumentation around `SmartmenuState.for_context` to measure payload build time and frequency.
+- [ ] Treat menu render data as a “cached artifact” keyed by a single menu cache version.
+- [ ] Add instrumentation around `SmartmenuState.for_context` to measure payload build time and frequency.
 
 ## Success metrics
 

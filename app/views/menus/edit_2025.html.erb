@@ -303,7 +303,7 @@
         ? 'This will translate your menu to active restaurant locales and may consume API credits. Proceed?'
         : (currentMode === 'polish'
             ? 'This will clean up item names/descriptions, generate missing descriptions with AI, assess allergens/alcohol and reorder sections. Proceed?'
-            : 'This will generate new AI images for your menu items and may consume API credits. Proceed?');
+            : 'This will generate new AI images for your menu items and may consume API credits. AI Polish is strongly recommended first for best results. Proceed?');
       confirmPane.querySelector('p').textContent = confirmText;
       // Hide image preview for localization mode, show for AI mode
       document.getElementById('ai-preview').style.display = (currentMode === 'localize' || currentMode === 'polish') ? 'none' : '';

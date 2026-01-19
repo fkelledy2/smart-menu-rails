@@ -1,11 +1,11 @@
 class AlcoholDetectionService
   KEYWORDS = {
-    wine: %w[wine rosé rose chardonnay merlot cabernet sauvignon sauvignon blanc pinot noir pinot grigio riesling syrah malbec tempranillo rioja bordeaux chianti prosecco champagne cava sparkling],
+    wine: %w[wine rosé rose chardonnay merlot cabernet sauvignon sauvignon blanc pinot noir pinot grigio riesling syrah malbec tempranillo rioja bordeaux chianti prosecco champagne cava],
     beer: %w[beer ale lager ipa pilsner pils pilsener stout porter weizen weiss wheat saison kolsch bitter tripel dubbel gueuze lambic helles dunkel],
     spirit: %w[spirit vodka gin rum tequila whisky whiskey bourbon scotch brandy cognac armagnac grappa pisco mezcal],
     liqueur: %w[liqueur amaro amaretto sambuca limoncello cointreau grand marnier baileys kahlua chartreuse campari aperol],
     cocktail: %w[cocktail martini negroni spritz margarita mojito old fashioned manhattan daiquiri sour mule paloma gimlet boulevardier cosmopolitan caipirinha sangria bellini],
-    cider: %w[cider hard seltzer seltzer perry],
+    cider: ['cider', 'perry', 'hard seltzer'],
     sake: %w[sake nigori junmai ginjo daiginjo],
     mead: %w[mead hydromel],
   }.freeze
@@ -112,7 +112,7 @@ class AlcoholDetectionService
 
     # Generic synonyms
     return 'cocktail' if t.include?('bar') # bar menus often cocktails/spirits
-    return 'other' if t.include?('beverage') || t.include?('beverages') || t.include?('drinks') || t.include?('drink')
+    return nil if t.include?('beverage') || t.include?('beverages') || t.include?('drinks') || t.include?('drink')
 
     # Multilingual hints
     return 'wine' if t.include?('vin') || t.include?('vino')

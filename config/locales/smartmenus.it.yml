@@ -55,6 +55,7 @@ it:
       confirmPayment: Conferma pagamento
       cover_charge: Coperto
       customiseOrderWithName: Aggiungi il tuo nome all'ordine
+      partySize: Numero di persone
       excluding_tip: escl. mancia
       filterAllergyns: Filtra allergeni
       filterBy: Filtra

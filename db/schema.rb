@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_17_160000) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_19_183500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -187,9 +187,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_17_160000) do
     t.bigint "menuitem_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "prompt_fingerprint"
     t.index ["menu_id"], name: "index_genimages_on_menu_id"
     t.index ["menuitem_id"], name: "index_genimages_on_menuitem_id"
     t.index ["menusection_id"], name: "index_genimages_on_menusection_id"
+    t.index ["prompt_fingerprint"], name: "index_genimages_on_prompt_fingerprint"
     t.index ["restaurant_id", "menu_id", "menuitem_id"], name: "index_genimages_on_restaurant_menu_item"
     t.index ["restaurant_id"], name: "index_genimages_on_restaurant_id"
   end
@@ -414,6 +416,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_17_160000) do
     t.jsonb "sommelier_parsed_fields", default: {}, null: false
     t.decimal "sommelier_parse_confidence", precision: 5, scale: 4
     t.boolean "sommelier_needs_review", default: false, null: false
+    t.text "image_prompt"
     t.index "lower((name)::text) varchar_pattern_ops", name: "index_menuitems_on_lower_name"
     t.index ["alcohol_classification"], name: "index_menuitems_on_alcohol_classification"
     t.index ["archived"], name: "index_menuitems_on_archived"
@@ -606,6 +609,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_17_160000) do
     t.datetime "updated_at", null: false
     t.boolean "is_dairy_free", default: false, null: false
     t.bigint "menuitem_id"
+    t.text "image_prompt"
     t.index ["allergens"], name: "index_ocr_menu_items_on_allergens", using: :gin
     t.index ["is_confirmed"], name: "index_ocr_menu_items_on_is_confirmed"
     t.index ["is_gluten_free"], name: "index_ocr_menu_items_on_is_gluten_free"

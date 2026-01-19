@@ -129,7 +129,7 @@ class OcrMenuItemsController < ApplicationController
 
   def permitted_item_params
     # Only allow the fields we expect to edit here; tolerate missing root key
-    params.fetch(:ocr_menu_item, {}).permit(:name, :description, :price)
+    params.fetch(:ocr_menu_item, {}).permit(:name, :description, :price, :image_prompt)
   end
 
   def normalize_restrictions(arr)
@@ -148,6 +148,7 @@ class OcrMenuItemsController < ApplicationController
       id: item.id,
       name: item.name,
       description: item.description,
+      image_prompt: item.respond_to?(:image_prompt) ? item.image_prompt : nil,
       price: item.price,
       allergens: item.allergens,
       is_vegetarian: item.respond_to?(:is_vegetarian) ? item.is_vegetarian : false,

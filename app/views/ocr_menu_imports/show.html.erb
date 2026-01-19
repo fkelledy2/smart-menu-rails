@@ -23,7 +23,7 @@
     <%= render 'restaurants/sidebar_2025', restaurant: @restaurant, current_section: 'import' %>
 
     <div class="sidebar-main-content">
-      <div class="py-4 px-3 px-md-4" data-controller="menu-import" data-menu-import-progress-url-value="<%= progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>">
+      <div class="py-4 px-3 px-md-4" data-controller="menu-import" data-menu-import-progress-url-value="<%= progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-polish-url-value="<%= polish_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-polish-progress-url-value="<%= polish_progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>">
         <div class="mb-3 d-flex justify-content-end">
           <%= link_to edit_restaurant_path(@restaurant, section: 'import'),
               class: 'btn btn-outline-secondary',
@@ -54,6 +54,11 @@
       </div>
     </div>
     <div class="d-flex gap-2">
+      <% if @ocr_menu_import.completed? %>
+        <button type="button" class="btn btn-outline-primary" data-action="click->menu-import#startPolish" data-menu-import-target="polishButton">
+          <i class="bi bi-magic me-1" aria-hidden="true"></i> AI Polish
+        </button>
+      <% end %>
       <% if @ocr_menu_import.may_process? %>
         <%= button_to process_pdf_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
             method: :post,
@@ -301,6 +306,7 @@
                                                  data-item-id="<%= item.id %>"
                                                  data-item-name="<%= item.name %>"
                                                  data-item-description="<%= item.description.to_s %>"
+                                                 data-item-image-prompt="<%= item.respond_to?(:image_prompt) ? item.image_prompt.to_s : '' %>"
                                                  data-item-price="<%= item.price %>"
                                                  data-item-allergens='<%= (item.allergens || []).to_json %>'
                                                  data-item-section="<%= section.id %>"
@@ -477,6 +483,11 @@
           <div class="mb-3">
             <label for="item_description" class="form-label"><%= t('.description') %></label>
             <textarea class="form-control" id="item_description" name="item_description" rows="3" data-menu-import-target="editItemDescription"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="item_image_prompt" class="form-label"><%= t('.image_prompt', default: 'Image prompt') %></label>
+            <textarea class="form-control" id="item_image_prompt" name="item_image_prompt" rows="2" data-menu-import-target="editItemImagePrompt"></textarea>
           </div>
 
           <div class="row g-3 mb-3">

@@ -66,6 +66,14 @@
     <% if menuitem.itemtype != 'wine' %>
       <div class="mb-2 p-2">
         <h2 class="h5 mb-2"><%= t(".imageSettings") %></h2>
+        <div class="row g-2 align-items-start mb-2">
+          <div class="col-4">
+            <%= form.label :image_prompt, class: 'col-form-label py-0 mb-0' %>
+          </div>
+          <div class="col-8">
+            <%= form.text_area :image_prompt, class: 'form-control', rows: 2 %>
+          </div>
+        </div>
         <div class="row g-2">
             <div class="col-12">
               <% if menuitem.image && !(menuitem.persisted? && menuitem.image.storage_key.to_s == 'cache') %>
