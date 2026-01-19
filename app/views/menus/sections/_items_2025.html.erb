@@ -381,6 +381,13 @@
     border: 1px solid var(--color-gray-200);
   }
 
+  .item-image-tooltip.fixed-tooltip {
+    position: fixed;
+    left: 0;
+    top: 0;
+    margin-left: 0;
+  }
+
   /* Show on hover (desktop) */
   .item-name-cell:hover .item-image-tooltip {
     opacity: 1;
@@ -454,9 +461,52 @@
   document.addEventListener('DOMContentLoaded', function() {
     const itemCells = document.querySelectorAll('.item-name-cell');
 
+    const isDesktop = () => {
+      try { return window.matchMedia && window.matchMedia('(min-width: 769px)').matches; } catch (_) { return true; }
+    };
+
+    const positionTooltipDesktop = (cell) => {
+      const tooltip = cell.querySelector('.item-image-tooltip');
+      if (!tooltip) return;
+      if (!isDesktop()) return;
+      tooltip.classList.add('fixed-tooltip');
+      tooltip.style.left = '0px';
+      tooltip.style.top = '0px';
+
+      const cellRect = cell.getBoundingClientRect();
+      const tipRect = tooltip.getBoundingClientRect();
+      const margin = 16;
+      let left = cellRect.right + margin;
+      const maxLeft = window.innerWidth - tipRect.width - margin;
+      if (left > maxLeft) left = Math.max(margin, maxLeft);
+      const top = cellRect.top + (cellRect.height / 2);
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+    };
+
+    const resetTooltipDesktop = (cell) => {
+      const tooltip = cell.querySelector('.item-image-tooltip');
+      if (!tooltip) return;
+      tooltip.classList.remove('fixed-tooltip');
+      tooltip.style.left = '';
+      tooltip.style.top = '';
+    };
+
     itemCells.forEach(cell => {
       // Only add touch handling if the cell has an image tooltip
       if (cell.querySelector('.item-image-tooltip')) {
+        cell.addEventListener('mouseenter', function() {
+          positionTooltipDesktop(this);
+        });
+
+        cell.addEventListener('mousemove', function() {
+          positionTooltipDesktop(this);
+        });
+
+        cell.addEventListener('mouseleave', function() {
+          resetTooltipDesktop(this);
+        });
+
         // Handle touch/click on mobile
         cell.addEventListener('click', function(e) {
           // Don't interfere with edit button clicks
