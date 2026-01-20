@@ -3,11 +3,12 @@ import { initTomSelectIfNeeded } from './tomselect_helper';
 export function initialiseSlugs() {
   $('.qrSlug').each(function () {
     const qrSlug = $(this).text();
+    const qrSize = parseInt($(this).data('qrSize'), 10) || 300;
     const qrCode = new QRCodeStyling({
       type: 'canvas',
       shape: 'square',
-      width: 300,
-      height: 300,
+      width: qrSize,
+      height: qrSize,
       data: 'https://' + $('#qrHost').text() + '/smartmenus/' + qrSlug,
       margin: 0,
       qrOptions: {
@@ -98,11 +99,12 @@ export function initialiseSlugs() {
 
   $('.qrWiFi').each(function () {
     const qrSlug = $(this).text();
+    const qrSize = parseInt($(this).data('qrSize'), 10) || 300;
     const qrCode = new QRCodeStyling({
       type: 'canvas',
       shape: 'square',
-      width: 300,
-      height: 300,
+      width: qrSize,
+      height: qrSize,
       data: qrSlug,
       margin: 0,
       qrOptions: {

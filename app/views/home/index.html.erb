@@ -380,36 +380,30 @@
   <% if @demoMenu %>
     <span class="display-none" id="qrIcon"><%= image_url('qr-icon.svg') %></span>
     <span class="display-none" id="qrHost"><%= @qrHost %></span>
-    <div class="container px-3 px-md-1 py-2">
-        <h2 class="pb-2 border-bottom"><%= t(".demoMenu") %></h2>
-        <div id="demo-table" class="container px-3 px-md-1 py-2">
-          <div class="row g-4 py-2 row-cols-12 row-cols-12 row-cols-lg-12 align-items-center">
-                <span class="display-none qrSlug"><%= @demoMenu.slug %></span>
-                <div class="padding-horizontal-2 col-sm-12 col-md-12 col-lg-8">
-                  <div class="embed-responsive embed-responsive-16by9">
-                        <video style='z-index:10000;' width="100%" loop muted playsinline autoplay>
-                          <source src="<%= asset_path('smart-menu.mp4') %>" type="video/mp4">
-                          <%= t('.video_unsupported') %>
-                        </video>
+    <div class="">
+      <div id="demo-table" class="demo-hero" style="--demo-bg: url('<%= image_path('smart-menu-demo.png') %>');">
+        <span class="display-none qrSlug" data-qr-size="200"><%= @demoMenu.slug %></span>
+        <div class="container px-3 px-md-1">
+          <div class="demo-hero-content">
+            <h2 class="pb-2 border-bottom"><%= t(".demoMenu") %></h2>
+            <div class="bunq-qr-card demo-hero-cta">
+              <h6 class="text-center-padded"><%= t(".demoMenuTag").html_safe %></h6>
+              <div class="d-flex justify-content-center">
+                <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
+                  <div id="<%= @demoMenu.slug %>">
                   </div>
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-4">
-                    <h6 class="text-center-padded"><%= t(".demoMenuTag").html_safe %></h6>
-                    <div class="d-flex justify-content-center">
-                        <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
-                            <div id="<%= @demoMenu.slug %>">
-                            </div>
-                        </a>
-                    </div>
-                    <h6 class="text-center-padded">
-                        <%= t(".demoMenuTagBrowse").html_safe %>
-                    </h6>
-                    <h6 class="text-center">
-                        <%= link_to t(".browse"), smartmenus_path, class: "btn btn-danger" %>
-                    </h6>
-                </div>
+                </a>
+              </div>
+              <h6 class="text-center-padded">
+                <%= t(".demoMenuTagBrowse").html_safe %>
+              </h6>
+              <h6 class="text-center">
+                <%= link_to t(".browse"), smartmenus_path, class: "btn btn-danger" %>
+              </h6>
+            </div>
           </div>
         </div>
+      </div>
     </div>
   <% end %>
 
@@ -462,66 +456,71 @@
     </div>
   </div>
 
-  <div class="container px-3 px-md-1 py-2">
-   <h2 class="pb-2 border-bottom"><%= t(".pricing") %></h2>
-   <p class="text-justify"><%= t(".pricingTag") %></p>
-   <div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
-    <% @plans.each do |plan| %>
-      <div class="col">
-        <% if plan.favourite %>
-         <div class="card mb-4 rounded-3 shadow-lg">
-            <div class="card-header bg-danger text-white py-3 py-3">
-        <% else %>
-          <div class="card mb-4 rounded-3 shadow-sm">
-            <div class="card-header py-3">
-        <% end %>
-            <h4 class="my-0 fw-normal"><%= t(plan.key) %></h4>
-          </div>
-          <div class="card-body">
-            <div>
-                <% if plan.pricePerMonth %>
-                    <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerMonth, precision: 0) %><small class="text-body-secondary fw-light">/mo</small></h1>
-                <% else %>
-                    <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i><small class="text-body-secondary fw-light"></small></h1>
-                <% end %>
-            </div>
-            <div class="display-none">
-                <% if plan.pricePerYear %>
-                    <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerYear, precision: 0) %><small class="text-body-secondary fw-light">/yr</small></h1>
-                <% else %>
-                    <h1 class="card-title pricing-card-title"><%= t(".contactUs") %><small class="text-body-secondary fw-light"></small></h1>
-                <% end %>
-            </div>
-            <div class="text-start">
-            <ul class="list-unstyled mt-3 mb-4">
-              <% if plan.attribute1 %>
-                  <%= t_html(plan.attribute1, locations: plan.locations) %>
-              <% else %>
-                  <li>&nbsp</li>
-              <% end %>
-              <% if plan.attribute2 %>
-                  <%= t_html(plan.attribute2, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages) %>
-              <% else %>
-                  <li>&nbsp</li>
-              <% end %>
-              <% if plan.attribute3 %>
-                    <hr>
-                  <%= t_html(plan.attribute3, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages) %>
-              <% else %>
-                  <li>&nbsp</li>
-              <% end %>
-            </ul>
-            </div>
-            <% if plan.action == 'register' %>
-                <%= link_to t(".signUp"), new_user_registration_path, class: "w-100 btn btn-danger" %>
+  <div class="bunq-section bunq-section--pricing">
+    <div class="container px-3 px-md-1">
+      <div class="bunq-surface p-3 p-lg-4">
+       <h2 class="pb-2 border-bottom"><%= t(".pricing") %></h2>
+       <p class="text-justify"><%= t(".pricingTag") %></p>
+       <div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
+        <% @plans.each do |plan| %>
+          <div class="col">
+            <% if plan.favourite %>
+             <div class="card pricing-card featured mb-4 shadow-lg">
+                <div class="card-header py-3">
             <% else %>
-                <a class="w-100 btn btn-danger" href="#contact_us"><%= t('plan.'+plan.action) %></a>
+              <div class="card pricing-card mb-4 shadow-sm">
+                <div class="card-header py-3">
             <% end %>
+                <h4 class="my-0 fw-normal"><%= t(plan.key) %></h4>
+              </div>
+              <div class="card-body">
+                <div>
+                    <% if plan.pricePerMonth %>
+                        <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerMonth, precision: 0) %><small class="text-body-secondary fw-light">/mo</small></h1>
+                    <% else %>
+                        <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i><small class="text-body-secondary fw-light"></small></h1>
+                    <% end %>
+                </div>
+                <div class="display-none">
+                    <% if plan.pricePerYear %>
+                        <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerYear, precision: 0) %><small class="text-body-secondary fw-light">/yr</small></h1>
+                    <% else %>
+                        <h1 class="card-title pricing-card-title"><%= t(".contactUs") %><small class="text-body-secondary fw-light"></small></h1>
+                    <% end %>
+                </div>
+                <div class="text-start">
+                <ul class="list-unstyled mt-3 mb-4">
+                  <% if plan.attribute1 %>
+                      <%= t_html(plan.attribute1, locations: plan.locations) %>
+                  <% else %>
+                      <li>&nbsp</li>
+                  <% end %>
+                  <% if plan.attribute2 %>
+                      <%= t_html(plan.attribute2, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages) %>
+                  <% else %>
+                      <li>&nbsp</li>
+                  <% end %>
+                  <% if plan.attribute3 %>
+                        <hr>
+                      <%= t_html(plan.attribute3, locations: plan.getLocations, menus: plan.getMenusPerLocation, dishes: plan.getItemsPerMenu, languages: plan.getLanguages) %>
+                  <% else %>
+                      <li>&nbsp</li>
+                  <% end %>
+                </ul>
+                </div>
+                <% if plan.action == 'register' %>
+                    <%= link_to t(".signUp"), new_user_registration_path, class: "w-100 btn btn-danger" %>
+                <% else %>
+                    <a class="w-100 btn btn-danger" href="#contact_us"><%= t('plan.'+plan.action) %></a>
+                <% end %>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    <% end %>
-   </div>
+        <% end %>
+       </div>
+     </div>
+    </div>
+  </div>
 
    <h2 class="display-none pb-2"><%= t('.compare_plans') %></h2>
    <div class="display-none table-responsive">
@@ -553,10 +552,12 @@
    </div>
 
   <% if @testimonials.size > 0 %>
-      <div id="testimonials" class="container px-3 px-md-1 py-2">
-        <h2 class="pb-2 border-bottom"><%= t(".testimonials") %></h2>
-        <p class="text-justify"><%= t(".testimonialsTag") %></p>
-        <div id="testimonialCarousel" class="carousel carousel-dark slide mb-6" data-bs-ride="carousel">
+      <div class="bunq-section bunq-section--testimonials">
+        <div id="testimonials" class="container px-3 px-md-1">
+          <div class="bunq-surface p-3 p-lg-4">
+            <h2 class="pb-2 border-bottom"><%= t(".testimonials") %></h2>
+            <p class="text-justify"><%= t(".testimonialsTag") %></p>
+            <div id="testimonialCarousel" class="carousel carousel-dark slide mb-0 bunq-testimonial-carousel" data-bs-ride="carousel">
             <div class="carousel-indicators">
                 <% @testimonials.each_with_index do |testimonial, index| %>
                     <% if index == 0 %>
@@ -578,14 +579,16 @@
                         </svg>
                         <div class="container">
                             <div class="carousel-caption text-start">
-                                <figure class="text-end">
-                                  <blockquote class="blockquote">
-                                    <p><strong>“</strong> <%= testimonial.testimonial %> <strong>”</strong></p>
-                                  </blockquote>
-                                  <figcaption class="blockquote-footer">
-                                    <cite title="<%= testimonial.user.name %> @ <%= testimonial.restaurant.name %>"><%= testimonial.user.name %> @ <%= testimonial.restaurant.name %></cite>
-                                  </figcaption>
-                                </figure>
+                                <div class="bunq-testimonial-card">
+                                  <figure class="text-end">
+                                    <blockquote class="blockquote">
+                                      <p><strong>“</strong> <%= testimonial.testimonial %> <strong>”</strong></p>
+                                    </blockquote>
+                                    <figcaption class="blockquote-footer">
+                                      <cite title="<%= testimonial.user.name %> @ <%= testimonial.restaurant.name %>"><%= testimonial.user.name %> @ <%= testimonial.restaurant.name %></cite>
+                                    </figcaption>
+                                  </figure>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -599,32 +602,38 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden"><%= t('.next') %></span>
             </button>
+            </div>
+          </div>
         </div>
       </div>
   <% end %>
 
-  <div id="contact_us" class="container px-3 px-md-1 py-2" id="hanging-icons">
-      <div class="row">
-        <div class="col-12">
-            <h2 class="pb-2 border-bottom"><%= t(".contactUs") %></h2>
-            <%= form_with(model: @contact, local: true) do |form| %>
+  <div class="bunq-section bunq-section--contact">
+    <div id="contact_us" class="container px-3 px-md-1" id="hanging-icons">
+      <div class="bunq-surface p-3 p-lg-4 bunq-contact">
+        <div class="row">
+          <div class="col-12">
+              <h2 class="pb-2 border-bottom"><%= t(".contactUs") %></h2>
+              <%= form_with(model: @contact, local: true) do |form| %>
 
-              <div class="form-group row">
-                <div class="mb-3">
-                  <%= form.label :email, class: 'col-form-label' %>
-                  <%= form.email_field :email, class: 'form-control' %>
-                  <div id="emailHelp" class="form-text"><%= t(".emailAddressTag") %></div>
+                <div class="form-group row">
+                  <div class="mb-3">
+                    <%= form.label :email, class: 'col-form-label' %>
+                    <%= form.email_field :email, class: 'form-control' %>
+                    <div id="emailHelp" class="form-text"><%= t(".emailAddressTag") %></div>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <div class="mb-3">
-                  <%= form.label :message, class: 'col-form-label' %>
-                  <%= form.text_area :message, class: 'form-control' %>
+                <div class="form-group row">
+                  <div class="mb-3">
+                    <%= form.label :message, class: 'col-form-label' %>
+                    <%= form.text_area :message, class: 'form-control' %>
+                  </div>
                 </div>
-              </div>
-              <%= form.submit value: t(".submit"), class: 'float-end btn btn-danger' %>
-            <% end %>
+                <%= form.submit value: t(".submit"), class: 'float-end btn btn-danger' %>
+              <% end %>
+          </div>
         </div>
       </div>
-   </div>
+    </div>
+  </div>
 <% end %>

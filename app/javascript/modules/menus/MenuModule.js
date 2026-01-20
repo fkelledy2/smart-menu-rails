@@ -63,6 +63,7 @@ export class MenuModule extends ComponentBase {
     const qrSlug = element.textContent.trim();
     const qrHost = this.find('#qrHost')?.textContent || window.location.host;
     const qrIcon = this.find('#qrIcon')?.textContent || '';
+    const qrSize = parseInt(element.dataset.qrSize, 10) || 300;
 
     if (!qrSlug || typeof window.QRCodeStyling !== 'function') return;
 
@@ -70,8 +71,8 @@ export class MenuModule extends ComponentBase {
       const qrCode = new window.QRCodeStyling({
         type: 'canvas',
         shape: 'square',
-        width: 300,
-        height: 300,
+        width: qrSize,
+        height: qrSize,
         data: `https://${qrHost}/smartmenus/${qrSlug}`,
         margin: 0,
         qrOptions: { typeNumber: '0', mode: 'Byte', errorCorrectionLevel: 'Q' },
