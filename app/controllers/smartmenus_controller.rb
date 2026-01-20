@@ -9,19 +9,11 @@ class SmartmenusController < ApplicationController
 
   # GET /smartmenus or /smartmenus.json
   def index
-    @smartmenus = if current_user
-                    policy_scope(Smartmenu)
-                      .includes(:menu, :restaurant, :tablesetting)
-                      .joins(:menu)
-                      .where(tablesetting_id: nil, menus: { status: 'active' })
-                      .limit(100)
-                  else
-                    Smartmenu
-                      .includes(:menu, :restaurant, :tablesetting)
-                      .joins(:menu)
-                      .where(tablesetting_id: nil, menus: { status: 'active' })
-                      .limit(100)
-                  end
+    @smartmenus = policy_scope(Smartmenu)
+      .includes(:menu, :restaurant, :tablesetting)
+      .joins(:menu)
+      .where(tablesetting_id: nil, menus: { status: 'active' })
+      .limit(100)
   end
 
   # GET /smartmenus/1 or /smartmenus/1.json

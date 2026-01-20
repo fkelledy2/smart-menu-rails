@@ -1,29 +1,27 @@
-<title><%= Rails.configuration.application_name %></title>
+<title><%= @page_title.presence || t('shared.head.meta_title') %></title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0">
 <!-- Meta Title -->
-<title>Smart Digital Menus & Ordering for Restaurants | Boost Efficiency</title>
-
 <!-- Meta Description -->
-<meta name="title" content="Smart Digital Menus & Ordering for Restaurants | Boost Efficiency">
-<meta name="description" content="Transform your restaurant with contactless digital menus and smart ordering. Speed up service, reduce errors, and boost customer satisfaction with ease.">
+<meta name="title" content="<%= @page_title.presence || t('shared.head.meta_title') %>">
+<meta name="description" content="<%= @page_description.presence || t('shared.head.meta_description') %>">
 <!-- Keywords -->
-<meta name="keywords" content="Digital menus for restaurants | Contactless restaurant ordering | Restaurant efficiency tools | Smart restaurant technology | QR code menus | Online menu systems | Improve restaurant operations | Self-service restaurant ordering | Hospitality tech solutions | Eco-friendly restaurant tools">
+<meta name="keywords" content="<%= t('shared.head.meta_keywords') %>">
 <!-- Author -->
 <meta name="author" content="Mellow Menu">
 
 <!-- Open Graph Metadata -->
-<meta property="og:title" content="Digital Menus & Smart Ordering for Modern Restaurants">
-<meta property="og:description" content="Upgrade your restaurant with digital menus and smart tech that streamline service, reduce wait times, and increase guest satisfaction.">
+<meta property="og:title" content="<%= t('shared.head.og_title') %>">
+<meta property="og:description" content="<%= t('shared.head.og_description') %>">
 <meta property="og:image" content="https://www.mellow.menu/images/featured-dish.jpg">
 <meta property="og:url" content="https://www.mellow.menu">
 <meta property="og:type" content="website">
-<meta property="og:locale" content="en_IE">
+<meta property="og:locale" content="<%= I18n.locale.to_s == 'it' ? 'it_IT' : 'en_IE' %>">
 
 <!-- Twitter Metadata -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Make Your Restaurant Smarter with Digital Menus">
-<meta name="twitter:description" content="Discover how digital menus and smart ordering tools can simplify service and elevate your guests' dining experience.">
+<meta name="twitter:title" content="<%= t('shared.head.twitter_title') %>">
+<meta name="twitter:description" content="<%= t('shared.head.twitter_description') %>">
 <meta name="twitter:image" content="https://www.mellow.menu/images/featured-dish.jpg">
 
 <!-- Local SEO Metadata -->
@@ -42,7 +40,7 @@
 <%= tag.meta name: "theme-color", content: "#007bff" %>
 <%= tag.meta name: "apple-mobile-web-app-capable", content: "yes" %>
 <%= tag.meta name: "apple-mobile-web-app-status-bar-style", content: "default" %>
-<%= tag.meta name: "apple-mobile-web-app-title", content: "Smart Menu" %>
+<%= tag.meta name: "apple-mobile-web-app-title", content: t('shared.head.pwa_title') %>
 <%= tag.meta name: "mobile-web-app-capable", content: "yes" %>
 <%= tag.meta name: "msapplication-TileColor", content: "#007bff" %>
 <%= tag.meta name: "msapplication-config", content: "/browserconfig.xml" %>

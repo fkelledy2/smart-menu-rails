@@ -90,57 +90,288 @@
     <div class="hero-caption text-start">
       <h1 data-cta-title><%= t(".ctaTitle1") %></h1>
       <p data-cta-body><strong><%= t(".ctaBody1") %></strong></p>
-      <p><%= link_to t(".signUp"), new_user_registration_path, class: "btn btn-danger" %></p>
+      <div class="hero-actions d-flex flex-wrap gap-2">
+        <%= link_to t('.heroPrimaryCta'), new_user_registration_path, class: "btn btn-danger" %>
+        <%= link_to t('.heroSecondaryCta'), '#demo-table', class: "btn btn-outline-light" %>
+      </div>
     </div>
   </div>
   </div>
 
-  <div class="container px-1 py-2">
-    <h2 class="pb-2 border-bottom"><%= t(".features") %></h2>
-    <div class="row g-4 py-3 px-3 row-cols-1 row-cols-lg-3">
-      <div class="col d-flex align-items-start feature-card">
-        <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i class="feature-icon bi bi-activity"></i></h2>
-        </div>
-        <div>
-          <h3 class="fs-2 text-body-emphasis"><%= t(".featureTitle2").html_safe %></h3>
-          <p class="feature-description"><%= t(".featureDescription2").html_safe %></p>
-        </div>
-      </div>
-      <div class="col d-flex align-items-start feature-card">
-        <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i class="feature-icon bi bi-bullseye"></i></h2>
-        </div>
-        <div>
-          <h3 class="fs-2 text-body-emphasis"><%= t(".featureTitle3").html_safe %></h3>
-          <p class="feature-description"><%= t(".featureDescription3").html_safe %></p>
+  <div class="container px-3 px-md-1 py-2">
+    <h2 class="pb-2 border-bottom"><%= t('.overviewTitle') %></h2>
+    <p class="text-justify"><%= t('.overviewBody') %></p>
+    <div class="row g-4 py-3 row-cols-1 row-cols-lg-5">
+      <div class="col">
+        <div class="mellow-overview-card p-3 h-100">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-lightning-charge"></i>
+            <strong><%= t('.overviewItem1') %></strong>
+          </div>
         </div>
       </div>
-      <div class="col d-flex align-items-start feature-card">
-        <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i class="feature-icon bi bi-emoji-heart-eyes"></i></h2>
-        </div>
-        <div>
-          <h3 class="fs-2 text-body-emphasis"><%= t(".featureTitle4").html_safe %></h3>
-          <p class="feature-description"><%= t(".featureDescription4").html_safe %></p>
-        </div>
-      </div>
-      <div class="col d-flex align-items-start feature-card">
-        <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i class="feature-icon bi bi-graph-up-arrow"></i></h2>
-        </div>
-        <div>
-          <h3 class="fs-2 text-body-emphasis"><%= t(".featureTitle6").html_safe %></h3>
-          <p class="feature-description"><%= t(".featureDescription6").html_safe %></p>
+      <div class="col">
+        <div class="mellow-overview-card p-3 h-100">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-translate"></i>
+            <strong><%= t('.overviewItem2') %></strong>
+          </div>
         </div>
       </div>
-      <div class="col d-flex align-items-start feature-card">
-        <div class="icon-square text-body-emphasis d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <h2><i class="feature-icon bi bi-tree"></i></h2>
+      <div class="col">
+        <div class="mellow-overview-card p-3 h-100">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-image"></i>
+            <strong><%= t('.overviewItem3') %></strong>
+          </div>
         </div>
-        <div>
-          <h3 class="fs-2 text-body-emphasis"><%= t(".featureTitle5").html_safe %></h3>
-          <p class="feature-description"><%= t(".featureDescription5").html_safe %></p>
+      </div>
+      <div class="col">
+        <div class="mellow-overview-card p-3 h-100">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-bag-check"></i>
+            <strong><%= t('.overviewItem4') %></strong>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mellow-overview-card p-3 h-100">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-graph-up"></i>
+            <strong><%= t('.overviewItem5') %></strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container px-3 px-md-1 py-2">
+    <h2 class="pb-2 border-bottom"><%= t('.howTitle') %></h2>
+    <p class="text-justify"><%= t('.howBody') %></p>
+    <div class="row g-4 py-3 row-cols-1 row-cols-lg-3">
+      <div class="col">
+        <div class="mellow-step-card p-4 h-100">
+          <div class="mellow-step-number">1</div>
+          <h3 class="h5 mt-3"><%= t('.howStep1Title') %></h3>
+          <p class="mb-0 text-muted"><%= t('.howStep1Body') %></p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mellow-step-card p-4 h-100">
+          <div class="mellow-step-number">2</div>
+          <h3 class="h5 mt-3"><%= t('.howStep2Title') %></h3>
+          <p class="mb-0 text-muted"><%= t('.howStep2Body') %></p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mellow-step-card p-4 h-100">
+          <div class="mellow-step-number">3</div>
+          <h3 class="h5 mt-3"><%= t('.howStep3Title') %></h3>
+          <p class="mb-0 text-muted"><%= t('.howStep3Body') %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container px-3 px-md-1 py-2">
+    <h2 class="pb-2 border-bottom"><%= t('.trustTitle') %></h2>
+    <div class="row g-4 py-3 row-cols-1 row-cols-lg-4">
+      <div class="col">
+        <div class="mellow-trust-card p-3 h-100">
+          <h3 class="h6 mb-1"><%= t('.trustItem1Title') %></h3>
+          <div class="text-muted"><%= t('.trustItem1Body') %></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mellow-trust-card p-3 h-100">
+          <h3 class="h6 mb-1"><%= t('.trustItem2Title') %></h3>
+          <div class="text-muted"><%= t('.trustItem2Body') %></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mellow-trust-card p-3 h-100">
+          <h3 class="h6 mb-1"><%= t('.trustItem3Title') %></h3>
+          <div class="text-muted"><%= t('.trustItem3Body') %></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mellow-trust-card p-3 h-100">
+          <h3 class="h6 mb-1"><%= t('.trustItem4Title') %></h3>
+          <div class="text-muted"><%= t('.trustItem4Body') %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container px-3 px-md-1 py-2">
+    <h2 class="pb-2 border-bottom"><%= t('.faqTitle') %></h2>
+    <div class="accordion mellow-faq" id="mellowFaq">
+      <div class="accordion-item">
+        <h3 class="accordion-header" id="mellowFaqHeadingOne">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mellowFaqCollapseOne" aria-expanded="true" aria-controls="mellowFaqCollapseOne">
+            <%= t('.faqQ1') %>
+          </button>
+        </h3>
+        <div id="mellowFaqCollapseOne" class="accordion-collapse collapse show" aria-labelledby="mellowFaqHeadingOne" data-bs-parent="#mellowFaq">
+          <div class="accordion-body"><%= t('.faqA1') %></div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-header" id="mellowFaqHeadingTwo">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mellowFaqCollapseTwo" aria-expanded="false" aria-controls="mellowFaqCollapseTwo">
+            <%= t('.faqQ2') %>
+          </button>
+        </h3>
+        <div id="mellowFaqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="mellowFaqHeadingTwo" data-bs-parent="#mellowFaq">
+          <div class="accordion-body"><%= t('.faqA2') %></div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-header" id="mellowFaqHeadingThree">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mellowFaqCollapseThree" aria-expanded="false" aria-controls="mellowFaqCollapseThree">
+            <%= t('.faqQ3') %>
+          </button>
+        </h3>
+        <div id="mellowFaqCollapseThree" class="accordion-collapse collapse" aria-labelledby="mellowFaqHeadingThree" data-bs-parent="#mellowFaq">
+          <div class="accordion-body"><%= t('.faqA3') %></div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-header" id="mellowFaqHeadingFour">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mellowFaqCollapseFour" aria-expanded="false" aria-controls="mellowFaqCollapseFour">
+            <%= t('.faqQ4') %>
+          </button>
+        </h3>
+        <div id="mellowFaqCollapseFour" class="accordion-collapse collapse" aria-labelledby="mellowFaqHeadingFour" data-bs-parent="#mellowFaq">
+          <div class="accordion-body"><%= t('.faqA4') %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container px-3 px-md-1 py-4">
+    <div class="mellow-cta-band p-4 p-lg-5">
+      <div class="row align-items-center g-3">
+        <div class="col-lg-8">
+          <h2 class="mb-2"><%= t('.closingTitle') %></h2>
+          <div class="text-muted"><%= t('.closingBody') %></div>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <div class="d-flex flex-wrap justify-content-lg-end gap-2">
+            <%= link_to t('.closingPrimaryCta'), new_user_registration_path, class: 'btn btn-danger' %>
+            <%= link_to t('.closingSecondaryCta'), '#demo-table', class: 'btn btn-outline-secondary' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container px-3 px-md-1 py-2">
+    <h2 class="pb-2 border-bottom"><%= t('.featuresStoryTitle') %></h2>
+    <p class="text-justify"><%= t('.featuresStoryBody') %></p>
+
+    <div class="mellow-feature-block row align-items-center g-4 py-4">
+      <div class="col-lg-6">
+        <div class="mellow-kicker text-uppercase"><%= t('.featuresStory1Kicker') %></div>
+        <h3 class="mellow-feature-title"><%= t('.featuresStory1Title') %></h3>
+        <p class="text-muted"><%= t('.featuresStory1Body') %></p>
+        <ul class="mellow-feature-bullets">
+          <li><%= t('.featuresStory1Bullet1') %></li>
+          <li><%= t('.featuresStory1Bullet2') %></li>
+          <li><%= t('.featuresStory1Bullet3') %></li>
+        </ul>
+        <div class="d-flex flex-wrap gap-2">
+          <%= link_to t('.featuresStoryPrimaryCta'), new_user_registration_path, class: 'btn btn-danger' %>
+          <%= link_to t('.featuresStorySecondaryCta'), '#demo-table', class: 'btn btn-outline-secondary' %>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="mellow-feature-visual mellow-feature-visual-1">
+          <i class="bi bi-phone"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="mellow-feature-block row align-items-center g-4 py-4 flex-lg-row-reverse">
+      <div class="col-lg-6">
+        <div class="mellow-kicker text-uppercase"><%= t('.featuresStory2Kicker') %></div>
+        <h3 class="mellow-feature-title"><%= t('.featuresStory2Title') %></h3>
+        <p class="text-muted"><%= t('.featuresStory2Body') %></p>
+        <ul class="mellow-feature-bullets">
+          <li><%= t('.featuresStory2Bullet1') %></li>
+          <li><%= t('.featuresStory2Bullet2') %></li>
+          <li><%= t('.featuresStory2Bullet3') %></li>
+        </ul>
+        <div class="d-flex flex-wrap gap-2">
+          <%= link_to t('.featuresStorySecondaryCta'), '#demo-table', class: 'btn btn-outline-secondary' %>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="mellow-feature-visual mellow-feature-visual-2">
+          <i class="bi bi-translate"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="mellow-feature-block row align-items-center g-4 py-4">
+      <div class="col-lg-6">
+        <div class="mellow-kicker text-uppercase"><%= t('.featuresStory3Kicker') %></div>
+        <h3 class="mellow-feature-title"><%= t('.featuresStory3Title') %></h3>
+        <p class="text-muted"><%= t('.featuresStory3Body') %></p>
+        <ul class="mellow-feature-bullets">
+          <li><%= t('.featuresStory3Bullet1') %></li>
+          <li><%= t('.featuresStory3Bullet2') %></li>
+          <li><%= t('.featuresStory3Bullet3') %></li>
+        </ul>
+        <div class="d-flex flex-wrap gap-2">
+          <%= link_to t('.featuresStoryPrimaryCta'), new_user_registration_path, class: 'btn btn-danger' %>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="mellow-feature-visual mellow-feature-visual-3">
+          <i class="bi bi-image"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="mellow-feature-block row align-items-center g-4 py-4 flex-lg-row-reverse">
+      <div class="col-lg-6">
+        <div class="mellow-kicker text-uppercase"><%= t('.featuresStory4Kicker') %></div>
+        <h3 class="mellow-feature-title"><%= t('.featuresStory4Title') %></h3>
+        <p class="text-muted"><%= t('.featuresStory4Body') %></p>
+        <ul class="mellow-feature-bullets">
+          <li><%= t('.featuresStory4Bullet1') %></li>
+          <li><%= t('.featuresStory4Bullet2') %></li>
+          <li><%= t('.featuresStory4Bullet3') %></li>
+        </ul>
+        <div class="d-flex flex-wrap gap-2">
+          <%= link_to t('.featuresStoryPrimaryCta'), new_user_registration_path, class: 'btn btn-danger' %>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="mellow-feature-visual mellow-feature-visual-4">
+          <i class="bi bi-bag-check"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="mellow-feature-block row align-items-center g-4 py-4">
+      <div class="col-lg-6">
+        <div class="mellow-kicker text-uppercase"><%= t('.featuresStory5Kicker') %></div>
+        <h3 class="mellow-feature-title"><%= t('.featuresStory5Title') %></h3>
+        <p class="text-muted"><%= t('.featuresStory5Body') %></p>
+        <ul class="mellow-feature-bullets">
+          <li><%= t('.featuresStory5Bullet1') %></li>
+          <li><%= t('.featuresStory5Bullet2') %></li>
+          <li><%= t('.featuresStory5Bullet3') %></li>
+        </ul>
+        <div class="d-flex flex-wrap gap-2">
+          <%= link_to t('.featuresStorySecondaryCta'), '#demo-table', class: 'btn btn-outline-secondary' %>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="mellow-feature-visual mellow-feature-visual-5">
+          <i class="bi bi-graph-up"></i>
         </div>
       </div>
     </div>
@@ -149,9 +380,9 @@
   <% if @demoMenu %>
     <span class="display-none" id="qrIcon"><%= image_url('qr-icon.svg') %></span>
     <span class="display-none" id="qrHost"><%= @qrHost %></span>
-    <div class="container px-1 py-2">
+    <div class="container px-3 px-md-1 py-2">
         <h2 class="pb-2 border-bottom"><%= t(".demoMenu") %></h2>
-        <div id="demo-table" class="container px-1 py-2">
+        <div id="demo-table" class="container px-3 px-md-1 py-2">
           <div class="row g-4 py-2 row-cols-12 row-cols-12 row-cols-lg-12 align-items-center">
                 <span class="display-none qrSlug"><%= @demoMenu.slug %></span>
                 <div class="padding-horizontal-2 col-sm-12 col-md-12 col-lg-8">
@@ -182,7 +413,7 @@
     </div>
   <% end %>
 
-  <div id="metrics-table" class="display-none container px-1 py-2">
+  <div id="metrics-table" class="display-none container px-3 px-md-1 py-2">
     <h2 class="pb-2 border-bottom"><%= t(".numbers") %></h2>
     <p class="text-justify"><%= t(".numbersTag") %></p>
     <div class="row g-4 py-5 row-cols-2 row-cols-2 row-cols-lg-4">
@@ -231,7 +462,7 @@
     </div>
   </div>
 
-  <div class="container px-1 py-2">
+  <div class="container px-3 px-md-1 py-2">
    <h2 class="pb-2 border-bottom"><%= t(".pricing") %></h2>
    <p class="text-justify"><%= t(".pricingTag") %></p>
    <div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
@@ -322,7 +553,7 @@
    </div>
 
   <% if @testimonials.size > 0 %>
-      <div id="testimonials" class="container px-1 py-2">
+      <div id="testimonials" class="container px-3 px-md-1 py-2">
         <h2 class="pb-2 border-bottom"><%= t(".testimonials") %></h2>
         <p class="text-justify"><%= t(".testimonialsTag") %></p>
         <div id="testimonialCarousel" class="carousel carousel-dark slide mb-6" data-bs-ride="carousel">
@@ -372,7 +603,7 @@
       </div>
   <% end %>
 
-  <div id="contact_us" class="container px-1 py-2" id="hanging-icons">
+  <div id="contact_us" class="container px-3 px-md-1 py-2" id="hanging-icons">
       <div class="row">
         <div class="col-12">
             <h2 class="pb-2 border-bottom"><%= t(".contactUs") %></h2>

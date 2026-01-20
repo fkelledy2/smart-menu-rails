@@ -404,6 +404,14 @@ it:
       genimage: Genera immagine
       menuItems: Elementi
   plan:
+    business:
+      attribut6: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Per locali multi-sede</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> Fino a <strong>%{locations}</strong> ristoranti</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Fino a <strong>%{menus}</strong> menu / ristorante</li><li><i class='bi bi-check-lg'></i> Fino a <strong>%{dishes}</strong> piatti / menu</li><li><i class='bi bi-check-lg'></i> Fino a <strong>%{languages}</strong> lingue</li><li><i class='bi bi-check-lg'></i> Gestione inventario</li><li><i class='bi bi-check-lg'></i> Branding assistito da IA</li><li><i class='bi bi-check-lg'></i> Supporto email prioritario</li>"
+      attribute4: ''
+      attribute5: ''
+      key: Business
     call: Contattaci
     enterprise:
       attribut6: ''
@@ -427,6 +435,14 @@ it:
       attribute4: ''
       key: Pro
     register: Registrati
+    starter:
+      attribut6: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Per piccoli bar e caffetterie</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> ristorante</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Fino a <strong>%{menus}</strong> menu / ristorante</li><li><i class='bi bi-check-lg'></i> Fino a <strong>%{dishes}</strong> piatti / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> lingua</li><li><i class='bi bi-check-lg'></i> Ordini del personale</li><li><i class='bi bi-check-lg'></i> Supporto email</li><li>&nbsp;</li>"
+      attribute4: ''
+      attribute5: ''
+      key: Starter
     trial:
       attribute1: "<li><strong>1</strong> Ristorante</li>"
       attribute2: "<li><strong>1</strong> Menu</li>"

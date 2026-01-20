@@ -31,6 +31,142 @@
   }
 }
 
+.hero-actions .btn {
+  padding: 12px 26px;
+  font-weight: 600;
+}
+
+.hero-actions .btn-outline-light {
+  border-width: 2px;
+}
+
+.hero-trust i.bi-check-lg {
+  color: #22C55E;
+  font-weight: 700;
+}
+
+.mellow-overview-card {
+  border-radius: 16px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.mellow-overview-card i {
+  color: #DC2626;
+  font-size: 1.2rem;
+}
+
+.mellow-step-card {
+  border-radius: 18px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+}
+
+.mellow-step-number {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+  color: #FFFFFF;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mellow-trust-card {
+  border-radius: 16px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+}
+
+.mellow-faq .accordion-item {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #E5E7EB;
+  margin-bottom: 12px;
+}
+
+.mellow-faq .accordion-button {
+  font-weight: 700;
+}
+
+.mellow-cta-band {
+  border-radius: 22px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+.mellow-feature-block {
+  border-top: 1px solid #F3F4F6;
+}
+
+.mellow-kicker {
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: #DC2626;
+}
+
+.mellow-feature-title {
+  font-weight: 800;
+  color: #111827;
+  margin-top: 8px;
+}
+
+.mellow-feature-bullets {
+  margin: 16px 0 18px 0;
+  padding-left: 18px;
+  color: #374151;
+}
+
+.mellow-feature-bullets li {
+  margin: 8px 0;
+}
+
+.mellow-feature-visual {
+  border-radius: 22px;
+  border: 1px solid #E5E7EB;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.mellow-feature-visual i {
+  font-size: 4rem;
+  color: #DC2626;
+  opacity: 0.9;
+}
+
+.mellow-feature-visual-1 {
+  background: linear-gradient(135deg, #FFF1F2 0%, #FFFFFF 100%);
+}
+
+.mellow-feature-visual-2 {
+  background: linear-gradient(135deg, #ECFEFF 0%, #FFFFFF 100%);
+}
+
+.mellow-feature-visual-3 {
+  background: linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 100%);
+}
+
+.mellow-feature-visual-4 {
+  background: linear-gradient(135deg, #EFF6FF 0%, #FFFFFF 100%);
+}
+
+.mellow-feature-visual-5 {
+  background: linear-gradient(135deg, #FAF5FF 0%, #FFFFFF 100%);
+}
+
 // Hero overlay - REMOVED for brighter appearance
 .hero-overlay {
   position: absolute;
@@ -49,6 +185,13 @@
   left: 5%;
   right: 5%;
   z-index: 2;
+
+  max-width: 820px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  padding: 20px 22px;
+  border-radius: 18px;
   
   h1 {
     color: white;

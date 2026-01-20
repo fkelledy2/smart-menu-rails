@@ -3,16 +3,106 @@ en:
   home:
     index:
       browse: Browse
+      page_title: Mellow Menu - Digital Menu Solution for Restaurants
+      page_description: Create beautiful digital menus, enable online ordering, and provide contactless payment options for your restaurant.
+      error: "An error occurred: %{message}"
       compare_plans: Compare plans
       contactUs: Contact Us
-      ctaBody1: Create beautiful digital menus and streamline ordering.
-      ctaBody2: Smart ordering, images, translations, availability and more.
-      ctaTitle1: Add intelligence to your restaurant
-      ctaTitle2: Intelligent features
+      ctaBody1: Create a QR menu guests love. Update items instantly. Add translations, ordering, and AI dish images when you’re ready.
+      ctaBody2: Create a QR menu guests love. Update items instantly. Add translations, ordering, and AI dish images when you’re ready.
+      ctaTitle1: A beautiful digital menu in minutes.
+      ctaTitle2: A beautiful digital menu in minutes.
       demoMenu: Demo Menu
       demoMenuTag: Preview
       demoMenuTagBrowse: Browse
       emailAddressTag: Email address
+      heroPrimaryCta: Create my menu
+      heroSecondaryCta: View demo menu
+      heroTrust1: No app needed for guests
+      heroTrust2: Multilingual menus
+      heroTrust3: Instant updates (no reprints)
+
+      overviewTitle: All you need from a digital menu, in one platform
+      overviewBody: Keep your menu fresh, consistent, and conversion-friendly—without reprints or messy PDFs.
+      overviewItem1: Fast, mobile-first menus
+      overviewItem2: One-click translation
+      overviewItem3: AI dish images (consistent style)
+      overviewItem4: Ordering & payments when you want it
+      overviewItem5: Insights you can act on
+
+      howTitle: Get started in minutes
+      howBody: You don’t need a developer. Set up your menu and go live fast.
+      howStep1Title: Create your restaurant & menu
+      howStep1Body: Add sections and dishes, or import your existing menu.
+      howStep2Title: Make it guest-ready
+      howStep2Body: Add translations, availability rules, allergens, and images.
+      howStep3Title: Share your QR
+      howStep3Body: Print and place it—guests scan and browse instantly.
+
+      trustTitle: Built for real restaurant service
+      trustItem1Title: Fast on mobile
+      trustItem1Body: Designed to load quickly and stay readable.
+      trustItem2Title: Control & availability
+      trustItem2Body: Toggle items and availability as service changes.
+      trustItem3Title: Guest-friendly UX
+      trustItem3Body: No app required—just scan and go.
+      trustItem4Title: Support when you need it
+      trustItem4Body: Get help fast when you’re busy.
+
+      faqTitle: Frequently Asked Questions
+      faqQ1: Do guests need an app?
+      faqA1: No. Guests just scan a QR code and the menu opens in their browser.
+      faqQ2: Can I update the menu instantly?
+      faqA2: Yes. Changes publish immediately—no reprints.
+      faqQ3: Do you support multiple languages?
+      faqA3: Yes. Translate the menu and let guests browse in their language.
+      faqQ4: Can we add photos without a photoshoot?
+      faqA4: Yes. Generate AI images to keep your menu consistent and on-brand.
+
+      closingTitle: Launch your menu today
+      closingBody: Create your first menu now, or explore a demo and see how it feels on mobile.
+      closingPrimaryCta: Create my menu
+      closingSecondaryCta: View demo
+
+      featuresStoryTitle: Finally, a digital menu that feels premium
+      featuresStoryBody: Designed for guests, built for service. Choose the features you need now, and add more as you grow.
+      featuresStoryPrimaryCta: Create my menu
+      featuresStorySecondaryCta: View demo
+
+      featuresStory1Kicker: Guest experience
+      featuresStory1Title: Menus that load instantly and look great
+      featuresStory1Body: Your menu should feel like part of your brand—fast, clean, and effortless to browse.
+      featuresStory1Bullet1: Mobile-first layout with smooth navigation
+      featuresStory1Bullet2: Clear sections and dish details
+      featuresStory1Bullet3: No app required—just scan a QR
+
+      featuresStory2Kicker: Translation
+      featuresStory2Title: Serve every guest in their own language
+      featuresStory2Body: Translate your menu with a click and let guests browse confidently—no awkward guessing.
+      featuresStory2Bullet1: Multilingual menus for tourists and locals
+      featuresStory2Bullet2: Consistent formatting across languages
+      featuresStory2Bullet3: Faster ordering with fewer questions
+
+      featuresStory3Kicker: AI images
+      featuresStory3Title: Dish photos that match your menu’s style
+      featuresStory3Body: Generate consistent, on-brand dish images to lift perceived quality and increase selection.
+      featuresStory3Bullet1: Cohesive visual identity across dishes
+      featuresStory3Bullet2: No photoshoot required to get started
+      featuresStory3Bullet3: Easy to update when your menu changes
+
+      featuresStory4Kicker: Ordering
+      featuresStory4Title: Ordering & payments when you’re ready
+      featuresStory4Body: Start with a beautiful menu. Add ordering and payments when it fits your service model.
+      featuresStory4Bullet1: Reduce wait times during peak service
+      featuresStory4Bullet2: Control availability and ordering windows
+      featuresStory4Bullet3: Keep staff focused on hospitality
+
+      featuresStory5Kicker: Insights
+      featuresStory5Title: Understand what sells—then optimize
+      featuresStory5Body: Use simple analytics to improve your menu, reduce dead stock, and increase average order value.
+      featuresStory5Bullet1: Spot trends and top-performing dishes
+      featuresStory5Bullet2: See what guests actually view and choose
+      featuresStory5Bullet3: Make changes and publish instantly
       featureDescription2: Serve guests in their own language with one click.
       featureDescription3: Generate consistent, on-brand dish photos.
       featureDescription4: Control what customers can see and order.
@@ -42,3 +132,11 @@ en:
       testimonialsTag: What our customers say
       video_unsupported: Your browser does not support the video tag.
       welcome: Welcome
+
+    terms:
+      page_title: Terms of Service - Mellow Menu
+      page_description: Read our Terms of Service to understand the rules and guidelines for using Mellow Menu.
+
+    privacy:
+      page_title: Privacy Policy - Mellow Menu
+      page_description: Learn how Mellow Menu collects, uses, and protects your personal information in our Privacy Policy.

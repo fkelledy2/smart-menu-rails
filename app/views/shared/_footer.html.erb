@@ -13,7 +13,7 @@
                    <ul class="nav justify-content-center">
                       <% if @current_user && @current_user.plan %>
                           <% plan_key = @current_user.plan.key.to_s %>
-                          <li class="nav-item"><small><span class="px-2 text-muted">Plan: <%= plan_key.present? ? t(plan_key, default: plan_key) : '-' %></span></small></li>
+                          <li class="nav-item"><small><span class="px-2 text-muted"><%= t(".plan") %>: <%= plan_key.present? ? t(plan_key, default: plan_key) : '-' %></span></small></li>
                       <% end %>
                       <li class="nav-item"><small><%= link_to t(".terms"), terms_path, class: "px-2 text-muted" %></small></li>
                       <li class="nav-item"><small><%= link_to t(".privacy"), privacy_path, class: "px-2 text-muted" %></small></li>
@@ -34,7 +34,7 @@
         </div>
         <% if build_number.present? %>
           <div class='col-12 text-end mt-1'>
-            <small class="text-muted">Build: <%= build_number %></small>
+            <small class="text-muted"><%= t(".build") %>: <%= build_number %></small>
           </div>
         <% end %>
     </div>
