@@ -1,4 +1,4 @@
-namespace :ocr_imports do
+http://localhost:3000/smartmenus/470543c6-f005-4f12-9559-9befc6edb6f3namespace :ocr_imports do
   desc 'Reprocess published OCR imports for a single restaurant. Usage: rake ocr_imports:reprocess_restaurant[restaurant_id,limit,dry_run]'
   task :reprocess_restaurant, [:restaurant_id, :limit, :dry_run] => :environment do |_t, args|
     restaurant_id = args[:restaurant_id]
