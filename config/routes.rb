@@ -201,6 +201,7 @@ Rails.application.routes.draw do
     resources :inventories
     
     # Order management
+    get 'order_events', to: 'ordrs#restaurant_events'
     resources :ordrs do
       member do
         get :analytics

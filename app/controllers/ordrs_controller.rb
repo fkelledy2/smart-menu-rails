@@ -206,6 +206,67 @@ class OrdrsController < ApplicationController
     }
   end
 
+  # GET /restaurants/:restaurant_id/order_events
+  def restaurant_events
+    authorize Ordr.new(restaurant: @restaurant), :index?
+
+    scope = OrderEvent.joins(:ordr).where(ordrs: { restaurant_id: @restaurant.id })
+
+    if params[:ordr_id].present?
+      scope = scope.where(ordr_id: params[:ordr_id])
+    end
+
+    if params[:event_type].present?
+      scope = scope.where(event_type: params[:event_type])
+    end
+
+    if params[:source].present?
+      scope = scope.where(source: params[:source])
+    end
+
+    if params[:since].present?
+      since_time = begin
+        Time.iso8601(params[:since].to_s)
+      rescue ArgumentError
+        nil
+      end
+      scope = scope.where('order_events.occurred_at >= ?', since_time) if since_time
+    end
+
+    if params[:before_id].present?
+      scope = scope.where('order_events.id < ?', params[:before_id].to_i)
+    end
+
+    limit = params[:limit].to_i
+    limit = 200 if limit <= 0
+    limit = 1000 if limit > 1000
+
+    events = scope.includes(:ordr).order(id: :desc).limit(limit)
+
+    render json: {
+      restaurant_id: @restaurant.id,
+      count: events.length,
+      limit: limit,
+      next_before_id: events.last&.id,
+      events: events.map { |e|
+        {
+          id: e.id,
+          ordr_id: e.ordr_id,
+          ordr_cursor: e.ordr&.last_projected_order_event_sequence.to_i,
+          sequence: e.sequence,
+          event_type: e.event_type,
+          entity_type: e.entity_type,
+          entity_id: e.entity_id,
+          source: e.source,
+          idempotency_key: e.idempotency_key,
+          occurred_at: e.occurred_at,
+          created_at: e.created_at,
+          payload: e.payload,
+        }
+      },
+    }
+  end
+
   # GET /restaurants/:restaurant_id/ordrs/summary
   def summary
     authorize Ordr.new(restaurant: @restaurant), :index?
