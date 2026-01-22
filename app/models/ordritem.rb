@@ -21,6 +21,10 @@ class Ordritem < ApplicationRecord
     closed: 40,
   }
 
+  before_validation :ensure_line_key, on: :create
+
+  validates :line_key, presence: true
+
   # IdentityCache configuration
   cache_index :id
   cache_index :ordr_id
@@ -30,4 +34,10 @@ class Ordritem < ApplicationRecord
   cache_belongs_to :ordr
   cache_belongs_to :menuitem
   cache_has_one :ordrparticipant, embed: :id
+
+  private
+
+  def ensure_line_key
+    self.line_key = SecureRandom.uuid if line_key.blank?
+  end
 end

@@ -114,6 +114,7 @@ Rails.application.routes.draw do
     post :create_payment_link, controller: 'base'
     post :generate_qr, controller: 'base'
     post :create_intent, to: 'intents#create'
+    post 'webhooks/stripe', to: 'webhooks#stripe'
   end
   
   # ============================================================================
@@ -204,6 +205,7 @@ Rails.application.routes.draw do
       member do
         get :analytics
         post :ack_alcohol, to: 'ordrs#ack_alcohol'
+        get :events
       end
     end
     resources :ordr_station_tickets, only: [:update]

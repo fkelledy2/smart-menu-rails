@@ -22,6 +22,7 @@ export function post(url, body) {
   try { $('#orderCartSpinner').show(); } catch (_) {}
 
   const csrfToken = document.querySelector("meta[name='csrf-token']")?.content || '';
+  const orderSource = (typeof window !== 'undefined' && window.__SM_ORDER_SOURCE) || document.body?.dataset?.orderSource || '';
 
   try { window.dispatchEvent(new CustomEvent('ordr:request:start', { detail: { method: 'POST', url, body, timestamp: Date.now() } })); } catch (_) {}
 
@@ -31,6 +32,7 @@ export function post(url, body) {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       'X-CSRF-Token': csrfToken,
+      ...(orderSource ? { 'X-Order-Source': String(orderSource) } : {}),
     },
     body: JSON.stringify(body),
   })
@@ -67,6 +69,7 @@ export function patch(url, body) {
   try { $('#orderCartSpinner').show(); } catch (_) {}
 
   const csrfToken = document.querySelector("meta[name='csrf-token']")?.content || '';
+  const orderSource = (typeof window !== 'undefined' && window.__SM_ORDER_SOURCE) || document.body?.dataset?.orderSource || '';
 
   try { window.dispatchEvent(new CustomEvent('ordr:request:start', { detail: { method: 'PATCH', url, body, timestamp: Date.now() } })); } catch (_) {}
 
@@ -76,6 +79,7 @@ export function patch(url, body) {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       'X-CSRF-Token': csrfToken,
+      ...(orderSource ? { 'X-Order-Source': String(orderSource) } : {}),
     },
     body: JSON.stringify(body),
   })

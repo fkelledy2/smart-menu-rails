@@ -42,13 +42,35 @@ class KitchenChannel < ApplicationCable::Channel
     order = Ordr.find_by(id: data['order_id'])
     return unless order
 
-    old_status = order.status
-    order.update(status: data['new_status'])
+    old_status = order.status.to_s
+    raw_to = data['new_status']
+    to = raw_to.to_s
+    if to.match?(/^\d+$/)
+      to = Ordr.statuses.key(to.to_i).to_s
+    end
+
+    begin
+      OrderEvent.emit!(
+        ordr: order,
+        event_type: 'status_changed',
+        entity_type: 'order',
+        entity_id: order.id,
+        source: 'staff',
+        payload: {
+          from: old_status,
+          to: to,
+        },
+      )
+      OrderEventProjector.project!(order.id)
+      order.reload
+    rescue StandardError => e
+      Rails.logger.warn("[OrderEvent] kitchen_channel status update failed: #{e.class}: #{e.message}")
+    end
 
     KitchenBroadcastService.broadcast_status_change(
       order,
       old_status,
-      data['new_status'],
+      to,
     )
   end
 

@@ -521,15 +521,21 @@ async function executeIntent(payload) {
     }
 
     const csrf = document.querySelector("meta[name='csrf-token']")?.content || '';
-    await fetch(`/restaurants/${restaurantId}/ordrs/${orderId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'X-CSRF-Token': csrf,
-      },
-      body: JSON.stringify({ ordr: { status: 40 } }),
-    });
+    window.__SM_ORDER_SOURCE = 'voice';
+    try {
+      await fetch(`/restaurants/${restaurantId}/ordrs/${orderId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'X-CSRF-Token': csrf,
+          'X-Order-Source': 'voice',
+        },
+        body: JSON.stringify({ ordr: { status: 40 } }),
+      });
+    } finally {
+      window.__SM_ORDER_SOURCE = null;
+    }
     return;
   }
 
@@ -546,14 +552,31 @@ async function executeIntent(payload) {
 
   if (type === 'submit_order') {
     const btn = qs('#confirm-order');
-    if (btn) { btn.click(); return; }
+    if (btn) {
+      window.__SM_ORDER_SOURCE = 'voice';
+      try {
+        btn.click();
+      } finally {
+        // Allow any async handlers to start their requests.
+        setTimeout(() => { window.__SM_ORDER_SOURCE = null; }, 1500);
+      }
+      return;
+    }
     showMessage(tUi('cannot_submit_order_yet')); hideMessageSoon();
     return;
   }
 
   if (type === 'request_bill') {
     const btn = qs('#request-bill');
-    if (btn) { btn.click(); return; }
+    if (btn) {
+      window.__SM_ORDER_SOURCE = 'voice';
+      try {
+        btn.click();
+      } finally {
+        setTimeout(() => { window.__SM_ORDER_SOURCE = null; }, 1500);
+      }
+      return;
+    }
     showMessage(tUi('cannot_request_bill_yet')); hideMessageSoon();
     return;
   }
@@ -579,15 +602,20 @@ async function executeIntent(payload) {
     }
 
     const qty = typeof intent.qty === 'number' ? intent.qty : 1;
-    for (let i = 0; i < qty; i++) {
-      await commonsPost(`/restaurants/${restaurantId}/ordritems`, {
-        ordritem: {
-          ordr_id: orderId,
-          menuitem_id: menuitemId,
-          status: 0,
-          ordritemprice: ordritemprice,
-        },
-      });
+    window.__SM_ORDER_SOURCE = 'voice';
+    try {
+      for (let i = 0; i < qty; i++) {
+        await commonsPost(`/restaurants/${restaurantId}/ordritems`, {
+          ordritem: {
+            ordr_id: orderId,
+            menuitem_id: menuitemId,
+            status: 0,
+            ordritemprice: ordritemprice,
+          },
+        });
+      }
+    } finally {
+      window.__SM_ORDER_SOURCE = null;
     }
     return;
   }
@@ -603,6 +631,7 @@ async function executeIntent(payload) {
 
     const qty = typeof intent.qty === 'number' ? intent.qty : 1;
     let removed = 0;
+    window.__SM_ORDER_SOURCE = 'voice';
     for (const it of items) {
       if (removed >= qty) break;
       if (String(it.menuitem_id) !== String(targetMenuitemId)) continue;
@@ -613,11 +642,13 @@ async function executeIntent(payload) {
           'Content-Type': 'application/json',
           Accept: 'application/json',
           'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content || '',
+          'X-Order-Source': 'voice',
         },
         body: JSON.stringify({ ordritem: { status: 10, ordritemprice: 0 } }),
       });
       removed++;
     }
+    window.__SM_ORDER_SOURCE = null;
 
     if (!removed) {
       showMessage(tUi('no_matching_item_to_remove'));

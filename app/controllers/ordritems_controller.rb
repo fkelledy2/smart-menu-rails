@@ -94,13 +94,39 @@ class OrdritemsController < ApplicationController
       return
     end
 
-    @ordritem = Ordritem.new(ordritem_params)
     # Always authorize - policy handles public vs private access
-    authorize @ordritem
+    authorize Ordritem.new(ordritem_params)
 
     respond_to do |format|
       ActiveRecord::Base.transaction do
-        if @ordritem.save
+        begin
+          line_key = SecureRandom.uuid
+          source = request.headers['X-Order-Source'].to_s == 'voice' ? 'voice' : ((current_user && @current_employee.present?) ? 'staff' : 'guest')
+          OrderEvent.emit!(
+            ordr: @ordr,
+            event_type: 'item_added',
+            entity_type: 'item',
+            source: source,
+            payload: {
+              line_key: line_key,
+              menuitem_id: ordritem_params[:menuitem_id],
+              ordritemprice: ordritem_params[:ordritemprice],
+              qty: 1,
+            },
+          )
+          OrderEventProjector.project!(@ordr.id)
+          @ordritem = Ordritem.find_by!(ordr_id: @ordr.id, line_key: line_key)
+        rescue StandardError => e
+          Rails.logger.error "Error creating order item (event-first): #{e.message}"
+          format.html do
+            redirect_back fallback_location: root_path,
+                          alert: I18n.t('ordritems.errors.create_failed', default: 'Cannot add item right now')
+          end
+          format.json { render json: { error: e.message }, status: :internal_server_error }
+          raise ActiveRecord::Rollback
+        end
+
+        if @ordritem.present?
           begin
             mi = @ordritem.menuitem
             if mi&.alcoholic?
@@ -135,9 +161,6 @@ class OrdritemsController < ApplicationController
             render :show, status: :created,
                           location: restaurant_ordritem_url(@restaurant || @ordritem.ordr.restaurant, @ordritem)
           end
-        else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @ordritem.errors, status: :unprocessable_entity }
         end
       end
     rescue StandardError => e
@@ -155,7 +178,41 @@ class OrdritemsController < ApplicationController
     respond_to do |format|
       ActiveRecord::Base.transaction do
         old_ordritem = @ordritem.dup
-        if @ordritem.update(ordritem_params)
+        if ordritem_params[:status].to_i == Ordritem.statuses['removed']
+          begin
+            order = @ordritem.ordr
+            source = request.headers['X-Order-Source'].to_s == 'voice' ? 'voice' : ((current_user && @current_employee.present?) ? 'staff' : 'guest')
+            removed_line_key = @ordritem.line_key
+            removed_ordritem_id = @ordritem.id
+            menuitem = @ordritem.menuitem
+
+            OrderEvent.emit!(
+              ordr: order,
+              event_type: 'item_removed',
+              entity_type: 'item',
+              entity_id: removed_ordritem_id,
+              source: source,
+              payload: {
+                line_key: removed_line_key,
+                ordritem_id: removed_ordritem_id,
+              },
+            )
+            OrderEventProjector.project!(order.id)
+            @ordritem.reload
+
+            adjust_inventory(menuitem&.inventory, 1)
+            update_ordr(order)
+            participant = find_or_create_participant(order)
+            Ordraction.create!(ordrparticipant: participant, ordr: order, ordritem: @ordritem, action: 3)
+            broadcast_partials(order, order.tablesetting, participant)
+            broadcast_state(order, order.tablesetting, participant)
+            format.json { render :show, status: :ok, location: restaurant_ordritem_url(@restaurant || order.restaurant, @ordritem) }
+          rescue StandardError => e
+            Rails.logger.error("[OrderEvent] item_removed via update failed: #{e.class}: #{e.message}")
+            format.json { render json: { error: e.message }, status: :internal_server_error }
+            raise ActiveRecord::Rollback
+          end
+        elsif @ordritem.update(ordritem_params)
           # If menuitem_id changed, adjust old/new inventory
           if old_ordritem.menuitem_id != @ordritem.menuitem_id
             adjust_inventory(old_ordritem.menuitem&.inventory, 1)
@@ -182,21 +239,55 @@ class OrdritemsController < ApplicationController
     # Always authorize - policy handles public vs private access
     authorize @ordritem
 
-    ActiveRecord::Base.transaction do
-      adjust_inventory(@ordritem.menuitem&.inventory, 1)
-      order = @ordritem.ordr
-      @ordritem.destroy!
-      update_ordr(order)
-      ordrparticipant = find_or_create_participant(order)
-      Ordraction.create!(ordrparticipant: ordrparticipant, ordr: order, ordritem: @ordritem, action: 3)
-      broadcast_partials(order, order.tablesetting, ordrparticipant)
-      broadcast_state(order, order.tablesetting, ordrparticipant)
+    begin
+      ActiveRecord::Base.transaction do
+        order = @ordritem.ordr
+        source = request.headers['X-Order-Source'].to_s == 'voice' ? 'voice' : ((current_user && @current_employee.present?) ? 'staff' : 'guest')
+        removed_line_key = @ordritem.line_key
+        removed_ordritem_id = @ordritem.id
+        menuitem = @ordritem.menuitem
+
+        begin
+          OrderEvent.emit!(
+            ordr: order,
+            event_type: 'item_removed',
+            entity_type: 'item',
+            entity_id: removed_ordritem_id,
+            source: source,
+            payload: {
+              line_key: removed_line_key,
+              ordritem_id: removed_ordritem_id,
+            },
+          )
+          OrderEventProjector.project!(order.id)
+          @ordritem.reload
+        rescue StandardError => e
+          Rails.logger.error("[OrderEvent] item_removed event-first failed: #{e.class}: #{e.message}")
+          raise ActiveRecord::Rollback
+        end
+
+        adjust_inventory(menuitem&.inventory, 1)
+        update_ordr(order)
+        ordrparticipant = find_or_create_participant(order)
+        Ordraction.create!(ordrparticipant: ordrparticipant, ordr: order, ordritem: @ordritem, action: 3)
+        broadcast_partials(order, order.tablesetting, ordrparticipant)
+        broadcast_state(order, order.tablesetting, ordrparticipant)
+        respond_to do |format|
+          format.html do
+            redirect_to restaurant_ordrs_path(@restaurant || order.restaurant),
+                        notice: 'Ordritem was successfully destroyed.'
+          end
+          format.json { head :no_content }
+        end
+      end
+    rescue StandardError => e
+      Rails.logger.error "Error removing order item: #{e.message}"
       respond_to do |format|
         format.html do
-          redirect_to restaurant_ordrs_path(@restaurant || order.restaurant),
-                      notice: 'Ordritem was successfully destroyed.'
+          redirect_back fallback_location: root_path,
+                        alert: I18n.t('ordritems.errors.remove_failed', default: 'Cannot remove item right now')
         end
-        format.json { head :no_content }
+        format.json { render json: { error: e.message }, status: :internal_server_error }
       end
     end
   end

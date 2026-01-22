@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_19_183500) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_21_230600) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -657,6 +657,24 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_19_183500) do
     t.index ["user_id"], name: "index_onboarding_sessions_on_user_id"
   end
 
+  create_table "order_events", force: :cascade do |t|
+    t.bigint "ordr_id", null: false
+    t.bigint "sequence", null: false
+    t.string "event_type", null: false
+    t.string "entity_type", null: false
+    t.bigint "entity_id"
+    t.jsonb "payload", default: {}, null: false
+    t.string "source", null: false
+    t.string "idempotency_key"
+    t.datetime "occurred_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ordr_id", "created_at", "id"], name: "index_order_events_on_ordr_id_and_created_at_and_id"
+    t.index ["ordr_id", "idempotency_key"], name: "index_order_events_on_ordr_id_and_idempotency_key", unique: true, where: "(idempotency_key IS NOT NULL)"
+    t.index ["ordr_id", "sequence"], name: "index_order_events_on_ordr_id_and_sequence", unique: true
+    t.index ["ordr_id"], name: "index_order_events_on_ordr_id"
+  end
+
   create_table "ordr_station_tickets", force: :cascade do |t|
     t.bigint "restaurant_id", null: false
     t.bigint "ordr_id", null: false
@@ -700,10 +718,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_19_183500) do
     t.float "ordritemprice", default: 0.0
     t.integer "status", default: 0
     t.bigint "ordr_station_ticket_id"
+    t.string "line_key", null: false
     t.index ["created_at"], name: "index_ordritems_on_created_at"
     t.index ["menuitem_id", "status"], name: "index_ordritems_on_menuitem_status"
     t.index ["menuitem_id"], name: "index_ordritems_on_menuitem_id"
     t.index ["ordr_id", "created_at"], name: "index_ordritems_on_ordr_created_at"
+    t.index ["ordr_id", "line_key"], name: "index_ordritems_on_ordr_id_and_line_key", unique: true
     t.index ["ordr_id", "status"], name: "index_ordritems_on_ordr_status"
     t.index ["ordr_id"], name: "index_ordritems_on_ordr_id"
     t.index ["ordr_station_ticket_id"], name: "index_ordritems_on_ordr_station_ticket_id"
@@ -759,9 +779,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_19_183500) do
     t.float "covercharge", default: 0.0
     t.string "paymentlink"
     t.integer "paymentstatus", default: 0
+    t.bigint "last_projected_order_event_sequence", default: 0, null: false
     t.index ["created_at"], name: "index_ordrs_on_created_at"
     t.index ["employee_id", "created_at"], name: "index_ordrs_on_employee_created_at"
     t.index ["employee_id"], name: "index_ordrs_on_employee_id"
+    t.index ["last_projected_order_event_sequence"], name: "index_ordrs_on_last_projected_order_event_sequence"
     t.index ["menu_id"], name: "index_ordrs_on_menu_id"
     t.index ["restaurant_id", "created_at", "gross"], name: "index_ordrs_on_restaurant_created_gross"
     t.index ["restaurant_id", "created_at", "status"], name: "index_ordrs_on_restaurant_created_status"
@@ -1314,6 +1336,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_19_183500) do
   add_foreign_key "onboarding_sessions", "menus"
   add_foreign_key "onboarding_sessions", "restaurants"
   add_foreign_key "onboarding_sessions", "users"
+  add_foreign_key "order_events", "ordrs"
   add_foreign_key "ordr_station_tickets", "ordrs"
   add_foreign_key "ordr_station_tickets", "restaurants"
   add_foreign_key "ordractions", "ordritems"

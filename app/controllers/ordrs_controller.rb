@@ -49,7 +49,7 @@ class OrdrsController < ApplicationController
   before_action :authenticate_user!, except: %i[show create update] # Allow customers to create/update orders
   skip_before_action :verify_authenticity_token, only: %i[ack_alcohol], if: -> { request.format.json? }
   before_action :set_restaurant
-  before_action :set_ordr, only: %i[show edit update destroy analytics ack_alcohol]
+  before_action :set_ordr, only: %i[show edit update destroy analytics ack_alcohol events]
   before_action :set_currency
 
   # Pundit authorization
@@ -179,6 +179,33 @@ class OrdrsController < ApplicationController
     end
   end
 
+  # GET /restaurants/:restaurant_id/ordrs/:id/events
+  def events
+    authorize @ordr, :show?
+
+    events = OrderEvent.where(ordr_id: @ordr.id).order(:sequence)
+
+    render json: {
+      order_id: @ordr.id,
+      cursor: @ordr.last_projected_order_event_sequence.to_i,
+      count: events.count,
+      events: events.map { |e|
+        {
+          id: e.id,
+          sequence: e.sequence,
+          event_type: e.event_type,
+          entity_type: e.entity_type,
+          entity_id: e.entity_id,
+          source: e.source,
+          idempotency_key: e.idempotency_key,
+          occurred_at: e.occurred_at,
+          created_at: e.created_at,
+          payload: e.payload,
+        }
+      }
+    }
+  end
+
   # GET /restaurants/:restaurant_id/ordrs/summary
   def summary
     authorize Ordr.new(restaurant: @restaurant), :index?
@@ -289,11 +316,15 @@ class OrdrsController < ApplicationController
 
     begin
       ActiveRecord::Base.transaction do
-        @ordr.assign_attributes(ordr_params)
+        desired_status = ordr_params[:status]
+        before_status = @ordr.status.to_s
+        attrs = ordr_params.to_h.symbolize_keys
+        attrs.delete(:status)
+        @ordr.assign_attributes(attrs)
 
         # Ensure any newly added items are promoted from 'opened' to 'ordered' when submitting,
         # even if the overall order status was already 'ordered'.
-        if ordr_params[:status].to_i == 20
+        if desired_status.to_i == 20
           # 0 => opened, 20 => ordered (consistent with client usage)
           begin
             # Items are promoted + assigned to station tickets during submission
@@ -306,12 +337,33 @@ class OrdrsController < ApplicationController
         # Now that items may have changed status, recalculate totals
         calculate_order_totals(@ordr)
 
-        if @ordr.status_changed?
-          handle_status_change(@ordr, ordr_params[:status])
-        end
-        # Status cascading now handled by after_update callback in Ordr model
-
         if @ordr.save
+          begin
+            if desired_status.present?
+              to = desired_status.to_s
+              if to.match?(/^\d+$/)
+                to = Ordr.statuses.key(to.to_i).to_s
+              end
+              if to.present? && to != before_status
+                source = request.headers['X-Order-Source'].to_s == 'voice' ? 'voice' : ((current_user && @current_employee.present?) ? 'staff' : 'guest')
+                OrderEvent.emit!(
+                  ordr: @ordr,
+                  event_type: 'status_changed',
+                  entity_type: 'order',
+                  entity_id: @ordr.id,
+                  source: source,
+                  payload: {
+                    from: before_status,
+                    to: to,
+                  },
+                )
+                OrderEventProjector.project!(@ordr.id)
+                @ordr.reload
+              end
+            end
+          rescue StandardError => e
+            Rails.logger.warn("[OrderEvent] status event-first update failed: #{e.class}: #{e.message}")
+          end
           # Move cache invalidation to background job to improve response time
           CacheInvalidationJob.perform_later(
             order_id: @ordr.id,
