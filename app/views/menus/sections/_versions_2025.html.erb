@@ -1,0 +1,243 @@
+<% menu = local_assigns[:menu] || @menu %>
+<% restaurant = local_assigns[:restaurant] || @restaurant || menu.restaurant %>
+<% read_only = local_assigns[:read_only] ? true : false %>
+
+<% can_view_snapshot_json = begin
+  if current_user && restaurant
+    owner = restaurant.user_id.to_i == current_user.id.to_i
+    emp = current_user.employees.where(restaurant_id: restaurant.id, status: :active).first
+    owner || (emp && (emp.manager? || emp.admin?))
+  else
+    false
+  end
+rescue StandardError
+  false
+end %>
+
+<% tz_name = begin
+  restaurant&.respond_to?(:timezone) ? restaurant.timezone.to_s.presence : nil
+rescue StandardError
+  nil
+end %>
+<% tz_name ||= Time.zone.name %>
+
+<% versions = menu.menu_versions.order(version_number: :desc).to_a %>
+<% active_version = menu.active_menu_version %>
+
+<div class="mb-3 p-3">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <h2 class="h5 mb-1">
+        <i class="bi bi-clock-history"></i>
+        <%= t('.menu_versions', default: 'Menu Versions') %>
+      </h2>
+      <p class="text-muted mb-0">
+        <%= t('.menu_versions_help', default: 'Versions are immutable snapshots. Activate one to make Smartmenu render from that snapshot.') %>
+      </p>
+    </div>
+
+    <% unless read_only %>
+      <%= button_to create_version_restaurant_menu_path(restaurant, menu),
+          method: :post,
+          class: 'btn btn-dark',
+          form: { data: { turbo: true } } do %>
+        <i class="bi bi-plus-circle"></i>
+        <%= t('.create_version', default: 'Create version') %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<div class="mb-3 p-3">
+  <h3 class="h6 mb-3">
+    <i class="bi bi-git"></i>
+    <%= t('.compare_versions', default: 'Compare versions') %>
+  </h3>
+
+  <% if versions.size >= 2 %>
+    <%= form_with url: versions_diff_restaurant_menu_path(restaurant, menu),
+          method: :get,
+          data: { turbo_frame: 'menu_versions_diff' } do |f| %>
+      <div class="row g-2 align-items-end">
+        <div class="col-12 col-md-5">
+          <label class="form-label"><%= t('.from', default: 'From') %></label>
+          <select class="form-select" name="from_version_id" required>
+            <% versions.each do |v| %>
+              <option value="<%= v.id %>" <%= 'selected' if active_version && v.id == active_version.id %>>
+                v<%= v.version_number %> (id <%= v.id %>)
+              </option>
+            <% end %>
+          </select>
+        </div>
+
+        <div class="col-12 col-md-5">
+          <label class="form-label"><%= t('.to', default: 'To') %></label>
+          <select class="form-select" name="to_version_id" required>
+            <% versions.each_with_index do |v, idx| %>
+              <option value="<%= v.id %>" <%= 'selected' if idx == 0 %>>
+                v<%= v.version_number %> (id <%= v.id %>)
+              </option>
+            <% end %>
+          </select>
+        </div>
+
+        <div class="col-12 col-md-2">
+          <button class="btn btn-outline-secondary w-100" type="submit">
+            <i class="bi bi-arrow-left-right"></i>
+            <%= t('.compare', default: 'Compare') %>
+          </button>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="mt-3">
+      <%= turbo_frame_tag 'menu_versions_diff' do %>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-muted mb-0"><%= t('.need_two_versions', default: 'Create at least two versions to compare.') %></p>
+  <% end %>
+</div>
+
+<div class="mb-3 p-3">
+  <h3 class="h6 mb-3">
+    <i class="bi bi-list-ul"></i>
+    <%= t('.version_history', default: 'Version history') %>
+  </h3>
+
+  <% if versions.empty? %>
+    <p class="text-muted mb-0"><%= t('.no_versions', default: 'No versions yet.') %></p>
+  <% else %>
+    <div class="d-flex flex-column gap-2">
+      <% versions.each do |v| %>
+        <% is_active = active_version && v.id == active_version.id %>
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start gap-3">
+              <div>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <div class="fw-semibold">v<%= v.version_number %></div>
+                  <% if is_active %>
+                    <span class="badge bg-success"><%= t('.active_now', default: 'Active now') %></span>
+                  <% elsif v.is_active %>
+                    <span class="badge bg-secondary"><%= t('.default_active', default: 'Default active') %></span>
+                  <% end %>
+                </div>
+
+                <div class="text-muted small mt-1">
+                  <%= t('.created', default: 'Created') %>:
+                  <%= l(v.created_at, format: :short) rescue v.created_at %>
+                  <% if v.created_by_user_id.present? %>
+                    · <%= t('.by_user', default: 'by user') %> <%= v.created_by_user_id %>
+                  <% end %>
+                </div>
+
+                <% if v.starts_at.present? || v.ends_at.present? %>
+                  <div class="text-muted small mt-1">
+                    <%= t('.window', default: 'Window') %>:
+                    <%= v.starts_at.present? ? (l(v.starts_at, format: :short) rescue v.starts_at) : t('.any_time', default: 'any time') %>
+                    →
+                    <%= v.ends_at.present? ? (l(v.ends_at, format: :short) rescue v.ends_at) : t('.forever', default: 'forever') %>
+                  </div>
+                <% end %>
+              </div>
+
+              <% unless read_only %>
+                <div class="d-flex flex-column gap-2" style="min-width: 180px;">
+                  <button type="button"
+                          class="btn btn-outline-dark btn-sm"
+                          data-bs-toggle="modal"
+                          data-bs-target="#activateMenuVersionModal"
+                          data-menu-version-id="<%= v.id %>"
+                          data-menu-version-number="<%= v.version_number %>"
+                          data-menu-version-starts-at="<%= v.starts_at.present? ? v.starts_at.in_time_zone(tz_name).strftime('%Y-%m-%dT%H:%M') : '' %>"
+                          data-menu-version-ends-at="<%= v.ends_at.present? ? v.ends_at.in_time_zone(tz_name).strftime('%Y-%m-%dT%H:%M') : '' %>">
+                    <i class="bi bi-lightning-charge"></i>
+                    <%= t('.activate_or_schedule', default: 'Activate/Schedule') %>
+                  </button>
+
+                  <% if can_view_snapshot_json %>
+                    <%= link_to version_diff_restaurant_menu_path(restaurant, menu, v.id, active_version&.id || v.id),
+                        class: 'btn btn-outline-secondary btn-sm',
+                        data: { turbo: false } do %>
+                      <i class="bi bi-arrow-left-right"></i>
+                      <%= t('.diff_json', default: 'Diff (JSON)') %>
+                    <% end %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<% unless read_only %>
+  <div class="modal fade" id="activateMenuVersionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="bi bi-lightning-charge"></i>
+            <span id="activateMenuVersionModalTitle"><%= t('.activate_version', default: 'Activate version') %></span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <%= form_with url: activate_version_restaurant_menu_path(restaurant, menu), method: :post do |f| %>
+          <div class="modal-body">
+            <input type="hidden" name="menu_version_id" id="activate_menu_version_id" />
+
+            <div class="mb-3">
+              <label class="form-label"><%= t('.starts_at', default: 'Starts at (optional)') %></label>
+              <input class="form-control" type="datetime-local" name="starts_at" id="activate_starts_at" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label"><%= t('.ends_at', default: 'Ends at (optional)') %></label>
+              <input class="form-control" type="datetime-local" name="ends_at" id="activate_ends_at" />
+            </div>
+
+            <div class="text-muted small">
+              <%= t('.activation_help', default: 'Leave both empty to make this the default active version. Provide a window to schedule activation.') %>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><%= t('.cancel', default: 'Cancel') %></button>
+            <button type="submit" class="btn btn-dark"><%= t('.save', default: 'Save') %></button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var modal = document.getElementById('activateMenuVersionModal')
+      if (!modal) return
+
+      modal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        if (!button) return
+
+        var versionId = button.getAttribute('data-menu-version-id')
+        var versionNumber = button.getAttribute('data-menu-version-number')
+        var startsAt = button.getAttribute('data-menu-version-starts-at')
+        var endsAt = button.getAttribute('data-menu-version-ends-at')
+
+        var idInput = document.getElementById('activate_menu_version_id')
+        var startsInput = document.getElementById('activate_starts_at')
+        var endsInput = document.getElementById('activate_ends_at')
+        var title = document.getElementById('activateMenuVersionModalTitle')
+
+        if (title) title.textContent = 'Activate version v' + versionNumber
+        if (idInput) idInput.value = versionId || ''
+        if (startsInput) startsInput.value = startsAt || ''
+        if (endsInput) endsInput.value = endsAt || ''
+      })
+    })()
+  </script>
+<% end %>

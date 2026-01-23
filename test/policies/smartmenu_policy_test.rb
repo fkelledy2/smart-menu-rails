@@ -119,10 +119,12 @@ class SmartmenuPolicyTest < ActiveSupport::TestCase
   end
 
   test 'should return empty scope for anonymous user' do
-    # Anonymous user scope will fail because user is nil
-    assert_raises(NoMethodError) do
-      SmartmenuPolicy::Scope.new(nil, Smartmenu).resolve
-    end
+    scope = SmartmenuPolicy::Scope.new(nil, Smartmenu).resolve
+    assert scope.respond_to?(:to_a)
+
+    # Anonymous scope is public: active menu smartmenus with no tablesetting
+    assert_includes scope, smartmenus(:customer_menu)
+    assert_not_includes scope, smartmenus(:one)
   end
 
   test 'should handle user with no restaurant smartmenus' do

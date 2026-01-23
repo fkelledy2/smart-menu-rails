@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_21_230600) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_23_103300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -313,6 +313,23 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_21_230600) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["menu_id"], name: "index_menu_sections_on_menu_id"
+  end
+
+  create_table "menu_versions", force: :cascade do |t|
+    t.bigint "menu_id", null: false
+    t.integer "version_number", null: false
+    t.jsonb "snapshot_json", default: {}, null: false
+    t.bigint "created_by_user_id"
+    t.boolean "is_active", default: false, null: false
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_user_id"], name: "index_menu_versions_on_created_by_user_id"
+    t.index ["menu_id", "is_active"], name: "index_menu_versions_on_menu_id_and_is_active"
+    t.index ["menu_id", "starts_at", "ends_at"], name: "index_menu_versions_on_menu_id_and_starts_at_and_ends_at"
+    t.index ["menu_id", "version_number"], name: "index_menu_versions_on_menu_id_and_version_number", unique: true
+    t.index ["menu_id"], name: "index_menu_versions_on_menu_id"
   end
 
   create_table "menuavailabilities", force: :cascade do |t|
@@ -1076,6 +1093,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_21_230600) do
     t.boolean "displayImagesInPopup", default: false
     t.text "image_style_profile"
     t.boolean "allow_alcohol", default: false, null: false
+    t.string "timezone", default: "UTC"
     t.index ["user_id", "status"], name: "index_restaurants_on_user_status_active", where: "(archived = false)"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
@@ -1307,6 +1325,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_21_230600) do
   add_foreign_key "menu_item_product_links", "products"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "menus"
+  add_foreign_key "menu_versions", "menus"
+  add_foreign_key "menu_versions", "users", column: "created_by_user_id"
   add_foreign_key "menuavailabilities", "menus"
   add_foreign_key "menuitem_allergyn_mappings", "allergyns"
   add_foreign_key "menuitem_allergyn_mappings", "menuitems"

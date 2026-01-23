@@ -87,15 +87,94 @@ Approach options:
 
 ## Progress Checklist
 
-- [ ] Decide storage strategy: JSON snapshot vs versioned tables
-- [ ] Add `menu_versions` model/table
-- [ ] Implement “Create Version” action from current menu
-- [ ] Implement “Activate Version” (manual)
-- [ ] Implement activation window fields (`starts_at`, `ends_at`)
-- [ ] Implement version selection logic in smart menu rendering
+
+### 0) Decisions (lock these in first)
+
+- [ ] Decide storage strategy
+  - [ ] Snapshot JSON (`menu_versions.snapshot_json`) (fastest to ship)
+  - [ ] Versioned tables (`menu_versions`, `menu_section_versions`, `menu_item_versions`) (more relational)
+- [ ] Decide what fields are in-scope for snapshot/diff (v1)
+  - [ ] menu fields
+  - [ ] section fields
+  - [ ] item fields
+  - [ ] locale fields (include vs exclude)
+- [ ] Decide how version selection interacts with existing availability/time restrictions
+
+### 1) Data model + migrations
+
+- [ ] Add `menu_versions` table/model
+  - [ ] `menu_id` (FK)
+  - [ ] `version_number` (per-menu increment)
+  - [ ] `snapshot_json` (if JSON strategy)
+  - [ ] `created_by_user_id` (optional)
+  - [ ] activation fields: `is_active`, `starts_at`, `ends_at`
+  - [ ] indexes for `menu_id`, `(menu_id, version_number)` unique, activation queries
+- [ ] Add model validations + immutability constraints (v1)
+  - [ ] prevent updates to snapshot once created (application-level)
+  - [ ] allow toggling activation fields only (if needed)
+
+### 2) Snapshot creation (from current menu)
+
+- [ ] Implement `MenuVersionSnapshotService`
+  - [ ] deterministic serialization (stable sort order for sections/items)
+  - [ ] include required menu/section/item fields
+  - [ ] exclude transient/derived fields (timestamps, counters)
+- [ ] Implement `MenuVersion.create_from_menu!(menu:, user:)`
+  - [ ] allocate `version_number` with per-menu lock
+  - [ ] persist snapshot
+
+### 3) Activation (manual + optional window)
+
+- [ ] Implement activation rules (v1)
+  - [ ] “manual active” (one active version per menu)
+  - [ ] optional windowed activation (`starts_at`, `ends_at`)
+  - [ ] conflict resolution rules when multiple windows overlap
+- [ ] Implement `MenuVersionActivationService`
+  - [ ] activate version now
+  - [ ] schedule activation window
+  - [ ] deactivate other versions as needed
+
+### 4) Version selection in smart menu rendering
+
+- [ ] Implement `Menu#active_menu_version(at: Time.current)`
+- [ ] Wire smartmenu rendering to use active version snapshot when present
+  - [ ] ensure existing ordering + time restrictions still apply correctly
+  - [ ] fallback to current mutable tables when no versions exist
+
+### 5) Diffing
+
 - [ ] Implement `MenuVersionDiffService`
-- [ ] Add admin/staff UI for:
-  - [ ] list versions
-  - [ ] diff view
-  - [ ] activate/schedule activation
-- [ ] Add tests for snapshot integrity + activation logic
+  - [ ] deterministic diff output
+  - [ ] added/removed sections
+  - [ ] added/removed items
+  - [ ] changed fields (name/price/description/availability metadata)
+- [ ] Add a JSON endpoint to fetch diff
+  - [ ] `GET /restaurants/:restaurant_id/menus/:menu_id/versions/:a_id/diff/:b_id`
+
+### 6) UI (staff/admin)
+
+- [ ] Versions list page (menu-level)
+  - [ ] show version number, created_at, created_by, active/window info
+- [ ] “Create Version” action/button
+- [ ] “Activate Version” action/button
+- [ ] “Schedule Activation Window” UI
+- [ ] Diff view UI (A vs B)
+
+### 7) Authorization + auditing
+
+- [ ] Pundit policy updates
+  - [ ] who can create versions
+  - [ ] who can activate/schedule
+  - [ ] who can view diffs
+- [ ] Basic auditing fields in snapshot metadata (created_by, created_at)
+
+### 8) Tests
+
+- [ ] Snapshot integrity
+  - [ ] snapshot includes all sections/items deterministically
+  - [ ] snapshot is stable across repeated runs (same input => same JSON)
+- [ ] Activation selection
+  - [ ] window selects correct version in-window
+  - [ ] fallback to default active version out-of-window
+- [ ] Diff service
+  - [ ] detects add/remove/change correctly

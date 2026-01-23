@@ -248,6 +248,12 @@ Rails.application.routes.draw do
         post :attach
         post :share
         delete :detach
+
+        get :versions
+        get 'versions/diff', to: 'menus#versions_diff', as: :versions_diff
+        post :create_version
+        post :activate_version
+        get 'versions/:from_version_id/diff/:to_version_id', to: 'menus#version_diff', as: :version_diff
       end
       collection do
         patch :update_sequence

@@ -7,5 +7,6 @@ one:
   menuitem: burger
   status: 0  # opened
   ordritemprice: 15.99
+  line_key: ordritem-one-line
   created_at: <%= 1.day.ago %>
   updated_at: <%= 1.day.ago %>

@@ -96,6 +96,13 @@
       <i class="bi bi-qr-code"></i>
       <span><%= t('.qrcode', default: 'QR Code') %></span>
     <% end %>
+
+    <%= link_to edit_restaurant_menu_path(restaurant, menu, section: 'versions'),
+        class: "sidebar-link #{'active' if current_section == 'versions'}",
+        data: { turbo_frame: 'menu_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick' } do %>
+      <i class="bi bi-clock-history"></i>
+      <span><%= t('.versions', default: 'Versions') %></span>
+    <% end %>
   </div>
 </aside>
 

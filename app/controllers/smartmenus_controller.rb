@@ -20,6 +20,16 @@ class SmartmenusController < ApplicationController
   def show
     load_menu_associations_for_show
 
+    begin
+      @active_menu_version = @menu&.active_menu_version
+      if @active_menu_version
+        MenuVersionApplyService.apply_snapshot!(menu: @menu, menu_version: @active_menu_version)
+      end
+    rescue StandardError => e
+      Rails.logger.warn("[SmartmenusController#show] menu version apply failed: #{e.class}: #{e.message}")
+      @active_menu_version = nil
+    end
+
     # Cache-buster for the header/table selector.
     # The header fragment cache key previously ignored newly created Smartmenus/Tablesettings,
     # causing stale table dropdown contents (e.g., missing newly added tables).
@@ -135,7 +145,12 @@ class SmartmenusController < ApplicationController
               begin
                 @ordrparticipant.reload
                 @ordrparticipant = Ordrparticipant.includes(:ordrparticipant_allergyn_filters).find(@ordrparticipant.id)
-                Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: :openorder)
+                Ordraction.find_or_create_by!(
+                  ordrparticipant: @ordrparticipant,
+                  ordr: @openOrder,
+                  ordritem: nil,
+                  action: :openorder,
+                )
               rescue ActiveRecord::InvalidForeignKey, ActiveRecord::RecordNotFound => e
                 Rails.logger.warn("[SmartmenusController#show] skipped ordraction create (staff): #{e.class}: #{e.message}")
               end
@@ -156,7 +171,12 @@ class SmartmenusController < ApplicationController
               begin
                 @ordrparticipant.reload
                 @ordrparticipant = Ordrparticipant.includes(:ordrparticipant_allergyn_filters).find(@ordrparticipant.id)
-                Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @openOrder, action: :participate)
+                Ordraction.find_or_create_by!(
+                  ordrparticipant: @ordrparticipant,
+                  ordr: @openOrder,
+                  ordritem: nil,
+                  action: :participate,
+                )
               rescue ActiveRecord::InvalidForeignKey, ActiveRecord::RecordNotFound => e
                 Rails.logger.warn("[SmartmenusController#show] skipped ordraction create (customer): #{e.class}: #{e.message}")
               end
@@ -246,6 +266,13 @@ class SmartmenusController < ApplicationController
           menuparticipant: @menuparticipant,
           session_id: session.id.to_s
         )
+
+        if @active_menu_version
+          payload[:menuVersion] = {
+            id: @active_menu_version.id,
+            version_number: @active_menu_version.version_number,
+          }
+        end
         begin
           items_len = payload.dig(:order, :items)&.length || 0
           item_ids = Array(payload.dig(:order, :items)).map { |i| i[:id] }.compact.take(20)

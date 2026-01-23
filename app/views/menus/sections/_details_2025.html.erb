@@ -8,7 +8,7 @@
 <% restaurant_menu = local_assigns[:restaurant_menu] || @restaurant_menu %>
 <% read_only = local_assigns[:read_only] ? true : false %>
 
-<% menu_smartmenu_slug = Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id, tablesetting_id: nil).first&.slug %>
+<% menu_smartmenu_slug = menu.smartmenu&.slug %>
 
 <% if read_only %>
   <% if menu_smartmenu_slug.present? %>

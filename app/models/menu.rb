@@ -10,6 +10,7 @@ class Menu < ApplicationRecord
   has_many :menusections
   has_many :menuavailabilities
   has_many :menuitems, through: :menusections
+  has_many :menu_versions, dependent: :destroy
   # Per-menu allergens via items
   has_many :menuitem_allergyn_mappings, through: :menuitems
   has_many :allergyns, -> { distinct }, through: :menuitem_allergyn_mappings
@@ -73,11 +74,7 @@ class Menu < ApplicationRecord
   }
 
   def slug
-    if Smartmenu.where(restaurant: restaurant, menu: self).first
-      Smartmenu.where(restaurant: restaurant, menu: self).first.slug
-    else
-      ''
-    end
+    smartmenu&.slug.to_s
   end
 
   def smartmenu
@@ -132,6 +129,22 @@ class Menu < ApplicationRecord
           end
 
     mil&.description.presence || description
+  end
+
+  def active_menu_version(at: Time.current)
+    now = at
+
+    windowed = menu_versions
+      .where.not(starts_at: nil)
+      .or(menu_versions.where.not(ends_at: nil))
+      .where('starts_at IS NULL OR starts_at <= ?', now)
+      .where('ends_at IS NULL OR ends_at >= ?', now)
+      .order(version_number: :desc)
+      .first
+
+    return windowed if windowed
+
+    menu_versions.where(is_active: true).order(version_number: :desc).first
   end
 
   private
