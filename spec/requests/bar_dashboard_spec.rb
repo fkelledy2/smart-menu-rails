@@ -1,19 +1,19 @@
 require 'rails_helper'
 
-RSpec.describe 'KitchenDashboards' do
-  describe 'GET /restaurants/:id/kitchen' do
+RSpec.describe 'BarDashboards' do
+  describe 'GET /restaurants/:id/bar' do
     let(:owner) { create(:user) }
     let(:restaurant) { create(:restaurant, user: owner) }
 
     it 'redirects when not signed in' do
-      get "/restaurants/#{restaurant.id}/kitchen"
+      get "/restaurants/#{restaurant.id}/bar"
       expect(response).not_to have_http_status(:success)
     end
 
     it 'allows the restaurant owner' do
       sign_in owner
 
-      get "/restaurants/#{restaurant.id}/kitchen"
+      get "/restaurants/#{restaurant.id}/bar"
       expect(response).to have_http_status(:success)
     end
 
@@ -22,7 +22,7 @@ RSpec.describe 'KitchenDashboards' do
       create(:employee, user: employee_user, restaurant: restaurant, status: 'active', role: 'staff')
       sign_in employee_user
 
-      get "/restaurants/#{restaurant.id}/kitchen"
+      get "/restaurants/#{restaurant.id}/bar"
       expect(response).to have_http_status(:success)
     end
 
@@ -30,7 +30,7 @@ RSpec.describe 'KitchenDashboards' do
       other_user = create(:user)
       sign_in other_user
 
-      get "/restaurants/#{restaurant.id}/kitchen"
+      get "/restaurants/#{restaurant.id}/bar"
       expect(response).not_to have_http_status(:success)
     end
   end
@@ -49,7 +49,7 @@ RSpec.describe 'KitchenDashboards' do
       ticket = OrdrStationTicket.create!(
         restaurant: restaurant,
         ordr: ordr,
-        station: :kitchen,
+        station: :bar,
         status: :ordered,
         sequence: 1,
         submitted_at: Time.current,
@@ -77,7 +77,7 @@ RSpec.describe 'KitchenDashboards' do
       ticket = OrdrStationTicket.create!(
         restaurant: restaurant,
         ordr: ordr,
-        station: :kitchen,
+        station: :bar,
         status: :ordered,
         sequence: 1,
         submitted_at: Time.current,
@@ -106,7 +106,7 @@ RSpec.describe 'KitchenDashboards' do
       ticket = OrdrStationTicket.create!(
         restaurant: restaurant,
         ordr: ordr,
-        station: :kitchen,
+        station: :bar,
         status: :ready,
         sequence: 1,
         submitted_at: Time.current,

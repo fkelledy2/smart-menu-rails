@@ -130,6 +130,19 @@ export function getCurrentOrderId() {
     const id = gs.order && gs.order.id ? String(gs.order.id).trim() : null;
     if (id) return id;
   } catch (_) {}
+
+  // Fallback: legacy DOM nodes
+  try {
+    const legacy = document.getElementById('currentOrder')?.textContent?.trim();
+    if (legacy) return legacy;
+  } catch (_) {}
+
+  // Fallback: modal field populated on show.bs.modal
+  try {
+    const modalOrderId = document.getElementById('a2o_ordr_id')?.textContent?.trim();
+    if (modalOrderId) return modalOrderId;
+  } catch (_) {}
+
   if (!root) return null;
   const v = root.dataset?.orderId?.trim();
   if (v) return v;
@@ -169,6 +182,26 @@ export function getRestaurantId() {
     const rid = gs.restaurant && gs.restaurant.id ? String(gs.restaurant.id).trim() : null;
     if (rid) return rid;
   } catch (_) {}
+
+  // Fallback: legacy DOM nodes
+  try {
+    const legacy = document.getElementById('currentRestaurant')?.textContent?.trim();
+    if (legacy) return legacy;
+  } catch (_) {}
+
+  // Fallback: any element advertising a restaurant id
+  try {
+    const anyNode = document.querySelector('[data-restaurant-id]');
+    const anyId = anyNode?.dataset?.restaurantId?.trim();
+    if (anyId) return anyId;
+  } catch (_) {}
+
+  // Fallback: hidden input used by payments
+  try {
+    const inputVal = document.getElementById('paymentRestaurantId')?.value?.trim();
+    if (inputVal) return inputVal;
+  } catch (_) {}
+
   if (!root) return null;
   const fromData = root.dataset?.restaurantId;
   if (fromData) return fromData;
@@ -182,6 +215,13 @@ function getCurrentOrderStatus() {
     const st = gs.order && gs.order.status ? String(gs.order.status).toLowerCase() : null;
     if (st) return st;
   } catch (_) {}
+
+  // Fallback: legacy DOM nodes
+  try {
+    const legacy = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
+    if (legacy) return legacy;
+  } catch (_) {}
+
   const root = getContextRoot();
   if (!root) return null;
   return root.dataset?.orderStatus?.trim()?.toLowerCase() || null;

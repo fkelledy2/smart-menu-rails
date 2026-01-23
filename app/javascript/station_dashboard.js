@@ -14,26 +14,25 @@ class StationDashboard {
     this.initializePresenceChannel();
     this.initializeTicketStatusButtons();
     this.initializeSortButtons();
+    this.initializeDragAndDrop();
   }
 
   initializeClock() {
     const updateClock = () => {
       const now = new Date();
-      const timeString = now.toLocaleTimeString('en-US', {
+      const timeString = now.toLocaleTimeString('en-GB', {
         hour: '2-digit',
         minute: '2-digit',
-        second: '2-digit',
         hour12: false,
       });
-      const dateString = now.toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
+      const dateString = now.toLocaleDateString('en-GB', {
+        weekday: 'short',
+        day: '2-digit',
+        month: 'short',
       });
 
       const clockElement = document.getElementById('current-time');
-      if (clockElement) clockElement.textContent = `${dateString} - ${timeString}`;
+      if (clockElement) clockElement.textContent = `${dateString} ${timeString}`;
     };
 
     updateClock();
@@ -105,10 +104,12 @@ class StationDashboard {
   renderPresence() {
     const countEl = document.getElementById('kitchen-presence-count');
     const listEl = document.getElementById('kitchen-presence-list');
-    if (!countEl || !listEl) return;
+    if (!countEl) return;
 
     const users = Array.from(this.presenceState.values()).filter((u) => u.status && u.status !== 'offline');
     countEl.textContent = String(users.length);
+
+    if (!listEl) return;
 
     listEl.innerHTML = users
       .slice(0, 5)
@@ -131,9 +132,267 @@ class StationDashboard {
     }
 
     if (data.event === 'status_change') {
+      const card = document.querySelector(`.order-card[data-ticket-id="${data.ticket.id}"]`);
+      const newColumnType = this.getColumnType(data.new_status);
+      const currentColumnType = this.getCurrentColumnTypeForCard(card);
+
+      // If we've already applied this move optimistically (e.g., via drag/drop),
+      // ignore the broadcast to avoid double metric updates.
+      if (card && card.dataset.status === data.new_status && currentColumnType === newColumnType) return;
+
       this.moveTicketBetweenColumns(data.ticket.id, data.old_status, data.new_status, data.ticket);
       this.updateMetricsFromStatusChange(data.old_status, data.new_status);
     }
+  }
+
+  initializeDragAndDrop() {
+    this.dragState = {
+      ticketId: null,
+      fromStatus: null,
+      pointerId: null,
+      ghost: null,
+      sourceCard: null,
+      activeDropZone: null,
+    };
+
+    // Desktop HTML5 drag-and-drop
+    document.addEventListener('dragstart', (event) => {
+      const card = event.target.closest('.order-card');
+      if (!card) return;
+
+      const ticketId = card.dataset.ticketId;
+      const fromStatus = card.dataset.status;
+      if (!ticketId || !fromStatus) return;
+
+      this.dragState.ticketId = ticketId;
+      this.dragState.fromStatus = fromStatus;
+
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', ticketId);
+    });
+
+    document.addEventListener('dragend', () => {
+      this.clearDropZoneHighlight();
+      this.dragState.ticketId = null;
+      this.dragState.fromStatus = null;
+    });
+
+    // Touch-friendly pointer drag
+    document.addEventListener('pointerdown', (event) => {
+      const card = event.target.closest('.order-card');
+      if (!card) return;
+
+      // Don't start drag from buttons
+      if (event.target.closest('button, a, input, textarea, select, label')) return;
+
+      const ticketId = card.dataset.ticketId;
+      const fromStatus = card.dataset.status;
+      if (!ticketId || !fromStatus) return;
+
+      // Only treat touch/pen as drag; mouse will use native drag.
+      if (event.pointerType === 'mouse') return;
+
+      this.dragState.ticketId = ticketId;
+      this.dragState.fromStatus = fromStatus;
+      this.dragState.pointerId = event.pointerId;
+      this.dragState.sourceCard = card;
+
+      this.createGhostFromCard(card, event.clientX, event.clientY);
+      try {
+        card.setPointerCapture(event.pointerId);
+      } catch (e) {
+        // no-op
+      }
+      event.preventDefault();
+    });
+
+    document.addEventListener('pointermove', (event) => {
+      if (this.dragState.pointerId == null) return;
+      if (event.pointerId !== this.dragState.pointerId) return;
+
+      this.positionGhost(event.clientX, event.clientY);
+      this.updateDropZoneHighlightFromPoint(event.clientX, event.clientY);
+      event.preventDefault();
+    });
+
+    document.addEventListener('pointerup', (event) => {
+      if (this.dragState.pointerId == null) return;
+      if (event.pointerId !== this.dragState.pointerId) return;
+
+      const dropZone = this.dragState.activeDropZone || this.findDropZoneFromPoint(event.clientX, event.clientY);
+      const ticketId = this.dragState.ticketId;
+      const fromStatus = this.dragState.fromStatus;
+
+      this.teardownGhost();
+      this.clearDropZoneHighlight();
+      this.dragState.pointerId = null;
+      this.dragState.activeDropZone = null;
+
+      if (!dropZone || !ticketId || !fromStatus) {
+        this.dragState.ticketId = null;
+        this.dragState.fromStatus = null;
+        return;
+      }
+
+      const columnType = this.getColumnTypeFromDropZone(dropZone);
+      const newStatus = this.getStatusForColumnType(columnType);
+      if (!newStatus || newStatus === fromStatus) {
+        this.dragState.ticketId = null;
+        this.dragState.fromStatus = null;
+        return;
+      }
+
+      if (!this.isAllowedStatusTransition(fromStatus, newStatus)) {
+        this.dragState.ticketId = null;
+        this.dragState.fromStatus = null;
+        return;
+      }
+
+      this.applyStatusChangeOptimistically(ticketId, fromStatus, newStatus);
+      this.updateTicketStatus(ticketId, newStatus);
+
+      this.dragState.ticketId = null;
+      this.dragState.fromStatus = null;
+    });
+
+    // Drop zones (for both HTML5 drag and pointer drag highlight)
+    ['pending', 'preparing', 'ready'].forEach((columnType) => {
+      const zone = document.getElementById(`${columnType}-orders`);
+      if (!zone) return;
+
+      zone.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        this.setDropZoneHighlight(zone);
+      });
+
+      zone.addEventListener('dragleave', () => {
+        this.clearDropZoneHighlight(zone);
+      });
+
+      zone.addEventListener('drop', (event) => {
+        event.preventDefault();
+
+        const ticketId = event.dataTransfer.getData('text/plain') || this.dragState.ticketId;
+        const fromStatus = this.dragState.fromStatus;
+        const newStatus = this.getStatusForColumnType(columnType);
+
+        this.clearDropZoneHighlight(zone);
+
+        if (!ticketId || !fromStatus || !newStatus || newStatus === fromStatus) return;
+
+        if (!this.isAllowedStatusTransition(fromStatus, newStatus)) return;
+
+        this.applyStatusChangeOptimistically(ticketId, fromStatus, newStatus);
+        this.updateTicketStatus(ticketId, newStatus);
+      });
+    });
+  }
+
+  isAllowedStatusTransition(fromStatus, newStatus) {
+    const from = String(fromStatus || '');
+    const to = String(newStatus || '');
+
+    const allowedNext = {
+      ordered: ['preparing'],
+      preparing: ['ready'],
+      ready: ['collected'],
+      collected: [],
+    };
+
+    const allowed = allowedNext[from] || [];
+    return allowed.includes(to);
+  }
+
+  applyStatusChangeOptimistically(ticketId, fromStatus, newStatus) {
+    this.moveTicketBetweenColumns(ticketId, fromStatus, newStatus, { id: ticketId });
+    this.updateMetricsFromStatusChange(fromStatus, newStatus);
+  }
+
+  getCurrentColumnTypeForCard(card) {
+    if (!card) return null;
+    const zone = card.closest('#pending-orders, #preparing-orders, #ready-orders');
+    if (!zone || !zone.id) return null;
+    return zone.id.replace('-orders', '');
+  }
+
+  getColumnTypeFromDropZone(dropZone) {
+    if (!dropZone || !dropZone.id) return null;
+    return dropZone.id.replace('-orders', '');
+  }
+
+  getStatusForColumnType(columnType) {
+    if (columnType === 'pending') return 'ordered';
+    if (columnType === 'preparing') return 'preparing';
+    if (columnType === 'ready') return 'ready';
+    return null;
+  }
+
+  setDropZoneHighlight(zone) {
+    if (!zone) return;
+    if (this.dragState.activeDropZone && this.dragState.activeDropZone !== zone) {
+      this.clearDropZoneHighlight(this.dragState.activeDropZone);
+    }
+    this.dragState.activeDropZone = zone;
+    zone.classList.add('border', 'border-3', 'border-primary');
+  }
+
+  clearDropZoneHighlight(zone = null) {
+    const z = zone || this.dragState.activeDropZone;
+    if (!z) return;
+    z.classList.remove('border', 'border-3', 'border-primary');
+    if (!zone) this.dragState.activeDropZone = null;
+  }
+
+  findDropZoneFromPoint(x, y) {
+    const el = document.elementFromPoint(x, y);
+    return el ? el.closest('#pending-orders, #preparing-orders, #ready-orders') : null;
+  }
+
+  updateDropZoneHighlightFromPoint(x, y) {
+    const zone = this.findDropZoneFromPoint(x, y);
+    if (!zone) {
+      this.clearDropZoneHighlight();
+      return;
+    }
+    this.setDropZoneHighlight(zone);
+  }
+
+  createGhostFromCard(card, x, y) {
+    this.teardownGhost();
+
+    const rect = card.getBoundingClientRect();
+    const ghost = card.cloneNode(true);
+    ghost.style.position = 'fixed';
+    ghost.style.left = `${Math.max(0, x - rect.width / 2)}px`;
+    ghost.style.top = `${Math.max(0, y - rect.height / 2)}px`;
+    ghost.style.width = `${rect.width}px`;
+    ghost.style.pointerEvents = 'none';
+    ghost.style.opacity = '0.85';
+    ghost.style.zIndex = '9999';
+
+    document.body.appendChild(ghost);
+    this.dragState.ghost = ghost;
+
+    card.style.opacity = '0.35';
+  }
+
+  positionGhost(x, y) {
+    const ghost = this.dragState.ghost;
+    if (!ghost) return;
+    const rect = ghost.getBoundingClientRect();
+    ghost.style.left = `${Math.max(0, x - rect.width / 2)}px`;
+    ghost.style.top = `${Math.max(0, y - rect.height / 2)}px`;
+  }
+
+  teardownGhost() {
+    if (this.dragState.ghost && this.dragState.ghost.parentNode) {
+      this.dragState.ghost.parentNode.removeChild(this.dragState.ghost);
+    }
+    this.dragState.ghost = null;
+    if (this.dragState.sourceCard) {
+      this.dragState.sourceCard.style.opacity = '';
+    }
+    this.dragState.sourceCard = null;
   }
 
   initializeTicketStatusButtons() {
@@ -329,6 +588,7 @@ class StationDashboard {
   createTicketCardElement(ticket) {
     const card = document.createElement('div');
     card.className = 'card mb-2 order-card shadow-sm';
+    card.draggable = true;
     card.dataset.ticketId = ticket.id;
     card.dataset.orderId = ticket.order_id;
     card.dataset.status = ticket.status;

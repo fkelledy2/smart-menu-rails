@@ -5,10 +5,12 @@
   </div>
 <% end %>
 
-<nav class="p-0 navbar navbar-expand-md navbar-light bg-light">
+<% station_screen = controller_name == 'kitchen_dashboard' || controller_name == 'bar_dashboard' %>
+
+<nav class="p-0 navbar navbar-expand-md navbar-light bg-light <%= 'sticky-top' if station_screen %>">
   <div class="container-fluid mx-auto">
     <%= link_to root_path, class: "navbar-brand" do %>
-        <%= image_tag "qr-icon.svg", height:'56' %><%= image_tag "logo.png", height:'56' %>
+        <%= image_tag "qr-icon.svg", height:'56' %><%= image_tag("logo.png", height:'56') unless station_screen %>
     <% end %>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarsExample04" aria-expanded="false" aria-label="<%= t('.toggle_navigation') %>">
@@ -17,7 +19,15 @@
 
     <div class="collapse navbar-collapse" id="navbarMain">
       <ul class="navbar-nav me-auto mt-2 mt-md-0">
-        <% if current_user %>
+        <% if station_screen %>
+          <li class="nav-item d-flex align-items-center">
+            <span class="navbar-text fw-semibold">
+              <i class="bi bi-shop"></i>
+              <%= @restaurant&.name %>
+              <%= controller_name == 'kitchen_dashboard' ? 'Kitchen' : 'Bar' %>
+            </span>
+          </li>
+        <% elsif current_user %>
             <li class="z-index-high nav-item dropdown">
               <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
                 <%= t(".restaurants") %>
@@ -39,6 +49,17 @@
         <% end %>
       </ul>
       <ul class="navbar-nav">
+        <% if station_screen %>
+          <li class="nav-item d-flex align-items-center me-2">
+            <span class="badge bg-secondary" title="Staff online">
+              <i class="bi bi-people me-1"></i>
+              <span id="kitchen-presence-count">0</span>
+            </span>
+          </li>
+          <li class="nav-item d-flex align-items-center me-3">
+            <span id="current-time" class="navbar-text fw-semibold"></span>
+          </li>
+        <% end %>
         <% if user_signed_in? %>
           <li class="z-index-high nav-item dropdown">
             <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>

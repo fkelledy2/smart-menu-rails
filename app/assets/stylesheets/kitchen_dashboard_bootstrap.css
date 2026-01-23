@@ -24,6 +24,30 @@
   }
 }
 
+.kitchen-dashboard {
+  background:
+    radial-gradient(1200px circle at 10% 10%, rgba(0, 195, 137, 0.10), transparent 55%),
+    radial-gradient(900px circle at 90% 15%, rgba(45, 127, 249, 0.10), transparent 55%),
+    radial-gradient(900px circle at 60% 80%, rgba(167, 139, 250, 0.10), transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, #F7FAFF 100%);
+}
+
+.kitchen-dashboard .navbar {
+  background: rgba(11, 18, 32, 0.92) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.kitchen-dashboard .navbar-brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.kitchen-dashboard #current-time {
+  font-variant-numeric: tabular-nums;
+}
+
 /* New order animation */
 .order-card.new-order {
   animation: slideInFromTop 0.5s ease, pulseGlow 2s infinite;

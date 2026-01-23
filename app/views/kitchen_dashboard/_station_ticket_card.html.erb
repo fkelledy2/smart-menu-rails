@@ -1,5 +1,5 @@
 <% order = ticket.ordr %>
-<div class="card mb-2 order-card shadow-sm" data-ticket-id="<%= ticket.id %>" data-order-id="<%= order.id %>" data-status="<%= ticket.status %>" data-created-at="<%= order.created_at.to_i %>">
+<div class="card mb-2 order-card shadow-sm" draggable="true" data-ticket-id="<%= ticket.id %>" data-order-id="<%= order.id %>" data-status="<%= ticket.status %>" data-created-at="<%= order.created_at.to_i %>">
   <div class="card-header py-2 d-flex justify-content-between align-items-center <%= ticket.status == 'ordered' ? 'bg-danger-subtle' : ticket.status == 'preparing' ? 'bg-warning-subtle' : 'bg-success-subtle' %>">
     <div>
       <strong class="fs-5">Order #<%= order.id %></strong>

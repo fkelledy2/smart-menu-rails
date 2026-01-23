@@ -124,6 +124,9 @@ class ApplicationController < ActionController::Base
     return if devise_controller?
     return if controller_name == 'onboarding'
     return if request.xhr? # Skip for AJAX requests
+    return if request.format.json?
+
+    return if current_user.employees.exists?(status: :active)
 
     # Skip for certain controllers that should always be accessible
     skip_controllers = %w[home sessions registrations passwords confirmations unlocks]
