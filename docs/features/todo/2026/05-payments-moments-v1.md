@@ -29,8 +29,74 @@ Gaps:
 
 - Standardize the **bill requested** transition as the trigger to show payment UI.
 - Implement pay-at-table flow:
-  - QR → Stripe Checkout or Payment Element
-- Implement partial payment support (v1): **even split only**.
+  - QR → **Stripe Checkout Session**
+- Implement partial payment support (v1): **even split only** (via dedicated split payment records).
+
+## Decisions locked for v1
+
+- Stripe integration: **Checkout Session** (not Payment Element).
+- Split payments data model: **Option B** (dedicated model/records per participant payment).
+- “No opened items” means: there are **no** `ordritems` where `ordritems.status == 'opened'`.
+
+## Canonical payment UX states (derived)
+
+These are UI states (not necessarily DB columns). The UI should derive them primarily from `ordr.status` and split-payment state.
+
+- `pay_hidden`
+  - Order is not in `billrequested`.
+- `pay_available`
+  - Order is `billrequested` and not fully paid.
+- `pay_in_progress`
+  - A Checkout Session has been created for the current participant/device and is pending.
+- `pay_succeeded`
+  - Participant payment succeeded (split flow) OR the order is fully paid.
+- `pay_locked`
+  - Order is `closed` (or otherwise no longer payable).
+
+## Proposed server surfaces (v1)
+
+The intent is to keep this small and Stripe-led.
+
+- `POST /ordrs/:id/request_bill`
+  - Transitions order to `billrequested` (if allowed).
+- `POST /ordrs/:id/payments/checkout_session`
+  - Creates a Stripe Checkout Session for:
+    - full amount (non-split), OR
+    - the participant share (split)
+  - Returns `checkout_url`.
+- `POST /payments/webhooks/stripe`
+  - Receives Checkout completion events and updates:
+    - split-payment record(s)
+    - order `paid` when fully settled
+
+## Split payments (even split only) – Option B
+
+### Model sketch
+
+Create a dedicated record per participant share (name TBD, e.g. `OrdrSplitPayment`).
+
+Minimum fields:
+
+- `ordr_id`
+- `ordr_participant_id` (nullable if you choose “split by number” later)
+- `amount_cents`
+- `currency`
+- `status` (e.g. `pending`, `requires_payment`, `succeeded`, `failed`, `canceled`)
+- Stripe references:
+  - `stripe_checkout_session_id`
+  - `stripe_payment_intent_id` (if available from session)
+
+### Settlement rule
+
+- Order becomes `paid` when:
+  - all split payment records are `succeeded`, OR
+  - the non-split payment succeeds.
+
+### Rounding rule (v1)
+
+- Compute `N` shares.
+- Use integer cents.
+- Allocate remainder cents by adding +1 cent to the first K participants.
 
 ## Non-goals (v1)
 
@@ -42,7 +108,7 @@ Gaps:
 
 ### Request bill moment
 
-- GIVEN an order with at least one ordered item and no opened items
+- GIVEN an order with at least one ordered item and no `ordritems` where `ordritems.status == 'opened'`
   WHEN the customer triggers “Request Bill”
   THEN the order transitions to `billrequested` and the UI exposes payment options.
 
@@ -74,9 +140,9 @@ Gaps:
 
 - [ ] Define canonical payment UX states tied to order status (`billrequested` as entry)
 - [ ] Implement pay-at-table UX entry point and server endpoints
-- [ ] Add Stripe integration for chosen flow (Payment Element / Checkout)
+- [ ] Add Stripe integration for chosen flow (Checkout Session)
 - [ ] Add payment confirmation handling (success/failure)
-- [ ] Add even-split data model and UI (reuse/align with bill splitting doc)
+- [ ] Add even-split data model and UI (Option B split payment records; reuse/align with bill splitting doc)
 - [ ] Add staff visibility of split payment state
 - [ ] Add tests:
   - [ ] request bill transition => pay visible

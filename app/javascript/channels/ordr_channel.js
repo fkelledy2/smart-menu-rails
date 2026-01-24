@@ -564,25 +564,27 @@ function refreshOrderJSLogic() {
   if ($('#pay-order').length) {
     if (document.getElementById('refreshPaymentLink')) {
       document.getElementById('refreshPaymentLink').addEventListener('click', async () => {
-        const amount = document.getElementById('paymentAmount').value;
-        const currency = document.getElementById('paymentCurrency').value;
-        const restaurantName = document.getElementById('paymentRestaurantName').value;
+        const amountCents = document.getElementById('paymentAmount').value;
         const restaurantId = document.getElementById('paymentRestaurantId').value;
         const openOrderId = document.getElementById('openOrderId').value;
+        let tip = 0;
+        if ($('#tipNumberField').length > 0) {
+          tip = $('#tipNumberField').val();
+        }
         try {
-          const response = await fetch('/payments/create_payment_link', {
+          const response = await fetch(`/restaurants/${restaurantId}/ordrs/${openOrderId}/payments/checkout_session`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               Accept: 'application/json',
             },
-            body: JSON.stringify({ openOrderId, amount, currency, restaurantName, restaurantId }),
+            body: JSON.stringify({ amount_cents: amountCents, tip: tip, success_url: window.location.href, cancel_url: window.location.href }),
           });
           const data = await response.json();
-          if (data.payment_link) {
-            $('#paymentlink').text(data.payment_link);
-            $('#paymentAnchor').prop('href', data.payment_link);
-            fetchQR(data.payment_link);
+          if (data.checkout_url) {
+            $('#paymentlink').text(data.checkout_url);
+            $('#paymentAnchor').prop('href', data.checkout_url);
+            fetchQR(data.checkout_url);
           } else {
             alert('Failed to generate payment link.');
           }
@@ -592,47 +594,6 @@ function refreshOrderJSLogic() {
         }
       });
     }
-    // Delegated handler for Pay Order with in-flight guard
-    $(document).off('click.payOrder').on('click.payOrder', '#pay-order:not([disabled])', function () {
-      if (window.__payOrderPosting) { return; }
-      window.__payOrderPosting = true;
-      let tip = 0;
-      if ($('#tipNumberField').length > 0) {
-        tip = $('#tipNumberField').val();
-      }
-      if ($('#currentEmployee').length) {
-        const ordr = {
-          ordr: {
-            tablesetting_id: $('#currentTable').text(),
-            employee_id: $('#currentEmployee').text(),
-            restaurant_id: getRestaurantId(),
-            tip: tip,
-            menu_id: $('#currentMenu').text(),
-            status: ORDR_CLOSED,
-          },
-        };
-        const restaurantId = getRestaurantId();
-        const orderId = getCurrentOrderId();
-        if (!restaurantId || !orderId) { console.warn('[PayOrder] Missing id; aborting', { restaurantId, orderId }); window.__payOrderPosting = false; return; }
-        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
-          .finally(() => setTimeout(() => { window.__payOrderPosting = false; }, 500));
-      } else {
-        const ordr = {
-          ordr: {
-            tablesetting_id: $('#currentTable').text(),
-            restaurant_id: getRestaurantId(),
-            tip: tip,
-            menu_id: $('#currentMenu').text(),
-            status: ORDR_CLOSED,
-          },
-        };
-        const restaurantId = getRestaurantId();
-        const orderId = getCurrentOrderId();
-        if (!restaurantId || !orderId) { console.warn('[PayOrder] Missing id; aborting', { restaurantId, orderId }); window.__payOrderPosting = false; return; }
-        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
-          .finally(() => setTimeout(() => { window.__payOrderPosting = false; }, 500));
-      }
-    });
   }
 
 }

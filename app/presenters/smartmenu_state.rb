@@ -26,7 +26,7 @@ class SmartmenuState
       flags: {
         displayRequestBill: display_request_bill,
         payVisible: (order_hash[:status].to_s == 'billrequested'),
-        menuItemsEnabled: (order_hash[:id].present? && order_hash[:status].to_s != 'billrequested')
+        menuItemsEnabled: (order_hash[:id].present? && !%w[billrequested paid closed].include?(order_hash[:status].to_s))
       },
       participants: {
         orderParticipantId: ordrparticipant&.id&.to_s,

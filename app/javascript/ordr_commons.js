@@ -411,14 +411,43 @@ export function initOrderBindings() {
       window.__requestBillPosting = true;
       const currentStatus = getCurrentOrderStatus();
       if (currentStatus === 'billrequested' || currentStatus === 'closed') { window.__requestBillPosting = false; return; }
-      const base = { tablesetting_id: getCurrentTableId(), restaurant_id: getRestaurantId(), menu_id: getCurrentMenuId(), status: 30 };
-      const eid = getCurrentEmployeeId(); if (eid) { base.employee_id = eid; }
       const restaurantId = getRestaurantId();
       const orderId = getCurrentOrderId();
       if (!restaurantId || !orderId) { console.warn('[RequestBill][capture] Missing id; aborting', { restaurantId, orderId }); window.__requestBillPosting = false; return; }
-      try { console.debug('[RequestBill][capture] PATCH dispatch', { restaurantId, orderId, base }); } catch (_) {}
-      patch(`/restaurants/${restaurantId}/ordrs/` + orderId, { ordr: base })
-        .then(() => hideClosestModal(btn))
+
+      const csrfToken = document.querySelector("meta[name='csrf-token']")?.content || '';
+      const orderSource = (typeof window !== 'undefined' && window.__SM_ORDER_SOURCE) || document.body?.dataset?.orderSource || '';
+
+      const postJson = (url, body) => {
+        return fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'X-CSRF-Token': csrfToken,
+            ...(orderSource ? { 'X-Order-Source': String(orderSource) } : {}),
+          },
+          body: JSON.stringify(body || {}),
+        }).then(async (res) => {
+          let data = null;
+          try { data = await res.json(); } catch (_) { data = {}; }
+          if (!res.ok) {
+            const msg = (data && (data.error || data.message)) ? (data.error || data.message) : `Request failed (${res.status})`;
+            throw new Error(msg);
+          }
+          return data;
+        });
+      };
+
+      postJson(`/restaurants/${restaurantId}/ordrs/${orderId}/request_bill`, {})
+        .then((rb) => {
+          if (!rb || rb.ok !== true) throw new Error('request_bill failed');
+          try { hideClosestModal(btn); } catch (_) {}
+        })
+        .catch((e) => {
+          console.error('[RequestBill][capture] Failed', e);
+          try { alert(String(e && e.message ? e.message : e)); } catch (_) {}
+        })
         .finally(() => setTimeout(() => { window.__requestBillPosting = false; }, 500));
     }, true);
   })();
@@ -436,15 +465,58 @@ export function initOrderBindings() {
       if (evt.stopImmediatePropagation) try { evt.stopImmediatePropagation(); } catch (_) {}
       evt.preventDefault();
 
+      if (window.__payOrderPosting) return;
+      window.__payOrderPosting = true;
+
       let tip = 0;
       if ($('#tipNumberField').length > 0) { tip = $('#tipNumberField').val(); }
-      const base = { tablesetting_id: getCurrentTableId(), restaurant_id: getRestaurantId(), tip: tip, menu_id: getCurrentMenuId(), status: 40 };
-      const eid = getCurrentEmployeeId(); if (eid) { base.employee_id = eid; }
       const restaurantId = getRestaurantId();
       const orderId = getCurrentOrderId();
-      if (!restaurantId || !orderId) { console.warn('[PayOrder][capture] Missing id; aborting', { restaurantId, orderId }); return; }
-      patch(`/restaurants/${restaurantId}/ordrs/` + orderId, { ordr: base }, false)
-        .then(() => hideClosestModal(btn));
+      if (!restaurantId || !orderId) {
+        console.warn('[PayOrder][capture] Missing id; aborting', { restaurantId, orderId });
+        window.__payOrderPosting = false;
+        return;
+      }
+
+      const currentStatus = (getCurrentOrderStatus() || '').toLowerCase();
+
+      // Charge the displayed total (incl. tip) when available.
+      let amountCents = null;
+      try {
+        const v = $('#paymentAmount').val();
+        const n = parseInt(v, 10);
+        if (!Number.isNaN(n) && n > 0) amountCents = n;
+      } catch (_) {}
+
+      const successUrl = window.location.href;
+      const cancelUrl = window.location.href;
+
+      const ensureBillRequested = () => {
+        if (currentStatus === 'billrequested') return Promise.resolve({ ok: true });
+        return post(`/restaurants/${restaurantId}/ordrs/${orderId}/request_bill`, {});
+      };
+
+      ensureBillRequested()
+        .then((rb) => {
+          if (!rb || rb.ok !== true) throw new Error('request_bill failed');
+          return post(`/restaurants/${restaurantId}/ordrs/${orderId}/payments/checkout_session`, {
+            success_url: successUrl,
+            cancel_url: cancelUrl,
+            tip: tip,
+            amount_cents: amountCents,
+          });
+        })
+        .then((cs) => {
+          if (!cs || cs.ok !== true || !cs.checkout_url) throw new Error('checkout_session failed');
+          try { hideClosestModal(btn); } catch (_) {}
+          window.location.assign(String(cs.checkout_url));
+        })
+        .catch((e) => {
+          console.error('[PayOrder][capture] Failed to start checkout', e);
+        })
+        .finally(() => {
+          setTimeout(() => { window.__payOrderPosting = false; }, 500);
+        });
     }, true);
   })();
 

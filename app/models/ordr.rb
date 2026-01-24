@@ -51,6 +51,7 @@ class Ordr < ApplicationRecord
   has_many :ordrparticipants, dependent: :destroy
   has_many :ordractions, dependent: :destroy
   has_many :ordr_station_tickets, dependent: :destroy
+  has_many :ordr_split_payments, dependent: :destroy
 
   # Optimized associations to prevent N+1 queries
   has_many :ordered_items_with_details, lambda {

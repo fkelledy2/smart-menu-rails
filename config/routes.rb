@@ -207,6 +207,10 @@ Rails.application.routes.draw do
         get :analytics
         post :ack_alcohol, to: 'ordrs#ack_alcohol'
         get :events
+
+        post :request_bill, to: 'ordr_payments#request_bill'
+        post :split_evenly, to: 'ordr_payments#split_evenly'
+        post 'payments/checkout_session', to: 'ordr_payments#checkout_session'
       end
     end
     resources :ordr_station_tickets, only: [:update]

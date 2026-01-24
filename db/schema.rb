@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_23_103300) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_24_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -692,6 +692,22 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_23_103300) do
     t.index ["ordr_id"], name: "index_order_events_on_ordr_id"
   end
 
+  create_table "ordr_split_payments", force: :cascade do |t|
+    t.bigint "ordr_id", null: false
+    t.bigint "ordrparticipant_id"
+    t.integer "amount_cents", null: false
+    t.string "currency", null: false
+    t.integer "status", default: 0, null: false
+    t.string "stripe_checkout_session_id"
+    t.string "stripe_payment_intent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ordr_id"], name: "index_ordr_split_payments_on_ordr_id"
+    t.index ["ordrparticipant_id"], name: "index_ordr_split_payments_on_ordrparticipant_id"
+    t.index ["stripe_checkout_session_id"], name: "index_ordr_split_payments_on_stripe_checkout_session_id", unique: true
+    t.index ["stripe_payment_intent_id"], name: "index_ordr_split_payments_on_stripe_payment_intent_id"
+  end
+
   create_table "ordr_station_tickets", force: :cascade do |t|
     t.bigint "restaurant_id", null: false
     t.bigint "ordr_id", null: false
@@ -1357,6 +1373,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_23_103300) do
   add_foreign_key "onboarding_sessions", "restaurants"
   add_foreign_key "onboarding_sessions", "users"
   add_foreign_key "order_events", "ordrs"
+  add_foreign_key "ordr_split_payments", "ordrparticipants"
+  add_foreign_key "ordr_split_payments", "ordrs"
   add_foreign_key "ordr_station_tickets", "ordrs"
   add_foreign_key "ordr_station_tickets", "restaurants"
   add_foreign_key "ordractions", "ordritems"
