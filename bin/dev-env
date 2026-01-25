@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+set -e
+
+RAILS_ENV_VALUE="${RAILS_ENV:-development}"
+STRIPE_ENV_VALUE="development"
+
+STRIPE_API_KEY_FROM_CREDS="$(bundle exec rails runner -e "${RAILS_ENV_VALUE}" 'key = (Rails.application.credentials.stripe_secret_key rescue nil)
+if key.nil? || key.to_s.empty?
+  key = (Rails.application.credentials.dig(:stripe, :secret_key) || Rails.application.credentials.dig(:stripe, :api_key) rescue nil)
+end
+print key.to_s')"
+
+STRIPE_API_KEY="${STRIPE_API_KEY_FROM_CREDS}"
+
+if [ -z "${STRIPE_API_KEY}" ]; then
+  echo "Could not load STRIPE_API_KEY from Rails credentials (env=${RAILS_ENV_VALUE})" 1>&2
+  exit 1
+fi
+
+printf '%s\n' "export STRIPE_API_KEY=\"${STRIPE_API_KEY}\""
+printf '%s\n' "export STRIPE_ENABLED=\"${STRIPE_ENABLED:-true}\""
+printf '%s\n' "export STRIPE_ENV=\"${STRIPE_ENV_VALUE}\""

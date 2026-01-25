@@ -7,5 +7,8 @@ fi
 
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
+export WEB_PORT="${WEB_PORT:-${PORT}}"
+
+eval "$(sh bin/dev-env)"
 
 exec foreman start -f Procfile.dev "$@"

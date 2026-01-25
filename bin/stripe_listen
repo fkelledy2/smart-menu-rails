@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+
+set -e
+
+WEB_PORT="${WEB_PORT:-${PORT:-3000}}"
+FORWARD_TO="${STRIPE_WEBHOOK_FORWARD_TO:-http://localhost:${WEB_PORT}/payments/webhooks/stripe}"
+RAILS_ENV_VALUE="${RAILS_ENV:-development}"
+
+if [ -z "${STRIPE_API_KEY}" ]; then
+  if [ -n "${STRIPE_SECRET_KEY}" ]; then
+    STRIPE_API_KEY="${STRIPE_SECRET_KEY}"
+  else
+    STRIPE_API_KEY="$(bundle exec rails runner -e "${RAILS_ENV_VALUE}" 'key = (Rails.application.credentials.stripe_secret_key rescue nil)
+if key.nil? || key.to_s.empty?
+  key = (Rails.application.credentials.dig(:stripe, :secret_key) || Rails.application.credentials.dig(:stripe, :api_key) rescue nil)
+end
+print key.to_s')"
+  fi
+fi
+
+if [ -z "${STRIPE_API_KEY}" ]; then
+  echo "STRIPE_API_KEY is not set" 1>&2
+  exit 1
+fi
+
+exec stripe listen --api-key "${STRIPE_API_KEY}" --forward-to "${FORWARD_TO}"

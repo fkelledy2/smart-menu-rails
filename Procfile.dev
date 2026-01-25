@@ -1,4 +1,5 @@
-web: bin/rails server -p 3000
+web: bin/rails server -p ${WEB_PORT:-3000}
+stripe: sh bin/stripe_listen
 worker: bundle exec sidekiq
 js: yarn build --reload
 css: yarn build:css --watch
