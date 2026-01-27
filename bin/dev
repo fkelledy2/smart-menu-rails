@@ -5,6 +5,9 @@ if gem list --no-installed --exact --silent foreman; then
   gem install foreman
 fi
 
+# Default to development for local dev unless explicitly set
+export RAILS_ENV="${RAILS_ENV:-development}"
+
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
 export WEB_PORT="${WEB_PORT:-${PORT}}"

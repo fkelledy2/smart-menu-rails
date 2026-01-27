@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_24_100000) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_26_183000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -231,6 +231,24 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_24_100000) do
     t.index ["menuitem_id", "updated_at"], name: "index_inventories_on_menuitem_updated_at"
     t.index ["menuitem_id"], name: "index_inventories_on_menuitem_id"
     t.index ["status"], name: "index_inventories_on_status"
+  end
+
+  create_table "ledger_events", force: :cascade do |t|
+    t.integer "entity_type", default: 0, null: false
+    t.bigint "entity_id"
+    t.integer "event_type", default: 0, null: false
+    t.integer "amount_cents"
+    t.string "currency"
+    t.integer "provider", default: 0, null: false
+    t.string "provider_event_id", null: false
+    t.string "provider_event_type"
+    t.jsonb "raw_event_payload", default: {}, null: false
+    t.datetime "occurred_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entity_type", "entity_id"], name: "index_ledger_events_on_entity_type_and_entity_id"
+    t.index ["occurred_at"], name: "index_ledger_events_on_occurred_at"
+    t.index ["provider", "provider_event_id"], name: "index_ledger_events_on_provider_and_provider_event_id", unique: true
   end
 
   create_table "memory_metrics", force: :cascade do |t|
@@ -928,6 +946,59 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_24_100000) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "payment_attempts", force: :cascade do |t|
+    t.bigint "ordr_id", null: false
+    t.bigint "restaurant_id", null: false
+    t.integer "provider", default: 0, null: false
+    t.string "provider_payment_id"
+    t.integer "amount_cents", null: false
+    t.string "currency", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "charge_pattern", default: 0, null: false
+    t.integer "merchant_model", default: 0, null: false
+    t.integer "platform_fee_cents"
+    t.integer "provider_fee_cents"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ordr_id", "created_at"], name: "index_payment_attempts_on_ordr_id_and_created_at"
+    t.index ["ordr_id"], name: "index_payment_attempts_on_ordr_id"
+    t.index ["provider", "provider_payment_id"], name: "index_payment_attempts_on_provider_and_provider_payment_id", unique: true, where: "(provider_payment_id IS NOT NULL)"
+    t.index ["restaurant_id", "created_at"], name: "index_payment_attempts_on_restaurant_id_and_created_at"
+    t.index ["restaurant_id"], name: "index_payment_attempts_on_restaurant_id"
+  end
+
+  create_table "payment_profiles", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.integer "merchant_model", default: 0, null: false
+    t.integer "primary_provider", default: 0, null: false
+    t.jsonb "fallback_providers", default: {}, null: false
+    t.string "default_country"
+    t.string "default_currency"
+    t.jsonb "fee_model", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_payment_profiles_on_restaurant_id", unique: true
+  end
+
+  create_table "payment_refunds", force: :cascade do |t|
+    t.bigint "payment_attempt_id", null: false
+    t.bigint "ordr_id", null: false
+    t.bigint "restaurant_id", null: false
+    t.integer "provider", default: 0, null: false
+    t.string "provider_refund_id"
+    t.integer "amount_cents"
+    t.string "currency"
+    t.integer "status", default: 0, null: false
+    t.jsonb "provider_response_payload", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ordr_id"], name: "index_payment_refunds_on_ordr_id"
+    t.index ["payment_attempt_id", "created_at"], name: "index_payment_refunds_on_payment_attempt_id_and_created_at"
+    t.index ["payment_attempt_id"], name: "index_payment_refunds_on_payment_attempt_id"
+    t.index ["provider", "provider_refund_id"], name: "index_payment_refunds_on_provider_and_provider_refund_id", unique: true, where: "(provider_refund_id IS NOT NULL)"
+    t.index ["restaurant_id"], name: "index_payment_refunds_on_restaurant_id"
+  end
+
   create_table "performance_metrics", force: :cascade do |t|
     t.string "endpoint", null: false
     t.float "response_time", null: false
@@ -990,6 +1061,23 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_24_100000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_type", "canonical_name"], name: "index_products_on_product_type_and_canonical_name", unique: true
+  end
+
+  create_table "provider_accounts", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.integer "provider", default: 0, null: false
+    t.string "provider_account_id", null: false
+    t.string "account_type"
+    t.string "country"
+    t.string "currency"
+    t.integer "status", default: 0, null: false
+    t.jsonb "capabilities", default: {}, null: false
+    t.boolean "payouts_enabled", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "provider_account_id"], name: "index_provider_accounts_on_provider_and_provider_account_id", unique: true
+    t.index ["restaurant_id", "provider"], name: "index_provider_accounts_on_restaurant_id_and_provider"
+    t.index ["restaurant_id"], name: "index_provider_accounts_on_restaurant_id"
   end
 
   create_table "push_subscriptions", force: :cascade do |t|
@@ -1394,8 +1482,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_24_100000) do
   add_foreign_key "pay_charges", "pay_subscriptions", column: "subscription_id"
   add_foreign_key "pay_payment_methods", "pay_customers", column: "customer_id"
   add_foreign_key "pay_subscriptions", "pay_customers", column: "customer_id"
+  add_foreign_key "payment_attempts", "ordrs"
+  add_foreign_key "payment_attempts", "restaurants"
+  add_foreign_key "payment_profiles", "restaurants"
+  add_foreign_key "payment_refunds", "ordrs"
+  add_foreign_key "payment_refunds", "payment_attempts"
+  add_foreign_key "payment_refunds", "restaurants"
   add_foreign_key "performance_metrics", "users"
   add_foreign_key "product_enrichments", "products"
+  add_foreign_key "provider_accounts", "restaurants"
   add_foreign_key "push_subscriptions", "users"
   add_foreign_key "resource_locks", "users"
   add_foreign_key "restaurant_menus", "menus"

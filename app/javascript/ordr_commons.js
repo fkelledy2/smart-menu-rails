@@ -468,8 +468,6 @@ export function initOrderBindings() {
       if (window.__payOrderPosting) return;
       window.__payOrderPosting = true;
 
-      let tip = 0;
-      if ($('#tipNumberField').length > 0) { tip = $('#tipNumberField').val(); }
       const restaurantId = getRestaurantId();
       const orderId = getCurrentOrderId();
       if (!restaurantId || !orderId) {
@@ -480,14 +478,6 @@ export function initOrderBindings() {
 
       const currentStatus = (getCurrentOrderStatus() || '').toLowerCase();
 
-      // Charge the displayed total (incl. tip) when available.
-      let amountCents = null;
-      try {
-        const v = $('#paymentAmount').val();
-        const n = parseInt(v, 10);
-        if (!Number.isNaN(n) && n > 0) amountCents = n;
-      } catch (_) {}
-
       const successUrl = window.location.href;
       const cancelUrl = window.location.href;
 
@@ -496,20 +486,29 @@ export function initOrderBindings() {
         return post(`/restaurants/${restaurantId}/ordrs/${orderId}/request_bill`, {});
       };
 
+      const startPaymentAttempt = () => {
+        return post('/payments/payment_attempts', {
+          ordr_id: orderId,
+          success_url: successUrl,
+          cancel_url: cancelUrl,
+        });
+      };
+
       ensureBillRequested()
         .then((rb) => {
           if (!rb || rb.ok !== true) throw new Error('request_bill failed');
-          return post(`/restaurants/${restaurantId}/ordrs/${orderId}/payments/checkout_session`, {
-            success_url: successUrl,
-            cancel_url: cancelUrl,
-            tip: tip,
-            amount_cents: amountCents,
+          return startPaymentAttempt().catch(() => {
+            return post(`/restaurants/${restaurantId}/ordrs/${orderId}/payments/checkout_session`, {
+              success_url: successUrl,
+              cancel_url: cancelUrl,
+            });
           });
         })
         .then((cs) => {
-          if (!cs || cs.ok !== true || !cs.checkout_url) throw new Error('checkout_session failed');
+          const redirectUrl = (cs && (cs.redirect_url || cs.checkout_url)) ? (cs.redirect_url || cs.checkout_url) : null;
+          if (!cs || cs.ok !== true || !redirectUrl) throw new Error('checkout start failed');
           try { hideClosestModal(btn); } catch (_) {}
-          window.location.assign(String(cs.checkout_url));
+          window.location.assign(String(redirectUrl));
         })
         .catch((e) => {
           console.error('[PayOrder][capture] Failed to start checkout', e);

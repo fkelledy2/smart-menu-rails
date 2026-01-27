@@ -403,9 +403,8 @@ module JavascriptHelper
     # Add meta tag to signal new system should run
     content_for :head, tag.meta(name: 'js-system', content: 'new')
 
-    # Load modular system - used by ALL controllers
-    javascript_importmap_tags +
-      javascript_import_module_tag('application')
+    # Load bundled system - used by ALL controllers
+    javascript_include_tag('application', 'data-turbo-track': 'reload', defer: true)
   end
 
   # Helper for progressive enhancement

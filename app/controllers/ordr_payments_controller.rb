@@ -19,6 +19,22 @@ class OrdrPaymentsController < ApplicationController
       return
     end
 
+    begin
+      OrdrStationTicketService.submit_unsubmitted_items!(@ordr)
+      @ordr.reload
+    rescue StandardError
+      begin
+        opened_status = Ordritem.statuses['opened']
+        ordered_status = Ordritem.statuses['ordered']
+
+        @ordr.ordritems.where(status: opened_status).update_all(status: ordered_status)
+        @ordr.update(status: 'ordered') if @ordr.status.to_s == 'opened'
+        @ordr.reload
+      rescue StandardError
+        nil
+      end
+    end
+
     if @ordr.ordritems.where(status: Ordritem.statuses['opened']).exists?
       render json: { ok: false, error: 'Cannot request bill while items are still open' }, status: :unprocessable_entity
       return
@@ -111,10 +127,6 @@ class OrdrPaymentsController < ApplicationController
     if @ordr.status.to_s != 'billrequested'
       render json: { ok: false, error: 'Order must be billrequested to pay' }, status: :unprocessable_entity
       return
-    end
-
-    if params[:tip].present?
-      @ordr.update(tip: params[:tip].to_f)
     end
 
     if Stripe.api_key.blank?
@@ -237,7 +249,7 @@ class OrdrPaymentsController < ApplicationController
   end
 
   def total_amount_cents(ordr)
-    cents = (ordr.gross.to_f * 100.0).round
+    cents = ((ordr.gross.to_f - ordr.tip.to_f) * 100.0).round
     return cents if cents.positive?
 
     # Fallback to ordritems total

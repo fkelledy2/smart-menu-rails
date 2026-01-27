@@ -23,6 +23,11 @@ class Restaurant < ApplicationRecord
   has_many :ordr_station_tickets, dependent: :delete_all
   has_many :taxes, dependent: :delete_all
   has_many :tips, dependent: :delete_all
+
+  has_one :payment_profile, dependent: :destroy
+  has_many :provider_accounts, dependent: :delete_all
+  has_many :payment_attempts, dependent: :delete_all
+  has_many :payment_refunds, dependent: :delete_all
   has_many :restaurantavailabilities, dependent: :delete_all
   has_many :menusections, through: :menus
   has_many :menuavailabilities, through: :menus

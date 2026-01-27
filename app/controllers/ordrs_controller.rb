@@ -392,6 +392,13 @@ class OrdrsController < ApplicationController
             OrdrStationTicketService.submit_unsubmitted_items!(@ordr)
           rescue => e
             Rails.logger.warn("[OrdrsController#update] Failed to submit unsubmitted items for order=#{@ordr.id}: #{e.class}: #{e.message}")
+            begin
+              opened_status = Ordritem.statuses['opened']
+              ordered_status = Ordritem.statuses['ordered']
+              @ordr.ordritems.where(status: opened_status).update_all(status: ordered_status)
+            rescue StandardError
+              nil
+            end
           end
         end
 

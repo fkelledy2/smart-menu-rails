@@ -246,6 +246,7 @@ class NPlusOneEliminationTest < ActiveSupport::TestCase
   def cleanup_test_data
     # Clean up any created test data in proper order to handle foreign keys
     @test_orders&.each do |order|
+      OrderEvent.where(ordr_id: order.id).delete_all
       order.ordritems.destroy_all
       order.destroy
     end

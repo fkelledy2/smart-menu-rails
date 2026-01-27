@@ -114,6 +114,8 @@ Rails.application.routes.draw do
     post :create_payment_link, controller: 'base'
     post :generate_qr, controller: 'base'
     post :create_intent, to: 'intents#create'
+    post 'payment_attempts', to: 'payment_attempts#create'
+    post 'refunds', to: 'refunds#create'
     post 'webhooks/stripe', to: 'webhooks#stripe'
   end
   
