@@ -2,7 +2,7 @@ require 'stripe'
 
 module Payments
   module Providers
-    class StripeAdapter
+    class StripeAdapter < BaseAdapter
       def create_checkout_session!(payment_attempt:, ordr:, amount_cents:, currency:, success_url:, cancel_url:)
         ensure_api_key!
 

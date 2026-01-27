@@ -236,6 +236,13 @@ Rails.application.routes.draw do
       get 'employees/summary', to: 'employees#summary'
       get 'orders/summary', to: 'ordrs#summary'
     end
+
+    namespace :payments do
+      post 'stripe_connect/start', to: 'stripe_connect#start'
+      get 'stripe_connect/return', to: 'stripe_connect#return'
+      get 'stripe_connect/refresh', to: 'stripe_connect#refresh'
+      resource :payment_profile, only: [:update]
+    end
     
     # Menu management (full operations within restaurant context)
     resources :restaurant_menus, only: [] do

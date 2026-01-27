@@ -19,6 +19,12 @@ module Payments
         amount_cents = (ordr.ordritems.sum(:ordritemprice).to_f * 100.0).round
       end
 
+      charge_pattern = Payments::FundsFlowRouter.charge_pattern_for(
+        provider: provider,
+        merchant_model: profile.merchant_model,
+        restaurant: ordr.restaurant,
+      )
+
       payment_attempt = PaymentAttempt.create!(
         ordr: ordr,
         restaurant: ordr.restaurant,
@@ -26,7 +32,7 @@ module Payments
         amount_cents: amount_cents,
         currency: currency,
         status: :requires_action,
-        charge_pattern: :direct,
+        charge_pattern: charge_pattern,
         merchant_model: profile.merchant_model,
       )
 

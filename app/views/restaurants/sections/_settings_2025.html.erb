@@ -5,6 +5,90 @@
 
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
+<% payment_profile = restaurant.payment_profile || restaurant.build_payment_profile(merchant_model: :restaurant_mor, primary_provider: :stripe) %>
+<% stripe_account = restaurant.provider_accounts.find { |a| a.provider.to_s == 'stripe' } || restaurant.provider_accounts.where(provider: :stripe).first %>
+<% stripe_connect_enabled = stripe_account&.status.to_s == 'enabled' %>
+
+<div class="content-card-2025">
+  <h2 class="content-card-title">
+    <i class="bi bi-credit-card"></i>
+    <%= t('.payments', default: 'Payments') %>
+  </h2>
+
+  <div class="row g-3 align-items-start">
+    <div class="col-12 col-lg-6">
+      <div class="feature-card">
+        <div class="feature-card-icon bg-dark">
+          <i class="bi bi-stripe"></i>
+        </div>
+        <div class="feature-card-content">
+          <h5 class="feature-card-title"><%= t('.stripe_connect', default: 'Stripe Connect') %></h5>
+          <p class="feature-card-description">
+            <%= t('.stripe_connect_help', default: 'Connect your Stripe account to enable restaurant MoR payments.') %>
+          </p>
+
+          <% if flash[:stripe_connect_error].present? %>
+            <div class="alert alert-warning py-2 px-3 mb-2">
+              <%= flash[:stripe_connect_error] %>
+            </div>
+          <% end %>
+
+          <p class="text-muted small mb-0">
+            <% if stripe_account&.status.to_s == 'enabled' %>
+              <span class="text-success"><i class="bi bi-check-circle"></i> <%= t('.enabled', default: 'Enabled') %></span>
+            <% elsif stripe_account.present? %>
+              <span class="text-muted"><i class="bi bi-hourglass-split"></i> <%= stripe_account.status.to_s.humanize %></span>
+            <% else %>
+              <span class="text-muted"><i class="bi bi-x-circle"></i> <%= t('.not_connected', default: 'Not connected') %></span>
+            <% end %>
+          </p>
+        </div>
+        <div class="feature-card-toggle">
+          <%= button_to t('.start_onboarding', default: 'Start onboarding'),
+            restaurant_payments_stripe_connect_start_path(restaurant),
+            method: :post,
+            class: 'btn btn-outline-secondary btn-sm',
+            disabled: stripe_connect_enabled,
+            data: { turbo: false } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="feature-card">
+        <div class="feature-card-icon bg-primary">
+          <i class="bi bi-shield-lock"></i>
+        </div>
+        <div class="feature-card-content">
+          <h5 class="feature-card-title"><%= t('.merchant_of_record', default: 'Merchant of record') %></h5>
+          <p class="feature-card-description">
+            <%= t('.merchant_of_record_help', default: 'Choose whether payments are processed as the restaurant or as the platform.') %>
+          </p>
+
+          <% unless stripe_connect_enabled %>
+            <div class="alert alert-info py-2 px-3 mb-2">
+              <%= t('.merchant_of_record_requires_connect', default: 'Complete Stripe Connect onboarding to change merchant of record.') %>
+            </div>
+          <% end %>
+
+          <%= form_with url: restaurant_payments_payment_profile_path(restaurant), method: :patch, data: { turbo: false } do |f| %>
+            <%= f.fields_for :payment_profile, payment_profile do |pf| %>
+              <%= pf.select :merchant_model,
+                PaymentProfile.merchant_models.keys.map { |k| [k.humanize, k] },
+                { selected: payment_profile.merchant_model.to_s },
+                class: 'form-select form-select-sm',
+                disabled: !stripe_connect_enabled %>
+            <% end %>
+            <div class="mt-2">
+              <%= f.submit t('.save', default: 'Save'), class: 'btn btn-primary btn-sm', disabled: !stripe_connect_enabled %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- General Settings card removed: status managed via Quick Actions -->
 
 <!-- Feature Toggles -->

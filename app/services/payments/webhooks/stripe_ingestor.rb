@@ -15,18 +15,25 @@ module Payments
         amount_cents = amount_cents_for_payload(provider_event_type, obj)
         currency = currency_for_payload(obj)
 
-        LedgerEvent.create!(
+        normalized = Payments::NormalizedEvent.new(
           provider: :stripe,
-          provider_event_id: provider_event_id.to_s,
-          provider_event_type: provider_event_type.to_s,
+          provider_event_id: provider_event_id,
+          provider_event_type: provider_event_type,
+          occurred_at: occurred_at,
           entity_type: entity_type,
           entity_id: (payment_attempt || payment_refund)&.id,
           event_type: event_type,
           amount_cents: amount_cents,
           currency: currency,
-          raw_event_payload: payload,
-          occurred_at: occurred_at,
+          metadata: (obj['metadata'] || {}),
         )
+
+        unless provider_event_type.to_s == 'account.updated'
+          Payments::Ledger.append!(
+            **normalized.ledger_attributes,
+            raw_event_payload: payload,
+          )
+        end
 
         if payment_attempt && event_type == :succeeded
           payment_attempt.update!(status: :succeeded)
@@ -122,7 +129,56 @@ module Payments
           handle_checkout_session_completed(obj)
         when 'payment_intent.succeeded'
           handle_payment_intent_succeeded(obj)
+        when 'account.updated'
+          handle_account_updated(obj)
         end
+      end
+
+      def handle_account_updated(obj)
+        acct_id = obj['id'].to_s
+        return if acct_id.blank?
+
+        md = obj['metadata'] || {}
+        restaurant_id = md['restaurant_id'] || md[:restaurant_id]
+
+        provider_account = ProviderAccount.find_by(provider: :stripe, provider_account_id: acct_id)
+
+        if provider_account.nil? && restaurant_id.present?
+          restaurant = Restaurant.find_by(id: restaurant_id)
+          return unless restaurant
+
+          provider_account = ProviderAccount.create!(
+            restaurant: restaurant,
+            provider: :stripe,
+            provider_account_id: acct_id,
+            status: :created,
+          )
+        end
+
+        return unless provider_account
+
+        charges_enabled = !!obj['charges_enabled']
+        payouts_enabled = !!obj['payouts_enabled']
+        details_submitted = !!obj['details_submitted']
+
+        status = if charges_enabled && payouts_enabled
+          :enabled
+        elsif details_submitted
+          :restricted
+        else
+          :onboarding
+        end
+
+        provider_account.update!(
+          account_type: obj['type'].to_s.presence || provider_account.account_type,
+          country: obj['country'].to_s.presence || provider_account.country,
+          currency: obj['default_currency'].to_s.presence&.upcase || provider_account.currency,
+          status: status,
+          capabilities: (obj['capabilities'] || {}),
+          payouts_enabled: payouts_enabled,
+        )
+      rescue StandardError
+        nil
       end
 
       def handle_payment_intent_succeeded(obj)
