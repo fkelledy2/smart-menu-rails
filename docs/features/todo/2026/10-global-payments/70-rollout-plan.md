@@ -22,6 +22,10 @@
 - Enable restaurant-level MoR selection.
 - Implement routing patterns per MoR.
 
+Status:
+- Phase 0-3 implemented.
+- Phase 4+ remains.
+
 ## Phase 4 (Provider #2)
 - Implement second adapter and capability routing.
 

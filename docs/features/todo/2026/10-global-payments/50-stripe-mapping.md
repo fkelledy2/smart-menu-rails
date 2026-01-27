@@ -8,6 +8,8 @@ Existing v1 Stripe Checkout integration:
 ## Stripe Connect (future within this project)
 For restaurant payouts, Stripe Connect introduces **connected accounts**.
 
+Status: implemented (Express).
+
 ### Stripe objects
 - Connected Account: `acct_...`
 - Account onboarding link
@@ -27,7 +29,7 @@ For restaurant payouts, Stripe Connect introduces **connected accounts**.
 - `charge.refunded`
 - (later) `charge.dispute.*`
 - (later) `transfer.*`
-- (later) `account.updated`
+- `account.updated` (implemented to sync `provider_accounts`)
 
 ## Key correlation fields
 - `metadata.order_id`

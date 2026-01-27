@@ -15,11 +15,15 @@
 - **Ledger**: append-only normalized events + reconciliation
 
 ### Rails components
-- `Payments::PaymentsController` (new)
+- `Payments::PaymentAttemptsController`
   - `POST /payments/payment_attempts` (create attempt / start payment)
-  - `POST /payments/refunds` (optional v1)
-- `Payments::WebhooksController` (existing for Stripe v1)
-  - becomes a thin gateway that calls the Stripe adapter/gateway and emits normalized events.
+- `Payments::WebhooksController`
+  - `POST /payments/webhooks/stripe` verifies/parses the event then enqueues `Payments::WebhookIngestJob` (with inline fallback).
+- `Payments::StripeConnectController` (restaurant-scoped)
+  - `POST /restaurants/:restaurant_id/payments/stripe_connect/start` generates an AccountLink and redirects.
+  - `GET /restaurants/:restaurant_id/payments/stripe_connect/return|refresh` handles browser return/refresh.
+- `Payments::PaymentProfilesController` (restaurant-scoped)
+  - `PATCH /restaurants/:restaurant_id/payments/payment_profile` updates `payment_profiles.merchant_model`.
 
 ### Service objects
 - `Payments::Orchestrator`
@@ -27,6 +31,7 @@
 - `Payments::Ledger`
 - `Payments::Providers::BaseAdapter`
 - `Payments::Providers::StripeAdapter` (Provider #1)
+- `Payments::Providers::StripeConnect` (Connect onboarding)
 
 ### Jobs (Sidekiq)
 - `Payments::WebhookIngestJob`

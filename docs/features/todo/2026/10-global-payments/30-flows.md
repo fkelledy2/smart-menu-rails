@@ -32,6 +32,13 @@
 - In v1, ingest disputes webhooks and record them in ledger.
 - Defer evidence submission tooling.
 
+## 4.5) Stripe Connect onboarding (implemented)
+1. Restaurant manager clicks "Start onboarding" in restaurant settings.
+2. Smartmenu creates a Stripe connected account (if missing) and persists a `ProviderAccount`.
+3. Smartmenu generates a Stripe AccountLink and redirects.
+4. Stripe sends `account.updated` webhooks as the account progresses.
+5. Smartmenu updates `ProviderAccount` status/capabilities/payouts_enabled from the webhook.
+
 ## 5) Dual MoR support
 - For each payment attempt:
   - snapshot restaurant’s `merchant_model`
@@ -39,6 +46,10 @@
     - merchant_model
     - provider capabilities
     - corridor constraints
+
+Guardrails (implemented):
+- MoR selection UI is disabled until Stripe Connect is enabled.
+- Server enforces Stripe Connect enabled before allowing any MoR changes.
 
 ## Failure / contingency
 - PSP webhook delay: client should poll order/payment status.
