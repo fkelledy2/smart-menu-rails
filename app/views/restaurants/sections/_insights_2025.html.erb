@@ -1,0 +1,286 @@
+<div class="container-fluid">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h3 mb-1"><%= t('restaurants.insights.title') %></h1>
+      <div class="text-muted"><%= @restaurant.name %></div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row g-2 align-items-end">
+        <div class="col-sm-4">
+          <label for="ins-time-range" class="form-label"><%= t('restaurants.insights.filters.time_window') %></label>
+          <select id="ins-time-range" class="form-select form-select-sm">
+            <option value="today"><%= t('restaurants.insights.filters.today') %></option>
+            <option value="yesterday"><%= t('restaurants.insights.filters.yesterday') %></option>
+            <option value="last7"><%= t('restaurants.insights.filters.last7') %></option>
+            <option value="last28" selected><%= t('restaurants.insights.filters.last28') %></option>
+            <option value="mtd"><%= t('restaurants.insights.filters.mtd') %></option>
+            <option value="last_month"><%= t('restaurants.insights.filters.last_month') %></option>
+            <option value="custom"><%= t('restaurants.insights.filters.custom') %></option>
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <label for="ins-start" class="form-label"><%= t('restaurants.insights.filters.start') %></label>
+          <input id="ins-start" type="date" class="form-control form-control-sm" />
+        </div>
+        <div class="col-sm-3">
+          <label for="ins-end" class="form-label"><%= t('restaurants.insights.filters.end') %></label>
+          <input id="ins-end" type="date" class="form-control form-control-sm" />
+        </div>
+        <div class="col-sm-2 d-grid">
+          <button id="ins-refresh" type="button" class="btn btn-sm btn-primary"><%= t('restaurants.insights.filters.refresh') %></button>
+        </div>
+      </div>
+
+      <div class="row g-2 mt-2">
+        <div class="col-sm-6">
+          <label for="ins-menu" class="form-label"><%= t('restaurants.insights.filters.menu_optional') %></label>
+          <select id="ins-menu" class="form-select form-select-sm">
+            <option value=""><%= t('restaurants.insights.filters.all_menus') %></option>
+            <% @restaurant.menus.order(:sequence).each do |m| %>
+              <option value="<%= m.id %>"><%= m.name %></option>
+            <% end %>
+          </select>
+        </div>
+      </div>
+
+      <div class="text-muted mt-2" style="font-size: 12px;">
+        <%= t('restaurants.insights.helper_text') %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-6">
+      <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="fw-semibold"><%= t('restaurants.insights.sections.top_performers.title') %></div>
+          <a id="ins-export-top" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener"><%= t('restaurants.insights.export_csv') %></a>
+        </div>
+        <div class="card-body">
+          <div id="ins-top" class="table-responsive"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="fw-semibold"><%= t('restaurants.insights.sections.slow_movers.title') %></div>
+          <a id="ins-export-slow" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener"><%= t('restaurants.insights.export_csv') %></a>
+        </div>
+        <div class="card-body">
+          <div id="ins-slow" class="table-responsive"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="fw-semibold"><%= t('restaurants.insights.sections.prep_time_bottlenecks.title') %></div>
+          <a id="ins-export-prep" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener"><%= t('restaurants.insights.export_csv') %></a>
+        </div>
+        <div class="card-body">
+          <div id="ins-prep" class="table-responsive"></div>
+          <div class="text-muted mt-2" style="font-size: 12px;">
+            <%= t('restaurants.insights.sections.prep_time_bottlenecks.helper_text') %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="fw-semibold"><%= t('restaurants.insights.sections.voice_triggers.title') %></div>
+          <a id="ins-export-voice" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener"><%= t('restaurants.insights.export_csv') %></a>
+        </div>
+        <div class="card-body">
+          <div id="ins-voice" class="table-responsive"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="fw-semibold"><%= t('restaurants.insights.sections.abandonment_funnel.title') %></div>
+          <a id="ins-export-funnel" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener"><%= t('restaurants.insights.export_csv') %></a>
+        </div>
+        <div class="card-body">
+          <div id="ins-funnel" class="table-responsive"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    function qs(sel) { return document.querySelector(sel); }
+
+    function fmtNumber(v, digits) {
+      if (v == null || v === '') return '';
+      const n = Number(v);
+      if (Number.isNaN(n)) return String(v);
+      return n.toLocaleString(undefined, {
+        minimumFractionDigits: digits || 0,
+        maximumFractionDigits: digits || 0,
+      });
+    }
+
+    function fmtPercent(v, digits) {
+      if (v == null || v === '') return '';
+      const n = Number(v);
+      if (Number.isNaN(n)) return String(v);
+      const pct = n * 100.0;
+      return `${fmtNumber(pct, digits == null ? 1 : digits)}%`;
+    }
+
+    function fmtBool(v) {
+      if (v === true) return '<%= j t('restaurants.insights.values.yes') %>';
+      if (v === false) return '<%= j t('restaurants.insights.values.no') %>';
+      return v == null ? '' : String(v);
+    }
+
+    function funnelStepLabel(stepKey) {
+      const labels = {
+        order_submitted: '<%= j t('restaurants.insights.funnel_steps.order_submitted') %>',
+        bill_requested: '<%= j t('restaurants.insights.funnel_steps.bill_requested') %>',
+        payment_succeeded: '<%= j t('restaurants.insights.funnel_steps.payment_succeeded') %>',
+      };
+      return labels[String(stepKey || '')] || String(stepKey || '');
+    }
+
+    const restaurantId = <%= @restaurant.id %>;
+
+    function params() {
+      const p = new URLSearchParams();
+      const range = qs('#ins-time-range')?.value || 'last28';
+      const menuId = qs('#ins-menu')?.value || '';
+      p.set('range', range);
+      if (range === 'custom') {
+        const s = qs('#ins-start')?.value || '';
+        const e = qs('#ins-end')?.value || '';
+        if (s) p.set('start', s);
+        if (e) p.set('end', e);
+      }
+      if (menuId) p.set('menu_id', menuId);
+      return p.toString();
+    }
+
+    async function fetchJSON(path) {
+      const url = `/restaurants/${restaurantId}/${path}.json?${params()}`;
+      const res = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    }
+
+    function setExportLinks() {
+      const p = params();
+      qs('#ins-export-top').href = `/restaurants/${restaurantId}/insights/top_performers.csv?${p}`;
+      qs('#ins-export-slow').href = `/restaurants/${restaurantId}/insights/slow_movers.csv?${p}`;
+      qs('#ins-export-prep').href = `/restaurants/${restaurantId}/insights/prep_time_bottlenecks.csv?${p}`;
+      qs('#ins-export-voice').href = `/restaurants/${restaurantId}/insights/voice_triggers.csv?${p}`;
+      qs('#ins-export-funnel').href = `/restaurants/${restaurantId}/insights/abandonment_funnel.csv?${p}`;
+    }
+
+    function renderTable(containerId, columns, rows) {
+      const el = qs(containerId);
+      if (!el) return;
+      if (!rows || !rows.length) {
+        el.innerHTML = '<div class="text-muted"><%= j t('restaurants.insights.no_data') %></div>';
+        return;
+      }
+      const header = columns.map(c => `<th>${c.label}</th>`).join('');
+      const body = rows.map(r => {
+        const tds = columns.map(c => {
+          const raw = r[c.key];
+          const val = typeof c.formatter === 'function' ? c.formatter(raw, r) : (raw == null ? '' : raw);
+          return `<td>${val == null ? '' : val}</td>`;
+        }).join('');
+        return `<tr>${tds}</tr>`;
+      }).join('');
+      el.innerHTML = `
+        <table class="table table-sm table-striped align-middle mb-0">
+          <thead><tr>${header}</tr></thead>
+          <tbody>${body}</tbody>
+        </table>
+      `;
+    }
+
+    async function refresh() {
+      setExportLinks();
+
+      try {
+        const top = await fetchJSON('insights/top_performers');
+        renderTable('#ins-top', [
+          { key: 'menuitem_name', label: '<%= j t('restaurants.insights.columns.item') %>' },
+          { key: 'orders_with_item_count', label: '<%= j t('restaurants.insights.columns.orders') %>' },
+          { key: 'quantity_sold', label: '<%= j t('restaurants.insights.columns.qty') %>' },
+          { key: 'share_of_orders', label: '<%= j t('restaurants.insights.columns.share') %>', formatter: (v) => fmtPercent(v, 1) }
+        ], top.top_performers);
+      } catch (e) {
+        renderTable('#ins-top', [], []);
+      }
+
+      try {
+        const slow = await fetchJSON('insights/slow_movers');
+        renderTable('#ins-slow', [
+          { key: 'menuitem_name', label: '<%= j t('restaurants.insights.columns.item') %>' },
+          { key: 'orders_with_item_count', label: '<%= j t('restaurants.insights.columns.orders') %>' },
+          { key: 'quantity_sold', label: '<%= j t('restaurants.insights.columns.qty') %>' },
+          { key: 'share_of_orders', label: '<%= j t('restaurants.insights.columns.share') %>', formatter: (v) => fmtPercent(v, 1) }
+        ], slow.slow_movers);
+      } catch (e) {
+        renderTable('#ins-slow', [], []);
+      }
+
+      try {
+        const prep = await fetchJSON('insights/prep_time_bottlenecks');
+        renderTable('#ins-prep', [
+          { key: 'menuitem_name', label: '<%= j t('restaurants.insights.columns.item') %>' },
+          { key: 'median_time_to_ready_seconds', label: '<%= j t('restaurants.insights.columns.median_seconds') %>', formatter: (v) => fmtNumber(v, 0) },
+          { key: 'sample_size', label: '<%= j t('restaurants.insights.columns.sample_size') %>', formatter: (v) => fmtNumber(v, 0) },
+          { key: 'is_outlier', label: '<%= j t('restaurants.insights.columns.outlier') %>', formatter: (v) => fmtBool(v) }
+        ], prep.prep_time_bottlenecks);
+      } catch (e) {
+        renderTable('#ins-prep', [], []);
+      }
+
+      try {
+        const voice = await fetchJSON('insights/voice_triggers');
+        renderTable('#ins-voice', [
+          { key: 'menuitem_name', label: '<%= j t('restaurants.insights.columns.item') %>' },
+          { key: 'voice_trigger_count', label: '<%= j t('restaurants.insights.columns.triggers') %>' },
+          { key: 'success_count', label: '<%= j t('restaurants.insights.columns.success') %>' },
+          { key: 'failure_count', label: '<%= j t('restaurants.insights.columns.fail') %>' },
+          { key: 'success_rate', label: '<%= j t('restaurants.insights.columns.rate') %>', formatter: (v) => fmtPercent(v, 1) }
+        ], voice.voice_triggers);
+      } catch (e) {
+        renderTable('#ins-voice', [], []);
+      }
+
+      try {
+        const funnel = await fetchJSON('insights/abandonment_funnel');
+        renderTable('#ins-funnel', [
+          { key: 'step_key', label: '<%= j t('restaurants.insights.columns.step') %>', formatter: (v) => funnelStepLabel(v) },
+          { key: 'step_count', label: '<%= j t('restaurants.insights.columns.count') %>' },
+          { key: 'dropoff_count', label: '<%= j t('restaurants.insights.columns.dropoff') %>' },
+          { key: 'dropoff_rate', label: '<%= j t('restaurants.insights.columns.dropoff_rate') %>', formatter: (v) => fmtPercent(v, 1) }
+        ], funnel.abandonment_funnel);
+      } catch (e) {
+        renderTable('#ins-funnel', [], []);
+      }
+    }
+
+    qs('#ins-refresh')?.addEventListener('click', refresh);
+    qs('#ins-time-range')?.addEventListener('change', refresh);
+    qs('#ins-menu')?.addEventListener('change', refresh);
+
+    refresh();
+  })();
+</script>

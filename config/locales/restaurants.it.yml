@@ -112,6 +112,68 @@ it:
       loading: Caricamento...
     showTracks:
       tracks: Brani
+
+    insights:
+      page_title: "%{restaurant_name} - Approfondimenti"
+      title: Approfondimenti
+      back: Indietro
+      export_csv: Esporta CSV
+      helper_text: "v1: approfondimenti in sola lettura. Il funnel di abbandono è attualmente basato su milestone ordine/pagamento."
+      no_data: Nessun dato per il periodo selezionato.
+
+      values:
+        yes: Sì
+        no: No
+
+      filters:
+        time_window: Periodo
+        today: Oggi
+        yesterday: Ieri
+        last7: Ultimi 7 giorni
+        last28: Ultimi 28 giorni
+        mtd: Mese corrente
+        last_month: Mese scorso
+        custom: Personalizzato
+        start: Inizio
+        end: Fine
+        refresh: Aggiorna
+        menu_optional: Menù (opzionale)
+        all_menus: Tutti i menù
+
+      sections:
+        top_performers:
+          title: Migliori risultati
+        slow_movers:
+          title: Articoli meno richiesti
+        prep_time_bottlenecks:
+          title: Colli di bottiglia tempi di preparazione
+          helper_text: "Usa la tempistica dei ticket di stazione (inviato → pronto/ritirato) come proxy v1."
+        voice_triggers:
+          title: Frequenza comandi vocali
+        abandonment_funnel:
+          title: Funnel di abbandono
+
+      columns:
+        item: Articolo
+        orders: Ordini
+        qty: Qtà
+        share: Quota
+        median_seconds: Mediana (s)
+        sample_size: N
+        outlier: Outlier
+        triggers: Trigger
+        success: Successi
+        fail: Errori
+        rate: Tasso
+        step: Fase
+        count: Conteggio
+        dropoff: Abbandono
+        dropoff_rate: Tasso di abbandono
+
+      funnel_steps:
+        order_submitted: Ordine inviato
+        bill_requested: Conto richiesto
+        payment_succeeded: Pagamento riuscito
     edit_2025:
       subtitle: Gestisci la configurazione del tuo ristorante
       toggle_navigation: Attiva/disattiva navigazione
@@ -137,6 +199,7 @@ it:
       taxes: Tasse
       tips: Mance
       ordering: Ordinazioni
+      insights: Approfondimenti
       setup: CONFIGURAZIONE
       settings: Impostazioni
       qr_codes: Codici QR

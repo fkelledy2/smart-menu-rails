@@ -143,6 +143,14 @@ Rails.application.routes.draw do
       get 'analytics/table_performance',  to: 'restaurant_analytics#table_performance'
       get 'analytics/orders',             to: 'restaurant_analytics#orders'
       get 'analytics/items',              to: 'restaurant_analytics#items'
+
+      # AI Menu Insights (v1 - read-only)
+      get 'insights',                     to: 'restaurant_insights#show'
+      get 'insights/top_performers',      to: 'restaurant_insights#top_performers'
+      get 'insights/slow_movers',         to: 'restaurant_insights#slow_movers'
+      get 'insights/prep_time_bottlenecks', to: 'restaurant_insights#prep_time_bottlenecks'
+      get 'insights/voice_triggers',      to: 'restaurant_insights#voice_triggers'
+      get 'insights/abandonment_funnel',  to: 'restaurant_insights#abandonment_funnel'
     end
     
     # Restaurant configuration

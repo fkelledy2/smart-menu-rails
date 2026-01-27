@@ -112,6 +112,68 @@ en:
       loading: Loading...
     showTracks:
       tracks: Tracks
+
+    insights:
+      page_title: "%{restaurant_name} - Insights"
+      title: Insights
+      back: Back
+      export_csv: Export CSV
+      helper_text: "v1: read-only insights. Abandonment funnel is currently based on order/payment milestones."
+      no_data: No data for selected window.
+
+      values:
+        yes: Yes
+        no: No
+
+      filters:
+        time_window: Time window
+        today: Today
+        yesterday: Yesterday
+        last7: Last 7 Days
+        last28: Last 28 Days
+        mtd: MTD
+        last_month: Last Month
+        custom: Custom
+        start: Start
+        end: End
+        refresh: Refresh
+        menu_optional: Menu (optional)
+        all_menus: All menus
+
+      sections:
+        top_performers:
+          title: Top performers
+        slow_movers:
+          title: Slow movers
+        prep_time_bottlenecks:
+          title: Prep-time bottlenecks
+          helper_text: "Uses station ticket timing (submitted → ready/collected) as the v1 proxy."
+        voice_triggers:
+          title: Voice-trigger frequency
+        abandonment_funnel:
+          title: Abandonment funnel
+
+      columns:
+        item: Item
+        orders: Orders
+        qty: Qty
+        share: Share
+        median_seconds: Median (s)
+        sample_size: N
+        outlier: Outlier
+        triggers: Triggers
+        success: Success
+        fail: Fail
+        rate: Rate
+        step: Step
+        count: Count
+        dropoff: Dropoff
+        dropoff_rate: Dropoff rate
+
+      funnel_steps:
+        order_submitted: Order submitted
+        bill_requested: Bill requested
+        payment_succeeded: Payment succeeded
     edit_2025:
       subtitle: Manage your restaurant configuration
       toggle_navigation: Toggle navigation
@@ -137,6 +199,7 @@ en:
       taxes: Taxes
       tips: Tips
       ordering: Ordering
+      insights: Insights
       setup: SETUP
       settings: Settings
       qr_codes: QR Codes

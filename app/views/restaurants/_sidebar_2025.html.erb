@@ -179,6 +179,13 @@
         <i class="bi bi-cart-check"></i>
         <span><%= t('.ordering') %></span>
       <% end %>
+
+      <%= link_to edit_restaurant_path(restaurant, section: 'insights'),
+          class: "sidebar-link sidebar-link-sub #{'active' if current_section == 'insights'} #{disabled_class_for('ordering', onboarding_next)}",
+          data: { testid: 'sidebar-insights-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('ordering', onboarding_next) } do %>
+        <i class="bi bi-stars"></i>
+        <span><%= t('.insights') %></span>
+      <% end %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'jukebox'),

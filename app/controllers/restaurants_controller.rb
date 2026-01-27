@@ -1167,6 +1167,8 @@ class RestaurantsController < ApplicationController
       'tables_2025'
     when 'ordering'
       'ordering_2025'
+    when 'insights'
+      'insights_2025'
     when 'wifi'
       'wifi_2025'
     when 'advanced'
