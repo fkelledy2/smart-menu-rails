@@ -992,6 +992,16 @@ document.addEventListener('turbo:frame-load', (event) => {
   try {
     const frame = event.target;
     if (!(frame instanceof Element)) return;
+
+    const newRestaurantEl = frame.querySelector && frame.querySelector('#newRestaurant');
+    if (newRestaurantEl) {
+      try {
+        initRestaurants();
+      } catch (e) {
+        console.warn('[SmartMenu] initRestaurants turbo:frame-load init failed', e);
+      }
+    }
+
     const el = frame.querySelector && frame.querySelector('#ordering-dashboard');
     if (el && window.OrderingModule && el.dataset.odInitialized !== 'true') {
       el.dataset.odInitialized = 'true';

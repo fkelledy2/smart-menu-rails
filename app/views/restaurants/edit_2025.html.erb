@@ -44,13 +44,27 @@
           <div>
             <% required_text = case @onboarding_next
               when 'details'
-                t('.onboarding_need_details', default: 'To continue setup, please add a description, select a currency, and provide your address/location.')
-              when 'tables'
-                t('.onboarding_need_tables', default: 'Add at least one table to your restaurant to continue setup.')
-              when 'taxes_and_tips'
-                t('.onboarding_need_taxes_tips', default: 'Add at least one tax and one tip to continue setup.')
+                missing = @restaurant.onboarding_missing_details_fields
+                labels = {
+                  description: t('.onboarding_field_description', default: 'a description'),
+                  currency: t('.onboarding_field_currency', default: 'a currency'),
+                  address: t('.onboarding_field_address', default: 'your address/location'),
+                  country: t('.onboarding_field_country', default: 'your country'),
+                }
+                items = missing.map { |k| labels[k] }.compact
+                t(
+                  '.onboarding_need_details_dynamic',
+                  default: "To continue setup, please add %{items}.",
+                  items: items.to_sentence,
+                )
               when 'localization'
                 t('.onboarding_need_localization', default: 'Add at least one language and set a default language to continue setup.')
+              when 'tables'
+                t('.onboarding_need_tables', default: 'Add at least one table (capacity 4 is fine) to continue setup.')
+              when 'staff'
+                t('.onboarding_need_staff', default: 'Add at least one staff member to continue setup.')
+              when 'menus'
+                t('.onboarding_need_menus', default: 'Create or import a menu to continue setup.')
               else
                 t('.onboarding_continue', default: 'Continue the required setup to proceed.')
               end %>
@@ -106,13 +120,6 @@
 
     .text-gray-500 {
       color: var(--color-gray-500);
-    }
-
-    /* Visually disable links that are not allowed during onboarding */
-    .sidebar-2025 .sidebar-link.link-disabled {
-      opacity: 0.5;
-      pointer-events: none;
-      cursor: not-allowed;
     }
   </style>
 <% end %>

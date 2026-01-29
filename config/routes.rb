@@ -123,6 +123,11 @@ Rails.application.routes.draw do
   # RESTAURANT MANAGEMENT
   # ============================================================================
   resources :restaurants do
+    collection do
+      patch :bulk_update
+      patch :reorder
+    end
+
     # Kitchen Dashboard
     member do
       get 'kitchen', to: 'kitchen_dashboard#index', as: :kitchen_dashboard

@@ -120,17 +120,7 @@ class OnboardingController < ApplicationController
     @onboarding.update!(restaurant: restaurant)
     @onboarding.account_created!
 
-    # Provision current user as an employee manager for newly created restaurants
-    if new_restaurant
-      Employee.create!(
-        user: current_user,
-        restaurant: restaurant,
-        name: current_user.name.presence || 'Manager',
-        role: :manager,
-        status: :active,
-        eid: SecureRandom.hex(6),
-      )
-    end
+    RestaurantProvisioningService.call(restaurant: restaurant, user: current_user) if new_restaurant
 
     # Track successful step completion
     AnalyticsService.track_onboarding_step_completed(current_user, 1, {
@@ -139,6 +129,14 @@ class OnboardingController < ApplicationController
       restaurant_id: restaurant.id,
       restaurant_new: new_restaurant,
     },)
+
+    if new_restaurant
+      AnalyticsService.track_user_event(current_user, 'restaurant_onboarding_started', {
+        restaurant_id: restaurant.id,
+        source: 'signup_onboarding',
+        initial_next_section: restaurant.onboarding_next_section,
+      },)
+    end
 
     # Redirect directly to the restaurant edit page to guide remaining steps
     flash[:notice] = I18n.t('onboarding.next_steps.restaurant_edit_notice', default: 'Great! Now complete your restaurant details, address and set up your tables.')

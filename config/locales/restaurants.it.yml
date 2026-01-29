@@ -205,11 +205,15 @@ it:
       qr_codes: Codici QR
       jukebox: Jukebox
       advanced: Avanzate
+    index_2025:
+      title: I tuoi ristoranti
+      heading: Ristoranti
+      subtitle: Gestisci sedi, menù e staff
+      quick_actions: Azioni Rapide
+      new_restaurant: Nuovo Ristorante
+      search_placeholder: Cerca ristoranti…
+      search: Cerca
     index_frame_2025:
-      all: Tutti
-      active: Attivi
-      inactive: Inattivi
-      archived: Archiviati
       pagination_aria_label: Paginazione ristoranti
       no_restaurants: Nessun ristorante trovato
       no_results_for: Nessun risultato per
@@ -218,6 +222,12 @@ it:
       staff_count_label: staff
       edit: Modifica
       menus_action: Menù
+      restaurants: Ristoranti
+      active: Attivo
+      inactive: Inattivo
+      set_status: Imposta stato...
+      apply: Applica
+      drag_to_reorder: Trascina per riordinare
     sections:
       details_2025:
         quick_actions: Azioni Rapide

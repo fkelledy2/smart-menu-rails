@@ -217,6 +217,7 @@ module JavascriptHelper
     }
 
     attributes = form_data_attributes('restaurant', form_options)
+    extra_data = options.delete(:data) || {}
     
     # Ensure proper URL is set for auto-save to work correctly
     # For existing records, use the standard resource path
@@ -224,7 +225,7 @@ module JavascriptHelper
       options[:url] ||= restaurant_path(model)
     end
 
-    form_with(model: model, **options.merge(data: attributes), &)
+    form_with(model: model, **options.merge(data: attributes.merge(extra_data)), &)
   end
 
   # Helper for menu form

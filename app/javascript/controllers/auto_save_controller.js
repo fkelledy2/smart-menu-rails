@@ -97,6 +97,7 @@ export default class extends Controller {
         const data = await response.json()
         console.log('[AutoSave] ✓ Saved successfully')
         this.showSaved()
+        this.updateOnboardingGuidance(data)
         this.dispatch('saved', { detail: data })
       } else {
         const errorData = await response.json()
@@ -179,5 +180,24 @@ export default class extends Controller {
   csrfToken() {
     const meta = document.querySelector('meta[name="csrf-token"]')
     return meta ? meta.content : ''
+  }
+
+  updateOnboardingGuidance(data) {
+    if (!data || typeof data !== 'object') return
+
+    const banner = document.querySelector('[data-testid="onboarding-guidance"]')
+    if (!banner) return
+
+    if (!data.onboarding_next) {
+      banner.remove()
+      return
+    }
+
+    if (!data.onboarding_required_text) return
+
+    const content = banner.querySelector('div')
+    if (!content) return
+
+    content.innerHTML = `<strong>Required step</strong>: ${data.onboarding_required_text}`
   }
 }

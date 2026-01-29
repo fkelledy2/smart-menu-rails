@@ -19,13 +19,10 @@
   # Onboarding gating: only allow navigation to the next required section
   onboarding_next = @onboarding_next
   def disabled_class_for(section, onboarding_next)
-    return '' if onboarding_next.blank? || onboarding_next == section
-    'disabled link-disabled'
+    ''
   end
   def disabled_data_attrs(section, onboarding_next)
-    return {}
-      .merge({}) if onboarding_next.blank? || onboarding_next == section
-    { disabled: true, controller: 'prevent-click' }
+    {}
   end
 %>
 

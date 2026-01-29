@@ -118,6 +118,16 @@
   }
 }
 
+.pac-container {
+  z-index: 2000 !important;
+}
+
+@media (min-width: 1200px) {
+  .new-restaurant-modal-dialog {
+    max-width: min(1400px, 96vw);
+  }
+}
+
 .menuitem-image-preview-2025 {
   display: block;
   width: 100%;

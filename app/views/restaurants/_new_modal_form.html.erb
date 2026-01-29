@@ -1,0 +1,5 @@
+<%= turbo_frame_tag 'new_restaurant_modal' do %>
+  <div id="newRestaurant">
+    <%= render 'restaurants/form', restaurant: restaurant, minimal: true, turbo_frame: '_top' %>
+  </div>
+<% end %>

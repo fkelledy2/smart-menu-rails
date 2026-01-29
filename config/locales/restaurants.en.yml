@@ -205,11 +205,15 @@ en:
       qr_codes: QR Codes
       jukebox: Jukebox
       advanced: Advanced
+    index_2025:
+      title: Your Restaurants
+      heading: Restaurants
+      subtitle: Manage locations, menus and staff
+      quick_actions: Quick Actions
+      new_restaurant: New Restaurant
+      search_placeholder: Search restaurants…
+      search: Search
     index_frame_2025:
-      all: All
-      active: Active
-      inactive: Inactive
-      archived: Archived
       pagination_aria_label: Restaurants pagination
       no_restaurants: No restaurants found
       no_results_for: No results for
@@ -218,6 +222,12 @@ en:
       staff_count_label: staff
       edit: Edit
       menus_action: Menus
+      restaurants: Restaurants
+      active: Active
+      inactive: Inactive
+      set_status: Set status...
+      apply: Apply
+      drag_to_reorder: Drag to reorder
     sections:
       details_2025:
         quick_actions: Quick Actions

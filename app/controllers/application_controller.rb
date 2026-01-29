@@ -91,7 +91,7 @@ class ApplicationController < ActionController::Base
     @canAddRestaurant = false
     return unless current_user&.plan
 
-    @restaurants = Restaurant.where(user: current_user, archived: false)
+    @restaurants = Restaurant.where(user: current_user, archived: false).order(:sequence, :id)
     if @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
       @canAddRestaurant = true
     end
@@ -100,7 +100,7 @@ class ApplicationController < ActionController::Base
   def set_current_employee
     if current_user
       @current_employee = Employee.where(user_id: current_user.id).first
-      @restaurants = Restaurant.where(user: current_user)
+      @restaurants = Restaurant.where(user: current_user).order(:sequence, :id)
       @userplan = Userplan.where(user_id: current_user.id).first
       if @userplan.nil?
         @userplan = Userplan.new

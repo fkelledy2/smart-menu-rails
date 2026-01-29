@@ -1,4 +1,4 @@
 <%# Wrapper to ensure Turbo Frame response includes matching frame id %>
 <%= turbo_frame_tag 'restaurants_content' do %>
-  <%= render 'restaurants/index_frame_2025', restaurants: local_assigns[:restaurants], filter: local_assigns[:filter], q: local_assigns[:q], counts: local_assigns[:counts], page: local_assigns[:page], per_page: local_assigns[:per_page], total_pages: local_assigns[:total_pages], total_count: local_assigns[:total_count] %>
+  <%= render 'restaurants/index_frame_2025', restaurants: local_assigns[:restaurants], q: local_assigns[:q] %>
 <% end %>

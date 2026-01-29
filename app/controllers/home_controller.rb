@@ -7,11 +7,7 @@ class HomeController < ApplicationController
 
     # Set up instance variables
     @qrHost = request.host_with_port
-    @demoMenu = if request.host == 'localhost'
-                  Smartmenu.where(restaurant_id: 1, menu_id: 1).first
-                else
-                  Smartmenu.where(restaurant_id: 3, menu_id: 3).first
-                end
+    @demoMenu = DemoMenuService.demo_smartmenu_for_host(request.host)
 
     @plans = Plan.all
     @features = Feature.all

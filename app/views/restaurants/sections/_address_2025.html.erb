@@ -25,7 +25,6 @@
           required: true %>
       <%= form.hidden_field :latitude %>
       <%= form.hidden_field :longitude %>
-      <%= form.hidden_field :country %>
       <div class="form-text">
         <%= t('.address_help') %>
       </div>
@@ -37,14 +36,15 @@
       <% end %>
       <%= form.text_field :address2,
           class: 'form-control',
-          placeholder: t('.address2_placeholder') %>
+          placeholder: t('.address2_placeholder'),
+          readonly: true %>
       <div class="form-text">
         <%= t('.address2_help') %>
       </div>
     </div>
 
     <div class="row g-3 mb-4">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div>
           <%= form.label :city, class: 'form-label' do %>
             <%= t('activerecord.attributes.restaurant.city') %>
@@ -52,7 +52,8 @@
           <% end %>
           <%= form.text_field :city,
               class: 'form-control',
-              required: true %>
+              required: true,
+              readonly: true %>
         </div>
       </div>
 
@@ -62,7 +63,8 @@
             <%= t('activerecord.attributes.restaurant.state') %>
           <% end %>
           <%= form.text_field :state,
-              class: 'form-control' %>
+              class: 'form-control',
+              readonly: true %>
         </div>
       </div>
 
@@ -72,7 +74,19 @@
             <%= t('activerecord.attributes.restaurant.postcode') %>
           <% end %>
           <%= form.text_field :postcode,
-              class: 'form-control' %>
+              class: 'form-control',
+              readonly: true %>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div>
+          <%= form.label :country, class: 'form-label' do %>
+            <%= t('activerecord.attributes.restaurant.country') %>
+          <% end %>
+          <%= form.text_field :country,
+              class: 'form-control',
+              readonly: true %>
         </div>
       </div>
     </div>
@@ -151,9 +165,11 @@
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', async function() {
+  async function initRestaurantMap() {
     const mapElement = document.getElementById('restaurant-map');
     if (!mapElement) return;
+    if (mapElement.dataset.mapInitialized === 'true') return;
+    mapElement.dataset.mapInitialized = 'true';
 
     const mapLoadingText = '<%= j t('.map_loading') %>';
     const mapLocationLabel = '<%= j t('.map_location_label') %>';
@@ -227,6 +243,8 @@
         animation: google.maps.Animation.DROP
       });
 
+      window.__restaurantMapInstance = { map: map, marker: marker, element: mapElement };
+
       // Add info window
       const infoWindow = new google.maps.InfoWindow({
         content: `
@@ -264,5 +282,8 @@
         </div>
       `;
     }
-  });
+  }
+
+  document.addEventListener('turbo:load', initRestaurantMap);
+  document.addEventListener('DOMContentLoaded', initRestaurantMap);
 </script>

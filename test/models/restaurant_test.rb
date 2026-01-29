@@ -124,6 +124,54 @@ class RestaurantTest < ActiveSupport::TestCase
     assert_respond_to @restaurant, :NONE?
   end
 
+  test 'onboarding_next_section enforces smart menu prerequisites and does not require taxes/tips' do
+    restaurant = Restaurant.create!(
+      name: 'Onboarding Gate Test',
+      user: @user,
+      status: :active,
+      description: 'desc',
+      currency: 'USD',
+      address1: '123 Main',
+      country: 'US',
+    )
+
+    assert_equal 'localization', restaurant.onboarding_next_section
+
+    restaurant.restaurantlocales.create!(
+      locale: 'en',
+      status: :active,
+      dfault: true,
+    )
+    assert_equal 'tables', restaurant.onboarding_next_section
+
+    restaurant.tablesettings.create!(
+      name: 'Table 1',
+      capacity: 4,
+      tabletype: :indoor,
+      status: :free,
+    )
+    assert_equal 'staff', restaurant.onboarding_next_section
+
+    restaurant.employees.create!(
+      user: @user,
+      name: 'Manager',
+      eid: 'EID1',
+      role: :manager,
+      status: :active,
+    )
+    assert_equal 'menus', restaurant.onboarding_next_section
+
+    restaurant.menus.create!(
+      name: 'Menu 1',
+      status: :active,
+      archived: false,
+      allowOrdering: false,
+    )
+
+    # Taxes and tips are optional and should not block completion
+    assert_nil restaurant.onboarding_next_section
+  end
+
   # Business logic tests
   test 'locales should return array of locale codes' do
     # This test assumes there are restaurantlocales fixtures

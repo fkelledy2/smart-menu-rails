@@ -139,21 +139,42 @@ class Restaurant < ApplicationRecord
   validates :status, presence: true
 
   # Onboarding guidance helpers
+  def onboarding_missing_details_fields
+    missing = []
+    missing << :description if description.blank?
+    missing << :currency if currency.blank?
+
+    address_ok = address1.present? || city.present? || postcode.present?
+    missing << :address unless address_ok
+    missing << :country if country.blank?
+
+    missing
+  end
+
   def onboarding_next_section
-    # 1) Details: require description, currency, and some address/location info
-    details_ok = description.present? && currency.present? && (address1.present? || city.present? || postcode.present? || country.present?)
+    # 1) Details: require description, currency, and address + country (for correct tax inference)
+    address_ok = address1.present? || city.present? || postcode.present?
+    details_ok = description.present? && currency.present? && address_ok && country.present?
     return 'details' unless details_ok
 
-    # 2) Tables: require at least one table setting
-    return 'tables' unless tablesettings.any?
-
-    # 3) Taxes and Tips: require at least one tax and one tip
-    return 'taxes_and_tips' unless taxes.any? && tips.any?
-
-    # 4) Localization: require at least one language and a default language set
+    # 2) Localization: require at least one language and a default language set
     has_locales = restaurantlocales.any?
     has_default_locale = restaurantlocales.where(status: 'active', dfault: true).exists?
     return 'localization' unless has_locales && has_default_locale
+
+    # 3) Tables: require at least one table setting
+    return 'tables' unless tablesettings.any?
+
+    # 4) Staff: require at least one employee
+    return 'staff' unless employees.any?
+
+    # 5) Menus: require at least one menu
+    has_any_menu = restaurant_menus
+      .where.not(status: RestaurantMenu.statuses[:archived])
+      .joins(:menu)
+      .where(menus: { archived: false })
+      .exists?
+    return 'menus' unless has_any_menu
 
     nil
   end
@@ -167,19 +188,24 @@ class Restaurant < ApplicationRecord
     return true if name.blank?
     return true if description.blank?
     return true if currency.blank?
-    address_ok = address1.present? || city.present? || postcode.present? || country.present?
+    address_ok = address1.present? || city.present? || postcode.present?
     return true unless address_ok
+    return true if country.blank?
     # Context and image style profile
     return true if respond_to?(:imagecontext) && imagecontext.blank?
     return true if respond_to?(:image_style_profile) && image_style_profile.blank?
-    # Tables, employees, taxes, tips, and localization
+    # Tables, employees, localization, and menu (taxes/tips optional)
     return true unless tablesettings.any?
     return true unless employees.any?
     has_locales = restaurantlocales.any?
     has_default_locale = restaurantlocales.where(status: 'active', dfault: true).exists?
     return true unless has_locales && has_default_locale
-    return true unless taxes.any?
-    return true unless tips.any?
+    has_any_menu = restaurant_menus
+      .where.not(status: RestaurantMenu.statuses[:archived])
+      .joins(:menu)
+      .where(menus: { archived: false })
+      .exists?
+    return true unless has_any_menu
     false
   end
 

@@ -142,52 +142,20 @@ class RestaurantsController < ApplicationController
     authorize Restaurant
 
     if current_user.plan
-      # Filter handling for 2025 UI
-      filter = params[:filter].presence || 'all'
-      base_scope = policy_scope(Restaurant)
-      # Search
-      q = params[:q].to_s.strip
-      scope = base_scope
-      # Use enum-based status filtering; avoid relying on any archived boolean
-      case filter
-      when 'active'
-        scope = scope.where(status: Restaurant.statuses[:active])
-      when 'inactive'
-        scope = scope.where(status: Restaurant.statuses[:inactive])
-      when 'archived'
-        scope = scope.where(status: Restaurant.statuses[:archived])
-      else # 'all'
-        scope = scope.where.not(status: Restaurant.statuses[:archived])
+      ApplicationRecord.on_primary do
+        scope = policy_scope(Restaurant).where.not(status: Restaurant.statuses[:archived])
+
+        q = params[:q].to_s.strip
+        scope = scope.where('restaurants.name ILIKE ?', "%#{q}%") if q.present?
+
+        @q = q
+        @restaurants = scope.order(:sequence)
+
+        Rails.logger.warn(
+          "[RestaurantsController#index] db_role=primary q=#{@q.inspect} restaurants_sample=" \
+          "#{@restaurants.limit(10).pluck(:id, :sequence).inspect}",
+        )
       end
-      if q.present?
-        scope = scope.where('restaurants.name ILIKE ?', "%#{q}%")
-      end
-      @filter = filter
-      @q = q
-
-      # Counts for tabs (based on current user scope)
-      counts_scope = base_scope
-      @counts = {
-        all: counts_scope.where.not(status: Restaurant.statuses[:archived]).count,
-        active: counts_scope.where(status: Restaurant.statuses[:active]).count,
-        inactive: counts_scope.where(status: Restaurant.statuses[:inactive]).count,
-        archived: counts_scope.where(status: Restaurant.statuses[:archived]).count,
-      }
-
-      # Pagination
-      @page = params[:page].to_i
-      @page = 1 if @page < 1
-      @per_page = params[:per].to_i
-      @per_page = 20 if @per_page <= 0 || @per_page > 100
-      @total_count = scope.count
-      @total_pages = (@total_count / @per_page.to_f).ceil
-
-      # Optimize query based on request format
-      @restaurants = if request.format.json?
-                       scope.order(:sequence).limit(@per_page).offset((@page - 1) * @per_page)
-                     else
-                       scope.order(:sequence).limit(@per_page).offset((@page - 1) * @per_page)
-                     end
 
       AnalyticsService.track_user_event(current_user, 'restaurants_viewed', {
         restaurants_count: @restaurants.count,
@@ -204,13 +172,91 @@ class RestaurantsController < ApplicationController
       format.html do
         if request.headers["Turbo-Frame"] == 'restaurants_content'
           render partial: 'restaurants/index_frame_wrapper_2025',
-                 locals: { restaurants: @restaurants, filter: @filter, q: @q, counts: @counts, page: @page, per_page: @per_page, total_pages: @total_pages, total_count: @total_count }
+                 locals: { restaurants: @restaurants, q: @q }
         else
           render :index_2025
         end
       end
       format.json { render 'index_minimal' }
     end
+  end
+
+  # PATCH /restaurants/bulk_update
+  def bulk_update
+    authorize Restaurant
+
+    status = params.dig(:bulk, :status).presence
+    ids = Array(params[:restaurant_ids]).map(&:to_i).uniq
+
+    if status.blank? || ids.blank?
+      render json: { success: false }, status: :unprocessable_entity
+      return
+    end
+
+    scope = policy_scope(Restaurant).where(id: ids)
+    scope.update_all(status: Restaurant.statuses.fetch(status))
+
+    render json: { success: true }, status: :ok
+  rescue KeyError
+    render json: { success: false }, status: :unprocessable_entity
+  end
+
+  # PATCH /restaurants/reorder
+  def reorder
+    authorize Restaurant
+
+    order = params[:order]
+    unless order.is_a?(Array)
+      render json: { success: false }, status: :unprocessable_entity
+      return
+    end
+
+    scope = policy_scope(Restaurant).where.not(status: Restaurant.statuses[:archived])
+    permitted_ids = scope.pluck(:id)
+
+    payload_ids = order.filter_map do |item|
+      raw = if item.is_a?(ActionController::Parameters)
+              item.to_unsafe_h
+            elsif item.is_a?(Hash)
+              item
+            else
+              nil
+            end
+      next if raw.nil?
+
+      raw_id = raw['id'] || raw[:id]
+      next if raw_id.blank?
+
+      id = raw_id.to_i
+      next unless permitted_ids.include?(id)
+
+      id
+    end
+    payload_ids = payload_ids.uniq
+
+    remaining_ids = scope.where.not(id: payload_ids).order(:sequence, :id).pluck(:id)
+    final_ids = payload_ids + remaining_ids
+
+    Restaurant.transaction do
+      final_ids.each_with_index do |id, idx|
+        Restaurant.where(id: id).update_all(sequence: idx + 1)
+      end
+    end
+
+    persisted_sample = ApplicationRecord.on_primary do
+      policy_scope(Restaurant)
+        .where.not(status: Restaurant.statuses[:archived])
+        .order(:sequence, :id)
+        .limit(10)
+        .pluck(:id, :sequence)
+    end
+
+    Rails.logger.warn(
+      "[RestaurantsController#reorder] db_role=primary payload_ids=#{payload_ids.inspect} " \
+      "final_ids_first10=#{final_ids.first(10).inspect} persisted_sample=#{persisted_sample.inspect}",
+    )
+
+    render json: { success: true }, status: :ok
   end
 
   # GET /restaurants/1 or /restaurants/1.json
@@ -409,12 +455,18 @@ class RestaurantsController < ApplicationController
   # GET /restaurants/new
   def new
     @restaurant = Restaurant.new
+    @restaurant.status ||= :inactive
     authorize @restaurant
 
     AnalyticsService.track_user_event(current_user, 'restaurant_creation_started', {
       user_restaurants_count: current_user.restaurants.count,
       plan_name: current_user.plan&.name,
     },)
+
+    if request.headers['Turbo-Frame'] == 'new_restaurant_modal'
+      render partial: 'restaurants/new_modal_form', locals: { restaurant: @restaurant }
+      return
+    end
   end
 
   # GET /restaurants/1/edit
@@ -453,15 +505,14 @@ class RestaurantsController < ApplicationController
     @onboarding_mode = ActiveModel::Type::Boolean.new.cast(params[:onboarding])
     @onboarding_next = @restaurant.onboarding_next_section
 
-    # Guided onboarding: force user through required setup sequence
-    begin
-      next_section = @onboarding_next
-      if next_section.present? && @current_section != next_section
-        flash[:notice] = I18n.t('onboarding.restaurant_guidance.redirecting', default: 'Please complete this setup step first.')
-        return redirect_to edit_restaurant_path(@restaurant, section: next_section, onboarding: (@onboarding_mode ? 'true' : nil))
-      end
-    rescue => e
-      Rails.logger.warn("[RestaurantsController#edit] onboarding guidance error: #{e.message}")
+    # Restaurant onboarding (guided, non-blocking)
+    if @onboarding_next.present?
+      AnalyticsService.track_user_event(current_user, 'restaurant_onboarding_step_viewed', {
+        restaurant_id: @restaurant.id,
+        section: @current_section,
+        next_recommended_section: @onboarding_next,
+        is_recommended: (@current_section == @onboarding_next),
+      },)
     end
 
     AnalyticsService.track_user_event(current_user, 'restaurant_edit_started', {
@@ -498,11 +549,20 @@ class RestaurantsController < ApplicationController
   # POST /restaurants or /restaurants.json
   def create
     @restaurant = Restaurant.new(restaurant_params)
+    @restaurant.user = current_user
+    @restaurant.status ||= :inactive
     authorize @restaurant
 
     respond_to do |format|
       if @restaurant.save
+        RestaurantProvisioningService.call(restaurant: @restaurant, user: current_user)
+
         AnalyticsService.track_restaurant_created(current_user, @restaurant)
+        AnalyticsService.track_user_event(current_user, 'restaurant_onboarding_started', {
+          restaurant_id: @restaurant.id,
+          source: 'restaurants_create',
+          initial_next_section: @restaurant.onboarding_next_section,
+        },)
         if @restaurant.genimage.nil?
           @genimage = Genimage.new
           @genimage.restaurant = @restaurant
@@ -589,7 +649,13 @@ class RestaurantsController < ApplicationController
         format.json { 
           # For AJAX/auto-save requests, return simple success response
           if request.xhr?
-            render json: { success: true, message: 'Saved successfully' }, status: :ok
+            onboarding_next = @restaurant.onboarding_next_section
+            render json: {
+              success: true,
+              message: 'Saved successfully',
+              onboarding_next: onboarding_next,
+              onboarding_required_text: onboarding_required_text_for(onboarding_next),
+            }, status: :ok
           else
             render :edit, status: :ok, location: @restaurant
           end
@@ -722,6 +788,33 @@ class RestaurantsController < ApplicationController
   end
 
   private
+
+  def onboarding_required_text_for(onboarding_next)
+    case onboarding_next
+    when 'details'
+      missing = @restaurant.onboarding_missing_details_fields
+      labels = {
+        description: 'a description',
+        currency: 'a currency',
+        address: 'your address/location',
+        country: 'your country',
+      }
+      items = missing.map { |k| labels[k] }.compact
+      "To continue setup, please add #{items.to_sentence}."
+    when 'localization'
+      'Add at least one language and set a default language to continue setup.'
+    when 'tables'
+      'Add at least one table (capacity 4 is fine) to continue setup.'
+    when 'staff'
+      'Add at least one staff member to continue setup.'
+    when 'menus'
+      'Create or import a menu to continue setup.'
+    else
+      'Continue the required setup to proceed.'
+    end
+  rescue StandardError
+    'Continue the required setup to proceed.'
+  end
 
   # Skip policy scope verification for optimized JSON requests
   def skip_policy_scope_for_json?

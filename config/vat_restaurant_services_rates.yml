@@ -1,0 +1,4 @@
+# Restaurant-services VAT rates by country code.
+# Values are percentages (e.g. 20 for 20%).
+# Intentionally left empty for now; populate per jurisdiction as rates are verified.
+{}

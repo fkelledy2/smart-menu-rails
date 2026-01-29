@@ -197,7 +197,6 @@
           data: { testid: 'restaurant-address1-input' } %>
       <%= form.hidden_field :latitude %>
       <%= form.hidden_field :longitude %>
-      <%= form.hidden_field :country %>
       <div class="form-text">
         <%= t('.address_help') %>
       </div>
@@ -210,6 +209,7 @@
       <%= form.text_field :address2,
           class: 'form-control',
           placeholder: t('.address2_placeholder'),
+          readonly: true,
           data: { testid: 'restaurant-address2-input' } %>
       <div class="form-text">
         <%= t('.address2_help') %>
@@ -217,7 +217,7 @@
     </div>
 
     <div class="row g-3 mb-4">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div>
           <%= form.label :city, class: 'form-label d-inline-flex align-items-center gap-2' do %>
             <%= t('activerecord.attributes.restaurant.city') %>
@@ -227,6 +227,7 @@
           <%= form.text_field :city,
               class: 'form-control',
               required: true,
+              readonly: true,
               data: { testid: 'restaurant-city-input' } %>
         </div>
       </div>
@@ -238,6 +239,7 @@
           <% end %>
           <%= form.text_field :state,
               class: 'form-control',
+              readonly: true,
               data: { testid: 'restaurant-state-input' } %>
         </div>
       </div>
@@ -249,7 +251,20 @@
           <% end %>
           <%= form.text_field :postcode,
               class: 'form-control',
+              readonly: true,
               data: { testid: 'restaurant-postcode-input' } %>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div>
+          <%= form.label :country, class: 'form-label' do %>
+            <%= t('activerecord.attributes.restaurant.country') %>
+          <% end %>
+          <%= form.text_field :country,
+              class: 'form-control',
+              readonly: true,
+              data: { testid: 'restaurant-country-input' } %>
         </div>
       </div>
     </div>
@@ -359,9 +374,11 @@
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', async function() {
+  async function initRestaurantMap() {
     const mapElement = document.getElementById('restaurant-map');
     if (!mapElement) return;
+    if (mapElement.dataset.mapInitialized === 'true') return;
+    mapElement.dataset.mapInitialized = 'true';
 
     const latitude = parseFloat(mapElement.dataset.latitude);
     const longitude = parseFloat(mapElement.dataset.longitude);
@@ -431,6 +448,8 @@
         animation: google.maps.Animation.DROP
       });
 
+      window.__restaurantMapInstance = { map: map, marker: marker, element: mapElement };
+
       // Add info window
       const infoWindow = new google.maps.InfoWindow({
         content: `
@@ -468,5 +487,8 @@
         </div>
       `;
     }
-  });
+  }
+
+  document.addEventListener('turbo:load', initRestaurantMap);
+  document.addEventListener('DOMContentLoaded', initRestaurantMap);
 </script>

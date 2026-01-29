@@ -3,6 +3,14 @@ class RestaurantPolicy < ApplicationPolicy
     user.present?
   end
 
+  def reorder?
+    user.present?
+  end
+
+  def bulk_update?
+    user.present?
+  end
+
   def show?
     owner? || authorized_employee?
   end
