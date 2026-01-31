@@ -162,7 +162,12 @@ class RestaurantsController < ApplicationController
         has_restaurants: @restaurants.any?,
       },)
 
-      @canAddRestaurant = @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
+      if current_user.plan.locations == -1
+        @canAddRestaurant = true
+      else
+        active_count = policy_scope(Restaurant).where(archived: false, status: :active).count
+        @canAddRestaurant = active_count < current_user.plan.locations
+      end
     else
       redirect_to root_url
     end
@@ -189,16 +194,25 @@ class RestaurantsController < ApplicationController
     ids = Array(params[:restaurant_ids]).map(&:to_i).uniq
 
     if status.blank? || ids.blank?
-      render json: { success: false }, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { redirect_to restaurants_path, alert: 'Invalid bulk update' }
+        format.json { render json: { success: false }, status: :unprocessable_entity }
+      end
       return
     end
 
     scope = policy_scope(Restaurant).where(id: ids)
     scope.update_all(status: Restaurant.statuses.fetch(status))
 
-    render json: { success: true }, status: :ok
+    respond_to do |format|
+      format.html { redirect_to restaurants_path, notice: 'Restaurants updated' }
+      format.json { render json: { success: true }, status: :ok }
+    end
   rescue KeyError
-    render json: { success: false }, status: :unprocessable_entity
+    respond_to do |format|
+      format.html { redirect_to restaurants_path, alert: 'Invalid status' }
+      format.json { render json: { success: false }, status: :unprocessable_entity }
+    end
   end
 
   # PATCH /restaurants/reorder
@@ -552,6 +566,18 @@ class RestaurantsController < ApplicationController
     @restaurant.user = current_user
     @restaurant.status ||= :inactive
     authorize @restaurant
+
+    if current_user&.plan && current_user.plan.locations != -1
+      active_count = current_user.restaurants.where(archived: false, status: :active).count
+      if active_count >= current_user.plan.locations
+        @restaurant.errors.add(:base, 'Plan limit reached: maximum active restaurants')
+        respond_to do |format|
+          format.html { redirect_to restaurants_path, alert: @restaurant.errors.full_messages.to_sentence }
+          format.json { render json: { errors: @restaurant.errors.full_messages }, status: :unprocessable_entity }
+        end
+        return
+      end
+    end
 
     respond_to do |format|
       if @restaurant.save

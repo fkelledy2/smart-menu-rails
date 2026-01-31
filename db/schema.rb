@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_26_183000) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_30_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -1133,6 +1133,21 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_26_183000) do
     t.index ["restaurant_id"], name: "index_restaurant_onboardings_on_restaurant_id"
   end
 
+  create_table "restaurant_subscriptions", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.integer "status", default: 0, null: false
+    t.string "stripe_customer_id"
+    t.string "stripe_subscription_id"
+    t.boolean "payment_method_on_file", default: false, null: false
+    t.datetime "trial_ends_at"
+    t.datetime "current_period_end"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_restaurant_subscriptions_on_restaurant_id", unique: true
+    t.index ["stripe_customer_id"], name: "index_restaurant_subscriptions_on_stripe_customer_id"
+    t.index ["stripe_subscription_id"], name: "index_restaurant_subscriptions_on_stripe_subscription_id"
+  end
+
   create_table "restaurantavailabilities", force: :cascade do |t|
     t.integer "dayofweek"
     t.integer "starthour"
@@ -1496,6 +1511,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_26_183000) do
   add_foreign_key "restaurant_menus", "menus"
   add_foreign_key "restaurant_menus", "restaurants"
   add_foreign_key "restaurant_onboardings", "restaurants"
+  add_foreign_key "restaurant_subscriptions", "restaurants"
   add_foreign_key "restaurantavailabilities", "restaurants"
   add_foreign_key "restaurantlocales", "restaurants"
   add_foreign_key "restaurants", "users"

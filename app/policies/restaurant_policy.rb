@@ -89,18 +89,18 @@ class RestaurantPolicy < ApplicationPolicy
   def authorized_employee?
     return false unless user.present? && record
 
-    user.employees.exists?(restaurant_id: record.id, status: :active)
+    user.active_employee_for_restaurant?(record.id)
   end
 
   def employee_admin?
     return false unless user.present? && record
 
-    user.employees.exists?(restaurant_id: record.id, role: :admin, status: :active)
+    user.admin_employee_for_restaurant?(record.id)
   end
 
   def employee_manager?
     return false unless user.present? && record
 
-    user.employees.exists?(restaurant_id: record.id, role: %i[manager admin], status: :active)
+    user.manager_employee_for_restaurant?(record.id)
   end
 end

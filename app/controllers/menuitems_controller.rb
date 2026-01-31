@@ -331,6 +331,30 @@ class MenuitemsController < ApplicationController
     @menuitem = Menuitem.new(menuitem_params)
     authorize @menuitem
 
+    plan = current_user&.plan
+    items_limit = plan&.itemspermenu
+    if items_limit.present? && items_limit != -1
+      context_menu = @menuitem.menusection&.menu
+      if context_menu
+        existing_count = Menuitem.joins(:menusection)
+          .where(menusections: { menu_id: context_menu.id })
+          .where(archived: [false, nil])
+          .count
+
+        if existing_count >= items_limit
+          @menuitem.errors.add(:base, 'Your plan limit has been reached for number of items per menu')
+          respond_to do |format|
+            format.html do
+              redirect_to edit_restaurant_menu_path(context_menu.restaurant, context_menu, section: 'items'),
+                          alert: @menuitem.errors.full_messages.to_sentence
+            end
+            format.json { render json: { errors: @menuitem.errors.full_messages }, status: :unprocessable_entity }
+          end
+          return
+        end
+      end
+    end
+
     respond_to do |format|
       if @menuitem.save
         if @menuitem.genimage.nil?

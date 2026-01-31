@@ -737,8 +737,23 @@ class MenusController < ApplicationController
 
   # POST /menus or /menus.json
   def create
-    @menu = (@restaurant || Restaurant.find(menu_params[:restaurant_id])).menus.build(menu_params)
+    context_restaurant = @restaurant || Restaurant.find(menu_params[:restaurant_id])
+    @menu = context_restaurant.menus.build(menu_params)
     authorize @menu
+
+    plan = current_user&.plan
+    menus_limit = plan&.menusperlocation
+    if menus_limit.present? && menus_limit != -1
+      active_menu_count = Menu.where(restaurant: context_restaurant, status: 'active', archived: false).count
+      if active_menu_count >= menus_limit
+        @menu.errors.add(:base, 'Your plan limit has been reached for number of menus')
+        respond_to do |format|
+          format.html { redirect_to edit_restaurant_path(id: context_restaurant.id), alert: @menu.errors.full_messages.to_sentence }
+          format.json { render json: { errors: @menu.errors.full_messages }, status: :unprocessable_entity }
+        end
+        return
+      end
+    end
 
     respond_to do |format|
       # Remove PDF if requested
@@ -808,6 +823,18 @@ class MenusController < ApplicationController
         end
       end
       attrs[:status] = status_value if status_value.present?
+
+      if attrs[:status].to_s == 'active'
+        context_restaurant = @restaurant || @menu.owner_restaurant || @menu.restaurant
+        unless context_restaurant&.publish_allowed?
+          @menu.errors.add(:base, 'Publishing requires an active subscription with a payment method on file')
+          format.html do
+            redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), alert: @menu.errors.full_messages.to_sentence
+          end
+          format.json { render json: { errors: @menu.errors.full_messages }, status: :unprocessable_entity }
+          next
+        end
+      end
 
       Rails.logger.info("[MenusController#update] raw_menu=#{raw_menu.inspect} built_attrs=#{attrs.inspect}")
 

@@ -86,6 +86,17 @@ However, this provisioning is tied to the wizard job path, not guaranteed for *a
 - `:smartmenu_mor` => `:destination`
 - else `:direct`
 
+### 6) Subscription billing readiness (missing)
+We currently do **not** have a clear, enforced path that ensures a new restaurant owner/manager:
+- Can pick a paid `mellow.menu` plan.
+- Can start a recurring SaaS subscription.
+- Has completed the minimum required Stripe onboarding steps to facilitate that subscription.
+
+This document extends the plan to introduce a Stripe KYC/bank-details requirement in a way that:
+- Minimizes early drop-off.
+- Prevents “free value” beyond a defined trial/preview boundary.
+- Keeps Merchant of Record (MoR) logic correct.
+
 ## Problems / Drop-off Drivers
 - Too many mandatory steps before users get value.
 - Guided onboarding gates navigation to a single next section; this can feel restrictive.
@@ -94,6 +105,13 @@ However, this provisioning is tied to the wizard job path, not guaranteed for *a
   - Standard `RestaurantsController#create` does not appear to provision defaults.
 - Payments/MOR choice is not placed early enough in the journey to avoid later rework.
 - Funnel measurement exists for the wizard, but not for restaurant edit gating (where drop-off likely happens).
+
+Additional (current) problems:
+- There is no explicit *paid conversion moment* that is enforced before “real usage”.
+- There is no clear gating strategy for:
+  - selecting a paid plan
+  - starting a recurring subscription
+  - enabling publishing/ordering
 
 ## Proposed Improvements
 
@@ -143,6 +161,79 @@ Rules:
 UX suggestion:
 - Make this a single decision card with plain language explaining:
   - fees, payouts, responsibility for refunds/chargebacks, compliance.
+
+### E) Subscription billing gate (Stripe bank details) for paid plans
+We need a *separate* (but related) gate for **SaaS subscription billing**.
+
+Key principle:
+- **MoR selection is about customer payments** (if/when the restaurant accepts payments from patrons).
+- **Bank details / Stripe KYC is also needed for paid subscription collection** (charging the restaurant for the SaaS plan), depending on the chosen billing architecture.
+
+We should decide which of these billing architectures we are using:
+
+Option E1 (recommended if we can): “Platform bills restaurant without restaurant Connect onboarding”
+- The platform (mellow.menu) charges the restaurant as a customer for the SaaS subscription.
+- The restaurant does **not** need Stripe Connect/bank details to pay a subscription.
+- Benefits:
+  - lowest onboarding friction
+  - simplest conversion funnel
+- Open question:
+  - can we legally/operationally do this in our target regions, and does it fit our Stripe setup?
+
+Option E2: “Restaurant must complete Stripe Connect (bank details) before paid plan starts”
+- Paid plan selection triggers a requirement for Stripe Connect onboarding.
+- Benefits:
+  - aligns with having a connected account on file early
+  - unifies payments compliance flows
+- Cost:
+  - higher drop-off
+
+Decision (2026-01): we are proceeding with **Option E1**.
+
+#### Proposed product gating rule (Option E1)
+- User can set up and preview a Smart Menu without paying.
+- User cannot obtain “real-world value” for free until they start a trial with card/bank details up-front.
+
+Decision (2026-01): **Publish gate**
+- Publishing / making the menu publicly usable by patrons is blocked until subscription is activated.
+
+Decision (2026-01): **Trial with card/bank up-front**
+- The trial can start immediately once payment method is on file.
+- If a payment method is not on file:
+  - allow preview
+  - block publish
+
+#### Recommended placement in the funnel
+We should treat Stripe bank-details onboarding as a **late gate** at the moment of intent, not an early gate.
+
+Recommendation:
+1. Let the user:
+  - create restaurant
+  - create/import a menu
+  - create a table / QR
+  - preview Smart Menu internally
+2. When they try to do one of:
+  - publish / activate (customer-facing)
+then require:
+  - starting trial/subscription with payment method (Option E1)
+  - (separately) explicit MoR selection
+  - (separately) Stripe Connect onboarding only if MoR == restaurant_mor
+
+This is a “value-first but not free” model.
+
+#### How to prevent “free value”
+Define a clear boundary between preview and real usage.
+
+Candidate hard gates (choose the one we want as the activation boundary):
+- Gate G1 (recommended): **Publishing**
+  - allow preview on a private URL (or with a watermark)
+  - block making it usable by patrons (publicly accessible)
+- Gate G2: **QR export / printing**
+  - allow preview QR but block downloading/printing/exporting high-res assets
+- Gate G3: **Ordering / payments**
+  - allow menu browsing for free, charge only when ordering is enabled
+
+Decision (2026-01): we are using **G1 Publish gate**.
 
 ## Funnel Instrumentation Plan (Segment)
 
@@ -216,6 +307,31 @@ Wizard already emits step completion/failure. Add parallel events for restaurant
   - Candidate: “menu created/imported” and “ordering enabled”.
 - What countries/regions do we need tax inference for first?
   - Start with IT/UK/US/EU defaults.
+
+Additional questions to resolve (payments + subscription):
+- Do we want subscription billing to require restaurant Stripe Connect at all?
+  - Decision (2026-01): No, we are using E1.
+- What is the exact Stripe implementation for subscription billing?
+  - Stripe Billing subscription on the platform account.
+  - Restaurant is stored as a Stripe Customer.
+  - Trial starts when payment method is attached.
+- What is the definition of “free value” we must prevent?
+  - browsing preview is OK?
+  - public publishing is NOT OK?
+  - QR download/print is NOT OK?
+- What is the precise activation gate?
+  - publish gate (G1), QR gate (G2), ordering gate (G3), or combination?
+- What is the trial policy?
+  - duration
+  - does it still require bank details up-front?
+  - what happens at trial end?
+- Who is allowed to complete Stripe Connect onboarding?
+  - only owner?
+  - manager role?
+  - what if multiple managers?
+- What is the expected Stripe Connect completion time and what recovery UX do we need?
+  - reminders, emails, banners
+  - what do we do with restaurants stuck in pending?
 
 ## Acceptance Criteria
 - New restaurant creation results in:
@@ -512,6 +628,20 @@ Use a consistent prefix `restaurant_onboarding_*` and keep existing wizard event
 - Add server-side enforcement on ordering enablement.
 - Emit `merchant_model_selected` and Stripe lifecycle events.
 
+### Phase 3b: Subscription billing gate + anti-free-value enforcement
+- Billing architecture decision: E1 (platform bills restaurant; no Connect required for subscription).
+- Add a dedicated “Plan & Billing” section (or extend Settings) that:
+  - shows current plan
+  - allows selecting a plan
+  - starts a trial/subscription only after a payment method is on file
+- Add a server-side enforcement point on the *activation boundary*:
+  - Publish action endpoint (required)
+- Emit:
+  - `billing_plan_selected`
+  - `billing_subscription_started`
+  - `billing_subscription_payment_failed`
+  - `billing_subscription_canceled`
+
 ### Phase 4: Funnel completion + abandonment
 - Implement completion detection when `Restaurant#onboarding_next_section` transitions to `nil`.
 - Add `restaurant_onboarding_completed`.
@@ -548,3 +678,7 @@ Use a consistent prefix `restaurant_onboarding_*` and keep existing wizard event
 1. **Locale inference**: should we prefer restaurant country, user locale, or browser Accept-Language?
 2. **Tips**: do we want to seed a default tip automatically for all countries, or only some?
 3. **Hard gating**: confirm we only hard-gate Smart Menus on (language + table + staff + menu), and that taxes/tips remain optional.
+
+4. **Billing architecture**: Decision (2026-01): E1 (platform bills without Connect).
+5. **Activation boundary**: Decision (2026-01): Publish gate.
+6. **Trial policy**: Decision (2026-01): Trial with card/bank up-front.

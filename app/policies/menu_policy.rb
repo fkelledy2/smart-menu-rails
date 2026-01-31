@@ -86,7 +86,7 @@ class MenuPolicy < ApplicationPolicy
     owner_restaurant = record.respond_to?(:owner_restaurant) && record.owner_restaurant.present? ? record.owner_restaurant : record.restaurant
     return false unless user.present? && owner_restaurant
 
-    user.employees.exists?(restaurant_id: owner_restaurant.id, status: :active)
+    user.active_employee_for_restaurant?(owner_restaurant.id)
   end
 
   def employee_admin?
@@ -95,7 +95,7 @@ class MenuPolicy < ApplicationPolicy
     owner_restaurant = record.respond_to?(:owner_restaurant) && record.owner_restaurant.present? ? record.owner_restaurant : record.restaurant
     return false unless user.present? && owner_restaurant
 
-    user.employees.exists?(restaurant_id: owner_restaurant.id, role: :admin, status: :active)
+    user.admin_employee_for_restaurant?(owner_restaurant.id)
   end
 
   def employee_manager?
@@ -104,12 +104,12 @@ class MenuPolicy < ApplicationPolicy
     owner_restaurant = record.respond_to?(:owner_restaurant) && record.owner_restaurant.present? ? record.owner_restaurant : record.restaurant
     return false unless user.present? && owner_restaurant
 
-    user.employees.exists?(restaurant_id: owner_restaurant.id, role: %i[manager admin], status: :active)
+    user.manager_employee_for_restaurant?(owner_restaurant.id)
   end
 
   def employee_admin_of_restaurant?
     return false unless user.present? && record.respond_to?(:restaurant_id)
 
-    user.employees.exists?(restaurant_id: record.restaurant_id, role: :admin, status: :active)
+    user.admin_employee_for_restaurant?(record.restaurant_id)
   end
 end

@@ -61,31 +61,34 @@
 
             <!-- Change Password Section -->
             <h5 class="mb-3 pb-2 border-bottom mt-4">Change Password</h5>
-            <p class="text-muted small mb-3">Leave blank if you don't want to change your password</p>
+            <p class="text-muted small mb-3">Leave blank to keep your current password</p>
 
-            <!-- New Password Field -->
-            <div class="mb-4">
+            <div data-controller="password-confirmation-toggle">
+              <!-- New Password Field -->
+              <div class="mb-4">
               <label for="user_password" class="form-label fw-semibold">
                 <i class="bi bi-lock me-2"></i>New Password
               </label>
               <%= f.password_field :password,
                   autocomplete: "new-password",
-                  placeholder: "Leave blank to keep current password",
+                  placeholder: "New password",
                   class: 'form-control form-control-lg',
+                  data: { "password-confirmation-toggle-target": "password", action: "input->password-confirmation-toggle#toggle" },
                   id: 'user_password' %>
-              <div class="form-text small">Minimum 6 characters</div>
-            </div>
+              </div>
 
-            <!-- Confirm New Password Field -->
-            <div class="mb-4">
+              <!-- Confirm New Password Field -->
+              <div class="mb-4 d-none" data-password-confirmation-toggle-target="confirmationWrapper">
               <label for="user_password_confirmation" class="form-label fw-semibold">
                 <i class="bi bi-lock-fill me-2"></i>Confirm New Password
               </label>
               <%= f.password_field :password_confirmation,
                   autocomplete: "new-password",
-                  placeholder: t(".confirmPassword"),
+                  placeholder: "Confirm new password",
                   class: 'form-control form-control-lg',
+                  data: { "password-confirmation-toggle-target": "confirmation" },
                   id: 'user_password_confirmation' %>
+              </div>
             </div>
 
             <!-- Current Password Field (Required) -->

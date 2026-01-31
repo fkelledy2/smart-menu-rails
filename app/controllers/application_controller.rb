@@ -87,11 +87,17 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def current_user_restaurants
+    return Restaurant.none unless current_user
+
+    @current_user_restaurants ||= Restaurant.where(user: current_user, archived: false).order(:sequence, :id)
+  end
+
   def set_permissions
     @canAddRestaurant = false
     return unless current_user&.plan
 
-    @restaurants = Restaurant.where(user: current_user, archived: false).order(:sequence, :id)
+    @restaurants = current_user_restaurants
     if @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
       @canAddRestaurant = true
     end
@@ -100,7 +106,7 @@ class ApplicationController < ActionController::Base
   def set_current_employee
     if current_user
       @current_employee = Employee.where(user_id: current_user.id).first
-      @restaurants = Restaurant.where(user: current_user).order(:sequence, :id)
+      @restaurants = current_user_restaurants
       @userplan = Userplan.where(user_id: current_user.id).first
       if @userplan.nil?
         @userplan = Userplan.new
@@ -126,7 +132,7 @@ class ApplicationController < ActionController::Base
     return if request.xhr? # Skip for AJAX requests
     return if request.format.json?
 
-    return if current_user.employees.exists?(status: :active)
+    return if current_user.has_active_employment?
 
     # Skip for certain controllers that should always be accessible
     skip_controllers = %w[home sessions registrations passwords confirmations unlocks]

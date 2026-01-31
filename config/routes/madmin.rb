@@ -18,6 +18,11 @@ namespace :madmin do
   resources :ocr_menu_imports
   resources :ocr_menu_sections
   resources :ocr_menu_items
+  resources :ledger_events
+  resources :payment_attempts
+  resources :payment_profiles
+  resources :payment_refunds
+  resources :provider_accounts
   namespace :noticed do
     resources :notifications
   end

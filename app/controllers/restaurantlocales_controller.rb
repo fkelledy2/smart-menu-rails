@@ -46,6 +46,39 @@ class RestaurantlocalesController < ApplicationController
   def create
     @restaurantlocale = Restaurantlocale.new(restaurantlocale_params)
     authorize @restaurantlocale
+
+    plan = current_user&.plan
+    languages_limit = plan&.languages
+    if languages_limit.present? && languages_limit != -1
+      context_restaurant = @restaurantlocale.restaurant || Restaurant.find_by(id: params.dig(:restaurantlocale, :restaurant_id))
+      if context_restaurant
+        existing_count = Restaurantlocale.where(restaurant_id: context_restaurant.id)
+          .where.not(status: Restaurantlocale.statuses[:archived])
+          .count
+
+        if existing_count >= languages_limit
+          @restaurantlocale.errors.add(:base, 'Your plan limit has been reached for number of languages')
+          respond_to do |format|
+            format.turbo_stream do
+              render turbo_stream: turbo_stream.replace(
+                'localization_new_locale',
+                ApplicationController.render(
+                  partial: 'restaurantlocales/form',
+                  assigns: { restaurantlocale: @restaurantlocale },
+                  formats: [:html]
+                )
+              ), status: :unprocessable_entity
+            end
+            format.html do
+              redirect_to edit_restaurant_path(id: context_restaurant.id), alert: @restaurantlocale.errors.full_messages.to_sentence
+            end
+            format.json { render json: { errors: @restaurantlocale.errors.full_messages }, status: :unprocessable_entity }
+          end
+          return
+        end
+      end
+    end
+
     respond_to do |format|
       if @restaurantlocale.save
         if @restaurantlocale.dfault == true

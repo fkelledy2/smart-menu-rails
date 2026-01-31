@@ -30,11 +30,12 @@ class ChangePasswordFlowTest < ApplicationSystemTestCase
     visit edit_user_registration_path
     # Ensure fields are present before interacting (by label for robustness)
     assert_selector(:field, 'New Password', wait: 5)
-    assert_selector(:field, 'Confirm New Password', wait: 5)
     assert_selector(:field, 'Current Password', wait: 5)
 
     # Change password: set new password and confirm, provide current password
     fill_in 'New Password', with: 'newpassword1'
+
+    assert_selector(:field, 'Confirm New Password', wait: 5)
     fill_in 'Confirm New Password', with: 'newpassword1'
     fill_in 'Current Password', with: 'oldpassword1'
 

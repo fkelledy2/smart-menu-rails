@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  require 'set'
   include IdentityCache
 
   # Include default devise modules. Others available are:
@@ -62,6 +63,40 @@ class User < ApplicationRecord
     parts = full_name.to_s.split(' ', 2)
     self.first_name = parts[0]
     self.last_name = parts[1] if parts.length > 1
+  end
+
+  def employee_roles_for_restaurant(restaurant_id)
+    rid = restaurant_id.to_i
+    return [] if rid <= 0 || id.blank?
+
+    @employee_roles_by_restaurant_id ||= begin
+      roles_by_restaurant = Hash.new { |h, k| h[k] = Set.new }
+      employees.where(status: :active).pluck(:restaurant_id, :role).each do |r_id, role|
+        roles_by_restaurant[r_id.to_i] << role.to_s
+      end
+      roles_by_restaurant
+    end
+
+    @employee_roles_by_restaurant_id[rid].to_a
+  end
+
+  def active_employee_for_restaurant?(restaurant_id)
+    employee_roles_for_restaurant(restaurant_id).any?
+  end
+
+  def admin_employee_for_restaurant?(restaurant_id)
+    employee_roles_for_restaurant(restaurant_id).include?('admin')
+  end
+
+  def manager_employee_for_restaurant?(restaurant_id)
+    roles = employee_roles_for_restaurant(restaurant_id)
+    roles.include?('admin') || roles.include?('manager')
+  end
+
+  def has_active_employment?
+    return false if id.blank?
+
+    @has_active_employment ||= employees.where(status: :active).limit(1).pluck(:id).any?
   end
 
   def self.from_omniauth(auth)

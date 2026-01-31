@@ -6,12 +6,14 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
 <% 
-  restaurant_menus = restaurant.restaurant_menus.joins(:menu)
+  restaurant_menus = restaurant.restaurant_menus
+    .joins(:menu)
     .where(menus: { archived: false })
+    .includes(:menu)
+    .order(Arel.sql('CASE WHEN restaurant_menus.sequence IS NULL THEN 1 ELSE 0 END, restaurant_menus.sequence ASC'))
+    .to_a
 
-  restaurant_menus = restaurant_menus.order(Arel.sql('CASE WHEN restaurant_menus.sequence IS NULL THEN 1 ELSE 0 END, restaurant_menus.sequence ASC'))
-
-  show_availability_column = restaurant_menus.includes(:menu).any? do |rm|
+  show_availability_column = restaurant_menus.any? do |rm|
     m = rm.menu
     owner_id = m.owner_restaurant_id.presence || m.restaurant_id
     owner_id != restaurant.id
@@ -124,7 +126,7 @@
         <tbody data-controller="sortable"
                data-sortable-url-value="<%= reorder_restaurant_restaurant_menus_path(restaurant) %>"
                data-sortable-handle-value=".drag-handle">
-          <% restaurant_menus.includes(:menu).each do |restaurant_menu| %>
+          <% restaurant_menus.each do |restaurant_menu| %>
             <% menu = restaurant_menu.menu %>
             <% owner_restaurant_id = menu.owner_restaurant_id.presence || menu.restaurant_id %>
             <% row_status = restaurant_menu.status.to_s %>

@@ -28,6 +28,7 @@ class Restaurant < ApplicationRecord
   has_many :provider_accounts, dependent: :delete_all
   has_many :payment_attempts, dependent: :delete_all
   has_many :payment_refunds, dependent: :delete_all
+  has_one :restaurant_subscription, dependent: :destroy
   has_many :restaurantavailabilities, dependent: :delete_all
   has_many :menusections, through: :menus
   has_many :menuavailabilities, through: :menus
@@ -63,6 +64,10 @@ class Restaurant < ApplicationRecord
   # Returns all locale codes for this restaurant
   def locales
     restaurantlocales.pluck(:locale)
+  end
+
+  def publish_allowed?
+    restaurant_subscription&.active_or_trialing_with_payment_method?
   end
 
   enum :status, {
