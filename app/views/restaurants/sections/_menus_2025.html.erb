@@ -236,7 +236,7 @@
          data-controller="sortable"
          data-sortable-url-value="<%= reorder_restaurant_restaurant_menus_path(restaurant) %>"
          data-sortable-handle-value=".drag-handle">
-      <% restaurant_menus.includes(:menu).each do |restaurant_menu| %>
+      <% restaurant_menus.each do |restaurant_menu| %>
         <% menu = restaurant_menu.menu %>
         <% owner_restaurant_id = menu.owner_restaurant_id.presence || menu.restaurant_id %>
         <% row_status = restaurant_menu.status.to_s %>

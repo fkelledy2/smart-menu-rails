@@ -11,14 +11,14 @@
     restaurant.restaurant_menus
       .joins(:menu)
       .where(menus: { archived: false })
-      .group(:status)
+      .group('restaurant_menus.status')
       .count
   rescue StandardError
     {}
   end
 
-  active_menus_count = menus_counts_by_status.fetch(RestaurantMenu.statuses.fetch('active'), 0) rescue 0
-  inactive_menus_count = menus_counts_by_status.fetch(RestaurantMenu.statuses.fetch('inactive'), 0) rescue 0
+  active_menus_count = menus_counts_by_status.fetch('active', menus_counts_by_status.fetch(RestaurantMenu.statuses.fetch('active'), 0)) rescue 0
+  inactive_menus_count = menus_counts_by_status.fetch('inactive', menus_counts_by_status.fetch(RestaurantMenu.statuses.fetch('inactive'), 0)) rescue 0
 
   staff_count = restaurant.employees.count rescue 0
   tables_count = restaurant.tablesettings.count rescue 0
