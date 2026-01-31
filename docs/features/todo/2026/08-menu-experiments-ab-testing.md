@@ -1,6 +1,6 @@
 # Menu Experiments (A/B + Time-boxed) (v1)
 
-## Purpose
+## Purpose 
 Enable safe experimentation on menus:
 
 - A/B testing between menu versions
