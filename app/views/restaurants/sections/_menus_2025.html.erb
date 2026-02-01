@@ -13,6 +13,20 @@
     .order(Arel.sql('CASE WHEN restaurant_menus.sequence IS NULL THEN 1 ELSE 0 END, restaurant_menus.sequence ASC'))
     .to_a
 
+  plan = restaurant.user&.plan
+  menus_limit = plan&.menusperlocation
+  active_menus_count = restaurant.restaurant_menus
+    .joins(:menu)
+    .where(menus: { archived: false })
+    .where(status: RestaurantMenu.statuses[:active])
+    .count
+  can_add_menu = menus_limit == -1 || (menus_limit.to_i > 0 && active_menus_count < menus_limit.to_i)
+  disabled_menu_action_message = if menus_limit.present? && menus_limit.to_i > 0
+    "Your plan allows up to #{menus_limit} active menu#{menus_limit.to_i == 1 ? '' : 's'} per restaurant. Archive or deactivate a menu to add another."
+  else
+    'You cannot add more menus on your current plan.'
+  end
+
   show_availability_column = restaurant_menus.any? do |rm|
     m = rm.menu
     owner_id = m.owner_restaurant_id.presence || m.restaurant_id
@@ -28,18 +42,40 @@
   </h2>
 
   <div class="quick-actions-grid">
-    <%= link_to new_restaurant_menu_path(restaurant),
-        class: 'quick-action-btn',
-        data: { testid: 'new-menu-btn', turbo_frame: '_top' } do %>
-      <i class="bi bi-plus-circle"></i>
-      <span><%= t('.new_menu') %></span>
+    <% if can_add_menu %>
+      <%= link_to new_restaurant_menu_path(restaurant),
+          class: 'quick-action-btn',
+          data: { testid: 'new-menu-btn', turbo_frame: '_top' } do %>
+        <i class="bi bi-plus-circle"></i>
+        <span><%= t('.new_menu') %></span>
+      <% end %>
+    <% else %>
+      <%= link_to '#',
+          class: 'quick-action-btn disabled',
+          title: disabled_menu_action_message,
+          aria: { disabled: true },
+          data: { controller: 'disabled-action', action: 'click->disabled-action#explain', disabled_action_title_value: 'Menu limit reached', disabled_action_message_value: disabled_menu_action_message, testid: 'new-menu-btn', turbo: false } do %>
+        <i class="bi bi-plus-circle"></i>
+        <span><%= t('.new_menu') %></span>
+      <% end %>
     <% end %>
 
-    <%= link_to edit_restaurant_path(restaurant, section: 'import'),
-        class: 'quick-action-btn',
-        data: { testid: 'import-menu-btn', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-      <i class="bi bi-file-earmark-arrow-up"></i>
-      <span><%= t('.import_menu') %></span>
+    <% if can_add_menu %>
+      <%= link_to edit_restaurant_path(restaurant, section: 'import'),
+          class: 'quick-action-btn',
+          data: { testid: 'import-menu-btn', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+        <i class="bi bi-file-earmark-arrow-up"></i>
+        <span><%= t('.import_menu') %></span>
+      <% end %>
+    <% else %>
+      <%= link_to '#',
+          class: 'quick-action-btn disabled',
+          title: disabled_menu_action_message,
+          aria: { disabled: true },
+          data: { controller: 'disabled-action', action: 'click->disabled-action#explain', disabled_action_title_value: 'Menu limit reached', disabled_action_message_value: disabled_menu_action_message, testid: 'import-menu-btn', turbo: false } do %>
+        <i class="bi bi-file-earmark-arrow-up"></i>
+        <span><%= t('.import_menu') %></span>
+      <% end %>
     <% end %>
   </div>
 </div>
@@ -54,6 +90,13 @@
   .quick-actions-grid .quick-action-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .quick-action-btn.disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    filter: grayscale(25%);
+    pointer-events: auto;
   }
 
   tr.menu-row-shared {

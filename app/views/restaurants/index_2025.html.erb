@@ -25,7 +25,14 @@
           <span><%= t('.new_restaurant', default: 'New Restaurant') %></span>
         <% end %>
       <% else %>
-        <a class="quick-action-btn disabled" aria-disabled="true" data-testid="new-restaurant-btn">
+        <a class="quick-action-btn disabled"
+           title="Your plan limit has been reached. Upgrade your plan or archive an existing restaurant to add a new one."
+           aria-disabled="true"
+           data-controller="disabled-action"
+           data-action="click->disabled-action#explain"
+           data-disabled-action-title-value="Restaurant limit reached"
+           data-disabled-action-message-value="Your plan limit has been reached. Upgrade your plan or archive an existing restaurant to add a new one."
+           data-testid="new-restaurant-btn">
           <i class="bi bi-plus-circle"></i>
           <span><%= t('.new_restaurant', default: 'New Restaurant') %></span>
         </a>
