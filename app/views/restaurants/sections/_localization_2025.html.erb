@@ -10,6 +10,22 @@
                Array(restaurant.restaurantlocales).sort_by { |rl| rl.respond_to?(:sequence) ? rl.sequence.to_i : 0 }
              end %>
 
+<%
+  plan = restaurant.user&.plan
+  languages_limit = plan&.languages
+  active_languages_count = Restaurantlocale
+    .where(restaurant_id: restaurant.id)
+    .where.not(status: Restaurantlocale.statuses[:archived])
+    .where(status: Restaurantlocale.statuses[:active])
+    .count
+  can_add_language = languages_limit == -1 || (languages_limit.to_i > 0 && active_languages_count < languages_limit.to_i)
+  disabled_language_action_message = if languages_limit.present? && languages_limit.to_i > 0
+    "Your plan allows up to #{languages_limit} active language#{languages_limit.to_i == 1 ? '' : 's'} per restaurant. Deactivate a language to add another."
+  else
+    'You cannot add more languages on your current plan.'
+  end
+%>
+
 <!-- Quick Actions Card -->
 <div class="mb-3 p-3">
   <h2 class="quick-actions-title">
@@ -18,14 +34,34 @@
   </h2>
 
   <div class="quick-actions-grid">
-    <%= link_to new_restaurant_restaurantlocale_path(restaurant),
-        class: 'quick-action-btn',
-        data: { turbo_frame: 'localization_new_locale' } do %>
-      <i class="bi bi-plus-circle"></i>
-      <span><%= t('.add_language') %></span>
+    <% if can_add_language %>
+      <%= link_to new_restaurant_restaurantlocale_path(restaurant),
+          class: 'quick-action-btn',
+          data: { turbo_frame: 'localization_new_locale' } do %>
+        <i class="bi bi-plus-circle"></i>
+        <span><%= t('.add_language') %></span>
+      <% end %>
+    <% else %>
+      <%= link_to '#',
+          class: 'quick-action-btn disabled',
+          title: disabled_language_action_message,
+          aria: { disabled: true },
+          data: { controller: 'disabled-action', action: 'click->disabled-action#explain', disabled_action_title_value: 'Language limit reached', disabled_action_message_value: disabled_language_action_message, turbo: false } do %>
+        <i class="bi bi-plus-circle"></i>
+        <span><%= t('.add_language') %></span>
+      <% end %>
     <% end %>
   </div>
 </div>
+
+<style>
+  .quick-action-btn.disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    filter: grayscale(25%);
+    pointer-events: auto;
+  }
+</style>
 
 <!-- Inline New Language Frame -->
 <%= turbo_frame_tag 'localization_new_locale' do %>

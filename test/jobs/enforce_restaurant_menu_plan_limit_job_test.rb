@@ -72,4 +72,51 @@ class EnforceRestaurantMenuPlanLimitJobTest < ActiveJob::TestCase
     assert_equal 'active', rm1.status
     assert_equal 'active', rm2.status
   end
+
+  test 'keeps default locale active and enforces language limit by deactivating extras' do
+    @plan.update!(languages: 1)
+
+    restaurant = Restaurant.create!(
+      user: @user,
+      name: 'Language Limit Test',
+      status: :active,
+      currency: 'USD',
+    )
+
+    default_rl = Restaurantlocale.create!(restaurant: restaurant, locale: 'EN', status: :active, dfault: true)
+    extra_rl = Restaurantlocale.create!(restaurant: restaurant, locale: 'FR', status: :active, dfault: false)
+    default_rl.update_columns(created_at: 2.days.ago, updated_at: 2.days.ago)
+    extra_rl.update_columns(created_at: 1.minute.ago, updated_at: 1.minute.ago)
+
+    EnforceRestaurantMenuPlanLimitJob.perform_now(restaurant_id: restaurant.id)
+
+    default_rl.reload
+    extra_rl.reload
+
+    assert_equal 'active', default_rl.status
+    assert_equal true, default_rl.dfault
+    assert_equal 'inactive', extra_rl.status
+  end
+
+  test 'does nothing when plan allows unlimited languages' do
+    @plan.update!(languages: -1)
+
+    restaurant = Restaurant.create!(
+      user: @user,
+      name: 'Unlimited Language Test',
+      status: :active,
+      currency: 'USD',
+    )
+
+    default_rl = Restaurantlocale.create!(restaurant: restaurant, locale: 'EN', status: :active, dfault: true)
+    extra_rl = Restaurantlocale.create!(restaurant: restaurant, locale: 'FR', status: :active, dfault: false)
+
+    EnforceRestaurantMenuPlanLimitJob.perform_now(restaurant_id: restaurant.id)
+
+    default_rl.reload
+    extra_rl.reload
+
+    assert_equal 'active', default_rl.status
+    assert_equal 'active', extra_rl.status
+  end
 end

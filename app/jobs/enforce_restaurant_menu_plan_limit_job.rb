@@ -29,6 +29,12 @@ class EnforceRestaurantMenuPlanLimitJob < ApplicationJob
     user = restaurant.user
     plan = user&.plan
     return unless plan
+
+    enforce_menus_for_restaurant(restaurant, plan)
+    enforce_languages_for_restaurant(restaurant, plan)
+  end
+
+  def enforce_menus_for_restaurant(restaurant, plan)
     return if plan.menusperlocation == -1
 
     limit = plan.menusperlocation.to_i
@@ -73,6 +79,45 @@ class EnforceRestaurantMenuPlanLimitJob < ApplicationJob
         .where(restaurant_id: restaurant.id, id: keep_ids)
         .where.not(status: RestaurantMenu.statuses[:archived])
         .update_all(status: RestaurantMenu.statuses[:active], updated_at: Time.current)
+    end
+  end
+
+  def enforce_languages_for_restaurant(restaurant, plan)
+    return if plan.languages == -1
+
+    limit = plan.languages.to_i
+    return if limit <= 0
+
+    scoped = Restaurantlocale
+      .where(restaurant_id: restaurant.id)
+      .where.not(status: Restaurantlocale.statuses[:archived])
+
+    default_locale = scoped.where(dfault: true).order(Arel.sql('created_at DESC, id DESC')).first
+    ApplicationRecord.on_primary do
+      if default_locale.present? && default_locale.status.to_s != 'active'
+        Restaurantlocale.where(id: default_locale.id).update_all(status: Restaurantlocale.statuses[:active], updated_at: Time.current)
+      end
+    end
+
+    active = scoped.where(status: Restaurantlocale.statuses[:active]).order(Arel.sql('created_at DESC, id DESC')).to_a
+    return if active.size <= limit
+
+    keep = []
+    keep << default_locale if default_locale.present?
+    keep.concat(active.reject { |rl| default_locale.present? && rl.id == default_locale.id })
+    keep_ids = keep.first(limit).map(&:id)
+
+    ApplicationRecord.on_primary do
+      Restaurantlocale
+        .where(restaurant_id: restaurant.id)
+        .where.not(status: Restaurantlocale.statuses[:archived])
+        .where.not(id: keep_ids)
+        .update_all(status: Restaurantlocale.statuses[:inactive], updated_at: Time.current)
+
+      Restaurantlocale
+        .where(restaurant_id: restaurant.id, id: keep_ids)
+        .where.not(status: Restaurantlocale.statuses[:archived])
+        .update_all(status: Restaurantlocale.statuses[:active], updated_at: Time.current)
     end
   end
 end

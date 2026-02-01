@@ -100,7 +100,7 @@ class PlanTest < ActiveSupport::TestCase
       pricePerMonth: 29.99,
       languages: 5,
       locations: 3,
-      itemspermenu: 100,
+      itemspermenu: 150,
       menusperlocation: 10,
     )
     assert plan.valid?
@@ -135,5 +135,16 @@ class PlanTest < ActiveSupport::TestCase
   test 'name should handle nil key' do
     @plan.update!(key: nil)
     assert_nil @plan.name
+  end
+
+  test 'display_order returns plans in starter, professional, business, enterprise order' do
+    Plan.delete_all
+
+    enterprise = Plan.create!(key: 'plan.enterprise.key', status: :active, action: :call)
+    business = Plan.create!(key: 'plan.business.key', status: :active, action: :register)
+    pro = Plan.create!(key: 'plan.pro.key', status: :active, action: :register)
+    starter = Plan.create!(key: 'plan.starter.key', status: :active, action: :register)
+
+    assert_equal [starter.id, pro.id, business.id, enterprise.id], Plan.display_order.pluck(:id)
   end
 end

@@ -16,7 +16,7 @@ class OnboardingController < ApplicationController
     authorize @onboarding
 
     @progress = (@step / 5.0 * 100).round
-    @plans = Plan.where(status: :active) if @step == 3
+    @plans = Plan.where(status: :active).display_order if @step == 3
 
     respond_to do |format|
       format.html do

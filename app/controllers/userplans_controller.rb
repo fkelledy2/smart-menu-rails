@@ -25,7 +25,7 @@ class UserplansController < ApplicationController
   # GET /userplans/1/edit
   def edit
     authorize @userplan
-    @plans = Plan.all
+    @plans = Plan.display_order
   end
 
   # POST /userplans or /userplans.json
@@ -63,7 +63,7 @@ class UserplansController < ApplicationController
         end
         format.json { render :show, status: :ok, location: @userplan }
       else
-        @plans = Plan.all
+        @plans = Plan.display_order
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @userplan.errors, status: :unprocessable_entity }
       end
@@ -89,7 +89,7 @@ class UserplansController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_userplan
     @userplan = Userplan.find(params[:id])
-    @plans = Plan.all
+    @plans = Plan.display_order
   end
 
   # Only allow a list of trusted parameters through.

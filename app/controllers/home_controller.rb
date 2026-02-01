@@ -9,7 +9,7 @@ class HomeController < ApplicationController
     @qrHost = request.host_with_port
     @demoMenu = DemoMenuService.demo_smartmenu_for_host(request.host)
 
-    @plans = Plan.all
+    @plans = Plan.display_order
     @features = Feature.all
     @contact = Contact.new
     @testimonials = Testimonial.where(status: 'approved').order(:sequence).all

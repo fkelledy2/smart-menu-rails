@@ -199,7 +199,7 @@ class MetricsController < ApplicationController
     @pro.pricePerMonth = 79
     @pro.pricePerYear = 790
     @pro.menusperlocation = 3
-    @pro.itemspermenu = 100
+    @pro.itemspermenu = 150
     @pro.languages = 4
     @pro.locations = 3
     @pro.action = 0
@@ -219,7 +219,7 @@ class MetricsController < ApplicationController
     @business.pricePerMonth = 149
     @business.pricePerYear = 1490
     @business.menusperlocation = 5
-    @business.itemspermenu = 200
+    @business.itemspermenu = 300
     @business.languages = 10
     @business.locations = 10
     @business.action = 0

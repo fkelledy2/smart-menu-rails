@@ -2,7 +2,7 @@ class PlansController < ApplicationController
   # Public plans listing - no authentication required for marketing/pricing pages
 
   def index
-    @plans = Plan.order(:key)
+    @plans = Plan.display_order
 
     respond_to do |format|
       format.html # Pricing page

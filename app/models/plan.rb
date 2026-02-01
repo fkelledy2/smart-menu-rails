@@ -17,6 +17,19 @@ class Plan < ApplicationRecord
     call: 1,
   }
 
+  scope :display_order, lambda {
+    order(
+      Arel.sql(
+        "CASE plans.key " \
+        "WHEN 'plan.starter.key' THEN 1 " \
+        "WHEN 'plan.pro.key' THEN 2 " \
+        "WHEN 'plan.business.key' THEN 3 " \
+        "WHEN 'plan.enterprise.key' THEN 4 " \
+        "ELSE 999 END, plans.key ASC",
+      ),
+    )
+  }
+
   # IdentityCache configuration
   cache_index :id
   cache_index :key, unique: true
