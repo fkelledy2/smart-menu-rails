@@ -72,7 +72,7 @@
   function loadGoogleMapsAPI() {
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.google_maps_api_key %>&libraries=places&loading=async&callback=Function.prototype`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=<%= ENV['GOOGLE_MAPS_API_KEY'].presence || ENV['GOOGLE_MAPS_BROWSER_API_KEY'].presence || Rails.application.credentials.google_maps_api_key %>&libraries=places&loading=async&callback=Function.prototype`;
       script.async = true;
       script.defer = true;
       script.onload = () => resolve(window.google);
