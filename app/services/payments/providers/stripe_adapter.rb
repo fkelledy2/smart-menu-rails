@@ -102,7 +102,7 @@ module Payments
 
         raise 'Stripe is not configured' if key.blank?
 
-        Rails.logger.info("[Stripe] api_key_source=#{key_source}")
+        Rails.logger.warn("[Stripe] api_key_source=#{key_source}")
         Stripe.api_key = key
       end
     end
