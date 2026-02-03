@@ -13,6 +13,11 @@ class ApplicationController < ActionController::Base
   # Authorization monitoring
   rescue_from Pundit::NotAuthorizedError, with: :handle_authorization_failure
 
+  # Redirect to restaurants index after sign in
+  def after_sign_in_path_for(resource)
+    restaurants_path
+  end
+
   def switch_locale(&)
     # Locale detection with optional URL override
     # Priority: URL parameter > Browser Accept-Language > Default

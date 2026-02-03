@@ -1,5 +1,5 @@
 web: bin/rails server -p ${WEB_PORT:-3000}
-stripe: sh bin/stripe_listen
+stripe: sh bin/stripe_listen  # Commented out - uncomment if you need Stripe webhook testing
 worker: bundle exec sidekiq
 js: yarn build --reload
 css: yarn build:css --watch

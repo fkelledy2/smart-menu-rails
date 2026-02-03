@@ -17,8 +17,8 @@ gem 'sprockets-rails'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.1'
 
-# Connection pooling
-gem 'connection_pool'
+# Connection pooling (pin to 2.x for Sidekiq 7 compatibility)
+gem 'connection_pool', '~> 2.4'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '~> 7.0.3'

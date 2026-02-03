@@ -5,6 +5,9 @@ if gem list --no-installed --exact --silent foreman; then
   gem install foreman
 fi
 
+# Suppress Ruby warnings for cleaner output
+export RUBYOPT="-W0"
+
 # Default to development for local dev unless explicitly set
 export RAILS_ENV="${RAILS_ENV:-development}"
 

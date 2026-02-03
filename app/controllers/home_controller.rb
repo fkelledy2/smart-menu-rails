@@ -2,6 +2,12 @@ class HomeController < ApplicationController
   layout 'marketing', only: %i[index terms privacy]
 
   def index
+    # Redirect logged-in users to restaurants index
+    if user_signed_in?
+      redirect_to restaurants_path
+      return
+    end
+
     # Set content type to HTML
     response.content_type = 'text/html; charset=utf-8'
 
