@@ -489,6 +489,21 @@
     }
   }
 
+  // Initialize on page load
   document.addEventListener('turbo:load', initRestaurantMap);
   document.addEventListener('DOMContentLoaded', initRestaurantMap);
+
+  // Initialize when the restaurant tab is shown (Bootstrap tab event)
+  document.addEventListener('turbo:load', function() {
+    const restaurantTab = document.getElementById('restaurant-tab');
+    if (restaurantTab) {
+      restaurantTab.addEventListener('shown.bs.tab', function() {
+        // Reset initialization flag to allow re-initialization
+        const mapElement = document.getElementById('restaurant-map');
+        if (mapElement && mapElement.dataset.mapInitialized !== 'true') {
+          initRestaurantMap();
+        }
+      });
+    }
+  });
 </script>
