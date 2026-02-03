@@ -54,7 +54,7 @@ class MenuLocalizationJob
       end
 
       merged = existing.merge(payload.stringify_keys)
-      r.setex("localize:#{jid}", 24 * 3600, merged.to_json)
+      r.set("localize:#{jid}", merged.to_json, ex: 24 * 3600)
     end
   rescue StandardError => e
     Rails.logger.warn("[MenuLocalizationJob] Failed to write progress for #{jid}: #{e.class}: #{e.message}")
@@ -68,7 +68,7 @@ class MenuLocalizationJob
       log << { at: Time.current.iso8601, message: message }
       log = log.last(50)
       payload['log'] = log
-      r.setex("localize:#{jid}", 24 * 3600, payload.to_json)
+      r.set("localize:#{jid}", payload.to_json, ex: 24 * 3600)
     end
   rescue StandardError => e
     Rails.logger.warn("[MenuLocalizationJob] Failed to append progress log for #{jid}: #{e.class}: #{e.message}")
@@ -110,7 +110,7 @@ class MenuLocalizationJob
           status_tag = evt[:changed] ? 'localized' : 'skipped'
           log << { at: Time.current.iso8601, message: "#{evt[:locale].to_s.upcase}: #{evt[:item_name]} (#{status_tag})" }
           payload['log'] = log.last(50)
-          r.setex("localize:#{jid}", 24 * 3600, payload.to_json)
+          r.set("localize:#{jid}", payload.to_json, ex: 24 * 3600)
         end
       rescue StandardError => e
         Rails.logger.warn("[MenuLocalizationJob] Progress update failed for #{jid}: #{e.class}: #{e.message}")

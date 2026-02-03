@@ -138,6 +138,9 @@ class PlanTest < ActiveSupport::TestCase
   end
 
   test 'display_order returns plans in starter, professional, business, enterprise order' do
+    # Clean up associations first to avoid foreign key constraints
+    ActiveRecord::Base.connection.execute('DELETE FROM features_plans')
+    ActiveRecord::Base.connection.execute('DELETE FROM userplans')
     Plan.delete_all
 
     enterprise = Plan.create!(key: 'plan.enterprise.key', status: :active, action: :call)

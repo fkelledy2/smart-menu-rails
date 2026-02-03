@@ -5,6 +5,9 @@ ruby '3.3.10'
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem 'rails', '~> 7.2.2', '>= 7.2.2.2'
 
+# Use Rack 3.x for security improvements
+gem 'rack', '~> 3.0'
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
 
@@ -106,7 +109,7 @@ gem 'jquery-rails'
 gem 'jsbundling-rails'
 gem 'madmin'
 gem 'mini_magick'
-gem 'name_of_person', github: 'basecamp/name_of_person'
+gem 'name_of_person', '~> 1.1'
 gem 'nokogiri'
 gem 'noticed', '~> 2.0'
 gem 'omniauth'
@@ -135,7 +138,7 @@ gem 'ruby-limiter'
 gem 'ruby-openai'
 gem 'seed_dump'
 gem 'shrine', '~> 3.3'
-gem 'sidekiq', '~> 6.2'
+gem 'sidekiq', '~> 7.0'
 gem 'simplecov', require: false, group: :test
 gem 'sitemap_generator', '~> 6.1'
 gem 'squasher'
