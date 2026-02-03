@@ -7,6 +7,8 @@ class Payments::WebhooksController < ApplicationController
     payload = request.body.read
     sig_header = request.env['HTTP_STRIPE_SIGNATURE']
 
+    Rails.logger.info("[StripeWebhook] Incoming request signature_header_present=#{sig_header.present?}")
+
     evt = build_stripe_event(payload, sig_header)
     return head :bad_request unless evt
 
@@ -32,13 +34,15 @@ class Payments::WebhooksController < ApplicationController
       Time.current
     end
 
-    Payments::WebhookIngestJob.perform_later(
+    job = Payments::WebhookIngestJob.perform_later(
       provider: 'stripe',
       provider_event_id: evt.id.to_s,
       provider_event_type: evt.type.to_s,
       occurred_at: occurred_at,
       payload: raw,
     )
+
+    Rails.logger.info("[StripeWebhook] Enqueued ingest job event_id=#{evt.id} job_id=#{job.job_id}")
   rescue StandardError => e
     Rails.logger.warn("[StripeWebhook] Failed to enqueue ingest job (falling back to inline ingest): #{e.class}: #{e.message}")
     begin

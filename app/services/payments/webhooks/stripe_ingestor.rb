@@ -183,9 +183,15 @@ module Payments
 
       def handle_payment_intent_succeeded(obj)
         order_id = extract_order_id(obj)
+        Rails.logger.info(
+          "[StripeIngestor] payment_intent.succeeded extracted_order_id=#{order_id.inspect} stripe_object_id=#{obj['id'].to_s}",
+        )
         return if order_id.blank?
 
         ordr = Ordr.find_by(id: order_id)
+        Rails.logger.info(
+          "[StripeIngestor] payment_intent.succeeded order_lookup order_id=#{order_id.inspect} found=#{ordr.present?}",
+        )
         return unless ordr
 
         split_payment_id = extract_split_payment_id(obj)
@@ -212,9 +218,15 @@ module Payments
 
       def handle_checkout_session_completed(obj)
         order_id = extract_order_id(obj)
+        Rails.logger.info(
+          "[StripeIngestor] checkout.session.completed extracted_order_id=#{order_id.inspect} checkout_session_id=#{obj['id'].to_s}",
+        )
         return if order_id.blank?
 
         ordr = Ordr.find_by(id: order_id)
+        Rails.logger.info(
+          "[StripeIngestor] checkout.session.completed order_lookup order_id=#{order_id.inspect} found=#{ordr.present?}",
+        )
         return unless ordr
 
         checkout_id = obj['id'].to_s

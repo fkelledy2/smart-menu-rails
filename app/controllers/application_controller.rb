@@ -274,7 +274,7 @@ class ApplicationController < ActionController::Base
       current_user,
       record,
       query.to_s.delete('?'),
-      result,
+      true,
       {
         controller: controller_name,
         action: action_name,
