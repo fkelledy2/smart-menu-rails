@@ -8,6 +8,9 @@ gem 'rails', '~> 7.2.2', '>= 7.2.2.2'
 # Use Rack 3.x for security improvements
 gem 'rack', '~> 3.0'
 
+# Pin minitest to 5.x for compatibility (6.x has breaking changes)
+gem 'minitest', '~> 5.25'
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
 
