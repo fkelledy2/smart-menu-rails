@@ -58,13 +58,30 @@ class Payments::WebhooksController < ApplicationController
   end
 
   def build_stripe_event(payload, sig_header)
-    secret = begin
+    env_secret = ENV['STRIPE_WEBHOOK_SECRET'].presence
+
+    credentials_secret = begin
       Rails.application.credentials.dig(:stripe, :webhook_secret) ||
         Rails.application.credentials.dig(:stripe_webhook_secret)
     rescue StandardError
       nil
     end
-    secret = ENV['STRIPE_WEBHOOK_SECRET'] if secret.blank?
+
+    secret = if Rails.env.production?
+      env_secret || credentials_secret
+    else
+      credentials_secret.presence || env_secret
+    end
+
+    secret_source = if secret.blank?
+      'none'
+    elsif secret == env_secret
+      'env'
+    else
+      'credentials'
+    end
+
+    Rails.logger.info("[StripeWebhook] webhook_secret_source=#{secret_source}")
 
     if secret.present?
       Stripe::Webhook.construct_event(payload, sig_header, secret)
