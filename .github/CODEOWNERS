@@ -1,0 +1,48 @@
+# CODEOWNERS file for Smart Menu Rails
+# This file defines code ownership for automatic review requests
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global owner - all files require review from repository owner
+* @fkelledy2
+
+# Application code
+/app/ @fkelledy2
+/app/models/ @fkelledy2
+/app/controllers/ @fkelledy2
+/app/views/ @fkelledy2
+/app/services/ @fkelledy2
+/app/jobs/ @fkelledy2
+
+# Configuration files (critical)
+/config/ @fkelledy2
+/config/environments/ @fkelledy2
+/config/initializers/ @fkelledy2
+/config/routes.rb @fkelledy2
+
+# Database
+/db/ @fkelledy2
+/db/migrate/ @fkelledy2
+/db/schema.rb @fkelledy2
+
+# Dependencies (critical)
+/Gemfile @fkelledy2
+/Gemfile.lock @fkelledy2
+/package.json @fkelledy2
+/yarn.lock @fkelledy2
+
+# Heroku deployment and infrastructure
+/heroku/ @fkelledy2
+/Procfile @fkelledy2
+/Procfile.dev @fkelledy2
+
+# CI/CD and GitHub workflows
+/.github/ @fkelledy2
+/.github/workflows/ @fkelledy2
+
+# Documentation
+/docs/ @fkelledy2
+/README.md @fkelledy2
+
+# Security and credentials
+/config/credentials/ @fkelledy2
+/config/master.key @fkelledy2
