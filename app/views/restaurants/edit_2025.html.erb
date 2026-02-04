@@ -38,6 +38,7 @@
 
     <!-- Main Content Area -->
     <div class="sidebar-main-content">
+      <%= render 'shared/notices' %>
       <% if @onboarding_next.present? %>
         <div class="alert alert-warning d-flex align-items-start gap-2 mb-3" role="alert" data-testid="onboarding-guidance">
           <i class="bi bi-exclamation-triangle-fill mt-1"></i>

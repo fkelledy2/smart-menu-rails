@@ -117,6 +117,7 @@ Rails.application.routes.draw do
     post 'payment_attempts', to: 'payment_attempts#create'
     post 'refunds', to: 'refunds#create'
     post 'subscriptions/start', to: 'subscriptions#start'
+    post 'subscriptions/portal', to: 'subscriptions#portal'
     post 'webhooks/stripe', to: 'webhooks#stripe'
   end
   

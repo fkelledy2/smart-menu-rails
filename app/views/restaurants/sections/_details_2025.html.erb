@@ -22,6 +22,59 @@
       <span><%= t('.new_menu') %></span>
     <% end %>
 
+    <% user_plan = (respond_to?(:current_user) ? current_user&.plan : nil) %>
+    <% billing_active = restaurant.restaurant_subscription&.active_or_trialing_with_payment_method? %>
+    <% if user_plan.blank? %>
+      <%= link_to onboarding_step_path(3),
+          class: 'quick-action-btn',
+          data: { turbo_frame: '_top' },
+          aria: { disabled: false } do %>
+        <i class="bi bi-credit-card"></i>
+        <span>Select plan</span>
+      <% end %>
+    <% elsif billing_active %>
+      <button type="button" class="quick-action-btn quick-action-btn-secondary" disabled>
+        <i class="bi bi-check2-circle"></i>
+        <span>Billing active</span>
+      </button>
+
+      <%= button_to payments_subscriptions_portal_path,
+          method: :post,
+          params: { restaurant_id: restaurant.id },
+          form: { data: { turbo: false } },
+          class: 'quick-action-btn',
+          aria: { disabled: false } do %>
+        <i class="bi bi-gear"></i>
+        <span>Manage billing / Unsubscribe</span>
+      <% end %>
+
+      <%= link_to onboarding_step_path(3),
+          class: 'quick-action-btn quick-action-btn-secondary',
+          data: { turbo_frame: '_top' },
+          aria: { disabled: false } do %>
+        <i class="bi bi-pencil"></i>
+        <span>Change plan</span>
+      <% end %>
+    <% else %>
+      <%= button_to payments_subscriptions_start_path,
+          method: :post,
+          params: { restaurant_id: restaurant.id },
+          form: { data: { turbo: false } },
+          class: 'quick-action-btn',
+          aria: { disabled: false } do %>
+        <i class="bi bi-credit-card"></i>
+        <span>Subscribe & Pay (<%= user_plan.name %>)</span>
+      <% end %>
+
+      <%= link_to onboarding_step_path(3),
+          class: 'quick-action-btn quick-action-btn-secondary',
+          data: { turbo_frame: '_top' },
+          aria: { disabled: false } do %>
+        <i class="bi bi-pencil"></i>
+        <span>Change plan</span>
+      <% end %>
+    <% end %>
+
     <%= link_to edit_restaurant_path(restaurant, section: 'import'),
         class: 'quick-action-btn',
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' },

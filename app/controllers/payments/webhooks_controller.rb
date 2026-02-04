@@ -4,7 +4,7 @@ class Payments::WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def stripe
-    payload = request.body.read
+    payload = request.raw_post
     sig_header = request.env['HTTP_STRIPE_SIGNATURE']
 
     Rails.logger.info("[StripeWebhook] Incoming request signature_header_present=#{sig_header.present?}")

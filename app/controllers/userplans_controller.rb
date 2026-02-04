@@ -59,7 +59,8 @@ class UserplansController < ApplicationController
         @user.plan = @userplan.plan
         @user.save
         format.html do
-          redirect_to @userplan, notice: t('common.flash.updated', resource: t('activerecord.models.userplan'))
+          redirect_to edit_userplan_path(@userplan),
+                      notice: t('common.flash.updated', resource: t('activerecord.models.userplan'))
         end
         format.json { render :show, status: :ok, location: @userplan }
       else

@@ -12,7 +12,7 @@ class Payments::SubscriptionsController < ApplicationController
 
     plan = current_user.plan
     unless plan
-      render json: { ok: false, error: 'No plan selected' }, status: :unprocessable_entity
+      respond_with_start_error('No plan selected', restaurant: restaurant)
       return
     end
 
@@ -21,7 +21,7 @@ class Payments::SubscriptionsController < ApplicationController
 
     price_id = stripe_price_id_for_plan(plan, interval: interval)
     if price_id.blank?
-      render json: { ok: false, error: 'Selected plan is not configured for billing' }, status: :unprocessable_entity
+      respond_with_start_error('Selected plan is not configured for billing', restaurant: restaurant)
       return
     end
 
@@ -44,7 +44,7 @@ class Payments::SubscriptionsController < ApplicationController
       sub.save!
     end
 
-    success_url = params[:success_url].presence || edit_restaurant_url(restaurant)
+    success_url = params[:success_url].presence || edit_restaurant_url(restaurant, checkout_session_id: '{CHECKOUT_SESSION_ID}')
     cancel_url = params[:cancel_url].presence || edit_restaurant_url(restaurant)
 
     session = Stripe::Checkout::Session.create(
@@ -78,10 +78,63 @@ class Payments::SubscriptionsController < ApplicationController
     head :not_found
   rescue StandardError => e
     Rails.logger.warn("[SubscriptionCheckout] start failed: #{e.class}: #{e.message}")
-    render json: { ok: false, error: 'Failed to start subscription checkout' }, status: :unprocessable_entity
+    respond_with_start_error('Failed to start subscription checkout', restaurant: restaurant)
+  end
+
+  def portal
+    restaurant = current_user.restaurants.find(params[:restaurant_id])
+    authorize restaurant, :update?
+
+    ensure_stripe_api_key!
+
+    sub = restaurant.restaurant_subscription
+    stripe_customer_id = sub&.stripe_customer_id.to_s
+    if stripe_customer_id.strip.blank?
+      respond_with_portal_error('Billing is not configured for this restaurant', restaurant: restaurant)
+      return
+    end
+
+    return_url = params[:return_url].presence || edit_restaurant_url(restaurant)
+
+    session = Stripe::BillingPortal::Session.create(
+      customer: stripe_customer_id,
+      return_url: return_url,
+    )
+
+    respond_to do |format|
+      format.json { render json: { ok: true, portal_url: session.url.to_s }, status: :ok }
+      format.html { redirect_to session.url.to_s, allow_other_host: true }
+    end
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
+  rescue StandardError => e
+    Rails.logger.warn("[SubscriptionCheckout] portal failed: #{e.class}: #{e.message}")
+    respond_with_portal_error('Failed to open billing portal', restaurant: restaurant)
   end
 
   private
+
+  def respond_with_start_error(message, restaurant:)
+    respond_to do |format|
+      format.json { render json: { ok: false, error: message }, status: :unprocessable_entity }
+      format.html do
+        redirect_back fallback_location: edit_restaurant_path(restaurant),
+                      alert: message,
+                      status: :see_other
+      end
+    end
+  end
+
+  def respond_with_portal_error(message, restaurant:)
+    respond_to do |format|
+      format.json { render json: { ok: false, error: message }, status: :unprocessable_entity }
+      format.html do
+        redirect_back fallback_location: edit_restaurant_path(restaurant),
+                      alert: message,
+                      status: :see_other
+      end
+    end
+  end
 
   def stripe_price_id_for_plan(plan, interval: 'month')
     if interval == 'year'

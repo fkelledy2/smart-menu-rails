@@ -1,6 +1,7 @@
 require 'rspotify'
 
 class RestaurantsController < ApplicationController
+  require 'stripe'
   include CachePerformanceMonitoring
 
   before_action :authenticate_user!
@@ -487,6 +488,8 @@ class RestaurantsController < ApplicationController
   def edit
     authorize @restaurant
 
+    sync_stripe_subscription_from_checkout_session! if params[:checkout_session_id].present?
+
     @qrHost = request.host_with_port
     @current_employee = @restaurant.employees.find_by(user: current_user)
 
@@ -814,6 +817,98 @@ class RestaurantsController < ApplicationController
   end
 
   private
+
+  def sync_stripe_subscription_from_checkout_session!
+    ensure_stripe_api_key_for_restaurants!
+    return if Stripe.api_key.to_s.strip.blank?
+
+    session_id = params[:checkout_session_id].to_s
+    session = Stripe::Checkout::Session.retrieve({ id: session_id, expand: ['subscription'] })
+
+    stripe_customer_id = session.customer.to_s
+    subscription_obj = session.subscription
+    stripe_subscription_id = if subscription_obj.respond_to?(:id)
+      subscription_obj.id.to_s
+    else
+      session.subscription.to_s
+    end
+
+    return if stripe_customer_id.blank? || stripe_subscription_id.blank?
+
+    subscription = if subscription_obj && subscription_obj.respond_to?(:status)
+      subscription_obj
+    else
+      Stripe::Subscription.retrieve({ id: stripe_subscription_id, expand: ['default_payment_method'] })
+    end
+
+    status = case subscription.status.to_s
+    when 'active'
+      :active
+    when 'trialing'
+      :trialing
+    when 'past_due', 'unpaid'
+      :past_due
+    when 'canceled', 'incomplete_expired'
+      :canceled
+    else
+      :inactive
+    end
+
+    has_payment_method = subscription.respond_to?(:default_payment_method) && subscription.default_payment_method.present?
+    has_payment_method ||= subscription.respond_to?(:default_source) && subscription.default_source.present?
+    has_payment_method ||= session.payment_status.to_s == 'paid'
+
+    rs = @restaurant.restaurant_subscription || @restaurant.build_restaurant_subscription(status: :inactive)
+    rs.update!(
+      status: status,
+      stripe_customer_id: stripe_customer_id,
+      stripe_subscription_id: stripe_subscription_id,
+      payment_method_on_file: has_payment_method,
+      trial_ends_at: begin
+        t = subscription.respond_to?(:trial_end) ? subscription.trial_end : nil
+        t.present? ? Time.at(t.to_i) : rs.trial_ends_at
+      rescue StandardError
+        rs.trial_ends_at
+      end,
+      current_period_end: begin
+        t = subscription.respond_to?(:current_period_end) ? subscription.current_period_end : nil
+        t.present? ? Time.at(t.to_i) : rs.current_period_end
+      rescue StandardError
+        rs.current_period_end
+      end,
+    )
+  rescue StandardError => e
+    Rails.logger.warn("[StripeCheckoutSync] Failed to sync checkout_session_id=#{params[:checkout_session_id]} restaurant_id=#{@restaurant&.id}: #{e.class}: #{e.message}")
+  end
+
+  def ensure_stripe_api_key_for_restaurants!
+    return if Stripe.api_key.present?
+
+    env_key = ENV['STRIPE_SECRET_KEY'].presence
+
+    credentials_key = begin
+      Rails.application.credentials.stripe_secret_key
+    rescue StandardError
+      nil
+    end
+
+    if credentials_key.blank?
+      credentials_key = begin
+        Rails.application.credentials.dig(:stripe, :secret_key) ||
+          Rails.application.credentials.dig(:stripe, :api_key)
+      rescue StandardError
+        nil
+      end
+    end
+
+    key = if Rails.env.production?
+      env_key || credentials_key
+    else
+      credentials_key.presence || env_key
+    end
+
+    Stripe.api_key = key if key.present?
+  end
 
   def onboarding_required_text_for(onboarding_next)
     case onboarding_next

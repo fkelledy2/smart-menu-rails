@@ -7,7 +7,9 @@ FORWARD_TO="${STRIPE_WEBHOOK_FORWARD_TO:-http://localhost:${WEB_PORT}/payments/w
 RAILS_ENV_VALUE="${RAILS_ENV:-development}"
 
 if [ -z "${STRIPE_API_KEY}" ]; then
-  if [ -n "${STRIPE_SECRET_KEY}" ]; then
+  if [ -n "${STRIPE_CLI_API_KEY}" ]; then
+    STRIPE_API_KEY="${STRIPE_CLI_API_KEY}"
+  elif [ -n "${STRIPE_SECRET_KEY}" ]; then
     STRIPE_API_KEY="${STRIPE_SECRET_KEY}"
   else
     STRIPE_API_KEY="$(bundle exec rails runner -e "${RAILS_ENV_VALUE}" 'key = (Rails.application.credentials.stripe_secret_key rescue nil)
@@ -19,8 +21,21 @@ print key.to_s')"
 fi
 
 if [ -z "${STRIPE_API_KEY}" ]; then
-  echo "STRIPE_API_KEY is not set" 1>&2
-  exit 1
+  echo "STRIPE_API_KEY not found; starting Stripe CLI using local login (run: stripe login)" 1>&2
+  exec env -u STRIPE_API_KEY stripe listen --forward-to "${FORWARD_TO}"
 fi
 
-exec stripe listen --api-key "${STRIPE_API_KEY}" --forward-to "${FORWARD_TO}"
+case "${STRIPE_API_KEY}" in
+  sk_*|rk_*)
+    exec stripe listen --api-key "${STRIPE_API_KEY}" --forward-to "${FORWARD_TO}"
+    ;;
+  pk_*)
+    echo "Stripe CLI requires a secret or restricted key (sk_* or rk_*), not a publishable key (pk_*)." 1>&2
+    echo "Falling back to Stripe CLI login mode (run: stripe login)" 1>&2
+    exec env -u STRIPE_API_KEY stripe listen --forward-to "${FORWARD_TO}"
+    ;;
+  *)
+    echo "Unrecognized STRIPE_API_KEY format; falling back to Stripe CLI login mode (run: stripe login)" 1>&2
+    exec env -u STRIPE_API_KEY stripe listen --forward-to "${FORWARD_TO}"
+    ;;
+esac

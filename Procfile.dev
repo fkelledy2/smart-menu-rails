@@ -1,5 +1,5 @@
 web: bin/rails server -p ${WEB_PORT:-3000}
-stripe: sh bin/stripe_listen  # Commented out - uncomment if you need Stripe webhook testing
+stripe: sh -c 'if [ "${STRIPE_LISTEN:-false}" = "true" ]; then sh bin/stripe_listen; else echo "stripe listen disabled (set STRIPE_LISTEN=true to enable)"; tail -f /dev/null; fi'
 worker: bundle exec sidekiq
 js: yarn build --reload
 css: yarn build:css --watch
