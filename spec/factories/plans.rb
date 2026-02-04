@@ -5,6 +5,8 @@ FactoryBot.define do
     status { 'active' }
     pricePerMonth { 9.99 }
     pricePerYear { 99.99 }
+    stripe_price_id_month { 'price_month_test_123' }
+    stripe_price_id_year { 'price_year_test_123' }
     locations { 1 }
     menusperlocation { 5 }
     itemspermenu { 100 }

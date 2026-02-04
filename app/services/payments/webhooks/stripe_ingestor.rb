@@ -131,7 +131,94 @@ module Payments
           handle_payment_intent_succeeded(obj)
         when 'account.updated'
           handle_account_updated(obj)
+        when 'customer.subscription.updated'
+          handle_customer_subscription_updated(obj)
+        when 'customer.subscription.deleted'
+          handle_customer_subscription_deleted(obj)
         end
+      end
+
+      def handle_customer_subscription_updated(obj)
+        upsert_restaurant_subscription_from_subscription(obj)
+      rescue StandardError
+        nil
+      end
+
+      def handle_customer_subscription_deleted(obj)
+        upsert_restaurant_subscription_from_subscription(obj, force_status: :canceled)
+      rescue StandardError
+        nil
+      end
+
+      def upsert_restaurant_subscription_from_subscription(obj, force_status: nil)
+        stripe_subscription_id = obj['id'].to_s
+        return if stripe_subscription_id.blank?
+
+        md = obj['metadata'] || {}
+        restaurant_id = (md['restaurant_id'] || md[:restaurant_id]).to_s
+
+        stripe_customer_id = obj['customer'].to_s
+
+        rs = RestaurantSubscription.find_by(stripe_subscription_id: stripe_subscription_id)
+        if rs.nil? && restaurant_id.present?
+          restaurant = Restaurant.find_by(id: restaurant_id)
+          rs = restaurant&.restaurant_subscription
+          rs ||= restaurant&.build_restaurant_subscription(status: :inactive)
+        end
+        if rs.nil? && stripe_customer_id.present?
+          rs = RestaurantSubscription.find_by(stripe_customer_id: stripe_customer_id)
+        end
+        return unless rs
+
+        status = (force_status || map_stripe_subscription_status(obj['status'].to_s))
+        has_payment_method = subscription_has_payment_method?(obj)
+
+        rs.update!(
+          status: status,
+          stripe_customer_id: stripe_customer_id.presence || rs.stripe_customer_id,
+          stripe_subscription_id: stripe_subscription_id,
+          payment_method_on_file: has_payment_method,
+          trial_ends_at: time_from_epoch(obj['trial_end']) || rs.trial_ends_at,
+          current_period_end: time_from_epoch(obj['current_period_end']) || rs.current_period_end,
+        )
+      end
+
+      def map_stripe_subscription_status(stripe_status)
+        case stripe_status.to_s
+        when 'active'
+          :active
+        when 'trialing'
+          :trialing
+        when 'past_due', 'unpaid'
+          :past_due
+        when 'canceled', 'incomplete_expired'
+          :canceled
+        else
+          :inactive
+        end
+      end
+
+      def subscription_has_payment_method?(obj)
+        # Stripe subscription object sometimes includes default_payment_method.
+        dpm = obj['default_payment_method']
+        return true if dpm.present?
+
+        # Or it may include default_source (legacy).
+        ds = obj['default_source']
+        return true if ds.present?
+
+        # Checkout flows may not attach these in the event payload; rely on status too.
+        st = obj['status'].to_s
+        return true if st == 'active' || st == 'trialing'
+
+        false
+      end
+
+      def time_from_epoch(v)
+        return nil if v.blank?
+        Time.zone.at(v.to_i)
+      rescue StandardError
+        nil
       end
 
       def handle_account_updated(obj)
@@ -216,7 +303,30 @@ module Payments
         broadcast_state(ordr.reload)
       end
 
+      def handle_subscription_checkout_completed(obj)
+        md = obj['metadata'] || {}
+        restaurant_id = (md['restaurant_id'] || md[:restaurant_id]).to_s
+        return if restaurant_id.blank?
+
+        restaurant = Restaurant.find_by(id: restaurant_id)
+        return unless restaurant
+
+        rs = restaurant.restaurant_subscription || restaurant.build_restaurant_subscription(status: :inactive)
+        rs.stripe_customer_id = obj['customer'].to_s.presence || rs.stripe_customer_id
+        rs.stripe_subscription_id = obj['subscription'].to_s.presence || rs.stripe_subscription_id
+        rs.payment_method_on_file = true if rs.payment_method_on_file == false
+        rs.status = :trialing if rs.status.to_s == 'inactive'
+        rs.save!
+      rescue StandardError
+        nil
+      end
+
       def handle_checkout_session_completed(obj)
+        if obj['mode'].to_s == 'subscription'
+          handle_subscription_checkout_completed(obj)
+          return
+        end
+
         order_id = extract_order_id(obj)
         Rails.logger.info(
           "[StripeIngestor] checkout.session.completed extracted_order_id=#{order_id.inspect} checkout_session_id=#{obj['id'].to_s}",

@@ -545,27 +545,68 @@ export function initOrderBindings() {
     }
   })();
 
-  // Tip presets and manual change
+  function resolveGrossForTipCalc() {
+    const domGross = parseFloat(String($('#orderGross').text() || '').replace(/[^0-9.\-]/g, ''));
+    if (Number.isFinite(domGross) && domGross > 0) return domGross;
+    try {
+      const gsGross = window.__SM_STATE?.totals?.gross;
+      const parsed = typeof gsGross === 'number' ? gsGross : parseFloat(String(gsGross || ''));
+      if (Number.isFinite(parsed) && parsed > 0) return parsed;
+    } catch (_) {}
+    return NaN;
+  }
+
+  function resolveCurrencySymbolForTipCalc() {
+    const dom = String($('#restaurantCurrency').text() || '');
+    if (dom) return dom;
+    try {
+      return String(window.__SM_STATE?.totals?.currency?.symbol || '');
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function recalcTipAndTotals() {
+    const gross = resolveGrossForTipCalc();
+    if (!Number.isFinite(gross) || gross <= 0) return;
+
+    const currency = resolveCurrencySymbolForTipCalc();
+    const tipRaw = $('#tipNumberField').val();
+    const tip = Number.isFinite(parseFloat(tipRaw)) ? parseFloat(tipRaw) : 0;
+    const total = parseFloat((tip + gross).toFixed(2));
+
+    $('#orderGrandTotal').text(currency + total.toFixed(2));
+    if ($('#paymentAmount').length) {
+      $('#paymentAmount').val(Math.round(total * 100));
+    }
+  }
+
+  // Tip presets and manual change (delegated so modal content replacement doesn't drop bindings)
   $(document).off('click.tipPreset.core').on('click.tipPreset.core', '.tipPreset', function () {
     const presetTipPercentage = parseFloat($(this).text());
-    const gross = parseFloat($('#orderGross').text());
+    const gross = resolveGrossForTipCalc();
+    if (!Number.isFinite(gross) || gross <= 0) return;
     const tip = ((gross / 100) * presetTipPercentage).toFixed(2);
     $('#tipNumberField').val(tip);
-    const total = parseFloat(parseFloat(tip) + parseFloat(gross)).toFixed(2);
-    $('#orderGrandTotal').text($('#restaurantCurrency').text() + parseFloat(total).toFixed(2));
-    $('#paymentAmount').val(parseFloat(total).toFixed(2) * 100);
+    recalcTipAndTotals();
     $('#paymentlink').text('');
     $('#paymentAnchor').prop('href', '');
     $('#paymentQR').html('');
     $('#paymentQR').text('');
   });
   $(document).off('change.tipNumberField.core').on('change.tipNumberField.core', '#tipNumberField', function () {
-    $(this).val(parseFloat($(this).val()).toFixed(2));
-    const gross = parseFloat($('#orderGross').text());
-    const tip = parseFloat($(this).val());
-    const total = tip + gross;
-    $('#orderGrandTotal').text($('#restaurantCurrency').text() + parseFloat(total).toFixed(2));
+    const parsed = parseFloat($(this).val());
+    $(this).val((Number.isFinite(parsed) ? parsed : 0).toFixed(2));
+    recalcTipAndTotals();
   });
+
+  // When opening the Pay modal without a full refresh, ensure totals are computed at show-time.
+  // Bootstrap modal events bubble, so we can delegate from document.
+  $(document)
+    .off('shown.bs.modal.payOrderTip')
+    .on('shown.bs.modal.payOrderTip', '#payOrderModal', function () {
+      recalcTipAndTotals();
+    });
 
   // Start Order modal: party size selector (no typing)
   (function bindOrderCapacityUi() {

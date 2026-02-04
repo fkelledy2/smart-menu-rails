@@ -165,26 +165,6 @@ function refreshOrderJSLogic() {
   $('#toggleFilters').click(function () {
     $(':checkbox').prop('checked', this.checked);
   });
-  $('.tipPreset').click(function () {
-    const presetTipPercentage = parseFloat($(this).text());
-    const gross = parseFloat($('#orderGross').text());
-    const tip = ((gross / 100) * presetTipPercentage).toFixed(2);
-    $('#tipNumberField').val(tip);
-    const total = parseFloat(parseFloat(tip) + parseFloat(gross)).toFixed(2);
-    $('#orderGrandTotal').text($('#restaurantCurrency').text() + parseFloat(total).toFixed(2));
-    $('#paymentAmount').val(parseFloat(total).toFixed(2) * 100);
-    $('#paymentlink').text('');
-    $('#paymentAnchor').prop('href', '');
-    $('#paymentQR').html('');
-    $('#paymentQR').text('');
-  });
-  $('#tipNumberField').change(function () {
-    $(this).val(parseFloat($(this).val()).toFixed(2));
-    const gross = parseFloat($('#orderGross').text());
-    const tip = parseFloat($(this).val());
-    const total = tip + gross;
-    $('#orderGrandTotal').text($('#restaurantCurrency').text() + parseFloat(total).toFixed(2));
-  });
   let restaurantCurrencySymbol = '$';
   if ($('#restaurantCurrency').length) {
     restaurantCurrencySymbol = $('#restaurantCurrency').text();

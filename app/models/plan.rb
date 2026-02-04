@@ -36,6 +36,8 @@ class Plan < ApplicationRecord
   cache_index :status
   cache_index :action
 
+  validate :validate_stripe_price_configuration
+
   # Cache associations
   cache_has_many :users, embed: :ids
   cache_has_many :userplans, embed: :ids
@@ -90,6 +92,17 @@ class Plan < ApplicationRecord
       'Unlimited'
     else
       menusperlocation
+    end
+  end
+
+  private
+
+  def validate_stripe_price_configuration
+    return unless status.to_s == 'active'
+    return unless action.to_s == 'register'
+
+    if stripe_price_id_month.to_s.strip.blank?
+      errors.add(:stripe_price_id_month, 'must be set for active self-serve plans')
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_30_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -1038,6 +1038,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_30_120000) do
     t.integer "languages", default: 0
     t.integer "locations", default: 0
     t.integer "menusperlocation", default: 0
+    t.string "stripe_price_id_month"
+    t.string "stripe_price_id_year"
+    t.index ["stripe_price_id_month"], name: "index_plans_on_stripe_price_id_month"
+    t.index ["stripe_price_id_year"], name: "index_plans_on_stripe_price_id_year"
   end
 
   create_table "product_enrichments", force: :cascade do |t|
