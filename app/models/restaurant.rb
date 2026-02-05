@@ -7,11 +7,11 @@ class Restaurant < ApplicationRecord
   # Standard ActiveRecord associations
   belongs_to :user
 
-  has_many :tablesettings, dependent: :delete_all
-  has_many :menus, dependent: :delete_all
+  has_many :tablesettings, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :tablesettings_count
+  has_many :menus, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :menus_count
   has_many :restaurant_menus, dependent: :delete_all
   has_many :shared_menus, through: :restaurant_menus, source: :menu
-  has_many :employees, dependent: :delete_all
+  has_many :employees, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :employees_count
 
   def alcohol_allowed_now?(now: Time.zone.now)
     return false if respond_to?(:allow_alcohol) && !allow_alcohol
@@ -19,10 +19,10 @@ class Restaurant < ApplicationRecord
     alcohol_policy.allowed_now?(now: now)
   end
 
-  has_many :ordrs, dependent: :delete_all
+  has_many :ordrs, -> { reorder(ordered_at: :desc, id: :desc) }, dependent: :delete_all, counter_cache: :ordrs_count
   has_many :ordr_station_tickets, dependent: :delete_all
-  has_many :taxes, dependent: :delete_all
-  has_many :tips, dependent: :delete_all
+  has_many :taxes, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
+  has_many :tips, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
 
   has_one :payment_profile, dependent: :destroy
   has_many :provider_accounts, dependent: :delete_all
@@ -34,10 +34,10 @@ class Restaurant < ApplicationRecord
   has_many :menuavailabilities, through: :menus
   has_one  :genimage, dependent: :destroy
   has_many :tracks, dependent: :delete_all
-  has_many :restaurantlocales, dependent: :delete_all
-  has_many :allergyns, dependent: :delete_all
-  has_many :sizes, dependent: :delete_all
-  has_many :ocr_menu_imports, dependent: :destroy
+  has_many :restaurantlocales, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
+  has_many :allergyns, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
+  has_many :sizes, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
+  has_many :ocr_menu_imports, -> { reorder(created_at: :desc, id: :desc) }, dependent: :destroy, counter_cache: :ocr_menu_imports_count
 
   # IdentityCache configuration
   cache_index :id
@@ -120,7 +120,7 @@ class Restaurant < ApplicationRecord
     if association(:restaurantlocales).loaded?
       restaurantlocales.find { |rl| rl.status.to_s == 'active' && rl.dfault == true }
     else
-      Restaurantlocale.where(restaurant_id: id, status: 'active', dfault: true).first
+      Restaurantlocale.find_by(restaurant_id: id, status: 'active', dfault: true)
     end
   end
 
@@ -130,9 +130,11 @@ class Restaurant < ApplicationRecord
       restaurantlocales.find { |rl| rl.status.to_s == 'active' && rl.locale.to_s.downcase == requested }
     else
       # Case-insensitive lookup to handle both 'it' and 'IT'
-      Restaurantlocale.where(restaurant_id: id, status: 'active')
-                      .where('LOWER(locale) = ?', requested)
-                      .first
+      Restaurantlocale.find_by(restaurant_id: id, status: 'active')
+                      &.then { |rl| rl&.locale&.downcase == requested ? rl : nil } ||
+                      Restaurantlocale.where(restaurant_id: id, status: 'active')
+                                      .where('LOWER(locale) = ?', requested)
+                                      .first
     end
   end
 

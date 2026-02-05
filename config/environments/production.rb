@@ -30,10 +30,12 @@ Rails.application.configure do
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
-  # Full error reports are disabled and caching is turned off (temporary alignment with development)
-  config.consider_all_requests_local = false
-  config.action_controller.perform_caching = false
-  config.cache_store = :null_store
+  # Enable fragment caching and action caching for improved performance
+  config.action_controller.perform_caching = true
+  config.cache_store = :redis_cache_store
+
+  # Cache configuration
+  config.cache_classes = true
 
   # Ensures that a master key has been made available in ENV["RAILS_MASTER_KEY"], config/master.key, or an environment
   # key such as config/credentials/production.key. This key is used to decrypt credentials (and other encrypted files).

@@ -110,9 +110,9 @@ class ApplicationController < ActionController::Base
 
   def set_current_employee
     if current_user
-      @current_employee = Employee.where(user_id: current_user.id).first
+      @current_employee ||= Employee.find_by(user_id: current_user.id)
       @restaurants = current_user_restaurants
-      @userplan = Userplan.where(user_id: current_user.id).first
+      @userplan ||= Userplan.find_by(user_id: current_user.id)
       if @userplan.nil?
         @userplan = Userplan.new
       end

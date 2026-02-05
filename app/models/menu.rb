@@ -7,13 +7,15 @@ class Menu < ApplicationRecord
   belongs_to :owner_restaurant, class_name: 'Restaurant', optional: true
   has_many :restaurant_menus, dependent: :destroy
   has_many :restaurants, through: :restaurant_menus
-  has_many :menusections
+  has_many :menusections, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :menusections_count
   has_many :menuavailabilities
   has_many :menuitems, through: :menusections
-  has_many :menu_versions, dependent: :destroy
+  has_many :menu_versions, -> { reorder(version_number: :desc) }, dependent: :destroy
   # Per-menu allergens via items
+  # Note: We don't use distinct here because it causes PostgreSQL issues when joined through has_many :through
+  # Deduplication is handled in Ruby when needed
   has_many :menuitem_allergyn_mappings, through: :menuitems
-  has_many :allergyns, -> { distinct }, through: :menuitem_allergyn_mappings
+  has_many :allergyns, through: :menuitem_allergyn_mappings
   has_many :menulocales
   has_one :genimage, dependent: :destroy
   has_many :smartmenus, dependent: :destroy
@@ -78,7 +80,7 @@ class Menu < ApplicationRecord
   end
 
   def smartmenu
-    smartmenus.where(tablesetting_id: nil).first
+    smartmenus.find_by(tablesetting_id: nil)
   end
 
   def localised_name(locale)
@@ -90,7 +92,7 @@ class Menu < ApplicationRecord
       rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
     end
     if rl.nil? && restaurant&.id
-      rl = Restaurantlocale.where(restaurant_id: restaurant.id, locale: locale_code).first
+      rl = Restaurantlocale.find_by(restaurant_id: restaurant.id, locale: locale_code)
       rl ||= Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
     end
 
@@ -99,7 +101,7 @@ class Menu < ApplicationRecord
     mil = if association(:menulocales).loaded?
             menulocales.find { |x| x.locale.to_s.downcase == locale_code }
           else
-            Menulocale.where(menu_id: id, locale: locale_code).first ||
+            Menulocale.find_by(menu_id: id, locale: locale_code) ||
               Menulocale.where(menu_id: id).where('LOWER(locale) = ?', locale_code).first
           end
 
@@ -115,7 +117,7 @@ class Menu < ApplicationRecord
       rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
     end
     if rl.nil? && restaurant&.id
-      rl = Restaurantlocale.where(restaurant_id: restaurant.id, locale: locale_code).first
+      rl = Restaurantlocale.find_by(restaurant_id: restaurant.id, locale: locale_code)
       rl ||= Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
     end
 
@@ -124,7 +126,7 @@ class Menu < ApplicationRecord
     mil = if association(:menulocales).loaded?
             menulocales.find { |x| x.locale.to_s.downcase == locale_code }
           else
-            Menulocale.where(menu_id: id, locale: locale_code).first ||
+            Menulocale.find_by(menu_id: id, locale: locale_code) ||
               Menulocale.where(menu_id: id).where('LOWER(locale) = ?', locale_code).first
           end
 
@@ -144,7 +146,10 @@ class Menu < ApplicationRecord
 
     return windowed if windowed
 
-    menu_versions.where(is_active: true).order(version_number: :desc).first
+    # Safely handle case where no menu versions exist
+    active_version = menu_versions.find_by(is_active: true)
+    return active_version&.order&.(:desc) if active_version
+    nil
   end
 
   private

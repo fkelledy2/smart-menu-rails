@@ -3,7 +3,7 @@ class Menusection < ApplicationRecord
 
   # Standard ActiveRecord associations
   belongs_to :menu
-  has_many :menuitems
+  has_many :menuitems, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :menuitems_count
 
   after_commit :enqueue_menu_item_search_reindex, on: %i[create update destroy]
 

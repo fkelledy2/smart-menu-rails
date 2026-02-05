@@ -13,7 +13,7 @@ class Menuitem < ApplicationRecord
   has_many :sizes, through: :menuitem_size_mappings
   has_many :menuitem_ingredient_mappings, dependent: :destroy
   has_many :ingredients, through: :menuitem_ingredient_mappings
-  has_many :ordritems, dependent: :destroy
+  has_many :ordritems, dependent: :destroy, counter_cache: :ordritems_count
   has_one :inventory, dependent: :destroy
   has_one :genimage, dependent: :destroy
 

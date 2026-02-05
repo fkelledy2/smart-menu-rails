@@ -141,9 +141,12 @@ class SizesController < ApplicationController
     end
 
     to_update = sizes.where(id: ids)
-    to_update.find_each do |size|
+    # Use update_all for bulk updates (skips callbacks for performance)
+    to_update.update_all(status: Size.statuses[status], updated_at: Time.current)
+
+    # Run authorizations in batch
+    Size.where(id: ids).each do |size|
       authorize size, :update?
-      size.update(status: status)
     end
 
     respond_to do |format|
@@ -170,6 +173,9 @@ class SizesController < ApplicationController
     end
 
     Size.transaction do
+      # Load all sizes at once to avoid N+1 queries
+      sizes_hash = sizes.where(id: order.filter_map { |item| (item[:id] || item['id']).to_i if item.is_a?(Hash) || item.is_a?(ActionController::Parameters) }).index_by(&:id)
+      
       order.each do |item|
         item_hash = if item.is_a?(ActionController::Parameters)
           item.to_unsafe_h
@@ -183,7 +189,9 @@ class SizesController < ApplicationController
         seq = item_hash[:sequence] || item_hash['sequence']
         next if id.blank? || seq.nil?
 
-        size = sizes.find(id)
+        size = sizes_hash[id.to_i]
+        next unless size
+        
         authorize size, :update?
         size.update_column(:sequence, seq.to_i)
       end

@@ -14,11 +14,11 @@ class User < ApplicationRecord
   has_many :services
   has_many :userplans, dependent: :destroy
   has_many :testimonials, dependent: :destroy
-  has_many :employees, dependent: :destroy
+  has_many :employees, -> { reorder(sequence: :asc, id: :asc) }, dependent: :destroy, counter_cache: :employees_count
   has_many :push_subscriptions, dependent: :destroy
 
   belongs_to :plan, optional: true
-  has_many :restaurants, dependent: :destroy
+  has_many :restaurants, -> { reorder(sequence: :asc, id: :asc) }, dependent: :destroy, counter_cache: :restaurants_count
   has_one :onboarding_session, dependent: :destroy
 
   # IdentityCache configuration
@@ -69,14 +69,21 @@ class User < ApplicationRecord
     rid = restaurant_id.to_i
     return [] if rid <= 0 || id.blank?
 
-    @employee_roles_by_restaurant_id ||= begin
-      roles_by_restaurant = Hash.new { |h, k| h[k] = Set.new }
-      employees.where(status: :active).pluck(:restaurant_id, :role).each do |r_id, role|
-        roles_by_restaurant[r_id.to_i] << role.to_s
-      end
-      roles_by_restaurant
+    # Memoize per-restaurant roles to avoid N+1 queries
+    @employee_roles_by_restaurant_id ||= {}
+    return @employee_roles_by_restaurant_id[rid].to_a if @employee_roles_by_restaurant_id.key?(rid)
+
+    # Load all active employee roles at once if not already loaded
+    if @all_employee_roles.nil?
+      @all_employee_roles = employees.where(status: :active).pluck(:restaurant_id, :role)
     end
 
+    roles_by_restaurant = Hash.new { |h, k| h[k] = Set.new }
+    @all_employee_roles.each do |r_id, role|
+      roles_by_restaurant[r_id.to_i] << role.to_s
+    end
+
+    @employee_roles_by_restaurant_id = roles_by_restaurant
     @employee_roles_by_restaurant_id[rid].to_a
   end
 
@@ -96,7 +103,10 @@ class User < ApplicationRecord
   def has_active_employment?
     return false if id.blank?
 
-    @has_active_employment ||= employees.where(status: :active).limit(1).pluck(:id).any?
+    # Use memoization with instance variable
+    return @has_active_employment if defined?(@has_active_employment) && !@has_active_employment.nil?
+
+    @has_active_employment = employees.where(status: :active).exists?
   end
 
   def self.from_omniauth(auth)
@@ -131,7 +141,7 @@ class User < ApplicationRecord
     return if plan.present?
 
     # Try to find the cheapest plan (starter) or fall back to first plan
-    default_plan = Plan.where(key: 'plan.starter.key').first ||
+    default_plan = Plan.find_by(key: 'plan.starter.key') ||
                    Plan.order(:pricePerMonth).first ||
                    Plan.first
     self.plan = default_plan if default_plan

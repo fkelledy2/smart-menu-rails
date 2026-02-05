@@ -47,10 +47,10 @@ class Ordr < ApplicationRecord
   belongs_to :menu
   belongs_to :restaurant
 
-  has_many :ordritems, dependent: :destroy
-  has_many :ordrparticipants, dependent: :destroy
-  has_many :ordractions, dependent: :destroy
-  has_many :ordr_station_tickets, dependent: :destroy
+  has_many :ordritems, -> { reorder(id: :asc) }, dependent: :destroy, counter_cache: :ordritems_count
+  has_many :ordrparticipants, -> { reorder(id: :asc) }, dependent: :destroy, counter_cache: :ordrparticipants_count
+  has_many :ordractions, -> { reorder(id: :asc) }, dependent: :destroy
+  has_many :ordr_station_tickets, -> { reorder(id: :asc) }, dependent: :destroy
   has_many :ordr_split_payments, dependent: :destroy
   has_many :payment_attempts, dependent: :delete_all
   has_many :payment_refunds, dependent: :delete_all
@@ -177,7 +177,8 @@ class Ordr < ApplicationRecord
   end
 
   def diners
-    ordrparticipants.where(role: 0).distinct.pluck('sessionid').count
+    # Count unique sessionids using SQL COUNT(DISTINCT ...) to avoid DISTINCT + ORDER BY issues
+    ordrparticipants.where(role: 0).count('DISTINCT sessionid')
   end
 
   def runningTotal

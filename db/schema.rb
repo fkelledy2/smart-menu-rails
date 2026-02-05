@@ -452,6 +452,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
     t.decimal "sommelier_parse_confidence", precision: 5, scale: 4
     t.boolean "sommelier_needs_review", default: false, null: false
     t.text "image_prompt"
+    t.integer "ordritems_count", default: 0
     t.index "lower((name)::text) varchar_pattern_ops", name: "index_menuitems_on_lower_name"
     t.index ["alcohol_classification"], name: "index_menuitems_on_alcohol_classification"
     t.index ["archived"], name: "index_menuitems_on_archived"
@@ -513,8 +514,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
     t.bigint "menu_import_id"
     t.boolean "voiceOrderingEnabled", default: false
     t.bigint "owner_restaurant_id"
+    t.integer "menuitems_count", default: 0
+    t.integer "menusections_count", default: 0
     t.index ["archived"], name: "index_menus_on_archived"
     t.index ["menu_import_id"], name: "index_menus_on_menu_import_id"
+    t.index ["menuitems_count"], name: "index_menus_on_menuitems_count"
     t.index ["owner_restaurant_id"], name: "index_menus_on_owner_restaurant_id"
     t.index ["restaurant_id", "created_at"], name: "index_menus_on_restaurant_created_at"
     t.index ["restaurant_id", "status"], name: "index_menus_on_restaurant_status_active", where: "(archived = false)"
@@ -563,9 +567,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
     t.boolean "allow_pairing", default: false, null: false
     t.integer "pairing_price_cents"
     t.string "pairing_currency"
+    t.integer "menuitems_count", default: 0
     t.index ["menu_id", "sequence"], name: "index_menusections_on_menu_and_sequence"
     t.index ["menu_id", "status", "sequence"], name: "index_menusections_on_menu_status_sequence", where: "(archived = false)"
     t.index ["menu_id"], name: "index_menusections_on_menu_id"
+    t.index ["menuitems_count"], name: "index_menusections_on_menuitems_count"
     t.index ["tasting_menu"], name: "index_menusections_on_tasting_menu"
   end
 
@@ -831,11 +837,14 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
     t.string "paymentlink"
     t.integer "paymentstatus", default: 0
     t.bigint "last_projected_order_event_sequence", default: 0, null: false
+    t.integer "ordritems_count", default: 0
+    t.integer "ordrparticipants_count", default: 0
     t.index ["created_at"], name: "index_ordrs_on_created_at"
     t.index ["employee_id", "created_at"], name: "index_ordrs_on_employee_created_at"
     t.index ["employee_id"], name: "index_ordrs_on_employee_id"
     t.index ["last_projected_order_event_sequence"], name: "index_ordrs_on_last_projected_order_event_sequence"
     t.index ["menu_id"], name: "index_ordrs_on_menu_id"
+    t.index ["ordritems_count"], name: "index_ordrs_on_ordritems_count"
     t.index ["restaurant_id", "created_at", "gross"], name: "index_ordrs_on_restaurant_created_gross"
     t.index ["restaurant_id", "created_at", "status"], name: "index_ordrs_on_restaurant_created_status"
     t.index ["restaurant_id", "status", "created_at"], name: "index_ordrs_on_restaurant_status_created"
@@ -1217,6 +1226,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
     t.text "image_style_profile"
     t.boolean "allow_alcohol", default: false, null: false
     t.string "timezone", default: "UTC"
+    t.integer "menus_count", default: 0
+    t.integer "employees_count", default: 0
+    t.integer "ordrs_count", default: 0
+    t.integer "tablesettings_count", default: 0
+    t.integer "ocr_menu_imports_count", default: 0
+    t.index ["employees_count"], name: "index_restaurants_on_employees_count"
+    t.index ["menus_count"], name: "index_restaurants_on_menus_count"
     t.index ["user_id", "status"], name: "index_restaurants_on_user_status_active", where: "(archived = false)"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
@@ -1397,6 +1413,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
+    t.integer "restaurants_count", default: 0
+    t.integer "employees_count", default: 0
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["plan_id", "admin"], name: "index_users_on_plan_admin"

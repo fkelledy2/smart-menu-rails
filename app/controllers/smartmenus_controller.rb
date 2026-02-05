@@ -64,8 +64,10 @@ class SmartmenusController < ApplicationController
     end
 
     begin
-      restaurantlocales = Array(@restaurant&.restaurantlocales)
-      @active_locales = restaurantlocales.select { |rl| rl.status.to_s == 'active' }
+      # Pre-load restaurantlocales to avoid N+1 queries
+      # Force reload to ensure we have fresh data
+      @restaurant&.reload
+      @active_locales = @restaurant&.restaurantlocales&.select { |rl| rl.status.to_s == 'active' } || []
       @default_locale = @active_locales.find { |rl| rl.dfault == true }
     rescue StandardError
       @active_locales = []
@@ -73,15 +75,16 @@ class SmartmenusController < ApplicationController
     end
 
     # Allergens must be those actually used by items in this menu
+    # We deduplicate in Ruby since the has_many :through association can cause DISTINCT issues
     allergyns_relation = @menu.allergyns
                               .where(archived: false)
                               .where(status: :active)
-                              .order(Arel.sql('allergyns.sequence NULLS LAST, allergyns.name'))
+                              .order('allergyns.sequence NULLS LAST, allergyns.name')
 
     if params[:debug_allergyns].to_s == 'true'
       Rails.logger.warn("[SmartmenusController#show] allergyns SQL: #{allergyns_relation.to_sql}")
     end
-    @allergyns = allergyns_relation.to_a
+    @allergyns = allergyns_relation.to_a.uniq { |a| a.id }
 
     if params[:debug_allergyns].to_s == 'true'
       Rails.logger.warn(
@@ -97,14 +100,15 @@ class SmartmenusController < ApplicationController
     end
 
     if @allergyns.empty?
+      # Fallback to restaurant allergyns (deduplicate in Ruby)
       fallback_relation = @restaurant.allergyns
                                      .where(archived: false)
                                      .where(status: :active)
-                                     .order(Arel.sql('allergyns.sequence NULLS LAST, allergyns.name'))
+                                     .order('allergyns.sequence NULLS LAST, allergyns.name')
       if params[:debug_allergyns].to_s == 'true'
         Rails.logger.warn("[SmartmenusController#show] allergyns empty for menu; using restaurant fallback SQL: #{fallback_relation.to_sql}")
       end
-      @allergyns = fallback_relation.to_a
+      @allergyns = fallback_relation.to_a.uniq { |a| a.id }
       if params[:debug_allergyns].to_s == 'true'
         Rails.logger.warn(
           "[SmartmenusController#show] fallback allergyns count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}"

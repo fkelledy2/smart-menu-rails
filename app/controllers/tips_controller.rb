@@ -141,9 +141,13 @@ class TipsController < ApplicationController
     end
 
     to_update = tips.where(id: ids)
-    to_update.find_each do |tip|
+    # Use update_all for bulk updates (skips callbacks for performance)
+    # Only update status, not timestamps
+    to_update.update_all(status: Tip.statuses[status], updated_at: Time.current)
+
+    # Run authorizations in batch
+    Tip.where(id: ids).each do |tip|
       authorize tip, :update?
-      tip.update(status: status)
     end
 
     respond_to do |format|
@@ -171,6 +175,9 @@ class TipsController < ApplicationController
     end
 
     Tip.transaction do
+      # Load all tips at once to avoid N+1 queries
+      tips_hash = tips.where(id: order.filter_map { |item| (item[:id] || item['id']).to_i if item.is_a?(Hash) || item.is_a?(ActionController::Parameters) }).index_by(&:id)
+      
       order.each do |item|
         item_hash = if item.is_a?(ActionController::Parameters)
           item.to_unsafe_h
@@ -184,7 +191,9 @@ class TipsController < ApplicationController
         seq = item_hash[:sequence] || item_hash['sequence']
         next if id.blank? || seq.nil?
 
-        tip = tips.find(id)
+        tip = tips_hash[id.to_i]
+        next unless tip
+        
         authorize tip, :update?
         tip.update_column(:sequence, seq.to_i)
       end
