@@ -144,9 +144,24 @@ class PlanTest < ActiveSupport::TestCase
     Plan.delete_all
 
     enterprise = Plan.create!(key: 'plan.enterprise.key', status: :active, action: :call)
-    business = Plan.create!(key: 'plan.business.key', status: :active, action: :register)
-    pro = Plan.create!(key: 'plan.pro.key', status: :active, action: :register)
-    starter = Plan.create!(key: 'plan.starter.key', status: :active, action: :register)
+    business = Plan.create!(
+      key: 'plan.business.key',
+      status: :active,
+      action: :register,
+      stripe_price_id_month: 'price_test_business_month',
+    )
+    pro = Plan.create!(
+      key: 'plan.pro.key',
+      status: :active,
+      action: :register,
+      stripe_price_id_month: 'price_test_pro_month',
+    )
+    starter = Plan.create!(
+      key: 'plan.starter.key',
+      status: :active,
+      action: :register,
+      stripe_price_id_month: 'price_test_starter_month',
+    )
 
     assert_equal [starter.id, pro.id, business.id, enterprise.id], Plan.display_order.pluck(:id)
   end

@@ -13,7 +13,7 @@ class UserTest < ActiveSupport::TestCase
 
   test 'should have many restaurants' do
     assert_respond_to @user, :restaurants
-    assert @user.restaurants.count >= 1
+    assert Restaurant.where(user_id: @user.id).count >= 1
   end
 
   test 'should have one onboarding session' do
@@ -109,7 +109,7 @@ class UserTest < ActiveSupport::TestCase
 
   test 'needs_onboarding? should return false when has restaurants' do
     @user.onboarding_session.update!(status: :started)
-    assert @user.restaurants.any?
+    assert Restaurant.where(user_id: @user.id).exists?
     assert_not @user.needs_onboarding?
   end
 

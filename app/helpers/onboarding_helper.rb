@@ -36,12 +36,12 @@ module OnboardingHelper
 
     case step.to_s
     when '1', 'restaurant'
-      user.restaurants.any?
+      Restaurant.where(user_id: user.id).exists?
     when '2', 'menu'
-      user.restaurants.joins(:menus).any?
+      Menu.joins(:restaurant).where(restaurants: { user_id: user.id }).exists?
     when '3', 'payment'
       # Assume payment is configured if user has active restaurants
-      user.restaurants.where(status: 'active').any?
+      Restaurant.where(user_id: user.id, status: 'active').exists?
     else
       false
     end

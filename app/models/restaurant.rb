@@ -19,7 +19,7 @@ class Restaurant < ApplicationRecord
     alcohol_policy.allowed_now?(now: now)
   end
 
-  has_many :ordrs, -> { reorder(ordered_at: :desc, id: :desc) }, dependent: :delete_all, counter_cache: :ordrs_count
+  has_many :ordrs, -> { reorder(orderedAt: :desc, id: :desc) }, dependent: :delete_all, counter_cache: :ordrs_count
   has_many :ordr_station_tickets, dependent: :delete_all
   has_many :taxes, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
   has_many :tips, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
@@ -234,7 +234,7 @@ class Restaurant < ApplicationRecord
     cache_key += ":#{date_range[:start]}_#{date_range[:end]}" if date_range
 
     self.class.cached_query(cache_key, cache_type: :analytics) do
-      query = ordrs.select('ordrs.*,
+      query = ordrs.unscope(:order).select('ordrs.*,
                             COUNT(ordritems.id) as item_count,
                             SUM(ordritems.ordritemprice) as items_total')
         .joins(:ordritems)
@@ -250,7 +250,7 @@ class Restaurant < ApplicationRecord
 
   def revenue_summary
     self.class.cached_query("restaurant:#{id}:revenue", cache_type: :report) do
-      ordrs.select('DATE(ordrs."orderedAt") as order_date,
+      ordrs.unscope(:order).select('DATE(ordrs."orderedAt") as order_date,
                     COUNT(*) as order_count,
                     SUM(ordrs.nett) as total_nett,
                     SUM(ordrs.service) as total_service,

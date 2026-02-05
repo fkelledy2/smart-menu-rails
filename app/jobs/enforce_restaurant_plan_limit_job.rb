@@ -23,15 +23,18 @@ class EnforceRestaurantPlanLimitJob < ApplicationJob
     limit = plan.locations.to_i
     return if limit <= 0
 
-    active_scope = user.restaurants.where(archived: false, status: Restaurant.statuses[:active])
-    active_count = active_scope.count
-    return if active_count <= limit
-
-    keep_ids = active_scope.order(created_at: :desc, id: :desc).limit(limit).pluck(:id)
-
     Restaurant.on_primary do
-      Restaurant
-        .where(user_id: user.id, archived: false, status: Restaurant.statuses[:active])
+      # Treat archived NULL as not archived (older data / fixtures may not populate it).
+      base_scope = Restaurant
+        .where(user_id: user.id, status: Restaurant.statuses[:active])
+        .where('archived IS NULL OR archived = ?', false)
+
+      active_count = base_scope.count
+      return if active_count <= limit
+
+      keep_ids = base_scope.order(created_at: :desc, id: :desc).limit(limit).pluck(:id)
+
+      base_scope
         .where.not(id: keep_ids)
         .update_all(status: Restaurant.statuses[:inactive], updated_at: Time.current)
     end

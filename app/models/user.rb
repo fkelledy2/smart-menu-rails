@@ -52,7 +52,7 @@ class User < ApplicationRecord
   end
 
   def needs_onboarding?
-    !onboarding_complete? && restaurants.empty?
+    !onboarding_complete? && !Restaurant.where(user_id: id).exists?
   end
 
   def name

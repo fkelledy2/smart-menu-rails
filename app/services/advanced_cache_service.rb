@@ -876,7 +876,7 @@ class AdvancedCacheService
           summary: {
             total_employees: employees.count,
             active_employees: employees.where(status: 'active').count,
-            roles_breakdown: employees.group(:role).count,
+            roles_breakdown: employees.unscope(:order).group(:role).count,
             average_tenure: calculate_average_employee_tenure(employees),
           },
           performance: {

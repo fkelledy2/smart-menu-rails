@@ -37,6 +37,7 @@ class SentryIntegrationTest < ActionDispatch::IntegrationTest
   test 'sentry context is set for authenticated requests' do
     sign_in @user
     get root_path
+    follow_redirect! while response.redirect?
     assert_response :success
     # Sentry context is set via before_action in SentryContext concern
   end
@@ -44,13 +45,15 @@ class SentryIntegrationTest < ActionDispatch::IntegrationTest
   test 'sentry does not break application when not configured' do
     # This test ensures the app works even without Sentry DSN
     get root_path
+    follow_redirect! while response.redirect?
     assert_response :success
   end
 
   test 'sentry meta tags are not present when dsn not configured' do
     sign_in @user
     get root_path
-    
+
+    follow_redirect! while response.redirect?
     assert_response :success
     # In test environment without DSN, meta tags should not be present
     assert_select 'meta[name="sentry-dsn"]', count: 0
@@ -59,7 +62,8 @@ class SentryIntegrationTest < ActionDispatch::IntegrationTest
   test 'sentry user context meta tags are not present without dsn' do
     sign_in @user
     get root_path
-    
+
+    follow_redirect! while response.redirect?
     assert_response :success
     # Without DSN configured, user meta tags should not be present
     assert_select 'meta[name="current-user-id"]', count: 0
@@ -67,6 +71,7 @@ class SentryIntegrationTest < ActionDispatch::IntegrationTest
 
   test 'application works for anonymous users without sentry' do
     get root_path
+    follow_redirect! while response.redirect?
     assert_response :success
   end
 

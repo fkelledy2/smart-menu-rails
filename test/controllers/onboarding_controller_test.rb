@@ -14,6 +14,7 @@ class OnboardingControllerTest < ActionDispatch::IntegrationTest
       status: 1,
       pricePerMonth: 0,
       action: 0,
+      stripe_price_id_month: 'price_test_onboarding_month',
       locations: 1,
       menusperlocation: 1,
       itemspermenu: 10,
