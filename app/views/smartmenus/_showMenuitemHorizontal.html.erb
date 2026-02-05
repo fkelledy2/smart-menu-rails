@@ -1,0 +1,68 @@
+<%# Customer-facing menu item horizontal partial
+    Parameters:
+    - mi/menuitem: the menu item object
+    - menu: the parent menu object
+    - order: the order object (optional)
+    - ordrparticipant: order participant (optional)
+    - menuparticipant: menu participant (optional)
+    - restaurantCurrency: currency object (optional)
+    - tablesetting: tablesetting object (optional)
+    - hide_add_button: boolean to hide the add button (optional)
+%>
+<% menuitem = mi if local_assigns[:mi].nil? && local_assigns[:menuitem].nil? %>
+<% menuitem ||= mi || menuitem %>
+<% hide_add_button = local_assigns[:hide_add_button] || false %>
+
+<%# Cache the menu item content - exclude order-dependent elements %>
+<% cache ["menuitem-horizontal", menuitem, I18n.locale, menuitem.updated_at] do %>
+  <div class="menu-item-card-mobile" data-name="<%= menuitem.name.to_s.downcase %>" data-description="<%= menuitem.description.to_s.downcase %>" data-testid="menu-item-<%= menuitem.id %>">
+      <div class="card">
+          <% if menuitem.name? %>
+              <div class="card-header padding-5">
+                  <span>
+                      <%= localised_name(menuitem, ordrparticipant, menuparticipant) %>
+                  </span>
+              </div>
+          <% end %>
+          <% if menu.displayImages == true && menu.restaurant.displayImages == true && menuitem.image %>
+              <div class="row">
+                  <div class="col-5">
+                      <div class="ratio ratio-1x1">
+                          <div class="d-flex justify-content-center align-items-center">
+                              <div class="m-5" role="status">
+                                  <span class="visually-hidden"><%= t('.loading') %></span>
+                              </div>
+                          </div>
+                          <%= picture_tag_with_webp(menuitem.image,
+                            alt: menuitem.name,
+                            sizes: menuitem.image_sizes,
+                            class_name: 'img-fluid',
+                            loading: 'lazy',
+                            quality: 85
+                          ) %>
+                      </div>
+                  </div>
+                  <div class="col-7">
+                      <h6 class='padding-5 padding-top-xs'>
+                          <small><%= localised_description(menuitem, ordrparticipant, menuparticipant) %></small>
+                      </h6>
+                  </div>
+              </div>
+              <% unless hide_add_button %>
+                <%= render partial: "smartmenus/showMenuitemHorizontalActionBar", locals: { order: order, mi: menuitem, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, restaurantCurrency: restaurantCurrency, tablesetting: tablesetting } %>
+              <% end %>
+          <% else %>
+              <div class="row">
+                  <div class="col-12">
+                      <h6 class='padding-left-md padding-right-md padding-top-xs'>
+                          <small><%= localised_description(menuitem, ordrparticipant, menuparticipant) %></small>
+                      </h6>
+                  </div>
+              </div>
+              <% unless hide_add_button %>
+                <%= render partial: "smartmenus/showMenuitemHorizontalActionBar", locals: { order: order, mi: menuitem, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, restaurantCurrency: restaurantCurrency, tablesetting: tablesetting } %>
+              <% end %>
+          <% end %>
+      </div>
+  </div>
+<% end %>

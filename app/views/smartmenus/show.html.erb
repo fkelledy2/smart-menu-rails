@@ -1,7 +1,7 @@
 <%= render 'shared/currency' %>
 
-<%# Optional debug output for allergen query/results: ?debug=allergyns %>
-<% if params[:debug] == 'allergyns' && defined?(@debug_allergyns_info) && @debug_allergyns_info.present? %>
+<%# Optional debug output for allergen query/results: ?debug=allergyns (development only) %>
+<% if Rails.env.development? && params[:debug] == 'allergyns' && defined?(@debug_allergyns_info) && @debug_allergyns_info.present? %>
   <div class="container my-2">
     <div class="alert alert-warning small" role="alert">
       <strong>Allergyns Debug</strong>

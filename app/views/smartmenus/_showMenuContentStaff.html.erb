@@ -1,0 +1,22 @@
+<%# Staff-facing menu content partial
+    Uses the shared _menu_section.html.erb for section rendering
+%>
+<div class="row">
+  <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+    <% menu.menusections.sort_by { |s| s.sequence.to_i }.each do |menusection| %>
+      <%= render partial: "smartmenus/menu_section",
+                 locals: {
+                   menusection: menusection,
+                   menu: menu,
+                   order: order,
+                   ordrparticipant: ordrparticipant,
+                   menuparticipant: menuparticipant,
+                   restaurantCurrency: restaurantCurrency,
+                   tablesetting: tablesetting,
+                   view_type: :staff
+                 } %>
+    <% end %>
+    <%= render partial: "smartmenus/showAllergyns", locals: { allergyns: allergyns }  %>
+    <%= render partial: "smartmenus/showCoverCharge", locals: { menu: menu, restaurantCurrency: restaurantCurrency } %>
+  </div>
+</div>

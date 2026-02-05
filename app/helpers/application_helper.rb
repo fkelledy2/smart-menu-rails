@@ -120,4 +120,29 @@ module ApplicationHelper
   rescue ArgumentError
     "#{Time.now.utc.to_date.strftime('%Y%m%d')}-#{release}"
   end
+
+  # Resolve preferred locale from participant chain
+  # Returns the first non-nil preferredlocale from the chain
+  def resolve_participant_locale(ordrparticipant = nil, menuparticipant = nil)
+    ordrparticipant ||= @ordrparticipant
+    menuparticipant ||= @menuparticipant
+
+    ordrparticipant&.preferredlocale || menuparticipant&.preferredlocale || I18n.default_locale
+  end
+
+  # Localize a name using resolved participant locale
+  def localised_name(entity, ordrparticipant = nil, menuparticipant = nil)
+    return entity.name unless entity.respond_to?(:localised_name)
+
+    locale = resolve_participant_locale(ordrparticipant, menuparticipant)
+    entity.localised_name(locale)
+  end
+
+  # Localize a description using resolved participant locale
+  def localised_description(entity, ordrparticipant = nil, menuparticipant = nil)
+    return entity.description unless entity.respond_to?(:localised_description)
+
+    locale = resolve_participant_locale(ordrparticipant, menuparticipant)
+    entity.localised_description(locale)
+  end
 end

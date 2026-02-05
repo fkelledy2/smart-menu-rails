@@ -1,0 +1,121 @@
+<%# Shared menu section rendering partial
+    Parameters:
+    - menusection: the menu section object
+    - menu: the parent menu object
+    - order: the order object (optional)
+    - ordrparticipant: order participant (optional)
+    - menuparticipant: menu participant (optional)
+    - restaurantCurrency: currency object (optional)
+    - tablesetting: tablesetting object (optional)
+    - view_type: :customer or :staff
+%>
+<% hide_add_button = local_assigns[:hide_add_button] || false %>
+<% show_images = menu.displayImages == true && menu.restaurant.displayImages == true %>
+<% tasting_menu = menusection.tasting_menu? %>
+
+<div class="padding-top-lg" id="menusection_<%= menusection.id %>" data-testid="menu-section-<%= menusection.id %>"></div>
+
+<%# Section header with image if available %>
+<% if show_images && menusection.image? %>
+  <div class="card border-light text-bg-dark">
+    <img src="<%= menusection.medium_url %>"
+         srcset="<%= menusection.image_srcset %>"
+         sizes="<%= menusection.image_sizes %>"
+         class="card-img img-fluid height-150"
+         alt="<%= menusection.name %>"
+         loading="lazy">
+    <div class="card-img-overlay">
+      <h3 class="card-title">
+        <%= menusection.name %>
+        <% if tasting_menu %>
+          <span class="badge bg-warning text-dark ms-2">Tasting</span>
+        <% end %>
+      </h3>
+      <p class="card-text"><%= menusection.description %></p>
+    </div>
+  </div>
+<% else %>
+  <div class="row">
+    <div class="col-12">
+      <span class='h3' data-testid="menu-section-title-<%= menusection.id %>">
+        <%= localised_name(menusection, ordrparticipant, menuparticipant) %>
+        <% if menusection.restricted == true %>
+          <span class='float-end'>
+            <small class="text-muted">
+              <%= format_time_range(menusection.fromhour, menusection.frommin, menusection.tohour, menusection.tomin) %>
+              <div class='d-none' id="sectionFromOffset"><%= menusection.fromOffset %></div>
+              <div class='d-none' id="sectionToOffset"><%= menusection.toOffset %></div>
+            </small>
+          <span>
+        <% end %>
+      </span>
+      <% if menusection.description? %>
+        <div class="col-12">
+          <span class='h6'>
+            <%= localised_description(menusection, ordrparticipant, menuparticipant) %>
+          </span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<%# Section items %>
+<% if tasting_menu %>
+  <%
+    section_items = menusection.menuitems.sort_by { |it| it.sequence.to_i }
+    carrier = section_items.find(&:tasting_carrier?)
+    tasting_meta = {
+      section_id: menusection.id,
+      section_name: menusection.name,
+      price_per: menusection.price_per,
+      tasting_price_cents: menusection.tasting_price_cents.to_i,
+      allow_pairing: menusection.allow_pairing,
+      pairing_price_cents: menusection.pairing_price_cents.to_i,
+      carrier_id: carrier&.id,
+      items: section_items.reject(&:hidden).map { |it| { id: it.id, name: it.name, optional: it.tasting_optional, supplement_cents: it.tasting_supplement_cents.to_i } }
+    }
+  %>
+  <div class="card border-secondary mt-2">
+    <div class="card-body p-2">
+      <div class="row opacity-75 pointer-events-none" aria-disabled="true" title="Courses are part of the tasting menu bundle and cannot be added individually">
+        <% section_items.each do |mi| %>
+          <% next if mi.tasting_carrier || mi.hidden %>
+          <% if ordrparticipant.nil? || (ordrparticipant.allergyns & mi.allergyns).empty? %>
+            <%= render partial: view_type == :customer ? "smartmenus/showMenuitemHorizontal" : "smartmenus/showMenuitemStaff",
+                       locals: {
+                         order: order,
+                         menu: menu,
+                         ordrparticipant: ordrparticipant,
+                         menuparticipant: menuparticipant,
+                         mi: mi,
+                         menuitem: mi,
+                         restaurantCurrency: restaurantCurrency,
+                         tablesetting: tablesetting,
+                         hide_add_button: true
+                       } %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <%= render partial: "smartmenus/tasting_courses_footer", locals: { tasting_meta: tasting_meta, menusection: menusection, order: order } %>
+  </div>
+<% else %>
+  <div class="row" data-testid="menu-items-row-<%= menusection.id %>">
+    <% menusection.menuitems.sort_by { |it| it.sequence.to_i }.each do |mi| %>
+      <% if ordrparticipant.nil? || (ordrparticipant.allergyns & mi.allergyns).empty? %>
+        <%= render partial: view_type == :customer ? "smartmenus/showMenuitemHorizontal" : "smartmenus/showMenuitemStaff",
+                   locals: {
+                     order: order,
+                     menu: menu,
+                     ordrparticipant: ordrparticipant,
+                     menuparticipant: menuparticipant,
+                     mi: mi,
+                     menuitem: mi,
+                     restaurantCurrency: restaurantCurrency,
+                     tablesetting: tablesetting
+                   } %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
