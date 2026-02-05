@@ -43,16 +43,22 @@ class DatabasePerformanceMonitor
     pattern = normalize_sql_pattern(sql)
 
     # Store in Redis for real-time analysis
-    return unless defined?(Redis) && Rails.cache.respond_to?(:redis)
+    return unless defined?(Redis) && Rails.cache.respond_to?(:write)
 
     key = "query_pattern:#{pattern}"
-    Rails.cache.increment(key, 1)
-    Rails.cache.expire(key, 5.minutes)
 
-    # Check for potential N+1 queries
-    count = Rails.cache.read(key) || 0
-    if count > 10 # More than 10 similar queries in 5 minutes
-      detect_n_plus_one(pattern, count, duration)
+    # Use write with expires_in instead of expire (works with all cache stores)
+    begin
+      current = Rails.cache.read(key) || 0
+      Rails.cache.write(key, current + 1, expires_in: 5.minutes)
+
+      # Check for potential N+1 queries
+      if current > 10 # More than 10 similar queries in 5 minutes
+        detect_n_plus_one(pattern, current, duration)
+      end
+    rescue StandardError => e
+      # Silently fail - monitoring should not break the application
+      Rails.logger.debug("[DatabasePerformanceMonitor] Failed to track query pattern: #{e.message}")
     end
   end
 

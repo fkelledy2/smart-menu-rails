@@ -70,8 +70,23 @@
 <script>
   // Function to load Google Maps API
   function loadGoogleMapsAPI() {
-    return new Promise((resolve, reject) => {
+    if (window.__googleMapsLoaderPromise) return window.__googleMapsLoaderPromise;
+
+    window.__googleMapsLoaderPromise = new Promise((resolve, reject) => {
+      if (window.google && window.google.maps) {
+        resolve(window.google);
+        return;
+      }
+
+      const existingScript = document.querySelector('script[data-google-maps-api="true"]');
+      if (existingScript) {
+        existingScript.addEventListener('load', () => resolve(window.google));
+        existingScript.addEventListener('error', (error) => reject(error));
+        return;
+      }
+
       const script = document.createElement('script');
+      script.setAttribute('data-google-maps-api', 'true');
       script.src = `https://maps.googleapis.com/maps/api/js?key=<%= ENV['GOOGLE_MAPS_API_KEY'].presence || ENV['GOOGLE_MAPS_BROWSER_API_KEY'].presence || Rails.application.credentials.google_maps_api_key %>&libraries=places&loading=async&callback=Function.prototype`;
       script.async = true;
       script.defer = true;
@@ -82,6 +97,8 @@
       };
       document.head.appendChild(script);
     });
+
+    return window.__googleMapsLoaderPromise;
   }
 
   // Make the loader function available globally

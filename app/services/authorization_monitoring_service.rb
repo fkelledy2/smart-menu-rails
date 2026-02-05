@@ -112,29 +112,55 @@ class AuthorizationMonitoringService
   end
 
   def store_in_redis(log_data)
-    return unless defined?(Redis) && Rails.cache.respond_to?(:redis)
+    return unless defined?(Redis)
+
+    # Try to get the underlying Redis client
+    redis = Rails.cache.redis rescue nil
+    return unless redis
 
     key = "authorization_checks:#{Date.current.strftime('%Y-%m-%d')}"
-    Rails.cache.redis.lpush(key, log_data.to_json)
-    Rails.cache.redis.expire(key, 7.days.to_i)
-  rescue StandardError => e
-    Rails.logger.error "Failed to store authorization data in Redis: #{e.message}"
+    begin
+      redis.lpush(key, log_data.to_json)
+      redis.expire(key, 7.days.to_i)
+    rescue StandardError => e
+      # Fallback to Rails.cache with proper expiry
+      Rails.logger.debug "[AuthorizationMonitoring] Using fallback cache storage: #{e.message}"
+      begin
+        Rails.cache.write(key, log_data, expires_in: 7.days)
+      rescue StandardError => e2
+        Rails.logger.error "Failed to store authorization data: #{e2.message}"
+      end
+    end
   end
 
   def store_failure_in_redis(log_data)
-    return unless defined?(Redis) && Rails.cache.respond_to?(:redis)
+    return unless defined?(Redis)
+
+    # Try to get the underlying Redis client
+    redis = Rails.cache.redis rescue nil
+    return unless redis
 
     key = "authorization_failures:#{Date.current.strftime('%Y-%m-%d')}"
-    Rails.cache.redis.lpush(key, log_data.to_json)
-    Rails.cache.redis.expire(key, 30.days.to_i)
-
-    # Store recent failures for alerting
     recent_key = 'recent_authorization_failures'
-    Rails.cache.redis.lpush(recent_key, log_data.to_json)
-    Rails.cache.redis.ltrim(recent_key, 0, 99) # Keep last 100 failures
-    Rails.cache.redis.expire(recent_key, 1.hour.to_i)
-  rescue StandardError => e
-    Rails.logger.error "Failed to store authorization failure in Redis: #{e.message}"
+
+    begin
+      redis.lpush(key, log_data.to_json)
+      redis.expire(key, 30.days.to_i)
+
+      # Store recent failures for alerting
+      redis.lpush(recent_key, log_data.to_json)
+      redis.ltrim(recent_key, 0, 99) # Keep last 100 failures
+      redis.expire(recent_key, 1.hour.to_i)
+    rescue StandardError => e
+      # Fallback to Rails.cache with proper expiry
+      Rails.logger.debug "[AuthorizationMonitoring] Using fallback cache storage: #{e.message}"
+      begin
+        Rails.cache.write(key, log_data, expires_in: 30.days)
+        Rails.cache.write(recent_key, log_data, expires_in: 1.hour)
+      rescue StandardError => e2
+        Rails.logger.error "Failed to store authorization failure: #{e2.message}"
+      end
+    end
   end
 
   def track_authorization_metrics(log_data)
@@ -181,21 +207,27 @@ class AuthorizationMonitoringService
   end
 
   def get_recent_failures_for_user(user_id)
-    return [] unless defined?(Redis) && Rails.cache.respond_to?(:redis)
+    return [] unless defined?(Redis)
+
+    # Try to get the underlying Redis client
+    redis = Rails.cache.redis rescue nil
+    return [] unless redis
 
     key = 'recent_authorization_failures'
-    failures = Rails.cache.redis.lrange(key, 0, -1)
+    begin
+      failures = redis.lrange(key, 0, -1)
 
-    failures.filter_map do |f|
-      JSON.parse(f)
-    rescue StandardError
-      nil
+      failures.filter_map do |f|
+        JSON.parse(f)
+      rescue StandardError
+        nil
+      end
+        .select { |f| f['user_id'] == user_id }
+        .select { |f| Time.zone.parse(f['timestamp']) > 1.hour.ago }
+    rescue StandardError => e
+      Rails.logger.error "Failed to get recent failures: #{e.message}"
+      []
     end
-      .select { |f| f['user_id'] == user_id }
-      .select { |f| Time.zone.parse(f['timestamp']) > 1.hour.ago }
-  rescue StandardError => e
-    Rails.logger.error "Failed to get recent failures: #{e.message}"
-    []
   end
 
   def send_security_alert(message, data)
