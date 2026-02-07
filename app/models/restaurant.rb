@@ -170,7 +170,7 @@ class Restaurant < ApplicationRecord
     return 'localization' unless has_locales && has_default_locale
 
     # 3) Tables: require at least one table setting
-    return 'tables' unless tablesettings.any?
+    return 'tables' unless tablesettings.where(archived: false).exists?
 
     # 4) Staff: require at least one employee
     return 'staff' unless employees.any?
@@ -202,7 +202,7 @@ class Restaurant < ApplicationRecord
     return true if respond_to?(:imagecontext) && imagecontext.blank?
     return true if respond_to?(:image_style_profile) && image_style_profile.blank?
     # Tables, employees, localization, and menu (taxes/tips optional)
-    return true unless tablesettings.any?
+    return true unless tablesettings.where(archived: false).exists?
     return true unless employees.any?
     has_locales = restaurantlocales.any?
     has_default_locale = restaurantlocales.where(status: 'active', dfault: true).exists?

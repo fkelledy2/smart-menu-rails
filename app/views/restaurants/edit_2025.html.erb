@@ -44,7 +44,7 @@
         <% stripe_connect_enabled = stripe_account&.status.to_s == 'enabled' %>
         <% address_ok = @restaurant.address1.present? || @restaurant.city.present? || @restaurant.postcode.present? %>
         <% default_language_ok = @restaurant.restaurantlocales.where(status: 'active', dfault: true).exists? %>
-        <% has_table_ok = @restaurant.tablesettings.any? %>
+        <% has_table_ok = @restaurant.tablesettings.where(archived: false).exists? %>
         <% has_menu_ok = @restaurant.restaurant_menus.where.not(status: RestaurantMenu.statuses[:archived]).joins(:menu).exists? %>
         <% subscription_ok = user_has_active_subscription?(@restaurant.user) %>
 
