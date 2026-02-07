@@ -41,6 +41,12 @@
     owner_id = m.owner_restaurant_id.presence || m.restaurant_id
     owner_id != restaurant.id
   end
+
+  other_restaurants_for_share = begin
+    Restaurant.where(user_id: current_user.id, archived: false).where.not(id: restaurant.id).to_a
+  rescue StandardError
+    []
+  end
 %>
 
 <!-- Quick Actions Card -->
@@ -132,12 +138,25 @@
       <%= t('.menus') %>
     </h2>
 
-    <%= link_to(
-      include_archived_menus ? t('.hide_archived', default: 'Hide archived') : t('.show_archived', default: 'Show archived'),
-      edit_restaurant_path(restaurant, section: 'menus', include_archived_menus: include_archived_menus ? nil : 1),
-      class: 'btn btn-sm btn-outline-secondary',
-      data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'toggle-include-archived-menus' }
-    ) %>
+    <div class="dropdown">
+      <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              data-testid="toggle-include-archived-menus">
+        <i class="bi bi-gear"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li>
+          <%= link_to(
+            include_archived_menus ? t('.hide_archived', default: 'Hide archived') : t('.show_archived', default: 'Show archived'),
+            edit_restaurant_path(restaurant, section: 'menus', include_archived_menus: include_archived_menus ? nil : 1),
+            class: 'dropdown-item',
+            data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' }
+          ) %>
+        </li>
+      </ul>
+    </div>
   </div>
 
   <% if restaurant_menus.any? %>
@@ -169,8 +188,13 @@
                   <select class="form-select form-select-sm" style="min-width: 0;" data-restaurantmenus-bulk-target="actionSelect" data-action="change->restaurantmenus-bulk#sync">
                     <option value=""><%= t('.bulk_action', default: 'Bulk action…') %></option>
                     <option value="set_status"><%= t('.bulk_set_status', default: 'Set status') %></option>
+                    <% if other_restaurants_for_share.any? %>
+                      <option value="share"><%= t('.bulk_share', default: 'Share') %></option>
+                    <% end %>
                     <option value="archive"><%= t('.bulk_archive', default: 'Archive') %></option>
-                    <option value="restore"><%= t('.bulk_restore', default: 'Restore') %></option>
+                    <% if include_archived_menus %>
+                      <option value="restore"><%= t('.bulk_restore', default: 'Restore') %></option>
+                    <% end %>
                   </select>
                   <button type="submit"
                           class="btn btn-primary"
@@ -253,31 +277,6 @@
                         method: :delete,
                         form: { data: { turbo_frame: '_top' } },
                         class: 'btn btn-sm btn-outline-secondary' %>
-                  <% end %>
-
-                  <% if owner_restaurant_id == restaurant.id %>
-                    <% other_restaurants = Restaurant.where(user_id: current_user.id).where.not(id: restaurant.id) %>
-                    <% if other_restaurants.any? %>
-                      <%= form_with url: share_restaurant_menu_path(restaurant, menu), method: :post, data: { turbo_frame: '_top' } do |f| %>
-                        <div class="input-group input-group-sm menu-share-controls" style="width: 184px; max-width: 184px;">
-                          <select class="form-select"
-                                  name="target_restaurant_ids[]"
-                                  aria-label="<%= t('.share') %>">
-                            <option value="" selected disabled><%= t('.share_menu') %></option>
-                            <option value="all"><%= t('.share_to_all') %></option>
-                            <% other_restaurants.each do |r| %>
-                              <option value="<%= r.id %>"><%= r.name %></option>
-                            <% end %>
-                          </select>
-                          <button type="submit"
-                                  class="btn btn-secondary"
-                                  title="<%= t('.share') %>"
-                                  aria-label="<%= t('.share') %>">
-                            <i class="bi bi-send"></i>
-                          </button>
-                        </div>
-                      <% end %>
-                    <% end %>
                   <% end %>
 
                   <%= link_to edit_restaurant_menu_path(restaurant, menu),
@@ -398,6 +397,16 @@
                   <option value="active"><%= t('.active') %></option>
                 <% end %>
                 <option value="inactive"><%= t('.inactive') %></option>
+              </select>
+            </div>
+
+            <div class="d-none" data-restaurantmenus-bulk-target="modalBodyShare">
+              <label class="form-label"><%= t('.share_to_restaurants', default: 'Share to restaurants') %></label>
+              <select class="form-select" multiple name="target_restaurant_ids[]" data-restaurantmenus-bulk-target="modalShareSelect">
+                <option value="" selected disabled><%= t('.share_menu', default: 'Share menu') %></option>
+                <% other_restaurants_for_share.each do |r| %>
+                  <option value="<%= r.id %>"><%= r.name %></option>
+                <% end %>
               </select>
             </div>
           </div>

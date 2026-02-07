@@ -14,7 +14,9 @@ export default class extends Controller {
     "modalBodyArchive",
     "modalBodyRestore",
     "modalBodyStatus",
+    "modalBodyShare",
     "modalStatusSelect",
+    "modalShareSelect",
     "modalApply",
   ];
 
@@ -93,6 +95,7 @@ export default class extends Controller {
     if (this.hasModalBodyArchiveTarget) this.modalBodyArchiveTarget.classList.add("d-none");
     if (this.hasModalBodyRestoreTarget) this.modalBodyRestoreTarget.classList.add("d-none");
     if (this.hasModalBodyStatusTarget) this.modalBodyStatusTarget.classList.add("d-none");
+    if (this.hasModalBodyShareTarget) this.modalBodyShareTarget.classList.add("d-none");
 
     if (this.hasModalApplyTarget) {
       this.modalApplyTarget.textContent = "Apply";
@@ -117,6 +120,12 @@ export default class extends Controller {
     } else if (action === "set_status") {
       if (this.hasModalTitleTarget) this.modalTitleTarget.textContent = "Set status";
       if (this.hasModalBodyStatusTarget) this.modalBodyStatusTarget.classList.remove("d-none");
+    } else if (action === "share") {
+      if (this.hasModalTitleTarget) this.modalTitleTarget.textContent = "Share";
+      if (this.hasModalBodyShareTarget) this.modalBodyShareTarget.classList.remove("d-none");
+      if (this.hasModalApplyTarget) {
+        this.modalApplyTarget.textContent = "Share";
+      }
     }
 
     this.bsModal.show();
@@ -137,6 +146,19 @@ export default class extends Controller {
       const v = this.hasModalStatusSelectTarget ? this.modalStatusSelectTarget.value : "";
       if (this.hasOperationTarget) this.operationTarget.value = "set_status";
       if (this.hasValueTarget) this.valueTarget.value = v;
+    } else if (action === "share") {
+      const selected = this.hasModalShareSelectTarget
+        ? Array.from(this.modalShareSelectTarget.selectedOptions)
+            .map((o) => o.value)
+            .filter((v) => v && v.trim() !== "")
+        : [];
+
+      if (selected.length === 0) {
+        return;
+      }
+
+      if (this.hasOperationTarget) this.operationTarget.value = "share";
+      if (this.hasValueTarget) this.valueTarget.value = "1";
     }
 
     if (this.bsModal) this.bsModal.hide();

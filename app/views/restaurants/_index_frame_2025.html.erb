@@ -11,10 +11,24 @@
 
     <% include_archived = ActiveModel::Type::Boolean.new.cast(params[:include_archived]) %>
     <% toggle_params = params.permit(:q).to_h.symbolize_keys.merge(include_archived: include_archived ? nil : '1') %>
-    <%= link_to(include_archived ? t('.hide_archived', default: 'Hide archived') : t('.show_archived', default: 'Show archived'),
-        restaurants_path(toggle_params),
-        class: 'btn btn-sm btn-outline-secondary',
-        data: { turbo_frame: 'restaurants_content', turbo_action: 'advance' }) %>
+    <div class="dropdown">
+      <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+        <i class="bi bi-gear"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li>
+          <%= link_to(
+            include_archived ? t('.hide_archived', default: 'Hide archived') : t('.show_archived', default: 'Show archived'),
+            restaurants_path(toggle_params),
+            class: 'dropdown-item',
+            data: { turbo_frame: 'restaurants_content', turbo_action: 'advance' }
+          ) %>
+        </li>
+      </ul>
+    </div>
   </div>
 
   <% if restaurants.blank? %>
@@ -51,7 +65,9 @@
                         <option value=""><%= t('.bulk_action', default: 'Bulk action…') %></option>
                         <option value="set_status"><%= t('.bulk_set_status', default: 'Set status') %></option>
                         <option value="archive"><%= t('.bulk_archive', default: 'Archive') %></option>
-                        <option value="restore"><%= t('.bulk_restore', default: 'Restore') %></option>
+                        <% if include_archived %>
+                          <option value="restore"><%= t('.bulk_restore', default: 'Restore') %></option>
+                        <% end %>
                       </select>
                       <button type="submit"
                               class="btn btn-primary"

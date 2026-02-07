@@ -1,3 +1,5 @@
+require 'securerandom'
+
 class RestaurantMenusController < ApplicationController
   before_action :authenticate_user!
   before_action :set_restaurant
@@ -104,6 +106,46 @@ class RestaurantMenusController < ApplicationController
         attrs[:archived_by_id] = nil if rm.respond_to?(:archived_by_id=)
         rm.update!(attrs)
       end
+    when 'share'
+      raw_target_ids = Array(params[:target_restaurant_ids]).map(&:to_s).map(&:strip).reject(&:blank?)
+      other_restaurant_ids = Restaurant.on_primary do
+        Restaurant.where(user_id: current_user.id, archived: false).where.not(id: @restaurant.id).pluck(:id)
+      end
+
+      target_ids = raw_target_ids.map(&:to_i).reject(&:zero?).select { |id| other_restaurant_ids.include?(id) }
+      target_restaurants = Restaurant.on_primary do
+        Restaurant.where(user_id: current_user.id).where(id: target_ids).to_a
+      end
+      if target_restaurants.empty?
+        return redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Restaurant not found'
+      end
+
+      selected_rms = scope.where(id: ids).includes(:menu).to_a
+      invalid = selected_rms.any? do |rm|
+        menu = rm.menu
+        owner_restaurant_id = menu.owner_restaurant_id.presence || menu.restaurant_id
+        owner_restaurant_id != @restaurant.id
+      end
+      if invalid
+        return redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Only the owner restaurant can share selected menus'
+      end
+
+      selected_rms.each do |rm|
+        menu = rm.menu
+        target_restaurants.each do |target_restaurant|
+          restaurant_menu = RestaurantMenu.find_or_initialize_by(restaurant: target_restaurant, menu: menu)
+          authorize restaurant_menu, :attach?
+          next if restaurant_menu.persisted?
+
+          restaurant_menu.sequence ||= (target_restaurant.restaurant_menus.maximum(:sequence).to_i + 1)
+          restaurant_menu.status ||= :active
+          restaurant_menu.availability_override_enabled = false if restaurant_menu.availability_override_enabled.nil?
+          restaurant_menu.availability_state ||= :available
+          restaurant_menu.save!
+
+          ensure_smartmenus_for_restaurant_menu!(target_restaurant, menu)
+        end
+      end
     else
       return redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Invalid bulk operation'
     end
@@ -185,5 +227,19 @@ class RestaurantMenusController < ApplicationController
 
   def set_restaurant
     @restaurant = current_user.restaurants.find(params[:restaurant_id])
+  end
+
+  def ensure_smartmenus_for_restaurant_menu!(restaurant, menu)
+    Smartmenu.on_primary do
+      if Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id, tablesetting_id: nil).first.nil?
+        Smartmenu.create!(restaurant: restaurant, menu: menu, tablesetting: nil, slug: SecureRandom.uuid)
+      end
+
+      restaurant.tablesettings.order(:id).each do |tablesetting|
+        next unless Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id, tablesetting_id: tablesetting.id).first.nil?
+
+        Smartmenu.create!(restaurant: restaurant, menu: menu, tablesetting: tablesetting, slug: SecureRandom.uuid)
+      end
+    end
   end
 end
