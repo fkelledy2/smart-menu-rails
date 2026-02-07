@@ -3,10 +3,19 @@
 <% q = local_assigns[:q] || @q %>
 
 <div class="mb-3 p-3" data-testid="restaurants-list-card">
-  <h2 class="h5 mb-3">
-    <i class="bi bi-shop"></i>
-    <%= t('.restaurants', default: 'Restaurants') %>
-  </h2>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h2 class="h5 mb-0">
+      <i class="bi bi-shop"></i>
+      <%= t('.restaurants', default: 'Restaurants') %>
+    </h2>
+
+    <% include_archived = ActiveModel::Type::Boolean.new.cast(params[:include_archived]) %>
+    <% toggle_params = params.permit(:q).to_h.symbolize_keys.merge(include_archived: include_archived ? nil : '1') %>
+    <%= link_to(include_archived ? t('.hide_archived', default: 'Hide archived') : t('.show_archived', default: 'Show archived'),
+        restaurants_path(toggle_params),
+        class: 'btn btn-sm btn-outline-secondary',
+        data: { turbo_frame: 'restaurants_content', turbo_action: 'advance' }) %>
+  </div>
 
   <% if restaurants.blank? %>
     <div class="text-center py-5">
@@ -18,8 +27,10 @@
       <% end %>
     </div>
   <% else %>
-    <div data-controller="localization-bulk">
-      <%= form_with url: bulk_update_restaurants_path, method: :patch, data: { turbo: false, action: 'submit->localization-bulk#beforeSubmit' } do |f| %>
+    <div data-controller="restaurants-bulk">
+      <%= form_with url: bulk_update_restaurants_path, method: :patch, data: { turbo: false, action: 'submit->restaurants-bulk#beforeSubmit' } do |f| %>
+        <%= hidden_field_tag :operation, '', data: { restaurants_bulk_target: 'operation' } %>
+        <%= hidden_field_tag :value, '', data: { restaurants_bulk_target: 'value' } %>
         <div class="table-responsive">
           <table class="table table-hover align-middle">
             <thead>
@@ -31,24 +42,24 @@
               </tr>
               <tr>
                 <th class="w-20px">
-                  <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
+                  <input type="checkbox" data-restaurants-bulk-target="selectAll" data-action="change->restaurants-bulk#toggleAll" />
                 </th>
                 <th class="text-end text-nowrap" colspan="3">
                   <div class="d-flex justify-content-end flex-nowrap">
                     <div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
-                      <%= f.select :status,
-                          [
-                            [t('.active', default: 'Active'), 'active'],
-                            [t('.inactive', default: 'Inactive'), 'inactive'],
-                          ],
-                          { include_blank: t('.set_status', default: 'Set status') },
-                          { class: 'form-select form-select-sm', disabled: true, style: 'min-width: 0;', name: 'bulk[status]', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
+                      <select class="form-select form-select-sm" style="min-width: 0;" data-restaurants-bulk-target="actionSelect" data-action="change->restaurants-bulk#sync">
+                        <option value=""><%= t('.bulk_action', default: 'Bulk action…') %></option>
+                        <option value="set_status"><%= t('.bulk_set_status', default: 'Set status') %></option>
+                        <option value="archive"><%= t('.bulk_archive', default: 'Archive') %></option>
+                        <option value="restore"><%= t('.bulk_restore', default: 'Restore') %></option>
+                      </select>
                       <button type="submit"
                               class="btn btn-primary"
                               title="<%= t('.apply', default: 'Apply') %>"
                               aria-label="<%= t('.apply', default: 'Apply') %>"
                               disabled
-                              data-localization-bulk-target="submit">
+                              data-restaurants-bulk-target="apply"
+                              data-action="click->restaurants-bulk#apply">
                         <i class="bi bi-check2"></i>
                         <span class="visually-hidden"><%= t('.apply', default: 'Apply') %></span>
                       </button>
@@ -69,7 +80,7 @@
                     data-turbo-frame="_top"
                     class="clickable-row row-status-<%= row_status %>">
                   <td class="w-20px">
-                    <input type="checkbox" name="restaurant_ids[]" value="<%= restaurant.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
+                    <input type="checkbox" name="restaurant_ids[]" value="<%= restaurant.id %>" data-restaurants-bulk-target="checkbox" data-action="change->restaurants-bulk#sync" />
                   </td>
                   <td class="w-20px">
                     <i class="bi bi-grip-vertical text-muted drag-handle" title="<%= t('.drag_to_reorder', default: 'Drag to reorder') %>"></i>
@@ -93,6 +104,41 @@
               <% end %>
             </tbody>
           </table>
+        </div>
+
+        <div class="modal fade" tabindex="-1" aria-hidden="true" data-restaurants-bulk-target="modal">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" data-restaurants-bulk-target="modalTitle">Bulk edit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="d-none" data-restaurants-bulk-target="modalBodyArchive">
+                  <p class="mb-0"><%= t('.archive_confirm', default: 'This will archive the selected restaurants.') %></p>
+                </div>
+
+                <div class="d-none" data-restaurants-bulk-target="modalBodyRestore">
+                  <p class="mb-0"><%= t('.restore_confirm', default: 'This will restore the selected restaurants.') %></p>
+                </div>
+
+                <div class="d-none" data-restaurants-bulk-target="modalBodyStatus">
+                  <label class="form-label"><%= t('.status', default: 'Status') %></label>
+                  <select class="form-select" data-restaurants-bulk-target="modalStatusSelect">
+                    <option value=""><%= t('.choose_status', default: 'Choose…') %></option>
+                    <% if current_user_has_active_subscription? %>
+                      <option value="active"><%= t('.active', default: 'Active') %></option>
+                    <% end %>
+                    <option value="inactive"><%= t('.inactive', default: 'Inactive') %></option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer gap-2">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><%= t('common.cancel', default: 'Cancel') %></button>
+                <button type="button" class="btn btn-primary" data-restaurants-bulk-target="modalApply" data-action="click->restaurants-bulk#confirmModalApply"><%= t('.apply', default: 'Apply') %></button>
+              </div>
+            </div>
+          </div>
         </div>
       <% end %>
     </div>

@@ -178,24 +178,24 @@
 }
 
 .clickable-row.row-status-archived {
-  background-color: var(--color-gray-100) !important;
-  opacity: 0.6;
+  background-color: rgba(239, 68, 68, 0.10) !important;
+  opacity: 0.75;
 }
 
 .table tbody tr.clickable-row.row-status-archived > * {
-  background-color: var(--color-gray-100) !important;
+  background-color: rgba(239, 68, 68, 0.10) !important;
 }
 
 .table tbody tr.row-status-archived > * {
-  background-color: var(--color-gray-100) !important;
+  background-color: rgba(239, 68, 68, 0.10) !important;
 }
 
 .table-hover tbody tr.clickable-row.row-status-archived:hover > * {
-  background-color: var(--color-gray-200) !important;
+  background-color: rgba(239, 68, 68, 0.16) !important;
 }
 
 .table-hover tbody tr.row-status-archived:hover > * {
-  background-color: var(--color-gray-200) !important;
+  background-color: rgba(239, 68, 68, 0.16) !important;
 }
 
 // ============================================

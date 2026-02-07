@@ -270,6 +270,8 @@ class MenusController < ApplicationController
   # POST /restaurants/:restaurant_id/menus/:id/share
   def share
     menu = Menu.find(params[:id])
+    authorize RestaurantMenu.new(restaurant: @restaurant, menu: menu), :attach?
+
     owner_restaurant_id = menu.owner_restaurant_id.presence || menu.restaurant_id
     unless owner_restaurant_id == @restaurant.id
       return redirect_to(edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Only the owner restaurant can share this menu')
@@ -339,6 +341,8 @@ class MenusController < ApplicationController
   # DELETE /restaurants/:restaurant_id/menus/:id/detach
   def detach
     menu = Menu.find(params[:id])
+
+    authorize RestaurantMenu.new(restaurant: @restaurant, menu: menu), :detach?
 
     owner_restaurant_id = menu.owner_restaurant_id.presence || menu.restaurant_id
     if owner_restaurant_id.present? && owner_restaurant_id == @restaurant.id
@@ -1193,6 +1197,23 @@ class MenusController < ApplicationController
       .where(restaurant_menus: { restaurant_id: @restaurant.id })
       .where(archived: false)
       .where(id: ids)
+
+    if status == 'active' && !current_user_has_active_subscription?
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            'restaurant_content',
+            partial: 'restaurants/sections/menus_2025',
+            locals: { restaurant: @restaurant, filter: 'all' },
+          )
+        end
+        format.html do
+          redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'You need an active subscription to activate a menu.'
+        end
+      end
+      return
+    end
+
     menus.find_each do |menu|
       authorize menu, :update?
       menu.update(status: status)

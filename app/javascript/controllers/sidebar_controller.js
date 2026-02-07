@@ -158,6 +158,7 @@ export default class extends Controller {
   updateActiveState() {
     const url = new URL(window.location.href)
     const section = url.searchParams.get('section') || 'details'
+    const hash = window.location.hash
     
     console.log("[Sidebar] Updating active state for section:", section)
     
@@ -174,5 +175,19 @@ export default class extends Controller {
         link.classList.remove('active')
       }
     })
+
+    if (hash && hash.length > 1) {
+      const targetId = hash.slice(1)
+      const target = document.getElementById(targetId)
+      if (target) {
+        setTimeout(() => {
+          try {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          } catch (e) {
+            target.scrollIntoView()
+          }
+        }, 0)
+      }
+    }
   }
 }

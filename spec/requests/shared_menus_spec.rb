@@ -8,7 +8,10 @@ RSpec.describe 'Shared menus', type: :request do
 
   before do
     sign_in user
-    create(:restaurant_menu, restaurant: restaurant_a, menu: menu, status: 'active', sequence: 1)
+    RestaurantMenu.find_or_create_by!(restaurant: restaurant_a, menu: menu) do |rm|
+      rm.status = 'active'
+      rm.sequence = 1
+    end
   end
 
   describe 'attaching and detaching menus' do
@@ -145,11 +148,39 @@ RSpec.describe 'Shared menus', type: :request do
 
       patch bulk_update_restaurant_restaurant_menus_path(restaurant_b), params: {
         restaurant_menu_ids: [rm.id],
-        status: 'inactive'
+        operation: 'set_status',
+        value: 'inactive'
       }
 
       expect(response).to have_http_status(:redirect).or have_http_status(:ok)
       expect(rm.reload.status).to eq('inactive')
+    end
+
+    it 'bulk archives restaurant_menus' do
+      rm = RestaurantMenu.find_by!(restaurant: restaurant_b, menu: menu)
+
+      patch bulk_update_restaurant_restaurant_menus_path(restaurant_b), params: {
+        restaurant_menu_ids: [rm.id],
+        operation: 'archive',
+        value: '1'
+      }
+
+      expect(response).to have_http_status(:redirect).or have_http_status(:ok)
+      expect(rm.reload.status).to eq('archived')
+    end
+
+    it 'bulk restores restaurant_menus' do
+      rm = RestaurantMenu.find_by!(restaurant: restaurant_b, menu: menu)
+      rm.update!(status: 'archived')
+
+      patch bulk_update_restaurant_restaurant_menus_path(restaurant_b), params: {
+        restaurant_menu_ids: [rm.id],
+        operation: 'restore',
+        value: '1'
+      }
+
+      expect(response).to have_http_status(:redirect).or have_http_status(:ok)
+      expect(rm.reload.status).to eq('active')
     end
 
     it 'bulk updates availability override on restaurant_menus' do

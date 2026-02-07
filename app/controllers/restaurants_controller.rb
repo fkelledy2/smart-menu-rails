@@ -5,7 +5,7 @@ class RestaurantsController < ApplicationController
   include CachePerformanceMonitoring
 
   before_action :authenticate_user!
-  before_action :set_restaurant, only: %i[show edit update destroy performance analytics user_activity update_hours update_alcohol_policy alcohol_status]
+  before_action :set_restaurant, only: %i[show edit update destroy archive restore performance analytics user_activity update_hours update_alcohol_policy alcohol_status]
   before_action :set_currency, only: %i[show index]
   before_action :disable_turbo, only: [:edit]
 
@@ -35,6 +35,38 @@ class RestaurantsController < ApplicationController
       'SPOTIFY_REDIRECT_URI', nil,
     )}&scope=#{scopes}"
     redirect_to spotify_auth_url, allow_other_host: true
+  end
+
+  # PATCH /restaurants/:id/archive
+  def archive
+    authorize @restaurant
+
+    RestaurantArchivalService.archive_async(
+      restaurant_id: @restaurant.id,
+      archived_by_id: current_user&.id,
+      reason: params[:reason],
+    )
+
+    respond_to do |format|
+      format.html { redirect_to restaurants_url, notice: t('common.flash.archived', resource: t('activerecord.models.restaurant')) }
+      format.json { render json: { success: true }, status: :accepted }
+    end
+  end
+
+  # PATCH /restaurants/:id/restore
+  def restore
+    authorize @restaurant
+
+    RestaurantArchivalService.restore_async(
+      restaurant_id: @restaurant.id,
+      archived_by_id: current_user&.id,
+      reason: params[:reason],
+    )
+
+    respond_to do |format|
+      format.html { redirect_to restaurants_url, notice: t('common.flash.restored', resource: t('activerecord.models.restaurant')) }
+      format.json { render json: { success: true }, status: :accepted }
+    end
   end
 
   # PATCH /restaurants/:id/update_alcohol_policy
@@ -144,7 +176,14 @@ class RestaurantsController < ApplicationController
 
     if current_user.plan
       ApplicationRecord.on_primary do
-        scope = policy_scope(Restaurant).where.not(status: Restaurant.statuses[:archived])
+        scope = policy_scope(Restaurant)
+
+        include_archived = ActiveModel::Type::Boolean.new.cast(params[:include_archived])
+        unless include_archived
+          scope = scope
+            .where.not(status: Restaurant.statuses[:archived])
+            .where('restaurants.archived IS NULL OR restaurants.archived = ?', false)
+        end
 
         q = params[:q].to_s.strip
         scope = scope.where('restaurants.name ILIKE ?', "%#{q}%") if q.present?
@@ -191,10 +230,11 @@ class RestaurantsController < ApplicationController
   def bulk_update
     authorize Restaurant
 
-    status = params.dig(:bulk, :status).presence
     ids = Array(params[:restaurant_ids]).map(&:to_i).uniq
+    operation = params[:operation].to_s
+    value = params[:value]
 
-    if status.blank? || ids.blank?
+    if ids.blank? || operation.blank?
       respond_to do |format|
         format.html { redirect_to restaurants_path, alert: 'Invalid bulk update' }
         format.json { render json: { success: false }, status: :unprocessable_entity }
@@ -203,15 +243,63 @@ class RestaurantsController < ApplicationController
     end
 
     scope = policy_scope(Restaurant).where(id: ids)
-    scope.update_all(status: Restaurant.statuses.fetch(status))
+
+    case operation
+    when 'set_status'
+      status = value.to_s
+      unless Restaurant.statuses.key?(status)
+        respond_to do |format|
+          format.html { redirect_to restaurants_path, alert: 'Invalid status' }
+          format.json { render json: { success: false }, status: :unprocessable_entity }
+        end
+        return
+      end
+
+      if status == 'active' && !current_user_has_active_subscription?
+        respond_to do |format|
+          format.html { redirect_to restaurants_path, alert: 'You need an active subscription to activate a restaurant.' }
+          format.json { render json: { success: false, error: 'subscription_required' }, status: :payment_required }
+        end
+        return
+      end
+
+      scope.find_each do |restaurant|
+        authorize restaurant, :update?
+        restaurant.update!(status: status)
+      end
+    when 'archive'
+      scope.find_each do |restaurant|
+        authorize restaurant, :archive?
+        RestaurantArchivalService.archive_async(
+          restaurant_id: restaurant.id,
+          archived_by_id: current_user&.id,
+          reason: params[:reason],
+        )
+      end
+    when 'restore'
+      scope.find_each do |restaurant|
+        authorize restaurant, :restore?
+        RestaurantArchivalService.restore_async(
+          restaurant_id: restaurant.id,
+          archived_by_id: current_user&.id,
+          reason: params[:reason],
+        )
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to restaurants_path, alert: 'Invalid bulk operation' }
+        format.json { render json: { success: false }, status: :unprocessable_entity }
+      end
+      return
+    end
 
     respond_to do |format|
       format.html { redirect_to restaurants_path, notice: 'Restaurants updated' }
       format.json { render json: { success: true }, status: :ok }
     end
-  rescue KeyError
+  rescue ActiveRecord::RecordInvalid => e
     respond_to do |format|
-      format.html { redirect_to restaurants_path, alert: 'Invalid status' }
+      format.html { redirect_to restaurants_path, alert: e.record.errors.full_messages.first }
       format.json { render json: { success: false }, status: :unprocessable_entity }
     end
   end
@@ -522,6 +610,15 @@ class RestaurantsController < ApplicationController
     @onboarding_mode = ActiveModel::Type::Boolean.new.cast(params[:onboarding])
     @onboarding_next = @restaurant.onboarding_next_section
 
+    if @current_section.to_s == 'settings'
+      @stripe_connect_account = @restaurant.provider_accounts.find { |a| a.provider.to_s == 'stripe' } || @restaurant.provider_accounts.where(provider: :stripe).first
+      if @stripe_connect_account&.status.to_s == 'enabled'
+        @stripe_connect_receipt_details = Payments::Providers::StripeConnect
+          .new(restaurant: @restaurant)
+          .receipt_details_for_account(provider_account_id: @stripe_connect_account.provider_account_id)
+      end
+    end
+
     # Restaurant onboarding (guided, non-blocking)
     if @onboarding_next.present?
       AnalyticsService.track_user_event(current_user, 'restaurant_onboarding_step_viewed', {
@@ -626,6 +723,17 @@ class RestaurantsController < ApplicationController
       # Build attributes for update (supports quick-action status-only submissions)
       raw_restaurant = params[:restaurant]
       status_value = params.dig(:restaurant, :status) || params[:status]
+
+      if status_value.to_s == 'active' && !current_user_has_active_subscription?
+        format.html do
+          redirect_back fallback_location: edit_restaurant_path(@restaurant, section: 'details'),
+                        alert: 'You need an active subscription to activate a restaurant.',
+                        status: :see_other
+        end
+        format.json { render json: { error: 'subscription_required' }, status: :payment_required }
+        return
+      end
+
       attrs = {}
       if raw_restaurant.is_a?(ActionController::Parameters)
         begin
@@ -792,14 +900,10 @@ class RestaurantsController < ApplicationController
   def destroy
     authorize @restaurant
 
-    # Get the user_id before destroying for cache invalidation
-    user_id = @restaurant.user_id
-
-    @restaurant.update(archived: true)
-
-    # Invalidate AdvancedCacheService caches for this restaurant and user
-    AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id)
-    AdvancedCacheService.invalidate_user_caches(user_id)
+    RestaurantArchivalService.archive_async(
+      restaurant_id: @restaurant.id,
+      archived_by_id: current_user&.id,
+    )
 
     AnalyticsService.track_user_event(current_user, AnalyticsService::RESTAURANT_DELETED, {
       restaurant_id: @restaurant.id,

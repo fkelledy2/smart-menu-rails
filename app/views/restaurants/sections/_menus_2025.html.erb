@@ -6,9 +6,18 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
 <% 
-  restaurant_menus = restaurant.restaurant_menus
+  include_archived_menus = params[:include_archived_menus].to_s == '1'
+
+  restaurant_menus_scope = restaurant.restaurant_menus
     .joins(:menu)
-    .where(menus: { archived: false })
+
+  unless include_archived_menus
+    restaurant_menus_scope = restaurant_menus_scope
+      .where.not(status: RestaurantMenu.statuses[:archived])
+      .where(menus: { archived: false })
+  end
+
+  restaurant_menus = restaurant_menus_scope
     .includes(:menu)
     .order(Arel.sql('CASE WHEN restaurant_menus.sequence IS NULL THEN 1 ELSE 0 END, restaurant_menus.sequence ASC'))
     .to_a
@@ -32,9 +41,125 @@
     owner_id = m.owner_restaurant_id.presence || m.restaurant_id
     owner_id != restaurant.id
   end
+
+  recent_completed_import = begin
+    restaurant.ocr_menu_imports.completed.where.not(menu_id: nil).first
+  rescue StandardError
+    nil
+  end
+
+  imported_menu = begin
+    if recent_completed_import&.menu_id.present?
+      restaurant.menus.where(id: recent_completed_import.menu_id).first
+    else
+      nil
+    end
+  rescue StandardError
+    nil
+  end
+
+  newly_imported_menu = begin
+    imported_menu.present? && recent_completed_import&.completed_at.present? && recent_completed_import.completed_at >= 14.days.ago
+  rescue StandardError
+    false
+  end
+
+  menu_smartmenu_slug = begin
+    imported_menu&.smartmenu&.slug.to_s.presence
+  rescue StandardError
+    nil
+  end
+
+  missing_image_prompt_count = begin
+    imported_menu.present? ? imported_menu.menuitems.where.not(itemtype: Menuitem.itemtypes[:wine]).where("COALESCE(image_prompt,'') = ''").count : 0
+  rescue StandardError
+    0
+  end
+
+  has_translation = begin
+    if imported_menu.present?
+      active_locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active')
+      default_locale = active_locales.find { |x| x.dfault == true }
+      non_default = active_locales.reject { |x| default_locale && x.id == default_locale.id }
+      non_default.any? && imported_menu.menulocales.where(locale: non_default.map(&:locale)).exists?
+    else
+      false
+    end
+  rescue StandardError
+    false
+  end
+
+  has_any_ai_image = begin
+    imported_menu.present? && imported_menu.menuitems.where.not(image_data: [nil, '']).exists?
+  rescue StandardError
+    false
+  end
 %>
 
+<% if newly_imported_menu %>
+  <div class="card mb-3" data-testid="menu-go-live-flow" data-controller="go-live-progress">
+    <div class="card-body py-3">
+      <% ai_polish_complete = (missing_image_prompt_count.to_i == 0) %>
+      <% menu_go_live_steps = [
+        { label: 'AI Polish', complete: ai_polish_complete, path: (imported_menu.present? ? edit_restaurant_menu_path(restaurant, imported_menu, section: 'details') : nil) },
+        { label: 'Add a translation', complete: has_translation, path: (ai_polish_complete && imported_menu.present? ? edit_restaurant_menu_path(restaurant, imported_menu, section: 'details') : nil) },
+        { label: 'Generate AI Images', complete: has_any_ai_image, path: (ai_polish_complete && imported_menu.present? ? edit_restaurant_menu_path(restaurant, imported_menu, section: 'details') : nil) },
+        { label: 'Preview as Staff', complete: menu_smartmenu_slug.present?, path: (ai_polish_complete && menu_smartmenu_slug.present? ? smartmenu_path(menu_smartmenu_slug) : nil) },
+        { label: 'Preview as Customer', complete: menu_smartmenu_slug.present?, path: (ai_polish_complete && menu_smartmenu_slug.present? ? smartmenu_path(menu_smartmenu_slug, view: 'customer') : nil) },
+      ] %>
+      <% completed_steps = menu_go_live_steps.count { |s| s[:complete] } %>
+      <% total_steps = menu_go_live_steps.size %>
+      <% percent_complete = total_steps.positive? ? ((completed_steps.to_f / total_steps) * 100).round : 0 %>
+      <% go_live_complete = (completed_steps == total_steps) %>
+
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <div class="fw-semibold">Menu go live flow</div>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <div class="text-muted small"><%= completed_steps %>/<%= total_steps %></div>
+          <button class="btn btn-sm btn-outline-secondary"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="go-live-progress-details"
+                  data-go-live-progress-target="toggle"
+                  data-action="click->go-live-progress#toggle mouseenter->go-live-progress#open">
+            <i class="bi bi-chevron-right" data-go-live-progress-target="chevron"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="progress mt-2" style="height: 8px;" role="progressbar" aria-valuenow="<%= percent_complete %>" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar <%= go_live_complete ? 'bg-success' : 'progress-bar-striped progress-bar-animated' %>" style="width: <%= percent_complete %>%;"></div>
+      </div>
+
+      <div class="collapse mt-3" id="go-live-progress-details" data-go-live-progress-target="details" data-action="mouseenter->go-live-progress#open mouseleave->go-live-progress#close">
+        <div class="row g-2">
+          <% menu_go_live_steps.each do |step| %>
+            <div class="col-12 col-md-6 col-lg-4">
+              <div class="d-flex align-items-start gap-2 small">
+                <% if step[:complete] %>
+                  <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                  <div class="text-muted"><%= step[:label] %></div>
+                <% else %>
+                  <i class="bi bi-circle text-muted mt-1"></i>
+                  <% if step[:path].present? %>
+                    <%= link_to step[:label], step[:path], class: 'text-decoration-none', data: { turbo_frame: '_top' } %>
+                  <% else %>
+                    <div class="text-muted"><%= step[:label] %></div>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
 <!-- Quick Actions Card -->
+<div id="restaurant-menus-section"></div>
 <div class="mb-3 p-3" data-testid="menus-quick-actions">
   <h2 class="quick-actions-title">
     <i class="bi bi-lightning-charge"></i>
@@ -116,15 +241,26 @@
 
 <!-- Menus List -->
 <div class="mb-3 p-3" data-testid="menus-list-card">
-  <h2 class="h5 mb-3">
+  <div class="d-flex justify-content-between align-items-center mb-3 gap-2 flex-wrap">
+    <h2 class="h5 mb-0">
       <i class="bi bi-grid-3x3"></i>
       <%= t('.menus') %>
     </h2>
 
+    <%= link_to(
+      include_archived_menus ? t('.hide_archived', default: 'Hide archived') : t('.show_archived', default: 'Show archived'),
+      edit_restaurant_path(restaurant, section: 'menus', include_archived_menus: include_archived_menus ? nil : 1),
+      class: 'btn btn-sm btn-outline-secondary',
+      data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'toggle-include-archived-menus' }
+    ) %>
+  </div>
+
   <% if restaurant_menus.any? %>
     <!-- Menus List (styled like Table Settings) -->
-    <div data-controller="localization-bulk">
-    <%= form_with url: bulk_update_restaurant_restaurant_menus_path(restaurant), method: :patch, data: { turbo: true, action: 'submit->localization-bulk#beforeSubmit' } do |f| %>
+    <div data-controller="restaurantmenus-bulk">
+    <%= form_with url: bulk_update_restaurant_restaurant_menus_path(restaurant), method: :patch, data: { turbo: true, action: 'submit->restaurantmenus-bulk#beforeSubmit' } do |f| %>
+      <%= hidden_field_tag :operation, '', data: { restaurantmenus_bulk_target: 'operation' } %>
+      <%= hidden_field_tag :value, '', data: { restaurantmenus_bulk_target: 'value' } %>
       <div class="table-responsive menus-table-view"
            data-testid="menus-list">
         <table class="table table-hover align-middle">
@@ -140,24 +276,24 @@
           <% end %>
           <tr>
             <th class="w-20px menu-compact-cell">
-              <input type="checkbox" data-localization-bulk-target="selectAll" data-action="change->localization-bulk#toggleAll" />
+              <input type="checkbox" data-restaurantmenus-bulk-target="selectAll" data-action="change->restaurantmenus-bulk#toggleAll" />
             </th>
             <th class="text-end text-nowrap" colspan="<%= show_availability_column ? 4 : 3 %>">
               <div class="d-flex justify-content-end flex-nowrap">
                 <div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
-                  <%= f.select :status,
-                      [
-                        [t('.active'), 'active'],
-                        [t('.inactive'), 'inactive'],
-                      ],
-                      { include_blank: t('.set_status') },
-                      { class: 'form-select form-select-sm', disabled: true, style: 'min-width: 0;', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
+                  <select class="form-select form-select-sm" style="min-width: 0;" data-restaurantmenus-bulk-target="actionSelect" data-action="change->restaurantmenus-bulk#sync">
+                    <option value=""><%= t('.bulk_action', default: 'Bulk action…') %></option>
+                    <option value="set_status"><%= t('.bulk_set_status', default: 'Set status') %></option>
+                    <option value="archive"><%= t('.bulk_archive', default: 'Archive') %></option>
+                    <option value="restore"><%= t('.bulk_restore', default: 'Restore') %></option>
+                  </select>
                   <button type="submit"
                           class="btn btn-primary"
                           title="<%= t('.apply') %>"
                           aria-label="<%= t('.apply') %>"
                           disabled
-                          data-localization-bulk-target="submit">
+                          data-restaurantmenus-bulk-target="apply"
+                          data-action="click->restaurantmenus-bulk#apply">
                     <i class="bi bi-check2"></i>
                     <span class="visually-hidden"><%= t('.apply') %></span>
                   </button>
@@ -179,7 +315,7 @@
                 class="<%= owner_restaurant_id == restaurant.id ? 'menu-row-owned' : 'menu-row-shared' %> clickable-row row-status-<%= row_status %> <%= row_status == 'inactive' ? 'menu-row-muted' : '' %>"
                 title="<%= t(".#{row_status}") %>">
               <td class="w-20px menu-compact-cell">
-                <input type="checkbox" name="restaurant_menu_ids[]" value="<%= restaurant_menu.id %>" data-localization-bulk-target="checkbox" data-action="change->localization-bulk#sync" />
+                <input type="checkbox" name="restaurant_menu_ids[]" value="<%= restaurant_menu.id %>" data-restaurantmenus-bulk-target="checkbox" data-action="change->restaurantmenus-bulk#sync" />
               </td>
               <td class="w-20px menu-compact-cell">
                 <i class="bi bi-grip-vertical text-muted drag-handle" title="<%= t('.drag_to_reorder') %>"></i>
@@ -293,8 +429,8 @@
               <input type="checkbox"
                      name="restaurant_menu_ids[]"
                      value="<%= restaurant_menu.id %>"
-                     data-localization-bulk-target="checkbox"
-                     data-action="change->localization-bulk#sync" />
+                     data-restaurantmenus-bulk-target="checkbox"
+                     data-action="change->restaurantmenus-bulk#sync" />
   
               <span class="drag-handle cursor-grab" aria-hidden="true">
                 <i class="bi bi-grip-vertical text-muted" title="<%= t('.drag_to_reorder') %>"></i>
@@ -351,6 +487,41 @@
           <% end %>
         </div>
       <% end %>
+    </div>
+
+    <div class="modal fade" tabindex="-1" aria-hidden="true" data-restaurantmenus-bulk-target="modal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" data-restaurantmenus-bulk-target="modalTitle">Bulk edit</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-none" data-restaurantmenus-bulk-target="modalBodyArchive">
+              <p class="mb-0"><%= t('.archive_confirm', default: 'This will archive the selected menus for this restaurant.') %></p>
+            </div>
+
+            <div class="d-none" data-restaurantmenus-bulk-target="modalBodyRestore">
+              <p class="mb-0"><%= t('.restore_confirm', default: 'This will restore the selected menus for this restaurant.') %></p>
+            </div>
+
+            <div class="d-none" data-restaurantmenus-bulk-target="modalBodyStatus">
+              <label class="form-label"><%= t('.status', default: 'Status') %></label>
+              <select class="form-select" data-restaurantmenus-bulk-target="modalStatusSelect">
+                <option value=""><%= t('.choose_status', default: 'Choose…') %></option>
+                <% if current_user_has_active_subscription? %>
+                  <option value="active"><%= t('.active') %></option>
+                <% end %>
+                <option value="inactive"><%= t('.inactive') %></option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer gap-2">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><%= t('common.cancel', default: 'Cancel') %></button>
+            <button type="button" class="btn btn-primary" data-restaurantmenus-bulk-target="modalApply" data-action="click->restaurantmenus-bulk#confirmModalApply"><%= t('.apply', default: 'Apply') %></button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <% end %>

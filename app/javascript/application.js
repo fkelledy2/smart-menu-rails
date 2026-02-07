@@ -1002,6 +1002,15 @@ document.addEventListener('turbo:frame-load', (event) => {
       }
     }
 
+    const addressInput = frame.querySelector && frame.querySelector('#restaurant_address1');
+    if (addressInput) {
+      try {
+        initRestaurants();
+      } catch (e) {
+        console.warn('[SmartMenu] initRestaurants turbo:frame-load init failed', e);
+      }
+    }
+
     const el = frame.querySelector && frame.querySelector('#ordering-dashboard');
     if (el && window.OrderingModule && el.dataset.odInitialized !== 'true') {
       el.dataset.odInitialized = 'true';

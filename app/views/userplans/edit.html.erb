@@ -1,4 +1,45 @@
   <div class="container px-1 py-2">
+   <%= render 'shared/notices' %>
+   <% restaurant = current_user&.restaurants&.order(:id)&.first %>
+   <% billing_active = restaurant&.restaurant_subscription&.active_or_trialing_with_payment_method? %>
+
+   <div class="mb-3 p-3">
+    <h2 class="quick-actions-title">
+     <i class="bi bi-lightning-charge"></i>
+     Quick actions
+    </h2>
+
+    <div class="quick-actions-grid">
+     <% if billing_active %>
+      <%= button_to payments_subscriptions_portal_path,
+          method: :post,
+          params: { restaurant_id: restaurant.id, return_url: edit_userplan_url(@userplan) },
+          form: { data: { turbo: false } },
+          class: 'quick-action-btn',
+          aria: { disabled: false } do %>
+        <i class="bi bi-gear"></i>
+        <span>Manage Billing</span>
+      <% end %>
+     <% end %>
+
+     <div style="width: 100%;" data-controller="userplan-plan-change" data-userplan-plan-change-current-plan-id-value="<%= @userplan.plan_id %>">
+      <%= form_with(
+        url: start_plan_change_userplan_path(@userplan),
+        method: :post,
+        data: { turbo: false },
+      ) do |f| %>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1"><%= f.label :plan %></span>
+          <%= select_tag :plan_id, options_for_select(Plan.limit(100).collect { |p| [t(p.key), p.id] }, @userplan.plan_id), class: 'form-select', data: { userplan_plan_change_target: 'select', action: 'change->userplan-plan-change#sync' } %>
+        </div>
+        <div class="d-grid">
+          <%= f.submit t(".saveChanges"), class: 'btn btn-danger', disabled: true, data: { userplan_plan_change_target: 'submit' } %>
+        </div>
+      <% end %>
+     </div>
+    </div>
+   </div>
+
    <h2 class="text-center"><%= t(".selectPlan").html_safe %></h2>
    <div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
     <% @plans.each do |plan| %>
@@ -14,17 +55,17 @@
           </div>
           <div class="card-body">
             <div>
-                <% if plan.pricePerMonth %>
+                <% if plan.pricePerMonth.present? && plan.pricePerMonth.to_f.positive? %>
                     <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerMonth, precision: 0) %><small class="text-body-secondary fw-light">/mo</small></h1>
                 <% else %>
-                    <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i><small class="text-body-secondary fw-light"></small></h1>
+                    <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i> <%= t('plan.call', default: 'Call') %><small class="text-body-secondary fw-light"></small></h1>
                 <% end %>
             </div>
             <div class="display-none">
-                <% if plan.pricePerYear %>
+                <% if plan.pricePerYear.present? && plan.pricePerYear.to_f.positive? %>
                     <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerYear, precision: 0) %><small class="text-body-secondary fw-light">/yr</small></h1>
                 <% else %>
-                    <h1 class="card-title pricing-card-title"><%= t(".contactUs") %><small class="text-body-secondary fw-light"></small></h1>
+                    <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i> <%= t('plan.call', default: 'Call') %><small class="text-body-secondary fw-light"></small></h1>
                 <% end %>
             </div>
             <div class="text-start">
@@ -53,17 +94,4 @@
     <% end %>
    </div>
 
-        <div class="col-lg-4 offset-lg-4">
-            <br>
-            <%= form_with(model: @userplan) do |f| %>
-              <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1"><%= f.label :plan %></span>
-                <%= f.select :plan_id, options_for_select(Plan.limit(100).collect { |p| [t(p.key), p.id] }, f.object.plan_id), {}, { class: 'form-select'} %>
-                <%# For large numbers of plans, consider AJAX/autocomplete for scalability %>
-                <%= f.hidden_field :user_id, value: @current_user.id %>
-              </div>
-              <div class="mb-3 d-grid">
-                <%= f.submit t(".saveChanges"), class: 'btn btn-lg btn-danger' %>
-              </div>
-            <% end %>
-          </div>
+

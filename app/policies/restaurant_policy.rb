@@ -39,6 +39,14 @@ class RestaurantPolicy < ApplicationPolicy
     owner? # Only owners can delete restaurants
   end
 
+  def archive?
+    owner?
+  end
+
+  def restore?
+    owner?
+  end
+
   def analytics?
     owner? || employee_admin?
   end

@@ -10,7 +10,11 @@ class Payments::SubscriptionsController < ApplicationController
     restaurant = current_user.restaurants.find(params[:restaurant_id])
     authorize restaurant, :update?
 
-    plan = current_user.plan
+    plan = if params[:plan_id].present?
+      Plan.find_by(id: params[:plan_id])
+    else
+      current_user.plan
+    end
     unless plan
       respond_with_start_error('No plan selected', restaurant: restaurant)
       return

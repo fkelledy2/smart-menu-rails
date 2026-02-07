@@ -4,6 +4,9 @@ class ApplicationController < ActionController::Base
   include AnalyticsTrackable
   include SentryContext
 
+  helper_method :current_user_has_active_subscription?
+  helper_method :user_has_active_subscription?
+
   # include StructuredLogging # Temporarily disabled
   # include MetricsTracking # Temporarily disabled
   around_action :switch_locale
@@ -91,6 +94,22 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def user_has_active_subscription?(user)
+    return false unless user
+
+    user.restaurants
+      .includes(:restaurant_subscription)
+      .any? { |r| r.restaurant_subscription&.active_or_trialing_with_payment_method? }
+  rescue StandardError
+    false
+  end
+
+  def current_user_has_active_subscription?
+    return false unless current_user
+
+    @current_user_has_active_subscription ||= user_has_active_subscription?(current_user)
+  end
 
   def current_user_restaurants
     return Restaurant.none unless current_user

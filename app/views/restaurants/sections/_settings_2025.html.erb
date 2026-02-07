@@ -8,10 +8,15 @@
 <% payment_profile = restaurant.payment_profile || restaurant.build_payment_profile(primary_provider: :stripe) %>
 <% stripe_account = restaurant.provider_accounts.find { |a| a.provider.to_s == 'stripe' } || restaurant.provider_accounts.where(provider: :stripe).first %>
 <% stripe_connect_enabled = stripe_account&.status.to_s == 'enabled' %>
-<% payment_profile.merchant_model = nil unless payment_profile.persisted? %>
-<% restaurant_mor_selected = payment_profile.merchant_model.to_s == 'restaurant_mor' %>
-<% restaurant_mor_saved = payment_profile.persisted? && restaurant_mor_selected %>
+<% restaurant_mor_selected = payment_profile&.merchant_model.to_s == 'restaurant_mor' %>
+<% stripe_connect_button_label = stripe_connect_enabled ? 'Update Merchant of Record' : 'Set Merchant of Record' %>
+<% stripe_connect_button_path = stripe_account.present? ? restaurant_payments_stripe_connect_refresh_path(restaurant) : restaurant_payments_stripe_connect_start_path(restaurant) %>
 
+<div data-controller="settings-dependencies"
+     data-settings-dependencies-stripe-connect-enabled-value="<%= stripe_connect_enabled %>"
+     data-settings-dependencies-mor-enabled-value="<%= restaurant_mor_selected %>">
+
+<div id="restaurant-settings-section"></div>
 <div class="content-card-2025">
   <h2 class="content-card-title">
     <i class="bi bi-credit-card"></i>
@@ -19,52 +24,94 @@
   </h2>
 
   <div class="row g-3 align-items-start">
-    <div class="col-12 col-lg-6">
+    <div class="col-12">
       <div class="feature-card">
-        <div class="feature-card-icon bg-primary">
-          <i class="bi bi-shield-lock"></i>
+        <div class="feature-card-icon bg-dark">
+          <i class="bi bi-stripe"></i>
         </div>
         <div class="feature-card-content">
-          <h5 class="feature-card-title"><%= t('.merchant_of_record', default: 'Merchant of record') %></h5>
-          <p class="feature-card-description">
-            <%= t('.merchant_of_record_help', default: 'Choose whether payments are processed as the restaurant or as the platform.') %>
-          </p>
+          <h5 class="feature-card-title"><%= t('.stripe_connect', default: 'Stripe Connect') %></h5>
+          <% receipt_details_available = stripe_account&.status.to_s == 'enabled' && @stripe_connect_receipt_details.present? %>
 
-          <%= form_with url: restaurant_payments_payment_profile_path(restaurant), method: :patch, data: { turbo: false } do |f| %>
-            <%= f.fields_for :payment_profile, payment_profile do |pf| %>
-              <%= pf.select :merchant_model,
-                PaymentProfile.merchant_models.keys.map { |k|
-                  label = case k.to_s
-                  when 'restaurant_mor'
-                    'Restaurant acts as Merchant of Record'
-                  when 'smartmenu_mor'
-                    'Mellow.menu acts as Merchant of Record'
-                  else
-                    k.to_s.humanize
-                  end
+          <% if receipt_details_available %>
+            <% d = @stripe_connect_receipt_details %>
+            <div class="row g-3">
+              <div class="col-12 col-lg-6">
+                <p class="feature-card-description">
+                  <%= t('.stripe_connect_help', default: 'Connect your Stripe account to enable restaurant MoR payments.') %>
+                </p>
 
-                  [label, k]
-                },
-                { include_blank: '--choose--' },
-                class: 'form-select form-select-sm',
-                required: true %>
-            <% end %>
-            <div class="mt-2">
-              <%= f.submit t('.save', default: 'Save'), class: 'btn btn-primary btn-sm' %>
+                <% if flash[:stripe_connect_error].present? %>
+                  <div class="alert alert-warning py-2 px-3 mb-2">
+                    <%= flash[:stripe_connect_error] %>
+                  </div>
+                <% end %>
+
+                <p class="text-muted small mb-0">
+                  <span class="text-success"><i class="bi bi-check-circle"></i> <%= t('.enabled', default: 'Enabled') %></span>
+                </p>
+              </div>
+
+              <div class="col-12 col-lg-6">
+                <div class="small fw-semibold">Receipt / merchant details</div>
+                <div class="small text-muted">
+                  <% if d[:business_name].present? %>
+                    <div><%= d[:business_name] %></div>
+                  <% end %>
+
+                  <% if d[:statement_descriptor].present? %>
+                    <div>Statement descriptor: <%= d[:statement_descriptor] %></div>
+                  <% end %>
+
+                  <% if d[:support_email].present? || d[:support_phone].present? || d[:support_url].present? %>
+                    <div>
+                      <% if d[:support_email].present? %>
+                        <span><%= d[:support_email] %></span>
+                      <% end %>
+                      <% if d[:support_phone].present? %>
+                        <span><%= d[:support_email].present? ? ' · ' : '' %><%= d[:support_phone] %></span>
+                      <% end %>
+                      <% if d[:support_url].present? %>
+                        <span><%= (d[:support_email].present? || d[:support_phone].present?) ? ' · ' : '' %><%= d[:support_url] %></span>
+                      <% end %>
+                    </div>
+                  <% end %>
+
+                  <% if d[:support_address].present? %>
+                    <% a = d[:support_address] %>
+                    <% line = [a.respond_to?(:line1) ? a.line1 : a['line1'], a.respond_to?(:line2) ? a.line2 : a['line2']].reject(&:blank?).join(', ') %>
+                    <% city = a.respond_to?(:city) ? a.city : a['city'] %>
+                    <% state = a.respond_to?(:state) ? a.state : a['state'] %>
+                    <% postal = a.respond_to?(:postal_code) ? a.postal_code : a['postal_code'] %>
+                    <% country = a.respond_to?(:country) ? a.country : a['country'] %>
+                    <% city_line = [city, state, postal].reject(&:blank?).join(', ') %>
+                    <div><%= [line, city_line, country].reject(&:blank?).join(' · ') %></div>
+                  <% end %>
+                </div>
+
+                <div class="mt-3 ps-3 border-start d-none" data-settings-dependencies-target="allowOrderingRow">
+                  <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                      <div>
+                        <div class="small fw-semibold"><%= t('.allow_ordering') %></div>
+                        <div class="small text-muted"><%= t('.allow_ordering_help') %></div>
+                      </div>
+                      <div class="form-check form-switch m-0">
+                        <input type="hidden" name="restaurant[allowOrdering]" value="false">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="restaurant[allowOrdering]"
+                               id="restaurant_allowOrdering"
+                               value="true"
+                               <%= 'checked' if restaurant.allowOrdering %>
+                               data-skip-tomselect="true">
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
             </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-
-    <% if restaurant_mor_saved %>
-      <div class="col-12 col-lg-6">
-        <div class="feature-card">
-          <div class="feature-card-icon bg-dark">
-            <i class="bi bi-stripe"></i>
-          </div>
-          <div class="feature-card-content">
-            <h5 class="feature-card-title"><%= t('.stripe_connect', default: 'Stripe Connect') %></h5>
+          <% else %>
             <p class="feature-card-description">
               <%= t('.stripe_connect_help', default: 'Connect your Stripe account to enable restaurant MoR payments.') %>
             </p>
@@ -84,18 +131,41 @@
                 <span class="text-muted"><i class="bi bi-x-circle"></i> <%= t('.not_connected', default: 'Not connected') %></span>
               <% end %>
             </p>
-          </div>
-          <div class="feature-card-toggle">
-            <%= button_to t('.start_onboarding', default: 'Start onboarding'),
-              restaurant_payments_stripe_connect_start_path(restaurant),
-              method: :post,
-              class: 'btn btn-outline-secondary btn-sm',
-              disabled: stripe_connect_enabled || !restaurant_mor_selected,
-              data: { turbo: false } %>
-          </div>
+          <% end %>
+
+          <% unless receipt_details_available %>
+            <div class="mt-3 ps-3 border-start d-none" data-settings-dependencies-target="allowOrderingRow">
+              <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                  <div>
+                    <div class="small fw-semibold"><%= t('.allow_ordering') %></div>
+                    <div class="small text-muted"><%= t('.allow_ordering_help') %></div>
+                  </div>
+                  <div class="form-check form-switch m-0">
+                    <input type="hidden" name="restaurant[allowOrdering]" value="false">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="restaurant[allowOrdering]"
+                           id="restaurant_allowOrdering"
+                           value="true"
+                           <%= 'checked' if restaurant.allowOrdering %>
+                           data-skip-tomselect="true">
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <div class="feature-card-toggle">
+          <%= button_to stripe_connect_button_label,
+            stripe_connect_button_path,
+            method: :post,
+            class: 'btn btn-outline-secondary btn-sm',
+            disabled: !restaurant_mor_selected,
+            data: { turbo: false } %>
         </div>
       </div>
-    <% end %>
+    </div>
   </div>
 </div>
 
@@ -120,6 +190,25 @@
         <p class="feature-card-description">
           <%= t('.display_images_help') %>
         </p>
+
+        <div class="mt-3 ps-3 border-start d-none" data-settings-dependencies-target="displayImagesPopupRow">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+              <div class="small fw-semibold"><%= t('.display_images_popup') %></div>
+              <div class="small text-muted"><%= t('.display_images_popup_help') %></div>
+            </div>
+            <div class="form-check form-switch m-0">
+              <input type="hidden" name="restaurant[displayImagesInPopup]" value="false">
+              <input class="form-check-input"
+                     type="checkbox"
+                     name="restaurant[displayImagesInPopup]"
+                     id="restaurant_displayImagesInPopup"
+                     value="true"
+                     <%= 'checked' if restaurant.displayImagesInPopup %>
+                     data-skip-tomselect="true">
+            </div>
+          </div>
+        </div>
       </div>
       <div class="feature-card-toggle">
         <div class="form-check form-switch">
@@ -135,173 +224,191 @@
       </div>
     </div>
 
-    <!-- Alcohol Policy -->
-    <div class="feature-card" id="alcohol-policy-editor" data-endpoint="<%= update_alcohol_policy_restaurant_path(restaurant) %>" data-status-endpoint="<%= alcohol_status_restaurant_path(restaurant) %>">
-      <div class="feature-card-icon bg-danger">
-        <i class="bi bi-shield-exclamation"></i>
-      </div>
-      <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.alcohol_policy') %></h5>
-        <p class="feature-card-description">
-          <%= t('.alcohol_policy_help') %>
-        </p>
-        <div class="mt-3">
-          <!-- Status preview -->
-          <div class="mb-3">
-            <span id="alcohol-policy-status" class="badge <%= restaurant.alcohol_allowed_now? ? 'bg-success' : 'bg-secondary' %>">
-              <%= restaurant.alcohol_allowed_now? ? t('.allowed_now') : t('.blocked_now') %>
-            </span>
-          </div>
-
-          <!-- Days of week -->
-          <div class="mb-3">
-            <label class="form-label-2025"><%= t('.allowed_days') %></label>
-            <div class="d-flex flex-wrap gap-3" id="alcohol-days">
-              <% days = Array(I18n.t('date.abbr_day_names')) %>
-              <% selected_days = restaurant.alcohol_policy&.allowed_days_of_week || [] %>
-              <% days.each_with_index do |d, i| %>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="<%= i %>" id="alcohol-day-<%= i %>" <%= 'checked' if selected_days.include?(i) %> />
-                  <label class="form-check-label" for="alcohol-day-<%= i %>"><%= d %></label>
-                </div>
-              <% end %>
+    <% if false %>
+      <!-- Alcohol Policy -->
+      <div class="feature-card" id="alcohol-policy-editor" data-endpoint="<%= update_alcohol_policy_restaurant_path(restaurant) %>" data-status-endpoint="<%= alcohol_status_restaurant_path(restaurant) %>">
+        <div class="feature-card-icon bg-danger">
+          <i class="bi bi-shield-exclamation"></i>
+        </div>
+        <div class="feature-card-content">
+          <h5 class="feature-card-title"><%= t('.alcohol_policy') %></h5>
+          <p class="feature-card-description">
+            <%= t('.alcohol_policy_help') %>
+          </p>
+          <div class="mt-3">
+            <!-- Status preview -->
+            <div class="mb-3">
+              <span id="alcohol-policy-status" class="badge <%= restaurant.alcohol_allowed_now? ? 'bg-success' : 'bg-secondary' %>">
+                <%= restaurant.alcohol_allowed_now? ? t('.allowed_now') : t('.blocked_now') %>
+              </span>
             </div>
-          </div>
 
-          <!-- Time ranges -->
-          <div class="mb-3">
-            <label class="form-label-2025"><%= t('.time_ranges') %></label>
-            <div id="alcohol-time-ranges" class="d-flex flex-column gap-2">
-              <% (restaurant.alcohol_policy&.allowed_time_ranges || []).each_with_index do |r, idx| %>
-                <div class="input-group" data-range-index="<%= idx %>">
-                  <span class="input-group-text"><%= t('.from') %></span>
-                  <input type="time" class="form-control" value="<%= format('%02d:%02d', (r['from_min'].to_i/60), (r['from_min'].to_i%60)) %>" />
-                  <span class="input-group-text"><%= t('.to') %></span>
-                  <input type="time" class="form-control" value="<%= format('%02d:%02d', (r['to_min'].to_i/60), (r['to_min'].to_i%60)) %>" />
-                  <button type="button" class="btn btn-outline-danger remove-range"><i class="bi bi-x"></i></button>
-                </div>
-              <% end %>
+            <!-- Days of week -->
+            <div class="mb-3">
+              <label class="form-label-2025"><%= t('.allowed_days') %></label>
+              <div class="d-flex flex-wrap gap-3" id="alcohol-days">
+                <% days = Array(I18n.t('date.abbr_day_names')) %>
+                <% selected_days = restaurant.alcohol_policy&.allowed_days_of_week || [] %>
+                <% days.each_with_index do |d, i| %>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="<%= i %>" id="alcohol-day-<%= i %>" <%= 'checked' if selected_days.include?(i) %> />
+                    <label class="form-check-label" for="alcohol-day-<%= i %>"><%= d %></label>
+                  </div>
+                <% end %>
+              </div>
             </div>
-            <div class="mt-2">
-              <button type="button" class="btn btn-sm btn-outline-primary" id="add-time-range"><i class="bi bi-plus"></i> <%= t('.add_range') %></button>
-            </div>
-          </div>
 
-          <!-- Blackout dates -->
-          <div class="mb-3">
-            <label class="form-label-2025"><%= t('.blackout_dates') %></label>
-            <input type="text" class="form-control" id="alcohol-blackouts" value="<%= (restaurant.alcohol_policy&.blackout_dates || []).map(&:to_s).join(', ') %>" placeholder="2025-12-25, 2025-01-01" />
+            <!-- Time ranges -->
+            <div class="mb-3">
+              <label class="form-label-2025"><%= t('.time_ranges') %></label>
+              <div id="alcohol-time-ranges" class="d-flex flex-column gap-2">
+                <% (restaurant.alcohol_policy&.allowed_time_ranges || []).each_with_index do |r, idx| %>
+                  <div class="input-group" data-range-index="<%= idx %>">
+                    <span class="input-group-text"><%= t('.from') %></span>
+                    <input type="time" class="form-control" value="<%= format('%02d:%02d', (r['from_min'].to_i/60), (r['from_min'].to_i%60)) %>" />
+                    <span class="input-group-text"><%= t('.to') %></span>
+                    <input type="time" class="form-control" value="<%= format('%02d:%02d', (r['to_min'].to_i/60), (r['to_min'].to_i%60)) %>" />
+                    <button class="btn btn-outline-danger" type="button" data-remove-range="true"><i class="bi bi-trash"></i></button>
+                  </div>
+                <% end %>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="add-time-range"><i class="bi bi-plus"></i> <%= t('.add_range') %></button>
+            </div>
+
+            <!-- Blackout dates -->
+            <div class="mb-3">
+              <label class="form-label-2025"><%= t('.blackout_dates') %></label>
+              <input type="text" class="form-control" id="alcohol-blackouts" value="<%= (restaurant.alcohol_policy&.blackout_dates || []).map(&:to_s).join(', ') %>" placeholder="2025-12-25, 2025-01-01" />
+            </div>
           </div>
         </div>
-      </div>
-      
-      <script>
-        (function(){
-          const card = document.getElementById('alcohol-policy-editor');
-          if (!card) return;
-          const statusBadge = card.querySelector('#alcohol-policy-status');
-          const daysContainer = card.querySelector('#alcohol-days');
-          const rangesContainer = card.querySelector('#alcohol-time-ranges');
-          const addRangeBtn = card.querySelector('#add-time-range');
-          const blackoutsInput = card.querySelector('#alcohol-blackouts');
-          const saveBtn = card.querySelector('#save-alcohol-policy');
-          const endpoint = card.getAttribute('data-endpoint');
-          const statusEndpoint = card.getAttribute('data-status-endpoint');
+        
+        <script>
+          (function(){
+            const card = document.getElementById('alcohol-policy-editor');
+            if (!card) return;
+            const statusBadge = card.querySelector('#alcohol-policy-status');
+            const daysContainer = card.querySelector('#alcohol-days');
+            const rangesContainer = card.querySelector('#alcohol-time-ranges');
+            const addRangeBtn = card.querySelector('#add-time-range');
+            const blackoutsInput = card.querySelector('#alcohol-blackouts');
+            const saveBtn = card.querySelector('#save-alcohol-policy');
+            const endpoint = card.getAttribute('data-endpoint');
+            const statusEndpoint = card.getAttribute('data-status-endpoint');
 
-          const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
-          const toMin = (hhmm) => { if(!hhmm) return 0; const [h,m] = hhmm.split(':').map(x=>parseInt(x,10)||0); return (h*60)+m; };
-          const fmt = (n) => String(n).padStart(2,'0');
-          const toHHMM = (mins) => `${fmt(Math.floor(mins/60))}:${fmt(mins%60)}`;
+            const csrf = () => document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-          const gather = () => {
-            const allowed_days_of_week = Array.from(daysContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>parseInt(cb.value,10));
-            const allowed_time_ranges = Array.from(rangesContainer.querySelectorAll('.input-group')).map(g=>{
-              const inputs = g.querySelectorAll('input[type="time"]');
-              return { from_min: toMin(inputs[0]?.value), to_min: toMin(inputs[1]?.value) };
+            const debounce = (fn, delay) => {
+              let t;
+              return (...args) => {
+                clearTimeout(t);
+                t = setTimeout(()=>fn(...args), delay);
+              };
+            };
+
+            const parseRanges = () => {
+              const ranges = [];
+              card.querySelectorAll('[data-range-index]').forEach((row)=>{
+                const inputs = row.querySelectorAll('input[type="time"]');
+                if (inputs.length < 2) return;
+                const from = inputs[0].value || '00:00';
+                const to = inputs[1].value || '00:00';
+                const [fh, fm] = from.split(':').map(Number);
+                const [th, tm] = to.split(':').map(Number);
+                ranges.push({ from_min: (fh*60+fm), to_min: (th*60+tm) });
+              });
+              return ranges;
+            };
+
+            const parseDays = () => {
+              const days = [];
+              card.querySelectorAll('#alcohol-days input[type="checkbox"]').forEach((cb)=>{
+                if (cb.checked) days.push(parseInt(cb.value, 10));
+              });
+              return days;
+            };
+
+            const parseBlackouts = () => {
+              const raw = (blackoutsInput?.value || '').trim();
+              if (!raw) return [];
+              return raw.split(',').map(s=>s.trim()).filter(Boolean);
+            };
+
+            const save = async () => {
+              const payload = {
+                alcohol_policy: {
+                  allowed_days_of_week: parseDays(),
+                  allowed_time_ranges: parseRanges(),
+                  blackout_dates: parseBlackouts(),
+                }
+              };
+
+              try {
+                await fetch(endpoint, {
+                  method: 'PATCH',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrf(),
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                  },
+                  body: JSON.stringify(payload),
+                });
+              } catch (e) {
+                // ignore
+              }
+
+              try {
+                const resp = await fetch(statusEndpoint, {
+                  headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await resp.json();
+                if (statusBadge) {
+                  statusBadge.classList.toggle('bg-success', data.allowed_now === true);
+                  statusBadge.classList.toggle('bg-secondary', data.allowed_now !== true);
+                }
+              } catch (e) {
+                // ignore
+              }
+            };
+
+            const autoSave = debounce(save, 700);
+
+            card.addEventListener('click', (e)=>{
+              const btn = e.target.closest('[data-remove-range="true"]');
+              if (!btn) return;
+              const row = btn.closest('[data-range-index]');
+              if (row) row.remove();
+              autoSave();
             });
-            const blackout_dates = (blackoutsInput.value||'').split(',').map(s=>s.trim()).filter(Boolean);
-            return { allowed_days_of_week, allowed_time_ranges, blackout_dates };
-          };
 
-          let saving = false; let t;
-          const updateStatus = (allowed_now) => {
-            if (!statusBadge) return;
-            statusBadge.textContent = allowed_now ? '<%= j t('.allowed_now') %>' : '<%= j t('.blocked_now') %>';
-            statusBadge.classList.remove('bg-success','bg-secondary');
-            statusBadge.classList.add(allowed_now ? 'bg-success' : 'bg-secondary');
-          };
-
-          const fetchStatus = () => {
-            if (!statusEndpoint) return;
-            fetch(statusEndpoint, { headers: { 'Accept': 'application/json' }})
-              .then(r=>r.json()).then(j=>{ if ('allowed_now' in j) updateStatus(!!j.allowed_now); }).catch(()=>{});
-          };
-
-          const save = () => {
-            if (saving) return; saving = true;
-            const body = gather();
-            fetch(endpoint, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf, 'Accept': 'application/json' },
-              body: JSON.stringify(body)
-            }).then(r=>r.json()).then(j=>{
-              if (j && typeof j.allowed_now !== 'undefined') updateStatus(!!j.allowed_now); else fetchStatus();
-            }).catch(()=>{ /* noop */ }).finally(()=>{ saving = false; });
-          };
-
-          const debounce = (fn, ms=600) => { let tm; return (...args)=>{ clearTimeout(tm); tm = setTimeout(()=>fn.apply(null,args), ms); }; };
-          const autoSave = debounce(save, 700);
-
-          card.addEventListener('change', (e)=>{
-            if (e.target.closest('#alcohol-days') || e.target.id === 'alcohol-blackouts' || e.target.type === 'time') {
-              autoSave();
+            if (addRangeBtn) {
+              addRangeBtn.addEventListener('click', ()=>{
+                const idx = card.querySelectorAll('[data-range-index]').length;
+                const row = document.createElement('div');
+                row.className = 'input-group';
+                row.setAttribute('data-range-index', idx);
+                row.innerHTML = `
+                  <span class="input-group-text">from</span>
+                  <input type="time" class="form-control" value="00:00" />
+                  <span class="input-group-text">to</span>
+                  <input type="time" class="form-control" value="00:00" />
+                  <button class="btn btn-outline-danger" type="button" data-remove-range="true"><i class="bi bi-trash"></i></button>
+                `;
+                if (rangesContainer) rangesContainer.appendChild(row);
+                autoSave();
+              });
             }
-          });
 
-          addRangeBtn?.addEventListener('click', ()=>{
-            const div = document.createElement('div');
-            div.className = 'input-group';
-            div.innerHTML = `
-              <span class="input-group-text"><%= j t('.from') %></span>
-              <input type="time" class="form-control" value="08:00" />
-              <span class="input-group-text"><%= j t('.to') %></span>
-              <input type="time" class="form-control" value="22:00" />
-              <button type="button" class="btn btn-outline-danger remove-range"><i class="bi bi-x"></i></button>
-            `;
-            rangesContainer.appendChild(div);
-            autoSave();
-          });
-
-          rangesContainer.addEventListener('click', (e)=>{
-            if (e.target.closest('.remove-range')) {
-              const grp = e.target.closest('.input-group');
-              grp?.remove();
-              autoSave();
-            }
-          });
-
-          // No explicit save button; auto-save on changes is enabled.
-        })();
-      </script>
-    </div>
-
-    <!-- Age Verification (moved from Advanced) -->
-    <div class="feature-card">
-      <div class="feature-card-icon bg-danger">
-        <i class="bi bi-shield-check"></i>
+            card.addEventListener('change', (e)=>{
+              if (e.target.closest('#alcohol-days') || e.target.id === 'alcohol-blackouts' || e.target.type === 'time') {
+                autoSave();
+              }
+            });
+          })();
+        </script>
       </div>
-      <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.age_verification') %></h5>
-        <p class="feature-card-description">
-          <%= t('.age_verification_desc') %>
-        </p>
-      </div>
-      <div class="feature-card-toggle">
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="enable_age_verification">
-        </div>
-      </div>
-    </div>
+    <% end %>
 
     <!-- Allow Alcohol -->
     <div class="feature-card">
@@ -313,6 +420,18 @@
         <p class="feature-card-description">
           <%= t('.allow_alcohol_help') %>
         </p>
+
+        <div class="mt-3 ps-3 border-start d-none" data-settings-dependencies-target="ageVerificationRow">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+              <div class="small fw-semibold"><%= t('.age_verification') %></div>
+              <div class="small text-muted"><%= t('.age_verification_desc') %></div>
+            </div>
+            <div class="form-check form-switch m-0">
+              <input class="form-check-input" type="checkbox" id="enable_age_verification">
+            </div>
+          </div>
+        </div>
       </div>
       <div class="feature-card-toggle">
         <div class="form-check form-switch">
@@ -323,56 +442,6 @@
                  id="restaurant_allow_alcohol"
                  value="true"
                  <%= 'checked' if restaurant.allow_alcohol %>
-                 data-skip-tomselect="true">
-        </div>
-      </div>
-    </div>
-
-    <!-- Display Images in Popup -->
-    <div class="feature-card">
-      <div class="feature-card-icon bg-success">
-        <i class="bi bi-window-stack"></i>
-      </div>
-      <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.display_images_popup') %></h5>
-        <p class="feature-card-description">
-          <%= t('.display_images_popup_help') %>
-        </p>
-      </div>
-      <div class="feature-card-toggle">
-        <div class="form-check form-switch">
-          <input type="hidden" name="restaurant[displayImagesInPopup]" value="false">
-          <input class="form-check-input"
-                 type="checkbox"
-                 name="restaurant[displayImagesInPopup]"
-                 id="restaurant_displayImagesInPopup"
-                 value="true"
-                 <%= 'checked' if restaurant.displayImagesInPopup %>
-                 data-skip-tomselect="true">
-        </div>
-      </div>
-    </div>
-
-    <!-- Allow Ordering -->
-    <div class="feature-card">
-      <div class="feature-card-icon bg-warning">
-        <i class="bi bi-cart-check"></i>
-      </div>
-      <div class="feature-card-content">
-        <h5 class="feature-card-title"><%= t('.allow_ordering') %></h5>
-        <p class="feature-card-description">
-          <%= t('.allow_ordering_help') %>
-        </p>
-      </div>
-      <div class="feature-card-toggle">
-        <div class="form-check form-switch">
-          <input type="hidden" name="restaurant[allowOrdering]" value="false">
-          <input class="form-check-input"
-                 type="checkbox"
-                 name="restaurant[allowOrdering]"
-                 id="restaurant_allowOrdering"
-                 value="true"
-                 <%= 'checked' if restaurant.allowOrdering %>
                  data-skip-tomselect="true">
         </div>
       </div>
@@ -407,6 +476,8 @@
     <% end %>
   </div>
   <% end %>
+</div>
+
 </div>
 
 <!-- WiFi Configuration moved to its own section (wifi_2025) -->

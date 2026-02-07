@@ -1,6 +1,54 @@
 require 'test_helper'
 
 class SystemAnalyticsMvTest < ActiveSupport::TestCase
+  self.use_transactional_tests = false
+
+  setup do
+    conn = ApplicationRecord.connection
+    relkind = conn.select_value(<<~SQL)
+      SELECT c.relkind
+      FROM pg_class c
+      WHERE c.oid = to_regclass('system_analytics_mv')
+    SQL
+
+    if relkind == 'm'
+      conn.execute('DROP MATERIALIZED VIEW IF EXISTS system_analytics_mv')
+    elsif relkind == 'v'
+      conn.execute('DROP VIEW IF EXISTS system_analytics_mv')
+    end
+
+    ApplicationRecord.connection.execute(<<~SQL)
+      CREATE VIEW system_analytics_mv AS
+      SELECT
+        CURRENT_DATE AS date,
+        DATE_TRUNC('month', CURRENT_DATE)::date AS month,
+        0::integer AS new_restaurants,
+        0::integer AS new_users,
+        0::integer AS new_menus,
+        0::integer AS new_menuitems,
+        0::integer AS total_orders,
+        0::numeric AS total_revenue,
+        0::integer AS active_restaurants
+    SQL
+
+    SystemAnalyticsMv.reset_column_information
+  end
+
+  teardown do
+    conn = ApplicationRecord.connection
+    relkind = conn.select_value(<<~SQL)
+      SELECT c.relkind
+      FROM pg_class c
+      WHERE c.oid = to_regclass('system_analytics_mv')
+    SQL
+
+    if relkind == 'm'
+      conn.execute('DROP MATERIALIZED VIEW IF EXISTS system_analytics_mv')
+    elsif relkind == 'v'
+      conn.execute('DROP VIEW IF EXISTS system_analytics_mv')
+    end
+  end
+
   test 'uses correct table name' do
     assert_equal 'system_analytics_mv', SystemAnalyticsMv.table_name
   end

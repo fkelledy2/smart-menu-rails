@@ -100,7 +100,13 @@ Rails.application.routes.draw do
   resources :plans
   resources :features
   resources :features_plans
-  resources :userplans
+  resources :userplans do
+    member do
+      get :stripe_success
+      post :start_plan_change
+      get :portal_plan_changed
+    end
+  end
   resources :testimonials
   resources :hero_images
   resources :hero_images do
@@ -134,6 +140,8 @@ Rails.application.routes.draw do
     member do
       get 'kitchen', to: 'kitchen_dashboard#index', as: :kitchen_dashboard
       get 'bar', to: 'bar_dashboard#index', as: :bar_dashboard
+      patch :archive
+      patch :restore
       patch 'update_hours', to: 'restaurants#update_hours'
       patch 'update_alcohol_policy', to: 'restaurants#update_alcohol_policy'
       get 'alcohol_status', to: 'restaurants#alcohol_status'
@@ -255,7 +263,7 @@ Rails.application.routes.draw do
     namespace :payments do
       post 'stripe_connect/start', to: 'stripe_connect#start'
       get 'stripe_connect/return', to: 'stripe_connect#return'
-      get 'stripe_connect/refresh', to: 'stripe_connect#refresh'
+      post 'stripe_connect/refresh', to: 'stripe_connect#refresh'
       resource :payment_profile, only: [:update]
     end
     

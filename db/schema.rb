@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_05_183500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -516,7 +516,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
     t.bigint "owner_restaurant_id"
     t.integer "menuitems_count", default: 0
     t.integer "menusections_count", default: 0
+    t.datetime "archived_at"
+    t.string "archived_reason"
+    t.bigint "archived_by_id"
     t.index ["archived"], name: "index_menus_on_archived"
+    t.index ["archived_by_id"], name: "index_menus_on_archived_by_id"
     t.index ["menu_import_id"], name: "index_menus_on_menu_import_id"
     t.index ["menuitems_count"], name: "index_menus_on_menuitems_count"
     t.index ["owner_restaurant_id"], name: "index_menus_on_owner_restaurant_id"
@@ -1131,6 +1135,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
     t.integer "availability_state", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.string "archived_reason"
+    t.bigint "archived_by_id"
+    t.index ["archived_by_id"], name: "index_restaurant_menus_on_archived_by_id"
     t.index ["menu_id"], name: "index_restaurant_menus_on_menu_id"
     t.index ["restaurant_id", "menu_id"], name: "index_restaurant_menus_on_restaurant_id_and_menu_id", unique: true
     t.index ["restaurant_id"], name: "index_restaurant_menus_on_restaurant_id"
@@ -1231,6 +1239,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
     t.integer "ordrs_count", default: 0
     t.integer "tablesettings_count", default: 0
     t.integer "ocr_menu_imports_count", default: 0
+    t.datetime "archived_at"
+    t.string "archived_reason"
+    t.bigint "archived_by_id"
+    t.index ["archived_by_id"], name: "index_restaurants_on_archived_by_id"
     t.index ["employees_count"], name: "index_restaurants_on_employees_count"
     t.index ["menus_count"], name: "index_restaurants_on_menus_count"
     t.index ["user_id", "status"], name: "index_restaurants_on_user_status_active", where: "(archived = false)"
@@ -1285,7 +1297,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["menu_id"], name: "index_smartmenus_on_menu_id"
+    t.index ["restaurant_id", "menu_id", "tablesetting_id"], name: "uniq_smartmenus_restaurant_menu_table", unique: true, where: "((menu_id IS NOT NULL) AND (tablesetting_id IS NOT NULL))"
+    t.index ["restaurant_id", "menu_id"], name: "uniq_smartmenus_restaurant_menu_global", unique: true, where: "((tablesetting_id IS NULL) AND (menu_id IS NOT NULL))"
     t.index ["restaurant_id", "slug"], name: "index_smartmenus_on_restaurant_slug"
+    t.index ["restaurant_id", "tablesetting_id"], name: "uniq_smartmenus_restaurant_table_general", unique: true, where: "((menu_id IS NULL) AND (tablesetting_id IS NOT NULL))"
     t.index ["restaurant_id"], name: "index_smartmenus_on_restaurant_id"
     t.index ["slug"], name: "index_smartmenus_on_slug"
     t.index ["tablesetting_id"], name: "index_smartmenus_on_tablesetting_id"
@@ -1484,6 +1499,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
   add_foreign_key "menus", "menu_imports"
   add_foreign_key "menus", "restaurants"
   add_foreign_key "menus", "restaurants", column: "owner_restaurant_id"
+  add_foreign_key "menus", "users", column: "archived_by_id"
   add_foreign_key "menusectionlocales", "menusections"
   add_foreign_key "menusections", "menus"
   add_foreign_key "ocr_menu_imports", "menus"
@@ -1532,11 +1548,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_122000) do
   add_foreign_key "resource_locks", "users"
   add_foreign_key "restaurant_menus", "menus"
   add_foreign_key "restaurant_menus", "restaurants"
+  add_foreign_key "restaurant_menus", "users", column: "archived_by_id"
   add_foreign_key "restaurant_onboardings", "restaurants"
   add_foreign_key "restaurant_subscriptions", "restaurants"
   add_foreign_key "restaurantavailabilities", "restaurants"
   add_foreign_key "restaurantlocales", "restaurants"
   add_foreign_key "restaurants", "users"
+  add_foreign_key "restaurants", "users", column: "archived_by_id"
   add_foreign_key "services", "users"
   add_foreign_key "sizes", "restaurants"
   add_foreign_key "smartmenus", "menus"

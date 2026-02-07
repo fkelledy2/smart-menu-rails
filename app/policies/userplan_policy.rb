@@ -15,6 +15,14 @@ class UserplanPolicy < ApplicationPolicy
     owner?
   end
 
+  def start_plan_change?
+    update?
+  end
+
+  def portal_plan_changed?
+    update?
+  end
+
   def destroy?
     owner?
   end

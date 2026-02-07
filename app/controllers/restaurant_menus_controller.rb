@@ -50,9 +50,10 @@ class RestaurantMenusController < ApplicationController
     scope = policy_scope(RestaurantMenu).where(restaurant_id: @restaurant.id)
 
     ids = Array(params[:restaurant_menu_ids]).map(&:to_s).reject(&:blank?)
-    status = params[:status].to_s
+    operation = params[:operation].to_s
+    value = params[:value]
 
-    if ids.empty? || status.blank?
+    if ids.empty? || operation.blank?
       return respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
@@ -65,9 +66,46 @@ class RestaurantMenusController < ApplicationController
       end
     end
 
-    scope.where(id: ids).find_each do |rm|
-      authorize rm, :update?
-      rm.update(status: status)
+    now = Time.current
+
+    case operation
+    when 'set_status'
+      status = value.to_s
+      unless RestaurantMenu.statuses.key?(status)
+        return redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Invalid status'
+      end
+
+      if status == 'active' && !current_user_has_active_subscription?
+        return redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'You need an active subscription to activate a menu.'
+      end
+
+      scope.where(id: ids).find_each do |rm|
+        authorize rm, :update?
+        rm.update!(status: status)
+      end
+    when 'archive'
+      scope.where(id: ids).find_each do |rm|
+        authorize rm, :update?
+        attrs = { status: :archived }
+        attrs[:archived_at] = now if rm.respond_to?(:archived_at=)
+        attrs[:archived_reason] = params[:reason] if rm.respond_to?(:archived_reason=) && params[:reason].present?
+        attrs[:archived_by_id] = current_user&.id if rm.respond_to?(:archived_by_id=) && current_user&.id.present?
+        rm.update!(attrs)
+      end
+    when 'restore'
+      if !current_user_has_active_subscription?
+        return redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'You need an active subscription to activate a menu.'
+      end
+      scope.where(id: ids).find_each do |rm|
+        authorize rm, :update?
+        attrs = { status: :active }
+        attrs[:archived_at] = nil if rm.respond_to?(:archived_at=)
+        attrs[:archived_reason] = nil if rm.respond_to?(:archived_reason=)
+        attrs[:archived_by_id] = nil if rm.respond_to?(:archived_by_id=)
+        rm.update!(attrs)
+      end
+    else
+      return redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'Invalid bulk operation'
     end
 
     respond_to do |format|

@@ -10,6 +10,103 @@
 
 <% menu_smartmenu_slug = menu.smartmenu&.slug %>
 
+<%
+  recent_completed_import = begin
+    restaurant.ocr_menu_imports.completed.where(menu_id: menu.id).first
+  rescue StandardError
+    nil
+  end
+
+  newly_imported_menu = begin
+    recent_completed_import&.completed_at.present?
+  rescue StandardError
+    false
+  end
+
+  missing_image_prompt_count = begin
+    menu.menuitems.where.not(itemtype: Menuitem.itemtypes[:wine]).where("COALESCE(image_prompt,'') = ''").count
+  rescue StandardError
+    0
+  end
+
+  has_translation = begin
+    active_locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active')
+    default_locale = active_locales.find { |x| x.dfault == true }
+    non_default = active_locales.reject { |x| default_locale && x.id == default_locale.id }
+    non_default.any? && menu.menulocales.where(locale: non_default.map(&:locale)).exists?
+  rescue StandardError
+    false
+  end
+
+  has_any_ai_image = begin
+    menu.menuitems.where.not(image_data: [nil, '']).exists?
+  rescue StandardError
+    false
+  end
+%>
+
+<% if newly_imported_menu && !read_only %>
+  <div class="card mb-3" data-testid="menu-go-live-flow" data-controller="go-live-progress">
+    <div class="card-body py-3">
+      <% ai_polish_complete = (missing_image_prompt_count.to_i == 0) %>
+      <% menu_go_live_steps = [
+        { label: 'AI Polish', complete: ai_polish_complete, path: edit_restaurant_menu_path(restaurant, menu, section: 'details') },
+        { label: 'Add a translation', complete: has_translation, path: (ai_polish_complete ? edit_restaurant_menu_path(restaurant, menu, section: 'details') : nil) },
+        { label: 'Generate AI Images', complete: has_any_ai_image, path: (ai_polish_complete ? edit_restaurant_menu_path(restaurant, menu, section: 'details') : nil) },
+        { label: 'Preview as Staff', complete: menu_smartmenu_slug.present?, path: (ai_polish_complete && menu_smartmenu_slug.present? ? smartmenu_path(menu_smartmenu_slug) : nil) },
+        { label: 'Preview as Customer', complete: menu_smartmenu_slug.present?, path: (ai_polish_complete && menu_smartmenu_slug.present? ? smartmenu_path(menu_smartmenu_slug, view: 'customer') : nil) },
+      ] %>
+      <% completed_steps = menu_go_live_steps.count { |s| s[:complete] } %>
+      <% total_steps = menu_go_live_steps.size %>
+      <% percent_complete = total_steps.positive? ? ((completed_steps.to_f / total_steps) * 100).round : 0 %>
+      <% go_live_complete = (completed_steps == total_steps) %>
+
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <div class="fw-semibold">Menu go live flow</div>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <div class="text-muted small"><%= completed_steps %>/<%= total_steps %></div>
+          <button class="btn btn-sm btn-outline-secondary"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="go-live-progress-details"
+                  data-go-live-progress-target="toggle"
+                  data-action="click->go-live-progress#toggle mouseenter->go-live-progress#open">
+            <i class="bi bi-chevron-right" data-go-live-progress-target="chevron"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="progress mt-2" style="height: 8px;" role="progressbar" aria-valuenow="<%= percent_complete %>" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar <%= go_live_complete ? 'bg-success' : 'progress-bar-striped progress-bar-animated' %>" style="width: <%= percent_complete %>%;"></div>
+      </div>
+
+      <div class="collapse mt-3" id="go-live-progress-details" data-go-live-progress-target="details" data-action="mouseenter->go-live-progress#open mouseleave->go-live-progress#close">
+        <div class="row g-2">
+          <% menu_go_live_steps.each do |step| %>
+            <div class="col-12 col-md-6 col-lg-4">
+              <div class="d-flex align-items-start gap-2 small">
+                <% if step[:complete] %>
+                  <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                  <div class="text-muted"><%= step[:label] %></div>
+                <% else %>
+                  <i class="bi bi-circle text-muted mt-1"></i>
+                  <% if step[:path].present? %>
+                    <%= link_to step[:label], step[:path], class: 'text-decoration-none', data: { turbo_frame: '_top' } %>
+                  <% else %>
+                    <div class="text-muted"><%= step[:label] %></div>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
 <% if read_only %>
   <% if menu_smartmenu_slug.present? %>
     <div class="mb-3 p-3">
@@ -80,12 +177,6 @@
     rescue StandardError
       0
     end %>
-
-    <% if missing_image_prompt_count.to_i > 0 %>
-      <div class="alert alert-warning mb-3">
-        AI Polish is strongly recommended before generating images. <%= missing_image_prompt_count %> items are missing an image prompt.
-      </div>
-    <% end %>
 
     <div class="quick-actions-grid">
       <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true),

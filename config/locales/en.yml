@@ -401,18 +401,18 @@ en:
     business:
       attribut6: ''
       attribute1: "<li><i class='bi bi-check-lg'></i> For multi-location venues</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{locations}</strong>
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
         Restaurants</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong>
-        menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong>
-        dishes / menu</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{languages}</strong>
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong>
+        menus / restaurant</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong>
+        dishes / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
         languages</li><li><i class='bi bi-check-lg'></i> Inventory management</li><li><i
         class='bi bi-check-lg'></i> AI assisted branding</li><li><i class='bi bi-check-lg'></i>
         Priority email support</li>"
       attribute4: ''
       attribute5: ''
       key: Business
-    call: Contact Us
+    call: Call
     enterprise:
       attribut6: ''
       attribute1: "<li><i class='bi bi-check-lg'></i> For large restaurant chains</li>"
@@ -430,11 +430,11 @@ en:
     pro:
       attribut6: ''
       attribute1: "<li><i class='bi bi-check-lg'></i> For growing restaurants</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{locations}</strong>
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
         Restaurants</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong>
-        menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong>
-        dishes / menu</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{languages}</strong>
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong>
+        menus / restaurant</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong>
+        dishes / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
         languages</li><li><i class='bi bi-check-lg'></i> Staff & customer ordering</li><li><i
         class='bi bi-check-lg'></i> AI menu item images</li><li><i class='bi bi-check-lg'></i>
         Priority email support</li>"
@@ -447,8 +447,8 @@ en:
       attribute1: "<li><i class='bi bi-check-lg'></i> For small cafes</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
         Restaurant</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong>
-        menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong>
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong>
+        menus / restaurant</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong>
         dishes / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
         language</li><li><i class='bi bi-check-lg'></i> Staff ordering</li><li><i
         class='bi bi-check-lg'></i> Email support</li><li>&nbsp;</li>"

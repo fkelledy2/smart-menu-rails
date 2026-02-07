@@ -6,75 +6,20 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
 <!-- Quick Actions Card -->
+<div id="restaurant-details-section"></div>
 <div class="mb-3 p-3<%= ' is-disabled' if restaurant.onboarding_quick_actions_blocked? %>">
-  <h2 class="quick-actions-title">
-    <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions') %>
-  </h2>
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h2 class="quick-actions-title mb-0">
+      <i class="bi bi-lightning-charge"></i>
+      <%= t('.quick_actions') %>
+    </h2>
+
+    <div class="quick-actions-notice-slot text-end">
+      <%= render 'shared/notices' if flash.any? %>
+    </div>
+  </div>
 
   <div class="quick-actions-grid">
-    <%= link_to new_restaurant_menu_path(restaurant),
-        class: 'quick-action-btn',
-        data: { turbo_frame: '_top' },
-        aria: { disabled: restaurant.onboarding_quick_actions_blocked? },
-        tabindex: (restaurant.onboarding_quick_actions_blocked? ? -1 : nil) do %>
-      <i class="bi bi-plus-circle"></i>
-      <span><%= t('.new_menu') %></span>
-    <% end %>
-
-    <% user_plan = (respond_to?(:current_user) ? current_user&.plan : nil) %>
-    <% billing_active = restaurant.restaurant_subscription&.active_or_trialing_with_payment_method? %>
-    <% if user_plan.blank? %>
-      <%= link_to onboarding_step_path(3),
-          class: 'quick-action-btn',
-          data: { turbo_frame: '_top' },
-          aria: { disabled: false } do %>
-        <i class="bi bi-credit-card"></i>
-        <span>Select plan</span>
-      <% end %>
-    <% elsif billing_active %>
-      <button type="button" class="quick-action-btn quick-action-btn-secondary" disabled>
-        <i class="bi bi-check2-circle"></i>
-        <span>Billing active</span>
-      </button>
-
-      <%= button_to payments_subscriptions_portal_path,
-          method: :post,
-          params: { restaurant_id: restaurant.id },
-          form: { data: { turbo: false } },
-          class: 'quick-action-btn',
-          aria: { disabled: false } do %>
-        <i class="bi bi-gear"></i>
-        <span>Manage billing / Unsubscribe</span>
-      <% end %>
-
-      <%= link_to onboarding_step_path(3),
-          class: 'quick-action-btn quick-action-btn-secondary',
-          data: { turbo_frame: '_top' },
-          aria: { disabled: false } do %>
-        <i class="bi bi-pencil"></i>
-        <span>Change plan</span>
-      <% end %>
-    <% else %>
-      <%= button_to payments_subscriptions_start_path,
-          method: :post,
-          params: { restaurant_id: restaurant.id },
-          form: { data: { turbo: false } },
-          class: 'quick-action-btn',
-          aria: { disabled: false } do %>
-        <i class="bi bi-credit-card"></i>
-        <span>Subscribe & Pay (<%= user_plan.name %>)</span>
-      <% end %>
-
-      <%= link_to onboarding_step_path(3),
-          class: 'quick-action-btn quick-action-btn-secondary',
-          data: { turbo_frame: '_top' },
-          aria: { disabled: false } do %>
-        <i class="bi bi-pencil"></i>
-        <span>Change plan</span>
-      <% end %>
-    <% end %>
-
     <%= link_to edit_restaurant_path(restaurant, section: 'import'),
         class: 'quick-action-btn',
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' },
@@ -92,17 +37,28 @@
           data: { turbo: false },
           html: { class: 'd-inline' } do |f| %>
       <%= hidden_field_tag :return_to, 'restaurant_edit' %>
+      <% owner_has_subscription = user_has_active_subscription?(restaurant.user) %>
+      <% disabled_by_subscription = !owner_has_subscription %>
+      <% subscription_disabled_message = 'You need an active subscription to activate a restaurant.' %>
       <% if restaurant.respond_to?(:active?) ? restaurant.active? : (restaurant.status.to_s == 'active' || restaurant.status_before_type_cast.to_i == 1) %>
         <%= hidden_field_tag 'restaurant[status]', 'inactive' %>
         <%= hidden_field_tag :status, 'inactive' %>
-        <button type="submit" class="quick-action-btn quick-action-btn-secondary" data-testid="restaurant-status-toggle-btn" <%= 'disabled' if restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>>
+        <button type="submit"
+                class="quick-action-btn quick-action-btn-secondary restaurant-status-pill restaurant-status-pill--active"
+                data-testid="restaurant-status-toggle-btn"
+                <%= 'disabled' if disabled_by_subscription || restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>
+                <%= "title=\"#{subscription_disabled_message}\"" if disabled_by_subscription %>>
           <i class="bi bi-toggle2-off"></i>
           <span><%= t('.active') %></span>
         </button>
       <% else %>
         <%= hidden_field_tag 'restaurant[status]', 'active' %>
         <%= hidden_field_tag :status, 'active' %>
-        <button type="submit" class="quick-action-btn" data-testid="restaurant-status-toggle-btn" <%= 'disabled' if restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>>
+        <button type="submit"
+                class="quick-action-btn restaurant-status-pill restaurant-status-pill--inactive"
+                data-testid="restaurant-status-toggle-btn"
+                <%= 'disabled' if disabled_by_subscription || restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>
+                <%= "title=\"#{subscription_disabled_message}\"" if disabled_by_subscription %>>
           <i class="bi bi-toggle2-on"></i>
           <span><%= t('.inactive') %></span>
         </button>
@@ -134,6 +90,27 @@
     document.addEventListener('turbo:frame-load', __cleanupRestaurantStatusTomSelect);
   })();
 </script>
+
+<style>
+  .restaurant-status-pill.restaurant-status-pill--active {
+    background: #d9f7e1;
+    border-color: rgba(25, 135, 84, 0.25);
+  }
+
+  .restaurant-status-pill.restaurant-status-pill--inactive {
+    background: #ffd9e1;
+    border-color: rgba(220, 53, 69, 0.25);
+  }
+
+  .quick-actions-notice-slot {
+    min-height: 32px;
+  }
+
+  .quick-actions-notice-slot .alert {
+    margin: 0;
+    display: inline-block;
+  }
+</style>
 
 <!-- Overview Stats Card -->
 <div class="mb-3 p-3" data-testid="overview-stats-card">
