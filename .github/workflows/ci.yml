@@ -142,6 +142,11 @@ jobs:
         run: |
           bundle exec rails assets:precompile
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libvips
+
       - name: Set up database
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
@@ -155,6 +160,7 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
           REDIS_URL: redis://localhost:6379/0
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          OPENAI_API_KEY: test
         run: |
           bundle exec rails test
 
@@ -163,6 +169,7 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
           REDIS_URL: redis://localhost:6379/0
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          OPENAI_API_KEY: test
         run: |
           if bundle show rspec-rails > /dev/null 2>&1; then
             bundle exec rspec
