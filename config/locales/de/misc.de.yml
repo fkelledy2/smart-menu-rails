@@ -287,9 +287,15 @@ de:
   plan:
     business:
       attribut6: ''
-      attribute1: "<li><i class='bi bi-check-lg'></i> Für Restaurants mit mehreren Standorten</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> Restaurants</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> Menüs / Restaurant</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong> Gerichte / Menü</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> Sprachen</li><li><i class='bi bi-check-lg'></i> Online-Bestellung</li><li><i class='bi bi-check-lg'></i> Priorisierter Support</li>"
+      attribute1: "<li><i class='bi bi-check-lg'></i> Für Restaurants mit mehreren
+        Standorten</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
+        Restaurants</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> Menüs
+        / Restaurant</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong>
+        Gerichte / Menü</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
+        Sprachen</li><li><i class='bi bi-check-lg'></i> Online-Bestellung</li><li><i
+        class='bi bi-check-lg'></i> Priorisierter Support</li>"
       attribute4: ''
       attribute5: ''
       key: Business
@@ -298,29 +304,44 @@ de:
       attribut6: ''
       attribute1: "<li><i class='bi bi-check-lg'></i> Unbegrenzte Standorte</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> Unbegrenzte Menüs</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> KI-Gerichtevorschau</li><li><i class='bi bi-check-lg'></i> Smart Ordering & Zahlungen</li><li><i class='bi bi-check-lg'></i> Erweiterte Mehrsprachen-Unterstützung</li><li><i class='bi bi-check-lg'></i> Dedizierter Account Manager</li><li><i class='bi bi-check-lg'></i> Individuelles Branding</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> KI-Gerichtevorschau</li><li><i
+        class='bi bi-check-lg'></i> Smart Ordering & Zahlungen</li><li><i class='bi
+        bi-check-lg'></i> Erweiterte Mehrsprachen-Unterstützung</li><li><i class='bi
+        bi-check-lg'></i> Dedizierter Account Manager</li><li><i class='bi bi-check-lg'></i>
+        Individuelles Branding</li>"
       attribute4: ''
       attribute5: ''
       key: Enterprise
     pro:
-      attribute1: "<li><i class='bi bi-check-lg'></i> Bis zu <strong>%{locations}</strong> Restaurants</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> Menüs / Restaurant</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Digitales Menü (+ Fotos)</li><li><i class='bi bi-check-lg'></i> Gastbestellungen</li><li><i class='bi bi-check-lg'></i> Basis-Analytics</li><li><i class='bi bi-check-lg'></i> Mehrsprachige Unterstützung</li><li>&nbsp;</li>"
+      attribute1: "<li><i class='bi bi-check-lg'></i> Bis zu <strong>%{locations}</strong>
+        Restaurants</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> Menüs
+        / Restaurant</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Digitales Menü (+ Fotos)</li><li><i
+        class='bi bi-check-lg'></i> Gastbestellungen</li><li><i class='bi bi-check-lg'></i>
+        Basis-Analytics</li><li><i class='bi bi-check-lg'></i> Mehrsprachige Unterstützung</li><li>&nbsp;</li>"
       attribute4: ''
       key: Pro
     register: Registrieren
     starter:
       attribut6: ''
       attribute1: "<li><i class='bi bi-check-lg'></i> Für kleine Cafés</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> Restaurant</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Bis zu <strong>%{menus}</strong> Menüs / Restaurant</li><li><i class='bi bi-check-lg'></i> Bis zu <strong>%{dishes}</strong> Gerichte / Menü</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> Sprache</li><li><i class='bi bi-check-lg'></i> Bestellungen fürs Personal</li><li><i class='bi bi-check-lg'></i> E-Mail-Support</li><li>&nbsp;</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
+        Restaurant</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Bis zu <strong>%{menus}</strong>
+        Menüs / Restaurant</li><li><i class='bi bi-check-lg'></i> Bis zu <strong>%{dishes}</strong>
+        Gerichte / Menü</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
+        Sprache</li><li><i class='bi bi-check-lg'></i> Bestellungen fürs Personal</li><li><i
+        class='bi bi-check-lg'></i> E-Mail-Support</li><li>&nbsp;</li>"
       attribute4: ''
       attribute5: ''
       key: Starter
     trial:
       attribute1: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> Restaurant</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> Menü</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Digitales Menü</li><li><i class='bi bi-check-lg'></i> Nur Personal-Bestellungen</li><li><i class='bi bi-check-lg'></i> Ernährungsfilter</li><li>&nbsp;</li><li>&nbsp;</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Digitales Menü</li><li><i class='bi
+        bi-check-lg'></i> Nur Personal-Bestellungen</li><li><i class='bi bi-check-lg'></i>
+        Ernährungsfilter</li><li>&nbsp;</li><li>&nbsp;</li>"
       key: Test
   restaurantavailabilities:
     form:

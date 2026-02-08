@@ -286,8 +286,13 @@ hu:
     business:
       attribut6: ''
       attribute1: "<li><i class='bi bi-check-lg'></i> Több telephelyes éttermeknek</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> étterem</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menü / étterem</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong> étel / menü</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> nyelv</li><li><i class='bi bi-check-lg'></i> Online rendelés</li><li><i class='bi bi-check-lg'></i> Kiemelt támogatás</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
+        étterem</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menü
+        / étterem</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong>
+        étel / menü</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
+        nyelv</li><li><i class='bi bi-check-lg'></i> Online rendelés</li><li><i class='bi
+        bi-check-lg'></i> Kiemelt támogatás</li>"
       attribute4: ''
       attribute5: ''
       key: Business
@@ -296,29 +301,43 @@ hu:
       attribut6: ''
       attribute1: "<li><i class='bi bi-check-lg'></i> Korlátlan telephely</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> Korlátlan menü</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> MI étel-előnézetek</li><li><i class='bi bi-check-lg'></i> Okos rendelés és fizetés</li><li><i class='bi bi-check-lg'></i> Haladó többnyelvű támogatás</li><li><i class='bi bi-check-lg'></i> Dedikált kapcsolattartó</li><li><i class='bi bi-check-lg'></i> Egyedi arculat</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> MI étel-előnézetek</li><li><i
+        class='bi bi-check-lg'></i> Okos rendelés és fizetés</li><li><i class='bi
+        bi-check-lg'></i> Haladó többnyelvű támogatás</li><li><i class='bi bi-check-lg'></i>
+        Dedikált kapcsolattartó</li><li><i class='bi bi-check-lg'></i> Egyedi arculat</li>"
       attribute4: ''
       attribute5: ''
       key: Enterprise
     pro:
-      attribute1: "<li><i class='bi bi-check-lg'></i> Akár <strong>%{locations}</strong> étterem</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menü / étterem</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Digitális menü (+ fotók)</li><li><i class='bi bi-check-lg'></i> Vendég rendelés</li><li><i class='bi bi-check-lg'></i> Alap analitika</li><li><i class='bi bi-check-lg'></i> Többnyelvű támogatás</li><li>&nbsp;</li>"
+      attribute1: "<li><i class='bi bi-check-lg'></i> Akár <strong>%{locations}</strong>
+        étterem</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menü
+        / étterem</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Digitális menü (+ fotók)</li><li><i
+        class='bi bi-check-lg'></i> Vendég rendelés</li><li><i class='bi bi-check-lg'></i>
+        Alap analitika</li><li><i class='bi bi-check-lg'></i> Többnyelvű támogatás</li><li>&nbsp;</li>"
       attribute4: ''
       key: Pro
     register: Regisztráció
     starter:
       attribut6: ''
       attribute1: "<li><i class='bi bi-check-lg'></i> Kis kávézóknak</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> étterem</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Akár <strong>%{menus}</strong> menü / étterem</li><li><i class='bi bi-check-lg'></i> Akár <strong>%{dishes}</strong> étel / menü</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> nyelv</li><li><i class='bi bi-check-lg'></i> Személyzeti rendelés</li><li><i class='bi bi-check-lg'></i> Email támogatás</li><li>&nbsp;</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
+        étterem</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Akár <strong>%{menus}</strong>
+        menü / étterem</li><li><i class='bi bi-check-lg'></i> Akár <strong>%{dishes}</strong>
+        étel / menü</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
+        nyelv</li><li><i class='bi bi-check-lg'></i> Személyzeti rendelés</li><li><i
+        class='bi bi-check-lg'></i> Email támogatás</li><li>&nbsp;</li>"
       attribute4: ''
       attribute5: ''
       key: Starter
     trial:
       attribute1: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> étterem</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> menü</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Digitális menü</li><li><i class='bi bi-check-lg'></i> Csak személyzet rendelése</li><li><i class='bi bi-check-lg'></i> Étkezési szűrők</li><li>&nbsp;</li><li>&nbsp;</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Digitális menü</li><li><i class='bi
+        bi-check-lg'></i> Csak személyzet rendelése</li><li><i class='bi bi-check-lg'></i>
+        Étkezési szűrők</li><li>&nbsp;</li><li>&nbsp;</li>"
       key: Próbaverzió
   restaurantavailabilities:
     form:

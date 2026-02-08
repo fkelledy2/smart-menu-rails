@@ -286,8 +286,13 @@ en_US:
     business:
       attribut6: ''
       attribute1: "<li><i class='bi bi-check-lg'></i> For multi-location restaurants</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> restaurants</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menus / restaurant</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong> dishes / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> languages</li><li><i class='bi bi-check-lg'></i> Online ordering</li><li><i class='bi bi-check-lg'></i> Priority support</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
+        restaurants</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menus
+        / restaurant</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong>
+        dishes / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
+        languages</li><li><i class='bi bi-check-lg'></i> Online ordering</li><li><i
+        class='bi bi-check-lg'></i> Priority support</li>"
       attribute4: ''
       attribute5: ''
       key: Business
@@ -296,29 +301,43 @@ en_US:
       attribut6: ''
       attribute1: "<li><i class='bi bi-check-lg'></i> Unlimited locations</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> Unlimited menus</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> AI dish previews</li><li><i class='bi bi-check-lg'></i> Smart ordering & payments</li><li><i class='bi bi-check-lg'></i> Advanced multilingual support</li><li><i class='bi bi-check-lg'></i> Dedicated account manager</li><li><i class='bi bi-check-lg'></i> Custom branding</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> AI dish previews</li><li><i
+        class='bi bi-check-lg'></i> Smart ordering & payments</li><li><i class='bi
+        bi-check-lg'></i> Advanced multilingual support</li><li><i class='bi bi-check-lg'></i>
+        Dedicated account manager</li><li><i class='bi bi-check-lg'></i> Custom branding</li>"
       attribute4: ''
       attribute5: ''
       key: Enterprise
     pro:
-      attribute1: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{locations}</strong> restaurants</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menus / restaurant</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Digital menu (+ photos)</li><li><i class='bi bi-check-lg'></i> Guest ordering</li><li><i class='bi bi-check-lg'></i> Basic analytics</li><li><i class='bi bi-check-lg'></i> Multilingual support</li><li>&nbsp;</li>"
+      attribute1: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{locations}</strong>
+        restaurants</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menus
+        / restaurant</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Digital menu (+ photos)</li><li><i
+        class='bi bi-check-lg'></i> Guest ordering</li><li><i class='bi bi-check-lg'></i>
+        Basic analytics</li><li><i class='bi bi-check-lg'></i> Multilingual support</li><li>&nbsp;</li>"
       attribute4: ''
       key: Pro
     register: Sign up
     starter:
       attribut6: ''
       attribute1: "<li><i class='bi bi-check-lg'></i> For small cafes</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> restaurant</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong> menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong> dishes / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> language</li><li><i class='bi bi-check-lg'></i> Staff ordering</li><li><i class='bi bi-check-lg'></i> Email support</li><li>&nbsp;</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
+        restaurant</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Up to <strong>%{menus}</strong>
+        menus / restaurant</li><li><i class='bi bi-check-lg'></i> Up to <strong>%{dishes}</strong>
+        dishes / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
+        language</li><li><i class='bi bi-check-lg'></i> Staff ordering</li><li><i
+        class='bi bi-check-lg'></i> Email support</li><li>&nbsp;</li>"
       attribute4: ''
       attribute5: ''
       key: Starter
     trial:
       attribute1: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> restaurant</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> menu</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Digital menu</li><li><i class='bi bi-check-lg'></i> Staff-only ordering</li><li><i class='bi bi-check-lg'></i> Dietary filters</li><li>&nbsp;</li><li>&nbsp;</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Digital menu</li><li><i class='bi
+        bi-check-lg'></i> Staff-only ordering</li><li><i class='bi bi-check-lg'></i>
+        Dietary filters</li><li>&nbsp;</li><li>&nbsp;</li>"
       key: Trial
   restaurantavailabilities:
     form:
