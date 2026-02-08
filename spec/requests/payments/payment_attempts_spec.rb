@@ -25,38 +25,73 @@ RSpec.describe 'Payments::PaymentAttempts' do
   end
 
   describe 'POST /payments/payment_attempts' do
-    it 'creates a payment_attempt and returns redirect_url' do
-      fake_session = Struct.new(:id, :url, :payment_intent).new('cs_test_123', 'https://stripe.test/checkout', 'pi_test_123')
-      allow(Stripe::Checkout::Session).to receive(:create).and_return(fake_session)
+    let(:fake_session) do
+      Struct.new(:id, :url, :payment_intent).new('cs_test_123', 'https://stripe.test/checkout', 'pi_test_123')
+    end
 
+    def request_params
+      { ordr_id: ordr.id, success_url: 'https://example.test/success', cancel_url: 'https://example.test/cancel' }
+    end
+
+    def post_create_attempt
       post '/payments/payment_attempts',
-           params: { ordr_id: ordr.id, success_url: 'https://example.test/success', cancel_url: 'https://example.test/cancel' },
+           params: request_params,
            headers: { 'ACCEPT' => 'application/json' },
            as: :json
+    end
+
+    before do
+      allow(Stripe::Checkout::Session).to receive(:create).and_return(fake_session)
+    end
+
+    it 'returns ok payload and redirect_url' do
+      post_create_attempt
 
       expect(response).to have_http_status(:ok)
-      data = response.parsed_body
-      expect(data['ok']).to be(true)
-      expect(data['payment_attempt_id']).to be_present
-      expect(data['redirect_url']).to eq('https://stripe.test/checkout')
+      expect(response.parsed_body).to include(
+        'ok' => true,
+        'redirect_url' => 'https://stripe.test/checkout',
+      )
+      expect(response.parsed_body['payment_attempt_id']).to be_present
+    end
 
-      payment_attempt = PaymentAttempt.find(data['payment_attempt_id'])
-      expect(payment_attempt.provider).to eq('stripe')
-      expect(payment_attempt.status).to eq('requires_action')
-      expect(payment_attempt.currency).to eq('USD')
-      expect(payment_attempt.amount_cents).to eq(1000)
-      expect(payment_attempt.provider_payment_id).to eq('cs_test_123')
+    it 'persists a payment_attempt for the order' do
+      post_create_attempt
+
+      payment_attempt_id = response.parsed_body['payment_attempt_id']
+      payment_attempt = PaymentAttempt.find(payment_attempt_id)
+      expect(payment_attempt).to have_attributes(
+        provider: 'stripe',
+        status: 'requires_action',
+        currency: 'USD',
+        amount_cents: 1000,
+        provider_payment_id: 'cs_test_123',
+      )
+    end
+
+    it 'creates a payment_profile for the restaurant' do
+      post_create_attempt
 
       profile = PaymentProfile.find_by(restaurant: restaurant)
-      expect(profile).to be_present
-      expect(profile.merchant_model).to eq('restaurant_mor')
-      expect(profile.primary_provider).to eq('stripe')
+      expect(profile).to have_attributes(
+        merchant_model: 'restaurant_mor',
+        primary_provider: 'stripe',
+      )
+    end
+
+    it 'sends order metadata to Stripe checkout session create' do
+      post_create_attempt
+
+      payment_attempt_id = response.parsed_body['payment_attempt_id']
+      payment_attempt = PaymentAttempt.find(payment_attempt_id)
 
       expect(Stripe::Checkout::Session).to have_received(:create) do |args|
         md = args[:metadata]
-        expect(md[:order_id]).to eq(ordr.id)
-        expect(md[:restaurant_id]).to eq(restaurant.id)
-        expect(md[:payment_attempt_id]).to eq(payment_attempt.id)
+        expect(md).to include(
+          order_id: ordr.id,
+          restaurant_id: restaurant.id,
+          payment_attempt_id: payment_attempt.id,
+        )
       end
     end
   end

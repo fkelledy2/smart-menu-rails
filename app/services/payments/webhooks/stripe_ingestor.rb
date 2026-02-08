@@ -44,7 +44,11 @@ module Payments
         end
 
         handle_payment_effects!(provider_event_type: provider_event_type.to_s, obj: obj)
-      rescue ActiveRecord::RecordNotUnique
+      rescue ActiveRecord::RecordNotUnique => e
+        # Idempotency: multiple deliveries of the same provider event can race.
+        # Ledger.append! enforces uniqueness; if we hit it, we can safely no-op.
+        Rails.logger.debug { "[StripeIngestor] RecordNotUnique ignored provider_event_id=#{provider_event_id}: #{e.message}" }
+        nil
       end
 
       private

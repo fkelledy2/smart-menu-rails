@@ -437,6 +437,7 @@ module TestIdHelpers
     Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0, 20, 22, 24, 25, 30]).find_each do |o|
       o.destroy!
     rescue StandardError
+      Rails.logger.debug { '[TestIdHelpers] failed to destroy order during ensure_clean_order_once!' } if defined?(Rails)
     end
     # Create a fresh order to align with production auto-create on first add
     fresh = Ordr.create!(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: 0, ordercapacity: 1)
@@ -468,6 +469,7 @@ module TestIdHelpers
         return '¥' if %w[JPY CNY].include?(code)
       end
     rescue StandardError
+      Rails.logger.debug { '[TestIdHelpers] currency_symbol_for failed' } if defined?(Rails)
     end
     '$'
   end
@@ -507,7 +509,7 @@ module TestIdHelpers
         @__menu_participant_id = menup.id
       end
     rescue StandardError
-      # ignore
+      Rails.logger.debug { '[TestIdHelpers] failed to ensure Menuparticipant' } if defined?(Rails)
     end
     return unless order
 
@@ -569,6 +571,7 @@ module TestIdHelpers
         })();
       JS
     rescue StandardError
+      Rails.logger.debug { '[TestIdHelpers] open_view_order_modal async state update failed' } if defined?(Rails)
     end
 
     # Give Stimulus a tick to render before opening the modal

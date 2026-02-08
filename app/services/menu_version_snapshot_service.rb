@@ -84,33 +84,33 @@ class MenuVersionSnapshotService
 
   def self.snapshot_items(section)
     Array(section.menuitems)
-      .select { |it| it.archived != true && it.status.to_s == 'active' }
-      .sort_by { |it| [it.sequence.to_i, it.id.to_i] }
-      .map do |it|
+      .select { |item| item.archived != true && item.status.to_s == 'active' }
+      .sort_by { |item| [item.sequence.to_i, item.id.to_i] }
+      .map do |item|
         {
-          id: it.id,
-          name: it.name,
-          description: it.description,
-          status: it.status,
-          sequence: it.sequence,
-          calories: it.calories,
-          price: it.price,
-          preptime: it.preptime,
-          archived: it.archived,
-          itemtype: it.itemtype,
-          hidden: it.hidden,
-          tasting_carrier: it.tasting_carrier,
-          tasting_optional: it.tasting_optional,
-          tasting_supplement_cents: it.tasting_supplement_cents,
-          tasting_supplement_currency: it.tasting_supplement_currency,
-          course_order: it.course_order,
-          abv: it.abv,
-          alcohol_classification: it.alcohol_classification,
-          alcohol_notes: it.alcohol_notes,
-          sommelier_category: it.sommelier_category,
-          sommelier_parsed_fields: it.sommelier_parsed_fields,
-          sommelier_needs_review: it.sommelier_needs_review,
-          image_prompt: it.image_prompt,
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          status: item.status,
+          sequence: item.sequence,
+          calories: item.calories,
+          price: item.price,
+          preptime: item.preptime,
+          archived: item.archived,
+          itemtype: item.itemtype,
+          hidden: item.hidden,
+          tasting_carrier: item.tasting_carrier,
+          tasting_optional: item.tasting_optional,
+          tasting_supplement_cents: item.tasting_supplement_cents,
+          tasting_supplement_currency: item.tasting_supplement_currency,
+          course_order: item.course_order,
+          abv: item.abv,
+          alcohol_classification: item.alcohol_classification,
+          alcohol_notes: item.alcohol_notes,
+          sommelier_category: item.sommelier_category,
+          sommelier_parsed_fields: item.sommelier_parsed_fields,
+          sommelier_needs_review: item.sommelier_needs_review,
+          image_prompt: item.image_prompt,
         }
       end
   end

@@ -142,26 +142,26 @@ class VoiceCommandIntentService
   def remove_item_regex(locale)
     case locale
     when 'fr'
-      /\b(retire|enl[èe]ve|supprime|annule)\b\s+(?<qty>\d+|un|une|deux|trois)?\s*(?<name>.+)$/
+      /\b(?:retire|enl[èe]ve|supprime|annule)\b\s+(?<qty>\d+|un|une|deux|trois)?\s*(?<name>.+)$/
     when 'it'
-      /\b(togli|rimuovi|cancella|annulla)\b\s+(?<qty>\d+|uno|una|due|tre)?\s*(?<name>.+)$/
+      /\b(?:togli|rimuovi|cancella|annulla)\b\s+(?<qty>\d+|uno|una|due|tre)?\s*(?<name>.+)$/
     when 'es'
-      /\b(quita|elimina|borra|cancela)\b\s+(?<qty>\d+|uno|una|dos|tres)?\s*(?<name>.+)$/
+      /\b(?:quita|elimina|borra|cancela)\b\s+(?<qty>\d+|uno|una|dos|tres)?\s*(?<name>.+)$/
     else
-      /\b(remove|delete|take\s+off|take\s+out|cancel|drop|undo|scratch)\b\s+(?<qty>\d+|one|two|three)?\s*(?<name>.+)$/
+      /\b(?:remove|delete|take\s+off|take\s+out|cancel|drop|undo|scratch)\b\s+(?<qty>\d+|one|two|three)?\s*(?<name>.+)$/
     end
   end
 
   def add_item_regex(locale)
     case locale
     when 'fr'
-      /\b(ajoute|commander|je\s+veux|j'?aimerais|je\s+prends|on\s+prend|peux\s+tu\s+ajouter)\b\s+(?<qty>\d+|un|une|deux|trois)?\s*(?<name>.+)$/
+      /\b(?:ajoute|commander|je\s+veux|j'?aimerais|je\s+prends|on\s+prend|peux\s+tu\s+ajouter)\b\s+(?<qty>\d+|un|une|deux|trois)?\s*(?<name>.+)$/
     when 'it'
-      /\b(aggiungi|ordina|vorrei|voglio|prendo|posso\s+avere|ci\s+prendiamo)\b\s+(?<qty>\d+|uno|una|due|tre)?\s*(?<name>.+)$/
+      /\b(?:aggiungi|ordina|vorrei|voglio|prendo|posso\s+avere|ci\s+prendiamo)\b\s+(?<qty>\d+|uno|una|due|tre)?\s*(?<name>.+)$/
     when 'es'
-      /\b(agrega|a[ñn]ade|añade|pedir|quiero|me\s+gustar[ií]a|ponme|dame|podemos\s+tener)\b\s+(?<qty>\d+|uno|una|dos|tres)?\s*(?<name>.+)$/
+      /\b(?:agrega|a[ñn]ade|añade|pedir|quiero|me\s+gustar[ií]a|ponme|dame|podemos\s+tener)\b\s+(?<qty>\d+|uno|una|dos|tres)?\s*(?<name>.+)$/
     else
-      /\b(add|order|get|give\s+me|i\s+want|i'?d\s+like|can\s+i\s+get|can\s+i\s+have|we'?ll\s+have|make\s+it)\b\s+(?<qty>\d+|one|two|three)?\s*(?<name>.+)$/
+      /\b(?:add|order|get|give\s+me|i\s+want|i'?d\s+like|can\s+i\s+get|can\s+i\s+have|we'?ll\s+have|make\s+it)\b\s+(?<qty>\d+|one|two|three)?\s*(?<name>.+)$/
     end
   end
 

@@ -91,22 +91,22 @@ RSpec.describe OrderEventProjector do
     ordr = create(:ordr)
     mi = create(:menuitem)
     lk = SecureRandom.uuid
-    it = Ordritem.create!(ordr: ordr, menuitem: mi, status: :opened, ordritemprice: 5.0, line_key: lk)
+    ordritem = Ordritem.create!(ordr: ordr, menuitem: mi, status: :opened, ordritemprice: 5.0, line_key: lk)
 
     OrderEvent.emit!(
       ordr: ordr,
       event_type: 'item_removed',
       entity_type: 'item',
-      entity_id: it.id,
+      entity_id: ordritem.id,
       source: 'guest',
-      payload: { line_key: lk, ordritem_id: it.id },
+      payload: { line_key: lk, ordritem_id: ordritem.id },
     )
 
     described_class.project!(ordr.id)
-    it.reload
+    ordritem.reload
 
-    expect(it.status.to_s).to eq('removed')
-    expect(it.ordritemprice.to_f).to eq(0.0)
+    expect(ordritem.status.to_s).to eq('removed')
+    expect(ordritem.ordritemprice.to_f).to eq(0.0)
   end
 
   it 'clears station tickets on terminal status without FK violations' do

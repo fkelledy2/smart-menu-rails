@@ -2,6 +2,7 @@ require 'digest'
 begin
   require 'pgvector'
 rescue LoadError
+  Rails.logger.debug { '[MenuItemSearchIndexJob] pgvector not available; vector search indexing disabled' } if defined?(Rails)
 end
 
 class MenuItemSearchIndexJob

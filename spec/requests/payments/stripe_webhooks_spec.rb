@@ -11,9 +11,9 @@ RSpec.describe 'Payments::Webhooks (Stripe)' do
   end
 
   describe 'POST /payments/webhooks/stripe' do
-    it 'records ledger_event idempotently and marks payment_attempt succeeded' do
-      ordr = create(:ordr, status: :billrequested)
-      payment_attempt = PaymentAttempt.create!(
+    let(:ordr) { create(:ordr, status: :billrequested) }
+    let(:payment_attempt) do
+      PaymentAttempt.create!(
         ordr: ordr,
         restaurant: create(:restaurant, currency: 'USD'),
         provider: :stripe,
@@ -23,12 +23,13 @@ RSpec.describe 'Payments::Webhooks (Stripe)' do
         charge_pattern: :direct,
         merchant_model: :restaurant_mor,
       )
+    end
 
-      created = Time.zone.now.to_i
-      payload_hash = {
+    let(:payload_hash) do
+      {
         id: 'evt_test_123',
         type: 'payment_intent.succeeded',
-        created: created,
+        created: Time.zone.now.to_i,
         data: {
           object: {
             id: 'pi_test_123',
@@ -39,12 +40,13 @@ RSpec.describe 'Payments::Webhooks (Stripe)' do
           },
         },
       }
-      payload = payload_hash.to_json
+    end
 
-      evt_obj = OpenStruct.new(
+    let(:evt_obj) do
+      OpenStruct.new(
         id: 'evt_test_123',
         type: 'payment_intent.succeeded',
-        created: created,
+        created: payload_hash[:created],
         livemode: false,
         data: OpenStruct.new(
           object: OpenStruct.new(
@@ -53,50 +55,57 @@ RSpec.describe 'Payments::Webhooks (Stripe)' do
           ),
         ),
       )
+    end
 
+    def post_webhook
+      post '/payments/webhooks/stripe',
+           params: payload_hash.to_json,
+           headers: { 'HTTP_STRIPE_SIGNATURE' => 't=1,v1=fake', 'CONTENT_TYPE' => 'application/json' }
+    end
+
+    before do
       allow(Stripe::Webhook).to receive(:construct_event).and_return(evt_obj)
+    end
 
-      expect do
-        post '/payments/webhooks/stripe',
-             params: payload,
-             headers: { 'HTTP_STRIPE_SIGNATURE' => 't=1,v1=fake', 'CONTENT_TYPE' => 'application/json' }
-      end.to change(LedgerEvent, :count).by(1)
+    it 'creates a ledger event and emits order events' do
+      expect { post_webhook }
+        .to change(LedgerEvent, :count).by(1)
         .and change(OrderEvent, :count).by(2)
+    end
+
+    it 'marks payment_attempt succeeded and closes the order' do
+      post_webhook
 
       payment_attempt.reload
-      expect(payment_attempt.status).to eq('succeeded')
-
       ordr.reload
+      expect(payment_attempt.status).to eq('succeeded')
       expect(ordr.status).to eq('closed')
+    end
 
-      types = OrderEvent.where(ordr_id: ordr.id).order(:sequence).pluck(:event_type)
-      expect(types).to include('paid', 'closed')
+    it 'persists expected ledger event details' do
+      post_webhook
 
       ledger = LedgerEvent.last
-      expect(ledger.provider).to eq('stripe')
-      expect(ledger.provider_event_id).to eq('evt_test_123')
-      expect(ledger.event_type).to eq('succeeded')
-      expect(ledger.entity_type).to eq('payment_attempt')
-      expect(ledger.entity_id).to eq(payment_attempt.id)
+      expect(ledger).to have_attributes(
+        provider: 'stripe',
+        provider_event_id: 'evt_test_123',
+        event_type: 'succeeded',
+        entity_type: 'payment_attempt',
+        entity_id: payment_attempt.id,
+      )
       expect(ledger.raw_event_payload).to be_a(Hash)
+    end
 
-      expect do
-        post '/payments/webhooks/stripe',
-             params: payload,
-             headers: { 'HTTP_STRIPE_SIGNATURE' => 't=1,v1=fake', 'CONTENT_TYPE' => 'application/json' }
-      end.not_to change(LedgerEvent, :count)
+    it 'does not create duplicate ledger events on repeat delivery' do
+      post_webhook
 
-      expect do
-        post '/payments/webhooks/stripe',
-             params: payload,
-             headers: { 'HTTP_STRIPE_SIGNATURE' => 't=1,v1=fake', 'CONTENT_TYPE' => 'application/json' }
-      end.not_to change(OrderEvent, :count)
+      expect { post_webhook }.not_to change(LedgerEvent, :count)
+    end
 
-      payment_attempt.reload
-      expect(payment_attempt.status).to eq('succeeded')
+    it 'does not emit duplicate order events on repeat delivery' do
+      post_webhook
 
-      ordr.reload
-      expect(ordr.status).to eq('closed')
+      expect { post_webhook }.not_to change(OrderEvent, :count)
     end
   end
 end

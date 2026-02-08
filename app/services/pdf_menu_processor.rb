@@ -1,6 +1,7 @@
 begin
   require 'google/cloud/vision'
 rescue LoadError
+  Rails.logger.debug { '[PdfMenuProcessor] google-cloud-vision not available; vision OCR disabled' } if defined?(Rails)
 end
 require 'mini_magick'
 require 'json'
@@ -9,6 +10,7 @@ require 'ostruct'
 begin
   require 'openai'
 rescue LoadError
+  Rails.logger.debug { '[PdfMenuProcessor] openai gem not available; GPT features disabled' } if defined?(Rails)
 end
 
 class PdfMenuProcessor

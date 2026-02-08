@@ -2,6 +2,7 @@ require 'digest'
 begin
   require 'pgvector'
 rescue LoadError
+  Rails.logger.debug { '[MenuItemMatcherService] pgvector not available; semantic matcher disabled' } if defined?(Rails)
 end
 
 class MenuItemMatcherService

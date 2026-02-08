@@ -16,7 +16,7 @@ class AlcoholDetectionService
 
   ABV_REGEX = /(\d+(?:[.,]\d+)?)\s*%/i
 
-  SectionClassMap = {
+  SECTION_CLASS_MAP = {
     'wine' => 'wine', 'wines' => 'wine',
     'beer' => 'beer', 'beers' => 'beer',
     'spirits' => 'spirit', 'spirit' => 'spirit',
@@ -39,12 +39,12 @@ class AlcoholDetectionService
     # ABV extraction as signal
     abv = extract_abv(text)
     if abv
-      sec_class = SectionClassMap[normalize(section_name)] || section_class_from_text(section_name)
+      sec_class = SECTION_CLASS_MAP[normalize(section_name)] || section_class_from_text(section_name)
       return { decided: true, alcoholic: true, classification: sec_class || 'other', abv: abv, confidence: 0.95, note: 'abv present' }
     end
 
     # Section hint
-    sec_class = SectionClassMap[normalize(section_name)] || section_class_from_text(section_name)
+    sec_class = SECTION_CLASS_MAP[normalize(section_name)] || section_class_from_text(section_name)
     sec_score = sec_class ? 0.4 : 0.0
 
     # Keyword scoring
@@ -106,8 +106,8 @@ class AlcoholDetectionService
     t = text.tr('_', ' ').gsub(%r{[-/&]}, ' ')
 
     # Direct token map
-    SectionClassMap.each_key do |key|
-      return SectionClassMap[key] if t.include?(key)
+    SECTION_CLASS_MAP.each_key do |key|
+      return SECTION_CLASS_MAP[key] if t.include?(key)
     end
 
     # Generic synonyms

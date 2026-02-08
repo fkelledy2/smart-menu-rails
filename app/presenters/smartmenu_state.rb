@@ -56,37 +56,37 @@ class SmartmenuState
       base_items = Array(order.ordractions).filter_map(&:ordritem)
     end
 
-    items = base_items.uniq(&:id).map do |it|
+    items = base_items.uniq(&:id).map do |item|
       # Localised name with safe fallbacks
       name = begin
-        mi = it.menuitem
+        mi = item.menuitem
         if mi.respond_to?(:localised_name)
           mi.localised_name(locale)
         else
           mi&.name
         end
       rescue StandardError
-        it.menuitem&.name
+        item.menuitem&.name
       end
 
       # Price: prefer ordritemprice, else fall back to menuitem price
       price = begin
-        p = it.ordritemprice
-        if p.nil? && it.menuitem && it.menuitem.respond_to?(:price)
-          it.menuitem.price
+        p = item.ordritemprice
+        if p.nil? && item.menuitem && item.menuitem.respond_to?(:price)
+          item.menuitem.price
         else
           p
         end
       rescue StandardError
-        it.ordritemprice
+        item.ordritemprice
       end
 
       {
-        id: it.id,
-        menuitem_id: it.menuitem_id,
+        id: item.id,
+        menuitem_id: item.menuitem_id,
         name: name.to_s,
         price: price.to_f,
-        status: it.status.to_s,
+        status: item.status.to_s,
       }
     end
     opened_count         = items.count { |i| i[:status] == 'opened' }

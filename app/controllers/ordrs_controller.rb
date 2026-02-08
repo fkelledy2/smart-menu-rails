@@ -117,6 +117,12 @@ class OrdrsController < ApplicationController
     end
   end
 
+  def order_event_source
+    return 'voice' if request.headers['X-Order-Source'].to_s == 'voice'
+
+    current_user && @current_employee.present? ? 'staff' : 'guest'
+  end
+
   # GET /ordrs/1 or /ordrs/1.json
   def show
     # Always authorize - policy handles public vs private access
@@ -411,11 +417,7 @@ class OrdrsController < ApplicationController
                 to = Ordr.statuses.key(to.to_i).to_s
               end
               if to.present? && to != before_status
-                source = if request.headers['X-Order-Source'].to_s == 'voice'
-                           'voice'
-                         else
-                           (current_user && @current_employee.present? ? 'staff' : 'guest')
-                         end
+                source = order_event_source
                 OrderEvent.emit!(
                   ordr: @ordr,
                   event_type: 'status_changed',

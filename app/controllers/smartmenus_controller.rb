@@ -20,27 +20,12 @@ class SmartmenusController < ApplicationController
   def show
     load_menu_associations_for_show
 
-    begin
-      @active_menu_version = @menu&.active_menu_version
-      if @active_menu_version
-        MenuVersionApplyService.apply_snapshot!(menu: @menu, menu_version: @active_menu_version)
-      end
-    rescue StandardError => e
-      Rails.logger.warn("[SmartmenusController#show] menu version apply failed: #{e.class}: #{e.message}")
-      @active_menu_version = nil
-    end
+    load_active_menu_version
 
     # Cache-buster for the header/table selector.
     # The header fragment cache key previously ignored newly created Smartmenus/Tablesettings,
     # causing stale table dropdown contents (e.g., missing newly added tables).
-    begin
-      # Smartmenu and Tablesetting both touch restaurant, so restaurant.updated_at reflects
-      # changes that should invalidate the header cache without needing per-request MAX() queries.
-      @header_cache_buster = @restaurant&.updated_at
-    rescue StandardError => e
-      Rails.logger.warn("[SmartmenusController#show] header cache buster error: #{e.class}: #{e.message}")
-      @header_cache_buster = nil
-    end
+    load_header_cache_buster
 
     unless @menu.restaurant_id == @restaurant.id || RestaurantMenu.exists?(restaurant_id: @restaurant.id, menu_id: @menu.id)
       redirect_to root_url and return
@@ -50,145 +35,13 @@ class SmartmenusController < ApplicationController
     # Allows staff to preview menu as customers see it
     @force_customer_view = params[:view] == 'customer'
 
-    begin
-      @table_smartmenus = if @restaurant&.id && @menu&.id
-                            Smartmenu.includes(:tablesetting)
-                              .where(restaurant_id: @restaurant.id, menu_id: @menu.id)
-                              .order(:id)
-                              .to_a
-                          else
-                            []
-                          end
-    rescue StandardError
-      @table_smartmenus = []
-    end
+    load_table_smartmenus
 
-    begin
-      # Pre-load restaurantlocales to avoid N+1 queries
-      # Force reload to ensure we have fresh data
-      @restaurant&.reload
-      @active_locales = @restaurant&.restaurantlocales&.select { |rl| rl.status.to_s == 'active' } || []
-      @default_locale = @active_locales.find { |rl| rl.dfault == true }
-    rescue StandardError
-      @active_locales = []
-      @default_locale = nil
-    end
+    load_restaurant_locales
 
-    # Allergens must be those actually used by items in this menu
-    # We deduplicate in Ruby since the has_many :through association can cause DISTINCT issues
-    allergyns_relation = @menu.allergyns
-      .where(archived: false)
-      .where(status: :active)
-      .order('allergyns.sequence NULLS LAST, allergyns.name')
+    load_allergyns
 
-    if params[:debug_allergyns].to_s == 'true'
-      Rails.logger.warn("[SmartmenusController#show] allergyns SQL: #{allergyns_relation.to_sql}")
-    end
-    @allergyns = allergyns_relation.to_a.uniq(&:id)
-
-    if params[:debug_allergyns].to_s == 'true'
-      Rails.logger.warn(
-        "[SmartmenusController#show] allergyns result count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}",
-      )
-
-      @debug_allergyns_info = {
-        sql: allergyns_relation.to_sql,
-        count: @allergyns.size,
-        ids: @allergyns.map(&:id),
-        names: @allergyns.map(&:name),
-      }
-    end
-
-    if @allergyns.empty?
-      # Fallback to restaurant allergyns (deduplicate in Ruby)
-      fallback_relation = @restaurant.allergyns
-        .where(archived: false)
-        .where(status: :active)
-        .order('allergyns.sequence NULLS LAST, allergyns.name')
-      if params[:debug_allergyns].to_s == 'true'
-        Rails.logger.warn("[SmartmenusController#show] allergyns empty for menu; using restaurant fallback SQL: #{fallback_relation.to_sql}")
-      end
-      @allergyns = fallback_relation.to_a.uniq(&:id)
-      if params[:debug_allergyns].to_s == 'true'
-        Rails.logger.warn(
-          "[SmartmenusController#show] fallback allergyns count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}",
-        )
-        @debug_allergyns_info ||= {}
-        @debug_allergyns_info[:fallback_sql] = fallback_relation.to_sql
-        @debug_allergyns_info[:fallback_count] = @allergyns.size
-      end
-    end
-
-    if @tablesetting
-      @openOrder = Ordr.where(
-        menu_id: @menu.id,
-        tablesetting_id: @tablesetting.id,
-        restaurant_id: @tablesetting.restaurant_id,
-        status: [0, 20, 22, 24, 25, 30], # opened, ordered, preparing, ready, delivered, billrequested
-      ).first
-
-      if @openOrder
-        # Eager load ordritems and their menuitems/locales for state JSON and to avoid N+1
-        begin
-          @openOrder = Ordr.includes(
-            ordritems: { menuitem: :menuitemlocales },
-            ordractions: [:ordrparticipant, { ordritem: { menuitem: :menuitemlocales } }],
-          ).find(@openOrder.id)
-        rescue StandardError => e
-          Rails.logger.warn("[SmartmenusController#show] failed to eager load order #{@openOrder&.id}: #{e.class}: #{e.message}")
-        end
-        if current_user
-          Ordrparticipant.on_primary do
-            @ordrparticipant = Ordrparticipant.find_or_create_by!(
-              ordr: @openOrder,
-              employee: @current_employee,
-              role: :staff,
-              sessionid: session.id.to_s,
-            )
-            if @ordrparticipant.persisted?
-              begin
-                @ordrparticipant.reload
-                @ordrparticipant = Ordrparticipant.includes(:ordrparticipant_allergyn_filters).find(@ordrparticipant.id)
-                Ordraction.find_or_create_by!(
-                  ordrparticipant: @ordrparticipant,
-                  ordr: @openOrder,
-                  ordritem: nil,
-                  action: :openorder,
-                )
-              rescue ActiveRecord::InvalidForeignKey, ActiveRecord::RecordNotFound => e
-                Rails.logger.warn("[SmartmenusController#show] skipped ordraction create (staff): #{e.class}: #{e.message}")
-              end
-            end
-          end
-        else
-          Ordrparticipant.on_primary do
-            @ordrparticipant = Ordrparticipant.find_or_create_by!(
-              ordr: @openOrder,
-              role: :customer,
-              sessionid: session.id.to_s,
-            )
-            @menuparticipant = Menuparticipant.find_by(sessionid: session.id.to_s)
-            if @menuparticipant && @ordrparticipant.preferredlocale != @menuparticipant.preferredlocale
-              @ordrparticipant.update!(preferredlocale: @menuparticipant.preferredlocale)
-            end
-            if @ordrparticipant.persisted?
-              begin
-                @ordrparticipant.reload
-                @ordrparticipant = Ordrparticipant.includes(:ordrparticipant_allergyn_filters).find(@ordrparticipant.id)
-                Ordraction.find_or_create_by!(
-                  ordrparticipant: @ordrparticipant,
-                  ordr: @openOrder,
-                  ordritem: nil,
-                  action: :participate,
-                )
-              rescue ActiveRecord::InvalidForeignKey, ActiveRecord::RecordNotFound => e
-                Rails.logger.warn("[SmartmenusController#show] skipped ordraction create (customer): #{e.class}: #{e.message}")
-              end
-            end
-          end
-        end
-      end
-    end
+    load_open_order_and_participant
 
     begin
       @needs_age_check = !(@openOrder && AlcoholOrderEvent.exists?(ordr_id: @openOrder.id, age_check_acknowledged: false)).nil?
@@ -345,6 +198,204 @@ class SmartmenusController < ApplicationController
   end
 
   private
+
+  def load_active_menu_version
+    @active_menu_version = @menu&.active_menu_version
+    if @active_menu_version
+      MenuVersionApplyService.apply_snapshot!(menu: @menu, menu_version: @active_menu_version)
+    end
+  rescue StandardError => e
+    Rails.logger.warn("[SmartmenusController#show] menu version apply failed: #{e.class}: #{e.message}")
+    @active_menu_version = nil
+  end
+
+  def load_header_cache_buster
+    # Smartmenu and Tablesetting both touch restaurant, so restaurant.updated_at reflects
+    # changes that should invalidate the header cache without needing per-request MAX() queries.
+    @header_cache_buster = @restaurant&.updated_at
+  rescue StandardError => e
+    Rails.logger.warn("[SmartmenusController#show] header cache buster error: #{e.class}: #{e.message}")
+    @header_cache_buster = nil
+  end
+
+  def load_table_smartmenus
+    @table_smartmenus = if @restaurant&.id && @menu&.id
+                          Smartmenu.includes(:tablesetting)
+                            .where(restaurant_id: @restaurant.id, menu_id: @menu.id)
+                            .order(:id)
+                            .to_a
+                        else
+                          []
+                        end
+  rescue StandardError
+    @table_smartmenus = []
+  end
+
+  def load_restaurant_locales
+    # Pre-load restaurantlocales to avoid N+1 queries
+    # Force reload to ensure we have fresh data
+    @restaurant&.reload
+    @active_locales = @restaurant&.restaurantlocales&.select { |rl| rl.status.to_s == 'active' } || []
+    @default_locale = @active_locales.find { |rl| rl.dfault == true }
+  rescue StandardError
+    @active_locales = []
+    @default_locale = nil
+  end
+
+  def allergyns_debug_enabled?
+    params[:debug_allergyns].to_s == 'true'
+  end
+
+  def log_allergyns_debug(relation)
+    Rails.logger.warn("[SmartmenusController#show] allergyns SQL: #{relation.to_sql}")
+  end
+
+  def log_allergyns_result_debug(allergyns)
+    Rails.logger.warn(
+      "[SmartmenusController#show] allergyns result count=#{allergyns.size} ids=#{allergyns.map(&:id)} names=#{allergyns.map(&:name)}",
+    )
+  end
+
+  def log_fallback_allergyns_debug(relation)
+    Rails.logger.warn("[SmartmenusController#show] allergyns empty for menu; using restaurant fallback SQL: #{relation.to_sql}")
+  end
+
+  def log_fallback_allergyns_result_debug(allergyns)
+    Rails.logger.warn(
+      "[SmartmenusController#show] fallback allergyns count=#{allergyns.size} ids=#{allergyns.map(&:id)} names=#{allergyns.map(&:name)}",
+    )
+  end
+
+  def load_allergyns
+    # Allergens must be those actually used by items in this menu
+    # We deduplicate in Ruby since the has_many :through association can cause DISTINCT issues
+    allergyns_relation = @menu.allergyns
+      .where(archived: false)
+      .where(status: :active)
+      .order('allergyns.sequence NULLS LAST, allergyns.name')
+
+    log_allergyns_debug(allergyns_relation) if allergyns_debug_enabled?
+    @allergyns = allergyns_relation.to_a.uniq(&:id)
+
+    if allergyns_debug_enabled?
+      log_allergyns_result_debug(@allergyns)
+      @debug_allergyns_info = {
+        sql: allergyns_relation.to_sql,
+        count: @allergyns.size,
+        ids: @allergyns.map(&:id),
+        names: @allergyns.map(&:name),
+      }
+    end
+
+    return unless @allergyns.empty?
+
+    # Fallback to restaurant allergyns (deduplicate in Ruby)
+    fallback_relation = @restaurant.allergyns
+      .where(archived: false)
+      .where(status: :active)
+      .order('allergyns.sequence NULLS LAST, allergyns.name')
+    log_fallback_allergyns_debug(fallback_relation) if allergyns_debug_enabled?
+    @allergyns = fallback_relation.to_a.uniq(&:id)
+
+    return unless allergyns_debug_enabled?
+
+    log_fallback_allergyns_result_debug(@allergyns)
+    @debug_allergyns_info ||= {}
+    @debug_allergyns_info[:fallback_sql] = fallback_relation.to_sql
+    @debug_allergyns_info[:fallback_count] = @allergyns.size
+  end
+
+  def eager_load_open_order
+    # Eager load ordritems and their menuitems/locales for state JSON and to avoid N+1
+    @openOrder = Ordr.includes(
+      ordritems: { menuitem: :menuitemlocales },
+      ordractions: [:ordrparticipant, { ordritem: { menuitem: :menuitemlocales } }],
+    ).find(@openOrder.id)
+  rescue StandardError => e
+    Rails.logger.warn("[SmartmenusController#show] failed to eager load order #{@openOrder&.id}: #{e.class}: #{e.message}")
+  end
+
+  def create_staff_participant_activity
+    @ordrparticipant.reload
+    @ordrparticipant = Ordrparticipant.includes(:ordrparticipant_allergyn_filters).find(@ordrparticipant.id)
+    Ordraction.find_or_create_by!(
+      ordrparticipant: @ordrparticipant,
+      ordr: @openOrder,
+      ordritem: nil,
+      action: :openorder,
+    )
+  rescue ActiveRecord::InvalidForeignKey, ActiveRecord::RecordNotFound => e
+    Rails.logger.warn("[SmartmenusController#show] skipped ordraction create (staff): #{e.class}: #{e.message}")
+  end
+
+  def load_staff_participant
+    @ordrparticipant = Ordrparticipant.find_or_create_by!(
+      ordr: @openOrder,
+      employee: @current_employee,
+      role: :staff,
+      sessionid: session.id.to_s,
+    )
+
+    return unless @ordrparticipant.persisted?
+
+    create_staff_participant_activity
+  end
+
+  def maybe_sync_customer_preferred_locale
+    @menuparticipant = Menuparticipant.find_by(sessionid: session.id.to_s)
+    return unless @menuparticipant
+    return if @ordrparticipant.preferredlocale == @menuparticipant.preferredlocale
+
+    @ordrparticipant.update!(preferredlocale: @menuparticipant.preferredlocale)
+  end
+
+  def create_customer_participant_activity
+    @ordrparticipant.reload
+    @ordrparticipant = Ordrparticipant.includes(:ordrparticipant_allergyn_filters).find(@ordrparticipant.id)
+    Ordraction.find_or_create_by!(
+      ordrparticipant: @ordrparticipant,
+      ordr: @openOrder,
+      ordritem: nil,
+      action: :participate,
+    )
+  rescue ActiveRecord::InvalidForeignKey, ActiveRecord::RecordNotFound => e
+    Rails.logger.warn("[SmartmenusController#show] skipped ordraction create (customer): #{e.class}: #{e.message}")
+  end
+
+  def load_customer_participant
+    @ordrparticipant = Ordrparticipant.find_or_create_by!(
+      ordr: @openOrder,
+      role: :customer,
+      sessionid: session.id.to_s,
+    )
+    maybe_sync_customer_preferred_locale
+
+    return unless @ordrparticipant.persisted?
+
+    create_customer_participant_activity
+  end
+
+  def load_open_order_and_participant
+    return unless @tablesetting
+
+    @openOrder = Ordr.where(
+      menu_id: @menu.id,
+      tablesetting_id: @tablesetting.id,
+      restaurant_id: @tablesetting.restaurant_id,
+      status: [0, 20, 22, 24, 25, 30], # opened, ordered, preparing, ready, delivered, billrequested
+    ).first
+    return unless @openOrder
+
+    eager_load_open_order
+
+    Ordrparticipant.on_primary do
+      if current_user
+        load_staff_participant
+      else
+        load_customer_participant
+      end
+    end
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_smartmenu

@@ -134,7 +134,7 @@ class Ordr < ApplicationRecord
 
   def orderedItemsCount
     if association(:ordritems).loaded?
-      ordritems.count { |it| it.status.to_s == 'ordered' }
+      ordritems.count { |item| item.status.to_s == 'ordered' }
     else
       ordritems.where(status: 20).count
     end
@@ -146,7 +146,7 @@ class Ordr < ApplicationRecord
 
   def preparedItemsCount
     if association(:ordritems).loaded?
-      ordritems.count { |it| it.status.to_s == 'preparing' }
+      ordritems.count { |item| item.status.to_s == 'preparing' }
     else
       ordritems.where(status: 22).count
     end
@@ -154,7 +154,7 @@ class Ordr < ApplicationRecord
 
   def totalItemsCount
     if association(:ordritems).loaded?
-      ordritems.count { |it| %w[opened ordered preparing ready delivered].include?(it.status.to_s) }
+      ordritems.count { |item| %w[opened ordered preparing ready delivered].include?(item.status.to_s) }
     else
       ordritems.where(status: [0, 20, 22, 24, 25]).count
     end
@@ -166,7 +166,7 @@ class Ordr < ApplicationRecord
 
   def deliveredItemsCount
     if association(:ordritems).loaded?
-      ordritems.count { |it| it.status.to_s == 'delivered' }
+      ordritems.count { |item| item.status.to_s == 'delivered' }
     else
       ordritems.where(status: 25).count
     end
@@ -187,9 +187,9 @@ class Ordr < ApplicationRecord
 
   def orderedCount
     if association(:ordritems).loaded?
-      ordritems.count { |it| %w[ordered preparing ready delivered].include?(it.status.to_s) }
+      ordritems.count { |item| %w[ordered preparing ready delivered].include?(item.status.to_s) }
     elsif association(:ordractions).loaded?
-      ordractions.filter_map(&:ordritem).count { |it| %w[ordered preparing ready delivered].include?(it.status.to_s) }
+      ordractions.filter_map(&:ordritem).count { |item| %w[ordered preparing ready delivered].include?(item.status.to_s) }
     else
       ordractions.joins(:ordritem).where(ordritems: { status: [20, 22, 24, 25] }).count
     end
@@ -197,9 +197,9 @@ class Ordr < ApplicationRecord
 
   def addedCount
     if association(:ordritems).loaded?
-      ordritems.count { |it| it.status.to_s == 'opened' }
+      ordritems.count { |item| item.status.to_s == 'opened' }
     elsif association(:ordractions).loaded?
-      ordractions.filter_map(&:ordritem).count { |it| it.status.to_s == 'opened' }
+      ordractions.filter_map(&:ordritem).count { |item| item.status.to_s == 'opened' }
     else
       ordractions.joins(:ordritem).where(ordritems: { status: 0 }).count
     end

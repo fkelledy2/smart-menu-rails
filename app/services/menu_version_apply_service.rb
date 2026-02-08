@@ -62,14 +62,14 @@ class MenuVersionApplyService
   def self.apply_items!(section, item_snapshots)
     return unless section.association(:menuitems).loaded?
 
-    items_by_id = Array(section.menuitems).index_by { |it| it.id.to_i }
+    items_by_id = Array(section.menuitems).index_by { |item| item.id.to_i }
 
     ordered_items = item_snapshots.filter_map do |is|
-      it = items_by_id[is['id'].to_i]
-      next unless it
+      item = items_by_id[is['id'].to_i]
+      next unless item
 
-      apply_item_attributes!(it, is)
-      it
+      apply_item_attributes!(item, is)
+      item
     end
 
     section.association(:menuitems).target = ordered_items
