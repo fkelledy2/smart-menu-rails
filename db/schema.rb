@@ -13,7 +13,11 @@
 ActiveRecord::Schema[7.2].define(version: 2026_02_05_183500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "vector"
+  begin
+    enable_extension "vector"
+  rescue ActiveRecord::StatementInvalid
+    nil
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
