@@ -285,41 +285,41 @@ cs:
   plan:
     business:
       attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Pro restaurace s více pobočkami</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> restaurací</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menu / restauraci</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong> položek / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> jazyků</li><li><i class='bi bi-check-lg'></i> Online objednávky</li><li><i class='bi bi-check-lg'></i> Prioritní podpora</li>"
       attribute4: ''
       attribute5: ''
-      key: ''
-    call: ''
+      key: Business
+    call: Zavolat
     enterprise:
       attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Neomezený počet poboček</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> Neomezený počet menu</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> AI náhledy jídel</li><li><i class='bi bi-check-lg'></i> Chytré objednávky a platby</li><li><i class='bi bi-check-lg'></i> Pokročilá vícejazyčná podpora</li><li><i class='bi bi-check-lg'></i> Dedikovaný account manager</li><li><i class='bi bi-check-lg'></i> Vlastní branding</li>"
       attribute4: ''
       attribute5: ''
-      key: ''
+      key: Enterprise
     pro:
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Až <strong>%{locations}</strong> restaurace</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menu / restauraci</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Digitální menu (+ fotky)</li><li><i class='bi bi-check-lg'></i> Objednávky hostů</li><li><i class='bi bi-check-lg'></i> Základní analytika</li><li><i class='bi bi-check-lg'></i> Vícejazyčná podpora</li><li>&nbsp;</li>"
       attribute4: ''
-      key: ''
-    register: ''
+      key: Pro
+    register: Registrovat
     starter:
       attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Pro malé kavárny</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> restaurace</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Až <strong>%{menus}</strong> menu / restauraci</li><li><i class='bi bi-check-lg'></i> Až <strong>%{dishes}</strong> položek / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> jazyk</li><li><i class='bi bi-check-lg'></i> Objednávky personálu</li><li><i class='bi bi-check-lg'></i> Podpora e‑mailem</li><li>&nbsp;</li>"
       attribute4: ''
       attribute5: ''
-      key: ''
+      key: Starter
     trial:
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      key: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> restaurace</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> menu</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Digitální menu</li><li><i class='bi bi-check-lg'></i> Objednávky pouze pro personál</li><li><i class='bi bi-check-lg'></i> Dietní filtry</li><li>&nbsp;</li><li>&nbsp;</li>"
+      key: Zkušební verze
   restaurantavailabilities:
     form:
       errors: ''

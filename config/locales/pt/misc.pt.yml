@@ -287,41 +287,41 @@ pt:
   plan:
     business:
       attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Para restaurantes com várias localizações</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> restaurantes</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menus / restaurante</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong> pratos / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> idiomas</li><li><i class='bi bi-check-lg'></i> Encomendas online</li><li><i class='bi bi-check-lg'></i> Suporte prioritário</li>"
       attribute4: ''
       attribute5: ''
       key: Business
     call: Ligar
     enterprise:
       attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Localizações ilimitadas</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> Menus ilimitados</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Pré-visualizações de pratos com IA</li><li><i class='bi bi-check-lg'></i> Encomendas e pagamentos inteligentes</li><li><i class='bi bi-check-lg'></i> Suporte multilingue avançado</li><li><i class='bi bi-check-lg'></i> Gestor de conta dedicado</li><li><i class='bi bi-check-lg'></i> Branding personalizado</li>"
       attribute4: ''
       attribute5: ''
       key: Enterprise
     pro:
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Até <strong>%{locations}</strong> restaurantes</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menus / restaurante</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Menu digital (+ fotos)</li><li><i class='bi bi-check-lg'></i> Encomendas de clientes</li><li><i class='bi bi-check-lg'></i> Analítica básica</li><li><i class='bi bi-check-lg'></i> Suporte multilingue</li><li>&nbsp;</li>"
       attribute4: ''
       key: Pro
     register: Registar
     starter:
       attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Para pequenos cafés</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> restaurante</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Até <strong>%{menus}</strong> menus / restaurante</li><li><i class='bi bi-check-lg'></i> Até <strong>%{dishes}</strong> pratos / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> idioma</li><li><i class='bi bi-check-lg'></i> Encomendas do staff</li><li><i class='bi bi-check-lg'></i> Suporte por email</li><li>&nbsp;</li>"
       attribute4: ''
       attribute5: ''
       key: Starter
     trial:
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      key: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> restaurante</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> menu</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Menu digital</li><li><i class='bi bi-check-lg'></i> Encomendas apenas para o staff</li><li><i class='bi bi-check-lg'></i> Filtros alimentares</li><li>&nbsp;</li><li>&nbsp;</li>"
+      key: Teste
   restaurantavailabilities:
     form:
       errors: Erros

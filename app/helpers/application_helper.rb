@@ -83,8 +83,17 @@ module ApplicationHelper
 
   # Safely render HTML content from translations
   # This method should be used when translation values contain HTML that needs to be rendered
-  def t_html(key, **)
-    raw t(key, **)
+  def t_html(key, **options)
+    k = key.to_s
+    return raw('') if k.blank?
+
+    opts = options
+    value = I18n.t(k, **opts.merge(default: nil))
+    if value.blank? || value.to_s.start_with?('translation missing:')
+      value = I18n.t(k, **opts.merge(locale: I18n.default_locale, default: k))
+    end
+
+    raw value
   end
 
   # Alternative method name for clarity

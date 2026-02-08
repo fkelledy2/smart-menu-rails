@@ -284,42 +284,42 @@ pl:
       table: replace_me
   plan:
     business:
-      attribut6: replace_me
-      attribute1: replace_me
-      attribute2: replace_me
-      attribute3: replace_me
-      attribute4: replace_me
-      attribute5: replace_me
-      key: replace_me
-    call: replace_me
+      attribut6: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Dla restauracji z wieloma lokalizacjami</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> restauracji</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menu / restaurację</li><li><i class='bi bi-check-lg'></i> <strong>%{dishes}</strong> dań / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> języków</li><li><i class='bi bi-check-lg'></i> Zamówienia online</li><li><i class='bi bi-check-lg'></i> Priorytetowe wsparcie</li>"
+      attribute4: ''
+      attribute5: ''
+      key: Business
+    call: Zadzwoń
     enterprise:
-      attribut6: replace_me
-      attribute1: replace_me
-      attribute2: replace_me
-      attribute3: replace_me
-      attribute4: replace_me
-      attribute5: replace_me
-      key: replace_me
+      attribut6: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Nielimitowane lokalizacje</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> Nielimitowane menu</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Podglądy dań AI</li><li><i class='bi bi-check-lg'></i> Inteligentne zamówienia i płatności</li><li><i class='bi bi-check-lg'></i> Zaawansowane wsparcie wielojęzyczne</li><li><i class='bi bi-check-lg'></i> Dedykowany opiekun</li><li><i class='bi bi-check-lg'></i> Personalizacja marki</li>"
+      attribute4: ''
+      attribute5: ''
+      key: Enterprise
     pro:
-      attribute1: replace_me
-      attribute2: replace_me
-      attribute3: replace_me
-      attribute4: replace_me
-      key: replace_me
-    register: replace_me
+      attribute1: "<li><i class='bi bi-check-lg'></i> Do <strong>%{locations}</strong> restauracji</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{menus}</strong> menu / restaurację</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Cyfrowe menu (+ zdjęcia)</li><li><i class='bi bi-check-lg'></i> Zamówienia gości</li><li><i class='bi bi-check-lg'></i> Podstawowa analityka</li><li><i class='bi bi-check-lg'></i> Wsparcie wielojęzyczne</li><li>&nbsp;</li>"
+      attribute4: ''
+      key: Pro
+    register: Zarejestruj się
     starter:
-      attribut6: replace_me
-      attribute1: replace_me
-      attribute2: replace_me
-      attribute3: replace_me
-      attribute4: replace_me
-      attribute5: replace_me
-      key: replace_me
+      attribut6: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Dla małych kawiarni</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong> restauracja</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Do <strong>%{menus}</strong> menu / restaurację</li><li><i class='bi bi-check-lg'></i> Do <strong>%{dishes}</strong> dań / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong> język</li><li><i class='bi bi-check-lg'></i> Zamówienia personelu</li><li><i class='bi bi-check-lg'></i> Wsparcie email</li><li>&nbsp;</li>"
+      attribute4: ''
+      attribute5: ''
+      key: Starter
     trial:
-      attribute1: replace_me
-      attribute2: replace_me
-      attribute3: replace_me
-      key: replace_me
+      attribute1: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> restauracja</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> menu</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Cyfrowe menu</li><li><i class='bi bi-check-lg'></i> Zamówienia tylko dla personelu</li><li><i class='bi bi-check-lg'></i> Filtry dietetyczne</li><li>&nbsp;</li><li>&nbsp;</li>"
+      key: Próbny
   restaurantavailabilities:
     form:
       errors: replace_me
