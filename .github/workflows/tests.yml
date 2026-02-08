@@ -12,7 +12,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15
+        image: ankane/pgvector:pg15
         ports: ["5432:5432"]
         env:
           POSTGRES_USER: postgres
@@ -27,6 +27,7 @@ jobs:
     env:
       RAILS_ENV: test
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
+      OPENAI_API_KEY: test
 
     steps:
       - name: Checkout
@@ -38,10 +39,22 @@ jobs:
           ruby-version: '.ruby-version'
           bundler-cache: true
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: 'yarn'
+
+      - name: Install Yarn
+        run: npm install -g yarn@1.22.22
+
+      - name: Install Node dependencies
+        run: yarn install --frozen-lockfile
+
       - name: Install system deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y libpq-dev
+          sudo apt-get install -y libpq-dev libvips
 
       - name: Install gems
         run: bundle install --jobs 4 --retry 3
