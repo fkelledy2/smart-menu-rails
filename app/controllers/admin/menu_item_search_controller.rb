@@ -17,7 +17,7 @@ class Admin::MenuItemSearchController < ApplicationController
     authorize %i[admin menu_item_search], :reindex?
 
     unless vector_search_enabled?
-      render json: { ok: false, error: 'vector_search_disabled' }, status: :unprocessable_entity
+      render json: { ok: false, error: 'vector_search_disabled' }, status: :unprocessable_content
       return
     end
 
@@ -32,8 +32,9 @@ class Admin::MenuItemSearchController < ApplicationController
   private
 
   def vector_search_enabled?
-    v = ENV['SMART_MENU_VECTOR_SEARCH_ENABLED']
+    v = ENV.fetch('SMART_MENU_VECTOR_SEARCH_ENABLED', nil)
     return true if v.nil? || v.to_s.strip == ''
+
     v.to_s.downcase == 'true'
   end
 
@@ -44,7 +45,7 @@ class Admin::MenuItemSearchController < ApplicationController
     restaurant = menu.restaurant
 
     locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 1).pluck(:locale).map { |l| normalize_locale(l) }
-    locales = locales.map(&:presence).compact.uniq
+    locales = locales.filter_map(&:presence).uniq
     locales = ['en'] if locales.empty?
 
     menuitem_count = Menuitem.joins(:menusection).where(menusections: { menu_id: menu.id }).count
@@ -58,7 +59,7 @@ class Admin::MenuItemSearchController < ApplicationController
         locale: loc,
         docs: total_docs,
         embedded: embedded_docs,
-        missing_embeddings: total_docs - embedded_docs
+        missing_embeddings: total_docs - embedded_docs,
       }
     end
 
@@ -66,7 +67,7 @@ class Admin::MenuItemSearchController < ApplicationController
       menu_id: menu.id,
       restaurant_id: restaurant.id,
       menuitems: menuitem_count,
-      locales: per_locale
+      locales: per_locale,
     }
   rescue ActiveRecord::RecordNotFound
     { ok: false, error: 'menu_not_found', menu_id: menu_id }

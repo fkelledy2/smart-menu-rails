@@ -45,7 +45,7 @@ module SentryContext
         user_agent: request.user_agent,
         ip_address: request.remote_ip,
         referer: request.referer,
-      },)
+      })
     rescue StandardError => e
       # Silently fail in test environment or if Sentry is not properly configured
       Rails.logger.debug { "Sentry context setting failed: #{e.message}" } if Rails.env.development?

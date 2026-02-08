@@ -51,7 +51,7 @@ class RestaurantOnboardingJob < ApplicationJob
       menu_id: menu.id,
       restaurant_name: restaurant.name,
       menu_name: menu.name,
-    },)
+    })
 
     # Track restaurant creation
     AnalyticsService.track_restaurant_created(user, restaurant)
@@ -65,7 +65,7 @@ class RestaurantOnboardingJob < ApplicationJob
       has_menu: true,
       onboarding_completed: true,
       onboarding_completed_at: Time.current,
-    },)
+    })
   rescue StandardError => e
     Rails.logger.error "Analytics tracking failed in RestaurantOnboardingJob: #{e.message}"
     # Don't fail the job if analytics fails

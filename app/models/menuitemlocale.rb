@@ -16,7 +16,7 @@ class Menuitemlocale < ApplicationRecord
     menu_id = menuitem&.menusection&.menu_id
     return if menu_id.blank?
 
-    v = ENV['SMART_MENU_VECTOR_SEARCH_ENABLED']
+    v = ENV.fetch('SMART_MENU_VECTOR_SEARCH_ENABLED', nil)
     vector_enabled = if v.nil? || v.to_s.strip == ''
                        true
                      else

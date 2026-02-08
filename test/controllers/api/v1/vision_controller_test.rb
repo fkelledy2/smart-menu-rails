@@ -28,13 +28,13 @@ class Api::V1::VisionControllerTest < ActionDispatch::IntegrationTest
   test 'should have analyze route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'post', path: '/api/v1/vision/analyze' },
-                   { controller: 'api/v1/vision', action: 'analyze', format: :json },)
+                   { controller: 'api/v1/vision', action: 'analyze', format: :json })
   end
 
   test 'should have detect menu items route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'post', path: '/api/v1/vision/detect_menu_items' },
-                   { controller: 'api/v1/vision', action: 'detect_menu_items', format: :json },)
+                   { controller: 'api/v1/vision', action: 'detect_menu_items', format: :json })
   end
 
   # Basic functionality tests

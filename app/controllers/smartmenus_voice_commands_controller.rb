@@ -3,6 +3,20 @@ class SmartmenusVoiceCommandsController < ApplicationController
 
   before_action :ensure_voice_enabled
 
+  def show
+    smartmenu = Smartmenu.find_by(slug: params[:smartmenu_id]) || Smartmenu.find(params[:smartmenu_id])
+    vc = VoiceCommand.where(smartmenu: smartmenu, session_id: session.id.to_s).find(params[:id])
+
+    render json: {
+      id: vc.id,
+      status: vc.status,
+      transcript: vc.transcript,
+      intent: vc.intent,
+      result: vc.result,
+      error: vc.error_message,
+    }
+  end
+
   def create
     smartmenu = Smartmenu.find_by(slug: params[:smartmenu_id]) || Smartmenu.find(params[:smartmenu_id])
 
@@ -16,7 +30,7 @@ class SmartmenusVoiceCommandsController < ApplicationController
         restaurant_id: params[:restaurant_id].presence,
         menu_id: params[:menu_id].presence,
         order_id: params[:order_id].presence,
-      }
+      },
     )
 
     if params[:audio].present?
@@ -26,20 +40,6 @@ class SmartmenusVoiceCommandsController < ApplicationController
     VoiceCommandTranscriptionJob.perform_async(vc.id)
 
     render json: { id: vc.id, status: vc.status }, status: :accepted
-  end
-
-  def show
-    smartmenu = Smartmenu.find_by(slug: params[:smartmenu_id]) || Smartmenu.find(params[:smartmenu_id])
-    vc = VoiceCommand.where(smartmenu: smartmenu, session_id: session.id.to_s).find(params[:id])
-
-    render json: {
-      id: vc.id,
-      status: vc.status,
-      transcript: vc.transcript,
-      intent: vc.intent,
-      result: vc.result,
-      error: vc.error_message,
-    }
   end
 
   private

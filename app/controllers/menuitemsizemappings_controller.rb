@@ -17,14 +17,14 @@ class MenuitemsizemappingsController < ApplicationController
           menusection = menuitem.menusection
           menu = menusection.menu
           restaurant = menu.owner_restaurant || menu.restaurant
-          
+
           redirect_to edit_restaurant_menu_menusection_menuitem_path(restaurant, menu, menusection, menuitem),
                       notice: t('common.flash.updated', resource: t('activerecord.models.menuitem'))
         end
         format.json { render :show, status: :ok, location: @menuItemSizeMapping }
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @menuItemSizeMapping.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @menuItemSizeMapping.errors, status: :unprocessable_content }
       end
     end
   end

@@ -19,10 +19,12 @@ class CacheKeyService
       end
 
       return ENV['ASSETS_DIGEST'] if ENV['ASSETS_DIGEST'].present?
-      return (Rails.respond_to?(:revision) ? Rails.revision : nil).to_s
+
+      (Rails.respond_to?(:revision) ? Rails.revision : nil).to_s
     rescue StandardError
       nil
     end
+
     # Generate optimized cache key for menu content
     def menu_content_key(ordr:, menu:, participant: nil, **options)
       base_key = "menu_content:#{menu.id}:#{menu.updated_at.to_i}"

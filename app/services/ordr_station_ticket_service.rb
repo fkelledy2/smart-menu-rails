@@ -12,6 +12,7 @@ class OrdrStationTicketService
       unsubmitted.each do |ordritem|
         station = station_for_menuitem(ordritem.menuitem)
         next unless station
+
         by_station[station] << ordritem
       end
 
@@ -24,7 +25,7 @@ class OrdrStationTicketService
           ticket = create_next_ticket!(order: order, station: station)
           items.each do |item|
             attrs = { ordr_station_ticket_id: ticket.id }
-            attrs[:status] = 20 if item.status.to_i == 0
+            attrs[:status] = 20 if item.status.to_i.zero?
             item.update!(attrs)
           end
 

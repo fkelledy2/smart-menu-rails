@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :ordr do
-    association :menu
+    menu
 
     restaurant { menu.restaurant }
     tablesetting { association :tablesetting, restaurant: restaurant }

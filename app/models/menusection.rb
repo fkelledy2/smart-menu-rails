@@ -5,6 +5,8 @@ class Menusection < ApplicationRecord
   belongs_to :menu
   has_many :menuitems, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :menuitems_count
 
+  # Default currencies based on parent restaurant
+  before_validation :default_tasting_currencies
   after_commit :enqueue_menu_item_search_reindex, on: %i[create update destroy]
 
   # IdentityCache configuration
@@ -58,7 +60,7 @@ class Menusection < ApplicationRecord
     restaurant = menu&.restaurant
 
     rl = nil
-    if restaurant && restaurant.association(:restaurantlocales).loaded?
+    if restaurant&.association(:restaurantlocales)&.loaded?
       rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
     end
     if rl.nil? && restaurant&.id
@@ -84,7 +86,7 @@ class Menusection < ApplicationRecord
     restaurant = menu&.restaurant
 
     rl = nil
-    if restaurant && restaurant.association(:restaurantlocales).loaded?
+    if restaurant&.association(:restaurantlocales)&.loaded?
       rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
     end
     if rl.nil? && restaurant&.id
@@ -139,39 +141,38 @@ class Menusection < ApplicationRecord
     validates :pairing_currency, presence: true, if: -> { pairing_price_cents.present? }
   end
 
-  # Default currencies based on parent restaurant
-  before_validation :default_tasting_currencies
-
   def tasting_price_amount
     return nil if tasting_price_cents.nil?
+
     tasting_price_cents.to_i / 100.0
   end
 
   def tasting_price_amount=(value)
-    if value.present?
-      self.tasting_price_cents = (value.to_f * 100).round
-    else
-      self.tasting_price_cents = nil
-    end
+    self.tasting_price_cents = if value.present?
+                                 (value.to_f * 100).round
+                               else
+                                 nil
+                               end
   end
 
   def pairing_price_amount
     return nil if pairing_price_cents.nil?
+
     pairing_price_cents.to_i / 100.0
   end
 
   def pairing_price_amount=(value)
-    if value.present?
-      self.pairing_price_cents = (value.to_f * 100).round
-    else
-      self.pairing_price_cents = nil
-    end
+    self.pairing_price_cents = if value.present?
+                                 (value.to_f * 100).round
+                               else
+                                 nil
+                               end
   end
 
   def enqueue_menu_item_search_reindex
     return if menu_id.blank?
 
-    v = ENV['SMART_MENU_VECTOR_SEARCH_ENABLED']
+    v = ENV.fetch('SMART_MENU_VECTOR_SEARCH_ENABLED', nil)
     vector_enabled = if v.nil? || v.to_s.strip == ''
                        true
                      else
@@ -189,11 +190,11 @@ class Menusection < ApplicationRecord
 
   def default_tasting_currencies
     parent_currency = menu&.restaurant&.currency
-    if tasting_menu?
-      self.tasting_currency ||= parent_currency if tasting_price_cents.present?
-      if allow_pairing? && pairing_price_cents.present?
-        self.pairing_currency ||= parent_currency
-      end
+    return unless tasting_menu?
+
+    self.tasting_currency ||= parent_currency if tasting_price_cents.present?
+    if allow_pairing? && pairing_price_cents.present?
+      self.pairing_currency ||= parent_currency
     end
   end
 end

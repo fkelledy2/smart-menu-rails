@@ -64,7 +64,7 @@ class OcrMenuItemsController < ApplicationController
     end
 
     if attrs.blank? && !params.dig(:ocr_menu_item, :allergens) && !params.dig(:ocr_menu_item, :dietary_restrictions)
-      return render json: { ok: false, errors: ['Empty payload'] }, status: :unprocessable_entity
+      return render json: { ok: false, errors: ['Empty payload'] }, status: :unprocessable_content
     end
 
     # basic guardrails to satisfy API contract and tests
@@ -72,12 +72,16 @@ class OcrMenuItemsController < ApplicationController
     guard_errors << "Name can't be blank" if attrs.key?(:name) && attrs[:name].to_s.strip.empty?
     guard_errors << 'Price must be greater than or equal to 0' if attrs.key?(:price) && attrs[:price].to_f.negative?
     if guard_errors.any?
-      return render json: { ok: false, errors: guard_errors }, status: :unprocessable_entity
+      return render json: { ok: false, errors: guard_errors }, status: :unprocessable_content
     end
 
     # Merge metadata overrides (alcohol flags) if provided
     if params.dig(:ocr_menu_item, :metadata).present?
-      md = params[:ocr_menu_item][:metadata].to_unsafe_h.symbolize_keys rescue {}
+      md = begin
+        params[:ocr_menu_item][:metadata].to_unsafe_h.symbolize_keys
+      rescue StandardError
+        {}
+      end
       safe_md = {}
       if md.key?(:alcohol_override)
         # expected values: 'alcoholic', 'non_alcoholic', 'undecided'
@@ -100,10 +104,10 @@ class OcrMenuItemsController < ApplicationController
     if @item.update(attrs)
       render json: { ok: true, item: serialize_item(@item) }
     else
-      render json: { ok: false, errors: @item.errors.full_messages }, status: :unprocessable_entity
+      render json: { ok: false, errors: @item.errors.full_messages }, status: :unprocessable_content
     end
   rescue ActionController::ParameterMissing
-    render json: { ok: false, errors: ['Invalid parameters'] }, status: :unprocessable_entity
+    render json: { ok: false, errors: ['Invalid parameters'] }, status: :unprocessable_content
   end
 
   private

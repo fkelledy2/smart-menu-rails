@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
     # Locale detection with optional URL override
     # Priority: URL parameter > Browser Accept-Language > Default
     # Supports: en (English), it (Italian)
-    
+
     requested_locale = nil
 
     normalize = lambda do |raw|
@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
         v
       end
     end
-    
+
     # 1. Check for explicit URL parameter (for testing/debugging)
     if params[:locale].present?
       requested_locale = normalize.call(params[:locale])
@@ -66,13 +66,13 @@ class ApplicationController < ActionController::Base
     end
 
     # Validate locale is supported
-    if requested_locale && I18n.available_locales.map(&:to_s).include?(requested_locale)
-      @locale = requested_locale.to_sym
-    else
-      # Fall back to default locale for unsupported or missing locales
-      @locale = I18n.default_locale
-    end
-    
+    @locale = if requested_locale && I18n.available_locales.map(&:to_s).include?(requested_locale)
+                requested_locale.to_sym
+              else
+                # Fall back to default locale for unsupported or missing locales
+                I18n.default_locale
+              end
+
     I18n.with_locale(@locale, &)
   rescue I18n::InvalidLocale => e
     # Safety net: if the requested locale is invalid, fall back to default.
@@ -96,7 +96,7 @@ class ApplicationController < ActionController::Base
     # For development, show more details
     if Rails.env.development?
       render plain: "CSRF Error: #{exception.message}\nSession: #{session.id}\nExpected: #{form_authenticity_token}\nReceived: #{request.headers['X-CSRF-Token'] || params[:authenticity_token]}",
-             status: :unprocessable_entity
+             status: :unprocessable_content
     else
       redirect_to new_user_session_path, alert: 'Security token expired. Please try logging in again.'
     end

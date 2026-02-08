@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Shared menus', type: :request do
+RSpec.describe 'Shared menus' do
   let(:user) { create(:user) }
   let(:restaurant_a) { create(:restaurant, user: user) }
   let(:restaurant_b) { create(:restaurant, user: user) }
@@ -16,41 +16,41 @@ RSpec.describe 'Shared menus', type: :request do
 
   describe 'attaching and detaching menus' do
     it 'attaches a menu to another restaurant' do
-      expect {
+      expect do
         post attach_restaurant_menu_path(restaurant_b, menu)
-      }.to change { RestaurantMenu.where(restaurant: restaurant_b, menu: menu).count }.from(0).to(1)
+      end.to change { RestaurantMenu.where(restaurant: restaurant_b, menu: menu).count }.from(0).to(1)
 
       expect(response).to have_http_status(:redirect).or have_http_status(:ok)
     end
 
     it 'does not allow owner restaurant to detach its own menu' do
-      expect {
+      expect do
         delete detach_restaurant_menu_path(restaurant_a, menu)
-      }.not_to change { RestaurantMenu.where(restaurant: restaurant_a, menu: menu).count }
+      end.not_to change { RestaurantMenu.where(restaurant: restaurant_a, menu: menu).count }
     end
 
     it 'detaches a menu from a restaurant' do
       create(:restaurant_menu, restaurant: restaurant_b, menu: menu, status: 'active', sequence: 1)
 
-      expect {
+      expect do
         delete detach_restaurant_menu_path(restaurant_b, menu)
-      }.to change { RestaurantMenu.where(restaurant: restaurant_b, menu: menu).count }.from(1).to(0)
+      end.to change { RestaurantMenu.where(restaurant: restaurant_b, menu: menu).count }.from(1).to(0)
 
       expect(response).to have_http_status(:redirect).or have_http_status(:ok)
     end
 
     it 'shares a menu to another restaurant' do
-      expect {
+      expect do
         post share_restaurant_menu_path(restaurant_a, menu), params: { target_restaurant_id: restaurant_b.id }
-      }.to change { RestaurantMenu.where(restaurant: restaurant_b, menu: menu).count }.from(0).to(1)
+      end.to change { RestaurantMenu.where(restaurant: restaurant_b, menu: menu).count }.from(0).to(1)
     end
 
     it 'shares a menu to multiple restaurants in one request' do
       restaurant_c = create(:restaurant, user: user)
 
-      expect {
+      expect do
         post share_restaurant_menu_path(restaurant_a, menu), params: { target_restaurant_ids: [restaurant_b.id, restaurant_c.id] }
-      }.to change { RestaurantMenu.where(menu: menu).count }.by(2)
+      end.to change { RestaurantMenu.where(menu: menu).count }.by(2)
 
       expect(RestaurantMenu.where(restaurant: restaurant_b, menu: menu).count).to eq(1)
       expect(RestaurantMenu.where(restaurant: restaurant_c, menu: menu).count).to eq(1)
@@ -60,9 +60,9 @@ RSpec.describe 'Shared menus', type: :request do
       restaurant_b
       restaurant_c = create(:restaurant, user: user)
 
-      expect {
+      expect do
         post share_restaurant_menu_path(restaurant_a, menu), params: { target_restaurant_ids: ['all'] }
-      }.to change { RestaurantMenu.where(menu: menu).count }.by(2)
+      end.to change { RestaurantMenu.where(menu: menu).count }.by(2)
 
       expect(RestaurantMenu.where(restaurant: restaurant_b, menu: menu).count).to eq(1)
       expect(RestaurantMenu.where(restaurant: restaurant_c, menu: menu).count).to eq(1)
@@ -72,18 +72,18 @@ RSpec.describe 'Shared menus', type: :request do
       other_user = create(:user)
       other_restaurant = create(:restaurant, user: other_user)
 
-      expect {
+      expect do
         post share_restaurant_menu_path(restaurant_a, menu), params: { target_restaurant_id: other_restaurant.id }
-      }.not_to change { RestaurantMenu.where(menu: menu).count }
+      end.not_to change { RestaurantMenu.where(menu: menu).count }
     end
 
     it 'does not allow re-sharing a menu from a non-owner restaurant context' do
       restaurant_c = create(:restaurant, user: user)
       post attach_restaurant_menu_path(restaurant_b, menu)
 
-      expect {
+      expect do
         post share_restaurant_menu_path(restaurant_b, menu), params: { target_restaurant_ids: [restaurant_c.id] }
-      }.not_to change { RestaurantMenu.where(restaurant: restaurant_c, menu: menu).count }
+      end.not_to change { RestaurantMenu.where(restaurant: restaurant_c, menu: menu).count }
     end
   end
 
@@ -118,11 +118,11 @@ RSpec.describe 'Shared menus', type: :request do
 
       patch availability_restaurant_restaurant_menu_path(restaurant_b, rm), params: {
         availability_override_enabled: 'true',
-        availability_state: 'unavailable'
+        availability_state: 'unavailable',
       }
 
       expect(response).to have_http_status(:redirect).or have_http_status(:ok)
-      expect(rm.reload.availability_override_enabled).to eq(true)
+      expect(rm.reload.availability_override_enabled).to be(true)
       expect(rm.availability_state).to eq('unavailable')
     end
   end
@@ -136,7 +136,7 @@ RSpec.describe 'Shared menus', type: :request do
       rm = RestaurantMenu.find_by!(restaurant: restaurant_b, menu: menu)
 
       patch reorder_restaurant_restaurant_menus_path(restaurant_b), params: {
-        order: [{ id: rm.id, sequence: 2 }]
+        order: [{ id: rm.id, sequence: 2 }],
       }, as: :json
 
       expect(response).to have_http_status(:ok)
@@ -149,7 +149,7 @@ RSpec.describe 'Shared menus', type: :request do
       patch bulk_update_restaurant_restaurant_menus_path(restaurant_b), params: {
         restaurant_menu_ids: [rm.id],
         operation: 'set_status',
-        value: 'inactive'
+        value: 'inactive',
       }
 
       expect(response).to have_http_status(:redirect).or have_http_status(:ok)
@@ -162,7 +162,7 @@ RSpec.describe 'Shared menus', type: :request do
       patch bulk_update_restaurant_restaurant_menus_path(restaurant_b), params: {
         restaurant_menu_ids: [rm.id],
         operation: 'archive',
-        value: '1'
+        value: '1',
       }
 
       expect(response).to have_http_status(:redirect).or have_http_status(:ok)
@@ -176,7 +176,7 @@ RSpec.describe 'Shared menus', type: :request do
       patch bulk_update_restaurant_restaurant_menus_path(restaurant_b), params: {
         restaurant_menu_ids: [rm.id],
         operation: 'restore',
-        value: '1'
+        value: '1',
       }
 
       expect(response).to have_http_status(:redirect).or have_http_status(:ok)
@@ -189,12 +189,12 @@ RSpec.describe 'Shared menus', type: :request do
       patch bulk_availability_restaurant_restaurant_menus_path(restaurant_b), params: {
         restaurant_menu_ids: [rm.id],
         availability_override_enabled: 'true',
-        availability_state: 'unavailable'
+        availability_state: 'unavailable',
       }
 
       expect(response).to have_http_status(:redirect).or have_http_status(:ok)
       rm.reload
-      expect(rm.availability_override_enabled).to eq(true)
+      expect(rm.availability_override_enabled).to be(true)
       expect(rm.availability_state).to eq('unavailable')
     end
   end

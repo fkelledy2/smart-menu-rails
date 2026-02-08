@@ -11,10 +11,10 @@ class Payments::SubscriptionsController < ApplicationController
     authorize restaurant, :update?
 
     plan = if params[:plan_id].present?
-      Plan.find_by(id: params[:plan_id])
-    else
-      current_user.plan
-    end
+             Plan.find_by(id: params[:plan_id])
+           else
+             current_user.plan
+           end
     unless plan
       respond_with_start_error('No plan selected', restaurant: restaurant)
       return
@@ -120,22 +120,20 @@ class Payments::SubscriptionsController < ApplicationController
 
   def respond_with_start_error(message, restaurant:)
     respond_to do |format|
-      format.json { render json: { ok: false, error: message }, status: :unprocessable_entity }
+      format.json { render json: { ok: false, error: message }, status: :unprocessable_content }
       format.html do
-        redirect_back fallback_location: edit_restaurant_path(restaurant),
-                      alert: message,
-                      status: :see_other
+        redirect_back_or_to(edit_restaurant_path(restaurant), alert: message,
+                                                              status: :see_other,)
       end
     end
   end
 
   def respond_with_portal_error(message, restaurant:)
     respond_to do |format|
-      format.json { render json: { ok: false, error: message }, status: :unprocessable_entity }
+      format.json { render json: { ok: false, error: message }, status: :unprocessable_content }
       format.html do
-        redirect_back fallback_location: edit_restaurant_path(restaurant),
-                      alert: message,
-                      status: :see_other
+        redirect_back_or_to(edit_restaurant_path(restaurant), alert: message,
+                                                              status: :see_other,)
       end
     end
   end
@@ -169,10 +167,10 @@ class Payments::SubscriptionsController < ApplicationController
     end
 
     key = if Rails.env.production?
-      env_key || credentials_key
-    else
-      credentials_key.presence || env_key
-    end
+            env_key || credentials_key
+          else
+            credentials_key.presence || env_key
+          end
 
     raise 'Stripe is not configured' if key.blank?
 

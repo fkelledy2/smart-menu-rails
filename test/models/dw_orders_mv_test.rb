@@ -27,8 +27,8 @@ class DwOrdersMvTest < ActiveSupport::TestCase
   end
 
   test 'cannot be destroyed' do
-    skip 'No records in materialized view' if DwOrdersMv.count.zero?
-    
+    skip 'No records in materialized view' if DwOrdersMv.none?
+
     mv = DwOrdersMv.first
     assert_raises(ActiveRecord::ReadOnlyRecord) do
       mv.destroy

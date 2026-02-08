@@ -55,7 +55,7 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
       render json: restaurant_json(@restaurant), status: :created
     else
       render json: { error: { code: 'VALIDATION_ERROR', message: @restaurant.errors.full_messages.join(', ') } },
-             status: :unprocessable_entity
+             status: :unprocessable_content
     end
   end
 
@@ -67,7 +67,7 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
       render json: restaurant_json(@restaurant)
     else
       render json: { error: { code: 'VALIDATION_ERROR', message: @restaurant.errors.full_messages.join(', ') } },
-             status: :unprocessable_entity
+             status: :unprocessable_content
     end
   end
 

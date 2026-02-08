@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Menu publishing gating', type: :request do
+RSpec.describe 'Menu publishing gating' do
   let(:plan) { create(:plan) }
   let(:user) { create(:user, plan: plan) }
   let(:restaurant) { create(:restaurant, user: user) }
@@ -15,8 +15,8 @@ RSpec.describe 'Menu publishing gating', type: :request do
             headers: { 'ACCEPT' => 'application/json' },
             as: :json
 
-      expect(response).to have_http_status(:unprocessable_entity)
-      data = JSON.parse(response.body)
+      expect(response).to have_http_status(:unprocessable_content)
+      data = response.parsed_body
       expect(data['errors'].join(' ')).to match(/Publishing requires an active subscription/i)
 
       expect(menu.reload.status).to eq('inactive')

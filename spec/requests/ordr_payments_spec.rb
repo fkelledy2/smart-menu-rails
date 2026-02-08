@@ -20,7 +20,7 @@ RSpec.describe 'OrdrPayments' do
 
       post "/restaurants/#{restaurant.id}/ordrs/#{ordr.id}/request_bill", headers: { 'ACCEPT' => 'application/json' }, as: :json
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(ordr.reload.status).not_to eq('billrequested')
     end
 
@@ -43,11 +43,11 @@ RSpec.describe 'OrdrPayments' do
       post "/restaurants/#{restaurant.id}/ordrs/#{ordr.id}/split_evenly", headers: { 'ACCEPT' => 'application/json' }, as: :json
 
       expect(response).to have_http_status(:ok)
-      data = JSON.parse(response.body)
-      expect(data['ok']).to eq(true)
+      data = response.parsed_body
+      expect(data['ok']).to be(true)
       expect(data['split_payments'].length).to eq(2)
 
-      amounts = data['split_payments'].map { |sp| sp['amount_cents'] }
+      amounts = data['split_payments'].pluck('amount_cents')
       expect(amounts.sum).to eq(1000)
       expect(amounts.uniq).to eq([500])
 
@@ -75,8 +75,8 @@ RSpec.describe 'OrdrPayments' do
            as: :json
 
       expect(response).to have_http_status(:ok)
-      data = JSON.parse(response.body)
-      expect(data['ok']).to eq(true)
+      data = response.parsed_body
+      expect(data['ok']).to be(true)
       expect(data['checkout_url']).to eq('https://stripe.test/checkout')
 
       sp.reload

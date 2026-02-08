@@ -4,7 +4,7 @@ class MemoryMonitoringServiceTest < ActiveSupport::TestCase
   test 'returns memory leak threshold' do
     threshold = MemoryMonitoringService.memory_leak_threshold_mb
     assert_kind_of Integer, threshold
-    assert threshold > 0
+    assert threshold.positive?
   end
 
   test 'default memory leak threshold is 50 MB' do
@@ -13,7 +13,7 @@ class MemoryMonitoringServiceTest < ActiveSupport::TestCase
 
   test 'gets process memory' do
     memory = MemoryMonitoringService.get_process_memory
-    
+
     assert_kind_of Hash, memory
     assert_includes memory.keys, :rss
     assert_kind_of Integer, memory[:rss]
@@ -21,7 +21,7 @@ class MemoryMonitoringServiceTest < ActiveSupport::TestCase
 
   test 'current memory snapshot includes expected keys' do
     snapshot = MemoryMonitoringService.current_memory_snapshot
-    
+
     assert_includes snapshot.keys, :heap_size
     assert_includes snapshot.keys, :heap_free
     assert_includes snapshot.keys, :objects_allocated
@@ -63,7 +63,7 @@ class MemoryMonitoringServiceTest < ActiveSupport::TestCase
 
   test 'get_fallback_memory returns hash with rss' do
     memory = MemoryMonitoringService.get_fallback_memory
-    
+
     assert_kind_of Hash, memory
     assert_includes memory.keys, :rss
     assert memory[:rss] >= 0
@@ -83,22 +83,22 @@ class MemoryMonitoringServiceTest < ActiveSupport::TestCase
 
   test 'current memory snapshot has positive values' do
     snapshot = MemoryMonitoringService.current_memory_snapshot
-    
-    assert snapshot[:heap_size] > 0
-    assert snapshot[:objects_allocated] > 0
+
+    assert snapshot[:heap_size].positive?
+    assert snapshot[:objects_allocated].positive?
     assert snapshot[:gc_count] >= 0
   end
 
   test 'formatted RSS is a string' do
     snapshot = MemoryMonitoringService.current_memory_snapshot
-    
+
     assert_kind_of String, snapshot[:formatted_rss]
     assert_match(/\d+(\.\d+)?\s+(B|KB|MB|GB)/, snapshot[:formatted_rss])
   end
 
   test 'timestamp is a Time object' do
     snapshot = MemoryMonitoringService.current_memory_snapshot
-    
+
     assert_kind_of Time, snapshot[:timestamp]
   end
 end

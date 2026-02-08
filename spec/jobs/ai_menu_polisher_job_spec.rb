@@ -22,7 +22,7 @@ RSpec.describe AiMenuPolisherJob do
     allow(AlcoholDetectionService).to receive(:detect).and_return({ decided: false, confidence: 0.0 })
     allow(AdvancedCacheService).to receive(:invalidate_menu_caches)
     allow(AdvancedCacheService).to receive(:invalidate_restaurant_caches)
-    allow_any_instance_of(AiMenuPolisherJob).to receive(:set_progress)
+    allow_any_instance_of(described_class).to receive(:set_progress)
 
     described_class.new.perform(menu.id)
 

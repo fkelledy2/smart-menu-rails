@@ -87,18 +87,18 @@ module Payments
         end
 
         key = if Rails.env.production?
-          env_key || credentials_key
-        else
-          credentials_key.presence || env_key
-        end
+                env_key || credentials_key
+              else
+                credentials_key.presence || env_key
+              end
 
         key_source = if key.blank?
-          'none'
-        elsif key == env_key
-          'env'
-        else
-          'credentials'
-        end
+                       'none'
+                     elsif key == env_key
+                       'env'
+                     else
+                       'credentials'
+                     end
 
         raise 'Stripe is not configured' if key.blank?
 

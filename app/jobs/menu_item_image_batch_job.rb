@@ -16,7 +16,7 @@ class MenuItemImageBatchJob
       merged = existing.merge(payload.stringify_keys)
       r.setex("image_gen:#{jid}", 24 * 3600, merged.to_json)
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.warn("[MenuItemImageBatchJob] Failed to write progress for #{jid}: #{e.class}: #{e.message}")
   end
 
@@ -29,7 +29,7 @@ class MenuItemImageBatchJob
       payload['log'] = log.last(50)
       r.setex("image_gen:#{jid}", 24 * 3600, payload.to_json)
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.warn("[MenuItemImageBatchJob] Failed to append progress log for #{jid}: #{e.class}: #{e.message}")
   end
 
@@ -39,12 +39,12 @@ class MenuItemImageBatchJob
       current: current,
       total: total,
       message: message || 'AI image generation in progress',
-      menu_id: menu_id
+      menu_id: menu_id,
     }.merge(extra.is_a?(Hash) ? extra : {})
 
     update_progress(payload)
     append_progress_log(payload[:message].to_s) if payload[:message].present?
-  rescue => e
+  rescue StandardError => e
     Rails.logger.warn("[MenuItemImageBatchJob] Failed to set progress: #{e.message}")
   end
 
@@ -65,6 +65,7 @@ class MenuItemImageBatchJob
         menu.menuitems.includes(:menusection).find_each do |mi|
           next if mi.itemtype == 'wine' # we never generate for wines
           next if mi.genimage.present?
+
           Genimage.create!(
             restaurant: menu.restaurant,
             menu: menu,
@@ -74,7 +75,7 @@ class MenuItemImageBatchJob
           created += 1
         end
         Rails.logger.info "[MenuItemImageBatchJob] Seeded #{created} missing genimage records for menu #{menu.id}"
-      rescue => e
+      rescue StandardError => e
         Rails.logger.warn "[MenuItemImageBatchJob] Failed seeding genimages for menu #{menu_id}: #{e.message}"
       end
     end
@@ -131,10 +132,10 @@ class MenuItemImageBatchJob
           message: "Generated '#{item_name}' (#{processed + skipped}/#{total})",
           extra: {
             current_item_name: item_name,
-            current_item_image_url: current_url
-          }
+            current_item_image_url: current_url,
+          },
         )
-      rescue => e
+      rescue StandardError => e
         Rails.logger.warn("[MenuItemImageBatchJob] Progress update failed: #{e.message}")
       end
 
@@ -158,7 +159,7 @@ class MenuItemImageBatchJob
       total,
       menu_id,
       message: 'Completed',
-      extra: { summary: { processed: processed, skipped: skipped, errors: errors } }
+      extra: { summary: { processed: processed, skipped: skipped, errors: errors } },
     )
   end
 end

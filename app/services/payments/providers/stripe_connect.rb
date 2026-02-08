@@ -13,16 +13,16 @@ module Payments
         acct = Stripe::Account.retrieve(provider_account_id.to_s)
         business_profile = acct.respond_to?(:business_profile) ? acct.business_profile : nil
         settings = acct.respond_to?(:settings) ? acct.settings : nil
-        payments_settings = settings&.respond_to?(:payments) ? settings.payments : nil
+        payments_settings = settings.respond_to?(:payments) ? settings.payments : nil
 
         {
           account_id: acct.id.to_s,
-          business_name: business_profile&.respond_to?(:name) ? business_profile.name.to_s.presence : nil,
-          support_email: business_profile&.respond_to?(:support_email) ? business_profile.support_email.to_s.presence : nil,
-          support_phone: business_profile&.respond_to?(:support_phone) ? business_profile.support_phone.to_s.presence : nil,
-          support_url: business_profile&.respond_to?(:support_url) ? business_profile.support_url.to_s.presence : nil,
-          support_address: business_profile&.respond_to?(:support_address) ? business_profile.support_address : nil,
-          statement_descriptor: payments_settings&.respond_to?(:statement_descriptor) ? payments_settings.statement_descriptor.to_s.presence : nil,
+          business_name: business_profile.respond_to?(:name) ? business_profile.name.to_s.presence : nil,
+          support_email: business_profile.respond_to?(:support_email) ? business_profile.support_email.to_s.presence : nil,
+          support_phone: business_profile.respond_to?(:support_phone) ? business_profile.support_phone.to_s.presence : nil,
+          support_url: business_profile.respond_to?(:support_url) ? business_profile.support_url.to_s.presence : nil,
+          support_address: business_profile.respond_to?(:support_address) ? business_profile.support_address : nil,
+          statement_descriptor: payments_settings.respond_to?(:statement_descriptor) ? payments_settings.statement_descriptor.to_s.presence : nil,
         }
       rescue Stripe::StripeError => e
         Rails.logger.warn("[StripeConnect] receipt_details_for_account failed restaurant_id=#{@restaurant&.id} account_id=#{provider_account_id}: #{e.class}: #{e.message}")
@@ -63,8 +63,8 @@ module Payments
             country: created.country.to_s.presence,
             currency: created.default_currency.to_s.presence&.upcase,
             status: :onboarding,
-            capabilities: (created.capabilities || {}),
-            payouts_enabled: !!created.payouts_enabled,
+            capabilities: created.capabilities || {},
+            payouts_enabled: !created.payouts_enabled.nil?,
           )
         end
 
@@ -98,7 +98,7 @@ module Payments
           end
         end
 
-        key = ENV['STRIPE_SECRET_KEY'] if key.blank?
+        key = ENV.fetch('STRIPE_SECRET_KEY', nil) if key.blank?
 
         raise 'Stripe is not configured' if key.blank?
 

@@ -246,16 +246,16 @@ es:
   number:
     currency:
       format:
-        delimiter: ''
-        format: ''
-        precision: ''
-        separator: ''
-        unit: ''
+        delimiter: '.'
+        format: '%n %u'
+        precision: 2
+        separator: ','
+        unit: '€'
   ocr_menu_imports:
     create:
-      success: Importación de menú iniciada exitosamente.
+      success: Importación de menú iniciada correctamente.
     edit:
-      ocrMenuImport: Editar importación
+      ocrMenuImport: Editar importación OCR
     form:
       cancel: Cancelar
       import: Importar

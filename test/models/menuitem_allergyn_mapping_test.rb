@@ -7,7 +7,7 @@ class MenuitemAllergynMappingTest < ActiveSupport::TestCase
     # Create mapping dynamically instead of using fixtures to avoid FK constraint issues
     @mapping = MenuitemAllergynMapping.create!(
       menuitem: @menuitem,
-      allergyn: @allergyn
+      allergyn: @allergyn,
     )
   end
 

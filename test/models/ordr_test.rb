@@ -279,7 +279,7 @@ class OrdrTest < ActiveSupport::TestCase
   test 'diners should count distinct session IDs for role 0 participants' do
     # Clear existing fixture participants to test from clean state
     @ordr.ordrparticipants.destroy_all
-    
+
     # Create test participants with different roles and session IDs
     @ordr.ordrparticipants.create!(role: 0, sessionid: 'session1')
     @ordr.ordrparticipants.create!(role: 0, sessionid: 'session2')
@@ -361,16 +361,16 @@ class OrdrTest < ActiveSupport::TestCase
     mock.expect :call, true do |ordr|
       ordr.is_a?(Ordr)
     end
-    
+
     KitchenBroadcastService.stub :broadcast_new_order, mock do
-      ordr = Ordr.create!(
+      Ordr.create!(
         restaurant: @restaurant,
         menu: @menu,
         tablesetting: @tablesetting,
         gross: 0.0,
-        status: :ordered
+        status: :ordered,
       )
-      
+
       assert mock.verify
     end
   end
@@ -379,18 +379,18 @@ class OrdrTest < ActiveSupport::TestCase
     # Mock should not be called for 'opened' status
     mock = Minitest::Mock.new
     # No expectation set
-    
+
     KitchenBroadcastService.stub :broadcast_new_order, mock do
       ordr = Ordr.create!(
         restaurant: @restaurant,
         menu: @menu,
         tablesetting: @tablesetting,
         gross: 0.0,
-        status: :opened
+        status: :opened,
       )
-      
+
       # If broadcast was called, mock would raise error
-      assert ordr.persisted?, "Order should be created successfully"
+      assert ordr.persisted?, 'Order should be created successfully'
     end
   end
 
@@ -399,16 +399,16 @@ class OrdrTest < ActiveSupport::TestCase
     mock.expect :call, true do |ordr|
       ordr.is_a?(Ordr)
     end
-    
+
     KitchenBroadcastService.stub :broadcast_new_order, mock do
-      ordr = Ordr.create!(
+      Ordr.create!(
         restaurant: @restaurant,
         menu: @menu,
         tablesetting: @tablesetting,
         gross: 0.0,
-        status: :preparing
+        status: :preparing,
       )
-      
+
       assert mock.verify
     end
   end
@@ -420,14 +420,14 @@ class OrdrTest < ActiveSupport::TestCase
       menu: @menu,
       tablesetting: @tablesetting,
       gross: 0.0,
-      status: :opened
+      status: :opened,
     )
-    
+
     mock = Minitest::Mock.new
     mock.expect :call, true do |order, old_status, new_status|
       order.is_a?(Ordr) && old_status == 'opened' && new_status == 'ordered'
     end
-    
+
     KitchenBroadcastService.stub :broadcast_status_change, mock do
       ordr.update!(status: :ordered)
       assert mock.verify
@@ -440,16 +440,16 @@ class OrdrTest < ActiveSupport::TestCase
       menu: @menu,
       tablesetting: @tablesetting,
       gross: 0.0,
-      status: :opened
+      status: :opened,
     )
-    
+
     mock = Minitest::Mock.new
     # No expectation set
-    
+
     KitchenBroadcastService.stub :broadcast_status_change, mock do
       result = ordr.update!(gross: 100.0) # Update different field
       # If broadcast was called, mock would raise error
-      assert result, "Order should update successfully"
+      assert result, 'Order should update successfully'
     end
   end
 
@@ -459,15 +459,15 @@ class OrdrTest < ActiveSupport::TestCase
       menu: @menu,
       tablesetting: @tablesetting,
       gross: 0.0,
-      status: :ordered
+      status: :ordered,
     )
-    
+
     # Test ordered -> preparing
     mock = Minitest::Mock.new
     mock.expect :call, true do |order, old_status, new_status|
       order.is_a?(Ordr) && old_status == 'ordered' && new_status == 'preparing'
     end
-    
+
     KitchenBroadcastService.stub :broadcast_status_change, mock do
       ordr.update!(status: :preparing)
       assert mock.verify
@@ -480,16 +480,16 @@ class OrdrTest < ActiveSupport::TestCase
       menu: @menu,
       tablesetting: @tablesetting,
       gross: 0.0,
-      status: :billrequested
+      status: :billrequested,
     )
-    
+
     mock = Minitest::Mock.new
     # No expectation set
-    
+
     KitchenBroadcastService.stub :broadcast_status_change, mock do
       result = ordr.update!(status: :paid)
       # If broadcast was called, mock would raise error (paid is not kitchen-relevant)
-      assert result, "Order should update successfully"
+      assert result, 'Order should update successfully'
     end
   end
 
@@ -500,20 +500,20 @@ class OrdrTest < ActiveSupport::TestCase
       menu: @menu,
       tablesetting: @tablesetting,
       gross: 0.0,
-      status: :opened
+      status: :opened,
     )
-    
+
     menuitem = menuitems(:one)
     item1 = ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.0)
     item2 = ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 15.0)
-    
+
     # Change order status
     ordr.update!(status: :ordered)
-    
+
     # Reload items to get updated status
     item1.reload
     item2.reload
-    
+
     # Items should have cascaded status
     assert item1.ordered?
     assert item2.ordered?
@@ -525,18 +525,18 @@ class OrdrTest < ActiveSupport::TestCase
       menu: @menu,
       tablesetting: @tablesetting,
       gross: 0.0,
-      status: :opened
+      status: :opened,
     )
-    
+
     menuitem = menuitems(:one)
     item = ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.0)
-    
+
     # Update different field
     ordr.update!(gross: 100.0)
-    
+
     # Reload item
     item.reload
-    
+
     # Item status should remain unchanged
     assert item.opened?
   end
@@ -547,18 +547,18 @@ class OrdrTest < ActiveSupport::TestCase
       menu: @menu,
       tablesetting: @tablesetting,
       gross: 0.0,
-      status: :ordered
+      status: :ordered,
     )
-    
+
     menuitem = menuitems(:one)
     items = []
     5.times do
       items << ordr.ordritems.create!(menuitem: menuitem, status: :ordered, ordritemprice: 10.0)
     end
-    
+
     # Change order status
     ordr.update!(status: :preparing)
-    
+
     # All items should have cascaded status
     items.each do |item|
       item.reload
@@ -572,37 +572,37 @@ class OrdrTest < ActiveSupport::TestCase
       menu: @menu,
       tablesetting: @tablesetting,
       gross: 0.0,
-      status: :opened
+      status: :opened,
     )
-    
+
     menuitem = menuitems(:one)
     item_to_update = ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.0)
     item_already_opened = ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 15.0)
-    
+
     # Change order status to ordered
     ordr.update!(status: :ordered)
-    
+
     # Reload items
     item_to_update.reload
     item_already_opened.reload
-    
+
     # Both items should now be ordered (cascaded from order)
     assert item_to_update.ordered?
     assert item_already_opened.ordered?
-    
+
     # Now change one item back to opened manually using update_column (bypasses callbacks)
     item_to_update.update_column(:status, Ordritem.statuses[:opened])
     item_to_update.reload
     assert item_to_update.opened?
-    
+
     # Change order status to preparing (actual status change)
     # This should cascade and update both items
     ordr.update!(status: :preparing)
-    
+
     # Reload items
     item_to_update.reload
     item_already_opened.reload
-    
+
     # Both items should now be preparing
     assert item_to_update.preparing?
     assert item_already_opened.preparing?
@@ -614,11 +614,11 @@ class OrdrTest < ActiveSupport::TestCase
       menu: @menu,
       tablesetting: @tablesetting,
       gross: 0.0,
-      status: :opened
+      status: :opened,
     )
-    
+
     # No ordritems created
-    
+
     # Should not raise error when cascading
     assert_nothing_raised do
       ordr.update!(status: :ordered)
@@ -633,14 +633,14 @@ class OrdrTest < ActiveSupport::TestCase
       restaurant: @restaurant,
       menu: @menu,
       tablesetting: @tablesetting,
-      gross: 0.0
+      gross: 0.0,
     )
-    
+
     menuitem = menuitems(:one)
     ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.0)
-    
+
     results = Ordr.with_complete_items
-    
+
     # Verify associations are loaded
     assert results.first.association(:restaurant).loaded?
     assert results.first.association(:tablesetting).loaded?
@@ -652,9 +652,9 @@ class OrdrTest < ActiveSupport::TestCase
     ordr1 = Ordr.create!(restaurant: @restaurant, menu: @menu, tablesetting: @tablesetting, gross: 0.0, status: :opened)
     ordr2 = Ordr.create!(restaurant: @restaurant, menu: @menu, tablesetting: @tablesetting, gross: 0.0, status: :ordered)
     ordr3 = Ordr.create!(restaurant: @restaurant, menu: @menu, tablesetting: @tablesetting, gross: 0.0, status: :closed)
-    
+
     results = Ordr.with_complete_items
-    
+
     assert_includes results, ordr1
     assert_includes results, ordr2
     assert_includes results, ordr3
@@ -664,20 +664,20 @@ class OrdrTest < ActiveSupport::TestCase
   test 'should filter by restaurant_id with for_restaurant_dashboard' do
     restaurant1 = restaurants(:one)
     restaurant2 = restaurants(:two)
-    
+
     # Create tablesetting for restaurant2
     tablesetting2 = restaurant2.tablesettings.create!(
       name: 'Table 1',
       status: :free,
       tabletype: :indoor,
-      capacity: 4
+      capacity: 4,
     )
-    
+
     ordr1 = Ordr.create!(restaurant: restaurant1, menu: @menu, tablesetting: @tablesetting, gross: 0.0)
     ordr2 = Ordr.create!(restaurant: restaurant2, menu: menus(:two), tablesetting: tablesetting2, gross: 0.0)
-    
+
     results = Ordr.for_restaurant_dashboard(restaurant1.id)
-    
+
     assert_includes results, ordr1
     assert_not_includes results, ordr2
   end
@@ -688,19 +688,19 @@ class OrdrTest < ActiveSupport::TestCase
       menu: @menu,
       tablesetting: @tablesetting,
       gross: 0.0,
-      created_at: 2.days.ago
+      created_at: 2.days.ago,
     )
-    
+
     new_ordr = Ordr.create!(
       restaurant: @restaurant,
       menu: @menu,
       tablesetting: @tablesetting,
       gross: 0.0,
-      created_at: Time.current
+      created_at: Time.current,
     )
-    
+
     results = Ordr.for_restaurant_dashboard(@restaurant.id)
-    
+
     assert_equal new_ordr.id, results.first.id
     assert_equal old_ordr.id, results.last.id
   end
@@ -710,14 +710,14 @@ class OrdrTest < ActiveSupport::TestCase
       restaurant: @restaurant,
       menu: @menu,
       tablesetting: @tablesetting,
-      gross: 0.0
+      gross: 0.0,
     )
-    
+
     menuitem = menuitems(:one)
     ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.0)
-    
+
     results = Ordr.for_restaurant_dashboard(@restaurant.id)
-    
+
     # Verify associations are loaded
     assert results.first.association(:restaurant).loaded?
     assert results.first.association(:ordritems).loaded?
@@ -725,9 +725,9 @@ class OrdrTest < ActiveSupport::TestCase
 
   test 'should return empty for_restaurant_dashboard when no orders for restaurant' do
     restaurant2 = restaurants(:two)
-    
+
     results = Ordr.for_restaurant_dashboard(restaurant2.id)
-    
+
     assert_empty results
   end
 end

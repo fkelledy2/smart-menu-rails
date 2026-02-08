@@ -21,8 +21,8 @@ class SlowQuery < ApplicationRecord
   def self.group_by_pattern
     all.group_by { |query| normalize_sql(query.sql) }
       .transform_values do |queries|
-      { count: queries.count,
-        avg_duration: queries.sum(&:duration) / queries.count.to_f, }
+        { count: queries.count,
+          avg_duration: queries.sum(&:duration) / queries.count.to_f, }
     end
   end
 

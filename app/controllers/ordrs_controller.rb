@@ -1,53 +1,51 @@
-  def broadcast_state(ordr, tablesetting, ordrparticipant)
-    begin
-      menu = ordr.menu
-      restaurant = menu.restaurant
-      menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
+def broadcast_state(ordr, tablesetting, ordrparticipant)
+  menu = ordr.menu
+  restaurant = menu.restaurant
+  menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
 
-      Rails.logger.info("[BroadcastState][Ordrs] Building payload for order=#{ordr.id} table=#{tablesetting&.id} session=#{session.id}")
+  Rails.logger.info("[BroadcastState][Ordrs] Building payload for order=#{ordr.id} table=#{tablesetting&.id} session=#{session.id}")
 
-      payload = SmartmenuState.for_context(
-        menu: menu,
-        restaurant: restaurant,
-        tablesetting: tablesetting,
-        open_order: ordr,
-        ordrparticipant: ordrparticipant,
-        menuparticipant: menuparticipant,
-        session_id: session.id.to_s
-      )
+  payload = SmartmenuState.for_context(
+    menu: menu,
+    restaurant: restaurant,
+    tablesetting: tablesetting,
+    open_order: ordr,
+    ordrparticipant: ordrparticipant,
+    menuparticipant: menuparticipant,
+    session_id: session.id.to_s,
+  )
 
-      begin
-        keys = payload.is_a?(Hash) ? payload.keys : payload.class
-        Rails.logger.info("[BroadcastState][Ordrs] Payload summary keys=#{keys} orderId=#{payload.dig(:order, :id)} totals?=#{!!payload[:totals]}")
-      rescue StandardError => ie
-        Rails.logger.info("[BroadcastState][Ordrs] Payload summary failed: #{ie.class}: #{ie.message}")
-      end
-
-      # Broadcast to both order_id channel and slug channel for compatibility
-      channel_order = "ordr_#{ordr.id}_channel"
-      Rails.logger.info("[BroadcastState][Ordrs] Broadcasting to #{channel_order}")
-      ActionCable.server.broadcast(channel_order, { state: payload })
-
-      if menuparticipant&.smartmenu&.slug
-        channel_slug = "ordr_#{menuparticipant.smartmenu.slug}_channel"
-        Rails.logger.info("[BroadcastState][Ordrs] Broadcasting to #{channel_slug}")
-        ActionCable.server.broadcast(channel_slug, { state: payload })
-      end
-    rescue => e
-      Rails.logger.warn("[SmartmenuState] Broadcast failed: #{e.class}: #{e.message}")
-      begin
-        Rails.logger.warn("[SmartmenuState] Backtrace:\n#{e.backtrace.join("\n")}")
-      rescue StandardError
-        # ignore
-      end
-    end
+  begin
+    keys = payload.is_a?(Hash) ? payload.keys : payload.class
+    Rails.logger.info("[BroadcastState][Ordrs] Payload summary keys=#{keys} orderId=#{payload.dig(:order, :id)} totals?=#{!payload[:totals].nil?}")
+  rescue StandardError => e
+    Rails.logger.info("[BroadcastState][Ordrs] Payload summary failed: #{e.class}: #{e.message}")
   end
+
+  # Broadcast to both order_id channel and slug channel for compatibility
+  channel_order = "ordr_#{ordr.id}_channel"
+  Rails.logger.info("[BroadcastState][Ordrs] Broadcasting to #{channel_order}")
+  ActionCable.server.broadcast(channel_order, { state: payload })
+
+  if menuparticipant&.smartmenu&.slug
+    channel_slug = "ordr_#{menuparticipant.smartmenu.slug}_channel"
+    Rails.logger.info("[BroadcastState][Ordrs] Broadcasting to #{channel_slug}")
+    ActionCable.server.broadcast(channel_slug, { state: payload })
+  end
+rescue StandardError => e
+  Rails.logger.warn("[SmartmenuState] Broadcast failed: #{e.class}: #{e.message}")
+  begin
+    Rails.logger.warn("[SmartmenuState] Backtrace:\n#{e.backtrace.join("\n")}")
+  rescue StandardError
+    # ignore
+  end
+end
 
 class OrdrsController < ApplicationController
   include CachePerformanceMonitoring
 
   before_action :authenticate_user!, except: %i[show create update] # Allow customers to create/update orders
-  skip_before_action :verify_authenticity_token, only: %i[ack_alcohol], if: -> { request.format.json? }
+  skip_before_action :verify_authenticity_token, only: %i[ack_alcohol]
   before_action :set_restaurant
   before_action :set_ordr, only: %i[show edit update destroy analytics ack_alcohol events]
   before_action :set_currency
@@ -76,7 +74,7 @@ class OrdrsController < ApplicationController
             restaurant_name: @restaurant.name,
             orders_count: @ordrs.count,
             viewing_context: 'restaurant_management',
-          },)
+          })
         else
           # Use enhanced cache service that returns model instances
           cached_result = AdvancedCacheServiceV2.cached_user_all_orders_with_models(current_user.id)
@@ -90,7 +88,7 @@ class OrdrsController < ApplicationController
             user_id: current_user.id,
             restaurants_count: @all_orders_data[:metadata][:restaurants_count],
             total_orders: @ordrs.count,
-          },)
+          })
         end
       end
 
@@ -152,7 +150,7 @@ class OrdrsController < ApplicationController
       order_status: @ordr.status,
       order_total: @ordr.gross,
       viewing_context: current_user.admin? ? 'staff_view' : 'customer_view',
-    },)
+    })
   end
 
   # GET /ordrs/1/analytics
@@ -171,7 +169,7 @@ class OrdrsController < ApplicationController
       restaurant_id: @ordr.restaurant_id,
       period_days: days,
       order_total: @ordr.gross,
-    },)
+    })
 
     respond_to do |format|
       format.html
@@ -189,7 +187,7 @@ class OrdrsController < ApplicationController
       order_id: @ordr.id,
       cursor: @ordr.last_projected_order_event_sequence.to_i,
       count: events.count,
-      events: events.map { |e|
+      events: events.map do |e|
         {
           id: e.id,
           sequence: e.sequence,
@@ -202,7 +200,7 @@ class OrdrsController < ApplicationController
           created_at: e.created_at,
           payload: e.payload,
         }
-      }
+      end,
     }
   end
 
@@ -230,11 +228,11 @@ class OrdrsController < ApplicationController
       rescue ArgumentError
         nil
       end
-      scope = scope.where('order_events.occurred_at >= ?', since_time) if since_time
+      scope = scope.where(order_events: { occurred_at: since_time.. }) if since_time
     end
 
     if params[:before_id].present?
-      scope = scope.where('order_events.id < ?', params[:before_id].to_i)
+      scope = scope.where(order_events: { id: ...params[:before_id].to_i })
     end
 
     limit = params[:limit].to_i
@@ -248,7 +246,7 @@ class OrdrsController < ApplicationController
       count: events.length,
       limit: limit,
       next_before_id: events.last&.id,
-      events: events.map { |e|
+      events: events.map do |e|
         {
           id: e.id,
           ordr_id: e.ordr_id,
@@ -263,7 +261,7 @@ class OrdrsController < ApplicationController
           created_at: e.created_at,
           payload: e.payload,
         }
-      },
+      end,
     }
   end
 
@@ -283,7 +281,7 @@ class OrdrsController < ApplicationController
       period_days: days,
       total_orders: @summary_data[:summary][:total_orders],
       total_revenue: @summary_data[:summary][:total_revenue],
-    },)
+    })
 
     respond_to do |format|
       format.html
@@ -334,7 +332,7 @@ class OrdrsController < ApplicationController
             menu_id: @ordr.menu_id,
             table_id: @ordr.tablesetting_id,
             order_status: @ordr.status,
-          },)
+          })
         else
           anonymous_id = session[:session_id] ||= SecureRandom.uuid
           AnalyticsService.track_anonymous_event(anonymous_id, 'order_started_anonymous', {
@@ -342,7 +340,7 @@ class OrdrsController < ApplicationController
             restaurant_id: @ordr.restaurant_id,
             menu_id: @ordr.menu_id,
             table_id: @ordr.tablesetting_id,
-          },)
+          })
         end
 
         if ordr_params[:status].to_i.zero?
@@ -362,8 +360,8 @@ class OrdrsController < ApplicationController
         end
       else
         respond_to do |format|
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @ordr.errors, status: :unprocessable_entity }
+          format.html { render :new, status: :unprocessable_content }
+          format.json { render json: @ordr.errors, status: :unprocessable_content }
         end
         return # Return early to prevent double render
       end
@@ -390,7 +388,7 @@ class OrdrsController < ApplicationController
           begin
             # Items are promoted + assigned to station tickets during submission
             OrdrStationTicketService.submit_unsubmitted_items!(@ordr)
-          rescue => e
+          rescue StandardError => e
             Rails.logger.warn("[OrdrsController#update] Failed to submit unsubmitted items for order=#{@ordr.id}: #{e.class}: #{e.message}")
             begin
               opened_status = Ordritem.statuses['opened']
@@ -413,7 +411,11 @@ class OrdrsController < ApplicationController
                 to = Ordr.statuses.key(to.to_i).to_s
               end
               if to.present? && to != before_status
-                source = request.headers['X-Order-Source'].to_s == 'voice' ? 'voice' : ((current_user && @current_employee.present?) ? 'staff' : 'guest')
+                source = if request.headers['X-Order-Source'].to_s == 'voice'
+                           'voice'
+                         else
+                           (current_user && @current_employee.present? ? 'staff' : 'guest')
+                         end
                 OrderEvent.emit!(
                   ordr: @ordr,
                   event_type: 'status_changed',
@@ -452,8 +454,8 @@ class OrdrsController < ApplicationController
           end
         else
           respond_to do |format|
-            format.html { render :edit, status: :unprocessable_entity }
-            format.json { render json: @ordr.errors, status: :unprocessable_entity }
+            format.html { render :edit, status: :unprocessable_content }
+            format.json { render json: @ordr.errors, status: :unprocessable_content }
           end
         end
       end
@@ -461,8 +463,8 @@ class OrdrsController < ApplicationController
       # Handle invalid enum values
       @ordr.errors.add(:status, e.message)
       respond_to do |format|
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @ordr.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @ordr.errors, status: :unprocessable_content }
       end
     end
   end
@@ -498,7 +500,7 @@ class OrdrsController < ApplicationController
       format.html do
         redirect_to restaurant_ordrs_url(@restaurant), alert: t('common.flash.action_failed', error: e.message)
       end
-      format.json { render json: { error: e.message }, status: :unprocessable_entity }
+      format.json { render json: { error: e.message }, status: :unprocessable_content }
     end
   end
 
@@ -686,7 +688,7 @@ class OrdrsController < ApplicationController
 
     needs_age_check = false
     begin
-      needs_age_check = !!(ordr && AlcoholOrderEvent.where(ordr_id: ordr.id, age_check_acknowledged: false).exists?)
+      needs_age_check = !(ordr && AlcoholOrderEvent.exists?(ordr_id: ordr.id, age_check_acknowledged: false)).nil?
     rescue StandardError
       needs_age_check = false
     end

@@ -8,7 +8,7 @@ class ResourceLockTest < ActiveSupport::TestCase
       user: @user,
       resource_type: 'Menu',
       resource_id: @menu.id,
-      session_id: 'test-session-123'
+      session_id: 'test-session-123',
     )
   end
 
@@ -21,7 +21,7 @@ class ResourceLockTest < ActiveSupport::TestCase
   test 'requires user' do
     lock = ResourceLock.new
     assert_not lock.valid?
-    assert_includes lock.errors[:user], "must exist"
+    assert_includes lock.errors[:user], 'must exist'
   end
 
   test 'can create lock with valid attributes' do
@@ -29,7 +29,7 @@ class ResourceLockTest < ActiveSupport::TestCase
       user: @user,
       resource_type: 'Menu',
       resource_id: @menu.id,
-      session_id: 'new-session-456'
+      session_id: 'new-session-456',
     )
     assert lock.valid?
     assert lock.save
@@ -47,7 +47,7 @@ class ResourceLockTest < ActiveSupport::TestCase
       user: @user,
       resource_type: 'Menu',
       resource_id: menu2.id,
-      session_id: 'session-menu2'
+      session_id: 'session-menu2',
     )
     assert_not_nil lock2
     assert_equal @user, lock2.user

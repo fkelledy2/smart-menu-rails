@@ -36,7 +36,7 @@ class OpenaiClient < ExternalApiClient
     response = post('/images/generations', {
       body: body.to_json,
       headers: { 'Content-Type' => 'application/json' },
-    },)
+    })
 
     process_image_response(response)
   rescue ApiError => e
@@ -61,7 +61,7 @@ class OpenaiClient < ExternalApiClient
     response = post('/images/variations', {
       body: body,
       headers: {}, # Let HTTParty handle multipart
-    },)
+    })
 
     process_image_response(response)
   end
@@ -90,7 +90,7 @@ class OpenaiClient < ExternalApiClient
     response = post('/images/edits', {
       body: body,
       headers: {}, # Let HTTParty handle multipart
-    },)
+    })
 
     process_image_response(response)
   end

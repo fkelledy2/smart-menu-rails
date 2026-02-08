@@ -20,7 +20,7 @@ class EnrichProductsJobTest < ActiveSupport::TestCase
       preptime: 0,
       sequence: 999,
       status: 'active',
-      itemtype: 'wine'
+      itemtype: 'wine',
     )
 
     MenuItemProductLink.create!(menuitem: @menuitem, product: @product, resolution_confidence: 0.9)
@@ -30,7 +30,7 @@ class EnrichProductsJobTest < ActiveSupport::TestCase
       menu: @menu,
       status: 'running',
       started_at: Time.current,
-      current_step: 'resolve_entities'
+      current_step: 'resolve_entities',
     )
   end
 

@@ -5,7 +5,7 @@ class OnboardingSessionTest < ActiveSupport::TestCase
     @user = users(:one)
     @session = OnboardingSession.create!(
       user: @user,
-      status: :started
+      status: :started,
     )
   end
 
@@ -34,19 +34,19 @@ class OnboardingSessionTest < ActiveSupport::TestCase
   test 'can transition through statuses' do
     @session.update!(status: :started)
     assert @session.started?
-    
+
     @session.update!(status: :account_created)
     assert @session.account_created?
-    
+
     @session.update!(status: :restaurant_details)
     assert @session.restaurant_details?
-    
+
     @session.update!(status: :plan_selected)
     assert @session.plan_selected?
-    
+
     @session.update!(status: :menu_created)
     assert @session.menu_created?
-    
+
     @session.update!(status: :completed)
     assert @session.completed?
   end
@@ -179,7 +179,7 @@ class OnboardingSessionTest < ActiveSupport::TestCase
     @session.restaurant_name = 'Test Restaurant'
     @session.cuisine_type = 'italian'
     @session.save!
-    
+
     @session.reload
     assert_equal 'Test Restaurant', @session.restaurant_name
     assert_equal 'italian', @session.cuisine_type
@@ -188,7 +188,7 @@ class OnboardingSessionTest < ActiveSupport::TestCase
   test 'wizard_data is serialized as JSON' do
     @session.restaurant_name = 'Test'
     @session.save!
-    
+
     raw_data = @session.read_attribute(:wizard_data)
     assert_kind_of Hash, raw_data
   end

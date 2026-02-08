@@ -1,6 +1,6 @@
 class Ordr < ApplicationRecord
   include AASM
-  include IdentityCache unless included_modules.include?(IdentityCache)
+  include IdentityCache unless include?(IdentityCache)
 
   aasm column: 'status' do
     state :opened, initial: true
@@ -189,7 +189,7 @@ class Ordr < ApplicationRecord
     if association(:ordritems).loaded?
       ordritems.count { |it| %w[ordered preparing ready delivered].include?(it.status.to_s) }
     elsif association(:ordractions).loaded?
-      ordractions.map(&:ordritem).compact.count { |it| %w[ordered preparing ready delivered].include?(it.status.to_s) }
+      ordractions.filter_map(&:ordritem).count { |it| %w[ordered preparing ready delivered].include?(it.status.to_s) }
     else
       ordractions.joins(:ordritem).where(ordritems: { status: [20, 22, 24, 25] }).count
     end
@@ -199,7 +199,7 @@ class Ordr < ApplicationRecord
     if association(:ordritems).loaded?
       ordritems.count { |it| it.status.to_s == 'opened' }
     elsif association(:ordractions).loaded?
-      ordractions.map(&:ordritem).compact.count { |it| it.status.to_s == 'opened' }
+      ordractions.filter_map(&:ordritem).count { |it| it.status.to_s == 'opened' }
     else
       ordractions.joins(:ordritem).where(ordritems: { status: 0 }).count
     end

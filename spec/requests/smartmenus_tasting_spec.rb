@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Smartmenus tasting bundle rendering', type: :request do
+RSpec.describe 'Smartmenus tasting bundle rendering' do
   let(:restaurant) { create(:restaurant, country: 'US') }
   let(:menu) { create(:menu, restaurant: restaurant, status: 'active') }
   let(:smartmenu) { create(:smartmenu, restaurant: restaurant, menu: menu) }

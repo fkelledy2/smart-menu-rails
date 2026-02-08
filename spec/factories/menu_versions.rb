@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :menu_version do
-    association :menu
+    menu
     sequence(:version_number) { |n| n }
     snapshot_json { { schema_version: 1, menu: {}, menuavailabilities: [], menusections: [] } }
     is_active { false }

@@ -1,5 +1,5 @@
-require "application_system_test_case"
-require "securerandom"
+require 'application_system_test_case'
+require 'securerandom'
 
 class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
   setup do
@@ -16,7 +16,7 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
 
     # Use up to 3 existing menu sections from fixtures that actually have items
     @sections = @menu.menusections.order(:id).select { |s| s.menuitems.exists? }.take(3)
-    assert @sections.size >= 1, "Expected at least 1 menu section with items in fixtures for this menu"
+    assert @sections.size >= 1, 'Expected at least 1 menu section with items in fixtures for this menu'
 
     # Preload items per section from fixtures
     @items_by_section = {}
@@ -24,80 +24,79 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
       @items_by_section[section.id] = section.menuitems.order(:id).to_a
     end
 
-  def ensure_order_status_progress(table, ordr_id: nil, desired_status: nil, not_status: nil, timeout: 8)
-    start = Time.now
-    loop do
-      order = if ordr_id.present?
-        Ordr.find_by(id: ordr_id)
-      else
-        Ordr.where(restaurant: @restaurant, tablesetting: table).order(:created_at).last
-      end
-      if desired_status && order
-        if desired_status.to_s == 'billrequested'
-          return true if %w[billrequested paid closed].include?(order.status.to_s)
-        elsif desired_status.to_s == 'paid'
-          return true if %w[paid closed].include?(order.status.to_s)
-        else
-          return true if order.status == desired_status
+    def ensure_order_status_progress(table, ordr_id: nil, desired_status: nil, not_status: nil, timeout: 8)
+      start = Time.zone.now
+      loop do
+        order = if ordr_id.present?
+                  Ordr.find_by(id: ordr_id)
+                else
+                  Ordr.where(restaurant: @restaurant, tablesetting: table).order(:created_at).last
+                end
+        if desired_status && order
+          if desired_status.to_s == 'billrequested'
+            return true if %w[billrequested paid closed].include?(order.status.to_s)
+          elsif desired_status.to_s == 'paid'
+            return true if %w[paid closed].include?(order.status.to_s)
+          elsif order.status == desired_status
+            return true
+          end
         end
-      end
-      return true if not_status && order && order.status != not_status
-      break if Time.now - start > timeout
-      sleep 0.5
-    end
-    false
-  end
+        return true if not_status && order && order.status != not_status
+        break if Time.zone.now - start > timeout
 
-  def close_all_modals(session)
-    # Attempt to click any visible dismiss buttons first
-    begin
-      session.all(:css, 'button[data-bs-dismiss="modal"]', minimum: 0, wait: 0).each do |btn|
-        begin
+        sleep 0.5
+      end
+      false
+    end
+
+    def close_all_modals(session)
+      # Attempt to click any visible dismiss buttons first
+      begin
+        session.all(:css, 'button[data-bs-dismiss="modal"]', minimum: 0, wait: 0).find_each do |btn|
           btn.click
         rescue Selenium::WebDriver::Error::ElementClickInterceptedError, Selenium::WebDriver::Error::ElementNotInteractableError
           next
         end
+      rescue StandardError
+        # ignore
       end
-    rescue StandardError
-      # ignore
-    end
 
-    # Try ESC a couple of times (best-effort)
-    begin
-      2.times { session.send_keys(:escape) }
-    rescue Selenium::WebDriver::Error::ElementNotInteractableError, StandardError
-      # ignore
-    end
+      # Try ESC a couple of times (best-effort)
+      begin
+        2.times { session.send_keys(:escape) }
+      rescue Selenium::WebDriver::Error::ElementNotInteractableError, StandardError
+        # ignore
+      end
 
-    # Remove any lingering backdrops/modals if present (best-effort, non-fatal)
-    begin
-      session.execute_script(<<~JS)
-        document.querySelectorAll('.modal.show').forEach(function(m){ m.classList.remove('show'); m.style.display='none'; });
-        document.querySelectorAll('.modal-backdrop.show').forEach(function(b){ b.remove(); });
-        document.body.classList.remove('modal-open');
-      JS
-    rescue StandardError
-      # ignore
+      # Remove any lingering backdrops/modals if present (best-effort, non-fatal)
+      begin
+        session.execute_script(<<~JS)
+          document.querySelectorAll('.modal.show').forEach(function(m){ m.classList.remove('show'); m.style.display='none'; });
+          document.querySelectorAll('.modal-backdrop.show').forEach(function(b){ b.remove(); });
+          document.body.classList.remove('modal-open');
+        JS
+      rescue StandardError
+        # ignore
+      end
+      wait_for_no_backdrop(session)
     end
-    wait_for_no_backdrop(session)
-  end
 
     # Use existing tablesettings from fixtures
     tables = Tablesetting.where(restaurant: @restaurant).order(:id).limit(2).to_a
-    assert_equal 2, tables.size, "Expected at least 2 tablesettings in fixtures for this restaurant"
+    assert_equal 2, tables.size, 'Expected at least 2 tablesettings in fixtures for this restaurant'
     @table1, @table2 = tables
 
     # Use existing smartmenus if present, otherwise create minimal ones
     @smartmenu1 = Smartmenu.where(menu: @menu, restaurant: @restaurant, tablesetting: @table1).first ||
-                  Smartmenu.create!(menu: @menu, restaurant: @restaurant, tablesetting: @table1, slug: "multi-table-1")
+                  Smartmenu.create!(menu: @menu, restaurant: @restaurant, tablesetting: @table1, slug: 'multi-table-1')
     @smartmenu2 = Smartmenu.where(menu: @menu, restaurant: @restaurant, tablesetting: @table2).first ||
-                  Smartmenu.create!(menu: @menu, restaurant: @restaurant, tablesetting: @table2, slug: "multi-table-2")
+                  Smartmenu.create!(menu: @menu, restaurant: @restaurant, tablesetting: @table2, slug: 'multi-table-2')
   end
 
-  test "multi-table, multi-customer orders stay isolated and totals are correct through full lifecycle" do
+  test 'multi-table, multi-customer orders stay isolated and totals are correct through full lifecycle' do
     # 1 customer per table, 2 sessions total
-    c1 = new_customer_session("C1_T1")
-    c5 = new_customer_session("C5_T2")
+    c1 = new_customer_session('C1_T1')
+    c5 = new_customer_session('C5_T2')
 
     @expected_items_t1 = simulate_customers_for_table([c1], @smartmenu1)
     @expected_items_t2 = simulate_customers_for_table([c5], @smartmenu2)
@@ -167,13 +166,13 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
           session.execute_script('arguments[0].click();', btn.native)
         end
         if session.has_selector?('#addItemToOrderModal.show', wait: 5)
-          session.find('#addItemToOrderButton', wait: 5).click
+          session.find_by_id('addItemToOrderButton', wait: 5).click
           session.has_no_selector?('#addItemToOrderModal.show', wait: 5)
           added += 1
         end
-      elsif session.has_button?("Add")
+      elsif session.has_button?('Add')
         # Fallback: click a generic Add button if present in item context
-        session.click_button("Add")
+        session.click_button('Add')
         added += 1
       end
     end
@@ -189,7 +188,7 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
     return if order_id.present?
 
     begin
-      trigger = session.find('button[data-bs-target="#openOrderModal"], a[data-bs-target="#openOrderModal"]', match: :first, wait: 3)
+      trigger = first('button[data-bs-target="#openOrderModal"], a[data-bs-target="#openOrderModal"]', wait: 3)
       session.execute_script('arguments[0].scrollIntoView({block: "center"});', trigger.native)
       trigger.click
     rescue StandardError
@@ -197,7 +196,7 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
     end
 
     session.assert_selector('#openOrderModal.show', wait: 5)
-    start_btn = session.find('#start-order', wait: 5)
+    start_btn = session.find_by_id('start-order', wait: 5)
     begin
       start_btn.click
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError
@@ -205,7 +204,7 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
     end
     session.has_no_selector?('#openOrderModal.show', wait: 5)
 
-    start = Time.now
+    start = Time.zone.now
     loop do
       order_id = begin
         session.evaluate_script('window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id')
@@ -213,7 +212,8 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
         nil
       end
       break if order_id.present?
-      break if Time.now - start > 10
+      break if Time.zone.now - start > 10
+
       sleep 0.25
     end
   end
@@ -272,17 +272,13 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
     # Submit; if disabled or missing, add an item and retry once
     retried = false
     begin
-      if session.has_selector?('[data-testid="submit-order-btn"]', wait: 5)
-        submit_btn = session.find('[data-testid="submit-order-btn"]', wait: 5)
-        if submit_btn[:disabled]
-          raise :submit_disabled
-        else
-          submit_btn.click
-        end
-      else
-        raise :submit_missing
-      end
-    rescue => _e
+      raise :submit_missing unless session.has_selector?('[data-testid="submit-order-btn"]', wait: 5)
+
+      submit_btn = session.find('[data-testid="submit-order-btn"]', wait: 5)
+      raise :submit_disabled if submit_btn[:disabled]
+
+      submit_btn.click
+    rescue StandardError => _e
       unless retried
         # Close modal, add an item, reopen modal, then try submit again
         click_view_order_cancel(session)
@@ -303,7 +299,7 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
     wait_for_modal_to_close(session)
 
     # Wait for state to reflect successful submission (items promoted and bill available)
-    start = Time.now
+    start = Time.zone.now
     loop do
       st = begin
         session.evaluate_script('window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.status')
@@ -316,7 +312,8 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
         nil
       end
       break if st.to_s.downcase != 'opened' && can_bill == true
-      break if Time.now - start > 12
+      break if Time.zone.now - start > 12
+
       sleep 0.25
     end
 
@@ -334,7 +331,7 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
       # In modal
       session.assert_selector('#requestBillModal.show', wait: 5)
       session.assert_selector('#request-bill-confirm:not([disabled])', wait: 10)
-      confirm_btn = session.find('#request-bill-confirm', wait: 5)
+      confirm_btn = session.find_by_id('request-bill-confirm', wait: 5)
       begin
         confirm_btn.click
       rescue Selenium::WebDriver::Error::ElementClickInterceptedError
@@ -360,7 +357,7 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
         session.execute_script('arguments[0].click();', btn.native)
         session.assert_selector('#requestBillModal.show', wait: 5)
         session.assert_selector('#request-bill-confirm:not([disabled])', wait: 10)
-        confirm_btn = session.find('#request-bill-confirm', wait: 5)
+        confirm_btn = session.find_by_id('request-bill-confirm', wait: 5)
         session.execute_script('arguments[0].click();', confirm_btn.native)
         session.has_no_selector?('#requestBillModal.show', wait: 5)
         wait_for_modal_to_close(session)
@@ -375,7 +372,7 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
     end
     if current_order_id.blank?
       begin
-        ctx = session.find('#contextContainer', wait: 5)
+        ctx = session.find_by_id('contextContainer', wait: 5)
         current_order_id = ctx['data-order-id']
       rescue StandardError
         nil
@@ -396,25 +393,27 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
 
     section = @sections.first
     return unless section
+
     items = @items_by_section[section.id]
     item = items&.first
     return unless item
+
     # Click add on the first item
-    if session.has_selector?(%([data-testid="add-item-btn-#{item.id}"]), wait: 5)
-      btn = session.find(%([data-testid="add-item-btn-#{item.id}"]))
-      session.execute_script('arguments[0].scrollIntoView({block: "center"});', btn.native)
-      begin
-        btn.click
-      rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-        session.execute_script('arguments[0].click();', btn.native)
-      end
-      # Confirm add in modal
-      session.assert_selector('#addItemToOrderModal.show', wait: 5)
-      session.find('#addItemToOrderButton', wait: 5).click
-      session.has_no_selector?('#addItemToOrderModal.show', wait: 5)
-      # Ensure add-item modal/backdrop are closed before continuing
-      close_all_modals(session)
+    return unless session.has_selector?(%([data-testid="add-item-btn-#{item.id}"]), wait: 5)
+
+    btn = session.find(%([data-testid="add-item-btn-#{item.id}"]))
+    session.execute_script('arguments[0].scrollIntoView({block: "center"});', btn.native)
+    begin
+      btn.click
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+      session.execute_script('arguments[0].click();', btn.native)
     end
+    # Confirm add in modal
+    session.assert_selector('#addItemToOrderModal.show', wait: 5)
+    session.find_by_id('addItemToOrderButton', wait: 5).click
+    session.has_no_selector?('#addItemToOrderModal.show', wait: 5)
+    # Ensure add-item modal/backdrop are closed before continuing
+    close_all_modals(session)
   end
 
   def wait_for_no_backdrop(session)
@@ -453,7 +452,7 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
     unless page.has_selector?('[data-testid="staff-pay-btn"]', wait: 2)
       # Submit order (open viewOrderModal and press submit if enabled)
       if page.has_selector?('[data-testid="staff-view-order-btn"]', wait: 5)
-        btn = find('[data-testid="staff-view-order-btn"]', match: :first)
+        btn = first('[data-testid="staff-view-order-btn"]')
         execute_script('arguments[0].scrollIntoView({block: "center"});', btn.native)
         btn.click
         if page.has_selector?('[data-testid="submit-order-btn"]', wait: 5)
@@ -462,7 +461,7 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
         end
         # Close modal if still open
         if page.has_selector?('#viewOrderModal button[data-bs-dismiss="modal"]', wait: 3)
-          all(:css, '#viewOrderModal button[data-bs-dismiss="modal"]').first.click
+          first(:css, '#viewOrderModal button[data-bs-dismiss="modal"]').click
         else
           send_keys(:escape)
         end
@@ -471,12 +470,12 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
 
       # Request bill from staff UI
       if page.has_selector?('[data-testid="staff-request-bill-btn"]', wait: 5)
-        rbtn = find('[data-testid="staff-request-bill-btn"]', match: :first)
+        rbtn = first('[data-testid="staff-request-bill-btn"]')
         execute_script('arguments[0].scrollIntoView({block: "center"});', rbtn.native)
         rbtn.click
         if page.has_selector?('#requestBillModal.show', wait: 5)
           assert_selector('#request-bill-confirm:not([disabled])', wait: 10)
-          confirm_btn = find('#request-bill-confirm', wait: 5)
+          confirm_btn = find_by_id('request-bill-confirm', wait: 5)
           begin
             confirm_btn.click
           rescue Selenium::WebDriver::Error::ElementClickInterceptedError
@@ -489,12 +488,12 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
 
     # Open pay modal when available (status billrequested)
     if page.has_selector?('[data-testid="staff-pay-btn"]', wait: 10)
-      pbtn = find('[data-testid="staff-pay-btn"]', match: :first)
+      pbtn = first('[data-testid="staff-pay-btn"]')
       execute_script('arguments[0].scrollIntoView({block: "center"});', pbtn.native)
       pbtn.click
       assert_selector('#payOrderModal.show', wait: 5)
       assert_selector('#pay-order-confirm:not([disabled])', wait: 10)
-      confirm_btn = find('#pay-order-confirm', wait: 10)
+      confirm_btn = find_by_id('pay-order-confirm', wait: 10)
       begin
         confirm_btn.click
       rescue Selenium::WebDriver::Error::ElementClickInterceptedError
@@ -512,25 +511,25 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
     order_t1 = Ordr.where(restaurant: @restaurant, tablesetting: @table1).order(:created_at).last
     order_t2 = Ordr.where(restaurant: @restaurant, tablesetting: @table2).order(:created_at).last
 
-    assert order_t1.present?, "Expected an order for Table 1"
-    assert order_t2.present?, "Expected an order for Table 2"
+    assert order_t1.present?, 'Expected an order for Table 1'
+    assert order_t2.present?, 'Expected an order for Table 2'
 
-    if @expected_items_t1 > 0
+    if @expected_items_t1.positive?
       assert_equal @expected_items_t1, order_t1.ordritems.count, "Table 1 should have #{@expected_items_t1} items based on UI additions"
     end
-    if @expected_items_t2 > 0
+    if @expected_items_t2.positive?
       assert_equal @expected_items_t2, order_t2.ordritems.count, "Table 2 should have #{@expected_items_t2} items based on UI additions"
     end
 
     expected_t1 = order_t1.ordritems.sum(:ordritemprice)
     expected_t2 = order_t2.ordritems.sum(:ordritemprice)
 
-    assert_equal expected_t1.to_f.round(2), order_t1.gross.to_f.round(2), "Table 1 final gross total should match sum of items"
-    assert_equal expected_t2.to_f.round(2), order_t2.gross.to_f.round(2), "Table 2 final gross total should match sum of items"
+    assert_equal expected_t1.to_f.round(2), order_t1.gross.to_f.round(2), 'Table 1 final gross total should match sum of items'
+    assert_equal expected_t2.to_f.round(2), order_t2.gross.to_f.round(2), 'Table 2 final gross total should match sum of items'
 
     ids_t1 = order_t1.ordritems.pluck(:id)
     ids_t2 = order_t2.ordritems.pluck(:id)
-    assert_equal 0, (ids_t1 & ids_t2).size, "Orders for each table should not share ordritems"
+    assert_equal 0, (ids_t1 & ids_t2).size, 'Orders for each table should not share ordritems'
   end
 
   # no programmatic seeding in strict UI-driven mode

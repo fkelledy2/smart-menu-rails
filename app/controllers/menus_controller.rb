@@ -2,7 +2,7 @@ require 'rqrcode'
 
 class MenusController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  skip_before_action :verify_authenticity_token, only: %i[create_version activate_version], if: -> { request.format.json? }
+  skip_before_action :verify_authenticity_token, only: %i[create_version activate_version]
   before_action :set_restaurant
   before_action :set_menu, only: %i[show edit update destroy regenerate_images image_generation_progress localize localization_progress performance update_availabilities polish polish_progress versions version_diff versions_diff create_version activate_version]
   before_action :ensure_owner_restaurant_context!, only: %i[update destroy regenerate_images localize update_availabilities polish create_version activate_version]
@@ -47,7 +47,7 @@ class MenusController < ApplicationController
           menus_count: @menus.size, # Use size instead of count (uses loaded records)
           restaurant_id: @restaurant&.id,
           viewing_context: params[:restaurant_id] ? 'restaurant_specific' : 'all_menus',
-        },)
+        })
       end
     elsif params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
@@ -62,7 +62,7 @@ class MenusController < ApplicationController
         menus_count: @menus.count,
         restaurant_id: @restaurant.id,
         restaurant_name: @restaurant.name,
-      },)
+      })
     end
 
     # Use minimal JSON view for better performance
@@ -83,7 +83,7 @@ class MenusController < ApplicationController
       menu_id: @menu.id,
       active_menu_version_id: active&.id,
       count: versions.size,
-      versions: versions.map { |v|
+      versions: versions.map do |v|
         {
           id: v.id,
           version_number: v.version_number,
@@ -93,7 +93,7 @@ class MenusController < ApplicationController
           created_by_user_id: v.created_by_user_id,
           created_at: v.created_at,
         }
-      },
+      end,
     }
   end
 
@@ -183,7 +183,7 @@ class MenusController < ApplicationController
 
     context_restaurant = @restaurant || @menu.owner_restaurant || @menu.restaurant
     zone_name = begin
-      context_restaurant&.respond_to?(:timezone) ? context_restaurant.timezone.to_s.presence : nil
+      context_restaurant.respond_to?(:timezone) ? context_restaurant.timezone.to_s.presence : nil
     rescue StandardError
       nil
     end
@@ -194,18 +194,16 @@ class MenusController < ApplicationController
       next nil if s.blank?
 
       Time.use_zone(zone_name) do
+        if s.end_with?('Z') || s.match?(/[+-]\d\d:\d\d\z/)
+          Time.iso8601(s)
+        else
+          Time.zone.parse(s)
+        end
+      rescue ArgumentError
         begin
-          if s.end_with?('Z') || s.match?(/[+-]\d\d:\d\d\z/)
-            Time.iso8601(s)
-          else
-            Time.zone.parse(s)
-          end
-        rescue ArgumentError
-          begin
-            Time.zone.parse(s)
-          rescue StandardError
-            nil
-          end
+          Time.zone.parse(s)
+        rescue StandardError
+          nil
         end
       end
     end
@@ -282,7 +280,7 @@ class MenusController < ApplicationController
     raw_target_ids = []
     raw_target_ids.concat(Array(params[:target_restaurant_ids])) if params.key?(:target_restaurant_ids)
     raw_target_ids << params[:target_restaurant_id] if params.key?(:target_restaurant_id)
-    raw_target_ids = raw_target_ids.map(&:to_s).map(&:strip).reject(&:blank?)
+    raw_target_ids = raw_target_ids.map(&:to_s).map(&:strip).compact_blank
 
     other_restaurant_ids = Restaurant.on_primary do
       Restaurant.where(user_id: current_user.id).where.not(id: @restaurant.id).pluck(:id)
@@ -504,7 +502,7 @@ class MenusController < ApplicationController
     active_locales = Restaurantlocale.where(restaurant: restaurant, status: 'active')
 
     if active_locales.empty?
-      flash[:alert] = t('menus.controller.no_active_locales', default: 'No active locales configured for this restaurant.')
+      flash.now[:alert] = t('menus.controller.no_active_locales', default: 'No active locales configured for this restaurant.')
       redirect_to edit_restaurant_menu_path(restaurant, @menu) and return
     end
 
@@ -600,7 +598,7 @@ class MenusController < ApplicationController
             menu_name: @menu.name,
             items_count: @menu_data[:metadata][:active_items],
             sections_count: @menu_data[:sections].count,
-          },)
+          })
         else
           anonymous_id = session[:session_id] ||= SecureRandom.uuid
           AnalyticsService.track_anonymous_event(anonymous_id, 'menu_viewed_anonymous', {
@@ -608,7 +606,7 @@ class MenusController < ApplicationController
             menu_id: @menu.id,
             menu_name: @menu.name,
             items_count: @menu_data[:metadata][:active_items],
-          },)
+          })
         end
       end
       @participantsFirstTime = false
@@ -753,7 +751,7 @@ class MenusController < ApplicationController
         @menu.errors.add(:base, 'Your plan limit has been reached for number of menus')
         respond_to do |format|
           format.html { redirect_to edit_restaurant_path(id: context_restaurant.id), alert: @menu.errors.full_messages.to_sentence }
-          format.json { render json: { errors: @menu.errors.full_messages }, status: :unprocessable_entity }
+          format.json { render json: { errors: @menu.errors.full_messages }, status: :unprocessable_content }
         end
         return
       end
@@ -792,8 +790,8 @@ class MenusController < ApplicationController
           render :show, status: :created, location: restaurant_menu_url(@restaurant || @menu.restaurant, @menu)
         end
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @menu.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @menu.errors, status: :unprocessable_content }
       end
     end
   rescue ArgumentError => e
@@ -801,8 +799,8 @@ class MenusController < ApplicationController
     @menu = Menu.new
     @menu.errors.add(:status, e.message)
     respond_to do |format|
-      format.html { render :new, status: :unprocessable_entity }
-      format.json { render json: @menu.errors, status: :unprocessable_entity }
+      format.html { render :new, status: :unprocessable_content }
+      format.json { render json: @menu.errors, status: :unprocessable_content }
     end
   end
 
@@ -835,7 +833,7 @@ class MenusController < ApplicationController
           format.html do
             redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), alert: @menu.errors.full_messages.to_sentence
           end
-          format.json { render json: { errors: @menu.errors.full_messages }, status: :unprocessable_entity }
+          format.json { render json: { errors: @menu.errors.full_messages }, status: :unprocessable_content }
           next
         end
       end
@@ -893,15 +891,15 @@ class MenusController < ApplicationController
             @current_section = 'settings'
             render partial: 'menus/section_frame_2025',
                    locals: { menu: @menu, partial_name: menu_section_partial_name(@current_section) },
-                   status: :unprocessable_entity
+                   status: :unprocessable_content
           elsif params[:return_to] == 'menu_edit'
             # Redirect back to menu edit with alert for quick-action UX
             redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), alert: @menu.errors.full_messages.presence || 'Failed to update menu'
           else
-            render :edit, status: :unprocessable_entity
+            render :edit, status: :unprocessable_content
           end
         end
-        format.json { render json: @menu.errors, status: :unprocessable_entity }
+        format.json { render json: @menu.errors, status: :unprocessable_content }
       end
     end
   end
@@ -986,7 +984,7 @@ class MenusController < ApplicationController
   rescue StandardError => e
     Rails.logger.error("Error updating availabilities: #{e.message}")
     respond_to do |format|
-      format.json { render json: { error: e.message }, status: :unprocessable_entity }
+      format.json { render json: { error: e.message }, status: :unprocessable_content }
       format.html { redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'schedule'), alert: 'Failed to update availabilities' }
     end
   end
@@ -1109,7 +1107,7 @@ class MenusController < ApplicationController
       period_days: days,
       cache_hit_rate: @performance_data[:cache_performance][:hit_rate],
       avg_response_time: @performance_data[:response_times][:average],
-    },)
+    })
 
     Rails.logger.debug '[MenusController#performance] Responding with performance data'
     respond_to do |format|
@@ -1132,7 +1130,7 @@ class MenusController < ApplicationController
     Rails.logger.info "Order array: #{order.inspect}"
 
     if order.blank?
-      return render json: { status: 'error', message: 'No order data provided' }, status: :unprocessable_entity
+      return render json: { status: 'error', message: 'No order data provided' }, status: :unprocessable_content
     end
 
     ActiveRecord::Base.transaction do
@@ -1168,12 +1166,12 @@ class MenusController < ApplicationController
     render json: { status: 'error', message: 'Menu not found' }, status: :not_found
   rescue StandardError => e
     Rails.logger.error "Update sequence error: #{e.message}\n#{e.backtrace.join("\n")}"
-    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+    render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 
   # PATCH /restaurants/:restaurant_id/menus/bulk_update
   def bulk_update
-    ids = Array(params[:menu_ids]).map(&:to_s).reject(&:blank?)
+    ids = Array(params[:menu_ids]).map(&:to_s).compact_blank
     status = params[:status].to_s
 
     if ids.empty? || status.blank?

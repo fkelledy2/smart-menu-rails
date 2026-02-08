@@ -118,7 +118,7 @@ RSpec.describe 'KitchenDashboards' do
             params: { ordr_station_ticket: { status: 'preparing' } },
             headers: { 'ACCEPT' => 'application/json' }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(ticket.reload.status).to eq('ready')
     end
   end

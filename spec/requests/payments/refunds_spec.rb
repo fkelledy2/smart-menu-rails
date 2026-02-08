@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'ostruct'
 
-RSpec.describe 'Payments::Refunds', type: :request do
+RSpec.describe 'Payments::Refunds' do
   let(:admin_user) { create(:user, admin: true) }
 
   around do |example|
@@ -34,16 +34,16 @@ RSpec.describe 'Payments::Refunds', type: :request do
       allow(Stripe::Checkout::Session).to receive(:retrieve).and_return(session)
       allow(Stripe::Refund).to receive(:create).and_return(refund_obj)
 
-      expect {
+      expect do
         post '/payments/refunds',
              params: { payment_attempt_id: payment_attempt.id },
              headers: { 'ACCEPT' => 'application/json' },
              as: :json
-      }.to change(PaymentRefund, :count).by(1)
+      end.to change(PaymentRefund, :count).by(1)
 
-      data = JSON.parse(response.body)
+      data = response.parsed_body
       expect(response).to have_http_status(:ok)
-      expect(data['ok']).to eq(true)
+      expect(data['ok']).to be(true)
 
       refund = PaymentRefund.find(data['payment_refund_id'])
       expect(refund.status).to eq('succeeded')

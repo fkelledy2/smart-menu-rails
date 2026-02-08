@@ -6,7 +6,7 @@ class SmartmenuState
     order_hash = order_payload(open_order, locale)
     # Visibility flags derived from counts (server source of truth)
     # Single source of truth for Request Bill visibility
-    display_request_bill = (order_hash[:totalCount].to_i > 0 && order_hash[:openedCount].to_i == 0)
+    display_request_bill = order_hash[:totalCount].to_i.positive? && order_hash[:openedCount].to_i.zero?
     {
       version: 1,
       session: session_id,
@@ -16,22 +16,22 @@ class SmartmenuState
       menuId: menu&.id&.to_s,
       restaurant: {
         id: restaurant&.id&.to_s,
-        allowAlcohol: !!restaurant&.allow_alcohol,
-        allowedNow: !!(restaurant&.respond_to?(:alcohol_allowed_now?) && restaurant&.alcohol_allowed_now?),
+        allowAlcohol: !restaurant&.allow_alcohol.nil?,
+        allowedNow: !(restaurant.respond_to?(:alcohol_allowed_now?) && restaurant.alcohol_allowed_now?).nil?,
         verifyAgeText: I18n.t('smartmenus.alcohol.verify_age', default: ''),
         salesDisabledText: I18n.t('smartmenus.alcohol.sales_disabled', default: ''),
-        policyBlockedText: I18n.t('smartmenus.alcohol.policy_blocked', default: 'Alcohol not available at this time.')
+        policyBlockedText: I18n.t('smartmenus.alcohol.policy_blocked', default: 'Alcohol not available at this time.'),
       },
       totals: totals_for(open_order, restaurant),
       flags: {
         displayRequestBill: display_request_bill,
         payVisible: (order_hash[:status].to_s == 'billrequested'),
-        menuItemsEnabled: (order_hash[:id].present? && !%w[billrequested paid closed].include?(order_hash[:status].to_s))
+        menuItemsEnabled: order_hash[:id].present? && %w[billrequested paid closed].exclude?(order_hash[:status].to_s),
       },
       participants: {
         orderParticipantId: ordrparticipant&.id&.to_s,
-        menuParticipantId: menuparticipant&.id&.to_s
-      }
+        menuParticipantId: menuparticipant&.id&.to_s,
+      },
     }
   end
 
@@ -49,22 +49,23 @@ class SmartmenuState
 
   def self.order_payload(order, locale)
     return { id: nil, status: nil } unless order
+
     # Prefer ordritems; if missing, derive from ordractions to mirror ERB rendering
     base_items = Array(order.ordritems)
     if base_items.empty? && order.respond_to?(:ordractions)
-      base_items = Array(order.ordractions).map(&:ordritem).compact
+      base_items = Array(order.ordractions).filter_map(&:ordritem)
     end
 
-    items = base_items.uniq { |it| it.id }.map do |it|
+    items = base_items.uniq(&:id).map do |it|
       # Localised name with safe fallbacks
       name = begin
         mi = it.menuitem
-        if mi && mi.respond_to?(:localised_name)
+        if mi.respond_to?(:localised_name)
           mi.localised_name(locale)
         else
           mi&.name
         end
-      rescue
+      rescue StandardError
         it.menuitem&.name
       end
 
@@ -76,7 +77,7 @@ class SmartmenuState
         else
           p
         end
-      rescue
+      rescue StandardError
         it.ordritemprice
       end
 
@@ -85,7 +86,7 @@ class SmartmenuState
         menuitem_id: it.menuitem_id,
         name: name.to_s,
         price: price.to_f,
-        status: it.status.to_s
+        status: it.status.to_s,
       }
     end
     opened_count         = items.count { |i| i[:status] == 'opened' }
@@ -117,12 +118,13 @@ class SmartmenuState
       deliveredCount: delivered_count,
       billrequestedCount: billrequested_count,
       paidCount: paid_count,
-      closedCount: closed_count
+      closedCount: closed_count,
     }
   end
 
   def self.totals_for(order, restaurant)
     return nil unless order && restaurant
+
     currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
 
     nett = order.nett.to_f
@@ -156,8 +158,8 @@ class SmartmenuState
       gross: gross,
       currency: {
         code: currency.code,
-        symbol: currency.symbol.to_s
-      }
+        symbol: currency.symbol.to_s,
+      },
     }
   end
 end

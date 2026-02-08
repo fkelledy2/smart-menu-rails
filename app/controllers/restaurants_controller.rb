@@ -74,19 +74,23 @@ class RestaurantsController < ApplicationController
     authorize @restaurant
     payload = params.permit(
       allowed_days_of_week: [],
-      allowed_time_ranges: [:from_min, :to_min],
+      allowed_time_ranges: %i[from_min to_min],
       blackout_dates: [],
     )
 
     policy = @restaurant.alcohol_policy || @restaurant.build_alcohol_policy
 
     # Normalize inputs
-    days = Array(payload[:allowed_days_of_week]).map { |d| d.to_i }.uniq.sort
+    days = Array(payload[:allowed_days_of_week]).map(&:to_i).uniq.sort
     ranges = Array(payload[:allowed_time_ranges]).map do |r|
       h = r.is_a?(ActionController::Parameters) ? r.to_unsafe_h : r
       { 'from_min' => h['from_min'].to_i, 'to_min' => h['to_min'].to_i }
     end
-    dates = Array(payload[:blackout_dates]).map { |d| Date.parse(d) rescue nil }.compact.uniq.sort
+    dates = Array(payload[:blackout_dates]).filter_map do |d|
+      Date.parse(d)
+    rescue StandardError
+      nil
+    end.uniq.sort
 
     policy.allowed_days_of_week = days
     policy.allowed_time_ranges = ranges
@@ -96,7 +100,7 @@ class RestaurantsController < ApplicationController
       AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id) if defined?(AdvancedCacheService)
       render json: { success: true, allowed_now: @restaurant.alcohol_allowed_now? }, status: :ok
     else
-      render json: { success: false, errors: policy.errors.full_messages }, status: :unprocessable_entity
+      render json: { success: false, errors: policy.errors.full_messages }, status: :unprocessable_content
     end
   end
 
@@ -110,31 +114,31 @@ class RestaurantsController < ApplicationController
     if params[:code]
       # Encode client credentials for Basic Auth
       credentials = Base64.strict_encode64("#{Rails.application.credentials.spotify_key}:#{Rails.application.credentials.spotify_secret}")
-      
+
       # Prepare form data as URL-encoded string
       form_data = URI.encode_www_form({
         grant_type: 'authorization_code',
         code: params[:code],
-        redirect_uri: ENV.fetch('SPOTIFY_REDIRECT_URI', nil)
+        redirect_uri: ENV.fetch('SPOTIFY_REDIRECT_URI', nil),
       })
-      
+
       auth_response = RestClient.post(
         'https://accounts.spotify.com/api/token',
         form_data,
         {
           Authorization: "Basic #{credentials}",
           content_type: 'application/x-www-form-urlencoded',
-          accept: 'application/json'
-        }
+          accept: 'application/json',
+        },
       )
-      
+
       auth_data = JSON.parse(auth_response.body)
-      Rails.logger.debug "Spotify auth response: #{auth_data}"
-      
+      Rails.logger.debug { "Spotify auth response: #{auth_data}" }
+
       # Get user info from Spotify API
       user_response = RestClient.get(
         'https://api.spotify.com/v1/me',
-        { Authorization: "Bearer #{auth_data['access_token']}" }
+        { Authorization: "Bearer #{auth_data['access_token']}" },
       )
       user_data = JSON.parse(user_response.body)
 
@@ -146,7 +150,7 @@ class RestaurantsController < ApplicationController
         refresh_token: auth_data['refresh_token'],
         expires_at: Time.now.to_i + auth_data['expires_in'],
       }
-      
+
       if session[:spotify_restaurant_id]
         @restaurant = Restaurant.find(session[:spotify_restaurant_id])
         @restaurant.spotifyaccesstoken = auth_data['access_token']
@@ -200,7 +204,7 @@ class RestaurantsController < ApplicationController
       AnalyticsService.track_user_event(current_user, 'restaurants_viewed', {
         restaurants_count: @restaurants.count,
         has_restaurants: @restaurants.any?,
-      },)
+      })
 
       if current_user.plan.locations == -1
         @canAddRestaurant = true
@@ -215,7 +219,7 @@ class RestaurantsController < ApplicationController
     # Use minimal JSON view for better performance and Turbo Frame support for 2025 UI
     respond_to do |format|
       format.html do
-        if request.headers["Turbo-Frame"] == 'restaurants_content'
+        if request.headers['Turbo-Frame'] == 'restaurants_content'
           render partial: 'restaurants/index_frame_wrapper_2025',
                  locals: { restaurants: @restaurants, q: @q }
         else
@@ -237,7 +241,7 @@ class RestaurantsController < ApplicationController
     if ids.blank? || operation.blank?
       respond_to do |format|
         format.html { redirect_to restaurants_path, alert: 'Invalid bulk update' }
-        format.json { render json: { success: false }, status: :unprocessable_entity }
+        format.json { render json: { success: false }, status: :unprocessable_content }
       end
       return
     end
@@ -250,7 +254,7 @@ class RestaurantsController < ApplicationController
       unless Restaurant.statuses.key?(status)
         respond_to do |format|
           format.html { redirect_to restaurants_path, alert: 'Invalid status' }
-          format.json { render json: { success: false }, status: :unprocessable_entity }
+          format.json { render json: { success: false }, status: :unprocessable_content }
         end
         return
       end
@@ -288,7 +292,7 @@ class RestaurantsController < ApplicationController
     else
       respond_to do |format|
         format.html { redirect_to restaurants_path, alert: 'Invalid bulk operation' }
-        format.json { render json: { success: false }, status: :unprocessable_entity }
+        format.json { render json: { success: false }, status: :unprocessable_content }
       end
       return
     end
@@ -300,7 +304,7 @@ class RestaurantsController < ApplicationController
   rescue ActiveRecord::RecordInvalid => e
     respond_to do |format|
       format.html { redirect_to restaurants_path, alert: e.record.errors.full_messages.first }
-      format.json { render json: { success: false }, status: :unprocessable_entity }
+      format.json { render json: { success: false }, status: :unprocessable_content }
     end
   end
 
@@ -310,7 +314,7 @@ class RestaurantsController < ApplicationController
 
     order = params[:order]
     unless order.is_a?(Array)
-      render json: { success: false }, status: :unprocessable_entity
+      render json: { success: false }, status: :unprocessable_content
       return
     end
 
@@ -382,7 +386,7 @@ class RestaurantsController < ApplicationController
       has_menus: @dashboard_data[:stats][:total_menus_count].positive?,
       menus_count: @dashboard_data[:stats][:total_menus_count],
       employees_count: @dashboard_data[:stats][:staff_count],
-    },)
+    })
   end
 
   # GET /restaurants/1/analytics
@@ -405,7 +409,7 @@ class RestaurantsController < ApplicationController
       date_range_days: @analytics_data[:period][:days],
       total_orders: @analytics_data[:totals][:orders],
       total_revenue: @analytics_data[:totals][:revenue],
-    },)
+    })
 
     respond_to do |format|
       format.html
@@ -454,7 +458,7 @@ class RestaurantsController < ApplicationController
       period_days: days,
       cache_hit_rate: @performance_data[:cache_performance][:hit_rate],
       avg_response_time: @performance_data[:response_times][:average],
-    },)
+    })
 
     respond_to do |format|
       format.html
@@ -533,7 +537,7 @@ class RestaurantsController < ApplicationController
       period_days: days,
       total_orders: @analytics_data[:orders][:total],
       total_revenue: @analytics_data[:revenue][:total],
-    },)
+    })
 
     Rails.logger.debug '[RestaurantsController#analytics] Responding with analytics data'
     respond_to do |format|
@@ -564,11 +568,11 @@ class RestaurantsController < ApplicationController
     AnalyticsService.track_user_event(current_user, 'restaurant_creation_started', {
       user_restaurants_count: current_user.restaurants.count,
       plan_name: current_user.plan&.name,
-    },)
+    })
 
     if request.headers['Turbo-Frame'] == 'new_restaurant_modal'
       render partial: 'restaurants/new_modal_form', locals: { restaurant: @restaurant }
-      return
+      nil
     end
   end
 
@@ -604,7 +608,7 @@ class RestaurantsController < ApplicationController
     rescue StandardError
       nil
     end
-    
+
     # Set current section for 2025 UI
     @current_section = params[:section] || 'details'
     @onboarding_mode = ActiveModel::Type::Boolean.new.cast(params[:onboarding])
@@ -626,7 +630,7 @@ class RestaurantsController < ApplicationController
         section: @current_section,
         next_recommended_section: @onboarding_next,
         is_recommended: (@current_section == @onboarding_next),
-      },)
+      })
     end
 
     AnalyticsService.track_user_event(current_user, 'restaurant_edit_started', {
@@ -635,28 +639,28 @@ class RestaurantsController < ApplicationController
       has_employee_role: @current_employee.present?,
       employee_role: @current_employee&.role,
       section: @current_section,
-    },)
-    
+    })
+
     # 2025 UI is now the default
     # Provides modern sidebar navigation with 69% cognitive load reduction
     # Use ?old_ui=true to access legacy UI if needed
-    unless params[:old_ui] == 'true'
-      # Handle Turbo Frame requests for section content
-      if request.headers["Turbo-Frame"] == 'restaurant_content'
-        # Determine filter for menu sections
-        filter = @current_section.include?('menus') ? @current_section.sub('menus_', '') : 'all'
-        filter = 'all' if @current_section == 'menus'
-        
-        # Render turbo frame wrapper with section content
-        render partial: 'restaurants/section_frame_2025',
-               locals: { 
-                 restaurant: @restaurant, 
-                 partial_name: section_partial_name(@current_section),
-                 filter: filter
-               }
-      else
-        render :edit_2025
-      end
+    return if params[:old_ui] == 'true'
+
+    # Handle Turbo Frame requests for section content
+    if request.headers['Turbo-Frame'] == 'restaurant_content'
+      # Determine filter for menu sections
+      filter = @current_section.include?('menus') ? @current_section.sub('menus_', '') : 'all'
+      filter = 'all' if @current_section == 'menus'
+
+      # Render turbo frame wrapper with section content
+      render partial: 'restaurants/section_frame_2025',
+             locals: {
+               restaurant: @restaurant,
+               partial_name: section_partial_name(@current_section),
+               filter: filter,
+             }
+    else
+      render :edit_2025
     end
   end
 
@@ -673,7 +677,7 @@ class RestaurantsController < ApplicationController
         @restaurant.errors.add(:base, 'Plan limit reached: maximum active restaurants')
         respond_to do |format|
           format.html { redirect_to restaurants_path, alert: @restaurant.errors.full_messages.to_sentence }
-          format.json { render json: { errors: @restaurant.errors.full_messages }, status: :unprocessable_entity }
+          format.json { render json: { errors: @restaurant.errors.full_messages }, status: :unprocessable_content }
         end
         return
       end
@@ -688,7 +692,7 @@ class RestaurantsController < ApplicationController
           restaurant_id: @restaurant.id,
           source: 'restaurants_create',
           initial_next_section: @restaurant.onboarding_next_section,
-        },)
+        })
         if @restaurant.genimage.nil?
           @genimage = Genimage.new
           @genimage.restaurant = @restaurant
@@ -701,8 +705,8 @@ class RestaurantsController < ApplicationController
         end
         format.json { render :show, status: :created, location: @restaurant }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @restaurant.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @restaurant.errors, status: :unprocessable_content }
       end
     end
   rescue ArgumentError => e
@@ -710,8 +714,8 @@ class RestaurantsController < ApplicationController
     @restaurant = Restaurant.new
     @restaurant.errors.add(:status, e.message)
     respond_to do |format|
-      format.html { render :new, status: :unprocessable_entity }
-      format.json { render json: @restaurant.errors, status: :unprocessable_entity }
+      format.html { render :new, status: :unprocessable_content }
+      format.json { render json: @restaurant.errors, status: :unprocessable_content }
     end
   end
 
@@ -726,9 +730,8 @@ class RestaurantsController < ApplicationController
 
       if status_value.to_s == 'active' && !current_user_has_active_subscription?
         format.html do
-          redirect_back fallback_location: edit_restaurant_path(@restaurant, section: 'details'),
-                        alert: 'You need an active subscription to activate a restaurant.',
-                        status: :see_other
+          redirect_back_or_to(edit_restaurant_path(@restaurant, section: 'details'), alert: 'You need an active subscription to activate a restaurant.',
+                                                                                     status: :see_other,)
         end
         format.json { render json: { error: 'subscription_required' }, status: :payment_required }
         return
@@ -738,7 +741,7 @@ class RestaurantsController < ApplicationController
       if raw_restaurant.is_a?(ActionController::Parameters)
         begin
           attrs.merge!(restaurant_params.to_h)
-        rescue => e
+        rescue StandardError => e
           Rails.logger.warn("[RestaurantsController#update] restaurant_params error: #{e.message}")
         end
       end
@@ -766,7 +769,7 @@ class RestaurantsController < ApplicationController
           restaurant_id: @restaurant.id,
           restaurant_name: @restaurant.name,
           changes_made: @restaurant.previous_changes.keys,
-        },)
+        })
         if @restaurant.genimage.nil?
           @genimage = Genimage.new
           @genimage.restaurant = @restaurant
@@ -783,7 +786,7 @@ class RestaurantsController < ApplicationController
                         notice: t('common.flash.updated', resource: t('activerecord.models.restaurant'))
           end
         end
-        format.json { 
+        format.json do
           # For AJAX/auto-save requests, return simple success response
           if request.xhr?
             onboarding_next = @restaurant.onboarding_next_section
@@ -796,16 +799,16 @@ class RestaurantsController < ApplicationController
           else
             render :edit, status: :ok, location: @restaurant
           end
-        }
+        end
       else
         format.html do
           if params[:return_to] == 'restaurant_edit'
             redirect_to edit_restaurant_path(@restaurant, section: 'details'), alert: @restaurant.errors.full_messages.presence || 'Failed to update restaurant'
           else
-            render :edit, status: :unprocessable_entity
+            render :edit, status: :unprocessable_content
           end
         end
-        format.json { render json: @restaurant.errors, status: :unprocessable_entity }
+        format.json { render json: @restaurant.errors, status: :unprocessable_content }
       end
     end
   end
@@ -813,85 +816,85 @@ class RestaurantsController < ApplicationController
   # PATCH /restaurants/:id/update_hours
   def update_hours
     authorize @restaurant
-    
+
     Rails.logger.info "[UpdateHours] Received request for restaurant #{@restaurant.id}"
     Rails.logger.info "[UpdateHours] All params: #{params.inspect}"
     Rails.logger.info "[UpdateHours] Hours params: #{params[:hours].inspect}"
     Rails.logger.info "[UpdateHours] Closed params: #{params[:closed].inspect}"
-    
+
     hours_params = params[:hours] || {}
-    
+
     # Process each day's hours
     hours_params.each do |day, times|
       Rails.logger.info "[UpdateHours] Processing day: #{day}, times: #{times.inspect}"
-      
+
       # Find or create restaurantavailability for this day
       availability = @restaurant.restaurantavailabilities.find_or_initialize_by(
         dayofweek: day,
-        sequence: 1  # Default sequence for primary hours
+        sequence: 1, # Default sequence for primary hours
       )
-      
+
       Rails.logger.info "[UpdateHours] Found/Created availability: #{availability.inspect}"
-      
+
       # Parse times (handle both symbol and string keys from FormData)
       open_time = times[:open] || times['open']
       close_time = times[:close] || times['close']
-      
+
       if open_time.present? && close_time.present?
         open_parts = open_time.split(':')
         close_parts = close_time.split(':')
-        
+
         availability.starthour = open_parts[0].to_i
         availability.startmin = open_parts[1].to_i
         availability.endhour = close_parts[0].to_i
         availability.endmin = close_parts[1].to_i
-        availability.status = :open  # Use enum symbol
-        
+        availability.status = :open # Use enum symbol
+
         Rails.logger.info "[UpdateHours] Setting hours: #{availability.starthour}:#{availability.startmin} - #{availability.endhour}:#{availability.endmin}"
       else
         Rails.logger.warn "[UpdateHours] No time data for #{day}: open=#{open_time.inspect}, close=#{close_time.inspect}"
       end
-      
+
       if availability.save
         Rails.logger.info "[UpdateHours] Saved availability for #{day}: #{availability.id}"
       else
         Rails.logger.error "[UpdateHours] Failed to save availability for #{day}: #{availability.errors.full_messages}"
       end
     end
-    
+
     # Handle closed days (checkboxes that are checked)
     if params[:closed].is_a?(Hash)
       params[:closed].each do |day, is_closed|
         Rails.logger.info "[UpdateHours] Processing closed day: #{day} = #{is_closed}"
-        if is_closed == '1'
-          availability = @restaurant.restaurantavailabilities.find_or_initialize_by(
-            dayofweek: day,
-            sequence: 1
-          )
-          availability.status = :closed  # Use enum symbol
-          if availability.save
-            Rails.logger.info "[UpdateHours] Marked #{day} as closed"
-          else
-            Rails.logger.error "[UpdateHours] Failed to mark #{day} as closed: #{availability.errors.full_messages}"
-          end
+        next unless is_closed == '1'
+
+        availability = @restaurant.restaurantavailabilities.find_or_initialize_by(
+          dayofweek: day,
+          sequence: 1,
+        )
+        availability.status = :closed # Use enum symbol
+        if availability.save
+          Rails.logger.info "[UpdateHours] Marked #{day} as closed"
+        else
+          Rails.logger.error "[UpdateHours] Failed to mark #{day} as closed: #{availability.errors.full_messages}"
         end
       end
     end
-    
-    Rails.logger.info "[UpdateHours] Finished processing all hours"
-    
+
+    Rails.logger.info '[UpdateHours] Finished processing all hours'
+
     # Invalidate caches
     @restaurant.expire_restaurant_cache if @restaurant.respond_to?(:expire_restaurant_cache)
     AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id) if defined?(AdvancedCacheService)
-    
+
     respond_to do |format|
       format.json { render json: { success: true, message: 'Hours saved successfully' }, status: :ok }
       format.html { redirect_to edit_restaurant_path(@restaurant, section: 'hours'), notice: 'Hours updated successfully' }
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error("Error updating hours: #{e.message}")
     respond_to do |format|
-      format.json { render json: { error: e.message }, status: :unprocessable_entity }
+      format.json { render json: { error: e.message }, status: :unprocessable_content }
       format.html { redirect_to edit_restaurant_path(@restaurant, section: 'hours'), alert: 'Failed to update hours' }
     end
   end
@@ -910,7 +913,7 @@ class RestaurantsController < ApplicationController
       restaurant_name: @restaurant.name,
       had_menus: @restaurant.menus.any?,
       menus_count: @restaurant.menus.count,
-    },)
+    })
 
     respond_to do |format|
       format.html do
@@ -932,31 +935,31 @@ class RestaurantsController < ApplicationController
     stripe_customer_id = session.customer.to_s
     subscription_obj = session.subscription
     stripe_subscription_id = if subscription_obj.respond_to?(:id)
-      subscription_obj.id.to_s
-    else
-      session.subscription.to_s
-    end
+                               subscription_obj.id.to_s
+                             else
+                               session.subscription.to_s
+                             end
 
     return if stripe_customer_id.blank? || stripe_subscription_id.blank?
 
-    subscription = if subscription_obj && subscription_obj.respond_to?(:status)
-      subscription_obj
-    else
-      Stripe::Subscription.retrieve({ id: stripe_subscription_id, expand: ['default_payment_method'] })
-    end
+    subscription = if subscription_obj.respond_to?(:status)
+                     subscription_obj
+                   else
+                     Stripe::Subscription.retrieve({ id: stripe_subscription_id, expand: ['default_payment_method'] })
+                   end
 
     status = case subscription.status.to_s
-    when 'active'
-      :active
-    when 'trialing'
-      :trialing
-    when 'past_due', 'unpaid'
-      :past_due
-    when 'canceled', 'incomplete_expired'
-      :canceled
-    else
-      :inactive
-    end
+             when 'active'
+               :active
+             when 'trialing'
+               :trialing
+             when 'past_due', 'unpaid'
+               :past_due
+             when 'canceled', 'incomplete_expired'
+               :canceled
+             else
+               :inactive
+             end
 
     has_payment_method = subscription.respond_to?(:default_payment_method) && subscription.default_payment_method.present?
     has_payment_method ||= subscription.respond_to?(:default_source) && subscription.default_source.present?
@@ -970,13 +973,13 @@ class RestaurantsController < ApplicationController
       payment_method_on_file: has_payment_method,
       trial_ends_at: begin
         t = subscription.respond_to?(:trial_end) ? subscription.trial_end : nil
-        t.present? ? Time.at(t.to_i) : rs.trial_ends_at
+        t.present? ? Time.zone.at(t.to_i) : rs.trial_ends_at
       rescue StandardError
         rs.trial_ends_at
       end,
       current_period_end: begin
         t = subscription.respond_to?(:current_period_end) ? subscription.current_period_end : nil
-        t.present? ? Time.at(t.to_i) : rs.current_period_end
+        t.present? ? Time.zone.at(t.to_i) : rs.current_period_end
       rescue StandardError
         rs.current_period_end
       end,
@@ -1006,10 +1009,10 @@ class RestaurantsController < ApplicationController
     end
 
     key = if Rails.env.production?
-      env_key || credentials_key
-    else
-      credentials_key.presence || env_key
-    end
+            env_key || credentials_key
+          else
+            credentials_key.presence || env_key
+          end
 
     Stripe.api_key = key if key.present?
   end
@@ -1024,7 +1027,7 @@ class RestaurantsController < ApplicationController
         address: 'your address/location',
         country: 'your country',
       }
-      items = missing.map { |k| labels[k] }.compact
+      items = missing.filter_map { |k| labels[k] }
       "To continue setup, please add #{items.to_sentence}."
     when 'localization'
       'Add at least one language and set a default language to continue setup.'
@@ -1499,13 +1502,13 @@ class RestaurantsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def restaurant_params
     permitted = params.require(:restaurant).permit(:name, :description, :address1, :address2, :state, :city, :postcode, :country,
-                                       :image, :remove_image, :status, :sequence, :capacity, :user_id, :displayImages, :displayImagesInPopup, :allowOrdering, :allow_alcohol, :inventoryTracking, :currency, :genid, :latitude, :longitude, :imagecontext, :image_style_profile, :wifissid, :wifiEncryptionType, :wifiPassword, :wifiHidden, :spotifyuserid,)
-    
+                                                   :image, :remove_image, :status, :sequence, :capacity, :user_id, :displayImages, :displayImagesInPopup, :allowOrdering, :allow_alcohol, :inventoryTracking, :currency, :genid, :latitude, :longitude, :imagecontext, :image_style_profile, :wifissid, :wifiEncryptionType, :wifiPassword, :wifiHidden, :spotifyuserid,)
+
     # Convert status to integer if it's a string (from select dropdown)
     if permitted[:status].present? && permitted[:status].is_a?(String)
       permitted[:status] = permitted[:status].to_i
     end
-    
+
     permitted
   end
 end

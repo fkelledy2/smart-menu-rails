@@ -110,15 +110,15 @@ class MenuItemImageGeneratorJob
     style_profile = resolve_style_profile(restaurant).truncate(100)
 
     parts = []
-    if item_img_txt.present?
-      if item_name.present? && item_img_txt.downcase.include?(item_name.downcase)
-        parts << "Photorealistic #{item_img_txt}"
-      else
-        parts << "Photorealistic #{item_name}#{" - #{item_img_txt}" if item_img_txt.present?}"
-      end
-    else
-      parts << "Photorealistic #{item_name}#{" - #{item_desc}" if item_desc.present?}"
-    end
+    parts << if item_img_txt.present?
+               if item_name.present? && item_img_txt.downcase.include?(item_name.downcase)
+                 "Photorealistic #{item_img_txt}"
+               else
+                 "Photorealistic #{item_name}#{" - #{item_img_txt}" if item_img_txt.present?}"
+               end
+             else
+               "Photorealistic #{item_name}#{" - #{item_desc}" if item_desc.present?}"
+             end
     parts << "#{sec_name} section" if sec_name.present?
     parts << "Restaurant: #{rest_name}" if rest_name.present?
 
@@ -196,11 +196,10 @@ class MenuItemImageGeneratorJob
     lines << "Style: #{style_profile}."
     lines << "Brand: #{brand_adj.join(', ')}." if brand_adj.any?
     # Negative cues to reduce mismatches
-    lines << "Negative: no text, no watermark, no people, no hands, no menus, no packaging, no logos."
+    lines << 'Negative: no text, no watermark, no people, no hands, no menus, no packaging, no logos.'
 
     prompt = join_parts(lines)
-    prompt = prompt[0, 1000]
-    prompt
+    prompt[0, 1000]
   end
 
   def use_prompt_v2?
@@ -229,38 +228,40 @@ class MenuItemImageGeneratorJob
       tags[:plating] = 'glassware on bar top'
     end
 
-    if s.match?(/pizza/i)
+    case s
+    when /pizza/i
       tags[:category] = 'pizza'
       tags[:cuisine] ||= 'italian'
       tags[:cooking] = 'wood-fired, lightly charred crust'
       tags[:plating] ||= 'full round on wooden peel'
-    elsif s.match?(/pasta/i)
+    when /pasta/i
       tags[:category] = 'pasta'
       tags[:cuisine] ||= 'italian'
       tags[:plating] ||= 'shallow bowl'
-    elsif s.match?(/seafood|fish|oyster|shellfish/i)
+    when /seafood|fish|oyster|shellfish/i
       tags[:category] = 'seafood'
       tags[:plating] ||= 'on plate with subtle lemon garnish'
       tags[:cooking] ||= 'fresh, crisp highlights'
-    elsif s.match?(/salad/i)
+    when /salad/i
       tags[:category] = 'salad'
       tags[:plating] ||= 'wide bowl, fresh greens'
       tags[:cooking] ||= 'fresh, crisp textures'
-    elsif s.match?(/burger|sandwich/i)
+    when /burger|sandwich/i
       tags[:category] = 'burger'
       tags[:plating] ||= 'stacked on plate or board'
       tags[:cooking] ||= 'grilled, juicy, melted cheese when applicable'
-    elsif s.match?(/grill|steak|bbq/i)
+    when /grill|steak|bbq/i
       tags[:category] = 'grill'
       tags[:plating] ||= 'centered on plate, rustic sides'
       tags[:cooking] ||= 'grilled, seared, char marks'
     end
 
-    if s.match?(/vegan/i)
+    case s
+    when /vegan/i
       tags[:diet] = 'vegan'
-    elsif s.match?(/vegetarian/i)
+    when /vegetarian/i
       tags[:diet] = 'vegetarian'
-    elsif s.match?(/gluten[- ]?free|gf/i)
+    when /gluten[- ]?free|gf/i
       tags[:diet] = 'gluten-free'
     end
     tags
@@ -286,14 +287,20 @@ class MenuItemImageGeneratorJob
 
   def sanitize_text(text, limit)
     t = text.to_s
-    t = ActionView::Base.full_sanitizer.sanitize(t) rescue t
+    t = begin
+      ActionView::Base.full_sanitizer.sanitize(t)
+    rescue StandardError
+      t
+    end
     t = t.gsub(/\s+/, ' ').strip
     return t if t.length <= limit
+
     t.split[0..].join(' ')[0, limit]
   end
 
   def distilled_brand_adjectives(restaurant, max: 5)
     return [] unless restaurant
+
     pool = [restaurant.try(:imagecontext), restaurant.try(:description)].map { |s| s.to_s.downcase }
     words = pool.join(' ').scan(/[a-zA-Z]+/)
     candidates = %w[rustic cozy modern upscale casual coastal vibrant elegant minimalist traditional authentic contemporary warm refined bright moody]

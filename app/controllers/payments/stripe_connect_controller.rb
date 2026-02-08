@@ -15,14 +15,12 @@ class Payments::StripeConnectController < ApplicationController
   rescue Stripe::InvalidRequestError => e
     Rails.logger.warn("Stripe Connect onboarding failed for restaurant_id=#{@restaurant.id}: #{e.message}")
     flash[:stripe_connect_error] = 'Stripe Connect is not enabled for this Stripe account. Enable Connect in the Stripe Dashboard and try again.'
-    redirect_back fallback_location: edit_restaurant_path(@restaurant, section: 'settings'), alert: flash[:stripe_connect_error]
+    redirect_back_or_to(edit_restaurant_path(@restaurant, section: 'settings'), alert: flash[:stripe_connect_error])
   rescue RuntimeError => e
-    if e.message.to_s == 'Stripe is not configured'
-      flash[:stripe_connect_error] = 'Stripe is not configured. Set STRIPE_SECRET_KEY (or credentials) and try again.'
-      redirect_back fallback_location: edit_restaurant_path(@restaurant, section: 'settings'), alert: flash[:stripe_connect_error]
-    else
-      raise
-    end
+    raise unless e.message.to_s == 'Stripe is not configured'
+
+    flash[:stripe_connect_error] = 'Stripe is not configured. Set STRIPE_SECRET_KEY (or credentials) and try again.'
+    redirect_back_or_to(edit_restaurant_path(@restaurant, section: 'settings'), alert: flash[:stripe_connect_error])
   end
 
   def refresh
@@ -37,14 +35,12 @@ class Payments::StripeConnectController < ApplicationController
   rescue Stripe::InvalidRequestError => e
     Rails.logger.warn("Stripe Connect refresh failed for restaurant_id=#{@restaurant.id}: #{e.message}")
     flash[:stripe_connect_error] = 'Stripe Connect is not enabled for this Stripe account. Enable Connect in the Stripe Dashboard and try again.'
-    redirect_back fallback_location: edit_restaurant_path(@restaurant, section: 'settings'), alert: flash[:stripe_connect_error]
+    redirect_back_or_to(edit_restaurant_path(@restaurant, section: 'settings'), alert: flash[:stripe_connect_error])
   rescue RuntimeError => e
-    if e.message.to_s == 'Stripe is not configured'
-      flash[:stripe_connect_error] = 'Stripe is not configured. Set STRIPE_SECRET_KEY (or credentials) and try again.'
-      redirect_back fallback_location: edit_restaurant_path(@restaurant, section: 'settings'), alert: flash[:stripe_connect_error]
-    else
-      raise
-    end
+    raise unless e.message.to_s == 'Stripe is not configured'
+
+    flash[:stripe_connect_error] = 'Stripe is not configured. Set STRIPE_SECRET_KEY (or credentials) and try again.'
+    redirect_back_or_to(edit_restaurant_path(@restaurant, section: 'settings'), alert: flash[:stripe_connect_error])
   end
 
   def return

@@ -7,7 +7,7 @@ class MenuEditSessionTest < ActiveSupport::TestCase
     @session = MenuEditSession.create!(
       menu: @menu,
       user: @user,
-      session_id: 'test-session-123'
+      session_id: 'test-session-123',
     )
   end
 
@@ -27,13 +27,13 @@ class MenuEditSessionTest < ActiveSupport::TestCase
   test 'requires menu' do
     session = MenuEditSession.new(user: @user)
     assert_not session.valid?
-    assert_includes session.errors[:menu], "must exist"
+    assert_includes session.errors[:menu], 'must exist'
   end
 
   test 'requires user' do
     session = MenuEditSession.new(menu: @menu)
     assert_not session.valid?
-    assert_includes session.errors[:user], "must exist"
+    assert_includes session.errors[:user], 'must exist'
   end
 
   test 'can create session with valid attributes' do
@@ -41,7 +41,7 @@ class MenuEditSessionTest < ActiveSupport::TestCase
     session = MenuEditSession.new(
       menu: menu2,
       user: @user,
-      session_id: 'new-session-456'
+      session_id: 'new-session-456',
     )
     assert session.valid?
     assert session.save
@@ -52,9 +52,9 @@ class MenuEditSessionTest < ActiveSupport::TestCase
     session2 = MenuEditSession.create!(
       menu: @menu,
       user: user2,
-      session_id: 'session-user2'
+      session_id: 'session-user2',
     )
-    
+
     assert_not_nil session2
     assert_equal @menu, session2.menu
     assert_equal user2, session2.user
@@ -65,9 +65,9 @@ class MenuEditSessionTest < ActiveSupport::TestCase
     session2 = MenuEditSession.create!(
       menu: menu2,
       user: @user,
-      session_id: 'session-menu2'
+      session_id: 'session-menu2',
     )
-    
+
     assert_not_nil session2
     assert_equal menu2, session2.menu
     assert_equal @user, session2.user

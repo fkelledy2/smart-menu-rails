@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Testable module provides helper methods for adding test automation attributes to views.
-# 
+#
 # These data-testid attributes make elements easily findable in Selenium/Capybara tests
 # without relying on fragile CSS classes or text content.
 #
@@ -18,7 +18,7 @@
 #
 module Testable
   # Add a data-testid attribute for test automation
-  # 
+  #
   # @param identifier [String] Unique identifier for the element
   # @return [Hash] Empty hash in production, or { 'data-testid': identifier }
   #
@@ -32,6 +32,7 @@ module Testable
   #
   def test_id(identifier)
     return {} unless testable_environment?
+
     { 'data-testid': identifier }
   end
 
@@ -142,6 +143,7 @@ module Testable
   #
   def test_attrs(identifier, **attrs)
     return attrs unless testable_environment?
+
     { 'data-testid': identifier }.merge(attrs)
   end
 
@@ -152,6 +154,6 @@ module Testable
   #
   # @return [Boolean]
   def testable_environment?
-    Rails.env.test? || Rails.env.development?
+    Rails.env.local?
   end
 end

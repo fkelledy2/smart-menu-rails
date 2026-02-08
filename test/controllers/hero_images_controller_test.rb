@@ -1,10 +1,10 @@
 require 'test_helper'
 
 class HeroImagesControllerTest < ActionDispatch::IntegrationTest
-  # Note: Tests involving POST/PATCH/DELETE requests are skipped due to known Warden
+  # NOTE: Tests involving POST/PATCH/DELETE requests are skipped due to known Warden
   # session persistence issue in integration tests. GET requests work correctly.
   # The HeroImagesController functions correctly in production.
-  
+
   setup do
     @admin_user = users(:admin)
     @regular_user = users(:one)

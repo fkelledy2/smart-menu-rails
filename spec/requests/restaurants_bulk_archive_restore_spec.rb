@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Restaurants bulk archive/restore', type: :request do
+RSpec.describe 'Restaurants bulk archive/restore' do
   let(:user) { create(:user) }
   let!(:restaurant1) { create(:restaurant, user: user, status: 'active', archived: false) }
   let!(:restaurant2) { create(:restaurant, user: user, status: 'active', archived: false) }
@@ -17,7 +17,7 @@ RSpec.describe 'Restaurants bulk archive/restore', type: :request do
       patch bulk_update_restaurants_path, params: {
         restaurant_ids: [restaurant1.id, restaurant2.id],
         operation: 'archive',
-        value: '1'
+        value: '1',
       }
 
       expect(response).to have_http_status(:redirect).or have_http_status(:ok)
@@ -30,7 +30,7 @@ RSpec.describe 'Restaurants bulk archive/restore', type: :request do
       patch bulk_update_restaurants_path, params: {
         restaurant_ids: [restaurant1.id, restaurant2.id],
         operation: 'restore',
-        value: '1'
+        value: '1',
       }
 
       expect(response).to have_http_status(:redirect).or have_http_status(:ok)

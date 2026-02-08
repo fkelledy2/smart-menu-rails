@@ -19,7 +19,7 @@ namespace :sidekiq do
         puts "Cleared queue: #{q}"
       end
     else
-      Sidekiq::Queue.all.each do |q|
+      Sidekiq::Queue.find_each do |q|
         q.clear
         puts "Cleared queue: #{q.name}"
       end

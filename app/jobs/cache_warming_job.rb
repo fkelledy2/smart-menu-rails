@@ -160,11 +160,11 @@ class CacheWarmingJob < ApplicationJob
       .distinct
       .limit(15)
       .find_each do |restaurant|
-      # Warm common analytics queries
-      [7, 30].each do |days|
-        AdvancedCacheService.cached_order_analytics(restaurant.id, days.days.ago..Time.current)
-        AdvancedCacheService.cached_restaurant_order_summary(restaurant.id, days: days)
-      end
+        # Warm common analytics queries
+        [7, 30].each do |days|
+          AdvancedCacheService.cached_order_analytics(restaurant.id, days.days.ago..Time.current)
+          AdvancedCacheService.cached_restaurant_order_summary(restaurant.id, days: days)
+        end
     end
   end
 

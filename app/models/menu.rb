@@ -88,7 +88,7 @@ class Menu < ApplicationRecord
     locale_code = locale.to_s.downcase
 
     rl = nil
-    if restaurant && restaurant.association(:restaurantlocales).loaded?
+    if restaurant&.association(:restaurantlocales)&.loaded?
       rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
     end
     if rl.nil? && restaurant&.id
@@ -113,7 +113,7 @@ class Menu < ApplicationRecord
     locale_code = locale.to_s.downcase
 
     rl = nil
-    if restaurant && restaurant.association(:restaurantlocales).loaded?
+    if restaurant&.association(:restaurantlocales)&.loaded?
       rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
     end
     if rl.nil? && restaurant&.id
@@ -148,7 +148,8 @@ class Menu < ApplicationRecord
 
     # Safely handle case where no menu versions exist
     active_version = menu_versions.find_by(is_active: true)
-    return active_version&.order&.(:desc) if active_version
+    return active_version&.order&.call(:desc) if active_version
+
     nil
   end
 

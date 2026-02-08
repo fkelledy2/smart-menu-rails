@@ -367,8 +367,8 @@ class AuthenticationSecurityTest < ActionDispatch::IntegrationTest
 
     # In test environment, CSRF tokens may not be rendered in forms
     # The key security test is that CSRF protection is configured at the application level
-    csrf_configured = ApplicationController.instance_methods.include?(:verify_authenticity_token) ||
-                      ApplicationController.private_instance_methods.include?(:verify_authenticity_token)
+    csrf_configured = ApplicationController.method_defined?(:verify_authenticity_token) ||
+                      ApplicationController.private_method_defined?(:verify_authenticity_token)
     assert csrf_configured, 'CSRF protection should be configured'
   end
 
@@ -378,8 +378,8 @@ class AuthenticationSecurityTest < ActionDispatch::IntegrationTest
 
     # In test environment, CSRF tokens may not be rendered in forms
     # The key security test is that CSRF protection is configured at the application level
-    csrf_configured = ApplicationController.instance_methods.include?(:verify_authenticity_token) ||
-                      ApplicationController.private_instance_methods.include?(:verify_authenticity_token)
+    csrf_configured = ApplicationController.method_defined?(:verify_authenticity_token) ||
+                      ApplicationController.private_method_defined?(:verify_authenticity_token)
     assert csrf_configured, 'CSRF protection should be configured'
   end
 

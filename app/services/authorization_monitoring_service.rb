@@ -115,7 +115,11 @@ class AuthorizationMonitoringService
     return unless defined?(Redis)
 
     # Try to get the underlying Redis client
-    redis = Rails.cache.redis rescue nil
+    redis = begin
+      Rails.cache.redis
+    rescue StandardError
+      nil
+    end
     return unless redis
 
     key = "authorization_checks:#{Date.current.strftime('%Y-%m-%d')}"
@@ -124,7 +128,7 @@ class AuthorizationMonitoringService
       redis.expire(key, 7.days.to_i)
     rescue StandardError => e
       # Fallback to Rails.cache with proper expiry
-      Rails.logger.debug "[AuthorizationMonitoring] Using fallback cache storage: #{e.message}"
+      Rails.logger.debug { "[AuthorizationMonitoring] Using fallback cache storage: #{e.message}" }
       begin
         Rails.cache.write(key, log_data, expires_in: 7.days)
       rescue StandardError => e2
@@ -137,7 +141,11 @@ class AuthorizationMonitoringService
     return unless defined?(Redis)
 
     # Try to get the underlying Redis client
-    redis = Rails.cache.redis rescue nil
+    redis = begin
+      Rails.cache.redis
+    rescue StandardError
+      nil
+    end
     return unless redis
 
     key = "authorization_failures:#{Date.current.strftime('%Y-%m-%d')}"
@@ -153,7 +161,7 @@ class AuthorizationMonitoringService
       redis.expire(recent_key, 1.hour.to_i)
     rescue StandardError => e
       # Fallback to Rails.cache with proper expiry
-      Rails.logger.debug "[AuthorizationMonitoring] Using fallback cache storage: #{e.message}"
+      Rails.logger.debug { "[AuthorizationMonitoring] Using fallback cache storage: #{e.message}" }
       begin
         Rails.cache.write(key, log_data, expires_in: 30.days)
         Rails.cache.write(recent_key, log_data, expires_in: 1.hour)
@@ -203,14 +211,18 @@ class AuthorizationMonitoringService
       user_id: user_id,
       failure_count: recent_failures.count,
       recent_failures: recent_failures.last(5),
-    },)
+    })
   end
 
   def get_recent_failures_for_user(user_id)
     return [] unless defined?(Redis)
 
     # Try to get the underlying Redis client
-    redis = Rails.cache.redis rescue nil
+    redis = begin
+      Rails.cache.redis
+    rescue StandardError
+      nil
+    end
     return [] unless redis
 
     key = 'recent_authorization_failures'

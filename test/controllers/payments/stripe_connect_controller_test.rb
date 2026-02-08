@@ -16,7 +16,7 @@ class Payments::StripeConnectControllerTest < ActionDispatch::IntegrationTest
     Stripe.api_key = 'sk_test_dummy'
 
     get edit_restaurant_path(restaurant, section: 'settings')
-    csrf = response.body.to_s[/name=\"csrf-token\" content=\"([^\"]+)\"/, 1]
+    csrf = response.body.to_s[/name="csrf-token" content="([^"]+)"/, 1]
 
     headers = {}
     headers['X-CSRF-Token'] = csrf if csrf.present?

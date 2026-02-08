@@ -49,7 +49,7 @@ class Api::V1::OcrMenuSectionsControllerTest < ActionDispatch::IntegrationTest
   test 'should have update route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'patch', path: "/api/v1/ocr_menu_sections/#{@section.id}" },
-                   { controller: 'api/v1/ocr_menu_sections', action: 'update', id: @section.id.to_s, format: :json },)
+                   { controller: 'api/v1/ocr_menu_sections', action: 'update', id: @section.id.to_s, format: :json })
   end
 
   # Basic functionality tests

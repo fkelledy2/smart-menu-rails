@@ -9,10 +9,9 @@ class RestaurantSubscription < ApplicationRecord
     canceled: 4,
   }
 
-  validates :restaurant, presence: true
   validates :status, presence: true
 
   def active_or_trialing_with_payment_method?
-    payment_method_on_file && (status.to_s == 'active' || status.to_s == 'trialing')
+    payment_method_on_file && %w[active trialing].include?(status.to_s)
   end
 end

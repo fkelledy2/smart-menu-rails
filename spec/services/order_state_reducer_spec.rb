@@ -9,8 +9,8 @@ RSpec.describe OrderStateReducer do
       event_type: attrs.fetch(:event_type),
       entity_id: attrs[:entity_id],
       payload: attrs.fetch(:payload, {}),
-      occurred_at: attrs.fetch(:occurred_at, Time.at(0)),
-      created_at: attrs.fetch(:created_at, Time.at(0))
+      occurred_at: attrs.fetch(:occurred_at, Time.zone.at(0)),
+      created_at: attrs.fetch(:created_at, Time.zone.at(0)),
     })
   end
 
@@ -18,7 +18,7 @@ RSpec.describe OrderStateReducer do
     events = [
       event(sequence: 2, id: 2, event_type: 'status_changed', payload: { from: 'opened', to: 'ordered' }),
       event(sequence: 1, id: 1, event_type: 'item_added', entity_id: 111, payload: { menuitem_id: 5, qty: 1 }),
-      event(sequence: 3, id: 3, event_type: 'item_removed', payload: { ordritem_id: 111 })
+      event(sequence: 3, id: 3, event_type: 'item_removed', payload: { ordritem_id: 111 }),
     ]
 
     result = described_class.reduce(events)
@@ -31,7 +31,7 @@ RSpec.describe OrderStateReducer do
   it 'collects unsupported events without corrupting state' do
     events = [
       event(sequence: 1, id: 1, event_type: 'unknown_type', payload: { foo: 'bar' }),
-      event(sequence: 2, id: 2, event_type: 'bill_requested', payload: {})
+      event(sequence: 2, id: 2, event_type: 'bill_requested', payload: {}),
     ]
 
     result = described_class.reduce(events)

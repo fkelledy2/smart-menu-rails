@@ -10,7 +10,6 @@ class PaymentProfile < ApplicationRecord
     stripe: 0,
   }
 
-  validates :restaurant, presence: true
   validates :merchant_model, presence: true
   validates :primary_provider, presence: true
 end

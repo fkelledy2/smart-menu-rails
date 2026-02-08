@@ -30,18 +30,16 @@ class MenuLocalizationRetryJob
       processed: 0,
       successful: 0,
       still_rate_limited: [],
-      errors: []
+      errors: [],
     }
 
     rate_limited_items.each do |item|
-      begin
-        retry_item_translation(item, stats)
-        stats[:processed] += 1
-      rescue StandardError => e
-        error_msg = "Failed to retry #{item[:type]} ##{item[:id]} #{item[:field]}: #{e.message}"
-        Rails.logger.error("[MenuLocalizationRetryJob] #{error_msg}")
-        stats[:errors] << error_msg
-      end
+      retry_item_translation(item, stats)
+      stats[:processed] += 1
+    rescue StandardError => e
+      error_msg = "Failed to retry #{item[:type]} ##{item[:id]} #{item[:field]}: #{e.message}"
+      Rails.logger.error("[MenuLocalizationRetryJob] #{error_msg}")
+      stats[:errors] << error_msg
     end
 
     Rails.logger.info("[MenuLocalizationRetryJob] Completed: #{stats[:successful]} successful, #{stats[:still_rate_limited].count} still rate-limited, #{stats[:errors].count} errors")
@@ -68,7 +66,7 @@ class MenuLocalizationRetryJob
   def retry_item_translation(item, stats)
     locale_code = item[:locale]
     text = item[:text]
-    
+
     return if text.blank?
 
     # Attempt translation with rate limit tracking
@@ -105,22 +103,22 @@ class MenuLocalizationRetryJob
 
     begin
       result = DeeplApiService.translate(text, to: target_locale, from: source_locale)
-      
+
       # Add delay to prevent rate limiting
       sleep(0.1) unless Rails.env.test?
-      
+
       { text: result, rate_limited: false }
     rescue StandardError => e
       # Check if it's a rate limit error (429)
       if e.message.include?('429') && retry_count < max_retries
         retry_count += 1
         delay = base_delay * (2**(retry_count - 1)) # Exponential backoff: 2s, 4s
-        
+
         Rails.logger.warn("[MenuLocalizationRetryJob] Rate limit hit for '#{text.truncate(50)}' to #{target_locale}. Retry #{retry_count}/#{max_retries} after #{delay}s")
         sleep(delay)
         retry
       end
-      
+
       # If still rate limited, mark for later retry
       if e.message.include?('429')
         Rails.logger.warn("[MenuLocalizationRetryJob] Rate limit exceeded for '#{text.truncate(50)}' to #{target_locale}. Will retry later.")

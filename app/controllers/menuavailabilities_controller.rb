@@ -53,8 +53,8 @@ class MenuavailabilitiesController < ApplicationController
                         location: restaurant_menu_menuavailability_url(@menuavailability.menu.restaurant, @menuavailability.menu, @menuavailability)
         end
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @menuavailability.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @menuavailability.errors, status: :unprocessable_content }
       end
     end
   end
@@ -74,8 +74,8 @@ class MenuavailabilitiesController < ApplicationController
                         location: restaurant_menu_menuavailability_url(@menuavailability.menu.restaurant, @menuavailability.menu, @menuavailability)
         end
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @menuavailability.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @menuavailability.errors, status: :unprocessable_content }
       end
     end
   end
@@ -100,14 +100,14 @@ class MenuavailabilitiesController < ApplicationController
     return if params[:restaurant_id].blank?
 
     menu = if defined?(@menuavailability) && @menuavailability&.menu
-      @menuavailability.menu
-    elsif defined?(@futureParentMenu) && @futureParentMenu
-      @futureParentMenu
-    elsif params[:menu_id]
-      Menu.find_by(id: params[:menu_id])
-    elsif params.dig(:menuavailability, :menu_id)
-      Menu.find_by(id: params.dig(:menuavailability, :menu_id))
-    end
+             @menuavailability.menu
+           elsif defined?(@futureParentMenu) && @futureParentMenu
+             @futureParentMenu
+           elsif params[:menu_id]
+             Menu.find_by(id: params[:menu_id])
+           elsif params.dig(:menuavailability, :menu_id)
+             Menu.find_by(id: params.dig(:menuavailability, :menu_id))
+           end
 
     return unless menu
 

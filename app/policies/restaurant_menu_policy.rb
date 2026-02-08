@@ -29,7 +29,7 @@ class RestaurantMenuPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      return scope.none unless user.present?
+      return scope.none if user.blank?
 
       scope.joins(:restaurant).where(restaurants: { user_id: user.id })
     end
@@ -45,10 +45,10 @@ class RestaurantMenuPolicy < ApplicationPolicy
 
   def menu_owner?
     menu = if record.respond_to?(:menu)
-      record.menu
-    elsif record.is_a?(Menu)
-      record
-    end
+             record.menu
+           elsif record.is_a?(Menu)
+             record
+           end
 
     return false unless user && menu
 

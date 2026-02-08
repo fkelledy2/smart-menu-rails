@@ -19,7 +19,7 @@ class BackfillDemoMenuJob < ApplicationJob
           RestaurantMenu.where(restaurant_id: restaurant.id, menu_id: old_menu_id).destroy_all
         end
 
-        next if RestaurantMenu.where(restaurant_id: restaurant.id, menu_id: demo_menu_id).exists?
+        next if RestaurantMenu.exists?(restaurant_id: restaurant.id, menu_id: demo_menu_id)
 
         DemoMenuService.attach_demo_menu_to_restaurant!(restaurant)
       end

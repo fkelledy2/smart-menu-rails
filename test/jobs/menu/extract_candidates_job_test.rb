@@ -18,7 +18,7 @@ class ExtractCandidatesJobTest < ActiveSupport::TestCase
       preptime: 0,
       sequence: 999,
       status: 'active',
-      itemtype: 'spirits'
+      itemtype: 'spirits',
     )
 
     @wine_item = Menuitem.create!(
@@ -30,7 +30,7 @@ class ExtractCandidatesJobTest < ActiveSupport::TestCase
       preptime: 0,
       sequence: 1000,
       status: 'active',
-      itemtype: 'wine'
+      itemtype: 'wine',
     )
 
     @run = BeveragePipelineRun.create!(
@@ -38,7 +38,7 @@ class ExtractCandidatesJobTest < ActiveSupport::TestCase
       menu: @menu,
       status: 'running',
       started_at: Time.current,
-      current_step: 'start'
+      current_step: 'start',
     )
   end
 
@@ -47,13 +47,13 @@ class ExtractCandidatesJobTest < ActiveSupport::TestCase
 
     @whiskey_item.reload
     assert_equal 'whiskey', @whiskey_item.sommelier_category
-    assert @whiskey_item.sommelier_classification_confidence.to_f > 0
+    assert @whiskey_item.sommelier_classification_confidence.to_f.positive?
     assert_equal 12, @whiskey_item.sommelier_parsed_fields['age_years']
     assert_in_delta 40.0, @whiskey_item.sommelier_parsed_fields['bottling_strength_abv'].to_f, 0.5
 
     @wine_item.reload
     assert_equal 'wine', @wine_item.sommelier_category
-    assert @wine_item.sommelier_classification_confidence.to_f > 0
+    assert @wine_item.sommelier_classification_confidence.to_f.positive?
     assert_equal 2018, @wine_item.sommelier_parsed_fields['vintage_year']
     assert_equal 750, @wine_item.sommelier_parsed_fields['size_ml']
 

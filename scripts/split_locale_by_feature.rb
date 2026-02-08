@@ -21,7 +21,7 @@ def deep_slice(source, template)
 
     if v.is_a?(Hash) && source[k].is_a?(Hash)
       sliced = deep_slice(source[k], v)
-      out[k] = sliced unless sliced.nil? || sliced.empty?
+      out[k] = sliced if sliced.present?
     else
       out[k] = source[k]
     end
@@ -62,7 +62,7 @@ options = {
 }
 
 parser = OptionParser.new do |opts|
-  opts.banner = "Usage: ruby scripts/split_locale_by_feature.rb --locale <fr> --input config/locales/fr/fr.yml [options]"
+  opts.banner = 'Usage: ruby scripts/split_locale_by_feature.rb --locale <fr> --input config/locales/fr/fr.yml [options]'
 
   opts.on('--locale LOCALE', 'Target locale code (e.g. fr, de, es, pt, cs, hu)') { |v| options[:locale] = v }
   opts.on('--input PATH', 'Input monolithic locale yml path (defaults to config/locales/<locale>/<locale>.yml)') { |v| options[:input] = v }
@@ -76,7 +76,7 @@ parser.parse!
 
 locale = options[:locale]
 if locale.nil? || locale.strip.empty?
-  warn(parser.to_s)
+  warn(parser)
   exit(1)
 end
 
@@ -112,7 +112,7 @@ template_paths.sort.each do |template_path|
   template = template_yaml.fetch('en', {})
 
   sliced = deep_slice(remaining, template)
-  next if sliced.nil? || sliced.empty?
+  next if sliced.blank?
 
   out_hash = { locale => sliced }
 

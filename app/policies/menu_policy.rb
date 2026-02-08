@@ -15,7 +15,7 @@ class MenuPolicy < ApplicationPolicy
   def update?
     owner? || employee_admin? || employee_manager?
   end
-  
+
   def update_availabilities?
     owner? || employee_admin? || employee_manager?
   end
@@ -42,7 +42,7 @@ class MenuPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      return scope.none unless user.present?
+      return scope.none if user.blank?
 
       owned_restaurant_ids = Restaurant.where(user_id: user.id).select(:id)
       employee_restaurant_ids = Employee.where(user: user, status: :active).select(:restaurant_id)

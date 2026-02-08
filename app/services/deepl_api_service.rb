@@ -11,7 +11,7 @@ class DeeplApiService
   class MissingApiKeyError < StandardError; end
 
   def self.api_key
-    (Rails.application.credentials.dig(:deepl, :api_key) || ENV['DEEPL_API_KEY']).to_s.strip
+    (Rails.application.credentials.dig(:deepl, :api_key) || ENV.fetch('DEEPL_API_KEY', nil)).to_s.strip
   end
 
   def self.api_key_with_test_fallback
@@ -36,7 +36,7 @@ class DeeplApiService
         source_lang: from,
         target_lang: to,
       },
-    },)
+    })
 
     raise "DeepL API error: #{response.code} - #{response.body}" unless response.success?
 

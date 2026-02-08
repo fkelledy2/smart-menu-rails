@@ -41,7 +41,7 @@ class MenusectionlocalesController < ApplicationController
       redirect_to menusectionlocale_url(@menusectionlocale),
                   notice: t('common.flash.created', resource: t('activerecord.models.menusectionlocale'))
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -52,7 +52,7 @@ class MenusectionlocalesController < ApplicationController
       redirect_to menusectionlocale_url(@menusectionlocale),
                   notice: t('common.flash.updated', resource: t('activerecord.models.menusectionlocale'))
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -70,12 +70,12 @@ class MenusectionlocalesController < ApplicationController
     return if params[:restaurant_id].blank?
 
     menu = if defined?(@menusectionlocale) && @menusectionlocale&.menusection&.menu
-      @menusectionlocale.menusection.menu
-    elsif params[:menu_id]
-      Menu.find_by(id: params[:menu_id])
-    elsif params.dig(:menusectionlocale, :menusection_id)
-      Menusection.find_by(id: params.dig(:menusectionlocale, :menusection_id))&.menu
-    end
+             @menusectionlocale.menusection.menu
+           elsif params[:menu_id]
+             Menu.find_by(id: params[:menu_id])
+           elsif params.dig(:menusectionlocale, :menusection_id)
+             Menusection.find_by(id: params.dig(:menusectionlocale, :menusection_id))&.menu
+           end
 
     return unless menu
 

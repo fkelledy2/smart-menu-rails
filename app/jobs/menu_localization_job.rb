@@ -88,38 +88,36 @@ class MenuLocalizationJob
     update_progress(
       status: 'running',
       current: 0,
-      message: "Starting menu localization#{force ? ' (force)' : ''}",
-      menu_id: menu_id
+      message: "Starting menu localization#{' (force)' if force}",
+      menu_id: menu_id,
     )
 
     service_args = [menu]
     service_kwargs = force ? { force: true } : {}
 
     stats = LocalizeMenuService.localize_menu_to_all_locales(*service_args, **service_kwargs) do |evt|
-      begin
-        Sidekiq.redis do |r|
-          json = r.get("localize:#{jid}")
-          payload = json.present? ? JSON.parse(json) : {}
-          payload['status'] ||= 'running'
-          payload['current'] = payload.fetch('current', 0).to_i + 1
-          payload['current_locale'] = evt[:locale]
-          verb = evt[:changed] ? 'Localized' : 'Checked'
-          payload['message'] = "#{verb} #{evt[:item_name]}"
-          payload['menu_id'] ||= menu_id
-          log = Array(payload['log'])
-          status_tag = evt[:changed] ? 'localized' : 'skipped'
-          log << { at: Time.current.iso8601, message: "#{evt[:locale].to_s.upcase}: #{evt[:item_name]} (#{status_tag})" }
-          payload['log'] = log.last(50)
-          r.set("localize:#{jid}", payload.to_json, ex: 24 * 3600)
-        end
-      rescue StandardError => e
-        Rails.logger.warn("[MenuLocalizationJob] Progress update failed for #{jid}: #{e.class}: #{e.message}")
+      Sidekiq.redis do |r|
+        json = r.get("localize:#{jid}")
+        payload = json.present? ? JSON.parse(json) : {}
+        payload['status'] ||= 'running'
+        payload['current'] = payload.fetch('current', 0).to_i + 1
+        payload['current_locale'] = evt[:locale]
+        verb = evt[:changed] ? 'Localized' : 'Checked'
+        payload['message'] = "#{verb} #{evt[:item_name]}"
+        payload['menu_id'] ||= menu_id
+        log = Array(payload['log'])
+        status_tag = evt[:changed] ? 'localized' : 'skipped'
+        log << { at: Time.current.iso8601, message: "#{evt[:locale].to_s.upcase}: #{evt[:item_name]} (#{status_tag})" }
+        payload['log'] = log.last(50)
+        r.set("localize:#{jid}", payload.to_json, ex: 24 * 3600)
       end
+    rescue StandardError => e
+      Rails.logger.warn("[MenuLocalizationJob] Progress update failed for #{jid}: #{e.class}: #{e.message}")
     end
 
     update_progress(
       status: 'completed',
-      message: 'Completed'
+      message: 'Completed',
     )
 
     begin

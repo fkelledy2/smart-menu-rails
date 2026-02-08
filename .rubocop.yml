@@ -2,14 +2,11 @@
 # This configuration balances code quality with practical development needs
 
 # Use plugins for modern RuboCop extensions (where supported)
-# Note: rubocop-rspec and rubocop-rspec_rails still use require
 plugins:
   - rubocop-rails
   - rubocop-performance
   - rubocop-capybara
   - rubocop-factory_bot
-
-require:
   - rubocop-rspec
   - rubocop-rspec_rails
 
@@ -161,19 +158,16 @@ Rails/ThreeStateBooleanColumn:
   Enabled: false # Allow nullable boolean columns
 
 # RSpec specific
-RSpec/ExampleLength:
-  Max: 20
-
-RSpec/MultipleExpectations:
-  Max: 5
-
 RSpec/NestedGroups:
   Max: 4
 
 RSpec/DescribeClass:
   Enabled: false # Allow describe without class
 
-RSpec/FilePath:
+RSpec/SpecFilePathFormat:
+  Enabled: false # Don't enforce file path matching
+
+RSpec/SpecFilePathSuffix:
   Enabled: false # Don't enforce file path matching
 
 # Performance

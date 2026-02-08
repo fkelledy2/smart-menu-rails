@@ -154,7 +154,7 @@ class AnalyticsService
     track_user_event(user, ONBOARDING_STARTED, {
       source: source,
       user_created_at: user.created_at,
-    },)
+    })
   end
 
   def track_onboarding_step_completed(user, step, step_data = {})
@@ -172,7 +172,7 @@ class AnalyticsService
       step_name: step_name_for(step),
       error_message: error_message,
       time_on_step: calculate_step_time(user, step),
-    },)
+    })
   end
 
   def track_onboarding_completed(user, completion_data = {})
@@ -199,7 +199,7 @@ class AnalyticsService
       location: restaurant.address1,
       phone: restaurant.respond_to?(:phone) ? restaurant.phone.present? : false,
       via_onboarding: true, # Always true when called from onboarding
-    },)
+    })
   end
 
   def track_menu_created(user, menu)
@@ -210,7 +210,7 @@ class AnalyticsService
       items_count: menu.menuitems.count,
       sections_count: menu.menusections.count,
       via_onboarding: true, # Always true when called from onboarding
-    },)
+    })
   end
 
   def track_feature_usage(user, feature_name, feature_data = {})

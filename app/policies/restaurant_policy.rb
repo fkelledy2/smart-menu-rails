@@ -22,7 +22,7 @@ class RestaurantPolicy < ApplicationPolicy
   def update?
     owner? || employee_admin?
   end
-  
+
   def update_hours?
     owner? || employee_admin?
   end

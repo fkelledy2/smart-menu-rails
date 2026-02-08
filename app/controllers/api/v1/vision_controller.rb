@@ -36,7 +36,7 @@ module Api
         unless valid_image_format?(params[:image])
           skip_authorization
           return render json: error_response('invalid_format', 'Invalid image format. Supported formats: JPEG, PNG, GIF, BMP, WEBP'),
-                        status: :unprocessable_entity
+                        status: :unprocessable_content
         end
 
         authorize :vision, :analyze?

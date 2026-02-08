@@ -26,7 +26,7 @@ class Payments::BaseController < ApplicationController
       end
     end
 
-    key = ENV['STRIPE_SECRET_KEY'] if key.blank?
+    key = ENV.fetch('STRIPE_SECRET_KEY', nil) if key.blank?
     Stripe.api_key = key if key.present?
     price = Stripe::Price.create({
       unit_amount: amount,

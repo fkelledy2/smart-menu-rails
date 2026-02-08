@@ -27,7 +27,7 @@ class Api::V1::MenuItemsControllerTest < ActionDispatch::IntegrationTest
   test 'should have index route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'get', path: "/api/v1/menus/#{@menu.id}/items" },
-                   { controller: 'api/v1/menu_items', action: 'index', menu_id: @menu.id.to_s, format: :json },)
+                   { controller: 'api/v1/menu_items', action: 'index', menu_id: @menu.id.to_s, format: :json })
   end
 
   # JSON response tests

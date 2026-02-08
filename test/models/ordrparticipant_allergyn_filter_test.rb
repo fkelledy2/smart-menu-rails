@@ -6,7 +6,7 @@ class OrdrparticipantAllergynFilterTest < ActiveSupport::TestCase
     @allergyn = allergyns(:one)
     @filter = OrdrparticipantAllergynFilter.create!(
       ordrparticipant: @ordrparticipant,
-      allergyn: @allergyn
+      allergyn: @allergyn,
     )
   end
 

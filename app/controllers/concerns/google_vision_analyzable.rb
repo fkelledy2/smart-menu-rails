@@ -50,6 +50,6 @@ module GoogleVisionAnalyzable
                       "Error processing image: #{exception.message}"
                     end
 
-    render json: { error: error_message }, status: :unprocessable_entity
+    render json: { error: error_message }, status: :unprocessable_content
   end
 end

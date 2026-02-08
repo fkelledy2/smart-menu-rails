@@ -17,8 +17,4 @@ class WhiskyHunterClient < ExternalApiClient
       max_retries: 2,
     )
   end
-
-  def validate_config!
-    super
-  end
 end

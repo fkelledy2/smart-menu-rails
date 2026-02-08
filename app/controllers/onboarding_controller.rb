@@ -128,14 +128,14 @@ class OnboardingController < ApplicationController
       email: current_user.email,
       restaurant_id: restaurant.id,
       restaurant_new: new_restaurant,
-    },)
+    })
 
     if new_restaurant
       AnalyticsService.track_user_event(current_user, 'restaurant_onboarding_started', {
         restaurant_id: restaurant.id,
         source: 'signup_onboarding',
         initial_next_section: restaurant.onboarding_next_section,
-      },)
+      })
     end
 
     # Redirect directly to the restaurant edit page to guide remaining steps
@@ -156,7 +156,7 @@ class OnboardingController < ApplicationController
         cuisine_type: @onboarding.cuisine_type,
         location: @onboarding.location,
         has_phone: @onboarding.phone.present?,
-      },)
+      })
 
       redirect_to onboarding_step_path(3), status: :see_other
     else
@@ -183,7 +183,7 @@ class OnboardingController < ApplicationController
         selected_plan_id: plan.id,
         plan_name: plan.name,
         plan_price: plan.price,
-      },)
+      })
 
       # Also track plan selection event
       AnalyticsService.track_user_event(current_user, AnalyticsService::PLAN_SELECTED, {
@@ -191,7 +191,7 @@ class OnboardingController < ApplicationController
         plan_name: plan.name,
         plan_price: plan.price,
         via_onboarding: true,
-      },)
+      })
 
       redirect_to onboarding_step_path(4), status: :see_other
     else
@@ -217,7 +217,7 @@ class OnboardingController < ApplicationController
         menu_items: @onboarding.menu_items&.map do |item|
           { name: item['name'], price: item['price'], has_description: item['description'].present? }
         end,
-      },)
+      })
 
       # Create restaurant and menu in background
       RestaurantOnboardingJob.perform_later(current_user.id, @onboarding.id)

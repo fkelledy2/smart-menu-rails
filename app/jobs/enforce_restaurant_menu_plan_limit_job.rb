@@ -63,7 +63,7 @@ class EnforceRestaurantMenuPlanLimitJob < ApplicationJob
         menu_id = menu&.id
         imported_at = import_times[menu_id]
         fallback_at = menu&.created_at || rm.created_at
-        [-(imported_at || fallback_at || Time.at(0)).to_i, -rm.id]
+        [-(imported_at || fallback_at || Time.zone.at(0)).to_i, -rm.id]
       end
 
     keep_ids = ranked.first(limit).map(&:id)

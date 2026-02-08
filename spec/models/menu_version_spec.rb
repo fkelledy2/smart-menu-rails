@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe MenuVersion, type: :model do
+RSpec.describe MenuVersion do
   describe '.create_from_menu!' do
     it 'allocates sequential version_number per menu' do
       user = create(:user)

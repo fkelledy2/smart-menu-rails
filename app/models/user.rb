@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  require 'set'
   include IdentityCache
 
   # Include default devise modules. Others available are:
@@ -52,7 +51,7 @@ class User < ApplicationRecord
   end
 
   def needs_onboarding?
-    !onboarding_complete? && !Restaurant.where(user_id: id).exists?
+    !onboarding_complete? && !Restaurant.exists?(user_id: id)
   end
 
   def name
@@ -106,7 +105,7 @@ class User < ApplicationRecord
     # Use memoization with instance variable
     return @has_active_employment if defined?(@has_active_employment) && !@has_active_employment.nil?
 
-    @has_active_employment = employees.where(status: :active).exists?
+    @has_active_employment = employees.exists?(status: :active)
   end
 
   def self.from_omniauth(auth)
@@ -119,12 +118,12 @@ class User < ApplicationRecord
     end
 
     user ||= create!(
-      first_name: (auth.info.first_name.presence || auth.info.name.to_s.split(' ').first),
-      last_name: (auth.info.last_name.presence || auth.info.name.to_s.split(' ', 2).last),
+      first_name: auth.info.first_name.presence || auth.info.name.to_s.split.first,
+      last_name: auth.info.last_name.presence || auth.info.name.to_s.split(' ', 2).last,
       email: auth.info.email,
       password: Devise.friendly_token[0, 32],
       provider: auth.provider,
-      uid: auth.uid
+      uid: auth.uid,
     )
 
     user

@@ -244,11 +244,11 @@ hu:
   number:
     currency:
       format:
-        delimiter: ''
-        format: ''
-        precision: ''
-        separator: ''
-        unit: ''
+        delimiter: ' '
+        format: '%n %u'
+        precision: 2
+        separator: ','
+        unit: 'Ft'
   ocr_menu_imports:
     create:
       success: ''

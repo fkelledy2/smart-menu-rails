@@ -5,7 +5,7 @@ class SystemAnalyticsMvTest < ActiveSupport::TestCase
 
   setup do
     conn = ApplicationRecord.connection
-    relkind = conn.select_value(<<~SQL)
+    relkind = conn.select_value(<<~SQL.squish)
       SELECT c.relkind
       FROM pg_class c
       WHERE c.oid = to_regclass('system_analytics_mv')
@@ -17,7 +17,7 @@ class SystemAnalyticsMvTest < ActiveSupport::TestCase
       conn.execute('DROP VIEW IF EXISTS system_analytics_mv')
     end
 
-    ApplicationRecord.connection.execute(<<~SQL)
+    ApplicationRecord.connection.execute(<<~SQL.squish)
       CREATE VIEW system_analytics_mv AS
       SELECT
         CURRENT_DATE AS date,
@@ -36,7 +36,7 @@ class SystemAnalyticsMvTest < ActiveSupport::TestCase
 
   teardown do
     conn = ApplicationRecord.connection
-    relkind = conn.select_value(<<~SQL)
+    relkind = conn.select_value(<<~SQL.squish)
       SELECT c.relkind
       FROM pg_class c
       WHERE c.oid = to_regclass('system_analytics_mv')

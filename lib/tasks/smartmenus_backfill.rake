@@ -28,7 +28,7 @@ namespace :smartmenus do
         sm = Smartmenu.find_or_create_by!(
           restaurant_id: restaurant.id,
           menu_id: menu.id,
-          tablesetting_id: table.id
+          tablesetting_id: table.id,
         ) do |record|
           record.slug = SecureRandom.uuid
         end
@@ -38,7 +38,7 @@ namespace :smartmenus do
       sm = Smartmenu.find_or_create_by!(
         restaurant_id: restaurant.id,
         menu_id: nil,
-        tablesetting_id: table.id
+        tablesetting_id: table.id,
       ) do |record|
         record.slug = SecureRandom.uuid
       end

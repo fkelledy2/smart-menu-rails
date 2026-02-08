@@ -43,8 +43,8 @@ class OrdrparticipantsController < ApplicationController
                         location: restaurant_ordr_url(@ordrparticipant.ordr.restaurant, @ordrparticipant.ordr)
         end
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @ordrparticipant.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @ordrparticipant.errors, status: :unprocessable_content }
       end
     end
   end
@@ -64,8 +64,8 @@ class OrdrparticipantsController < ApplicationController
                         location: restaurant_ordr_url(@ordrparticipant.ordr.restaurant, @ordrparticipant.ordr)
         end
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @ordrparticipant.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @ordrparticipant.errors, status: :unprocessable_content }
       end
     end
   end
@@ -128,7 +128,7 @@ class OrdrparticipantsController < ApplicationController
       "menuparticipant_id=#{menuparticipant&.id} " \
       "menuparticipant_locale=#{menuparticipant&.preferredlocale.inspect} " \
       "restaurant_default_locale=#{restaurant.defaultLocale&.locale.inspect} " \
-      "render_locale=#{render_locale.inspect}"
+      "render_locale=#{render_locale.inspect}",
     )
 
     partials = I18n.with_locale(render_locale) do

@@ -27,8 +27,6 @@ class PaymentAttempt < ApplicationRecord
     smartmenu_mor: 1,
   }
 
-  validates :ordr, presence: true
-  validates :restaurant, presence: true
   validates :provider, presence: true
   validates :amount_cents, numericality: { greater_than: 0, only_integer: true }
   validates :currency, presence: true

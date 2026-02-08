@@ -34,8 +34,8 @@ class Payments::Webhooks::StripeIngestorTest < ActiveSupport::TestCase
           'id' => 're_test_123',
           'amount' => 500,
           'currency' => 'usd',
-        }
-      }
+        },
+      },
     }
 
     assert_difference('LedgerEvent.count', 1) do
@@ -69,8 +69,8 @@ class Payments::Webhooks::StripeIngestorTest < ActiveSupport::TestCase
           'amount_total' => 1000,
           'currency' => 'usd',
           'metadata' => { 'order_id' => ordrs(:one).id.to_s },
-        }
-      }
+        },
+      },
     }
 
     ingestor = Payments::Webhooks::StripeIngestor.new

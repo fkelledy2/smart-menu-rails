@@ -3,8 +3,7 @@ class OrdrPaymentsController < ApplicationController
   require 'digest'
 
   skip_before_action :verify_authenticity_token,
-                   only: %i[request_bill split_evenly checkout_session],
-                   if: -> { request.format.json? || !user_signed_in? }
+                     only: %i[request_bill split_evenly checkout_session]
 
   before_action :set_restaurant
   before_action :set_ordr
@@ -14,7 +13,7 @@ class OrdrPaymentsController < ApplicationController
   def request_bill
     authorize @ordr, :update?
 
-    if @ordr.status.to_s == 'billrequested' || @ordr.status.to_s == 'paid' || @ordr.status.to_s == 'closed'
+    if %w[billrequested paid closed].include?(@ordr.status.to_s)
       render json: { ok: true, status: @ordr.status.to_s }, status: :ok
       return
     end
@@ -35,14 +34,14 @@ class OrdrPaymentsController < ApplicationController
       end
     end
 
-    if @ordr.ordritems.where(status: Ordritem.statuses['opened']).exists?
-      render json: { ok: false, error: 'Cannot request bill while items are still open' }, status: :unprocessable_entity
+    if @ordr.ordritems.exists?(status: Ordritem.statuses['opened'])
+      render json: { ok: false, error: 'Cannot request bill while items are still open' }, status: :unprocessable_content
       return
     end
 
     submitted_statuses = %w[ordered preparing ready delivered]
-    unless @ordr.ordritems.where(status: submitted_statuses.map { |s| Ordritem.statuses[s] }).exists?
-      render json: { ok: false, error: 'Cannot request bill with no submitted items' }, status: :unprocessable_entity
+    unless @ordr.ordritems.exists?(status: submitted_statuses.map { |s| Ordritem.statuses[s] })
+      render json: { ok: false, error: 'Cannot request bill with no submitted items' }, status: :unprocessable_content
       return
     end
 
@@ -70,7 +69,7 @@ class OrdrPaymentsController < ApplicationController
     authorize @ordr, :update?
 
     if @ordr.status.to_s != 'billrequested'
-      render json: { ok: false, error: 'Order must be billrequested to split' }, status: :unprocessable_entity
+      render json: { ok: false, error: 'Order must be billrequested to split' }, status: :unprocessable_content
       return
     end
 
@@ -78,7 +77,7 @@ class OrdrPaymentsController < ApplicationController
     n = participants.length
 
     if n < 2
-      render json: { ok: false, error: 'Need at least 2 participants to split evenly' }, status: :unprocessable_entity
+      render json: { ok: false, error: 'Need at least 2 participants to split evenly' }, status: :unprocessable_content
       return
     end
 
@@ -86,7 +85,7 @@ class OrdrPaymentsController < ApplicationController
     total_cents = total_amount_cents(@ordr)
 
     if total_cents <= 0
-      render json: { ok: false, error: 'Order total is zero' }, status: :unprocessable_entity
+      render json: { ok: false, error: 'Order total is zero' }, status: :unprocessable_content
       return
     end
 
@@ -110,14 +109,14 @@ class OrdrPaymentsController < ApplicationController
       order_id: @ordr.id,
       total_cents: total_cents,
       currency: currency,
-      split_payments: created.map { |sp|
+      split_payments: created.map do |sp|
         {
           id: sp.id,
           ordrparticipant_id: sp.ordrparticipant_id,
           amount_cents: sp.amount_cents,
           status: sp.status,
         }
-      }
+      end,
     }, status: :ok
   end
 
@@ -125,7 +124,7 @@ class OrdrPaymentsController < ApplicationController
     authorize @ordr, :update?
 
     if @ordr.status.to_s != 'billrequested'
-      render json: { ok: false, error: 'Order must be billrequested to pay' }, status: :unprocessable_entity
+      render json: { ok: false, error: 'Order must be billrequested to pay' }, status: :unprocessable_content
       return
     end
 
@@ -143,7 +142,7 @@ class OrdrPaymentsController < ApplicationController
           nil
         end
       end
-      key = ENV['STRIPE_SECRET_KEY'] if key.blank?
+      key = ENV.fetch('STRIPE_SECRET_KEY', nil) if key.blank?
 
       if key.present?
         Stripe.api_key = key
@@ -167,12 +166,12 @@ class OrdrPaymentsController < ApplicationController
 
     requested_amount_cents = params[:amount_cents].to_i
     amount_cents = if requested_amount_cents.positive?
-      requested_amount_cents
-    else
-      split_payment ? split_payment.amount_cents.to_i : total_amount_cents(@ordr)
-    end
+                     requested_amount_cents
+                   else
+                     split_payment ? split_payment.amount_cents.to_i : total_amount_cents(@ordr)
+                   end
     if amount_cents <= 0
-      render json: { ok: false, error: 'Order total is zero' }, status: :unprocessable_entity
+      render json: { ok: false, error: 'Order total is zero' }, status: :unprocessable_content
       return
     end
 
@@ -200,7 +199,7 @@ class OrdrPaymentsController < ApplicationController
               name: "#{@ordr.restaurant.name} Order #{@ordr.id}",
             },
           },
-        }
+        },
       ],
       metadata: metadata,
       payment_intent_data: {
@@ -210,16 +209,14 @@ class OrdrPaymentsController < ApplicationController
 
     key_fingerprint = Digest::SHA256.hexdigest(Stripe.api_key.to_s)[0, 12]
     Rails.logger.warn(
-      "[StripeCheckout] Created session (ordr_id=#{@ordr.id} split_payment_id=#{split_payment&.id} session_id=#{session.id} payment_intent_id=#{session.payment_intent.presence} stripe_key_fp=#{key_fingerprint})"
+      "[StripeCheckout] Created session (ordr_id=#{@ordr.id} split_payment_id=#{split_payment&.id} session_id=#{session.id} payment_intent_id=#{session.payment_intent.presence} stripe_key_fp=#{key_fingerprint})",
     )
 
-    if split_payment
-      split_payment.update!(
-        status: :pending,
-        stripe_checkout_session_id: session.id.to_s,
-        stripe_payment_intent_id: session.payment_intent.to_s.presence,
-      )
-    end
+    split_payment&.update!(
+      status: :pending,
+      stripe_checkout_session_id: session.id.to_s,
+      stripe_payment_intent_id: session.payment_intent.to_s.presence,
+    )
 
     render json: { ok: true, checkout_session_id: session.id.to_s, checkout_url: session.url.to_s }, status: :ok
   end
@@ -233,11 +230,11 @@ class OrdrPaymentsController < ApplicationController
   def set_ordr
     @ordr = Ordr.find(params[:id])
 
-    if @restaurant && @ordr.restaurant_id != @restaurant.id
-      skip_authorization
-      render json: { ok: false, error: 'Order not found for restaurant' }, status: :not_found
-      return
-    end
+    return unless @restaurant && @ordr.restaurant_id != @restaurant.id
+
+    skip_authorization
+    render json: { ok: false, error: 'Order not found for restaurant' }, status: :not_found
+    nil
   end
 
   def customer_participants(ordr)
@@ -245,7 +242,12 @@ class OrdrPaymentsController < ApplicationController
     p = ordr.ordrparticipants.where(role: Ordrparticipant.roles['customer'])
     p = p.order(:id).to_a
     seen = {}
-    p.select { |x| sid = x.sessionid.to_s; next false if sid.blank? || seen[sid]; seen[sid] = true }
+    p.select do |x|
+      sid = x.sessionid.to_s
+      next false if sid.blank? || seen[sid]
+
+      seen[sid] = true
+    end
   end
 
   def total_amount_cents(ordr)

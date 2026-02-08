@@ -18,7 +18,7 @@ module Api
             attrs[:price] = BigDecimal(attrs[:price].to_s)
           rescue ArgumentError, TypeError
             return render json: error_response('invalid_price', 'Price must be a valid number'),
-                          status: :unprocessable_entity
+                          status: :unprocessable_content
           end
         end
 

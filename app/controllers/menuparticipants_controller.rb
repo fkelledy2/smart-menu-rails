@@ -60,8 +60,8 @@ class MenuparticipantsController < ApplicationController
         end
       else
         @smartmenus = Smartmenu.all
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @menuparticipant.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @menuparticipant.errors, status: :unprocessable_content }
       end
     end
   end
@@ -82,8 +82,8 @@ class MenuparticipantsController < ApplicationController
         end
       else
         #         @smartmenus = Smartmenu.all
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @menuparticipant.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @menuparticipant.errors, status: :unprocessable_content }
       end
     end
   end
@@ -129,7 +129,7 @@ class MenuparticipantsController < ApplicationController
     restaurant_currency = ISO4217::Currency.from_code(restaurant.currency.presence || 'USD')
     allergyns = Allergyn.where(restaurant_id: restaurant.id)
     full_refresh = false
-    
+
     # Use menuparticipant's preferred locale for rendering, but only if it is supported
     # Ensure locale is lowercase and included in I18n.available_locales; otherwise fall back to default
     raw_locale = menuparticipant.preferredlocale.presence&.downcase
@@ -141,113 +141,113 @@ class MenuparticipantsController < ApplicationController
 
     partials = I18n.with_locale(participant_locale) do
       {
-      context: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showContext',
-          locals: {
-            order: nil,
-            menu: menu,
-            ordrparticipant: nil,
-            tablesetting: tablesetting,
-            menuparticipant: menuparticipant,
-            current_employee: @current_employee,
-          },
+        context: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showContext',
+            locals: {
+              order: nil,
+              menu: menu,
+              ordrparticipant: nil,
+              tablesetting: tablesetting,
+              menuparticipant: menuparticipant,
+              current_employee: @current_employee,
+            },
+          ),
         ),
-      ),
-      modals: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showModals',
-          locals: {
-            order: nil,
-            menu: menu,
-            ordrparticipant: nil,
-            tablesetting: tablesetting,
-            menuparticipant: menuparticipant,
-            restaurantCurrency: restaurant_currency,
-            current_employee: @current_employee,
-          },
+        modals: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showModals',
+            locals: {
+              order: nil,
+              menu: menu,
+              ordrparticipant: nil,
+              tablesetting: tablesetting,
+              menuparticipant: menuparticipant,
+              restaurantCurrency: restaurant_currency,
+              current_employee: @current_employee,
+            },
+          ),
         ),
-      ),
-      menuContentStaff: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showMenuContentStaff',
-          locals: {
-            order: nil,
-            menu: menu,
-            allergyns: allergyns,
-            restaurantCurrency: restaurant_currency,
-            ordrparticipant: nil,
-            menuparticipant: menuparticipant,
-            tablesetting: tablesetting,
-          },
+        menuContentStaff: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showMenuContentStaff',
+            locals: {
+              order: nil,
+              menu: menu,
+              allergyns: allergyns,
+              restaurantCurrency: restaurant_currency,
+              ordrparticipant: nil,
+              menuparticipant: menuparticipant,
+              tablesetting: tablesetting,
+            },
+          ),
         ),
-      ),
-      menuContentCustomer: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showMenuContentCustomer',
-          locals: {
-            order: nil,
-            menu: menu,
-            allergyns: allergyns,
-            restaurantCurrency: restaurant_currency,
-            ordrparticipant: nil,
-            menuparticipant: menuparticipant,
-            tablesetting: tablesetting,
-          },
+        menuContentCustomer: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showMenuContentCustomer',
+            locals: {
+              order: nil,
+              menu: menu,
+              allergyns: allergyns,
+              restaurantCurrency: restaurant_currency,
+              ordrparticipant: nil,
+              menuparticipant: menuparticipant,
+              tablesetting: tablesetting,
+            },
+          ),
         ),
-      ),
-      orderCustomer: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/orderCustomer',
-          locals: {
-            order: nil,
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: nil,
-          },
+        orderCustomer: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/orderCustomer',
+            locals: {
+              order: nil,
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: nil,
+            },
+          ),
         ),
-      ),
-      orderStaff: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/orderStaff',
-          locals: {
-            order: nil,
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: nil,
-          },
+        orderStaff: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/orderStaff',
+            locals: {
+              order: nil,
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: nil,
+            },
+          ),
         ),
-      ),
-      tableLocaleSelectorStaff: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showTableLocaleSelectorStaff',
-          locals: {
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: nil,
-            menuparticipant: menuparticipant,
-          },
+        tableLocaleSelectorStaff: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showTableLocaleSelectorStaff',
+            locals: {
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: nil,
+              menuparticipant: menuparticipant,
+            },
+          ),
         ),
-      ),
-      tableLocaleSelectorCustomer: compress_string(
-        ApplicationController.renderer.render(
-          partial: 'smartmenus/showTableLocaleSelectorCustomer',
-          locals: {
-            menu: menu,
-            restaurant: restaurant,
-            tablesetting: tablesetting,
-            ordrparticipant: nil,
-            menuparticipant: menuparticipant,
-          },
+        tableLocaleSelectorCustomer: compress_string(
+          ApplicationController.renderer.render(
+            partial: 'smartmenus/showTableLocaleSelectorCustomer',
+            locals: {
+              menu: menu,
+              restaurant: restaurant,
+              tablesetting: tablesetting,
+              ordrparticipant: nil,
+              menuparticipant: menuparticipant,
+            },
+          ),
         ),
-      ),
-      fullPageRefresh: { refresh: full_refresh },
+        fullPageRefresh: { refresh: full_refresh },
       }
     end
-    
+
     ActionCable.server.broadcast("ordr_#{smartmenu.slug}_channel", partials)
   end
 

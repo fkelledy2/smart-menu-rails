@@ -15,9 +15,6 @@ class PaymentRefund < ApplicationRecord
     canceled: 40,
   }
 
-  validates :payment_attempt, presence: true
-  validates :ordr, presence: true
-  validates :restaurant, presence: true
   validates :provider, presence: true
   validates :status, presence: true
 end

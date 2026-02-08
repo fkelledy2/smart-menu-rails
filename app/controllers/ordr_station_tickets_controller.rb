@@ -8,16 +8,16 @@ class OrdrStationTicketsController < ApplicationController
 
     unless valid_status_value?(new_status)
       respond_to do |format|
-        format.json { render json: { error: 'Invalid status' }, status: :unprocessable_entity }
-        format.html { redirect_back fallback_location: kitchen_dashboard_restaurant_path(@restaurant), alert: 'Invalid status' }
+        format.json { render json: { error: 'Invalid status' }, status: :unprocessable_content }
+        format.html { redirect_back_or_to(kitchen_dashboard_restaurant_path(@restaurant), alert: 'Invalid status') }
       end
       return
     end
 
     unless valid_status_transition?(@ticket.status, new_status)
       respond_to do |format|
-        format.json { render json: { error: 'Invalid status transition' }, status: :unprocessable_entity }
-        format.html { redirect_back fallback_location: kitchen_dashboard_restaurant_path(@restaurant), alert: 'Invalid status transition' }
+        format.json { render json: { error: 'Invalid status transition' }, status: :unprocessable_content }
+        format.html { redirect_back_or_to(kitchen_dashboard_restaurant_path(@restaurant), alert: 'Invalid status transition') }
       end
       return
     end
@@ -27,18 +27,19 @@ class OrdrStationTicketsController < ApplicationController
 
       # Update item statuses within the ticket to match station progress.
       # This keeps the customer view consistent while allowing multiple tickets per order.
-      if new_status == 'preparing'
+      case new_status
+      when 'preparing'
         @ticket.ordritems.update_all(status: 22)
-      elsif new_status == 'ready'
+      when 'ready'
         @ticket.ordritems.update_all(status: 24)
-      elsif new_status == 'collected'
+      when 'collected'
         @ticket.ordritems.update_all(status: 25)
       end
     end
 
     respond_to do |format|
       format.json { render json: { status: 'ok' } }
-      format.html { redirect_back fallback_location: kitchen_dashboard_restaurant_path(@restaurant) }
+      format.html { redirect_back_or_to(kitchen_dashboard_restaurant_path(@restaurant)) }
     end
   end
 

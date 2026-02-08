@@ -7,7 +7,7 @@ class Payments::RefundsController < ApplicationController
     payment_attempt = PaymentAttempt.find(params[:payment_attempt_id])
 
     if payment_attempt.status.to_s != 'succeeded'
-      render json: { ok: false, error: 'Payment must be succeeded to refund' }, status: :unprocessable_entity
+      render json: { ok: false, error: 'Payment must be succeeded to refund' }, status: :unprocessable_content
       return
     end
 

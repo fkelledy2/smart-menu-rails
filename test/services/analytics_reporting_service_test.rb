@@ -187,7 +187,7 @@ class AnalyticsReportingServiceTest < ActiveSupport::TestCase
       @service.stub(:unique_customers_count, 25) do
         @service.stub(:repeat_customers_count, 8) do
           @service.stub(:customer_frequency_distribution,
-                        { '1_order' => 17, '2_orders' => 5, '3_orders' => 2, '4_plus_orders' => 1 },) do
+                        { '1_order' => 17, '2_orders' => 5, '3_orders' => 2, '4_plus_orders' => 1 }) do
             @service.stub(:peak_hours_analysis, { 12 => 15, 19 => 12, 13 => 10 }) do
               insights = @service.customer_insights(@restaurant.id, @date_range)
 
@@ -534,7 +534,7 @@ class AnalyticsReportingServiceTest < ActiveSupport::TestCase
     @service.stub(:unique_customers_count, 25) do
       @service.stub(:repeat_customers_count, 8) do
         @service.stub(:customer_frequency_distribution,
-                      { '1_order' => 17, '2_orders' => 5, '3_orders' => 2, '4_plus_orders' => 1 },) do
+                      { '1_order' => 17, '2_orders' => 5, '3_orders' => 2, '4_plus_orders' => 1 }) do
           @service.stub(:peak_hours_analysis, { 12 => 15, 19 => 12, 13 => 10 }) do
             yield if block_given?
           end
@@ -614,7 +614,7 @@ class AnalyticsReportingServiceTest < ActiveSupport::TestCase
       '2_orders' => 8,
       '3_orders' => 3,
       '4_plus_orders' => 2,
-    },) do
+    }) do
       yield if block_given?
     end
   end
@@ -624,7 +624,7 @@ class AnalyticsReportingServiceTest < ActiveSupport::TestCase
       12 => 25,  # Lunch rush
       19 => 20,  # Dinner rush
       13 => 15, # Post-lunch
-    },) do
+    }) do
       yield if block_given?
     end
   end

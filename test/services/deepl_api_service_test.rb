@@ -24,7 +24,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
   end
 
   test 'should raise MissingApiKeyError when api key is not configured' do
-    prev = ENV['DEEPL_API_KEY']
+    prev = ENV.fetch('DEEPL_API_KEY', nil)
     begin
       ENV.delete('DEEPL_API_KEY')
 

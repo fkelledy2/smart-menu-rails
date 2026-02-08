@@ -1,16 +1,16 @@
 namespace :shrine do
-  desc "Promote cached image attachments to store"
+  desc 'Promote cached image attachments to store'
   task promote_cached_images: :environment do
-    dry_run = ENV.fetch("DRY_RUN", "1") != "0"
-    clear_missing = ENV.fetch("CLEAR_MISSING", "0") == "1"
-    limit = ENV["LIMIT"]&.to_i
-    batch_size = ENV.fetch("BATCH_SIZE", "200").to_i
+    dry_run = ENV.fetch('DRY_RUN', '1') != '0'
+    clear_missing = ENV.fetch('CLEAR_MISSING', '0') == '1'
+    limit = ENV['LIMIT']&.to_i
+    batch_size = ENV.fetch('BATCH_SIZE', '200').to_i
 
-    model_names = if ENV["MODELS"].present?
-      ENV["MODELS"].split(",").map(&:strip).reject(&:blank?)
-    else
-      %w[Menuitem Menusection Menu Restaurant]
-    end
+    model_names = if ENV['MODELS'].present?
+                    ENV['MODELS'].split(',').map(&:strip).compact_blank
+                  else
+                    %w[Menuitem Menusection Menu Restaurant]
+                  end
 
     checked = 0
     candidates = 0
@@ -22,9 +22,9 @@ namespace :shrine do
     model_names.each do |model_name|
       model = model_name.safe_constantize
       next unless model
-      next unless model.column_names.include?("image_data")
+      next unless model.column_names.include?('image_data')
 
-      scope = model.where.not(image_data: [nil, ""])
+      scope = model.where.not(image_data: [nil, ''])
       scope = scope.limit(limit) if limit
 
       scope.find_each(batch_size: batch_size) do |record|
@@ -32,7 +32,7 @@ namespace :shrine do
 
         image = record.image
         next unless image
-        next unless image.storage_key.to_s == "cache"
+        next unless image.storage_key.to_s == 'cache'
 
         candidates += 1
 
@@ -46,7 +46,7 @@ namespace :shrine do
           promoted += 1
           puts "[PROMOTED] #{model_name}##{record.id} image_id=#{image.id}"
         rescue StandardError => e
-          if e.class.name.include?("FileNotFound") || e.is_a?(Errno::ENOENT)
+          if e.class.name.include?('FileNotFound') || e.is_a?(Errno::ENOENT)
             missing += 1
             puts "[MISSING] #{model_name}##{record.id} image_id=#{image.id} error=#{e.class}: #{e.message}"
 

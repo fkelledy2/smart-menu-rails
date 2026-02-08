@@ -51,7 +51,7 @@ class MenusectionsController < ApplicationController
   # GET /menusections/1/edit
   def edit
     authorize @menusection
-    
+
     # Use 2025 UI
     render 'edit_2025'
   end
@@ -82,8 +82,8 @@ class MenusectionsController < ApplicationController
                         location: restaurant_menu_menusection_url(@menusection.menu.restaurant, @menusection.menu, @menusection)
         end
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @menusection.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @menusection.errors, status: :unprocessable_content }
       end
     end
   rescue ArgumentError => e
@@ -91,8 +91,8 @@ class MenusectionsController < ApplicationController
     @menusection = Menusection.new
     @menusection.errors.add(:status, e.message)
     respond_to do |format|
-      format.html { render :new, status: :unprocessable_entity }
-      format.json { render json: @menusection.errors, status: :unprocessable_entity }
+      format.html { render :new, status: :unprocessable_content }
+      format.json { render json: @menusection.errors, status: :unprocessable_content }
     end
   end
 
@@ -121,8 +121,8 @@ class MenusectionsController < ApplicationController
                         location: restaurant_menu_menusection_url(@menusection.menu.restaurant, @menusection.menu, @menusection)
         end
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @menusection.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @menusection.errors, status: :unprocessable_content }
       end
     end
   end
@@ -145,19 +145,19 @@ class MenusectionsController < ApplicationController
   def reorder
     @menu = Menu.find(params[:menu_id])
     @restaurant = @menu.restaurant
-    
+
     # Authorize that user owns this restaurant
     authorize @menu, :update?
-    
+
     # Update sequence for each section
     params[:order].each do |item|
       section = @menu.menusections.find(item[:id])
       section.update_column(:sequence, item[:sequence])
     end
-    
+
     render json: { status: 'success' }, status: :ok
-  rescue => e
-    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+  rescue StandardError => e
+    render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 
   # PATCH /restaurants/:restaurant_id/menus/:menu_id/menusections/bulk_update
@@ -208,7 +208,7 @@ class MenusectionsController < ApplicationController
     end
 
     redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'sections'),
-                notice: "Updated #{updated} section#{updated == 1 ? '' : 's'}"
+                notice: "Updated #{updated} section#{'s' unless updated == 1}"
   rescue ActiveRecord::RecordNotFound
     redirect_to edit_restaurant_path(params[:restaurant_id], section: 'menus'), alert: 'Menu not found'
   rescue ActiveRecord::RecordInvalid => e
@@ -221,12 +221,12 @@ class MenusectionsController < ApplicationController
     return if params[:restaurant_id].blank?
 
     menu = if defined?(@menusection) && @menusection&.menu
-      @menusection.menu
-    elsif defined?(@futureParentMenu) && @futureParentMenu
-      @futureParentMenu
-    elsif params[:menu_id]
-      Menu.find(params[:menu_id])
-    end
+             @menusection.menu
+           elsif defined?(@futureParentMenu) && @futureParentMenu
+             @futureParentMenu
+           elsif params[:menu_id]
+             Menu.find(params[:menu_id])
+           end
 
     return unless menu
 
@@ -250,7 +250,7 @@ class MenusectionsController < ApplicationController
         itemtype: :food,
         status: 'active',
         sequence: 0,
-        price: (menusection.tasting_price_amount || 0.0),
+        price: menusection.tasting_price_amount || 0.0,
         preptime: 0,
         calories: 0,
         hidden: true,
@@ -297,7 +297,7 @@ class MenusectionsController < ApplicationController
       # Tasting menu fields
       :tasting_menu, :tasting_price_amount, :tasting_currency, :price_per,
       :min_party_size, :max_party_size, :includes_description,
-      :allow_substitutions, :allow_pairing, :pairing_price_amount, :pairing_currency
+      :allow_substitutions, :allow_pairing, :pairing_price_amount, :pairing_currency,
     )
   end
 end

@@ -27,18 +27,22 @@ class OrderEventProjector
     when 'status_changed'
       to = event.payload['to'] || event.payload[:to]
       return if to.blank?
+
       apply_status_change!(ordr, to.to_s)
 
     when 'bill_requested'
       return if ordr.status.to_s == 'billrequested'
+
       apply_status_change!(ordr, 'billrequested')
 
     when 'paid'
       return if ordr.status.to_s == 'paid'
+
       apply_status_change!(ordr, 'paid')
 
     when 'closed'
       return if ordr.status.to_s == 'closed'
+
       apply_status_change!(ordr, 'closed')
 
     when 'item_removed'
@@ -51,6 +55,7 @@ class OrderEventProjector
 
       ordritem_id = event.payload['ordritem_id'] || event.payload[:ordritem_id] || event.entity_id
       return if ordritem_id.blank?
+
       Ordritem.where(ordr_id: ordr.id, id: ordritem_id)
         .update_all(status: Ordritem.statuses['removed'], ordritemprice: 0.0)
 
@@ -79,7 +84,7 @@ class OrderEventProjector
 
     else
       # Unknown events are ignored for projection in v1.
-      return
+      nil
     end
   end
 

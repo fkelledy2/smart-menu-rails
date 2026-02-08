@@ -25,7 +25,7 @@ module Payments
           event_type: event_type,
           amount_cents: amount_cents,
           currency: currency,
-          metadata: (obj['metadata'] || {}),
+          metadata: obj['metadata'] || {},
         )
 
         unless provider_event_type.to_s == 'account.updated'
@@ -170,7 +170,7 @@ module Payments
         end
         return unless rs
 
-        status = (force_status || map_stripe_subscription_status(obj['status'].to_s))
+        status = force_status || map_stripe_subscription_status(obj['status'].to_s)
         has_payment_method = subscription_has_payment_method?(obj)
 
         rs.update!(
@@ -209,13 +209,14 @@ module Payments
 
         # Checkout flows may not attach these in the event payload; rely on status too.
         st = obj['status'].to_s
-        return true if st == 'active' || st == 'trialing'
+        return true if %w[active trialing].include?(st)
 
         false
       end
 
       def time_from_epoch(v)
         return nil if v.blank?
+
         Time.zone.at(v.to_i)
       rescue StandardError
         nil
@@ -244,24 +245,24 @@ module Payments
 
         return unless provider_account
 
-        charges_enabled = !!obj['charges_enabled']
-        payouts_enabled = !!obj['payouts_enabled']
-        details_submitted = !!obj['details_submitted']
+        charges_enabled = !obj['charges_enabled'].nil?
+        payouts_enabled = !obj['payouts_enabled'].nil?
+        details_submitted = !obj['details_submitted'].nil?
 
         status = if charges_enabled && payouts_enabled
-          :enabled
-        elsif details_submitted
-          :restricted
-        else
-          :onboarding
-        end
+                   :enabled
+                 elsif details_submitted
+                   :restricted
+                 else
+                   :onboarding
+                 end
 
         provider_account.update!(
           account_type: obj['type'].to_s.presence || provider_account.account_type,
           country: obj['country'].to_s.presence || provider_account.country,
           currency: obj['default_currency'].to_s.presence&.upcase || provider_account.currency,
           status: status,
-          capabilities: (obj['capabilities'] || {}),
+          capabilities: obj['capabilities'] || {},
           payouts_enabled: payouts_enabled,
         )
       rescue StandardError
@@ -271,7 +272,7 @@ module Payments
       def handle_payment_intent_succeeded(obj)
         order_id = extract_order_id(obj)
         Rails.logger.info(
-          "[StripeIngestor] payment_intent.succeeded extracted_order_id=#{order_id.inspect} stripe_object_id=#{obj['id'].to_s}",
+          "[StripeIngestor] payment_intent.succeeded extracted_order_id=#{order_id.inspect} stripe_object_id=#{obj['id']}",
         )
         return if order_id.blank?
 
@@ -293,7 +294,7 @@ module Payments
           return
         end
 
-        unless OrderEvent.where(ordr_id: ordr.id, event_type: 'paid').exists?
+        unless OrderEvent.exists?(ordr_id: ordr.id, event_type: 'paid')
           emit_paid!(ordr: ordr, idempotency_key: "stripe:payment_intent:#{pi_id}", external_ref: pi_id)
         end
 
@@ -329,7 +330,7 @@ module Payments
 
         order_id = extract_order_id(obj)
         Rails.logger.info(
-          "[StripeIngestor] checkout.session.completed extracted_order_id=#{order_id.inspect} checkout_session_id=#{obj['id'].to_s}",
+          "[StripeIngestor] checkout.session.completed extracted_order_id=#{order_id.inspect} checkout_session_id=#{obj['id']}",
         )
         return if order_id.blank?
 
@@ -349,7 +350,7 @@ module Payments
           emit_paid_if_settled!(ordr: ordr, idempotency_key: "stripe:split_paid:#{ordr.id}", external_ref: checkout_id)
           emit_closed_if_paid!(ordr: ordr, idempotency_key: "stripe:split_closed:#{ordr.id}", external_ref: checkout_id)
         else
-          unless OrderEvent.where(ordr_id: ordr.id, event_type: 'paid').exists?
+          unless OrderEvent.exists?(ordr_id: ordr.id, event_type: 'paid')
             emit_paid!(ordr: ordr, idempotency_key: "stripe:checkout_session:#{checkout_id}", external_ref: checkout_id)
           end
           emit_closed_if_paid!(ordr: ordr, idempotency_key: "stripe:checkout_session_closed:#{checkout_id}", external_ref: checkout_id)
@@ -387,7 +388,7 @@ module Payments
       end
 
       def emit_paid_if_settled!(ordr:, idempotency_key:, external_ref:)
-        return if OrderEvent.where(ordr_id: ordr.id, event_type: 'paid').exists?
+        return if OrderEvent.exists?(ordr_id: ordr.id, event_type: 'paid')
 
         has_splits = ordr.ordr_split_payments.exists?
         return emit_paid!(ordr: ordr, idempotency_key: idempotency_key, external_ref: external_ref) unless has_splits
@@ -414,9 +415,9 @@ module Payments
       end
 
       def emit_closed_if_paid!(ordr:, idempotency_key:, external_ref:)
-        return if OrderEvent.where(ordr_id: ordr.id, event_type: 'closed').exists?
+        return if OrderEvent.exists?(ordr_id: ordr.id, event_type: 'closed')
 
-        paid = OrderEvent.where(ordr_id: ordr.id, event_type: 'paid').exists?
+        paid = OrderEvent.exists?(ordr_id: ordr.id, event_type: 'paid')
         return unless paid
 
         OrderEvent.emit!(

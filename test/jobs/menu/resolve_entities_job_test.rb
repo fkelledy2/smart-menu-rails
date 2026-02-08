@@ -23,7 +23,7 @@ class ResolveEntitiesJobTest < ActiveSupport::TestCase
       sommelier_classification_confidence: 0.95,
       sommelier_parsed_fields: { 'name_raw' => 'Lagavulin 16', 'age_years' => 16, 'bottling_strength_abv' => 43.0 },
       sommelier_parse_confidence: 0.9,
-      sommelier_needs_review: true
+      sommelier_needs_review: true,
     )
 
     @run = BeveragePipelineRun.create!(
@@ -31,7 +31,7 @@ class ResolveEntitiesJobTest < ActiveSupport::TestCase
       menu: @menu,
       status: 'running',
       started_at: Time.current,
-      current_step: 'extract_candidates'
+      current_step: 'extract_candidates',
     )
   end
 

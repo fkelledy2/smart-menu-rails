@@ -4,7 +4,7 @@ class DatabasePerformanceMonitorTest < ActiveSupport::TestCase
   test 'returns slow query threshold' do
     threshold = DatabasePerformanceMonitor.slow_query_threshold
     assert_kind_of Integer, threshold
-    assert threshold > 0
+    assert threshold.positive?
   end
 
   test 'skips schema queries' do
@@ -33,28 +33,28 @@ class DatabasePerformanceMonitorTest < ActiveSupport::TestCase
   test 'normalizes SQL patterns' do
     sql = "SELECT * FROM users WHERE id = 123 AND name = 'John'"
     normalized = DatabasePerformanceMonitor.normalize_sql_pattern(sql)
-    
-    assert_equal "SELECT * FROM users WHERE id = ? AND name = ?", normalized
+
+    assert_equal 'SELECT * FROM users WHERE id = ? AND name = ?', normalized
   end
 
   test 'normalizes SQL with placeholders' do
-    sql = "SELECT * FROM users WHERE id = $1 AND name = $2"
+    sql = 'SELECT * FROM users WHERE id = $1 AND name = $2'
     normalized = DatabasePerformanceMonitor.normalize_sql_pattern(sql)
-    
-    assert_equal "SELECT * FROM users WHERE id = ? AND name = ?", normalized
+
+    assert_equal 'SELECT * FROM users WHERE id = ? AND name = ?', normalized
   end
 
   test 'normalizes SQL whitespace' do
-    sql = "SELECT   *   FROM   users   WHERE   id = 1"
+    sql = 'SELECT   *   FROM   users   WHERE   id = 1'
     normalized = DatabasePerformanceMonitor.normalize_sql_pattern(sql)
-    
-    assert_equal "SELECT * FROM users WHERE id = ?", normalized
+
+    assert_equal 'SELECT * FROM users WHERE id = ?', normalized
   end
 
   test 'truncates long SQL patterns' do
-    long_sql = "SELECT * FROM users WHERE " + ("id = 1 OR " * 50)
+    long_sql = 'SELECT * FROM users WHERE ' + ('id = 1 OR ' * 50)
     normalized = DatabasePerformanceMonitor.normalize_sql_pattern(long_sql)
-    
+
     assert normalized.length <= 200
   end
 
@@ -66,8 +66,8 @@ class DatabasePerformanceMonitorTest < ActiveSupport::TestCase
   test 'handles SQL with multiple string literals' do
     sql = "SELECT * FROM users WHERE name = 'John' AND email = 'john@example.com'"
     normalized = DatabasePerformanceMonitor.normalize_sql_pattern(sql)
-    
-    assert_equal "SELECT * FROM users WHERE name = ? AND email = ?", normalized
+
+    assert_equal 'SELECT * FROM users WHERE name = ? AND email = ?', normalized
   end
 
   test 'setup_monitoring does not raise errors' do

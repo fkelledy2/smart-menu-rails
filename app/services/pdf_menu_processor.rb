@@ -47,8 +47,7 @@ class PdfMenuProcessor
     end
 
     code = content.to_s.strip.downcase
-    code = code[/\b(en|fr|it|es)\b/, 1]
-    code
+    code[/\b(en|fr|it|es)\b/, 1]
   end
 
   def process
@@ -98,8 +97,8 @@ class PdfMenuProcessor
     return if code.blank?
 
     existing = Restaurantlocale.where(restaurant_id: @restaurant.id)
-                              .where('LOWER(locale) = ?', code.downcase)
-                              .first
+      .where('LOWER(locale) = ?', code.downcase)
+      .first
 
     if existing
       existing.update!(status: 'active') if existing.status != 'active'
@@ -191,6 +190,7 @@ class PdfMenuProcessor
       image_annotator = @vision_client
       if image_annotator.nil?
         raise ProcessingError, 'Google Cloud Vision is not available' unless defined?(Google::Cloud::Vision)
+
         image_annotator = Google::Cloud::Vision.image_annotator
       end
       processed = 0
@@ -412,7 +412,7 @@ class PdfMenuProcessor
           )
 
           items_processed += 1
-          if items_processed % 5 == 0 || items_processed == items_total
+          if (items_processed % 5).zero? || items_processed == items_total
             @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu', 'sections_total' => sections_total, 'sections_processed' => section_index, 'items_total' => items_total, 'items_processed' => items_processed))
           end
         end
@@ -434,6 +434,7 @@ class PdfMenuProcessor
     Array(allergens).map { |a| a.to_s.downcase.strip }.compact_blank.uniq.select do |a|
       token = a.gsub(/[^a-z0-9\s]/, ' ').gsub(/\s+/, ' ').strip
       next false if token.blank?
+
       normalized_source_text.match?(/\b#{Regexp.escape(token)}\b/)
     end
   end

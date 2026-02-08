@@ -60,31 +60,31 @@ class Api::V1::MenusControllerTest < ActionDispatch::IntegrationTest
   test 'should have index route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'get', path: "/api/v1/restaurants/#{@restaurant.id}/menus" },
-                   { controller: 'api/v1/menus', action: 'index', restaurant_id: @restaurant.id.to_s, format: :json },)
+                   { controller: 'api/v1/menus', action: 'index', restaurant_id: @restaurant.id.to_s, format: :json })
   end
 
   test 'should have show route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'get', path: "/api/v1/menus/#{@menu.id}" },
-                   { controller: 'api/v1/menus', action: 'show', id: @menu.id.to_s, format: :json },)
+                   { controller: 'api/v1/menus', action: 'show', id: @menu.id.to_s, format: :json })
   end
 
   test 'should have create route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'post', path: "/api/v1/restaurants/#{@restaurant.id}/menus" },
-                   { controller: 'api/v1/menus', action: 'create', restaurant_id: @restaurant.id.to_s, format: :json },)
+                   { controller: 'api/v1/menus', action: 'create', restaurant_id: @restaurant.id.to_s, format: :json })
   end
 
   test 'should have update route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'patch', path: "/api/v1/menus/#{@menu.id}" },
-                   { controller: 'api/v1/menus', action: 'update', id: @menu.id.to_s, format: :json },)
+                   { controller: 'api/v1/menus', action: 'update', id: @menu.id.to_s, format: :json })
   end
 
   test 'should have destroy route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'delete', path: "/api/v1/menus/#{@menu.id}" },
-                   { controller: 'api/v1/menus', action: 'destroy', id: @menu.id.to_s, format: :json },)
+                   { controller: 'api/v1/menus', action: 'destroy', id: @menu.id.to_s, format: :json })
   end
 
   # Basic functionality tests

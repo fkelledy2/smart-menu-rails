@@ -1,11 +1,11 @@
 namespace :smartmenu do
-  desc "One-off cleanup: normalise participant preferredlocale to restaurant default or nil"
+  desc 'One-off cleanup: normalise participant preferredlocale to restaurant default or nil'
   task cleanup_participant_locales: :environment do
     allowed = I18n.available_locales.map(&:to_s)
-    slug = ENV["SMARTMENU_SLUG"]
+    slug = ENV.fetch('SMARTMENU_SLUG', nil)
 
-    puts "Allowed locales: #{allowed.join(", ")}"
-    puts slug ? "Scoping cleanup to Smartmenu slug=#{slug}" : "Cleaning up ALL smartmenus"
+    puts "Allowed locales: #{allowed.join(', ')}"
+    puts slug ? "Scoping cleanup to Smartmenu slug=#{slug}" : 'Cleaning up ALL smartmenus'
 
     if slug
       smartmenu = Smartmenu.find_by(slug: slug)
@@ -65,6 +65,6 @@ namespace :smartmenu do
         end
     end
 
-    puts "Cleanup complete."
+    puts 'Cleanup complete.'
   end
 end

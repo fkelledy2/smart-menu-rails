@@ -177,13 +177,13 @@ class TipsControllerTest < ActionDispatch::IntegrationTest
   # Core functionality is tested via HTML requests above
   test 'should handle JSON update requests' do
     skip 'Warden session persistence issue with JSON PATCH requests in integration tests'
-    patch restaurant_tip_url(@restaurant, @tip), 
+    patch restaurant_tip_url(@restaurant, @tip),
           params: {
             tip: {
               percentage: 19.0,
               restaurant_id: @tip.restaurant_id,
             },
-          }, 
+          },
           headers: { 'Accept' => 'application/json' },
           as: :json
     assert_response :success
@@ -191,7 +191,7 @@ class TipsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should handle JSON destroy requests' do
     skip 'Warden session persistence issue with JSON DELETE requests in integration tests'
-    delete restaurant_tip_url(@restaurant, @tip), 
+    delete restaurant_tip_url(@restaurant, @tip),
            headers: { 'Accept' => 'application/json' },
            as: :json
     assert_response :success

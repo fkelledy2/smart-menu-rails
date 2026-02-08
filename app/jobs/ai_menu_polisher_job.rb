@@ -10,7 +10,7 @@ class AiMenuPolisherJob
     menu = Menu.includes(menusections: [:menuitems]).find_by(id: menu_id)
     return unless menu
 
-    restaurant = menu.restaurant
+    menu.restaurant
     target_locale = restaurant_default_locale(menu)
     target_language = locale_to_language(target_locale)
     total_items = menu.menuitems.count
@@ -42,10 +42,10 @@ class AiMenuPolisherJob
                 item_name: mi.name,
                 section_name: section.name,
                 section_description: section.description,
-                language: target_language
+                language: target_language,
               )
               mi.description = gen if gen.present?
-            rescue => e
+            rescue StandardError => e
               Rails.logger.warn("[AIMenuPolisherJob] LLM description failed for item ##{mi.id}: #{e.class}: #{e.message}")
             end
           end
@@ -58,10 +58,10 @@ class AiMenuPolisherJob
                 item_description: mi.description,
                 section_name: section.name,
                 section_description: section.description,
-                language: target_language
+                language: target_language,
               )
               mi.image_prompt = img_prompt if img_prompt.present?
-            rescue => e
+            rescue StandardError => e
               Rails.logger.warn("[AIMenuPolisherJob] LLM image_prompt failed for item ##{mi.id}: #{e.class}: #{e.message}")
             end
           end
@@ -72,7 +72,7 @@ class AiMenuPolisherJob
               section_name: section.name.to_s,
               item_name: mi.name.to_s,
               # Expand context by including section description into the item_description signal
-              item_description: [mi.description.to_s, section.description.to_s].reject(&:blank?).join(". ")
+              item_description: [mi.description.to_s, section.description.to_s].compact_blank.join('. '),
             )
             # Decide whether to call LLM: always when forced, otherwise only if undecided
             llm_det = nil
@@ -81,7 +81,7 @@ class AiMenuPolisherJob
                 item_name: mi.name.to_s,
                 item_description: mi.description.to_s,
                 section_name: section.name.to_s,
-                section_description: section.description.to_s
+                section_description: section.description.to_s,
               )
             end
 
@@ -117,12 +117,12 @@ class AiMenuPolisherJob
               Rails.logger.warn("[AIMenuPolisherJob] alcohol(#{source})=true item=##{mi.id} name='#{mi.name}' section='#{section.name}' class='#{chosen_class}' abv='#{chosen_abv}'")
               set_progress('running', processed, total_items, menu_id, message: "Alcohol detected (#{source})", extra: { current_item_name: mi.name })
 
-              mi.abv = chosen_abv if !chosen_abv.nil?
+              mi.abv = chosen_abv unless chosen_abv.nil?
               mi.alcohol_classification = chosen_class
             else
               nil
             end
-          rescue => e
+          rescue StandardError => e
             Rails.logger.warn("[AIMenuPolisherJob] alcohol detect failed for item ##{mi.id}: #{e.class}: #{e.message}")
           end
 
@@ -139,7 +139,7 @@ class AiMenuPolisherJob
     AdvancedCacheService.invalidate_restaurant_caches(menu.restaurant.id)
 
     set_progress('completed', total_items, total_items, menu_id)
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error("[AIMenuPolisherJob] Error polishing menu ##{menu_id}: #{e.class}: #{e.message}")
     set_progress('failed', processed, total_items, menu_id, message: e.message)
     raise
@@ -160,7 +160,7 @@ class AiMenuPolisherJob
       merged = existing.merge(payload.stringify_keys)
       r.setex("polish:#{jid}", 24 * 3600, merged.to_json)
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.warn("[AIMenuPolisherJob] Failed to write progress for #{jid}: #{e.class}: #{e.message}")
   end
 
@@ -173,7 +173,7 @@ class AiMenuPolisherJob
       payload['log'] = log.last(50)
       r.setex("polish:#{jid}", 24 * 3600, payload.to_json)
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.warn("[AIMenuPolisherJob] Failed to append progress log for #{jid}: #{e.class}: #{e.message}")
   end
 
@@ -183,7 +183,7 @@ class AiMenuPolisherJob
       current: current,
       total: total,
       message: message || 'AI polishing in progress',
-      menu_id: menu_id
+      menu_id: menu_id,
     }.merge(extra.is_a?(Hash) ? extra : {})
 
     update_progress(payload)
@@ -194,19 +194,21 @@ class AiMenuPolisherJob
     elsif msg.present?
       append_progress_log(msg)
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.warn("[AIMenuPolisherJob] Failed to set progress: #{e.message}")
   end
 
   def normalize_title(text)
     s = text.to_s.strip.gsub(/\s+/, ' ')
     return s if s.blank?
+
     s.titleize
   end
 
   def normalize_sentence(text)
     s = text.to_s.strip.gsub(/\s+/, ' ')
     return s if s.blank?
+
     s = s.downcase
     s[0] = s[0].upcase if s[0]
     s
@@ -219,14 +221,14 @@ class AiMenuPolisherJob
       'main' => 30, 'mains' => 30, 'secondi' => 30, 'piatti principali' => 30,
       'side' => 40, 'sides' => 40, 'contorni' => 40,
       'dessert' => 50, 'desserts' => 50, 'dolci' => 50,
-      'drinks' => 60, 'beverages' => 60, 'wine' => 60, 'beer' => 60, 'cocktails' => 60
+      'drinks' => 60, 'beverages' => 60, 'wine' => 60, 'beer' => 60, 'cocktails' => 60,
     }
     seq = 1
-    menu.menusections.sort_by { |ms|
+    menu.menusections.sort_by do |ms|
       key = ms.name.to_s.downcase
       pr = priority.find { |k, _| key.include?(k) }&.last || 999
       [pr, ms.sequence || 999]
-    }.each do |ms|
+    end.each do |ms|
       # Avoid unnecessary updates (and noisy N+1 warnings)
       if ms.sequence.to_i != seq
         ms.update_column(:sequence, seq)
@@ -241,6 +243,7 @@ class AiMenuPolisherJob
     allergyn_catalog.each do |a|
       n = a.name.to_s.downcase
       next if n.blank?
+
       names << n if text.include?(n)
     end
     names.uniq
@@ -295,16 +298,17 @@ class AiMenuPolisherJob
       temperature: 0.7,
       messages: [
         { role: 'system', content: system_msg },
-        { role: 'user', content: user_msg }
-      ]
+        { role: 'user', content: user_msg },
+      ],
     }
 
     begin
       resp = client.chat(parameters: params)
       content = resp.dig('choices', 0, 'message', 'content').to_s.strip
       return nil if content.blank?
+
       content.gsub(/[\s\n]+/, ' ').strip
-    rescue => e
+    rescue StandardError => e
       Rails.logger.warn("[AIMenuPolisherJob] OpenAI chat error: #{e.message}")
       nil
     end
@@ -337,16 +341,17 @@ class AiMenuPolisherJob
       temperature: 0.5,
       messages: [
         { role: 'system', content: system_msg },
-        { role: 'user', content: user_msg }
-      ]
+        { role: 'user', content: user_msg },
+      ],
     }
 
     begin
       resp = client.chat(parameters: params)
       content = resp.dig('choices', 0, 'message', 'content').to_s.strip
       return nil if content.blank?
+
       content.gsub(/[\s\n]+/, ' ').strip
-    rescue => e
+    rescue StandardError => e
       Rails.logger.warn("[AIMenuPolisherJob] OpenAI image_prompt error: #{e.message}")
       nil
     end
@@ -356,6 +361,7 @@ class AiMenuPolisherJob
   # Returns a hash similar to AlcoholDetectionService or nil when disabled/unavailable
   def generate_alcohol_decision_via_llm(item_name:, item_description:, section_name:, section_description: nil)
     return nil unless llm_alcohol_enabled?
+
     client = Rails.configuration.x.openai_client
     return nil unless client
 
@@ -375,8 +381,8 @@ class AiMenuPolisherJob
       temperature: 0.0,
       messages: [
         { role: 'system', content: system_msg },
-        { role: 'user', content: user_prompt }
-      ]
+        { role: 'user', content: user_prompt },
+      ],
     }
 
     begin
@@ -386,7 +392,11 @@ class AiMenuPolisherJob
 
       # Best effort to extract JSON
       json_str = content[/\{.*\}/m] || content
-      data = JSON.parse(json_str) rescue nil
+      data = begin
+        JSON.parse(json_str)
+      rescue StandardError
+        nil
+      end
       return nil unless data.is_a?(Hash) && data.key?('alcoholic')
 
       decided = true
@@ -396,15 +406,16 @@ class AiMenuPolisherJob
       abv = abv.to_f if abv.is_a?(String) && abv.match?(/\d/)
 
       { decided: decided, alcoholic: alcoholic, classification: classification, abv: abv, confidence: 0.7, note: 'llm tiebreaker' }
-    rescue => e
+    rescue StandardError => e
       Rails.logger.warn("[AIMenuPolisherJob] OpenAI alcohol tiebreaker error: #{e.message}")
       nil
     end
   end
 
   def llm_alcohol_enabled?
-    v = ENV['AI_POLISH_USE_LLM_ALCOHOL']
+    v = ENV.fetch('AI_POLISH_USE_LLM_ALCOHOL', nil)
     return true if v.nil? || v.strip == ''
+
     v.to_s.downcase == 'true'
   end
 
@@ -424,7 +435,7 @@ class AiMenuPolisherJob
   def menu_source_locale(menu)
     s = begin
       if menu&.id.present?
-        OcrMenuImport.where(menu_id: menu.id).order(created_at: :desc).limit(1).pluck(:source_locale).first.to_s
+        OcrMenuImport.where(menu_id: menu.id).order(created_at: :desc).limit(1).pick(:source_locale).to_s
       else
         ''
       end

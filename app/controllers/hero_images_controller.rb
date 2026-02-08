@@ -51,8 +51,8 @@ class HeroImagesController < ApplicationController
         end
         format.json { render :show, status: :created, location: @hero_image }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @hero_image.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @hero_image.errors, status: :unprocessable_content }
       end
     end
   end
@@ -68,8 +68,8 @@ class HeroImagesController < ApplicationController
         end
         format.json { render :show, status: :ok, location: @hero_image }
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @hero_image.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @hero_image.errors, status: :unprocessable_content }
       end
     end
   end

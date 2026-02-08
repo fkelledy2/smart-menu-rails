@@ -22,7 +22,7 @@ module Api
 
       rescue_from ActiveRecord::RecordInvalid do |e|
         render json: { error: { code: 'invalid_record', message: e.record.errors.full_messages.join(', ') } },
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
 
       rescue_from Pundit::NotAuthorizedError do

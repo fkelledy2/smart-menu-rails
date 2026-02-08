@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :ordrparticipant do
-    association :ordr
+    ordr
 
     role { :customer }
     sequence(:sessionid) { |n| "session-#{n}" }

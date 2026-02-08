@@ -46,7 +46,7 @@ class DeeplClientTest < ActiveSupport::TestCase
     ENV['DEEPL_API_KEY'] = 'test-key:fx'
     client = DeeplClient.new
     base_uri = client.send(:deepl_base_uri)
-    
+
     assert_equal 'https://api-free.deepl.com/v2', base_uri
   ensure
     ENV['DEEPL_API_KEY'] = 'test-api-key'
@@ -56,7 +56,7 @@ class DeeplClientTest < ActiveSupport::TestCase
     ENV['DEEPL_API_KEY'] = 'test-key'
     client = DeeplClient.new
     base_uri = client.send(:deepl_base_uri)
-    
+
     assert_equal 'https://api.deepl.com/v2', base_uri
   ensure
     ENV['DEEPL_API_KEY'] = 'test-api-key'
@@ -65,14 +65,14 @@ class DeeplClientTest < ActiveSupport::TestCase
   test 'builds form-encoded request body' do
     options = { body: { text: 'Hello', target_lang: 'ES' } }
     request_options = @client.send(:build_request_options, options)
-    
+
     assert_kind_of String, request_options[:body]
     assert_includes request_options[:body], 'text=Hello'
   end
 
   test 'handles translation error' do
     error = DeeplClient::ApiError.new('Translation failed')
-    
+
     assert_raises(DeeplClient::TranslationError) do
       @client.send(:handle_deepl_error, error)
     end
@@ -80,7 +80,7 @@ class DeeplClientTest < ActiveSupport::TestCase
 
   test 'handles quota exceeded error' do
     error = DeeplClient::ApiError.new('Quota exceeded')
-    
+
     assert_raises(DeeplClient::QuotaExceededError) do
       @client.send(:handle_deepl_error, error)
     end
@@ -88,7 +88,7 @@ class DeeplClientTest < ActiveSupport::TestCase
 
   test 'handles unsupported language error' do
     error = DeeplClient::ApiError.new('Unsupported language')
-    
+
     assert_raises(DeeplClient::UnsupportedLanguageError) do
       @client.send(:handle_deepl_error, error)
     end
@@ -98,18 +98,18 @@ class DeeplClientTest < ActiveSupport::TestCase
     response = OpenStruct.new(
       parsed_response: {
         'translations' => [
-          { 'text' => 'Hola', 'detected_source_language' => 'EN' }
-        ]
-      }
+          { 'text' => 'Hola', 'detected_source_language' => 'EN' },
+        ],
+      },
     )
-    
+
     translation = @client.send(:extract_translation, response)
     assert_equal 'Hola', translation
   end
 
   test 'raises error when no translations returned' do
     response = OpenStruct.new(parsed_response: { 'translations' => [] })
-    
+
     assert_raises(DeeplClient::TranslationError) do
       @client.send(:extract_translation, response)
     end
@@ -122,7 +122,7 @@ class DeeplClientTest < ActiveSupport::TestCase
 
   test 'default config includes DeepL specific settings' do
     config = @client.send(:default_config)
-    
+
     assert_includes config[:headers]['Content-Type'], 'application/x-www-form-urlencoded'
     assert_equal '/usage', config[:health_check_endpoint]
   end

@@ -27,7 +27,7 @@ class QueryCacheableSimpleTest < ActionDispatch::IntegrationTest
   # === BASIC FUNCTIONALITY TESTS ===
 
   test 'should include QueryCacheable concern' do
-    assert @controller.class.included_modules.include?(QueryCacheable)
+    assert @controller.class.include?(QueryCacheable)
   end
 
   test 'should respond to cache_query method' do
@@ -98,7 +98,7 @@ class QueryCacheableSimpleTest < ActionDispatch::IntegrationTest
   test 'should work with controller inheritance' do
     # Test that the concern works when included in a controller
     assert @controller.is_a?(ApplicationController)
-    assert @controller.class.included_modules.include?(QueryCacheable)
+    assert @controller.class.include?(QueryCacheable)
   end
 
   test 'should handle method visibility correctly' do

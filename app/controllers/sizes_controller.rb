@@ -49,7 +49,7 @@ class SizesController < ApplicationController
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace('sizes_new_size', ''),
-            turbo_stream.replace('restaurant_content', partial: 'restaurants/sections/sizes_2025', locals: { restaurant: @size.restaurant, filter: 'all' })
+            turbo_stream.replace('restaurant_content', partial: 'restaurants/sections/sizes_2025', locals: { restaurant: @size.restaurant, filter: 'all' }),
           ]
         end
         format.html do
@@ -58,9 +58,9 @@ class SizesController < ApplicationController
         end
         format.json { render :show, status: :created, location: restaurant_size_url(@restaurant, @size) }
       else
-        format.turbo_stream { render :new, status: :unprocessable_entity }
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @size.errors, status: :unprocessable_entity }
+        format.turbo_stream { render :new, status: :unprocessable_content }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @size.errors, status: :unprocessable_content }
       end
     end
   rescue ArgumentError => e
@@ -68,9 +68,9 @@ class SizesController < ApplicationController
     @size = Size.new
     @size.errors.add(:size, e.message)
     respond_to do |format|
-      format.turbo_stream { render :new, status: :unprocessable_entity }
-      format.html { render :new, status: :unprocessable_entity }
-      format.json { render json: @size.errors, status: :unprocessable_entity }
+      format.turbo_stream { render :new, status: :unprocessable_content }
+      format.html { render :new, status: :unprocessable_content }
+      format.json { render json: @size.errors, status: :unprocessable_content }
     end
   end
 
@@ -86,8 +86,8 @@ class SizesController < ApplicationController
             turbo_stream.replace(
               'restaurant_content',
               partial: 'restaurants/sections/sizes_2025',
-              locals: { restaurant: @size.restaurant, filter: 'all' }
-            )
+              locals: { restaurant: @size.restaurant, filter: 'all' },
+            ),
           ]
         end
         format.html do
@@ -96,9 +96,9 @@ class SizesController < ApplicationController
         end
         format.json { render :show, status: :ok, location: restaurant_size_url(@restaurant, @size) }
       else
-        format.turbo_stream { render :edit, status: :unprocessable_entity }
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @size.errors, status: :unprocessable_entity }
+        format.turbo_stream { render :edit, status: :unprocessable_content }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @size.errors, status: :unprocessable_content }
       end
     end
   end
@@ -121,7 +121,7 @@ class SizesController < ApplicationController
   def bulk_update
     sizes = policy_scope(Size).where(restaurant_id: @restaurant.id, archived: false)
 
-    ids = Array(params[:size_ids]).map(&:to_s).reject(&:blank?)
+    ids = Array(params[:size_ids]).map(&:to_s).compact_blank
     status = params[:status].to_s
 
     if ids.empty? || status.blank?
@@ -130,7 +130,7 @@ class SizesController < ApplicationController
           render turbo_stream: turbo_stream.replace(
             'restaurant_content',
             partial: 'restaurants/sections/sizes_2025',
-            locals: { restaurant: @restaurant, filter: 'all' }
+            locals: { restaurant: @restaurant, filter: 'all' },
           )
         end
         format.html do
@@ -145,7 +145,7 @@ class SizesController < ApplicationController
     to_update.update_all(status: Size.statuses[status], updated_at: Time.current)
 
     # Run authorizations in batch
-    Size.where(id: ids).each do |size|
+    Size.where(id: ids).find_each do |size|
       authorize size, :update?
     end
 
@@ -154,7 +154,7 @@ class SizesController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           'restaurant_content',
           partial: 'restaurants/sections/sizes_2025',
-          locals: { restaurant: @restaurant, filter: 'all' }
+          locals: { restaurant: @restaurant, filter: 'all' },
         )
       end
       format.html do
@@ -169,21 +169,21 @@ class SizesController < ApplicationController
 
     order = params[:order]
     unless order.is_a?(Array)
-      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_entity
+      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_content
     end
 
     Size.transaction do
       # Load all sizes at once to avoid N+1 queries
       sizes_hash = sizes.where(id: order.filter_map { |item| (item[:id] || item['id']).to_i if item.is_a?(Hash) || item.is_a?(ActionController::Parameters) }).index_by(&:id)
-      
+
       order.each do |item|
         item_hash = if item.is_a?(ActionController::Parameters)
-          item.to_unsafe_h
-        elsif item.is_a?(Hash)
-          item
-        else
-          next
-        end
+                      item.to_unsafe_h
+                    elsif item.is_a?(Hash)
+                      item
+                    else
+                      next
+                    end
 
         id = item_hash[:id] || item_hash['id']
         seq = item_hash[:sequence] || item_hash['sequence']
@@ -191,7 +191,7 @@ class SizesController < ApplicationController
 
         size = sizes_hash[id.to_i]
         next unless size
-        
+
         authorize size, :update?
         size.update_column(:sequence, seq.to_i)
       end
@@ -202,7 +202,7 @@ class SizesController < ApplicationController
     render json: { status: 'error', message: 'Size not found' }, status: :not_found
   rescue StandardError => e
     Rails.logger.error("Sizes reorder error: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
-    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+    render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 
   private

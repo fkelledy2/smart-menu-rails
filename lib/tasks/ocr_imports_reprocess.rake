@@ -1,6 +1,6 @@
 namespace :ocr_imports do
   desc 'Reprocess published OCR imports for a single restaurant. Usage: rake ocr_imports:reprocess_restaurant[restaurant_id,limit,dry_run]'
-  task :reprocess_restaurant, [:restaurant_id, :limit, :dry_run] => :environment do |_t, args|
+  task :reprocess_restaurant, %i[restaurant_id limit dry_run] => :environment do |_t, args|
     restaurant_id = args[:restaurant_id]
 
     if restaurant_id.blank?
@@ -18,7 +18,7 @@ namespace :ocr_imports do
     limit = nil if limit <= 0
 
     dry_run = args[:dry_run].to_s.downcase
-    dry_run = (dry_run == 'true' || dry_run == '1')
+    dry_run = %w[true 1].include?(dry_run)
 
     puts "🔧 Reprocessing published OCR imports for restaurant_id=#{restaurant.id} (#{restaurant.name}) dry_run=#{dry_run}"
 
@@ -28,7 +28,7 @@ namespace :ocr_imports do
       .where.not(menu_id: nil)
       .completed
       .select('DISTINCT ON (menu_id) ocr_menu_imports.*')
-      .order('menu_id, created_at DESC')
+      .order(:menu_id, created_at: :desc)
 
     imports = imports.limit(limit) if limit
 
@@ -47,7 +47,7 @@ namespace :ocr_imports do
       enqueued += 1
     end
 
-    puts "✅ Done. Enqueued #{enqueued} job(s)." if !dry_run
-    puts "✅ Dry run complete (no jobs enqueued)." if dry_run
+    puts "✅ Done. Enqueued #{enqueued} job(s)." unless dry_run
+    puts '✅ Dry run complete (no jobs enqueued).' if dry_run
   end
 end

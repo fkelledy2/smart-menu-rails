@@ -143,7 +143,7 @@ class Admin::MetricsControllerTest < ActionDispatch::IntegrationTest
       'http_requests_total_get' => { type: :counter, value: 100 },
       'http_requests_total_post' => { type: :counter, value: 50 },
       'errors_total_500' => { type: :counter, value: 5 },
-    },) do
+    }) do
       MetricsCollector.stub(:get_metric_summary, lambda { |metric|
         case metric
         when :http_request_duration

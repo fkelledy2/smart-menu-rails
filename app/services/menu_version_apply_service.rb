@@ -16,6 +16,7 @@ class MenuVersionApplyService
     attrs = {}
     %w[name description status sequence displayImages allowOrdering inventoryTracking archived covercharge voiceOrderingEnabled].each do |k|
       next unless menu_hash.key?(k)
+
       attrs[k] = menu_hash[k]
     end
 
@@ -32,6 +33,7 @@ class MenuVersionApplyService
     ordered_sections = section_snapshots.filter_map do |ss|
       s = sections_by_id[ss['id'].to_i]
       next unless s
+
       apply_section_attributes!(s, ss)
       apply_items!(s, Array(ss['menuitems']))
       s
@@ -48,6 +50,7 @@ class MenuVersionApplyService
       includes_description allow_substitutions allow_pairing pairing_price_cents pairing_currency
     ].each do |k|
       next unless ss.key?(k)
+
       attrs[k] = ss[k]
     end
 
@@ -64,6 +67,7 @@ class MenuVersionApplyService
     ordered_items = item_snapshots.filter_map do |is|
       it = items_by_id[is['id'].to_i]
       next unless it
+
       apply_item_attributes!(it, is)
       it
     end
@@ -80,6 +84,7 @@ class MenuVersionApplyService
       sommelier_needs_review image_prompt
     ].each do |k|
       next unless is.key?(k)
+
       attrs[k] = is[k]
     end
 

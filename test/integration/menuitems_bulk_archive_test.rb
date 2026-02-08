@@ -68,8 +68,8 @@ class MenuitemsBulkArchiveTest < ActionDispatch::IntegrationTest
     Rails.cache.clear
     get edit_restaurant_menu_path(@restaurant, menu, section: 'items')
     assert_response :success
-    assert !response.body.include?("data-testid=\"menu-item-#{item_to_archive.id}\""),
-           'Archived item row should not appear in the items list'
+    assert_not response.body.include?("data-testid=\"menu-item-#{item_to_archive.id}\""),
+               'Archived item row should not appear in the items list'
     assert response.body.include?("data-testid=\"menu-item-#{item_to_keep.id}\"")
   end
 end

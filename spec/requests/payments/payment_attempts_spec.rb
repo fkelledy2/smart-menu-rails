@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Payments::PaymentAttempts', type: :request do
+RSpec.describe 'Payments::PaymentAttempts' do
   let(:restaurant) { create(:restaurant, currency: 'USD') }
   let(:menu) { create(:menu, restaurant: restaurant) }
   let(:tablesetting) { create(:tablesetting, restaurant: restaurant) }
@@ -35,8 +35,8 @@ RSpec.describe 'Payments::PaymentAttempts', type: :request do
            as: :json
 
       expect(response).to have_http_status(:ok)
-      data = JSON.parse(response.body)
-      expect(data['ok']).to eq(true)
+      data = response.parsed_body
+      expect(data['ok']).to be(true)
       expect(data['payment_attempt_id']).to be_present
       expect(data['redirect_url']).to eq('https://stripe.test/checkout')
 

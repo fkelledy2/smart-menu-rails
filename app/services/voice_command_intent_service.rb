@@ -58,7 +58,7 @@ class VoiceCommandIntentService
     s = text.to_s.strip.downcase
 
     # Remove trailing punctuation/noise first
-    s = s.gsub(/[\s\.,!\?]+\z/, '')
+    s = s.gsub(/[\s.,!?]+\z/, '')
 
     politeness = politeness_words(locale)
 
@@ -66,7 +66,7 @@ class VoiceCommandIntentService
     loop do
       before = s
       s = s.gsub(/(?:\s*(?:#{politeness}))\s*\z/, '')
-      s = s.gsub(/[\s\.,!\?]+\z/, '')
+      s = s.gsub(/[\s.,!?]+\z/, '')
       break if s == before
     end
 
@@ -167,11 +167,13 @@ class VoiceCommandIntentService
 
   def normalize_qty(q)
     return 1 if q.blank?
+
     s = q.to_s.strip
     return s.to_i if s.match?(/^\d+$/)
     return 1 if %w[one un une uno una].include?(s)
     return 2 if %w[two deux due dos].include?(s)
     return 3 if %w[three trois tre tres].include?(s)
+
     1
   end
 end

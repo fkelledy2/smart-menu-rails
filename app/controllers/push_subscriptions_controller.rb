@@ -22,7 +22,7 @@ class PushSubscriptionsController < ApplicationController
       render json: {
         success: false,
         errors: @subscription.errors.full_messages,
-      }, status: :unprocessable_entity
+      }, status: :unprocessable_content
     end
   end
 
@@ -37,7 +37,7 @@ class PushSubscriptionsController < ApplicationController
       render json: {
         success: false,
         errors: @subscription.errors.full_messages,
-      }, status: :unprocessable_entity
+      }, status: :unprocessable_content
     end
   end
 

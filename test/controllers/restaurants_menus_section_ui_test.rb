@@ -27,29 +27,35 @@ class RestaurantsMenusSectionUiTest < ActionDispatch::IntegrationTest
     )
 
     # Complete onboarding prerequisites so RestaurantsController#edit doesn't redirect.
-    Tablesetting.create!(
-      restaurant: @restaurant,
-      name: 'Table 1',
-      capacity: 2,
-      status: 'free',
-      tabletype: 'indoor',
-    ) unless @restaurant.tablesettings.any?
+    unless @restaurant.tablesettings.any?
+      Tablesetting.create!(
+        restaurant: @restaurant,
+        name: 'Table 1',
+        capacity: 2,
+        status: 'free',
+        tabletype: 'indoor',
+      )
+    end
 
-    Tax.create!(
-      restaurant: @restaurant,
-      name: 'VAT',
-      taxpercentage: 10.0,
-      taxtype: 'local',
-      status: 'active',
-    ) unless @restaurant.taxes.any?
+    unless @restaurant.taxes.any?
+      Tax.create!(
+        restaurant: @restaurant,
+        name: 'VAT',
+        taxpercentage: 10.0,
+        taxtype: 'local',
+        status: 'active',
+      )
+    end
 
-    Tip.create!(
-      restaurant: @restaurant,
-      percentage: 10.0,
-      status: 'active',
-    ) unless @restaurant.tips.any?
+    unless @restaurant.tips.any?
+      Tip.create!(
+        restaurant: @restaurant,
+        percentage: 10.0,
+        status: 'active',
+      )
+    end
 
-    unless @restaurant.restaurantlocales.where(status: 'active', dfault: true).exists?
+    unless @restaurant.restaurantlocales.exists?(status: 'active', dfault: true)
       Restaurantlocale.create!(
         restaurant: @restaurant,
         locale: 'en',
@@ -61,7 +67,7 @@ class RestaurantsMenusSectionUiTest < ActionDispatch::IntegrationTest
 
   test 'menus section hides sections count and uses share menu placeholder' do
     # Ensure all menus in this list are treated as owned so availability column should be hidden
-    @restaurant.restaurant_menus.includes(:menu).each do |rm|
+    @restaurant.restaurant_menus.includes(:menu).find_each do |rm|
       m = rm.menu
       m.update!(owner_restaurant_id: @restaurant.id)
     end
@@ -86,7 +92,7 @@ class RestaurantsMenusSectionUiTest < ActionDispatch::IntegrationTest
 
   test 'availability column is shown only when there is at least one shared menu' do
     # Normalize to owned
-    @restaurant.restaurant_menus.includes(:menu).each do |rm|
+    @restaurant.restaurant_menus.includes(:menu).find_each do |rm|
       rm.menu.update!(owner_restaurant_id: @restaurant.id)
     end
 
@@ -101,7 +107,7 @@ class RestaurantsMenusSectionUiTest < ActionDispatch::IntegrationTest
       displayImages: false,
       allowOrdering: false,
       inventoryTracking: false,
-      imagecontext: 'x'
+      imagecontext: 'x',
     )
     RestaurantMenu.create!(restaurant: @restaurant, menu: shared_menu, status: 'active', sequence: 999)
 
@@ -115,8 +121,8 @@ class RestaurantsMenusSectionUiTest < ActionDispatch::IntegrationTest
     get edit_restaurant_path(@restaurant, section: 'localization')
     assert_response :success
 
-    assert_select "tbody tr.clickable-row[data-href]", minimum: 1
-    assert_select "tbody tr.clickable-row a i.bi-chevron-right", minimum: 1
-    assert_select "tbody tr.clickable-row a i.bi-pencil", false
+    assert_select 'tbody tr.clickable-row[data-href]', minimum: 1
+    assert_select 'tbody tr.clickable-row a i.bi-chevron-right', minimum: 1
+    assert_select 'tbody tr.clickable-row a i.bi-pencil', false
   end
 end

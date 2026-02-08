@@ -27,7 +27,7 @@ class RestaurantProvisioningService
   attr_reader :restaurant, :user
 
   def ensure_manager_employee
-    return if restaurant.employees.where(user: user).exists?
+    return if restaurant.employees.exists?(user: user)
 
     restaurant.employees.create!(
       user: user,
@@ -50,7 +50,7 @@ class RestaurantProvisioningService
       return
     end
 
-    return if active_locales.where(dfault: true).exists?
+    return if active_locales.exists?(dfault: true)
 
     locale = active_locales.order(:sequence).first
     locale.update!(dfault: true)

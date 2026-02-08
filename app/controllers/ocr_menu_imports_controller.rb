@@ -34,7 +34,7 @@ class OcrMenuImportsController < ApplicationController
     render json: { ok: true, section_id: section.id, confirmed: confirmed }
   rescue StandardError => e
     Rails.logger.error("toggle_section_confirmation error: #{e.class}: #{e.message}")
-    render json: { ok: false, error: 'unable to update section' }, status: :unprocessable_entity
+    render json: { ok: false, error: 'unable to update section' }, status: :unprocessable_content
   end
 
   # PATCH /restaurants/:restaurant_id/ocr_menu_imports/:id/toggle_all_confirmation
@@ -47,7 +47,7 @@ class OcrMenuImportsController < ApplicationController
     render json: { ok: true, confirmed: confirmed }
   rescue StandardError => e
     Rails.logger.error("toggle_all_confirmation error: #{e.class}: #{e.message}")
-    render json: { ok: false, error: 'unable to update all' }, status: :unprocessable_entity
+    render json: { ok: false, error: 'unable to update all' }, status: :unprocessable_content
   end
 
   # GET /restaurants/:restaurant_id/ocr_menu_imports/:id
@@ -78,7 +78,7 @@ class OcrMenuImportsController < ApplicationController
 
     page_percent = begin
       if total_pages.to_i.positive?
-        (processed_pages.to_f / total_pages.to_f * 100.0)
+        (processed_pages.to_f / total_pages * 100.0)
       else
         0.0
       end
@@ -86,11 +86,15 @@ class OcrMenuImportsController < ApplicationController
       0.0
     end
 
-    parse_denom = (items_total.positive? ? items_total : (sections_total.positive? ? sections_total : 0))
+    parse_denom = (if items_total.positive?
+                     items_total
+                   else
+                     (sections_total.positive? ? sections_total : 0)
+                   end)
     parse_num = (items_total.positive? ? items_processed : sections_processed)
     parse_percent = begin
       if parse_denom.to_i.positive?
-        (parse_num.to_f / parse_denom.to_f * 100.0)
+        (parse_num.to_f / parse_denom * 100.0)
       else
         0.0
       end
@@ -145,7 +149,7 @@ class OcrMenuImportsController < ApplicationController
           total: total,
           message: 'Queued AI polish',
           import_id: @ocr_menu_import.id,
-        }.to_json)
+        }.to_json,)
       end
     rescue StandardError => e
       Rails.logger.warn("[OcrMenuImportsController] Failed to init polish progress for #{jid}: #{e.message}")
@@ -211,7 +215,7 @@ class OcrMenuImportsController < ApplicationController
                     alert: t('ocr_menu_imports.controller.attach_pdf')
       end
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -229,9 +233,9 @@ class OcrMenuImportsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
         format.json do
-          render json: { ok: false, errors: @ocr_menu_import.errors.full_messages }, status: :unprocessable_entity
+          render json: { ok: false, errors: @ocr_menu_import.errors.full_messages }, status: :unprocessable_content
         end
       end
     end
@@ -267,7 +271,7 @@ class OcrMenuImportsController < ApplicationController
       if @ocr_menu_import.menu_id.present?
         # Republish into existing menu: update existing and add new confirmed content
         sync = ActiveModel::Type::Boolean.new.cast(params[:sync])
-        menu, stats = service.upsert_into_menu(@ocr_menu_import.menu, sync: sync)
+        _, stats = service.upsert_into_menu(@ocr_menu_import.menu, sync: sync)
         notice = t('ocr_menu_imports.controller.republished')
         if stats.present?
           notice << " (sections: +#{stats[:sections_created]}/~#{stats[:sections_updated]}#{", -#{stats[:sections_archived]}" if sync}, items: +#{stats[:items_created]}/~#{stats[:items_updated]}#{", -#{stats[:items_archived]}" if sync})"
@@ -275,7 +279,7 @@ class OcrMenuImportsController < ApplicationController
         redirect_to edit_restaurant_path(@restaurant, section: 'menus'), notice: notice, status: :see_other
       else
         # First-time publish: create a new menu from confirmed content
-        menu = service.call
+        service.call
         redirect_to edit_restaurant_path(@restaurant, section: 'menus'), notice: t('ocr_menu_imports.controller.published'), status: :see_other
       end
     rescue StandardError => e
@@ -304,13 +308,13 @@ class OcrMenuImportsController < ApplicationController
     Rails.logger.warn("[reorder_sections] found #{sections.size} matching sections for ids #{section_ids.inspect} (expected #{section_ids.size})")
     if sections.size != section_ids.size
       return render(json: { error: 'sections mismatch' },
-                    status: :unprocessable_entity,)
+                    status: :unprocessable_content,)
     end
 
     OcrMenuSection.transaction do
       section_ids.each_with_index do |sid, idx|
         section = @ocr_menu_import.ocr_menu_sections.find_by(id: sid)
-        return render(json: { error: 'section not found' }, status: :unprocessable_entity) unless section
+        return render(json: { error: 'section not found' }, status: :unprocessable_content) unless section
 
         Rails.logger.warn("[reorder_sections] updating section ##{sid} -> sequence #{idx + 1}")
         section.update!(sequence: idx + 1)
@@ -341,17 +345,17 @@ class OcrMenuImportsController < ApplicationController
 
     # Ensure section belongs to this import
     section = @ocr_menu_import.ocr_menu_sections.find_by(id: section_id)
-    return render(json: { error: 'section not found' }, status: :unprocessable_entity) unless section
+    return render(json: { error: 'section not found' }, status: :unprocessable_content) unless section
 
     # Ensure all items belong to this section for safety
     items = section.ocr_menu_items.where(id: item_ids)
     Rails.logger.warn("[reorder_items] found #{items.size} matching items for ids #{item_ids.inspect} (expected #{item_ids.size}) in section #{section.id}")
-    return render(json: { error: 'items mismatch' }, status: :unprocessable_entity) if items.size != item_ids.size
+    return render(json: { error: 'items mismatch' }, status: :unprocessable_content) if items.size != item_ids.size
 
     OcrMenuItem.transaction do
       item_ids.each_with_index do |iid, idx|
         item = section.ocr_menu_items.find_by(id: iid)
-        return head :unprocessable_entity unless item
+        return head :unprocessable_content unless item
 
         Rails.logger.warn("[reorder_items] updating item ##{iid} -> sequence #{idx + 1}")
         item.update!(sequence: idx + 1)
@@ -371,7 +375,7 @@ class OcrMenuImportsController < ApplicationController
   # DELETE /restaurants/:restaurant_id/ocr_menu_imports/bulk_destroy
   def bulk_destroy
     imports = policy_scope(OcrMenuImport).where(restaurant_id: @restaurant.id)
-    ids = Array(params[:ocr_menu_import_ids]).map(&:to_s).reject(&:blank?)
+    ids = Array(params[:ocr_menu_import_ids]).map(&:to_s).compact_blank
 
     if ids.any?
       to_destroy = imports.where(id: ids)
@@ -386,7 +390,7 @@ class OcrMenuImportsController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           'restaurant_content',
           partial: 'restaurants/sections/import_2025',
-          locals: { restaurant: @restaurant }
+          locals: { restaurant: @restaurant },
         )
       end
       format.html do

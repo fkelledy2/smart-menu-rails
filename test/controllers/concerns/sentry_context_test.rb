@@ -9,7 +9,7 @@ class SentryContextTest < ActionDispatch::IntegrationTest
   end
 
   test 'sentry context concern is included in application controller' do
-    assert ApplicationController.included_modules.include?(SentryContext),
+    assert ApplicationController.include?(SentryContext),
            'SentryContext should be included in ApplicationController'
   end
 
@@ -40,12 +40,12 @@ class SentryContextTest < ActionDispatch::IntegrationTest
 
   test 'sentry context handles errors gracefully' do
     sign_in @user
-    
+
     # SentryContext has error handling built in
     assert_nothing_raised do
       get restaurants_path
     end
-    
+
     assert_response :success
   end
 
@@ -60,7 +60,7 @@ class SentryContextTest < ActionDispatch::IntegrationTest
     assert_nothing_raised do
       get root_path
     end
-    
+
     assert_response :success
   end
 

@@ -22,8 +22,8 @@ class HomeController < ApplicationController
     @hero_images = HeroImage.approved_for_carousel
 
     # Set page metadata
-    @page_title = t('home.index.page_title')
-    @page_description = t('home.index.page_description')
+    @page_title = t('.page_title')
+    @page_description = t('.page_description')
 
     # Track homepage view
     if current_user
@@ -31,7 +31,7 @@ class HomeController < ApplicationController
         has_restaurants: current_user.restaurants.any?,
         plan_name: current_user.plan&.name,
         user_type: 'authenticated',
-      },)
+      })
     else
       anonymous_id = session[:session_id] ||= SecureRandom.uuid
       AnalyticsService.track_anonymous_event(anonymous_id, 'homepage_viewed', {
@@ -40,14 +40,14 @@ class HomeController < ApplicationController
         utm_source: params[:utm_source],
         utm_medium: params[:utm_medium],
         utm_campaign: params[:utm_campaign],
-      },)
+      })
     end
 
     # Explicitly render the template with layout
     render :index, layout: 'marketing', content_type: 'text/html'
   rescue StandardError => e
     logger.error "Error in HomeController#index: #{e.message}\n#{e.backtrace.join("\n")}"
-    render plain: t('home.index.error', message: e.message), status: :internal_server_error, content_type: 'text/plain'
+    render plain: t('.error', message: e.message), status: :internal_server_error, content_type: 'text/plain'
   end
 
   def terms
@@ -55,14 +55,14 @@ class HomeController < ApplicationController
     AnalyticsService.track_anonymous_event(anonymous_id, 'terms_viewed', {
       page: 'terms_of_service',
       referrer: request.referer,
-    },)
+    })
 
-    @page_title = t('home.terms.page_title')
-    @page_description = t('home.terms.page_description')
+    @page_title = t('.page_title')
+    @page_description = t('.page_description')
 
     respond_to do |format|
       format.html { render :terms, status: :ok }
-      format.json { render json: { status: 'success', message: t('home.terms.page_title') } }
+      format.json { render json: { status: 'success', message: t('.page_title') } }
     end
   rescue StandardError => e
     logger.error "Error in HomeController#terms: #{e.message}\n#{e.backtrace.join("\n")}"
@@ -74,14 +74,14 @@ class HomeController < ApplicationController
     AnalyticsService.track_anonymous_event(anonymous_id, 'privacy_viewed', {
       page: 'privacy_policy',
       referrer: request.referer,
-    },)
+    })
 
-    @page_title = t('home.privacy.page_title')
-    @page_description = t('home.privacy.page_description')
+    @page_title = t('.page_title')
+    @page_description = t('.page_description')
 
     respond_to do |format|
       format.html { render :privacy, status: :ok }
-      format.json { render json: { status: 'success', message: t('home.privacy.page_title') } }
+      format.json { render json: { status: 'success', message: t('.page_title') } }
     end
   rescue StandardError => e
     logger.error "Error in HomeController#privacy: #{e.message}\n#{e.backtrace.join("\n")}"

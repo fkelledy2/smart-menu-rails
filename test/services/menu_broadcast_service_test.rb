@@ -31,7 +31,7 @@ class MenuBroadcastServiceTest < ActiveSupport::TestCase
     ActionCable.server.stub(:broadcast, ->(channel, data) { broadcast_data = data }) do
       MenuBroadcastService.broadcast_menu_change(@menu, @changes, @user)
     end
-    
+
     assert_equal 'menu_change', broadcast_data[:event]
   end
 
@@ -40,7 +40,7 @@ class MenuBroadcastServiceTest < ActiveSupport::TestCase
     ActionCable.server.stub(:broadcast, ->(channel, data) { broadcast_data = data }) do
       MenuBroadcastService.broadcast_menu_change(@menu, @changes, @user)
     end
-    
+
     assert_equal @menu.id, broadcast_data[:menu_id]
   end
 
@@ -49,7 +49,7 @@ class MenuBroadcastServiceTest < ActiveSupport::TestCase
     ActionCable.server.stub(:broadcast, ->(channel, data) { broadcast_data = data }) do
       MenuBroadcastService.broadcast_menu_change(@menu, @changes, @user)
     end
-    
+
     assert_equal @changes, broadcast_data[:changes]
   end
 
@@ -58,7 +58,7 @@ class MenuBroadcastServiceTest < ActiveSupport::TestCase
     ActionCable.server.stub(:broadcast, ->(channel, data) { broadcast_data = data }) do
       MenuBroadcastService.broadcast_menu_change(@menu, @changes, @user)
     end
-    
+
     assert_equal @user.id, broadcast_data[:user][:id]
     assert_equal @user.email, broadcast_data[:user][:email]
   end
@@ -68,7 +68,7 @@ class MenuBroadcastServiceTest < ActiveSupport::TestCase
     ActionCable.server.stub(:broadcast, ->(channel, data) { broadcast_data = data }) do
       MenuBroadcastService.broadcast_menu_change(@menu, @changes, @user)
     end
-    
+
     assert_not_nil broadcast_data[:timestamp]
     assert_kind_of String, broadcast_data[:timestamp]
   end
@@ -78,7 +78,7 @@ class MenuBroadcastServiceTest < ActiveSupport::TestCase
     ActionCable.server.stub(:broadcast, ->(channel, data) { broadcast_data = data }) do
       MenuBroadcastService.broadcast_field_lock(@menu, 'name', @user)
     end
-    
+
     assert_equal 'field_locked', broadcast_data[:event]
   end
 
@@ -87,7 +87,7 @@ class MenuBroadcastServiceTest < ActiveSupport::TestCase
     ActionCable.server.stub(:broadcast, ->(channel, data) { broadcast_data = data }) do
       MenuBroadcastService.broadcast_field_lock(@menu, 'description', @user)
     end
-    
+
     assert_equal 'description', broadcast_data[:field]
   end
 
@@ -96,7 +96,7 @@ class MenuBroadcastServiceTest < ActiveSupport::TestCase
     ActionCable.server.stub(:broadcast, ->(channel, data) { broadcast_data = data }) do
       MenuBroadcastService.broadcast_field_unlock(@menu, 'name', @user)
     end
-    
+
     assert_equal 'field_unlocked', broadcast_data[:event]
   end
 
@@ -105,7 +105,7 @@ class MenuBroadcastServiceTest < ActiveSupport::TestCase
     ActionCable.server.stub(:broadcast, ->(channel, _data) { channel_name = channel }) do
       MenuBroadcastService.broadcast_menu_change(@menu, @changes, @user)
     end
-    
+
     assert_equal "menu_#{@menu.id}_editing", channel_name
   end
 

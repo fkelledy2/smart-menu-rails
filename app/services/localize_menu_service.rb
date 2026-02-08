@@ -14,7 +14,7 @@ class LocalizeMenuService
       restaurant = menu.restaurant
       stats = { locales_processed: 0, menu_locales_created: 0, menu_locales_updated: 0,
                 section_locales_created: 0, section_locales_updated: 0,
-                item_locales_created: 0, item_locales_updated: 0, 
+                item_locales_created: 0, item_locales_updated: 0,
                 rate_limited_items: [], errors: [], }
 
       restaurant_locales = restaurant.restaurantlocales.active.order(dfault: :desc, id: :asc).to_a
@@ -37,14 +37,14 @@ class LocalizeMenuService
       end
 
       Rails.logger.info("[LocalizeMenuService] Localized menu ##{menu.id} to #{stats[:locales_processed]} locales")
-      
+
       # Queue rate-limited items for retry
       if stats[:rate_limited_items].any?
         Rails.logger.info("[LocalizeMenuService] Queueing #{stats[:rate_limited_items].count} rate-limited items for retry")
-        safe_items = stats[:rate_limited_items].map { |h| h.stringify_keys }
+        safe_items = stats[:rate_limited_items].map(&:stringify_keys)
         MenuLocalizationRetryJob.perform_in(5.minutes, safe_items)
       end
-      
+
       stats
     end
 
@@ -58,36 +58,36 @@ class LocalizeMenuService
     def localize_all_menus_to_locale(restaurant, restaurant_locale, force: false, &on_item)
       stats = { menus_processed: 0, menu_locales_created: 0, menu_locales_updated: 0,
                 section_locales_created: 0, section_locales_updated: 0,
-                item_locales_created: 0, item_locales_updated: 0, 
+                item_locales_created: 0, item_locales_updated: 0,
                 rate_limited_items: [], errors: [], }
 
       Menu.joins(:restaurant_menus)
         .where(restaurant_menus: { restaurant_id: restaurant.id })
         .distinct
         .find_each do |menu|
-        menu_stats = localize_menu_to_locale(menu, restaurant_locale, force: force, &on_item)
-        stats[:menus_processed] += 1
-        stats[:menu_locales_created] += menu_stats[:menu_locales_created]
-        stats[:menu_locales_updated] += menu_stats[:menu_locales_updated]
-        stats[:section_locales_created] += menu_stats[:section_locales_created]
-        stats[:section_locales_updated] += menu_stats[:section_locales_updated]
-        stats[:item_locales_created] += menu_stats[:item_locales_created]
-        stats[:item_locales_updated] += menu_stats[:item_locales_updated]
-        stats[:rate_limited_items].concat(menu_stats[:rate_limited_items]) if menu_stats[:rate_limited_items]
-      rescue StandardError => e
-        error_msg = "Failed to localize menu ##{menu.id} to locale #{restaurant_locale.locale}: #{e.message}"
-        Rails.logger.error("[LocalizeMenuService] #{error_msg}")
-        stats[:errors] << error_msg
+          menu_stats = localize_menu_to_locale(menu, restaurant_locale, force: force, &on_item)
+          stats[:menus_processed] += 1
+          stats[:menu_locales_created] += menu_stats[:menu_locales_created]
+          stats[:menu_locales_updated] += menu_stats[:menu_locales_updated]
+          stats[:section_locales_created] += menu_stats[:section_locales_created]
+          stats[:section_locales_updated] += menu_stats[:section_locales_updated]
+          stats[:item_locales_created] += menu_stats[:item_locales_created]
+          stats[:item_locales_updated] += menu_stats[:item_locales_updated]
+          stats[:rate_limited_items].concat(menu_stats[:rate_limited_items]) if menu_stats[:rate_limited_items]
+        rescue StandardError => e
+          error_msg = "Failed to localize menu ##{menu.id} to locale #{restaurant_locale.locale}: #{e.message}"
+          Rails.logger.error("[LocalizeMenuService] #{error_msg}")
+          stats[:errors] << error_msg
       end
 
       Rails.logger.info("[LocalizeMenuService] Localized #{stats[:menus_processed]} menus to locale #{restaurant_locale.locale}")
-      
+
       # Queue rate-limited items for retry
       if stats[:rate_limited_items].any?
         Rails.logger.info("[LocalizeMenuService] Queueing #{stats[:rate_limited_items].count} rate-limited items for retry")
         MenuLocalizationRetryJob.perform_in(5.minutes, stats[:rate_limited_items])
       end
-      
+
       stats
     end
 
@@ -122,17 +122,17 @@ class LocalizeMenuService
         false
       end
       should_translate = force || was_new_record || menu_locale.name.blank? || needs_source_update
-      
+
       if should_translate
         translation_result = localize_text_with_tracking(menu.name, locale_code, is_default)
         description_result = localize_text_with_tracking(menu.description, locale_code, is_default)
-        
+
         menu_locale.assign_attributes(
           status: restaurant_locale.status,
           name: translation_result[:text],
           description: description_result[:text],
         )
-        
+
         # Track rate-limited items
         if translation_result[:rate_limited]
           stats[:rate_limited_items] << { type: 'menu', id: menu.id, field: 'name', locale: locale_code, text: menu.name }
@@ -194,17 +194,17 @@ class LocalizeMenuService
         false
       end
       should_translate = force || was_new_record || section_locale.name.blank? || needs_source_update
-      
+
       if should_translate
         translation_result = localize_text_with_tracking(section.name, locale_code, is_default)
         description_result = localize_text_with_tracking(section.description, locale_code, is_default)
-        
+
         section_locale.assign_attributes(
           status: restaurant_locale.status,
           name: translation_result[:text],
           description: description_result[:text],
         )
-        
+
         # Track rate-limited items
         if translation_result[:rate_limited]
           stats[:rate_limited_items] << { type: 'section', id: section.id, field: 'name', locale: locale_code, text: section.name }
@@ -260,17 +260,17 @@ class LocalizeMenuService
         false
       end
       should_translate = force || was_new_record || item_locale.name.blank? || needs_source_update
-      
+
       if should_translate
         translation_result = localize_text_with_tracking(item.name, locale_code, is_default)
         description_result = localize_text_with_tracking(item.description, locale_code, is_default)
-        
+
         item_locale.assign_attributes(
           status: restaurant_locale.status,
           name: translation_result[:text],
           description: description_result[:text],
         )
-        
+
         # Track rate-limited items
         if translation_result[:rate_limited]
           stats[:rate_limited_items] << { type: 'item', id: item.id, field: 'name', locale: locale_code, text: item.name }
@@ -325,7 +325,7 @@ class LocalizeMenuService
 
       translate_with_fallback(text, locale_code)
     end
-    
+
     # Localize text with rate limiting tracking
     # Returns a hash with translated text and rate limit status
     #
@@ -389,7 +389,7 @@ class LocalizeMenuService
         text # Fallback to original text
       end
     end
-    
+
     # Translate text with rate limit tracking
     # Returns a hash indicating if translation was rate-limited
     #

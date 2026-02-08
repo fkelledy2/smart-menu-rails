@@ -18,7 +18,7 @@ class AlcoholDetectionServiceTest < ActiveSupport::TestCase
 
   test 'ambiguous item yields undecided with low confidence' do
     det = AlcoholDetectionService.detect(section_name: 'Snacks', item_name: 'House Special', item_description: 'Chef\'s choice')
-    refute det[:decided]
+    assert_not det[:decided]
     assert det[:confidence].to_f < 0.5
   end
 end

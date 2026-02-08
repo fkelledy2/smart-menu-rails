@@ -69,7 +69,7 @@ class AllergynsController < ApplicationController
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace('allergens_new_allergyn', ''),
-            turbo_stream.replace('restaurant_content', partial: 'restaurants/sections/allergens_2025', locals: { restaurant: @allergyn.restaurant, filter: 'all' })
+            turbo_stream.replace('restaurant_content', partial: 'restaurants/sections/allergens_2025', locals: { restaurant: @allergyn.restaurant, filter: 'all' }),
           ]
         end
         format.html do
@@ -80,9 +80,9 @@ class AllergynsController < ApplicationController
           render :show, status: :created, location: restaurant_allergyn_url(@allergyn.restaurant, @allergyn)
         end
       else
-        format.turbo_stream { render :new, status: :unprocessable_entity }
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @allergyn.errors, status: :unprocessable_entity }
+        format.turbo_stream { render :new, status: :unprocessable_content }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @allergyn.errors, status: :unprocessable_content }
       end
     end
   end
@@ -99,8 +99,8 @@ class AllergynsController < ApplicationController
             turbo_stream.replace(
               'restaurant_content',
               partial: 'restaurants/sections/allergens_2025',
-              locals: { restaurant: @allergyn.restaurant, filter: 'all' }
-            )
+              locals: { restaurant: @allergyn.restaurant, filter: 'all' },
+            ),
           ]
         end
         format.html do
@@ -109,9 +109,9 @@ class AllergynsController < ApplicationController
         end
         format.json { render :show, status: :ok, location: restaurant_allergyn_url(@allergyn.restaurant, @allergyn) }
       else
-        format.turbo_stream { render :edit, status: :unprocessable_entity }
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @allergyn.errors, status: :unprocessable_entity }
+        format.turbo_stream { render :edit, status: :unprocessable_content }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @allergyn.errors, status: :unprocessable_content }
       end
     end
   end
@@ -135,7 +135,7 @@ class AllergynsController < ApplicationController
     @restaurant = Restaurant.find(params[:restaurant_id])
     allergyns = policy_scope(Allergyn).where(restaurant_id: @restaurant.id, archived: false)
 
-    ids = Array(params[:allergyn_ids]).map(&:to_s).reject(&:blank?)
+    ids = Array(params[:allergyn_ids]).map(&:to_s).compact_blank
     status = params[:status].to_s
 
     if ids.empty? || status.blank?
@@ -144,7 +144,7 @@ class AllergynsController < ApplicationController
           render turbo_stream: turbo_stream.replace(
             'restaurant_content',
             partial: 'restaurants/sections/allergens_2025',
-            locals: { restaurant: @restaurant, filter: 'all' }
+            locals: { restaurant: @restaurant, filter: 'all' },
           )
         end
         format.html do
@@ -165,7 +165,7 @@ class AllergynsController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           'restaurant_content',
           partial: 'restaurants/sections/allergens_2025',
-          locals: { restaurant: @restaurant, filter: 'all' }
+          locals: { restaurant: @restaurant, filter: 'all' },
         )
       end
       format.html do
@@ -181,18 +181,18 @@ class AllergynsController < ApplicationController
 
     order = params[:order]
     unless order.is_a?(Array)
-      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_entity
+      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_content
     end
 
     Allergyn.transaction do
       order.each do |item|
         item_hash = if item.is_a?(ActionController::Parameters)
-          item.to_unsafe_h
-        elsif item.is_a?(Hash)
-          item
-        else
-          next
-        end
+                      item.to_unsafe_h
+                    elsif item.is_a?(Hash)
+                      item
+                    else
+                      next
+                    end
 
         id = item_hash[:id] || item_hash['id']
         seq = item_hash[:sequence] || item_hash['sequence']
@@ -209,7 +209,7 @@ class AllergynsController < ApplicationController
     render json: { status: 'error', message: 'Allergen not found' }, status: :not_found
   rescue StandardError => e
     Rails.logger.error("Allergyns reorder error: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
-    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+    render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 
   private

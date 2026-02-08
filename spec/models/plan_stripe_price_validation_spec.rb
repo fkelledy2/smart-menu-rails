@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Plan, type: :model do
+RSpec.describe Plan do
   describe 'stripe price id validation' do
     it 'requires stripe_price_id_month for active register plans' do
       plan = build(:plan, status: :active, action: :register, stripe_price_id_month: nil)

@@ -23,9 +23,9 @@ class RestaurantProvisioningServiceTest < ActiveSupport::TestCase
 
     RestaurantProvisioningService.call(restaurant: restaurant, user: user)
 
-    assert restaurant.employees.where(user: user, role: :manager, status: :active).exists?
-    assert restaurant.restaurantlocales.where(status: :active).exists?
-    assert restaurant.restaurantlocales.where(status: :active, dfault: true).exists?
+    assert restaurant.employees.exists?(user: user, role: :manager, status: :active)
+    assert restaurant.restaurantlocales.exists?(status: :active)
+    assert restaurant.restaurantlocales.exists?(status: :active, dfault: true)
     assert restaurant.tablesettings.exists?
     assert_equal 4, restaurant.tablesettings.order(:id).first.capacity
   end

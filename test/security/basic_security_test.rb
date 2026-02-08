@@ -93,8 +93,8 @@ class BasicSecurityTest < ActionDispatch::IntegrationTest
            'ApplicationController should have CSRF protection configured'
 
     # Verify the configuration exists
-    csrf_configured = ApplicationController.instance_methods.include?(:verify_authenticity_token) ||
-                      ApplicationController.private_instance_methods.include?(:verify_authenticity_token)
+    csrf_configured = ApplicationController.method_defined?(:verify_authenticity_token) ||
+                      ApplicationController.private_method_defined?(:verify_authenticity_token)
 
     assert csrf_configured, 'CSRF protection methods should be available'
 

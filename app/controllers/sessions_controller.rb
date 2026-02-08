@@ -25,7 +25,7 @@ class SessionsController < ApplicationController
         redirect_uri: ENV.fetch('SPOTIFY_REDIRECT_URI', nil),
         client_id: Rails.application.credentials.spotify_key,
         client_secret: Rails.application.credentials.spotify_secret,
-      },)
+      })
       auth_data = JSON.parse(auth_response.body)
       Rails.logger.debug auth_data
       spotify_user = RSpotify::User.new(auth_data)

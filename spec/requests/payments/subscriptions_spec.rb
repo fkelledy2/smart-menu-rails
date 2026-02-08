@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Payments::Subscriptions', type: :request do
+RSpec.describe 'Payments::Subscriptions' do
   let(:plan) { create(:plan, stripe_price_id_month: 'price_month_test_123', stripe_price_id_year: 'price_year_test_123') }
   let(:user) { create(:user, plan: plan) }
   let(:restaurant) { create(:restaurant, user: user, currency: 'USD') }
@@ -29,8 +29,8 @@ RSpec.describe 'Payments::Subscriptions', type: :request do
            as: :json
 
       expect(response).to have_http_status(:ok)
-      data = JSON.parse(response.body)
-      expect(data['ok']).to eq(true)
+      data = response.parsed_body
+      expect(data['ok']).to be(true)
       expect(data['checkout_url']).to eq('https://stripe.test/subscription_checkout')
 
       rs = restaurant.reload.restaurant_subscription
@@ -54,9 +54,9 @@ RSpec.describe 'Payments::Subscriptions', type: :request do
            headers: { 'ACCEPT' => 'application/json' },
            as: :json
 
-      expect(response).to have_http_status(:unprocessable_entity)
-      data = JSON.parse(response.body)
-      expect(data['ok']).to eq(false)
+      expect(response).to have_http_status(:unprocessable_content)
+      data = response.parsed_body
+      expect(data['ok']).to be(false)
     end
   end
 end

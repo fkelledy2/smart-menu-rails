@@ -27,7 +27,7 @@ class BeverageReviewQueuesControllerTest < ActionDispatch::IntegrationTest
       sommelier_classification_confidence: 0.9,
       sommelier_parsed_fields: { 'name_raw' => 'Test Whiskey 12yo', 'age_years' => 12 },
       sommelier_parse_confidence: 0.9,
-      sommelier_needs_review: true
+      sommelier_needs_review: true,
     )
 
     @product = Product.create!(product_type: 'whiskey', canonical_name: 'Test Whiskey 12yo 12yo')

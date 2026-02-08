@@ -122,7 +122,7 @@ class UserplansController < ApplicationController
     end
 
     sub = restaurant.restaurant_subscription
-    unless sub&.stripe_subscription_id.present?
+    if sub&.stripe_subscription_id.blank?
       return redirect_to edit_userplan_path(@userplan), alert: 'Billing is not configured for this restaurant'
     end
 
@@ -134,14 +134,14 @@ class UserplansController < ApplicationController
     ensure_stripe_api_key!
 
     subscription = Stripe::Subscription.retrieve({ id: sub.stripe_subscription_id.to_s, expand: ['items.data.price'] })
-    current_price_ids = Array(subscription.items&.data).map { |i| i.price&.id.to_s }.reject(&:blank?)
+    current_price_ids = Array(subscription.items&.data).map { |i| i.price&.id.to_s }.compact_blank
 
     expected_price_ids = [
       plan.respond_to?(:stripe_price_id_month) ? plan.stripe_price_id_month.to_s : '',
       plan.respond_to?(:stripe_price_id_year) ? plan.stripe_price_id_year.to_s : '',
-    ].reject(&:blank?)
+    ].compact_blank
 
-    unless (current_price_ids & expected_price_ids).any?
+    unless current_price_ids.intersect?(expected_price_ids)
       return redirect_to edit_userplan_path(@userplan), alert: 'Subscription was not updated to the selected plan'
     end
 
@@ -200,8 +200,8 @@ class UserplansController < ApplicationController
         end
         format.json { render :show, status: :created, location: @userplan }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @userplan.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @userplan.errors, status: :unprocessable_content }
       end
     end
   end
@@ -222,8 +222,8 @@ class UserplansController < ApplicationController
         format.json { render :show, status: :ok, location: @userplan }
       else
         @plans = Plan.display_order
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @userplan.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @userplan.errors, status: :unprocessable_content }
       end
     end
   end
@@ -271,10 +271,10 @@ class UserplansController < ApplicationController
     end
 
     message = if blocked
-      parts.join('. ') + '. Deactivate restaurants/menus first, then try again.'
-    else
-      ''
-    end
+                parts.join('. ') + '. Deactivate restaurants/menus first, then try again.'
+              else
+                ''
+              end
 
     { blocked: blocked, message: message }
   end
@@ -314,10 +314,10 @@ class UserplansController < ApplicationController
     end
 
     key = if Rails.env.production?
-      env_key || credentials_key
-    else
-      credentials_key.presence || env_key
-    end
+            env_key || credentials_key
+          else
+            credentials_key.presence || env_key
+          end
 
     raise 'Stripe is not configured' if key.blank?
 

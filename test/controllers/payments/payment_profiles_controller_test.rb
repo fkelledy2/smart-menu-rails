@@ -5,7 +5,7 @@ class Payments::PaymentProfilesControllerTest < ActionDispatch::IntegrationTest
 
   def csrf_headers_for(restaurant)
     get edit_restaurant_path(restaurant, section: 'settings')
-    csrf = response.body.to_s[/name=\"csrf-token\" content=\"([^\"]+)\"/, 1]
+    csrf = response.body.to_s[/name="csrf-token" content="([^"]+)"/, 1]
     headers = {}
     headers['X-CSRF-Token'] = csrf if csrf.present?
     headers

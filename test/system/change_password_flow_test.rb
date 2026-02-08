@@ -10,7 +10,7 @@ class ChangePasswordFlowTest < ApplicationSystemTestCase
       password: 'oldpassword1',
       password_confirmation: 'oldpassword1',
       first_name: 'Change',
-      last_name: 'Me'
+      last_name: 'Me',
     )
 
     # Sign in

@@ -17,38 +17,38 @@ class OrderLifecycleWorkflowTest < ActionDispatch::IntegrationTest
     order = @restaurant.ordrs.create!(
       tablesetting: @tablesetting,
       menu: @menu,
-      status: :opened  # 0
+      status: :opened, # 0
     )
-    
+
     # Add order item (simplified - just create the association)
     order.ordritems.create!(
       menuitem: @menu_item,
-      ordritemprice: @menu_item.price
+      ordritemprice: @menu_item.price,
     )
-    
+
     assert_not_nil order
     assert_equal 'opened', order.status
     assert_equal @tablesetting.id, order.tablesetting_id
     assert_equal 1, order.ordritems.count
-    
+
     # Step 2: Order placed
-    order.update!(status: :ordered)  # 20
+    order.update!(status: :ordered) # 20
     order.reload
     assert_equal 'ordered', order.status
-    
+
     # Step 3: Start preparing
-    order.update!(status: :preparing)  # 22
+    order.update!(status: :preparing) # 22
     order.reload
     assert_equal 'preparing', order.status
-    
+
     # Step 4: Mark as ready
-    order.update!(status: :ready)  # 24
+    order.update!(status: :ready) # 24
     order.reload
     assert_equal 'ready', order.status
-    
+
     # Step 5: Deliver order
-    order.update!(status: :delivered)  # 25
-    
+    order.update!(status: :delivered) # 25
+
     order.reload
     assert_equal 'delivered', order.status
   end
@@ -56,25 +56,25 @@ class OrderLifecycleWorkflowTest < ActionDispatch::IntegrationTest
   test 'order with multiple items' do
     item1 = @menu_item
     item2 = menuitems(:two)
-    
+
     order = @restaurant.ordrs.create!(
       tablesetting: @tablesetting,
       menu: @menu,
-      status: :opened
+      status: :opened,
     )
-    
+
     order.ordritems.create!(
       menuitem: item1,
-      ordritemprice: item1.price
+      ordritemprice: item1.price,
     )
-    
+
     order.ordritems.create!(
       menuitem: item2,
-      ordritemprice: item2.price
+      ordritemprice: item2.price,
     )
-    
+
     assert_equal 2, order.ordritems.count
-    
+
     # Verify items associated correctly
     assert_includes order.ordritems.map(&:menuitem_id), item1.id
     assert_includes order.ordritems.map(&:menuitem_id), item2.id
@@ -84,21 +84,21 @@ class OrderLifecycleWorkflowTest < ActionDispatch::IntegrationTest
     order = @restaurant.ordrs.create!(
       tablesetting: @tablesetting,
       menu: @menu,
-      status: :opened
+      status: :opened,
     )
-    
+
     # Valid transition: opened -> ordered
     order.update(status: :ordered)
     assert_equal 'ordered', order.status
-    
+
     # Valid transition: ordered -> preparing
     order.update(status: :preparing)
     assert_equal 'preparing', order.status
-    
+
     # Valid transition: preparing -> ready
     order.update(status: :ready)
     assert_equal 'ready', order.status
-    
+
     # Valid transition: ready -> delivered
     order.update(status: :delivered)
     assert_equal 'delivered', order.status
@@ -108,19 +108,19 @@ class OrderLifecycleWorkflowTest < ActionDispatch::IntegrationTest
     order = @restaurant.ordrs.create!(
       tablesetting: @tablesetting,
       menu: @menu,
-      status: :opened
+      status: :opened,
     )
-    
+
     # Request bill
     order.update!(status: :billrequested)
     order.reload
     assert_equal 'billrequested', order.status
-    
+
     # Mark as paid
     order.update!(status: :paid)
     order.reload
     assert_equal 'paid', order.status
-    
+
     # Close order
     order.update!(status: :closed)
     order.reload
@@ -131,17 +131,17 @@ class OrderLifecycleWorkflowTest < ActionDispatch::IntegrationTest
     order = @restaurant.ordrs.create!(
       tablesetting: @tablesetting,
       menu: @menu,
-      status: :opened
+      status: :opened,
     )
-    
+
     ordritem = order.ordritems.create!(
       menuitem: @menu_item,
-      ordritemprice: @menu_item.price
+      ordritemprice: @menu_item.price,
     )
-    
+
     # Add note to order item
     ordritem.ordritemnotes.create!(note: 'Well done') if ordritem.respond_to?(:ordritemnotes)
-    
+
     # Verify order and items created
     assert_not_nil order
     assert_equal 1, order.ordritems.count
@@ -150,28 +150,28 @@ class OrderLifecycleWorkflowTest < ActionDispatch::IntegrationTest
   test 'order with multiple items and prices' do
     item1_price = 10.00
     item2_price = 15.00
-    
+
     order = @restaurant.ordrs.create!(
       tablesetting: @tablesetting,
       menu: @menu,
-      status: :opened
+      status: :opened,
     )
-    
+
     order.ordritems.create!(
       menuitem: @menu_item,
-      ordritemprice: item1_price
+      ordritemprice: item1_price,
     )
-    
+
     item2 = menuitems(:two)
-    
+
     order.ordritems.create!(
       menuitem: item2,
-      ordritemprice: item2_price
+      ordritemprice: item2_price,
     )
-    
+
     # Verify items created
     assert_equal 2, order.ordritems.count
-    
+
     # Verify prices stored correctly
     prices = order.ordritems.map(&:ordritemprice).sort
     assert_equal [item1_price, item2_price].sort, prices
@@ -181,18 +181,18 @@ class OrderLifecycleWorkflowTest < ActionDispatch::IntegrationTest
     order = @restaurant.ordrs.create!(
       tablesetting: @tablesetting,
       menu: @menu,
-      status: :opened
+      status: :opened,
     )
-    
+
     assert_not_nil order.created_at
     assert_not_nil order.updated_at
-    
+
     original_updated_at = order.updated_at
-    
+
     # Update status
     sleep 0.1 # Ensure time difference
     order.update(status: :ordered)
-    
+
     assert order.updated_at > original_updated_at
   end
 
@@ -201,12 +201,12 @@ class OrderLifecycleWorkflowTest < ActionDispatch::IntegrationTest
     order1 = @restaurant.ordrs.create!(tablesetting: @tablesetting, menu: @menu, status: :opened)
     order2 = @restaurant.ordrs.create!(tablesetting: @tablesetting, menu: @menu, status: :opened)
     order3 = @restaurant.ordrs.create!(tablesetting: @tablesetting, menu: @menu, status: :opened)
-    
+
     # Update different orders
     order1.update(status: :ordered)
     order2.update(status: :preparing)
     order3.update(status: :ready)
-    
+
     # Verify each order maintained correct state
     assert_equal 'ordered', order1.reload.status
     assert_equal 'preparing', order2.reload.status
@@ -217,19 +217,19 @@ class OrderLifecycleWorkflowTest < ActionDispatch::IntegrationTest
     order = @restaurant.ordrs.create!(
       tablesetting: @tablesetting,
       menu: @menu,
-      status: :opened
+      status: :opened,
     )
-    
+
     order_item = order.ordritems.create!(
       menuitem: @menu_item,
-      ordritemprice: 10.00
+      ordritemprice: 10.00,
     )
-    
+
     original_price = order_item.ordritemprice
-    
+
     # Update price
     order_item.update(ordritemprice: 15.00)
-    
+
     new_price = order_item.reload.ordritemprice
     assert new_price > original_price
     assert_equal 15.00, order_item.reload.ordritemprice

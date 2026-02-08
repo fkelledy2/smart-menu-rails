@@ -48,7 +48,7 @@ class MenuItemMatcherService
 
     unless rerank_enabled?
       best = docs.first
-      return nil unless best&.menuitem_id.present?
+      return nil if best&.menuitem_id.blank?
 
       return {
         menuitem_id: best.menuitem_id.to_s,
@@ -64,9 +64,11 @@ class MenuItemMatcherService
     scores = {}
     ranked.each do |row|
       next unless row.is_a?(Hash)
+
       rid = row['id'] || row[:id]
       sc = row['score'] || row[:score]
       next if rid.blank? || sc.nil?
+
       scores[rid.to_s] = sc.to_f
     end
 
@@ -99,8 +101,9 @@ class MenuItemMatcherService
   end
 
   def rerank_enabled?
-    v = ENV['SMART_MENU_ML_RERANK_ENABLED']
+    v = ENV.fetch('SMART_MENU_ML_RERANK_ENABLED', nil)
     return true if v.nil? || v.to_s.strip == ''
+
     v.to_s.downcase == 'true'
   end
 

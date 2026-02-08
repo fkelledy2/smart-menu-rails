@@ -52,31 +52,31 @@ class Api::V1::RestaurantsControllerTest < ActionDispatch::IntegrationTest
   test 'should have index route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'get', path: '/api/v1/restaurants' },
-                   { controller: 'api/v1/restaurants', action: 'index', format: :json },)
+                   { controller: 'api/v1/restaurants', action: 'index', format: :json })
   end
 
   test 'should have show route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'get', path: "/api/v1/restaurants/#{@restaurant.id}" },
-                   { controller: 'api/v1/restaurants', action: 'show', id: @restaurant.id.to_s, format: :json },)
+                   { controller: 'api/v1/restaurants', action: 'show', id: @restaurant.id.to_s, format: :json })
   end
 
   test 'should have create route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'post', path: '/api/v1/restaurants' },
-                   { controller: 'api/v1/restaurants', action: 'create', format: :json },)
+                   { controller: 'api/v1/restaurants', action: 'create', format: :json })
   end
 
   test 'should have update route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'patch', path: "/api/v1/restaurants/#{@restaurant.id}" },
-                   { controller: 'api/v1/restaurants', action: 'update', id: @restaurant.id.to_s, format: :json },)
+                   { controller: 'api/v1/restaurants', action: 'update', id: @restaurant.id.to_s, format: :json })
   end
 
   test 'should have destroy route' do
     # Just verify the route exists (API routes default to JSON format)
     assert_routing({ method: 'delete', path: "/api/v1/restaurants/#{@restaurant.id}" },
-                   { controller: 'api/v1/restaurants', action: 'destroy', id: @restaurant.id.to_s, format: :json },)
+                   { controller: 'api/v1/restaurants', action: 'destroy', id: @restaurant.id.to_s, format: :json })
   end
 
   # Basic functionality tests

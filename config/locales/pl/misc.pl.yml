@@ -244,11 +244,11 @@ pl:
   number:
     currency:
       format:
-        delimiter: replace_me
-        format: replace_me
-        precision: replace_me
-        separator: replace_me
-        unit: replace_me
+        delimiter: ' '
+        format: '%n %u'
+        precision: 2
+        separator: ','
+        unit: 'zł'
   ocr_menu_imports:
     create:
       success: replace_me

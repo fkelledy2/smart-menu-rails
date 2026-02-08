@@ -16,24 +16,22 @@ class VoiceCommandTranscriptionJob
 
     transcript = vc.transcript.to_s
 
-    if transcript.blank?
-      if vc.audio.attached?
-        unless whisper_enabled?
-          vc.update!(status: :failed, error_message: 'Audio transcription is disabled')
-          return
-        end
+    if transcript.blank? && vc.audio.attached?
+      unless whisper_enabled?
+        vc.update!(status: :failed, error_message: 'Audio transcription is disabled')
+        return
+      end
 
-        tmp = Tempfile.new(['voice_command', vc.audio.filename.extension_with_delimiter])
-        begin
-          tmp.binmode
-          tmp.write(vc.audio.download)
-          tmp.flush
-          svc = OpenaiWhisperTranscriptionService.new
-          transcript = svc.transcribe(file_path: tmp.path, language: vc.locale)
-        ensure
-          tmp.close
-          tmp.unlink
-        end
+      tmp = Tempfile.new(['voice_command', vc.audio.filename.extension_with_delimiter])
+      begin
+        tmp.binmode
+        tmp.write(vc.audio.download)
+        tmp.flush
+        svc = OpenaiWhisperTranscriptionService.new
+        transcript = svc.transcribe(file_path: tmp.path, language: vc.locale)
+      ensure
+        tmp.close
+        tmp.unlink
       end
     end
 
@@ -61,12 +59,12 @@ class VoiceCommandTranscriptionJob
       intent: intent,
       result: {
         ok: true,
-        translated_transcript: (translated_transcript.present? && translated_transcript != transcript) ? translated_transcript : nil,
-      }
+        translated_transcript: translated_transcript.present? && translated_transcript != transcript ? translated_transcript : nil,
+      },
     )
   rescue StandardError => e
     begin
-      vc.update!(status: :failed, error_message: "#{e.class}: #{e.message}") if vc
+      vc&.update!(status: :failed, error_message: "#{e.class}: #{e.message}")
     rescue StandardError
       # ignore
     end
@@ -80,20 +78,23 @@ class VoiceCommandTranscriptionJob
   end
 
   def whisper_enabled?
-    v = ENV['SMART_MENU_VOICE_WHISPER_ENABLED']
+    v = ENV.fetch('SMART_MENU_VOICE_WHISPER_ENABLED', nil)
     return true if v.nil? || v.to_s.strip == ''
+
     v.to_s.downcase == 'true'
   end
 
   def vector_search_enabled?
-    v = ENV['SMART_MENU_VECTOR_SEARCH_ENABLED']
+    v = ENV.fetch('SMART_MENU_VECTOR_SEARCH_ENABLED', nil)
     return true if v.nil? || v.to_s.strip == ''
+
     v.to_s.downcase == 'true'
   end
 
   def deepl_enabled?
-    v = ENV['SMART_MENU_DEEPL_ENABLED']
+    v = ENV.fetch('SMART_MENU_DEEPL_ENABLED', nil)
     return true if v.nil? || v.to_s.strip == ''
+
     v.to_s.downcase == 'true'
   end
 
@@ -117,7 +118,7 @@ class VoiceCommandTranscriptionJob
     return intent unless intent.is_a?(Hash)
 
     type = intent[:type].to_s
-    return intent unless type == 'add_item' || type == 'remove_item'
+    return intent unless %w[add_item remove_item].include?(type)
 
     return intent unless vector_search_enabled?
 
@@ -135,7 +136,7 @@ class VoiceCommandTranscriptionJob
     intent.merge(
       menuitem_id: match[:menuitem_id],
       confidence: match[:confidence],
-      match_method: match[:method]
+      match_method: match[:method],
     )
   rescue StandardError
     intent

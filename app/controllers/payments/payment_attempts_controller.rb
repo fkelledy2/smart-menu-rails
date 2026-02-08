@@ -9,7 +9,7 @@ class Payments::PaymentAttemptsController < ApplicationController
     authorize ordr, :update?
 
     if ordr.status.to_s != 'billrequested'
-      render json: { ok: false, error: 'Order must be billrequested to pay' }, status: :unprocessable_entity
+      render json: { ok: false, error: 'Order must be billrequested to pay' }, status: :unprocessable_content
       return
     end
 
@@ -18,7 +18,7 @@ class Payments::PaymentAttemptsController < ApplicationController
 
     provider = params[:provider].presence
     if provider.present? && !provider.to_s.in?(%w[stripe])
-      render json: { ok: false, error: 'Unsupported payment provider' }, status: :unprocessable_entity
+      render json: { ok: false, error: 'Unsupported payment provider' }, status: :unprocessable_content
       return
     end
 

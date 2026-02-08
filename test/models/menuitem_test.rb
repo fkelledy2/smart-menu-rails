@@ -256,7 +256,7 @@ class MenuitemTest < ActiveSupport::TestCase
   end
 
   test 'should accept very high price' do
-    @menuitem.price = 999999.99
+    @menuitem.price = 999_999.99
     assert @menuitem.valid?
   end
 
@@ -408,7 +408,7 @@ class MenuitemTest < ActiveSupport::TestCase
       calories: 1,
       itemtype: :food,
       status: :active,
-      menusection: @menusection
+      menusection: @menusection,
     )
     assert menuitem.valid?
     assert menuitem.save
@@ -421,7 +421,7 @@ class MenuitemTest < ActiveSupport::TestCase
       preptime: 1,
       calories: 1,
       itemtype: :food,
-      status: :active
+      status: :active,
     )
     assert_not menuitem.valid?
     assert_includes menuitem.errors[:menusection], 'must exist'
@@ -434,7 +434,7 @@ class MenuitemTest < ActiveSupport::TestCase
       preptime: -1,
       calories: -1,
       itemtype: nil,
-      status: nil
+      status: nil,
     )
     assert_not menuitem.valid?
     assert menuitem.errors[:name].any?
@@ -453,7 +453,7 @@ class MenuitemTest < ActiveSupport::TestCase
       calories: 'ghi',
       itemtype: :food,
       status: :active,
-      menusection: @menusection
+      menusection: @menusection,
     )
     assert_not menuitem.valid?
     assert_includes menuitem.errors[:price], 'is not a number'

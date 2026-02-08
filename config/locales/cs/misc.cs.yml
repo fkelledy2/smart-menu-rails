@@ -244,11 +244,11 @@ cs:
   number:
     currency:
       format:
-        delimiter: ''
-        format: ''
-        precision: ''
-        separator: ''
-        unit: ''
+        delimiter: ' '
+        format: '%n %u'
+        precision: 2
+        separator: ','
+        unit: 'Kč'
   ocr_menu_imports:
     create:
       success: ''

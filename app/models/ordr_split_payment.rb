@@ -10,7 +10,6 @@ class OrdrSplitPayment < ApplicationRecord
     canceled: 40,
   }
 
-  validates :ordr, presence: true
   validates :amount_cents, presence: true
   validates :currency, presence: true
   validates :status, presence: true

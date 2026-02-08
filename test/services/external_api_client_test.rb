@@ -15,9 +15,9 @@ class ExternalApiClientTest < ActiveSupport::TestCase
     client = ExternalApiClient.new(
       base_uri: 'https://api.example.com',
       timeout: 60.seconds,
-      max_retries: 5
+      max_retries: 5,
     )
-    
+
     assert_equal 60.seconds, client.config[:timeout]
     assert_equal 5, client.config[:max_retries]
   end
@@ -30,7 +30,7 @@ class ExternalApiClientTest < ActiveSupport::TestCase
 
   test 'default config includes expected keys' do
     config = @client.send(:default_config)
-    
+
     assert_includes config.keys, :timeout
     assert_includes config.keys, :max_retries
     assert_includes config.keys, :retry_delay
@@ -41,7 +41,7 @@ class ExternalApiClientTest < ActiveSupport::TestCase
 
   test 'retryable errors include network errors' do
     errors = @client.send(:retryable_errors)
-    
+
     assert_includes errors, Net::ReadTimeout
     assert_includes errors, Net::OpenTimeout
     assert_includes errors, Errno::ECONNREFUSED
@@ -50,14 +50,14 @@ class ExternalApiClientTest < ActiveSupport::TestCase
 
   test 'handles successful response' do
     response = OpenStruct.new(code: 200, body: 'OK', success?: true)
-    
+
     result = @client.send(:handle_response, response)
     assert_equal response, result
   end
 
   test 'raises authentication error for 401' do
     response = OpenStruct.new(code: 401, body: 'Unauthorized')
-    
+
     assert_raises(ExternalApiClient::AuthenticationError) do
       @client.send(:handle_response, response)
     end
@@ -65,7 +65,7 @@ class ExternalApiClientTest < ActiveSupport::TestCase
 
   test 'raises authentication error for 403' do
     response = OpenStruct.new(code: 403, body: 'Forbidden')
-    
+
     assert_raises(ExternalApiClient::AuthenticationError) do
       @client.send(:handle_response, response)
     end
@@ -73,7 +73,7 @@ class ExternalApiClientTest < ActiveSupport::TestCase
 
   test 'raises rate limit error for 429' do
     response = OpenStruct.new(code: 429, body: 'Too Many Requests')
-    
+
     assert_raises(ExternalApiClient::RateLimitError) do
       @client.send(:handle_response, response)
     end
@@ -81,7 +81,7 @@ class ExternalApiClientTest < ActiveSupport::TestCase
 
   test 'raises API error for 4xx client errors' do
     response = OpenStruct.new(code: 400, body: 'Bad Request')
-    
+
     assert_raises(ExternalApiClient::ApiError) do
       @client.send(:handle_response, response)
     end
@@ -89,7 +89,7 @@ class ExternalApiClientTest < ActiveSupport::TestCase
 
   test 'raises API error for 5xx server errors' do
     response = OpenStruct.new(code: 500, body: 'Internal Server Error')
-    
+
     assert_raises(ExternalApiClient::ApiError) do
       @client.send(:handle_response, response)
     end
@@ -98,7 +98,7 @@ class ExternalApiClientTest < ActiveSupport::TestCase
   test 'handles 2xx success codes' do
     [200, 201, 204].each do |code|
       response = OpenStruct.new(code: code, body: 'Success')
-      
+
       assert_nothing_raised do
         @client.send(:handle_response, response)
       end

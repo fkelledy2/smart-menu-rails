@@ -52,8 +52,8 @@ class TipsController < ApplicationController
             turbo_stream.replace(
               'restaurant_content',
               partial: 'restaurants/sections/catalog_2025',
-              locals: { restaurant: @tip.restaurant, filter: 'all' }
-            )
+              locals: { restaurant: @tip.restaurant, filter: 'all' },
+            ),
           ]
         end
         format.html do
@@ -61,9 +61,9 @@ class TipsController < ApplicationController
         end
         format.json { render :show, status: :created, location: restaurant_tip_url(@tip.restaurant, @tip) }
       else
-        format.turbo_stream { render :new, status: :unprocessable_entity }
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @tip.errors, status: :unprocessable_entity }
+        format.turbo_stream { render :new, status: :unprocessable_content }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @tip.errors, status: :unprocessable_content }
       end
     end
   rescue ArgumentError => e
@@ -71,9 +71,9 @@ class TipsController < ApplicationController
     @tip = Tip.new
     @tip.errors.add(:status, e.message)
     respond_to do |format|
-      format.turbo_stream { render :new, status: :unprocessable_entity }
-      format.html { render :new, status: :unprocessable_entity }
-      format.json { render json: @tip.errors, status: :unprocessable_entity }
+      format.turbo_stream { render :new, status: :unprocessable_content }
+      format.html { render :new, status: :unprocessable_content }
+      format.json { render json: @tip.errors, status: :unprocessable_content }
     end
   end
 
@@ -89,8 +89,8 @@ class TipsController < ApplicationController
             turbo_stream.replace(
               'restaurant_content',
               partial: 'restaurants/sections/catalog_2025',
-              locals: { restaurant: @tip.restaurant, filter: 'all' }
-            )
+              locals: { restaurant: @tip.restaurant, filter: 'all' },
+            ),
           ]
         end
         format.html do
@@ -98,9 +98,9 @@ class TipsController < ApplicationController
         end
         format.json { render :show, status: :ok, location: restaurant_tip_url(@tip.restaurant, @tip) }
       else
-        format.turbo_stream { render :edit, status: :unprocessable_entity }
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @tip.errors, status: :unprocessable_entity }
+        format.turbo_stream { render :edit, status: :unprocessable_content }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @tip.errors, status: :unprocessable_content }
       end
     end
   end
@@ -121,7 +121,7 @@ class TipsController < ApplicationController
     restaurant = Restaurant.find(params[:restaurant_id])
     tips = policy_scope(Tip).where(restaurant_id: restaurant.id, archived: false)
 
-    ids = Array(params[:tip_ids]).map(&:to_s).reject(&:blank?)
+    ids = Array(params[:tip_ids]).map(&:to_s).compact_blank
     status = params[:status].to_s
 
     if ids.empty? || status.blank?
@@ -130,7 +130,7 @@ class TipsController < ApplicationController
           render turbo_stream: turbo_stream.replace(
             'restaurant_content',
             partial: 'restaurants/sections/catalog_2025',
-            locals: { restaurant: restaurant, filter: 'all' }
+            locals: { restaurant: restaurant, filter: 'all' },
           )
         end
         format.html do
@@ -146,7 +146,7 @@ class TipsController < ApplicationController
     to_update.update_all(status: Tip.statuses[status], updated_at: Time.current)
 
     # Run authorizations in batch
-    Tip.where(id: ids).each do |tip|
+    Tip.where(id: ids).find_each do |tip|
       authorize tip, :update?
     end
 
@@ -155,7 +155,7 @@ class TipsController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           'restaurant_content',
           partial: 'restaurants/sections/catalog_2025',
-          locals: { restaurant: restaurant, filter: 'all' }
+          locals: { restaurant: restaurant, filter: 'all' },
         )
       end
       format.html do
@@ -171,21 +171,21 @@ class TipsController < ApplicationController
 
     order = params[:order]
     unless order.is_a?(Array)
-      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_entity
+      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_content
     end
 
     Tip.transaction do
       # Load all tips at once to avoid N+1 queries
       tips_hash = tips.where(id: order.filter_map { |item| (item[:id] || item['id']).to_i if item.is_a?(Hash) || item.is_a?(ActionController::Parameters) }).index_by(&:id)
-      
+
       order.each do |item|
         item_hash = if item.is_a?(ActionController::Parameters)
-          item.to_unsafe_h
-        elsif item.is_a?(Hash)
-          item
-        else
-          next
-        end
+                      item.to_unsafe_h
+                    elsif item.is_a?(Hash)
+                      item
+                    else
+                      next
+                    end
 
         id = item_hash[:id] || item_hash['id']
         seq = item_hash[:sequence] || item_hash['sequence']
@@ -193,7 +193,7 @@ class TipsController < ApplicationController
 
         tip = tips_hash[id.to_i]
         next unless tip
-        
+
         authorize tip, :update?
         tip.update_column(:sequence, seq.to_i)
       end
@@ -204,7 +204,7 @@ class TipsController < ApplicationController
     render json: { status: 'error', message: 'Tip not found' }, status: :not_found
   rescue StandardError => e
     Rails.logger.error("Tips reorder error: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
-    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+    render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 
   private

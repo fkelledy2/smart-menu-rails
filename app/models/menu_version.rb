@@ -2,7 +2,6 @@ class MenuVersion < ApplicationRecord
   belongs_to :menu
   belongs_to :created_by_user, class_name: 'User', optional: true
 
-  validates :menu, presence: true
   validates :version_number, presence: true
   validates :snapshot_json, presence: true
   validates :is_active, inclusion: { in: [true, false] }

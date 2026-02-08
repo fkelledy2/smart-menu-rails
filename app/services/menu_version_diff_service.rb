@@ -63,11 +63,12 @@ class MenuVersionDiffService
     added_sections = (to_section_ids - from_section_ids).map { |id| summarize_section(to_sections_by_id[id]) }
     removed_sections = (from_section_ids - to_section_ids).map { |id| summarize_section(from_sections_by_id[id]) }
 
-    changed_sections = (from_section_ids & to_section_ids).map do |id|
+    changed_sections = (from_section_ids & to_section_ids).filter_map do |id|
       changes = diff_fields(from_sections_by_id[id], to_sections_by_id[id], SECTION_KEYS)
       next if changes.empty?
+
       { id: id, changes: changes }
-    end.compact
+    end
 
     from_items_by_id = flatten_items(from_sections)
     to_items_by_id = flatten_items(to_sections)
@@ -78,11 +79,12 @@ class MenuVersionDiffService
     added_items = (to_item_ids - from_item_ids).map { |id| summarize_item(to_items_by_id[id]) }
     removed_items = (from_item_ids - to_item_ids).map { |id| summarize_item(from_items_by_id[id]) }
 
-    changed_items = (from_item_ids & to_item_ids).map do |id|
+    changed_items = (from_item_ids & to_item_ids).filter_map do |id|
       changes = diff_fields(from_items_by_id[id], to_items_by_id[id], ITEM_KEYS)
       next if changes.empty?
+
       { id: id, changes: changes }
-    end.compact
+    end
 
     {
       sections: {
@@ -109,24 +111,27 @@ class MenuVersionDiffService
   end
 
   def self.diff_fields(from_hash, to_hash, keys)
-    from_hash = from_hash || {}
-    to_hash = to_hash || {}
+    from_hash ||= {}
+    to_hash ||= {}
 
-    keys.map do |k|
+    keys.filter_map do |k|
       from_val = from_hash[k]
       to_val = to_hash[k]
       next if from_val == to_val
+
       { field: k, from: from_val, to: to_val }
-    end.compact
+    end
   end
 
   def self.summarize_section(section)
     return {} unless section
+
     { id: section['id'].to_i, name: section['name'], sequence: section['sequence'] }
   end
 
   def self.summarize_item(item)
     return {} unless item
+
     { id: item['id'].to_i, name: item['name'], sequence: item['sequence'], price: item['price'] }
   end
 

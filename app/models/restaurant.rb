@@ -16,6 +16,7 @@ class Restaurant < ApplicationRecord
   def alcohol_allowed_now?(now: Time.zone.now)
     return false if respond_to?(:allow_alcohol) && !allow_alcohol
     return true unless alcohol_policy
+
     alcohol_policy.allowed_now?(now: now)
   end
 
@@ -131,10 +132,10 @@ class Restaurant < ApplicationRecord
     else
       # Case-insensitive lookup to handle both 'it' and 'IT'
       Restaurantlocale.find_by(restaurant_id: id, status: 'active')
-                      &.then { |rl| rl&.locale&.downcase == requested ? rl : nil } ||
-                      Restaurantlocale.where(restaurant_id: id, status: 'active')
-                                      .where('LOWER(locale) = ?', requested)
-                                      .first
+        &.then { |rl| rl&.locale&.downcase == requested ? rl : nil } ||
+        Restaurantlocale.where(restaurant_id: id, status: 'active')
+          .where('LOWER(locale) = ?', requested)
+          .first
     end
   end
 
@@ -166,11 +167,11 @@ class Restaurant < ApplicationRecord
 
     # 2) Localization: require at least one language and a default language set
     has_locales = restaurantlocales.any?
-    has_default_locale = restaurantlocales.where(status: 'active', dfault: true).exists?
+    has_default_locale = restaurantlocales.exists?(status: 'active', dfault: true)
     return 'localization' unless has_locales && has_default_locale
 
     # 3) Tables: require at least one table setting
-    return 'tables' unless tablesettings.where(archived: false).exists?
+    return 'tables' unless tablesettings.exists?(archived: false)
 
     # 4) Staff: require at least one employee
     return 'staff' unless employees.any?
@@ -179,8 +180,7 @@ class Restaurant < ApplicationRecord
     has_any_menu = restaurant_menus
       .where.not(status: RestaurantMenu.statuses[:archived])
       .joins(:menu)
-      .where(menus: { archived: false })
-      .exists?
+      .exists?(menus: { archived: false })
     return 'menus' unless has_any_menu
 
     nil
@@ -195,6 +195,7 @@ class Restaurant < ApplicationRecord
     return true if name.blank?
     return true if description.blank?
     return true if currency.blank?
+
     address_ok = address1.present? || city.present? || postcode.present?
     return true unless address_ok
     return true if country.blank?
@@ -202,17 +203,19 @@ class Restaurant < ApplicationRecord
     return true if respond_to?(:imagecontext) && imagecontext.blank?
     return true if respond_to?(:image_style_profile) && image_style_profile.blank?
     # Tables, employees, localization, and menu (taxes/tips optional)
-    return true unless tablesettings.where(archived: false).exists?
+    return true unless tablesettings.exists?(archived: false)
     return true unless employees.any?
+
     has_locales = restaurantlocales.any?
-    has_default_locale = restaurantlocales.where(status: 'active', dfault: true).exists?
+    has_default_locale = restaurantlocales.exists?(status: 'active', dfault: true)
     return true unless has_locales && has_default_locale
+
     has_any_menu = restaurant_menus
       .where.not(status: RestaurantMenu.statuses[:archived])
       .joins(:menu)
-      .where(menus: { archived: false })
-      .exists?
+      .exists?(menus: { archived: false })
     return true unless has_any_menu
+
     false
   end
 

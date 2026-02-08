@@ -21,10 +21,10 @@ class SmartmenuPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      unless user.present?
+      if user.blank?
         return scope
-          .joins(:menu)
-          .where(tablesetting_id: nil, menus: { status: 'active' })
+            .joins(:menu)
+            .where(tablesetting_id: nil, menus: { status: 'active' })
       end
 
       scope.joins(:restaurant).where(restaurants: { user_id: user.id })

@@ -212,17 +212,17 @@ class OcrMenuItemTest < ActiveSupport::TestCase
       ocr_menu_section: @ocr_menu_section,
       name: 'Veggie Burger',
       is_vegetarian: true,
-      is_vegan: false
+      is_vegan: false,
     )
-    
+
     non_vegetarian_item = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Beef Burger',
-      is_vegetarian: false
+      is_vegetarian: false,
     )
-    
+
     results = OcrMenuItem.vegetarian
-    
+
     assert_includes results, vegetarian_item
     assert_not_includes results, non_vegetarian_item
   end
@@ -233,18 +233,18 @@ class OcrMenuItemTest < ActiveSupport::TestCase
       ocr_menu_section: @ocr_menu_section,
       name: 'Vegan Salad',
       is_vegan: true,
-      is_vegetarian: true
+      is_vegetarian: true,
     )
-    
+
     non_vegan_item = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Cheese Pizza',
       is_vegan: false,
-      is_vegetarian: true
+      is_vegetarian: true,
     )
-    
+
     results = OcrMenuItem.vegan
-    
+
     assert_includes results, vegan_item
     assert_not_includes results, non_vegan_item
   end
@@ -254,17 +254,17 @@ class OcrMenuItemTest < ActiveSupport::TestCase
     gluten_free_item = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Rice Bowl',
-      is_gluten_free: true
+      is_gluten_free: true,
     )
-    
+
     gluten_item = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Pasta',
-      is_gluten_free: false
+      is_gluten_free: false,
     )
-    
+
     results = OcrMenuItem.gluten_free
-    
+
     assert_includes results, gluten_free_item
     assert_not_includes results, gluten_item
   end
@@ -274,17 +274,17 @@ class OcrMenuItemTest < ActiveSupport::TestCase
     dairy_free_item = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Fruit Salad',
-      is_dairy_free: true
+      is_dairy_free: true,
     )
-    
+
     dairy_item = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Cheese Plate',
-      is_dairy_free: false
+      is_dairy_free: false,
     )
-    
+
     results = OcrMenuItem.dairy_free
-    
+
     assert_includes results, dairy_free_item
     assert_not_includes results, dairy_item
   end
@@ -295,20 +295,20 @@ class OcrMenuItemTest < ActiveSupport::TestCase
       ocr_menu_section: @ocr_menu_section,
       name: 'Vegan Salad',
       is_vegan: true,
-      is_vegetarian: true
+      is_vegetarian: true,
     )
-    
+
     item_without_restrictions = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Regular Item',
       is_vegan: false,
       is_vegetarian: false,
       is_gluten_free: false,
-      is_dairy_free: false
+      is_dairy_free: false,
     )
-    
+
     results = OcrMenuItem.with_dietary_restrictions
-    
+
     assert_includes results, item_with_restrictions
     assert_not_includes results, item_without_restrictions
   end
@@ -319,11 +319,11 @@ class OcrMenuItemTest < ActiveSupport::TestCase
       name: 'Special Salad',
       is_vegan: true,
       is_gluten_free: true,
-      is_dairy_free: true
+      is_dairy_free: true,
     )
-    
+
     results = OcrMenuItem.with_dietary_restrictions
-    
+
     assert_includes results, multi_restriction_item
   end
 
@@ -333,18 +333,18 @@ class OcrMenuItemTest < ActiveSupport::TestCase
       ocr_menu_section: @ocr_menu_section,
       name: 'Vegan Salad',
       is_vegan: true,
-      is_vegetarian: true
+      is_vegetarian: true,
     )
-    
+
     vegetarian_item = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Cheese Pizza',
       is_vegan: false,
-      is_vegetarian: true
+      is_vegetarian: true,
     )
-    
+
     results = OcrMenuItem.matching_dietary_restrictions(['vegan'])
-    
+
     assert_includes results, vegan_item
     assert_not_includes results, vegetarian_item
   end
@@ -355,19 +355,19 @@ class OcrMenuItemTest < ActiveSupport::TestCase
       name: 'Vegan GF Salad',
       is_vegan: true,
       is_gluten_free: true,
-      is_vegetarian: true
+      is_vegetarian: true,
     )
-    
+
     vegan_only_item = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Vegan Pasta',
       is_vegan: true,
       is_gluten_free: false,
-      is_vegetarian: true
+      is_vegetarian: true,
     )
-    
-    results = OcrMenuItem.matching_dietary_restrictions(['vegan', 'gluten_free'])
-    
+
+    results = OcrMenuItem.matching_dietary_restrictions(%w[vegan gluten_free])
+
     assert_includes results, vegan_gluten_free_item
     assert_not_includes results, vegan_only_item
   end
@@ -376,17 +376,17 @@ class OcrMenuItemTest < ActiveSupport::TestCase
     item1 = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Item 1',
-      is_vegan: true
+      is_vegan: true,
     )
-    
+
     item2 = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Item 2',
-      is_vegan: false
+      is_vegan: false,
     )
-    
+
     results = OcrMenuItem.matching_dietary_restrictions([])
-    
+
     assert_includes results, item1
     assert_includes results, item2
   end
@@ -395,11 +395,11 @@ class OcrMenuItemTest < ActiveSupport::TestCase
     OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Item 1',
-      is_vegan: true
+      is_vegan: true,
     )
-    
+
     results = OcrMenuItem.matching_dietary_restrictions(['invalid_restriction'])
-    
+
     assert_empty results
   end
 
@@ -408,25 +408,25 @@ class OcrMenuItemTest < ActiveSupport::TestCase
       ocr_menu_section: @ocr_menu_section,
       name: 'Vegan GF Salad',
       is_vegan: true,
-      is_gluten_free: true
+      is_gluten_free: true,
     )
-    
+
     vegan_only_item = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'Vegan Pasta',
       is_vegan: true,
-      is_gluten_free: false
+      is_gluten_free: false,
     )
-    
+
     gluten_free_only_item = OcrMenuItem.create!(
       ocr_menu_section: @ocr_menu_section,
       name: 'GF Bread',
       is_vegan: false,
-      is_gluten_free: true
+      is_gluten_free: true,
     )
-    
+
     results = OcrMenuItem.vegan.gluten_free
-    
+
     assert_includes results, vegan_gluten_free_item
     assert_not_includes results, vegan_only_item
     assert_not_includes results, gluten_free_only_item

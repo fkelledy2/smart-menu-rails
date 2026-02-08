@@ -1,11 +1,11 @@
 require 'test_helper'
 
 class OnboardingControllerTest < ActionDispatch::IntegrationTest
-  # Note: Many tests in this file are skipped due to a known issue with Warden session
+  # NOTE: Many tests in this file are skipped due to a known issue with Warden session
   # persistence for PATCH requests in integration tests. This is a test infrastructure
   # limitation, not a production code issue. The onboarding workflow functions correctly
   # in production. Affected tests involve PATCH requests to onboarding_path.
-  
+
   setup do
     # Create a simple plan without complex associations
     @plan = Plan.create!(

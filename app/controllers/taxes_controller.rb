@@ -60,8 +60,8 @@ class TaxesController < ApplicationController
               turbo_stream.replace(
                 'restaurant_content',
                 partial: 'restaurants/sections/catalog_2025',
-                locals: { restaurant: @tax.restaurant, filter: 'all' }
-              )
+                locals: { restaurant: @tax.restaurant, filter: 'all' },
+              ),
             ]
           end
           format.html do
@@ -70,9 +70,9 @@ class TaxesController < ApplicationController
           # format.html { redirect_to @return_url, notice: "Tax was successfully created." }
           format.json { render :show, status: :created, location: @tax }
         else
-          format.turbo_stream { render :new, status: :unprocessable_entity }
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @tax.errors, status: :unprocessable_entity }
+          format.turbo_stream { render :new, status: :unprocessable_content }
+          format.html { render :new, status: :unprocessable_content }
+          format.json { render json: @tax.errors, status: :unprocessable_content }
         end
       end
     else
@@ -92,8 +92,8 @@ class TaxesController < ApplicationController
               turbo_stream.replace(
                 'restaurant_content',
                 partial: 'restaurants/sections/catalog_2025',
-                locals: { restaurant: @tax.restaurant, filter: 'all' }
-              )
+                locals: { restaurant: @tax.restaurant, filter: 'all' },
+              ),
             ]
           end
           format.html do
@@ -102,9 +102,9 @@ class TaxesController < ApplicationController
           # format.html { redirect_to tax_url(@tax), notice: "Tax was successfully updated." }
           format.json { render :show, status: :ok, location: @tax }
         else
-          format.turbo_stream { render :edit, status: :unprocessable_entity }
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @tax.errors, status: :unprocessable_entity }
+          format.turbo_stream { render :edit, status: :unprocessable_content }
+          format.html { render :edit, status: :unprocessable_content }
+          format.json { render json: @tax.errors, status: :unprocessable_content }
         end
       end
     else
@@ -130,7 +130,7 @@ class TaxesController < ApplicationController
     restaurant = Restaurant.find(params[:restaurant_id])
     taxes = policy_scope(Tax).where(restaurant_id: restaurant.id, archived: false)
 
-    ids = Array(params[:tax_ids]).map(&:to_s).reject(&:blank?)
+    ids = Array(params[:tax_ids]).map(&:to_s).compact_blank
     status = params[:status].to_s
 
     if ids.empty? || status.blank?
@@ -139,7 +139,7 @@ class TaxesController < ApplicationController
           render turbo_stream: turbo_stream.replace(
             'restaurant_content',
             partial: 'restaurants/sections/catalog_2025',
-            locals: { restaurant: restaurant, filter: 'all' }
+            locals: { restaurant: restaurant, filter: 'all' },
           )
         end
         format.html do
@@ -160,7 +160,7 @@ class TaxesController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           'restaurant_content',
           partial: 'restaurants/sections/catalog_2025',
-          locals: { restaurant: restaurant, filter: 'all' }
+          locals: { restaurant: restaurant, filter: 'all' },
         )
       end
       format.html do
@@ -176,18 +176,18 @@ class TaxesController < ApplicationController
 
     order = params[:order]
     unless order.is_a?(Array)
-      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_entity
+      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_content
     end
 
     Tax.transaction do
       order.each do |item|
         item_hash = if item.is_a?(ActionController::Parameters)
-          item.to_unsafe_h
-        elsif item.is_a?(Hash)
-          item
-        else
-          next
-        end
+                      item.to_unsafe_h
+                    elsif item.is_a?(Hash)
+                      item
+                    else
+                      next
+                    end
 
         id = item_hash[:id] || item_hash['id']
         seq = item_hash[:sequence] || item_hash['sequence']
@@ -204,7 +204,7 @@ class TaxesController < ApplicationController
     render json: { status: 'error', message: 'Tax not found' }, status: :not_found
   rescue StandardError => e
     Rails.logger.error("Taxes reorder error: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
-    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+    render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 
   private

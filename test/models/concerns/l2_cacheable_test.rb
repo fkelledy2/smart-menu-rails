@@ -11,7 +11,7 @@ class L2CacheableTest < ActiveSupport::TestCase
   end
 
   test 'model includes L2Cacheable concern' do
-    assert Restaurant.included_modules.include?(L2Cacheable)
+    assert Restaurant.include?(L2Cacheable)
   end
 
   test 'cached_query caches complex query results' do

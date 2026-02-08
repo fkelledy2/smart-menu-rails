@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
-  
+
   # System tests run in a separate thread, so transactional fixtures don't work
   # We need to manually clean up the database after each test
   self.use_transactional_tests = false
@@ -74,14 +74,12 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       # Cycle or unexpected constraint chain; try deleting what's left in a best-effort order.
       # If a table can't be deleted yet due to FK constraints, we'll skip it and retry.
       remaining.dup.each do |table|
-        begin
-          connection.execute("DELETE FROM #{connection.quote_table_name(table)}")
-          remaining.delete(table)
-          deleted << table
-          progress = true
-        rescue ActiveRecord::InvalidForeignKey
-          next
-        end
+        connection.execute("DELETE FROM #{connection.quote_table_name(table)}")
+        remaining.delete(table)
+        deleted << table
+        progress = true
+      rescue ActiveRecord::InvalidForeignKey
+        next
       end
 
       raise "Unable to clean tables due to FK cycles: #{remaining.join(', ')}" unless progress
@@ -96,13 +94,13 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
     super
   end
-  
+
   setup do
     if SKIPPED_SYSTEM_TEST_CLASSES.include?(self.class.name)
       skip('Obsolete scaffold-generated system test (routes/UI no longer match application)')
     end
   end
-  
+
   teardown do
     Capybara.reset_sessions!
   end

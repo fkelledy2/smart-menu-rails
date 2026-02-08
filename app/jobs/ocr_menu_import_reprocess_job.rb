@@ -36,9 +36,17 @@ class OcrMenuImportReprocessJob
     menu = import.menu
 
     ocr_items_total = import.ocr_menu_items.count
-    ocr_items_confirmed = import.ocr_menu_items.where(is_confirmed: true).count rescue nil
+    ocr_items_confirmed = begin
+      import.ocr_menu_items.where(is_confirmed: true).count
+    rescue StandardError
+      nil
+    end
     ocr_sections_total = import.ocr_menu_sections.count
-    ocr_sections_confirmed = import.ocr_menu_sections.where(is_confirmed: true).count rescue nil
+    ocr_sections_confirmed = begin
+      import.ocr_menu_sections.where(is_confirmed: true).count
+    rescue StandardError
+      nil
+    end
     menuitems_total = menu.menuitems.count
 
     log_event(

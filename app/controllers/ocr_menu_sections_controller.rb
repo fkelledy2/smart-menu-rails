@@ -13,20 +13,20 @@ class OcrMenuSectionsController < ApplicationController
     attrs = section_params
 
     if attrs.blank? && !params.dig(:ocr_menu_section, :name) && !params.dig(:ocr_menu_section, :description)
-      return render json: { ok: false, errors: ['Empty payload'] }, status: :unprocessable_entity
+      return render json: { ok: false, errors: ['Empty payload'] }, status: :unprocessable_content
     end
 
     if attrs.key?(:name) && attrs[:name].to_s.strip.empty?
-      return render json: { ok: false, errors: ["Name can't be blank"] }, status: :unprocessable_entity
+      return render json: { ok: false, errors: ["Name can't be blank"] }, status: :unprocessable_content
     end
 
     if @section.update(attrs)
       render json: { ok: true, section: { id: @section.id, name: @section.name } }
     else
-      render json: { ok: false, errors: @section.errors.full_messages }, status: :unprocessable_entity
+      render json: { ok: false, errors: @section.errors.full_messages }, status: :unprocessable_content
     end
   rescue ActionController::ParameterMissing
-    render json: { ok: false, errors: ['Invalid parameters'] }, status: :unprocessable_entity
+    render json: { ok: false, errors: ['Invalid parameters'] }, status: :unprocessable_content
   end
 
   private

@@ -21,7 +21,7 @@ class RestaurantInsightsService
           'ordritems.menuitem_id AS menuitem_id',
           'menuitems.name AS menuitem_name',
           'COUNT(DISTINCT ordritems.ordr_id) AS orders_with_item_count',
-          'COUNT(*) AS quantity_sold'
+          'COUNT(*) AS quantity_sold',
         )
         .order(Arel.sql('orders_with_item_count DESC, quantity_sold DESC, ordritems.menuitem_id ASC'))
 
@@ -32,7 +32,7 @@ class RestaurantInsightsService
           menuitem_name: r.menuitem_name,
           orders_with_item_count: orders_with_item_count,
           quantity_sold: r.quantity_sold.to_i,
-          share_of_orders: total_orders.positive? ? (orders_with_item_count.to_f / total_orders.to_f) : 0.0
+          share_of_orders: total_orders.positive? ? (orders_with_item_count.to_f / total_orders) : 0.0,
         }
       end
     end
@@ -55,7 +55,7 @@ class RestaurantInsightsService
           'ordritems.menuitem_id AS menuitem_id',
           'menuitems.name AS menuitem_name',
           'COUNT(DISTINCT ordritems.ordr_id) AS orders_with_item_count',
-          'COUNT(*) AS quantity_sold'
+          'COUNT(*) AS quantity_sold',
         )
         .order(Arel.sql('orders_with_item_count ASC, quantity_sold ASC, ordritems.menuitem_id ASC'))
 
@@ -66,7 +66,7 @@ class RestaurantInsightsService
           menuitem_name: r.menuitem_name,
           orders_with_item_count: orders_with_item_count,
           quantity_sold: r.quantity_sold.to_i,
-          share_of_orders: total_orders.positive? ? (orders_with_item_count.to_f / total_orders.to_f) : 0.0
+          share_of_orders: total_orders.positive? ? (orders_with_item_count.to_f / total_orders) : 0.0,
         }
       end
     end
@@ -83,14 +83,14 @@ class RestaurantInsightsService
         .joins('INNER JOIN ordr_station_tickets ost ON ost.id = ordritems.ordr_station_ticket_id')
         .where(ordrs: { id: orders.select(:id) })
         .where(menuitems: { status: Menuitem.statuses[:active], hidden: [false, nil] })
-        .where('ost.submitted_at IS NOT NULL')
-        .where('ost.status IN (?)', [OrdrStationTicket.statuses[:ready], OrdrStationTicket.statuses[:collected]])
+        .where.not(ost: { submitted_at: nil })
+        .where(ost: { status: [OrdrStationTicket.statuses[:ready], OrdrStationTicket.statuses[:collected]] })
         .group('ordritems.menuitem_id', 'menuitems.name')
         .select(
           'ordritems.menuitem_id AS menuitem_id',
           'menuitems.name AS menuitem_name',
           'COUNT(*) AS sample_size',
-          "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY EXTRACT(EPOCH FROM (ost.updated_at - COALESCE(ost.submitted_at, ordrs.\"orderedAt\", ordrs.created_at)))) AS median_time_to_ready_seconds"
+          'PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY EXTRACT(EPOCH FROM (ost.updated_at - COALESCE(ost.submitted_at, ordrs."orderedAt", ordrs.created_at)))) AS median_time_to_ready_seconds',
         )
         .order(Arel.sql('median_time_to_ready_seconds DESC NULLS LAST'))
 
@@ -106,7 +106,7 @@ class RestaurantInsightsService
           menuitem_name: r.menuitem_name,
           median_time_to_ready_seconds: median_seconds,
           sample_size: sample_size,
-          is_outlier: is_outlier
+          is_outlier: is_outlier,
         }
       end
     end
@@ -134,7 +134,7 @@ class RestaurantInsightsService
           "COALESCE(menuitems.name, 'Item') AS menuitem_name",
           'COUNT(*) AS voice_trigger_count',
           "SUM(CASE WHEN voice_commands.status = 'completed' THEN 1 ELSE 0 END) AS success_count",
-          "SUM(CASE WHEN voice_commands.status = 'failed' THEN 1 ELSE 0 END) AS failure_count"
+          "SUM(CASE WHEN voice_commands.status = 'failed' THEN 1 ELSE 0 END) AS failure_count",
         )
         .order(Arel.sql('voice_trigger_count DESC'))
 
@@ -148,7 +148,7 @@ class RestaurantInsightsService
           voice_trigger_count: r.voice_trigger_count.to_i,
           success_count: success,
           failure_count: failure,
-          success_rate: denom.positive? ? (success.to_f / denom.to_f) : 0.0
+          success_rate: denom.positive? ? (success.to_f / denom) : 0.0,
         }
       end
     end
@@ -166,14 +166,14 @@ class RestaurantInsightsService
       steps = [
         { step_key: 'order_submitted', step_count: order_submitted },
         { step_key: 'bill_requested', step_count: bill_requested },
-        { step_key: 'payment_succeeded', step_count: payment_succeeded }
+        { step_key: 'payment_succeeded', step_count: payment_succeeded },
       ]
 
       previous = nil
       steps.map do |s|
         current = s[:step_count].to_i
         dropoff_count = previous.nil? ? 0 : [previous - current, 0].max
-        dropoff_rate = previous.to_i.positive? ? (dropoff_count.to_f / previous.to_f) : 0.0
+        dropoff_rate = previous.to_i.positive? ? (dropoff_count.to_f / previous) : 0.0
         previous = current
 
         s.merge(dropoff_count: dropoff_count, dropoff_rate: dropoff_rate)
@@ -183,7 +183,7 @@ class RestaurantInsightsService
 
   private
 
-  def cache_fetch(section)
+  def cache_fetch(section, &)
     range = (@params[:range].presence || 'last28').to_s
     start_param = @params[:start].to_s
     end_param = @params[:end].to_s
@@ -194,10 +194,10 @@ class RestaurantInsightsService
       range,
       menu_id,
       start_param,
-      end_param
+      end_param,
     ].join(':')
 
-    Rails.cache.fetch(key, expires_in: 15.minutes) { yield }
+    Rails.cache.fetch(key, expires_in: 15.minutes, &)
   end
 
   def menu_id
@@ -229,7 +229,7 @@ class RestaurantInsightsService
       begin
         cs = Time.zone.parse(@params[:start].to_s).beginning_of_day
         ce = Time.zone.parse(@params[:end].to_s).end_of_day
-      rescue
+      rescue StandardError
         cs = 27.days.ago.beginning_of_day
         ce = now.end_of_day
       end
@@ -253,7 +253,7 @@ class RestaurantInsightsService
       .where(ordr_id: orders.select(:id))
       .where.not(submitted_at: nil)
       .where(status: [OrdrStationTicket.statuses[:ready], OrdrStationTicket.statuses[:collected]])
-      .select("PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY EXTRACT(EPOCH FROM (ordr_station_tickets.updated_at - COALESCE(ordr_station_tickets.submitted_at, ordrs.\"orderedAt\", ordrs.created_at)))) AS median_seconds")
+      .select('PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY EXTRACT(EPOCH FROM (ordr_station_tickets.updated_at - COALESCE(ordr_station_tickets.submitted_at, ordrs."orderedAt", ordrs.created_at)))) AS median_seconds')
       .take
 
     row&.median_seconds.to_f

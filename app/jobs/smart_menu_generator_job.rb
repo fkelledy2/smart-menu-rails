@@ -22,30 +22,26 @@ class SmartMenuGeneratorJob
       end
 
       Tablesetting.where(restaurant_id: restaurant.id).order(:name).each do |tablesetting|
-        begin
-          Smartmenu.create!(
-            restaurant: restaurant,
-            menu: menu,
-            tablesetting: tablesetting,
-            slug: SecureRandom.uuid,
-          )
-        rescue ActiveRecord::RecordNotUnique
-          nil
-        end
-      end
-    end
-
-    Tablesetting.where(restaurant_id: restaurant.id).order(:name).each do |tablesetting|
-      begin
         Smartmenu.create!(
           restaurant: restaurant,
-          menu: nil,
+          menu: menu,
           tablesetting: tablesetting,
           slug: SecureRandom.uuid,
         )
       rescue ActiveRecord::RecordNotUnique
         nil
       end
+    end
+
+    Tablesetting.where(restaurant_id: restaurant.id).order(:name).each do |tablesetting|
+      Smartmenu.create!(
+        restaurant: restaurant,
+        menu: nil,
+        tablesetting: tablesetting,
+        slug: SecureRandom.uuid,
+      )
+    rescue ActiveRecord::RecordNotUnique
+      nil
     end
     #       end
   end

@@ -40,8 +40,8 @@ class OrderStateReducer
   end
 
   def self.safe_time(v)
-    v.respond_to?(:to_time) ? v.to_time : Time.at(0)
+    v.respond_to?(:to_time) ? v.to_time : Time.zone.at(0)
   rescue StandardError
-    Time.at(0)
+    Time.zone.at(0)
   end
 end

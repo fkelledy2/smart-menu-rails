@@ -27,9 +27,9 @@ class RestaurantAnalyticsController < ApplicationController
 
     # Daily buckets (works across typical ranges). Use DATE(created_at) for PG/MySQL.
     rows = scope
-      .group("DATE(created_at)")
-      .select("DATE(created_at) AS day, COALESCE(SUM(nett),0) AS net, COALESCE(SUM(tax),0) AS tax, COALESCE(SUM(service),0) AS service, COALESCE(SUM(tip),0) AS tip, COALESCE(SUM(gross),0) AS gross, COUNT(*) AS orders")
-      .order("day ASC")
+      .group('DATE(created_at)')
+      .select('DATE(created_at) AS day, COALESCE(SUM(nett),0) AS net, COALESCE(SUM(tax),0) AS tax, COALESCE(SUM(service),0) AS service, COALESCE(SUM(tip),0) AS tip, COALESCE(SUM(gross),0) AS gross, COUNT(*) AS orders')
+      .order(:day)
 
     series = rows.map do |r|
       { t: r.day.to_date.iso8601, gross: r.gross.to_f, net: r.net.to_f, orders: r.orders.to_i }
@@ -46,7 +46,7 @@ class RestaurantAnalyticsController < ApplicationController
       .joins(:menu)
       .group('menus.id', 'menus.name')
       .select('menus.id AS menu_id, menus.name AS menu_name, COALESCE(SUM(ordrs.gross),0) AS revenue, COUNT(*) AS orders')
-      .order('revenue DESC')
+      .order(revenue: :desc)
     data = rows.map { |r| { menu_id: r.menu_id, menu_name: r.menu_name, revenue: r.revenue.to_f, orders: r.orders.to_i } }
     render json: { period: period_payload.merge(range), data: data }
   end
@@ -62,7 +62,7 @@ class RestaurantAnalyticsController < ApplicationController
       .where(ordrs: { id: scope.select(:id) })
       .group('ordritems.menuitem_id', 'menuitems.name', 'menus.id', 'menus.name')
       .select('ordritems.menuitem_id AS item_id, COALESCE(menuitems.name, \'Item\') AS item_name, COUNT(*) AS qty, COALESCE(SUM(ordritems.ordritemprice),0) AS revenue, menus.id AS menu_id, menus.name AS menu_name')
-      .order('revenue DESC, qty DESC')
+      .order(revenue: :desc, qty: :desc)
       .limit(12)
     data = rows.map { |r| { item_id: r.item_id, item_name: r.item_name, qty: r.qty.to_i, revenue: r.revenue.to_f, menu_id: r.menu_id, menu_name: r.menu_name } }
     render json: { period: period_payload.merge(range), data: data }
@@ -77,7 +77,7 @@ class RestaurantAnalyticsController < ApplicationController
       .joins('LEFT JOIN users ON users.id = employees.user_id')
       .group('ordrs.employee_id', 'users.email')
       .select("ordrs.employee_id AS employee_id, COALESCE(users.email, ('#' || ordrs.employee_id::text)) AS employee_name, COALESCE(SUM(ordrs.gross),0) AS revenue, COUNT(*) AS orders")
-      .order('revenue DESC, orders DESC')
+      .order(revenue: :desc, orders: :desc)
     data = rows.map { |r| { employee_id: r.employee_id, employee_name: r.employee_name, revenue: r.revenue.to_f, orders: r.orders.to_i } }
     render json: { period: period_payload.merge(range), data: data }
   end
@@ -90,7 +90,7 @@ class RestaurantAnalyticsController < ApplicationController
       .joins(:tablesetting)
       .group('tablesettings.id', 'tablesettings.name')
       .select('tablesettings.id AS table_id, tablesettings.name AS table_name, COALESCE(SUM(ordrs.gross),0) AS revenue, COUNT(*) AS orders')
-      .order('revenue DESC, orders DESC')
+      .order(revenue: :desc, orders: :desc)
     data = rows.map { |r| { table_id: r.table_id, table_name: r.table_name, revenue: r.revenue.to_f, orders: r.orders.to_i } }
     render json: { period: period_payload.merge(range), data: data }
   end
@@ -105,12 +105,12 @@ class RestaurantAnalyticsController < ApplicationController
     dir  = params[:dir].to_s.upcase == 'ASC' ? 'ASC' : 'DESC'
     allowed_order_cols = {
       'created_at' => 'ordrs.created_at',
-      'status'     => 'ordrs.status',
-      'gross'      => 'ordrs.gross',
-      'nett'       => 'ordrs.nett',
-      'tax'        => 'ordrs.tax',
-      'service'    => 'ordrs.service',
-      'tip'        => 'ordrs.tip',
+      'status' => 'ordrs.status',
+      'gross' => 'ordrs.gross',
+      'nett' => 'ordrs.nett',
+      'tax' => 'ordrs.tax',
+      'service' => 'ordrs.service',
+      'tip' => 'ordrs.tip',
     }
     order_sql = allowed_order_cols[sort] || 'ordrs.created_at'
 
@@ -144,7 +144,7 @@ class RestaurantAnalyticsController < ApplicationController
         gross: r.gross.to_f,
         menu: r.menu_name,
         table: r.table_name,
-        employee: r.employee_email
+        employee: r.employee_email,
       }
     end
 
@@ -153,7 +153,7 @@ class RestaurantAnalyticsController < ApplicationController
         render json: {
           period: period_payload.merge(range),
           rows: rows,
-          pagination: { page: page, per: per, total_pages: total_pages, total_count: total_count }
+          pagination: { page: page, per: per, total_pages: total_pages, total_count: total_count },
         }
       end
       format.csv do
@@ -163,7 +163,7 @@ class RestaurantAnalyticsController < ApplicationController
             c << [row[:id], row[:created_at], row[:status], row[:menu], row[:table], row[:employee], row[:net], row[:tax], row[:service], row[:tip], row[:gross]]
           end
         end
-        send_data csv, filename: "orders_#{Date.today}.csv"
+        send_data csv, filename: "orders_#{Time.zone.today}.csv"
       end
     end
   end
@@ -178,8 +178,8 @@ class RestaurantAnalyticsController < ApplicationController
     dir  = params[:dir].to_s.upcase == 'ASC' ? 'ASC' : 'DESC'
     allowed_item_cols = {
       'created_at' => 'ordritems.created_at',
-      'revenue'    => 'ordritems.ordritemprice',
-      'ordr_id'    => 'ordritems.ordr_id',
+      'revenue' => 'ordritems.ordritemprice',
+      'ordr_id' => 'ordritems.ordr_id',
     }
     order_sql = allowed_item_cols[sort] || 'ordritems.created_at'
 
@@ -212,7 +212,7 @@ class RestaurantAnalyticsController < ApplicationController
         render json: {
           period: period_payload.merge(range),
           rows: rows,
-          pagination: { page: page, per: per, total_pages: total_pages, total_count: total_count }
+          pagination: { page: page, per: per, total_pages: total_pages, total_count: total_count },
         }
       end
       format.csv do
@@ -222,7 +222,7 @@ class RestaurantAnalyticsController < ApplicationController
             c << [row[:id], row[:ordr_id], row[:created_at], row[:item], row[:revenue]]
           end
         end
-        send_data csv, filename: "items_#{Date.today}.csv"
+        send_data csv, filename: "items_#{Time.zone.today}.csv"
       end
     end
   end
@@ -239,7 +239,7 @@ class RestaurantAnalyticsController < ApplicationController
       range: params[:range].presence || 'last28',
       start: params[:start],
       end: params[:end],
-      compare: ActiveModel::Type::Boolean.new.cast(params[:compare])
+      compare: ActiveModel::Type::Boolean.new.cast(params[:compare]),
     }
   end
 
@@ -261,13 +261,13 @@ class RestaurantAnalyticsController < ApplicationController
       cs = now.beginning_of_month
       ce = now.end_of_day
     when 'last_month'
-      cs = (now.last_month.beginning_of_month)
-      ce = (now.last_month.end_of_month)
+      cs = now.last_month.beginning_of_month
+      ce = now.last_month.end_of_month
     when 'custom'
       begin
         cs = Time.zone.parse(params[:start].to_s).beginning_of_day
         ce = Time.zone.parse(params[:end].to_s).end_of_day
-      rescue
+      rescue StandardError
         cs = 27.days.ago.beginning_of_day
         ce = now.end_of_day
       end
@@ -325,12 +325,17 @@ class RestaurantAnalyticsController < ApplicationController
       Arel.sql('COALESCE(SUM(service),0)'),
       Arel.sql('COALESCE(SUM(tip),0)'),
       Arel.sql('COALESCE(SUM(gross),0)'),
-      Arel.sql('COUNT(*)')
+      Arel.sql('COUNT(*)'),
     )
 
-    net ||= 0.0; tax ||= 0.0; service ||= 0.0; tip ||= 0.0; gross ||= 0.0; orders ||= 0
+    net ||= 0.0
+    tax ||= 0.0
+    service ||= 0.0
+    tip ||= 0.0
+    gross ||= 0.0
+    orders ||= 0
     items_count = Ordritem.where(ordr_id: scope.select(:id)).count
-    aov = (orders.to_i > 0) ? (gross.to_f / orders.to_i) : 0.0
+    aov = orders.to_i.positive? ? (gross.to_f / orders.to_i) : 0.0
     {
       gross: gross.to_f,
       net: net.to_f,

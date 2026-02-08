@@ -14,7 +14,7 @@ class RestaurantMenusController < ApplicationController
   def reorder
     order = params[:order]
     unless order.is_a?(Array)
-      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_entity
+      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_content
     end
 
     scope = policy_scope(RestaurantMenu).where(restaurant_id: @restaurant.id)
@@ -22,12 +22,12 @@ class RestaurantMenusController < ApplicationController
     RestaurantMenu.transaction do
       order.each do |item|
         item_hash = if item.is_a?(ActionController::Parameters)
-          item.to_unsafe_h
-        elsif item.is_a?(Hash)
-          item
-        else
-          next
-        end
+                      item.to_unsafe_h
+                    elsif item.is_a?(Hash)
+                      item
+                    else
+                      next
+                    end
 
         id = item_hash[:id] || item_hash['id']
         seq = item_hash[:sequence] || item_hash['sequence']
@@ -44,14 +44,14 @@ class RestaurantMenusController < ApplicationController
     render json: { status: 'error', message: 'Menu attachment not found' }, status: :not_found
   rescue StandardError => e
     Rails.logger.error("RestaurantMenus reorder error: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
-    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+    render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 
   # PATCH /restaurants/:restaurant_id/restaurant_menus/bulk_update
   def bulk_update
     scope = policy_scope(RestaurantMenu).where(restaurant_id: @restaurant.id)
 
-    ids = Array(params[:restaurant_menu_ids]).map(&:to_s).reject(&:blank?)
+    ids = Array(params[:restaurant_menu_ids]).map(&:to_s).compact_blank
     operation = params[:operation].to_s
     value = params[:value]
 
@@ -61,7 +61,7 @@ class RestaurantMenusController < ApplicationController
           render turbo_stream: turbo_stream.replace(
             'restaurant_content',
             partial: 'restaurants/sections/menus_2025',
-            locals: { restaurant: @restaurant, filter: 'all' }
+            locals: { restaurant: @restaurant, filter: 'all' },
           )
         end
         format.html { redirect_to edit_restaurant_path(@restaurant, section: 'menus') }
@@ -95,9 +95,10 @@ class RestaurantMenusController < ApplicationController
         rm.update!(attrs)
       end
     when 'restore'
-      if !current_user_has_active_subscription?
+      unless current_user_has_active_subscription?
         return redirect_to edit_restaurant_path(@restaurant, section: 'menus'), alert: 'You need an active subscription to activate a menu.'
       end
+
       scope.where(id: ids).find_each do |rm|
         authorize rm, :update?
         attrs = { status: :active }
@@ -107,7 +108,7 @@ class RestaurantMenusController < ApplicationController
         rm.update!(attrs)
       end
     when 'share'
-      raw_target_ids = Array(params[:target_restaurant_ids]).map(&:to_s).map(&:strip).reject(&:blank?)
+      raw_target_ids = Array(params[:target_restaurant_ids]).map(&:to_s).map(&:strip).compact_blank
       other_restaurant_ids = Restaurant.on_primary do
         Restaurant.where(user_id: current_user.id, archived: false).where.not(id: @restaurant.id).pluck(:id)
       end
@@ -155,7 +156,7 @@ class RestaurantMenusController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           'restaurant_content',
           partial: 'restaurants/sections/menus_2025',
-          locals: { restaurant: @restaurant, filter: 'all' }
+          locals: { restaurant: @restaurant, filter: 'all' },
         )
       end
       format.html { redirect_to edit_restaurant_path(@restaurant, section: 'menus') }
@@ -166,7 +167,7 @@ class RestaurantMenusController < ApplicationController
   def bulk_availability
     scope = policy_scope(RestaurantMenu).where(restaurant_id: @restaurant.id)
 
-    ids = Array(params[:restaurant_menu_ids]).map(&:to_s).reject(&:blank?)
+    ids = Array(params[:restaurant_menu_ids]).map(&:to_s).compact_blank
     enabled = ActiveModel::Type::Boolean.new.cast(params[:availability_override_enabled])
     state = params[:availability_state].to_s
 
@@ -176,7 +177,7 @@ class RestaurantMenusController < ApplicationController
           render turbo_stream: turbo_stream.replace(
             'restaurant_content',
             partial: 'restaurants/sections/menus_2025',
-            locals: { restaurant: @restaurant, filter: 'all' }
+            locals: { restaurant: @restaurant, filter: 'all' },
           )
         end
         format.html { redirect_to edit_restaurant_path(@restaurant, section: 'menus') }
@@ -193,7 +194,7 @@ class RestaurantMenusController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           'restaurant_content',
           partial: 'restaurants/sections/menus_2025',
-          locals: { restaurant: @restaurant, filter: 'all' }
+          locals: { restaurant: @restaurant, filter: 'all' },
         )
       end
       format.html { redirect_to edit_restaurant_path(@restaurant, section: 'menus') }
@@ -215,7 +216,7 @@ class RestaurantMenusController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           'restaurant_content',
           partial: 'restaurants/sections/menus_2025',
-          locals: { restaurant: @restaurant, filter: 'all' }
+          locals: { restaurant: @restaurant, filter: 'all' },
         )
       end
       format.html { redirect_to edit_restaurant_path(@restaurant, section: 'menus') }

@@ -32,7 +32,7 @@ class MenuitemsController < ApplicationController
         menu_id: menusection.menu.id,
         restaurant_id: menusection.menu.restaurant.id,
         items_count: @menuitems.count,
-      },)
+      })
     elsif params[:menu_id]
       @menu = Menu.find(params[:menu_id])
       authorize @menu, :show? # Authorize access to the menu
@@ -57,7 +57,7 @@ class MenuitemsController < ApplicationController
           restaurant_id: @menu.restaurant.id,
           items_count: @menuitems.count,
           viewing_context: 'menu_management',
-        },)
+        })
       end
 
     else
@@ -185,7 +185,7 @@ class MenuitemsController < ApplicationController
     end
 
     redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'items'),
-                notice: "Updated #{updated} item#{updated == 1 ? '' : 's'}"
+                notice: "Updated #{updated} item#{'s' unless updated == 1}"
   rescue ActiveRecord::RecordNotFound
     redirect_to edit_restaurant_path(params[:restaurant_id], section: 'menus'), alert: 'Menu not found'
   rescue ActiveRecord::RecordInvalid => e
@@ -263,7 +263,7 @@ class MenuitemsController < ApplicationController
       restaurant_id: @menuitem.menusection.menu.restaurant.id,
       price: @menuitem.price,
       has_image: @menuitem.image.present?,
-    },)
+    })
   end
 
   # GET /menuitems/1/analytics
@@ -283,7 +283,7 @@ class MenuitemsController < ApplicationController
       period_days: days,
       total_orders: @analytics_data[:performance][:total_orders],
       total_revenue: @analytics_data[:performance][:total_revenue],
-    },)
+    })
 
     respond_to do |format|
       format.html
@@ -321,7 +321,7 @@ class MenuitemsController < ApplicationController
   # GET /menuitems/1/edit
   def edit
     authorize @menuitem
-    
+
     # Use 2025 UI
     render 'edit_2025'
   end
@@ -348,7 +348,7 @@ class MenuitemsController < ApplicationController
               redirect_to edit_restaurant_menu_path(context_menu.restaurant, context_menu, section: 'items'),
                           alert: @menuitem.errors.full_messages.to_sentence
             end
-            format.json { render json: { errors: @menuitem.errors.full_messages }, status: :unprocessable_entity }
+            format.json { render json: { errors: @menuitem.errors.full_messages }, status: :unprocessable_content }
           end
           return
         end
@@ -380,8 +380,8 @@ class MenuitemsController < ApplicationController
                         location: restaurant_menu_menusection_menuitem_url(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, @menuitem.menusection, @menuitem)
         end
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @menuitem.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @menuitem.errors, status: :unprocessable_content }
       end
     end
   end
@@ -424,8 +424,8 @@ class MenuitemsController < ApplicationController
                         location: restaurant_menu_menusection_menuitem_url(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, @menuitem.menusection, @menuitem)
         end
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @menuitem.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @menuitem.errors, status: :unprocessable_content }
       end
     end
   end
@@ -458,19 +458,19 @@ class MenuitemsController < ApplicationController
     @menusection = Menusection.find(params[:menusection_id])
     @menu = @menusection.menu
     @restaurant = @menu.restaurant
-    
+
     # Authorize that user owns this restaurant
     authorize @menu, :update?
-    
+
     # Update sequence for each item within this section
     params[:order].each do |item|
       menuitem = @menusection.menuitems.find(item[:id])
       menuitem.update_column(:sequence, item[:sequence])
     end
-    
+
     render json: { status: 'success' }, status: :ok
-  rescue => e
-    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+  rescue StandardError => e
+    render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 
   private
@@ -479,14 +479,14 @@ class MenuitemsController < ApplicationController
     return if params[:restaurant_id].blank?
 
     menu = if defined?(@menuitem) && @menuitem&.menusection&.menu
-      @menuitem.menusection.menu
-    elsif params[:menusection_id]
-      Menusection.find_by(id: params[:menusection_id])&.menu
-    elsif params.dig(:menuitem, :menusection_id)
-      Menusection.find_by(id: params.dig(:menuitem, :menusection_id))&.menu
-    elsif params[:menu_id]
-      Menu.find_by(id: params[:menu_id])
-    end
+             @menuitem.menusection.menu
+           elsif params[:menusection_id]
+             Menusection.find_by(id: params[:menusection_id])&.menu
+           elsif params.dig(:menuitem, :menusection_id)
+             Menusection.find_by(id: params.dig(:menuitem, :menusection_id))&.menu
+           elsif params[:menu_id]
+             Menu.find_by(id: params[:menu_id])
+           end
 
     return unless menu
 

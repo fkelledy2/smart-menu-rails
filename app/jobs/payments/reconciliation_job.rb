@@ -3,7 +3,7 @@ class Payments::ReconciliationJob < ApplicationJob
 
   def perform(provider: nil, since: 24.hours.ago)
     Rails.logger.info(
-      "[Payments::ReconciliationJob] noop v1 provider=#{provider.inspect} since=#{since}"
+      "[Payments::ReconciliationJob] noop v1 provider=#{provider.inspect} since=#{since}",
     )
   end
 end

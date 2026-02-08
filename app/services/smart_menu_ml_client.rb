@@ -18,7 +18,7 @@ class SmartMenuMlClient
       "#{@base_url}/embed",
       headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' },
       body: { texts: texts, locale: locale }.to_json,
-      timeout: (ENV['SMART_MENU_ML_TIMEOUT_SECONDS'].presence || 0.25).to_f
+      timeout: (ENV['SMART_MENU_ML_TIMEOUT_SECONDS'].presence || 0.25).to_f,
     )
 
     log_response('embed', r)
@@ -39,7 +39,7 @@ class SmartMenuMlClient
       "#{@base_url}/rerank",
       headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' },
       body: { query: query, candidates: candidates, locale: locale }.to_json,
-      timeout: (ENV['SMART_MENU_ML_TIMEOUT_SECONDS'].presence || 0.25).to_f
+      timeout: (ENV['SMART_MENU_ML_TIMEOUT_SECONDS'].presence || 0.25).to_f,
     )
 
     log_response('rerank', r)
@@ -71,8 +71,9 @@ class SmartMenuMlClient
   end
 
   def ml_logging_enabled?
-    v = ENV['SMART_MENU_ML_LOG_RESPONSES']
+    v = ENV.fetch('SMART_MENU_ML_LOG_RESPONSES', nil)
     return false if v.nil? || v.to_s.strip == ''
+
     v.to_s.strip.downcase == 'true'
   end
 
@@ -94,7 +95,7 @@ class SmartMenuMlClient
         return "{vectors_count=#{vectors.length}, dims=#{dims}}"
       end
       if payload.key?('ranked') && payload['ranked'].is_a?(Array)
-        ids = payload['ranked'].first(3).map { |x| x.is_a?(Hash) ? (x['id'] || x[:id]) : nil }.compact
+        ids = payload['ranked'].first(3).filter_map { |x| x.is_a?(Hash) ? (x['id'] || x[:id]) : nil }
         return "{ranked_count=#{payload['ranked'].length}, top_ids=#{ids}}"
       end
       return truncate_str(payload.to_json, max)
@@ -113,6 +114,7 @@ class SmartMenuMlClient
     str = s.to_s
     return str if max <= 0
     return str if str.length <= max
+
     "#{str[0, max]}…"
   end
 end

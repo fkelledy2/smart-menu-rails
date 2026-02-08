@@ -65,7 +65,7 @@ class DeeplClient < ExternalApiClient
   def usage
     response = post('/usage', {
       body: { auth_key: config[:api_key] },
-    },)
+    })
 
     response.parsed_response
   end
@@ -79,7 +79,7 @@ class DeeplClient < ExternalApiClient
         auth_key: config[:api_key],
         type: type,
       },
-    },)
+    })
 
     response.parsed_response
   end

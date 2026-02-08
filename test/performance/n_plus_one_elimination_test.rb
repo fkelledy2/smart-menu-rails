@@ -193,7 +193,7 @@ class NPlusOneEliminationTest < ActiveSupport::TestCase
       Menu.where(restaurant: @restaurant)
         .for_management_display
         .each do |menu|
-        menu.menuavailabilities.each(&:dayofweek)
+          menu.menuavailabilities.each(&:dayofweek)
       end
     end
 

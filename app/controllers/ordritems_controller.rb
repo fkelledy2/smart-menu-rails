@@ -1,50 +1,48 @@
-  def broadcast_state(ordr, tablesetting, ordrparticipant)
-    begin
-      menu = ordr.menu
-      restaurant = menu.restaurant
-      menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
+def broadcast_state(ordr, tablesetting, ordrparticipant)
+  menu = ordr.menu
+  restaurant = menu.restaurant
+  menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
 
-      Rails.logger.info("[BroadcastState][Ordritems] Building payload for order=#{ordr.id} table=#{tablesetting&.id} session=#{session.id}")
+  Rails.logger.info("[BroadcastState][Ordritems] Building payload for order=#{ordr.id} table=#{tablesetting&.id} session=#{session.id}")
 
-      payload = SmartmenuState.for_context(
-        menu: menu,
-        restaurant: restaurant,
-        tablesetting: tablesetting,
-        open_order: ordr,
-        ordrparticipant: ordrparticipant,
-        menuparticipant: menuparticipant,
-        session_id: session.id.to_s
-      )
+  payload = SmartmenuState.for_context(
+    menu: menu,
+    restaurant: restaurant,
+    tablesetting: tablesetting,
+    open_order: ordr,
+    ordrparticipant: ordrparticipant,
+    menuparticipant: menuparticipant,
+    session_id: session.id.to_s,
+  )
 
-      begin
-        keys = payload.is_a?(Hash) ? payload.keys : payload.class
-        Rails.logger.info("[BroadcastState][Ordritems] Payload summary keys=#{keys} orderId=#{payload.dig(:order, :id)} totals?=#{!!payload[:totals]}")
-      rescue StandardError => ie
-        Rails.logger.info("[BroadcastState][Ordritems] Payload summary failed: #{ie.class}: #{ie.message}")
-      end
-
-      channel_order = "ordr_#{ordr.id}_channel"
-      Rails.logger.info("[BroadcastState][Ordritems] Broadcasting to #{channel_order}")
-      ActionCable.server.broadcast(channel_order, { state: payload })
-
-      if menuparticipant&.smartmenu&.slug
-        channel_slug = "ordr_#{menuparticipant.smartmenu.slug}_channel"
-        Rails.logger.info("[BroadcastState][Ordritems] Broadcasting to #{channel_slug}")
-        ActionCable.server.broadcast(channel_slug, { state: payload })
-      end
-    rescue => e
-      Rails.logger.warn("[SmartmenuState] Broadcast failed: #{e.class}: #{e.message}")
-      begin
-        Rails.logger.warn("[SmartmenuState] Backtrace:\n#{e.backtrace.join("\n")}")
-      rescue StandardError
-        # ignore
-      end
-    end
+  begin
+    keys = payload.is_a?(Hash) ? payload.keys : payload.class
+    Rails.logger.info("[BroadcastState][Ordritems] Payload summary keys=#{keys} orderId=#{payload.dig(:order, :id)} totals?=#{!payload[:totals].nil?}")
+  rescue StandardError => e
+    Rails.logger.info("[BroadcastState][Ordritems] Payload summary failed: #{e.class}: #{e.message}")
   end
+
+  channel_order = "ordr_#{ordr.id}_channel"
+  Rails.logger.info("[BroadcastState][Ordritems] Broadcasting to #{channel_order}")
+  ActionCable.server.broadcast(channel_order, { state: payload })
+
+  if menuparticipant&.smartmenu&.slug
+    channel_slug = "ordr_#{menuparticipant.smartmenu.slug}_channel"
+    Rails.logger.info("[BroadcastState][Ordritems] Broadcasting to #{channel_slug}")
+    ActionCable.server.broadcast(channel_slug, { state: payload })
+  end
+rescue StandardError => e
+  Rails.logger.warn("[SmartmenuState] Broadcast failed: #{e.class}: #{e.message}")
+  begin
+    Rails.logger.warn("[SmartmenuState] Backtrace:\n#{e.backtrace.join("\n")}")
+  rescue StandardError
+    # ignore
+  end
+end
 
 class OrdritemsController < ApplicationController
   before_action :authenticate_user!, except: %i[create update destroy] # Allow customers to manage order items
-  skip_before_action :verify_authenticity_token, only: %i[create update destroy], if: -> { request.format.json? }
+  skip_before_action :verify_authenticity_token, only: %i[create update destroy]
   before_action :set_restaurant
   before_action :set_ordritem, only: %i[show edit update destroy]
   before_action :set_currency
@@ -86,10 +84,9 @@ class OrdritemsController < ApplicationController
     rescue ActiveRecord::RecordNotFound, NoMethodError
       respond_to do |format|
         format.html do
-          redirect_back fallback_location: root_path,
-                        alert: I18n.t('ordritems.errors.order_missing', default: 'Cannot add item: order does not exist')
+          redirect_back_or_to(root_path, alert: I18n.t('ordritems.errors.order_missing', default: 'Cannot add item: order does not exist'))
         end
-        format.json { render json: { error: 'order_not_found' }, status: :unprocessable_entity }
+        format.json { render json: { error: 'order_not_found' }, status: :unprocessable_content }
       end
       return
     end
@@ -101,7 +98,11 @@ class OrdritemsController < ApplicationController
       ActiveRecord::Base.transaction do
         begin
           line_key = SecureRandom.uuid
-          source = request.headers['X-Order-Source'].to_s == 'voice' ? 'voice' : ((current_user && @current_employee.present?) ? 'staff' : 'guest')
+          source = if request.headers['X-Order-Source'].to_s == 'voice'
+                     'voice'
+                   else
+                     (current_user && @current_employee.present? ? 'staff' : 'guest')
+                   end
           OrderEvent.emit!(
             ordr: @ordr,
             event_type: 'item_added',
@@ -119,8 +120,7 @@ class OrdritemsController < ApplicationController
         rescue StandardError => e
           Rails.logger.error "Error creating order item (event-first): #{e.message}"
           format.html do
-            redirect_back fallback_location: root_path,
-                          alert: I18n.t('ordritems.errors.create_failed', default: 'Cannot add item right now')
+            redirect_back_or_to(root_path, alert: I18n.t('ordritems.errors.create_failed', default: 'Cannot add item right now'))
           end
           format.json { render json: { error: e.message }, status: :internal_server_error }
           raise ActiveRecord::Rollback
@@ -181,7 +181,11 @@ class OrdritemsController < ApplicationController
         if ordritem_params[:status].to_i == Ordritem.statuses['removed']
           begin
             order = @ordritem.ordr
-            source = request.headers['X-Order-Source'].to_s == 'voice' ? 'voice' : ((current_user && @current_employee.present?) ? 'staff' : 'guest')
+            source = if request.headers['X-Order-Source'].to_s == 'voice'
+                       'voice'
+                     else
+                       (current_user && @current_employee.present? ? 'staff' : 'guest')
+                     end
             removed_line_key = @ordritem.line_key
             removed_ordritem_id = @ordritem.id
             menuitem = @ordritem.menuitem
@@ -227,8 +231,8 @@ class OrdritemsController < ApplicationController
                           location: restaurant_ordritem_url(@restaurant || @ordritem.ordr.restaurant, @ordritem)
           end
         else
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @ordritem.errors, status: :unprocessable_entity }
+          format.html { render :edit, status: :unprocessable_content }
+          format.json { render json: @ordritem.errors, status: :unprocessable_content }
         end
       end
     end
@@ -242,7 +246,11 @@ class OrdritemsController < ApplicationController
     begin
       ActiveRecord::Base.transaction do
         order = @ordritem.ordr
-        source = request.headers['X-Order-Source'].to_s == 'voice' ? 'voice' : ((current_user && @current_employee.present?) ? 'staff' : 'guest')
+        source = if request.headers['X-Order-Source'].to_s == 'voice'
+                   'voice'
+                 else
+                   (current_user && @current_employee.present? ? 'staff' : 'guest')
+                 end
         removed_line_key = @ordritem.line_key
         removed_ordritem_id = @ordritem.id
         menuitem = @ordritem.menuitem
@@ -284,8 +292,7 @@ class OrdritemsController < ApplicationController
       Rails.logger.error "Error removing order item: #{e.message}"
       respond_to do |format|
         format.html do
-          redirect_back fallback_location: root_path,
-                        alert: I18n.t('ordritems.errors.remove_failed', default: 'Cannot remove item right now')
+          redirect_back_or_to(root_path, alert: I18n.t('ordritems.errors.remove_failed', default: 'Cannot remove item right now'))
         end
         format.json { render json: { error: e.message }, status: :internal_server_error }
       end

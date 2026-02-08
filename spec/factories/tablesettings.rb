@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :tablesetting do
-    association :restaurant
+    restaurant
     sequence(:name) { |n| "Table #{n}" }
     description { 'Test table' }
     status { 'free' }

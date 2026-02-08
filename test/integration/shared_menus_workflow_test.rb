@@ -121,7 +121,7 @@ class SharedMenusWorkflowTest < ActionDispatch::IntegrationTest
     post attach_restaurant_menu_path(@restaurant_b, @menu)
     assert_redirected_to edit_restaurant_path(@restaurant_b, section: 'menus')
 
-    assert_difference("RestaurantMenu.where(restaurant_id: @restaurant_b.id, menu_id: @menu.id).count", -1) do
+    assert_difference('RestaurantMenu.where(restaurant_id: @restaurant_b.id, menu_id: @menu.id).count', -1) do
       delete detach_restaurant_menu_path(@restaurant_b, @menu)
     end
     assert_redirected_to edit_restaurant_path(@restaurant_b, section: 'menus')

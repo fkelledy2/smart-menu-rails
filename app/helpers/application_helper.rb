@@ -1,6 +1,6 @@
 module ApplicationHelper
   include Testable
-  
+
   # Enhanced restaurant context helper for JavaScript
   def restaurant_context_data(restaurant = nil)
     # Try to determine restaurant from various sources
@@ -107,8 +107,8 @@ module ApplicationHelper
   end
 
   def build_number
-    release = ENV['HEROKU_RELEASE_VERSION'] || ENV['HEROKU_RELEASE_NUMBER']
-    return nil if release.nil? || release.empty?
+    release = ENV['HEROKU_RELEASE_VERSION'] || ENV.fetch('HEROKU_RELEASE_NUMBER', nil)
+    return nil if release.blank?
 
     date_str = if ENV['HEROKU_RELEASE_CREATED_AT']
                  Time.parse(ENV['HEROKU_RELEASE_CREATED_AT']).utc.to_date.strftime('%Y%m%d')

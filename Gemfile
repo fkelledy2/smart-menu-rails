@@ -107,7 +107,6 @@ gem 'http_accept_language'
 gem 'httparty'
 gem 'identity_cache'
 gem 'image_processing', '~> 1.12', '>= 1.12.1'
-gem 'pgvector', '= 0.3.2'
 gem 'jquery-rails'
 gem 'jsbundling-rails'
 gem 'madmin'
@@ -116,16 +115,17 @@ gem 'name_of_person', '~> 1.1'
 gem 'nokogiri'
 gem 'noticed', '~> 2.0'
 gem 'omniauth'
+gem 'omniauth-apple', '~> 1.2'
 gem 'omniauth-facebook', '~> 8.0'
 gem 'omniauth-github', '~> 2.0'
-gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-google-oauth2', '~> 1.1'
-gem 'omniauth-apple', '~> 1.2'
+gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-spotify'
 gem 'omniauth-twitter', '~> 1.4'
 gem 'openai', '~> 0.25.0'
 gem 'pay', '~> 8.0'
 gem 'pdf-reader'
+gem 'pgvector', '= 0.3.2'
 gem 'pretender', '~> 0.3.4'
 gem 'pundit', '~> 2.1'
 gem 'rack-cors'
@@ -160,13 +160,13 @@ group :development, :test do
   # CI/CD and Code Quality Tools
   gem 'brakeman', '~> 6.0', require: false
   gem 'bundler-audit', '~> 0.9', require: false
-  gem 'rubocop', '~> 1.57', require: false
+  gem 'rubocop', '~> 1.84', require: false
   gem 'rubocop-capybara', require: false
   gem 'rubocop-factory_bot', require: false
-  gem 'rubocop-performance', '~> 1.19', require: false
-  gem 'rubocop-rails', '~> 2.22', require: false
-  gem 'rubocop-rspec', '~> 2.25', require: false
-  gem 'rubocop-rspec_rails', require: false
+  gem 'rubocop-performance', '~> 1.26', require: false
+  gem 'rubocop-rails', '~> 2.34', require: false
+  gem 'rubocop-rspec', '~> 3.0', require: false
+  gem 'rubocop-rspec_rails', '~> 2.31', require: false
 end
 
-gem "erb_lint", "~> 0.9.0", groups: [:development, :test]
+gem 'erb_lint', '~> 0.9.0', groups: %i[development test]

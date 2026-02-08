@@ -91,13 +91,13 @@ module CachePerformanceMonitoring
       # Aggregate by controller/action
       summary = metrics.group_by { |m| "#{m[:controller]}##{m[:action]}" }
         .transform_values do |controller_metrics|
-        {
-          count: controller_metrics.count,
-          avg_time: controller_metrics.sum { |m| m[:execution_time] } / controller_metrics.count,
-          max_time: controller_metrics.map { |m| m[:execution_time] }.max,
-          avg_cache_hits: controller_metrics.sum { |m| m[:cache_hits] } / controller_metrics.count,
-          total_cache_hits: controller_metrics.sum { |m| m[:cache_hits] },
-        }
+          {
+            count: controller_metrics.count,
+            avg_time: controller_metrics.sum { |m| m[:execution_time] } / controller_metrics.count,
+            max_time: controller_metrics.map { |m| m[:execution_time] }.max,
+            avg_cache_hits: controller_metrics.sum { |m| m[:cache_hits] } / controller_metrics.count,
+            total_cache_hits: controller_metrics.sum { |m| m[:cache_hits] },
+          }
       end
 
       summary.sort_by { |_, stats| -stats[:avg_time] }

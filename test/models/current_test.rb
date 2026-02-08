@@ -74,9 +74,9 @@ class CurrentTest < ActiveSupport::TestCase
     Current.user = @user
     Current.request_id = 'test-id'
     Current.user_agent = 'Mozilla'
-    
+
     Current.clear_all
-    
+
     assert_nil Current.user
     assert_nil Current.request_id
     assert_nil Current.user_agent
@@ -84,13 +84,13 @@ class CurrentTest < ActiveSupport::TestCase
 
   test 'attributes are thread-safe' do
     Current.user = @user
-    
+
     thread = Thread.new do
       assert_nil Current.user
       Current.user = users(:two)
       assert_equal users(:two), Current.user
     end
-    
+
     thread.join
     assert_equal @user, Current.user
   end
@@ -100,11 +100,11 @@ class CurrentTest < ActiveSupport::TestCase
       request_id: 'req-123',
       user_agent: 'Test Agent',
       remote_ip: '192.168.1.1',
-      session: OpenStruct.new(id: 'session-456')
+      session: OpenStruct.new(id: 'session-456'),
     )
-    
+
     Current.set_request_context(request)
-    
+
     assert_equal 'req-123', Current.request_id
     assert_equal 'Test Agent', Current.user_agent
     assert_equal '192.168.1.1', Current.ip_address
@@ -116,9 +116,9 @@ class CurrentTest < ActiveSupport::TestCase
       request_id: 'req-123',
       user_agent: 'Test Agent',
       remote_ip: '192.168.1.1',
-      session: nil
+      session: nil,
     )
-    
+
     assert_nothing_raised do
       Current.set_request_context(request)
     end

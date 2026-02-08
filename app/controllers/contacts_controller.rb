@@ -15,7 +15,7 @@ class ContactsController < ApplicationController
     AnalyticsService.track_anonymous_event(anonymous_id, 'contact_form_viewed', {
       referrer: request.referer,
       user_type: current_user ? 'authenticated' : 'anonymous',
-    },)
+    })
   end
 
   def create
@@ -25,7 +25,7 @@ class ContactsController < ApplicationController
       begin
         ContactMailer.receipt(@contact).deliver_later
         ContactMailer.notification(@contact).deliver_later
-      rescue => e
+      rescue StandardError => e
         Rails.logger.error("[ContactsController#create] Mail delivery failed: #{e.class}: #{e.message}")
       end
 
@@ -35,7 +35,7 @@ class ContactsController < ApplicationController
         email_domain: @contact.email.split('@').last,
         message_length: @contact.message.length,
         user_type: current_user ? 'authenticated' : 'anonymous',
-      },)
+      })
 
       flash[:notice] = t('contacts.controller.thanks')
       redirect_to root_url
@@ -45,7 +45,7 @@ class ContactsController < ApplicationController
       AnalyticsService.track_anonymous_event(anonymous_id, 'contact_form_failed', {
         errors: @contact.errors.full_messages,
         user_type: current_user ? 'authenticated' : 'anonymous',
-      },)
+      })
 
       render :new
     end

@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :menuitem do
-    association :menusection
+    menusection
     sequence(:name) { |n| "Item #{n}" }
     description { 'Test item' }
     status { 'active' }

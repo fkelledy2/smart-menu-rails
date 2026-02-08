@@ -28,7 +28,7 @@ class EmployeesController < ApplicationController
             restaurant_name: @futureParentRestaurant.name,
             employees_count: @employees.count,
             viewing_context: 'restaurant_management',
-          },)
+          })
         else
           # Use AdvancedCacheService for user's all employees across restaurants
           @all_employees_data = AdvancedCacheService.cached_user_all_employees(current_user.id)
@@ -39,7 +39,7 @@ class EmployeesController < ApplicationController
             user_id: current_user.id,
             restaurants_count: @all_employees_data[:metadata][:restaurants_count],
             total_employees: @employees.count,
-          },)
+          })
         end
       end
 
@@ -83,7 +83,7 @@ class EmployeesController < ApplicationController
       restaurant_id: @employee.restaurant_id,
       employee_role: @employee.role,
       viewing_context: 'employee_management',
-    },)
+    })
   end
 
   # GET /employees/1/analytics
@@ -102,7 +102,7 @@ class EmployeesController < ApplicationController
       employee_name: @employee.name,
       restaurant_id: @employee.restaurant_id,
       period_days: days,
-    },)
+    })
 
     respond_to do |format|
       format.html
@@ -127,7 +127,7 @@ class EmployeesController < ApplicationController
       period_days: days,
       total_employees: @summary_data[:summary][:total_employees],
       active_employees: @summary_data[:summary][:active_employees],
-    },)
+    })
 
     respond_to do |format|
       format.html
@@ -180,15 +180,15 @@ class EmployeesController < ApplicationController
             turbo_stream.replace(
               'restaurant_content',
               partial: 'restaurants/sections/staff_2025',
-              locals: { restaurant: @employee.restaurant, filter: 'all' }
-            )
+              locals: { restaurant: @employee.restaurant, filter: 'all' },
+            ),
           ]
         end
         format.json { render :show, status: :created, location: @employee }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.turbo_stream { render :new, formats: [:html], status: :unprocessable_entity }
-        format.json { render json: @employee.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.turbo_stream { render :new, formats: [:html], status: :unprocessable_content }
+        format.json { render json: @employee.errors, status: :unprocessable_content }
       end
     end
   end
@@ -211,8 +211,8 @@ class EmployeesController < ApplicationController
             turbo_stream.replace(
               'restaurant_content',
               partial: 'restaurants/sections/staff_2025',
-              locals: { restaurant: @employee.restaurant, filter: 'all' }
-            )
+              locals: { restaurant: @employee.restaurant, filter: 'all' },
+            ),
           ]
         end
         format.html do
@@ -221,9 +221,9 @@ class EmployeesController < ApplicationController
         # format.html { redirect_to @return_url, notice: "Employee was successfully updated." }
         format.json { render :show, status: :ok, location: @employee }
       else
-        format.turbo_stream { render :edit, status: :unprocessable_entity }
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @employee.errors, status: :unprocessable_entity }
+        format.turbo_stream { render :edit, status: :unprocessable_content }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @employee.errors, status: :unprocessable_content }
       end
     end
   end
@@ -256,7 +256,7 @@ class EmployeesController < ApplicationController
     restaurant = Restaurant.find(params[:restaurant_id])
     employees = policy_scope(Employee).where(restaurant_id: restaurant.id, archived: false)
 
-    ids = Array(params[:employee_ids]).map(&:to_s).reject(&:blank?)
+    ids = Array(params[:employee_ids]).map(&:to_s).compact_blank
     status = params[:status].to_s
 
     if ids.empty? || status.blank?
@@ -265,7 +265,7 @@ class EmployeesController < ApplicationController
           render turbo_stream: turbo_stream.replace(
             'restaurant_content',
             partial: 'restaurants/sections/staff_2025',
-            locals: { restaurant: restaurant, filter: 'all' }
+            locals: { restaurant: restaurant, filter: 'all' },
           )
         end
         format.html do
@@ -286,7 +286,7 @@ class EmployeesController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           'restaurant_content',
           partial: 'restaurants/sections/staff_2025',
-          locals: { restaurant: restaurant, filter: 'all' }
+          locals: { restaurant: restaurant, filter: 'all' },
         )
       end
       format.html do
@@ -302,18 +302,18 @@ class EmployeesController < ApplicationController
 
     order = params[:order]
     unless order.is_a?(Array)
-      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_entity
+      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_content
     end
 
     Employee.transaction do
       order.each do |item|
         item_hash = if item.is_a?(ActionController::Parameters)
-          item.to_unsafe_h
-        elsif item.is_a?(Hash)
-          item
-        else
-          next
-        end
+                      item.to_unsafe_h
+                    elsif item.is_a?(Hash)
+                      item
+                    else
+                      next
+                    end
 
         id = item_hash[:id] || item_hash['id']
         seq = item_hash[:sequence] || item_hash['sequence']
@@ -330,7 +330,7 @@ class EmployeesController < ApplicationController
     render json: { status: 'error', message: 'Employee not found' }, status: :not_found
   rescue StandardError => e
     Rails.logger.error("Employees reorder error: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
-    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+    render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 
   private

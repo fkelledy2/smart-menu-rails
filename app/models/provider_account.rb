@@ -13,7 +13,6 @@ class ProviderAccount < ApplicationRecord
     disabled: 40,
   }
 
-  validates :restaurant, presence: true
   validates :provider, presence: true
   validates :provider_account_id, presence: true
   validates :status, presence: true

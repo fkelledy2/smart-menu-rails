@@ -72,7 +72,7 @@ class RestaurantArchivalService
     attributes[:archived_reason] = @reason if record.respond_to?(:archived_reason=) && @reason.present?
     attributes[:archived_by_id] = @archived_by_id if record.respond_to?(:archived_by_id=) && @archived_by_id.present?
 
-    if !archived
+    unless archived
       attributes[:archived_reason] = nil if record.respond_to?(:archived_reason=)
       attributes[:archived_by_id] = nil if record.respond_to?(:archived_by_id=)
     end
@@ -200,7 +200,7 @@ class RestaurantArchivalService
 
     if defined?(AlcoholPolicy)
       policy = AlcoholPolicy.find_by(restaurant_id: @restaurant.id)
-      update_record(policy, archived: true, archived_at: @archived_at) if policy && policy.respond_to?(:archived=)
+      update_record(policy, archived: true, archived_at: @archived_at) if policy.respond_to?(:archived=)
     end
   end
 
@@ -217,7 +217,7 @@ class RestaurantArchivalService
 
     if defined?(AlcoholPolicy)
       policy = AlcoholPolicy.find_by(restaurant_id: @restaurant.id)
-      update_record(policy, archived: false, archived_at: nil) if policy && policy.respond_to?(:archived=)
+      update_record(policy, archived: false, archived_at: nil) if policy.respond_to?(:archived=)
     end
   end
 

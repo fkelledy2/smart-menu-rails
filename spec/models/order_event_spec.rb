@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe OrderEvent, type: :model do
+RSpec.describe OrderEvent do
   describe '.emit!' do
     it 'allocates a monotonic sequence per order under lock' do
       ordr = create(:ordr)

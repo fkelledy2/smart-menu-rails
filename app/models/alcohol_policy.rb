@@ -23,11 +23,11 @@ class AlcoholPolicy < ApplicationRecord
 
     # Time range check (minutes since midnight)
     if allowed_time_ranges.present?
-      minutes = now.hour * 60 + now.min
+      minutes = (now.hour * 60) + now.min
       in_any_range = allowed_time_ranges.any? do |r|
-        from_min = r["from_min"].to_i
-        to_min = r["to_min"].to_i
-        from_min <= minutes && minutes <= to_min
+        from_min = r['from_min'].to_i
+        to_min = r['to_min'].to_i
+        minutes.between?(from_min, to_min)
       end
       return false unless in_any_range
     end
@@ -39,6 +39,7 @@ class AlcoholPolicy < ApplicationRecord
 
   def validate_days
     return if allowed_days_of_week.blank?
+
     unless allowed_days_of_week.all? { |d| d.is_a?(Integer) && d.between?(0, 6) }
       errors.add(:allowed_days_of_week, 'must contain integers between 0 and 6 (0=Sunday)')
     end
@@ -46,18 +47,19 @@ class AlcoholPolicy < ApplicationRecord
 
   def validate_time_ranges
     return if allowed_time_ranges.blank?
+
     unless allowed_time_ranges.is_a?(Array)
       errors.add(:allowed_time_ranges, 'must be an array of {from_min,to_min}')
       return
     end
     allowed_time_ranges.each do |r|
-      unless r.is_a?(Hash) && r.key?("from_min") && r.key?("to_min")
+      unless r.is_a?(Hash) && r.key?('from_min') && r.key?('to_min')
         errors.add(:allowed_time_ranges, 'each range must include from_min and to_min')
         next
       end
-      from_min = r["from_min"].to_i
-      to_min = r["to_min"].to_i
-      if from_min < 0 || to_min > 24 * 60 || from_min > to_min
+      from_min = r['from_min'].to_i
+      to_min = r['to_min'].to_i
+      if from_min.negative? || to_min > 24 * 60 || from_min > to_min
         errors.add(:allowed_time_ranges, 'invalid minute bounds or from_min > to_min')
       end
     end

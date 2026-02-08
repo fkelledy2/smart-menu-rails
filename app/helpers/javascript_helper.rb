@@ -218,7 +218,7 @@ module JavascriptHelper
 
     attributes = form_data_attributes('restaurant', form_options)
     extra_data = options.delete(:data) || {}
-    
+
     # Ensure proper URL is set for auto-save to work correctly
     # For existing records, use the standard resource path
     if model.persisted?

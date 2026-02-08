@@ -36,8 +36,7 @@ class ProductEnrichmentRefreshJob
 
     # Missing enrichment
     Product
-      .left_outer_joins(:product_enrichments)
-      .where(product_enrichments: { id: nil })
+      .where.missing(:product_enrichments)
       .limit(limit)
       .pluck(:id)
   end

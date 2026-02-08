@@ -3,10 +3,10 @@ namespace :uiux do
   task lint: :environment do
     patterns = [
       /\bbtn-2025\b/,
-      /\bbadge-2025\b/
+      /\bbadge-2025\b/,
     ]
 
-    files = Dir.glob(Rails.root.join('app/views/**/*_2025.html.erb'))
+    files = Rails.root.glob('app/views/**/*_2025.html.erb/*_2025.html.erb/**/*_2025.html.erb/*_2025.html.erb')
     offenders = {}
 
     files.each do |path|
@@ -18,7 +18,7 @@ namespace :uiux do
 
       # Ignore Ruby comment lines (e.g. usage examples inside `<% %>` blocks).
       content = content.gsub(/^\s*#.*$/, '')
-      matches = patterns.filter { |re| content.match?(re) }.map(&:source)
+      matches = patterns.grep(content).map(&:source)
       next if matches.empty?
 
       offenders[path] = matches

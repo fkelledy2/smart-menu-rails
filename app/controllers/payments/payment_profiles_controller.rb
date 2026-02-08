@@ -14,9 +14,9 @@ class Payments::PaymentProfilesController < ApplicationController
 
     if requested_merchant_model.present? && stripe_enabled
       profile.update!(merchant_model: requested_merchant_model)
-      redirect_back fallback_location: edit_restaurant_path(@restaurant, section: 'settings'), notice: 'Payments settings updated'
+      redirect_back_or_to(edit_restaurant_path(@restaurant, section: 'settings'), notice: 'Payments settings updated')
     else
-      redirect_back fallback_location: edit_restaurant_path(@restaurant, section: 'settings')
+      redirect_back_or_to(edit_restaurant_path(@restaurant, section: 'settings'))
     end
   end
 

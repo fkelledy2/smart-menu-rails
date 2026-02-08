@@ -26,7 +26,7 @@ class Payments::IntentsController < ApplicationController
       end
     end
 
-    key = ENV['STRIPE_SECRET_KEY'] if key.blank?
+    key = ENV.fetch('STRIPE_SECRET_KEY', nil) if key.blank?
     Stripe.api_key = key if key.present?
 
     intent = Stripe::PaymentIntent.create(
@@ -36,8 +36,8 @@ class Payments::IntentsController < ApplicationController
       metadata: {
         order_id: @ordr.id,
         restaurant_id: @ordr.restaurant_id,
-        smartmenu_id: @ordr.menu&.smartmenus&.first&.id
-      }
+        smartmenu_id: @ordr.menu&.smartmenus&.first&.id,
+      },
     )
 
     render json: { client_secret: intent.client_secret }

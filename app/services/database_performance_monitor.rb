@@ -58,7 +58,7 @@ class DatabasePerformanceMonitor
       end
     rescue StandardError => e
       # Silently fail - monitoring should not break the application
-      Rails.logger.debug("[DatabasePerformanceMonitor] Failed to track query pattern: #{e.message}")
+      Rails.logger.debug { "[DatabasePerformanceMonitor] Failed to track query pattern: #{e.message}" }
     end
   end
 

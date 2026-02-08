@@ -11,10 +11,10 @@ class AlcoholDetectionService
   }.freeze
 
   NEGATIONS = [
-    'non alcoholic', 'non-alcoholic', 'alcohol free', 'alcohol-free', '0.0%', '0,0%', 'zero alcohol', 'senza alcol', 'analcolico', 'senza alcool', 'no alcohol', 'mocktail', 'virgin'
+    'non alcoholic', 'non-alcoholic', 'alcohol free', 'alcohol-free', '0.0%', '0,0%', 'zero alcohol', 'senza alcol', 'analcolico', 'senza alcool', 'no alcohol', 'mocktail', 'virgin',
   ].freeze
 
-  ABV_REGEX = /(\d+(?:[\.,]\d+)?)\s*%/i
+  ABV_REGEX = /(\d+(?:[.,]\d+)?)\s*%/i
 
   SectionClassMap = {
     'wine' => 'wine', 'wines' => 'wine',
@@ -25,7 +25,7 @@ class AlcoholDetectionService
     'bar' => 'cocktail',
     'cider' => 'cider', 'ciders' => 'cider',
     'sake' => 'sake',
-    'mead' => 'mead'
+    'mead' => 'mead',
   }.freeze
 
   def self.detect(section_name:, item_name:, item_description: nil)
@@ -40,7 +40,7 @@ class AlcoholDetectionService
     abv = extract_abv(text)
     if abv
       sec_class = SectionClassMap[normalize(section_name)] || section_class_from_text(section_name)
-      return { decided: true, alcoholic: true, classification: (sec_class || 'other'), abv: abv, confidence: 0.95, note: 'abv present' }
+      return { decided: true, alcoholic: true, classification: sec_class || 'other', abv: abv, confidence: 0.95, note: 'abv present' }
     end
 
     # Section hint
@@ -62,11 +62,9 @@ class AlcoholDetectionService
 
     # Strong signal: item name itself contains a class keyword (e.g., 'pils', 'ipa', 'stout')
     item_name_norm = normalize(item_name)
-    if best_class && best_score.to_f >= 0.2
-      if KEYWORDS[best_class].any? { |kw| item_name_norm.include?(kw) }
-        classification = best_class.to_s
-        return { decided: true, alcoholic: true, classification: classification, abv: abv, confidence: 0.6, note: 'name keyword' }
-      end
+    if best_class && best_score.to_f >= 0.2 && KEYWORDS[best_class].any? { |kw| item_name_norm.include?(kw) }
+      classification = best_class.to_s
+      return { decided: true, alcoholic: true, classification: classification, abv: abv, confidence: 0.6, note: 'name keyword' }
     end
 
     # Combine evidence
@@ -87,9 +85,11 @@ class AlcoholDetectionService
   def self.extract_abv(text)
     m = ABV_REGEX.match(text)
     return nil unless m
+
     raw = m[1].tr(',', '.')
     val = raw.to_f
     return nil if val <= 0.0 || val > 100.0
+
     val.round(1)
   end
 
@@ -103,7 +103,7 @@ class AlcoholDetectionService
     return nil if text.blank?
 
     # Normalize common separators
-    t = text.tr('_', ' ').gsub(/[\-\/&]/, ' ')
+    t = text.tr('_', ' ').gsub(%r{[-/&]}, ' ')
 
     # Direct token map
     SectionClassMap.each_key do |key|
@@ -127,6 +127,4 @@ class AlcoholDetectionService
 
     nil
   end
-
-  
 end

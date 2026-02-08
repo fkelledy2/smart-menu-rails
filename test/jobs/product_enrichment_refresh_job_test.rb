@@ -8,7 +8,7 @@ class ProductEnrichmentRefreshJobTest < ActiveSupport::TestCase
       source: 'openai',
       payload_json: { 'foo' => 'bar' },
       fetched_at: 40.days.ago,
-      expires_at: 1.day.ago
+      expires_at: 1.day.ago,
     )
   end
 

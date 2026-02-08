@@ -37,7 +37,7 @@ class SmartmenusController < ApplicationController
       # Smartmenu and Tablesetting both touch restaurant, so restaurant.updated_at reflects
       # changes that should invalidate the header cache without needing per-request MAX() queries.
       @header_cache_buster = @restaurant&.updated_at
-    rescue => e
+    rescue StandardError => e
       Rails.logger.warn("[SmartmenusController#show] header cache buster error: #{e.class}: #{e.message}")
       @header_cache_buster = nil
     end
@@ -53,9 +53,9 @@ class SmartmenusController < ApplicationController
     begin
       @table_smartmenus = if @restaurant&.id && @menu&.id
                             Smartmenu.includes(:tablesetting)
-                                     .where(restaurant_id: @restaurant.id, menu_id: @menu.id)
-                                     .order(:id)
-                                     .to_a
+                              .where(restaurant_id: @restaurant.id, menu_id: @menu.id)
+                              .order(:id)
+                              .to_a
                           else
                             []
                           end
@@ -77,18 +77,18 @@ class SmartmenusController < ApplicationController
     # Allergens must be those actually used by items in this menu
     # We deduplicate in Ruby since the has_many :through association can cause DISTINCT issues
     allergyns_relation = @menu.allergyns
-                              .where(archived: false)
-                              .where(status: :active)
-                              .order('allergyns.sequence NULLS LAST, allergyns.name')
+      .where(archived: false)
+      .where(status: :active)
+      .order('allergyns.sequence NULLS LAST, allergyns.name')
 
     if params[:debug_allergyns].to_s == 'true'
       Rails.logger.warn("[SmartmenusController#show] allergyns SQL: #{allergyns_relation.to_sql}")
     end
-    @allergyns = allergyns_relation.to_a.uniq { |a| a.id }
+    @allergyns = allergyns_relation.to_a.uniq(&:id)
 
     if params[:debug_allergyns].to_s == 'true'
       Rails.logger.warn(
-        "[SmartmenusController#show] allergyns result count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}"
+        "[SmartmenusController#show] allergyns result count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}",
       )
 
       @debug_allergyns_info = {
@@ -102,16 +102,16 @@ class SmartmenusController < ApplicationController
     if @allergyns.empty?
       # Fallback to restaurant allergyns (deduplicate in Ruby)
       fallback_relation = @restaurant.allergyns
-                                     .where(archived: false)
-                                     .where(status: :active)
-                                     .order('allergyns.sequence NULLS LAST, allergyns.name')
+        .where(archived: false)
+        .where(status: :active)
+        .order('allergyns.sequence NULLS LAST, allergyns.name')
       if params[:debug_allergyns].to_s == 'true'
         Rails.logger.warn("[SmartmenusController#show] allergyns empty for menu; using restaurant fallback SQL: #{fallback_relation.to_sql}")
       end
-      @allergyns = fallback_relation.to_a.uniq { |a| a.id }
+      @allergyns = fallback_relation.to_a.uniq(&:id)
       if params[:debug_allergyns].to_s == 'true'
         Rails.logger.warn(
-          "[SmartmenusController#show] fallback allergyns count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}"
+          "[SmartmenusController#show] fallback allergyns count=#{@allergyns.size} ids=#{@allergyns.map(&:id)} names=#{@allergyns.map(&:name)}",
         )
         @debug_allergyns_info ||= {}
         @debug_allergyns_info[:fallback_sql] = fallback_relation.to_sql
@@ -132,10 +132,10 @@ class SmartmenusController < ApplicationController
         begin
           @openOrder = Ordr.includes(
             ordritems: { menuitem: :menuitemlocales },
-            ordractions: [:ordrparticipant, { ordritem: { menuitem: :menuitemlocales } }]
+            ordractions: [:ordrparticipant, { ordritem: { menuitem: :menuitemlocales } }],
           ).find(@openOrder.id)
-        rescue => e
-          Rails.logger.warn("[SmartmenusController#show] failed to eager load order #{ @openOrder&.id }: #{e.class}: #{e.message}")
+        rescue StandardError => e
+          Rails.logger.warn("[SmartmenusController#show] failed to eager load order #{@openOrder&.id}: #{e.class}: #{e.message}")
         end
         if current_user
           Ordrparticipant.on_primary do
@@ -191,7 +191,7 @@ class SmartmenusController < ApplicationController
     end
 
     begin
-      @needs_age_check = !!(@openOrder && AlcoholOrderEvent.where(ordr_id: @openOrder.id, age_check_acknowledged: false).exists?)
+      @needs_age_check = !(@openOrder && AlcoholOrderEvent.exists?(ordr_id: @openOrder.id, age_check_acknowledged: false)).nil?
     rescue StandardError
       @needs_age_check = false
     end
@@ -203,10 +203,8 @@ class SmartmenusController < ApplicationController
 
     if params[:locale].present?
       requested = params[:locale].to_s.downcase
-      if I18n.available_locales.map(&:to_s).include?(requested)
-        if @menuparticipant.preferredlocale.to_s.downcase != requested
-          @menuparticipant.update(preferredlocale: requested)
-        end
+      if I18n.available_locales.map(&:to_s).include?(requested) && (@menuparticipant.preferredlocale.to_s.downcase != requested)
+        @menuparticipant.update(preferredlocale: requested)
       end
     end
 
@@ -220,7 +218,7 @@ class SmartmenusController < ApplicationController
 
       # Build conservative last_modified including order and items where possible
       order_items_last_modified = nil
-      if @openOrder && @openOrder.respond_to?(:ordritems)
+      if @openOrder.respond_to?(:ordritems)
         # Safe query for maximum updated_at across order items
         order_items_last_modified = @openOrder.ordritems.maximum(:updated_at)
       end
@@ -257,7 +255,7 @@ class SmartmenusController < ApplicationController
         public: false,
       )
     end
-    
+
     respond_to do |format|
       format.html
       format.json do
@@ -268,7 +266,7 @@ class SmartmenusController < ApplicationController
           open_order: @openOrder,
           ordrparticipant: @ordrparticipant,
           menuparticipant: @menuparticipant,
-          session_id: session.id.to_s
+          session_id: session.id.to_s,
         )
 
         if @active_menu_version
@@ -279,9 +277,9 @@ class SmartmenusController < ApplicationController
         end
         begin
           items_len = payload.dig(:order, :items)&.length || 0
-          item_ids = Array(payload.dig(:order, :items)).map { |i| i[:id] }.compact.take(20)
+          item_ids = Array(payload.dig(:order, :items)).filter_map { |i| i[:id] }.take(20)
           Rails.logger.info("[SmartmenusController#show][JSON] order_id=#{payload.dig(:order, :id)} items=#{items_len} ids=#{item_ids.inspect} totals=#{payload[:totals] ? 'present' : 'nil'}")
-        rescue => e
+        rescue StandardError => e
           Rails.logger.warn("[SmartmenusController#show][JSON] logging failed: #{e.class}: #{e.message}")
         end
         render json: payload
@@ -308,8 +306,8 @@ class SmartmenusController < ApplicationController
         end
         format.json { render :show, status: :created, location: @smartmenu }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @smartmenu.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @smartmenu.errors, status: :unprocessable_content }
       end
     end
   end
@@ -325,8 +323,8 @@ class SmartmenusController < ApplicationController
         end
         format.json { render :show, status: :ok, location: @smartmenu }
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @smartmenu.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @smartmenu.errors, status: :unprocessable_content }
       end
     end
   end

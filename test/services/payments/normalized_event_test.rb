@@ -11,7 +11,7 @@ class Payments::NormalizedEventTest < ActiveSupport::TestCase
       entity_id: 1,
       event_type: :succeeded,
       amount_cents: 1234,
-      currency: 'EUR'
+      currency: 'EUR',
     )
 
     attrs = evt.ledger_attributes

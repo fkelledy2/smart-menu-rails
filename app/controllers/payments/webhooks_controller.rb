@@ -62,24 +62,24 @@ class Payments::WebhooksController < ApplicationController
 
     credentials_secret = begin
       Rails.application.credentials.dig(:stripe, :webhook_secret) ||
-        Rails.application.credentials.dig(:stripe_webhook_secret)
+        Rails.application.credentials[:stripe_webhook_secret]
     rescue StandardError
       nil
     end
 
     secret = if Rails.env.production?
-      env_secret || credentials_secret
-    else
-      credentials_secret.presence || env_secret
-    end
+               env_secret || credentials_secret
+             else
+               credentials_secret.presence || env_secret
+             end
 
     secret_source = if secret.blank?
-      'none'
-    elsif secret == env_secret
-      'env'
-    else
-      'credentials'
-    end
+                      'none'
+                    elsif secret == env_secret
+                      'env'
+                    else
+                      'credentials'
+                    end
 
     Rails.logger.info("[StripeWebhook] webhook_secret_source=#{secret_source}")
 

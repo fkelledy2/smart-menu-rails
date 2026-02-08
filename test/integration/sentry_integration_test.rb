@@ -14,21 +14,21 @@ class SentryIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test 'sentry configuration has correct environment' do
-    skip 'Sentry not configured in test environment' unless Sentry.configuration.dsn.present?
-    
+    skip 'Sentry not configured in test environment' if Sentry.configuration.dsn.blank?
+
     assert_equal Rails.env, Sentry.configuration.environment
   end
 
   test 'sentry configuration has release tracking' do
-    skip 'Sentry not configured in test environment' unless Sentry.configuration.dsn.present?
-    
+    skip 'Sentry not configured in test environment' if Sentry.configuration.dsn.blank?
+
     assert_not_nil Sentry.configuration.release
     assert_not_equal 'unknown', Sentry.configuration.release
   end
 
   test 'sentry excludes common exceptions' do
-    skip 'Sentry not configured in test environment' unless Sentry.configuration.dsn.present?
-    
+    skip 'Sentry not configured in test environment' if Sentry.configuration.dsn.blank?
+
     excluded = Sentry.configuration.excluded_exceptions
     assert_includes excluded, 'ActionController::BadRequest'
     assert_includes excluded, 'ActionController::UnknownFormat'
@@ -86,9 +86,9 @@ class SentryIntegrationTest < ActionDispatch::IntegrationTest
         },
       ),
     )
-    
+
     filtered_event = Sentry.configuration.before_send.call(event, {})
-    
+
     assert_nil filtered_event.request.data['password']
     assert_nil filtered_event.request.data['credit_card_number']
     assert_equal 'test@example.com', filtered_event.request.data['email']

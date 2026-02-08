@@ -150,7 +150,7 @@ class MaterializedViewService
 
   def get_last_refresh_time(view_name)
     # Query PostgreSQL system catalogs for last refresh time
-    result = ActiveRecord::Base.connection.execute(<<-SQL.squish)
+    result = ActiveRecord::Base.connection.execute(<<~SQL.squish)
       SELECT#{' '}
         schemaname,
         matviewname,
@@ -171,7 +171,7 @@ class MaterializedViewService
   end
 
   def get_single_view_stats(view_name)
-    result = ActiveRecord::Base.connection.execute(<<-SQL.squish)
+    result = ActiveRecord::Base.connection.execute(<<~SQL.squish)
       SELECT#{' '}
         schemaname,
         matviewname,

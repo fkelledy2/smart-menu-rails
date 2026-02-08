@@ -28,7 +28,7 @@ class Api::V1::MenusController < Api::V1::BaseController
       render json: menu_json(@menu), status: :created
     else
       render json: { error: { code: 'VALIDATION_ERROR', message: @menu.errors.full_messages.join(', ') } },
-             status: :unprocessable_entity
+             status: :unprocessable_content
     end
   end
 
@@ -40,7 +40,7 @@ class Api::V1::MenusController < Api::V1::BaseController
       render json: menu_json(@menu)
     else
       render json: { error: { code: 'VALIDATION_ERROR', message: @menu.errors.full_messages.join(', ') } },
-             status: :unprocessable_entity
+             status: :unprocessable_content
     end
   end
 

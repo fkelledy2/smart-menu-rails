@@ -27,10 +27,10 @@ module TestIdHelpers
   #   find_testid('loading-spinner', visible: false)
   #   find_testid('error-message', wait: 10)
   #
-  def find_testid(testid, **options)
-    find("[data-testid='#{testid}']", **options)
+  def find_testid(testid, **)
+    find("[data-testid='#{testid}']", **)
   end
-  
+
   # Recalculate order totals (nett, tax, service, gross) to mirror production logic
   def recalc_order_totals!(order)
     nett = order.ordritems.sum(:ordritemprice).to_f
@@ -71,8 +71,8 @@ module TestIdHelpers
   #   click_testid('submit-btn')
   #   click_testid('confirm-btn', wait: 5)
   #
-  def click_testid(testid, **options)
-    find_testid(testid, **options).click
+  def click_testid(testid, **)
+    find_testid(testid, **).click
   end
 
   # Fill in a form field by its data-testid
@@ -86,8 +86,8 @@ module TestIdHelpers
   #   fill_testid('email-input', 'user@example.com')
   #   fill_testid('password-input', 'secret123')
   #
-  def fill_testid(testid, value, **options)
-    element = find_testid(testid, **options)
+  def fill_testid(testid, value, **)
+    element = find_testid(testid, **)
     # Get the actual input ID (might be nested)
     input_id = element[:id]
     fill_in input_id, with: value
@@ -104,8 +104,8 @@ module TestIdHelpers
   #   attach_testid('avatar-input', Rails.root.join('test/fixtures/files/avatar.jpg'))
   #   attach_testid('pdf-input', file_fixture('menu.pdf'))
   #
-  def attach_testid(testid, file_path, **options)
-    element = find_testid(testid, **options)
+  def attach_testid(testid, file_path, **)
+    element = find_testid(testid, **)
     # File inputs might be hidden, need to find them differently
     input_id = element[:id] || element.find('input[type="file"]', visible: :all)[:id]
     attach_file input_id, file_path
@@ -122,8 +122,8 @@ module TestIdHelpers
   #     # Handle error
   #   end
   #
-  def has_testid?(testid, **options)
-    has_selector?("[data-testid='#{testid}']", **options)
+  def has_testid?(testid, **)
+    has_selector?("[data-testid='#{testid}']", **)
   end
 
   # Check if an element with the given test ID does NOT exist
@@ -135,8 +135,8 @@ module TestIdHelpers
   # @example
   #   assert has_no_testid?('loading-spinner')
   #
-  def has_no_testid?(testid, **options)
-    has_no_selector?("[data-testid='#{testid}']", **options)
+  def has_no_testid?(testid, **)
+    has_no_selector?("[data-testid='#{testid}']", **)
   end
 
   # Wait for an element to appear by its test ID
@@ -181,8 +181,8 @@ module TestIdHelpers
   #     click_testid('submit-btn')
   #   end
   #
-  def within_testid(testid, **options, &block)
-    within("[data-testid='#{testid}']", **options, &block)
+  def within_testid(testid, **, &)
+    within("[data-testid='#{testid}']", **, &)
   end
 
   # Get the text content of an element by its test ID
@@ -195,8 +195,8 @@ module TestIdHelpers
   #   username = text_from_testid('username-display')
   #   assert_equal 'John Doe', username
   #
-  def text_from_testid(testid, **options)
-    find_testid(testid, **options).text
+  def text_from_testid(testid, **)
+    find_testid(testid, **).text
   end
 
   # Get the value of an input element by its test ID
@@ -209,8 +209,8 @@ module TestIdHelpers
   #   email = value_from_testid('email-input')
   #   assert_includes email, '@example.com'
   #
-  def value_from_testid(testid, **options)
-    find_testid(testid, **options).value
+  def value_from_testid(testid, **)
+    find_testid(testid, **).value
   end
 
   # Assert that an element with the test ID exists
@@ -223,8 +223,8 @@ module TestIdHelpers
   #   assert_testid('success-message')
   #   assert_testid('user-profile', text: 'John Doe')
   #
-  def assert_testid(testid, **options)
-    assert_selector "[data-testid='#{testid}']", **options
+  def assert_testid(testid, **)
+    assert_selector("[data-testid='#{testid}']", **)
   end
 
   # Assert that an element with the test ID does NOT exist
@@ -237,8 +237,8 @@ module TestIdHelpers
   #   click_testid('delete-btn')
   #   assert_no_testid('user-42')
   #
-  def assert_no_testid(testid, **options)
-    assert_no_selector "[data-testid='#{testid}']", **options
+  def assert_no_testid(testid, **)
+    assert_no_selector("[data-testid='#{testid}']", **)
   end
 
   # Select an option from a select dropdown by test ID
@@ -252,8 +252,8 @@ module TestIdHelpers
   #   select_testid('country-select', 'United States')
   #   select_testid('role-select', 'Admin')
   #
-  def select_testid(testid, value, **options)
-    element = find_testid(testid, **options)
+  def select_testid(testid, value, **)
+    element = find_testid(testid, **)
     select value, from: element[:id]
   end
 
@@ -267,8 +267,8 @@ module TestIdHelpers
   #   check_testid('terms-checkbox')
   #   check_testid('subscribe-checkbox')
   #
-  def check_testid(testid, **options)
-    element = find_testid(testid, **options)
+  def check_testid(testid, **)
+    element = find_testid(testid, **)
     check element[:id]
   end
 
@@ -281,11 +281,11 @@ module TestIdHelpers
   # @example
   #   uncheck_testid('newsletter-checkbox')
   #
-  def uncheck_testid(testid, **options)
-    element = find_testid(testid, **options)
+  def uncheck_testid(testid, **)
+    element = find_testid(testid, **)
     uncheck element[:id]
   end
-  
+
   # Helper method for smartmenu ordering flow
   # Clicks add item button, then confirms in modal, then opens view order modal
   #
@@ -312,22 +312,22 @@ module TestIdHelpers
         modal.style.display = 'none';
         modal.setAttribute('aria-hidden', 'true');
       });
-      
+
       // Remove all backdrops
       document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
         backdrop.remove();
       });
-      
+
       // Clean up body
       document.body.classList.remove('modal-open');
       document.body.style.removeProperty('overflow');
       document.body.style.removeProperty('padding-right');
     JS
-    
+
     # Brief pause for DOM to settle
     sleep 0.2
   end
-  
+
   # Wait for all pending fetch/AJAX requests to complete
   def wait_for_requests_to_complete(timeout: 5)
     Timeout.timeout(timeout) do
@@ -335,13 +335,14 @@ module TestIdHelpers
         # Check if jQuery has pending AJAX requests
         pending = page.evaluate_script('typeof jQuery !== "undefined" && jQuery.active || 0')
         break if pending.zero?
+
         sleep 0.05
       end
     end
   rescue Timeout::Error
     # Continue if timeout
   end
-  
+
   # Wait for DOM to be mutated (e.g., after Turbo Stream updates)
   def wait_for_dom_update(timeout: 5)
     Timeout.timeout(timeout) do
@@ -352,7 +353,7 @@ module TestIdHelpers
             resolve(true);
           });
           observer.observe(document.body, { childList: true, subtree: true });
-          
+        #{'  '}
           // Auto-resolve if no changes within 500ms
           setTimeout(() => {
             observer.disconnect();
@@ -364,29 +365,30 @@ module TestIdHelpers
   rescue Timeout::Error
     # Continue if timeout
   end
-  
+
   # Wait for a specific element to have content (not empty)
   def wait_for_element_content(selector, timeout: 5)
     Timeout.timeout(timeout) do
       loop do
         content = page.evaluate_script("document.querySelector('#{selector}')?.textContent?.trim()")
-        break if content && !content.empty?
+        break if content.present?
+
         sleep 0.05
       end
     end
   rescue Timeout::Error
     # Continue if timeout
   end
-  
+
   def add_item_to_order(item_id, **options)
     ensure_clean_order_once!
     # First, close any open modals to prevent interference
     close_all_modals
-    
+
     # Ensure an order is explicitly started per production UX
     start_order_if_needed
     ensure_order_dom_context!
-    
+
     # Directly create the ordritem in the database using Smartmenu context
     slug = URI.parse(current_url).path.split('/').last
     sm = Smartmenu.find_by!(slug: slug)
@@ -395,7 +397,7 @@ module TestIdHelpers
     menu_id = sm.menu_id
     ensure_order_dom_context!
 
-    order = Ordr.where(restaurant_id: restaurant_id, tablesetting_id: table_id, menu_id: menu_id, status: [0,20,22,24,25,30]).order(:created_at).last
+    order = Ordr.where(restaurant_id: restaurant_id, tablesetting_id: table_id, menu_id: menu_id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
     order ||= Ordr.create!(restaurant_id: restaurant_id, tablesetting_id: table_id, menu_id: menu_id, status: 0, ordercapacity: 1)
 
     menuitem = Menuitem.find(item_id)
@@ -410,7 +412,11 @@ module TestIdHelpers
     after_count = order.ordritems.count
     if after_count > before_count + 1
       excess = after_count - (before_count + 1)
-      order.ordritems.where(menuitem_id: menuitem.id).order(created_at: :desc).limit(excess).each { |ri| ri.destroy! rescue nil }
+      order.ordritems.where(menuitem_id: menuitem.id).order(created_at: :desc).limit(excess).each do |ri|
+        ri.destroy!
+      rescue StandardError
+        nil
+      end
       order.reload
     end
     order
@@ -418,30 +424,28 @@ module TestIdHelpers
 
   # Ensure we start each test with a clean order for the current context exactly once
   def ensure_clean_order_once!
-    begin
-      # Persist across reloads within a single test via instance var
-      if instance_variable_defined?(:@__order_reset_done) && @__order_reset_done
-        return
-      end
-      slug = URI.parse(current_url).path.split('/').last
-      sm = Smartmenu.find_by(slug: slug)
-      return unless sm
-      # Remove any existing open-ish orders for this context
-      Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0,20,22,24,25,30]).find_each do |o|
-        begin
-          o.destroy!
-        rescue StandardError
-        end
-      end
-      # Create a fresh order to align with production auto-create on first add
-      fresh = Ordr.create!(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: 0, ordercapacity: 1)
-      recalc_order_totals!(fresh)
-      ensure_order_dom_context!
-      # Mark reset done for this test
-      @__order_reset_done = true
-    rescue StandardError
-      # ignore
+    # Persist across reloads within a single test via instance var
+    if instance_variable_defined?(:@__order_reset_done) && @__order_reset_done
+      return
     end
+
+    slug = URI.parse(current_url).path.split('/').last
+    sm = Smartmenu.find_by(slug: slug)
+    return unless sm
+
+    # Remove any existing open-ish orders for this context
+    Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0, 20, 22, 24, 25, 30]).find_each do |o|
+      o.destroy!
+    rescue StandardError
+    end
+    # Create a fresh order to align with production auto-create on first add
+    fresh = Ordr.create!(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: 0, ordercapacity: 1)
+    recalc_order_totals!(fresh)
+    ensure_order_dom_context!
+    # Mark reset done for this test
+    @__order_reset_done = true
+  rescue StandardError
+    # ignore
   end
 
   def currency_symbol_for(order)
@@ -451,15 +455,17 @@ module TestIdHelpers
       if c.respond_to?(:symbol)
         return c.symbol.to_s
       end
+
       # If it's a String which is already a symbol
       if c.is_a?(String)
         s = c.strip
-        return s if s.start_with?('$','€','£','¥')
+        return s if s.start_with?('$', '€', '£', '¥')
+
         code = s.upcase
-        return '$' if ['USD','AUD','CAD','NZD','SGD'].include?(code)
+        return '$' if %w[USD AUD CAD NZD SGD].include?(code)
         return '€' if code == 'EUR'
         return '£' if code == 'GBP'
-        return '¥' if ['JPY','CNY'].include?(code)
+        return '¥' if %w[JPY CNY].include?(code)
       end
     rescue StandardError
     end
@@ -472,7 +478,8 @@ module TestIdHelpers
     slug = URI.parse(current_url).path.split('/').last
     sm = Smartmenu.find_by(slug: slug)
     return unless sm
-    order = Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0,20,22,24,25,30]).order(:created_at).last
+
+    order = Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
     unless order
       order = Ordr.create!(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: 0, ordercapacity: 1)
       recalc_order_totals!(order)
@@ -522,19 +529,19 @@ module TestIdHelpers
         ensureSpan('currentTable').textContent = '#{table_id}';
         ensureSpan('currentOrder').textContent = '#{order.id}';
         ensureSpan('currentOrderStatus').textContent = '#{order.status}';
-        #{ @__menu_participant_id ? "ensureSpan('menuParticipant').textContent = '#{@__menu_participant_id}';" : '' }
+        #{"ensureSpan('menuParticipant').textContent = '#{@__menu_participant_id}';" if @__menu_participant_id}
         #{ begin
-             cp = Ordr.find(order.id).ordrparticipants.where(role: 0).first
-             cp ? "ensureSpan('currentParticipant').textContent = '#{cp.id}';" : ''
-           rescue StandardError
-             ''
-           end }
+          cp = Ordr.find(order.id).ordrparticipants.where(role: 0).first
+          cp ? "ensureSpan('currentParticipant').textContent = '#{cp.id}';" : ''
+        rescue StandardError
+          ''
+        end }
       })();
     JS
   end
-  
+
   # Opens the view order modal by clicking the FAB button or directly if FAB not visible
-  def open_view_order_modal(**options)
+  def open_view_order_modal(**)
     # Reload the page so server-rendered modal reflects current DB order
     page.execute_script('window.location.reload()')
     sleep 0.5
@@ -575,23 +582,23 @@ module TestIdHelpers
           instance.hide();
         }
       });
-      
+
       // Remove all backdrops
       document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
         backdrop.remove();
       });
-      
+
       // Reset body classes
       document.body.classList.remove('modal-open');
       document.body.style.overflow = '';
       document.body.style.paddingRight = '';
     JS
-    
+
     sleep 0.3 # Wait for cleanup
-    
+
     # Try to click FAB - in tests, WebSocket doesn't update so FAB may not be visible
     begin
-      click_testid('order-fab-btn', wait: 2, **options)
+      click_testid('order-fab-btn', wait: 2, **)
     rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::ElementClickInterceptedError
       # FAB not rendered or obscured, open modal directly via JavaScript
       page.execute_script(<<~JS)
@@ -602,7 +609,7 @@ module TestIdHelpers
         }
       JS
     end
-    
+
     # Wait for modal to appear
     assert_testid('view-order-modal', wait: 5)
 
@@ -632,12 +639,12 @@ module TestIdHelpers
       slug = URI.parse(current_url).path.split('/').last
       sm = Smartmenu.find_by(slug: slug)
       if sm
-        order = Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0,20,22,24,25,30]).order(:created_at).last
-        if order && order.ordritems.exists?
+        order = Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
+        if order&.ordritems&.exists?
           unless page.has_selector?('[data-testid="order-total-amount"]', wait: 5)
             # As a last resort for tests, inject a totals row based on DB values
             currency = currency_symbol_for(order)
-            amount = sprintf('%.2f', order.nett.to_f)
+            amount = format('%.2f', order.nett.to_f)
             page.execute_script(<<~JS)
               (function(){
                 const modal = document.getElementById('viewOrderModal');
@@ -659,8 +666,8 @@ module TestIdHelpers
           # Ensure at least one order item row is visible; if not, inject minimal rows
           unless page.has_selector?('[data-testid^="order-item-"]', wait: 2)
             items = order.ordritems.to_a
-            names = items.map { |ri| ri.menuitem&.name.to_s.gsub("'","\\'") }
-            prices = items.map { |ri| sprintf('%.2f', ri.ordritemprice.to_f) }
+            names = items.map { |ri| ri.menuitem&.name.to_s.gsub("'", "\\'") }
+            prices = items.map { |ri| format('%.2f', ri.ordritemprice.to_f) }
             ids = items.map(&:id)
             currency = currency_symbol_for(order)
             page.execute_script(<<~JS)
@@ -694,61 +701,65 @@ module TestIdHelpers
     end
 
     # Final enforcement: if DB says there are items, totals must be present before returning
-    slug = URI.parse(current_url).path.split('/').last rescue nil
-    if slug
-      sm = Smartmenu.find_by(slug: slug)
-      if sm
-        order = Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0,20,22,24,25,30]).order(:created_at).last
-        if order && order.ordritems.exists?
-          # Force-inject totals element if still missing
-          unless page.has_selector?('[data-testid="order-total-amount"]', wait: 2)
-            currency = order.menu.restaurant.currency&.symbol || ''
-            amount = sprintf('%.2f', order.nett.to_f)
-            page.execute_script(<<~JS)
-              (function(){
-                const modal = document.getElementById('viewOrderModal');
-                if (!modal) return;
-                const body = modal.querySelector('[data-testid="order-modal-body"]');
-                if (!body) return;
-                if (!body.querySelector('[data-testid="order-total-amount"]')) {
-                  const row = document.createElement('div');
-                  row.className = 'row';
-                  row.innerHTML = '<div class="col-8"></div><div class="col-2"><b>Total:</b></div>' +
-                                  '<div class="col-2"><span class="float-end" data-testid="order-total-amount"><b>#{currency}#{amount}</b></span></div>';
-                  body.appendChild(row);
-                }
-              })();
-            JS
-          end
-          assert_selector('[data-testid="order-total-amount"]', wait: 2)
-        end
-      end
+    slug = begin
+      URI.parse(current_url).path.split('/').last
+    rescue StandardError
+      nil
     end
+    return unless slug
+
+    sm = Smartmenu.find_by(slug: slug)
+    return unless sm
+
+    order = Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
+    return unless order&.ordritems&.exists?
+
+    # Force-inject totals element if still missing
+    unless page.has_selector?('[data-testid="order-total-amount"]', wait: 2)
+      currency = order.menu.restaurant.currency&.symbol || ''
+      amount = format('%.2f', order.nett.to_f)
+      page.execute_script(<<~JS)
+        (function(){
+          const modal = document.getElementById('viewOrderModal');
+          if (!modal) return;
+          const body = modal.querySelector('[data-testid="order-modal-body"]');
+          if (!body) return;
+          if (!body.querySelector('[data-testid="order-total-amount"]')) {
+            const row = document.createElement('div');
+            row.className = 'row';
+            row.innerHTML = '<div class="col-8"></div><div class="col-2"><b>Total:</b></div>' +
+                            '<div class="col-2"><span class="float-end" data-testid="order-total-amount"><b>#{currency}#{amount}</b></span></div>';
+            body.appendChild(row);
+          }
+        })();
+      JS
+    end
+    assert_selector('[data-testid="order-total-amount"]', wait: 2)
   end
-  
+
   # Removes an item from the order by ordritem id
   def remove_item_from_order_by_testid(testid)
     # Extract the ordritem id from the testid format: "order-item-123"
     item_id = testid.gsub('order-item-', '')
-    
+
     # Find and click the remove button using the correct testid format
     button_testid = "remove-order-item-#{item_id}-btn"
-    
+
     begin
       find_testid(button_testid).click
     rescue Capybara::ElementNotFound
       # Button might not be visible, use JavaScript
       page.execute_script(<<~JS)
-        const btn = document.querySelector('[data-testid=\"#{button_testid}\"]');
+        const btn = document.querySelector('[data-testid="#{button_testid}"]');
         if (btn) btn.click();
       JS
     end
-    
+
     # Wait for removal to complete
     wait_for_requests_to_complete(timeout: 3)
     sleep 0.3
   end
-  
+
   # Wait for a custom WebSocket event to be dispatched
   # This uses JavaScript event listeners instead of polling/sleeping
   def wait_for_websocket_event(event_name, timeout: 5)
@@ -756,62 +767,62 @@ module TestIdHelpers
       const eventName = '#{event_name}';
       const timeout = arguments[0];
       const done = arguments[1];
-      
+
       let timeoutId;
       const handler = (event) => {
         clearTimeout(timeoutId);
         window.removeEventListener(eventName, handler);
         done({ success: true, detail: event.detail });
       };
-      
+
       window.addEventListener(eventName, handler);
-      
+
       timeoutId = setTimeout(() => {
         window.removeEventListener(eventName, handler);
         done({ success: false, error: 'Timeout waiting for ' + eventName });
       }, timeout);
     JS
-    
+
     unless result['success']
       raise Timeout::Error, "Timeout waiting for WebSocket event: #{event_name}"
     end
-    
+
     result
   end
-  
+
   # Wait for order update via WebSocket
   def wait_for_order_update(timeout: 5)
     wait_for_websocket_event('ordr:updated', timeout: timeout)
   end
-  
+
   # Wait for menu update via WebSocket
   def wait_for_menu_update(timeout: 5)
     wait_for_websocket_event('ordr:menu:updated', timeout: timeout)
   end
-  
+
   # Wait for a POST request to start and complete, then wait for WebSocket update
   def wait_for_order_item_added(timeout: 10)
     # Wait for the request to complete
     wait_for_requests_to_complete(timeout: timeout)
-    
+
     # Then wait for the WebSocket update
     wait_for_order_update(timeout: timeout)
   end
-  
+
   # Enhanced add_item_to_order using event-driven waits
-  def add_item_to_order_with_events(item_id, **options)
+  def add_item_to_order_with_events(item_id, **)
     # Close any open modals
     close_all_modals
-    
+
     # Click the add item button - opens modal
-    click_testid("add-item-btn-#{item_id}", **options)
-    
+    click_testid("add-item-btn-#{item_id}", **)
+
     # Wait for modal to be visible
     assert_testid('add-item-modal', wait: 3)
-    
+
     # Wait for price to load
     wait_for_element_content('#a2o_menuitem_price', timeout: 3)
-    
+
     # Click the add button (force enable if needed)
     page.execute_script(<<~JS)
       const btn = document.getElementById('addItemToOrderButton');
@@ -820,10 +831,10 @@ module TestIdHelpers
         btn.click();
       }
     JS
-    
+
     # Wait for HTTP request and WebSocket update
     wait_for_order_item_added(timeout: 10)
-    
+
     # Modal should auto-close after update
   end
 end

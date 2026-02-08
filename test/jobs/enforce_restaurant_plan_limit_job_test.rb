@@ -8,7 +8,7 @@ class EnforceRestaurantPlanLimitJobTest < ActiveJob::TestCase
     @plan = plans(:one)
 
     @user.update!(plan: @plan) if @user.plan != @plan
-    
+
     # Deactivate any existing active restaurants from fixtures to start clean
     @user.restaurants.where(archived: false, status: Restaurant.statuses[:active]).update_all(status: Restaurant.statuses[:inactive])
   end

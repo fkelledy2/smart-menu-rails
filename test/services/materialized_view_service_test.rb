@@ -143,7 +143,7 @@ class MaterializedViewServiceTest < ActiveSupport::TestCase
     @service.stub(:get_single_view_stats, {
       exists: true,
       last_refresh: 10.minutes.ago,
-    },) do
+    }) do
       health = @service.send(:check_view_health, 'test_view', config)
       assert_equal :healthy, health[:status]
     end
@@ -152,7 +152,7 @@ class MaterializedViewServiceTest < ActiveSupport::TestCase
     @service.stub(:get_single_view_stats, {
       exists: true,
       last_refresh: 2.hours.ago,
-    },) do
+    }) do
       health = @service.send(:check_view_health, 'test_view', config)
       assert_equal :stale, health[:status]
       assert health[:reason].include?('Last refreshed')

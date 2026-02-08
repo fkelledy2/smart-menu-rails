@@ -35,6 +35,7 @@ class Menuitem < ApplicationRecord
   cache_has_one :inventory, embed: :id
   cache_has_one :genimage, embed: :id
 
+  before_validation :ensure_hidden_when_carrier
   # Cache invalidation hooks
   after_update :invalidate_menuitem_caches
   after_destroy :invalidate_menuitem_caches
@@ -47,7 +48,7 @@ class Menuitem < ApplicationRecord
     restaurant = menusection&.menu&.restaurant
 
     rl = nil
-    if restaurant && restaurant.association(:restaurantlocales).loaded?
+    if restaurant&.association(:restaurantlocales)&.loaded?
       rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
     end
     if rl.nil? && restaurant&.id
@@ -73,7 +74,7 @@ class Menuitem < ApplicationRecord
     restaurant = menusection&.menu&.restaurant
 
     rl = nil
-    if restaurant && restaurant.association(:restaurantlocales).loaded?
+    if restaurant&.association(:restaurantlocales)&.loaded?
       rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
     end
     if rl.nil? && restaurant&.id
@@ -116,10 +117,10 @@ class Menuitem < ApplicationRecord
 
   def image_url_or_fallback(size = nil)
     url = if image_attacher.derivatives&.key?(size)
-      image_url(size)
-    else
-      image_url
-    end
+            image_url(size)
+          else
+            image_url
+          end
     cache_busted(url)
   end
 
@@ -145,8 +146,6 @@ class Menuitem < ApplicationRecord
   validates :tasting_carrier, inclusion: { in: [true, false] }
   validates :hidden, inclusion: { in: [true, false] }
   validates :tasting_carrier, uniqueness: { scope: :menusection_id, message: 'already set for this section' }, if: :tasting_carrier?
-
-  before_validation :ensure_hidden_when_carrier
 
   def ensure_hidden_when_carrier
     if tasting_carrier?
@@ -184,10 +183,10 @@ class Menuitem < ApplicationRecord
       # Check if WebP derivative exists
       webp_key = :"#{size}_webp"
       url = if image_attacher.derivatives&.key?(webp_key)
-        image_url(webp_key)
-      else
-        image_url_or_fallback(size)
-      end
+              image_url(webp_key)
+            else
+              image_url_or_fallback(size)
+            end
       cache_busted(url)
     rescue StandardError => e
       Rails.logger.error "[Menuitem] Error getting WebP URL for #{id}: #{e.message}"
@@ -268,6 +267,7 @@ class Menuitem < ApplicationRecord
   # Append updated_at timestamp to bust browser caches when images change
   def cache_busted(url)
     return url if url.blank?
+
     ts = updated_at&.to_i
     return url unless ts
 
@@ -283,7 +283,7 @@ class Menuitem < ApplicationRecord
       params['v'] = [ts.to_s]
       u.query = URI.encode_www_form(params)
       u.to_s
-    rescue
+    rescue StandardError
       # Fallback to simple concatenation if URI parsing fails
       separator = url.include?('?') ? '&' : '?'
       "#{url}#{separator}v=#{ts}"
@@ -307,7 +307,7 @@ class Menuitem < ApplicationRecord
     menu_id = menusection&.menu_id
     return if menu_id.blank?
 
-    v = ENV['SMART_MENU_VECTOR_SEARCH_ENABLED']
+    v = ENV.fetch('SMART_MENU_VECTOR_SEARCH_ENABLED', nil)
     vector_enabled = if v.nil? || v.to_s.strip == ''
                        true
                      else

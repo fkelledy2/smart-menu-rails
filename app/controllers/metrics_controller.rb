@@ -53,8 +53,8 @@ class MetricsController < ApplicationController
         format.html { redirect_to metric_url(@metric), notice: format_html }
         format.json { render :show, status: :created, location: @metric }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @metric.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @metric.errors, status: :unprocessable_content }
       end
     end
   end
@@ -70,8 +70,8 @@ class MetricsController < ApplicationController
         end
         format.json { render :show, status: :ok, location: @metric }
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @metric.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @metric.errors, status: :unprocessable_content }
       end
     end
   end

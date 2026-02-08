@@ -1,9 +1,9 @@
 require 'rails_helper'
 require 'ostruct'
 
-RSpec.describe 'Payments::Webhooks (Stripe)', type: :request do
+RSpec.describe 'Payments::Webhooks (Stripe)' do
   around do |example|
-    prev = ENV['STRIPE_WEBHOOK_SECRET']
+    prev = ENV.fetch('STRIPE_WEBHOOK_SECRET', nil)
     ENV['STRIPE_WEBHOOK_SECRET'] = 'whsec_test'
     example.run
   ensure
@@ -56,11 +56,11 @@ RSpec.describe 'Payments::Webhooks (Stripe)', type: :request do
 
       allow(Stripe::Webhook).to receive(:construct_event).and_return(evt_obj)
 
-      expect {
+      expect do
         post '/payments/webhooks/stripe',
              params: payload,
              headers: { 'HTTP_STRIPE_SIGNATURE' => 't=1,v1=fake', 'CONTENT_TYPE' => 'application/json' }
-      }.to change(LedgerEvent, :count).by(1)
+      end.to change(LedgerEvent, :count).by(1)
         .and change(OrderEvent, :count).by(2)
 
       payment_attempt.reload
@@ -80,17 +80,17 @@ RSpec.describe 'Payments::Webhooks (Stripe)', type: :request do
       expect(ledger.entity_id).to eq(payment_attempt.id)
       expect(ledger.raw_event_payload).to be_a(Hash)
 
-      expect {
+      expect do
         post '/payments/webhooks/stripe',
              params: payload,
              headers: { 'HTTP_STRIPE_SIGNATURE' => 't=1,v1=fake', 'CONTENT_TYPE' => 'application/json' }
-      }.not_to change(LedgerEvent, :count)
+      end.not_to change(LedgerEvent, :count)
 
-      expect {
+      expect do
         post '/payments/webhooks/stripe',
              params: payload,
              headers: { 'HTTP_STRIPE_SIGNATURE' => 't=1,v1=fake', 'CONTENT_TYPE' => 'application/json' }
-      }.not_to change(OrderEvent, :count)
+      end.not_to change(OrderEvent, :count)
 
       payment_attempt.reload
       expect(payment_attempt.status).to eq('succeeded')

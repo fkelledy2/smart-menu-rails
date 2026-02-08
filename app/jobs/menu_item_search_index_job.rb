@@ -27,7 +27,7 @@ class MenuItemSearchIndexJob
                   Restaurantlocale.where(restaurant_id: restaurant_id, status: 1).pluck(:locale).map { |l| normalize_locale(l) }
                 end
 
-      locales = locales.map(&:presence).compact.uniq
+      locales = locales.filter_map(&:presence).uniq
       locales = ['en'] if locales.empty?
 
       locales.each do |loc|
@@ -39,8 +39,9 @@ class MenuItemSearchIndexJob
   private
 
   def vector_search_enabled?
-    v = ENV['SMART_MENU_VECTOR_SEARCH_ENABLED']
+    v = ENV.fetch('SMART_MENU_VECTOR_SEARCH_ENABLED', nil)
     return true if v.nil? || v.to_s.strip == ''
+
     v.to_s.downcase == 'true'
   end
 
@@ -64,7 +65,7 @@ class MenuItemSearchIndexJob
         mi.localised_description(locale),
         section&.localised_name(locale),
         section&.localised_description(locale),
-      ].map { |s| s.to_s.strip }.reject(&:blank?).join(' | ')
+      ].map { |s| s.to_s.strip }.compact_blank.join(' | ')
 
       content_hash = Digest::SHA256.hexdigest(doc_text)
 
@@ -82,12 +83,12 @@ class MenuItemSearchIndexJob
 
     existing = MenuItemSearchDocument.where(menu_id: menu.id, restaurant_id: restaurant_id, locale: locale).pluck(:menuitem_id, :content_hash).to_h
 
-    to_index = docs.select { |d| existing[d[:menuitem_id]].to_s != d[:content_hash].to_s }
+    to_index = docs.reject { |d| existing[d[:menuitem_id]].to_s == d[:content_hash].to_s }
     return if to_index.empty?
 
     vectors = nil
     if vector_embedding_column? && defined?(Pgvector::Vector)
-      texts = to_index.map { |d| d[:document_text] }
+      texts = to_index.pluck(:document_text)
       vectors = batch_embed(ml, texts, locale)
       return if vectors.blank?
     end
@@ -108,6 +109,7 @@ class MenuItemSearchIndexJob
       if vectors
         vec = vectors[idx]
         next unless vec.is_a?(Array) && vec.any?
+
         attrs[:embedding] = Pgvector::Vector.new(vec)
       else
         attrs[:embedding] = nil

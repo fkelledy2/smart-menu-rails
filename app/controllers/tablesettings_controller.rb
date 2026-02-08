@@ -67,7 +67,7 @@ class TablesettingsController < ApplicationController
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace('tables_new_tablesetting', ''),
-            turbo_stream.replace('restaurant_content', partial: 'restaurants/sections/tables_2025', locals: { restaurant: @tablesetting.restaurant, filter: 'all' })
+            turbo_stream.replace('restaurant_content', partial: 'restaurants/sections/tables_2025', locals: { restaurant: @tablesetting.restaurant, filter: 'all' }),
           ]
         end
         format.html do
@@ -79,9 +79,9 @@ class TablesettingsController < ApplicationController
           render :show, status: :created, location: restaurant_tablesetting_url(@restaurant, @tablesetting)
         end
       else
-        format.turbo_stream { render :new, status: :unprocessable_entity }
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @tablesetting.errors, status: :unprocessable_entity }
+        format.turbo_stream { render :new, status: :unprocessable_content }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @tablesetting.errors, status: :unprocessable_content }
       end
     end
   end
@@ -98,8 +98,8 @@ class TablesettingsController < ApplicationController
             turbo_stream.replace(
               'restaurant_content',
               partial: 'restaurants/sections/tables_2025',
-              locals: { restaurant: @tablesetting.restaurant, filter: 'all' }
-            )
+              locals: { restaurant: @tablesetting.restaurant, filter: 'all' },
+            ),
           ]
         end
         format.html do
@@ -108,9 +108,9 @@ class TablesettingsController < ApplicationController
         end
         format.json { render :show, status: :ok, location: restaurant_tablesetting_url(@restaurant, @tablesetting) }
       else
-        format.turbo_stream { render :edit, status: :unprocessable_entity }
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @tablesetting.errors, status: :unprocessable_entity }
+        format.turbo_stream { render :edit, status: :unprocessable_content }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @tablesetting.errors, status: :unprocessable_content }
       end
     end
   end
@@ -134,7 +134,7 @@ class TablesettingsController < ApplicationController
     restaurant = Restaurant.find(params[:restaurant_id])
     tables = policy_scope(Tablesetting).where(restaurant_id: restaurant.id, archived: false)
 
-    ids = Array(params[:tablesetting_ids]).map(&:to_s).reject(&:blank?)
+    ids = Array(params[:tablesetting_ids]).map(&:to_s).compact_blank
     status = params[:status].to_s
 
     if ids.empty? || status.blank?
@@ -143,7 +143,7 @@ class TablesettingsController < ApplicationController
           render turbo_stream: turbo_stream.replace(
             'restaurant_content',
             partial: 'restaurants/sections/tables_2025',
-            locals: { restaurant: restaurant, filter: 'all' }
+            locals: { restaurant: restaurant, filter: 'all' },
           )
         end
         format.html do
@@ -164,7 +164,7 @@ class TablesettingsController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           'restaurant_content',
           partial: 'restaurants/sections/tables_2025',
-          locals: { restaurant: restaurant, filter: 'all' }
+          locals: { restaurant: restaurant, filter: 'all' },
         )
       end
       format.html do
@@ -180,18 +180,18 @@ class TablesettingsController < ApplicationController
 
     order = params[:order]
     unless order.is_a?(Array)
-      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_entity
+      return render json: { status: 'error', message: 'Invalid order payload' }, status: :unprocessable_content
     end
 
     Tablesetting.transaction do
       order.each do |item|
         item_hash = if item.is_a?(ActionController::Parameters)
-          item.to_unsafe_h
-        elsif item.is_a?(Hash)
-          item
-        else
-          next
-        end
+                      item.to_unsafe_h
+                    elsif item.is_a?(Hash)
+                      item
+                    else
+                      next
+                    end
 
         id = item_hash[:id] || item_hash['id']
         seq = item_hash[:sequence] || item_hash['sequence']
@@ -208,7 +208,7 @@ class TablesettingsController < ApplicationController
     render json: { status: 'error', message: 'Table not found' }, status: :not_found
   rescue StandardError => e
     Rails.logger.error("Tablesettings reorder error: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
-    render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+    render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 
   private
@@ -220,7 +220,7 @@ class TablesettingsController < ApplicationController
       Smartmenu.find_or_create_by!(
         restaurant_id: restaurant.id,
         menu_id: menu.id,
-        tablesetting_id: tablesetting.id
+        tablesetting_id: tablesetting.id,
       ) do |sm|
         sm.slug = SecureRandom.uuid
       end
@@ -229,7 +229,7 @@ class TablesettingsController < ApplicationController
     Smartmenu.find_or_create_by!(
       restaurant_id: restaurant.id,
       menu_id: nil,
-      tablesetting_id: tablesetting.id
+      tablesetting_id: tablesetting.id,
     ) do |sm|
       sm.slug = SecureRandom.uuid
     end

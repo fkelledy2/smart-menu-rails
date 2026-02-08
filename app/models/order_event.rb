@@ -33,16 +33,13 @@ class OrderEvent < ApplicationRecord
           occurred_at: occurred_at,
         )
       rescue ActiveRecord::RecordNotUnique
-        if idempotency_key.present?
-          OrderEvent.find_by!(ordr_id: ordr.id, idempotency_key: idempotency_key)
-        else
-          raise
-        end
+        raise if idempotency_key.blank?
+
+        OrderEvent.find_by!(ordr_id: ordr.id, idempotency_key: idempotency_key)
       end
     end
   end
 
-  validates :ordr, presence: true
   validates :sequence, presence: true
   validates :event_type, presence: true
   validates :entity_type, presence: true

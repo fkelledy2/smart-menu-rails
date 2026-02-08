@@ -18,6 +18,7 @@ class DemoMenuService
   def self.demo_smartmenu
     ApplicationRecord.on_primary do
       return nil unless Restaurant.exists?(demo_restaurant_id) && Menu.exists?(demo_menu_id)
+
       Smartmenu.where(restaurant_id: demo_restaurant_id, menu_id: demo_menu_id, tablesetting_id: nil).first ||
         Smartmenu.create!(
           restaurant_id: demo_restaurant_id,

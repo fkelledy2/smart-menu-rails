@@ -8,10 +8,10 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     # Use the provided smartmenu slug for customer view
     slug = '3ecb722a-5257-4954-91b9-ee6863b84533'
     @smartmenu = Smartmenu.find_by(slug: slug)
-    unless @smartmenu
-      @smartmenu = Smartmenu.create!(restaurant: @restaurant, menu: @menu, tablesetting: @table, slug: slug)
-    else
+    if @smartmenu
       @smartmenu.update!(tablesetting: @table)
+    else
+      @smartmenu = Smartmenu.create!(restaurant: @restaurant, menu: @menu, tablesetting: @table, slug: slug)
     end
     # Ensure active locales exist for the restaurant so the selector renders
     %w[en it es].each do |loc|
@@ -22,9 +22,7 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     # Ensure a clear default locale is set for the restaurant
     Restaurantlocale.where(restaurant: @restaurant).update_all(dfault: false)
     en_default = Restaurantlocale.find_by(restaurant: @restaurant, locale: 'en')
-    if en_default
-      en_default.update!(dfault: true)
-    end
+    en_default&.update!(dfault: true)
   end
 
   # Pre-order: selecting locale persists in Menuparticipant
@@ -34,8 +32,12 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     assert_testid('smartmenu-customer-view')
 
     # Open dropdown and click a locale flag
-    find('#lovale-actions', wait: 5).click rescue nil
-    flag = find('.setparticipantlocale', match: :first, wait: 5, visible: :all)
+    begin
+      find_by_id('lovale-actions', wait: 5).click
+    rescue StandardError
+      nil
+    end
+    flag = first('.setparticipantlocale', wait: 5, visible: :all)
     chosen = flag[:'data-locale']
     flag.click
 
@@ -48,6 +50,7 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
         loop do
           mp = Menuparticipant.find_by(smartmenu_id: @smartmenu.id)
           break if mp&.preferredlocale&.downcase == chosen.downcase
+
           sleep 0.05
         end
       end
@@ -69,8 +72,12 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     ensure_order_dom_context!
 
     # Pre-select a locale
-    find('#lovale-actions', wait: 5).click rescue nil
-    italian = find('.setparticipantlocale[data-locale]', match: :first, wait: 5, visible: :all)
+    begin
+      find_by_id('lovale-actions', wait: 5).click
+    rescue StandardError
+      nil
+    end
+    italian = first('.setparticipantlocale[data-locale]', wait: 5, visible: :all)
     chosen = italian[:'data-locale']
     italian.click
     wait_for_requests_to_complete(timeout: 5)
@@ -78,6 +85,7 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
       loop do
         mp = Menuparticipant.find_by(smartmenu_id: @smartmenu.id)
         break if mp&.preferredlocale&.downcase == chosen.downcase
+
         sleep 0.05
       end
     end
@@ -92,7 +100,7 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
       page.execute_script("var m=document.getElementById('openOrderModal'); if(m && window.bootstrap){(window.bootstrap.Modal.getInstance(m)||window.bootstrap.Modal.getOrCreateInstance(m)).show();}")
       sleep 0.2
     end
-    find('#start-order', wait: 5).click
+    find_by_id('start-order', wait: 5).click
     wait_for_requests_to_complete(timeout: 5)
     add_item_to_order(menuitems(:burger).id)
 
@@ -104,14 +112,13 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
         loop do
           op = order.reload.ordrparticipants.where(role: 0).first
           break if op&.preferredlocale&.downcase == chosen.downcase
+
           sleep 0.05
         end
       end
     rescue Timeout::Error
       op = order.reload.ordrparticipants.where(role: 0).first
-      if op
-        op.update!(preferredlocale: chosen)
-      end
+      op&.update!(preferredlocale: chosen)
     end
     assert op.present?, 'Ordrparticipant should exist'
     assert_equal chosen.downcase, op.preferredlocale&.downcase
@@ -126,8 +133,12 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     order = Ordr.last
 
     # Change locale
-    find('#lovale-actions', wait: 5).click rescue nil
-    target = find('.setparticipantlocale[data-locale]', match: :first, wait: 5, visible: :all)
+    begin
+      find_by_id('lovale-actions', wait: 5).click
+    rescue StandardError
+      nil
+    end
+    target = first('.setparticipantlocale[data-locale]', wait: 5, visible: :all)
     chosen = target[:'data-locale']
     target.click
     wait_for_requests_to_complete(timeout: 5)
@@ -136,6 +147,7 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
       loop do
         op = order.ordrparticipants.where(role: 0).first
         break if op&.reload&.preferredlocale&.downcase == chosen.downcase
+
         sleep 0.05
       end
     end
@@ -147,18 +159,30 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   test 'menu displays in default restaurant locale when no preference set' do
     visit smartmenu_path(@smartmenu.slug)
     # Do not click a locale; ensure no menuparticipant exists for session
-    Menuparticipant.where(smartmenu_id: @smartmenu.id, sessionid: session.id.to_s).delete_all rescue nil
+    begin
+      Menuparticipant.where(smartmenu_id: @smartmenu.id, sessionid: session.id.to_s).delete_all
+    rescue StandardError
+      nil
+    end
 
     # Check selected locale icon corresponds to restaurant default (set to 'en' above)
     default_locale = 'en'
     # Open the dropdown to ensure flags are present
-    find('#lovale-actions', wait: 5).click rescue nil
+    begin
+      find_by_id('lovale-actions', wait: 5).click
+    rescue StandardError
+      nil
+    end
     # Ensure at least one locale option is visible (allow non-visible for dropdown rendering)
-    find('.setparticipantlocale', match: :first, wait: 5, visible: :all)
+    first('.setparticipantlocale', wait: 5, visible: :all)
     # The selected flag in the button should match default locale
-    button = find('#lovale-actions', wait: 5)
+    find_by_id('lovale-actions', wait: 5)
     # Open dropdown and ensure default locale option is present
-    find('#lovale-actions').click rescue nil
+    begin
+      find_by_id('lovale-actions').click
+    rescue StandardError
+      nil
+    end
     assert_selector(".setparticipantlocale[data-locale='#{default_locale}']", wait: 5, visible: :all)
   end
 end

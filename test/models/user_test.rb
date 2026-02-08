@@ -109,7 +109,7 @@ class UserTest < ActiveSupport::TestCase
 
   test 'needs_onboarding? should return false when has restaurants' do
     @user.onboarding_session.update!(status: :started)
-    assert Restaurant.where(user_id: @user.id).exists?
+    assert Restaurant.exists?(user_id: @user.id)
     assert_not @user.needs_onboarding?
   end
 
@@ -208,9 +208,9 @@ class UserTest < ActiveSupport::TestCase
       'user@example.com',
       'user.name@example.com',
       'user+tag@example.co.uk',
-      'user_name@example-domain.com'
+      'user_name@example-domain.com',
     ]
-    
+
     valid_emails.each do |email|
       user = User.new(email: email, password: 'password123')
       assert user.valid?, "#{email} should be valid"
@@ -250,7 +250,7 @@ class UserTest < ActiveSupport::TestCase
       email: 'test@example.com',
       password: 'password123',
       first_name: 'José',
-      last_name: 'García'
+      last_name: 'García',
     )
     assert user.valid?
   end
@@ -260,7 +260,7 @@ class UserTest < ActiveSupport::TestCase
       email: 'test@example.com',
       password: 'password123',
       first_name: "O'Brien",
-      last_name: 'Smith-Jones'
+      last_name: 'Smith-Jones',
     )
     assert user.valid?
   end
@@ -270,7 +270,7 @@ class UserTest < ActiveSupport::TestCase
       email: 'test@example.com',
       password: 'password123',
       first_name: 'A' * 255,
-      last_name: 'B' * 255
+      last_name: 'B' * 255,
     )
     assert user.valid?
   end
@@ -280,7 +280,7 @@ class UserTest < ActiveSupport::TestCase
       email: 'test@example.com',
       password: 'password123',
       first_name: nil,
-      last_name: nil
+      last_name: nil,
     )
     assert user.valid?
   end
@@ -289,7 +289,7 @@ class UserTest < ActiveSupport::TestCase
     existing_user = users(:one)
     user = User.new(
       email: existing_user.email.upcase,
-      password: 'password123'
+      password: 'password123',
     )
     assert_not user.valid?
     assert_includes user.errors[:email], 'has already been taken'
@@ -298,7 +298,7 @@ class UserTest < ActiveSupport::TestCase
   test 'should strip whitespace from email' do
     user = User.new(
       email: '  test@example.com  ',
-      password: 'password123'
+      password: 'password123',
     )
     user.valid?
     # Devise should handle email normalization
@@ -308,7 +308,7 @@ class UserTest < ActiveSupport::TestCase
   test 'should handle multiple validation errors' do
     user = User.new(
       email: 'invalid',
-      password: '123'
+      password: '123',
     )
     assert_not user.valid?
     assert user.errors[:email].any?
@@ -319,7 +319,7 @@ class UserTest < ActiveSupport::TestCase
     user = User.new(
       email: 'test@example.com',
       password: 'password123',
-      password_confirmation: 'different'
+      password_confirmation: 'different',
     )
     assert_not user.valid?
     assert_includes user.errors[:password_confirmation], "doesn't match Password"
@@ -329,7 +329,7 @@ class UserTest < ActiveSupport::TestCase
     user = User.new(
       email: 'test@example.com',
       password: 'password123',
-      password_confirmation: 'password123'
+      password_confirmation: 'password123',
     )
     assert user.valid?
   end
@@ -337,7 +337,7 @@ class UserTest < ActiveSupport::TestCase
   test 'should handle special characters in password' do
     user = User.new(
       email: 'test@example.com',
-      password: 'P@ssw0rd!#$%'
+      password: 'P@ssw0rd!#$%',
     )
     assert user.valid?
   end
@@ -345,7 +345,7 @@ class UserTest < ActiveSupport::TestCase
   test 'should handle spaces in password' do
     user = User.new(
       email: 'test@example.com',
-      password: 'pass word 123'
+      password: 'pass word 123',
     )
     assert user.valid?
   end
@@ -368,7 +368,7 @@ class UserTest < ActiveSupport::TestCase
     user = User.new(
       email: 'test@example.com',
       password: 'password123',
-      plan: nil
+      plan: nil,
     )
     user.valid? # Trigger before_validation callback
     assert_not_nil user.plan # Default plan should be assigned
@@ -377,7 +377,7 @@ class UserTest < ActiveSupport::TestCase
   test 'should maintain plan assignment after save' do
     user = User.create!(
       email: 'plantest@example.com',
-      password: 'password123'
+      password: 'password123',
     )
     assert_not_nil user.plan
     # Default plan should be assigned (whatever the default is)
@@ -387,7 +387,7 @@ class UserTest < ActiveSupport::TestCase
   test 'should allow plan to be nil before validation' do
     user = User.new(
       email: 'test@example.com',
-      password: 'password123'
+      password: 'password123',
     )
     assert_nil user.plan
     user.valid?
@@ -402,12 +402,12 @@ class UserTest < ActiveSupport::TestCase
     user = User.new(
       email: 'callback@example.com',
       password: 'password123',
-      plan: premium_plan
+      plan: premium_plan,
     )
-    
+
     # Trigger validation
     user.valid?
-    
+
     # Plan should remain unchanged
     assert_equal premium_plan, user.plan
   end
@@ -417,9 +417,9 @@ class UserTest < ActiveSupport::TestCase
     # The callback should handle this gracefully
     user = User.new(
       email: 'callback@example.com',
-      password: 'password123'
+      password: 'password123',
     )
-    
+
     # Even if plan assignment fails, validation should work
     # Plan is optional, so this is acceptable
     assert_nothing_raised do
@@ -433,9 +433,9 @@ class UserTest < ActiveSupport::TestCase
       email: 'onboarding@example.com',
       password: 'password123',
       first_name: 'Test',
-      last_name: 'User'
+      last_name: 'User',
     )
-    
+
     # Onboarding session should be created
     assert_not_nil user.onboarding_session
     assert_equal :started, user.onboarding_session.status.to_sym
@@ -444,32 +444,32 @@ class UserTest < ActiveSupport::TestCase
   test 'should set onboarding session status to started' do
     user = User.create!(
       email: 'onboarding2@example.com',
-      password: 'password123'
+      password: 'password123',
     )
-    
+
     assert user.onboarding_session.started?
   end
 
   test 'should associate onboarding session with user' do
     user = User.create!(
       email: 'onboarding3@example.com',
-      password: 'password123'
+      password: 'password123',
     )
-    
+
     assert_equal user, user.onboarding_session.user
   end
 
   # after_update :invalidate_user_caches callback tests
   test 'should call cache invalidation after update' do
     user = users(:one)
-    
+
     # Mock the cache service
     mock = Minitest::Mock.new
     mock.expect :call, true, [user.id]
-    
+
     AdvancedCacheService.stub :invalidate_user_caches, mock do
       user.update!(first_name: 'Updated')
-      
+
       # Verify cache invalidation was called
       assert mock.verify
     end
@@ -479,46 +479,46 @@ class UserTest < ActiveSupport::TestCase
     # Mock the cache service - should not be called
     mock = Minitest::Mock.new
     # No expectation set
-    
+
     AdvancedCacheService.stub :invalidate_user_caches, mock do
       user = User.create!(
         email: 'nocache@example.com',
-        password: 'password123'
+        password: 'password123',
       )
-      
+
       # If cache invalidation was called, mock would raise error
       # No error means callback didn't execute (correct behavior)
-      assert user.persisted?, "User should be created successfully"
+      assert user.persisted?, 'User should be created successfully'
     end
   end
 
   test 'should call cache invalidation with correct user id' do
     user = users(:one)
     original_id = user.id
-    
+
     # Mock to capture the argument
     called_with_id = nil
     AdvancedCacheService.stub :invalidate_user_caches, ->(id) { called_with_id = id } do
       user.update!(last_name: 'Changed')
     end
-    
+
     assert_equal original_id, called_with_id
   end
 
   test 'should trigger cache invalidation on any attribute update' do
     user = users(:one)
-    
+
     # Test various attribute updates
     attributes_to_test = [
       { first_name: 'New First' },
       { last_name: 'New Last' },
-      { email: 'newemail@example.com' }
+      { email: 'newemail@example.com' },
     ]
-    
+
     attributes_to_test.each do |attrs|
       mock = Minitest::Mock.new
       mock.expect :call, true, [user.id]
-      
+
       AdvancedCacheService.stub :invalidate_user_caches, mock do
         user.update!(attrs)
         assert mock.verify, "Cache invalidation should be called for #{attrs.keys.first}"

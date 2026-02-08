@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Menu Versions UI permissions', type: :request do
+RSpec.describe 'Menu Versions UI permissions' do
   let(:owner) { create(:user) }
   let(:restaurant) { create(:restaurant, user: owner) }
   let(:menu) { create(:menu, restaurant: restaurant, owner_restaurant: restaurant) }

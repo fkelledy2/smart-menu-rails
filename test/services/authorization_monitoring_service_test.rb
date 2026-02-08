@@ -15,7 +15,7 @@ class AuthorizationMonitoringServiceTest < ActiveSupport::TestCase
         @restaurant,
         :show,
         true,
-        { controller: 'restaurants', request_ip: '127.0.0.1' }
+        { controller: 'restaurants', request_ip: '127.0.0.1' },
       )
     end
   end
@@ -27,21 +27,21 @@ class AuthorizationMonitoringServiceTest < ActiveSupport::TestCase
         @restaurant,
         :show,
         false,
-        {}
+        {},
       )
     end
   end
 
   test 'tracks authorization failure' do
     exception = Pundit::NotAuthorizedError.new('Not authorized')
-    
+
     assert_nothing_raised do
       AuthorizationMonitoringService.track_authorization_failure(
         @user,
         @restaurant,
         :destroy,
         exception,
-        { controller: 'restaurants', request_ip: '127.0.0.1' }
+        { controller: 'restaurants', request_ip: '127.0.0.1' },
       )
     end
   end
@@ -83,9 +83,9 @@ class AuthorizationMonitoringServiceTest < ActiveSupport::TestCase
   test 'generates authorization report' do
     report = AuthorizationMonitoringService.generate_authorization_report(
       1.week.ago,
-      Time.current
+      Time.current,
     )
-    
+
     assert_not_nil report
     assert_includes report.keys, :period
     assert_includes report.keys, :summary
@@ -99,7 +99,7 @@ class AuthorizationMonitoringServiceTest < ActiveSupport::TestCase
   test 'report summary contains expected keys' do
     report = AuthorizationMonitoringService.generate_authorization_report
     summary = report[:summary]
-    
+
     assert_includes summary.keys, :total_checks
     assert_includes summary.keys, :total_failures
     assert_includes summary.keys, :failure_rate
@@ -109,7 +109,7 @@ class AuthorizationMonitoringServiceTest < ActiveSupport::TestCase
   test 'report includes role breakdown' do
     report = AuthorizationMonitoringService.generate_authorization_report
     role_breakdown = report[:by_user_role]
-    
+
     assert_includes role_breakdown.keys, 'owner'
     assert_includes role_breakdown.keys, 'customer'
     assert_includes role_breakdown.keys, 'anonymous'
@@ -118,7 +118,7 @@ class AuthorizationMonitoringServiceTest < ActiveSupport::TestCase
   test 'report includes resource breakdown' do
     report = AuthorizationMonitoringService.generate_authorization_report
     resource_breakdown = report[:by_resource_type]
-    
+
     assert_includes resource_breakdown.keys, 'Restaurant'
     assert_includes resource_breakdown.keys, 'Menu'
     assert_includes resource_breakdown.keys, 'Ordr'
@@ -127,7 +127,7 @@ class AuthorizationMonitoringServiceTest < ActiveSupport::TestCase
   test 'report includes action breakdown' do
     report = AuthorizationMonitoringService.generate_authorization_report
     action_breakdown = report[:by_action]
-    
+
     assert_includes action_breakdown.keys, 'show'
     assert_includes action_breakdown.keys, 'update'
     assert_includes action_breakdown.keys, 'destroy'
@@ -136,7 +136,7 @@ class AuthorizationMonitoringServiceTest < ActiveSupport::TestCase
   test 'report includes recommendations' do
     report = AuthorizationMonitoringService.generate_authorization_report
     recommendations = report[:recommendations]
-    
+
     assert_kind_of Array, recommendations
     assert recommendations.any?
   end
@@ -147,20 +147,20 @@ class AuthorizationMonitoringServiceTest < ActiveSupport::TestCase
         @user,
         @restaurant,
         :show,
-        true
+        true,
       )
     end
   end
 
   test 'handles authorization failure without context' do
     exception = StandardError.new('Test error')
-    
+
     assert_nothing_raised do
       AuthorizationMonitoringService.track_authorization_failure(
         @user,
         @restaurant,
         :show,
-        exception
+        exception,
       )
     end
   end
