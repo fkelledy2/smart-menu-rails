@@ -5,54 +5,54 @@ pl:
       created: Pozycja menu została pomyślnie utworzona.
       deleted: Pozycja menu została pomyślnie usunięta.
       updated: Pozycja menu została pomyślnie zaktualizowana.
-    errors:
-      menusection_required: Pozycje menu należy tworzyć z poziomu sekcji menu.
     edit:
       tab_item: Pozycja
+    errors:
+      menusection_required: Pozycje menu należy tworzyć z poziomu sekcji menu.
     form:
+      abv_help: Objętość alkoholu (0-100). Pozostaw puste dla napojów bezalkoholowych.
+      abv_placeholder: np. 13,5
       actions: Działania
+      alcohol_notes_ph: Uwagi opcjonalne, np. zawiera rum
+      alcohol_settings: Ustawienia alkoholu
+      alcoholic_help: Sprawdź, czy produkt zawiera alkohol.
+      classification_beer: Piwo
+      classification_cocktail: Koktajl
+      classification_help: Wybierz kategorię. Użyj non_alcoholic dla wariantów 0,0%.
+      classification_liqueur: Likier
+      classification_non_alcoholic: Bezalkoholowy
+      classification_other: Inne
+      classification_spirit: Duch
+      classification_wine: Wino
+      course_order: Kolejność kursów
+      course_order_help: 'Opcjonalnie: określ kolejność serwowania w ramach degustacji.'
       delete: Usuń
       details: Szczegóły
       errors: Błędy
       'false': fałszywy
       generateImage: Generowanie za pomocą sztucznej inteligencji
+      hidden: Ukryty (nie jest wyświetlany w smartmenu)
       imageSettings: Ustawienia obrazu
       no_image: Brak obrazu
       save: Zapisz
       settings: Ustawienia
       sure: Jesteś pewien?
-      'true': prawda
-      update: Aktualizacja
-      variantPricing: Ceny wariantów
-      tasting_price_ignored: Ta cena jest pomijana w sekcjach menu degustacyjnego.
-        Należy użyć poniższego dodatku.
-      alcohol_settings: Ustawienia alkoholu
-      alcoholic_help: Sprawdź, czy produkt zawiera alkohol.
-      abv_placeholder: np. 13,5
-      abv_help: Objętość alkoholu (0-100). Pozostaw puste dla napojów bezalkoholowych.
-      classification_wine: Wino
-      classification_beer: Piwo
-      classification_spirit: Duch
-      classification_cocktail: Koktajl
-      classification_liqueur: Likier
-      classification_other: Inne
-      classification_non_alcoholic: Bezalkoholowy
-      classification_help: Wybierz kategorię. Użyj non_alcoholic dla wariantów 0,0%.
-      alcohol_notes_ph: Uwagi opcjonalne, np. zawiera rum
+      tasting_carrier: Użyj jako nośnika do degustacji
+      tasting_carrier_help: Tylko jeden nośnik na sekcję degustacji. Elementy nośnika
+        są automatycznie ukrywane.
       tasting_item_settings: Ustawienia pozycji degustacji
       tasting_optional: Kurs opcjonalny
       tasting_optional_help: Jeśli zaznaczono, ten kurs jest opcjonalny (gość może
         go pominąć).
+      tasting_price_ignored: Ta cena jest pomijana w sekcjach menu degustacyjnego.
+        Należy użyć poniższego dodatku.
       tasting_supplement: Dodatek (w centach)
       tasting_supplement_help: Pozostaw puste lub 0 dla uwzględnionych; ustaw kwotę
         dla cen dodatkowych.
-      course_order: Kolejność kursów
-      course_order_help: 'Opcjonalnie: określ kolejność serwowania w ramach degustacji.'
+      'true': prawda
+      update: Aktualizacja
+      variantPricing: Ceny wariantów
       visibility: Widoczność
-      hidden: Ukryty (nie jest wyświetlany w smartmenu)
-      tasting_carrier: Użyj jako nośnika do degustacji
-      tasting_carrier_help: Tylko jeden nośnik na sekcję degustacji. Elementy nośnika
-        są automatycznie ukrywane.
     index:
       menuItem: Pozycja menu
       menuItems: Pozycje menu

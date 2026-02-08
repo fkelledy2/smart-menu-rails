@@ -1,30 +1,72 @@
 ---
 es:
   smartmenus:
+    alcohol:
+      acknowledge_btn: Confirmar verificación de edad
+      acknowledged: Verificación de edad confirmada
+      flag: Alcohol
+      non_alcoholic: Sin alcohol
+      policy_blocked: La venta de alcohol está actualmente bloqueada por la política.
+      sales_disabled: La venta de alcohol está prohibida en este restaurante.
+      verify_age: Compruebe la edad del cliente antes de servirle bebidas alcohólicas.
+      zero_abv_short: 0.0%
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: El Smartmenu se ha creado correctamente.
+      deleted: Smartmenu se ha eliminado correctamente.
+      updated: Smartmenu se ha actualizado correctamente.
     edit:
-      title: ''
+      title: Editar Smartmenu
+    empty_states:
+      adjust_filters: Ajustar filtros
+      browse_menu: Examinar el menú
+      cart_empty: Su cesta está vacía
+      cart_empty_description: Comience a añadir deliciosos productos de nuestro menú.
+      error_description: Tenemos problemas para cargar este contenido. Por favor,
+        inténtelo de nuevo.
+      error_occurred: Algo salió mal
+      no_items_filtered: No hay artículos que coincidan con sus filtros
+      no_items_filtered_description: Prueba a ajustar los filtros de alérgenos para
+        ver más artículos.
+      no_menu_description: Seguimos añadiendo artículos a nuestro menú. Visítenos
+        pronto.
+      no_menu_items: Aún no hay artículos en el menú
+      no_results: No se han encontrado resultados
+      no_results_description: No hemos encontrado ningún artículo que coincida con
+        su búsqueda. Pruebe con otras palabras clave.
+      no_table_description: Seleccione una mesa para iniciar su pedido.
+      no_table_selected: Seleccione su mesa
+      order_complete: Pedido enviado
+      order_complete_description: Su pedido ha sido enviado a la cocina. ¡Disfrute
+        de su comida!
+      refresh: Actualizar
+      try_again: Inténtelo de nuevo
     form:
-      cancel: ''
-      destroy: ''
+      cancel: Cancelar
+      destroy: Destruye
       save: Guardar
       sure: "¿Estás seguro?"
     index:
       smartmenus: Menús Inteligentes
+    modal_footer_primary:
+      cancel: Cancelar
     new:
-      title: ''
+      title: Nuevo Smartmenu
+    ocr:
+      alcohol:
+        abv: ABV
+        classification: Clase
+        override_label: Alcohol
+        overrides_hint: Las anulaciones se aplican en la publicación.
+        review_needed: Necesita revisión
     orderCustomer:
       bill: Cuenta
-      items_in_cart: ''
+      items_in_cart: artículos en la cesta
       order: Pedir
       staffAlerted: Personal alertado
       startOrder: Iniciar pedido
     orderStaff:
       bill: Cuenta
-      items_in_cart: ''
+      items_in_cart: artículos en la cesta
       order: Pedir
       startOrder: Iniciar pedido
       takePayment: Pagar
@@ -36,47 +78,47 @@ es:
     showMenuBanner:
       allergyns: Alérgenos
     showMenuContentCustomer:
-      search_placeholder: ''
+      search_placeholder: Buscar elementos en el menú...
     showMenuitem:
-      add_to_order: ''
-      allergyns: ''
-      loading: ''
+      add_to_order: Añadir al pedido
+      allergyns: Alérgenos
+      loading: Cargando...
     showMenuitemHorizontal:
-      loading: ''
+      loading: Cargando...
     showMenuitemHorizontalActionBar:
-      allergyns: ''
-      order: ''
-      toggle_dropdown: ''
+      allergyns: Alérgenos
+      order: Pida
+      toggle_dropdown: Desplegable
     showModals:
       add: Añadir nombre
       addToOrder: Añadir al pedido
-      bill_prefix: ''
+      bill_prefix: 'Bill:'
       cancel: Cancelar
       confirmPayment: Confirmar pago
-      cover_charge: ''
+      cover_charge: Tasa de cobertura
       customiseOrderWithName: Personaliza tu pedido
-      partySize: ''
-      excluding_tip: ''
+      excluding_tip: sin propina
       filterAllergyns: Filtrar alérgenos
       filterBy: Filtrar por
-      including_tip: ''
-      item: ''
-      name_label: ''
-      nett: ''
+      including_tip: incl. propina
+      item: Artículo
+      name_label: 'Nombre:'
+      nett: Neto
       noneAll: Ninguno / todos
-      order_aria: ''
-      payBill: ''
-      payment_link: ''
+      order_aria: Pida
+      partySize: Tamaño del partido
+      payBill: Pagar la factura
+      payment_link: Enlace de pago
       price: Precio
       requestBill: Pedir cuenta
-      selected: ''
-      service: ''
+      selected: Selección
+      service: Servicio
       start: Inicio
       startOrder: Iniciar pedido
       submit: Enviar pedido
-      submitted: ''
-      tax: ''
-      tip_options: ''
+      submitted: Enviado
+      tax: Impuesto
+      tip_options: Opciones
       total: Total
       yourOrder: Tu pedido
     showTableLocaleSelectorCustomer:
@@ -84,44 +126,7 @@ es:
     showTableLocaleSelectorStaff:
       table: Mesa
     smartmenu:
-      menu: ''
-      restaurant: ''
-      slug: ''
-      tablesetting: ''
-    modal_footer_primary:
-      cancel: ''
-    alcohol:
-      flag: ''
-      non_alcoholic: ''
-      zero_abv_short: ''
-      verify_age: ''
-      sales_disabled: ''
-      policy_blocked: ''
-      acknowledge_btn: Confirmar verificación de edad
-      acknowledged: Verificación de edad confirmada
-    ocr:
-      alcohol:
-        override_label: ''
-        abv: ''
-        classification: ''
-        review_needed: ''
-        overrides_hint: ''
-    empty_states:
-      no_menu_items: ''
-      no_menu_description: ''
-      refresh: ''
-      cart_empty: ''
-      cart_empty_description: ''
-      browse_menu: ''
-      no_results: ''
-      no_results_description: ''
-      no_items_filtered: ''
-      no_items_filtered_description: ''
-      adjust_filters: ''
-      no_table_selected: ''
-      no_table_description: ''
-      order_complete: ''
-      order_complete_description: ''
-      error_occurred: ''
-      error_description: ''
-      try_again: ''
+      menu: 'Menú:'
+      restaurant: 'Restaurante:'
+      slug: 'Babosa:'
+      tablesetting: 'Establecimiento de mesas:'

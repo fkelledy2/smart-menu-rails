@@ -2,28 +2,28 @@
 hu:
   inventories:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: A leltár sikeresen létrejött.
+      deleted: A leltár sikeresen törlésre került.
+      updated: A leltár sikeresen frissült.
     edit:
       inventory: Készlet szerkesztése
     form:
       delete: Törlés
-      errors: ''
+      errors: Hibák
       save: Mentés
-      select_menu_item: ''
+      select_menu_item: Válasszon ki egy menüpontot...
       sure: Biztos vagy benne?
     index:
       inventories: Készletek
       inventory: Készlet
     inventory:
-      currentinventory: ''
-      menuitem: ''
-      resethour: ''
-      startinginventory: ''
+      currentinventory: 'Jelenlegi leltár:'
+      menuitem: 'Menüpont:'
+      resethour: 'Óra visszaállítása:'
+      startinginventory: 'Kezdő leltár:'
     new:
       cancel: Mégse
       inventory: Új készlet
     show:
       inventory: Készlet megtekintése
-      select_menu_item: ''
+      select_menu_item: Válasszon ki egy menüpontot...

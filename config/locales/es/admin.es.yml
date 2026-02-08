@@ -1,220 +1,234 @@
 ---
 es:
   admin:
-    performance:
-      title: Monitoreo de Rendimiento
-      subtitle: Métricas y análisis de rendimiento en tiempo real
-      card:
-        avg_response_time: Tiempo Promedio de Respuesta
-        memory_usage: Uso de Memoria
-        error_rate: Tasa de Errores
-        active_users: Usuarios Activos
-        last_5_minutes: Últimos 5 minutos
-        current_rss: RSS Actual
-      response_time_trend: Tendencia de Tiempo de Respuesta (24h)
-      memory_usage_trend: Tendencia de Uso de Memoria (24h)
-      slowest_endpoints: Puntos de Acceso Más Lentos (Última Hora)
-      table:
-        endpoint: Punto de Acceso
-        avg_response_time: Tiempo Promedio de Respuesta
-      no_slow_endpoints: No se detectaron puntos de acceso lentos
-      recent_slow_queries: Consultas Lentas Recientes
-      query_table:
-        duration: Duración
-        query: Consulta
-        time: Hora
-      no_slow_queries: No se detectaron consultas lentas
-      actions: Acciones
     cache:
-      title: Administración de Caché
-      health_status: Estado de Salud del Caché
-      response_time: Tiempo de Respuesta
-      write_operation: Operación de Escritura
-      read_operation: Operación de Lectura
-      delete_operation: Operación de Eliminación
-      error: Error
-      performance_stats: Estadísticas de Rendimiento
-      reset_stats: Restablecer Estadísticas
-      cache_hits: Aciertos de Caché
-      cache_misses: Fallos de Caché
-      cache_writes: Escrituras de Caché
+      active_keys: Claves Activas
       cache_deletes: Eliminaciones de Caché
       cache_errors: Errores
-      hit_rate: Tasa de Aciertos
+      cache_hits: Aciertos de Caché
       cache_info: Información del Caché
-      service_version: Versión del Servicio
-      cache_methods: Métodos de Caché
-      active_keys: Claves Activas
-      memory_usage: Uso de Memoria
-      cache_warming: Calentamiento del Caché
-      cache_warming_description: Precargar datos críticos del caché para mejorar el
-        rendimiento.
       cache_management: Gestión del Caché
       cache_management_description: Borrar todos los datos almacenados en caché para
         forzar la carga de datos nuevos.
+      cache_methods: Métodos de Caché
+      cache_misses: Fallos de Caché
       cache_patterns: Patrones de Caché
+      cache_warming: Calentamiento del Caché
+      cache_warming_description: Precargar datos críticos del caché para mejorar el
+        rendimiento.
+      cache_writes: Escrituras de Caché
+      delete_operation: Operación de Eliminación
+      error: Error
+      health_status: Estado de Salud del Caché
+      hit_rate: Tasa de Aciertos
+      memory_usage: Uso de Memoria
       patterns:
-        restaurant: Paneles y análisis de restaurantes
+        employee: Datos y rendimiento del personal
         menu: Datos y rendimiento del menú
         menuitem: Detalles y análisis de artículos
         order: Datos y resúmenes de pedidos
-        employee: Datos y rendimiento del personal
+        restaurant: Paneles y análisis de restaurantes
         user: Actividad de usuario y datos multi-restaurante
+      performance_stats: Estadísticas de Rendimiento
+      read_operation: Operación de Lectura
+      reset_stats: Restablecer Estadísticas
+      response_time: Tiempo de Respuesta
+      service_version: Versión del Servicio
+      title: Administración de Caché
+      write_operation: Operación de Escritura
+    dashboard:
+      kpis:
+        bounce_rate: Tasa de Rebote
+        customers: Clientes
+        growth_rate: Tasa de Crecimiento
+        page_views: Vistas de Página
+        total_orders: Pedidos Totales
+        total_revenue: Ingresos Totales
+        unique_visitors: Visitantes Únicos
+      loading: Cargando...
+      sales:
+        no_data: No hay datos de ventas disponibles para este período.
+        table:
+          item: Artículo
+          quantity_sold: Cantidad Vendida
+        title: Artículos Más Vendidos
     metrics:
-      title: Monitoreo de Rendimiento de la Aplicación
       card:
-        total_requests: Solicitudes Totales
-        avg_response_time: Tiempo Promedio de Respuesta
-        error_rate: Tasa de Errores
-        total_users: Usuarios Totales
         all_time: Todo el tiempo
+        all_time_registrations: Registros de siempre
+        avg_response_time: Tiempo Promedio de Respuesta
         current_average: Promedio actual
         current_error_rate: Tasa de errores actual
-        all_time_registrations: Registros de siempre
-      summary:
-        restaurants_created: Restaurantes Creados
-        menu_imports: Importaciones de Menús
-      system:
-        memory_usage: Uso de Memoria
-        active_users: Usuarios Activos
+        error_rate: Tasa de Errores
+        total_requests: Solicitudes Totales
+        total_users: Usuarios Totales
       metric_types:
-        title: Tipos de Métricas
         counters: 'Contadores: Valores acumulativos que solo aumentan (ej. solicitudes
           totales)'
         gauges: 'Medidores: Valores actuales que pueden subir o bajar (ej. usuarios
           activos)'
         histograms: 'Histogramas: Colecciones de mediciones (ej. tiempos de respuesta)'
+        title: Tipos de Métricas
+      no_recent_metrics:
+        description: Las métricas aparecerán aquí a medida que se use la aplicación
+        message: No hay métricas recientes disponibles
+      summary:
+        menu_imports: Importaciones de Menús
+        restaurants_created: Restaurantes Creados
+      system:
+        active_users: Usuarios Activos
+        memory_usage: Uso de Memoria
       table:
+        last_updated: Última Actualización
         metric: Métrica
         type: Tipo
         value: Valor
-        last_updated: Última Actualización
-      no_recent_metrics:
-        message: No hay métricas recientes disponibles
-        description: Las métricas aparecerán aquí a medida que se use la aplicación
-    dashboard:
-      kpis:
-        total_orders: Pedidos Totales
-        total_revenue: Ingresos Totales
-        customers: Clientes
-        growth_rate: Tasa de Crecimiento
-        page_views: Vistas de Página
-        unique_visitors: Visitantes Únicos
-        bounce_rate: Tasa de Rebote
-      sales:
-        title: Artículos Más Vendidos
-        table:
-          item: Artículo
-          quantity_sold: Cantidad Vendida
-        no_data: No hay datos de ventas disponibles para este período.
-      loading: Cargando...
-  notifications:
-    index:
-      title: Notificaciones
+      title: Monitoreo de Rendimiento de la Aplicación
+    performance:
+      actions: Acciones
+      card:
+        active_users: Usuarios Activos
+        avg_response_time: Tiempo Promedio de Respuesta
+        current_rss: RSS Actual
+        error_rate: Tasa de Errores
+        last_5_minutes: Últimos 5 minutos
+        memory_usage: Uso de Memoria
+      memory_usage_trend: Tendencia de Uso de Memoria (24h)
+      no_slow_endpoints: No se detectaron puntos de acceso lentos
+      no_slow_queries: No se detectaron consultas lentas
+      query_table:
+        duration: Duración
+        query: Consulta
+        time: Hora
+      recent_slow_queries: Consultas Lentas Recientes
+      response_time_trend: Tendencia de Tiempo de Respuesta (24h)
+      slowest_endpoints: Puntos de Acceso Más Lentos (Última Hora)
+      subtitle: Métricas y análisis de rendimiento en tiempo real
+      table:
+        avg_response_time: Tiempo Promedio de Respuesta
+        endpoint: Punto de Acceso
+      title: Monitoreo de Rendimiento
   announcements:
     index:
-      title: Novedades
       coming_soon: "¡Cosas emocionantes vienen muy pronto!"
+      title: Novedades
   beverage_review_queue:
-    title: Cola de Revisión de Bebidas
-    recent_pipeline_runs: Ejecuciones de tubería recientes
-    table:
-      created: Creado
-      menu: Menú
-      status: Estado
-      step: Paso
-      processed: Procesado
-      needs_review: Necesita revisión
-      unresolved: Sin resolver
-      actions: Acciones
     items_needing_review: Elementos que necesitan revisión
     items_table:
-      menu: Menú
-      section: Sección
-      item: Artículo
       category: Categoría
       class_conf: Conf. Clase
+      item: Artículo
+      menu: Menú
       parse_conf: Conf. Parsing
       parsed: Analizado
-  dw_orders_mv:
-    title: Análisis de Pedidos
-    loading: Cargando datos...
-  ordritems:
-    index:
-      title: Artículos de Pedido
-    new:
-      title: Nuevo Artículo de Pedido
-    edit:
-      title: Editar Artículo de Pedido
-    show:
-      title: Mostrar Artículo de Pedido
-      ordr: Pedido
-      menuitem: Artículo del Menú
-  ordrparticipants:
-    index:
-      title: Participantes del Pedido
-    new:
-      title: Nuevo Participante del Menú
-    edit:
-      title: Editar Participante del Menú
-    show:
-      title: Mostrar Participante del Pedido
+      section: Sección
+    recent_pipeline_runs: Ejecuciones de tubería recientes
     table:
-      sessionid: ID de Sesión
-      role: Rol
-      employee: Empleado
-      ordr: Pedido
-      ordritem: Artículo de Pedido
-  ordractions:
-    index:
-      title: Acciones de Pedido
-    new:
-      title: Nueva Acción de Pedido
-    edit:
-      title: Editar Acción de Pedido
-    show:
-      title: Mostrar Acción de Pedido
-  ordritemnotes:
-    index:
-      title: Notas de Artículos de Pedido
-    new:
-      title: Nueva Nota
-    edit:
-      title: Editar Nota
-    show:
-      title: Mostrar Nota
-  menuparticipants:
-    new:
-      title: Nuevo Participante del Menú
-    edit:
-      title: Editar Participante del Menú
-  ingredients:
-    index:
-      title: Ingredientes
-    new:
-      title: Nuevo Ingrediente
-    edit:
-      title: Editar Ingrediente
-    show:
-      title: Mostrar Ingrediente
+      actions: Acciones
+      created: Creado
+      menu: Menú
+      needs_review: Necesita revisión
+      processed: Procesado
+      status: Estado
+      step: Paso
+      unresolved: Sin resolver
+    title: Cola de Revisión de Bebidas
+  dw_orders_mv:
+    loading: Cargando datos...
+    title: Análisis de Pedidos
   genimages:
+    edit:
+      title: Editar Imagen Generada
     index:
       title: Imágenes Generadas
     new:
       title: Nueva Imagen Generada
-    edit:
-      title: Editar Imagen Generada
     show:
       title: Mostrar Imagen Generada
     table:
-      id: ID
-      name: Nombre
       description: Descripción
-      restaurant: Restaurante
-      menu: Menú
-      menusection: Sección del Menú
-      menuitem: Artículo del Menú
+      id: ID
       image_data: Datos de Imagen
+      menu: Menú
+      menuitem: Artículo del Menú
+      menusection: Sección del Menú
+      name: Nombre
+      restaurant: Restaurante
+  ingredients:
+    edit:
+      title: Editar Ingrediente
+    index:
+      title: Ingredientes
+    new:
+      title: Nuevo Ingrediente
+    show:
+      title: Mostrar Ingrediente
+  menuparticipants:
+    edit:
+      title: Editar Participante del Menú
+    new:
+      title: Nuevo Participante del Menú
+  metrics:
+    edit:
+      title: Editar Métrica
+    index:
+      title: Métricas
+    new:
+      title: Nueva Métrica
+    show:
+      title: Mostrar Métrica
+  notifications:
+    index:
+      title: Notificaciones
+  onboarding:
+    show:
+      completed: Completado
+      current_step: Paso Actual
+      progress: Progreso
+  ordractions:
+    edit:
+      title: Editar Acción de Pedido
+    index:
+      title: Acciones de Pedido
+    new:
+      title: Nueva Acción de Pedido
+    show:
+      title: Mostrar Acción de Pedido
+  ordritemnotes:
+    edit:
+      title: Editar Nota
+    index:
+      title: Notas de Artículos de Pedido
+    new:
+      title: Nueva Nota
+    show:
+      title: Mostrar Nota
+  ordritems:
+    edit:
+      title: Editar Artículo de Pedido
+    index:
+      title: Artículos de Pedido
+    new:
+      title: Nuevo Artículo de Pedido
+    show:
+      menuitem: Artículo del Menú
+      ordr: Pedido
+      title: Mostrar Artículo de Pedido
+  ordrparticipants:
+    edit:
+      title: Editar Participante del Menú
+    index:
+      title: Participantes del Pedido
+    new:
+      title: Nuevo Participante del Menú
+    show:
+      title: Mostrar Participante del Pedido
+    table:
+      employee: Empleado
+      ordr: Pedido
+      ordritem: Artículo de Pedido
+      role: Rol
+      sessionid: ID de Sesión
   restaurantlocales:
     index:
       title: Idiomas del Restaurante
@@ -222,38 +236,24 @@ es:
       title: Mostrar Idioma del Restaurante
     table:
       locale: Idioma
-      status: Estado
       restaurant: Restaurante
+      status: Estado
   tracks:
+    edit:
+      title: Editar Pista
     index:
       title: Pistas
     new:
       title: Nueva Pista
-    edit:
-      title: Editar Pista
   userplans:
+    edit:
+      manage_billing: Gestionar Facturación
     index:
       title: Planes de Usuario
     new:
       title: Nuevo Plan de Usuario
     show:
       title: Mostrar Plan de Usuario
-    edit:
-      manage_billing: Gestionar Facturación
     table:
-      user: Usuario
       plan: Plan
-  metrics:
-    index:
-      title: Métricas
-    new:
-      title: Nueva Métrica
-    edit:
-      title: Editar Métrica
-    show:
-      title: Mostrar Métrica
-  onboarding:
-    show:
-      progress: Progreso
-      current_step: Paso Actual
-      completed: Completado
+      user: Usuario

@@ -2,53 +2,57 @@
 hu:
   menuitems:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
-    errors:
-      menusection_required: ''
+      created: A menüpont sikeresen létrehozásra került.
+      deleted: A menüpont sikeresen törlődött.
+      updated: A menüpont sikeresen frissült.
     edit:
-      tab_item: ''
+      tab_item: Tétel
+    errors:
+      menusection_required: Kérjük, hozzon létre menüpontokat egy menüszekción belül.
     form:
-      actions: ''
+      abv_help: Térfogatszázalékos alkohol (0-100). Alkoholmentes esetén hagyja üresen.
+      abv_placeholder: pl. 13,5
+      actions: Műveletek
+      alcohol_notes_ph: Választható megjegyzések, pl. rumot tartalmaz
+      alcohol_settings: Alkohol beállítások
+      alcoholic_help: Ellenőrizze, hogy ez a termék tartalmaz-e alkoholt.
+      classification_beer: Sör
+      classification_cocktail: Koktél
+      classification_help: Válasszon kategóriát. A 0,0%-os változatokhoz használja
+        a non_alcoholic opciót.
+      classification_liqueur: Likőr
+      classification_non_alcoholic: Alkoholmentes
+      classification_other: Egyéb
+      classification_spirit: Spirit
+      classification_wine: Bor
+      course_order: Tanfolyam sorrend
+      course_order_help: 'Választható: a kóstoláson belüli tálalási sorrend megadása.'
       delete: Törlés
       details: Részletek
-      errors: ''
-      'false': ''
-      generateImage: ''
+      errors: Hibák
+      'false': hamis
+      generateImage: Generálás AI-val
+      hidden: Rejtett (nem jelenik meg az intelligens menüben)
       imageSettings: Kép beállítások
-      no_image: ''
+      no_image: Még nincs kép
       save: Mentés
       settings: Beállítások
       sure: Biztos vagy benne?
-      'true': ''
+      tasting_carrier: Kóstoló hordozóként való felhasználás
+      tasting_carrier_help: Kóstolási szakaszonként csak egy fuvarozó. A hordozóelemek
+        automatikusan elrejtésre kerülnek.
+      tasting_item_settings: Kóstoló tétel beállításai
+      tasting_optional: Választható tanfolyam
+      tasting_optional_help: Ha bejelölte, ez a kurzus nem kötelező (a vendég kihagyhatja).
+      tasting_price_ignored: Ezt az árat a kóstoló menü részeknél figyelmen kívül
+        hagyjuk. Használja az alábbi kiegészítést.
+      tasting_supplement: Kiegészítés (cent)
+      tasting_supplement_help: Hagyja üresen vagy hagyja 0 értéken, ha tartalmazza;
+        adjon meg egy összeget a kiegészítő árképzéshez.
+      'true': igaz
       update: Frissítés
-      variantPricing: ''
-      tasting_price_ignored: ''
-      alcohol_settings: ''
-      alcoholic_help: ''
-      abv_placeholder: ''
-      abv_help: ''
-      classification_wine: ''
-      classification_beer: ''
-      classification_spirit: ''
-      classification_cocktail: ''
-      classification_liqueur: ''
-      classification_other: ''
-      classification_non_alcoholic: ''
-      classification_help: ''
-      alcohol_notes_ph: ''
-      tasting_item_settings: ''
-      tasting_optional: ''
-      tasting_optional_help: ''
-      tasting_supplement: ''
-      tasting_supplement_help: ''
-      course_order: ''
-      course_order_help: ''
-      visibility: ''
-      hidden: ''
-      tasting_carrier: ''
-      tasting_carrier_help: ''
+      variantPricing: Változatos árképzés
+      visibility: Láthatóság
     index:
       menuItem: Menü elem
       menuItems: Menü elemek
@@ -57,4 +61,4 @@ hu:
       menuItem: Új menü elem
     show:
       menuItem: Menü elem megtekintése
-      selectMenuSection: ''
+      selectMenuSection: Válassza ki a menüszekciót

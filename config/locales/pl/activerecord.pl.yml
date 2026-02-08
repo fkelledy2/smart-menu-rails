@@ -181,9 +181,13 @@ pl:
         not_a_number: nie jest liczbą
         taken: został już pobrany
         too_long:
+          few: jest zbyt długi (maksymalnie %{count} znaki)
+          many: jest zbyt długi (maksymalnie %{count} znaków)
           one: jest zbyt długi (maksymalnie 1 znak)
           other: jest zbyt długa (maksymalnie %{count} znaków)
         too_short:
+          few: jest zbyt krótki (minimum to %{count} znaki)
+          many: jest zbyt krótki (minimum to %{count} znaków)
           one: jest zbyt krótki (minimum to 1 znak)
           other: jest zbyt krótki (minimum to %{count} znaków)
     models:

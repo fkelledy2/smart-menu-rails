@@ -2,13 +2,13 @@
 hu:
   restaurantlocales:
     controller:
-      active_not_deleted: ''
-      created: ''
-      deleted: ''
-      updated: ''
+      active_not_deleted: Az Aktív helymeghatározás nem lett törölve.
+      created: Sikeresen létrehoztuk az Étterem Locale-t.
+      deleted: A Locale törlésre került.
+      updated: Az étterem Locale sikeresen frissült.
     form:
-      delete: ''
-      save: ''
-      sure: ''
+      delete: Törölje a  címet.
+      save: Mentés
+      sure: Biztos vagy benne?
     new:
-      restaurantlocale: ''
+      restaurantlocale: Étterem Locale

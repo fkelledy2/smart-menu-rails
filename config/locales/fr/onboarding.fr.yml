@@ -2,203 +2,219 @@
 fr:
   onboarding:
     account_details:
-      continue: ''
-      email_help: ''
-      email_label: ''
-      full_name_label: ''
-      full_name_placeholder: ''
-      full_name_required: ''
-      restaurant_name_preview_help: ''
-      restaurant_name_preview_label: ''
-      restaurant_name_preview_placeholder: ''
+      continue: Continuer
+      email_help: Cet e-mail est déjà confirmé et ne peut pas être modifié pendant
+        la configuration.
+      email_label: Adresse électronique
+      full_name_label: Nom complet
+      full_name_placeholder: Saisissez votre nom complet
+      full_name_required: Veuillez indiquer votre nom complet.
+      restaurant_name_preview_help: Ne vous inquiétez pas, vous pouvez changer cela
+        à l'étape suivante.
+      restaurant_name_preview_label: Nom du restaurant (aperçu)
+      restaurant_name_preview_placeholder: Quel est le nom de votre restaurant ?
       stats:
-        restaurants_count: ''
-        restaurants_label: ''
-        satisfaction: ''
-        satisfaction_label: ''
-        setup_time: ''
-        setup_time_label: ''
-      subtitle: ''
-      title: ''
+        restaurants_count: 1,000+
+        restaurants_label: Les restaurants nous font confiance
+        satisfaction: 98%
+        satisfaction_label: Satisfaction des clients
+        setup_time: 5 min
+        setup_time_label: Temps de préparation moyen
+      subtitle: Configurons votre compte. Cela ne prendra qu'un instant.
+      title: Bienvenue à Smart Menu !
     completion:
-      completion_time: ''
-      configuring_payments: ''
-      creating_profile: ''
-      customize_menu_description: ''
-      customize_menu_title: ''
-      free_trial_status: ''
-      generating_qr: ''
-      generating_qr_codes: ''
-      generating_status: ''
-      go_to_dashboard: ''
-      menu_published: ''
-      plan_activated: ''
-      print_qr_description: ''
-      print_qr_title: ''
-      qr_code_ready: ''
-      qr_ready_title: ''
-      restaurant_created: ''
-      setting_up_menu: ''
-      setup_timeout: ''
-      setup_timeout_help: ''
-      subtitle: ''
-      title: ''
-      track_orders_description: ''
-      track_orders_title: ''
-      view_live_menu: ''
-      whats_happening: ''
-      whats_next: ''
+      completion_time: Cette opération prend généralement de 30 à 60 secondes. Vous
+        serez redirigé automatiquement une fois l'opération terminée.
+      configuring_payments: Configuration des options de paiement
+      creating_profile: Création du profil de votre restaurant
+      customize_menu_description: Ajouter des articles, télécharger des photos et
+        définir des descriptions détaillées
+      customize_menu_title: Personnalisez votre menu
+      free_trial_status: Essai gratuit de 14 jours
+      generating_qr: Générer un code QR...
+      generating_qr_codes: Générer des codes QR
+      generating_status: Générer votre code QR...
+      go_to_dashboard: Accéder au tableau de bord
+      menu_published: Menu publié
+      plan_activated: Plan activé
+      print_qr_description: Téléchargez et imprimez des codes QR pour vos tables
+      print_qr_title: Imprimer des codes QR
+      qr_code_ready: Le code QR est prêt !
+      qr_ready_title: Votre menu numérique est prêt
+      restaurant_created: Restaurant créé
+      setting_up_menu: Mise en place du menu
+      setup_timeout: L'installation prend plus de temps que prévu
+      setup_timeout_help: Veuillez actualiser la page ou contacter le service d'assistance
+      subtitle: Votre restaurant est maintenant installé et prêt à servir les clients
+        !
+      title: "Félicitations ! \U0001F389"
+      track_orders_description: Contrôler les commandes des clients et les analyses
+        en temps réel
+      track_orders_title: Suivi des commandes
+      view_live_menu: Voir le menu en direct
+      whats_happening: 'Ce qui se passe actuellement :'
+      whats_next: Quelle est la prochaine étape ?
     menu_creation:
-      add_menu_item: ''
-      back: ''
-      create_menu: ''
-      item_description_placeholder: ''
-      item_name_placeholder: ''
-      item_price_placeholder: ''
-      live_preview: ''
-      menu_item_title: ''
-      menu_items_help: ''
-      menu_items_label: ''
-      menu_name_default: ''
-      menu_name_label: ''
-      menu_name_placeholder: ''
-      menu_name_required: ''
-      min_items_alert: ''
-      need_more_items: ''
-      preview_empty: ''
-      preview_empty_alt: ''
-      quick_start_label: ''
-      subtitle: ''
-      template_added: ''
+      add_menu_item: Ajouter un élément de menu
+      back: Retour
+      create_menu: Créer un menu
+      item_description_placeholder: Brève description (facultatif)
+      item_name_placeholder: Nom de l'article
+      item_price_placeholder: '0.00'
+      live_preview: Aperçu en direct
+      menu_item_title: Point de menu
+      menu_items_help: Ajoutez au moins 3 éléments pour continuer. Ne vous souciez
+        pas de la perfection - vous pourrez tout modifier plus tard !
+      menu_items_label: Points du menu
+      menu_name_default: Menu principal
+      menu_name_label: Nom du menu
+      menu_name_placeholder: par exemple, Menu principal, Menu du déjeuner, Menu du
+        dîner
+      menu_name_required: Veuillez indiquer un nom de menu.
+      min_items_alert: Veuillez ajouter au moins 3 éléments de menu pour continuer.
+      need_more_items: Besoin de %{count} articles supplémentaires
+      preview_empty: Les éléments de votre menu apparaîtront ici au fur et à mesure
+        que vous les ajouterez.
+      preview_empty_alt: Les éléments de votre menu apparaîtront ici
+      quick_start_label: Modèles de démarrage rapide
+      subtitle: Ajoutez quelques éléments pour commencer. Vous pourrez toujours en
+        ajouter plus tard !
+      template_added: Ajouté !
       template_items:
         american:
           bbq_ribs:
-            description: ''
-            name: ''
+            description: Côtes de porc cuites lentement avec sauce BBQ
+            name: Côtes de bœuf
           buffalo_wings:
-            description: ''
-            name: ''
+            description: 8 pièces avec céleri et trempette au fromage bleu
+            name: Buffalo Wings
           classic_burger:
-            description: ''
-            name: ''
+            description: Galette de bœuf, laitue, tomate, oignon, cornichons
+            name: Burger classique
         asian:
           chicken_teriyaki:
-            description: ''
-            name: ''
+            description: Poulet grillé avec sauce teriyaki et riz
+            name: Poulet Teriyaki
           pad_thai:
-            description: ''
-            name: ''
+            description: Nouilles de riz sautées aux crevettes et aux cacahuètes
+            name: Pad thaï
           spring_rolls:
-            description: ''
-            name: ''
+            description: Rouleaux croustillants à la sauce aigre-douce
+            name: Rouleaux de printemps aux légumes
         italian:
           caesar_salad:
-            description: ''
-            name: ''
+            description: Laitue romaine, croûtons, parmesan, vinaigrette césar
+            name: Salade César
           margherita_pizza:
-            description: ''
-            name: ''
+            description: Mozzarella fraîche, sauce tomate, basilic
+            name: Pizza Margherita
           spaghetti_carbonara:
-            description: ''
-            name: ''
+            description: Pâtes aux œufs, au fromage, à la pancetta et au poivre
+            name: Spaghetti Carbonara
         mexican:
           beef_burrito:
-            description: ''
-            name: ''
+            description: Grand burrito avec du bœuf assaisonné, du riz et des haricots
+            name: Burrito au bœuf
           chicken_tacos:
-            description: ''
-            name: ''
+            description: Trois tacos mous avec du poulet grillé et de la salsa
+            name: Tacos au poulet
           guacamole_chips:
-            description: ''
-            name: ''
+            description: Guacamole frais avec chips tortilla
+            name: Guacamole et chips
       templates:
-        american: ''
-        asian: ''
-        italian: ''
-        mexican: ''
-      templates_help: ''
-      title: ''
+        american: Américain
+        asian: Asiatique
+        italian: Italien
+        mexican: Mexicain
+      templates_help: Cliquez sur un modèle pour ajouter des exemples d'articles que
+        vous pouvez personnaliser.
+      title: Créez votre premier menu
     plan_selection:
-      always_free: ''
-      back: ''
-      choose_free_plan: ''
-      continue: ''
+      always_free: Toujours libre
+      back: Retour
+      choose_free_plan: Choisir un plan gratuit
+      continue: Continuer
       features:
-        advanced_analytics: ''
-        api_access: ''
-        custom_branding: ''
-        items_per_menu: ''
-        languages: ''
-        locations: ''
-        menus_per_location: ''
-        online_ordering: ''
-        priority_support: ''
-        qr_code_menus: ''
-      free_trial: ''
-      most_popular: ''
-      per_month: ''
-      select_plan_alert: ''
-      selected: ''
-      start_free_trial: ''
-      subtitle: ''
-      title: ''
+        advanced_analytics: Analyse avancée
+        api_access: Accès à l'API
+        custom_branding: Marquage personnalisé
+        items_per_menu: éléments/menu
+        languages: langues
+        locations: lieux
+        menus_per_location: menus/localisation
+        online_ordering: Commande en ligne
+        priority_support: Soutien prioritaire
+        qr_code_menus: Menus avec code QR
+      free_trial: Essai gratuit de 14 jours
+      most_popular: LE PLUS POPULAIRE
+      per_month: "/mo"
+      select_plan_alert: Veuillez sélectionner un plan pour continuer.
+      selected: Sélectionné ✓
+      start_free_trial: Démarrer l'essai gratuit
+      subtitle: Commencez par un essai gratuit de 14 jours. Aucune carte de crédit
+        n'est nécessaire !
+      title: Choisissez votre plan
       trust_indicators:
-        mobile_subtitle: ''
-        mobile_title: ''
-        secure_subtitle: ''
-        secure_title: ''
-        support_subtitle: ''
-        support_title: ''
+        mobile_subtitle: Parfait sur tous les appareils
+        mobile_title: Optimisé pour les mobiles
+        secure_subtitle: Sécurité au niveau de la banque
+        secure_title: Sûr et fiable
+        support_subtitle: Nous sommes là pour vous aider
+        support_title: Assistance 24/7
     restaurant_details:
-      back: ''
-      continue: ''
-      cuisine_type_label: ''
-      cuisine_type_prompt: ''
-      cuisine_type_required: ''
+      back: Retour
+      continue: Continuer
+      cuisine_type_label: Type de cuisine
+      cuisine_type_prompt: Sélectionner la cuisine...
+      cuisine_type_required: Veuillez sélectionner votre type de cuisine.
       cuisine_types:
-        american: ''
-        chinese: ''
-        french: ''
-        fusion: ''
-        greek: ''
-        indian: ''
-        italian: ''
-        japanese: ''
-        korean: ''
-        mediterranean: ''
-        mexican: ''
-        middle_eastern: ''
-        other: ''
-        spanish: ''
-        thai: ''
-        vietnamese: ''
-      location_help: ''
-      location_label: ''
-      location_placeholder: ''
-      location_required: ''
-      phone_help: ''
-      phone_label: ''
-      phone_placeholder: ''
+        american: Américain
+        chinese: Chinois
+        french: Français
+        fusion: Fusion
+        greek: Grecque
+        indian: Indien
+        italian: Italien
+        japanese: Japonais
+        korean: Coréen
+        mediterranean: Méditerranée
+        mexican: Mexicain
+        middle_eastern: Moyen-Orient
+        other: Autres
+        spanish: Espagnol
+        thai: Thaïlande
+        vietnamese: Vietnamien
+      location_help: Cela nous permet de définir les valeurs par défaut des devises
+        et des fuseaux horaires.
+      location_label: Localisation
+      location_placeholder: Ville, État/pays
+      location_required: Veuillez indiquer l'emplacement de votre restaurant.
+      phone_help: Facultatif - pour les contacts avec les clients et les réservations.
+      phone_label: Numéro de téléphone
+      phone_placeholder: "+1 (555) 123-4567"
       pro_tips:
-        tip1: ''
-        tip2: ''
-        tip3: ''
-        title: ''
-      restaurant_name_label: ''
-      restaurant_name_placeholder: ''
-      restaurant_name_required: ''
-      restaurant_type_label: ''
-      restaurant_type_prompt: ''
-      restaurant_type_required: ''
+        tip1: Choisissez le type de restaurant qui correspond le mieux à votre style
+          de service
+        tip2: Le type de cuisine nous aide à proposer des modèles de menu pertinents
+        tip3: L'emplacement est utilisé pour définir la monnaie locale et le fuseau
+          horaire.
+        title: Conseils de pro
+      restaurant_name_label: Nom du restaurant
+      restaurant_name_placeholder: Entrez le nom de votre restaurant
+      restaurant_name_required: Veuillez indiquer le nom de votre restaurant.
+      restaurant_type_label: Type de restaurant
+      restaurant_type_prompt: Sélectionnez le type...
+      restaurant_type_required: Veuillez sélectionner votre type de restaurant.
       restaurant_types:
-        bakery: ''
-        bar_grill: ''
-        cafe: ''
-        casual_dining: ''
-        fast_casual: ''
-        fine_dining: ''
-        food_truck: ''
-        other: ''
-        quick_service: ''
-      subtitle: ''
-      title: ''
+        bakery: Boulangerie
+        bar_grill: Bar & Grill
+        cafe: Café
+        casual_dining: Dîner décontracté
+        fast_casual: Fast Casual (décontracté)
+        fine_dining: Gastronomie
+        food_truck: Camion-restaurant
+        other: Autres
+        quick_service: Service rapide
+      subtitle: Aidez-nous à personnaliser votre expérience en nous fournissant quelques
+        informations de base.
+      title: Parlez-nous de votre restaurant

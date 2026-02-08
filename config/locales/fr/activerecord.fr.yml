@@ -11,18 +11,18 @@ fr:
         name: Nom
         role: Rôle
         status: Statut
-        user_id: ''
+        user_id: Utilisateur
       ingredient:
-        description: ''
-        name: ''
+        description: Description
+        name: Nom
       inventory:
         currentInventory: Stock actuel
-        currentinventory: ''
+        currentinventory: Inventaire actuel
         menuItem: Article
         resetHour: Réinitialiser à
-        resethour: ''
+        resethour: Remise à zéro de l'heure
         startingInventory: Stock initial
-        startinginventory: ''
+        startinginventory: Inventaire de départ
       menu:
         allowOrdering: Commandes
         covercharge: Cover
@@ -38,7 +38,7 @@ fr:
       menuavailability:
         dayofweek: Jour
         endhour: Heure de fermeture
-        menu_id: ''
+        menu_id: Carte
         starthour: Heure d'ouverture
         status: Statut
       menuitem:
@@ -46,7 +46,7 @@ fr:
         calories: Calories
         description: Description
         image: Image
-        itemtype: ''
+        itemtype: Type d'article
         name: Nom
         preptime: Temps de préparation
         price: Prix
@@ -55,48 +55,48 @@ fr:
         status: Statut
         unitcost: Coût unitaire
       menuparticipant:
-        preferredlocale: ''
-        sessionid: ''
-        smartmenu_id: ''
+        preferredlocale: Lieu de travail préféré
+        sessionid: ID de la session
+        smartmenu_id: Menu intelligent
       menusection:
         description: Description
-        endhour: ''
+        endhour: Heure de fin
         image: Image
-        menu_id: ''
+        menu_id: Carte
         name: Nom
-        restricted: ''
-        starthour: ''
+        restricted: Restreint
+        starthour: Heure de début
         status: Statut
       metric:
-        description: ''
-        name: ''
+        description: Description
+        name: Nom
       ordr:
-        employee_id: ''
-        menu_id: ''
-        restaurant_id: ''
-        tablesetting_id: ''
+        employee_id: Employé
+        menu_id: Carte
+        restaurant_id: Établissement
+        tablesetting_id: Mise en place de la table
       ordraction:
-        action: ''
-        employee_id: ''
-        ordr_id: ''
-        ordritem_id: ''
-        ordrparticipant_id: ''
-        sessionid: ''
+        action: Action
+        employee_id: Employé
+        ordr_id: Commande
+        ordritem_id: Commander l'article
+        ordrparticipant_id: Participant à la commande
+        sessionid: ID de la session
       ordritem:
-        menuitem_id: ''
-        ordr_id: ''
+        menuitem_id: Point de menu
+        ordr_id: Commande
       ordritemnote:
-        note: ''
-        ordritem_id: ''
+        note: Note
+        ordritem_id: Commander l'article
       ordrparticipant:
-        action: ''
-        employee_id: ''
-        ordr_id: ''
-        ordritem_id: ''
-        role: ''
-        sessionid: ''
+        action: Action
+        employee_id: Employé
+        ordr_id: Commande
+        ordritem_id: Commander l'article
+        role: Rôle
+        sessionid: ID de la session
       restaurant:
-        address: ''
+        address: Adresse
         address1: Adresse 1
         address2: Adresse 2
         allowOrdering: Commandes
@@ -108,7 +108,7 @@ fr:
         displayImagesInPopup: Images (popup)
         genid: Gen ID
         image: Image
-        image_style_profile: ''
+        image_style_profile: Profil du style de l'image
         imagecontext: Contexte
         inventoryTracking: Stock
         name: Nom
@@ -135,74 +135,74 @@ fr:
         name: Nom
         size: Taille
       smartmenu:
-        menu_id: ''
-        restaurant_id: ''
-        slug: ''
-        tablesetting_id: ''
+        menu_id: Carte
+        restaurant_id: Établissement
+        slug: Limace
+        tablesetting_id: Mise en place de la table
       tablesetting:
-        capacity: ''
-        description: ''
-        name: ''
-        status: ''
-        tabletype: ''
+        capacity: Capacité
+        description: Description
+        name: Nom
+        status: Statut
+        tabletype: Tableau Type
       tag:
-        description: ''
-        name: ''
+        description: Description
+        name: Nom
       tax:
         name: Nom
         taxPercentage: Pourcentage
         taxType: Type
-        taxpercentage: ''
-        taxtype: ''
+        taxpercentage: Pourcentage d'imposition
+        taxtype: Type d'impôt
       testimonial:
-        restaurant_id: ''
-        testimonial: ''
-        user_id: ''
+        restaurant_id: Établissement
+        testimonial: Témoignage
+        user_id: Utilisateur
       tip:
-        percentage: ''
+        percentage: Pourcentage
       track:
-        description: ''
-        externalid: ''
-        image: ''
-        name: ''
-        restaurant_id: ''
-        sequence: ''
+        description: Description
+        externalid: ID externe
+        image: Image
+        name: Nom
+        restaurant_id: Établissement
+        sequence: Séquence
       userplan:
-        plan_id: ''
+        plan_id: Forfait
     errors:
-      format: ''
+      format: "%{attribut} %{message}"
       messages:
-        blank: ''
-        greater_than: ''
-        greater_than_or_equal_to: ''
-        invalid: ''
-        less_than: ''
-        less_than_or_equal_to: ''
-        not_a_number: ''
-        taken: ''
+        blank: ne peut être vide
+        greater_than: doit être supérieur à %{count}
+        greater_than_or_equal_to: doit être supérieur ou égal à %{count}
+        invalid: n'est pas valide
+        less_than: doit être inférieur à %{count}
+        less_than_or_equal_to: doit être inférieur ou égal à %{count}
+        not_a_number: n'est pas un nombre
+        taken: a déjà été prise
         too_long:
-          one: ''
-          other: ''
+          one: est trop long (maximum 1 caractère)
+          other: est trop long (le maximum est %{count} caractères)
         too_short:
-          one: ''
-          other: ''
+          one: est trop court (minimum 1 caractère)
+          other: est trop court (le minimum est de %{count} caractères)
     models:
-      allergyn: ''
-      genimage: ''
-      ingredient: ''
-      inventory: ''
-      menu: ''
-      menuavailability: ''
-      menuitem: ''
-      menusection: ''
-      metric: ''
-      ordr: ''
-      restaurant: ''
-      restaurantavailability: ''
-      size: ''
-      smartmenu: ''
-      tablesetting: ''
-      tag: ''
-      testimonial: ''
-      track: ''
-      userplan: ''
+      allergyn: Allergène
+      genimage: Image générée
+      ingredient: Ingrédient
+      inventory: Inventaire
+      menu: Carte
+      menuavailability: Disponibilité du menu
+      menuitem: Point de menu
+      menusection: Section du menu
+      metric: Métrique
+      ordr: Commande
+      restaurant: Établissement
+      restaurantavailability: Disponibilité du restaurant
+      size: Taille
+      smartmenu: Menu intelligent
+      tablesetting: Mise en place de la table
+      tag: Étiquette
+      testimonial: Témoignage
+      track: Poursuivre
+      userplan: Plan de l'utilisateur

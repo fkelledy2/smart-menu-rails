@@ -2,6 +2,6 @@
 hu:
   metrics:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: A mérőszám sikeresen létrejött.
+      deleted: A mérőszám sikeresen törlődött.
+      updated: A mérőszám sikeresen frissült.

@@ -19,6 +19,9 @@ pl:
       taxesTab: Podatki
       tipsTab: Wskazówki
       tracksTab: Utwory
+    edit_2025:
+      subtitle: Zarządzanie konfiguracją restauracji
+      toggle_navigation: Przełącz nawigację
     form:
       address: Adres
       connect: Połączenie
@@ -39,6 +42,87 @@ pl:
       wifi: Wi‑Fi
     index:
       restaurants: Restauracje
+    index_2025:
+      heading: Restauracje
+      new_restaurant: Nowa restauracja
+      quick_actions: Szybkie akcje
+      search: Wyszukiwanie
+      search_placeholder: Szukaj restauracji...
+      subtitle: Zarządzanie lokalizacjami, menu i personelem
+      title: Restauracje
+    index_frame_2025:
+      active: Aktywny
+      apply: Zastosuj
+      clear_search: Wyczyść wyszukiwanie
+      drag_to_reorder: Przeciągnij, aby zmienić kolejność
+      edit: Edytuj
+      inactive: Nieaktywny
+      menus_action: Menu
+      menus_count_label: menu
+      no_restaurants: Nie znaleziono restauracji
+      no_results_for: Brak wyników dla
+      pagination_aria_label: Paginacja restauracji
+      restaurants: Restauracje
+      set_status: Ustaw status...
+      staff_count_label: personel
+    insights:
+      back: Powrót
+      columns:
+        count: Liczyć
+        dropoff: Dropoff
+        dropoff_rate: Współczynnik odpadania
+        fail: Niepowodzenie
+        item: Pozycja
+        median_seconds: Mediana (s)
+        orders: Zamówienia
+        outlier: Wartość odstająca
+        qty: Ilość
+        rate: Stawka
+        sample_size: "N"
+        share: Udział
+        step: Krok
+        success: Sukces
+        triggers: Wyzwalacze
+      export_csv: Eksport CSV
+      filters:
+        all_menus: Wszystkie menu
+        custom: Niestandardowe
+        end: Koniec
+        last28: Ostatnie 28 dni
+        last7: Ostatnie 7 dni
+        last_month: Ostatni miesiąc
+        menu_optional: Menu (opcjonalnie)
+        mtd: MTD
+        refresh: Odświeżanie
+        start: Start
+        time_window: Okno czasowe
+        today: Dzisiaj
+        yesterday: Wczoraj
+      funnel_steps:
+        bill_requested: Bill zażądał
+        order_submitted: Złożone zamówienie
+        payment_succeeded: Płatność powiodła się
+      helper_text: 'v1: wgląd tylko do odczytu. Lejek porzucania jest obecnie oparty
+        na kamieniach milowych zamówienia/płatności.'
+      no_data: Brak danych dla wybranego okna.
+      page_title: "%{nazwa_restauracji} - Insights"
+      sections:
+        abandonment_funnel:
+          title: Lejek porzucenia
+        prep_time_bottlenecks:
+          helper_text: Używa czasu biletu stacji (przesłany → gotowy/odebrany) jako
+            proxy v1.
+          title: Wąskie gardła czasu przygotowania
+        slow_movers:
+          title: Powolne ruchy
+        top_performers:
+          title: Najlepsi wykonawcy
+        voice_triggers:
+          title: Częstotliwość wyzwalania głosem
+      title: Spostrzeżenia
+      values:
+        'false': replace_me
+        'true': replace_me
     new:
       restaurant: Restauracja
       restaurants: Restauracje
@@ -55,6 +139,37 @@ pl:
       state: 'Stan:'
       status: 'Status:'
       user: 'Użytkownik:'
+    sections:
+      details_2025:
+        address: Adres
+        city: Miasto
+        city_placeholder: Nazwa miasta
+        country: Kraj
+        country_placeholder: Kraj
+        currency: Waluta
+        description: Opis
+        items: Przedmioty
+        latitude: Szerokość geograficzna
+        latitude_placeholder: np. 40.7128
+        longitude: Długość geograficzna
+        longitude_placeholder: np., -74.0060
+        phone: Telefon
+        phone_help: Numer kontaktowy dla klientów
+        phone_placeholder: np. +1 (555) 123-4567
+        postcode: Kod pocztowy
+        postcode_placeholder: np. 12345
+        restaurant_name: Nazwa restauracji
+        restaurant_name_help: Nazwa, którą zobaczą klienci
+        restaurant_name_placeholder: np. Bella Italia
+        state: Państwo/Prowincja
+        state_placeholder: Państwo lub prowincja
+        status: Status
+        status_help: Tylko aktywne restauracje są widoczne dla klientów
+        timezone: Strefa czasowa
+        timezone_help: Lokalna strefa czasowa dla godzin pracy
+        website: Strona internetowa
+        website_help: Strona internetowa restauracji
+        website_placeholder: https://example.com
     show:
       address: Adres
       billing_content: Tutaj pojawi się konfiguracja rozliczeń.
@@ -112,165 +227,31 @@ pl:
       loading: Ładowanie...
     showTracks:
       tracks: Utwory
-    insights:
-      page_title: "%{nazwa_restauracji} - Insights"
-      title: Spostrzeżenia
-      back: Powrót
-      export_csv: Eksport CSV
-      helper_text: 'v1: wgląd tylko do odczytu. Lejek porzucania jest obecnie oparty
-        na kamieniach milowych zamówienia/płatności.'
-      no_data: Brak danych dla wybranego okna.
-      values:
-        true: replace_me
-        false: replace_me
-      filters:
-        time_window: Okno czasowe
-        today: Dzisiaj
-        yesterday: Wczoraj
-        last7: Ostatnie 7 dni
-        last28: Ostatnie 28 dni
-        mtd: MTD
-        last_month: Ostatni miesiąc
-        custom: Niestandardowe
-        start: Start
-        end: Koniec
-        refresh: Odświeżanie
-        menu_optional: Menu (opcjonalnie)
-        all_menus: Wszystkie menu
-      sections:
-        top_performers:
-          title: Najlepsi wykonawcy
-        slow_movers:
-          title: Powolne ruchy
-        prep_time_bottlenecks:
-          title: Wąskie gardła czasu przygotowania
-          helper_text: Używa czasu biletu stacji (przesłany → gotowy/odebrany) jako
-            proxy v1.
-        voice_triggers:
-          title: Częstotliwość wyzwalania głosem
-        abandonment_funnel:
-          title: Lejek porzucenia
-      columns:
-        item: Pozycja
-        orders: Zamówienia
-        qty: Ilość
-        share: Udział
-        median_seconds: Mediana (s)
-        sample_size: "N"
-        outlier: Wartość odstająca
-        triggers: Wyzwalacze
-        success: Sukces
-        fail: Niepowodzenie
-        rate: Stawka
-        step: Krok
-        count: Liczyć
-        dropoff: Dropoff
-        dropoff_rate: Współczynnik odpadania
-      funnel_steps:
-        order_submitted: Złożone zamówienie
-        bill_requested: Bill zażądał
-        payment_succeeded: Płatność powiodła się
-    edit_2025:
-      subtitle: Zarządzanie konfiguracją restauracji
-      toggle_navigation: Przełącz nawigację
     sidebar_2025:
-      close_menu: Zamknij menu
-      restaurant: RESTAURACJA
-      details: Szczegóły
-      schedule: Harmonogram
-      localization: Lokalizacja
-      menus: MENUS
+      advanced: Zaawansowany
       all_menus: Wszystkie menu
       allergens: Alergeny
-      sizes: Rozmiary
-      tables: Stoły
-      operations: OPERACJE
-      kitchen_dashboard: Kuchnia
       bar_dashboard: Bar
-      wifi: Wi‑Fi
-      team: ZESPÓŁ
-      staff: Personel
+      close_menu: Zamknij menu
+      details: Szczegóły
       financials: FINANSE
-      taxes_and_tips: Podatki i porady
-      taxes: Podatki
-      tips: Wskazówki
-      ordering: Zamawianie
       insights: Spostrzeżenia
-      setup: USTAWIENIA
-      settings: Ustawienia
-      qr_codes: Kody QR
       jukebox: Szafa grająca
-      advanced: Zaawansowany
-    index_2025:
-      title: Restauracje
-      heading: Restauracje
-      subtitle: Zarządzanie lokalizacjami, menu i personelem
-      quick_actions: Szybkie akcje
-      new_restaurant: Nowa restauracja
-      search_placeholder: Szukaj restauracji...
-      search: Wyszukiwanie
-    index_frame_2025:
-      pagination_aria_label: Paginacja restauracji
-      no_restaurants: Nie znaleziono restauracji
-      no_results_for: Brak wyników dla
-      clear_search: Wyczyść wyszukiwanie
-      menus_count_label: menu
-      staff_count_label: personel
-      edit: Edytuj
-      menus_action: Menu
-      restaurants: Restauracje
-      active: Aktywny
-      inactive: Nieaktywny
-      set_status: Ustaw status...
-      apply: Zastosuj
-      drag_to_reorder: Przeciągnij, aby zmienić kolejność
-    sections:
-      details_2025:
-        quick_actions: Szybkie akcje
-        new_menu: Nowe menu
-        import_menu: Menu importu
-        overview: Przegląd
-        menus: Menu
-        items: Przedmioty
-        tables: Stoły
-        staff: Personel
-        restaurant_details: Szczegóły restauracji
-        restaurant_name: Nazwa restauracji
-        restaurant_name_placeholder: np. Bella Italia
-        restaurant_name_help: Nazwa, którą zobaczą klienci
-        description: Opis
-        description_placeholder: Opisz swoją restaurację...
-        description_help: Krótki opis restauracji
-        status: Status
-        active: Aktywny
-        inactive: Nieaktywny
-        status_help: Tylko aktywne restauracje są widoczne dla klientów
-        phone: Telefon
-        phone_placeholder: np. +1 (555) 123-4567
-        phone_help: Numer kontaktowy dla klientów
-        website: Strona internetowa
-        website_placeholder: https://example.com
-        website_help: Strona internetowa restauracji
-        currency: Waluta
-        currency_help: Waluta używana do ustalania cen
-        timezone: Strefa czasowa
-        timezone_help: Lokalna strefa czasowa dla godzin pracy
-        location: Lokalizacja
-        address: Adres
-        address_placeholder: Ulica
-        address_help: Pełny adres ulicy
-        city: Miasto
-        city_placeholder: Nazwa miasta
-        state: Państwo/Prowincja
-        state_placeholder: Państwo lub prowincja
-        postcode: Kod pocztowy
-        postcode_placeholder: np. 12345
-        country: Kraj
-        country_placeholder: Kraj
-        latitude: Szerokość geograficzna
-        latitude_placeholder: np. 40.7128
-        longitude: Długość geograficzna
-        longitude_placeholder: np., -74.0060
-        loading_map: Ładowanie mapy...
-        map_error: Nie można załadować mapy
-        location_label: 'Lokalizacja:'
+      kitchen_dashboard: Kuchnia
+      localization: Lokalizacja
+      menus: MENUS
+      operations: OPERACJE
+      ordering: Zamawianie
+      qr_codes: Kody QR
+      restaurant: RESTAURACJA
+      schedule: Harmonogram
+      settings: Ustawienia
+      setup: USTAWIENIA
+      sizes: Rozmiary
+      staff: Personel
+      tables: Stoły
+      taxes: Podatki
+      taxes_and_tips: Podatki i porady
+      team: ZESPÓŁ
+      tips: Wskazówki
+      wifi: Wi‑Fi

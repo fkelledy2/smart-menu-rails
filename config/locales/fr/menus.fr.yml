@@ -2,68 +2,69 @@
 fr:
   menus:
     controller:
-      created: ''
-      deleted: ''
-      image_regeneration_queued: ''
-      image_regeneration_queued_rake: ''
-      webp_regeneration_queued: ''
-      ai_image_generation_queued: ''
-      updated: ''
+      ai_image_generation_queued: La génération d'images d'IA a été mise en attente
+        pour les éléments de ce menu.
+      created: Le menu a été créé avec succès.
+      deleted: Le menu a été supprimé avec succès.
+      image_regeneration_queued: Régénération de l'image en file d'attente pour %{count}
+        éléments de ce menu.
+      image_regeneration_queued_rake: Un travail de régénération d'image a été mis
+        en file d'attente pour ce menu.
+      updated: Le menu a été mis à jour avec succès.
+      webp_regeneration_queued: La régénération dérivée WebP a été mise en attente
+        pour les images de ce menu.
     edit:
       availabilities: Disponibilités
       menu: Carte
-      regenerate_images_confirm: ''
+      regenerate_images_confirm: Cette opération met en file d'attente les travaux
+        de régénération d'images pour tous les éléments de ce menu. Poursuivre ?
       sections: Sections
     form:
-      current_pdf: ''
+      current_pdf: 'PDF actuel :'
       delete: Supprimer
       details: Détails
       errors: Erreurs
-      'false': ''
+      'false': éteint
       imageSettings: Paramètres d'image
-      'off': ''
-      'on': ''
+      'off': éteint
+      'on': sur
       pdfSettings: Paramètres PDF
-      regenerate_images: ''
-      regenerate_images_confirm: ''
-      remove: ''
+      regenerate_images: Régénérer les images
+      regenerate_images_confirm: Cette opération met en file d'attente les travaux
+        de régénération d'images pour tous les éléments de ce menu. Poursuivre ?
+      remove: Retirer
       save: Enregistrer
       settings: Paramètres
       sure: Êtes-vous sûr ?
-      'true': ''
+      'true': sur
     index:
       menu: Carte
       menus: Cartes
       unavailable: Le menu n'est pas actuellement disponible.
     menu:
-      description: ''
-      image: ''
-      name: ''
-      pdf_menu_scan: ''
-      restaurant: ''
-      sequence: ''
-      status: ''
+      description: 'Description :'
+      image: 'Image :'
+      name: 'Nom :'
+      pdf_menu_scan: 'Menu PDF Numérisation :'
+      restaurant: 'Restaurant :'
+      sequence: 'Séquence :'
+      status: 'Statut :'
     new:
       menu: Nouveau menu
     show:
-      add_to_order: ''
-      allergens: ''
-      allergyns: ''
-      bill: ''
-      loading: ''
-      not_available: ''
-      order: ''
-      order_updated: ''
-      remaining: ''
-      staff_alerted: ''
-      start_order: ''
-      take_payment: ''
+      add_to_order: Ajouter à la commande
+      allergens: Allergènes
+      allergyns: Allergènes
+      bill: Projet de loi
+      loading: Chargement...
+      not_available: Non disponible.
+      order: Commande
+      order_updated: Commande mise à jour !
+      remaining: "%{count} restant."
+      staff_alerted: Le personnel est alerté
+      start_order: Ordre de départ
+      take_payment: Accepter le paiement
     showMenuavailabilities:
       availabilities: Disponibilités
     showMenusections:
       sections: Sections
-    sections:
-      settings_2025:
-        disabled_at_restaurant: ''
-        parent_restriction: ''
-        parent_restriction_desc: ''

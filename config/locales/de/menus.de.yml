@@ -2,68 +2,69 @@
 de:
   menus:
     controller:
-      created: ''
-      deleted: ''
-      image_regeneration_queued: ''
-      image_regeneration_queued_rake: ''
-      webp_regeneration_queued: ''
-      ai_image_generation_queued: ''
-      updated: ''
+      ai_image_generation_queued: Die Erzeugung von AI-Bildern wurde für die Einträge
+        dieses Menüs in die Warteschlange gestellt.
+      created: Das Menü wurde erfolgreich erstellt.
+      deleted: Das Menü wurde erfolgreich gelöscht.
+      image_regeneration_queued: Bildregeneration in der Warteschlange für %{count}
+        Einträge in diesem Menü.
+      image_regeneration_queued_rake: Für dieses Menü wurde ein Bildregenerierungsauftrag
+        in die Warteschlange gestellt.
+      updated: Das Menü wurde erfolgreich aktualisiert.
+      webp_regeneration_queued: Die Regeneration der WebP-Derivate wurde für die Bilder
+        dieses Menüs in die Warteschlange gestellt.
     edit:
       availabilities: Verfügbarkeiten
       menu: Menü
-      regenerate_images_confirm: ''
+      regenerate_images_confirm: Damit werden die Bildregenerierungsaufträge für alle
+        Einträge in diesem Menü in die Warteschlange gestellt. Fortfahren?
       sections: Sektionen
     form:
-      current_pdf: ''
+      current_pdf: 'Aktuelles PDF:'
       delete: Löschen
       details: Einzelheiten
       errors: Fehler
-      'false': ''
+      'false': aus
       imageSettings: Bildeinstellungen
-      'off': ''
-      'on': ''
+      'off': aus
+      'on': auf
       pdfSettings: PDF-Einstellungen
-      regenerate_images: ''
-      regenerate_images_confirm: ''
-      remove: ''
+      regenerate_images: Bilder neu generieren
+      regenerate_images_confirm: Damit werden die Bildregenerierungsaufträge für alle
+        Einträge in diesem Menü in die Warteschlange gestellt. Fortfahren?
+      remove: entfernen
       save: Speichern
       settings: Einstellungen
       sure: Sind Sie sicher?
-      'true': ''
+      'true': auf
     index:
       menu: Menü
       menus: Menüs
       unavailable: Menü ist derzeit nicht verfügbar.
     menu:
-      description: ''
-      image: ''
-      name: ''
-      pdf_menu_scan: ''
-      restaurant: ''
-      sequence: ''
-      status: ''
+      description: 'Beschreibung:'
+      image: 'Bild:'
+      name: 'Name:'
+      pdf_menu_scan: 'PDF-Menü Scannen:'
+      restaurant: 'Restaurant:'
+      sequence: 'Sequenz:'
+      status: 'Status:'
     new:
       menu: Neues Menü
     show:
-      add_to_order: ''
-      allergens: ''
-      allergyns: ''
-      bill: ''
-      loading: ''
-      not_available: ''
-      order: ''
-      order_updated: ''
-      remaining: ''
-      staff_alerted: ''
-      start_order: ''
-      take_payment: ''
+      add_to_order: Zur Bestellung hinzufügen
+      allergens: Allergene
+      allergyns: Allergene
+      bill: Rechnung
+      loading: Laden...
+      not_available: Nicht verfügbar.
+      order: Bestellung
+      order_updated: Bestellung aktualisiert!
+      remaining: "%{Zahl} verbleibend."
+      staff_alerted: Personal alarmiert
+      start_order: Start Bestellung
+      take_payment: Zahlung annehmen
     showMenuavailabilities:
       availabilities: Verfügbarkeiten
     showMenusections:
       sections: Sektionen
-    sections:
-      settings_2025:
-        disabled_at_restaurant: ''
-        parent_restriction: ''
-        parent_restriction_desc: ''

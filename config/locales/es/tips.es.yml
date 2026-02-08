@@ -2,33 +2,34 @@
 es:
   tips:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: El consejo se ha creado correctamente.
+      deleted: El consejo se ha eliminado correctamente.
+      updated: El consejo se ha actualizado correctamente.
     edit:
-      tips: ''
-      edit_tip: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      tip_details: ''
-    form:
-      percentage: ''
-      percentage_placeholder: ''
-      percentage_help: ''
-    index:
-      tips: Propinas
-      description: ''
-      back: ''
-      new_tip: ''
-      all_tips: ''
-    new:
-      tips: ''
-      new: ''
-      new_tip: ''
-      description: ''
       cancel: Cancelar
-      tip_details: ''
+      confirm_delete: "¿Borrar esta opción de consejo?"
+      delete: Borrar
+      description: Actualizar los detalles del porcentaje de propina
+      edit_tip: Opción Editar Consejo
+      tip_details: Detalles
+      tips: Consejos
+    form:
+      percentage: Porcentaje de propina
+      percentage_help: Introduzca el porcentaje de propina (0-100)
+      percentage_placeholder: por ejemplo, 15
+    index:
+      all_tips: Todas las opciones
+      back: Volver
+      description: Gestionar los porcentajes de propina disponibles para los clientes
+        en la caja
+      new_tip: Nueva opción de propina
+      tips: Propinas
+    new:
+      cancel: Cancelar
+      description: Crear un nuevo porcentaje de propina para los clientes
+      new: Nuevo
+      new_tip: Nueva opción de propina
+      tip_details: Detalles
+      tips: Consejos
     show:
       tip: Mostrar propine

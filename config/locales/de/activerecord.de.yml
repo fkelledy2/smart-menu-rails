@@ -11,18 +11,18 @@ de:
         name: Bezeichnung
         role: Rolle
         status: Zustand
-        user_id: ''
+        user_id: Benutzer
       ingredient:
-        description: ''
-        name: ''
+        description: Beschreibung
+        name: Bezeichnung
       inventory:
         currentInventory: Endstand
-        currentinventory: ''
+        currentinventory: Aktueller Bestand
         menuItem: Artikel
         resetHour: Zurücksetzen um
-        resethour: ''
+        resethour: Stunde zurücksetzen
         startingInventory: Anfangsbestand
-        startinginventory: ''
+        startinginventory: Anfangsbestand
       menu:
         allowOrdering: Bestellungen
         covercharge: Covergebühr
@@ -38,7 +38,7 @@ de:
       menuavailability:
         dayofweek: Tag
         endhour: Schließzeit
-        menu_id: ''
+        menu_id: Speisekarte
         starthour: Öffnungszeit
         status: Zustand
       menuitem:
@@ -46,7 +46,7 @@ de:
         calories: Kalorien
         description: Beschreibung
         image: Bild
-        itemtype: ''
+        itemtype: Artikel Typ
         name: Bezeichnung
         preptime: Zubereitungszeit
         price: Preis
@@ -55,48 +55,48 @@ de:
         status: Zustand
         unitcost: Stückkosten
       menuparticipant:
-        preferredlocale: ''
-        sessionid: ''
-        smartmenu_id: ''
+        preferredlocale: Bevorzugter Standort
+        sessionid: Sitzungs-ID
+        smartmenu_id: Smartmenu
       menusection:
         description: Beschreibung
-        endhour: ''
+        endhour: Ende Stunde
         image: Bild
-        menu_id: ''
+        menu_id: Speisekarte
         name: Bezeichnung
-        restricted: ''
-        starthour: ''
+        restricted: Eingeschränkt
+        starthour: Start Stunde
         status: Zustand
       metric:
-        description: ''
-        name: ''
+        description: Beschreibung
+        name: Bezeichnung
       ordr:
-        employee_id: ''
-        menu_id: ''
-        restaurant_id: ''
-        tablesetting_id: ''
+        employee_id: Mitarbeiter
+        menu_id: Speisekarte
+        restaurant_id: Gastronomiebetrieb
+        tablesetting_id: Tisch decken
       ordraction:
-        action: ''
-        employee_id: ''
-        ordr_id: ''
-        ordritem_id: ''
-        ordrparticipant_id: ''
-        sessionid: ''
+        action: Aktion
+        employee_id: Mitarbeiter
+        ordr_id: Bestellung
+        ordritem_id: Artikel bestellen
+        ordrparticipant_id: Bestellung Teilnehmer
+        sessionid: Sitzungs-ID
       ordritem:
-        menuitem_id: ''
-        ordr_id: ''
+        menuitem_id: Menüpunkt
+        ordr_id: Bestellung
       ordritemnote:
-        note: ''
-        ordritem_id: ''
+        note: Hinweis
+        ordritem_id: Artikel bestellen
       ordrparticipant:
-        action: ''
-        employee_id: ''
-        ordr_id: ''
-        ordritem_id: ''
-        role: ''
-        sessionid: ''
+        action: Aktion
+        employee_id: Mitarbeiter
+        ordr_id: Bestellung
+        ordritem_id: Artikel bestellen
+        role: Rolle
+        sessionid: Sitzungs-ID
       restaurant:
-        address: ''
+        address: Adresse
         address1: Adresse 1
         address2: Adresse 2
         allowOrdering: Bestellungen
@@ -108,7 +108,7 @@ de:
         displayImagesInPopup: Bilder (in Popup)
         genid: Gen ID
         image: Bild
-        image_style_profile: ''
+        image_style_profile: Bild Stil Profil
         imagecontext: Kontext
         inventoryTracking: Bestand
         name: Bezeichnung
@@ -135,74 +135,74 @@ de:
         name: Bezeichnung
         size: Größe
       smartmenu:
-        menu_id: ''
-        restaurant_id: ''
-        slug: ''
-        tablesetting_id: ''
+        menu_id: Speisekarte
+        restaurant_id: Gastronomiebetrieb
+        slug: Schnecke
+        tablesetting_id: Tisch decken
       tablesetting:
-        capacity: ''
-        description: ''
-        name: ''
-        status: ''
-        tabletype: ''
+        capacity: Kapazität
+        description: Beschreibung
+        name: Bezeichnung
+        status: Zustand
+        tabletype: Tabelle Typ
       tag:
-        description: ''
-        name: ''
+        description: Beschreibung
+        name: Bezeichnung
       tax:
         name: Bezeichnung
         taxPercentage: Prozentsatz
         taxType: Typ
-        taxpercentage: ''
-        taxtype: ''
+        taxpercentage: Steuerprozentsatz
+        taxtype: Steuerart
       testimonial:
-        restaurant_id: ''
-        testimonial: ''
-        user_id: ''
+        restaurant_id: Gastronomiebetrieb
+        testimonial: Zeugnis
+        user_id: Benutzer
       tip:
-        percentage: ''
+        percentage: Prozentsatz
       track:
-        description: ''
-        externalid: ''
-        image: ''
-        name: ''
-        restaurant_id: ''
-        sequence: ''
+        description: Beschreibung
+        externalid: Externe ID
+        image: Bild
+        name: Bezeichnung
+        restaurant_id: Gastronomiebetrieb
+        sequence: Sequenz
       userplan:
-        plan_id: ''
+        plan_id: Tarif
     errors:
-      format: ''
+      format: "%{Attribut} %{Nachricht}"
       messages:
-        blank: ''
-        greater_than: ''
-        greater_than_or_equal_to: ''
-        invalid: ''
-        less_than: ''
-        less_than_or_equal_to: ''
-        not_a_number: ''
-        taken: ''
+        blank: kann nicht leer sein
+        greater_than: muss größer sein als %{count}
+        greater_than_or_equal_to: muss größer als oder gleich %{count} sein
+        invalid: ist ungültig
+        less_than: muss kleiner sein als %{count}
+        less_than_or_equal_to: muss kleiner als oder gleich %{count} sein
+        not_a_number: ist keine Zahl
+        taken: wurde bereits eingenommen
         too_long:
-          one: ''
-          other: ''
+          one: zu lang ist (maximal 1 Zeichen)
+          other: zu lang ist (Maximum ist %{count} Zeichen)
         too_short:
-          one: ''
-          other: ''
+          one: zu kurz ist (Minimum ist 1 Zeichen)
+          other: zu kurz ist (Minimum ist %{count} Zeichen)
     models:
-      allergyn: ''
-      genimage: ''
-      ingredient: ''
-      inventory: ''
-      menu: ''
-      menuavailability: ''
-      menuitem: ''
-      menusection: ''
-      metric: ''
-      ordr: ''
-      restaurant: ''
-      restaurantavailability: ''
-      size: ''
-      smartmenu: ''
-      tablesetting: ''
-      tag: ''
-      testimonial: ''
-      track: ''
-      userplan: ''
+      allergyn: Allergen
+      genimage: Generiertes Bild
+      ingredient: Zutat
+      inventory: Bestandsaufnahme
+      menu: Speisekarte
+      menuavailability: Verfügbarkeit der Speisekarte
+      menuitem: Menüpunkt
+      menusection: Abschnitt Menü
+      metric: Metrisch
+      ordr: Bestellung
+      restaurant: Gastronomiebetrieb
+      restaurantavailability: Restaurant Verfügbarkeit
+      size: Größe
+      smartmenu: Smartmenu
+      tablesetting: Tisch decken
+      tag: Schlagwort
+      testimonial: Zeugnis
+      track: Spur
+      userplan: Benutzerplan

@@ -1,34 +1,45 @@
 ---
 pt:
   shared:
-    head:
-      meta_title: ''
-      meta_description: ''
-      meta_keywords: ''
-      og_title: ''
-      og_description: ''
-      twitter_title: ''
-      twitter_description: ''
-      pwa_title: ''
     footer:
-      facebook: ''
-      instagram: ''
-      linkedin: ''
+      build: Construir
+      facebook: Facebook
+      instagram: Instagram
+      linkedin: LinkedIn
+      plan: Plano
       privacy: Privacidade
       terms: Termos
-      plan: ''
-      build: ''
-      twitter: ''
+      twitter: Twitter
+    head:
+      meta_description: Transforme o seu restaurante com menus digitais sem contacto
+        e encomendas inteligentes. Acelere o serviço, reduza os erros e aumente a
+        satisfação dos clientes com facilidade.
+      meta_keywords: Menus digitais para restaurantes | Encomendas sem contacto para
+        restaurantes | Ferramentas de eficiência para restaurantes | Tecnologia inteligente
+        para restaurantes | Menus com código QR | Sistemas de menus online | Melhorar
+        as operações dos restaurantes | Encomendas self-service para restaurantes
+        | Soluções tecnológicas para hotelaria | Ferramentas ecológicas para restaurantes
+      meta_title: 'Ementas e encomendas digitais inteligentes para restaurantes: aumentar
+        a eficiência'
+      og_description: Actualize o seu restaurante com menus digitais e tecnologia
+        inteligente que simplificam o serviço, reduzem os tempos de espera e aumentam
+        a satisfação dos clientes.
+      og_title: Ementas digitais e pedidos inteligentes para restaurantes modernos
+      pwa_title: Menu inteligente
+      twitter_description: Descubra como os menus digitais e as ferramentas de encomenda
+        inteligentes podem simplificar o serviço e melhorar a experiência gastronómica
+        dos seus clientes.
+      twitter_title: Torne o seu restaurante mais inteligente com ementas digitais
     navbar:
       adminArea: Administrador
-      dashboard: ''
       billing: Faturação
-      heroImages: ''
-      impersonated_as: ''
+      dashboard: Painel de controlo
+      heroImages: Imagens de heróis
+      impersonated_as: Tem sessão iniciada como
       login: Iniciar sessão
       logout: Terminar sessão
       restaurants: Restaurantes
       settings: Configurações
       signUp: Registar
       testimonials: Testemunhos
-      toggle_navigation: ''
+      toggle_navigation: Alternar navegação

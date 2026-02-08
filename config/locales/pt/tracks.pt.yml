@@ -2,8 +2,8 @@
 pt:
   tracks:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: O trajeto foi criado com sucesso.
+      deleted: O trajeto foi eliminado com êxito.
+      updated: A faixa foi actualizada com êxito.
     index:
       tracks: Playlist

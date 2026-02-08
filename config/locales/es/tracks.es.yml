@@ -2,8 +2,8 @@
 es:
   tracks:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: La pista se ha creado correctamente.
+      deleted: La pista se ha eliminado correctamente.
+      updated: La pista se ha actualizado correctamente.
     index:
       tracks: Lista de reproducción

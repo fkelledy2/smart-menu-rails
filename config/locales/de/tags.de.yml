@@ -2,14 +2,14 @@
 de:
   tags:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Tag wurde erfolgreich erstellt.
+      deleted: Tag wurde erfolgreich gelöscht.
+      updated: Tag wurde erfolgreich aktualisiert.
     edit:
-      title: ''
+      title: Tag bearbeiten
     form:
       delete: Löschen
-      errors: ''
+      errors: Fehler
       save: Speichern
       sure: Sind Sie sicher?
     index:
@@ -17,10 +17,10 @@ de:
       tags: Schlagwörter
     new:
       cancel: Abbrechen
-      title: ''
+      title: Neuer Tag
     show:
-      show_tag: ''
+      show_tag: Tag anzeigen
     tag:
-      description: ''
-      menuitem: ''
-      name: ''
+      description: 'Beschreibung:'
+      menuitem: 'Menüpunkt:'
+      name: 'Name:'

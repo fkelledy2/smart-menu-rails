@@ -1,34 +1,45 @@
 ---
 hu:
   shared:
-    head:
-      meta_title: ''
-      meta_description: ''
-      meta_keywords: ''
-      og_title: ''
-      og_description: ''
-      twitter_title: ''
-      twitter_description: ''
-      pwa_title: ''
     footer:
-      facebook: ''
-      instagram: ''
-      linkedin: ''
+      build: Build
+      facebook: Facebook
+      instagram: Instagram
+      linkedin: LinkedIn
+      plan: Csomag
       privacy: Adatvédelem
       terms: Feltételek
-      plan: ''
-      build: ''
-      twitter: ''
+      twitter: Twitter
+    head:
+      meta_description: Alakítsa át éttermét érintésmentes digitális étlapokkal és
+        intelligens rendeléssel. Gyorsítsa fel a kiszolgálást, csökkentse a hibák
+        számát és növelje a vendégek elégedettségét.
+      meta_keywords: Digitális étlapok éttermeknek | Érintésmentes éttermi rendelés
+        | Éttermi hatékonysági eszközök | Intelligens éttermi technológia | QR-kódos
+        étlapok | Online étlaprendszerek | Az éttermi működés javítása | Önkiszolgáló
+        éttermi rendelés | Vendéglátóipari technológiai megoldások | Környezetbarát
+        éttermi eszközök
+      meta_title: Intelligens digitális étlapok és rendelések éttermek számára | Fokozza
+        a hatékonyságot
+      og_description: Frissítse fel éttermét digitális étlapokkal és intelligens technológiával,
+        amelyek egyszerűsítik a kiszolgálást, csökkentik a várakozási időt és növelik
+        a vendégek elégedettségét.
+      og_title: Digitális étlapok és intelligens rendelés a modern éttermek számára
+      pwa_title: Intelligens menü
+      twitter_description: Fedezze fel, hogy a digitális étlapok és az intelligens
+        rendelési eszközök hogyan egyszerűsíthetik a kiszolgálást, és hogyan emelhetik
+        a vendégek étkezési élményét.
+      twitter_title: Tegye okosabbá éttermét a digitális étlapokkal
     navbar:
-      adminArea: ''
-      dashboard: ''
-      billing: ''
-      heroImages: ''
-      impersonated_as: ''
+      adminArea: Adminisztráció
+      billing: Számlázás
+      dashboard: Műszerfal
+      heroImages: Hős képek
+      impersonated_as: Ön bejelentkezett mint
       login: Bejelentkezés
       logout: Kijelentkezés
       restaurants: Éttermek
       settings: Beállítások
-      signUp: ''
+      signUp: Feliratkozás
       testimonials: Értékelések
-      toggle_navigation: ''
+      toggle_navigation: Navigáció váltás

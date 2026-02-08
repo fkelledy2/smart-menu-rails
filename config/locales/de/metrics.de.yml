@@ -2,6 +2,6 @@
 de:
   metrics:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Metrik wurde erfolgreich erstellt.
+      deleted: Metrik wurde erfolgreich gelöscht.
+      updated: Die Metrik wurde erfolgreich aktualisiert.

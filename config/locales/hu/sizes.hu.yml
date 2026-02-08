@@ -2,42 +2,42 @@
 hu:
   sizes:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: A méret sikeresen létrejött.
+      deleted: A méret sikeresen törlésre került.
+      updated: A méret sikeresen frissült.
     edit:
-      sizes: ''
-      edit_size: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      size_details: ''
-    form:
-      size_type: ''
-      size_type_help: ''
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      description: ''
-      description_placeholder: ''
-      description_help: ''
-    index:
+      cancel: Törölje
+      confirm_delete: Törölje ezt a méretet?
+      delete: Törölje a  címet.
+      description: Méretadatok frissítése
+      edit_size: Méret szerkesztése
+      size_details: Méret részletek
       sizes: Méretek
-      description: ''
-      back: ''
-      new_size: ''
-      all_sizes: ''
+    form:
+      description: Leírás
+      description_help: 'Választható: További részletek hozzáadása'
+      description_placeholder: Választható részletek erről a méretről...
+      name: Megjelenített név
+      name_help: Így fog megjelenni a méret az ügyfelek számára
+      name_placeholder: pl. Nagy, 16oz, Családi méret
+      size_type: Méret Típus
+      size_type_help: Válassza ki az általános méretkategóriát
+    index:
+      all_sizes: Minden méret
+      back: Vissza
+      description: A menüpontok méretváltozatainak kezelése (pl. Kicsi, Közepes, Nagy)
+      new_size: Új méret
+      sizes: Méretek
     new:
-      sizes: ''
-      new: ''
-      new_size: ''
-      description: ''
       cancel: Mégse
-      size_details: ''
+      description: Új méretváltozat létrehozása a menüpontokhoz
+      new: Új
+      new_size: Új méret
+      size_details: Méret részletek
+      sizes: Méretek
     show:
       size: Méret megtekintése
     size:
-      description: ''
-      name: ''
-      size: ''
+      description: 'Leírás:'
+      name: 'Név:'
+      size: 'Méret:'

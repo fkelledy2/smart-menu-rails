@@ -2,39 +2,39 @@
 de:
   allergyns:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Das Allergen wurde erfolgreich erstellt.
+      deleted: Das Allergen wurde erfolgreich gelöscht.
+      updated: Das Allergen wurde erfolgreich aktualisiert.
     edit:
-      allergyns: ''
-      edit_allergyn: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      allergyn_details: ''
-    form:
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      description: ''
-      description_placeholder: ''
-      description_help: ''
-      symbol: ''
-      symbol_placeholder: ''
-      symbol_help: ''
-    index:
+      allergyn_details: Angaben zum Allergen
       allergyns: Allergene
-      description: ''
-      back: ''
-      new_allergyn: ''
-      all_allergyns: ''
-    new:
-      allergyns: ''
-      new: ''
-      new_allergyn: ''
-      description: ''
       cancel: Abbrechen
-      allergyn_details: ''
+      confirm_delete: Dieses Allergen löschen?
+      delete: Löschen
+      description: Angaben zu Allergenen aktualisieren
+      edit_allergyn: Allergen bearbeiten
+    form:
+      description: Beschreibung
+      description_help: 'Fakultativ: Zusätzliche Informationen über das Allergen'
+      description_placeholder: Optionale Angaben zu diesem Allergen...
+      name: Name des Allergens
+      name_help: Der Name des Allergens
+      name_placeholder: z.B. Erdnüsse, Molkereiprodukte, Gluten
+      symbol: Symbol
+      symbol_help: 'Fakultativ: Emoji oder kurzes Symbol zur Darstellung dieses Allergens'
+      symbol_placeholder: "z.B. \U0001F95C, \U0001F95B, \U0001F33E"
+    index:
+      all_allergyns: Alle Allergene
+      allergyns: Allergene
+      back: Zurück
+      description: Verwalten von Allergeninformationen für Menüpunkte
+      new_allergyn: Neues Allergen
+    new:
+      allergyn_details: Angaben zum Allergen
+      allergyns: Allergene
+      cancel: Abbrechen
+      description: Ein neues Allergen für Menüpunkte erstellen
+      new: Neu
+      new_allergyn: Neues Allergen
     show:
       allergyn: Allergen anzeigen

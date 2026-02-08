@@ -2,5 +2,5 @@
 hu:
   genimages:
     controller:
-      deleted: ''
-      updated: ''
+      deleted: A generált képet sikeresen törölték.
+      updated: A kép sikeresen regenerálódott.

@@ -6,35 +6,35 @@ pl:
       deleted: Podatek został pomyślnie usunięty.
       updated: Podatek został pomyślnie zaktualizowany.
     edit:
-      taxes: Podatki
-      edit_tax: Edytuj podatek
-      description: Aktualizacja szczegółów stawki podatkowej
       cancel: Anuluj
       confirm_delete: Usunąć ten podatek?
       delete: Usuń
+      description: Aktualizacja szczegółów stawki podatkowej
+      edit_tax: Edytuj podatek
       tax_details: Szczegóły podatkowe
+      taxes: Podatki
     form:
       name: Nazwa podatku
-      name_placeholder: np. podatek od sprzedaży, VAT, GST
       name_help: Wyświetlana nazwa dla tego podatku
+      name_placeholder: np. podatek od sprzedaży, VAT, GST
+      tax_percentage: Procent podatku
+      tax_percentage_help: Wprowadź stawkę podatku jako wartość procentową (0-100).
+      tax_percentage_placeholder: np. 8,5
       tax_type: Rodzaj podatku
       tax_type_help: Wybierz rodzaj podatku
-      tax_percentage: Procent podatku
-      tax_percentage_placeholder: np. 8,5
-      tax_percentage_help: Wprowadź stawkę podatku jako wartość procentową (0-100).
     index:
-      taxes: Podatki
-      description: Zarządzanie stawkami podatkowymi stosowanymi do pozycji menu
-      back: Powrót
-      new_tax: Nowy podatek
       all_taxes: Wszystkie podatki
-    new:
+      back: Powrót
+      description: Zarządzanie stawkami podatkowymi stosowanymi do pozycji menu
+      new_tax: Nowy podatek
       taxes: Podatki
+    new:
+      cancel: Anuluj
+      description: Utwórz nową stawkę podatku dla pozycji menu
       new: Nowość
       new_tax: Nowy podatek
-      description: Utwórz nową stawkę podatku dla pozycji menu
-      cancel: Anuluj
       tax_details: Szczegóły podatkowe
+      taxes: Podatki
     show:
       selectRestaurant: Wybierz restaurację
       tax: Podatek

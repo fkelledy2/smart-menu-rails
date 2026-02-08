@@ -1,34 +1,45 @@
 ---
 es:
   shared:
-    head:
-      meta_title: ''
-      meta_description: ''
-      meta_keywords: ''
-      og_title: ''
-      og_description: ''
-      twitter_title: ''
-      twitter_description: ''
-      pwa_title: ''
     footer:
-      facebook: ''
-      instagram: ''
-      linkedin: ''
+      build: Construya
+      facebook: Facebook
+      instagram: Instagram
+      linkedin: LinkedIn
+      plan: Plan
       privacy: Privacidad
       terms: Términos
-      plan: ''
-      build: ''
-      twitter: ''
+      twitter: Twitter
+    head:
+      meta_description: Transforme su restaurante con menús digitales sin contacto
+        y pedidos inteligentes. Agilice el servicio, reduzca los errores y aumente
+        la satisfacción del cliente con facilidad.
+      meta_keywords: Menús digitales para restaurantes | Pedidos sin contacto en restaurantes
+        | Herramientas de eficiencia para restaurantes | Tecnología inteligente para
+        restaurantes | Menús con código QR | Sistemas de menús en línea | Mejorar
+        el funcionamiento de los restaurantes | Pedidos autoservicio en restaurantes
+        | Soluciones tecnológicas para hostelería | Herramientas ecológicas para restaurantes
+      meta_title: Menús y pedidos digitales inteligentes para restaurantes | Aumentar
+        la eficiencia
+      og_description: Actualice su restaurante con menús digitales y tecnología inteligente
+        que agilizan el servicio, reducen los tiempos de espera y aumentan la satisfacción
+        de los clientes.
+      og_title: Menús digitales y pedidos inteligentes para restaurantes modernos
+      pwa_title: Menú inteligente
+      twitter_description: Descubra cómo los menús digitales y las herramientas de
+        pedidos inteligentes pueden simplificar el servicio y mejorar la experiencia
+        gastronómica de sus clientes.
+      twitter_title: Haga su restaurante más inteligente con menús digitales
     navbar:
       adminArea: Administración
-      dashboard: ''
       billing: Facturación
-      heroImages: ''
-      impersonated_as: ''
+      dashboard: Cuadro de mandos
+      heroImages: Imágenes de héroes
+      impersonated_as: Has iniciado sesión como
       login: Iniciar sesión
       logout: Cerrar sesión
       restaurants: Restaurantes
       settings: Configuración
       signUp: Registrarse
       testimonials: Testimonios
-      toggle_navigation: ''
+      toggle_navigation: Alternar navegación

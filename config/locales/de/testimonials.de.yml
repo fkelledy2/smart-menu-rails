@@ -2,25 +2,25 @@
 de:
   testimonials:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Das Testimonial wurde erfolgreich erstellt.
+      deleted: Das Zeugnis wurde erfolgreich gelöscht.
+      updated: Das Zeugnis wurde erfolgreich aktualisiert.
     edit:
-      title: ''
+      title: Zeugnis bearbeiten
     form:
-      cancel: ''
-      destroy: ''
-      save: ''
-      sure: ''
+      cancel: Abbrechen
+      destroy: Zerstören Sie
+      save: Speichern Sie
+      sure: Sind Sie sicher?
     index:
       actions: Aktionen
       approve: Genehmigen
       testimonials: Referenzen
       unapprove: Ablehnen
     new:
-      cancel: ''
-      title: ''
+      cancel: Abbrechen
+      title: Neues Zeugnis
     testimonial:
-      restaurant: ''
-      testimonial: ''
-      user: ''
+      restaurant: 'Restaurant:'
+      testimonial: 'Zeugnis:'
+      user: 'Benutzer:'

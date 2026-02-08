@@ -2,33 +2,34 @@
 pt:
   tips:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: A dica foi criada com sucesso.
+      deleted: A dica foi eliminada com êxito.
+      updated: A dica foi actualizada com sucesso.
     edit:
-      tips: ''
-      edit_tip: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      tip_details: ''
-    form:
-      percentage: ''
-      percentage_placeholder: ''
-      percentage_help: ''
-    index:
-      tips: Gorjetas
-      description: ''
-      back: ''
-      new_tip: ''
-      all_tips: ''
-    new:
-      tips: ''
-      new: ''
-      new_tip: ''
-      description: ''
       cancel: Cancelar
-      tip_details: ''
+      confirm_delete: Eliminar esta opção de dica?
+      delete: Eliminar
+      description: Atualizar os detalhes da percentagem de gorjeta
+      edit_tip: Editar opção de dica
+      tip_details: Detalhes da dica
+      tips: Dicas
+    form:
+      percentage: Percentagem de gorjeta
+      percentage_help: Introduzir a percentagem de gorjeta (0-100)
+      percentage_placeholder: Por exemplo, 15
+    index:
+      all_tips: Todas as opções de dicas
+      back: Voltar
+      description: Gerir as percentagens de gorjeta disponíveis para os clientes na
+        caixa
+      new_tip: Nova opção de gorjeta
+      tips: Gorjetas
+    new:
+      cancel: Cancelar
+      description: Criar uma nova percentagem de gorjeta para os clientes
+      new: Novo
+      new_tip: Nova opção de gorjeta
+      tip_details: Detalhes da dica
+      tips: Dicas
     show:
       tip: Mostrar gorjeta

@@ -54,43 +54,43 @@ cs:
       title: Import nabídky z PDF
       upload_process: Nahrávání a zpracování
     new_2025:
-      title: Importování nabídky
-      subtitle: Nahrajte menu ve formátu PDF a naše umělá inteligence automaticky
-        extrahuje všechny položky.
-      step_upload: Nahrát
-      step_process: Proces
-      step_review: Recenze
-      name_label: Název nabídky
-      name_placeholder: např. letní menu 2024
-      name_help: Dejte nabídce popisný název pro snadnou identifikaci.
-      source_language_label: Jazyk nabídky
       auto_detect: Automatická detekce
+      browse_files: Procházet soubory
+      cancel: Zrušit
+      drop_subtitle: nebo
+      drop_title: Přetáhněte své PDF sem
+      estimated_time: Zpracování trvá ~2-5 minut
       language_en: Angličtina
+      language_es: Španělština
       language_fr: Francouzština
       language_it: Italský
-      language_es: Španělština
+      name_help: Dejte nabídce popisný název pro snadnou identifikaci.
+      name_label: Název nabídky
+      name_placeholder: např. letní menu 2024
+      pdf_hint: PDF do velikosti 10 MB. Nejlépe fungují čitelné skeny.
+      pdf_invalid_js: Vyberte prosím soubor PDF
+      pdf_label: Menu PDF
+      remove_file_aria: Odstranění souboru
       source_language_help: Slouží k zachování původního jazyka při generování chybějících
         popisů.
-      pdf_label: Menu PDF
-      drop_title: Přetáhněte své PDF sem
-      drop_subtitle: nebo
-      browse_files: Procházet soubory
-      pdf_hint: PDF do velikosti 10 MB. Nejlépe fungují čitelné skeny.
-      remove_file_aria: Odstranění souboru
-      estimated_time: Zpracování trvá ~2-5 minut
-      cancel: Zrušit
+      source_language_label: Jazyk nabídky
       start_processing: Zahájení zpracování
-      tips_title: Tipy pro dosažení nejlepších výsledků
-      tip_quality_title: Použití vysoce kvalitních skenů
-      tip_quality_text: Nejlépe se osvědčují jasné soubory PDF s vysokým rozlišením
-        a dobrým kontrastem. Vyhněte se rozmazaným nebo nekvalitním fotografiím.
-      tip_format_title: Standardní rozvržení nabídky
+      step_process: Proces
+      step_review: Recenze
+      step_upload: Nahrát
+      subtitle: Nahrajte menu ve formátu PDF a naše umělá inteligence automaticky
+        extrahuje všechny položky.
       tip_format_text: Nejlépe fungují nabídky s přehlednými oddíly a názvy položek
         oddělenými od cen. Naše umělá inteligence si poradí s většinou rozvržení.
-      tip_language_title: Podpora více jazyků
+      tip_format_title: Standardní rozvržení nabídky
       tip_language_text: Podporujeme nabídky v angličtině, italštině, španělštině,
         francouzštině a dalších jazycích. Fungují i vícejazyčná menu!
-      pdf_invalid_js: Vyberte prosím soubor PDF
+      tip_language_title: Podpora více jazyků
+      tip_quality_text: Nejlépe se osvědčují jasné soubory PDF s vysokým rozlišením
+        a dobrým kontrastem. Vyhněte se rozmazaným nebo nekvalitním fotografiím.
+      tip_quality_title: Použití vysoce kvalitních skenů
+      tips_title: Tipy pro dosažení nejlepších výsledků
+      title: Importování nabídky
     show:
       allergens: Alergeny
       approve_sections_items: Schválení oddílů a položek

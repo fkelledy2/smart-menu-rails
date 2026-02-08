@@ -2,203 +2,210 @@
 hu:
   onboarding:
     account_details:
-      continue: ''
-      email_help: ''
-      email_label: ''
-      full_name_label: ''
-      full_name_placeholder: ''
-      full_name_required: ''
-      restaurant_name_preview_help: ''
-      restaurant_name_preview_label: ''
-      restaurant_name_preview_placeholder: ''
+      continue: Folytatás
+      email_help: Ez az e-mail már megerősítésre került, és a beállítás során nem
+        módosítható.
+      email_label: E-mail cím
+      full_name_label: Teljes név
+      full_name_placeholder: Írja be a teljes nevét
+      full_name_required: Kérjük, adja meg teljes nevét.
+      restaurant_name_preview_help: Ne aggódjon, ezt a következő lépésben megváltoztathatja.
+      restaurant_name_preview_label: Étterem neve (előnézet)
+      restaurant_name_preview_placeholder: Hogy hívják az éttermedet?
       stats:
-        restaurants_count: ''
-        restaurants_label: ''
-        satisfaction: ''
-        satisfaction_label: ''
-        setup_time: ''
-        setup_time_label: ''
-      subtitle: ''
-      title: ''
+        restaurants_count: 1,000+
+        restaurants_label: Az éttermek bíznak bennünk
+        satisfaction: 98%
+        satisfaction_label: Ügyfél-elégedettség
+        setup_time: 5 perc
+        setup_time_label: Átlagos beállítási idő
+      subtitle: Állítsuk be a fiókodat. Ez csak egy pillanatot vesz igénybe.
+      title: Üdvözöljük a Smart Menu!
     completion:
-      completion_time: ''
-      configuring_payments: ''
-      creating_profile: ''
-      customize_menu_description: ''
-      customize_menu_title: ''
-      free_trial_status: ''
-      generating_qr: ''
-      generating_qr_codes: ''
-      generating_status: ''
-      go_to_dashboard: ''
-      menu_published: ''
-      plan_activated: ''
-      print_qr_description: ''
-      print_qr_title: ''
-      qr_code_ready: ''
-      qr_ready_title: ''
-      restaurant_created: ''
-      setting_up_menu: ''
-      setup_timeout: ''
-      setup_timeout_help: ''
-      subtitle: ''
-      title: ''
-      track_orders_description: ''
-      track_orders_title: ''
-      view_live_menu: ''
-      whats_happening: ''
-      whats_next: ''
+      completion_time: Ez általában 30-60 másodpercet vesz igénybe. Ha befejeződött,
+        automatikusan átirányítjuk Önt.
+      configuring_payments: Fizetési lehetőségek konfigurálása
+      creating_profile: Éttermi profil létrehozása
+      customize_menu_description: További elemek hozzáadása, fényképek feltöltése
+        és részletes leírások beállítása
+      customize_menu_title: Testreszabhatja menüjét
+      free_trial_status: 14 napos ingyenes próbaidőszak
+      generating_qr: QR-kód generálása...
+      generating_qr_codes: QR-kódok generálása
+      generating_status: QR-kód generálása...
+      go_to_dashboard: Menjen az irányítópultra
+      menu_published: Megjelent menü
+      plan_activated: Aktivált terv
+      print_qr_description: QR-kódok letöltése és nyomtatása a táblázatokhoz
+      print_qr_title: QR-kódok nyomtatása
+      qr_code_ready: QR-kód készen áll!
+      qr_ready_title: A digitális menü készen áll
+      restaurant_created: Étterem Created
+      setting_up_menu: A menü beállítása
+      setup_timeout: A vártnál hosszabb ideig tart a beállítás
+      setup_timeout_help: Kérjük, frissítse az oldalt vagy lépjen kapcsolatba az ügyfélszolgálattal
+      subtitle: Az éttermed most már fel van állítva, és készen áll a vendégek kiszolgálására!
+      title: "Gratulálunk! \U0001F389"
+      track_orders_description: Az ügyfelek megrendeléseinek és analitikájának valós
+        idejű nyomon követése
+      track_orders_title: Rendelések nyomon követése
+      view_live_menu: Élő menü megtekintése
+      whats_happening: 'Mi történik most:'
+      whats_next: Mi a következő lépés?
     menu_creation:
-      add_menu_item: ''
-      back: ''
-      create_menu: ''
-      item_description_placeholder: ''
-      item_name_placeholder: ''
-      item_price_placeholder: ''
-      live_preview: ''
-      menu_item_title: ''
-      menu_items_help: ''
-      menu_items_label: ''
-      menu_name_default: ''
-      menu_name_label: ''
-      menu_name_placeholder: ''
-      menu_name_required: ''
-      min_items_alert: ''
-      need_more_items: ''
-      preview_empty: ''
-      preview_empty_alt: ''
-      quick_start_label: ''
-      subtitle: ''
-      template_added: ''
+      add_menu_item: Menüelem hozzáadása
+      back: Vissza
+      create_menu: Menü létrehozása
+      item_description_placeholder: Rövid leírás (nem kötelező)
+      item_name_placeholder: Tétel neve
+      item_price_placeholder: '0.00'
+      live_preview: Élő előnézet
+      menu_item_title: Menüelem
+      menu_items_help: Legalább 3 elemet adjon hozzá a folytatáshoz. Ne aggódjon a
+        tökéletesség miatt - később mindent szerkeszthet!
+      menu_items_label: Menüelemek
+      menu_name_default: Főmenü
+      menu_name_label: Menü neve
+      menu_name_placeholder: pl. Főmenü, Ebédmenü, Vacsora menü
+      menu_name_required: Kérjük, adja meg a menü nevét.
+      min_items_alert: Kérjük, a folytatáshoz adjon hozzá legalább 3 menüpontot.
+      need_more_items: Szükség van %{szám} több elemre
+      preview_empty: A menüpontok itt fognak megjelenni, amint hozzáadod őket.
+      preview_empty_alt: A menüpontok itt fognak megjelenni
+      quick_start_label: Gyorsindítási sablonok
+      subtitle: Adjon hozzá néhány elemet a kezdéshez. Később bármikor hozzáadhatsz
+        még többet is!
+      template_added: Hozzáadva!
       template_items:
         american:
           bbq_ribs:
-            description: ''
-            name: ''
+            description: Lassan főzött sertésborda BBQ mártással
+            name: BBQ bordák
           buffalo_wings:
-            description: ''
-            name: ''
+            description: 8 darab zellerrel és kéksajtos mártogatóssal
+            name: Buffalo Wings
           classic_burger:
-            description: ''
-            name: ''
+            description: Marhahúspogácsa, saláta, paradicsom, hagyma, uborka
+            name: Klasszikus Burger
         asian:
           chicken_teriyaki:
-            description: ''
-            name: ''
+            description: Grillezett csirke teriyaki mártással és rizzsel
+            name: Csirke Teriyaki
           pad_thai:
-            description: ''
-            name: ''
+            description: Rántott rizstészta garnélarákkal és földimogyoróval
+            name: Pad Thai
           spring_rolls:
-            description: ''
-            name: ''
+            description: Ropogós tekercsek édes-savanyú mártással
+            name: Zöldséges tavaszi tekercsek
         italian:
           caesar_salad:
-            description: ''
-            name: ''
+            description: Roma saláta, kruton, parmezán, caesar öntet
+            name: Cézár saláta
           margherita_pizza:
-            description: ''
-            name: ''
+            description: Friss mozzarella, paradicsomszósz, bazsalikom
+            name: Margherita pizza
           spaghetti_carbonara:
-            description: ''
-            name: ''
+            description: Tészta tojással, sajttal, pancettával és borssal
+            name: Spagetti Carbonara
         mexican:
           beef_burrito:
-            description: ''
-            name: ''
+            description: Nagy burrito fűszerezett marhahússal, rizzsel és babbal
+            name: Marhahús Burrito
           chicken_tacos:
-            description: ''
-            name: ''
+            description: Három lágy taco grillezett csirkével és salsával
+            name: Csirke Taco
           guacamole_chips:
-            description: ''
-            name: ''
+            description: Friss guacamole tortilla chipsekkel
+            name: Guacamole & Chips
       templates:
-        american: ''
-        asian: ''
-        italian: ''
-        mexican: ''
-      templates_help: ''
-      title: ''
+        american: Amerikai
+        asian: Ázsiai
+        italian: Olasz
+        mexican: Mexikói
+      templates_help: Kattintson egy sablonra a testreszabható mintaelemek hozzáadásához.
+      title: Az első menü létrehozása
     plan_selection:
-      always_free: ''
-      back: ''
-      choose_free_plan: ''
-      continue: ''
+      always_free: Mindig ingyen
+      back: Vissza
+      choose_free_plan: Válasszon ingyenes tervet
+      continue: Folytatás
       features:
-        advanced_analytics: ''
-        api_access: ''
-        custom_branding: ''
-        items_per_menu: ''
-        languages: ''
-        locations: ''
-        menus_per_location: ''
-        online_ordering: ''
-        priority_support: ''
-        qr_code_menus: ''
-      free_trial: ''
-      most_popular: ''
-      per_month: ''
-      select_plan_alert: ''
-      selected: ''
-      start_free_trial: ''
-      subtitle: ''
-      title: ''
+        advanced_analytics: Fejlett analitika
+        api_access: API-hozzáférés
+        custom_branding: Egyedi márkaépítés
+        items_per_menu: elemek/menü
+        languages: nyelvek
+        locations: helyszínek
+        menus_per_location: menük/helyszín
+        online_ordering: Online rendelés
+        priority_support: Elsőbbségi támogatás
+        qr_code_menus: QR-kód menük
+      free_trial: 14 napos ingyenes próbaidőszak
+      most_popular: LEGNÉPSZERŰBB
+      per_month: "/mo"
+      select_plan_alert: Kérjük, válasszon egy tervet a folytatáshoz.
+      selected: Kiválasztott ✓
+      start_free_trial: Ingyenes próbaverzió indítása
+      subtitle: Kezdje a 14 napos ingyenes próbaverzióval. Nincs szükség hitelkártyára!
+      title: Válasszon tervet
       trust_indicators:
-        mobile_subtitle: ''
-        mobile_title: ''
-        secure_subtitle: ''
-        secure_title: ''
-        support_subtitle: ''
-        support_title: ''
+        mobile_subtitle: Tökéletes bármilyen eszközön
+        mobile_title: Mobilra optimalizált
+        secure_subtitle: Banki szintű biztonság
+        secure_title: Biztonságos és megbízható
+        support_subtitle: Azért vagyunk itt, hogy segítsünk
+        support_title: 24/7 támogatás
     restaurant_details:
-      back: ''
-      continue: ''
-      cuisine_type_label: ''
-      cuisine_type_prompt: ''
-      cuisine_type_required: ''
+      back: Vissza
+      continue: Folytatás
+      cuisine_type_label: Konyha típusa
+      cuisine_type_prompt: Válasszon konyhát...
+      cuisine_type_required: Kérjük, válassza ki a konyha típusát.
       cuisine_types:
-        american: ''
-        chinese: ''
-        french: ''
-        fusion: ''
-        greek: ''
-        indian: ''
-        italian: ''
-        japanese: ''
-        korean: ''
-        mediterranean: ''
-        mexican: ''
-        middle_eastern: ''
-        other: ''
-        spanish: ''
-        thai: ''
-        vietnamese: ''
-      location_help: ''
-      location_label: ''
-      location_placeholder: ''
-      location_required: ''
-      phone_help: ''
-      phone_label: ''
-      phone_placeholder: ''
+        american: Amerikai
+        chinese: Kínai
+        french: Francia
+        fusion: Fúzió
+        greek: Görög
+        indian: Indiai
+        italian: Olasz
+        japanese: Japán
+        korean: Koreai
+        mediterranean: Mediterrán
+        mexican: Mexikói
+        middle_eastern: Közel-keleti
+        other: Egyéb
+        spanish: Spanyol
+        thai: Thai
+        vietnamese: Vietnámi
+      location_help: Ez segít a pénznem és az időzóna alapértelmezett beállításában.
+      location_label: Helyszín
+      location_placeholder: Város, állam/ország
+      location_required: Kérjük, adja meg az étterem helyét.
+      phone_help: Választható - ügyfélkapcsolat és foglalások.
+      phone_label: Telefonszám
+      phone_placeholder: "+1 (555) 123-4567"
       pro_tips:
-        tip1: ''
-        tip2: ''
-        tip3: ''
-        title: ''
-      restaurant_name_label: ''
-      restaurant_name_placeholder: ''
-      restaurant_name_required: ''
-      restaurant_type_label: ''
-      restaurant_type_prompt: ''
-      restaurant_type_required: ''
+        tip1: Válassza ki az Ön szolgáltatási stílusához legjobban illeszkedő éttermi
+          típust
+        tip2: A konyha típusa segít nekünk releváns menüsablonokat javasolni
+        tip3: A hely a helyi pénznem és időzóna beállítására szolgál.
+        title: Profi tippek
+      restaurant_name_label: Étterem neve
+      restaurant_name_placeholder: Adja meg az étterem nevét
+      restaurant_name_required: Kérjük, adja meg az étterem nevét.
+      restaurant_type_label: Étterem típusa
+      restaurant_type_prompt: Típus kiválasztása...
+      restaurant_type_required: Kérjük, válassza ki az étterem típusát.
       restaurant_types:
-        bakery: ''
-        bar_grill: ''
-        cafe: ''
-        casual_dining: ''
-        fast_casual: ''
-        fine_dining: ''
-        food_truck: ''
-        other: ''
-        quick_service: ''
-      subtitle: ''
-      title: ''
+        bakery: Pékség
+        bar_grill: Bar & Grill
+        cafe: Cafe
+        casual_dining: Alkalmi étkezés
+        fast_casual: Gyors alkalmi
+        fine_dining: Fine Dining
+        food_truck: Food Truck
+        other: Egyéb
+        quick_service: Gyors kiszolgálás
+      subtitle: Segítsen nekünk néhány alapvető információval testreszabni az élményét.
+      title: Meséljen nekünk az étterméről

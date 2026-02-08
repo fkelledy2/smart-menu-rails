@@ -2,8 +2,8 @@
 hu:
   tracks:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: A pálya sikeresen létrejött.
+      deleted: A pálya sikeresen törlésre került.
+      updated: A pálya sikeresen frissült.
     index:
       tracks: Lejátszási lista

@@ -2,25 +2,25 @@
 fr:
   testimonials:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Le témoignage a été créé avec succès.
+      deleted: Le témoignage a été supprimé avec succès.
+      updated: Le témoignage a été mis à jour avec succès.
     edit:
-      title: ''
+      title: Editer un témoignage
     form:
-      cancel: ''
-      destroy: ''
-      save: ''
-      sure: ''
+      cancel: Annuler
+      destroy: Détruire
+      save: Économiser
+      sure: Êtes-vous sûr ?
     index:
       actions: Actions
       approve: Approuver
       testimonials: Témoignages
       unapprove: Désapprouver
     new:
-      cancel: ''
-      title: ''
+      cancel: Annuler
+      title: Nouveau témoignage
     testimonial:
-      restaurant: ''
-      testimonial: ''
-      user: ''
+      restaurant: 'Restaurant :'
+      testimonial: 'Témoignage :'
+      user: 'Utilisateur :'

@@ -17,18 +17,18 @@ fr:
       menuSection: Section
       menuSections: Sections
     menusection:
-      description: ''
-      image: ''
-      menu: ''
-      name: ''
-      sequence: ''
-      status: ''
+      description: 'Description :'
+      image: 'Image :'
+      menu: 'Carte :'
+      name: 'Nom :'
+      sequence: 'Séquence :'
+      status: 'Statut :'
     new:
       cancel: Annuler
       menuSection: Nouvelle section
     show:
       menuSection: Afficher la section
-      selectMenu: ''
+      selectMenu: Sélectionner le menu
     showInventories:
       inventories: Stocks
       reset: Réinitialiser

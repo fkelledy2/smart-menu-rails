@@ -2,28 +2,28 @@
 es:
   inventories:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: El inventario se ha creado correctamente.
+      deleted: El inventario se ha eliminado correctamente.
+      updated: El inventario se ha actualizado correctamente.
     edit:
       inventory: Editar inventario
     form:
       delete: Eliminar
-      errors: ''
+      errors: Errores
       save: Guardar
-      select_menu_item: ''
+      select_menu_item: Seleccione un elemento del menú...
       sure: "¿Estás seguro?"
     index:
       inventories: Inventarios
       inventory: Inventario
     inventory:
-      currentinventory: ''
-      menuitem: ''
-      resethour: ''
-      startinginventory: ''
+      currentinventory: 'Inventario actual:'
+      menuitem: 'Opción de menú:'
+      resethour: 'Hora de reinicio:'
+      startinginventory: 'Inventario inicial:'
     new:
       cancel: Cancelar
       inventory: Nuevo inventario
     show:
       inventory: Mostrar inventario
-      select_menu_item: ''
+      select_menu_item: Seleccione un elemento del menú...

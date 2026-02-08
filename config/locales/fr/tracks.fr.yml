@@ -2,8 +2,8 @@
 fr:
   tracks:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: La piste a été créée avec succès.
+      deleted: La piste a été supprimée avec succès.
+      updated: La mise à jour de la piste a été effectuée avec succès.
     index:
       tracks: Playlist

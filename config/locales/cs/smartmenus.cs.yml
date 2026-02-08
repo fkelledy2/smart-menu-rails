@@ -1,12 +1,43 @@
 ---
 cs:
   smartmenus:
+    alcohol:
+      acknowledge_btn: Potvrzení kontroly věku
+      acknowledged: Kontrola věku uznána
+      flag: Alkohol
+      non_alcoholic: Nealkoholické
+      policy_blocked: Prodej alkoholu je v současné době zakázán.
+      sales_disabled: Prodej alkoholu je v této restauraci zakázán.
+      verify_age: Před podáváním alkoholických nápojů ověřte věk zákazníka.
+      zero_abv_short: 0.0%
     controller:
       created: Smartmenu bylo úspěšně vytvořeno.
       deleted: Smartmenu bylo úspěšně odstraněno.
       updated: Smartmenu bylo úspěšně aktualizováno.
     edit:
       title: Upravit Smartmenu
+    empty_states:
+      adjust_filters: Nastavení filtrů
+      browse_menu: Procházet menu
+      cart_empty: Váš košík je prázdný
+      cart_empty_description: Začněte přidávat lahodné položky z naší nabídky!
+      error_description: Máme potíže s načítáním tohoto obsahu. Zkuste to prosím znovu.
+      error_occurred: Něco se pokazilo
+      no_items_filtered: Žádné položky neodpovídají vašim filtrům
+      no_items_filtered_description: Zkuste upravit filtry alergenů a zobrazit více
+        položek.
+      no_menu_description: Nabídku stále doplňujeme. Brzy se na ně prosím podívejte!
+      no_menu_items: Zatím žádné položky v nabídce
+      no_results: Nebyly nalezeny žádné výsledky
+      no_results_description: Nenašli jsme žádné položky odpovídající vašemu hledání.
+        Zkuste jiná klíčová slova.
+      no_table_description: Pro zahájení objednávky vyberte stůl.
+      no_table_selected: Vyberte si svůj stůl
+      order_complete: Objednávka odeslána!
+      order_complete_description: Vaše objednávka byla odeslána do kuchyně. Vychutnejte
+        si své jídlo!
+      refresh: Obnovit
+      try_again: Zkuste to znovu
     form:
       cancel: Zrušit
       destroy: Zničit
@@ -14,8 +45,17 @@ cs:
       sure: Jste si jistý?
     index:
       smartmenus: Chytrá menu
+    modal_footer_primary:
+      cancel: Zrušit
     new:
       title: Nové Smartmenu
+    ocr:
+      alcohol:
+        abv: ABV
+        classification: Třída
+        override_label: Alkohol
+        overrides_hint: Při publikování se použijí přepisy.
+        review_needed: Potřebuje revizi
     orderCustomer:
       bill: Účet prosím
       items_in_cart: položky v košíku
@@ -55,7 +95,6 @@ cs:
       confirmPayment: Potvrdit platbu
       cover_charge: Poplatek za obálku
       customiseOrderWithName: Přidejte své jméno do objednávky
-      partySize: Velikost strany
       excluding_tip: bez spropitného
       filterAllergyns: Filtrovat alergeny
       filterBy: Filtr
@@ -65,6 +104,7 @@ cs:
       nett: Nett
       noneAll: Žádné / Všechny
       order_aria: Objednávka
+      partySize: Velikost strany
       payBill: Zaplatit účet
       payment_link: Odkaz na platbu
       price: Cena
@@ -88,43 +128,3 @@ cs:
       restaurant: 'Restaurace:'
       slug: 'Slimák:'
       tablesetting: 'Sestavení tabulek:'
-    modal_footer_primary:
-      cancel: Zrušit
-    alcohol:
-      flag: Alkohol
-      non_alcoholic: Nealkoholické
-      zero_abv_short: 0.0%
-      verify_age: Před podáváním alkoholických nápojů ověřte věk zákazníka.
-      sales_disabled: Prodej alkoholu je v této restauraci zakázán.
-      policy_blocked: Prodej alkoholu je v současné době zakázán.
-      acknowledge_btn: Potvrzení kontroly věku
-      acknowledged: Kontrola věku uznána
-    ocr:
-      alcohol:
-        override_label: Alkohol
-        abv: ABV
-        classification: Třída
-        review_needed: Potřebuje revizi
-        overrides_hint: Při publikování se použijí přepisy.
-    empty_states:
-      no_menu_items: Zatím žádné položky v nabídce
-      no_menu_description: Nabídku stále doplňujeme. Brzy se na ně prosím podívejte!
-      refresh: Obnovit
-      cart_empty: Váš košík je prázdný
-      cart_empty_description: Začněte přidávat lahodné položky z naší nabídky!
-      browse_menu: Procházet menu
-      no_results: Nebyly nalezeny žádné výsledky
-      no_results_description: Nenašli jsme žádné položky odpovídající vašemu hledání.
-        Zkuste jiná klíčová slova.
-      no_items_filtered: Žádné položky neodpovídají vašim filtrům
-      no_items_filtered_description: Zkuste upravit filtry alergenů a zobrazit více
-        položek.
-      adjust_filters: Nastavení filtrů
-      no_table_selected: Vyberte si svůj stůl
-      no_table_description: Pro zahájení objednávky vyberte stůl.
-      order_complete: Objednávka odeslána!
-      order_complete_description: Vaše objednávka byla odeslána do kuchyně. Vychutnejte
-        si své jídlo!
-      error_occurred: Něco se pokazilo
-      error_description: Máme potíže s načítáním tohoto obsahu. Zkuste to prosím znovu.
-      try_again: Zkuste to znovu

@@ -1,765 +1,318 @@
 ---
 hu:
-  common:
-    remove: ''
-    archive: ''
   activerecord:
-    attributes:
-      allergyn:
-        description: ''
-        name: ''
-        symbol: ''
-      employee:
-        eid: ''
-        image: ''
-        name: ''
-        restaurant: ''
-        role: ''
-        status: ''
-        user: ''
-      inventory:
-        currentInventory: ''
-        menuItem: ''
-        resetHour: ''
-        startingInventory: ''
-      menu:
-        allowOrdering: Allow Ordering
-        covercharge: Teríték díj
-        description: ''
-        displayImages: Display Images
-        displayImagesInPopup: Display Images in Popup
-        image: ''
-        imagecontext: Image Context
-        inventoryTracking: Inventory Tracking
-        name: ''
-        pdf_menu_scan: PDF Menu
-        restaurant: ''
-        sequence: ''
-        status: ''
-      menuavailability:
-        dayofweek: Day of Week
-        endhour: End Hour
-        endmin: ''
-        menu: ''
-        starthour: Start Hour
-        startmin: ''
-        status: Állapot
-      menuitem:
-        allergyns: Allergens
-        calories: ''
-        description: ''
-        image: ''
-        ingredients: ''
-        menusection_id: ''
-        name: ''
-        preptime: ''
-        price: ''
-        sequence: ''
-        sizes: Sizes
-        sizesupport: Size Support
-        status: ''
-        tags: ''
-        unitcost: Egységköltség
-        variantPricing: ''
-      menusection:
-        description: ''
-        image: ''
-        menu: ''
-        name: ''
-        sequence: ''
-        status: ''
-      restaurant:
-        address1: ''
-        address2: ''
-        allowOrdering: Allow Ordering
-        capacity: ''
-        city: ''
-        country: ''
-        currency: ''
-        description: ''
-        displayImages: Display Images
-        displayImagesInPopup: Display Images in Popup
-        genid: Generation ID
-        image: Kép
-        imagecontext: Image Context
-        inventoryTracking: Inventory Tracking
-        music: ''
-        name: ''
-        postcode: ''
-        spotifyaccesstoken: Spotify Access Token
-        spotifyrefreshtoken: Spotify Refresh Token
-        spotifyuserid: Spotify User ID
-        state: ''
-        status: ''
-        tips: ''
-        wifiEncryptionType: WiFi Encryption Type
-        wifiHidden: WiFi Hidden
-        wifiPassword: WiFi Password
-        wifissid: WiFi SSID
-      restaurantavailability:
-        dayofweek: Day of Week
-        endhour: End Hour
-        endmin: ''
-        restaurant: ''
-        sequence: ''
-        starthour: Start Hour
-        startmin: ''
-        status: Állapot
-      restaurantlocale:
-        dfault: Alapértelmezett
-        locale: Nyelv
-      size:
-        description: ''
-        name: ''
-        size: ''
-      tax:
-        name: ''
-        restaurant: ''
-        taxPercentage: ''
-        taxType: Tax Type
-  allergyns:
-    edit:
-      allergyn: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: Aktiválás
-      allergyn: ''
-      allergyns: ''
-      deactivate: Deaktiválás
-    new:
-      allergyn: ''
-      cancel: ''
-    show:
-      allergyn: Allergén megtekintése
-  devise:
-    registrations:
-      edit:
-        account: ''
-        billing: ''
-        confirmPassword: ''
-        currentPassword: ''
-        currentPasswordHelp: A módosítások megerősítéséhez szükségünk van a jelenlegi
-          jelszavadra
-        deactivateMyAccount: Fiókom deaktiválása
-        deactivateMyAccountAreYouSure: Are you sure you want to deactivate your account?
-        password: ''
-        passwordHelp: ''
-        saveChanges: ''
-        selectPlan: ''
-      new:
-        confirmPassword: ''
-        emailAddress: ''
-        fullName: ''
-        password: ''
-        signUp: ''
-    sessions:
-      new:
-        emailAddress: ''
-        login: ''
-        password: ''
-        rememberMe: ''
-    shared:
-      links:
-        didntReceiverEmailConfirmation: Didn't receive confirmation instructions?
-        didntReceiverUnlockInstructions: Nem kaptad meg a feloldási útmutatót?
-        forgotYourPassword: Elfelejtetted a jelszavad?
+    models:
+      menusectionlocale: Menusectionlocale
+      ordraction: Ordraction
+      ordritemnote: Ordritemnote
+      ordrparticipant: Rendrparticipant
+  common:
+    archive: Archívum
+    flash:
+      restored: Visszaállított
+    remove: Távolítsa el a
   employees:
-    edit:
-      employee: Dolgozó
     form:
-      delete: Törlés
-      errors: Hibák
-      save: Mentés
-      selectRestaurant: ''
-      sure: Biztos vagy benne?
-    index:
-      activate: Aktiválás
-      deactivate: Deaktiválás
-      employee: Dolgozó
-      employees: Dolgozók
-    new:
-      cancel: ''
-      employee: Dolgozó
-    show:
-      employee: Dolgozó
-  feature1:
-    key: ''
-  feature2:
-    key: ''
-  feature3:
-    key: ''
-  feature4:
-    key: ''
-  feature5:
-    key: ''
-  feature6:
-    key: ''
-  home:
-    index:
-      actions: ''
-      activate: Aktiválás
-      browse: Browse
-      contactUs: ''
-      ctaBody1: Create a QR menu guests love. Update items instantly. Add translations,
-        ordering, and AI dish images when you’re ready.
-      ctaBody2: Create a QR menu guests love. Update items instantly. Add translations,
-        ordering, and AI dish images when you’re ready.
-      ctaTitle1: ''
-      ctaTitle2: ''
-      deactivate: Deaktiválás
-      demoMenu: Demo Menu
-      demoMenuTag: Preview
-      demoMenuTagBrowse: Browse
-      emailAddress: ''
-      emailAddressTag: Email address
-      featureDescription1: ''
-      featureDescription2: Serve guests in their own language with one click.
-      featureDescription3: Generate consistent, on-brand dish photos.
-      featureDescription4: Control what customers can see and order.
-      featureDescription5: Let guests order from the table and pay easily.
-      featureDescription6: Understand trends to improve your menu.
-      featureTitle1: ''
-      featureTitle2: Translate instantly
-      featureTitle3: AI Images
-      featureTitle4: Inventory & Availability
-      featureTitle5: Smart Ordering
-      featureTitle6: Analytics
-      features: ''
-      menus: ''
-      message: ''
-      next: Következő
-      numbers: Számok
-      numbersTag: At a glance
-      orderValue: Avg. order value
-      orders: Rendelések
-      previous: Előző
-      pricing: Pricing
-      pricingTag: Plans
-      restaurants: Éttermek
-      saveChanges: Save Changes
-      selectPlan: Select Plan
-      signUp: Sign up
-      signup: ''
-      submit: ''
-      testimonials: Vélemények
-      testimonialsTag: What our customers say
-      welcome: Welcome
-  inventories:
-    edit:
-      inventory: Készlet szerkesztése
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: Aktiválás
-      deactivate: Deaktiválás
-      inventories: Készletek
-      inventory: Készlet
-    new:
-      cancel: Mégse
-      inventory: Új készlet
-    show:
-      inventory: ''
-  menuavailabilities:
-    edit:
-      menuAvailability: Elérhetőség szerkesztése
-    form:
-      delete: Törlés
-      errors: ''
-      save: Mentés
-      selectMenu: Válasszon menüt...
-      sure: Biztos vagy benne?
-    index:
-      activate: Activate
-      deactivate: Deactivate
-      menuAvailabilities: Menu Availabilities
-      menuAvailability: ''
-    new:
-      cancel: Mégse
-      menuAvailability: Új elérhetőség
-    show:
-      menuAvailability: Menu Availability
+      eid: Id
+      name: Név
+      role: Szerep
+      status: Állapot
+      user: Felhasználó
+  free: Ingyenes
   menuitems:
-    edit:
-      menuItem: ''
-    form:
-      delete: ''
-      details: ''
-      errors: Hibák
-      imageSettings: ''
-      save: ''
-      selectMenuSection: ''
-      settings: ''
-      sizes: ''
-      sure: ''
-      update: ''
-    index:
-      activate: Aktiválás
-      deactivate: Deaktiválás
-      menuItem: Menü elem
-      menuItems: Menü elemek
-    new:
-      cancel: Mégse
-      menuItem: Új menü elem
-    show:
-      menuItem: ''
+    edit_2025:
+      back_to_items: Vissza a tételekhez
+      menu_item: Menüelem
   menus:
-    edit:
-      availabilities: Elérhetőségek
-      menu: ''
-      sections: ''
-    form:
-      delete: ''
-      details: ''
-      errors: Hibák
-      imageSettings: ''
-      pdfMenuScan: ''
-      pdfSettings: ''
-      preview: ''
-      save: ''
-      selectRestaurant: ''
-      settings: ''
-      sure: ''
-    index:
-      activate: Aktiválás
-      deactivate: Deaktiválás
-      menu: ''
-      menus: ''
-      unavailable: Unavailable
-    new:
-      cancel: Mégse
-      menu: Új menü
-    show:
-      menu: ''
-      table: ''
-    showMenuBanner:
-      table: ''
-    showMenuavailabilities:
-      actions: ''
-      activate: ''
-      availabilities: Elérhetőségek
-      deactivate: ''
-    showMenusections:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      sections: Szekciók
-  menusections:
-    edit:
-      inventories: Készletek
-      items: Elemek
-      menuSection: ''
-      section: Szekció
-    form:
-      delete: Törlés
-      details: Részletek
-      errors: ''
-      imageSettings: Kép beállítások
-      save: Mentés
-      selectMenu: Válasszon menüt...
-      settings: Beállítások
-      sure: Biztos vagy benne?
-    index:
-      activate: Aktiválás
-      deactivate: Deaktiválás
-      menuSection: Menü szekció
-      menuSections: Menü szekciók
-    new:
-      cancel: Mégse
-      menuSection: Új menü szekció
-    show:
-      menuSection: ''
-    showInventories:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      inventories: Készletek
-      reset: Visszaállítás
-    showMenuitems:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      genimage: Kép generálása
-      menuItems: Menu Items
-  plan:
-    business:
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-      key: ''
-    call: ''
-    enterprise:
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-      key: ''
-    pro:
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-      key: ''
-    register: ''
-    starter:
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-      greeting: ''
-      key: ''
-  restaurantavailabilities:
-    edit:
-      restaurantavailability: Nyitvatartás szerkesztése
-    form:
-      delete: Törlés
-      errors: ''
-      save: Mentés
-      selectRestaurant: Válasszon éttermet...
-      sure: Biztos vagy benne?
-    index:
-      activate: Activate
-      deactivate: Deactivate
-      restaurantavailabilities: Restaurant Availabilities
-      restaurantavailability: ''
-    new:
-      cancel: Mégse
-      restaurantavailability: Új nyitvatartás
-    show:
-      restaurantavailability: Restaurant Availability
-  restaurantlocales:
-    form:
-      save: Mentés
-    new:
-      restaurantlocale: Restaurant Locale
-  restaurants:
-    edit:
-      allergynsTab: Allergének
-      employeesTab: Dolgozók
-      localesTab: Lokációk
-      menuTab: Menük
-      openingsTab: Nyitvatartás
-      ordersTab: Rendelések
-      restaurant: Étterem szerkesztése
-      restaurantTab: Étterem
-      sizesTab: Méretek
-      smartQRTab: QR kódok
-      tableTab: Asztalok
-      taxesTab: Adók
-      tipsTab: Borravalók
-      tracksTab: Lejátszási lista
-    form:
-      address: ''
-      delete: ''
-      details: ''
-      errors: ''
-      generateImage: ''
-      imageSettings: ''
-      music: ''
-      pdfSettings: ''
-      save: ''
-      settings: ''
-      spotify: ''
-      sure: ''
-      wifi: ''
-    index:
-      actions: ''
-      activate: Aktiválás
-      deactivate: Deaktiválás
-      restaurant: Étterem
-      restaurants: Éttermek
-    new:
-      cancel: ''
-      restaurant: ''
-      restaurants: Éttermek
-    show:
-      address: ''
-      address1: ''
-      address2: ''
-      city: ''
-      currency: ''
-      description: ''
-      details: Részletek
-      imageSettings: Képbeállítások
-      name: ''
-      pdfSettings: ''
-      postcode: ''
-      restaurant: ''
-      settings: Beállítások
-      state: ''
-    showAllergyns:
-      actions: ''
-      activate: ''
-      allergyns: Allergens
-      deactivate: ''
-    showEmployees:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      employee: ''
-      employees: Dolgozók
-      id: ''
-      name: ''
-      role: ''
-    showLocales:
-      actions: Műveletek
-      activate: Aktiválás
-      deactivate: Deaktiválás
-      default: Default
-      delete: Törlés
-      menus: Menus
-    showMenus:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      menus: Menük
-    showOpeningHours:
-      actions: Műveletek
-      activate: Aktiválás
-      closing: ''
-      dayOfWeek: ''
-      deactivate: Deaktiválás
-      opening: ''
-      openingHour: ''
-      openingHours: ''
-      openings: Opening Hours
-    showOrdrs:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      ordrs: Rendelések
-    showSizes:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      sizes: Mé­retek
-    showSmartMenus:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      smartQRs: SmartQRs
-    showTableSettings:
-      actions: ''
-      activate: ''
-      capacity: ''
-      deactivate: ''
-      name: ''
-      tableSetting: ''
-      tableSettings: Table Settings
-      type: ''
-    showTaxes:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      name: ''
-      percentage: ''
-      tax: ''
-      taxes: Adók
-      type: ''
-    showTips:
-      actions: Műveletek
-      activate: Aktiválás
-      deactivate: Deaktiválás
-      percentage: ''
-      tip: ''
-      tips: Borravalók
-    showTracks:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      tracks: Tracks
-  shared:
-    footer:
-      privacy: ''
-      terms: ''
-    navbar:
-      adminArea: Admin
-      allergyns: ''
-      billing: Számlázás
-      employees: ''
-      inventories: ''
-      login: ''
-      logout: ''
-      menuAvailability: ''
-      menuItems: ''
-      menuSections: ''
-      menus: ''
-      openingHours: ''
-      orderItems: ''
-      orders: ''
-      restaurants: ''
-      settings: ''
-      signUp: ''
-      sizes: ''
-      tableSettings: ''
-      taxes: ''
-      testimonials: ''
-      whatsNew: ''
-  sizes:
-    edit:
-      size: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: Aktiválás
-      deactivate: Deaktiválás
-      size: ''
-      sizes: ''
-    new:
-      cancel: ''
-      size: ''
-    show:
-      size: Méret megtekintése
-  smartmenus:
-    edit:
-      menu: ''
-    form:
-      delete: ''
-      details: ''
-      errors: ''
-      preview: ''
-      save: Mentés
-      selectRestaurant: ''
-      sure: Biztos vagy benne?
-    index:
-      activate: Aktiválás
-      deactivate: Deaktiválás
-      menu: Menü
-      menus: Menük
-      smartmenus: Okos menük
-      unavailable: ''
-    new:
-      cancel: ''
-      menu: ''
-    orderCustomer:
-      bill: ''
-      order: ''
-      staffAlerted: Staff alerted
-      startOrder: ''
-      takePayment: ''
-    orderStaff:
-      bill: Bill
-      order: Rendelés
-      staffAlerted: ''
-      startOrder: Start sorrend
-      takePayment: Fizetés átvétele
-    show:
-      menu: Menü megtekintése
-      table: Asztal
-    alcoholic: Alkoholos
-    alcoholic_tooltip: ''
-    alcohol:
-      acknowledge_btn: A korellenőrzés nyugtázása
-      acknowledged: Életkor-ellenőrzés tudomásul véve
-    showAllergyns:
-      allergyns: Allergének
-    showCoverCharge:
-      covercharge: Cover Charge
-      coverchargeUnit: Cover Charge Unit
-    showMenuBanner:
-      allergyns: Allergének
-      table: ''
-    showModals:
-      add: ''
-      addToOrder: ''
-      cancel: ''
-      confirmPayment: ''
-      customiseOrderWithName: Add your name to the order
-      filterAllergyns: ''
-      filterBy: Filter
-      menuItem: ''
-      noneAll: None / All
-      price: ''
-      requestBill: ''
-      start: ''
-      startOrder: ''
-      submit: ''
-      total: ''
-      yourOrder: ''
-    showTableLocaleSelectorCustomer:
-      table: Asztal
-    showTableLocaleSelectorStaff:
-      table: Asztal
-  tablesettings:
-    edit:
-      tablesetting: Asztal szerkesztése
-    form:
-      delete: Törlés
-      errors: ''
-      save: Mentés
-      selectRestaurant: ''
-      sure: Biztos vagy benne?
-    index:
-      tablesetting: ''
-      tablesettings: ''
-    new:
-      cancel: ''
-      tablesetting: ''
-    show:
-      tablesetting: ''
-  taxes:
-    edit:
-      tax: ''
-    form:
-      delete: ''
-      errors: ''
-      save: ''
-      selectRestaurant: ''
-      sure: ''
-    index:
-      tax: ''
-      taxes: ''
-    new:
-      cancel: ''
-      tax: ''
-    show:
-      tax: ''
-  testimonials:
-    index:
-      actions: Műveletek
-      approve: Jóváhagyás
-      testimonials: Értékelések
-      unapprove: Elutasítás
-  tips:
-    edit:
-      tip: ''
-    form:
-      delete: ''
-      errors: ''
-      save: ''
-      selectRestaurant: ''
-      sure: ''
-    index:
-      tip: ''
-      tips: ''
-    new:
-      cancel: ''
-      tip: ''
-    show:
-      tip: Borravaló megtekintése
-  tracks:
-    index:
-      tracks: ''
-  userplans:
-    edit:
-      saveChanges: Frissítés
-      selectPlan: Válasszon tervet
-  contacts:
     controller:
-      thanks: Thank you for your message! We'll get back to you soon.
-  free: ''
+      localization_queued: Helymeghatározás sorba állítva
+      localization_queued_force: Helymeghatározás sorban álló erő
+      no_active_locales: Ehhez az étteremhez nincsenek aktív helyi beállítások konfigurálva.
+      polish_queued: A mesterséges intelligencia menü csiszolása sorba került.
+    edit:
+      back_to_menus: Vissza a Menükhöz
+      description: A menü konfigurációjának és tartalmának szerkesztése
+      localization_confirm: Helymeghatározás megerősítése
+      localization_description: Lokalizációs leírás
+      localization_title: Menü lokalizáció
+      localize_button: Menü lokalizálása
+      menus: Étlapok
+    edit_2025:
+      active: Aktív
+      inactive: Inaktív
+      items: tételek
+      menus: Étlapok
+      read_only: Csak olvasható
+      sections: szakaszok
+    index:
+      all_menus: Minden menü
+      back: Vissza
+      description: Kezelje éttermi menüit és szekcióit
+      new_menu: Új menü
+    new:
+      description: Új menü létrehozása az étterem számára
+      menu_details: Menü részletek
+      menus: Étlapok
+      new: Új
+      new_menu: Új menü
+    sections:
+      details_2025:
+        archived: Archivált
+      items_2025:
+        alcoholic: Alkoholos
+        alcoholic_false: Nem alkoholos
+        alcoholic_true: Alkoholos
+        apply: Alkalmazás
+        archive_confirm: Ez archiválja a kiválasztott menüpontokat. Az archivált elemek
+          többé nem jelennek meg ebben a listában.
+        bulk_action: Tömeges akció...
+        bulk_archive: Archívum
+        bulk_set_alcoholic: Állítsa be az alkoholos
+        bulk_set_food_type: Élelmiszertípus beállítása
+        bulk_set_status: Állapot beállítása
+        choose: Válasszon...
+        choose_food_type: Válasszon...
+        choose_status: Válasszon...
+        food_type: Élelmiszer típusa
+        status: Állapot
+      sections_2025:
+        apply: Alkalmazás
+        archive_confirm: Ez archiválja a kiválasztott menüpontokat. Az archivált szakaszok
+          többé nem jelennek meg ebben a listában.
+        bulk_action: Tömeges akció...
+        bulk_archive: Archívum
+        bulk_set_status: Állapot beállítása
+        choose_status: Válasszon...
+        status: Állapot
+      version_diff_2025:
+        added: Hozzáadva
+        changed: Megváltozott
+        diff_subtitle: Pillanatképek közötti változások
+        diff_title: Diff
+        items: Tételek
+        no_item_changes: Nincs tárgyváltoztatás.
+        no_section_changes: Nincs változás a szekcióban.
+        removed: Eltávolított
+        sections: Szekciók
+        view_json: JSON megtekintése
+      versions_2025:
+        activate_or_schedule: Aktiválás/ütemezés
+        activate_version: Verzió aktiválása
+        activation_help: Mindkettőt hagyja üresen, hogy ez legyen az alapértelmezett
+          aktív verzió. Adjon meg egy ablakot az aktiválás ütemezéséhez.
+        active_now: Aktív most
+        any_time: bármikor
+        by_user: felhasználó által
+        cancel: Törölje
+        compare: 'Összehasonlítás:'
+        compare_versions: Verziók összehasonlítása
+        create_version: Verzió létrehozása
+        created: Létrehozva
+        default_active: Alapértelmezett aktív
+        diff_json: Diff (JSON)
+        ends_at: Befejeződik (nem kötelező)
+        forever: forever
+        from: A  címről
+        menu_versions: Menü verziók
+        menu_versions_help: A verziók megváltoztathatatlan pillanatfelvételek. Aktiválja
+          az egyiket, hogy a Smartmenu az adott pillanatképből renderelje.
+        need_two_versions: Hozzon létre legalább két verziót az összehasonlításhoz.
+        no_versions: Még nincsenek verziók.
+        save: Mentés
+        starts_at: Indul (nem kötelező)
+        to: A  címre.
+        version_history: Verziótörténet
+        window: Ablak
+    sidebar_2025:
+      content: TARTALOM
+      details: Részletek
+      items: Tételek
+      menu: MENÜ
+      qrcode: QR-kód
+      schedule: Ütemterv
+      sections: Szekciók
+      settings: Beállítások
+      setup: BEÁLLÍTÁS
+      versions: Verziók
+  menusections:
+    edit_2025:
+      back_to_sections: Vissza a szakaszokhoz
+      items: tételek
+      menu_section: Menü szakasz
+    form:
+      allow_pairing_help: Az italpárosítás engedélyezése kiegészítésként.
+      availability_time: Rendelkezésre állás ideje
+      carrier_auto_help: Egy rejtett hordozó menüpont jön létre, és automatikusan
+        szinkronban marad ennek a szakasznak a nevével, leírásával és kóstolóárával.
+      includes_description: Tartalmazza (leírás)
+      pairing_price: Párosítás Ár
+      party_size: Party méret (opcionális)
+      tasting_menu_help: Ha engedélyezve van, ez a szakasz egy fix áras kóstoló. A
+        tételek árai elrejtve vannak; tételenként felárat lehet hozzáadni.
+      tasting_menu_settings: Kóstoló menü beállításai
+      tasting_price: Kóstoló ára
+      tasting_price_help: Adja meg a rögzített árat az étterem pénznemében. A pénznemet
+        az étterem beállításaiból kell levezetni.
+  ocr_menu_imports:
+    new:
+      auto_detect: Automatikus felismerés
+      source_language_help: Az eredeti nyelv megőrzésére szolgál a hiányzó leírások
+        generálásakor.
+      source_language_label: Menü nyelve
+    show:
+      back_to_imports: Vissza az importhoz
+      image_prompt: Képkérés
+  onboarding:
+    account_details:
+      restaurant_name_required: Kérjük, a folytatáshoz adja meg az étterem nevét.
+    next_steps:
+      restaurant_edit_notice: Nagyszerű! Most töltse ki az étterem adatait, címét
+        és állítsa be az asztalokat.
+  ordritems:
+    errors:
+      create_failed: Most nem tud elemet hozzáadni
+      order_missing: 'Nem lehet elemet hozzáadni: a rendelés nem létezik'
+      remove_failed: Most nem lehet eltávolítani az elemet
+  plan:
+    pro:
+      attribut6: Attribut6
+      attribute5: Attribútum5
+    starter:
+      greeting: Üdvözlés
+  restaurantavailabilities:
+    index:
+      restaurantAvailability: Restaurantavailability
+  restaurantlocales:
+    edit:
+      back: Vissza a Beállításokhoz
+      description: Nyelvi konfiguráció frissítése
+      edit_locale: Nyelv szerkesztése
+      settings: Beállítások
+    form:
+      default: Alapértelmezett nyelv
+      default_help: Állítsa be az étterem alapértelmezett nyelvét
+      locale: Nyelv
+      locale_help: Válassza ki a fordítások nyelvét
+      locale_locked: A nyelv nem módosítható a létrehozás után
+    new:
+      add_locale: Nyelv hozzáadása
+      back: Vissza a Beállításokhoz
+      description: Új nyelv hozzáadása az étteremhez
+      locale_details: Nyelvi részletek
+      new_locale: Új nyelv
+      settings: Beállítások
+  restaurants:
+    form:
+      pdfSettings: Pdfsettings
+    index_frame_2025:
+      archive_confirm: Ez archiválja a kiválasztott éttermeket.
+      bulk_action: Tömeges akció...
+      bulk_archive: Archívum
+      bulk_restore: Visszaállítás
+      bulk_set_status: Állapot beállítása
+      choose_status: Válasszon...
+      hide_archived: Elrejteni archivált
+      restore_confirm: Ez visszaállítja a kiválasztott éttermeket.
+      show_archived: Mutasd archiválva
+      status: Állapot
+    insights:
+      values:
+        'no': Nem
+        'yes': Igen
+    sections:
+      catalog_2025:
+        total_taxes: Adók összesen
+        total_tips: Összes borravaló
+      import_2025:
+        actions: Műveletek
+        ai_powered_menu_import: AI-alapú menü importálása
+        delete: Törölje a  címet.
+        tips_body: A legjobb eredmény érdekében töltsön fel egy tiszta PDF-et.
+      localization_2025:
+        current_languages: Jelenlegi nyelvek
+        total_languages: Nyelvek összesen
+      menus_2025:
+        archive_confirm: Ez archiválja az étterem kiválasztott menüit.
+        bulk_action: Tömeges akció...
+        bulk_archive: Archívum
+        bulk_restore: Visszaállítás
+        bulk_set_status: Állapot beállítása
+        bulk_share: Megosztás
+        choose_status: Válasszon...
+        hide_archived: Elrejteni archivált
+        restore_confirm: Ez visszaállítja az étterem kiválasztott menüit.
+        share_to_restaurants: Megosztás az éttermek között
+        show_archived: Mutasd archiválva
+        status: Állapot
+      settings_2025:
+        enabled: Engedélyezve
+        not_connected: Nincs csatlakoztatva
+        payments: Fizetések
+        stripe_connect: Stripe Connect
+        stripe_connect_help: Csatlakoztassa Stripe-fiókját az éttermi MoR-fizetések
+          engedélyezéséhez.
+      tables_2025:
+        tables: Táblák
+      wifi_2025:
+        'no': Nem
+        'yes': Igen
+    show:
+      pdfSettings: Pdfsettings
+  smartmenus:
+    alcohol:
+      age_check: Korellenőrzés
+    allergen_legend_modal:
+      allergen: Allergén
+      allergen_key: Allergén kulcs
+      allergen_key_description: Az allergének azonosítására rövid kódokat használunk.
+        A teljes allergénnév megjelenítéséhez vigye a mutatót a mutatóra, vagy koppintson
+        rá.
+      allergen_warning: Ha bármilyen ételallergiája vagy étrendi korlátozása van,
+        kérjük, rendelés előtt tájékoztassa a kiszolgálót.
+      close: Zárja be a
+      code: 'Kód:'
+      custom_allergens: További allergének
+    find_table: Keresse meg a táblázatot
+    orderCustomer:
+      add_name: Adja hozzá a nevét
+      view_cart: Kosár megtekintése
+    orderStaff:
+      view_cart: Kosár megtekintése
+    showMenuBanner:
+      allergen_key: Allergén kulcs
+      filter_allergens: Szűrje az allergéneket
+      search_menu: Keresés menü...
+      view_allergen_key: Allergén kulcs megtekintése
+    showModals:
+      remove_item: Tétel eltávolítása
+    welcome_banner:
+      default_tip: A lebegő piros gombra koppintva bármikor megtekintheti kosarát.
+      dismiss: Elutasíthatod
+      got_it: Megvan!
+      learn_more: Tudjon meg többet
+      need_help: Segítségre van szüksége?
+      step_1: Böngésszen a menüpontok között, és koppintson a rendeléshez való hozzáadáshoz.
+      step_2: Tekintse át kosarát a piros gomb segítségével
+      step_3: Küldje el rendelését, és mi az asztalához visszük.
+      tap_to_learn: Érintse meg a rendelés módjának megismeréséhez
+      tip_title: Gyors tipp
+      welcome_subtitle: Böngésszen étlapunkon és rendeljen készülékéről
+      welcome_title: Üdvözöljük a %{restaurant_név} étteremben!
+  tablesettings:
+    form:
+      capacity: Ülések
+      description: Leírás
+      description_help: 'Választható: Megjegyzés hozzáadása, mint például a helyszín
+        vagy különleges utasítások'
+      name: Név
+      name_help: Megjelenített táblázat neve (pl. 1. táblázat, Patio A)
+      status: Állapot
+      tabletype: Asztal típusa
+    index:
+      add_table: Táblázat hozzáadása
+      back: Vissza
+      quick_actions: Gyors akciók
+      tables_description: Kezelje éttermi asztalait a QR-kódok és az asztalok szerinti
+        rendelés lehetővé tételéhez.
+      tables_overview: Táblák
+      total_tables: Táblák összesen

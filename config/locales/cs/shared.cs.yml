@@ -1,8 +1,16 @@
 ---
 cs:
   shared:
+    footer:
+      build: Sestavte
+      facebook: Facebook
+      instagram: Instagram
+      linkedin: LinkedIn
+      plan: Plán
+      privacy: Ochrana soukromí
+      terms: Podmínky
+      twitter: Twitter
     head:
-      meta_title: Chytré digitální menu a objednávání pro restaurace | Zvýšení efektivity
       meta_description: Proměňte svou restauraci pomocí bezkontaktních digitálních
         jídelních lístků a chytrého objednávání. Zrychlete obsluhu, snižte počet chyb
         a zvyšte spokojenost zákazníků.
@@ -11,27 +19,19 @@ cs:
         pro restaurace | Jídelní lístky s QR kódy | Online systémy jídelních lístků
         | Zlepšení provozu restaurací | Samoobslužné objednávání v restauracích |
         Technologická řešení pro pohostinství | Ekologické nástroje pro restaurace
-      og_title: Digitální menu a chytré objednávání pro moderní restaurace
+      meta_title: Chytré digitální menu a objednávání pro restaurace | Zvýšení efektivity
       og_description: Vylepšete svou restauraci pomocí digitálních jídelních lístků
         a chytrých technologií, které zefektivní obsluhu, zkrátí čekací dobu a zvýší
         spokojenost hostů.
-      twitter_title: Udělejte svou restauraci chytřejší s digitálními jídelními lístky
+      og_title: Digitální menu a chytré objednávání pro moderní restaurace
+      pwa_title: Chytré menu
       twitter_description: Zjistěte, jak mohou digitální jídelní lístky a chytré objednávkové
         nástroje zjednodušit obsluhu a zlepšit zážitek hostů z jídla.
-      pwa_title: Chytré menu
-    footer:
-      facebook: Facebook
-      instagram: Instagram
-      linkedin: LinkedIn
-      privacy: Ochrana soukromí
-      terms: Podmínky
-      plan: Plán
-      build: Sestavte
-      twitter: Twitter
+      twitter_title: Udělejte svou restauraci chytřejší s digitálními jídelními lístky
     navbar:
       adminArea: Administrace
-      dashboard: Přístrojová deska
       billing: Fakturace
+      dashboard: Přístrojová deska
       heroImages: Obrázky hrdinů
       impersonated_as: Jste přihlášeni jako
       login: Přihlášení

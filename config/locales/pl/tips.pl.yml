@@ -6,30 +6,30 @@ pl:
       deleted: Wskazówka została pomyślnie usunięta.
       updated: Wskazówka została pomyślnie zaktualizowana.
     edit:
-      tips: Wskazówki
-      edit_tip: Opcja edycji porady
-      description: Aktualizacja procentowej wartości napiwku
       cancel: Anuluj
       confirm_delete: Usunąć tę opcję napiwku?
       delete: Usuń
+      description: Aktualizacja procentowej wartości napiwku
+      edit_tip: Opcja edycji porady
       tip_details: Szczegóły porady
+      tips: Wskazówki
     form:
       percentage: Procent napiwków
-      percentage_placeholder: np. 15
       percentage_help: Wprowadź wartość procentową napiwku (0-100)
+      percentage_placeholder: np. 15
     index:
-      tips: Opcje podpowiedzi
+      all_tips: Wszystkie opcje napiwków
+      back: Powrót
       description: Zarządzanie procentowymi wartościami napiwków dostępnymi dla klientów
         przy kasie.
-      back: Powrót
       new_tip: Nowa opcja napiwków
-      all_tips: Wszystkie opcje napiwków
+      tips: Opcje podpowiedzi
     new:
-      tips: Wskazówki
+      cancel: Anuluj
+      description: Utwórz nowy procent napiwków dla klientów
       new: Nowość
       new_tip: Nowa opcja napiwków
-      description: Utwórz nowy procent napiwków dla klientów
-      cancel: Anuluj
       tip_details: Szczegóły porady
+      tips: Wskazówki
     show:
       tip: Wskazówka

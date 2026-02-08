@@ -2,8 +2,8 @@
 pt:
   ordrs:
     controller:
-      could_not_delete: ''
-      created: ''
-      deleted: ''
+      could_not_delete: 'Não foi possível eliminar a encomenda: %{erro}'
+      created: A encomenda foi criada com sucesso.
+      deleted: A encomenda foi eliminada com êxito.
     index:
       orders: Pedidos

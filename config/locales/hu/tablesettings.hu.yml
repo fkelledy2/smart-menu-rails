@@ -2,28 +2,28 @@
 hu:
   tablesettings:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Az asztal beállítása sikeresen létrejött.
+      deleted: A táblázat beállítása sikeresen törlődött.
+      updated: A táblázat beállítása sikeresen frissült.
     edit:
       tablesetting: Asztal szerkesztése
     index:
-      archive: ''
-      seating_plan: ''
-      seats: ''
-      table_setting: ''
-      table_settings: ''
-      unarchive: ''
+      archive: Archívum
+      seating_plan: Ültetési terv
+      seats: 'Ülések:'
+      table_setting: Asztalterítés
+      table_settings: Asztali beállítások
+      unarchive: Unarchive
     new:
-      status: ''
+      status: 'Állapot:'
       tablesetting: Új asztal
     show:
-      available_menus: ''
-      selectRestaurant: ''
-      show_table_setting: ''
+      available_menus: Elérhető menük
+      selectRestaurant: Válassza ki az éttermet
+      show_table_setting: Mutasd meg az asztalterítést
     tablesetting:
-      capacity: ''
-      description: ''
-      name: ''
-      restaurant: ''
-      status: ''
+      capacity: 'Kapacitás:'
+      description: 'Leírás:'
+      name: 'Név:'
+      restaurant: 'Étterem:'
+      status: 'Állapot:'

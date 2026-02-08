@@ -2,20 +2,20 @@
 hu:
   menuavailabilities:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: A menü elérhetőségét sikeresen létrehoztuk.
+      deleted: A menü elérhetőségét sikeresen törölték.
+      updated: A menü elérhetőségét sikeresen frissítettük.
     form:
       delete: Törlés
       save: Mentés
       selectMenu: Válasszon menüt...
       sure: Biztos vagy benne?
     index:
-      menuAvailabilities: ''
+      menuAvailabilities: Menü elérhetőségek
       menuAvailability: Elérhetőség
     new:
       cancel: Mégse
       menuAvailability: Új elérhetőség
     show:
-      menuAvailability: ''
-      selectMenu: ''
+      menuAvailability: Menü elérhetősége
+      selectMenu: Válassza ki a menüt

@@ -3,10 +3,12 @@ de:
   home:
     index:
       browse: Menüs durchsuchen
-      page_title: ''
-      page_description: ''
-      error: ''
-      compare_plans: ''
+      closingBody: Erstellen Sie jetzt Ihr erstes Menü, oder sehen Sie sich eine Demo
+        an, um zu sehen, wie es sich auf dem Handy anfühlt.
+      closingPrimaryCta: Mein Menü erstellen
+      closingSecondaryCta: Demo ansehen
+      closingTitle: Starten Sie Ihr Menü noch heute
+      compare_plans: Pläne vergleichen
       contactUs: Kontaktieren Sie uns
       ctaBody1: Führen Sie ein intelligenteres Restaurant mit digitalen Tools, die
         so hart arbeiten wie Ihr Team. Von der Küche bis zum Gast befreien unsere
@@ -21,82 +23,19 @@ de:
         QR, um einen intelligenteren Service zu testen."
       demoMenuTagBrowse: oder
       emailAddressTag: Wir geben Ihre E-Mail niemals weiter.
-      heroPrimaryCta: ''
-      heroSecondaryCta: ''
-      heroTrust1: ''
-      heroTrust2: ''
-      heroTrust3: ''
-      overviewTitle: ''
-      overviewBody: ''
-      overviewItem1: ''
-      overviewItem2: ''
-      overviewItem3: ''
-      overviewItem4: ''
-      overviewItem5: ''
-      howTitle: ''
-      howBody: ''
-      howStep1Title: ''
-      howStep1Body: ''
-      howStep2Title: ''
-      howStep2Body: ''
-      howStep3Title: ''
-      howStep3Body: ''
-      trustTitle: ''
-      trustItem1Title: ''
-      trustItem1Body: ''
-      trustItem2Title: ''
-      trustItem2Body: ''
-      trustItem3Title: ''
-      trustItem3Body: ''
-      trustItem4Title: ''
-      trustItem4Body: ''
-      faqTitle: ''
-      faqQ1: ''
-      faqA1: ''
-      faqQ2: ''
-      faqA2: ''
-      faqQ3: ''
-      faqA3: ''
-      faqQ4: ''
-      faqA4: ''
-      closingTitle: ''
-      closingBody: ''
-      closingPrimaryCta: ''
-      closingSecondaryCta: ''
-      featuresStoryTitle: ''
-      featuresStoryBody: ''
-      featuresStoryPrimaryCta: ''
-      featuresStorySecondaryCta: ''
-      featuresStory1Kicker: ''
-      featuresStory1Title: ''
-      featuresStory1Body: ''
-      featuresStory1Bullet1: ''
-      featuresStory1Bullet2: ''
-      featuresStory1Bullet3: ''
-      featuresStory2Kicker: ''
-      featuresStory2Title: ''
-      featuresStory2Body: ''
-      featuresStory2Bullet1: ''
-      featuresStory2Bullet2: ''
-      featuresStory2Bullet3: ''
-      featuresStory3Kicker: ''
-      featuresStory3Title: ''
-      featuresStory3Body: ''
-      featuresStory3Bullet1: ''
-      featuresStory3Bullet2: ''
-      featuresStory3Bullet3: ''
-      featuresStory4Kicker: ''
-      featuresStory4Title: ''
-      featuresStory4Body: ''
-      featuresStory4Bullet1: ''
-      featuresStory4Bullet2: ''
-      featuresStory4Bullet3: ''
-      featuresStory5Kicker: ''
-      featuresStory5Title: ''
-      featuresStory5Body: ''
-      featuresStory5Bullet1: ''
-      featuresStory5Bullet2: ''
-      featuresStory5Bullet3: ''
+      error: 'Es ist ein Fehler aufgetreten: %{Meldung}'
+      faqA1: Nein. Die Gäste scannen einfach einen QR-Code und das Menü öffnet sich
+        in ihrem Browser.
+      faqA2: Ja. Änderungen werden sofort veröffentlicht - kein Nachdruck.
+      faqA3: Ja. Übersetzen Sie das Menü und lassen Sie die Gäste in ihrer Sprache
+        blättern.
+      faqA4: Ja. Generieren Sie AI-Bilder, um Ihr Menü konsistent und markengerecht
+        zu gestalten.
+      faqQ1: Brauchen Gäste eine App?
+      faqQ2: Kann ich das Menü sofort aktualisieren?
+      faqQ3: Unterstützen Sie mehrere Sprachen?
+      faqQ4: Können wir Fotos ohne ein Fotoshooting hinzufügen?
+      faqTitle: Häufig gestellte Fragen
       featureDescription2: Verabschieden Sie sich von langsamen Tischwechseln. Mit
         Selbstbedienungsbestellungen kontrollieren Gäste das Tempo - beschleunigen
         den Service, reduzieren Wartezeiten.
@@ -116,12 +55,81 @@ de:
       featureTitle5: Nachhaltiger Service
       featureTitle6: Echte Daten, klügere Entscheidungen
       features: Funktionen
+      featuresStory1Body: Ihr Menü sollte sich wie ein Teil Ihrer Marke anfühlen -
+        schnell, übersichtlich und mühelos zu durchsuchen.
+      featuresStory1Bullet1: Mobile-first Layout mit reibungsloser Navigation
+      featuresStory1Bullet2: Klare Abschnitte und Details der Gerichte
+      featuresStory1Bullet3: Keine App erforderlich - einfach einen QR-Code scannen
+      featuresStory1Kicker: Erfahrung der Gäste
+      featuresStory1Title: Menüs, die sofort geladen werden und gut aussehen
+      featuresStory2Body: Übersetzen Sie Ihre Speisekarte mit einem Klick und lassen
+        Sie Ihre Gäste in aller Ruhe stöbern - ohne lästiges Raten.
+      featuresStory2Bullet1: Mehrsprachige Speisekarten für Touristen und Einheimische
+      featuresStory2Bullet2: Konsistente Formatierung in allen Sprachen
+      featuresStory2Bullet3: Schnellere Bestellung mit weniger Fragen
+      featuresStory2Kicker: Übersetzung
+      featuresStory2Title: Jeden Gast in seiner eigenen Sprache zu bedienen
+      featuresStory3Body: Erstellen Sie konsistente, markengerechte Bilder von Speisen,
+        um die wahrgenommene Qualität zu steigern und die Auswahl zu erhöhen.
+      featuresStory3Bullet1: Eine kohärente visuelle Identität für alle Gerichte
+      featuresStory3Bullet2: Für den Anfang ist kein Fotoshooting erforderlich
+      featuresStory3Bullet3: Einfach zu aktualisieren, wenn sich Ihr Menü ändert
+      featuresStory3Kicker: AI-Bilder
+      featuresStory3Title: Fotos von Gerichten, die zum Stil Ihres Menüs passen
+      featuresStory4Body: Beginnen Sie mit einer schönen Speisekarte. Fügen Sie Bestell-
+        und Zahlungsmöglichkeiten hinzu, wenn es zu Ihrem Servicemodell passt.
+      featuresStory4Bullet1: Verkürzung der Wartezeiten in Spitzenzeiten
+      featuresStory4Bullet2: Kontrolle der Verfügbarkeit und Bestellfenster
+      featuresStory4Bullet3: Das Personal auf die Gastfreundschaft ausrichten
+      featuresStory4Kicker: Bestellung
+      featuresStory4Title: Bestellen & Bezahlen, wenn Sie bereit sind
+      featuresStory5Body: Nutzen Sie einfache Analysen, um Ihre Speisekarte zu verbessern,
+        unproduktive Bestände zu reduzieren und den durchschnittlichen Bestellwert
+        zu erhöhen.
+      featuresStory5Bullet1: Erkennen von Trends und Spitzengerichten
+      featuresStory5Bullet2: Sehen Sie, was die Gäste tatsächlich sehen und auswählen
+      featuresStory5Bullet3: Änderungen vornehmen und sofort veröffentlichen
+      featuresStory5Kicker: Einblicke
+      featuresStory5Title: Verstehen, was sich verkauft - und dann optimieren
+      featuresStoryBody: Entwickelt für Gäste, gebaut für Service. Wählen Sie die
+        Funktionen, die Sie jetzt brauchen, und fügen Sie weitere hinzu, wenn Sie
+        wachsen.
+      featuresStoryPrimaryCta: Mein Menü erstellen
+      featuresStorySecondaryCta: Demo ansehen
+      featuresStoryTitle: Endlich ein digitales Menü, das sich hochwertig anfühlt
+      heroPrimaryCta: Mein Menü erstellen
+      heroSecondaryCta: Demo-Menü anzeigen
+      heroTrust1: Keine App für Gäste erforderlich
+      heroTrust2: Mehrsprachige Menüs
+      heroTrust3: Sofortige Aktualisierungen (keine Nachdrucke)
+      howBody: Sie brauchen keinen Entwickler. Richten Sie Ihr Menü ein und gehen
+        Sie schnell live.
+      howStep1Body: Fügen Sie Abschnitte und Gerichte hinzu, oder importieren Sie
+        Ihr bestehendes Menü.
+      howStep1Title: Erstellen Sie Ihr Restaurant & Menü
+      howStep2Body: Fügen Sie Übersetzungen, Verfügbarkeitsregeln, Allergene und Bilder
+        hinzu.
+      howStep2Title: Bereiten Sie es für Gäste vor
+      howStep3Body: Ausdrucken und aufstellen - die Gäste scannen und blättern sofort.
+      howStep3Title: Teilen Sie Ihren QR
+      howTitle: Einstieg in wenigen Minuten
       menus: Menüs
       next: Weiter
       numbers: Zahlen
       numbersTag: 'Unsere Statistiken: Restaurants, Menüs, Bestellungen & Wert:'
       orderValue: Bestellwert
       orders: Bestellungen
+      overviewBody: Halten Sie Ihre Speisekarte frisch, konsistent und konvertierungsfreundlich
+        - ohne Nachdrucke oder unübersichtliche PDFs.
+      overviewItem1: Schnelle, mobilfreundliche Menüs
+      overviewItem2: Übersetzung mit einem Klick
+      overviewItem3: AI-Schalenbilder (einheitlicher Stil)
+      overviewItem4: Bestellen & Bezahlen, wann Sie es wünschen
+      overviewItem5: Einblicke, die Sie nutzen können
+      overviewTitle: Alles, was Sie von einem digitalen Menü erwarten, auf einer Plattform
+      page_description: Erstellen Sie schöne digitale Speisekarten, ermöglichen Sie
+        Online-Bestellungen und bieten Sie kontaktlose Zahlungsoptionen für Ihr Restaurant.
+      page_title: Mellow Menu - Digitale Speisekartenlösung für Restaurants
       previous: Zurück
       pricing: Unsere Preise
       pricingTag: 'Wählen Sie aus unseren flexiblen Preismodellen:'
@@ -132,11 +140,23 @@ de:
       submit: Absenden
       testimonials: Referenzen
       testimonialsTag: 'Ein paar Worte von unseren zufriedenen Kunden:'
-      video_unsupported: ''
+      trustItem1Body: Sie sollen schnell laden und lesbar bleiben.
+      trustItem1Title: Schnell auf dem Handy
+      trustItem2Body: Schalten Sie Artikel und Verfügbarkeit um, wenn sich der Service
+        ändert.
+      trustItem2Title: Kontrolle und Verfügbarkeit
+      trustItem3Body: Keine App erforderlich - einfach scannen und loslegen.
+      trustItem3Title: Gästefreundliche UX
+      trustItem4Body: Holen Sie sich schnell Hilfe, wenn Sie beschäftigt sind.
+      trustItem4Title: Unterstützung, wenn Sie sie brauchen
+      trustTitle: Gebaut für den echten Restaurantbetrieb
+      video_unsupported: Ihr Browser unterstützt das Video-Tag nicht.
       welcome: Willkommen!
-    terms:
-      page_title: ''
-      page_description: ''
     privacy:
-      page_title: ''
-      page_description: ''
+      page_description: Erfahren Sie in unseren Datenschutzrichtlinien, wie Mellow
+        Menu Ihre persönlichen Daten sammelt, verwendet und schützt.
+      page_title: Datenschutzrichtlinie - Mellow Menu
+    terms:
+      page_description: Lesen Sie unsere Allgemeinen Geschäftsbedingungen, um die
+        Regeln und Richtlinien für die Nutzung von Mellow Menu zu verstehen.
+      page_title: Allgemeine Geschäftsbedingungen - Mellow Menu

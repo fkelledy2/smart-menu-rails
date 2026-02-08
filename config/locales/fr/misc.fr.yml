@@ -1,59 +1,5 @@
 ---
 fr:
-  time:
-    formats:
-      default: "%a, %d %b %Y %H:%M:%S %z"
-      short: "%d %b %H:%M"
-      long: "%d %B %Y %H:%M"
-    date:
-      formats:
-        default: "%d/%m/%Y"
-        short: "%d %b"
-        long: "%d %B %Y"
-      abbr_day_names:
-      - dim.
-      - lun.
-      - mar.
-      - mer.
-      - jeu.
-      - ven.
-      - sam.
-      abbr_month_names:
-      - ''
-      - janv.
-      - févr.
-      - mars
-      - avr.
-      - mai
-      - juin
-      - juil.
-      - août
-      - sept.
-      - oct.
-      - nov.
-      - déc.
-      day_names:
-      - dimanche
-      - lundi
-      - mardi
-      - mercredi
-      - jeudi
-      - vendredi
-      - samedi
-      month_names:
-      - ''
-      - janvier
-      - février
-      - mars
-      - avril
-      - mai
-      - juin
-      - juillet
-      - août
-      - septembre
-      - octobre
-      - novembre
-      - décembre
   activerecord:
     attributes:
       employee:
@@ -63,24 +9,24 @@ fr:
       menu:
         restaurant: Restaurant
         sequence: Ordre d'affichage
+      menuavailability:
+        endmin: Minute de fermeture
+        menu: Menu
+        startmin: Minute d'ouverture
       menuitem:
-        sequence: Ordre d'affichage
         ingredients: Ingrédients
         menusection_id: Section
+        sequence: Ordre d'affichage
         tags: Tags
         variantPricing: Prix des variantes
       menusection:
         menu: Menu
         sequence: Ordre d'affichage
-      menuavailability:
-        endmin: Minute de fermeture
-        menu: Menu
-        startmin: Minute d'ouverture
       restaurant:
         capacity: Capacité
+        covercharge: ''
         music: Musique
         tips: Pourboires
-        covercharge: ''
       restaurantavailability:
         endmin: Minute de fermeture
         restaurant: Restaurant
@@ -101,6 +47,55 @@ fr:
       deactivate: Désactiver
     new:
       allergyn: Nouvel allergène
+  date:
+    abbr_day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    abbr_month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    formats:
+      default: ''
+      long: ''
+      short: ''
+    month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
   devise:
     registrations:
       edit:
@@ -108,10 +103,43 @@ fr:
         password: Mot de passe
         passwordHelp: Laissez vide si vous ne souhaitez pas changer
         selectPlan: Choisir un forfait
+  employees:
+    form:
+      selectRestaurant: Sélectionner un restaurant...
+    new:
+      cancel: Annuler
+  feature1:
+    key: Menus Intelligents
+  feature2:
+    key: Commandes Personnalisées
+  feature3:
+    key: Filtrage des Allergènes
+  feature4:
+    key: Commandes Clients
+  feature5:
+    key: Traductions IA
+  feature6:
+    key: Création d'Images IA
+  genimages:
+    edit:
+      genimage: Modifier l'image
+    form:
+      delete: Supprimer
+      save: Enregistrer
+      sure: Êtes-vous sûr ?
+    index:
+      activate: Activer
+      deactivate: Désactiver
+      genimage: Image
+      genimages: Images
+    new:
+      cancel: Annuler
+      genimage: Nouvelle image
+    show:
+      genimage: Afficher l'image
   home:
     index:
       actions: Actions
-      signup: S'inscrire
       activate: Activer
       deactivate: Désactiver
       emailAddress: Adresse e-mail
@@ -120,6 +148,24 @@ fr:
         et payer - plus de menus imprimés, de terminaux ou de tracas.
       featureTitle1: Confort sans contact
       message: Message
+      signup: S'inscrire
+  ingredients:
+    edit:
+      ingredient: Modifier l'ingrédient
+    form:
+      delete: Supprimer
+      save: Enregistrer
+      sure: Êtes-vous sûr ?
+    index:
+      activate: Activer
+      deactivate: Désactiver
+      ingredient: Ingrédient
+      ingredients: Ingredientes
+    new:
+      cancel: Annuler
+      ingredient: Nouvel ingrédient
+    show:
+      ingredient: Afficher l'ingrédient
   inventories:
     index:
       activate: Activer
@@ -127,11 +173,11 @@ fr:
   menuavailabilities:
     edit:
       menuAvailability: Modifier la disponibilité
+    form:
+      errors: Erreurs
     index:
       activate: Ouvrir
       deactivate: Fermer
-    form:
-      errors: Erreurs
   menuitems:
     edit:
       menuItem: Modifier l'article
@@ -143,9 +189,9 @@ fr:
       deactivate: Désactiver
   menus:
     form:
+      pdfMenuScan: PDF original
       preview: Aperçu
       selectRestaurant: Sélectionner un restaurant...
-      pdfMenuScan: PDF original
     index:
       activate: Activer
       deactivate: Désactiver
@@ -167,11 +213,11 @@ fr:
   menusections:
     edit:
       menuSection: Modifier la section
+    form:
+      errors: Erreurs
     index:
       activate: Activer
       deactivate: Désactiver
-    form:
-      errors: Erreurs
     showInventories:
       actions: Actions
       activate: Activer
@@ -180,40 +226,136 @@ fr:
       actions: Actions
       activate: Activer
       deactivate: Désactiver
+  metrics:
+    edit:
+      metric: Modifier la métrique
+    form:
+      delete: Supprimer
+      save: Enregistrer
+      sure: Êtes-vous sûr ?
+    index:
+      activate: Activer
+      deactivate: Désactiver
+      metric: Métrique
+      metrics: Métriques
+    new:
+      cancel: Annuler
+      metric: Nouvelle métrique
+    show:
+      metric: Afficher la métrique
+  number:
+    currency:
+      format:
+        delimiter: ''
+        format: ''
+        precision: ''
+        separator: ''
+        unit: ''
+  ocr_menu_imports:
+    create:
+      success: Import du menu démarré avec succès.
+    edit:
+      ocrMenuImport: Modifier l'import
+    form:
+      cancel: Annuler
+      import: Importer
+      save: Enregistrer
+    index:
+      activate: Activer
+      deactivate: Désactiver
+      ocrMenuImport: Import menu OCR
+      ocrMenuImports: Imports
+    new:
+      ocrMenuImport: Nouvel import
+    show:
+      ocrMenuImport: Afficher l'import
+  orders:
+    completed: Terminé
+    paid: Payé
+    payment: Paiement
+    pending: En attente
+    subtotal: Sous-total
+    tax: TVA
+    tip: Pourboire
+    total: Total
+  ordrs:
+    index:
+      order: Commande
+    show:
+      order: Commande
+      table: Table
+  plan:
+    business:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: Business
+    call: Appeler
+    enterprise:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: Enterprise
+    pro:
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      key: Pro
+    register: S'inscrire
+    starter:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: Starter
+    trial:
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      key: ''
   restaurantavailabilities:
     form:
-      selectRestaurant: Sélectionner un restaurant...
       errors: Erreurs
+      selectRestaurant: Sélectionner un restaurant...
     index:
       activate: Ouvrir
       deactivate: Fermer
     new:
       cancel: Annuler
   restaurants:
+    currency: EUR (€)
+    currency_symbol: "€"
     edit:
       restaurant: ''
     form:
-      generateImage: ''
       errors: ''
+      generateImage: ''
     index:
+      actions: ''
       activate: ''
       deactivate: ''
       restaurant: ''
-      actions: ''
     new:
       cancel: ''
     show:
-      name: ''
-      restaurant: ''
       address1: ''
       address2: ''
       city: ''
       currency: ''
       description: ''
+      name: ''
       postcode: ''
+      restaurant: ''
       state: ''
-    currency: EUR (€)
-    currency_symbol: "€"
     showAllergyns:
       actions: ''
       activate: ''
@@ -275,19 +417,19 @@ fr:
     navbar:
       allergyns: Allergènes
       employees: Employés
+      inventories: Stocks
+      menuAvailability: Disponibilité menu
       menuItems: Articles
+      menuSections: Sections
       menus: Menus
       openingHours: Heures d'ouverture
+      orderItems: Articles commandés
       orders: Commandes
       sizes: Tailles
       tableSettings: Tables
       taxes: Taxes
       tips: Pourboires
       whatsNew: Nouveautés
-      inventories: Stocks
-      menuAvailability: Disponibilité menu
-      menuSections: Sections
-      orderItems: Articles commandés
   sizes:
     edit:
       size: Modifier la taille
@@ -302,18 +444,8 @@ fr:
     new:
       size: Nouvelle taille
   smartmenus:
-    index:
-      activate: Activer
-      deactivate: Désactiver
-      menu: Menu
-      menus: Menus
-      unavailable: Le menu n'est pas actuellement disponible.
-    orderCustomer:
-      takePayment: Payer
-    show:
-      menu: Afficher le menu
-      table: Table
     alcoholic: Alcoolisé
+    alcoholic_tooltip: ''
     edit:
       menu: Modifier le menu
     form:
@@ -322,23 +454,33 @@ fr:
       errors: Erreurs
       preview: Aperçu
       selectRestaurant: Sélectionner un restaurant...
+    index:
+      activate: Activer
+      deactivate: Désactiver
+      menu: Menu
+      menus: Menus
+      unavailable: Le menu n'est pas actuellement disponible.
     new:
       cancel: Annuler
       menu: Nouveau menu
+    orderCustomer:
+      takePayment: Payer
     orderStaff:
       staffAlerted: Personnel alerté
+    show:
+      menu: Afficher le menu
+      table: Table
     showMenuBanner:
       table: Table
     showModals:
       menuItem: Article
-    alcoholic_tooltip: ''
   tablesettings:
     form:
       delete: Supprimer
-      save: Enregistrer
-      sure: Êtes-vous sûr ?
       errors: Erreurs
+      save: Enregistrer
       selectRestaurant: Sélectionner un restaurant...
+      sure: Êtes-vous sûr ?
     index:
       tablesetting: Table
       tablesettings: Tables
@@ -346,166 +488,6 @@ fr:
       cancel: Annuler
     show:
       tablesetting: Afficher la table
-  taxes:
-    edit:
-      tax: Modifier la taxe
-    form:
-      delete: Supprimer
-      save: Enregistrer
-      sure: Êtes-vous sûr ?
-      errors: Erreurs
-      selectRestaurant: Sélectionner un restaurant...
-    index:
-      tax: Taxe
-      activate: Activer
-      deactivate: Désactiver
-    new:
-      tax: Nouvelle taxe
-  tips:
-    edit:
-      tip: Modifier le pourboire
-    form:
-      delete: Supprimer
-      save: Enregistrer
-      sure: Êtes-vous sûr ?
-      errors: Erreurs
-      selectRestaurant: Sélectionner un restaurant...
-    index:
-      tip: Pourboire
-      activate: Activer
-      deactivate: Désactiver
-    new:
-      tip: Nouveau pourboire
-  employees:
-    form:
-      selectRestaurant: Sélectionner un restaurant...
-    new:
-      cancel: Annuler
-  feature1:
-    key: Menus Intelligents
-  feature2:
-    key: Commandes Personnalisées
-  feature3:
-    key: Filtrage des Allergènes
-  feature4:
-    key: Commandes Clients
-  feature5:
-    key: Traductions IA
-  feature6:
-    key: Création d'Images IA
-  genimages:
-    edit:
-      genimage: Modifier l'image
-    form:
-      delete: Supprimer
-      save: Enregistrer
-      sure: Êtes-vous sûr ?
-    index:
-      activate: Activer
-      deactivate: Désactiver
-      genimage: Image
-      genimages: Images
-    new:
-      cancel: Annuler
-      genimage: Nouvelle image
-    show:
-      genimage: Afficher l'image
-  ingredients:
-    edit:
-      ingredient: Modifier l'ingrédient
-    form:
-      delete: Supprimer
-      save: Enregistrer
-      sure: Êtes-vous sûr ?
-    index:
-      activate: Activer
-      deactivate: Désactiver
-      ingredient: Ingrédient
-      ingredients: Ingredientes
-    new:
-      cancel: Annuler
-      ingredient: Nouvel ingrédient
-    show:
-      ingredient: Afficher l'ingrédient
-  metrics:
-    edit:
-      metric: Modifier la métrique
-    form:
-      delete: Supprimer
-      save: Enregistrer
-      sure: Êtes-vous sûr ?
-    index:
-      activate: Activer
-      deactivate: Désactiver
-      metric: Métrique
-      metrics: Métriques
-    new:
-      cancel: Annuler
-      metric: Nouvelle métrique
-    show:
-      metric: Afficher la métrique
-  ocr_menu_imports:
-    create:
-      success: Import du menu démarré avec succès.
-    edit:
-      ocrMenuImport: Modifier l'import
-    form:
-      cancel: Annuler
-      import: Importer
-      save: Enregistrer
-    index:
-      activate: Activer
-      deactivate: Désactiver
-      ocrMenuImport: Import menu OCR
-      ocrMenuImports: Imports
-    new:
-      ocrMenuImport: Nouvel import
-    show:
-      ocrMenuImport: Afficher l'import
-  ordrs:
-    index:
-      order: Commande
-    show:
-      order: Commande
-      table: Table
-  plan:
-    business:
-      key: Business
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    call: Appeler
-    enterprise:
-      key: Enterprise
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    pro:
-      key: Pro
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-    register: S'inscrire
-    starter:
-      key: Starter
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    trial:
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      key: ''
   tags:
     edit:
       tag: Modifier le tag
@@ -516,6 +498,90 @@ fr:
       tag: Nouveau tag
     show:
       tag: Afficher le tag
+  taxes:
+    edit:
+      tax: Modifier la taxe
+    form:
+      delete: Supprimer
+      errors: Erreurs
+      save: Enregistrer
+      selectRestaurant: Sélectionner un restaurant...
+      sure: Êtes-vous sûr ?
+    index:
+      activate: Activer
+      deactivate: Désactiver
+      tax: Taxe
+    new:
+      tax: Nouvelle taxe
+  time:
+    date:
+      abbr_day_names:
+      - dim.
+      - lun.
+      - mar.
+      - mer.
+      - jeu.
+      - ven.
+      - sam.
+      abbr_month_names:
+      - ''
+      - janv.
+      - févr.
+      - mars
+      - avr.
+      - mai
+      - juin
+      - juil.
+      - août
+      - sept.
+      - oct.
+      - nov.
+      - déc.
+      day_names:
+      - dimanche
+      - lundi
+      - mardi
+      - mercredi
+      - jeudi
+      - vendredi
+      - samedi
+      formats:
+        default: "%d/%m/%Y"
+        long: "%d %B %Y"
+        short: "%d %b"
+      month_names:
+      - ''
+      - janvier
+      - février
+      - mars
+      - avril
+      - mai
+      - juin
+      - juillet
+      - août
+      - septembre
+      - octobre
+      - novembre
+      - décembre
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      long: "%d %B %Y %H:%M"
+      short: "%d %b %H:%M"
+  tips:
+    edit:
+      tip: Modifier le pourboire
+    form:
+      delete: Supprimer
+      errors: Erreurs
+      save: Enregistrer
+      selectRestaurant: Sélectionner un restaurant...
+      sure: Êtes-vous sûr ?
+    index:
+      activate: Activer
+      deactivate: Désactiver
+      tip: Pourboire
+    new:
+      tip: Nouveau pourboire
   tracks:
     edit:
       track: Modifier le track
@@ -536,69 +602,3 @@ fr:
       userplan: Nouveau plan utilisateur
     show:
       userplan: Afficher le plan utilisateur
-  orders:
-    total: Total
-    subtotal: Sous-total
-    tax: TVA
-    tip: Pourboire
-    payment: Paiement
-    paid: Payé
-    pending: En attente
-    completed: Terminé
-  number:
-    currency:
-      format:
-        unit: ''
-        precision: ''
-        separator: ''
-        delimiter: ''
-        format: ''
-  date:
-    formats:
-      default: ''
-      short: ''
-      long: ''
-    abbr_day_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    abbr_month_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    day_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    month_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''

@@ -1,34 +1,46 @@
 ---
 fr:
   shared:
-    head:
-      meta_title: ''
-      meta_description: ''
-      meta_keywords: ''
-      og_title: ''
-      og_description: ''
-      twitter_title: ''
-      twitter_description: ''
-      pwa_title: ''
     footer:
-      facebook: ''
-      instagram: ''
-      linkedin: ''
+      build: Construire
+      facebook: Facebook
+      instagram: Instagram
+      linkedin: LinkedIn
+      plan: Forfait
       privacy: Confidentialité
       terms: Conditions
-      plan: ''
-      build: ''
-      twitter: ''
+      twitter: Twitter
+    head:
+      meta_description: Transformez votre restaurant avec des menus numériques sans
+        contact et des commandes intelligentes. Accélérez le service, réduisez les
+        erreurs et augmentez la satisfaction des clients en toute simplicité.
+      meta_keywords: Menus numériques pour restaurants | Commandes sans contact pour
+        restaurants | Outils d'efficacité pour restaurants | Technologie pour restaurants
+        intelligents | Menus avec code QR | Systèmes de menus en ligne | Améliorer
+        les opérations des restaurants | Commandes en libre-service pour restaurants
+        | Solutions technologiques pour l'hôtellerie et la restauration | Outils pour
+        restaurants respectueux de l'environnement
+      meta_title: Menus et commandes numériques intelligents pour les restaurants
+        - Amélioration de l'efficacité
+      og_description: Améliorez votre restaurant avec des menus numériques et des
+        technologies intelligentes qui rationalisent le service, réduisent les temps
+        d'attente et augmentent la satisfaction des clients.
+      og_title: Menus numériques et commande intelligente pour les restaurants modernes
+      pwa_title: Menu intelligent
+      twitter_description: Découvrez comment les menus numériques et les outils de
+        commande intelligents peuvent simplifier le service et améliorer l'expérience
+        gastronomique de vos clients.
+      twitter_title: Rendez votre restaurant plus intelligent grâce aux menus numériques
     navbar:
       adminArea: Administrateur
-      dashboard: ''
       billing: Facturation
-      heroImages: ''
-      impersonated_as: ''
+      dashboard: Tableau de bord
+      heroImages: Images de héros
+      impersonated_as: Vous êtes connecté en tant que
       login: Connexion
       logout: Déconnexion
       restaurants: Établissements
       settings: Paramètres
       signUp: S'inscrire
       testimonials: Témoignages
-      toggle_navigation: ''
+      toggle_navigation: Toggle navigation

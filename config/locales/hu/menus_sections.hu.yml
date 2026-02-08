@@ -2,143 +2,164 @@
 hu:
   menus:
     sections:
-      details_2025:
-        quick_actions: ''
-        preview_staff: ''
-        preview_customer: ''
-        preview_staff_title: ''
-        preview_customer_title: ''
-        availability: ''
-        default: ''
-        available: ''
-        unavailable: ''
-        generate_images: ''
-        localize_menu: ''
-        ai_polish: ''
-        active: ''
-        inactive: ''
-        menu_details: ''
-        menu_name: ''
-        menu_name_placeholder: ''
-        menu_name_help: ''
-        description: ''
-        description_placeholder: ''
-        description_help: ''
-        statistics: ''
-        sections: ''
-        items: ''
-        schedules: ''
-      settings_2025:
-        feature_toggles: ''
-        display_images: ''
-        display_images_help: ''
-        disabled_at_restaurant: ''
-        display_images_popup: ''
-        display_images_popup_help: ''
-        allow_ordering: ''
-        allow_ordering_help: ''
-        voice_ordering: ''
-        voice_ordering_help: ''
-        inventory_tracking: ''
-        inventory_tracking_help: ''
-        settings_info_title: ''
-        settings_info_desc: ''
-        parent_restriction: ''
-        parent_restriction_desc: ''
-        status: ''
-        status_info: ''
-        images_info: ''
-        popup_info: ''
-        ordering_info: ''
-        voice_ordering_info: ''
-      sections_2025:
-        quick_actions: ''
-        add_section: ''
-        preview_staff: ''
-        preview_customer: ''
-        preview_staff_title: ''
-        preview_customer_title: ''
-        menu_sections: ''
-        sections_description: ''
-        name: ''
-        items: ''
-        edit: ''
-        no_sections: ''
-        no_sections_desc: ''
-        add_first_section: ''
-      items_2025:
-        quick_actions: ''
-        add_item: ''
-        preview_staff: ''
-        preview_customer: ''
-        preview_staff_title: ''
-        preview_customer_title: ''
-        menu_items: ''
-        items_description: ''
-        name: ''
-        price: ''
-        items_count:
-          one: ''
-          other: ''
-        tasting_menu: ''
-        per_table: ''
-        per_person: ''
-        has_image_title: ''
-        included: ''
-        edit: ''
-        no_items: ''
-        no_items_desc: ''
-        go_to_sections: ''
       design_2025:
-        quick_actions: ''
-        generate_images: ''
-        preview_staff: ''
-        preview_customer: ''
-        preview_staff_title: ''
-        preview_customer_title: ''
-        menu_image: ''
-        upload_image: ''
-        image_help: ''
-        remove_image: ''
-        pdf_menu: ''
-        pdf_menu_desc: ''
-        download: ''
-        upload_pdf: ''
-        pdf_help: ''
-        remove_pdf: ''
-        display_settings: ''
-        show_images: ''
-        show_images_desc: ''
-        popup_images: ''
-        popup_images_desc: ''
+        display_settings: Megjelenítési beállítások
+        download: Letöltés
+        generate_images: AI képek generálása
+        image_help: 'Hero kép a menüjéhez (ajánlott: 1200x600px)'
+        menu_image: Menü kép
+        pdf_help: Töltse fel a menü PDF verzióját
+        pdf_menu: PDF menü
+        pdf_menu_desc: Töltse fel a menü PDF verzióját, hogy az ügyfelek letölthessék
+          azt.
+        popup_images: Popup képek
+        popup_images_desc: Nagyobb kép megjelenítése, ha megérinti
+        preview_customer: Előnézet (ügyfél)
+        preview_customer_title: Előnézet menü, ahogy az ügyfelek látják (személyzeti
+          hitelesítéssel, de az ügyfélfelület megtekintésével)
+        preview_staff: Előnézet (személyzet)
+        preview_staff_title: A menü előnézeti megjelenítése személyi állományként
+          (hitelesített nézet)
+        quick_actions: Gyors akciók
+        remove_image: Jelenlegi kép eltávolítása
+        remove_pdf: Jelenlegi PDF eltávolítása
+        show_images: Képek megjelenítése
+        show_images_desc: A menüben megjelenő elemképek megjelenítése
+        upload_image: Kép feltöltése
+        upload_pdf: PDF feltöltése
+      details_2025:
+        active: Aktív
+        ai_polish: AI lengyel
+        availability: Elérhetőség
+        available: Elérhető
+        default: Alapértelmezett
+        description: Leírás
+        description_help: Választható leírás, amely segít az ügyfeleknek megérteni
+          ezt a menüt
+        description_placeholder: Írja le ezt a menüt...
+        generate_images: Képek generálása
+        inactive: Inaktív
+        items: Tételek
+        localize_menu: Fordítások
+        menu_details: Menü részletek
+        menu_name: Menü neve
+        menu_name_help: A név, amelyet az ügyfelek látni fognak
+        menu_name_placeholder: pl. Vacsora menü, ebédajánlatok
+        preview_customer: Ügyfél nézet
+        preview_customer_title: Előnézet menü, ahogy az ügyfelek látják (személyzeti
+          hitelesítéssel, de az ügyfélfelület megtekintésével)
+        preview_staff: Személyzeti nézet
+        preview_staff_title: A menü előnézeti megjelenítése személyi állományként
+          (hitelesített nézet)
+        quick_actions: Gyors akciók
+        schedules: Menetrendek
+        sections: Szekciók
+        statistics: Menü statisztikák
+        unavailable: Nem elérhető
+      items_2025:
+        add_item: Menüelem hozzáadása
+        edit: Szerkesztés
+        go_to_sections: Tovább a szakaszokhoz
+        has_image_title: Van kép - lebegtetés az előnézethez
+        included: Tartalmazza a
+        items_count:
+          one: 1 tétel
+          other: "%{szám} tételek"
+        items_description: Az összes menüpont megtekintése és kezelése az összes szekcióban
+        menu_items: Menüelemek
+        name: Név
+        no_items: Még nincsenek tételek
+        no_items_desc: Először adjon hozzá szakaszokat, majd adjon hozzá elemeket
+          ezekhez a szakaszokhoz.
+        per_person: "(személyenként)"
+        per_table: "(táblázatonként)"
+        preview_customer: Előnézet (ügyfél)
+        preview_customer_title: Előnézet menü, ahogy az ügyfelek látják (személyzeti
+          hitelesítéssel, de az ügyfélfelület megtekintésével)
+        preview_staff: Előnézet (személyzet)
+        preview_staff_title: A menü előnézeti megjelenítése személyi állományként
+          (hitelesített nézet)
+        price: Ár
+        quick_actions: Gyors akciók
+        tasting_menu: Kóstoló menü
       qrcode_2025:
-        all_qr_codes_for_menu: ''
-        all_qr_codes_for_menu_desc: ''
-        menu_only_qr: ''
-        all_tables: ''
-        print: ''
-        menu_table_qr: ''
-        no_qr_found: ''
-        download_options: ''
-        download_description: ''
-        png_format: ''
-        png_desc: ''
-        svg_format: ''
-        svg_desc: ''
-        pdf_format: ''
-        pdf_desc: ''
-        download: ''
-        usage_tips: ''
-        tip_1: ''
-        tip_2: ''
-        tip_3: ''
-        tip_4: ''
-        url_copied: ''
-        print_qr_title: ''
+        all_qr_codes_for_menu: Az összes QR-kód ehhez a menühöz
+        all_qr_codes_for_menu_desc: Tartalmazza az általános menü QR-t (asztal nélkül)
+          és asztalonként egy QR-t erre a menüre.
+        all_tables: Minden táblázat
+        download: Letöltés
+        download_description: QR-kód letöltése különböző formátumokban nyomtatáshoz
+        download_options: Letöltési lehetőségek
+        menu_only_qr: QR menü (Minden asztal)
+        menu_table_qr: Asztali QR-kódok ehhez a menühöz
+        no_qr_found: Még nem találtunk QR-kódokat. Győződjön meg róla, hogy Smartmenük
+          generálódnak ehhez a menühöz és a táblázatokhoz.
+        pdf_desc: Nyomtatásra kész formátum
+        pdf_format: PDF dokumentum
+        png_desc: Kiváló minőség digitális használatra
+        png_format: PNG kép
+        print: Nyomtatás
+        print_qr_title: QR nyomtatás
+        svg_desc: Bármilyen mérethez méretezhető
+        svg_format: SVG vektor
+        tip_1: Nyomtasson QR-kódokat az asztalsátrakra vagy terítékekre a vásárlók
+          könnyű hozzáférése érdekében.
+        tip_2: QR-kód feltüntetése a nyugtákon és névjegykártyákon
+        tip_3: Helyezzen el QR-kódokat a bejárat közelében az elvitelre érkező ügyfelek
+          számára.
+        tip_4: Rendszeresen tesztelje a QR-kódot a helyes működés biztosítása érdekében.
+        url_copied: URL másolva a vágólapra!
+        usage_tips: Használati tippek
       schedule_2025:
-        quick_actions: ''
-        copy_to_all: ''
-        menu_availabilities: ''
-        availabilities_description: ''
-        unavailable: ''
-        copied_success: ''
+        availabilities_description: Beállítja, hogy ez a menü a hét folyamán mikor
+          áll a vásárlók rendelkezésére.
+        copied_success: Másolom!
+        copy_to_all: Hétfő másolása minden napra
+        menu_availabilities: Menü elérhetőségek
+        quick_actions: Gyors akciók
+        unavailable: Nem elérhető
+      sections_2025:
+        add_first_section: Első szakasz hozzáadása
+        add_section: Szekció hozzáadása
+        edit: Szerkesztés
+        items: Tételek
+        menu_sections: Menüpontok
+        name: Név
+        no_sections: Még nincsenek szakaszok
+        no_sections_desc: Adja hozzá az első szekciót, hogy elkezdje a menü felépítését
+        preview_customer: Előnézet (ügyfél)
+        preview_customer_title: Előnézet menü, ahogy az ügyfelek látják (személyzeti
+          hitelesítéssel, de az ügyfélfelület megtekintésével)
+        preview_staff: Előnézet (személyzet)
+        preview_staff_title: A menü előnézeti megjelenítése személyi állományként
+          (hitelesített nézet)
+        quick_actions: Gyors akciók
+        sections_description: Rendezze a menüt olyan részekre, mint előételek, főételek,
+          desszertek stb.
+      settings_2025:
+        allow_ordering: Rendelés engedélyezése
+        allow_ordering_help: Engedélyezze az online rendelést ehhez a menühöz
+        disabled_at_restaurant: Mozgáskorlátozottak az étterem szintjén
+        display_images: Képek megjelenítése
+        display_images_help: A menüpontok képeinek megjelenítése ebben a menüben
+        display_images_popup: Képek megjelenítése a felugró ablakban
+        display_images_popup_help: A menüpontok képeinek megnyitása egy felugró modalban,
+          ha rákattintanak
+        feature_toggles: Funkció kapcsolók
+        images_info: A menüpont fotók váltása
+        inventory_tracking: Leltárkövetés
+        inventory_tracking_help: Készletszintek nyomon követése a menüpontokhoz (hamarosan)
+        ordering_info: Ügyfélmegrendelések engedélyezése
+        parent_restriction: 'Megjegyzés:'
+        parent_restriction_desc: Az éttermi szinten letiltott beállítások nem engedélyezhetők
+          az egyes menük esetében. Először az étterem szintjén engedélyezze őket.
+        popup_info: Teljes képernyős képnézegetés
+        settings_info_desc: Ezek a beállítások az adott menü működését szabályozzák.
+          A módosítások automatikusan mentésre kerülnek.
+        settings_info_title: A menübeállításokról
+        status: Állapot
+        status_info: A menü láthatóságát vezérli
+        voice_ordering: Hangrendelés
+        voice_ordering_help: Lehetővé teszi az ügyfelek számára, hogy hangutasításokkal
+          rendeljenek ebben a menüben
+        voice_ordering_info: Hangutasítások engedélyezése a rendeléshez

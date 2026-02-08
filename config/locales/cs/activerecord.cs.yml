@@ -181,9 +181,13 @@ cs:
         not_a_number: není číslo
         taken: již byla odebrána
         too_long:
+          few: je příliš dlouhý (maximum je %{počet} znaky).
+          many: je příliš dlouhý (maximum je %{počet} znaků).
           one: je příliš dlouhý (maximálně 1 znak)
           other: je příliš dlouhý (maximum je %{počet} znaků).
         too_short:
+          few: je příliš krátký (minimum je %{počet} znaky).
+          many: je příliš krátký (minimum je %{počet} znaků).
           one: je příliš krátký (minimum je 1 znak)
           other: je příliš krátký (minimum je %{počet} znaků).
     models:

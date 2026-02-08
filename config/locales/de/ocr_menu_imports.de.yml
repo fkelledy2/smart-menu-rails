@@ -2,136 +2,157 @@
 de:
   ocr_menu_imports:
     controller:
-      attach_pdf: ''
-      confirm_section: ''
-      deleted: ''
-      fail_create: ''
-      processing_restarted: ''
-      published: ''
-      queued: ''
-      republished: ''
-      unable_restart: ''
-      unauthorized: ''
-      updated: ''
+      attach_pdf: Bitte fügen Sie eine PDF-Datei bei.
+      confirm_section: Bitte bestätigen Sie mindestens einen Abschnitt vor dem Import.
+      deleted: Der Menüimport wurde erfolgreich gelöscht.
+      fail_create: 'Menü kann nicht erstellt werden: %{error}'
+      processing_restarted: Die Bearbeitung wurde (wieder) aufgenommen.
+      published: Das Menü wurde erfolgreich veröffentlicht!
+      queued: Der Menüimport steht in der Warteschlange zur Verarbeitung.
+      republished: Das Menü wurde mit bestätigten Änderungen neu veröffentlicht.
+      unable_restart: 'Verarbeitung kann nicht (erneut) gestartet werden von Status:
+        %{status}.'
+      unauthorized: Sie sind nicht berechtigt, diese Aktion durchzuführen.
+      updated: Der Menüimport wurde erfolgreich aktualisiert.
     import_item:
-      default_title: ''
-      delete_confirm: ''
-      delete_title: ''
-      imported_ago: ''
-      item_label: ''
-      section_label: ''
+      default_title: Artikel importieren
+      delete_confirm: Diesen Import löschen? Dies kann nicht rückgängig gemacht werden.
+      delete_title: Import löschen
+      imported_ago: Vor %{time} importiert
+      item_label: Artikel
+      section_label: Abschnitt
     index:
-      empty_hint: ''
-      empty_title: ''
-      new_import: ''
-      title: ''
+      empty_hint: Laden Sie zunächst eine neue Menü-PDF-Datei hoch.
+      empty_title: Keine Menüimporte
+      new_import: Neues Menü Import
+      title: Menü Importe
     menu_section:
-      edit: ''
-      hide: ''
-      items: ''
+      edit: bearbeiten
+      hide: Ausblenden
+      items: Artikel
     new:
-      cancel: ''
-      choose_file: ''
-      name_invalid: ''
-      name_label: ''
-      name_placeholder: ''
-      no_file_chosen: ''
-      pdf_hint: ''
-      pdf_invalid: ''
-      pdf_label: ''
-      subtitle: ''
-      tip_file_quality_text: ''
-      tip_file_quality_title: ''
-      tip_format_text: ''
-      tip_format_title: ''
-      tip_processing_time_text: ''
-      tip_processing_time_title: ''
-      tips_title: ''
-      title: ''
-      upload_process: ''
+      cancel: Abbrechen
+      choose_file: Datei auswählen
+      name_invalid: Bitte geben Sie einen Namen für dieses Menü an.
+      name_label: Menü Name
+      name_placeholder: z.B. Abendmenü, Mittagsangebote, etc.
+      no_file_chosen: Keine Datei ausgewählt
+      pdf_hint: PDF bis zu 10MB
+      pdf_invalid: Bitte wählen Sie eine PDF-Datei zum Hochladen aus.
+      pdf_label: PDF-Datei
+      subtitle: Laden Sie ein PDF-Menü hoch, um automatisch Menüpunkte und Abschnitte
+        zu extrahieren.
+      tip_file_quality_text: Verwenden Sie hochwertige PDF-Dateien mit klarem, lesbarem
+        Text. Vermeiden Sie handgeschriebene Menüs oder Scans mit niedriger Auflösung.
+      tip_file_quality_title: Qualität der Datei
+      tip_format_text: Das System funktioniert am besten mit digitalen PDF-Dateien.
+        Gescannte Dokumente können eine geringere Genauigkeit aufweisen.
+      tip_format_title: Format
+      tip_processing_time_text: Die Bearbeitung größerer Dateien kann einige Minuten
+        dauern. Sie erhalten eine E-Mail, wenn die Verarbeitung abgeschlossen ist.
+      tip_processing_time_title: Bearbeitungszeit
+      tips_title: Tipps für beste Ergebnisse
+      title: Menü aus PDF importieren
+      upload_process: Hochladen & Verarbeiten
     new_2025:
-      title: ''
-      subtitle: ''
-      step_upload: ''
-      step_process: ''
-      step_review: ''
-      name_label: ''
-      name_placeholder: ''
-      name_help: ''
-      source_language_label: ''
-      auto_detect: ''
-      language_en: ''
-      language_fr: ''
-      language_it: ''
-      language_es: ''
-      source_language_help: ''
-      pdf_label: ''
-      drop_title: ''
-      drop_subtitle: ''
-      browse_files: ''
-      pdf_hint: ''
-      remove_file_aria: ''
-      estimated_time: ''
-      cancel: ''
-      start_processing: ''
-      tips_title: ''
-      tip_quality_title: ''
-      tip_quality_text: ''
-      tip_format_title: ''
-      tip_format_text: ''
-      tip_language_title: ''
-      tip_language_text: ''
-      pdf_invalid_js: ''
+      auto_detect: Automatische Erkennung
+      browse_files: Dateien durchsuchen
+      cancel: Abbrechen
+      drop_subtitle: oder
+      drop_title: Ziehen Sie Ihr PDF per Drag & Drop hierher
+      estimated_time: Die Verarbeitung dauert ca. 2-5 Minuten.
+      language_en: Englisch
+      language_es: Spanisch
+      language_fr: Französisch
+      language_it: Italienisch
+      name_help: Geben Sie Ihrem Menü einen beschreibenden Namen, damit es leicht
+        zu identifizieren ist.
+      name_label: Menü Name
+      name_placeholder: z.B., Sommermenü 2024
+      pdf_hint: PDF bis zu 10 MB. Klare Scans funktionieren am besten.
+      pdf_invalid_js: Bitte wählen Sie eine PDF-Datei
+      pdf_label: Menü PDF
+      remove_file_aria: Datei entfernen
+      source_language_help: Wird verwendet, um bei der Erstellung fehlender Beschreibungen
+        die Originalsprache beizubehalten.
+      source_language_label: Sprache des Menüs
+      start_processing: Verarbeitung starten
+      step_process: Prozess
+      step_review: Überprüfung
+      step_upload: Hochladen
+      subtitle: Laden Sie eine PDF-Speisekarte hoch, und unsere KI extrahiert alle
+        Elemente automatisch.
+      tip_format_text: Menüs mit klaren Abschnitten und von den Preisen getrennten
+        Artikelnamen funktionieren am besten. Unsere KI kann die meisten Layouts verarbeiten.
+      tip_format_title: Standard-Menü-Layout
+      tip_language_text: Wir unterstützen Menüs in Englisch, Italienisch, Spanisch,
+        Französisch und mehr. Mehrsprachige Menüs funktionieren auch!
+      tip_language_title: Mehrere Sprachen werden unterstützt
+      tip_quality_text: Am besten eignen sich klare, hochauflösende PDF-Dateien mit
+        gutem Kontrast. Vermeiden Sie unscharfe oder qualitativ schlechte Fotos.
+      tip_quality_title: Hochwertige Scans verwenden
+      tips_title: Tipps für beste Ergebnisse
+      title: Importieren Sie Ihr Menü
     show:
-      allergens: ''
-      approve_sections_items: ''
-      cancel: ''
-      click_to_add_description: ''
-      confirm_modal_body: ''
-      confirm_modal_title: ''
-      create_menu: ''
-      dairy_free: ''
-      default_title: ''
-      delete: ''
-      description: ''
-      dietary_information: ''
-      edit_item_modal_title: ''
-      failed_heading: ''
-      gluten_free: ''
-      hold_multi_select: ''
-      import_details: ''
-      imported_ago: ''
-      imported_menu_subtitle: ''
-      imported_menu_title: ''
-      item_name: ''
-      no_items_explainer: ''
-      no_items_heading: ''
-      no_items_tip1: ''
-      no_items_tip2: ''
-      no_items_tip3: ''
-      position: ''
-      price: ''
-      process_confirm: ''
-      process_pdf: ''
-      processing_page: ''
-      processing_title: ''
-      progress_complete: ''
-      progress_loading: ''
-      publish: ''
-      publish_menu: ''
-      reorder_hint: ''
-      save_changes: ''
-      section: ''
-      section_disabled_title: ''
-      status: ''
+      allergens: Allergene
+      approve_sections_items: Abschnitte und Posten genehmigen
+      cancel: Abbrechen
+      click_to_add_description: Klicken Sie, um eine Beschreibung hinzuzufügen.
+      confirm_modal_body: Bestätigen Sie, um Ihr Menü zu veröffentlichen. Sie können
+        optional Sync publish verwenden, um alle vorhandenen Abschnitte/Elemente zu
+        archivieren, die bei diesem Import nicht vorhanden sind.
+      confirm_modal_title: Menü veröffentlichen
+      create_menu: Menü erstellen
+      dairy_free: Molkereifrei
+      default_title: 'Menü Import #%{id}'
+      delete: Löschen
+      description: Beschreibung
+      dietary_information: Informationen zur Ernährung
+      edit_item_modal_title: Menüpunkt Bearbeiten
+      failed_heading: Verarbeitung fehlgeschlagen
+      gluten_free: Glutenfrei
+      hold_multi_select: Strg/Befehlstaste gedrückt halten, um mehrere auszuwählen
+      import_details: Details importieren
+      imported_ago: Vor %{time} importiert
+      imported_menu_subtitle: Überprüfen und bestätigen Sie die extrahierten Menüpunkte
+        unten. Sie können jedes Element bearbeiten, bevor Sie das endgültige Menü
+        erstellen.
+      imported_menu_title: Importiertes Menü
+      item_name: Artikel Name
+      no_items_explainer: Wir konnten keine Abschnitte/Elemente aus dieser PDF-Datei
+        erkennen.
+      no_items_heading: Es wurden keine Menüpunkte geparst
+      no_items_tip1: Die PDF-Datei enthält möglicherweise keinen extrahierbaren Text
+        und die OCR hat keinen Text erzeugt. Überprüfen Sie, ob die Google Cloud Vision-Anmeldeinformationen
+        konfiguriert sind.
+      no_items_tip2: Der OpenAI-API-Schlüssel fehlt möglicherweise oder wird ungültig
+        ausgegeben. Fügen Sie openai_api_key zu den Rails-Anmeldeinformationen hinzu.
+      no_items_tip3: Die Formatierung der Antwort war möglicherweise ungültig. Wir
+        haben das Parsing gehärtet, aber eine erneute Ausführung könnte helfen.
+      position: Position
+      price: Preis
+      process_confirm: Jetzt mit der Verarbeitung dieses PDF beginnen?
+      process_pdf: Prozess-PDF
+      processing_page: Seite %{Aktuell} von %{Gesamt}
+      processing_title: Bearbeitung Ihres Menüs. Dies kann ein paar Minuten dauern...
+      progress_complete: "%{Prozent}% abgeschlossen"
+      progress_loading: Laden...
+      publish: veröffentlichen.
+      publish_menu: Menü veröffentlichen
+      reorder_hint: Bestellen Sie nur Artikel innerhalb dieses Abschnitts neu.
+      save_changes: Änderungen speichern
+      section: Abschnitt
+      section_disabled_title: Abschnitt kann hier nicht geändert werden
+      status: 'Status:'
       steps:
-        complete: ''
-        processing: ''
-        review: ''
-        upload: ''
-      sync_publish_label: ''
-      try_again: ''
-      updated_at: ''
-      upload_clearer_pdf: ''
-      vegan: ''
-      vegetarian: ''
+        complete: Vollständig
+        processing: Verarbeitung
+        review: Überprüfung
+        upload: Hochladen
+      sync_publish_label: Veröffentlichung synchronisieren (Archivabschnitte/Positionen,
+        die nicht in diesem Import enthalten sind)
+      try_again: Erneut versuchen
+      updated_at: Aktualisiert %{Zeitstempel}
+      upload_clearer_pdf: Eine übersichtlichere PDF-Datei hochladen
+      vegan: Vegan
+      vegetarian: Vegetarisch

@@ -1,132 +1,138 @@
 ---
 de:
-  bar_dashboard:
-    title: ''
-    metrics:
-      pending_tickets: ''
-      preparing: ''
-      ready: ''
-  kitchen_dashboard:
-    title: ''
-    metrics:
-      pending_tickets: ''
-      preparing: ''
-      ready: ''
-      todays_orders: ''
-    buttons:
-      start_preparing: ''
-      mark_ready: ''
-      mark_collected: ''
-  errors:
-    not_found:
-      title: ''
-      description: ''
-      suggestion: ''
-    unprocessable:
-      title: ''
-      description: ''
-      suggestion: ''
-    internal:
-      title: ''
-      description: ''
-      suggestion: ''
-      error_details: ''
-      backtrace: ''
-  menu_performance:
-    not_available:
-      title: ''
-      description: ''
-      reasons:
-      - ''
-      - ''
-      - ''
-  restaurant_analytics:
-    not_available:
-      title: ''
-      description: ''
-      reasons:
-      - ''
-      - ''
-      - ''
   ai_generation:
     modal:
-      title: ''
-      confirm: ''
-      progress: ''
-      progress_log: ''
-      last_image: ''
+      confirm: Bestätigen & Starten
+      last_image: Letztes Bild
+      progress: Derzeit erzeugt
+      progress_log: Fortschrittsprotokoll
+      title: AI-Bilder generieren
+  bar_dashboard:
+    metrics:
+      pending_tickets: Anhängige Tickets
+      preparing: Vorbereiten von
+      ready: Bereit
+    title: Bar Dashboard
+  details_2025:
+    menu_go_live_flow: Ablauf der Inbetriebnahme des Menüs
+  edit_2025:
+    onboarding_flow: Onboarding-Ablauf
+  errors:
+    internal:
+      backtrace: Rückverfolgung
+      description: Es tut uns leid, aber auf unserer Seite ist etwas schief gelaufen.
+      error_details: Fehler-Details
+      suggestion: Bitte versuchen Sie es später noch einmal oder wenden Sie sich an
+        den Support, wenn das Problem weiterhin besteht.
+      title: Interner Serverfehler
+    not_found:
+      description: Die Seite, die Sie suchen, existiert nicht.
+      suggestion: Sie wurde möglicherweise verschoben oder gelöscht, oder Sie haben
+        die falsche URL eingegeben.
+      title: Seite nicht gefunden
+    unprocessable:
+      description: Die von Ihnen gewünschte Änderung wurde abgelehnt.
+      suggestion: Vielleicht haben Sie versucht, etwas zu ändern, zu dem Sie keinen
+        Zugang hatten.
+      title: Unverarbeitbare Entität
+  form_2025:
+    image_settings: Bildeinstellungen
+    menu_details: Menü-Details
+    menu_details_subtitle: Grundlegende Informationen über Ihr Menü
+    menu_image: Menü Bild
+  hero_images:
+    form:
+      alt_text_help: Beschreibender Text für Barrierefreiheit
+      alt_text_placeholder: Belebtes Restaurantinterieur mit Gästen
+      image_url_help: Geben Sie die vollständige URL des Bildes von Pexels oder einer
+        anderen Quelle ein
+      image_url_placeholder: https://images.pexels.com/...
+      sequence_help: Reihenfolge der Anzeige (niedrigere Nummern erscheinen zuerst)
+      source_url_help: Link zur Original-Quellseite
+      source_url_placeholder: https://www.pexels.com/photo/...
+      status_help: Nur genehmigte Bilder werden auf der Homepage angezeigt
+    new:
+      title: Neues Heldenbild
+  kitchen_dashboard:
+    buttons:
+      mark_collected: Als gesammelt markieren
+      mark_ready: Mark Ready
+      start_preparing: Beginn der Vorbereitungen
+    metrics:
+      pending_tickets: Anhängige Tickets
+      preparing: Vorbereiten von
+      ready: Bereit
+      todays_orders: Heutige Aufträge
+    title: Dashboard Küche
+  menu_performance:
+    not_available:
+      description: 'Die Leistungsdaten für dieses Menü können nicht geladen werden.
+        Dies kann folgende Ursachen haben:'
+      reasons:
+      - Menü nicht gefunden oder Zugriff verweigert
+      - Unzureichende Genehmigungen
+      - Systemfehler bei der Datenerfassung
+      title: Leistungsdaten nicht verfügbar
   menuitem_ai:
     modal:
-      title: ''
-      confirm: ''
-      progress: ''
-      preview: ''
+      confirm: Bestätigen & Starten
+      preview: Bildvorschau
+      progress: Derzeit erzeugt
+      title: Bild generieren
   ocr_menu_imports:
     alcohol_override:
-      undecided: ''
-      alcoholic: ''
-      non_alcoholic: ''
+      alcoholic: Alkoholisch
+      non_alcoholic: Alkoholfrei
+      undecided: Unentschlossen
     publish:
-      title: ''
-      submit: ''
+      submit: Menü veröffentlichen
+      title: Menü veröffentlichen
   offline:
-    title: ''
-    available_offline: ''
+    available_offline: 'Offline verfügbar:'
     items:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    last_updated: ''
-  smartmenus:
-    skeleton:
-      loading: ''
-    no_image: ''
-  hero_images:
-    new:
-      title: ''
-    form:
-      image_url_placeholder: ''
-      image_url_help: ''
-      alt_text_placeholder: ''
-      alt_text_help: ''
-      sequence_help: ''
-      status_help: ''
-      source_url_placeholder: ''
-      source_url_help: ''
+    - Informationen zum Restaurant
+    - Menüpunkte und Preise
+    - Aktuelle Aufträge
+    - Bilder im Cache
+    - Grundlagen der Analytik
+    last_updated: Zuletzt aktualisiert
+    title: Sie sind offline
   orders:
-    ordered: ''
-    prepared: ''
-    delivered: ''
-  form_2025:
-    menu_details: ''
-    menu_details_subtitle: ''
-    image_settings: ''
-    menu_image: ''
-  version_diff:
-    section: ''
-    item: ''
-  version_diff_2025:
-    section: ''
-    item: ''
-  details_2025:
-    menu_go_live_flow: ''
-  edit_2025:
-    onboarding_flow: ''
+    delivered: Geliefert
+    ordered: Bestellt
+    prepared: Vorbereitet
+  restaurant_analytics:
+    not_available:
+      description: 'Die Analysedaten für dieses Restaurant können nicht geladen werden.
+        Dies könnte der Grund sein:'
+      reasons:
+      - Restaurant nicht gefunden oder Zugang verweigert
+      - Unzureichende Genehmigungen
+      - Systemfehler bei der Datenerfassung
+      title: Analysedaten nicht verfügbar
   settings_2025:
-    receipt_merchant_details: ''
-    statement_descriptor: ''
-  tasting_courses_footer:
-    show_courses: ''
-    add_tasting_menu: ''
-  tasting_badge: ''
-  show_modals:
-    pairing: ''
-    full: ''
+    receipt_merchant_details: Quittung / Händlerangaben
+    statement_descriptor: Anweisung Deskriptor
   show_allergyns_debug:
-    title: ''
-    sql: ''
-    count: ''
-    ids: ''
-    names: ''
+    count: Zählen Sie
+    ids: IDs
+    names: Namen
+    sql: SQL
+    title: Allergyns Debug
+  show_modals:
+    full: Vollständig
+    pairing: Paarung
+  smartmenus:
+    no_image: Kein Bild
+    skeleton:
+      loading: Laden von Menüpunkten...
+  tasting_badge: Verkostung
+  tasting_courses_footer:
+    add_tasting_menu: Degustationsmenü hinzufügen
+    show_courses: Kurse anzeigen
+  version_diff:
+    item: Artikel
+    section: Abschnitt
+  version_diff_2025:
+    item: 'Artikel #'
+    section: 'Abschnitt #'

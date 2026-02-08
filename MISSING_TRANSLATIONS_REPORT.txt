@@ -1,2051 +1,233 @@
-Missing German translations:
-  activerecord.attributes.employee.user_id: User
-  activerecord.attributes.ingredient.description: Description
-  activerecord.attributes.ingredient.name: Name
-  activerecord.attributes.inventory.currentinventory: Current inventory
-  activerecord.attributes.inventory.resethour: Reset hour
-  activerecord.attributes.inventory.startinginventory: Starting inventory
-  activerecord.attributes.menuavailability.menu_id: Menu
-  activerecord.attributes.menuitem.itemtype: Item Type
-  activerecord.attributes.menuparticipant.preferredlocale: Preferred Locale
-  activerecord.attributes.menuparticipant.sessionid: Session ID
-  activerecord.attributes.menuparticipant.smartmenu_id: Smartmenu
-  activerecord.attributes.menusection.endhour: End Hour
-  activerecord.attributes.menusection.menu_id: Menu
-  activerecord.attributes.menusection.restricted: Restricted
-  activerecord.attributes.menusection.starthour: Start Hour
-  activerecord.attributes.metric.description: Description
-  activerecord.attributes.metric.name: Name
-  activerecord.attributes.ordr.employee_id: Employee
-  activerecord.attributes.ordr.menu_id: Menu
-  activerecord.attributes.ordr.restaurant_id: Restaurant
-  activerecord.attributes.ordr.tablesetting_id: Table Setting
-  activerecord.attributes.ordraction.action: Action
-  activerecord.attributes.ordraction.employee_id: Employee
-  activerecord.attributes.ordraction.ordr_id: Order
-  activerecord.attributes.ordraction.ordritem_id: Order Item
-  activerecord.attributes.ordraction.ordrparticipant_id: Order Participant
-  activerecord.attributes.ordraction.sessionid: Session ID
-  activerecord.attributes.ordritem.menuitem_id: Menu Item
-  activerecord.attributes.ordritem.ordr_id: Order
-  activerecord.attributes.ordritemnote.note: Note
-  activerecord.attributes.ordritemnote.ordritem_id: Order Item
-  activerecord.attributes.ordrparticipant.action: Action
-  activerecord.attributes.ordrparticipant.employee_id: Employee
-  activerecord.attributes.ordrparticipant.ordr_id: Order
-  activerecord.attributes.ordrparticipant.ordritem_id: Order Item
-  activerecord.attributes.ordrparticipant.role: Role
-  activerecord.attributes.ordrparticipant.sessionid: Session ID
-  activerecord.attributes.restaurant.address: Address
-  activerecord.attributes.restaurant.image_style_profile: Image Style Profile
-  activerecord.attributes.smartmenu.menu_id: Menu
-  activerecord.attributes.smartmenu.restaurant_id: Restaurant
-  activerecord.attributes.smartmenu.slug: Slug
-  activerecord.attributes.smartmenu.tablesetting_id: Table Setting
-  activerecord.attributes.tablesetting.capacity: Capacity
-  activerecord.attributes.tablesetting.description: Description
-  activerecord.attributes.tablesetting.name: Name
-  activerecord.attributes.tablesetting.status: Status
-  activerecord.attributes.tablesetting.tabletype: Table Type
-  activerecord.attributes.tag.description: Description
-  activerecord.attributes.tag.name: Name
-  activerecord.attributes.tax.taxpercentage: Tax Percentage
-  activerecord.attributes.tax.taxtype: Tax Type
-  activerecord.attributes.testimonial.restaurant_id: Restaurant
-  activerecord.attributes.testimonial.testimonial: Testimonial
-  activerecord.attributes.testimonial.user_id: User
-  activerecord.attributes.tip.percentage: Percentage
-  activerecord.attributes.track.description: Description
-  activerecord.attributes.track.externalid: External ID
-  activerecord.attributes.track.image: Image
-  activerecord.attributes.track.name: Name
-  activerecord.attributes.track.restaurant_id: Restaurant
-  activerecord.attributes.track.sequence: Sequence
-  activerecord.attributes.userplan.plan_id: Plan
-  activerecord.errors.format: %{attribute} %{message}
-  activerecord.errors.messages.blank: can't be blank
-  activerecord.errors.messages.greater_than: must be greater than %{count}
-  activerecord.errors.messages.greater_than_or_equal_to: must be greater than or equal to %{count}
-  activerecord.errors.messages.invalid: is invalid
-  activerecord.errors.messages.less_than: must be less than %{count}
-  activerecord.errors.messages.less_than_or_equal_to: must be less than or equal to %{count}
-  activerecord.errors.messages.not_a_number: is not a number
-  activerecord.errors.messages.taken: has already been taken
-  activerecord.errors.messages.too_long.one: is too long (maximum is 1 character)
-  activerecord.errors.messages.too_long.other: is too long (maximum is %{count} characters)
-  activerecord.errors.messages.too_short.one: is too short (minimum is 1 character)
-  activerecord.errors.messages.too_short.other: is too short (minimum is %{count} characters)
-  activerecord.models.allergyn: Allergen
-  activerecord.models.genimage: Generated Image
-  activerecord.models.ingredient: Ingredient
-  activerecord.models.inventory: Inventory
-  activerecord.models.menu: Menu
-  activerecord.models.menuavailability: Menu Availability
-  activerecord.models.menuitem: Menu Item
-  activerecord.models.menusection: Menu Section
-  activerecord.models.metric: Metric
-  activerecord.models.ordr: Order
-  activerecord.models.restaurant: Restaurant
-  activerecord.models.restaurantavailability: Restaurant Availability
-  activerecord.models.size: Size
-  activerecord.models.smartmenu: Smartmenu
-  activerecord.models.tablesetting: Table Setting
-  activerecord.models.tag: Tag
-  activerecord.models.testimonial: Testimonial
-  activerecord.models.track: Track
-  activerecord.models.userplan: User Plan
-  admin.performance.title: Performance Monitoring
-  admin.performance.subtitle: Real-time performance metrics and analytics
-  admin.performance.card.avg_response_time: Avg Response Time
-  admin.performance.card.memory_usage: Memory Usage
-  admin.performance.card.error_rate: Error Rate
-  admin.performance.card.active_users: Active Users
-  admin.performance.card.last_5_minutes: Last 5 minutes
-  admin.performance.card.current_rss: Current RSS
-  admin.performance.response_time_trend: Response Time Trend (24h)
-  admin.performance.memory_usage_trend: Memory Usage Trend (24h)
-  admin.performance.slowest_endpoints: Slowest Endpoints (Last Hour)
-  admin.performance.table.endpoint: Endpoint
-  admin.performance.table.avg_response_time: Avg Response Time
-  admin.performance.no_slow_endpoints: No slow endpoints detected
-  admin.performance.recent_slow_queries: Recent Slow Queries
-  admin.performance.query_table.duration: Duration
-  admin.performance.query_table.query: Query
-  admin.performance.query_table.time: Time
-  admin.performance.no_slow_queries: No slow queries detected
-  admin.performance.actions: Actions
-  admin.cache.title: Cache Administration
-  admin.cache.health_status: Cache Health Status
-  admin.cache.response_time: Response Time
-  admin.cache.write_operation: Write Operation
-  admin.cache.read_operation: Read Operation
-  admin.cache.delete_operation: Delete Operation
-  admin.cache.error: Error
-  admin.cache.performance_stats: Performance Statistics
-  admin.cache.reset_stats: Reset Stats
-  admin.cache.cache_hits: Cache Hits
-  admin.cache.cache_misses: Cache Misses
-  admin.cache.cache_writes: Cache Writes
-  admin.cache.cache_deletes: Cache Deletes
-  admin.cache.cache_errors: Errors
-  admin.cache.hit_rate: Hit Rate
-  admin.cache.cache_info: Cache Information
-  admin.cache.service_version: Service Version
-  admin.cache.cache_methods: Cache Methods
-  admin.cache.active_keys: Active Keys
-  admin.cache.memory_usage: Memory Usage
-  admin.cache.cache_warming: Cache Warming
-  admin.cache.cache_warming_description: Pre-load critical cache data to improve performance.
-  admin.cache.cache_management: Cache Management
-  admin.cache.cache_management_description: Clear all cached data to force fresh data loading.
-  admin.cache.cache_patterns: Cache Patterns
-  admin.cache.patterns.restaurant: Restaurant dashboards and analytics
-  admin.cache.patterns.menu: Menu data and performance
-  admin.cache.patterns.menuitem: Menu item details and analytics
-  admin.cache.patterns.order: Order data and summaries
-  admin.cache.patterns.employee: Staff data and performance
-  admin.cache.patterns.user: User activity and cross-restaurant data
-  admin.metrics.title: Application Performance Monitoring
-  admin.metrics.card.total_requests: Total Requests
-  admin.metrics.card.avg_response_time: Avg Response Time
-  admin.metrics.card.error_rate: Error Rate
-  admin.metrics.card.total_users: Total Users
-  admin.metrics.card.all_time: All time
-  admin.metrics.card.current_average: Current average
-  admin.metrics.card.current_error_rate: Current error rate
-  admin.metrics.card.all_time_registrations: All time registrations
-  admin.metrics.summary.restaurants_created: Restaurants Created
-  admin.metrics.summary.menu_imports: Menu Imports
-  admin.metrics.system.memory_usage: Memory Usage
-  admin.metrics.system.active_users: Active Users
-  admin.metrics.metric_types.title: Metric Types
-  admin.metrics.metric_types.counters: Counters: Cumulative values that only increase (e.g., total requests)
-  admin.metrics.metric_types.gauges: Gauges: Current values that can go up or down (e.g., active users)
-  admin.metrics.metric_types.histograms: Histograms: Collections of measurements (e.g., response times)
-  admin.metrics.table.metric: Metric
-  admin.metrics.table.type: Type
-  admin.metrics.table.value: Value
-  admin.metrics.table.last_updated: Last Updated
-  admin.metrics.no_recent_metrics.message: No recent metrics available
-  admin.metrics.no_recent_metrics.description: Metrics will appear here as the application is used
-  admin.dashboard.kpis.total_orders: Total Orders
-  admin.dashboard.kpis.total_revenue: Total Revenue
-  admin.dashboard.kpis.customers: Customers
-  admin.dashboard.kpis.growth_rate: Growth Rate
-  admin.dashboard.kpis.page_views: Page Views
-  admin.dashboard.kpis.unique_visitors: Unique Visitors
-  admin.dashboard.kpis.bounce_rate: Bounce Rate
-  admin.dashboard.sales.title: Top Selling Items
-  admin.dashboard.sales.table.item: Item
-  admin.dashboard.sales.table.quantity_sold: Quantity Sold
-  admin.dashboard.sales.no_data: No sales data available for this period.
-  admin.dashboard.loading: Loading...
-  notifications.index.title: Notifications
-  announcements.index.title: What's New
-  announcements.index.coming_soon: Exciting stuff coming very soon!
-  beverage_review_queue.title: Beverage Review Queue
-  beverage_review_queue.recent_pipeline_runs: Recent pipeline runs
-  beverage_review_queue.table.created: Created
-  beverage_review_queue.table.menu: Menu
-  beverage_review_queue.table.status: Status
-  beverage_review_queue.table.step: Step
-  beverage_review_queue.table.processed: Processed
-  beverage_review_queue.table.needs_review: Needs review
-  beverage_review_queue.table.unresolved: Unresolved
-  beverage_review_queue.table.actions: Actions
-  beverage_review_queue.items_needing_review: Items needing review
-  beverage_review_queue.items_table.menu: Menu
-  beverage_review_queue.items_table.section: Section
-  beverage_review_queue.items_table.item: Item
-  beverage_review_queue.items_table.category: Category
-  beverage_review_queue.items_table.class_conf: Class conf
-  beverage_review_queue.items_table.parse_conf: Parse conf
-  beverage_review_queue.items_table.parsed: Parsed
-  dw_orders_mv.title: Order Analytics
-  dw_orders_mv.loading: Loading data...
-  ordritems.index.title: Order Items
-  ordritems.new.title: New ordritem
-  ordritems.edit.title: Edit Ordritem
-  ordritems.show.title: Show ordritem
-  ordritems.show.ordr: Ordr
-  ordritems.show.menuitem: Menuitem
-  ordrparticipants.index.title: Ordrparticipants
-  ordrparticipants.new.title: New Menuparticipant
-  ordrparticipants.edit.title: Edit Menuparticipant
-  ordrparticipants.show.title: Show ordrparticipant
-  ordrparticipants.table.sessionid: Sessionid
-  ordrparticipants.table.role: Role
-  ordrparticipants.table.employee: Employee
-  ordrparticipants.table.ordr: Ordr
-  ordrparticipants.table.ordritem: Ordritem
-  ordractions.index.title: Ordractions
-  ordractions.new.title: New ordraction
-  ordractions.edit.title: Edit Ordraction
-  ordractions.show.title: Show ordraction
-  ordritemnotes.index.title: Ordritemnotes
-  ordritemnotes.new.title: New ordritemnote
-  ordritemnotes.edit.title: Edit Ordritemnote
-  ordritemnotes.show.title: Show ordritemnote
-  menuparticipants.new.title: New Menuparticipant
-  menuparticipants.edit.title: Edit Menuparticipant
-  ingredients.index.title: Ingredients
-  ingredients.new.title: New ingredient
-  ingredients.edit.title: Edit Ingredient
-  ingredients.show.title: Show Ingredient
-  genimages.index.title: Genimages
-  genimages.new.title: New genimage
-  genimages.edit.title: Edit Genimage
-  genimages.show.title: Show genimage
-  genimages.table.id: ID
-  genimages.table.name: Name
-  genimages.table.description: Description
-  genimages.table.restaurant: Restaurant
-  genimages.table.menu: Menu
-  genimages.table.menusection: Menusection
-  genimages.table.menuitem: Menuitem
-  genimages.table.image_data: Image data
-  restaurantlocales.index.title: Restaurantlocales
-  restaurantlocales.show.title: Show restaurantlocale
-  restaurantlocales.table.locale: Locale
-  restaurantlocales.table.status: Status
-  restaurantlocales.table.restaurant: Restaurant
-  tracks.index.title: Tracks
-  tracks.new.title: New track
-  tracks.edit.title: Edit Track
-  userplans.index.title: Userplans
-  userplans.new.title: New userplan
-  userplans.show.title: Show userplan
-  userplans.edit.manage_billing: Manage Billing
-  userplans.table.user: User
-  userplans.table.plan: Plan
-  metrics.index.title: Metrics
-  metrics.new.title: New metric
-  metrics.edit.title: Edit Metric
-  metrics.show.title: Show metric
-  onboarding.show.current_step: Current step
-  allergyns.controller.created: Allergen was successfully created.
-  allergyns.controller.deleted: Allergen was successfully deleted.
-  allergyns.controller.updated: Allergen was successfully updated.
-  allergyns.edit.allergyns: Allergens
-  allergyns.edit.edit_allergyn: Edit Allergen
-  allergyns.edit.description: Update allergen details
-  allergyns.edit.cancel: Cancel
-  allergyns.edit.confirm_delete: Delete this allergen?
-  allergyns.edit.delete: Delete
-  allergyns.edit.allergyn_details: Allergen Details
-  allergyns.form.name: Allergen Name
-  allergyns.form.name_placeholder: e.g., Peanuts, Dairy, Gluten
-  allergyns.form.name_help: The name of the allergen
-  allergyns.form.description: Description
-  allergyns.form.description_placeholder: Optional details about this allergen...
-  allergyns.form.description_help: Optional: Additional information about the allergen
-  allergyns.form.symbol: Symbol
-  allergyns.form.symbol_placeholder: e.g., 🥜, 🥛, 🌾
-  allergyns.form.symbol_help: Optional: Emoji or short symbol to represent this allergen
-  allergyns.index.description: Manage allergen information for menu items
-  allergyns.index.back: Back
-  allergyns.index.new_allergyn: New Allergen
-  allergyns.index.all_allergyns: All Allergens
-  allergyns.new.allergyns: Allergens
-  allergyns.new.new: New
-  allergyns.new.new_allergyn: New Allergen
-  allergyns.new.description: Create a new allergen for menu items
-  allergyns.new.allergyn_details: Allergen Details
-  bar_dashboard.title: Bar Dashboard
-  bar_dashboard.metrics.pending_tickets: Pending Tickets
-  bar_dashboard.metrics.preparing: Preparing
-  bar_dashboard.metrics.ready: Ready
-  kitchen_dashboard.title: Kitchen Dashboard
-  kitchen_dashboard.metrics.pending_tickets: Pending Tickets
-  kitchen_dashboard.metrics.preparing: Preparing
-  kitchen_dashboard.metrics.ready: Ready
-  kitchen_dashboard.metrics.todays_orders: Today's Orders
-  kitchen_dashboard.buttons.start_preparing: Start Preparing
-  kitchen_dashboard.buttons.mark_ready: Mark Ready
-  kitchen_dashboard.buttons.mark_collected: Mark as Collected
-  errors.not_found.title: Page Not Found
-  errors.not_found.description: The page you're looking for doesn't exist.
-  errors.not_found.suggestion: It may have been moved, deleted, or you entered the wrong URL.
-  errors.unprocessable.title: Unprocessable Entity
-  errors.unprocessable.description: The change you wanted was rejected.
-  errors.unprocessable.suggestion: Maybe you tried to change something you didn't have access to.
-  errors.internal.title: Internal Server Error
-  errors.internal.description: We're sorry, but something went wrong on our end.
-  errors.internal.suggestion: Please try again later or contact support if the problem persists.
-  errors.internal.error_details: Error Details
-  errors.internal.backtrace: Backtrace
-  menu_performance.not_available.title: Performance Data Not Available
-  menu_performance.not_available.description: Unable to load performance data for this menu. This could be due to:
-  menu_performance.not_available.reasons: ["Menu not found or access denied", "Insufficient permissions", "System error during data collection"]
-  restaurant_analytics.not_available.title: Analytics Data Not Available
-  restaurant_analytics.not_available.description: Unable to load analytics data for this restaurant. This could be due to:
-  restaurant_analytics.not_available.reasons: ["Restaurant not found or access denied", "Insufficient permissions", "System error during data collection"]
-  ai_generation.modal.title: Generate AI Images
-  ai_generation.modal.confirm: Confirm & Start
-  ai_generation.modal.progress: Currently generating
-  ai_generation.modal.progress_log: Progress log
-  ai_generation.modal.last_image: Last Image
-  menuitem_ai.modal.title: Generate Image
-  menuitem_ai.modal.confirm: Confirm & Start
-  menuitem_ai.modal.progress: Currently generating
-  menuitem_ai.modal.preview: Image preview
-  ocr_menu_imports.alcohol_override.undecided: Undecided
-  ocr_menu_imports.alcohol_override.alcoholic: Alcoholic
-  ocr_menu_imports.alcohol_override.non_alcoholic: Non-alcoholic
-  ocr_menu_imports.publish.title: Publish Menu
-  ocr_menu_imports.publish.submit: Publish Menu
-  offline.title: You're Offline
-  offline.available_offline: Available Offline:
-  offline.items: ["Restaurant information", "Menu items and pricing", "Recent orders", "Cached images", "Basic analytics"]
-  offline.last_updated: Last updated
-  smartmenus.skeleton.loading: Loading menu items...
-  smartmenus.no_image: No Image
-  hero_images.new.title: New Hero Image
-  hero_images.form.image_url_placeholder: https://images.pexels.com/...
-  hero_images.form.image_url_help: Enter the full URL of the image from Pexels or other source
-  hero_images.form.alt_text_placeholder: Busy restaurant interior with diners
-  hero_images.form.alt_text_help: Descriptive text for accessibility
-  hero_images.form.sequence_help: Display order (lower numbers appear first)
-  hero_images.form.status_help: Only approved images will appear on the homepage
-  hero_images.form.source_url_placeholder: https://www.pexels.com/photo/...
-  hero_images.form.source_url_help: Link to the original source page
-  orders.ordered: Ordered
-  orders.prepared: Prepared
-  orders.delivered: Delivered
-  form_2025.menu_details: Menu Details
-  form_2025.menu_details_subtitle: Basic information about your menu
-  form_2025.image_settings: Image Settings
-  form_2025.menu_image: Menu Image
-  version_diff.section: Section
-  version_diff.item: Item
-  version_diff_2025.section: Section #
-  version_diff_2025.item: Item #
-  details_2025.menu_go_live_flow: Menu go live flow
-  edit_2025.onboarding_flow: Onboarding flow
-  settings_2025.receipt_merchant_details: Receipt / merchant details
-  settings_2025.statement_descriptor: Statement descriptor
-  tasting_courses_footer.show_courses: Show courses
-  tasting_courses_footer.add_tasting_menu: Add Tasting Menu
-  tasting_badge: Tasting
-  show_modals.pairing: Pairing
-  show_modals.full: Full
-  show_allergyns_debug.title: Allergyns Debug
-  show_allergyns_debug.sql: SQL
-  show_allergyns_debug.count: Count
-  show_allergyns_debug.ids: IDs
-  show_allergyns_debug.names: Names
-  devise.confirmations.confirmed: Your email address has been successfully confirmed.
-  devise.confirmations.send_instructions: You will receive an email with instructions for how to confirm your email address in a few minutes.
-  devise.confirmations.send_paranoid_instructions: If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes.
-  devise.failure.already_authenticated: You are already signed in.
-  devise.failure.inactive: Your account is not activated yet.
-  devise.failure.invalid: Invalid %{authentication_keys} or password.
-  devise.failure.last_attempt: You have one more attempt before your account is locked.
-  devise.failure.locked: Your account is locked.
-  devise.failure.not_found_in_database: Invalid %{authentication_keys} or password.
-  devise.failure.timeout: Your session expired. Please sign in again to continue.
-  devise.failure.unauthenticated: You need to sign in or sign up before continuing.
-  devise.failure.unconfirmed: You have to confirm your email address before continuing.
-  devise.mailer.confirmation_instructions.subject: Confirmation instructions
-  devise.mailer.email_changed.subject: Email Changed
-  devise.mailer.password_change.subject: Password Changed
-  devise.mailer.reset_password_instructions.subject: Reset password instructions
-  devise.mailer.unlock_instructions.subject: Unlock instructions
-  devise.omniauth_callbacks.failure: Could not authenticate you from %{kind} because "%{reason}".
-  devise.omniauth_callbacks.success: Successfully authenticated from %{kind} account.
-  devise.passwords.no_token: You can't access this page without coming from a password reset email. If you do come from a password reset email, please make sure you used the full URL provided.
-  devise.passwords.send_instructions: You will receive an email with instructions on how to reset your password in a few minutes.
-  devise.passwords.send_paranoid_instructions: If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes.
-  devise.passwords.updated: Your password has been changed successfully. You are now signed in.
-  devise.passwords.updated_not_active: Your password has been changed successfully.
-  devise.registrations.destroyed: Bye! Your account has been successfully cancelled. We hope to see you again soon.
-  devise.registrations.edit.emailAddress: Email address
-  devise.registrations.edit.fullName: Full name
-  devise.registrations.signed_up: Welcome! You have signed up successfully.
-  devise.registrations.signed_up_but_inactive: You have signed up successfully. However, we could not sign you in because your account is not yet activated.
-  devise.registrations.signed_up_but_locked: You have signed up successfully. However, we could not sign you in because your account is locked.
-  devise.registrations.signed_up_but_unconfirmed: A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.
-  devise.registrations.update_needs_confirmation: You updated your account successfully, but we need to verify your new email address. Please check your email and follow the confirmation link to confirm your new email address.
-  devise.registrations.updated: Your account has been updated successfully.
-  devise.registrations.updated_but_not_signed_in: Your account has been updated successfully, but since your password was changed, you need to sign in again.
-  devise.sessions.already_signed_out: Signed out successfully.
-  devise.sessions.signed_in: Signed in successfully.
-  devise.sessions.signed_out: Signed out successfully.
-  devise.unlocks.send_instructions: You will receive an email with instructions for how to unlock your account in a few minutes.
-  devise.unlocks.send_paranoid_instructions: If your account exists, you will receive an email with instructions for how to unlock it in a few minutes.
-  devise.unlocks.unlocked: Your account has been unlocked successfully. Please sign in to continue.
-  errors.messages.already_confirmed: was already confirmed, please try signing in
-  errors.messages.confirmation_period_expired: needs to be confirmed within %{period}, please request a new one
-  errors.messages.expired: has expired, please request a new one
-  errors.messages.not_found: not found
-  errors.messages.not_locked: was not locked
-  errors.messages.not_saved.one: 1 error prohibited this %{resource} from being saved:
-  errors.messages.not_saved.other: %{count} errors prohibited this %{resource} from being saved:
-  employees.controller.created: Employee was successfully created.
-  employees.controller.deleted: Employee was successfully deleted.
-  employees.controller.updated: Employee was successfully updated.
-  employees.employee.eid: Employee ID:
-  employees.employee.image: Image:
-  employees.employee.name: Name:
-  employees.employee.restaurant: Restaurant:
-  employees.employee.status: Status:
-  employees.form.selectUser: Select a user
-  employees.show.selectRestaurant: Select a restaurant
-  employees.show.selectUser: Select a user
-  genimages.controller.deleted: Generated image was successfully deleted.
-  genimages.controller.updated: Image was successfully regenerated.
-  home.index.page_title: Mellow Menu - Digital Menu Solution for Restaurants
-  home.index.page_description: Create beautiful digital menus, enable online ordering, and provide contactless payment options for your restaurant.
-  home.index.error: An error occurred: %{message}
-  home.index.compare_plans: Compare plans
-  home.index.heroPrimaryCta: Create my menu
-  home.index.heroSecondaryCta: View demo menu
-  home.index.heroTrust1: No app needed for guests
-  home.index.heroTrust2: Multilingual menus
-  home.index.heroTrust3: Instant updates (no reprints)
-  home.index.overviewTitle: All you need from a digital menu, in one platform
-  home.index.overviewBody: Keep your menu fresh, consistent, and conversion-friendly—without reprints or messy PDFs.
-  home.index.overviewItem1: Fast, mobile-first menus
-  home.index.overviewItem2: One-click translation
-  home.index.overviewItem3: AI dish images (consistent style)
-  home.index.overviewItem4: Ordering & payments when you want it
-  home.index.overviewItem5: Insights you can act on
-  home.index.howTitle: Get started in minutes
-  home.index.howBody: You don’t need a developer. Set up your menu and go live fast.
-  home.index.howStep1Title: Create your restaurant & menu
-  home.index.howStep1Body: Add sections and dishes, or import your existing menu.
-  home.index.howStep2Title: Make it guest-ready
-  home.index.howStep2Body: Add translations, availability rules, allergens, and images.
-  home.index.howStep3Title: Share your QR
-  home.index.howStep3Body: Print and place it—guests scan and browse instantly.
-  home.index.trustTitle: Built for real restaurant service
-  home.index.trustItem1Title: Fast on mobile
-  home.index.trustItem1Body: Designed to load quickly and stay readable.
-  home.index.trustItem2Title: Control & availability
-  home.index.trustItem2Body: Toggle items and availability as service changes.
-  home.index.trustItem3Title: Guest-friendly UX
-  home.index.trustItem3Body: No app required—just scan and go.
-  home.index.trustItem4Title: Support when you need it
-  home.index.trustItem4Body: Get help fast when you’re busy.
-  home.index.faqTitle: Frequently Asked Questions
-  home.index.faqQ1: Do guests need an app?
-  home.index.faqA1: No. Guests just scan a QR code and the menu opens in their browser.
-  home.index.faqQ2: Can I update the menu instantly?
-  home.index.faqA2: Yes. Changes publish immediately—no reprints.
-  home.index.faqQ3: Do you support multiple languages?
-  home.index.faqA3: Yes. Translate the menu and let guests browse in their language.
-  home.index.faqQ4: Can we add photos without a photoshoot?
-  home.index.faqA4: Yes. Generate AI images to keep your menu consistent and on-brand.
-  home.index.closingTitle: Launch your menu today
-  home.index.closingBody: Create your first menu now, or explore a demo and see how it feels on mobile.
-  home.index.closingPrimaryCta: Create my menu
-  home.index.closingSecondaryCta: View demo
-  home.index.featuresStoryTitle: Finally, a digital menu that feels premium
-  home.index.featuresStoryBody: Designed for guests, built for service. Choose the features you need now, and add more as you grow.
-  home.index.featuresStoryPrimaryCta: Create my menu
-  home.index.featuresStorySecondaryCta: View demo
-  home.index.featuresStory1Kicker: Guest experience
-  home.index.featuresStory1Title: Menus that load instantly and look great
-  home.index.featuresStory1Body: Your menu should feel like part of your brand—fast, clean, and effortless to browse.
-  home.index.featuresStory1Bullet1: Mobile-first layout with smooth navigation
-  home.index.featuresStory1Bullet2: Clear sections and dish details
-  home.index.featuresStory1Bullet3: No app required—just scan a QR
-  home.index.featuresStory2Kicker: Translation
-  home.index.featuresStory2Title: Serve every guest in their own language
-  home.index.featuresStory2Body: Translate your menu with a click and let guests browse confidently—no awkward guessing.
-  home.index.featuresStory2Bullet1: Multilingual menus for tourists and locals
-  home.index.featuresStory2Bullet2: Consistent formatting across languages
-  home.index.featuresStory2Bullet3: Faster ordering with fewer questions
-  home.index.featuresStory3Kicker: AI images
-  home.index.featuresStory3Title: Dish photos that match your menu’s style
-  home.index.featuresStory3Body: Generate consistent, on-brand dish images to lift perceived quality and increase selection.
-  home.index.featuresStory3Bullet1: Cohesive visual identity across dishes
-  home.index.featuresStory3Bullet2: No photoshoot required to get started
-  home.index.featuresStory3Bullet3: Easy to update when your menu changes
-  home.index.featuresStory4Kicker: Ordering
-  home.index.featuresStory4Title: Ordering & payments when you’re ready
-  home.index.featuresStory4Body: Start with a beautiful menu. Add ordering and payments when it fits your service model.
-  home.index.featuresStory4Bullet1: Reduce wait times during peak service
-  home.index.featuresStory4Bullet2: Control availability and ordering windows
-  home.index.featuresStory4Bullet3: Keep staff focused on hospitality
-  home.index.featuresStory5Kicker: Insights
-  home.index.featuresStory5Title: Understand what sells—then optimize
-  home.index.featuresStory5Body: Use simple analytics to improve your menu, reduce dead stock, and increase average order value.
-  home.index.featuresStory5Bullet1: Spot trends and top-performing dishes
-  home.index.featuresStory5Bullet2: See what guests actually view and choose
-  home.index.featuresStory5Bullet3: Make changes and publish instantly
-  home.index.video_unsupported: Your browser does not support the video tag.
-  home.terms.page_title: Terms of Service - Mellow Menu
-  home.terms.page_description: Read our Terms of Service to understand the rules and guidelines for using Mellow Menu.
-  home.privacy.page_title: Privacy Policy - Mellow Menu
-  home.privacy.page_description: Learn how Mellow Menu collects, uses, and protects your personal information in our Privacy Policy.
-  ingredients.controller.created: Ingredient was successfully created.
-  ingredients.controller.deleted: Ingredient was successfully deleted.
-  ingredients.controller.updated: Ingredient was successfully updated.
-  inventories.controller.created: Inventory was successfully created.
-  inventories.controller.deleted: Inventory was successfully deleted.
-  inventories.controller.updated: Inventory was successfully updated.
-  inventories.form.errors: Errors
-  inventories.form.select_menu_item: Select a Menu Item...
-  inventories.inventory.currentinventory: Current inventory:
-  inventories.inventory.menuitem: Menu item:
-  inventories.inventory.resethour: Reset hour:
-  inventories.inventory.startinginventory: Starting inventory:
-  inventories.show.select_menu_item: Select a Menu Item...
-  javascript.notifications.auto_save.error: Save failed
-  javascript.notifications.auto_save.network_error: Network error
-  javascript.notifications.auto_save.saved: Order saved
-  javascript.notifications.sortable.success: Order saved
-  javascript.notifications.sortable.error: Save failed
-  javascript.notifications.form.auto_saved: Details saved automatically
-  javascript.notifications.form.submit_error: Failed to save
-  javascript.notifications.employee.saved: Employee saved successfully
-  javascript.notifications.employee.save_error: Failed to save employee
-  javascript.notifications.employee.status_error: Failed to update employee status
-  javascript.notifications.employee.updated: Updated %{count} employee(s) to %{status}
-  javascript.notifications.employee.order_error: Failed to update order
-  javascript.notifications.menuitem.saved: Menu item saved successfully
-  javascript.notifications.menuitem.save_error: Failed to save menu item
-  javascript.notifications.menuitem.status_error: Failed to update menu item status
-  javascript.notifications.menuitem.updated: Updated %{count} menu item(s) to %{status}
-  javascript.notifications.menuitem.image_generation: Started image generation for %{count} menu item(s)
-  javascript.notifications.menuitem.no_images: No images could be generated
-  javascript.notifications.menuitem.order_error: Failed to update order
-  javascript.notifications.order.saved: Order details saved automatically
-  javascript.notifications.order.close_success: Order closed successfully
-  javascript.notifications.order.close_error: Failed to close order
-  javascript.notifications.order.bill_success: Bill requested successfully
-  javascript.notifications.order.bill_error: Failed to request bill
-  javascript.notifications.order.payment_success: Payment processed successfully
-  javascript.notifications.order.payment_error: Failed to process payment
-  javascript.notifications.order.missing_payment: Missing payment information
-  javascript.notifications.order.payment_link: Payment link refreshed
-  javascript.notifications.order.payment_link_error: Failed to generate payment link
-  javascript.notifications.order.delete_success: Order deleted successfully
-  javascript.notifications.order.delete_error: Failed to delete order
-  javascript.notifications.order.created: Order #%{id} created
-  javascript.notifications.order.updated: Order #%{orderId} updated
-  javascript.notifications.order.order_save_success: Order saved successfully
-  javascript.notifications.order.order_save_error: Failed to save order
-  javascript.notifications.inventory.saved: Inventory details saved automatically
-  javascript.notifications.inventory.saved_success: Inventory saved successfully
-  javascript.notifications.inventory.save_error: Failed to save inventory
-  javascript.notifications.inventory.status_error: Failed to update inventory status
-  javascript.notifications.inventory.updated: Updated %{count} inventory item(s) to %{status}
-  javascript.notifications.inventory.reset_error: Failed to reset inventory
-  javascript.notifications.inventory.reset_success: Reset %{count} inventory item(s)
-  javascript.notifications.inventory.order_error: Failed to update order
-  javascript.notifications.menu.saved: Menu details saved automatically
-  javascript.notifications.menu.saved_success: Menu saved successfully
-  javascript.notifications.menu.save_error: Failed to save menu
-  javascript.notifications.menu.status_error: Failed to update menu status
-  javascript.notifications.menu.updated: Updated %{count} menu(s) to %{status}
-  javascript.notifications.menu.order_error: Failed to update order
-  javascript.notifications.restaurant.saved: Restaurant details saved automatically
-  javascript.notifications.restaurant.saved_success: Restaurant saved successfully
-  javascript.notifications.restaurant.save_error: Failed to save restaurant
-  javascript.notifications.restaurant.delete_success: Restaurant deleted successfully
-  javascript.notifications.restaurant.delete_error: Failed to delete restaurant
-  javascript.notifications.restaurant.qr_error: Failed to generate QR code
-  javascript.notifications.menusection.saved: Menu section details saved automatically
-  javascript.notifications.menusection.saved_success: Menu section saved successfully
-  javascript.notifications.menusection.save_error: Failed to save menu section
-  javascript.notifications.menusection.status_error: Failed to update menu section status
-  javascript.notifications.menusection.updated: Updated %{count} menu section(s) to %{status}
-  javascript.notifications.menusection.order_error: Failed to update order
-  javascript.notifications.ocr.all_confirmed: All sections %{status}
-  javascript.notifications.ocr.all_confirm_error: Failed to update confirmations
-  javascript.notifications.ocr.section_confirmed: Section %{status}
-  javascript.notifications.ocr.section_confirm_error: Failed to update section confirmation
-  javascript.notifications.ocr.inline_edit_success: %{type} updated successfully
-  javascript.notifications.ocr.inline_edit_error: Failed to save changes
-  javascript.notifications.ocr.inline_cancel: Edit cancelled
-  javascript.notifications.ocr.section_order_success: Section order updated
-  javascript.notifications.ocr.section_order_error: Failed to update section order
-  javascript.notifications.ocr.item_move_success: Item moved successfully
-  javascript.notifications.ocr.item_move_error: Failed to move item
-  javascript.notifications.ocr.import_error: Import failed. Please try again.
-  javascript.notifications.ocr.import_success: Import completed successfully
-  javascript.notifications.ocr.delete_success: Deleted %{count} unconfirmed section(s)
-  javascript.notifications.ocr.export_success: Export completed
-  javascript.notifications.ocr.export_error: Export failed
-  javascript.notifications.pwa.install_success: App installed successfully! You can now use Smart Menu offline.
-  javascript.notifications.pwa.notification_success: Notifications enabled! You'll receive real-time updates.
-  javascript.notifications.pwa.sync_complete: %{count} items synced successfully
-  javascript.notifications.pwa.offline_action: Action saved. Will sync when online.
-  javascript.notifications.api.upload_error: Upload failed: Network error
-  javascript.form.actions.edit: Edit
-  javascript.form.actions.delete: Delete
-  javascript.form.actions.save: Save
-  javascript.table.no_data: No data available
-  javascript.order_status.ordered: ordered
-  javascript.order_status.preparing: preparing
-  javascript.order_status.ready: ready
-  javascript.order_status.collected: collected
-  javascript.buttons.start_preparing: Start Preparing
-  javascript.buttons.mark_ready: Mark Ready
-  javascript.buttons.mark_collected: Mark as Collected
-  menuavailabilities.controller.created: Menu availability was successfully created.
-  menuavailabilities.controller.deleted: Menu availability was successfully deleted.
-  menuavailabilities.controller.updated: Menu availability was successfully updated.
-  menuavailabilities.show.selectMenu: Select Menu
-  menuitems.controller.created: Menu item was successfully created.
-  menuitems.controller.deleted: Menu item was successfully deleted.
-  menuitems.controller.updated: Menu item was successfully updated.
-  menuitems.errors.menusection_required: Please create menu items from within a menu section.
-  menuitems.edit.tab_item: Item
-  menuitems.form.actions: Actions
-  menuitems.form.false: false
-  menuitems.form.generateImage: Generate with AI
-  menuitems.form.no_image: No image yet
-  menuitems.form.true: true
-  menuitems.form.variantPricing: Variant Pricing
-  menuitems.form.tasting_price_ignored: This price is ignored in tasting menu sections. Use supplement below.
-  menuitems.form.alcohol_settings: Alcohol Settings
-  menuitems.form.alcoholic_help: Check if this item contains alcohol.
-  menuitems.form.abv_placeholder: e.g. 13.5
-  menuitems.form.abv_help: Alcohol by volume (0–100). Leave blank for non-alcoholic.
-  menuitems.form.classification_wine: Wine
-  menuitems.form.classification_beer: Beer
-  menuitems.form.classification_spirit: Spirit
-  menuitems.form.classification_cocktail: Cocktail
-  menuitems.form.classification_liqueur: Liqueur
-  menuitems.form.classification_other: Other
-  menuitems.form.classification_non_alcoholic: Non-alcoholic
-  menuitems.form.classification_help: Choose a category. Use non_alcoholic for 0.0% variants.
-  menuitems.form.alcohol_notes_ph: Optional notes, e.g. contains rum
-  menuitems.form.tasting_item_settings: Tasting Item Settings
-  menuitems.form.tasting_optional: Optional Course
-  menuitems.form.tasting_optional_help: If checked, this course is optional (guest may skip).
-  menuitems.form.tasting_supplement: Supplement (cents)
-  menuitems.form.tasting_supplement_help: Leave blank or 0 for included; set an amount for add-on pricing.
-  menuitems.form.course_order: Course Order
-  menuitems.form.course_order_help: Optional: specify serving sequence within the tasting.
-  menuitems.form.visibility: Visibility
-  menuitems.form.hidden: Hidden (not shown on smartmenu)
-  menuitems.form.tasting_carrier: Use as Tasting Carrier
-  menuitems.form.tasting_carrier_help: Only one carrier per tasting section. Carrier items are automatically hidden.
-  menuitems.show.selectMenuSection: Select Menu Section
-  menus.controller.created: Menu was successfully created.
-  menus.controller.deleted: Menu was successfully deleted.
-  menus.controller.image_regeneration_queued: Queued image regeneration for %{count} items on this menu.
-  menus.controller.image_regeneration_queued_rake: Image regeneration job has been queued for this menu.
-  menus.controller.webp_regeneration_queued: WebP derivative regeneration has been queued for this menu's images.
-  menus.controller.ai_image_generation_queued: AI image generation has been queued for this menu's items.
-  menus.controller.updated: Menu was successfully updated.
-  menus.edit.regenerate_images_confirm: This will queue image regeneration jobs for all items in this menu. Continue?
-  menus.form.current_pdf: Current PDF:
-  menus.form.false: off
-  menus.form.off: off
-  menus.form.on: on
-  menus.form.regenerate_images: Regenerate images
-  menus.form.regenerate_images_confirm: This will queue image regeneration jobs for all items in this menu. Continue?
-  menus.form.remove: Remove
-  menus.form.true: on
-  menus.menu.description: Description:
-  menus.menu.image: Image:
-  menus.menu.name: Name:
-  menus.menu.pdf_menu_scan: PDF Menu Scan:
-  menus.menu.restaurant: Restaurant:
-  menus.menu.sequence: Sequence:
-  menus.menu.status: Status:
-  menus.show.add_to_order: Add to Order
-  menus.show.allergens: Allergens
-  menus.show.allergyns: Allergens
-  menus.show.bill: Bill
-  menus.show.loading: Loading...
-  menus.show.not_available: Not available.
-  menus.show.order: Order
-  menus.show.order_updated: Order Updated!
-  menus.show.remaining: %{count} remaining.
-  menus.show.staff_alerted: Staff Alerted
-  menus.show.start_order: Start Order
-  menus.show.take_payment: Take Payment
-  menus.sections.settings_2025.disabled_at_restaurant: Disabled at restaurant level
-  menus.sections.settings_2025.parent_restriction: Note:
-  menus.sections.settings_2025.parent_restriction_desc: Settings disabled at the restaurant level cannot be enabled for individual menus. Enable them at the restaurant level first.
-  menus.sections.details_2025.quick_actions: Quick Actions
-  menus.sections.details_2025.preview_staff: Staff View
-  menus.sections.details_2025.preview_customer: Customer View
-  menus.sections.details_2025.preview_staff_title: Preview menu as staff (authenticated view)
-  menus.sections.details_2025.preview_customer_title: Preview menu as customers see it (authenticated as staff but viewing customer interface)
-  menus.sections.details_2025.availability: Availability
-  menus.sections.details_2025.default: Default
-  menus.sections.details_2025.available: Available
-  menus.sections.details_2025.unavailable: Unavailable
-  menus.sections.details_2025.generate_images: Generate Images
-  menus.sections.details_2025.localize_menu: Translations
-  menus.sections.details_2025.ai_polish: AI Polish
-  menus.sections.details_2025.active: Active
-  menus.sections.details_2025.inactive: Inactive
-  menus.sections.details_2025.menu_details: Menu Details
-  menus.sections.details_2025.menu_name: Menu Name
-  menus.sections.details_2025.menu_name_placeholder: e.g., Dinner Menu, Lunch Specials
-  menus.sections.details_2025.menu_name_help: The name customers will see
-  menus.sections.details_2025.description: Description
-  menus.sections.details_2025.description_placeholder: Describe this menu...
-  menus.sections.details_2025.description_help: Optional description to help customers understand this menu
-  menus.sections.details_2025.statistics: Menu Statistics
-  menus.sections.details_2025.sections: Sections
-  menus.sections.details_2025.items: Items
-  menus.sections.details_2025.schedules: Schedules
-  menus.sections.settings_2025.feature_toggles: Feature Toggles
-  menus.sections.settings_2025.display_images: Display Images
-  menus.sections.settings_2025.display_images_help: Show menu item images in this menu
-  menus.sections.settings_2025.display_images_popup: Display Images in Popup
-  menus.sections.settings_2025.display_images_popup_help: Open menu item images in a popup modal when clicked
-  menus.sections.settings_2025.allow_ordering: Allow Ordering
-  menus.sections.settings_2025.allow_ordering_help: Enable online ordering for this menu
-  menus.sections.settings_2025.voice_ordering: Voice Ordering
-  menus.sections.settings_2025.voice_ordering_help: Enable customers to order using voice commands on this menu
-  menus.sections.settings_2025.inventory_tracking: Inventory Tracking
-  menus.sections.settings_2025.inventory_tracking_help: Track stock levels for menu items (Coming Soon)
-  menus.sections.settings_2025.settings_info_title: About Menu Settings
-  menus.sections.settings_2025.settings_info_desc: These settings control functionality for this specific menu. Changes are saved automatically.
-  menus.sections.settings_2025.status: Status
-  menus.sections.settings_2025.status_info: Controls menu visibility
-  menus.sections.settings_2025.images_info: Toggle menu item photos
-  menus.sections.settings_2025.popup_info: Full-screen image viewing
-  menus.sections.settings_2025.ordering_info: Enable customer orders
-  menus.sections.settings_2025.voice_ordering_info: Enable voice commands for ordering
-  menus.sections.sections_2025.quick_actions: Quick Actions
-  menus.sections.sections_2025.add_section: Add Section
-  menus.sections.sections_2025.preview_staff: Preview (Staff)
-  menus.sections.sections_2025.preview_customer: Preview (Customer)
-  menus.sections.sections_2025.preview_staff_title: Preview menu as staff (authenticated view)
-  menus.sections.sections_2025.preview_customer_title: Preview menu as customers see it (authenticated as staff but viewing customer interface)
-  menus.sections.sections_2025.menu_sections: Menu Sections
-  menus.sections.sections_2025.sections_description: Organize your menu into sections like Appetizers, Main Courses, Desserts, etc.
-  menus.sections.sections_2025.name: Name
-  menus.sections.sections_2025.items: Items
-  menus.sections.sections_2025.edit: Edit
-  menus.sections.sections_2025.no_sections: No sections yet
-  menus.sections.sections_2025.no_sections_desc: Add your first section to start building your menu
-  menus.sections.sections_2025.add_first_section: Add First Section
-  menus.sections.items_2025.quick_actions: Quick Actions
-  menus.sections.items_2025.add_item: Add Menu Item
-  menus.sections.items_2025.preview_staff: Preview (Staff)
-  menus.sections.items_2025.preview_customer: Preview (Customer)
-  menus.sections.items_2025.preview_staff_title: Preview menu as staff (authenticated view)
-  menus.sections.items_2025.preview_customer_title: Preview menu as customers see it (authenticated as staff but viewing customer interface)
-  menus.sections.items_2025.menu_items: Menu Items
-  menus.sections.items_2025.items_description: View and manage all menu items across all sections
-  menus.sections.items_2025.name: Name
-  menus.sections.items_2025.price: Price
-  menus.sections.items_2025.items_count.one: 1 item
-  menus.sections.items_2025.items_count.other: %{count} items
-  menus.sections.items_2025.tasting_menu: Tasting Menu
-  menus.sections.items_2025.per_table: (per table)
-  menus.sections.items_2025.per_person: (per person)
-  menus.sections.items_2025.has_image_title: Has image - hover to preview
-  menus.sections.items_2025.included: Included
-  menus.sections.items_2025.edit: Edit
-  menus.sections.items_2025.no_items: No items yet
-  menus.sections.items_2025.no_items_desc: Add sections first, then add items to those sections
-  menus.sections.items_2025.go_to_sections: Go to Sections
-  menus.sections.design_2025.quick_actions: Quick Actions
-  menus.sections.design_2025.generate_images: Generate AI Images
-  menus.sections.design_2025.preview_staff: Preview (Staff)
-  menus.sections.design_2025.preview_customer: Preview (Customer)
-  menus.sections.design_2025.preview_staff_title: Preview menu as staff (authenticated view)
-  menus.sections.design_2025.preview_customer_title: Preview menu as customers see it (authenticated as staff but viewing customer interface)
-  menus.sections.design_2025.menu_image: Menu Image
-  menus.sections.design_2025.upload_image: Upload Image
-  menus.sections.design_2025.image_help: Hero image for your menu (recommended: 1200x600px)
-  menus.sections.design_2025.remove_image: Remove current image
-  menus.sections.design_2025.pdf_menu: PDF Menu
-  menus.sections.design_2025.pdf_menu_desc: Upload a PDF version of your menu for customers to download
-  menus.sections.design_2025.download: Download
-  menus.sections.design_2025.upload_pdf: Upload PDF
-  menus.sections.design_2025.pdf_help: Upload a PDF version of your menu
-  menus.sections.design_2025.remove_pdf: Remove current PDF
-  menus.sections.design_2025.display_settings: Display Settings
-  menus.sections.design_2025.show_images: Show Images
-  menus.sections.design_2025.show_images_desc: Display item images in menu
-  menus.sections.design_2025.popup_images: Popup Images
-  menus.sections.design_2025.popup_images_desc: Show larger image when tapped
-  menus.sections.qrcode_2025.all_qr_codes_for_menu: All QR Codes for this Menu
-  menus.sections.qrcode_2025.all_qr_codes_for_menu_desc: Includes the general menu QR (no table) and one QR per table for this menu.
-  menus.sections.qrcode_2025.menu_only_qr: Menu QR (All Tables)
-  menus.sections.qrcode_2025.all_tables: All Tables
-  menus.sections.qrcode_2025.print: Print
-  menus.sections.qrcode_2025.menu_table_qr: Table QR Codes for this Menu
-  menus.sections.qrcode_2025.no_qr_found: No QR codes found yet. Ensure Smartmenus are generated for this menu and tables.
-  menus.sections.qrcode_2025.download_options: Download Options
-  menus.sections.qrcode_2025.download_description: Download your QR code in different formats for printing
-  menus.sections.qrcode_2025.png_format: PNG Image
-  menus.sections.qrcode_2025.png_desc: High quality for digital use
-  menus.sections.qrcode_2025.svg_format: SVG Vector
-  menus.sections.qrcode_2025.svg_desc: Scalable for any size
-  menus.sections.qrcode_2025.pdf_format: PDF Document
-  menus.sections.qrcode_2025.pdf_desc: Print-ready format
-  menus.sections.qrcode_2025.download: Download
-  menus.sections.qrcode_2025.usage_tips: Usage Tips
-  menus.sections.qrcode_2025.tip_1: Print QR codes on table tents or placemats for easy customer access
-  menus.sections.qrcode_2025.tip_2: Include QR code on receipts and business cards
-  menus.sections.qrcode_2025.tip_3: Place QR codes near your entrance for takeout customers
-  menus.sections.qrcode_2025.tip_4: Test the QR code regularly to ensure it works correctly
-  menus.sections.qrcode_2025.url_copied: URL copied to clipboard!
-  menus.sections.qrcode_2025.print_qr_title: Print QR
-  menus.sections.schedule_2025.quick_actions: Quick Actions
-  menus.sections.schedule_2025.copy_to_all: Copy Monday to All Days
-  menus.sections.schedule_2025.menu_availabilities: Menu Availabilities
-  menus.sections.schedule_2025.availabilities_description: Set when this menu is available to customers throughout the week
-  menus.sections.schedule_2025.unavailable: Unavailable
-  menus.sections.schedule_2025.copied_success: Copied!
-  menusectionlocales.controller.created: Menusectionlocale was successfully created.
-  menusectionlocales.controller.destroyed: Menusectionlocale was successfully destroyed.
-  menusectionlocales.controller.updated: Menusectionlocale was successfully updated.
-  menusections.menusection.description: Description:
-  menusections.menusection.image: Image:
-  menusections.menusection.menu: Menu:
-  menusections.menusection.name: Name:
-  menusections.menusection.sequence: Sequence:
-  menusections.menusection.status: Status:
-  menusections.show.selectMenu: Select Menu
-  metrics.controller.created: Metric was successfully created.
-  metrics.controller.deleted: Metric was successfully deleted.
-  metrics.controller.updated: Metric was successfully updated.
-  ocr_menu_imports.controller.attach_pdf: Please attach a PDF file.
-  ocr_menu_imports.controller.confirm_section: Please confirm at least one section before importing.
-  ocr_menu_imports.controller.deleted: Menu import was successfully deleted.
-  ocr_menu_imports.controller.fail_create: Failed to create menu: %{error}
-  ocr_menu_imports.controller.processing_restarted: Processing has been (re)started.
-  ocr_menu_imports.controller.published: Menu has been successfully published!
-  ocr_menu_imports.controller.queued: Menu import has been queued for processing.
-  ocr_menu_imports.controller.republished: Menu has been republished with confirmed changes.
-  ocr_menu_imports.controller.unable_restart: Unable to (re)start processing from status: %{status}.
-  ocr_menu_imports.controller.unauthorized: You are not authorized to perform this action.
-  ocr_menu_imports.controller.updated: Menu import was successfully updated.
-  ocr_menu_imports.import_item.default_title: Import Item
-  ocr_menu_imports.import_item.delete_confirm: Delete this import? This cannot be undone.
-  ocr_menu_imports.import_item.delete_title: Delete import
-  ocr_menu_imports.import_item.imported_ago: Imported %{time} ago
-  ocr_menu_imports.import_item.item_label: item
-  ocr_menu_imports.import_item.section_label: section
-  ocr_menu_imports.index.empty_hint: Get started by uploading a new menu PDF.
-  ocr_menu_imports.index.empty_title: No menu imports
-  ocr_menu_imports.index.new_import: New Menu Import
-  ocr_menu_imports.index.title: Menu Imports
-  ocr_menu_imports.menu_section.edit: Edit
-  ocr_menu_imports.menu_section.hide: Hide
-  ocr_menu_imports.menu_section.items: items
-  ocr_menu_imports.new.cancel: Cancel
-  ocr_menu_imports.new.choose_file: Choose File
-  ocr_menu_imports.new.name_invalid: Please provide a name for this menu.
-  ocr_menu_imports.new.name_label: Menu Name
-  ocr_menu_imports.new.name_placeholder: e.g., Dinner Menu, Lunch Specials, etc.
-  ocr_menu_imports.new.no_file_chosen: No file chosen
-  ocr_menu_imports.new.pdf_hint: PDF up to 10MB
-  ocr_menu_imports.new.pdf_invalid: Please select a PDF file to upload.
-  ocr_menu_imports.new.pdf_label: PDF File
-  ocr_menu_imports.new.subtitle: Upload a PDF menu to automatically extract menu items and sections.
-  ocr_menu_imports.new.tip_file_quality_text: Use high-quality PDFs with clear, readable text. Avoid handwritten menus or low-resolution scans.
-  ocr_menu_imports.new.tip_file_quality_title: File Quality
-  ocr_menu_imports.new.tip_format_text: The system works best with digital PDFs. Scanned documents may have lower accuracy.
-  ocr_menu_imports.new.tip_format_title: Format
-  ocr_menu_imports.new.tip_processing_time_text: Larger files may take several minutes to process. You'll receive an email when processing is complete.
-  ocr_menu_imports.new.tip_processing_time_title: Processing Time
-  ocr_menu_imports.new.tips_title: Tips for Best Results
-  ocr_menu_imports.new.title: Import Menu from PDF
-  ocr_menu_imports.new.upload_process: Upload & Process
-  ocr_menu_imports.new_2025.title: Import Your Menu
-  ocr_menu_imports.new_2025.subtitle: Upload a PDF menu and our AI will extract all items automatically
-  ocr_menu_imports.new_2025.step_upload: Upload
-  ocr_menu_imports.new_2025.step_process: Process
-  ocr_menu_imports.new_2025.step_review: Review
-  ocr_menu_imports.new_2025.name_label: Menu Name
-  ocr_menu_imports.new_2025.name_placeholder: e.g., Summer Menu 2024
-  ocr_menu_imports.new_2025.name_help: Give your menu a descriptive name for easy identification
-  ocr_menu_imports.new_2025.source_language_label: Menu language
-  ocr_menu_imports.new_2025.auto_detect: Auto-detect
-  ocr_menu_imports.new_2025.language_en: English
-  ocr_menu_imports.new_2025.language_fr: French
-  ocr_menu_imports.new_2025.language_it: Italian
-  ocr_menu_imports.new_2025.language_es: Spanish
-  ocr_menu_imports.new_2025.source_language_help: Used to preserve the original language when generating missing descriptions.
-  ocr_menu_imports.new_2025.pdf_label: Menu PDF
-  ocr_menu_imports.new_2025.drop_title: Drag and drop your PDF here
-  ocr_menu_imports.new_2025.drop_subtitle: or
-  ocr_menu_imports.new_2025.browse_files: Browse Files
-  ocr_menu_imports.new_2025.pdf_hint: PDF up to 10MB. Clear scans work best.
-  ocr_menu_imports.new_2025.remove_file_aria: Remove file
-  ocr_menu_imports.new_2025.estimated_time: Processing takes ~2-5 minutes
-  ocr_menu_imports.new_2025.cancel: Cancel
-  ocr_menu_imports.new_2025.start_processing: Start Processing
-  ocr_menu_imports.new_2025.tips_title: Tips for Best Results
-  ocr_menu_imports.new_2025.tip_quality_title: Use High-Quality Scans
-  ocr_menu_imports.new_2025.tip_quality_text: Clear, high-resolution PDFs with good contrast work best. Avoid blurry or low-quality photos.
-  ocr_menu_imports.new_2025.tip_format_title: Standard Menu Layout
-  ocr_menu_imports.new_2025.tip_format_text: Menus with clear sections and item names separated from prices work best. Our AI can handle most layouts.
-  ocr_menu_imports.new_2025.tip_language_title: Multiple Languages Supported
-  ocr_menu_imports.new_2025.tip_language_text: We support menus in English, Italian, Spanish, French, and more. Multi-language menus work too!
-  ocr_menu_imports.new_2025.pdf_invalid_js: Please select a PDF file
-  ocr_menu_imports.show.allergens: Allergens
-  ocr_menu_imports.show.approve_sections_items: Approve Sections and Items
-  ocr_menu_imports.show.cancel: Cancel
-  ocr_menu_imports.show.click_to_add_description: Click to add description.
-  ocr_menu_imports.show.confirm_modal_body: Confirm to publish your menu. You can optionally use Sync publish to archive any existing sections/items not present in this import.
-  ocr_menu_imports.show.confirm_modal_title: Publish Menu
-  ocr_menu_imports.show.create_menu: Create Menu
-  ocr_menu_imports.show.dairy_free: Dairy Free
-  ocr_menu_imports.show.default_title: Menu Import #%{id}
-  ocr_menu_imports.show.delete: Delete
-  ocr_menu_imports.show.description: Description
-  ocr_menu_imports.show.dietary_information: Dietary Information
-  ocr_menu_imports.show.edit_item_modal_title: Edit Menu Item
-  ocr_menu_imports.show.failed_heading: Processing failed
-  ocr_menu_imports.show.gluten_free: Gluten Free
-  ocr_menu_imports.show.hold_multi_select: Hold Ctrl/Cmd to select multiple
-  ocr_menu_imports.show.import_details: Import Details
-  ocr_menu_imports.show.imported_ago: Imported %{time} ago
-  ocr_menu_imports.show.imported_menu_subtitle: Review and confirm the extracted menu items below. You can edit any item before creating the final menu.
-  ocr_menu_imports.show.imported_menu_title: Imported Menu
-  ocr_menu_imports.show.item_name: Item Name
-  ocr_menu_imports.show.no_items_explainer: We couldn't detect any sections/items from this PDF.
-  ocr_menu_imports.show.no_items_heading: No menu items were parsed
-  ocr_menu_imports.show.no_items_tip1: PDF may contain no extractable text and OCR produced no text. Verify Google Cloud Vision credentials are configured.
-  ocr_menu_imports.show.no_items_tip2: OpenAI API key may be missing or returned invalid output. Add openai_api_key to Rails credentials.
-  ocr_menu_imports.show.no_items_tip3: The response formatting may have been invalid. We've hardened parsing, but re-running might help.
-  ocr_menu_imports.show.position: Position
-  ocr_menu_imports.show.price: Price
-  ocr_menu_imports.show.process_confirm: Start processing this PDF now?
-  ocr_menu_imports.show.process_pdf: Process PDF
-  ocr_menu_imports.show.processing_page: Page %{current} of %{total}
-  ocr_menu_imports.show.processing_title: Processing your menu. This may take a few minutes...
-  ocr_menu_imports.show.progress_complete: %{percent}% complete
-  ocr_menu_imports.show.progress_loading: Loading...
-  ocr_menu_imports.show.publish: Publish
-  ocr_menu_imports.show.publish_menu: Publish Menu
-  ocr_menu_imports.show.reorder_hint: Reorder items within this section only.
-  ocr_menu_imports.show.save_changes: Save Changes
-  ocr_menu_imports.show.section: Section
-  ocr_menu_imports.show.section_disabled_title: Section cannot be changed here
-  ocr_menu_imports.show.status: Status:
-  ocr_menu_imports.show.steps.complete: Complete
-  ocr_menu_imports.show.steps.processing: Processing
-  ocr_menu_imports.show.steps.review: Review
-  ocr_menu_imports.show.steps.upload: Upload
-  ocr_menu_imports.show.sync_publish_label: Sync publish (archive sections/items not in this import)
-  ocr_menu_imports.show.try_again: Try Again
-  ocr_menu_imports.show.updated_at: Updated %{timestamp}
-  ocr_menu_imports.show.upload_clearer_pdf: Upload a clearer PDF
-  ocr_menu_imports.show.vegan: Vegan
-  ocr_menu_imports.show.vegetarian: Vegetarian
-  omniauth.connected: Your %{kind} account was connected.
-  omniauth.email_exists: An account with this email already exists. Please sign in with that account before connecting your %{provider} account.
-  omniauth.failure: Something went wrong
-  onboarding.account_details.continue: Continue
-  onboarding.account_details.email_help: This email is already confirmed and cannot be changed during setup.
-  onboarding.account_details.email_label: Email Address
-  onboarding.account_details.full_name_label: Full Name
-  onboarding.account_details.full_name_placeholder: Enter your full name
-  onboarding.account_details.full_name_required: Please provide your full name.
-  onboarding.account_details.restaurant_name_preview_help: Don't worry, you can change this in the next step.
-  onboarding.account_details.restaurant_name_preview_label: Restaurant Name (Preview)
-  onboarding.account_details.restaurant_name_preview_placeholder: What's your restaurant called?
-  onboarding.account_details.stats.restaurants_count: 1,000+
-  onboarding.account_details.stats.restaurants_label: Restaurants Trust Us
-  onboarding.account_details.stats.satisfaction: 98%
-  onboarding.account_details.stats.satisfaction_label: Customer Satisfaction
-  onboarding.account_details.stats.setup_time: 5 min
-  onboarding.account_details.stats.setup_time_label: Average Setup Time
-  onboarding.account_details.subtitle: Let's get your account set up. This will only take a moment.
-  onboarding.account_details.title: Welcome to Smart Menu!
-  onboarding.completion.completion_time: This usually takes 30-60 seconds. You'll be redirected automatically when complete.
-  onboarding.completion.configuring_payments: Configuring payment options
-  onboarding.completion.creating_profile: Creating your restaurant profile
-  onboarding.completion.customize_menu_description: Add more items, upload photos, and set detailed descriptions
-  onboarding.completion.customize_menu_title: Customize Your Menu
-  onboarding.completion.free_trial_status: 14-day free trial
-  onboarding.completion.generating_qr: Generating QR code...
-  onboarding.completion.generating_qr_codes: Generating QR codes
-  onboarding.completion.generating_status: Generating your QR code...
-  onboarding.completion.go_to_dashboard: Go to Dashboard
-  onboarding.completion.menu_published: Menu Published
-  onboarding.completion.plan_activated: Plan Activated
-  onboarding.completion.print_qr_description: Download and print QR codes for your tables
-  onboarding.completion.print_qr_title: Print QR Codes
-  onboarding.completion.qr_code_ready: QR Code Ready!
-  onboarding.completion.qr_ready_title: Your Digital Menu is Ready
-  onboarding.completion.restaurant_created: Restaurant Created
-  onboarding.completion.setting_up_menu: Setting up your menu
-  onboarding.completion.setup_timeout: Setup taking longer than expected
-  onboarding.completion.setup_timeout_help: Please refresh the page or contact support
-  onboarding.completion.subtitle: Your restaurant is now set up and ready to serve customers!
-  onboarding.completion.title: Congratulations! 🎉
-  onboarding.completion.track_orders_description: Monitor customer orders and analytics in real-time
-  onboarding.completion.track_orders_title: Track Orders
-  onboarding.completion.view_live_menu: View Live Menu
-  onboarding.completion.whats_happening: What's happening now:
-  onboarding.completion.whats_next: What's next?
-  onboarding.menu_creation.add_menu_item: Add Menu Item
-  onboarding.menu_creation.back: Back
-  onboarding.menu_creation.create_menu: Create Menu
-  onboarding.menu_creation.item_description_placeholder: Brief description (optional)
-  onboarding.menu_creation.item_name_placeholder: Item name
-  onboarding.menu_creation.item_price_placeholder: 0.00
-  onboarding.menu_creation.live_preview: Live Preview
-  onboarding.menu_creation.menu_item_title: Menu Item
-  onboarding.menu_creation.menu_items_help: Add at least 3 items to continue. Don't worry about perfection - you can edit everything later!
-  onboarding.menu_creation.menu_items_label: Menu Items
-  onboarding.menu_creation.menu_name_default: Main Menu
-  onboarding.menu_creation.menu_name_label: Menu Name
-  onboarding.menu_creation.menu_name_placeholder: e.g., Main Menu, Lunch Menu, Dinner Menu
-  onboarding.menu_creation.menu_name_required: Please provide a menu name.
-  onboarding.menu_creation.min_items_alert: Please add at least 3 menu items to continue.
-  onboarding.menu_creation.need_more_items: Need %{count} more items
-  onboarding.menu_creation.preview_empty: Your menu items will appear here as you add them
-  onboarding.menu_creation.preview_empty_alt: Your menu items will appear here
-  onboarding.menu_creation.quick_start_label: Quick Start Templates
-  onboarding.menu_creation.subtitle: Add a few items to get started. You can always add more later!
-  onboarding.menu_creation.template_added: Added!
-  onboarding.menu_creation.template_items.american.bbq_ribs.description: Slow-cooked pork ribs with BBQ sauce
-  onboarding.menu_creation.template_items.american.bbq_ribs.name: BBQ Ribs
-  onboarding.menu_creation.template_items.american.buffalo_wings.description: 8 pieces with celery and blue cheese dip
-  onboarding.menu_creation.template_items.american.buffalo_wings.name: Buffalo Wings
-  onboarding.menu_creation.template_items.american.classic_burger.description: Beef patty, lettuce, tomato, onion, pickles
-  onboarding.menu_creation.template_items.american.classic_burger.name: Classic Burger
-  onboarding.menu_creation.template_items.asian.chicken_teriyaki.description: Grilled chicken with teriyaki sauce and rice
-  onboarding.menu_creation.template_items.asian.chicken_teriyaki.name: Chicken Teriyaki
-  onboarding.menu_creation.template_items.asian.pad_thai.description: Stir-fried rice noodles with shrimp and peanuts
-  onboarding.menu_creation.template_items.asian.pad_thai.name: Pad Thai
-  onboarding.menu_creation.template_items.asian.spring_rolls.description: Crispy rolls with sweet and sour sauce
-  onboarding.menu_creation.template_items.asian.spring_rolls.name: Vegetable Spring Rolls
-  onboarding.menu_creation.template_items.italian.caesar_salad.description: Romaine lettuce, croutons, parmesan, caesar dressing
-  onboarding.menu_creation.template_items.italian.caesar_salad.name: Caesar Salad
-  onboarding.menu_creation.template_items.italian.margherita_pizza.description: Fresh mozzarella, tomato sauce, basil
-  onboarding.menu_creation.template_items.italian.margherita_pizza.name: Margherita Pizza
-  onboarding.menu_creation.template_items.italian.spaghetti_carbonara.description: Pasta with eggs, cheese, pancetta, and pepper
-  onboarding.menu_creation.template_items.italian.spaghetti_carbonara.name: Spaghetti Carbonara
-  onboarding.menu_creation.template_items.mexican.beef_burrito.description: Large burrito with seasoned beef, rice, and beans
-  onboarding.menu_creation.template_items.mexican.beef_burrito.name: Beef Burrito
-  onboarding.menu_creation.template_items.mexican.chicken_tacos.description: Three soft tacos with grilled chicken and salsa
-  onboarding.menu_creation.template_items.mexican.chicken_tacos.name: Chicken Tacos
-  onboarding.menu_creation.template_items.mexican.guacamole_chips.description: Fresh guacamole with tortilla chips
-  onboarding.menu_creation.template_items.mexican.guacamole_chips.name: Guacamole & Chips
-  onboarding.menu_creation.templates.american: American
-  onboarding.menu_creation.templates.asian: Asian
-  onboarding.menu_creation.templates.italian: Italian
-  onboarding.menu_creation.templates.mexican: Mexican
-  onboarding.menu_creation.templates_help: Click a template to add sample items you can customize.
-  onboarding.menu_creation.title: Create your first menu
-  onboarding.plan_selection.always_free: Always free
-  onboarding.plan_selection.back: Back
-  onboarding.plan_selection.choose_free_plan: Choose Free Plan
-  onboarding.plan_selection.continue: Continue
-  onboarding.plan_selection.features.advanced_analytics: Advanced analytics
-  onboarding.plan_selection.features.api_access: API access
-  onboarding.plan_selection.features.custom_branding: Custom branding
-  onboarding.plan_selection.features.items_per_menu: items/menu
-  onboarding.plan_selection.features.languages: languages
-  onboarding.plan_selection.features.locations: locations
-  onboarding.plan_selection.features.menus_per_location: menus/location
-  onboarding.plan_selection.features.online_ordering: Online ordering
-  onboarding.plan_selection.features.priority_support: Priority support
-  onboarding.plan_selection.features.qr_code_menus: QR code menus
-  onboarding.plan_selection.free_trial: 14-day free trial
-  onboarding.plan_selection.most_popular: MOST POPULAR
-  onboarding.plan_selection.per_month: /mo
-  onboarding.plan_selection.select_plan_alert: Please select a plan to continue.
-  onboarding.plan_selection.selected: Selected ✓
-  onboarding.plan_selection.start_free_trial: Start Free Trial
-  onboarding.plan_selection.subtitle: Start with a 14-day free trial. No credit card required!
-  onboarding.plan_selection.title: Choose your plan
-  onboarding.plan_selection.trust_indicators.mobile_subtitle: Perfect on any device
-  onboarding.plan_selection.trust_indicators.mobile_title: Mobile Optimized
-  onboarding.plan_selection.trust_indicators.secure_subtitle: Bank-level security
-  onboarding.plan_selection.trust_indicators.secure_title: Secure & Reliable
-  onboarding.plan_selection.trust_indicators.support_subtitle: We're here to help
-  onboarding.plan_selection.trust_indicators.support_title: 24/7 Support
-  onboarding.restaurant_details.back: Back
-  onboarding.restaurant_details.continue: Continue
-  onboarding.restaurant_details.cuisine_type_label: Cuisine Type
-  onboarding.restaurant_details.cuisine_type_prompt: Select cuisine...
-  onboarding.restaurant_details.cuisine_type_required: Please select your cuisine type.
-  onboarding.restaurant_details.cuisine_types.american: American
-  onboarding.restaurant_details.cuisine_types.chinese: Chinese
-  onboarding.restaurant_details.cuisine_types.french: French
-  onboarding.restaurant_details.cuisine_types.fusion: Fusion
-  onboarding.restaurant_details.cuisine_types.greek: Greek
-  onboarding.restaurant_details.cuisine_types.indian: Indian
-  onboarding.restaurant_details.cuisine_types.italian: Italian
-  onboarding.restaurant_details.cuisine_types.japanese: Japanese
-  onboarding.restaurant_details.cuisine_types.korean: Korean
-  onboarding.restaurant_details.cuisine_types.mediterranean: Mediterranean
-  onboarding.restaurant_details.cuisine_types.mexican: Mexican
-  onboarding.restaurant_details.cuisine_types.middle_eastern: Middle Eastern
-  onboarding.restaurant_details.cuisine_types.other: Other
-  onboarding.restaurant_details.cuisine_types.spanish: Spanish
-  onboarding.restaurant_details.cuisine_types.thai: Thai
-  onboarding.restaurant_details.cuisine_types.vietnamese: Vietnamese
-  onboarding.restaurant_details.location_help: This helps us set up currency and timezone defaults.
-  onboarding.restaurant_details.location_label: Location
-  onboarding.restaurant_details.location_placeholder: City, State/Country
-  onboarding.restaurant_details.location_required: Please provide your restaurant location.
-  onboarding.restaurant_details.phone_help: Optional - for customer contact and reservations.
-  onboarding.restaurant_details.phone_label: Phone Number
-  onboarding.restaurant_details.phone_placeholder: +1 (555) 123-4567
-  onboarding.restaurant_details.pro_tips.tip1: Choose the restaurant type that best matches your service style
-  onboarding.restaurant_details.pro_tips.tip2: Cuisine type helps us suggest relevant menu templates
-  onboarding.restaurant_details.pro_tips.tip3: Location is used to set up local currency and timezone
-  onboarding.restaurant_details.pro_tips.title: Pro Tips
-  onboarding.restaurant_details.restaurant_name_label: Restaurant Name
-  onboarding.restaurant_details.restaurant_name_placeholder: Enter your restaurant name
-  onboarding.restaurant_details.restaurant_name_required: Please provide your restaurant name.
-  onboarding.restaurant_details.restaurant_type_label: Restaurant Type
-  onboarding.restaurant_details.restaurant_type_prompt: Select type...
-  onboarding.restaurant_details.restaurant_type_required: Please select your restaurant type.
-  onboarding.restaurant_details.restaurant_types.bakery: Bakery
-  onboarding.restaurant_details.restaurant_types.bar_grill: Bar & Grill
-  onboarding.restaurant_details.restaurant_types.cafe: Cafe
-  onboarding.restaurant_details.restaurant_types.casual_dining: Casual Dining
-  onboarding.restaurant_details.restaurant_types.fast_casual: Fast Casual
-  onboarding.restaurant_details.restaurant_types.fine_dining: Fine Dining
-  onboarding.restaurant_details.restaurant_types.food_truck: Food Truck
-  onboarding.restaurant_details.restaurant_types.other: Other
-  onboarding.restaurant_details.restaurant_types.quick_service: Quick Service
-  onboarding.restaurant_details.subtitle: Help us customize your experience with some basic information.
-  onboarding.restaurant_details.title: Tell us about your restaurant
-  ordrs.controller.could_not_delete: Could not delete order: %{error}
-  ordrs.controller.created: Order was successfully created.
-  ordrs.controller.deleted: Order was successfully deleted.
-  restaurantavailabilities.controller.created: Restaurant availability was successfully created.
-  restaurantavailabilities.controller.deleted: Restaurant availability was successfully deleted.
-  restaurantavailabilities.controller.updated: Restaurant availability was successfully updated.
-  restaurantavailabilities.show.selectRestaurant: Select Restaurant
-  restaurantlocales.controller.active_not_deleted: Active Locale was not deleted.
-  restaurantlocales.controller.created: Restaurant Locale was successfully created.
-  restaurantlocales.controller.deleted: Locale was deleted.
-  restaurantlocales.controller.updated: Restaurant Locale was successfully updated.
-  restaurantlocales.form.delete: Delete
-  restaurantlocales.form.sure: Are you sure?
-  restaurants.controller.archived: Restaurant was successfully archived.
-  restaurants.controller.created: Restaurant was successfully created.
-  restaurants.controller.updated: Restaurant was successfully updated.
-  restaurants.edit.allergynsTab: Allergens
-  restaurants.edit.employeesTab: Employees
-  restaurants.edit.localesTab: Locales
-  restaurants.edit.menuTab: Menus
-  restaurants.edit.openingsTab: Opening Hours
-  restaurants.edit.ordersTab: Orders
-  restaurants.edit.restaurantTab: Restaurant
-  restaurants.edit.sizesTab: Sizes
-  restaurants.edit.smartQRTab: SmartQRs
-  restaurants.edit.tableTab: Tables
-  restaurants.edit.taxesTab: Taxes
-  restaurants.edit.tipsTab: Tips
-  restaurants.edit.tracksTab: Tracks
-  restaurants.form.address: Address
-  restaurants.form.connect: Connect
-  restaurants.form.delete: Delete
-  restaurants.form.details: Details
-  restaurants.form.imageSettings: Image Settings
-  restaurants.form.image_style_profile_hint: Used to keep all generated menu item images consistent across this restaurant.
-  restaurants.form.image_style_profile_label: Image style profile
-  restaurants.form.image_style_profile_placeholder: e.g., Realistic studio food photography; shallow depth of field; soft natural light; matte stoneware; rustic wooden table; minimal props
-  restaurants.form.music: Music
-  restaurants.form.save: Save
-  restaurants.form.settings: Settings
-  restaurants.form.spotify: Spotify
-  restaurants.form.sure: Are you sure?
-  restaurants.form.wifi: WiFi
-  restaurants.index.restaurants: Restaurants
-  restaurants.new.restaurant: Restaurant
-  restaurants.new.restaurants: Restaurants
-  restaurants.restaurant.address1: Address1:
-  restaurants.restaurant.address2: Address2:
-  restaurants.restaurant.capacity: Capacity:
-  restaurants.restaurant.city: City:
-  restaurants.restaurant.country: Country:
-  restaurants.restaurant.description: Description:
-  restaurants.restaurant.image: Image:
-  restaurants.restaurant.name: Name:
-  restaurants.restaurant.postcode: Postcode:
-  restaurants.restaurant.state: State:
-  restaurants.restaurant.status: Status:
-  restaurants.restaurant.user: User:
-  restaurants.show.address: Address
-  restaurants.show.billing_content: Billing configuration will appear here.
-  restaurants.show.details: Details
-  restaurants.show.imageSettings: Image Settings
-  restaurants.show.settings: Settings
-  restaurants.show.switch_off: off
-  restaurants.show.switch_on: on
-  restaurants.show.tab_billing: Billing
-  restaurants.show.tab_employees: Employees
-  restaurants.show.tab_menus: Menus
-  restaurants.show.tab_openinghours: Opening Hours
-  restaurants.show.tab_restaurant: Restaurant
-  restaurants.show.tab_tables: Tables
-  restaurants.show.tab_taxes: Taxes
-  restaurants.show.tab_tips: Tips
-  restaurants.showAllergyns.allergyns: Allergens
-  restaurants.showEmployees.employees: Employees
-  restaurants.showLocales.actions: Actions
-  restaurants.showLocales.activate: Activate
-  restaurants.showLocales.deactivate: Deactivate
-  restaurants.showLocales.default: Default
-  restaurants.showLocales.delete: Delete
-  restaurants.showLocales.menus: Menus
-  restaurants.showMenus.add_new_menu: Add New Menu
-  restaurants.showMenus.import_menu_from_pdf: Import Menu from PDF
-  restaurants.showMenus.menus: Menus
-  restaurants.showOpeningHours.actions: Actions
-  restaurants.showOpeningHours.activate: Activate
-  restaurants.showOpeningHours.deactivate: Deactivate
-  restaurants.showOpeningHours.openings: Opening Hours
-  restaurants.showOrdrs.ordrs: Orders
-  restaurants.showSizes.sizes: Sizes
-  restaurants.showSmartMenus.scan_to_join: Scan to Join
-  restaurants.showSmartMenus.smartQRs: SmartQRs
-  restaurants.showSmartMenus.wifi: WiFi
-  restaurants.showTableSettings.tableSettings: Table Settings
-  restaurants.showTaxes.taxes: Taxes
-  restaurants.showTips.actions: Actions
-  restaurants.showTips.activate: Activate
-  restaurants.showTips.deactivate: Deactivate
-  restaurants.showTips.tips: Tips
-  restaurants.showTrack.loading: Loading...
-  restaurants.showTracks.tracks: Tracks
-  restaurants.insights.page_title: %{restaurant_name} - Insights
-  restaurants.insights.title: Insights
-  restaurants.insights.back: Back
-  restaurants.insights.export_csv: Export CSV
-  restaurants.insights.helper_text: v1: read-only insights. Abandonment funnel is currently based on order/payment milestones.
-  restaurants.insights.no_data: No data for selected window.
-  restaurants.insights.values.true: true
-  restaurants.insights.values.false: false
-  restaurants.insights.filters.time_window: Time window
-  restaurants.insights.filters.today: Today
-  restaurants.insights.filters.yesterday: Yesterday
-  restaurants.insights.filters.last7: Last 7 Days
-  restaurants.insights.filters.last28: Last 28 Days
-  restaurants.insights.filters.mtd: MTD
-  restaurants.insights.filters.last_month: Last Month
-  restaurants.insights.filters.custom: Custom
-  restaurants.insights.filters.start: Start
-  restaurants.insights.filters.end: End
-  restaurants.insights.filters.refresh: Refresh
-  restaurants.insights.filters.menu_optional: Menu (optional)
-  restaurants.insights.filters.all_menus: All menus
-  restaurants.insights.sections.top_performers.title: Top performers
-  restaurants.insights.sections.slow_movers.title: Slow movers
-  restaurants.insights.sections.prep_time_bottlenecks.title: Prep-time bottlenecks
-  restaurants.insights.sections.prep_time_bottlenecks.helper_text: Uses station ticket timing (submitted → ready/collected) as the v1 proxy.
-  restaurants.insights.sections.voice_triggers.title: Voice-trigger frequency
-  restaurants.insights.sections.abandonment_funnel.title: Abandonment funnel
-  restaurants.insights.columns.item: Item
-  restaurants.insights.columns.orders: Orders
-  restaurants.insights.columns.qty: Qty
-  restaurants.insights.columns.share: Share
-  restaurants.insights.columns.median_seconds: Median (s)
-  restaurants.insights.columns.sample_size: N
-  restaurants.insights.columns.outlier: Outlier
-  restaurants.insights.columns.triggers: Triggers
-  restaurants.insights.columns.success: Success
-  restaurants.insights.columns.fail: Fail
-  restaurants.insights.columns.rate: Rate
-  restaurants.insights.columns.step: Step
-  restaurants.insights.columns.count: Count
-  restaurants.insights.columns.dropoff: Dropoff
-  restaurants.insights.columns.dropoff_rate: Dropoff rate
-  restaurants.insights.funnel_steps.order_submitted: Order submitted
-  restaurants.insights.funnel_steps.bill_requested: Bill requested
-  restaurants.insights.funnel_steps.payment_succeeded: Payment succeeded
-  restaurants.edit_2025.subtitle: Manage your restaurant configuration
-  restaurants.edit_2025.toggle_navigation: Toggle navigation
-  restaurants.sidebar_2025.close_menu: Close menu
-  restaurants.sidebar_2025.restaurant: RESTAURANT
-  restaurants.sidebar_2025.details: Details
-  restaurants.sidebar_2025.schedule: Schedule
-  restaurants.sidebar_2025.localization: Localization
-  restaurants.sidebar_2025.menus: MENUS
-  restaurants.sidebar_2025.all_menus: All Menus
-  restaurants.sidebar_2025.allergens: Allergens
-  restaurants.sidebar_2025.sizes: Sizes
-  restaurants.sidebar_2025.tables: Tables
-  restaurants.sidebar_2025.operations: OPERATIONS
-  restaurants.sidebar_2025.kitchen_dashboard: Kitchen
-  restaurants.sidebar_2025.bar_dashboard: Bar
-  restaurants.sidebar_2025.wifi: WiFi
-  restaurants.sidebar_2025.team: TEAM
-  restaurants.sidebar_2025.staff: Staff
-  restaurants.sidebar_2025.financials: FINANCIALS
-  restaurants.sidebar_2025.taxes_and_tips: Taxes & Tips
-  restaurants.sidebar_2025.taxes: Taxes
-  restaurants.sidebar_2025.tips: Tips
-  restaurants.sidebar_2025.ordering: Ordering
-  restaurants.sidebar_2025.insights: Insights
-  restaurants.sidebar_2025.setup: SETUP
-  restaurants.sidebar_2025.settings: Settings
-  restaurants.sidebar_2025.qr_codes: QR Codes
-  restaurants.sidebar_2025.jukebox: Jukebox
-  restaurants.sidebar_2025.advanced: Advanced
-  restaurants.index_2025.title: Your Restaurants
-  restaurants.index_2025.heading: Restaurants
-  restaurants.index_2025.subtitle: Manage locations, menus and staff
-  restaurants.index_2025.quick_actions: Quick Actions
-  restaurants.index_2025.new_restaurant: New Restaurant
-  restaurants.index_2025.search_placeholder: Search restaurants…
-  restaurants.index_2025.search: Search
-  restaurants.index_frame_2025.pagination_aria_label: Restaurants pagination
-  restaurants.index_frame_2025.no_restaurants: No restaurants found
-  restaurants.index_frame_2025.no_results_for: No results for
-  restaurants.index_frame_2025.clear_search: Clear search
-  restaurants.index_frame_2025.menus_count_label: menus
-  restaurants.index_frame_2025.staff_count_label: staff
-  restaurants.index_frame_2025.edit: Edit
-  restaurants.index_frame_2025.menus_action: Menus
-  restaurants.index_frame_2025.restaurants: Restaurants
-  restaurants.index_frame_2025.active: Active
-  restaurants.index_frame_2025.inactive: Inactive
-  restaurants.index_frame_2025.set_status: Set status...
-  restaurants.index_frame_2025.apply: Apply
-  restaurants.index_frame_2025.drag_to_reorder: Drag to reorder
-  restaurants.sections.details_2025.quick_actions: Quick Actions
-  restaurants.sections.details_2025.new_menu: New Menu
-  restaurants.sections.details_2025.import_menu: Import Menu
-  restaurants.sections.details_2025.overview: Overview
-  restaurants.sections.details_2025.menus: Menus
-  restaurants.sections.details_2025.items: Items
-  restaurants.sections.details_2025.tables: Tables
-  restaurants.sections.details_2025.staff: Staff
-  restaurants.sections.details_2025.restaurant_details: Restaurant Details
-  restaurants.sections.details_2025.restaurant_name: Restaurant Name
-  restaurants.sections.details_2025.restaurant_name_placeholder: e.g., Bella Italia
-  restaurants.sections.details_2025.restaurant_name_help: The name customers will see
-  restaurants.sections.details_2025.description: Description
-  restaurants.sections.details_2025.description_placeholder: Describe your restaurant, cuisine, and what makes it special...
-  restaurants.sections.details_2025.description_help: A brief description that appears on your menu
-  restaurants.sections.details_2025.status: Status
-  restaurants.sections.details_2025.active: Active
-  restaurants.sections.details_2025.inactive: Inactive
-  restaurants.sections.details_2025.status_help: Only active restaurants are visible to customers
-  restaurants.sections.details_2025.phone: Phone
-  restaurants.sections.details_2025.phone_placeholder: e.g., +1 (555) 123-4567
-  restaurants.sections.details_2025.phone_help: Contact number for customers
-  restaurants.sections.details_2025.website: Website
-  restaurants.sections.details_2025.website_placeholder: https://example.com
-  restaurants.sections.details_2025.website_help: Your restaurant website
-  restaurants.sections.details_2025.currency: Currency
-  restaurants.sections.details_2025.currency_help: Currency for all prices
-  restaurants.sections.details_2025.timezone: Timezone
-  restaurants.sections.details_2025.timezone_help: Local timezone for operating hours
-  restaurants.sections.details_2025.location: Location & Address
-  restaurants.sections.details_2025.address: Address
-  restaurants.sections.details_2025.address_placeholder: 123 Main Street
-  restaurants.sections.details_2025.address_help: Your restaurant's street address
-  restaurants.sections.details_2025.city: City
-  restaurants.sections.details_2025.city_placeholder: City name
-  restaurants.sections.details_2025.state: State/Province
-  restaurants.sections.details_2025.state_placeholder: State or province
-  restaurants.sections.details_2025.postcode: Postal Code
-  restaurants.sections.details_2025.postcode_placeholder: e.g., 12345
-  restaurants.sections.details_2025.country: Country
-  restaurants.sections.details_2025.country_placeholder: Country
-  restaurants.sections.details_2025.latitude: Latitude
-  restaurants.sections.details_2025.latitude_placeholder: e.g., 40.7128
-  restaurants.sections.details_2025.longitude: Longitude
-  restaurants.sections.details_2025.longitude_placeholder: e.g., -74.0060
-  restaurants.sections.details_2025.loading_map: Loading map...
-  restaurants.sections.details_2025.map_error: Map could not be loaded
-  restaurants.sections.details_2025.location_label: Location:
-  restaurants.sections.details_2025.name_placeholder: e.g., Pizza Place
-  restaurants.sections.details_2025.name_help: This is how customers will see your restaurant
-  restaurants.sections.details_2025.address2_placeholder: Suite 100 (optional)
-  restaurants.sections.details_2025.address2_help: Additional address details
-  restaurants.sections.details_2025.location_verified: Location verified
-  restaurants.sections.details_2025.image_context_details: Image Context Details
-  restaurants.sections.details_2025.imagecontext_placeholder: e.g., Modern Italian restaurant with rustic decor...
-  restaurants.sections.details_2025.imagecontext_help: Describe your restaurant's style and atmosphere to help AI generate appropriate menu item images
-  restaurants.sections.details_2025.image_style_profile_placeholder: e.g., Professional food photography, well-lit, white background, top-down view...
-  restaurants.sections.details_2025.image_style_profile_help: Specify the style and presentation preferences for AI-generated menu item images
-  restaurants.sections.address_2025.location: Location & Address
-  restaurants.sections.address_2025.address_placeholder: 123 Main Street
-  restaurants.sections.address_2025.address_help: Your restaurant's street address
-  restaurants.sections.address_2025.address2_placeholder: Suite 100 (optional)
-  restaurants.sections.address_2025.address2_help: Additional address details
-  restaurants.sections.address_2025.location_verified: Location verified
-  restaurants.sections.address_2025.delivery_zones: Delivery Zones
-  restaurants.sections.address_2025.delivery_zones_help: Define areas where you offer delivery service
-  restaurants.sections.address_2025.add_zone: Add Delivery Zone
-  restaurants.sections.address_2025.map_loading: Loading map...
-  restaurants.sections.address_2025.map_location_label: Location:
-  restaurants.sections.address_2025.map_load_error: Map could not be loaded
-  restaurants.sections.wifi_2025.wifi_configuration: WiFi Configuration
-  restaurants.sections.wifi_2025.wifi_description: Configure WiFi settings to generate QR codes for customer access
-  restaurants.sections.wifi_2025.ssid_placeholder: Enter your WiFi network name
-  restaurants.sections.wifi_2025.ssid_help: The name of your WiFi network that customers will connect to
-  restaurants.sections.wifi_2025.password_placeholder: Enter WiFi password
-  restaurants.sections.wifi_2025.password_help: The password customers will need to connect
-  restaurants.sections.wifi_2025.select_encryption: Select encryption...
-  restaurants.sections.wifi_2025.encryption_help: The security protocol used by your WiFi network
-  restaurants.sections.wifi_2025.select_option: Select option...
-  restaurants.sections.wifi_2025.false: false
-  restaurants.sections.wifi_2025.true: true
-  restaurants.sections.wifi_2025.hidden_help: Whether the network name is broadcast publicly
-  restaurants.sections.import_2025.info_title: AI-Powered Menu Import
-  restaurants.sections.import_2025.info_text: Upload your PDF menu and our AI will automatically extract all items, sections, prices, and descriptions.
-  restaurants.sections.import_2025.upload_title: Upload Menu PDF
-  restaurants.sections.import_2025.name_label: Menu Name
-  restaurants.sections.import_2025.name_placeholder: e.g., Summer Menu 2024
-  restaurants.sections.import_2025.name_help: Give this menu a descriptive name
-  restaurants.sections.import_2025.name_invalid: Please provide a menu name
-  restaurants.sections.import_2025.source_language_label: Menu language
-  restaurants.sections.import_2025.auto_detect: Auto-detect
-  restaurants.sections.import_2025.source_language_help: Used to preserve the original language when generating missing descriptions.
-  restaurants.sections.import_2025.pdf_label: Menu PDF
-  restaurants.sections.import_2025.choose_file: Choose File
-  restaurants.sections.import_2025.no_file_chosen: No file chosen
-  restaurants.sections.import_2025.pdf_hint: PDF up to 10MB. Clear scans work best.
-  restaurants.sections.import_2025.pdf_invalid: Please select a PDF file
-  restaurants.sections.import_2025.upload_process: Upload & Process
-  restaurants.sections.import_2025.tips_title: Tips for Best Results
-  restaurants.sections.import_2025.tip_quality_title: High Quality PDF
-  restaurants.sections.import_2025.tip_quality_text: Use a clear, high-resolution PDF for best OCR accuracy. Scanned menus should be crisp and readable.
-  restaurants.sections.import_2025.tip_format_title: Structured Format
-  restaurants.sections.import_2025.tip_format_text: Menus with clear sections, item names, and prices work best. Avoid complex layouts or multiple columns.
-  restaurants.sections.import_2025.tip_processing_title: Processing Time
-  restaurants.sections.import_2025.tip_processing_text: Large menus may take a few minutes to process. You will be notified when the import is ready for review.
-  restaurants.sections.import_2025.recent_imports: Recent Imports
-  restaurants.sections.import_2025.ago: ago
-  restaurants.sections.import_2025.status_completed: Completed
-  restaurants.sections.import_2025.status_failed: Failed
-  restaurants.sections.import_2025.status_processing: Processing
-  restaurants.sections.import_2025.status_pending: Pending
-  restaurants.sections.import_2025.confirm_delete: Are you sure you want to delete this import?
-  restaurants.sections.import_2025.delete_import: Delete import
-  restaurants.sections.import_2025.select_all: Select all
-  restaurants.sections.import_2025.delete_selected: Delete selected
-  restaurants.sections.import_2025.view: View
-  restaurants.sections.import_2025.default_title: Import #%{id}
-  restaurants.sections.menus_2025.quick_actions: Quick Actions
-  restaurants.sections.menus_2025.new_menu: New Menu
-  restaurants.sections.menus_2025.import_menu: Import Menu
-  restaurants.sections.menus_2025.menus: Menus
-  restaurants.sections.menus_2025.all: All
-  restaurants.sections.menus_2025.active: Active
-  restaurants.sections.menus_2025.inactive: Inactive
-  restaurants.sections.menus_2025.menus_all: All Menus
-  restaurants.sections.menus_2025.menus_active: Active Menus
-  restaurants.sections.menus_2025.menus_inactive: Inactive Menus
-  restaurants.sections.menus_2025.sections: sections
-  restaurants.sections.menus_2025.items: items
-  restaurants.sections.menus_2025.edit: Edit
-  restaurants.sections.menus_2025.view: View
-  restaurants.sections.menus_2025.detach: Detach
-  restaurants.sections.menus_2025.preview: Preview Menu
-  restaurants.sections.menus_2025.no_preview: Menu not published yet
-  restaurants.sections.menus_2025.duplicate: Duplicate
-  restaurants.sections.menus_2025.delete: Delete
-  restaurants.sections.menus_2025.confirm_delete: Are you sure?
-  restaurants.sections.menus_2025.no_menus: No menus found
-  restaurants.sections.menus_2025.no_menus_description: Create your first menu to get started
-  restaurants.sections.menus_2025.create_first_menu: Create Your First Menu
-  restaurants.sections.menus_2025.drag_to_reorder: Drag to reorder
-  restaurants.sections.menus_2025.select_all: Select all
-  restaurants.sections.menus_2025.set_status: Set status...
-  restaurants.sections.menus_2025.apply: Apply
-  restaurants.sections.menus_2025.menu_name: Name
-  restaurants.sections.menus_2025.availability: Availability
-  restaurants.sections.menus_2025.shared: Shared
-  restaurants.sections.menus_2025.default: Default
-  restaurants.sections.menus_2025.available: Available
-  restaurants.sections.menus_2025.unavailable: Unavailable
-  restaurants.sections.menus_2025.share: Share
-  restaurants.sections.menus_2025.share_menu: Share menu
-  restaurants.sections.menus_2025.share_to_all: All restaurants
-  restaurants.sections.ordering_2025.ordering_dashboard: Ordering Dashboard
-  restaurants.sections.ordering_2025.today: Today
-  restaurants.sections.ordering_2025.yesterday: Yesterday
-  restaurants.sections.ordering_2025.last_7_days: Last 7 Days
-  restaurants.sections.ordering_2025.last_28_days: Last 28 Days
-  restaurants.sections.ordering_2025.mtd: Month to Date
-  restaurants.sections.ordering_2025.last_month: Last Month
-  restaurants.sections.ordering_2025.custom: Custom…
-  restaurants.sections.ordering_2025.compare: Compare previous period
-  restaurants.sections.ordering_2025.menu: Menu
-  restaurants.sections.ordering_2025.all: All
-  restaurants.sections.ordering_2025.employee: Employee
-  restaurants.sections.ordering_2025.table: Table
-  restaurants.sections.ordering_2025.status: Status
-  restaurants.sections.ordering_2025.completed: Completed
-  restaurants.sections.ordering_2025.open: Open
-  restaurants.sections.ordering_2025.cancelled: Cancelled
-  restaurants.sections.ordering_2025.kpi_gross: Gross Revenue
-  restaurants.sections.ordering_2025.kpi_net: Net Revenue
-  restaurants.sections.ordering_2025.kpi_taxes: Taxes
-  restaurants.sections.ordering_2025.kpi_tips: Tips
-  restaurants.sections.ordering_2025.kpi_service: Service Charges
-  restaurants.sections.ordering_2025.kpi_orders: Orders
-  restaurants.sections.ordering_2025.kpi_items: Items Sold
-  restaurants.sections.ordering_2025.kpi_aov: AOV
-  restaurants.sections.ordering_2025.revenue_over_time: Revenue Over Time
-  restaurants.sections.ordering_2025.orders_over_time: Orders Over Time
-  restaurants.sections.ordering_2025.menu_mix: Menu Mix
-  restaurants.sections.ordering_2025.top_items: Top Items
-  restaurants.sections.ordering_2025.staff_performance: Staff Performance
-  restaurants.sections.ordering_2025.table_utilization: Table Utilization
-  restaurants.sections.ordering_2025.orders_table: Orders
-  restaurants.sections.ordering_2025.items_table: Items
-  restaurants.sections.ordering_2025.export_csv: Export CSV
-  restaurants.sections.tables_2025.quick_actions: Quick Actions
-  restaurants.sections.tables_2025.add_table: Add Table
-  restaurants.sections.tables_2025.tables_overview: Tables
-  restaurants.sections.tables_2025.tables_description: Manage tables and generate table-specific QR codes for ordering.
-  restaurants.sections.tables_2025.total_tables: Total tables
-  restaurants.sections.tables_2025.table_settings: Table Settings
-  restaurants.sections.tables_2025.table_number: Table
-  restaurants.sections.tables_2025.table_name: Name
-  restaurants.sections.tables_2025.capacity: Capacity
-  restaurants.sections.tables_2025.status: Status
-  restaurants.sections.tables_2025.qr_code: QR Code
-  restaurants.sections.tables_2025.actions: Actions
-  restaurants.sections.tables_2025.select_all: Select all
-  restaurants.sections.tables_2025.set_status: Set status...
-  restaurants.sections.tables_2025.apply: Apply
-  restaurants.sections.tables_2025.drag_to_reorder: Drag to reorder
-  restaurants.sections.tables_2025.edit: Edit
-  restaurants.sections.tables_2025.free: Free
-  restaurants.sections.tables_2025.occupied: Occupied
-  restaurants.sections.tables_2025.archived: Archived
-  restaurants.sections.tables_2025.view: View
-  restaurants.sections.tables_2025.view_qr: View QR
-  restaurants.sections.tables_2025.view_qr_code: View QR Code for this table
-  restaurants.sections.tables_2025.no_smartmenu: No QR code generated yet
-  restaurants.sections.tables_2025.no_capacity: Capacity not set
-  restaurants.sections.tables_2025.seats: seats
-  restaurants.sections.tables_2025.confirm_delete: Delete this table?
-  restaurants.sections.tables_2025.no_tables: No tables configured yet
-  restaurants.sections.tables_2025.no_tables_description: Set up your restaurant tables to enable table-specific QR codes and ordering.
-  restaurants.sections.allergens_2025.quick_actions: Quick Actions
-  restaurants.sections.allergens_2025.add_allergen: Add Allergen
-  restaurants.sections.allergens_2025.allergens: Allergens
-  restaurants.sections.allergens_2025.allergens_description: Manage allergen information for your menu items to help customers make informed choices.
-  restaurants.sections.allergens_2025.total_allergens: Total Allergens
-  restaurants.sections.allergens_2025.manage_allergens: Manage Allergens
-  restaurants.sections.allergens_2025.common_templates: Common Templates
-  restaurants.sections.allergens_2025.templates_description: Quickly add standard allergen sets
-  restaurants.sections.allergens_2025.fda_top_8: FDA Top 8 Allergens
-  restaurants.sections.allergens_2025.recommended: Recommended
-  restaurants.sections.allergens_2025.fda_top_8_desc: Milk, Eggs, Fish, Shellfish, Tree Nuts, Peanuts, Wheat, Soybeans
-  restaurants.sections.allergens_2025.eu_allergens: EU 14 Allergens
-  restaurants.sections.allergens_2025.eu_allergens_desc: All 14 major allergens as per EU regulation
-  restaurants.sections.allergens_2025.common_dietary: Common Dietary Restrictions
-  restaurants.sections.allergens_2025.common_dietary_desc: Gluten-Free, Vegan, Vegetarian, Halal, Kosher
-  restaurants.sections.allergens_2025.load_template: Load Template
-  restaurants.sections.allergens_2025.current_allergens: Current Allergens
-  restaurants.sections.allergens_2025.select_all: Select all
-  restaurants.sections.allergens_2025.status_active: Active
-  restaurants.sections.allergens_2025.status_inactive: Inactive
-  restaurants.sections.allergens_2025.status_archived: Archived
-  restaurants.sections.allergens_2025.set_status: Set status...
-  restaurants.sections.allergens_2025.apply: Apply
-  restaurants.sections.allergens_2025.name: Name
-  restaurants.sections.allergens_2025.drag_to_reorder: Drag to reorder
-  restaurants.sections.allergens_2025.active: Active
-  restaurants.sections.allergens_2025.inactive: Inactive
-  restaurants.sections.allergens_2025.archived: Archived
-  restaurants.sections.allergens_2025.edit: Edit
-  restaurants.sections.sizes_2025.quick_actions: Quick Actions
-  restaurants.sections.sizes_2025.add_size: Add Size
-  restaurants.sections.sizes_2025.sizes: Menu Item Sizes
-  restaurants.sections.sizes_2025.sizes_description: Define size variants for menu items like Small, Medium, Large, etc.
-  restaurants.sections.sizes_2025.total_sizes: Total Sizes
-  restaurants.sections.sizes_2025.manage_sizes: Manage Sizes
-  restaurants.sections.sizes_2025.current_sizes: Current Sizes
-  restaurants.sections.sizes_2025.common_templates: Common Templates
-  restaurants.sections.sizes_2025.templates_description: Quickly add standard size sets
-  restaurants.sections.sizes_2025.pizza_sizes: Pizza Sizes
-  restaurants.sections.sizes_2025.recommended: Recommended
-  restaurants.sections.sizes_2025.pizza_sizes_desc: Personal, Small, Medium, Large, X-Large
-  restaurants.sections.sizes_2025.beverage_sizes: Beverage Sizes
-  restaurants.sections.sizes_2025.beverage_sizes_desc: Small, Medium, Large, Extra Large
-  restaurants.sections.sizes_2025.load_template: Load Template
-  restaurants.sections.sizes_2025.select_all: Select all
-  restaurants.sections.sizes_2025.status_active: Active
-  restaurants.sections.sizes_2025.status_inactive: Inactive
-  restaurants.sections.sizes_2025.status_archived: Archived
-  restaurants.sections.sizes_2025.set_status: Set status...
-  restaurants.sections.sizes_2025.apply: Apply
-  restaurants.sections.sizes_2025.name: Name
-  restaurants.sections.sizes_2025.drag_to_reorder: Drag to reorder
-  restaurants.sections.sizes_2025.edit: Edit
-  restaurants.sections.jukebox_2025.jukebox: Jukebox
-  restaurants.sections.jukebox_2025.jukebox_description: Integrate with Spotify to play music in your restaurant and create the perfect atmosphere
-  restaurants.sections.jukebox_2025.spotify: Spotify
-  restaurants.sections.jukebox_2025.connected: Connected
-  restaurants.sections.jukebox_2025.not_connected: Not Connected
-  restaurants.sections.jukebox_2025.connect: Connect
-  restaurants.sections.jukebox_2025.unknown_artist: Unknown Artist
-  restaurants.sections.jukebox_2025.no_tracks: No tracks configured
-  restaurants.sections.jukebox_2025.spotify_integration: Connect your Spotify account to manage your restaurant playlist
-  restaurants.sections.jukebox_2025.jukebox_desc: Connect Spotify to let customers control the music
-  restaurants.sections.jukebox_2025.spotify_status: Spotify Status
-  restaurants.sections.jukebox_2025.connect_spotify: Connect Spotify
-  restaurants.sections.jukebox_2025.disconnect: Disconnect
-  restaurants.sections.jukebox_2025.connected_as: Connected as: %{user}
-  restaurants.sections.catalog_2025.quick_actions: Quick Actions
-  restaurants.sections.catalog_2025.add_tax: Add Tax
-  restaurants.sections.catalog_2025.add_tip: Add Tip
-  restaurants.sections.catalog_2025.taxes_and_tips: Taxes & Tips
-  restaurants.sections.catalog_2025.taxes_and_tips_description: Manage taxes and tip configurations
-  restaurants.sections.catalog_2025.taxes: Taxes
-  restaurants.sections.catalog_2025.tips: Tips
-  restaurants.sections.catalog_2025.configured: configured
-  restaurants.sections.catalog_2025.manage: Manage
-  restaurants.sections.catalog_2025.tax_tip_templates: Tax & Tip Templates
-  restaurants.sections.catalog_2025.templates_description: Pre-configured tax and tip sets for quick setup
-  restaurants.sections.catalog_2025.us_restaurant: US Restaurant
-  restaurants.sections.catalog_2025.recommended: Recommended
-  restaurants.sections.catalog_2025.us_restaurant_desc: Sales tax + tip suggestions (15%, 18%, 20%)
-  restaurants.sections.catalog_2025.eu_restaurant: EU Restaurant
-  restaurants.sections.catalog_2025.eu_restaurant_desc: VAT + service charge included
-  restaurants.sections.catalog_2025.load_template: Load Template
-  restaurants.sections.catalog_2025.current_taxes: Current Taxes
-  restaurants.sections.catalog_2025.current_tips: Current Tips
-  restaurants.sections.catalog_2025.select_all: Select all
-  restaurants.sections.catalog_2025.status_active: Active
-  restaurants.sections.catalog_2025.status_inactive: Inactive
-  restaurants.sections.catalog_2025.status_archived: Archived
-  restaurants.sections.catalog_2025.set_status: Set status...
-  restaurants.sections.catalog_2025.apply: Apply
-  restaurants.sections.catalog_2025.name: Name
-  restaurants.sections.catalog_2025.rate: Rate
-  restaurants.sections.catalog_2025.status: Status
-  restaurants.sections.catalog_2025.drag_to_reorder: Drag to reorder
-  restaurants.sections.catalog_2025.inactive: Inactive
-  restaurants.sections.catalog_2025.archived: Archived
-  restaurants.sections.catalog_2025.active: Active
-  restaurants.sections.catalog_2025.edit: Edit
-  restaurants.sections.catalog_2025.tip: Tip
-  restaurants.sections.staff_2025.quick_actions: Quick Actions
-  restaurants.sections.staff_2025.add_staff: Add Staff Member
-  restaurants.sections.staff_2025.staff_overview: Staff
-  restaurants.sections.staff_2025.staff_overview_desc: Manage your team to collaborate on your restaurant.
-  restaurants.sections.staff_2025.total_staff: Total Employees
-  restaurants.sections.staff_2025.staff: Staff
-  restaurants.sections.staff_2025.name: Name
-  restaurants.sections.staff_2025.email: Email
-  restaurants.sections.staff_2025.role: Role
-  restaurants.sections.staff_2025.status: Status
-  restaurants.sections.staff_2025.joined: Joined
-  restaurants.sections.staff_2025.actions: Actions
-  restaurants.sections.staff_2025.select_all: Select all
-  restaurants.sections.staff_2025.status_active: Active
-  restaurants.sections.staff_2025.status_inactive: Inactive
-  restaurants.sections.staff_2025.status_archived: Archived
-  restaurants.sections.staff_2025.status_open: Open
-  restaurants.sections.staff_2025.set_status: Set status...
-  restaurants.sections.staff_2025.apply: Apply
-  restaurants.sections.staff_2025.drag_to_reorder: Drag to reorder
-  restaurants.sections.staff_2025.edit: Edit
-  restaurants.sections.staff_2025.unnamed: Unnamed
-  restaurants.sections.staff_2025.no_role: No role
-  restaurants.sections.staff_2025.active: Active
-  restaurants.sections.staff_2025.inactive: Inactive
-  restaurants.sections.staff_2025.confirm_remove: Remove this staff member?
-  restaurants.sections.staff_2025.no_staff: No staff members yet
-  restaurants.sections.staff_2025.no_staff_description: Add team members to collaborate on your restaurant
-  restaurants.sections.staff_2025.add_first_staff: Add Your First Staff Member
-  restaurants.sections.staff_2025.roles_permissions: Roles & Permissions
-  restaurants.sections.staff_2025.roles_description: Define what each role can access and manage
-  restaurants.sections.staff_2025.manager: Manager
-  restaurants.sections.staff_2025.manager_desc: Full access to all restaurant settings and data
-  restaurants.sections.staff_2025.editor: Editor
-  restaurants.sections.staff_2025.editor_desc: Can edit menus and manage content
-  restaurants.sections.staff_2025.viewer: Viewer
-  restaurants.sections.staff_2025.viewer_desc: Read-only access to menus and orders
-  restaurants.sections.staff_2025.edit_menus: Edit menus
-  restaurants.sections.staff_2025.manage_staff: Manage staff
-  restaurants.sections.staff_2025.view_analytics: View analytics
-  restaurants.sections.staff_2025.manage_orders: Manage orders
-  restaurants.sections.staff_2025.edit_items: Edit items
-  restaurants.sections.staff_2025.no_staff_access: No staff access
-  restaurants.sections.staff_2025.no_analytics: No analytics
-  restaurants.sections.staff_2025.view_menus: View menus
-  restaurants.sections.staff_2025.view_orders: View orders
-  restaurants.sections.staff_2025.no_editing: No editing
-  restaurants.sections.staff_2025.no_deletion: No deletion
-  restaurants.sections.settings_2025.general_settings: General Settings
-  restaurants.sections.settings_2025.status_active: Active - Restaurant is open and visible
-  restaurants.sections.settings_2025.status_inactive: Inactive - Restaurant is temporarily closed
-  restaurants.sections.settings_2025.status_archived: Archived - Restaurant is permanently closed
-  restaurants.sections.settings_2025.status_help: Controls whether your restaurant is visible to customers
-  restaurants.sections.settings_2025.feature_toggles: Feature Toggles
-  restaurants.sections.settings_2025.display_images: Display Images
-  restaurants.sections.settings_2025.display_images_help: Show menu item images in your digital menu
-  restaurants.sections.settings_2025.alcohol_policy: Alcohol Policy
-  restaurants.sections.settings_2025.alcohol_policy_help: Configure allowed days/times and blackout dates for alcohol sales.
-  restaurants.sections.settings_2025.allowed_now: Allowed now
-  restaurants.sections.settings_2025.blocked_now: Blocked now
-  restaurants.sections.settings_2025.allowed_days: Allowed Days
-  restaurants.sections.settings_2025.time_ranges: Allowed Time Ranges
-  restaurants.sections.settings_2025.from: From
-  restaurants.sections.settings_2025.to: To
-  restaurants.sections.settings_2025.add_range: Add range
-  restaurants.sections.settings_2025.blackout_dates: Blackout Dates (YYYY-MM-DD, comma-separated)
-  restaurants.sections.settings_2025.age_verification: Age Verification
-  restaurants.sections.settings_2025.age_verification_desc: Require age verification for alcohol items
-  restaurants.sections.settings_2025.allow_alcohol: Allow Alcohol Sales
-  restaurants.sections.settings_2025.allow_alcohol_help: Enable selling alcoholic beverages. You are responsible for legal compliance.
-  restaurants.sections.settings_2025.display_images_popup: Display Images in Popup
-  restaurants.sections.settings_2025.display_images_popup_help: Open menu item images in a popup modal when clicked
-  restaurants.sections.settings_2025.allow_ordering: Allow Ordering
-  restaurants.sections.settings_2025.allow_ordering_help: Enable online ordering for customers
-  restaurants.sections.settings_2025.inventory_tracking: Inventory Tracking
-  restaurants.sections.settings_2025.inventory_tracking_help: Track stock levels for menu items (Coming Soon)
-  restaurants.sections.settings_2025.wifi_configuration: WiFi Configuration
-  restaurants.sections.settings_2025.wifi_description: Configure WiFi settings to generate QR codes for customer access
-  restaurants.sections.settings_2025.ssid_placeholder: Enter your WiFi network name
-  restaurants.sections.settings_2025.ssid_help: The name of your WiFi network that customers will connect to
-  restaurants.sections.settings_2025.select_encryption: Select encryption...
-  restaurants.sections.settings_2025.encryption_help: The security protocol used by your WiFi network
-  restaurants.sections.settings_2025.password_placeholder: Enter WiFi password
-  restaurants.sections.settings_2025.password_help: The password customers will need to connect
-  restaurants.sections.settings_2025.select_option: Select option...
-  restaurants.sections.settings_2025.false: false
-  restaurants.sections.settings_2025.true: true
-  restaurants.sections.settings_2025.hidden_help: Whether the network name is broadcast publicly
-  restaurants.sections.settings_2025.settings_info_title: About Settings
-  restaurants.sections.settings_2025.settings_info_desc: These settings control core functionality of your restaurant. Changes are saved automatically.
-  restaurants.sections.settings_2025.status: Status
-  restaurants.sections.settings_2025.status_info: Controls restaurant visibility
-  restaurants.sections.settings_2025.images_info: Toggle menu item photos
-  restaurants.sections.settings_2025.popup_info: Full-screen image viewing
-  restaurants.sections.qrcodes_2025.quick_actions: Quick Actions
-  restaurants.sections.qrcodes_2025.view_all_qr: View All QR Codes
-  restaurants.sections.qrcodes_2025.qr_codes: QR Codes
-  restaurants.sections.qrcodes_2025.qr_description: Generate QR codes for your menus. Customers can scan these to view your digital menu.
-  restaurants.sections.qrcodes_2025.qr_code_types: QR Code Types
-  restaurants.sections.qrcodes_2025.general_qr: General Menu QR
-  restaurants.sections.qrcodes_2025.general_qr_desc: Single QR code for all menus. Best for small restaurants with one location.
-  restaurants.sections.qrcodes_2025.download: Download
-  restaurants.sections.qrcodes_2025.table_qr: Table-Specific QR
-  restaurants.sections.qrcodes_2025.table_qr_desc: Unique QR code for each table. Enables table ordering and tracking.
-  restaurants.sections.qrcodes_2025.manage_tables: Manage Tables
-  restaurants.sections.qrcodes_2025.menu_qr: Menu-Specific QR
-  restaurants.sections.qrcodes_2025.menu_qr_desc: Separate QR codes for each menu. Great for breakfast, lunch, dinner menus.
-  restaurants.sections.qrcodes_2025.setup_tables: Setup Tables
-  restaurants.sections.qrcodes_2025.view_menus: View Menus
-  restaurants.sections.qrcodes_2025.qr_customization: QR Code Customization
-  restaurants.sections.qrcodes_2025.customization_description: Customize the appearance of your QR codes to match your brand.
-  restaurants.sections.qrcodes_2025.customization: Customization Options
-  restaurants.sections.qrcodes_2025.logo: Logo
-  restaurants.sections.qrcodes_2025.logo_desc: Add your restaurant logo to the center of QR codes
-  restaurants.sections.qrcodes_2025.upload_logo: Upload Logo
-  restaurants.sections.qrcodes_2025.colors: Colors
-  restaurants.sections.qrcodes_2025.colors_desc: Choose custom colors for your QR codes
-  restaurants.sections.qrcodes_2025.customize_colors: Customize Colors
-  restaurants.sections.hours_2025.quick_actions: Quick Actions
-  restaurants.sections.hours_2025.copy_to_all: Copy Monday to All Days
-  restaurants.sections.hours_2025.operating_hours: Opening Hours
-  restaurants.sections.hours_2025.hours_description: Set your restaurant's regular business hours
-  restaurants.sections.hours_2025.closed: Closed
-  restaurants.sections.hours_2025.copied_success: Copied!
-  restaurants.sections.hours_2025.open_24h: Open 24h
-  restaurants.sections.hours_2025.custom: Custom
-  restaurants.sections.hours_2025.monday: Monday
-  restaurants.sections.hours_2025.tuesday: Tuesday
-  restaurants.sections.hours_2025.wednesday: Wednesday
-  restaurants.sections.hours_2025.thursday: Thursday
-  restaurants.sections.hours_2025.friday: Friday
-  restaurants.sections.hours_2025.saturday: Saturday
-  restaurants.sections.hours_2025.sunday: Sunday
-  restaurants.sections.localization_2025.quick_actions: Quick Actions
-  restaurants.sections.localization_2025.add_language: Add Language
-  restaurants.sections.localization_2025.localization: Localization & Languages
-  restaurants.sections.localization_2025.localization_description: Manage translations for your menus in multiple languages
-  restaurants.sections.localization_2025.language: Language
-  restaurants.sections.localization_2025.locale_code: Code
-  restaurants.sections.localization_2025.status: Status
-  restaurants.sections.localization_2025.actions: Actions
-  restaurants.sections.localization_2025.select_all: Select all
-  restaurants.sections.localization_2025.status_active: Active
-  restaurants.sections.localization_2025.status_inactive: Inactive
-  restaurants.sections.localization_2025.status_archived: Archived
-  restaurants.sections.localization_2025.set_status: Set status...
-  restaurants.sections.localization_2025.apply: Apply
-  restaurants.sections.localization_2025.drag_to_reorder: Drag to reorder
-  restaurants.sections.localization_2025.default: Default
-  restaurants.sections.localization_2025.edit: Edit
-  restaurants.sections.localization_2025.active: Active
-  restaurants.sections.localization_2025.inactive: Inactive
-  restaurants.sections.localization_2025.no_locales: No additional languages configured
-  restaurants.sections.localization_2025.no_locales_description: Add translations to make your menu accessible in multiple languages
-  restaurants.sections.localization_2025.common_languages: Common Languages
-  restaurants.sections.localization_2025.common_languages_description: Quickly add popular language translations
-  restaurants.sections.localization_2025.spanish: Spanish
-  restaurants.sections.localization_2025.french: French
-  restaurants.sections.localization_2025.german: German
-  restaurants.sections.localization_2025.italian: Italian
-  restaurants.sections.localization_2025.chinese: Chinese
-  restaurants.sections.localization_2025.japanese: Japanese
-  restaurants.sections.localization_2025.add: Add
-  restaurants.sections.advanced_2025.advanced_features: Advanced Features
-  restaurants.sections.advanced_2025.ai_features: AI-Powered Features
-  restaurants.sections.advanced_2025.ai_desc: Enable AI menu descriptions and image generation
-  restaurants.sections.advanced_2025.dynamic_pricing: Dynamic Pricing
-  restaurants.sections.advanced_2025.dynamic_pricing_desc: Adjust prices based on time of day or demand
-  restaurants.sections.advanced_2025.recommendations: Smart Recommendations
-  restaurants.sections.advanced_2025.recommendations_desc: Show personalized menu recommendations to customers
-  restaurants.sections.advanced_2025.age_verification: Age Verification
-  restaurants.sections.advanced_2025.age_verification_desc: Require age verification for alcohol items
-  shared.head.meta_title: Smart Digital Menus & Ordering for Restaurants | Boost Efficiency
-  shared.head.meta_description: Transform your restaurant with contactless digital menus and smart ordering. Speed up service, reduce errors, and boost customer satisfaction with ease.
-  shared.head.meta_keywords: Digital menus for restaurants | Contactless restaurant ordering | Restaurant efficiency tools | Smart restaurant technology | QR code menus | Online menu systems | Improve restaurant operations | Self-service restaurant ordering | Hospitality tech solutions | Eco-friendly restaurant tools
-  shared.head.og_title: Digital Menus & Smart Ordering for Modern Restaurants
-  shared.head.og_description: Upgrade your restaurant with digital menus and smart tech that streamline service, reduce wait times, and increase guest satisfaction.
-  shared.head.twitter_title: Make Your Restaurant Smarter with Digital Menus
-  shared.head.twitter_description: Discover how digital menus and smart ordering tools can simplify service and elevate your guests' dining experience.
-  shared.head.pwa_title: Smart Menu
-  shared.footer.facebook: Facebook
-  shared.footer.instagram: Instagram
-  shared.footer.linkedin: LinkedIn
-  shared.footer.plan: Plan
-  shared.footer.build: Build
-  shared.footer.twitter: Twitter
-  shared.navbar.dashboard: Dashboard
-  shared.navbar.heroImages: Hero Images
-  shared.navbar.impersonated_as: You're logged in as
-  shared.navbar.toggle_navigation: Toggle navigation
-  sizes.controller.created: Size was successfully created.
-  sizes.controller.deleted: Size was successfully deleted.
-  sizes.controller.updated: Size was successfully updated.
-  sizes.edit.sizes: Sizes
-  sizes.edit.edit_size: Edit Size
-  sizes.edit.description: Update size details
-  sizes.edit.cancel: Cancel
-  sizes.edit.confirm_delete: Delete this size?
-  sizes.edit.delete: Delete
-  sizes.edit.size_details: Size Details
-  sizes.form.size_type: Size Type
-  sizes.form.size_type_help: Select the general size category
-  sizes.form.name: Display Name
-  sizes.form.name_placeholder: e.g., Large, 16oz, Family Size
-  sizes.form.name_help: This is how the size will appear to customers
-  sizes.form.description: Description
-  sizes.form.description_placeholder: Optional details about this size...
-  sizes.form.description_help: Optional: Add any additional details
-  sizes.index.description: Manage size variants for your menu items (e.g., Small, Medium, Large)
-  sizes.index.back: Back
-  sizes.index.new_size: New Size
-  sizes.index.all_sizes: All Sizes
-  sizes.new.sizes: Sizes
-  sizes.new.new: New
-  sizes.new.new_size: New Size
-  sizes.new.description: Create a new size variant for menu items
-  sizes.new.size_details: Size Details
-  sizes.size.description: Description:
-  sizes.size.name: Name:
-  sizes.size.size: Size:
-  smartmenus.controller.created: Smartmenu was successfully created.
-  smartmenus.controller.deleted: Smartmenu was successfully deleted.
-  smartmenus.controller.updated: Smartmenu was successfully updated.
-  smartmenus.edit.title: Edit Smartmenu
-  smartmenus.form.cancel: Cancel
-  smartmenus.form.destroy: Destroy
-  smartmenus.new.title: New Smartmenu
-  smartmenus.orderCustomer.items_in_cart: items in cart
-  smartmenus.orderStaff.items_in_cart: items in cart
-  smartmenus.showMenuContentCustomer.search_placeholder: Search menu items...
-  smartmenus.showMenuitem.add_to_order: Add to Order
-  smartmenus.showMenuitem.allergyns: Allergens
-  smartmenus.showMenuitem.loading: Loading...
-  smartmenus.showMenuitemHorizontal.loading: Loading...
-  smartmenus.showMenuitemHorizontalActionBar.allergyns: Allergens
-  smartmenus.showMenuitemHorizontalActionBar.order: Order
-  smartmenus.showMenuitemHorizontalActionBar.toggle_dropdown: Toggle Dropdown
-  smartmenus.showModals.bill_prefix: Bill:
-  smartmenus.showModals.cover_charge: Cover Charge
-  smartmenus.showModals.partySize: Party size
-  smartmenus.showModals.excluding_tip: excl. tip
-  smartmenus.showModals.including_tip: incl. tip
-  smartmenus.showModals.item: Item
-  smartmenus.showModals.name_label: Name:
-  smartmenus.showModals.nett: Nett
-  smartmenus.showModals.order_aria: Order
-  smartmenus.showModals.payBill: Pay Bill
-  smartmenus.showModals.payment_link: Payment Link
-  smartmenus.showModals.selected: Selected
-  smartmenus.showModals.service: Service
-  smartmenus.showModals.submitted: Submitted
-  smartmenus.showModals.tax: Tax
-  smartmenus.showModals.tip_options: Tip Options
-  smartmenus.smartmenu.menu: Menu:
-  smartmenus.smartmenu.restaurant: Restaurant:
-  smartmenus.smartmenu.slug: Slug:
-  smartmenus.smartmenu.tablesetting: Tablesetting:
-  smartmenus.modal_footer_primary.cancel: Cancel
-  smartmenus.alcohol.flag: Alcohol
-  smartmenus.alcohol.non_alcoholic: Non-alcoholic
-  smartmenus.alcohol.zero_abv_short: 0.0%
-  smartmenus.alcohol.verify_age: Please verify the customer's age before serving alcoholic beverages.
-  smartmenus.alcohol.sales_disabled: Alcohol sales are disabled for this restaurant.
-  smartmenus.alcohol.policy_blocked: Alcohol sales are currently blocked by policy.
-  smartmenus.ocr.alcohol.override_label: Alcohol
-  smartmenus.ocr.alcohol.abv: ABV
-  smartmenus.ocr.alcohol.classification: Class
-  smartmenus.ocr.alcohol.review_needed: Needs review
-  smartmenus.ocr.alcohol.overrides_hint: Overrides apply at publish.
-  smartmenus.empty_states.no_menu_items: No Menu Items Yet
-  smartmenus.empty_states.no_menu_description: We're still adding items to our menu. Please check back soon!
-  smartmenus.empty_states.refresh: Refresh
-  smartmenus.empty_states.cart_empty: Your Cart is Empty
-  smartmenus.empty_states.cart_empty_description: Start adding delicious items from our menu!
-  smartmenus.empty_states.browse_menu: Browse Menu
-  smartmenus.empty_states.no_results: No Results Found
-  smartmenus.empty_states.no_results_description: We couldn't find any items matching your search. Try different keywords.
-  smartmenus.empty_states.no_items_filtered: No Items Match Your Filters
-  smartmenus.empty_states.no_items_filtered_description: Try adjusting your allergen filters to see more items.
-  smartmenus.empty_states.adjust_filters: Adjust Filters
-  smartmenus.empty_states.no_table_selected: Select Your Table
-  smartmenus.empty_states.no_table_description: Please select a table to start your order.
-  smartmenus.empty_states.order_complete: Order Submitted!
-  smartmenus.empty_states.order_complete_description: Your order has been sent to the kitchen. Enjoy your meal!
-  smartmenus.empty_states.error_occurred: Something Went Wrong
-  smartmenus.empty_states.error_description: We're having trouble loading this content. Please try again.
-  smartmenus.empty_states.try_again: Try Again
-  tablesettings.controller.created: Table setting was successfully created.
-  tablesettings.controller.deleted: Table setting was successfully deleted.
-  tablesettings.controller.updated: Table setting was successfully updated.
-  tablesettings.index.archive: Archive
-  tablesettings.index.seating_plan: Seating Plan
-  tablesettings.index.seats: Seats:
-  tablesettings.index.table_setting: Table Setting
-  tablesettings.index.table_settings: Table Settings
-  tablesettings.index.unarchive: Unarchive
-  tablesettings.new.status: Status:
-  tablesettings.show.available_menus: Available Menus
-  tablesettings.show.selectRestaurant: Select Restaurant
-  tablesettings.show.show_table_setting: Show Table Setting
-  tablesettings.tablesetting.capacity: Capacity:
-  tablesettings.tablesetting.description: Description:
-  tablesettings.tablesetting.name: Name:
-  tablesettings.tablesetting.restaurant: Restaurant:
-  tablesettings.tablesetting.status: Status:
-  tags.controller.created: Tag was successfully created.
-  tags.controller.deleted: Tag was successfully deleted.
-  tags.controller.updated: Tag was successfully updated.
-  tags.edit.title: Edit Tag
-  tags.form.errors: Errors
-  tags.new.title: New Tag
-  tags.show.show_tag: Show Tag
-  tags.tag.description: Description:
-  tags.tag.menuitem: Menu item:
-  tags.tag.name: Name:
-  taxes.controller.created: Tax was successfully created.
-  taxes.controller.deleted: Tax was successfully deleted.
-  taxes.controller.updated: Tax was successfully updated.
-  taxes.edit.taxes: Taxes
-  taxes.edit.edit_tax: Edit Tax
-  taxes.edit.description: Update tax rate details
-  taxes.edit.cancel: Cancel
-  taxes.edit.confirm_delete: Delete this tax?
-  taxes.edit.delete: Delete
-  taxes.edit.tax_details: Tax Details
-  taxes.form.name: Tax Name
-  taxes.form.name_placeholder: e.g., Sales Tax, VAT, GST
-  taxes.form.name_help: Display name for this tax
-  taxes.form.tax_type: Tax Type
-  taxes.form.tax_type_help: Select the type of tax
-  taxes.form.tax_percentage: Tax Percentage
-  taxes.form.tax_percentage_placeholder: e.g., 8.5
-  taxes.form.tax_percentage_help: Enter the tax rate as a percentage (0-100)
-  taxes.index.description: Manage tax rates applied to menu items
-  taxes.index.back: Back
-  taxes.index.new_tax: New Tax
-  taxes.index.all_taxes: All Taxes
-  taxes.new.taxes: Taxes
-  taxes.new.new: New
-  taxes.new.new_tax: New Tax
-  taxes.new.description: Create a new tax rate for menu items
-  taxes.new.tax_details: Tax Details
-  taxes.show.selectRestaurant: Select a restaurant
-  taxes.tax.name: Name:
-  taxes.tax.restaurant: Restaurant:
-  taxes.tax.taxpercentage: Tax percentage:
-  taxes.tax.taxtype: Tax type:
-  testimonials.controller.created: Testimonial was successfully created.
-  testimonials.controller.deleted: Testimonial was successfully deleted.
-  testimonials.controller.updated: Testimonial was successfully updated.
-  testimonials.edit.title: Edit Testimonial
-  testimonials.form.cancel: Cancel
-  testimonials.form.destroy: Destroy
-  testimonials.form.save: Save
-  testimonials.form.sure: Are you sure?
-  testimonials.new.cancel: Cancel
-  testimonials.new.title: New Testimonial
-  testimonials.testimonial.restaurant: Restaurant:
-  testimonials.testimonial.testimonial: Testimonial:
-  testimonials.testimonial.user: User:
-  tips.controller.created: Tip was successfully created.
-  tips.controller.deleted: Tip was successfully deleted.
-  tips.controller.updated: Tip was successfully updated.
-  tips.edit.tips: Tips
-  tips.edit.edit_tip: Edit Tip Option
-  tips.edit.description: Update tip percentage details
-  tips.edit.cancel: Cancel
-  tips.edit.confirm_delete: Delete this tip option?
-  tips.edit.delete: Delete
-  tips.edit.tip_details: Tip Details
-  tips.form.percentage: Tip Percentage
-  tips.form.percentage_placeholder: e.g., 15
-  tips.form.percentage_help: Enter the tip percentage (0-100)
-  tips.index.description: Manage tip percentages available to customers at checkout
-  tips.index.back: Back
-  tips.index.new_tip: New Tip Option
-  tips.index.all_tips: All Tip Options
-  tips.new.tips: Tips
-  tips.new.new: New
-  tips.new.new_tip: New Tip Option
-  tips.new.description: Create a new tip percentage for customers
-  tips.new.tip_details: Tip Details
-  tracks.controller.created: Track was successfully created.
-  tracks.controller.deleted: Track was successfully deleted.
-  tracks.controller.updated: Track was successfully updated.
-  userplans.controller.created: User plan was successfully created.
-  userplans.controller.deleted: User plan was successfully deleted.
-  userplans.controller.updated: User plan was successfully updated.
-  userplans.edit.contactUs: Contact Us
++--------+-----------------------------------------------------------+--------------------------------------------------------------------+
+| Locale | Key                                                       | Value in other locales or source                                   |
++--------+-----------------------------------------------------------+--------------------------------------------------------------------+
+|  all   | activerecord.models.menusectionlocale                     | app/controllers/menusectionlocales_controller.rb:42 (2 more)       |
+|  all   | activerecord.models.ordraction                            | app/controllers/ordractions_controller.rb:40 (2 more)              |
+|  all   | activerecord.models.ordritemnote                          | app/controllers/ordritemnotes_controller.rb:39 (2 more)            |
+|  all   | activerecord.models.ordrparticipant                       | app/controllers/ordrparticipants_controller.rb:81                  |
+|  all   | common.archive                                            | app/views/menuitems/_form.html.erb:373                             |
+|  all   | common.flash.restored                                     | app/controllers/restaurants_controller.rb:67                       |
+|  all   | common.remove                                             | app/views/menuitems/_form.html.erb:118                             |
+|  all   | employees.form.eid                                        | app/views/employees/_form.html.erb:20                              |
+|  all   | employees.form.name                                       | app/views/employees/_form.html.erb:10                              |
+|  all   | employees.form.role                                       | app/views/employees/_form.html.erb:43                              |
+|  all   | employees.form.status                                     | app/views/employees/_form.html.erb:55                              |
+|  all   | employees.form.user                                       | app/views/employees/_form.html.erb:30                              |
+|  all   | menuitems.edit_2025.back_to_items                         | app/views/menuitems/edit_2025.html.erb:42                          |
+|  all   | menuitems.edit_2025.menu_item                             | app/views/menuitems/edit_2025.html.erb:23                          |
+|  all   | menus.controller.localization_queued                      | app/controllers/menus_controller.rb:540                            |
+|  all   | menus.controller.localization_queued_force                | app/controllers/menus_controller.rb:537                            |
+|  all   | menus.controller.no_active_locales                        | app/controllers/menus_controller.rb:507                            |
+|  all   | menus.controller.polish_queued                            | app/controllers/menus_controller.rb:467                            |
+|  all   | menus.edit.back_to_menus                                  | app/views/menus/edit.html.erb:31                                   |
+|  all   | menus.edit.description                                    | app/views/menus/edit.html.erb:24                                   |
+|  all   | menus.edit.localization_confirm                           | app/views/menus/edit.html.erb:59                                   |
+|  all   | menus.edit.localization_description                       | app/views/menus/edit.html.erb:50                                   |
+|  all   | menus.edit.localization_title                             | app/views/menus/edit.html.erb:47                                   |
+|  all   | menus.edit.localize_button                                | app/views/menus/edit.html.erb:62                                   |
+|  all   | menus.edit.menus                                          | app/views/menus/edit.html.erb:14                                   |
+|  all   | menus.edit_2025.active                                    | app/views/menus/edit_2025.html.erb:34                              |
+|  all   | menus.edit_2025.inactive                                  | app/views/menus/edit_2025.html.erb:38                              |
+|  all   | menus.edit_2025.items                                     | app/views/menus/edit_2025.html.erb:54                              |
+|  all   | menus.edit_2025.menus                                     | app/views/menus/edit_2025.html.erb:23                              |
+|  all   | menus.edit_2025.read_only                                 | app/views/menus/edit_2025.html.erb:44                              |
+|  all   | menus.edit_2025.sections                                  | app/views/menus/edit_2025.html.erb:51                              |
+|  all   | menus.index.all_menus                                     | app/views/menus/index.html.erb:48                                  |
+|  all   | menus.index.back                                          | app/views/menus/index.html.erb:32                                  |
+|  all   | menus.index.description                                   | app/views/menus/index.html.erb:25                                  |
+|  all   | menus.index.new_menu                                      | app/views/menus/index.html.erb:37                                  |
+|  all   | menus.new.description                                     | app/views/menus/new.html.erb:24                                    |
+|  all   | menus.new.menu_details                                    | app/views/menus/new.html.erb:41                                    |
+|  all   | menus.new.menus                                           | app/views/menus/new.html.erb:14                                    |
+|  all   | menus.new.new                                             | app/views/menus/new.html.erb:16                                    |
+|  all   | menus.new.new_menu                                        | app/views/menus/new.html.erb:21                                    |
+|  all   | menus.sections.details_2025.archived                      | app/views/menus/sections/_sections_2025.html.erb:109               |
+|  all   | menus.sections.items_2025.alcoholic                       | app/views/menus/sections/_items_2025.html.erb:278                  |
+|  all   | menus.sections.items_2025.alcoholic_false                 | app/views/menus/sections/_items_2025.html.erb:282                  |
+|  all   | menus.sections.items_2025.alcoholic_true                  | app/views/menus/sections/_items_2025.html.erb:281                  |
+|  all   | menus.sections.items_2025.apply                           | app/views/menus/sections/_items_2025.html.erb:92 (3 more)          |
+|  all   | menus.sections.items_2025.archive_confirm                 | app/views/menus/sections/_items_2025.html.erb:253                  |
+|  all   | menus.sections.items_2025.bulk_action                     | app/views/menus/sections/_items_2025.html.erb:84                   |
+|  all   | menus.sections.items_2025.bulk_archive                    | app/views/menus/sections/_items_2025.html.erb:88                   |
+|  all   | menus.sections.items_2025.bulk_set_alcoholic              | app/views/menus/sections/_items_2025.html.erb:87                   |
+|  all   | menus.sections.items_2025.bulk_set_food_type              | app/views/menus/sections/_items_2025.html.erb:86                   |
+|  all   | menus.sections.items_2025.bulk_set_status                 | app/views/menus/sections/_items_2025.html.erb:85                   |
+|  all   | menus.sections.items_2025.choose                          | app/views/menus/sections/_items_2025.html.erb:280                  |
+|  all   | menus.sections.items_2025.choose_food_type                | app/views/menus/sections/_items_2025.html.erb:270                  |
+|  all   | menus.sections.items_2025.choose_status                   | app/views/menus/sections/_items_2025.html.erb:260                  |
+|  all   | menus.sections.items_2025.food_type                       | app/views/menus/sections/_items_2025.html.erb:268                  |
+|  all   | menus.sections.items_2025.status                          | app/views/menus/sections/_items_2025.html.erb:258                  |
+|  all   | menus.sections.sections_2025.apply                        | app/views/menus/sections/_sections_2025.html.erb:86 (3 more)       |
+|  all   | menus.sections.sections_2025.archive_confirm              | app/views/menus/sections/_sections_2025.html.erb:158               |
+|  all   | menus.sections.sections_2025.bulk_action                  | app/views/menus/sections/_sections_2025.html.erb:80                |
+|  all   | menus.sections.sections_2025.bulk_archive                 | app/views/menus/sections/_sections_2025.html.erb:82                |
+|  all   | menus.sections.sections_2025.bulk_set_status              | app/views/menus/sections/_sections_2025.html.erb:81                |
+|  all   | menus.sections.sections_2025.choose_status                | app/views/menus/sections/_sections_2025.html.erb:165               |
+|  all   | menus.sections.sections_2025.status                       | app/views/menus/sections/_sections_2025.html.erb:163               |
+|  all   | menus.sections.version_diff_2025.added                    | app/views/menus/sections/_version_diff_2025.html.erb:50 (1 more)   |
+|  all   | menus.sections.version_diff_2025.changed                  | app/views/menus/sections/_version_diff_2025.html.erb:72 (1 more)   |
+|  all   | menus.sections.version_diff_2025.diff_subtitle            | app/views/menus/sections/_version_diff_2025.html.erb:28            |
+|  all   | menus.sections.version_diff_2025.diff_title               | app/views/menus/sections/_version_diff_2025.html.erb:24            |
+|  all   | menus.sections.version_diff_2025.items                    | app/views/menus/sections/_version_diff_2025.html.erb:94            |
+|  all   | menus.sections.version_diff_2025.no_item_changes          | app/views/menus/sections/_version_diff_2025.html.erb:137           |
+|  all   | menus.sections.version_diff_2025.no_section_changes       | app/views/menus/sections/_version_diff_2025.html.erb:89            |
+|  all   | menus.sections.version_diff_2025.removed                  | app/views/menus/sections/_version_diff_2025.html.erb:61 (1 more)   |
+|  all   | menus.sections.version_diff_2025.sections                 | app/views/menus/sections/_version_diff_2025.html.erb:46            |
+|  all   | menus.sections.version_diff_2025.view_json                | app/views/menus/sections/_version_diff_2025.html.erb:37            |
+|  all   | menus.sections.versions_2025.activate_or_schedule         | app/views/menus/sections/_versions_2025.html.erb:156               |
+|  all   | menus.sections.versions_2025.activate_version             | app/views/menus/sections/_versions_2025.html.erb:184               |
+|  all   | menus.sections.versions_2025.activation_help              | app/views/menus/sections/_versions_2025.html.erb:204               |
+|  all   | menus.sections.versions_2025.active_now                   | app/views/menus/sections/_versions_2025.html.erb:121               |
+|  all   | menus.sections.versions_2025.any_time                     | app/views/menus/sections/_versions_2025.html.erb:138               |
+|  all   | menus.sections.versions_2025.by_user                      | app/views/menus/sections/_versions_2025.html.erb:131               |
+|  all   | menus.sections.versions_2025.cancel                       | app/views/menus/sections/_versions_2025.html.erb:209               |
+|  all   | menus.sections.versions_2025.compare                      | app/views/menus/sections/_versions_2025.html.erb:87                |
+|  all   | menus.sections.versions_2025.compare_versions             | app/views/menus/sections/_versions_2025.html.erb:54                |
+|  all   | menus.sections.versions_2025.create_version               | app/views/menus/sections/_versions_2025.html.erb:45                |
+|  all   | menus.sections.versions_2025.created                      | app/views/menus/sections/_versions_2025.html.erb:128               |
+|  all   | menus.sections.versions_2025.default_active               | app/views/menus/sections/_versions_2025.html.erb:123               |
+|  all   | menus.sections.versions_2025.diff_json                    | app/views/menus/sections/_versions_2025.html.erb:164               |
+|  all   | menus.sections.versions_2025.ends_at                      | app/views/menus/sections/_versions_2025.html.erb:199               |
+|  all   | menus.sections.versions_2025.forever                      | app/views/menus/sections/_versions_2025.html.erb:140               |
+|  all   | menus.sections.versions_2025.from                         | app/views/menus/sections/_versions_2025.html.erb:63                |
+|  all   | menus.sections.versions_2025.menu_versions                | app/views/menus/sections/_versions_2025.html.erb:32                |
+|  all   | menus.sections.versions_2025.menu_versions_help           | app/views/menus/sections/_versions_2025.html.erb:35                |
+|  all   | menus.sections.versions_2025.need_two_versions            | app/views/menus/sections/_versions_2025.html.erb:98                |
+|  all   | menus.sections.versions_2025.no_versions                  | app/views/menus/sections/_versions_2025.html.erb:109               |
+|  all   | menus.sections.versions_2025.save                         | app/views/menus/sections/_versions_2025.html.erb:210               |
+|  all   | menus.sections.versions_2025.starts_at                    | app/views/menus/sections/_versions_2025.html.erb:194               |
+|  all   | menus.sections.versions_2025.to                           | app/views/menus/sections/_versions_2025.html.erb:74                |
+|  all   | menus.sections.versions_2025.version_history              | app/views/menus/sections/_versions_2025.html.erb:105               |
+|  all   | menus.sections.versions_2025.window                       | app/views/menus/sections/_versions_2025.html.erb:137               |
+|  all   | menus.sidebar_2025.content                                | app/views/menus/_sidebar_2025.html.erb:55                          |
+|  all   | menus.sidebar_2025.details                                | app/views/menus/_sidebar_2025.html.erb:37                          |
+|  all   | menus.sidebar_2025.items                                  | app/views/menus/_sidebar_2025.html.erb:72                          |
+|  all   | menus.sidebar_2025.menu                                   | app/views/menus/_sidebar_2025.html.erb:30                          |
+|  all   | menus.sidebar_2025.qrcode                                 | app/views/menus/_sidebar_2025.html.erb:97                          |
+|  all   | menus.sidebar_2025.schedule                               | app/views/menus/_sidebar_2025.html.erb:44                          |
+|  all   | menus.sidebar_2025.sections                               | app/views/menus/_sidebar_2025.html.erb:62                          |
+|  all   | menus.sidebar_2025.settings                               | app/views/menus/_sidebar_2025.html.erb:90                          |
+|  all   | menus.sidebar_2025.setup                                  | app/views/menus/_sidebar_2025.html.erb:83                          |
+|  all   | menus.sidebar_2025.versions                               | app/views/menus/_sidebar_2025.html.erb:104                         |
+|  all   | menusections.edit_2025.back_to_sections                   | app/views/menusections/edit_2025.html.erb:42                       |
+|  all   | menusections.edit_2025.items                              | app/views/menusections/edit_2025.html.erb:33                       |
+|  all   | menusections.edit_2025.menu_section                       | app/views/menusections/edit_2025.html.erb:23                       |
+|  all   | menusections.form.allow_pairing_help                      | app/views/menusections/_form.html.erb:179                          |
+|  all   | menusections.form.availability_time                       | app/views/menusections/_form.html.erb:42                           |
+|  all   | menusections.form.carrier_auto_help                       | app/views/menusections/_form.html.erb:114                          |
+|  all   | menusections.form.includes_description                    | app/views/menusections/_form.html.erb:159                          |
+|  all   | menusections.form.pairing_price                           | app/views/menusections/_form.html.erb:185                          |
+|  all   | menusections.form.party_size                              | app/views/menusections/_form.html.erb:144                          |
+|  all   | menusections.form.tasting_menu_help                       | app/views/menusections/_form.html.erb:105                          |
+|  all   | menusections.form.tasting_menu_settings                   | app/views/menusections/_form.html.erb:98                           |
+|  all   | menusections.form.tasting_price                           | app/views/menusections/_form.html.erb:120                          |
+|  all   | menusections.form.tasting_price_help                      | app/views/menusections/_form.html.erb:131                          |
+|  all   | ocr_menu_imports.new.auto_detect                          | app/views/ocr_menu_imports/new.html.erb:27                         |
+|  all   | ocr_menu_imports.new.source_language_help                 | app/views/ocr_menu_imports/new.html.erb:36                         |
+|  all   | ocr_menu_imports.new.source_language_label                | app/views/ocr_menu_imports/new.html.erb:24                         |
+|  all   | ocr_menu_imports.show.back_to_imports                     | app/views/ocr_menu_imports/show.html.erb:31                        |
+|  all   | ocr_menu_imports.show.image_prompt                        | app/views/ocr_menu_imports/show.html.erb:489                       |
+|  all   | onboarding.account_details.restaurant_name_required       | app/controllers/onboarding_controller.rb:103                       |
+|  all   | onboarding.next_steps.restaurant_edit_notice              | app/controllers/onboarding_controller.rb:142                       |
+|  all   | ordritems.errors.create_failed                            | app/controllers/ordritems_controller.rb:123                        |
+|  all   | ordritems.errors.order_missing                            | app/controllers/ordritems_controller.rb:90                         |
+|  all   | ordritems.errors.remove_failed                            | app/controllers/ordritems_controller.rb:288                        |
+|  all   | restaurantavailabilities.index.restaurantAvailability     | app/views/restaurantavailabilities/index.html.erb:16               |
+|  all   | restaurantlocales.edit.back                               | app/views/restaurantlocales/edit.html.erb:34                       |
+|  all   | restaurantlocales.edit.description                        | app/views/restaurantlocales/edit.html.erb:27                       |
+|  all   | restaurantlocales.edit.edit_locale                        | app/views/restaurantlocales/edit.html.erb:24                       |
+|  all   | restaurantlocales.edit.settings                           | app/views/restaurantlocales/edit.html.erb:17                       |
+|  all   | restaurantlocales.form.default                            | app/views/restaurantlocales/_form.html.erb:59                      |
+|  all   | restaurantlocales.form.default_help                       | app/views/restaurantlocales/_form.html.erb:65                      |
+|  all   | restaurantlocales.form.locale                             | app/views/restaurantlocales/_form.html.erb:16                      |
+|  all   | restaurantlocales.form.locale_help                        | app/views/restaurantlocales/_form.html.erb:51                      |
+|  all   | restaurantlocales.form.locale_locked                      | app/views/restaurantlocales/_form.html.erb:29                      |
+|  all   | restaurantlocales.new.add_locale                          | app/views/restaurantlocales/new.html.erb:24                        |
+|  all   | restaurantlocales.new.back                                | app/views/restaurantlocales/new.html.erb:34                        |
+|  all   | restaurantlocales.new.description                         | app/views/restaurantlocales/new.html.erb:27                        |
+|  all   | restaurantlocales.new.locale_details                      | app/views/restaurantlocales/new.html.erb:46                        |
+|  all   | restaurantlocales.new.new_locale                          | app/views/restaurantlocales/new.html.erb:19                        |
+|  all   | restaurantlocales.new.settings                            | app/views/restaurantlocales/new.html.erb:17                        |
+|  all   | restaurants.index_frame_2025.archive_confirm              | app/views/restaurants/_index_frame_2025.html.erb:134               |
+|  all   | restaurants.index_frame_2025.bulk_action                  | app/views/restaurants/_index_frame_2025.html.erb:65                |
+|  all   | restaurants.index_frame_2025.bulk_archive                 | app/views/restaurants/_index_frame_2025.html.erb:67                |
+|  all   | restaurants.index_frame_2025.bulk_restore                 | app/views/restaurants/_index_frame_2025.html.erb:69                |
+|  all   | restaurants.index_frame_2025.bulk_set_status              | app/views/restaurants/_index_frame_2025.html.erb:66                |
+|  all   | restaurants.index_frame_2025.choose_status                | app/views/restaurants/_index_frame_2025.html.erb:144               |
+|  all   | restaurants.index_frame_2025.hide_archived                | app/views/restaurants/_index_frame_2025.html.erb:24                |
+|  all   | restaurants.index_frame_2025.restore_confirm              | app/views/restaurants/_index_frame_2025.html.erb:138               |
+|  all   | restaurants.index_frame_2025.show_archived                | app/views/restaurants/_index_frame_2025.html.erb:24                |
+|  all   | restaurants.index_frame_2025.status                       | app/views/restaurants/_index_frame_2025.html.erb:142               |
+|  all   | restaurants.insights.values.no                            | app/views/restaurants/insights.html.erb:151 (1 more)               |
+|  all   | restaurants.insights.values.yes                           | app/views/restaurants/insights.html.erb:150 (1 more)               |
+|  all   | restaurants.sections.catalog_2025.total_taxes             | app/views/restaurants/sections/_catalog_2025.html.erb:46           |
+|  all   | restaurants.sections.catalog_2025.total_tips              | app/views/restaurants/sections/_catalog_2025.html.erb:50           |
+|  all   | restaurants.sections.import_2025.actions                  | app/views/restaurants/sections/_import_2025.html.erb:193           |
+|  all   | restaurants.sections.import_2025.ai_powered_menu_import   | app/views/restaurants/sections/_import_2025.html.erb:12            |
+|  all   | restaurants.sections.import_2025.delete                   | app/views/restaurants/sections/_import_2025.html.erb:198 (2 more)  |
+|  all   | restaurants.sections.import_2025.tips_body                | app/views/restaurants/sections/_import_2025.html.erb:157           |
+|  all   | restaurants.sections.localization_2025.current_languages  | app/views/restaurants/sections/_localization_2025.html.erb:91      |
+|  all   | restaurants.sections.localization_2025.total_languages    | app/views/restaurants/sections/_localization_2025.html.erb:80      |
+|  all   | restaurants.sections.menus_2025.archive_confirm           | app/views/restaurants/sections/_menus_2025.html.erb:385            |
+|  all   | restaurants.sections.menus_2025.bulk_action               | app/views/restaurants/sections/_menus_2025.html.erb:189            |
+|  all   | restaurants.sections.menus_2025.bulk_archive              | app/views/restaurants/sections/_menus_2025.html.erb:194            |
+|  all   | restaurants.sections.menus_2025.bulk_restore              | app/views/restaurants/sections/_menus_2025.html.erb:196            |
+|  all   | restaurants.sections.menus_2025.bulk_set_status           | app/views/restaurants/sections/_menus_2025.html.erb:190            |
+|  all   | restaurants.sections.menus_2025.bulk_share                | app/views/restaurants/sections/_menus_2025.html.erb:192            |
+|  all   | restaurants.sections.menus_2025.choose_status             | app/views/restaurants/sections/_menus_2025.html.erb:395            |
+|  all   | restaurants.sections.menus_2025.hide_archived             | app/views/restaurants/sections/_menus_2025.html.erb:152            |
+|  all   | restaurants.sections.menus_2025.restore_confirm           | app/views/restaurants/sections/_menus_2025.html.erb:389            |
+|  all   | restaurants.sections.menus_2025.share_to_restaurants      | app/views/restaurants/sections/_menus_2025.html.erb:404            |
+|  all   | restaurants.sections.menus_2025.show_archived             | app/views/restaurants/sections/_menus_2025.html.erb:152            |
+|  all   | restaurants.sections.menus_2025.status                    | app/views/restaurants/sections/_menus_2025.html.erb:393            |
+|  all   | restaurants.sections.settings_2025.enabled                | app/views/restaurants/sections/_settings_2025.html.erb:51 (1 more) |
+|  all   | restaurants.sections.settings_2025.not_connected          | app/views/restaurants/sections/_settings_2025.html.erb:131         |
+|  all   | restaurants.sections.settings_2025.payments               | app/views/restaurants/sections/_settings_2025.html.erb:23          |
+|  all   | restaurants.sections.settings_2025.stripe_connect         | app/views/restaurants/sections/_settings_2025.html.erb:33          |
+|  all   | restaurants.sections.settings_2025.stripe_connect_help    | app/views/restaurants/sections/_settings_2025.html.erb:41 (1 more) |
+|  all   | restaurants.sections.tables_2025.tables                   | app/views/restaurants/sections/_tables_2025.html.erb:62            |
+|  all   | restaurants.sections.wifi_2025.no                         | app/views/restaurants/sections/_wifi_2025.html.erb:75              |
+|  all   | restaurants.sections.wifi_2025.yes                        | app/views/restaurants/sections/_wifi_2025.html.erb:76              |
+|  all   | smartmenus.alcohol.age_check                              | app/views/smartmenus/_orderStaff.erb:45                            |
+|  all   | smartmenus.allergen_legend_modal.allergen                 | app/views/smartmenus/_allergen_legend_modal.html.erb:24            |
+|  all   | smartmenus.allergen_legend_modal.allergen_key             | app/views/smartmenus/_allergen_legend_modal.html.erb:8             |
+|  all   | smartmenus.allergen_legend_modal.allergen_key_description | app/views/smartmenus/_allergen_legend_modal.html.erb:15            |
+|  all   | smartmenus.allergen_legend_modal.allergen_warning         | app/views/smartmenus/_allergen_legend_modal.html.erb:74            |
+|  all   | smartmenus.allergen_legend_modal.close                    | app/views/smartmenus/_allergen_legend_modal.html.erb:82            |
+|  all   | smartmenus.allergen_legend_modal.code                     | app/views/smartmenus/_allergen_legend_modal.html.erb:23            |
+|  all   | smartmenus.allergen_legend_modal.custom_allergens         | app/views/smartmenus/_allergen_legend_modal.html.erb:49            |
+|  all   | smartmenus.find_table                                     | app/views/smartmenus/_showTableLocaleSelectorStaff.erb:12          |
+|  all   | smartmenus.orderCustomer.add_name                         | app/views/smartmenus/_orderCustomer.erb:10                         |
+|  all   | smartmenus.orderCustomer.view_cart                        | app/views/smartmenus/_orderCustomer.erb:95                         |
+|  all   | smartmenus.orderStaff.view_cart                           | app/views/smartmenus/_orderStaff.erb:89                            |
+|  all   | smartmenus.showMenuBanner.allergen_key                    | app/views/smartmenus/_showMenuBanner.erb:73                        |
+|  all   | smartmenus.showMenuBanner.filter_allergens                | app/views/smartmenus/_showMenuBanner.erb:59                        |
+|  all   | smartmenus.showMenuBanner.search_menu                     | app/views/smartmenus/_showMenuBanner.erb:49                        |
+|  all   | smartmenus.showMenuBanner.view_allergen_key               | app/views/smartmenus/_showMenuBanner.erb:74                        |
+|  all   | smartmenus.showModals.remove_item                         | app/views/smartmenus/_showModals.erb:187                           |
+|  all   | smartmenus.welcome_banner.default_tip                     | app/views/smartmenus/_welcome_banner.html.erb:96                   |
+|  all   | smartmenus.welcome_banner.dismiss                         | app/views/smartmenus/_welcome_banner.html.erb:3 (1 more)           |
+|  all   | smartmenus.welcome_banner.got_it                          | app/views/smartmenus/_welcome_banner.html.erb:35                   |
+|  all   | smartmenus.welcome_banner.learn_more                      | app/views/smartmenus/_welcome_banner.html.erb:38                   |
+|  all   | smartmenus.welcome_banner.need_help                       | app/views/smartmenus/_welcome_banner.html.erb:71                   |
+|  all   | smartmenus.welcome_banner.step_1                          | app/views/smartmenus/_welcome_banner.html.erb:21                   |
+|  all   | smartmenus.welcome_banner.step_2                          | app/views/smartmenus/_welcome_banner.html.erb:25                   |
+|  all   | smartmenus.welcome_banner.step_3                          | app/views/smartmenus/_welcome_banner.html.erb:29                   |
+|  all   | smartmenus.welcome_banner.tap_to_learn                    | app/views/smartmenus/_welcome_banner.html.erb:72                   |
+|  all   | smartmenus.welcome_banner.tip_title                       | app/views/smartmenus/_welcome_banner.html.erb:94                   |
+|  all   | smartmenus.welcome_banner.welcome_subtitle                | app/views/smartmenus/_welcome_banner.html.erb:15                   |
+|  all   | smartmenus.welcome_banner.welcome_title                   | app/views/smartmenus/_welcome_banner.html.erb:11                   |
+|  all   | tablesettings.form.capacity                               | app/views/tablesettings/_form.html.erb:17                          |
+|  all   | tablesettings.form.description                            | app/views/tablesettings/_form.html.erb:28                          |
+|  all   | tablesettings.form.description_help                       | app/views/tablesettings/_form.html.erb:34                          |
+|  all   | tablesettings.form.name                                   | app/views/tablesettings/_form.html.erb:4                           |
+|  all   | tablesettings.form.name_help                              | app/views/tablesettings/_form.html.erb:11                          |
+|  all   | tablesettings.form.status                                 | app/views/tablesettings/_form.html.erb:50                          |
+|  all   | tablesettings.form.tabletype                              | app/views/tablesettings/_form.html.erb:40                          |
+|  all   | tablesettings.index.add_table                             | app/views/tablesettings/index.html.erb:14                          |
+|  all   | tablesettings.index.back                                  | app/views/tablesettings/index.html.erb:20                          |
+|  all   | tablesettings.index.quick_actions                         | app/views/tablesettings/index.html.erb:6                           |
+|  all   | tablesettings.index.tables_description                    | app/views/tablesettings/index.html.erb:44                          |
+|  all   | tablesettings.index.tables_overview                       | app/views/tablesettings/index.html.erb:40                          |
+|  all   | tablesettings.index.total_tables                          | app/views/tablesettings/index.html.erb:50                          |
++--------+-----------------------------------------------------------+--------------------------------------------------------------------+

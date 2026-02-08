@@ -2,6 +2,6 @@
 hu:
   menusectionlocales:
     controller:
-      created: ''
-      destroyed: ''
-      updated: ''
+      created: A Menusectionlocale sikeresen létrejött.
+      destroyed: Menusectionlocale sikeresen megsemmisült.
+      updated: A Menusectionlocale sikeresen frissült.

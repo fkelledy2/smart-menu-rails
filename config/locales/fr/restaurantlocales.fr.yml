@@ -2,13 +2,13 @@
 fr:
   restaurantlocales:
     controller:
-      active_not_deleted: ''
-      created: ''
-      deleted: ''
-      updated: ''
+      active_not_deleted: La localité active n'a pas été supprimée.
+      created: Le lieu du restaurant a été créé avec succès.
+      deleted: La localité a été supprimée.
+      updated: La mise à jour du lieu du restaurant a été effectuée avec succès.
     form:
-      delete: ''
+      delete: Supprimer
       save: Enregistrer
-      sure: ''
+      sure: Êtes-vous sûr ?
     new:
       restaurantlocale: Nouvelle langue

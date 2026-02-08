@@ -2,6 +2,6 @@
 de:
   ingredients:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Die Zutat wurde erfolgreich erstellt.
+      deleted: Die Zutat wurde erfolgreich gelöscht.
+      updated: Die Zutat wurde erfolgreich aktualisiert.

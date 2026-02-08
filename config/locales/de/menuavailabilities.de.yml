@@ -2,9 +2,9 @@
 de:
   menuavailabilities:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Die Menüverfügbarkeit wurde erfolgreich erstellt.
+      deleted: Die Verfügbarkeit des Menüs wurde erfolgreich gelöscht.
+      updated: Die Verfügbarkeit des Menüs wurde erfolgreich aktualisiert.
     form:
       delete: Löschen
       save: Speichern
@@ -18,4 +18,4 @@ de:
       menuAvailability: Neue Verfügbarkeit
     show:
       menuAvailability: Verfügbarkeit anzeigen
-      selectMenu: ''
+      selectMenu: Menü auswählen

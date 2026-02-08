@@ -2,33 +2,34 @@
 fr:
   tips:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Le conseil a été créé avec succès.
+      deleted: Le conseil a été supprimé avec succès.
+      updated: Le conseil a été mis à jour avec succès.
     edit:
-      tips: ''
-      edit_tip: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      tip_details: ''
-    form:
-      percentage: ''
-      percentage_placeholder: ''
-      percentage_help: ''
-    index:
-      tips: Pourboires
-      description: ''
-      back: ''
-      new_tip: ''
-      all_tips: ''
-    new:
-      tips: ''
-      new: ''
-      new_tip: ''
-      description: ''
       cancel: Annuler
-      tip_details: ''
+      confirm_delete: Supprimer cette option de conseil ?
+      delete: Supprimer
+      description: Mise à jour des détails du pourcentage de pourboire
+      edit_tip: Modifier l'option de conseil
+      tip_details: Détails de l'astuce
+      tips: Conseils
+    form:
+      percentage: Pourcentage de pourboire
+      percentage_help: Saisir le pourcentage de pourboire (0-100)
+      percentage_placeholder: par exemple, 15
+    index:
+      all_tips: Toutes les options de conseil
+      back: Retour
+      description: Gérer les pourcentages de pourboire disponibles pour les clients
+        à la caisse
+      new_tip: Nouvelle option de conseil
+      tips: Pourboires
+    new:
+      cancel: Annuler
+      description: Créer un nouveau pourcentage de pourboire pour les clients
+      new: Nouveau
+      new_tip: Nouvelle option de conseil
+      tip_details: Détails de l'astuce
+      tips: Conseils
     show:
       tip: Afficher le pourboire

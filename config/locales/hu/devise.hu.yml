@@ -2,50 +2,58 @@
 hu:
   devise:
     confirmations:
-      confirmed: ''
-      send_instructions: ''
-      send_paranoid_instructions: ''
+      confirmed: Az Ön e-mail címe sikeresen megerősítésre került.
+      send_instructions: Néhány percen belül kapni fog egy e-mailt az e-mail cím megerősítésére
+        vonatkozó utasításokkal.
+      send_paranoid_instructions: Ha az Ön e-mail címe létezik az adatbázisunkban,
+        akkor néhány percen belül kap egy e-mailt az e-mail címének megerősítésére
+        vonatkozó utasításokkal.
     failure:
-      already_authenticated: ''
-      inactive: ''
-      invalid: ''
-      last_attempt: ''
-      locked: ''
-      not_found_in_database: ''
-      timeout: ''
-      unauthenticated: ''
-      unconfirmed: ''
+      already_authenticated: Ön már bejelentkezett.
+      inactive: A fiókja még nem aktivált.
+      invalid: Érvénytelen %{authentication_keys} vagy jelszó.
+      last_attempt: Még egy próbálkozásod van, mielőtt a fiókodat zárolják.
+      locked: A fiókja zárolva van.
+      not_found_in_database: Érvénytelen %{authentication_keys} vagy jelszó.
+      timeout: A munkamenet lejárt. Kérjük, a folytatáshoz jelentkezzen be újra.
+      unauthenticated: A folytatás előtt be kell jelentkeznie vagy regisztrálnia kell.
+      unconfirmed: A folytatás előtt meg kell erősítenie az e-mail címét.
     mailer:
       confirmation_instructions:
-        subject: ''
+        subject: Megerősítési utasítások
       email_changed:
-        subject: ''
+        subject: Email megváltozott
       password_change:
-        subject: ''
+        subject: Megváltozott jelszó
       reset_password_instructions:
-        subject: ''
+        subject: Jelszó-visszaállítási utasítások
       unlock_instructions:
-        subject: ''
+        subject: Feloldási utasítások
     omniauth_callbacks:
-      failure: ''
-      success: ''
+      failure: Nem tudtuk hitelesíteni Önt %{fajtától}, mert "%{okozat}".
+      success: Sikeresen hitelesítettük a %{fajtájú} fiókot.
     passwords:
-      no_token: ''
-      send_instructions: ''
-      send_paranoid_instructions: ''
-      updated: ''
-      updated_not_active: ''
+      no_token: Ezt az oldalt csak akkor érheti el, ha jelszó-visszaállítási e-mailből
+        érkezik. Ha jelszó-visszaállítási e-mailből érkezik, kérjük, győződjön meg
+        róla, hogy a megadott teljes URL-címet használta.
+      send_instructions: Néhány percen belül kapni fog egy e-mailt a jelszó visszaállítására
+        vonatkozó utasításokkal.
+      send_paranoid_instructions: Ha az Ön e-mail címe szerepel az adatbázisunkban,
+        néhány percen belül kap egy jelszó-visszaállítási linket az e-mail címére.
+      updated: A jelszavát sikeresen megváltoztattuk. Ön most már be van jelentkezve.
+      updated_not_active: A jelszavát sikeresen megváltoztattuk.
     registrations:
-      destroyed: ''
+      destroyed: Viszlát! A fiókodat sikeresen töröltük. Reméljük, hogy hamarosan
+        újra találkozunk.
       edit:
         account: Fiók
         confirmPassword: Jelszó megerősítése
         currentPassword: Jelenlegi jelszó
-        currentPasswordHelp: ''
-        deactivateMyAccount: ''
-        deactivateMyAccountAreYouSure: ''
-        emailAddress: ''
-        fullName: ''
+        currentPasswordHelp: Szükségünk van az aktuális jelszavára a módosítások megerősítéséhez
+        deactivateMyAccount: Fiókom deaktiválása
+        deactivateMyAccountAreYouSure: Biztos, hogy deaktiválni szeretné a fiókját?
+        emailAddress: E-mail cím
+        fullName: Teljes név
         saveChanges: Módosítások mentése
       new:
         confirmPassword: Jelszó megerősítése
@@ -53,38 +61,48 @@ hu:
         fullName: Teljes név
         password: Jelszó
         signUp: Regisztráció
-      signed_up: ''
-      signed_up_but_inactive: ''
-      signed_up_but_locked: ''
-      signed_up_but_unconfirmed: ''
-      update_needs_confirmation: ''
-      updated: ''
-      updated_but_not_signed_in: ''
+      signed_up: Üdvözöljük! Ön sikeresen regisztrált.
+      signed_up_but_inactive: Ön sikeresen regisztrált. Azonban nem tudtunk bejelentkezni,
+        mert a fiókja még nem aktiválódott.
+      signed_up_but_locked: Ön sikeresen regisztrált. Azonban nem tudtunk bejelentkezni,
+        mert a fiókja zárolt.
+      signed_up_but_unconfirmed: A megerősítő linket tartalmazó üzenetet küldtünk
+        az Ön e-mail címére. Kérjük, kövesse a linket a fiók aktiválásához.
+      update_needs_confirmation: Sikeresen frissítette fiókját, de ellenőriznünk kell
+        az új e-mail címét. Kérjük, ellenőrizze az e-mail címét, és kövesse a megerősítő
+        linket az új e-mail cím megerősítéséhez.
+      updated: A fiókodat sikeresen frissítettük.
+      updated_but_not_signed_in: A fiókját sikeresen frissítettük, de mivel a jelszava
+        megváltozott, újra be kell jelentkeznie.
     sessions:
-      already_signed_out: ''
+      already_signed_out: Sikeresen kijelentkezett.
       new:
         emailAddress: E-mail cím
         login: Bejelentkezés
         password: Jelszó
         rememberMe: Emlékezz rám
-      signed_in: ''
-      signed_out: ''
+      signed_in: Sikeresen bejelentkezett.
+      signed_out: Sikeresen kijelentkezett.
     shared:
       links:
-        didntReceiverEmailConfirmation: ''
-        didntReceiverUnlockInstructions: ''
-        forgotYourPassword: ''
+        didntReceiverEmailConfirmation: Nem kapta meg a visszaigazolási utasításokat?
+        didntReceiverUnlockInstructions: Nem kapta meg a feloldási utasításokat?
+        forgotYourPassword: Elfelejtette jelszavát?
     unlocks:
-      send_instructions: ''
-      send_paranoid_instructions: ''
-      unlocked: ''
+      send_instructions: Néhány percen belül kapni fog egy e-mailt a fiókjának feloldására
+        vonatkozó utasításokkal.
+      send_paranoid_instructions: Ha a fiókja létezik, néhány percen belül kap egy
+        e-mailt a feloldási utasításokkal.
+      unlocked: A fiókját sikeresen feloldottuk. A folytatáshoz kérjük, jelentkezzen
+        be.
   errors:
     messages:
-      already_confirmed: ''
-      confirmation_period_expired: ''
-      expired: ''
-      not_found: ''
-      not_locked: ''
+      already_confirmed: már megerősítették, kérjük, próbáljon meg bejelentkezni
+      confirmation_period_expired: "%{időszak} alatt kell megerősíteni, kérjük, kérjen
+        újat."
+      expired: lejárt, kérjük, kérjen újat
+      not_found: nem található
+      not_locked: nem volt lezárva
       not_saved:
-        one: ''
-        other: ''
+        one: '1 hiba megakadályozta a %{forrás} mentését:'
+        other: "%{szám} hiba megakadályozta, hogy ez a %{forrás} el legyen mentve:"

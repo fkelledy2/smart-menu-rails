@@ -16,25 +16,25 @@ it:
         description: Descrizione
         name: Nome
       inventory:
-        currentInventory: ''
+        currentInventory: Inventario corrente
         currentinventory: Inventario attuale
-        menuItem: ''
-        resetHour: ''
+        menuItem: Voce di menu
+        resetHour: Azzeramento dell'ora
         resethour: Ora di reset
-        startingInventory: ''
+        startingInventory: Inventario iniziale
         startinginventory: Inventario iniziale
       menu:
         allowOrdering: Consenti ordini
         covercharge: Coperto
-        description: ''
+        description: Descrizione
         displayImages: Mostra immagini
         displayImagesInPopup: Mostra immagini in popup
         image: Immagine
         imagecontext: Contesto immagine
         inventoryTracking: Tracciamento inventario
-        name: ''
+        name: Nome
         pdf_menu_scan: PDF del menu
-        status: ''
+        status: Stato
       menuavailability:
         dayofweek: Giorno della settimana
         endhour: Ora di fine
@@ -43,30 +43,30 @@ it:
         status: Stato
       menuitem:
         allergyns: Allergeni
-        calories: ''
-        description: ''
+        calories: Calorie
+        description: Descrizione
         image: Immagine
         itemtype: Tipo articolo
-        name: ''
+        name: Nome
         preptime: Tempo di preparazione
-        price: ''
+        price: Prezzo
         sizes: Taglie
         sizesupport: Supporto taglie
-        status: ''
+        status: Stato
         unitcost: Costo unitario
       menuparticipant:
         preferredlocale: Lingua preferita
         sessionid: ID sessione
         smartmenu_id: Smartmenu
       menusection:
-        description: ''
+        description: Descrizione
         endhour: Ora di fine
         image: Immagine
         menu_id: Menù
-        name: ''
+        name: Nome
         restricted: Limitato
         starthour: Ora di inizio
-        status: ''
+        status: Stato
       metric:
         description: Descrizione
         name: Nome
@@ -97,13 +97,13 @@ it:
         sessionid: ID sessione
       restaurant:
         address: Indirizzo
-        address1: ''
-        address2: ''
+        address1: Linea di indirizzo 1
+        address2: Linea di indirizzo 2
         allowOrdering: Consenti ordini
-        city: ''
-        country: ''
+        city: Città
+        country: Paese
         currency: Valuta
-        description: ''
+        description: Descrizione
         displayImages: Mostra immagini
         displayImagesInPopup: Mostra immagini in popup
         genid: ID generazione
@@ -111,13 +111,13 @@ it:
         image_style_profile: Profilo stile immagine
         imagecontext: Contesto immagine
         inventoryTracking: Tracciamento inventario
-        name: ''
-        postcode: ''
+        name: Nome
+        postcode: Codice postale/ZIP
         spotifyaccesstoken: Access token Spotify
         spotifyrefreshtoken: Refresh token Spotify
         spotifyuserid: ID utente Spotify
-        state: ''
-        status: ''
+        state: Stato/Provincia
+        status: Stato
         wifiEncryptionType: Tipo crittografia WiFi
         wifiHidden: WiFi nascosto
         wifiPassword: Password WiFi
@@ -140,10 +140,10 @@ it:
         slug: Lumaca
         tablesetting_id: Tavolo
       tablesetting:
-        capacity: ''
-        description: ''
-        name: ''
-        status: ''
+        capacity: Capacità
+        description: Descrizione
+        name: Nome
+        status: Stato
         tabletype: Tipo tavolo
       tag:
         description: Descrizione
@@ -168,7 +168,7 @@ it:
         restaurant_id: Ristorante
         sequence: Sequenza
       userplan:
-        plan_id: ''
+        plan_id: Piano
     errors:
       format: "%{attributo} %{messaggio}"
       messages:

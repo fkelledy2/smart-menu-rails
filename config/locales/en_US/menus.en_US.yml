@@ -2,13 +2,13 @@
 en_US:
   menus:
     controller:
+      ai_image_generation_queued: ''
       created: ''
       deleted: ''
       image_regeneration_queued: ''
       image_regeneration_queued_rake: ''
-      webp_regeneration_queued: ''
-      ai_image_generation_queued: ''
       updated: ''
+      webp_regeneration_queued: ''
     edit:
       availabilities: ''
       menu: ''
@@ -62,8 +62,3 @@ en_US:
       availabilities: ''
     showMenusections:
       sections: ''
-    sections:
-      settings_2025:
-        disabled_at_restaurant: ''
-        parent_restriction: ''
-        parent_restriction_desc: ''

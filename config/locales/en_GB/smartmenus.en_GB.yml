@@ -1,12 +1,40 @@
 ---
 en_GB:
   smartmenus:
+    alcohol:
+      acknowledge_btn: ''
+      acknowledged: ''
+      flag: ''
+      non_alcoholic: ''
+      policy_blocked: ''
+      sales_disabled: ''
+      verify_age: ''
+      zero_abv_short: ''
     controller:
       created: ''
       deleted: ''
       updated: ''
     edit:
       title: ''
+    empty_states:
+      adjust_filters: ''
+      browse_menu: ''
+      cart_empty: ''
+      cart_empty_description: ''
+      error_description: ''
+      error_occurred: ''
+      no_items_filtered: ''
+      no_items_filtered_description: ''
+      no_menu_description: ''
+      no_menu_items: ''
+      no_results: ''
+      no_results_description: ''
+      no_table_description: ''
+      no_table_selected: ''
+      order_complete: ''
+      order_complete_description: ''
+      refresh: ''
+      try_again: ''
     form:
       cancel: ''
       destroy: ''
@@ -14,8 +42,17 @@ en_GB:
       sure: ''
     index:
       smartmenus: ''
+    modal_footer_primary:
+      cancel: ''
     new:
       title: ''
+    ocr:
+      alcohol:
+        abv: ''
+        classification: ''
+        override_label: ''
+        overrides_hint: ''
+        review_needed: ''
     orderCustomer:
       bill: ''
       items_in_cart: ''
@@ -55,7 +92,6 @@ en_GB:
       confirmPayment: ''
       cover_charge: ''
       customiseOrderWithName: ''
-      partySize: ''
       excluding_tip: ''
       filterAllergyns: ''
       filterBy: ''
@@ -65,6 +101,7 @@ en_GB:
       nett: ''
       noneAll: ''
       order_aria: ''
+      partySize: ''
       payBill: ''
       payment_link: ''
       price: ''
@@ -88,40 +125,3 @@ en_GB:
       restaurant: ''
       slug: ''
       tablesetting: ''
-    modal_footer_primary:
-      cancel: ''
-    alcohol:
-      flag: ''
-      non_alcoholic: ''
-      zero_abv_short: ''
-      verify_age: ''
-      sales_disabled: ''
-      policy_blocked: ''
-      acknowledge_btn: ''
-      acknowledged: ''
-    ocr:
-      alcohol:
-        override_label: ''
-        abv: ''
-        classification: ''
-        review_needed: ''
-        overrides_hint: ''
-    empty_states:
-      no_menu_items: ''
-      no_menu_description: ''
-      refresh: ''
-      cart_empty: ''
-      cart_empty_description: ''
-      browse_menu: ''
-      no_results: ''
-      no_results_description: ''
-      no_items_filtered: ''
-      no_items_filtered_description: ''
-      adjust_filters: ''
-      no_table_selected: ''
-      no_table_description: ''
-      order_complete: ''
-      order_complete_description: ''
-      error_occurred: ''
-      error_description: ''
-      try_again: ''

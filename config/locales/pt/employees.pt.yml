@@ -2,22 +2,22 @@
 pt:
   employees:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: O empregado foi criado com sucesso.
+      deleted: O empregado foi eliminado com êxito.
+      updated: O empregado foi atualizado com sucesso.
     edit:
       employee: Editar funcionário
     employee:
-      eid: ''
-      image: ''
-      name: ''
-      restaurant: ''
-      status: ''
+      eid: 'ID do empregado:'
+      image: 'Imagem:'
+      name: 'Nome:'
+      restaurant: 'Restaurante:'
+      status: 'Estado:'
     form:
       delete: Eliminar
       errors: Erros
       save: Guardar
-      selectUser: ''
+      selectUser: Selecionar um utilizador
       sure: Tem a certeza?
     index:
       activate: Ativar
@@ -28,5 +28,5 @@ pt:
       employee: Novo funcionário
     show:
       employee: Mostrar funcionário
-      selectRestaurant: ''
-      selectUser: ''
+      selectRestaurant: Selecionar um restaurante
+      selectUser: Selecionar um utilizador

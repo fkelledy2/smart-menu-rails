@@ -2,25 +2,25 @@
 hu:
   testimonials:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Az ajánlást sikeresen létrehoztuk.
+      deleted: Az ajánlólevél sikeresen törlésre került.
+      updated: Az ajánlást sikeresen frissítettük.
     edit:
-      title: ''
+      title: Edit ajánlólevél szerkesztése
     form:
-      cancel: ''
-      destroy: ''
-      save: ''
-      sure: ''
+      cancel: Törölje
+      destroy: Destroy
+      save: Mentés
+      sure: Biztos vagy benne?
     index:
       actions: Műveletek
       approve: Jóváhagyás
       testimonials: Értékelések
       unapprove: Elutasítás
     new:
-      cancel: ''
-      title: ''
+      cancel: Törölje
+      title: Új ajánlólevél
     testimonial:
-      restaurant: ''
-      testimonial: ''
-      user: ''
+      restaurant: 'Étterem:'
+      testimonial: 'Ajánlás:'
+      user: 'Felhasználó:'

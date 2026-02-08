@@ -2,68 +2,67 @@
 hu:
   menus:
     controller:
-      created: ''
-      deleted: ''
-      image_regeneration_queued: ''
-      image_regeneration_queued_rake: ''
-      webp_regeneration_queued: ''
-      ai_image_generation_queued: ''
-      updated: ''
+      ai_image_generation_queued: A menü elemeinek AI képgenerálása sorba került.
+      created: A menü sikeresen létrejött.
+      deleted: A menü sikeresen törlődött.
+      image_regeneration_queued: A menü %{szám} elemeinek várakozó képregenerálása.
+      image_regeneration_queued_rake: A képregenerálási feladat sorba került ehhez
+        a menühöz.
+      updated: A menü sikeresen frissült.
+      webp_regeneration_queued: A WebP-származék regenerálása sorba került a menü
+        képeihez.
     edit:
-      availabilities: ''
+      availabilities: Elérhetőségek
       menu: Menü
-      regenerate_images_confirm: ''
+      regenerate_images_confirm: Ez a menü összes eleméhez sorba állítja a képregenerálási
+        feladatokat. Folytatás?
       sections: Szekciók
     form:
-      current_pdf: ''
+      current_pdf: 'Jelenlegi PDF:'
       delete: Törlés
       details: Részletek
-      errors: ''
-      'false': ''
+      errors: Hibák
+      'false': 'off'
       imageSettings: Kép beállítások
-      'off': ''
-      'on': ''
+      'off': 'off'
+      'on': a  oldalon
       pdfSettings: PDF beállítások
-      regenerate_images: ''
-      regenerate_images_confirm: ''
-      remove: ''
+      regenerate_images: Képek regenerálása
+      regenerate_images_confirm: Ez a menü összes eleméhez sorba állítja a képregenerálási
+        feladatokat. Folytatás?
+      remove: Távolítsa el a
       save: Mentés
       settings: Beállítások
       sure: Biztos vagy benne?
-      'true': ''
+      'true': a  oldalon
     index:
       menu: Menü
       menus: Menük
-      unavailable: ''
+      unavailable: Nem elérhető
     menu:
-      description: ''
-      image: ''
-      name: ''
-      pdf_menu_scan: ''
-      restaurant: ''
-      sequence: ''
-      status: ''
+      description: 'Leírás:'
+      image: 'Kép:'
+      name: 'Név:'
+      pdf_menu_scan: 'PDF menü beolvasás:'
+      restaurant: 'Étterem:'
+      sequence: 'Sorozat:'
+      status: 'Állapot:'
     new:
       menu: Új menü
     show:
-      add_to_order: ''
-      allergens: ''
-      allergyns: ''
-      bill: ''
-      loading: ''
-      not_available: ''
-      order: ''
-      order_updated: ''
-      remaining: ''
-      staff_alerted: ''
-      start_order: ''
-      take_payment: ''
+      add_to_order: Hozzáadás a megrendeléshez
+      allergens: Allergének
+      allergyns: Allergének
+      bill: Bill
+      loading: Betöltés...
+      not_available: Nem áll rendelkezésre.
+      order: Megrendelés
+      order_updated: Rendelés frissítve!
+      remaining: "%{count} maradék."
+      staff_alerted: Riasztott személyzet
+      start_order: Start sorrend
+      take_payment: Fizetés átvétele
     showMenuavailabilities:
-      availabilities: ''
+      availabilities: Elérhetőségek
     showMenusections:
-      sections: ''
-    sections:
-      settings_2025:
-        disabled_at_restaurant: ''
-        parent_restriction: ''
-        parent_restriction_desc: ''
+      sections: Szekciók

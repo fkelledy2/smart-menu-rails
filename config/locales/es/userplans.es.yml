@@ -2,10 +2,10 @@
 es:
   userplans:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: El plan de usuario se ha creado correctamente.
+      deleted: El plan de usuario se ha eliminado correctamente.
+      updated: El plan de usuario se ha actualizado correctamente.
     edit:
-      contactUs: ''
+      contactUs: Póngase en contacto con nosotros
       saveChanges: Actualizar
       selectPlan: Seleccionar plan

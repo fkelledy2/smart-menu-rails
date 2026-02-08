@@ -2,5 +2,5 @@
 es:
   genimages:
     controller:
-      deleted: ''
-      updated: ''
+      deleted: La imagen generada se ha eliminado correctamente.
+      updated: La imagen se ha regenerado correctamente.

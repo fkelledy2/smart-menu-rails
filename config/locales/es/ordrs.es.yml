@@ -2,8 +2,8 @@
 es:
   ordrs:
     controller:
-      could_not_delete: ''
-      created: ''
-      deleted: ''
+      could_not_delete: 'No se ha podido eliminar el pedido: %{error}'
+      created: El pedido se ha creado correctamente.
+      deleted: El pedido se ha eliminado correctamente.
     index:
       orders: Pedidos

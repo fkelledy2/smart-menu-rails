@@ -1,30 +1,73 @@
 ---
 pt:
   smartmenus:
+    alcohol:
+      acknowledge_btn: Confirmar verificação de idade
+      acknowledged: Verificação de idade confirmada
+      flag: Álcool
+      non_alcoholic: Sem álcool
+      policy_blocked: Atualmente, a venda de álcool está bloqueada por razões políticas.
+      sales_disabled: A venda de bebidas alcoólicas não é permitida neste restaurante.
+      verify_age: Por favor, verifique a idade do cliente antes de servir bebidas
+        alcoólicas.
+      zero_abv_short: 0.0%
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: O Smartmenu foi criado com sucesso.
+      deleted: O Smartmenu foi eliminado com êxito.
+      updated: O Smartmenu foi atualizado com sucesso.
     edit:
-      title: ''
+      title: Editar Smartmenu
+    empty_states:
+      adjust_filters: Ajustar filtros
+      browse_menu: Navegar no menu
+      cart_empty: O seu carrinho está vazio
+      cart_empty_description: Comece a adicionar produtos deliciosos do nosso menu!
+      error_description: Estamos a ter problemas em carregar este conteúdo. Por favor,
+        tente novamente.
+      error_occurred: Algo correu mal
+      no_items_filtered: Nenhum item corresponde aos seus filtros
+      no_items_filtered_description: Tente ajustar os seus filtros de alergénios para
+        ver mais itens.
+      no_menu_description: Ainda estamos a adicionar itens ao nosso menu. Por favor,
+        volte em breve!
+      no_menu_items: Ainda não há itens de menu
+      no_results: Nenhum resultado encontrado
+      no_results_description: Não encontrámos nenhum item que corresponda à sua pesquisa.
+        Tente outras palavras-chave.
+      no_table_description: Selecione uma mesa para iniciar a sua encomenda.
+      no_table_selected: Selecione a sua mesa
+      order_complete: Encomenda enviada!
+      order_complete_description: A sua encomenda foi enviada para a cozinha. Desfrute
+        da sua refeição!
+      refresh: Atualizar
+      try_again: Tentar de novo
     form:
-      cancel: ''
-      destroy: ''
+      cancel: Cancelar
+      destroy: Destruir
       save: Guardar
       sure: Tem a certeza?
     index:
       smartmenus: Menus Inteligentes
+    modal_footer_primary:
+      cancel: Cancelar
     new:
-      title: ''
+      title: Novo Smartmenu
+    ocr:
+      alcohol:
+        abv: TEOR ALCOÓLICO
+        classification: Classe
+        override_label: Álcool
+        overrides_hint: As substituições aplicam-se na publicação.
+        review_needed: Necessita de revisão
     orderCustomer:
       bill: Conta
-      items_in_cart: ''
+      items_in_cart: itens no carrinho
       order: Pedir
       staffAlerted: Staff alertado
       startOrder: Iniciar pedido
     orderStaff:
       bill: Conta
-      items_in_cart: ''
+      items_in_cart: itens no carrinho
       order: Pedir
       startOrder: Iniciar pedido
       takePayment: Pagar
@@ -36,47 +79,47 @@ pt:
     showMenuBanner:
       allergyns: Alergénios
     showMenuContentCustomer:
-      search_placeholder: ''
+      search_placeholder: Procurar itens de menu...
     showMenuitem:
-      add_to_order: ''
-      allergyns: ''
-      loading: ''
+      add_to_order: Adicionar à encomenda
+      allergyns: Alergénios
+      loading: Carregando...
     showMenuitemHorizontal:
-      loading: ''
+      loading: Carregando...
     showMenuitemHorizontalActionBar:
-      allergyns: ''
-      order: ''
-      toggle_dropdown: ''
+      allergyns: Alergénios
+      order: Encomendar
+      toggle_dropdown: Alternar menu pendente
     showModals:
       add: Adicionar nome
       addToOrder: Adicionar ao pedido
-      bill_prefix: ''
+      bill_prefix: 'Projeto de lei:'
       cancel: Cancelar
       confirmPayment: Confirmar pagamento
-      cover_charge: ''
+      cover_charge: Taxa de cobertura
       customiseOrderWithName: Personalize o seu pedido
-      partySize: ''
-      excluding_tip: ''
+      excluding_tip: excl. ponta
       filterAllergyns: Filtrar alergénios
       filterBy: Filtrar por
-      including_tip: ''
-      item: ''
-      name_label: ''
-      nett: ''
+      including_tip: incl. ponta
+      item: Item
+      name_label: 'Nome:'
+      nett: Líquido
       noneAll: Nenhum / todos
-      order_aria: ''
-      payBill: ''
-      payment_link: ''
+      order_aria: Encomendar
+      partySize: Tamanho da festa
+      payBill: Pagar fatura
+      payment_link: Ligação de pagamento
       price: Preço
       requestBill: Pedir conta
-      selected: ''
-      service: ''
+      selected: Selecionado
+      service: Serviço
       start: Início
       startOrder: Iniciar pedido
       submit: Enviar pedido
-      submitted: ''
-      tax: ''
-      tip_options: ''
+      submitted: Enviado
+      tax: Imposto
+      tip_options: Opções de dicas
       total: Total
       yourOrder: O seu pedido
     showTableLocaleSelectorCustomer:
@@ -84,44 +127,7 @@ pt:
     showTableLocaleSelectorStaff:
       table: Mesa
     smartmenu:
-      menu: ''
-      restaurant: ''
-      slug: ''
-      tablesetting: ''
-    modal_footer_primary:
-      cancel: ''
-    alcohol:
-      flag: ''
-      non_alcoholic: ''
-      zero_abv_short: ''
-      verify_age: ''
-      sales_disabled: ''
-      policy_blocked: ''
-      acknowledge_btn: Confirmar verificação de idade
-      acknowledged: Verificação de idade confirmada
-    ocr:
-      alcohol:
-        override_label: ''
-        abv: ''
-        classification: ''
-        review_needed: ''
-        overrides_hint: ''
-    empty_states:
-      no_menu_items: ''
-      no_menu_description: ''
-      refresh: ''
-      cart_empty: ''
-      cart_empty_description: ''
-      browse_menu: ''
-      no_results: ''
-      no_results_description: ''
-      no_items_filtered: ''
-      no_items_filtered_description: ''
-      adjust_filters: ''
-      no_table_selected: ''
-      no_table_description: ''
-      order_complete: ''
-      order_complete_description: ''
-      error_occurred: ''
-      error_description: ''
-      try_again: ''
+      menu: 'Menu:'
+      restaurant: 'Restaurante:'
+      slug: 'Lesma:'
+      tablesetting: 'Colocação de mesas:'

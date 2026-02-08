@@ -2,10 +2,10 @@
 fr:
   userplans:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Le plan d'utilisateur a été créé avec succès.
+      deleted: Le plan d'utilisateur a été supprimé avec succès.
+      updated: La mise à jour du plan d'utilisateur a été effectuée avec succès.
     edit:
-      contactUs: ''
+      contactUs: Nous contacter
       saveChanges: Mettre à jour
       selectPlan: Choisir un forfait

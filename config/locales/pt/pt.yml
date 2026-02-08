@@ -1,762 +1,319 @@
 ---
 pt:
-  common:
-    remove: ''
-    archive: ''
   activerecord:
-    attributes:
-      allergyn:
-        description: ''
-        name: ''
-        symbol: ''
-      employee:
-        eid: ''
-        image: ''
-        name: ''
-        restaurant: ''
-        role: ''
-        status: ''
-        user: ''
-      inventory:
-        currentInventory: ''
-        menuItem: ''
-        resetHour: ''
-        startingInventory: ''
-      menu:
-        allowOrdering: ''
-        covercharge: ''
-        description: ''
-        displayImages: ''
-        displayImagesInPopup: ''
-        image: ''
-        imagecontext: ''
-        inventoryTracking: ''
-        name: ''
-        pdf_menu_scan: ''
-        restaurant: ''
-        sequence: ''
-        status: ''
-      menuavailability:
-        dayofweek: ''
-        endhour: ''
-        endmin: ''
-        menu: ''
-        starthour: ''
-        startmin: ''
-        status: ''
-      menuitem:
-        allergyns: ''
-        calories: ''
-        description: ''
-        image: ''
-        ingredients: ''
-        menusection_id: ''
-        name: ''
-        preptime: ''
-        price: ''
-        sequence: ''
-        sizes: ''
-        sizesupport: ''
-        status: ''
-        tags: ''
-        unitcost: ''
-        variantPricing: ''
-      menusection:
-        description: ''
-        image: ''
-        menu: ''
-        name: ''
-        sequence: ''
-        status: ''
-      restaurant:
-        address1: ''
-        address2: ''
-        allowOrdering: ''
-        capacity: ''
-        city: ''
-        country: ''
-        currency: ''
-        description: ''
-        displayImages: ''
-        displayImagesInPopup: ''
-        genid: ''
-        image: ''
-        imagecontext: ''
-        inventoryTracking: ''
-        music: ''
-        name: ''
-        postcode: ''
-        spotifyaccesstoken: ''
-        spotifyrefreshtoken: ''
-        spotifyuserid: ''
-        state: ''
-        status: ''
-        tips: ''
-        wifiEncryptionType: ''
-        wifiHidden: ''
-        wifiPassword: ''
-        wifissid: ''
-      restaurantavailability:
-        dayofweek: ''
-        endhour: ''
-        endmin: ''
-        restaurant: ''
-        sequence: ''
-        starthour: ''
-        startmin: ''
-        status: ''
-      restaurantlocale:
-        dfault: ''
-        locale: ''
-      size:
-        description: ''
-        name: ''
-        size: ''
-      tax:
-        name: ''
-        restaurant: ''
-        taxPercentage: ''
-        taxType: ''
-  allergyns:
-    edit:
-      allergyn: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: Ativar
-      allergyn: ''
-      allergyns: ''
-      deactivate: Desativar
-    new:
-      allergyn: ''
-      cancel: ''
-    show:
-      allergyn: Mostrar alergénio
-  devise:
-    registrations:
-      edit:
-        account: ''
-        billing: ''
-        confirmPassword: ''
-        currentPassword: ''
-        currentPasswordHelp: ''
-        deactivateMyAccount: ''
-        deactivateMyAccountAreYouSure: ''
-        password: ''
-        passwordHelp: ''
-        saveChanges: ''
-        selectPlan: ''
-      new:
-        confirmPassword: ''
-        emailAddress: ''
-        fullName: ''
-        password: ''
-        signUp: ''
-    sessions:
-      new:
-        emailAddress: ''
-        login: ''
-        password: ''
-        rememberMe: ''
-    shared:
-      links:
-        didntReceiverEmailConfirmation: Não recebeu o email de confirmação?
-        didntReceiverUnlockInstructions: Não recebeu as instruções de desbloqueio?
-        forgotYourPassword: Esqueceu-se da palavra-passe?
+    models:
+      menusectionlocale: Menusectionlocale
+      ordraction: Ordenação
+      ordritemnote: Nota de encomenda
+      ordrparticipant: Ordrparticipante
+  common:
+    archive: Arquivo
+    flash:
+      restored: Restaurado
+    remove: Remover
   employees:
-    edit:
-      employee: Editar funcionário
     form:
-      delete: ''
-      errors: ''
-      save: ''
-      selectRestaurant: ''
-      sure: ''
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      employee: Funcionário
-      employees: Funcionários
-    new:
-      cancel: Cancelar
-      employee: Novo funcionário
-    show:
-      employee: ''
-  feature1:
-    key: Menus Inteligentes
-  feature2:
-    key: Pedidos Personalizados
-  feature3:
-    key: Filtragem de Alergénios
-  feature4:
-    key: Pedidos de Clientes
-  feature5:
-    key: Traduções IA
-  feature6:
-    key: Criação de Imagens IA
-  home:
-    index:
-      actions: ''
-      activate: Ativar
-      browse: ''
-      contactUs: ''
-      ctaBody1: ''
-      ctaBody2: ''
-      ctaTitle1: ''
-      ctaTitle2: ''
-      deactivate: Desativar
-      demoMenu: ''
-      demoMenuTag: ''
-      demoMenuTagBrowse: ''
-      emailAddress: ''
-      emailAddressTag: ''
-      featureDescription1: ''
-      featureDescription2: ''
-      featureDescription3: ''
-      featureDescription4: ''
-      featureDescription5: ''
-      featureDescription6: ''
-      featureTitle1: ''
-      featureTitle2: ''
-      featureTitle3: ''
-      featureTitle4: ''
-      featureTitle5: ''
-      featureTitle6: ''
-      features: ''
-      menus: ''
-      message: ''
-      next: ''
-      numbers: ''
-      numbersTag: ''
-      orderValue: ''
-      orders: ''
-      previous: ''
-      pricing: ''
-      pricingTag: ''
-      restaurants: Restaurantes
-      saveChanges: ''
-      selectPlan: ''
-      signUp: ''
-      signup: ''
-      submit: ''
-      testimonials: ''
-      testimonialsTag: ''
-      welcome: ''
-  inventories:
-    edit:
-      inventory: Editar inventário
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      inventories: Inventários
-      inventory: Inventário
-    new:
-      cancel: Cancelar
-      inventory: Novo inventário
-    show:
-      inventory: ''
-  menuavailabilities:
-    edit:
-      menuAvailability: Editar disponibilidade
-    form:
-      delete: Eliminar
-      errors: Erros
-      save: Guardar
-      selectMenu: Selecionar menu...
-      sure: Tem a certeza?
-    index:
-      activate: Abrir
-      deactivate: Fechar
-      menuAvailabilities: Disponibilidades
-      menuAvailability: Disponibilidade
-    new:
-      cancel: Cancelar
-      menuAvailability: Nova disponibilidade
-    show:
-      menuAvailability: ''
+      eid: Id
+      name: Nome
+      role: Função
+      status: Estado
+      user: Utilizador
+  free: Grátis
   menuitems:
-    edit:
-      menuItem: ''
-    form:
-      delete: ''
-      details: ''
-      errors: ''
-      imageSettings: ''
-      save: ''
-      selectMenuSection: ''
-      settings: ''
-      sizes: ''
-      sure: ''
-      update: ''
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      menuItem: Item
-      menuItems: Items
-    new:
-      cancel: Cancelar
-      menuItem: Novo item
-    show:
-      menuItem: ''
+    edit_2025:
+      back_to_items: Voltar aos artigos
+      menu_item: Item do menu
   menus:
-    edit:
-      availabilities: ''
-      menu: ''
-      sections: ''
-    form:
-      delete: ''
-      details: ''
-      errors: ''
-      imageSettings: ''
-      pdfMenuScan: ''
-      pdfSettings: ''
-      preview: ''
-      save: ''
-      selectRestaurant: ''
-      settings: ''
-      sure: ''
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      menu: Menu
-      menus: Menus
-      unavailable: O menu não está disponível atualmente.
-    new:
-      cancel: Cancelar
-      menu: Novo menu
-    show:
-      menu: ''
-      table: ''
-    showMenuBanner:
-      table: Mesa
-    showMenuavailabilities:
-      actions: Ações
-      activate: Ativar
-      availabilities: Disponibilidades
-      deactivate: Desativar
-    showMenusections:
-      actions: Ações
-      activate: Ativar
-      deactivate: Desativar
-      sections: Secções
-  menusections:
-    edit:
-      inventories: Inventários
-      items: Itens
-      menuSection: Editar secção
-      section: Secção
-    form:
-      delete: Eliminar
-      details: Detalhes
-      errors: Erros
-      imageSettings: Configurações de imagem
-      save: Guardar
-      selectMenu: Selecionar menu...
-      settings: Configurações
-      sure: Tem a certeza?
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      menuSection: Secção
-      menuSections: Secções
-    new:
-      cancel: Cancelar
-      menuSection: Nova secção
-    show:
-      menuSection: ''
-    showInventories:
-      actions: Ações
-      activate: Ativar
-      deactivate: Desativar
-      inventories: Inventários
-      reset: Reiniciar
-    showMenuitems:
-      actions: Ações
-      activate: Ativar
-      deactivate: Desativar
-      genimage: Criar imagem
-      menuItems: Items
-  plan:
-    business:
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-      key: Negócios
-    call: Ligar
-    enterprise:
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-      key: Empresa
-    pro:
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-      key: Profissional
-    register: Registar
-    starter:
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-      greeting: ''
-      key: Arranque
-  restaurantavailabilities:
-    edit:
-      restaurantavailability: Editar horários
-    form:
-      delete: Eliminar
-      errors: Erros
-      save: Guardar
-      selectRestaurant: Selecionar restaurante...
-      sure: Tem a certeza?
-    index:
-      activate: Abrir
-      deactivate: Fechar
-      restaurantavailabilities: Horário de funcionamento
-      restaurantavailability: Horário
-    new:
-      cancel: Cancelar
-      restaurantavailability: Novo horário
-    show:
-      restaurantavailability: ''
-  restaurantlocales:
-    form:
-      save: ''
-    new:
-      restaurantlocale: Novo idioma
-  restaurants:
-    edit:
-      allergynsTab: Allergens
-      employeesTab: Funcionários
-      localesTab: Idiomas
-      menuTab: Menus
-      openingsTab: Opening Hours
-      ordersTab: Pedidos
-      restaurant: ''
-      restaurantTab: Restaurante
-      sizesTab: Tamanhos
-      smartQRTab: SmartQRs
-      tableTab: Mesas
-      taxesTab: Impostos
-      tipsTab: Gorjetas
-      tracksTab: Tracks
-    form:
-      address: Endereço
-      delete: Eliminar
-      details: Detalhes
-      errors: ''
-      generateImage: ''
-      imageSettings: Definições de imagem
-      music: Música
-      pdfSettings: ''
-      save: Guardar
-      settings: Configurações
-      spotify: Spotify
-      sure: Tens a certeza?
-      wifi: Wi‑Fi
-    index:
-      actions: ''
-      activate: Ativar
-      deactivate: Desativar
-      restaurant: Restaurante
-      restaurants: Restaurantes
-    new:
-      cancel: ''
-      restaurant: Restaurante
-      restaurants: Restaurantes
-    show:
-      address: Endereço
-      address1: ''
-      address2: ''
-      city: ''
-      currency: ''
-      description: ''
-      details: Detalhes
-      imageSettings: Definições de imagem
-      name: ''
-      pdfSettings: ''
-      postcode: ''
-      restaurant: ''
-      settings: Configurações
-      state: ''
-    showAllergyns:
-      actions: ''
-      activate: ''
-      allergyns: Allergens
-      deactivate: ''
-    showEmployees:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      employee: ''
-      employees: Funcionários
-      id: ''
-      name: ''
-      role: ''
-    showLocales:
-      actions: Ações
-      activate: Ativar
-      deactivate: Desativar
-      default: Default
-      delete: Eliminar
-      menus: Menus
-    showMenus:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      menus: Menus
-    showOpeningHours:
-      actions: Ações
-      activate: Ativar
-      closing: ''
-      dayOfWeek: ''
-      deactivate: Desativar
-      opening: ''
-      openingHour: ''
-      openingHours: ''
-      openings: Opening Hours
-    showOrdrs:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      ordrs: Pedidos
-    showSizes:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      sizes: Tamanhos
-    showSmartMenus:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      smartQRs: SmartQRs
-    showTableSettings:
-      actions: ''
-      activate: ''
-      capacity: ''
-      deactivate: ''
-      name: ''
-      tableSetting: ''
-      tableSettings: Table Settings
-      type: ''
-    showTaxes:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      name: ''
-      percentage: ''
-      tax: ''
-      taxes: Impostos
-      type: ''
-    showTips:
-      actions: Ações
-      activate: Ativar
-      deactivate: Desativar
-      percentage: ''
-      tip: ''
-      tips: Gorjetas
-    showTracks:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      tracks: Tracks
-  shared:
-    footer:
-      privacy: ''
-      terms: ''
-    navbar:
-      adminArea: Admin
-      allergyns: ''
-      billing: Faturação
-      employees: ''
-      inventories: ''
-      login: ''
-      logout: ''
-      menuAvailability: ''
-      menuItems: ''
-      menuSections: ''
-      menus: ''
-      openingHours: ''
-      orderItems: ''
-      orders: ''
-      restaurants: ''
-      settings: ''
-      signUp: ''
-      sizes: ''
-      tableSettings: ''
-      taxes: ''
-      testimonials: ''
-      whatsNew: ''
-  sizes:
-    edit:
-      size: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      size: ''
-      sizes: ''
-    new:
-      cancel: ''
-      size: ''
-    show:
-      size: Mostrar tamanho
-  smartmenus:
-    edit:
-      menu: ''
-    form:
-      delete: ''
-      details: ''
-      errors: ''
-      preview: ''
-      save: ''
-      selectRestaurant: ''
-      sure: ''
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      menu: Menu
-      menus: Menus
-      smartmenus: Menus Inteligentes
-      unavailable: O menu não está disponível atualmente.
-    new:
-      cancel: ''
-      menu: ''
-    orderCustomer:
-      bill: ''
-      order: ''
-      staffAlerted: ''
-      startOrder: ''
-      takePayment: ''
-    orderStaff:
-      bill: ''
-      order: ''
-      staffAlerted: ''
-      startOrder: ''
-      takePayment: ''
-    show:
-      menu: Mostrar menu
-      table: Mesa
-    alcoholic: Alcoólico
-    alcoholic_tooltip: ''
-    alcohol:
-      acknowledge_btn: ''
-      acknowledged: ''
-    showAllergyns:
-      allergyns: Alergénios
-    showCoverCharge:
-      covercharge: Couver
-      coverchargeUnit: por pessoa
-    showMenuBanner:
-      allergyns: Alergénios
-      table: Mesa
-    showModals:
-      add: ''
-      addToOrder: ''
-      cancel: ''
-      confirmPayment: ''
-      customiseOrderWithName: ''
-      filterAllergyns: ''
-      filterBy: ''
-      menuItem: ''
-      noneAll: ''
-      price: ''
-      requestBill: ''
-      start: ''
-      startOrder: ''
-      submit: ''
-      total: ''
-      yourOrder: ''
-    showTableLocaleSelectorCustomer:
-      table: Mesa
-    showTableLocaleSelectorStaff:
-      table: Mesa
-  tablesettings:
-    edit:
-      tablesetting: Editar mesa
-    form:
-      delete: Eliminar
-      errors: Erros
-      save: Guardar
-      selectRestaurant: Selecionar restaurante...
-      sure: Tem a certeza?
-    index:
-      tablesetting: ''
-      tablesettings: ''
-    new:
-      cancel: ''
-      tablesetting: ''
-    show:
-      tablesetting: ''
-  taxes:
-    edit:
-      tax: ''
-    form:
-      delete: ''
-      errors: ''
-      save: ''
-      selectRestaurant: ''
-      sure: ''
-    index:
-      tax: ''
-      taxes: ''
-    new:
-      cancel: ''
-      tax: ''
-    show:
-      tax: ''
-  testimonials:
-    index:
-      actions: Ações
-      approve: Aprovar
-      testimonials: Testemunhos
-      unapprove: Desaprovar
-  tips:
-    edit:
-      tip: ''
-    form:
-      delete: ''
-      errors: ''
-      save: ''
-      selectRestaurant: ''
-      sure: ''
-    index:
-      tip: ''
-      tips: ''
-    new:
-      cancel: ''
-      tip: ''
-    show:
-      tip: Mostrar gorjeta
-  tracks:
-    index:
-      tracks: ''
-  userplans:
-    edit:
-      saveChanges: ''
-      selectPlan: ''
-  contacts:
     controller:
-      thanks: Obrigado por nos contactar! Responderemos em breve.
-  free: ''
+      localization_queued: Localização em fila de espera
+      localization_queued_force: Força de localização em fila de espera
+      no_active_locales: Não há locais activos configurados para este restaurante.
+      polish_queued: O polimento do menu de IA foi colocado em fila de espera.
+    edit:
+      back_to_menus: Voltar aos Menus
+      description: Editar a configuração e o conteúdo do menu
+      localization_confirm: Confirmação de localização
+      localization_description: Descrição da localização
+      localization_title: Localização de menus
+      localize_button: Localizar menu
+      menus: Menus
+    edit_2025:
+      active: Ativo
+      inactive: Inativo
+      items: artigos
+      menus: Menus
+      read_only: Só de leitura
+      sections: secções
+    index:
+      all_menus: Todos os menus
+      back: Voltar
+      description: Gerir os menus e as secções do seu restaurante
+      new_menu: Novo menu
+    new:
+      description: Criar um novo menu para o seu restaurante
+      menu_details: Detalhes do menu
+      menus: Menus
+      new: Novo
+      new_menu: Novo menu
+    sections:
+      details_2025:
+        archived: Arquivado
+      items_2025:
+        alcoholic: Alcoólico
+        alcoholic_false: Não alcoólico
+        alcoholic_true: Alcoólico
+        apply: Aplicar
+        archive_confirm: Isto arquivará os itens de menu selecionados. Os itens arquivados
+          deixarão de aparecer nesta lista.
+        bulk_action: Ação em massa...
+        bulk_archive: Arquivo
+        bulk_set_alcoholic: Conjunto alcoólico
+        bulk_set_food_type: Definir o tipo de alimento
+        bulk_set_status: Definir estado
+        choose: Escolher...
+        choose_food_type: Escolher...
+        choose_status: Escolher...
+        food_type: Tipo de alimento
+        status: Estado
+      sections_2025:
+        apply: Aplicar
+        archive_confirm: Esta ação arquiva as secções de menu selecionadas. As secções
+          arquivadas deixarão de aparecer nesta lista.
+        bulk_action: Ação em massa...
+        bulk_archive: Arquivo
+        bulk_set_status: Definir estado
+        choose_status: Escolher...
+        status: Estado
+      version_diff_2025:
+        added: Adicionado
+        changed: Alterado
+        diff_subtitle: Alterações entre instantâneos
+        diff_title: Difícil
+        items: Artigos
+        no_item_changes: Não há alterações de itens.
+        no_section_changes: Não há alterações de secção.
+        removed: Removido
+        sections: Secções
+        view_json: Ver JSON
+      versions_2025:
+        activate_or_schedule: Ativar/Programar
+        activate_version: Ativar a versão
+        activation_help: Deixar ambos vazios para que esta seja a versão ativa por
+          defeito. Forneça uma janela para agendar a ativação.
+        active_now: Ativo agora
+        any_time: em qualquer altura
+        by_user: por utilizador
+        cancel: Cancelar
+        compare: Comparar
+        compare_versions: Comparar versões
+        create_version: Criar versão
+        created: Criado
+        default_active: Predefinição ativa
+        diff_json: Difusão (JSON)
+        ends_at: Termina em (opcional)
+        forever: para sempre
+        from: De
+        menu_versions: Versões de menu
+        menu_versions_help: As versões são instantâneos imutáveis. Active uma para
+          que o Smartmenu seja processado a partir dessa imagem.
+        need_two_versions: Criar pelo menos duas versões para comparar.
+        no_versions: Ainda não há versões.
+        save: Guardar
+        starts_at: Começa em (opcional)
+        to: Para
+        version_history: Histórico de versões
+        window: Janela
+    sidebar_2025:
+      content: CONTEÚDO
+      details: Detalhes
+      items: Artigos
+      menu: MENU
+      qrcode: Código QR
+      schedule: Horário
+      sections: Secções
+      settings: Definições
+      setup: CONFIGURAÇÃO
+      versions: Versões
+  menusections:
+    edit_2025:
+      back_to_sections: Voltar às secções
+      items: artigos
+      menu_section: Secção do menu
+    form:
+      allow_pairing_help: Ativar o emparelhamento de bebidas como complemento.
+      availability_time: Tempo de disponibilidade
+      carrier_auto_help: É criado um item de menu de transporte oculto, que é mantido
+        em sincronia automaticamente com o nome, a descrição e o preço de degustação
+        desta secção.
+      includes_description: Inclui (descrição)
+      pairing_price: Preço de emparelhamento
+      party_size: Tamanho da festa (opcional)
+      tasting_menu_help: Quando activada, esta secção é uma prova de preço fixo. Os
+        preços dos itens estão ocultos; podem ser adicionados suplementos por item.
+      tasting_menu_settings: Definições do menu de degustação
+      tasting_price: Preço da degustação
+      tasting_price_help: Introduzir o preço fixo na moeda do restaurante. A moeda
+        é inferida a partir das definições do restaurante.
+  ocr_menu_imports:
+    new:
+      auto_detect: Deteção automática
+      source_language_help: Utilizado para preservar a língua original ao gerar descrições
+        em falta.
+      source_language_label: Idioma do menu
+    show:
+      back_to_imports: Voltar a Importações
+      image_prompt: Imagem imediata
+  onboarding:
+    account_details:
+      restaurant_name_required: Introduza o nome de um restaurante para continuar.
+    next_steps:
+      restaurant_edit_notice: Ótimo! Agora, complete os dados do seu restaurante,
+        a morada e prepare as suas mesas.
+  ordritems:
+    errors:
+      create_failed: Não é possível adicionar um item neste momento
+      order_missing: 'Não é possível adicionar um item: a ordem não existe'
+      remove_failed: Não é possível remover o item neste momento
+  plan:
+    pro:
+      attribut6: Atributo6
+      attribute5: Atributo5
+    starter:
+      greeting: Saudação
+  restaurantavailabilities:
+    index:
+      restaurantAvailability: Restaurantavailability
+  restaurantlocales:
+    edit:
+      back: Voltar às definições
+      description: Atualizar a configuração da língua
+      edit_locale: Editar idioma
+      settings: Definições
+    form:
+      default: Língua por defeito
+      default_help: Definir como língua predefinida para o seu restaurante
+      locale: Língua
+      locale_help: Selecionar a língua para as traduções
+      locale_locked: A língua não pode ser alterada após a criação
+    new:
+      add_locale: Adicionar idioma
+      back: Voltar às definições
+      description: Adicionar uma nova língua ao seu restaurante
+      locale_details: Detalhes da língua
+      new_locale: Nova língua
+      settings: Definições
+  restaurants:
+    form:
+      pdfSettings: Pdfsettings
+    index_frame_2025:
+      archive_confirm: Isto irá arquivar os restaurantes selecionados.
+      bulk_action: Ação em massa...
+      bulk_archive: Arquivo
+      bulk_restore: Restaurar
+      bulk_set_status: Definir estado
+      choose_status: Escolher...
+      hide_archived: Ocultar arquivados
+      restore_confirm: Isto irá restaurar os restaurantes selecionados.
+      show_archived: Mostrar arquivado
+      status: Estado
+    insights:
+      values:
+        'no': Não
+        'yes': Sim
+    sections:
+      catalog_2025:
+        total_taxes: Total de impostos
+        total_tips: Total de gorjetas
+      import_2025:
+        actions: Ações
+        ai_powered_menu_import: Importação de menus com IA
+        delete: Eliminar
+        tips_body: Carregue um PDF nítido para obter melhores resultados.
+      localization_2025:
+        current_languages: Línguas actuais
+        total_languages: Total de línguas
+      menus_2025:
+        archive_confirm: Isto irá arquivar os menus selecionados para este restaurante.
+        bulk_action: Ação em massa...
+        bulk_archive: Arquivo
+        bulk_restore: Restaurar
+        bulk_set_status: Definir estado
+        bulk_share: Partilhar
+        choose_status: Escolher...
+        hide_archived: Ocultar arquivados
+        restore_confirm: Isto irá restaurar os menus selecionados para este restaurante.
+        share_to_restaurants: Partilhar com os restaurantes
+        show_archived: Mostrar arquivado
+        status: Estado
+      settings_2025:
+        enabled: Ativado
+        not_connected: Não ligado
+        payments: Pagamentos
+        stripe_connect: Ligação por faixas
+        stripe_connect_help: Ligue a sua conta Stripe para ativar os pagamentos MoR
+          do restaurante.
+      tables_2025:
+        tables: Tabelas
+      wifi_2025:
+        'no': Não
+        'yes': Sim
+    show:
+      pdfSettings: Pdfsettings
+  smartmenus:
+    alcohol:
+      age_check: Controlo de idade
+    allergen_legend_modal:
+      allergen: Alergénio
+      allergen_key: Chave de alergénios
+      allergen_key_description: Utilizamos códigos curtos para identificar os alergénios.
+        Passe o cursor ou toque em qualquer emblema para ver o nome completo do alergénio.
+      allergen_warning: Se tiver alguma alergia alimentar ou restrição alimentar,
+        informe o seu empregado antes de efetuar o pedido.
+      close: Fechar
+      code: Código
+      custom_allergens: Alergénios adicionais
+    find_table: Procurar tabela
+    orderCustomer:
+      add_name: Adicionar o seu nome
+      view_cart: Ver carrinho
+    orderStaff:
+      view_cart: Ver carrinho
+    showMenuBanner:
+      allergen_key: Chave de alergénios
+      filter_allergens: Filtrar alergénios
+      search_menu: Menu de pesquisa...
+      view_allergen_key: Ver chave de alergénios
+    showModals:
+      remove_item: Remover item
+    welcome_banner:
+      default_tip: Toque no botão vermelho flutuante para ver o seu carrinho em qualquer
+        altura.
+      dismiss: Rejeitar
+      got_it: Já está!
+      learn_more: Saiba mais
+      need_help: Precisa de ajuda?
+      step_1: Navegue pelos itens do menu e toque para adicionar à sua encomenda
+      step_2: Rever o seu carrinho utilizando o botão vermelho
+      step_3: Envie a sua encomenda e nós levá-la-emos à sua mesa
+      tap_to_learn: Toque para saber como encomendar
+      tip_title: Dica rápida
+      welcome_subtitle: Navegue pelo nosso menu e encomende a partir do seu dispositivo
+      welcome_title: Bem-vindo ao %{nome_do_restaurante}!
+  tablesettings:
+    form:
+      capacity: Assentos
+      description: Descrição
+      description_help: 'Opcional: Adicionar notas como a localização ou instruções
+        especiais'
+      name: Nome
+      name_help: Nome da tabela exibida (por exemplo, Tabela 1, Pátio A)
+      status: Estado
+      tabletype: Tipo de tabela
+    index:
+      add_table: Adicionar tabela
+      back: Voltar
+      quick_actions: Acções rápidas
+      tables_description: Faça a gestão das mesas do seu restaurante para permitir
+        códigos QR e encomendas por mesa.
+      tables_overview: Tabelas
+      total_tables: Total de quadros

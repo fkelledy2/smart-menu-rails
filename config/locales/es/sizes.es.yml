@@ -2,42 +2,43 @@
 es:
   sizes:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: El tamaño se ha creado correctamente.
+      deleted: El tamaño se ha eliminado correctamente.
+      updated: El tamaño se ha actualizado correctamente.
     edit:
-      sizes: ''
-      edit_size: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      size_details: ''
-    form:
-      size_type: ''
-      size_type_help: ''
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      description: ''
-      description_placeholder: ''
-      description_help: ''
-    index:
-      sizes: Tamaños
-      description: ''
-      back: ''
-      new_size: ''
-      all_sizes: ''
-    new:
-      sizes: ''
-      new: ''
-      new_size: ''
-      description: ''
       cancel: Cancelar
-      size_details: ''
+      confirm_delete: "¿Borrar este tamaño?"
+      delete: Borrar
+      description: Actualizar detalles de tamaño
+      edit_size: Editar tamaño
+      size_details: Detalles del tamaño
+      sizes: Tallas
+    form:
+      description: Descripción
+      description_help: 'Opcional: Añada cualquier detalle adicional'
+      description_placeholder: Detalles opcionales sobre esta talla...
+      name: Mostrar nombre
+      name_help: Así es como los clientes verán el tamaño
+      name_placeholder: p. ej., Grande, 16oz, Tamaño familiar
+      size_type: Tamaño Tipo
+      size_type_help: Seleccione la categoría de tamaño general
+    index:
+      all_sizes: Todos los tamaños
+      back: Volver
+      description: Gestione variantes de tamaño para sus elementos de menú (por ejemplo,
+        Pequeño, Mediano, Grande)
+      new_size: Talla nueva
+      sizes: Tamaños
+    new:
+      cancel: Cancelar
+      description: Crear una nueva variante de tamaño para los elementos de menú
+      new: Nuevo
+      new_size: Talla nueva
+      size_details: Detalles del tamaño
+      sizes: Tallas
     show:
       size: Mostrar tamaño
     size:
-      description: ''
-      name: ''
-      size: ''
+      description: 'Descripción:'
+      name: 'Nombre:'
+      size: 'Tamaño:'

@@ -2,42 +2,43 @@
 fr:
   sizes:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: La taille a été créée avec succès.
+      deleted: La taille a été supprimée avec succès.
+      updated: La taille a été mise à jour avec succès.
     edit:
-      sizes: ''
-      edit_size: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      size_details: ''
-    form:
-      size_type: ''
-      size_type_help: ''
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      description: ''
-      description_placeholder: ''
-      description_help: ''
-    index:
-      sizes: Tailles
-      description: ''
-      back: ''
-      new_size: ''
-      all_sizes: ''
-    new:
-      sizes: ''
-      new: ''
-      new_size: ''
-      description: ''
       cancel: Annuler
-      size_details: ''
+      confirm_delete: Supprimer cette taille ?
+      delete: Supprimer
+      description: Mettre à jour les détails de la taille
+      edit_size: Modifier la taille
+      size_details: Détails de la taille
+      sizes: Tailles
+    form:
+      description: Description
+      description_help: 'Optionnel : Ajouter des détails supplémentaires'
+      description_placeholder: Détails optionnels sur cette taille...
+      name: Nom d'affichage
+      name_help: C'est ainsi que la taille apparaîtra aux clients
+      name_placeholder: par exemple, Grand, 16oz, Format familial
+      size_type: Taille Type
+      size_type_help: Sélectionner la catégorie de taille générale
+    index:
+      all_sizes: Toutes les tailles
+      back: Retour
+      description: Gérer les variantes de taille pour les articles de votre menu (par
+        exemple, petit, moyen, grand)
+      new_size: Nouvelle taille
+      sizes: Tailles
+    new:
+      cancel: Annuler
+      description: Créer une nouvelle variante de taille pour les articles de menu
+      new: Nouveau
+      new_size: Nouvelle taille
+      size_details: Détails de la taille
+      sizes: Tailles
     show:
       size: Afficher la taille
     size:
-      description: ''
-      name: ''
-      size: ''
+      description: 'Description :'
+      name: 'Nom :'
+      size: 'Taille :'

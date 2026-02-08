@@ -2,28 +2,28 @@
 de:
   inventories:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Das Inventar wurde erfolgreich erstellt.
+      deleted: Das Inventar wurde erfolgreich gelöscht.
+      updated: Das Inventar wurde erfolgreich aktualisiert.
     edit:
       inventory: Bestand bearbeiten
     form:
       delete: Löschen
-      errors: ''
+      errors: Fehler
       save: Speichern
-      select_menu_item: ''
+      select_menu_item: Wählen Sie einen Menüpunkt...
       sure: Sind Sie sicher?
     index:
       inventories: Bestände
       inventory: Bestand
     inventory:
-      currentinventory: ''
-      menuitem: ''
-      resethour: ''
-      startinginventory: ''
+      currentinventory: 'Derzeitiger Bestand:'
+      menuitem: 'Menüpunkt:'
+      resethour: 'Stunde zurücksetzen:'
+      startinginventory: 'Anfangsbestand:'
     new:
       cancel: Abbrechen
       inventory: Neuer Bestand
     show:
       inventory: Bestand anzeigen
-      select_menu_item: ''
+      select_menu_item: Wählen Sie einen Menüpunkt...

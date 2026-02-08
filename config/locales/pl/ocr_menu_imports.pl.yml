@@ -53,44 +53,44 @@ pl:
       title: Import menu z pliku PDF
       upload_process: Przesyłanie i przetwarzanie
     new_2025:
-      title: Importowanie menu
-      subtitle: Prześlij menu PDF, a nasza sztuczna inteligencja automatycznie wyodrębni
-        wszystkie pozycje
-      step_upload: Przesyłanie
-      step_process: Proces
-      step_review: Recenzja
-      name_label: Nazwa menu
-      name_placeholder: np. menu letnie 2024
-      name_help: Nadaj swojemu menu opisową nazwę w celu łatwej identyfikacji.
-      source_language_label: Język menu
       auto_detect: Automatyczne wykrywanie
+      browse_files: Przeglądaj pliki
+      cancel: Anuluj
+      drop_subtitle: lub
+      drop_title: Przeciągnij i upuść plik PDF tutaj
+      estimated_time: Przetwarzanie trwa około 2-5 minut
       language_en: Angielski
+      language_es: Hiszpański
       language_fr: Francuski
       language_it: Włoski
-      language_es: Hiszpański
+      name_help: Nadaj swojemu menu opisową nazwę w celu łatwej identyfikacji.
+      name_label: Nazwa menu
+      name_placeholder: np. menu letnie 2024
+      pdf_hint: PDF do 10 MB. Najlepiej sprawdzają się wyraźne skany.
+      pdf_invalid_js: Wybierz plik PDF
+      pdf_label: Menu PDF
+      remove_file_aria: Usuń plik
       source_language_help: Służy do zachowania oryginalnego języka podczas generowania
         brakujących opisów.
-      pdf_label: Menu PDF
-      drop_title: Przeciągnij i upuść plik PDF tutaj
-      drop_subtitle: lub
-      browse_files: Przeglądaj pliki
-      pdf_hint: PDF do 10 MB. Najlepiej sprawdzają się wyraźne skany.
-      remove_file_aria: Usuń plik
-      estimated_time: Przetwarzanie trwa około 2-5 minut
-      cancel: Anuluj
+      source_language_label: Język menu
       start_processing: Rozpoczęcie przetwarzania
-      tips_title: Wskazówki dotyczące najlepszych wyników
-      tip_quality_title: Używaj wysokiej jakości skanów
-      tip_quality_text: Najlepiej sprawdzają się wyraźne pliki PDF o wysokiej rozdzielczości
-        i dobrym kontraście. Unikaj rozmytych lub niskiej jakości zdjęć.
-      tip_format_title: Standardowy układ menu
+      step_process: Proces
+      step_review: Recenzja
+      step_upload: Przesyłanie
+      subtitle: Prześlij menu PDF, a nasza sztuczna inteligencja automatycznie wyodrębni
+        wszystkie pozycje
       tip_format_text: Najlepiej sprawdzają się menu z przejrzystymi sekcjami i nazwami
         przedmiotów oddzielonymi od cen. Nasza sztuczna inteligencja poradzi sobie
         z większością układów.
-      tip_language_title: Obsługa wielu języków
+      tip_format_title: Standardowy układ menu
       tip_language_text: Obsługujemy menu w języku angielskim, włoskim, hiszpańskim,
         francuskim i nie tylko. Wielojęzyczne menu również działają!
-      pdf_invalid_js: Wybierz plik PDF
+      tip_language_title: Obsługa wielu języków
+      tip_quality_text: Najlepiej sprawdzają się wyraźne pliki PDF o wysokiej rozdzielczości
+        i dobrym kontraście. Unikaj rozmytych lub niskiej jakości zdjęć.
+      tip_quality_title: Używaj wysokiej jakości skanów
+      tips_title: Wskazówki dotyczące najlepszych wyników
+      title: Importowanie menu
     show:
       allergens: Alergeny
       approve_sections_items: Zatwierdzanie sekcji i pozycji

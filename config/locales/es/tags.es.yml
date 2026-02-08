@@ -2,14 +2,14 @@
 es:
   tags:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: La etiqueta se ha creado correctamente.
+      deleted: La etiqueta se ha eliminado correctamente.
+      updated: La etiqueta se ha actualizado correctamente.
     edit:
-      title: ''
+      title: Editar etiqueta
     form:
       delete: Eliminar
-      errors: ''
+      errors: Errores
       save: Guardar
       sure: "¿Estás seguro?"
     index:
@@ -17,10 +17,10 @@ es:
       tags: Etiquetas
     new:
       cancel: Cancelar
-      title: ''
+      title: Nueva etiqueta
     show:
-      show_tag: ''
+      show_tag: Mostrar etiqueta
     tag:
-      description: ''
-      menuitem: ''
-      name: ''
+      description: 'Descripción:'
+      menuitem: 'Opción de menú:'
+      name: 'Nombre:'

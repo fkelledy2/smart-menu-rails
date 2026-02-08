@@ -3,10 +3,12 @@ pt:
   home:
     index:
       browse: Ver menus
-      page_title: ''
-      page_description: ''
-      error: ''
-      compare_plans: ''
+      closingBody: Crie o seu primeiro menu agora, ou explore uma demonstração e veja
+        como se sente no telemóvel.
+      closingPrimaryCta: Criar o meu menu
+      closingSecondaryCta: Ver demonstração
+      closingTitle: Lance o seu menu hoje mesmo
+      compare_plans: Comparar planos
       contactUs: Contacte-nos
       ctaBody1: Gere um restaurante mais inteligente com ferramentas digitais que
         trabalham tanto como a sua equipa. Desde menus inteligentes a sistemas de
@@ -21,82 +23,18 @@ pt:
         experimentar um serviço mais inteligente."
       demoMenuTagBrowse: ou
       emailAddressTag: Nunca partilharemos o seu email.
-      heroPrimaryCta: ''
-      heroSecondaryCta: ''
-      heroTrust1: ''
-      heroTrust2: ''
-      heroTrust3: ''
-      overviewTitle: ''
-      overviewBody: ''
-      overviewItem1: ''
-      overviewItem2: ''
-      overviewItem3: ''
-      overviewItem4: ''
-      overviewItem5: ''
-      howTitle: ''
-      howBody: ''
-      howStep1Title: ''
-      howStep1Body: ''
-      howStep2Title: ''
-      howStep2Body: ''
-      howStep3Title: ''
-      howStep3Body: ''
-      trustTitle: ''
-      trustItem1Title: ''
-      trustItem1Body: ''
-      trustItem2Title: ''
-      trustItem2Body: ''
-      trustItem3Title: ''
-      trustItem3Body: ''
-      trustItem4Title: ''
-      trustItem4Body: ''
-      faqTitle: ''
-      faqQ1: ''
-      faqA1: ''
-      faqQ2: ''
-      faqA2: ''
-      faqQ3: ''
-      faqA3: ''
-      faqQ4: ''
-      faqA4: ''
-      closingTitle: ''
-      closingBody: ''
-      closingPrimaryCta: ''
-      closingSecondaryCta: ''
-      featuresStoryTitle: ''
-      featuresStoryBody: ''
-      featuresStoryPrimaryCta: ''
-      featuresStorySecondaryCta: ''
-      featuresStory1Kicker: ''
-      featuresStory1Title: ''
-      featuresStory1Body: ''
-      featuresStory1Bullet1: ''
-      featuresStory1Bullet2: ''
-      featuresStory1Bullet3: ''
-      featuresStory2Kicker: ''
-      featuresStory2Title: ''
-      featuresStory2Body: ''
-      featuresStory2Bullet1: ''
-      featuresStory2Bullet2: ''
-      featuresStory2Bullet3: ''
-      featuresStory3Kicker: ''
-      featuresStory3Title: ''
-      featuresStory3Body: ''
-      featuresStory3Bullet1: ''
-      featuresStory3Bullet2: ''
-      featuresStory3Bullet3: ''
-      featuresStory4Kicker: ''
-      featuresStory4Title: ''
-      featuresStory4Body: ''
-      featuresStory4Bullet1: ''
-      featuresStory4Bullet2: ''
-      featuresStory4Bullet3: ''
-      featuresStory5Kicker: ''
-      featuresStory5Title: ''
-      featuresStory5Body: ''
-      featuresStory5Bullet1: ''
-      featuresStory5Bullet2: ''
-      featuresStory5Bullet3: ''
+      error: 'Ocorreu um erro: %{mensagem}'
+      faqA1: Não. Os hóspedes só têm de digitalizar um código QR e o menu abre-se
+        no seu browser.
+      faqA2: Sim. As alterações são publicadas imediatamente, sem reimpressões.
+      faqA3: Sim. Traduzir o menu e permitir que os convidados naveguem na sua língua.
+      faqA4: Sim. Gere imagens de IA para manter o seu menu consistente e com a sua
+        marca.
+      faqQ1: Os hóspedes precisam de uma aplicação?
+      faqQ2: Posso atualizar o menu instantaneamente?
+      faqQ3: Suportam várias línguas?
+      faqQ4: É possível adicionar fotografias sem uma sessão fotográfica?
+      faqTitle: Perguntas mais frequentes
       featureDescription2: Adeus às mudanças de mesa lentas. Com pedidos de autoatendimento,
         os clientes controlam o ritmo - acelerando o serviço, reduzindo os tempos
         de espera.
@@ -116,12 +54,79 @@ pt:
       featureTitle5: Serviço sustentável
       featureTitle6: Dados reais, decisões mais inteligentes
       features: Funcionalidades
+      featuresStory1Body: O seu menu deve parecer parte da sua marca - rápido, limpo
+        e fácil de navegar.
+      featuresStory1Bullet1: Layout mobile-first com navegação suave
+      featuresStory1Bullet2: Secções claras e detalhes do prato
+      featuresStory1Bullet3: Não é necessária nenhuma aplicação - basta digitalizar
+        um QR
+      featuresStory1Kicker: Experiência do hóspede
+      featuresStory1Title: Menus que carregam instantaneamente e têm um ótimo aspeto
+      featuresStory2Body: Traduza o seu menu com um clique e deixe os convidados navegarem
+        com confiança - sem adivinhações incómodas.
+      featuresStory2Bullet1: Menus multilingues para turistas e habitantes locais
+      featuresStory2Bullet2: Formatação consistente em todas as línguas
+      featuresStory2Bullet3: Encomendas mais rápidas com menos perguntas
+      featuresStory2Kicker: Tradução
+      featuresStory2Title: Servir cada hóspede na sua própria língua
+      featuresStory3Body: Crie imagens de pratos consistentes e de acordo com a marca
+        para melhorar a qualidade percebida e aumentar a seleção.
+      featuresStory3Bullet1: Identidade visual coesa em todos os pratos
+      featuresStory3Bullet2: Não é necessária uma sessão fotográfica para começar
+      featuresStory3Bullet3: Fácil de atualizar quando o menu muda
+      featuresStory3Kicker: Imagens de IA
+      featuresStory3Title: Fotografias de pratos que combinam com o estilo do seu
+        menu
+      featuresStory4Body: Comece com um belo menu. Adicione encomendas e pagamentos
+        quando for adequado ao seu modelo de serviço.
+      featuresStory4Bullet1: Reduzir os tempos de espera durante o serviço de ponta
+      featuresStory4Bullet2: Controlar a disponibilidade e as janelas de encomenda
+      featuresStory4Bullet3: Manter o pessoal concentrado na hospitalidade
+      featuresStory4Kicker: Encomendar
+      featuresStory4Title: Encomendas e pagamentos quando estiver pronto
+      featuresStory5Body: Utilize análises simples para melhorar o seu menu, reduzir
+        o stock morto e aumentar o valor médio das encomendas.
+      featuresStory5Bullet1: Identificar tendências e pratos com melhor desempenho
+      featuresStory5Bullet2: Veja o que os hóspedes realmente vêem e escolhem
+      featuresStory5Bullet3: Faça alterações e publique instantaneamente
+      featuresStory5Kicker: Conhecimentos
+      featuresStory5Title: Compreender o que vende - depois otimizar
+      featuresStoryBody: Concebido para os hóspedes, construído para o serviço. Escolha
+        as funcionalidades de que necessita agora e adicione mais à medida que cresce.
+      featuresStoryPrimaryCta: Criar o meu menu
+      featuresStorySecondaryCta: Ver demonstração
+      featuresStoryTitle: Finalmente, um menu digital que parece de primeira qualidade
+      heroPrimaryCta: Criar o meu menu
+      heroSecondaryCta: Ver menu de demonstração
+      heroTrust1: Não é necessária nenhuma aplicação para os hóspedes
+      heroTrust2: Menus multilingues
+      heroTrust3: Actualizações instantâneas (sem reimpressões)
+      howBody: Não precisa de um programador. Configure o seu menu e entre em funcionamento
+        rapidamente.
+      howStep1Body: Adicione secções e pratos ou importe o seu menu existente.
+      howStep1Title: Criar o seu restaurante e menu
+      howStep2Body: Adicione traduções, regras de disponibilidade, alergénios e imagens.
+      howStep2Title: Prepará-lo para receber convidados
+      howStep3Body: Imprima e coloque-o - os convidados digitalizam e navegam instantaneamente.
+      howStep3Title: Partilhe o seu QR
+      howTitle: Comece a trabalhar em minutos
       menus: Menus
       next: Próximo
       numbers: Números
       numbersTag: 'As nossas estatísticas: Restaurantes, Menus, Pedidos e Valor:'
       orderValue: Valor do pedido
       orders: Pedidos
+      overviewBody: Mantenha o seu menu atualizado, consistente e de fácil conversão
+        - sem reimpressões ou PDFs confusos.
+      overviewItem1: Menus rápidos e com prioridade para os telemóveis
+      overviewItem2: Tradução com um clique
+      overviewItem3: Imagens de pratos AI (estilo consistente)
+      overviewItem4: Encomendas e pagamentos quando quiser
+      overviewItem5: Informações que podem ser utilizadas
+      overviewTitle: Tudo o que precisa de um menu digital, numa única plataforma
+      page_description: Crie menus digitais bonitos, permita encomendas em linha e
+        ofereça opções de pagamento sem contacto para o seu restaurante.
+      page_title: Mellow Menu - Solução de menu digital para restaurantes
       previous: Anterior
       pricing: Os nossos preços
       pricingTag: 'Escolha entre os nossos modelos de preços flexíveis:'
@@ -132,11 +137,22 @@ pt:
       submit: Enviar
       testimonials: Testemunhos
       testimonialsTag: 'Algumas palavras dos nossos clientes satisfeitos:'
-      video_unsupported: ''
+      trustItem1Body: Concebido para carregar rapidamente e manter-se legível.
+      trustItem1Title: Rápido no telemóvel
+      trustItem2Body: Alternar itens e disponibilidade à medida que o serviço muda.
+      trustItem2Title: Controlo e disponibilidade
+      trustItem3Body: Não é necessária nenhuma aplicação - basta digitalizar e seguir.
+      trustItem3Title: UX amigável para os hóspedes
+      trustItem4Body: Obtenha ajuda rapidamente quando está ocupado.
+      trustItem4Title: Apoio quando precisa dele
+      trustTitle: Construído para um verdadeiro serviço de restauração
+      video_unsupported: O seu browser não suporta a etiqueta de vídeo.
       welcome: Bem-vindo!
-    terms:
-      page_title: ''
-      page_description: ''
     privacy:
-      page_title: ''
-      page_description: ''
+      page_description: Saiba como a Mellow Menu recolhe, utiliza e protege as suas
+        informações pessoais na nossa Política de privacidade.
+      page_title: Política de privacidade - Mellow Menu
+    terms:
+      page_description: Leia os nossos Termos de Serviço para compreender as regras
+        e diretrizes de utilização do Mellow Menu.
+      page_title: Termos de serviço - Mellow Menu

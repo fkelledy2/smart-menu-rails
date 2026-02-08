@@ -2,270 +2,256 @@
 es:
   restaurants:
     controller:
-      archived: ''
-      created: ''
-      updated: ''
+      archived: El restaurante se ha archivado correctamente.
+      created: El restaurante se ha creado correctamente.
+      updated: El restaurante se ha actualizado correctamente.
     edit:
-      allergynsTab: ''
-      employeesTab: ''
-      localesTab: ''
-      menuTab: ''
-      openingsTab: ''
-      ordersTab: ''
-      restaurantTab: ''
-      sizesTab: ''
-      smartQRTab: ''
-      tableTab: ''
-      taxesTab: ''
-      tipsTab: ''
-      tracksTab: ''
-    form:
-      address: ''
-      connect: ''
-      delete: ''
-      details: ''
-      imageSettings: ''
-      image_style_profile_hint: ''
-      image_style_profile_label: ''
-      image_style_profile_placeholder: ''
-      music: ''
-      save: ''
-      settings: ''
-      spotify: ''
-      sure: ''
-      wifi: ''
-    index:
-      restaurants: ''
-    new:
-      restaurant: ''
-      restaurants: ''
-    restaurant:
-      address1: ''
-      address2: ''
-      capacity: ''
-      city: ''
-      country: ''
-      description: ''
-      image: ''
-      name: ''
-      postcode: ''
-      state: ''
-      status: ''
-      user: ''
-    show:
-      address: ''
-      billing_content: ''
-      details: ''
-      imageSettings: ''
-      settings: ''
-      switch_off: ''
-      switch_on: ''
-      tab_billing: ''
-      tab_employees: ''
-      tab_menus: ''
-      tab_openinghours: ''
-      tab_restaurant: ''
-      tab_tables: ''
-      tab_taxes: ''
-      tab_tips: ''
-    showAllergyns:
-      allergyns: ''
-    showEmployees:
-      employees: ''
-    showLocales:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      default: ''
-      delete: ''
-      menus: ''
-    showMenus:
-      add_new_menu: ''
-      import_menu_from_pdf: ''
-      menus: ''
-    showOpeningHours:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      openings: ''
-    showOrdrs:
-      ordrs: ''
-    showSizes:
-      sizes: ''
-    showSmartMenus:
-      scan_to_join: ''
-      smartQRs: ''
-      wifi: ''
-    showTableSettings:
-      tableSettings: ''
-    showTaxes:
-      taxes: ''
-    showTips:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      tips: ''
-    showTrack:
-      loading: ''
-    showTracks:
-      tracks: ''
-    insights:
-      page_title: ''
-      title: ''
-      back: ''
-      export_csv: ''
-      helper_text: ''
-      no_data: ''
-      values:
-        true: ''
-        false: ''
-      filters:
-        time_window: ''
-        today: ''
-        yesterday: ''
-        last7: ''
-        last28: ''
-        mtd: ''
-        last_month: ''
-        custom: ''
-        start: ''
-        end: ''
-        refresh: ''
-        menu_optional: ''
-        all_menus: ''
-      sections:
-        top_performers:
-          title: ''
-        slow_movers:
-          title: ''
-        prep_time_bottlenecks:
-          title: ''
-          helper_text: ''
-        voice_triggers:
-          title: ''
-        abandonment_funnel:
-          title: ''
-      columns:
-        item: ''
-        orders: ''
-        qty: ''
-        share: ''
-        median_seconds: ''
-        sample_size: ''
-        outlier: ''
-        triggers: ''
-        success: ''
-        fail: ''
-        rate: ''
-        step: ''
-        count: ''
-        dropoff: ''
-        dropoff_rate: ''
-      funnel_steps:
-        order_submitted: ''
-        bill_requested: ''
-        payment_succeeded: ''
+      allergynsTab: Alérgenos
+      employeesTab: Empleados
+      localesTab: Locales
+      menuTab: Menús
+      openingsTab: Horario de apertura
+      ordersTab: Pedidos
+      restaurantTab: Restaurante
+      sizesTab: Tallas
+      smartQRTab: SmartQRs
+      tableTab: Tablas
+      taxesTab: Impuestos
+      tipsTab: Consejos
+      tracksTab: Pistas
     edit_2025:
-      subtitle: ''
-      toggle_navigation: ''
-    sidebar_2025:
-      close_menu: ''
-      restaurant: ''
-      details: ''
-      schedule: ''
-      localization: ''
-      menus: ''
-      all_menus: ''
-      allergens: ''
-      sizes: ''
-      tables: ''
-      operations: ''
-      kitchen_dashboard: ''
-      bar_dashboard: ''
-      wifi: ''
-      team: ''
-      staff: ''
-      financials: ''
-      taxes_and_tips: ''
-      taxes: ''
-      tips: ''
-      ordering: ''
-      insights: ''
-      setup: ''
-      settings: ''
-      qr_codes: ''
-      jukebox: ''
-      advanced: ''
+      subtitle: Gestione la configuración de su restaurante
+      toggle_navigation: Alternar navegación
+    form:
+      address: Dirección
+      connect: Conectar
+      delete: Borrar
+      details: Detalles
+      imageSettings: Ajustes de imagen
+      image_style_profile_hint: Se utiliza para mantener la coherencia de todas las
+        imágenes de los elementos de menú generados en este restaurante.
+      image_style_profile_label: Perfil de estilo de imagen
+      image_style_profile_placeholder: p. ej., fotografía realista de alimentos en
+        estudio; poca profundidad de campo; luz natural suave; gres mate; mesa de
+        madera rústica; atrezzo mínimo
+      music: Música
+      save: Guardar
+      settings: Ajustes
+      spotify: Spotify
+      sure: "¿Seguro?"
+      wifi: Wi‑Fi
+    index:
+      restaurants: Restaurantes
     index_2025:
-      title: ''
-      heading: ''
-      subtitle: ''
-      quick_actions: ''
-      new_restaurant: ''
-      search_placeholder: ''
-      search: ''
+      heading: Restaurantes
+      new_restaurant: Nuevo restaurante
+      quick_actions: Acciones rápidas
+      search: Buscar en
+      search_placeholder: Buscar restaurantes...
+      subtitle: Gestionar ubicaciones, menús y personal
+      title: Sus restaurantes
     index_frame_2025:
-      pagination_aria_label: ''
-      no_restaurants: ''
-      no_results_for: ''
-      clear_search: ''
-      menus_count_label: ''
-      staff_count_label: ''
-      edit: ''
-      menus_action: ''
-      restaurants: ''
-      active: ''
-      inactive: ''
-      set_status: ''
-      apply: ''
-      drag_to_reorder: ''
+      active: Activo
+      apply: Solicitar
+      clear_search: Búsqueda clara
+      drag_to_reorder: Arrastrar para reordenar
+      edit: Editar
+      inactive: Inactivo
+      menus_action: Menús
+      menus_count_label: menús
+      no_restaurants: No se han encontrado restaurantes
+      no_results_for: No hay resultados para
+      pagination_aria_label: Paginación de restaurantes
+      restaurants: Restaurantes
+      set_status: Establecer estado...
+      staff_count_label: personal
+    insights:
+      back: Volver
+      columns:
+        count: Cuenta
+        dropoff: Dejar
+        dropoff_rate: Tasa de abandono
+        fail: Falla
+        item: Artículo
+        median_seconds: Mediana (s)
+        orders: Pedidos
+        outlier: Outlier
+        qty: Cantidad
+        rate: Tarifa
+        sample_size: "N"
+        share: Compartir
+        step: Paso
+        success: Éxito
+        triggers: Disparadores
+      export_csv: Exportar CSV
+      filters:
+        all_menus: Todos los menús
+        custom: A medida
+        end: Fin
+        last28: Últimos 28 días
+        last7: Últimos 7 días
+        last_month: Último mes
+        menu_optional: Menú (opcional)
+        mtd: MTD
+        refresh: Actualizar
+        start: Inicio
+        time_window: Ventana de tiempo
+        today: Hoy
+        yesterday: Ayer
+      funnel_steps:
+        bill_requested: Proyecto de ley solicitado
+        order_submitted: Pedido presentado
+        payment_succeeded: Pago efectuado
+      helper_text: 'v1: información de sólo lectura. El embudo de abandono se basa
+        actualmente en hitos de pedido/pago.'
+      no_data: No hay datos para la ventana seleccionada.
+      page_title: "%{restaurant_name} - Perspectivas"
+      sections:
+        abandonment_funnel:
+          title: Embudo de abandono
+        prep_time_bottlenecks:
+          helper_text: Utiliza la temporización del ticket de la estación (enviado
+            → listo/recogido) como proxy v1.
+          title: Cuellos de botella en la preparación
+        slow_movers:
+          title: Movimientos lentos
+        top_performers:
+          title: Mejores resultados
+        voice_triggers:
+          title: Frecuencia de disparo de voz
+      title: Perspectivas
+      values:
+        'false': ''
+        'true': ''
+    new:
+      restaurant: Restaurante
+      restaurants: Restaurantes
+    restaurant:
+      address1: 'Dirección1:'
+      address2: 'Dirección2:'
+      capacity: 'Capacidad:'
+      city: 'Ciudad:'
+      country: 'País:'
+      description: 'Descripción:'
+      image: 'Imagen:'
+      name: 'Nombre:'
+      postcode: 'Código postal:'
+      state: 'Estado:'
+      status: 'Estado:'
+      user: 'Usuario:'
     sections:
       details_2025:
-        quick_actions: ''
-        new_menu: ''
-        import_menu: ''
-        overview: ''
-        menus: ''
-        items: ''
-        tables: ''
-        staff: ''
-        restaurant_details: ''
-        restaurant_name: ''
-        restaurant_name_placeholder: ''
-        restaurant_name_help: ''
-        description: ''
-        description_placeholder: ''
-        description_help: ''
-        status: ''
-        active: ''
-        inactive: ''
-        status_help: ''
-        phone: ''
-        phone_placeholder: ''
-        phone_help: ''
-        website: ''
-        website_placeholder: ''
-        website_help: ''
-        currency: ''
-        currency_help: ''
-        timezone: ''
-        timezone_help: ''
-        location: ''
-        address: ''
-        address_placeholder: ''
-        address_help: ''
-        city: ''
-        city_placeholder: ''
-        state: ''
-        state_placeholder: ''
-        postcode: ''
-        postcode_placeholder: ''
-        country: ''
-        country_placeholder: ''
-        latitude: ''
-        latitude_placeholder: ''
-        longitude: ''
-        longitude_placeholder: ''
-        loading_map: ''
-        map_error: ''
-        location_label: ''
+        address: Dirección
+        city: Ciudad
+        city_placeholder: Nombre de la ciudad
+        country: País
+        country_placeholder: País
+        currency: Moneda
+        description: Descripción
+        items: Artículos
+        latitude: Latitud
+        latitude_placeholder: por ejemplo, 40.7128
+        longitude: Longitud
+        longitude_placeholder: por ejemplo, -74,0060
+        phone: Teléfono
+        phone_help: Número de contacto para clientes
+        phone_placeholder: por ejemplo, +1 (555) 123-4567
+        postcode: Código postal
+        postcode_placeholder: por ejemplo, 12345
+        restaurant_name: Nombre del restaurante
+        restaurant_name_help: El nombre que verán los clientes
+        restaurant_name_placeholder: por ejemplo, Bella Italia
+        state: Estado/Provincia
+        state_placeholder: Estado o provincia
+        status: Estado
+        status_help: Sólo los restaurantes activos son visibles para los clientes
+        timezone: Zona horaria
+        timezone_help: Zona horaria local para el horario de funcionamiento
+        website: Página web
+        website_help: Sitio web de su restaurante
+        website_placeholder: https://example.com
+    show:
+      address: Dirección
+      billing_content: Aquí aparecerá la configuración de facturación.
+      details: Detalles
+      imageSettings: Ajustes de imagen
+      settings: Ajustes
+      switch_off: fuera de
+      switch_on: en
+      tab_billing: Facturación
+      tab_employees: Empleados
+      tab_menus: Menús
+      tab_openinghours: Horario de apertura
+      tab_restaurant: Restaurante
+      tab_tables: Tablas
+      tab_taxes: Impuestos
+      tab_tips: Consejos
+    showAllergyns:
+      allergyns: Alérgenos
+    showEmployees:
+      employees: Empleados
+    showLocales:
+      actions: Acciones
+      activate: Activar
+      deactivate: Desactivar
+      default: Por defecto
+      delete: Borrar
+      menus: Menús
+    showMenus:
+      add_new_menu: Añadir nuevo menú
+      import_menu_from_pdf: Importar menú desde PDF
+      menus: Menús
+    showOpeningHours:
+      actions: Acciones
+      activate: Activar
+      deactivate: Desactivar
+      openings: Horario de apertura
+    showOrdrs:
+      ordrs: Pedidos
+    showSizes:
+      sizes: Tallas
+    showSmartMenus:
+      scan_to_join: Escanear para unirse
+      smartQRs: SmartQRs
+      wifi: Wi‑Fi
+    showTableSettings:
+      tableSettings: Configuración de la mesa
+    showTaxes:
+      taxes: Impuestos
+    showTips:
+      actions: Acciones
+      activate: Activar
+      deactivate: Desactivar
+      tips: Consejos
+    showTrack:
+      loading: Cargando...
+    showTracks:
+      tracks: Pistas
+    sidebar_2025:
+      advanced: Avanzado
+      all_menus: Todos los menús
+      allergens: Alérgenos
+      bar_dashboard: Bar
+      close_menu: Cerrar menú
+      details: Detalles
+      financials: FINANZAS
+      insights: Perspectivas
+      jukebox: Jukebox
+      kitchen_dashboard: Cocina
+      localization: Localización
+      menus: MENÚS
+      operations: OPERACIONES
+      ordering: Pedidos
+      qr_codes: Códigos QR
+      restaurant: RESTAURANTE
+      schedule: Horario
+      settings: Ajustes
+      setup: CONFIGURACIÓN
+      sizes: Tallas
+      staff: Personal
+      tables: Tablas
+      taxes: Impuestos
+      taxes_and_tips: Impuestos y propinas
+      team: EQUIPO
+      tips: Consejos
+      wifi: Wi‑Fi

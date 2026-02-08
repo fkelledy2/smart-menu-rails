@@ -2,6 +2,6 @@
 es:
   ingredients:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: El ingrediente se ha creado correctamente.
+      deleted: Ingrediente eliminado con éxito.
+      updated: El ingrediente se ha actualizado correctamente.

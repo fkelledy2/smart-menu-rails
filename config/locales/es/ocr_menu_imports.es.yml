@@ -2,136 +2,157 @@
 es:
   ocr_menu_imports:
     controller:
-      attach_pdf: ''
-      confirm_section: ''
-      deleted: ''
-      fail_create: ''
-      processing_restarted: ''
-      published: ''
-      queued: ''
-      republished: ''
-      unable_restart: ''
-      unauthorized: ''
-      updated: ''
+      attach_pdf: Adjunte un archivo PDF.
+      confirm_section: Confirme al menos una sección antes de importar.
+      deleted: La importación de menús se ha eliminado correctamente.
+      fail_create: 'Error al crear el menú: %{error}'
+      processing_restarted: Se ha (re)iniciado la tramitación.
+      published: El menú se ha publicado correctamente.
+      queued: La importación de menús se ha puesto en cola para su procesamiento.
+      republished: Se ha vuelto a publicar el menú con los cambios confirmados.
+      unable_restart: 'No se ha podido (re)iniciar el procesamiento desde el estado:
+        %{status}.'
+      unauthorized: No está autorizado a realizar esta acción.
+      updated: La importación de menús se ha actualizado correctamente.
     import_item:
-      default_title: ''
-      delete_confirm: ''
-      delete_title: ''
-      imported_ago: ''
-      item_label: ''
-      section_label: ''
+      default_title: Importar artículo
+      delete_confirm: "¿Borrar esta importación? No se puede deshacer."
+      delete_title: Borrar importación
+      imported_ago: Importado hace %{time}
+      item_label: artículo
+      section_label: sección
     index:
-      empty_hint: ''
-      empty_title: ''
-      new_import: ''
-      title: ''
+      empty_hint: Para empezar, cargue un nuevo menú en PDF.
+      empty_title: Sin importación de menús
+      new_import: Nuevo menú Importar
+      title: Menú Importación
     menu_section:
-      edit: ''
-      hide: ''
-      items: ''
+      edit: Editar
+      hide: Ocultar
+      items: artículos
     new:
-      cancel: ''
-      choose_file: ''
-      name_invalid: ''
-      name_label: ''
-      name_placeholder: ''
-      no_file_chosen: ''
-      pdf_hint: ''
-      pdf_invalid: ''
-      pdf_label: ''
-      subtitle: ''
-      tip_file_quality_text: ''
-      tip_file_quality_title: ''
-      tip_format_text: ''
-      tip_format_title: ''
-      tip_processing_time_text: ''
-      tip_processing_time_title: ''
-      tips_title: ''
-      title: ''
-      upload_process: ''
+      cancel: Cancelar
+      choose_file: Elegir archivo
+      name_invalid: Indique un nombre para este menú.
+      name_label: Nombre del menú
+      name_placeholder: p. ej., Menú de cena, Especiales de almuerzo, etc.
+      no_file_chosen: Ningún archivo elegido
+      pdf_hint: PDF de hasta 10 MB
+      pdf_invalid: Seleccione un archivo PDF para cargar.
+      pdf_label: Archivo PDF
+      subtitle: Cargue un menú en PDF para extraer automáticamente los elementos y
+        secciones del menú.
+      tip_file_quality_text: Utilice PDF de alta calidad con texto claro y legible.
+        Evite los menús escritos a mano o los escaneados de baja resolución.
+      tip_file_quality_title: Calidad de los archivos
+      tip_format_text: El sistema funciona mejor con PDF digitales. Los documentos
+        escaneados pueden tener menor precisión.
+      tip_format_title: Formato
+      tip_processing_time_text: Los archivos más grandes pueden tardar varios minutos
+        en procesarse. Recibirás un correo electrónico cuando el procesamiento haya
+        finalizado.
+      tip_processing_time_title: Tiempo de procesamiento
+      tips_title: Consejos para obtener los mejores resultados
+      title: Importar menú desde PDF
+      upload_process: Cargar y procesar
     new_2025:
-      title: ''
-      subtitle: ''
-      step_upload: ''
-      step_process: ''
-      step_review: ''
-      name_label: ''
-      name_placeholder: ''
-      name_help: ''
-      source_language_label: ''
-      auto_detect: ''
-      language_en: ''
-      language_fr: ''
-      language_it: ''
-      language_es: ''
-      source_language_help: ''
-      pdf_label: ''
-      drop_title: ''
-      drop_subtitle: ''
-      browse_files: ''
-      pdf_hint: ''
-      remove_file_aria: ''
-      estimated_time: ''
-      cancel: ''
-      start_processing: ''
-      tips_title: ''
-      tip_quality_title: ''
-      tip_quality_text: ''
-      tip_format_title: ''
-      tip_format_text: ''
-      tip_language_title: ''
-      tip_language_text: ''
-      pdf_invalid_js: ''
+      auto_detect: Detección automática
+      browse_files: Examinar archivos
+      cancel: Cancelar
+      drop_subtitle: o
+      drop_title: Arrastre y suelte su PDF aquí
+      estimated_time: El proceso dura entre 2 y 5 minutos
+      language_en: Inglés
+      language_es: Español
+      language_fr: Francés
+      language_it: Italiano
+      name_help: Asigne a su menú un nombre descriptivo para facilitar su identificación
+      name_label: Nombre del menú
+      name_placeholder: por ejemplo, Menú de verano 2024
+      pdf_hint: PDF de hasta 10 MB. Los escaneados nítidos son los mejores.
+      pdf_invalid_js: Seleccione un archivo PDF
+      pdf_label: Menú PDF
+      remove_file_aria: Eliminar archivo
+      source_language_help: Se utiliza para conservar el idioma original al generar
+        las descripciones que faltan.
+      source_language_label: Idioma del menú
+      start_processing: Iniciar tratamiento
+      step_process: Proceso
+      step_review: Consulte
+      step_upload: Cargar
+      subtitle: Cargue un menú en PDF y nuestra IA extraerá todos los elementos automáticamente
+      tip_format_text: Los menús con secciones claras y nombres de artículos separados
+        de los precios funcionan mejor. Nuestra IA puede manejar la mayoría de los
+        diseños.
+      tip_format_title: Menú estándar
+      tip_language_text: Admitimos menús en inglés, italiano, español, francés, etc.
+        Los menús multilingües también funcionan.
+      tip_language_title: Compatible con varios idiomas
+      tip_quality_text: Lo mejor son los PDF claros, de alta resolución y con buen
+        contraste. Evite las fotos borrosas o de baja calidad.
+      tip_quality_title: Utilice escáneres de alta calidad
+      tips_title: Consejos para obtener los mejores resultados
+      title: Importe su menú
     show:
-      allergens: ''
-      approve_sections_items: ''
-      cancel: ''
-      click_to_add_description: ''
-      confirm_modal_body: ''
-      confirm_modal_title: ''
-      create_menu: ''
-      dairy_free: ''
-      default_title: ''
-      delete: ''
-      description: ''
-      dietary_information: ''
-      edit_item_modal_title: ''
-      failed_heading: ''
-      gluten_free: ''
-      hold_multi_select: ''
-      import_details: ''
-      imported_ago: ''
-      imported_menu_subtitle: ''
-      imported_menu_title: ''
-      item_name: ''
-      no_items_explainer: ''
-      no_items_heading: ''
-      no_items_tip1: ''
-      no_items_tip2: ''
-      no_items_tip3: ''
-      position: ''
-      price: ''
-      process_confirm: ''
-      process_pdf: ''
-      processing_page: ''
-      processing_title: ''
-      progress_complete: ''
-      progress_loading: ''
-      publish: ''
-      publish_menu: ''
-      reorder_hint: ''
-      save_changes: ''
-      section: ''
-      section_disabled_title: ''
-      status: ''
+      allergens: Alérgenos
+      approve_sections_items: Aprobar secciones y puntos
+      cancel: Cancelar
+      click_to_add_description: Haga clic para añadir una descripción.
+      confirm_modal_body: Confirme para publicar su menú. Opcionalmente, puede utilizar
+        Sincronizar publicación para archivar las secciones/elementos existentes que
+        no estén presentes en esta importación.
+      confirm_modal_title: Publicar menú
+      create_menu: Crear menú
+      dairy_free: Sin lácteos
+      default_title: 'Menú Importar #%{id}'
+      delete: Borrar
+      description: Descripción
+      dietary_information: Información dietética
+      edit_item_modal_title: Editar elemento del menú
+      failed_heading: Procesamiento fallido
+      gluten_free: Sin gluten
+      hold_multi_select: Mantenga pulsada la tecla Ctrl/Cmd para seleccionar varias
+        opciones.
+      import_details: Importar detalles
+      imported_ago: Importado hace %{time}
+      imported_menu_subtitle: Revise y confirme los elementos de menú extraídos a
+        continuación. Puede editar cualquier elemento antes de crear el menú final.
+      imported_menu_title: Menú Importado
+      item_name: Nombre del artículo
+      no_items_explainer: No hemos podido detectar ninguna sección/artículo de este
+        PDF.
+      no_items_heading: No se ha analizado ningún elemento del menú
+      no_items_tip1: Es posible que el PDF no contenga texto extraíble y que el OCR
+        no haya producido texto. Compruebe que las credenciales de Google Cloud Vision
+        están configuradas.
+      no_items_tip2: Puede que falte la clave de la API de OpenAI o que la salida
+        no sea válida. Añada openai_api_key a las credenciales de Rails.
+      no_items_tip3: Es posible que el formato de la respuesta no sea válido. Hemos
+        reforzado el análisis sintáctico, pero volver a ejecutarlo podría ayudar.
+      position: Posición
+      price: Precio
+      process_confirm: "¿Empezar a procesar este PDF ahora?"
+      process_pdf: Proceso PDF
+      processing_page: Página %{actual} de %{total}
+      processing_title: Procesando su menú. Esto puede tardar unos minutos...
+      progress_complete: "%{porcent}% completado"
+      progress_loading: Cargando...
+      publish: Publique
+      publish_menu: Publicar menú
+      reorder_hint: Reordene los artículos sólo dentro de esta sección.
+      save_changes: Guardar cambios
+      section: Sección
+      section_disabled_title: Aquí no se puede modificar la sección
+      status: 'Estado:'
       steps:
-        complete: ''
-        processing: ''
-        review: ''
-        upload: ''
-      sync_publish_label: ''
-      try_again: ''
-      updated_at: ''
-      upload_clearer_pdf: ''
-      vegan: ''
-      vegetarian: ''
+        complete: Complete
+        processing: Tratamiento
+        review: Consulte
+        upload: Cargar
+      sync_publish_label: Sincronizar publicación (archivar secciones/artículos no
+        incluidos en esta importación)
+      try_again: Inténtelo de nuevo
+      updated_at: Actualizado %{timestamp}
+      upload_clearer_pdf: Cargar un PDF más claro
+      vegan: Vegano
+      vegetarian: Vegetariano

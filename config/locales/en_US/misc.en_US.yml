@@ -1,59 +1,5 @@
 ---
 en_US:
-  time:
-    formats:
-      default: "%a, %b %d, %Y %H:%M:%S %z"
-      short: "%b %d %H:%M"
-      long: "%B %d, %Y %H:%M"
-    date:
-      formats:
-        default: "%m/%d/%Y"
-        short: "%b %d"
-        long: "%B %d, %Y"
-      abbr_day_names:
-      - Sun
-      - Mon
-      - Tue
-      - Wed
-      - Thu
-      - Fri
-      - Sat
-      abbr_month_names:
-      - ''
-      - Jan
-      - Feb
-      - Mar
-      - Apr
-      - May
-      - Jun
-      - Jul
-      - Aug
-      - Sep
-      - Oct
-      - Nov
-      - Dec
-      day_names:
-      - Sunday
-      - Monday
-      - Tuesday
-      - Wednesday
-      - Thursday
-      - Friday
-      - Saturday
-      month_names:
-      - ''
-      - January
-      - February
-      - March
-      - April
-      - May
-      - June
-      - July
-      - August
-      - September
-      - October
-      - November
-      - December
   activerecord:
     attributes:
       employee:
@@ -63,24 +9,24 @@ en_US:
       menu:
         restaurant: ''
         sequence: ''
+      menuavailability:
+        endmin: ''
+        menu: ''
+        startmin: ''
       menuitem:
-        sequence: ''
         ingredients: ''
         menusection_id: ''
+        sequence: ''
         tags: ''
         variantPricing: ''
       menusection:
         menu: ''
         sequence: ''
-      menuavailability:
-        endmin: ''
-        menu: ''
-        startmin: ''
       restaurant:
         capacity: ''
+        covercharge: Cover Charge
         music: ''
         tips: ''
-        covercharge: Cover Charge
       restaurantavailability:
         endmin: ''
         restaurant: ''
@@ -101,6 +47,55 @@ en_US:
       deactivate: ''
     new:
       allergyn: ''
+  date:
+    abbr_day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    abbr_month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    formats:
+      default: ''
+      long: ''
+      short: ''
+    month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
   devise:
     registrations:
       edit:
@@ -108,16 +103,67 @@ en_US:
         password: ''
         passwordHelp: ''
         selectPlan: ''
+  employees:
+    form:
+      selectRestaurant: ''
+    new:
+      cancel: ''
+  feature1:
+    key: ''
+  feature2:
+    key: ''
+  feature3:
+    key: ''
+  feature4:
+    key: ''
+  feature5:
+    key: ''
+  feature6:
+    key: ''
+  genimages:
+    edit:
+      genimage: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      genimage: ''
+      genimages: ''
+    new:
+      cancel: ''
+      genimage: ''
+    show:
+      genimage: ''
   home:
     index:
       actions: ''
-      signup: ''
       activate: ''
       deactivate: ''
       emailAddress: ''
       featureDescription1: ''
       featureTitle1: ''
       message: ''
+      signup: ''
+  ingredients:
+    edit:
+      ingredient: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      ingredient: ''
+      ingredients: ''
+    new:
+      cancel: ''
+      ingredient: ''
+    show:
+      ingredient: ''
   inventories:
     index:
       activate: ''
@@ -125,11 +171,11 @@ en_US:
   menuavailabilities:
     edit:
       menuAvailability: ''
+    form:
+      errors: ''
     index:
       activate: ''
       deactivate: ''
-    form:
-      errors: ''
   menuitems:
     edit:
       menuItem: ''
@@ -141,9 +187,9 @@ en_US:
       deactivate: ''
   menus:
     form:
+      pdfMenuScan: ''
       preview: ''
       selectRestaurant: ''
-      pdfMenuScan: ''
     index:
       activate: ''
       deactivate: ''
@@ -165,11 +211,11 @@ en_US:
   menusections:
     edit:
       menuSection: ''
+    form:
+      errors: ''
     index:
       activate: ''
       deactivate: ''
-    form:
-      errors: ''
     showInventories:
       actions: ''
       activate: ''
@@ -178,40 +224,136 @@ en_US:
       actions: ''
       activate: ''
       deactivate: ''
+  metrics:
+    edit:
+      metric: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      metric: ''
+      metrics: ''
+    new:
+      cancel: ''
+      metric: ''
+    show:
+      metric: ''
+  number:
+    currency:
+      format:
+        delimiter: ","
+        format: "%u%n"
+        precision: 2
+        separator: "."
+        unit: "$"
+  ocr_menu_imports:
+    create:
+      success: ''
+    edit:
+      ocrMenuImport: ''
+    form:
+      cancel: ''
+      import: ''
+      save: ''
+    index:
+      activate: ''
+      deactivate: ''
+      ocrMenuImport: ''
+      ocrMenuImports: ''
+    new:
+      ocrMenuImport: ''
+    show:
+      ocrMenuImport: ''
+  orders:
+    completed: Completed
+    paid: Paid
+    payment: Payment
+    pending: Pending
+    subtotal: Subtotal
+    tax: Tax
+    tip: Tip
+    total: Total
+  ordrs:
+    index:
+      order: ''
+    show:
+      order: ''
+      table: ''
+  plan:
+    business:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: ''
+    call: ''
+    enterprise:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: ''
+    pro:
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      key: ''
+    register: ''
+    starter:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: ''
+    trial:
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      key: ''
   restaurantavailabilities:
     form:
-      selectRestaurant: ''
       errors: ''
+      selectRestaurant: ''
     index:
       activate: ''
       deactivate: ''
     new:
       cancel: ''
   restaurants:
+    currency: USD ($)
+    currency_symbol: "$"
     edit:
       restaurant: ''
     form:
-      generateImage: ''
       errors: ''
+      generateImage: ''
     index:
+      actions: ''
       activate: ''
       deactivate: ''
       restaurant: ''
-      actions: ''
     new:
       cancel: ''
     show:
-      name: ''
-      restaurant: ''
       address1: ''
       address2: ''
       city: ''
       currency: ''
       description: ''
+      name: ''
       postcode: ''
+      restaurant: ''
       state: ''
-    currency: USD ($)
-    currency_symbol: "$"
     showAllergyns:
       actions: ''
       activate: ''
@@ -273,19 +415,19 @@ en_US:
     navbar:
       allergyns: ''
       employees: ''
+      inventories: ''
+      menuAvailability: ''
       menuItems: ''
+      menuSections: ''
       menus: ''
       openingHours: ''
+      orderItems: ''
       orders: ''
       sizes: ''
       tableSettings: ''
       taxes: ''
       tips: ''
       whatsNew: ''
-      inventories: ''
-      menuAvailability: ''
-      menuSections: ''
-      orderItems: ''
   sizes:
     edit:
       size: ''
@@ -300,18 +442,8 @@ en_US:
     new:
       size: ''
   smartmenus:
-    index:
-      activate: ''
-      deactivate: ''
-      menu: ''
-      menus: ''
-      unavailable: ''
-    orderCustomer:
-      takePayment: ''
-    show:
-      menu: ''
-      table: ''
     alcoholic: ''
+    alcoholic_tooltip: ''
     edit:
       menu: ''
     form:
@@ -320,23 +452,33 @@ en_US:
       errors: ''
       preview: ''
       selectRestaurant: ''
+    index:
+      activate: ''
+      deactivate: ''
+      menu: ''
+      menus: ''
+      unavailable: ''
     new:
       cancel: ''
       menu: ''
+    orderCustomer:
+      takePayment: ''
     orderStaff:
       staffAlerted: ''
+    show:
+      menu: ''
+      table: ''
     showMenuBanner:
       table: ''
     showModals:
       menuItem: ''
-    alcoholic_tooltip: ''
   tablesettings:
     form:
       delete: ''
-      save: ''
-      sure: ''
       errors: ''
+      save: ''
       selectRestaurant: ''
+      sure: ''
     index:
       tablesetting: ''
       tablesettings: ''
@@ -344,166 +486,6 @@ en_US:
       cancel: ''
     show:
       tablesetting: ''
-  taxes:
-    edit:
-      tax: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-      errors: ''
-      selectRestaurant: ''
-    index:
-      tax: ''
-      activate: ''
-      deactivate: ''
-    new:
-      tax: ''
-  tips:
-    edit:
-      tip: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-      errors: ''
-      selectRestaurant: ''
-    index:
-      tip: ''
-      activate: ''
-      deactivate: ''
-    new:
-      tip: ''
-  employees:
-    form:
-      selectRestaurant: ''
-    new:
-      cancel: ''
-  feature1:
-    key: ''
-  feature2:
-    key: ''
-  feature3:
-    key: ''
-  feature4:
-    key: ''
-  feature5:
-    key: ''
-  feature6:
-    key: ''
-  genimages:
-    edit:
-      genimage: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: ''
-      deactivate: ''
-      genimage: ''
-      genimages: ''
-    new:
-      cancel: ''
-      genimage: ''
-    show:
-      genimage: ''
-  ingredients:
-    edit:
-      ingredient: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: ''
-      deactivate: ''
-      ingredient: ''
-      ingredients: ''
-    new:
-      cancel: ''
-      ingredient: ''
-    show:
-      ingredient: ''
-  metrics:
-    edit:
-      metric: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: ''
-      deactivate: ''
-      metric: ''
-      metrics: ''
-    new:
-      cancel: ''
-      metric: ''
-    show:
-      metric: ''
-  ocr_menu_imports:
-    create:
-      success: ''
-    edit:
-      ocrMenuImport: ''
-    form:
-      cancel: ''
-      import: ''
-      save: ''
-    index:
-      activate: ''
-      deactivate: ''
-      ocrMenuImport: ''
-      ocrMenuImports: ''
-    new:
-      ocrMenuImport: ''
-    show:
-      ocrMenuImport: ''
-  ordrs:
-    index:
-      order: ''
-    show:
-      order: ''
-      table: ''
-  plan:
-    business:
-      key: ''
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    call: ''
-    enterprise:
-      key: ''
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    pro:
-      key: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-    register: ''
-    starter:
-      key: ''
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    trial:
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      key: ''
   tags:
     edit:
       tag: ''
@@ -514,6 +496,90 @@ en_US:
       tag: ''
     show:
       tag: ''
+  taxes:
+    edit:
+      tax: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      tax: ''
+    new:
+      tax: ''
+  time:
+    date:
+      abbr_day_names:
+      - Sun
+      - Mon
+      - Tue
+      - Wed
+      - Thu
+      - Fri
+      - Sat
+      abbr_month_names:
+      - ''
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - May
+      - Jun
+      - Jul
+      - Aug
+      - Sep
+      - Oct
+      - Nov
+      - Dec
+      day_names:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      formats:
+        default: "%m/%d/%Y"
+        long: "%B %d, %Y"
+        short: "%b %d"
+      month_names:
+      - ''
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
+    formats:
+      default: "%a, %b %d, %Y %H:%M:%S %z"
+      long: "%B %d, %Y %H:%M"
+      short: "%b %d %H:%M"
+  tips:
+    edit:
+      tip: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      tip: ''
+    new:
+      tip: ''
   tracks:
     edit:
       track: ''
@@ -534,69 +600,3 @@ en_US:
       userplan: ''
     show:
       userplan: ''
-  orders:
-    total: Total
-    subtotal: Subtotal
-    tax: Tax
-    tip: Tip
-    payment: Payment
-    paid: Paid
-    pending: Pending
-    completed: Completed
-  number:
-    currency:
-      format:
-        unit: "$"
-        precision: 2
-        separator: "."
-        delimiter: ","
-        format: "%u%n"
-  date:
-    formats:
-      default: ''
-      short: ''
-      long: ''
-    abbr_day_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    abbr_month_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    day_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    month_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''

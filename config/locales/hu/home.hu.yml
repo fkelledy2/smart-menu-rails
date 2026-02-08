@@ -2,128 +2,152 @@
 hu:
   home:
     index:
-      browse: ''
-      page_title: ''
-      page_description: ''
-      error: ''
-      compare_plans: ''
+      browse: Böngésszen a  oldalon.
+      closingBody: Készítse el első menüjét most, vagy fedezze fel a demót, és nézze
+        meg, milyen érzés mobilon.
+      closingPrimaryCta: Saját menü létrehozása
+      closingSecondaryCta: Demó megtekintése
+      closingTitle: Indítsa el menüjét még ma
+      compare_plans: Tervek összehasonlítása
       contactUs: Kapcsolatfelvétel
-      ctaBody1: ''
-      ctaBody2: ''
+      ctaBody1: Készítsen olyan QR-menüt, amelyet a vendégek szeretnek. Azonnal frissítse
+        a tételeket. Adjon hozzá fordításokat, rendelési és AI ételképeket, amikor
+        készen áll.
+      ctaBody2: Készítsen olyan QR-menüt, amelyet a vendégek szeretnek. Azonnal frissítse
+        a tételeket. Adjon hozzá fordításokat, rendelési és AI ételképeket, amikor
+        készen áll.
       ctaTitle1: Egyszerűsítse a szolgáltatást. Emelje az élményt.
       ctaTitle2: Itt kezdődik az okosabb étterem
-      demoMenu: ''
-      demoMenuTag: ''
-      demoMenuTagBrowse: ''
-      emailAddressTag: ''
-      heroPrimaryCta: ''
-      heroSecondaryCta: ''
-      heroTrust1: ''
-      heroTrust2: ''
-      heroTrust3: ''
-      overviewTitle: ''
-      overviewBody: ''
-      overviewItem1: ''
-      overviewItem2: ''
-      overviewItem3: ''
-      overviewItem4: ''
-      overviewItem5: ''
-      howTitle: ''
-      howBody: ''
-      howStep1Title: ''
-      howStep1Body: ''
-      howStep2Title: ''
-      howStep2Body: ''
-      howStep3Title: ''
-      howStep3Body: ''
-      trustTitle: ''
-      trustItem1Title: ''
-      trustItem1Body: ''
-      trustItem2Title: ''
-      trustItem2Body: ''
-      trustItem3Title: ''
-      trustItem3Body: ''
-      trustItem4Title: ''
-      trustItem4Body: ''
-      faqTitle: ''
-      faqQ1: ''
-      faqA1: ''
-      faqQ2: ''
-      faqA2: ''
-      faqQ3: ''
-      faqA3: ''
-      faqQ4: ''
-      faqA4: ''
-      closingTitle: ''
-      closingBody: ''
-      closingPrimaryCta: ''
-      closingSecondaryCta: ''
-      featuresStoryTitle: ''
-      featuresStoryBody: ''
-      featuresStoryPrimaryCta: ''
-      featuresStorySecondaryCta: ''
-      featuresStory1Kicker: ''
-      featuresStory1Title: ''
-      featuresStory1Body: ''
-      featuresStory1Bullet1: ''
-      featuresStory1Bullet2: ''
-      featuresStory1Bullet3: ''
-      featuresStory2Kicker: ''
-      featuresStory2Title: ''
-      featuresStory2Body: ''
-      featuresStory2Bullet1: ''
-      featuresStory2Bullet2: ''
-      featuresStory2Bullet3: ''
-      featuresStory3Kicker: ''
-      featuresStory3Title: ''
-      featuresStory3Body: ''
-      featuresStory3Bullet1: ''
-      featuresStory3Bullet2: ''
-      featuresStory3Bullet3: ''
-      featuresStory4Kicker: ''
-      featuresStory4Title: ''
-      featuresStory4Body: ''
-      featuresStory4Bullet1: ''
-      featuresStory4Bullet2: ''
-      featuresStory4Bullet3: ''
-      featuresStory5Kicker: ''
-      featuresStory5Title: ''
-      featuresStory5Body: ''
-      featuresStory5Bullet1: ''
-      featuresStory5Bullet2: ''
-      featuresStory5Bullet3: ''
-      featureDescription2: ''
-      featureDescription3: ''
-      featureDescription4: ''
-      featureDescription5: ''
-      featureDescription6: ''
-      featureTitle2: ''
-      featureTitle3: ''
-      featureTitle4: ''
-      featureTitle5: ''
-      featureTitle6: ''
+      demoMenu: Demo menü
+      demoMenuTag: Előnézet
+      demoMenuTagBrowse: Böngésszen a  oldalon.
+      emailAddressTag: E-mail cím
+      error: 'Hiba történt: %{message}'
+      faqA1: Nem. A vendégek csak beolvasnak egy QR-kódot, és a menü megnyílik a böngészőjükben.
+      faqA2: Igen. A változtatásokat azonnal közzéteszik - nincs újranyomás.
+      faqA3: Igen. Fordítsa le a menüt, és hagyja, hogy a vendégek a saját nyelvükön
+        böngészhessenek.
+      faqA4: Igen. Generáljon AI-képeket, hogy menüje következetes és márkás maradjon.
+      faqQ1: A vendégeknek szükségük van egy alkalmazásra?
+      faqQ2: Azonnal frissíthetem a menüt?
+      faqQ3: Több nyelvet is támogatnak?
+      faqQ4: Felvehetünk fotókat fotózás nélkül is?
+      faqTitle: Gyakran ismételt kérdések
+      featureDescription2: Egyetlen kattintással kiszolgálhatja a vendégeket a saját
+        nyelvükön.
+      featureDescription3: Hozzon létre következetes, márkás ételfotókat.
+      featureDescription4: Ellenőrizze, hogy az ügyfelek mit láthatnak és mit rendelhetnek.
+      featureDescription5: Hagyja, hogy a vendégek az asztalról rendeljenek és könnyen
+        fizessenek.
+      featureDescription6: Értse meg a trendeket, hogy javíthassa menüjét.
+      featureTitle2: Azonnal lefordítani
+      featureTitle3: AI képek
+      featureTitle4: Készlet és elérhetőség
+      featureTitle5: Intelligens rendelés
+      featureTitle6: Analitika
       features: Funkciók
+      featuresStory1Body: A menüjének úgy kell kinéznie, mintha a márkája része lenne
+        - gyorsnak, letisztultnak és könnyen böngészhetőnek kell lennie.
+      featuresStory1Bullet1: Mobile-first elrendezés zökkenőmentes navigációval
+      featuresStory1Bullet2: Világos szelvények és edény részletek
+      featuresStory1Bullet3: Nincs szükség applikációra - csak szkennelje be a QR-kódot
+      featuresStory1Kicker: Vendégélmény
+      featuresStory1Title: Azonnal betöltődő és jól kinéző menük
+      featuresStory2Body: Fordítsa le menüjét egy kattintással, és hagyja, hogy a
+        vendégek magabiztosan böngészhessenek - nincs kínos találgatás.
+      featuresStory2Bullet1: Többnyelvű étlapok turisták és helyiek számára
+      featuresStory2Bullet2: Konzisztens formázás minden nyelven
+      featuresStory2Bullet3: Gyorsabb rendelés kevesebb kérdéssel
+      featuresStory2Kicker: Fordítás
+      featuresStory2Title: Minden vendéget a saját nyelvén szolgáljon ki
+      featuresStory3Body: Hozzon létre konzisztens, márkás ételképeket, hogy javítsa
+        az érzékelt minőséget és növelje a választékot.
+      featuresStory3Bullet1: Összefüggő vizuális identitás az ételek között
+      featuresStory3Bullet2: Nincs szükség fotózásra a kezdéshez
+      featuresStory3Bullet3: Könnyen frissíthető, ha a menü változik
+      featuresStory3Kicker: AI képek
+      featuresStory3Title: A menü stílusához illeszkedő ételfotók
+      featuresStory4Body: Kezdje egy gyönyörű menüvel. Adja hozzá a rendelést és a
+        fizetést, ha ez illik a szolgáltatási modelljéhez.
+      featuresStory4Bullet1: Csökkentse a várakozási időt csúcsidőben
+      featuresStory4Bullet2: A rendelkezésre állás és a rendelési ablakok ellenőrzése
+      featuresStory4Bullet3: Tartsa a személyzetet a vendéglátásra összpontosítva
+      featuresStory4Kicker: Rendelés
+      featuresStory4Title: Rendelés és fizetés, amikor készen állsz
+      featuresStory5Body: Használjon egyszerű analitikát a menü javításához, a holt
+        árukészlet csökkentéséhez és az átlagos rendelési érték növeléséhez.
+      featuresStory5Bullet1: A trendek és a legjobban teljesítő ételek kiszúrása
+      featuresStory5Bullet2: Nézze meg, hogy a vendégek valójában mit néznek meg és
+        mit választanak
+      featuresStory5Bullet3: Módosítások elvégzése és azonnali közzététel
+      featuresStory5Kicker: Betekintés
+      featuresStory5Title: Értsd meg, mit adsz el - aztán optimalizálj
+      featuresStoryBody: Vendégeknek tervezve, szolgáltatásra építve. Válassza ki
+        azokat a funkciókat, amelyekre most szüksége van, és bővítse őket, ahogy növekszik.
+      featuresStoryPrimaryCta: Saját menü létrehozása
+      featuresStorySecondaryCta: Demó megtekintése
+      featuresStoryTitle: Végre egy digitális menü, amely prémium érzést nyújt
+      heroPrimaryCta: Saját menü létrehozása
+      heroSecondaryCta: Demo menü megtekintése
+      heroTrust1: Nincs szükség applikációra a vendégek számára
+      heroTrust2: Többnyelvű menük
+      heroTrust3: Azonnali frissítések (nincs újranyomás)
+      howBody: Nincs szükséged fejlesztőre. Állítsa be a menüt, és legyen gyorsan
+        élesben.
+      howStep1Body: Adjon hozzá részeket és ételeket, vagy importálja meglévő menüjét.
+      howStep1Title: Étterem és menü létrehozása
+      howStep2Body: Adjon hozzá fordításokat, elérhetőségi szabályokat, allergéneket
+        és képeket.
+      howStep2Title: Tegye vendégképessé
+      howStep3Body: Nyomtassa ki és helyezze el - a vendégek azonnal beolvassák és
+        böngészhetnek.
+      howStep3Title: Ossza meg a QR-kódját
+      howTitle: Kezdje el percek alatt
       menus: Menük
-      next: ''
-      numbers: ''
-      numbersTag: ''
-      orderValue: ''
-      orders: ''
-      previous: ''
-      pricing: ''
-      pricingTag: ''
+      next: Következő
+      numbers: Számok
+      numbersTag: Ránézésre
+      orderValue: Átlagos rendelési érték
+      orders: Megrendelések
+      overviewBody: Tartsa menüjét frissen, konzisztensen és konverzióbarát módon
+        - újranyomtatás vagy rendetlen PDF-ek nélkül.
+      overviewItem1: Gyors, mobil-első menük
+      overviewItem2: Egy kattintással történő fordítás
+      overviewItem3: AI edényképek (egységes stílus)
+      overviewItem4: Rendelés és fizetés, amikor csak akarja
+      overviewItem5: Meglátások, amelyek alapján cselekedhet
+      overviewTitle: Minden, amire egy digitális menüből szüksége van, egyetlen platformon
+      page_description: Készítsen gyönyörű digitális étlapokat, tegye lehetővé az
+        online rendelést, és biztosítson érintésmentes fizetési lehetőségeket étterme
+        számára.
+      page_title: Mellow Menu - Digitális menü megoldás éttermek számára
+      previous: Előző
+      pricing: Árképzés
+      pricingTag: Tervek
       restaurants: Éttermek
-      saveChanges: ''
-      selectPlan: ''
-      signUp: ''
+      saveChanges: Változások mentése
+      selectPlan: Válassza ki a tervet
+      signUp: Feliratkozás
       submit: Küldés
-      testimonials: ''
-      testimonialsTag: ''
-      video_unsupported: ''
-      welcome: ''
-    terms:
-      page_title: ''
-      page_description: ''
+      testimonials: Ajánlások
+      testimonialsTag: Mit mondanak ügyfeleink
+      trustItem1Body: Úgy tervezték, hogy gyorsan betöltődjön és olvasható maradjon.
+      trustItem1Title: Gyors mobilon
+      trustItem2Body: Kapcsolja át az elemeket és a rendelkezésre állást a szolgáltatás
+        változásával.
+      trustItem2Title: Ellenőrzés és rendelkezésre állás
+      trustItem3Body: Nincs szükség applikációra - csak beolvasás és mehet.
+      trustItem3Title: Vendégbarát UX
+      trustItem4Body: Gyorsan segítséget kaphat, ha elfoglalt.
+      trustItem4Title: Támogatás, amikor szüksége van rá
+      trustTitle: Igazi éttermi kiszolgáláshoz készült
+      video_unsupported: Az Ön böngészője nem támogatja a videó tag-et.
+      welcome: Üdvözöljük
     privacy:
-      page_title: ''
-      page_description: ''
+      page_description: Az Adatvédelmi irányelvekből megtudhatja, hogyan gyűjti, használja
+        és védi személyes adatait a Mellow Menu.
+      page_title: Adatvédelmi szabályzat - Mellow Menu
+    terms:
+      page_description: A Mellow Menu használatára vonatkozó szabályok és irányelvek
+        megértéséhez olvassa el a Szolgáltatási feltételeinket.
+      page_title: Általános Szerződési Feltételek - Mellow Menu

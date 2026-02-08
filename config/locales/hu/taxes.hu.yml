@@ -2,44 +2,44 @@
 hu:
   taxes:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Az adót sikeresen létrehozták.
+      deleted: Az adót sikeresen törölték.
+      updated: Az adót sikeresen frissítettük.
     edit:
-      taxes: ''
-      edit_tax: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      tax_details: ''
-    form:
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      tax_type: ''
-      tax_type_help: ''
-      tax_percentage: ''
-      tax_percentage_placeholder: ''
-      tax_percentage_help: ''
-    index:
+      cancel: Törölje
+      confirm_delete: Eltörölni ezt az adót?
+      delete: Törölje a  címet.
+      description: Adókulcs-adatok frissítése
+      edit_tax: Adó szerkesztése
+      tax_details: Adó részletek
       taxes: Adók
-      description: ''
-      back: ''
-      new_tax: ''
-      all_taxes: ''
+    form:
+      name: Adó neve
+      name_help: Ennek az adónak a megjelenített neve
+      name_placeholder: pl. forgalmi adó, HÉA, GST
+      tax_percentage: Adószázalék
+      tax_percentage_help: Adja meg az adókulcsot százalékban kifejezve (0-100).
+      tax_percentage_placeholder: pl. 8,5
+      tax_type: Adó típusa
+      tax_type_help: Válassza ki az adó típusát
+    index:
+      all_taxes: Minden adó
+      back: Vissza
+      description: A menüpontokra alkalmazott adókulcsok kezelése
+      new_tax: Új adó
+      taxes: Adók
     new:
-      taxes: ''
-      new: ''
-      new_tax: ''
-      description: ''
       cancel: Mégse
-      tax_details: ''
+      description: Új adókulcs létrehozása a menüpontokhoz
+      new: Új
+      new_tax: Új adó
+      tax_details: Adó részletek
+      taxes: Adók
     show:
-      selectRestaurant: ''
+      selectRestaurant: Válasszon egy éttermet
       tax: Adó megtekintése
     tax:
-      name: ''
-      restaurant: ''
-      taxpercentage: ''
-      taxtype: ''
+      name: 'Név:'
+      restaurant: 'Étterem:'
+      taxpercentage: 'Adószázalék:'
+      taxtype: 'Adó típusa:'

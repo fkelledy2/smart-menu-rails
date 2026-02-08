@@ -2,39 +2,39 @@
 pt:
   allergyns:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: O alergénio foi criado com sucesso.
+      deleted: O alergénio foi eliminado com sucesso.
+      updated: O alergénio foi atualizado com sucesso.
     edit:
-      allergyns: ''
-      edit_allergyn: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      allergyn_details: ''
-    form:
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      description: ''
-      description_placeholder: ''
-      description_help: ''
-      symbol: ''
-      symbol_placeholder: ''
-      symbol_help: ''
-    index:
+      allergyn_details: Detalhes do alergénio
       allergyns: Alergénios
-      description: ''
-      back: ''
-      new_allergyn: ''
-      all_allergyns: ''
-    new:
-      allergyns: ''
-      new: ''
-      new_allergyn: ''
-      description: ''
       cancel: Cancelar
-      allergyn_details: ''
+      confirm_delete: Eliminar este alergénio?
+      delete: Eliminar
+      description: Atualizar os dados sobre os alergénios
+      edit_allergyn: Editar alergénio
+    form:
+      description: Descrição
+      description_help: 'Opcional: Informações adicionais sobre o alergénio'
+      description_placeholder: Detalhes opcionais sobre este alergénio...
+      name: Nome do alergénio
+      name_help: O nome do alergénio
+      name_placeholder: por exemplo, amendoins, lacticínios, glúten
+      symbol: Símbolo
+      symbol_help: 'Opcional: Emoji ou símbolo curto para representar este alergénio'
+      symbol_placeholder: "Por exemplo, \U0001F95C, \U0001F95B, \U0001F33E"
+    index:
+      all_allergyns: Todos os alergénios
+      allergyns: Alergénios
+      back: Voltar
+      description: Gerir a informação sobre alergénios para os itens do menu
+      new_allergyn: Novo alergénio
+    new:
+      allergyn_details: Detalhes do alergénio
+      allergyns: Alergénios
+      cancel: Cancelar
+      description: Criar um novo alergénio para os itens do menu
+      new: Novo
+      new_allergyn: Novo alergénio
     show:
       allergyn: Mostrar alergénio

@@ -1,12 +1,43 @@
 ---
 pl:
   smartmenus:
+    alcohol:
+      acknowledge_btn: Potwierdzenie sprawdzenia wieku
+      acknowledged: Weryfikacja wieku potwierdzona
+      flag: Alkohol
+      non_alcoholic: Bezalkoholowy
+      policy_blocked: Sprzedaż alkoholu jest obecnie zablokowana przez politykę.
+      sales_disabled: Sprzedaż alkoholu w tej restauracji jest wyłączona.
+      verify_age: Przed podaniem napojów alkoholowych należy zweryfikować wiek klienta.
+      zero_abv_short: 0.0%
     controller:
       created: Smartmenu zostało pomyślnie utworzone.
       deleted: Smartmenu zostało pomyślnie usunięte.
       updated: Smartmenu zostało pomyślnie zaktualizowane.
     edit:
       title: Edytuj Smartmenu
+    empty_states:
+      adjust_filters: Regulacja filtrów
+      browse_menu: Przeglądaj menu
+      cart_empty: Twój koszyk jest pusty
+      cart_empty_description: Zacznij dodawać pyszne pozycje z naszego menu!
+      error_description: Mamy problem z załadowaniem tej zawartości. Spróbuj ponownie.
+      error_occurred: Coś poszło nie tak
+      no_items_filtered: Żadne elementy nie pasują do filtrów
+      no_items_filtered_description: Spróbuj dostosować filtry alergenów, aby zobaczyć
+        więcej pozycji.
+      no_menu_description: Wciąż dodajemy pozycje do naszego menu. Sprawdź wkrótce!
+      no_menu_items: Nie ma jeszcze pozycji w menu
+      no_results: Nie znaleziono wyników
+      no_results_description: Nie mogliśmy znaleźć żadnych elementów pasujących do
+        Twojego wyszukiwania. Wypróbuj inne słowa kluczowe.
+      no_table_description: Wybierz stolik, aby rozpocząć zamówienie.
+      no_table_selected: Wybierz swój stół
+      order_complete: Zamówienie złożone!
+      order_complete_description: Twoje zamówienie zostało wysłane do kuchni. Życzymy
+        smacznego!
+      refresh: Odświeżanie
+      try_again: Spróbuj ponownie
     form:
       cancel: Anuluj
       destroy: Zniszczenie
@@ -14,8 +45,17 @@ pl:
       sure: Jesteś pewien?
     index:
       smartmenus: Smartmenus
+    modal_footer_primary:
+      cancel: Anuluj
     new:
       title: Nowe Smartmenu
+    ocr:
+      alcohol:
+        abv: ABV
+        classification: Klasa
+        override_label: Alkohol
+        overrides_hint: Zastąpienia mają zastosowanie podczas publikacji.
+        review_needed: Wymaga przeglądu
     orderCustomer:
       bill: Bill
       items_in_cart: produkty w koszyku
@@ -55,7 +95,6 @@ pl:
       confirmPayment: Potwierdź płatność
       cover_charge: Opłata za okładkę
       customiseOrderWithName: Dodaj swoje imię i nazwisko do zamówienia
-      partySize: Wielkość imprezy
       excluding_tip: bez końcówki
       filterAllergyns: Filtruj alergeny
       filterBy: Filtr
@@ -65,6 +104,7 @@ pl:
       nett: Netto
       noneAll: Brak / Wszystkie
       order_aria: Zamówienie
+      partySize: Wielkość imprezy
       payBill: Zapłać rachunek
       payment_link: Link do płatności
       price: Cena
@@ -88,43 +128,3 @@ pl:
       restaurant: 'Restauracja:'
       slug: 'Ślimak:'
       tablesetting: 'Ustawienie stołów:'
-    modal_footer_primary:
-      cancel: Anuluj
-    alcohol:
-      flag: Alkohol
-      non_alcoholic: Bezalkoholowy
-      zero_abv_short: 0.0%
-      verify_age: Przed podaniem napojów alkoholowych należy zweryfikować wiek klienta.
-      sales_disabled: Sprzedaż alkoholu w tej restauracji jest wyłączona.
-      policy_blocked: Sprzedaż alkoholu jest obecnie zablokowana przez politykę.
-      acknowledge_btn: Potwierdzenie sprawdzenia wieku
-      acknowledged: Weryfikacja wieku potwierdzona
-    ocr:
-      alcohol:
-        override_label: Alkohol
-        abv: ABV
-        classification: Klasa
-        review_needed: Wymaga przeglądu
-        overrides_hint: Zastąpienia mają zastosowanie podczas publikacji.
-    empty_states:
-      no_menu_items: Nie ma jeszcze pozycji w menu
-      no_menu_description: Wciąż dodajemy pozycje do naszego menu. Sprawdź wkrótce!
-      refresh: Odświeżanie
-      cart_empty: Twój koszyk jest pusty
-      cart_empty_description: Zacznij dodawać pyszne pozycje z naszego menu!
-      browse_menu: Przeglądaj menu
-      no_results: Nie znaleziono wyników
-      no_results_description: Nie mogliśmy znaleźć żadnych elementów pasujących do
-        Twojego wyszukiwania. Wypróbuj inne słowa kluczowe.
-      no_items_filtered: Żadne elementy nie pasują do filtrów
-      no_items_filtered_description: Spróbuj dostosować filtry alergenów, aby zobaczyć
-        więcej pozycji.
-      adjust_filters: Regulacja filtrów
-      no_table_selected: Wybierz swój stół
-      no_table_description: Wybierz stolik, aby rozpocząć zamówienie.
-      order_complete: Zamówienie złożone!
-      order_complete_description: Twoje zamówienie zostało wysłane do kuchni. Życzymy
-        smacznego!
-      error_occurred: Coś poszło nie tak
-      error_description: Mamy problem z załadowaniem tej zawartości. Spróbuj ponownie.
-      try_again: Spróbuj ponownie

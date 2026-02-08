@@ -2,17 +2,17 @@
 cs:
   menus:
     controller:
+      ai_image_generation_queued: Generování obrázků s umělou inteligencí bylo pro
+        položky této nabídky zařazeno do fronty.
       created: Nabídka byla úspěšně vytvořena.
       deleted: Nabídka byla úspěšně odstraněna.
       image_regeneration_queued: Regenerace obrázku ve frontě pro položky %{count}
         v této nabídce.
       image_regeneration_queued_rake: Úloha regenerace obrazu byla pro tuto nabídku
         zařazena do fronty.
+      updated: Nabídka byla úspěšně aktualizována.
       webp_regeneration_queued: Regenerace derivátu WebP byla pro obrázky této nabídky
         zařazena do fronty.
-      ai_image_generation_queued: Generování obrázků s umělou inteligencí bylo pro
-        položky této nabídky zařazeno do fronty.
-      updated: Nabídka byla úspěšně aktualizována.
     edit:
       availabilities: Dostupnost
       menu: Nabídka
@@ -68,9 +68,3 @@ cs:
       availabilities: Dostupnost
     showMenusections:
       sections: Sekce
-    sections:
-      settings_2025:
-        disabled_at_restaurant: Bezbariérový přístup na úrovni restaurace
-        parent_restriction: 'Poznámka:'
-        parent_restriction_desc: Nastavení zakázaná na úrovni restaurace nelze povolit
-          pro jednotlivá menu. Nejprve je povolte na úrovni restaurace.

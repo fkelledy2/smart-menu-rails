@@ -2,6 +2,6 @@
 es:
   menusectionlocales:
     controller:
-      created: ''
-      destroyed: ''
-      updated: ''
+      created: Menusectionlocale se ha creado correctamente.
+      destroyed: Menusectionlocale fue destruido con éxito.
+      updated: Menusectionlocale se ha actualizado correctamente.

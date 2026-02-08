@@ -2,9 +2,9 @@
 de:
   restaurantavailabilities:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Die Verfügbarkeit des Restaurants wurde erfolgreich erstellt.
+      deleted: Die Verfügbarkeit des Restaurants wurde erfolgreich gelöscht.
+      updated: Die Verfügbarkeit des Restaurants wurde erfolgreich aktualisiert.
     edit:
       restaurantavailability: Öffnungszeiten bearbeiten
     form:
@@ -18,4 +18,4 @@ de:
       restaurantavailability: Neue Öffnungszeiten
     show:
       restaurantavailability: Öffnungszeiten anzeigen
-      selectRestaurant: ''
+      selectRestaurant: Restaurant auswählen

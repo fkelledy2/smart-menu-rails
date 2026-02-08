@@ -104,5 +104,7 @@ pl:
       not_found: nie znaleziono
       not_locked: nie został zablokowany
       not_saved:
+        few: "%{liczba} błędy uniemożliwiły zapisanie tego %{zasobu}:"
+        many: "%{liczba} błędów uniemożliwiło zapisanie tego %{zasobu}:"
         one: '1 błąd uniemożliwił zapisanie tego %{zasobu}:'
         other: "%{liczba} błędów uniemożliwiła zapisanie tego %{zasobu}:"

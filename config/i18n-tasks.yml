@@ -1,7 +1,16 @@
 base_locale: en
 locales:
   - en
+  - en_GB
+  - en_US
+  - cs
+  - de
+  - es
+  - fr
+  - hu
   - it
+  - pl
+  - pt
 search:
   paths:
     - app
@@ -9,6 +18,7 @@ search:
     - lib
 data:
   read:
+    - config/locales/%{locale}/%{locale}.yml
     - config/locales/**/*.%{locale}.yml
   write:
     - config/locales/%{locale}/%{locale}.yml

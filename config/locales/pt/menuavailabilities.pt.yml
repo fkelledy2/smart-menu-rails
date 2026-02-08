@@ -2,9 +2,9 @@
 pt:
   menuavailabilities:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: A disponibilidade do menu foi criada com sucesso.
+      deleted: A disponibilidade do menu foi eliminada com êxito.
+      updated: A disponibilidade do menu foi actualizada com sucesso.
     form:
       delete: Eliminar
       save: Guardar
@@ -18,4 +18,4 @@ pt:
       menuAvailability: Nova disponibilidade
     show:
       menuAvailability: Mostrar disponibilidade
-      selectMenu: ''
+      selectMenu: Selecionar menu

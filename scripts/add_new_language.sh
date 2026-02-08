@@ -13,6 +13,9 @@ Behavior:
   - Creates config/locales/<locale>/
   - Copies the file set from config/locales/en/
   - Preserves all keys/structure, but sets every leaf value to "replace_me"
+  - Runs i18n-tasks normalization checks:
+      bundle exec i18n-tasks normalize
+      bundle exec i18n-tasks check-normalized
 EOF
 }
 
@@ -139,6 +142,13 @@ ruby -e '
 '
 
 trap - ERR
+
+if ! command -v bundle >/dev/null 2>&1; then
+  echo "Warning: bundle not found; skipping i18n-tasks normalization checks" >&2
+else
+  (cd "$PROJECT_ROOT" && bundle exec i18n-tasks normalize)
+  (cd "$PROJECT_ROOT" && bundle exec i18n-tasks check-normalized)
+fi
 
 echo "Created locale folder: config/locales/$LOCALE_CODE"
 ls -1 "$TARGET_DIR" | wc -l | awk '{print "Files created: "$1}'

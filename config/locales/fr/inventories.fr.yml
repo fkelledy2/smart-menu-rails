@@ -2,28 +2,28 @@
 fr:
   inventories:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: L'inventaire a été créé avec succès.
+      deleted: L'inventaire a été supprimé avec succès.
+      updated: L'inventaire a été mis à jour avec succès.
     edit:
       inventory: Modifier le stock
     form:
       delete: Supprimer
-      errors: ''
+      errors: Erreurs
       save: Enregistrer
-      select_menu_item: ''
+      select_menu_item: Sélectionner un élément de menu...
       sure: Êtes-vous sûr ?
     index:
       inventories: Stocks
       inventory: Stock
     inventory:
-      currentinventory: ''
-      menuitem: ''
-      resethour: ''
-      startinginventory: ''
+      currentinventory: 'Inventaire actuel :'
+      menuitem: 'Point de menu :'
+      resethour: 'Heure de remise à zéro :'
+      startinginventory: 'Inventaire de départ :'
     new:
       cancel: Annuler
       inventory: Nouveau stock
     show:
       inventory: Afficher le stock
-      select_menu_item: ''
+      select_menu_item: Sélectionner un élément de menu...

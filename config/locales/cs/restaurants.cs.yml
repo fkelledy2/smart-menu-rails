@@ -19,6 +19,9 @@ cs:
       taxesTab: Daně
       tipsTab: Spropitné
       tracksTab: Playlist
+    edit_2025:
+      subtitle: Správa konfigurace restaurace
+      toggle_navigation: Přepínání navigace
     form:
       address: Adresa
       connect: Připojení
@@ -39,6 +42,87 @@ cs:
       wifi: Wi‑Fi
     index:
       restaurants: Restaurace
+    index_2025:
+      heading: Restaurace
+      new_restaurant: Nová restaurace
+      quick_actions: Rychlé akce
+      search: Vyhledávání
+      search_placeholder: Vyhledávání restaurací...
+      subtitle: Správa míst, jídelníčků a zaměstnanců
+      title: Vaše restaurace
+    index_frame_2025:
+      active: Aktivní
+      apply: Použít
+      clear_search: Přehledné vyhledávání
+      drag_to_reorder: Přetažením změníte pořadí
+      edit: Upravit
+      inactive: Neaktivní
+      menus_action: Jídelní lístky
+      menus_count_label: menu
+      no_restaurants: Nebyly nalezeny žádné restaurace
+      no_results_for: Žádné výsledky pro
+      pagination_aria_label: Stránkování restaurací
+      restaurants: Restaurace
+      set_status: Nastavení stavu...
+      staff_count_label: zaměstnanci
+    insights:
+      back: Zpět
+      columns:
+        count: Hrabě
+        dropoff: Dropoff
+        dropoff_rate: Míra poklesu
+        fail: Selhání
+        item: Položka
+        median_seconds: Medián (s)
+        orders: Objednávky
+        outlier: Odlišné hodnoty
+        qty: Množství
+        rate: Hodnotit
+        sample_size: "N"
+        share: Sdílet
+        step: Krok
+        success: Úspěch
+        triggers: Spouštěče
+      export_csv: Export CSV
+      filters:
+        all_menus: Všechna menu
+        custom: Vlastní
+        end: Konec
+        last28: Posledních 28 dní
+        last7: Posledních 7 dní
+        last_month: Poslední měsíc
+        menu_optional: Menu (volitelné)
+        mtd: MTD
+        refresh: Obnovit
+        start: Start
+        time_window: Časové okno
+        today: Dnes
+        yesterday: Včera
+      funnel_steps:
+        bill_requested: Bill si vyžádal
+        order_submitted: Předložená objednávka
+        payment_succeeded: Platba proběhla úspěšně
+      helper_text: 'v1: pouze pro čtení postřehy. Trychtýř opuštění je v současné
+        době založen na milnících objednávky/platby.'
+      no_data: Žádná data pro vybrané okno.
+      page_title: "%{název_restaurace} - Insights"
+      sections:
+        abandonment_funnel:
+          title: Opuštěný trychtýř
+        prep_time_bottlenecks:
+          helper_text: Používá časování tipu stanice (odeslán → připraven/vyzvednut)
+            jako proxy v1.
+          title: Úzká místa v přípravě
+        slow_movers:
+          title: Pomalí stěhováci
+        top_performers:
+          title: Nejvýkonnější hráči
+        voice_triggers:
+          title: Frekvence hlasové spouště
+      title: Insights
+      values:
+        'false': ''
+        'true': ''
     new:
       restaurant: Nová restaurace
       restaurants: Restaurace
@@ -55,6 +139,37 @@ cs:
       state: 'Stát:'
       status: 'Stav:'
       user: 'Uživatel:'
+    sections:
+      details_2025:
+        address: Adresa
+        city: Město
+        city_placeholder: Název města
+        country: Země
+        country_placeholder: Země
+        currency: Měna
+        description: Popis
+        items: Položky
+        latitude: Zeměpisná šířka
+        latitude_placeholder: např. 40.7128
+        longitude: Zeměpisná délka
+        longitude_placeholder: např. -74.0060
+        phone: Telefon
+        phone_help: Kontaktní číslo pro zákazníky
+        phone_placeholder: např. +1 (555) 123-4567.
+        postcode: Poštovní směrovací číslo
+        postcode_placeholder: např. 12345
+        restaurant_name: Název restaurace
+        restaurant_name_help: Název, který zákazníci uvidí
+        restaurant_name_placeholder: např. Bella Italia
+        state: Stát/provincie
+        state_placeholder: Stát nebo provincie
+        status: Stav
+        status_help: Zákazníci vidí pouze aktivní restaurace
+        timezone: Časové pásmo
+        timezone_help: Místní časové pásmo pro provozní dobu
+        website: Webové stránky
+        website_help: Webové stránky vaší restaurace
+        website_placeholder: https://example.com
     show:
       address: Adresa
       billing_content: Zde se zobrazí konfigurace fakturace.
@@ -112,165 +227,31 @@ cs:
       loading: Načítání...
     showTracks:
       tracks: Skladby
-    insights:
-      page_title: "%{název_restaurace} - Insights"
-      title: Insights
-      back: Zpět
-      export_csv: Export CSV
-      helper_text: 'v1: pouze pro čtení postřehy. Trychtýř opuštění je v současné
-        době založen na milnících objednávky/platby.'
-      no_data: Žádná data pro vybrané okno.
-      values:
-        true: ''
-        false: ''
-      filters:
-        time_window: Časové okno
-        today: Dnes
-        yesterday: Včera
-        last7: Posledních 7 dní
-        last28: Posledních 28 dní
-        mtd: MTD
-        last_month: Poslední měsíc
-        custom: Vlastní
-        start: Start
-        end: Konec
-        refresh: Obnovit
-        menu_optional: Menu (volitelné)
-        all_menus: Všechna menu
-      sections:
-        top_performers:
-          title: Nejvýkonnější hráči
-        slow_movers:
-          title: Pomalí stěhováci
-        prep_time_bottlenecks:
-          title: Úzká místa v přípravě
-          helper_text: Používá časování tipu stanice (odeslán → připraven/vyzvednut)
-            jako proxy v1.
-        voice_triggers:
-          title: Frekvence hlasové spouště
-        abandonment_funnel:
-          title: Opuštěný trychtýř
-      columns:
-        item: Položka
-        orders: Objednávky
-        qty: Množství
-        share: Sdílet
-        median_seconds: Medián (s)
-        sample_size: "N"
-        outlier: Odlišné hodnoty
-        triggers: Spouštěče
-        success: Úspěch
-        fail: Selhání
-        rate: Hodnotit
-        step: Krok
-        count: Hrabě
-        dropoff: Dropoff
-        dropoff_rate: Míra poklesu
-      funnel_steps:
-        order_submitted: Předložená objednávka
-        bill_requested: Bill si vyžádal
-        payment_succeeded: Platba proběhla úspěšně
-    edit_2025:
-      subtitle: Správa konfigurace restaurace
-      toggle_navigation: Přepínání navigace
     sidebar_2025:
-      close_menu: Zavřít nabídku
-      restaurant: RESTAURACE
-      details: Podrobnosti na
-      schedule: Plán
-      localization: Lokalizace
-      menus: MENU
+      advanced: Pokročilé
       all_menus: Všechny nabídky
       allergens: Alergeny
-      sizes: Velikosti
-      tables: Tabulky
-      operations: OPERACE
-      kitchen_dashboard: Kuchyně
       bar_dashboard: Bar
-      wifi: Wi‑Fi
-      team: TEAM
-      staff: Zaměstnanci
+      close_menu: Zavřít nabídku
+      details: Podrobnosti na
       financials: FINANCE
-      taxes_and_tips: Daně a tipy
-      taxes: Daně
-      tips: Tipy
-      ordering: Objednávání
       insights: Insights
-      setup: NASTAVENÍ
-      settings: Nastavení
-      qr_codes: Kódy QR
       jukebox: Jukebox
-      advanced: Pokročilé
-    index_2025:
-      title: Vaše restaurace
-      heading: Restaurace
-      subtitle: Správa míst, jídelníčků a zaměstnanců
-      quick_actions: Rychlé akce
-      new_restaurant: Nová restaurace
-      search_placeholder: Vyhledávání restaurací...
-      search: Vyhledávání
-    index_frame_2025:
-      pagination_aria_label: Stránkování restaurací
-      no_restaurants: Nebyly nalezeny žádné restaurace
-      no_results_for: Žádné výsledky pro
-      clear_search: Přehledné vyhledávání
-      menus_count_label: menu
-      staff_count_label: zaměstnanci
-      edit: Upravit
-      menus_action: Jídelní lístky
-      restaurants: Restaurace
-      active: Aktivní
-      inactive: Neaktivní
-      set_status: Nastavení stavu...
-      apply: Použít
-      drag_to_reorder: Přetažením změníte pořadí
-    sections:
-      details_2025:
-        quick_actions: Rychlé akce
-        new_menu: Nové menu
-        import_menu: Nabídka Import
-        overview: Přehled
-        menus: Jídelní lístky
-        items: Položky
-        tables: Tabulky
-        staff: Zaměstnanci
-        restaurant_details: Podrobnosti o restauraci
-        restaurant_name: Název restaurace
-        restaurant_name_placeholder: např. Bella Italia
-        restaurant_name_help: Název, který zákazníci uvidí
-        description: Popis
-        description_placeholder: Popište svou restauraci...
-        description_help: Stručný popis vaší restaurace
-        status: Stav
-        active: Aktivní
-        inactive: Neaktivní
-        status_help: Zákazníci vidí pouze aktivní restaurace
-        phone: Telefon
-        phone_placeholder: např. +1 (555) 123-4567.
-        phone_help: Kontaktní číslo pro zákazníky
-        website: Webové stránky
-        website_placeholder: https://example.com
-        website_help: Webové stránky vaší restaurace
-        currency: Měna
-        currency_help: Měna použitá pro stanovení ceny
-        timezone: Časové pásmo
-        timezone_help: Místní časové pásmo pro provozní dobu
-        location: Umístění
-        address: Adresa
-        address_placeholder: Adresa ulice
-        address_help: Úplná adresa
-        city: Město
-        city_placeholder: Název města
-        state: Stát/provincie
-        state_placeholder: Stát nebo provincie
-        postcode: Poštovní směrovací číslo
-        postcode_placeholder: např. 12345
-        country: Země
-        country_placeholder: Země
-        latitude: Zeměpisná šířka
-        latitude_placeholder: např. 40.7128
-        longitude: Zeměpisná délka
-        longitude_placeholder: např. -74.0060
-        loading_map: Načítání mapy...
-        map_error: Mapu se nepodařilo načíst
-        location_label: 'Umístění:'
+      kitchen_dashboard: Kuchyně
+      localization: Lokalizace
+      menus: MENU
+      operations: OPERACE
+      ordering: Objednávání
+      qr_codes: Kódy QR
+      restaurant: RESTAURACE
+      schedule: Plán
+      settings: Nastavení
+      setup: NASTAVENÍ
+      sizes: Velikosti
+      staff: Zaměstnanci
+      tables: Tabulky
+      taxes: Daně
+      taxes_and_tips: Daně a tipy
+      team: TEAM
+      tips: Tipy
+      wifi: Wi‑Fi

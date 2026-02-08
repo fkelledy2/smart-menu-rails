@@ -2,6 +2,6 @@
 pt:
   metrics:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: A métrica foi criada com sucesso.
+      deleted: A métrica foi eliminada com êxito.
+      updated: A métrica foi actualizada com sucesso.

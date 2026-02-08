@@ -1,28 +1,28 @@
 ---
 en_GB:
   shared:
-    head:
-      meta_title: ''
-      meta_description: ''
-      meta_keywords: ''
-      og_title: ''
-      og_description: ''
-      twitter_title: ''
-      twitter_description: ''
-      pwa_title: ''
     footer:
+      build: ''
       facebook: ''
       instagram: ''
       linkedin: ''
+      plan: ''
       privacy: ''
       terms: ''
-      plan: ''
-      build: ''
       twitter: ''
+    head:
+      meta_description: ''
+      meta_keywords: ''
+      meta_title: ''
+      og_description: ''
+      og_title: ''
+      pwa_title: ''
+      twitter_description: ''
+      twitter_title: ''
     navbar:
       adminArea: ''
-      dashboard: ''
       billing: ''
+      dashboard: ''
       heroImages: ''
       impersonated_as: ''
       login: ''

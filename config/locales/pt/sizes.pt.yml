@@ -2,42 +2,43 @@
 pt:
   sizes:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: O tamanho foi criado com sucesso.
+      deleted: O tamanho foi eliminado com êxito.
+      updated: O tamanho foi atualizado com sucesso.
     edit:
-      sizes: ''
-      edit_size: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      size_details: ''
-    form:
-      size_type: ''
-      size_type_help: ''
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      description: ''
-      description_placeholder: ''
-      description_help: ''
-    index:
-      sizes: Tamanhos
-      description: ''
-      back: ''
-      new_size: ''
-      all_sizes: ''
-    new:
-      sizes: ''
-      new: ''
-      new_size: ''
-      description: ''
       cancel: Cancelar
-      size_details: ''
+      confirm_delete: Eliminar este tamanho?
+      delete: Eliminar
+      description: Atualizar os detalhes do tamanho
+      edit_size: Editar tamanho
+      size_details: Detalhes do tamanho
+      sizes: Tamanhos
+    form:
+      description: Descrição
+      description_help: 'Opcional: Acrescentar pormenores adicionais'
+      description_placeholder: Detalhes opcionais sobre este tamanho...
+      name: Nome de exibição
+      name_help: É assim que o tamanho aparecerá aos clientes
+      name_placeholder: Por exemplo, Grande, 16 onças, Tamanho familiar
+      size_type: Tamanho Tipo
+      size_type_help: Selecionar a categoria de tamanho geral
+    index:
+      all_sizes: Todos os tamanhos
+      back: Voltar
+      description: Gerir variantes de tamanho para os seus itens de menu (por exemplo,
+        Pequeno, Médio, Grande)
+      new_size: Novo tamanho
+      sizes: Tamanhos
+    new:
+      cancel: Cancelar
+      description: Criar uma nova variante de tamanho para itens de menu
+      new: Novo
+      new_size: Novo tamanho
+      size_details: Detalhes do tamanho
+      sizes: Tamanhos
     show:
       size: Mostrar tamanho
     size:
-      description: ''
-      name: ''
-      size: ''
+      description: 'Descrição:'
+      name: 'Nome:'
+      size: 'Tamanho:'

@@ -2,33 +2,34 @@
 de:
   tips:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Tipp wurde erfolgreich erstellt.
+      deleted: Tipp wurde erfolgreich gelöscht.
+      updated: Der Tipp wurde erfolgreich aktualisiert.
     edit:
-      tips: ''
-      edit_tip: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      tip_details: ''
-    form:
-      percentage: ''
-      percentage_placeholder: ''
-      percentage_help: ''
-    index:
-      tips: Trinkgelder
-      description: ''
-      back: ''
-      new_tip: ''
-      all_tips: ''
-    new:
-      tips: ''
-      new: ''
-      new_tip: ''
-      description: ''
       cancel: Abbrechen
-      tip_details: ''
+      confirm_delete: Diese Tipp-Option löschen?
+      delete: Löschen
+      description: Angaben zum Trinkgeldprozentsatz aktualisieren
+      edit_tip: Tipp-Option bearbeiten
+      tip_details: Tipp Details
+      tips: Tipps
+    form:
+      percentage: Tipp Prozentsatz
+      percentage_help: Geben Sie den Trinkgeldprozentsatz ein (0-100)
+      percentage_placeholder: z.B., 15
+    index:
+      all_tips: Alle Tipp-Optionen
+      back: Zurück
+      description: Verwalten Sie die Trinkgeldprozentsätze, die den Kunden an der
+        Kasse zur Verfügung stehen.
+      new_tip: Neue Tipp-Option
+      tips: Trinkgelder
+    new:
+      cancel: Abbrechen
+      description: Erstellen Sie einen neuen Trinkgeldprozentsatz für Kunden
+      new: Neu
+      new_tip: Neue Tipp-Option
+      tip_details: Tipp Details
+      tips: Tipps
     show:
       tip: Trinkgeld anzeigen

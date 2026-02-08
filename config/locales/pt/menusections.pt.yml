@@ -17,18 +17,18 @@ pt:
       menuSection: Secção
       menuSections: Secções
     menusection:
-      description: ''
-      image: ''
-      menu: ''
-      name: ''
-      sequence: ''
-      status: ''
+      description: 'Descrição:'
+      image: 'Imagem:'
+      menu: 'Menu:'
+      name: 'Nome:'
+      sequence: 'Sequência:'
+      status: 'Estado:'
     new:
       cancel: Cancelar
       menuSection: Nova secção
     show:
       menuSection: Mostrar secção
-      selectMenu: ''
+      selectMenu: Selecionar menu
     showInventories:
       inventories: Inventários
       reset: Reiniciar

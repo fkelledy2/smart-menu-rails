@@ -2,7 +2,8 @@
 it:
   menus:
     controller:
-      ai_image_generation_queued: ''
+      ai_image_generation_queued: La generazione di immagini AI è stata messa in coda
+        per le voci di questo menu.
       created: Menu creato con successo.
       deleted: Menu eliminato con successo.
       image_regeneration_queued: Rigenerazione delle immagini in coda per %{count}
@@ -10,7 +11,8 @@ it:
       image_regeneration_queued_rake: Il lavoro di rigenerazione delle immagini è
         stato messo in coda per questo menu.
       updated: Menu aggiornato con successo.
-      webp_regeneration_queued: ''
+      webp_regeneration_queued: La rigenerazione dei derivati WebP è stata messa in
+        coda per le immagini di questo menu.
     edit:
       availabilities: Disponibilità
       menu: Menù

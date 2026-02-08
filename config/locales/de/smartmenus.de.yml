@@ -1,30 +1,75 @@
 ---
 de:
   smartmenus:
+    alcohol:
+      acknowledge_btn: Altersprüfung bestätigen
+      acknowledged: Altersprüfung bestätigt
+      flag: Alkohol
+      non_alcoholic: Alkoholfrei
+      policy_blocked: Der Verkauf von Alkohol ist derzeit durch die Politik blockiert.
+      sales_disabled: Der Verkauf von Alkohol ist in diesem Restaurant untersagt.
+      verify_age: Bitte überprüfen Sie das Alter der Gäste, bevor Sie alkoholische
+        Getränke ausschenken.
+      zero_abv_short: 0.0%
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Das Smartmenu wurde erfolgreich erstellt.
+      deleted: Smartmenu wurde erfolgreich gelöscht.
+      updated: Smartmenu wurde erfolgreich aktualisiert.
     edit:
-      title: ''
+      title: Smartmenu bearbeiten
+    empty_states:
+      adjust_filters: Einstellen von Filtern
+      browse_menu: Menü durchsuchen
+      cart_empty: Ihr Warenkorb ist leer
+      cart_empty_description: Fangen Sie an, köstliche Artikel aus unserer Speisekarte
+        hinzuzufügen!
+      error_description: Wir haben Probleme beim Laden dieses Inhalts. Bitte versuchen
+        Sie es erneut.
+      error_occurred: Etwas ist schief gelaufen
+      no_items_filtered: Keine Artikel entsprechen Ihren Filtern
+      no_items_filtered_description: Versuchen Sie, Ihre Allergenfilter anzupassen,
+        um mehr Artikel zu sehen.
+      no_menu_description: Wir fügen unserer Speisekarte immer noch neue Artikel hinzu.
+        Bitte schauen Sie bald wieder vorbei!
+      no_menu_items: Noch keine Menüpunkte
+      no_results: Keine Ergebnisse gefunden
+      no_results_description: Wir konnten keine Artikel finden, die Ihrer Suche entsprechen.
+        Versuchen Sie andere Schlüsselwörter.
+      no_table_description: Bitte wählen Sie einen Tisch aus, um Ihre Bestellung zu
+        starten.
+      no_table_selected: Wählen Sie Ihren Tisch
+      order_complete: Bestellung aufgegeben!
+      order_complete_description: Ihre Bestellung wurde an die Küche weitergeleitet.
+        Genießen Sie Ihr Essen!
+      refresh: Auffrischen
+      try_again: Erneut versuchen
     form:
-      cancel: ''
-      destroy: ''
+      cancel: Abbrechen
+      destroy: Zerstören Sie
       save: Speichern
       sure: Sind Sie sicher?
     index:
       smartmenus: Smart Menüs
+    modal_footer_primary:
+      cancel: Abbrechen
     new:
-      title: ''
+      title: Neues Smartmenu
+    ocr:
+      alcohol:
+        abv: ABV
+        classification: Klasse
+        override_label: Alkohol
+        overrides_hint: Überschreibungen gelten bei der Veröffentlichung.
+        review_needed: Bedarf an Überprüfung
     orderCustomer:
       bill: Rechnung
-      items_in_cart: ''
+      items_in_cart: Artikel im Einkaufswagen
       order: Bestellen
       staffAlerted: Personal benachrichtigt
       startOrder: Bestellung starten
     orderStaff:
       bill: Rechnung
-      items_in_cart: ''
+      items_in_cart: Artikel im Einkaufswagen
       order: Bestellen
       startOrder: Bestellung starten
       takePayment: Zahlung
@@ -36,47 +81,47 @@ de:
     showMenuBanner:
       allergyns: Allergene
     showMenuContentCustomer:
-      search_placeholder: ''
+      search_placeholder: Menüpunkte suchen...
     showMenuitem:
-      add_to_order: ''
-      allergyns: ''
-      loading: ''
+      add_to_order: Zur Bestellung hinzufügen
+      allergyns: Allergene
+      loading: Laden...
     showMenuitemHorizontal:
-      loading: ''
+      loading: Laden...
     showMenuitemHorizontalActionBar:
-      allergyns: ''
-      order: ''
-      toggle_dropdown: ''
+      allergyns: Allergene
+      order: Bestellung
+      toggle_dropdown: Dropdown umschalten
     showModals:
       add: Name hinzufügen
       addToOrder: Zur Bestellung hinzufügen
-      bill_prefix: ''
+      bill_prefix: 'Rechnung:'
       cancel: Abbrechen
       confirmPayment: Zahlung bestätigen
-      cover_charge: ''
+      cover_charge: Deckungsbeitrag
       customiseOrderWithName: Personalisieren Sie Ihre Bestellung
-      partySize: ''
-      excluding_tip: ''
+      excluding_tip: ohne Trinkgeld
       filterAllergyns: Allergene filtern
       filterBy: Filtern nach
-      including_tip: ''
-      item: ''
-      name_label: ''
-      nett: ''
+      including_tip: inkl. Trinkgeld
+      item: Artikel
+      name_label: 'Name:'
+      nett: Netto
       noneAll: Keine / alle
-      order_aria: ''
-      payBill: ''
-      payment_link: ''
+      order_aria: Bestellung
+      partySize: Größe der Partei
+      payBill: Rechnung bezahlen
+      payment_link: Link zur Bezahlung
       price: Preis
       requestBill: Rechnung anfordern
-      selected: ''
-      service: ''
+      selected: Ausgewählte
+      service: Dienst
       start: Starten
       startOrder: Bestellung starten
       submit: Bestellung absenden
-      submitted: ''
-      tax: ''
-      tip_options: ''
+      submitted: Eingereicht
+      tax: Steuer
+      tip_options: Tipp-Optionen
       total: Gesamt
       yourOrder: Ihre Bestellung
     showTableLocaleSelectorCustomer:
@@ -84,44 +129,7 @@ de:
     showTableLocaleSelectorStaff:
       table: Tisch
     smartmenu:
-      menu: ''
-      restaurant: ''
-      slug: ''
-      tablesetting: ''
-    modal_footer_primary:
-      cancel: ''
-    alcohol:
-      flag: ''
-      non_alcoholic: ''
-      zero_abv_short: ''
-      verify_age: ''
-      sales_disabled: ''
-      policy_blocked: ''
-      acknowledge_btn: Altersprüfung bestätigen
-      acknowledged: Altersprüfung bestätigt
-    ocr:
-      alcohol:
-        override_label: ''
-        abv: ''
-        classification: ''
-        review_needed: ''
-        overrides_hint: ''
-    empty_states:
-      no_menu_items: ''
-      no_menu_description: ''
-      refresh: ''
-      cart_empty: ''
-      cart_empty_description: ''
-      browse_menu: ''
-      no_results: ''
-      no_results_description: ''
-      no_items_filtered: ''
-      no_items_filtered_description: ''
-      adjust_filters: ''
-      no_table_selected: ''
-      no_table_description: ''
-      order_complete: ''
-      order_complete_description: ''
-      error_occurred: ''
-      error_description: ''
-      try_again: ''
+      menu: 'Speisekarte:'
+      restaurant: 'Restaurant:'
+      slug: 'Schnecke:'
+      tablesetting: 'Tablesetting:'

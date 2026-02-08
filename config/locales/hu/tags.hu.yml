@@ -2,25 +2,25 @@
 hu:
   tags:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: A címke sikeresen létrejött.
+      deleted: A címke sikeresen törlésre került.
+      updated: A címke sikeresen frissült.
     edit:
-      title: ''
+      title: Címke szerkesztése
     form:
-      delete: ''
-      errors: ''
-      save: ''
-      sure: ''
+      delete: Törölje a  címet.
+      errors: Hibák
+      save: Mentés
+      sure: Biztos vagy benne?
     index:
-      tag: ''
-      tags: ''
+      tag: Címke
+      tags: Címkék
     new:
-      cancel: ''
-      title: ''
+      cancel: Törölje
+      title: Új címke
     show:
-      show_tag: ''
+      show_tag: Címke megjelenítése
     tag:
-      description: ''
-      menuitem: ''
-      name: ''
+      description: 'Leírás:'
+      menuitem: 'Menüpont:'
+      name: 'Név:'

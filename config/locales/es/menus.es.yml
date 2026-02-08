@@ -2,68 +2,69 @@
 es:
   menus:
     controller:
-      created: ''
-      deleted: ''
-      image_regeneration_queued: ''
-      image_regeneration_queued_rake: ''
-      webp_regeneration_queued: ''
-      ai_image_generation_queued: ''
-      updated: ''
+      ai_image_generation_queued: Se ha puesto en cola la generación de imágenes AI
+        para los elementos de este menú.
+      created: El menú se ha creado correctamente.
+      deleted: El menú se ha eliminado correctamente.
+      image_regeneration_queued: Regeneración de imágenes en cola para %{count} elementos
+        de este menú.
+      image_regeneration_queued_rake: El trabajo de regeneración de imagen se ha puesto
+        en cola para este menú.
+      updated: El menú se ha actualizado correctamente.
+      webp_regeneration_queued: Se ha puesto en cola la regeneración derivada de WebP
+        para las imágenes de este menú.
     edit:
       availabilities: Disponibilidades
       menu: Menú
-      regenerate_images_confirm: ''
+      regenerate_images_confirm: Esto pondrá en cola los trabajos de regeneración
+        de imágenes para todos los elementos de este menú. ¿Continuar?
       sections: Secciones
     form:
-      current_pdf: ''
+      current_pdf: 'PDF actual:'
       delete: Eliminar
       details: Detalles
       errors: Errores
-      'false': ''
+      'false': fuera de
       imageSettings: Configuración de imagen
-      'off': ''
-      'on': ''
+      'off': fuera de
+      'on': en
       pdfSettings: Configuración PDF
-      regenerate_images: ''
-      regenerate_images_confirm: ''
-      remove: ''
+      regenerate_images: Regenerar imágenes
+      regenerate_images_confirm: Esto pondrá en cola los trabajos de regeneración
+        de imágenes para todos los elementos de este menú. ¿Continuar?
+      remove: Eliminar
       save: Guardar
       settings: Configuración
       sure: "¿Estás seguro?"
-      'true': ''
+      'true': en
     index:
       menu: Menú
       menus: Menús
       unavailable: El menú no está disponible actualmente.
     menu:
-      description: ''
-      image: ''
-      name: ''
-      pdf_menu_scan: ''
-      restaurant: ''
-      sequence: ''
-      status: ''
+      description: 'Descripción:'
+      image: 'Imagen:'
+      name: 'Nombre:'
+      pdf_menu_scan: 'Menú PDF Escanear:'
+      restaurant: 'Restaurante:'
+      sequence: 'Secuencia:'
+      status: 'Estado:'
     new:
       menu: Nuevo menú
     show:
-      add_to_order: ''
-      allergens: ''
-      allergyns: ''
-      bill: ''
-      loading: ''
-      not_available: ''
-      order: ''
-      order_updated: ''
-      remaining: ''
-      staff_alerted: ''
-      start_order: ''
-      take_payment: ''
+      add_to_order: Añadir al pedido
+      allergens: Alérgenos
+      allergyns: Alérgenos
+      bill: Bill
+      loading: Cargando...
+      not_available: No disponible.
+      order: Pida
+      order_updated: Pedido actualizado
+      remaining: "%{count} restante."
+      staff_alerted: Personal alertado
+      start_order: Orden de inicio
+      take_payment: Cobrar
     showMenuavailabilities:
       availabilities: Disponibilidades
     showMenusections:
       sections: Secciones
-    sections:
-      settings_2025:
-        disabled_at_restaurant: ''
-        parent_restriction: ''
-        parent_restriction_desc: ''

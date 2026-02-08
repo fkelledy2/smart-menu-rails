@@ -5,54 +5,54 @@ cs:
       created: Položka nabídky byla úspěšně vytvořena.
       deleted: Položka nabídky byla úspěšně odstraněna.
       updated: Položka nabídky byla úspěšně aktualizována.
-    errors:
-      menusection_required: Vytvářejte položky menu v rámci sekce menu.
     edit:
       tab_item: Položka
+    errors:
+      menusection_required: Vytvářejte položky menu v rámci sekce menu.
     form:
+      abv_help: Objemový obsah alkoholu (0-100). Pro nealkoholické nechte prázdné.
+      abv_placeholder: např. 13,5
       actions: Akce
+      alcohol_notes_ph: Nepovinné poznámky, např. obsahuje rum
+      alcohol_settings: Nastavení alkoholu
+      alcoholic_help: Zkontrolujte, zda tato položka neobsahuje alkohol.
+      classification_beer: Pivo
+      classification_cocktail: Koktejl
+      classification_help: Vyberte kategorii. Pro varianty 0,0 % použijte non_alcoholic.
+      classification_liqueur: Likér
+      classification_non_alcoholic: Nealkoholické
+      classification_other: Další
+      classification_spirit: Spirit
+      classification_wine: Víno
+      course_order: Objednávka kurzu
+      course_order_help: 'Nepovinné: zadejte pořadí podávání v rámci degustace.'
       delete: Smazat
       details: Podrobnosti
       errors: Chyby
       'false': 'false'
       generateImage: Generování s umělou inteligencí
+      hidden: Skryté (nezobrazuje se v nabídce smartmenu)
       imageSettings: Nastavení obrázku
       no_image: Zatím bez obrázku
       save: Uložit
       settings: Nastavení
       sure: Jste si jistí?
-      'true': 'true'
-      update: Aktualizovat
-      variantPricing: Varianty cen
-      tasting_price_ignored: Tato cena se u degustačních menu nezohledňuje. Použijte
-        níže uvedený dodatek.
-      alcohol_settings: Nastavení alkoholu
-      alcoholic_help: Zkontrolujte, zda tato položka neobsahuje alkohol.
-      abv_placeholder: např. 13,5
-      abv_help: Objemový obsah alkoholu (0-100). Pro nealkoholické nechte prázdné.
-      classification_wine: Víno
-      classification_beer: Pivo
-      classification_spirit: Spirit
-      classification_cocktail: Koktejl
-      classification_liqueur: Likér
-      classification_other: Další
-      classification_non_alcoholic: Nealkoholické
-      classification_help: Vyberte kategorii. Pro varianty 0,0 % použijte non_alcoholic.
-      alcohol_notes_ph: Nepovinné poznámky, např. obsahuje rum
+      tasting_carrier: Použití jako degustační nosič
+      tasting_carrier_help: V každé degustační části je pouze jeden nosič. Nosiče
+        jsou automaticky skryty.
       tasting_item_settings: Nastavení degustační položky
       tasting_optional: Volitelný kurz
       tasting_optional_help: Pokud je zaškrtnuto, je tento kurz nepovinný (host jej
         může vynechat).
+      tasting_price_ignored: Tato cena se u degustačních menu nezohledňuje. Použijte
+        níže uvedený dodatek.
       tasting_supplement: Příplatek (centy)
       tasting_supplement_help: Nechte prázdné nebo 0 pro zahrnuto; nastavte částku
         pro příplatkovou cenu.
-      course_order: Objednávka kurzu
-      course_order_help: 'Nepovinné: zadejte pořadí podávání v rámci degustace.'
+      'true': 'true'
+      update: Aktualizovat
+      variantPricing: Varianty cen
       visibility: Viditelnost
-      hidden: Skryté (nezobrazuje se v nabídce smartmenu)
-      tasting_carrier: Použití jako degustační nosič
-      tasting_carrier_help: V každé degustační části je pouze jeden nosič. Nosiče
-        jsou automaticky skryty.
     index:
       menuItem: Položka menu
       menuItems: Položky menu

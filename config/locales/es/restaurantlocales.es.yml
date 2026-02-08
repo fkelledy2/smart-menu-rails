@@ -2,13 +2,13 @@
 es:
   restaurantlocales:
     controller:
-      active_not_deleted: ''
-      created: ''
-      deleted: ''
-      updated: ''
+      active_not_deleted: No se ha eliminado la configuración regional activa.
+      created: Se ha creado correctamente el local del restaurante.
+      deleted: Se ha eliminado la configuración regional.
+      updated: El local del restaurante se ha actualizado correctamente.
     form:
-      delete: ''
+      delete: Borrar
       save: Guardar
-      sure: ''
+      sure: "¿Seguro?"
     new:
       restaurantlocale: Nuevo idioma

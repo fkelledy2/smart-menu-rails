@@ -2,9 +2,9 @@
 hu:
   menusections:
     edit:
-      inventories: ''
-      items: ''
-      section: ''
+      inventories: Készletek
+      items: Tételek
+      section: Szekció
     form:
       delete: Törlés
       details: Részletek
@@ -17,21 +17,21 @@ hu:
       menuSection: Menü szekció
       menuSections: Menü szekciók
     menusection:
-      description: ''
-      image: ''
-      menu: ''
-      name: ''
-      sequence: ''
-      status: ''
+      description: 'Leírás:'
+      image: 'Kép:'
+      menu: 'Étlap:'
+      name: 'Név:'
+      sequence: 'Sorozat:'
+      status: 'Állapot:'
     new:
       cancel: Mégse
       menuSection: Új menü szekció
     show:
       menuSection: Menü szekció megtekintése
-      selectMenu: ''
+      selectMenu: Válassza ki a menüt
     showInventories:
-      inventories: ''
-      reset: ''
+      inventories: Készletek
+      reset: Visszaállítás
     showMenuitems:
-      genimage: ''
-      menuItems: ''
+      genimage: Kép generálása
+      menuItems: Menüelemek

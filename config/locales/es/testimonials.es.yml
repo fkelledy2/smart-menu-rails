@@ -2,25 +2,25 @@
 es:
   testimonials:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: El testimonio se ha creado correctamente.
+      deleted: El testimonio se ha eliminado correctamente.
+      updated: El testimonio se ha actualizado correctamente.
     edit:
-      title: ''
+      title: Editar testimonio
     form:
-      cancel: ''
-      destroy: ''
-      save: ''
-      sure: ''
+      cancel: Cancelar
+      destroy: Destruye
+      save: Guardar
+      sure: "¿Seguro?"
     index:
       actions: Acciones
       approve: Aprobar
       testimonials: Testimonios
       unapprove: Desaprobar
     new:
-      cancel: ''
-      title: ''
+      cancel: Cancelar
+      title: Nuevo testimonio
     testimonial:
-      restaurant: ''
-      testimonial: ''
-      user: ''
+      restaurant: 'Restaurante:'
+      testimonial: 'Testimonio:'
+      user: 'Usuario:'

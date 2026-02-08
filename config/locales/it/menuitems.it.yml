@@ -8,7 +8,7 @@ it:
     edit:
       tab_item: Articolo
     errors:
-      menusection_required: ''
+      menusection_required: Creare voci di menu all'interno di una sezione di menu.
     form:
       abv_help: Gradazione alcolica (0–100). Lascia vuoto per analcolico.
       abv_placeholder: es. 13,5

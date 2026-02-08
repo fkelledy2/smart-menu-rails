@@ -2,8 +2,8 @@
 de:
   ordrs:
     controller:
-      could_not_delete: ''
-      created: ''
-      deleted: ''
+      could_not_delete: 'Bestellung konnte nicht gelöscht werden: %{error}'
+      created: Der Auftrag wurde erfolgreich erstellt.
+      deleted: Der Auftrag wurde erfolgreich gelöscht.
     index:
       orders: Bestellungen

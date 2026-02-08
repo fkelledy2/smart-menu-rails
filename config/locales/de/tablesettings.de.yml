@@ -2,28 +2,28 @@
 de:
   tablesettings:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Die Tabelleneinstellung wurde erfolgreich erstellt.
+      deleted: Die Tabelleneinstellung wurde erfolgreich gelöscht.
+      updated: Die Tabelleneinstellung wurde erfolgreich aktualisiert.
     edit:
       tablesetting: Tisch bearbeiten
     index:
-      archive: ''
-      seating_plan: ''
-      seats: ''
-      table_setting: ''
-      table_settings: ''
-      unarchive: ''
+      archive: Archiv
+      seating_plan: Sitzplan
+      seats: 'Sitze:'
+      table_setting: Tisch decken
+      table_settings: Tabelle Einstellungen
+      unarchive: Nicht archivieren
     new:
-      status: ''
+      status: 'Status:'
       tablesetting: Neuer Tisch
     show:
-      available_menus: ''
-      selectRestaurant: ''
-      show_table_setting: ''
+      available_menus: Verfügbare Menüs
+      selectRestaurant: Restaurant auswählen
+      show_table_setting: Tischgedeck anzeigen
     tablesetting:
-      capacity: ''
-      description: ''
-      name: ''
-      restaurant: ''
-      status: ''
+      capacity: 'Kapazität:'
+      description: 'Beschreibung:'
+      name: 'Name:'
+      restaurant: 'Restaurant:'
+      status: 'Status:'

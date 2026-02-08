@@ -2,13 +2,13 @@
 de:
   restaurantlocales:
     controller:
-      active_not_deleted: ''
-      created: ''
-      deleted: ''
-      updated: ''
+      active_not_deleted: Aktives Gebietsschema wurde nicht gelöscht.
+      created: Restaurant Locale wurde erfolgreich erstellt.
+      deleted: Das Gebietsschema wurde gelöscht.
+      updated: Restaurant Locale wurde erfolgreich aktualisiert.
     form:
-      delete: ''
+      delete: Löschen
       save: Speichern
-      sure: ''
+      sure: Sind Sie sicher?
     new:
       restaurantlocale: Neue Sprache

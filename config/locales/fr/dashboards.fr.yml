@@ -1,132 +1,139 @@
 ---
 fr:
-  bar_dashboard:
-    title: ''
-    metrics:
-      pending_tickets: ''
-      preparing: ''
-      ready: ''
-  kitchen_dashboard:
-    title: ''
-    metrics:
-      pending_tickets: ''
-      preparing: ''
-      ready: ''
-      todays_orders: ''
-    buttons:
-      start_preparing: ''
-      mark_ready: ''
-      mark_collected: ''
-  errors:
-    not_found:
-      title: ''
-      description: ''
-      suggestion: ''
-    unprocessable:
-      title: ''
-      description: ''
-      suggestion: ''
-    internal:
-      title: ''
-      description: ''
-      suggestion: ''
-      error_details: ''
-      backtrace: ''
-  menu_performance:
-    not_available:
-      title: ''
-      description: ''
-      reasons:
-      - ''
-      - ''
-      - ''
-  restaurant_analytics:
-    not_available:
-      title: ''
-      description: ''
-      reasons:
-      - ''
-      - ''
-      - ''
   ai_generation:
     modal:
-      title: ''
-      confirm: ''
-      progress: ''
-      progress_log: ''
-      last_image: ''
+      confirm: Confirmer et démarrer
+      last_image: Dernière image
+      progress: Génère actuellement
+      progress_log: Journal de bord
+      title: Générer des images d'IA
+  bar_dashboard:
+    metrics:
+      pending_tickets: Billets en attente
+      preparing: Préparation
+      ready: Prêt
+    title: Tableau de bord du bar
+  details_2025:
+    menu_go_live_flow: Flux de mise en ligne du menu
+  edit_2025:
+    onboarding_flow: Flux d'accueil
+  errors:
+    internal:
+      backtrace: Trace arrière
+      description: Nous sommes désolés, mais quelque chose a mal tourné de notre côté.
+      error_details: Détails de l'erreur
+      suggestion: Veuillez réessayer plus tard ou contacter l'assistance si le problème
+        persiste.
+      title: Erreur de serveur interne
+    not_found:
+      description: La page que vous recherchez n'existe pas.
+      suggestion: Il peut avoir été déplacé, supprimé ou vous avez saisi la mauvaise
+        URL.
+      title: Page non trouvée
+    unprocessable:
+      description: La modification que vous souhaitiez a été rejetée.
+      suggestion: Vous avez peut-être essayé de modifier quelque chose auquel vous
+        n'aviez pas accès.
+      title: Entité non traitable
+  form_2025:
+    image_settings: Paramètres de l'image
+    menu_details: Détails du menu
+    menu_details_subtitle: Informations de base sur votre menu
+    menu_image: Image du menu
+  hero_images:
+    form:
+      alt_text_help: Texte descriptif pour l'accessibilité
+      alt_text_placeholder: Intérieur d'un restaurant animé avec des clients
+      image_url_help: Saisissez l'URL complète de l'image provenant de Pexels ou d'une
+        autre source.
+      image_url_placeholder: https://images.pexels.com/...
+      sequence_help: Ordre d'affichage (les chiffres les plus bas apparaissent en
+        premier)
+      source_url_help: Lien vers la page source originale
+      source_url_placeholder: https://www.pexels.com/photo/...
+      status_help: Seules les images approuvées apparaîtront sur la page d'accueil
+    new:
+      title: Nouvelle image du héros
+  kitchen_dashboard:
+    buttons:
+      mark_collected: Marquer comme collecté
+      mark_ready: Mark Ready
+      start_preparing: Commencer à se préparer
+    metrics:
+      pending_tickets: Billets en attente
+      preparing: Préparation
+      ready: Prêt
+      todays_orders: Commandes du jour
+    title: Tableau de bord de la cuisine
+  menu_performance:
+    not_available:
+      description: 'Impossible de charger les données de performance pour ce menu.
+        Cela peut être dû à :'
+      reasons:
+      - Menu introuvable ou accès refusé
+      - Permissions insuffisantes
+      - Erreur du système pendant la collecte des données
+      title: Données de performance non disponibles
   menuitem_ai:
     modal:
-      title: ''
-      confirm: ''
-      progress: ''
-      preview: ''
+      confirm: Confirmer et démarrer
+      preview: Aperçu de l'image
+      progress: Génère actuellement
+      title: Générer une image
   ocr_menu_imports:
     alcohol_override:
-      undecided: ''
-      alcoholic: ''
-      non_alcoholic: ''
+      alcoholic: Alcoolique
+      non_alcoholic: Sans alcool
+      undecided: Indécis
     publish:
-      title: ''
-      submit: ''
+      submit: Publier le menu
+      title: Publier le menu
   offline:
-    title: ''
-    available_offline: ''
+    available_offline: 'Disponible hors ligne :'
     items:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    last_updated: ''
-  smartmenus:
-    skeleton:
-      loading: ''
-    no_image: ''
-  hero_images:
-    new:
-      title: ''
-    form:
-      image_url_placeholder: ''
-      image_url_help: ''
-      alt_text_placeholder: ''
-      alt_text_help: ''
-      sequence_help: ''
-      status_help: ''
-      source_url_placeholder: ''
-      source_url_help: ''
+    - Informations sur le restaurant
+    - Menu et prix
+    - Commandes récentes
+    - Images en cache
+    - Analyse de base
+    last_updated: Dernière mise à jour
+    title: Vous êtes hors ligne
   orders:
-    ordered: ''
-    prepared: ''
-    delivered: ''
-  form_2025:
-    menu_details: ''
-    menu_details_subtitle: ''
-    image_settings: ''
-    menu_image: ''
-  version_diff:
-    section: ''
-    item: ''
-  version_diff_2025:
-    section: ''
-    item: ''
-  details_2025:
-    menu_go_live_flow: ''
-  edit_2025:
-    onboarding_flow: ''
+    delivered: Livré
+    ordered: Commandé
+    prepared: Préparé
+  restaurant_analytics:
+    not_available:
+      description: 'Impossible de charger les données analytiques pour ce restaurant.
+        Cela peut être dû à :'
+      reasons:
+      - Restaurant introuvable ou accès refusé
+      - Permissions insuffisantes
+      - Erreur du système pendant la collecte des données
+      title: Données analytiques non disponibles
   settings_2025:
-    receipt_merchant_details: ''
-    statement_descriptor: ''
-  tasting_courses_footer:
-    show_courses: ''
-    add_tasting_menu: ''
-  tasting_badge: ''
-  show_modals:
-    pairing: ''
-    full: ''
+    receipt_merchant_details: Reçu / coordonnées du commerçant
+    statement_descriptor: Descripteur de déclaration
   show_allergyns_debug:
-    title: ''
-    sql: ''
-    count: ''
-    ids: ''
-    names: ''
+    count: Compter
+    ids: ID
+    names: Noms
+    sql: SQL
+    title: Allergyns Debug
+  show_modals:
+    full: Complet
+    pairing: Couplage
+  smartmenus:
+    no_image: Pas d'image
+    skeleton:
+      loading: Chargement des éléments de menu...
+  tasting_badge: Dégustation
+  tasting_courses_footer:
+    add_tasting_menu: Ajouter un menu de dégustation
+    show_courses: Afficher les cours
+  version_diff:
+    item: Objet
+    section: Section
+  version_diff_2025:
+    item: 'Article #'
+    section: 'Section #'

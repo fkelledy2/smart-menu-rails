@@ -102,5 +102,7 @@ cs:
       not_found: nenalezeno
       not_locked: nebyl uzamčen
       not_saved:
+        few: 'Chyby %{count} znemožnily uložení tohoto %{resource}:'
+        many: 'Chyby %{count} znemožnily uložení tohoto %{resource}:'
         one: '1 chyba znemožnila uložení tohoto %{zdroje}:'
         other: 'Chyby %{count} znemožnily uložení tohoto %{resource}:'

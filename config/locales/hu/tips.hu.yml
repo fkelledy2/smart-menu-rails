@@ -2,33 +2,33 @@
 hu:
   tips:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: A borravaló sikeresen létrejött.
+      deleted: A borravaló sikeresen törlésre került.
+      updated: A tippet sikeresen frissítettük.
     edit:
-      tips: ''
-      edit_tip: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      tip_details: ''
+      cancel: Törölje
+      confirm_delete: Törölje ezt a tipp opciót?
+      delete: Törölje a  címet.
+      description: A borravaló százalékos részleteinek frissítése
+      edit_tip: Tipp szerkesztése opció
+      tip_details: Tipp részletek
+      tips: Tippek
     form:
-      percentage: ''
-      percentage_placeholder: ''
-      percentage_help: ''
+      percentage: Borravaló százalék
+      percentage_help: Adja meg a borravaló százalékát (0-100)
+      percentage_placeholder: pl. 15
     index:
+      all_tips: Minden borravaló opció
+      back: Vissza
+      description: A vásárlók számára a pénztárnál elérhető borravaló százalékok kezelése
+      new_tip: Új borravaló opció
       tips: Borravalók
-      description: ''
-      back: ''
-      new_tip: ''
-      all_tips: ''
     new:
-      tips: ''
-      new: ''
-      new_tip: ''
-      description: ''
       cancel: Mégse
-      tip_details: ''
+      description: Új borravaló százalékos arány létrehozása az ügyfelek számára
+      new: Új
+      new_tip: Új borravaló opció
+      tip_details: Tipp részletek
+      tips: Tippek
     show:
       tip: Borravaló megtekintése

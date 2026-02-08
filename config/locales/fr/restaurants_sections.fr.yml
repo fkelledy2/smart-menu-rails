@@ -2,480 +2,523 @@
 fr:
   restaurants:
     sections:
-      details_2025:
-        quick_actions: ''
-        new_menu: ''
-        import_menu: ''
-        active: ''
-        inactive: ''
-        overview: ''
-        menus: ''
-        tables: ''
-        staff: ''
-        restaurant_details: ''
-        name_placeholder: ''
-        name_help: ''
-        description_placeholder: ''
-        description_help: ''
-        currency_help: ''
-        location: ''
-        address_placeholder: ''
-        address_help: ''
-        address2_placeholder: ''
-        address2_help: ''
-        location_verified: ''
-        image_context_details: ''
-        imagecontext_placeholder: ''
-        imagecontext_help: ''
-        image_style_profile_placeholder: ''
-        image_style_profile_help: ''
-        loading_map: ''
-        location_label: ''
-        map_error: ''
       address_2025:
-        location: ''
-        address_placeholder: ''
-        address_help: ''
-        address2_placeholder: ''
-        address2_help: ''
-        location_verified: ''
-        delivery_zones: ''
-        delivery_zones_help: ''
-        add_zone: ''
-        map_loading: ''
-        map_location_label: ''
-        map_load_error: ''
-      wifi_2025:
-        wifi_configuration: ''
-        wifi_description: ''
-        ssid_placeholder: ''
-        ssid_help: ''
-        password_placeholder: ''
-        password_help: ''
-        select_encryption: ''
-        encryption_help: ''
-        select_option: ''
-        false: ''
-        true: ''
-        hidden_help: ''
-      import_2025:
-        info_title: ''
-        info_text: ''
-        upload_title: ''
-        name_label: ''
-        name_placeholder: ''
-        name_help: ''
-        name_invalid: ''
-        source_language_label: ''
-        auto_detect: ''
-        source_language_help: ''
-        pdf_label: ''
-        choose_file: ''
-        no_file_chosen: ''
-        pdf_hint: ''
-        pdf_invalid: ''
-        upload_process: ''
-        tips_title: ''
-        tip_quality_title: ''
-        tip_quality_text: ''
-        tip_format_title: ''
-        tip_format_text: ''
-        tip_processing_title: ''
-        tip_processing_text: ''
-        recent_imports: ''
-        ago: ''
-        status_completed: ''
-        status_failed: ''
-        status_processing: ''
-        status_pending: ''
-        confirm_delete: ''
-        delete_import: ''
-        select_all: ''
-        delete_selected: ''
-        view: ''
-        default_title: ''
-      menus_2025:
-        quick_actions: ''
-        new_menu: ''
-        import_menu: ''
-        menus: ''
-        all: ''
-        active: ''
-        inactive: ''
-        menus_all: ''
-        menus_active: ''
-        menus_inactive: ''
-        sections: ''
-        items: ''
-        edit: ''
-        view: ''
-        detach: ''
-        preview: ''
-        no_preview: ''
-        duplicate: ''
-        delete: ''
-        confirm_delete: ''
-        no_menus: ''
-        no_menus_description: ''
-        create_first_menu: ''
-        drag_to_reorder: ''
-        select_all: ''
-        set_status: ''
-        apply: ''
-        menu_name: ''
-        availability: ''
-        shared: ''
-        default: ''
-        available: ''
-        unavailable: ''
-        share: ''
-        share_menu: ''
-        share_to_all: ''
-      ordering_2025:
-        ordering_dashboard: ''
-        today: ''
-        yesterday: ''
-        last_7_days: ''
-        last_28_days: ''
-        mtd: ''
-        last_month: ''
-        custom: ''
-        compare: ''
-        menu: ''
-        all: ''
-        employee: ''
-        table: ''
-        status: ''
-        completed: ''
-        open: ''
-        cancelled: ''
-        kpi_gross: ''
-        kpi_net: ''
-        kpi_taxes: ''
-        kpi_tips: ''
-        kpi_service: ''
-        kpi_orders: ''
-        kpi_items: ''
-        kpi_aov: ''
-        revenue_over_time: ''
-        orders_over_time: ''
-        menu_mix: ''
-        top_items: ''
-        staff_performance: ''
-        table_utilization: ''
-        orders_table: ''
-        items_table: ''
-        export_csv: ''
-      tables_2025:
-        quick_actions: ''
-        add_table: ''
-        tables_overview: ''
-        tables_description: ''
-        total_tables: ''
-        table_settings: ''
-        table_number: ''
-        table_name: ''
-        capacity: ''
-        status: ''
-        qr_code: ''
-        actions: ''
-        select_all: ''
-        set_status: ''
-        apply: ''
-        drag_to_reorder: ''
-        edit: ''
-        free: ''
-        occupied: ''
-        archived: ''
-        view: ''
-        view_qr: ''
-        view_qr_code: ''
-        no_smartmenu: ''
-        no_capacity: ''
-        seats: ''
-        confirm_delete: ''
-        no_tables: ''
-        no_tables_description: ''
-      allergens_2025:
-        quick_actions: ''
-        add_allergen: ''
-        allergens: ''
-        allergens_description: ''
-        total_allergens: ''
-        manage_allergens: ''
-        common_templates: ''
-        templates_description: ''
-        fda_top_8: ''
-        recommended: ''
-        fda_top_8_desc: ''
-        eu_allergens: ''
-        eu_allergens_desc: ''
-        common_dietary: ''
-        common_dietary_desc: ''
-        load_template: ''
-        current_allergens: ''
-        select_all: ''
-        status_active: ''
-        status_inactive: ''
-        status_archived: ''
-        set_status: ''
-        apply: ''
-        name: ''
-        drag_to_reorder: ''
-        active: ''
-        inactive: ''
-        archived: ''
-        edit: ''
-      sizes_2025:
-        quick_actions: ''
-        add_size: ''
-        sizes: ''
-        sizes_description: ''
-        total_sizes: ''
-        manage_sizes: ''
-        current_sizes: ''
-        common_templates: ''
-        templates_description: ''
-        pizza_sizes: ''
-        recommended: ''
-        pizza_sizes_desc: ''
-        beverage_sizes: ''
-        beverage_sizes_desc: ''
-        load_template: ''
-        select_all: ''
-        status_active: ''
-        status_inactive: ''
-        status_archived: ''
-        set_status: ''
-        apply: ''
-        name: ''
-        drag_to_reorder: ''
-        edit: ''
-      jukebox_2025:
-        jukebox: ''
-        jukebox_description: ''
-        spotify: ''
-        connected: ''
-        not_connected: ''
-        connect: ''
-        unknown_artist: ''
-        no_tracks: ''
-        spotify_integration: ''
-        jukebox_desc: ''
-        spotify_status: ''
-        connect_spotify: ''
-        disconnect: ''
-        connected_as: ''
-      catalog_2025:
-        quick_actions: ''
-        add_tax: ''
-        add_tip: ''
-        taxes_and_tips: ''
-        taxes_and_tips_description: ''
-        taxes: ''
-        tips: ''
-        configured: ''
-        manage: ''
-        tax_tip_templates: ''
-        templates_description: ''
-        us_restaurant: ''
-        recommended: ''
-        us_restaurant_desc: ''
-        eu_restaurant: ''
-        eu_restaurant_desc: ''
-        load_template: ''
-        current_taxes: ''
-        current_tips: ''
-        select_all: ''
-        status_active: ''
-        status_inactive: ''
-        status_archived: ''
-        set_status: ''
-        apply: ''
-        name: ''
-        rate: ''
-        status: ''
-        drag_to_reorder: ''
-        inactive: ''
-        archived: ''
-        active: ''
-        edit: ''
-        tip: ''
-      staff_2025:
-        quick_actions: ''
-        add_staff: ''
-        staff_overview: ''
-        staff_overview_desc: ''
-        total_staff: ''
-        staff: ''
-        name: ''
-        email: ''
-        role: ''
-        status: ''
-        joined: ''
-        actions: ''
-        select_all: ''
-        status_active: ''
-        status_inactive: ''
-        status_archived: ''
-        status_open: ''
-        set_status: ''
-        apply: ''
-        drag_to_reorder: ''
-        edit: ''
-        unnamed: ''
-        no_role: ''
-        active: ''
-        inactive: ''
-        confirm_remove: ''
-        no_staff: ''
-        no_staff_description: ''
-        add_first_staff: ''
-        roles_permissions: ''
-        roles_description: ''
-        manager: ''
-        manager_desc: ''
-        editor: ''
-        editor_desc: ''
-        viewer: ''
-        viewer_desc: ''
-        edit_menus: ''
-        manage_staff: ''
-        view_analytics: ''
-        manage_orders: ''
-        edit_items: ''
-        no_staff_access: ''
-        no_analytics: ''
-        view_menus: ''
-        view_orders: ''
-        no_editing: ''
-        no_deletion: ''
-      settings_2025:
-        general_settings: ''
-        status_active: ''
-        status_inactive: ''
-        status_archived: ''
-        status_help: ''
-        feature_toggles: ''
-        display_images: ''
-        display_images_help: ''
-        alcohol_policy: ''
-        alcohol_policy_help: ''
-        allowed_now: ''
-        blocked_now: ''
-        allowed_days: ''
-        time_ranges: ''
-        from: ''
-        to: ''
-        add_range: ''
-        blackout_dates: ''
-        age_verification: ''
-        age_verification_desc: ''
-        allow_alcohol: ''
-        allow_alcohol_help: ''
-        display_images_popup: ''
-        display_images_popup_help: ''
-        allow_ordering: ''
-        allow_ordering_help: ''
-        inventory_tracking: ''
-        inventory_tracking_help: ''
-        wifi_configuration: ''
-        wifi_description: ''
-        ssid_placeholder: ''
-        ssid_help: ''
-        select_encryption: ''
-        encryption_help: ''
-        password_placeholder: ''
-        password_help: ''
-        select_option: ''
-        false: ''
-        true: ''
-        hidden_help: ''
-        settings_info_title: ''
-        settings_info_desc: ''
-        status: ''
-        status_info: ''
-        images_info: ''
-        popup_info: ''
-      qrcodes_2025:
-        quick_actions: ''
-        view_all_qr: ''
-        qr_codes: ''
-        qr_description: ''
-        qr_code_types: ''
-        general_qr: ''
-        general_qr_desc: ''
-        download: ''
-        table_qr: ''
-        table_qr_desc: ''
-        manage_tables: ''
-        menu_qr: ''
-        menu_qr_desc: ''
-        setup_tables: ''
-        view_menus: ''
-        qr_customization: ''
-        customization_description: ''
-        customization: ''
-        logo: ''
-        logo_desc: ''
-        upload_logo: ''
-        colors: ''
-        colors_desc: ''
-        customize_colors: ''
-      hours_2025:
-        quick_actions: ''
-        copy_to_all: ''
-        operating_hours: ''
-        hours_description: ''
-        closed: ''
-        copied_success: ''
-        open_24h: ''
-        custom: ''
-        monday: ''
-        tuesday: ''
-        wednesday: ''
-        thursday: ''
-        friday: ''
-        saturday: ''
-        sunday: ''
-      localization_2025:
-        quick_actions: ''
-        add_language: ''
-        localization: ''
-        localization_description: ''
-        language: ''
-        locale_code: ''
-        status: ''
-        actions: ''
-        select_all: ''
-        status_active: ''
-        status_inactive: ''
-        status_archived: ''
-        set_status: ''
-        apply: ''
-        drag_to_reorder: ''
-        default: ''
-        edit: ''
-        active: ''
-        inactive: ''
-        no_locales: ''
-        no_locales_description: ''
-        common_languages: ''
-        common_languages_description: ''
-        spanish: ''
-        french: ''
-        german: ''
-        italian: ''
-        chinese: ''
-        japanese: ''
-        add: ''
+        add_zone: Ajouter une zone de livraison
+        address2_help: Complément d'adresse
+        address2_placeholder: Suite 100 (optionnel)
+        address_help: L'adresse de votre restaurant
+        address_placeholder: 123 Main Street
+        delivery_zones: Zones de livraison
+        delivery_zones_help: Définir les zones où vous offrez un service de livraison
+        location: Lieu et adresse
+        location_verified: Lieu vérifié
+        map_load_error: La carte n'a pas pu être chargée
+        map_loading: Chargement de la carte...
+        map_location_label: 'Localisation :'
       advanced_2025:
-        advanced_features: ''
-        ai_features: ''
-        ai_desc: ''
-        dynamic_pricing: ''
-        dynamic_pricing_desc: ''
-        recommendations: ''
-        recommendations_desc: ''
-        age_verification: ''
-        age_verification_desc: ''
+        advanced_features: Fonctionnalités avancées
+        age_verification: Vérification de l'âge
+        age_verification_desc: Exiger une vérification de l'âge pour les articles
+          contenant de l'alcool
+        ai_desc: Activer les descriptions de menu AI et la génération d'images
+        ai_features: Fonctionnalités basées sur l'IA
+        dynamic_pricing: Tarification dynamique
+        dynamic_pricing_desc: Ajuster les prix en fonction de l'heure de la journée
+          ou de la demande
+        recommendations: Recommandations intelligentes
+        recommendations_desc: Afficher des recommandations de menu personnalisées
+          aux clients
+      allergens_2025:
+        active: Actif
+        add_allergen: Ajouter un allergène
+        allergens: Allergènes
+        allergens_description: Gérez les informations sur les allergènes pour les
+          produits de votre menu afin d'aider les clients à faire des choix éclairés.
+        apply: Appliquer
+        archived: Archivé
+        common_dietary: Restrictions alimentaires courantes
+        common_dietary_desc: Sans gluten, végétalien, végétarien, halal, casher
+        common_templates: Modèles communs
+        current_allergens: Allergènes actuels
+        drag_to_reorder: Faire glisser pour réorganiser
+        edit: Editer
+        eu_allergens: UE 14 Allergènes
+        eu_allergens_desc: Les 14 principaux allergènes conformément à la réglementation
+          de l'UE
+        fda_top_8: Les 8 principaux allergènes de la FDA
+        fda_top_8_desc: Lait, œufs, poissons, crustacés, fruits à coque, arachides,
+          blé, soja
+        inactive: Inactif
+        load_template: Charger le modèle
+        manage_allergens: Gérer les allergènes
+        name: Nom
+        quick_actions: Actions rapides
+        recommended: Recommandé
+        select_all: Tout sélectionner
+        set_status: Définir l'état...
+        status_active: Actif
+        status_archived: Archivé
+        status_inactive: Inactif
+        templates_description: Ajout rapide de kits d'allergènes standard
+        total_allergens: Total des allergènes
+      catalog_2025:
+        active: Actif
+        add_tax: Ajouter la taxe
+        add_tip: Ajouter un conseil
+        apply: Appliquer
+        archived: Archivé
+        configured: configuré
+        current_taxes: Impôts courants
+        current_tips: Conseils actuels
+        drag_to_reorder: Faire glisser pour réorganiser
+        edit: Editer
+        eu_restaurant: Restaurant de l'UE
+        eu_restaurant_desc: TVA + frais de service inclus
+        inactive: Inactif
+        load_template: Charger le modèle
+        manage: Gérer
+        name: Nom
+        quick_actions: Actions rapides
+        rate: Taux
+        recommended: Recommandé
+        select_all: Tout sélectionner
+        set_status: Définir l'état...
+        status: Statut
+        status_active: Actif
+        status_archived: Archivé
+        status_inactive: Inactif
+        tax_tip_templates: Modèles de taxes et de pourboires
+        taxes: Impôts
+        taxes_and_tips: Taxes et conseils
+        taxes_and_tips_description: Gestion des taxes et des pourboires
+        templates_description: Jeux de taxes et de pourboires préconfigurés pour une
+          mise en place rapide
+        tip: Conseil
+        tips: Conseils
+        us_restaurant: Restaurant américain
+        us_restaurant_desc: Taxe de vente + suggestions de pourboires (15 %, 18 %,
+          20 %)
+      details_2025:
+        active: Actif
+        address2_help: Complément d'adresse
+        address2_placeholder: Suite 100 (optionnel)
+        address_help: L'adresse de votre restaurant
+        address_placeholder: 123 Main Street
+        currency_help: Monnaie pour tous les prix
+        description_help: Une brève description qui apparaît dans votre menu
+        description_placeholder: Décrivez votre restaurant, votre cuisine et ce qui
+          fait sa spécificité...
+        image_context_details: Détails du contexte de l'image
+        image_style_profile_help: Spécifier les préférences de style et de présentation
+          pour les images des éléments de menu générées par l'IA
+        image_style_profile_placeholder: Par exemple, photographie professionnelle
+          de produits alimentaires, bien éclairée, fond blanc, vue de haut en bas...
+        imagecontext_help: Décrivez le style et l'atmosphère de votre restaurant pour
+          aider l'IA à générer des images de produits de menu appropriées.
+        imagecontext_placeholder: par exemple, restaurant italien moderne au décor
+          rustique...
+        import_menu: Menu Importation
+        inactive: Inactif
+        loading_map: Chargement de la carte...
+        location: Lieu et adresse
+        location_label: 'Localisation :'
+        location_verified: Lieu vérifié
+        map_error: La carte n'a pas pu être chargée
+        menus: Cartes
+        name_help: C'est ainsi que les clients verront votre restaurant
+        name_placeholder: par exemple, Pizza Place
+        new_menu: Nouveau menu
+        overview: Vue d'ensemble
+        quick_actions: Actions rapides
+        restaurant_details: Détails du restaurant
+        staff: Personnel
+        tables: Tableaux
+      hours_2025:
+        closed: Fermé
+        copied_success: Copié !
+        copy_to_all: Copier le lundi vers tous les jours
+        custom: Sur mesure
+        friday: Vendredi
+        hours_description: Fixer les heures d'ouverture de votre restaurant
+        monday: Lundi
+        open_24h: Ouvert 24 heures sur 24
+        operating_hours: Heures d'ouverture
+        quick_actions: Actions rapides
+        saturday: Samedi
+        sunday: Dimanche
+        thursday: Jeudi
+        tuesday: Mardi
+        wednesday: Mercredi
+      import_2025:
+        ago: il y a
+        auto_detect: Détection automatique
+        choose_file: Choisir un fichier
+        confirm_delete: Êtes-vous sûr de vouloir supprimer cette importation ?
+        default_title: 'Importer #%{id}'
+        delete_import: Supprimer l'importation
+        delete_selected: Supprimer la sélection
+        info_text: Téléchargez votre menu PDF et notre IA extraira automatiquement
+          tous les articles, les sections, les prix et les descriptions.
+        info_title: Importation de menus à l'aide de l'IA
+        name_help: Donnez à ce menu un nom descriptif
+        name_invalid: Veuillez indiquer un nom de menu
+        name_label: Nom du menu
+        name_placeholder: par exemple, Menu d'été 2024
+        no_file_chosen: Pas de fichier choisi
+        pdf_hint: PDF jusqu'à 10MB. Les scans clairs sont les plus efficaces.
+        pdf_invalid: Veuillez sélectionner un fichier PDF
+        pdf_label: Menu PDF
+        recent_imports: Importations récentes
+        select_all: Tout sélectionner
+        source_language_help: Utilisé pour préserver la langue d'origine lors de la
+          génération de descriptions manquantes.
+        source_language_label: Langue du menu
+        status_completed: Terminé
+        status_failed: Échec
+        status_pending: En attente
+        status_processing: Traitement
+        tip_format_text: Les menus avec des sections, des noms d'articles et des prix
+          clairs sont les plus efficaces. Évitez les mises en page complexes ou les
+          colonnes multiples.
+        tip_format_title: Format structuré
+        tip_processing_text: Le traitement des menus volumineux peut prendre quelques
+          minutes. Vous serez informé lorsque l'importation sera prête à être examinée.
+        tip_processing_title: Délai de traitement
+        tip_quality_text: Utilisez un PDF clair et à haute résolution pour une meilleure
+          précision de l'OCR. Les menus scannés doivent être nets et lisibles.
+        tip_quality_title: PDF de haute qualité
+        tips_title: Conseils pour de meilleurs résultats
+        upload_process: Téléchargement et traitement
+        upload_title: Télécharger le menu en PDF
+        view: Voir
+      jukebox_2025:
+        connect: Connecter
+        connect_spotify: Se connecter à Spotify
+        connected: Connecté
+        connected_as: 'Connecté en tant que : %{utilisateur}'
+        disconnect: Déconnexion
+        jukebox: Jukebox
+        jukebox_desc: Connecter Spotify pour permettre aux clients de contrôler la
+          musique
+        jukebox_description: Intégrer Spotify pour diffuser de la musique dans votre
+          restaurant et créer l'ambiance parfaite
+        no_tracks: Aucune piste configurée
+        not_connected: Non connecté
+        spotify: Spotify
+        spotify_integration: Connectez votre compte Spotify pour gérer la liste de
+          lecture de votre restaurant
+        spotify_status: Statut Spotify
+        unknown_artist: Artiste inconnu
+      localization_2025:
+        actions: Actions
+        active: Actif
+        add: Ajouter
+        add_language: Ajouter une langue
+        apply: Appliquer
+        chinese: Chinois
+        common_languages: Langues communes
+        common_languages_description: Ajouter rapidement des traductions dans les
+          langues les plus courantes
+        default: Défaut
+        drag_to_reorder: Faire glisser pour réorganiser
+        edit: Editer
+        french: Français
+        german: Allemand
+        inactive: Inactif
+        italian: Italien
+        japanese: Japonais
+        language: Langue
+        locale_code: Code
+        localization: Localisation et langues
+        localization_description: Gérer les traductions de vos menus dans plusieurs
+          langues
+        no_locales: Aucune langue supplémentaire n'est configurée
+        no_locales_description: Ajouter des traductions pour rendre votre menu accessible
+          dans plusieurs langues
+        quick_actions: Actions rapides
+        select_all: Tout sélectionner
+        set_status: Définir l'état...
+        spanish: Espagnol
+        status: Statut
+        status_active: Actif
+        status_archived: Archivé
+        status_inactive: Inactif
+      menus_2025:
+        active: Actif
+        all: Tous
+        apply: Appliquer
+        availability: Disponibilité
+        available: Disponible
+        confirm_delete: Êtes-vous sûr ?
+        create_first_menu: Créez votre premier menu
+        default: Défaut
+        delete: Supprimer
+        detach: Détacher
+        drag_to_reorder: Faire glisser pour réorganiser
+        duplicate: Duplicata
+        edit: Editer
+        import_menu: Menu Importation
+        inactive: Inactif
+        items: articles
+        menu_name: Nom
+        menus: Cartes
+        menus_active: Menus actifs
+        menus_all: Tous les menus
+        menus_inactive: Menus inactifs
+        new_menu: Nouveau menu
+        no_menus: Aucun menu trouvé
+        no_menus_description: Créez votre premier menu pour commencer
+        no_preview: Le menu n'est pas encore publié
+        preview: Menu de prévisualisation
+        quick_actions: Actions rapides
+        sections: sections
+        select_all: Tout sélectionner
+        set_status: Définir l'état...
+        share: Partager
+        share_menu: Partager le menu
+        share_to_all: Tous les restaurants
+        shared: Partagé
+        unavailable: Indisponible
+        view: Voir
+      ordering_2025:
+        all: Tous
+        cancelled: Annulé
+        compare: Comparaison avec la période précédente
+        completed: Terminé
+        custom: Sur mesure...
+        employee: Employé
+        export_csv: Exporter CSV
+        items_table: Articles
+        kpi_aov: AOV
+        kpi_gross: Recettes brutes
+        kpi_items: Articles vendus
+        kpi_net: Recettes nettes
+        kpi_orders: Commandes
+        kpi_service: Frais de service
+        kpi_taxes: Impôts
+        kpi_tips: Conseils
+        last_28_days: Les 28 derniers jours
+        last_7_days: 7 derniers jours
+        last_month: Le mois dernier
+        menu: Carte
+        menu_mix: Menu Mix
+        mtd: Mois à ce jour
+        open: Ouvrir
+        ordering_dashboard: Tableau de bord des commandes
+        orders_over_time: Les commandes dans le temps
+        orders_table: Commandes
+        revenue_over_time: Recettes au fil du temps
+        staff_performance: Performance du personnel
+        status: Statut
+        table: Tableau
+        table_utilization: Utilisation du tableau
+        today: Aujourd'hui
+        top_items: Top Items
+        yesterday: Hier
+      qrcodes_2025:
+        colors: Couleurs
+        colors_desc: Choisissez des couleurs personnalisées pour vos codes QR
+        customization: Options de personnalisation
+        customization_description: Personnalisez l'apparence de vos codes QR pour
+          qu'ils correspondent à votre marque.
+        customize_colors: Personnaliser les couleurs
+        download: Télécharger
+        general_qr: Menu général QR
+        general_qr_desc: Un seul code QR pour tous les menus. Idéal pour les petits
+          restaurants avec un seul emplacement.
+        logo: Logo
+        logo_desc: Ajoutez le logo de votre restaurant au centre des codes QR
+        manage_tables: Gérer les tableaux
+        menu_qr: QR spécifiques au menu
+        menu_qr_desc: Codes QR séparés pour chaque menu. Idéal pour les menus du petit-déjeuner,
+          du déjeuner et du dîner.
+        qr_code_types: Types de codes QR
+        qr_codes: Codes QR
+        qr_customization: Personnalisation du code QR
+        qr_description: Générez des codes QR pour vos menus. Les clients peuvent les
+          scanner pour consulter votre menu numérique.
+        quick_actions: Actions rapides
+        setup_tables: Tableaux de configuration
+        table_qr: QR spécifique au tableau
+        table_qr_desc: Code QR unique pour chaque table. Permet de commander des tables
+          et d'en assurer le suivi.
+        upload_logo: Télécharger le logo
+        view_all_qr: Voir tous les QR Codes
+        view_menus: Voir les menus
+      settings_2025:
+        add_range: Ajouter une gamme
+        age_verification: Vérification de l'âge
+        age_verification_desc: Exiger une vérification de l'âge pour les articles
+          contenant de l'alcool
+        alcohol_policy: Politique en matière d'alcool
+        alcohol_policy_help: Configurer les jours/heures autorisés et les dates d'interdiction
+          de vente d'alcool.
+        allow_alcohol: Autoriser la vente d'alcool
+        allow_alcohol_help: Permettre la vente de boissons alcoolisées. Vous êtes
+          responsable du respect de la législation.
+        allow_ordering: Permettre la commande
+        allow_ordering_help: Permettre aux clients de commander en ligne
+        allowed_days: Jours autorisés
+        allowed_now: Autorisé maintenant
+        blackout_dates: Dates d'interdiction (AAAA-MM-JJ, séparées par des virgules)
+        blocked_now: Bloqué maintenant
+        display_images: Afficher les images
+        display_images_help: Afficher les images des éléments du menu dans votre menu
+          numérique
+        display_images_popup: Afficher des images dans une fenêtre contextuelle
+        display_images_popup_help: Ouvrir les images des éléments de menu dans une
+          fenêtre contextuelle lorsqu'on clique dessus
+        encryption_help: Le protocole de sécurité utilisé par votre réseau WiFi
+        'false': ''
+        feature_toggles: Toggles de fonctions
+        from: De
+        general_settings: Paramètres généraux
+        hidden_help: Si le nom du réseau est diffusé publiquement
+        images_info: Afficher les photos de l'élément de menu
+        inventory_tracking: Suivi des stocks
+        inventory_tracking_help: Suivi des niveaux de stock pour les articles du menu
+          (bientôt disponible)
+        password_help: Le mot de passe dont les clients auront besoin pour se connecter
+        password_placeholder: Saisir le mot de passe WiFi
+        popup_info: Visualisation d'images en plein écran
+        select_encryption: Sélectionner le cryptage...
+        select_option: Sélectionner une option...
+        settings_info_desc: Ces paramètres contrôlent les fonctionnalités de base
+          de votre restaurant. Les modifications sont enregistrées automatiquement.
+        settings_info_title: À propos des réglages
+        ssid_help: Le nom de votre réseau WiFi auquel les clients se connecteront
+        ssid_placeholder: Saisissez le nom de votre réseau WiFi
+        status: Statut
+        status_active: Actif - Le restaurant est ouvert et visible
+        status_archived: Archivé - Le restaurant est définitivement fermé
+        status_help: Contrôle la visibilité de votre restaurant pour les clients
+        status_inactive: Inactif - Le restaurant est temporairement fermé
+        status_info: Contrôle de la visibilité du restaurant
+        time_ranges: Plages de temps autorisées
+        to: Pour
+        'true': ''
+        wifi_configuration: Configuration du WiFi
+        wifi_description: Configurer les paramètres WiFi pour générer des codes QR
+          pour l'accès des clients
+      sizes_2025:
+        add_size: Ajouter une taille
+        apply: Appliquer
+        beverage_sizes: Tailles des boissons
+        beverage_sizes_desc: Petit, moyen, grand, très grand
+        common_templates: Modèles communs
+        current_sizes: Tailles actuelles
+        drag_to_reorder: Faire glisser pour réorganiser
+        edit: Editer
+        load_template: Charger le modèle
+        manage_sizes: Gérer les tailles
+        name: Nom
+        pizza_sizes: Taille des pizzas
+        pizza_sizes_desc: Personnel, Petit, Moyen, Grand, Très grand
+        quick_actions: Actions rapides
+        recommended: Recommandé
+        select_all: Tout sélectionner
+        set_status: Définir l'état...
+        sizes: Taille des éléments du menu
+        sizes_description: Définir des variantes de taille pour les éléments de menu
+          comme Petit, Moyen, Grand, etc.
+        status_active: Actif
+        status_archived: Archivé
+        status_inactive: Inactif
+        templates_description: Ajouter rapidement des ensembles de taille standard
+        total_sizes: Tailles totales
+      staff_2025:
+        actions: Actions
+        active: Actif
+        add_first_staff: Ajoutez votre premier membre du personnel
+        add_staff: Ajouter un membre du personnel
+        apply: Appliquer
+        confirm_remove: Renvoyer ce membre du personnel ?
+        drag_to_reorder: Faire glisser pour réorganiser
+        edit: Editer
+        edit_items: Modifier les éléments
+        edit_menus: Menus d'édition
+        editor: Éditeur
+        editor_desc: Peut éditer des menus et gérer le contenu
+        email: Courriel
+        inactive: Inactif
+        joined: Rejoint
+        manage_orders: Gérer les commandes
+        manage_staff: Gérer le personnel
+        manager: Gestionnaire
+        manager_desc: Accès complet à tous les paramètres et données du restaurant
+        name: Nom
+        no_analytics: Pas d'analyse
+        no_deletion: Pas de suppression
+        no_editing: Pas d'édition
+        no_role: Pas de rôle
+        no_staff: Pas encore de personnel
+        no_staff_access: Pas d'accès pour le personnel
+        no_staff_description: Ajoutez des membres d'équipe pour collaborer à votre
+          restaurant
+        quick_actions: Actions rapides
+        role: Rôle
+        roles_description: Définir ce à quoi chaque rôle peut accéder et gérer
+        roles_permissions: Rôles et autorisations
+        select_all: Tout sélectionner
+        set_status: Définir l'état...
+        staff: Personnel
+        staff_overview: Personnel
+        staff_overview_desc: Gérez votre équipe pour collaborer à votre restaurant.
+        status: Statut
+        status_active: Actif
+        status_archived: Archivé
+        status_inactive: Inactif
+        status_open: Ouvrir
+        total_staff: Total des employés
+        unnamed: Sans nom
+        view_analytics: Voir les analyses
+        view_menus: Voir les menus
+        view_orders: Voir les commandes
+        viewer: Visionneuse
+        viewer_desc: Accès en lecture seule aux menus et aux commandes
+      tables_2025:
+        actions: Actions
+        add_table: Ajouter une table
+        apply: Appliquer
+        archived: Archivé
+        capacity: Capacité
+        confirm_delete: Supprimer ce tableau ?
+        drag_to_reorder: Faire glisser pour réorganiser
+        edit: Editer
+        free: Gratuit
+        no_capacity: Capacité non définie
+        no_smartmenu: Aucun code QR n'a encore été généré
+        no_tables: Aucune table n'est encore configurée
+        no_tables_description: Configurez les tables de votre restaurant pour permettre
+          l'utilisation de codes QR et la commande par table.
+        occupied: Occupé
+        qr_code: Code QR
+        quick_actions: Actions rapides
+        seats: sièges
+        select_all: Tout sélectionner
+        set_status: Définir l'état...
+        status: Statut
+        table_name: Nom
+        table_number: Tableau
+        table_settings: Réglages de la table
+        tables_description: Gérez les tables et générez des codes QR spécifiques pour
+          les commandes.
+        tables_overview: Tableaux
+        total_tables: Total des tableaux
+        view: Voir
+        view_qr: Voir QR
+        view_qr_code: Voir le code QR pour ce tableau
+      wifi_2025:
+        encryption_help: Le protocole de sécurité utilisé par votre réseau WiFi
+        'false': ''
+        hidden_help: Si le nom du réseau est diffusé publiquement
+        password_help: Le mot de passe dont les clients auront besoin pour se connecter
+        password_placeholder: Saisir le mot de passe WiFi
+        select_encryption: Sélectionner le cryptage...
+        select_option: Sélectionner une option...
+        ssid_help: Le nom de votre réseau WiFi auquel les clients se connecteront
+        ssid_placeholder: Saisissez le nom de votre réseau WiFi
+        'true': ''
+        wifi_configuration: Configuration du WiFi
+        wifi_description: Configurer les paramètres WiFi pour générer des codes QR
+          pour l'accès des clients

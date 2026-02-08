@@ -2,10 +2,10 @@
 hu:
   userplans:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: A felhasználói terv sikeresen létrejött.
+      deleted: A felhasználói terv sikeresen törlésre került.
+      updated: A felhasználói terv sikeresen frissült.
     edit:
-      contactUs: ''
-      saveChanges: ''
-      selectPlan: ''
+      contactUs: Kapcsolatfelvétel
+      saveChanges: Frissítés
+      selectPlan: Válasszon tervet

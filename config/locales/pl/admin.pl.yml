@@ -1,220 +1,234 @@
 ---
 pl:
   admin:
-    performance:
-      title: Monitorowanie wydajności
-      subtitle: Wskaźniki wydajności i analizy w czasie rzeczywistym
-      card:
-        avg_response_time: Średni czas odpowiedzi
-        memory_usage: Wykorzystanie pamięci
-        error_rate: Współczynnik błędu
-        active_users: Aktywni użytkownicy
-        last_5_minutes: Ostatnie 5 minut
-        current_rss: Bieżący RSS
-      response_time_trend: Trend czasu reakcji (24h)
-      memory_usage_trend: Trend użycia pamięci (24h)
-      slowest_endpoints: Najwolniejsze punkty końcowe (ostatnia godzina)
-      table:
-        endpoint: Punkt końcowy
-        avg_response_time: Średni czas odpowiedzi
-      no_slow_endpoints: Nie wykryto wolnych punktów końcowych
-      recent_slow_queries: Ostatnie powolne zapytania
-      query_table:
-        duration: Czas trwania
-        query: Zapytanie
-        time: Czas
-      no_slow_queries: Nie wykryto wolnych zapytań
-      actions: Działania
     cache:
-      title: Administracja pamięcią podręczną
-      health_status: Stan zdrowia pamięci podręcznej
-      response_time: Czas reakcji
-      write_operation: Operacja zapisu
-      read_operation: Czytaj działanie
-      delete_operation: Usuń operację
-      error: Błąd
-      performance_stats: Statystyki wydajności
-      reset_stats: Zresetuj statystyki
-      cache_hits: Trafienia z pamięci podręcznej
-      cache_misses: Braki pamięci podręcznej
-      cache_writes: Zapis w pamięci podręcznej
+      active_keys: Aktywne klucze
       cache_deletes: Usuwanie pamięci podręcznej
       cache_errors: Błędy
-      hit_rate: Współczynnik trafień
+      cache_hits: Trafienia z pamięci podręcznej
       cache_info: Informacje o pamięci podręcznej
-      service_version: Wersja serwisowa
-      cache_methods: Metody pamięci podręcznej
-      active_keys: Aktywne klucze
-      memory_usage: Wykorzystanie pamięci
-      cache_warming: Ocieplenie pamięci podręcznej
-      cache_warming_description: Wstępne ładowanie krytycznych danych z pamięci podręcznej
-        w celu poprawy wydajności.
       cache_management: Zarządzanie pamięcią podręczną
       cache_management_description: Wyczyść wszystkie dane z pamięci podręcznej, aby
         wymusić ładowanie nowych danych.
+      cache_methods: Metody pamięci podręcznej
+      cache_misses: Braki pamięci podręcznej
       cache_patterns: Wzorce pamięci podręcznej
+      cache_warming: Ocieplenie pamięci podręcznej
+      cache_warming_description: Wstępne ładowanie krytycznych danych z pamięci podręcznej
+        w celu poprawy wydajności.
+      cache_writes: Zapis w pamięci podręcznej
+      delete_operation: Usuń operację
+      error: Błąd
+      health_status: Stan zdrowia pamięci podręcznej
+      hit_rate: Współczynnik trafień
+      memory_usage: Wykorzystanie pamięci
       patterns:
-        restaurant: Pulpity nawigacyjne i analizy dla restauracji
+        employee: Dane i wyniki pracowników
         menu: Dane menu i wydajność
         menuitem: Szczegóły i analiza pozycji menu
         order: Dane zamówienia i podsumowania
-        employee: Dane i wyniki pracowników
+        restaurant: Pulpity nawigacyjne i analizy dla restauracji
         user: Aktywność użytkowników i dane z różnych restauracji
+      performance_stats: Statystyki wydajności
+      read_operation: Czytaj działanie
+      reset_stats: Zresetuj statystyki
+      response_time: Czas reakcji
+      service_version: Wersja serwisowa
+      title: Administracja pamięcią podręczną
+      write_operation: Operacja zapisu
+    dashboard:
+      kpis:
+        bounce_rate: Współczynnik odrzuceń
+        customers: Klienci
+        growth_rate: Tempo wzrostu
+        page_views: Odsłony
+        total_orders: Zamówienia ogółem
+        total_revenue: Całkowity przychód
+        unique_visitors: Unikalni odwiedzający
+      loading: Ładowanie...
+      sales:
+        no_data: Brak dostępnych danych dotyczących sprzedaży w tym okresie.
+        table:
+          item: Pozycja
+          quantity_sold: Ilość sprzedana
+        title: Najlepiej sprzedające się produkty
     metrics:
-      title: Monitorowanie wydajności aplikacji
       card:
-        total_requests: Łączna liczba żądań
-        avg_response_time: Średni czas odpowiedzi
-        error_rate: Współczynnik błędu
-        total_users: Całkowita liczba użytkowników
         all_time: Cały czas
+        all_time_registrations: Rejestracje przez cały czas
+        avg_response_time: Średni czas odpowiedzi
         current_average: Bieżąca średnia
         current_error_rate: Bieżący poziom błędu
-        all_time_registrations: Rejestracje przez cały czas
-      summary:
-        restaurants_created: Utworzone restauracje
-        menu_imports: Menu Imports
-      system:
-        memory_usage: Wykorzystanie pamięci
-        active_users: Aktywni użytkownicy
+        error_rate: Współczynnik błędu
+        total_requests: Łączna liczba żądań
+        total_users: Całkowita liczba użytkowników
       metric_types:
-        title: Typy metryczne
         counters: 'Liczniki: Skumulowane wartości, które tylko rosną (np. całkowita
           liczba żądań).'
         gauges: 'Wskaźniki: Bieżące wartości, które mogą rosnąć lub spadać (np. aktywni
           użytkownicy).'
         histograms: 'Histogramy: Zbiory pomiarów (np. czasy reakcji).'
+        title: Typy metryczne
+      no_recent_metrics:
+        description: Metryki będą pojawiać się tutaj w miarę korzystania z aplikacji
+        message: Brak dostępnych najnowszych wskaźników
+      summary:
+        menu_imports: Menu Imports
+        restaurants_created: Utworzone restauracje
+      system:
+        active_users: Aktywni użytkownicy
+        memory_usage: Wykorzystanie pamięci
       table:
+        last_updated: Ostatnia aktualizacja
         metric: Metryczny
         type: Typ
         value: Wartość
-        last_updated: Ostatnia aktualizacja
-      no_recent_metrics:
-        message: Brak dostępnych najnowszych wskaźników
-        description: Metryki będą pojawiać się tutaj w miarę korzystania z aplikacji
-    dashboard:
-      kpis:
-        total_orders: Zamówienia ogółem
-        total_revenue: Całkowity przychód
-        customers: Klienci
-        growth_rate: Tempo wzrostu
-        page_views: Odsłony
-        unique_visitors: Unikalni odwiedzający
-        bounce_rate: Współczynnik odrzuceń
-      sales:
-        title: Najlepiej sprzedające się produkty
-        table:
-          item: Pozycja
-          quantity_sold: Ilość sprzedana
-        no_data: Brak dostępnych danych dotyczących sprzedaży w tym okresie.
-      loading: Ładowanie...
-  notifications:
-    index:
-      title: Powiadomienia
+      title: Monitorowanie wydajności aplikacji
+    performance:
+      actions: Działania
+      card:
+        active_users: Aktywni użytkownicy
+        avg_response_time: Średni czas odpowiedzi
+        current_rss: Bieżący RSS
+        error_rate: Współczynnik błędu
+        last_5_minutes: Ostatnie 5 minut
+        memory_usage: Wykorzystanie pamięci
+      memory_usage_trend: Trend użycia pamięci (24h)
+      no_slow_endpoints: Nie wykryto wolnych punktów końcowych
+      no_slow_queries: Nie wykryto wolnych zapytań
+      query_table:
+        duration: Czas trwania
+        query: Zapytanie
+        time: Czas
+      recent_slow_queries: Ostatnie powolne zapytania
+      response_time_trend: Trend czasu reakcji (24h)
+      slowest_endpoints: Najwolniejsze punkty końcowe (ostatnia godzina)
+      subtitle: Wskaźniki wydajności i analizy w czasie rzeczywistym
+      table:
+        avg_response_time: Średni czas odpowiedzi
+        endpoint: Punkt końcowy
+      title: Monitorowanie wydajności
   announcements:
     index:
-      title: Co nowego
       coming_soon: Ekscytujące rzeczy już wkrótce!
+      title: Co nowego
   beverage_review_queue:
-    title: Kolejka do przeglądu napojów
-    recent_pipeline_runs: Ostatnio uruchomione rurociągi
-    table:
-      created: Utworzony
-      menu: Menu
-      status: Status
-      step: Krok
-      processed: Przetworzone
-      needs_review: Wymaga przeglądu
-      unresolved: Nierozwiązany
-      actions: Działania
     items_needing_review: Elementy wymagające przeglądu
     items_table:
-      menu: Menu
-      section: Sekcja
-      item: Pozycja
       category: Kategoria
       class_conf: Klasa conf
+      item: Pozycja
+      menu: Menu
       parse_conf: Parse conf
       parsed: Parsowane
-  dw_orders_mv:
-    title: Analiza zamówień
-    loading: Ładowanie danych...
-  ordritems:
-    index:
-      title: Zamawianie przedmiotów
-    new:
-      title: Nowy przedmiot
-    edit:
-      title: Edytuj Ordritem
-    show:
-      title: Pokaż ordritem
-      ordr: Ordr
-      menuitem: Pozycja menu
-  ordrparticipants:
-    index:
-      title: Uczestnicy zamówienia
-    new:
-      title: Nowy uczestnik programu Menuparticipant
-    edit:
-      title: Edytuj Menuparticipant
-    show:
-      title: Pokaż lub uczestnik
+      section: Sekcja
+    recent_pipeline_runs: Ostatnio uruchomione rurociągi
     table:
-      sessionid: Sessionid
-      role: Rola
-      employee: Pracownik
-      ordr: Ordr
-      ordritem: Ordritem
-  ordractions:
-    index:
-      title: Rozkazy
-    new:
-      title: Nowa kolejność
-    edit:
-      title: Edytuj kolejność
-    show:
-      title: Pokaż ułamek zwykły
-  ordritemnotes:
-    index:
-      title: Przypisy porządkowe
-    new:
-      title: Nowa nota porządkowa
-    edit:
-      title: Edytuj Ordritemnote
-    show:
-      title: Pokaż ordritemnote
-  menuparticipants:
-    new:
-      title: Nowy uczestnik programu Menuparticipant
-    edit:
-      title: Edytuj Menuparticipant
-  ingredients:
-    index:
-      title: Składniki
-    new:
-      title: Nowy składnik
-    edit:
-      title: Edytuj składnik
-    show:
-      title: Pokaż składnik
+      actions: Działania
+      created: Utworzony
+      menu: Menu
+      needs_review: Wymaga przeglądu
+      processed: Przetworzone
+      status: Status
+      step: Krok
+      unresolved: Nierozwiązany
+    title: Kolejka do przeglądu napojów
+  dw_orders_mv:
+    loading: Ładowanie danych...
+    title: Analiza zamówień
   genimages:
+    edit:
+      title: Edytuj Genimage
     index:
       title: Genimages
     new:
       title: Nowy obraz
-    edit:
-      title: Edytuj Genimage
     show:
       title: Pokaż obraz
     table:
-      id: ID
-      name: Nazwa
       description: Opis
-      restaurant: Restauracja
-      menu: Menu
-      menusection: Menu
-      menuitem: Pozycja menu
+      id: ID
       image_data: Dane obrazu
+      menu: Menu
+      menuitem: Pozycja menu
+      menusection: Menu
+      name: Nazwa
+      restaurant: Restauracja
+  ingredients:
+    edit:
+      title: Edytuj składnik
+    index:
+      title: Składniki
+    new:
+      title: Nowy składnik
+    show:
+      title: Pokaż składnik
+  menuparticipants:
+    edit:
+      title: Edytuj Menuparticipant
+    new:
+      title: Nowy uczestnik programu Menuparticipant
+  metrics:
+    edit:
+      title: Edytuj metrykę
+    index:
+      title: Metryki
+    new:
+      title: Nowa metryka
+    show:
+      title: Pokaż metrykę
+  notifications:
+    index:
+      title: Powiadomienia
+  onboarding:
+    show:
+      completed: Zakończono
+      current_step: Bieżący krok
+      progress: Postęp
+  ordractions:
+    edit:
+      title: Edytuj kolejność
+    index:
+      title: Rozkazy
+    new:
+      title: Nowa kolejność
+    show:
+      title: Pokaż ułamek zwykły
+  ordritemnotes:
+    edit:
+      title: Edytuj Ordritemnote
+    index:
+      title: Przypisy porządkowe
+    new:
+      title: Nowa nota porządkowa
+    show:
+      title: Pokaż ordritemnote
+  ordritems:
+    edit:
+      title: Edytuj Ordritem
+    index:
+      title: Zamawianie przedmiotów
+    new:
+      title: Nowy przedmiot
+    show:
+      menuitem: Pozycja menu
+      ordr: Ordr
+      title: Pokaż ordritem
+  ordrparticipants:
+    edit:
+      title: Edytuj Menuparticipant
+    index:
+      title: Uczestnicy zamówienia
+    new:
+      title: Nowy uczestnik programu Menuparticipant
+    show:
+      title: Pokaż lub uczestnik
+    table:
+      employee: Pracownik
+      ordr: Ordr
+      ordritem: Ordritem
+      role: Rola
+      sessionid: Sessionid
   restaurantlocales:
     index:
       title: Restaurantlocales
@@ -222,38 +236,24 @@ pl:
       title: Pokaż lokalizację restauracji
     table:
       locale: Lokalizacja
-      status: Status
       restaurant: Restauracja
+      status: Status
   tracks:
+    edit:
+      title: Edytuj ścieżkę
     index:
       title: Utwory
     new:
       title: Nowy utwór
-    edit:
-      title: Edytuj ścieżkę
   userplans:
+    edit:
+      manage_billing: Zarządzanie rozliczeniami
     index:
       title: Plany użytkownika
     new:
       title: Nowy plan użytkownika
     show:
       title: Pokaż plan użytkownika
-    edit:
-      manage_billing: Zarządzanie rozliczeniami
     table:
-      user: Użytkownik
       plan: Plan
-  metrics:
-    index:
-      title: Metryki
-    new:
-      title: Nowa metryka
-    edit:
-      title: Edytuj metrykę
-    show:
-      title: Pokaż metrykę
-  onboarding:
-    show:
-      progress: Postęp
-      current_step: Bieżący krok
-      completed: Zakończono
+      user: Użytkownik

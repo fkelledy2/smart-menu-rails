@@ -2,39 +2,39 @@
 fr:
   allergyns:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: L'allergène a été créé avec succès.
+      deleted: L'allergène a été supprimé avec succès.
+      updated: L'allergène a été mis à jour avec succès.
     edit:
-      allergyns: ''
-      edit_allergyn: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      allergyn_details: ''
-    form:
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      description: ''
-      description_placeholder: ''
-      description_help: ''
-      symbol: ''
-      symbol_placeholder: ''
-      symbol_help: ''
-    index:
+      allergyn_details: Détails sur les allergènes
       allergyns: Allergènes
-      description: ''
-      back: ''
-      new_allergyn: ''
-      all_allergyns: ''
-    new:
-      allergyns: ''
-      new: ''
-      new_allergyn: ''
-      description: ''
       cancel: Annuler
-      allergyn_details: ''
+      confirm_delete: Supprimer cet allergène ?
+      delete: Supprimer
+      description: Mise à jour des informations sur les allergènes
+      edit_allergyn: Modifier l'allergène
+    form:
+      description: Description
+      description_help: 'Facultatif : Informations complémentaires sur l''allergène'
+      description_placeholder: Détails facultatifs sur cet allergène...
+      name: Nom de l'allergène
+      name_help: Le nom de l'allergène
+      name_placeholder: Cacahuètes, produits laitiers, gluten, etc.
+      symbol: Symbole
+      symbol_help: 'Facultatif : Emoji ou symbole court pour représenter cet allergène'
+      symbol_placeholder: "par exemple, \U0001F95C, \U0001F95B, \U0001F33E"
+    index:
+      all_allergyns: Tous les allergènes
+      allergyns: Allergènes
+      back: Retour
+      description: Gérer les informations sur les allergènes dans les menus
+      new_allergyn: Nouvel allergène
+    new:
+      allergyn_details: Détails sur les allergènes
+      allergyns: Allergènes
+      cancel: Annuler
+      description: Créer un nouvel allergène pour les plats du menu
+      new: Nouveau
+      new_allergyn: Nouvel allergène
     show:
       allergyn: Afficher l'allergène

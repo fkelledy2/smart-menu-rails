@@ -2,44 +2,44 @@
 pt:
   taxes:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: O imposto foi criado com sucesso.
+      deleted: O imposto foi eliminado com êxito.
+      updated: O imposto foi atualizado com sucesso.
     edit:
-      taxes: ''
-      edit_tax: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      tax_details: ''
-    form:
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      tax_type: ''
-      tax_type_help: ''
-      tax_percentage: ''
-      tax_percentage_placeholder: ''
-      tax_percentage_help: ''
-    index:
-      taxes: Impostos
-      description: ''
-      back: ''
-      new_tax: ''
-      all_taxes: ''
-    new:
-      taxes: ''
-      new: ''
-      new_tax: ''
-      description: ''
       cancel: Cancelar
-      tax_details: ''
+      confirm_delete: Eliminar este imposto?
+      delete: Eliminar
+      description: Atualizar os detalhes da taxa de imposto
+      edit_tax: Editar imposto
+      tax_details: Dados fiscais
+      taxes: Impostos
+    form:
+      name: Nome do imposto
+      name_help: Nome de exibição para este imposto
+      name_placeholder: por exemplo, imposto sobre vendas, IVA, GST
+      tax_percentage: Percentagem de imposto
+      tax_percentage_help: Introduzir a taxa de imposto como uma percentagem (0-100)
+      tax_percentage_placeholder: por exemplo, 8,5
+      tax_type: Tipo de imposto
+      tax_type_help: Selecionar o tipo de imposto
+    index:
+      all_taxes: Todos os impostos
+      back: Voltar
+      description: Gerir as taxas de imposto aplicadas aos itens de menu
+      new_tax: Novo imposto
+      taxes: Impostos
+    new:
+      cancel: Cancelar
+      description: Criar uma nova taxa de imposto para itens de menu
+      new: Novo
+      new_tax: Novo imposto
+      tax_details: Dados fiscais
+      taxes: Impostos
     show:
-      selectRestaurant: ''
+      selectRestaurant: Selecionar um restaurante
       tax: Mostrar imposto
     tax:
-      name: ''
-      restaurant: ''
-      taxpercentage: ''
-      taxtype: ''
+      name: 'Nome:'
+      restaurant: 'Restaurante:'
+      taxpercentage: 'Percentagem de imposto:'
+      taxtype: 'Tipo de imposto:'

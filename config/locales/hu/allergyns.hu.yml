@@ -2,39 +2,39 @@
 hu:
   allergyns:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Az allergént sikeresen létrehozták.
+      deleted: Az allergént sikeresen törölték.
+      updated: Az allergén sikeresen frissült.
     edit:
-      allergyns: ''
-      edit_allergyn: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      allergyn_details: ''
-    form:
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      description: ''
-      description_placeholder: ''
-      description_help: ''
-      symbol: ''
-      symbol_placeholder: ''
-      symbol_help: ''
-    index:
+      allergyn_details: Allergén részletek
       allergyns: Allergének
-      description: ''
-      back: ''
-      new_allergyn: ''
-      all_allergyns: ''
+      cancel: Törölje
+      confirm_delete: Törölje ezt az allergént?
+      delete: Törölje a  címet.
+      description: Az allergénre vonatkozó adatok frissítése
+      edit_allergyn: Allergén szerkesztése
+    form:
+      description: Leírás
+      description_help: 'Választható: További információk az allergénről'
+      description_placeholder: Választható részletek erről az allergénről...
+      name: Allergén neve
+      name_help: Az allergén neve
+      name_placeholder: pl. mogyoró, tejtermékek, glutén
+      symbol: Szimbólum
+      symbol_help: 'Választható: Emoji vagy rövid szimbólum az allergén ábrázolására.'
+      symbol_placeholder: "pl. \U0001F95C, \U0001F95B, \U0001F33E."
+    index:
+      all_allergyns: Minden allergén
+      allergyns: Allergének
+      back: Vissza
+      description: A menüpontok allergén információinak kezelése
+      new_allergyn: Új allergén
     new:
-      allergyns: ''
-      new: ''
-      new_allergyn: ''
-      description: ''
+      allergyn_details: Allergén részletek
+      allergyns: Allergének
       cancel: Mégse
-      allergyn_details: ''
+      description: Új allergén létrehozása a menüpontokhoz
+      new: Új
+      new_allergyn: Új allergén
     show:
       allergyn: Allergén megtekintése

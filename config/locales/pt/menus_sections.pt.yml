@@ -2,143 +2,162 @@
 pt:
   menus:
     sections:
-      details_2025:
-        quick_actions: ''
-        preview_staff: ''
-        preview_customer: ''
-        preview_staff_title: ''
-        preview_customer_title: ''
-        availability: ''
-        default: ''
-        available: ''
-        unavailable: ''
-        generate_images: ''
-        localize_menu: ''
-        ai_polish: ''
-        active: ''
-        inactive: ''
-        menu_details: ''
-        menu_name: ''
-        menu_name_placeholder: ''
-        menu_name_help: ''
-        description: ''
-        description_placeholder: ''
-        description_help: ''
-        statistics: ''
-        sections: ''
-        items: ''
-        schedules: ''
-      settings_2025:
-        feature_toggles: ''
-        display_images: ''
-        display_images_help: ''
-        disabled_at_restaurant: ''
-        display_images_popup: ''
-        display_images_popup_help: ''
-        allow_ordering: ''
-        allow_ordering_help: ''
-        voice_ordering: ''
-        voice_ordering_help: ''
-        inventory_tracking: ''
-        inventory_tracking_help: ''
-        settings_info_title: ''
-        settings_info_desc: ''
-        parent_restriction: ''
-        parent_restriction_desc: ''
-        status: ''
-        status_info: ''
-        images_info: ''
-        popup_info: ''
-        ordering_info: ''
-        voice_ordering_info: ''
-      sections_2025:
-        quick_actions: ''
-        add_section: ''
-        preview_staff: ''
-        preview_customer: ''
-        preview_staff_title: ''
-        preview_customer_title: ''
-        menu_sections: ''
-        sections_description: ''
-        name: ''
-        items: ''
-        edit: ''
-        no_sections: ''
-        no_sections_desc: ''
-        add_first_section: ''
-      items_2025:
-        quick_actions: ''
-        add_item: ''
-        preview_staff: ''
-        preview_customer: ''
-        preview_staff_title: ''
-        preview_customer_title: ''
-        menu_items: ''
-        items_description: ''
-        name: ''
-        price: ''
-        items_count:
-          one: ''
-          other: ''
-        tasting_menu: ''
-        per_table: ''
-        per_person: ''
-        has_image_title: ''
-        included: ''
-        edit: ''
-        no_items: ''
-        no_items_desc: ''
-        go_to_sections: ''
       design_2025:
-        quick_actions: ''
-        generate_images: ''
-        preview_staff: ''
-        preview_customer: ''
-        preview_staff_title: ''
-        preview_customer_title: ''
-        menu_image: ''
-        upload_image: ''
-        image_help: ''
-        remove_image: ''
-        pdf_menu: ''
-        pdf_menu_desc: ''
-        download: ''
-        upload_pdf: ''
-        pdf_help: ''
-        remove_pdf: ''
-        display_settings: ''
-        show_images: ''
-        show_images_desc: ''
-        popup_images: ''
-        popup_images_desc: ''
+        display_settings: Definições do ecrã
+        download: Descarregar
+        generate_images: Gerar imagens de IA
+        image_help: 'Imagem de herói para o seu menu (recomendado: 1200x600px)'
+        menu_image: Imagem do menu
+        pdf_help: Carregue uma versão PDF do seu menu
+        pdf_menu: Menu PDF
+        pdf_menu_desc: Carregue uma versão PDF do seu menu para os clientes descarregarem
+        popup_images: Imagens pop-up
+        popup_images_desc: Mostrar imagem maior quando tocada
+        preview_customer: Pré-visualização (Cliente)
+        preview_customer_title: Pré-visualizar o menu como os clientes o vêem (autenticado
+          como funcionário mas a visualizar a interface do cliente)
+        preview_staff: Pré-visualização (Equipa)
+        preview_staff_title: Pré-visualizar o menu como pessoal (vista autenticada)
+        quick_actions: Acções rápidas
+        remove_image: Remover a imagem atual
+        remove_pdf: Remover o PDF atual
+        show_images: Mostrar imagens
+        show_images_desc: Apresentar imagens de itens no menu
+        upload_image: Carregar imagem
+        upload_pdf: Carregar PDF
+      details_2025:
+        active: Ativo
+        ai_polish: Polaco AI
+        availability: Disponibilidade
+        available: Disponível
+        default: Predefinição
+        description: Descrição
+        description_help: Descrição facultativa para ajudar os clientes a compreender
+          este menu
+        description_placeholder: Descreva este menu...
+        generate_images: Gerar imagens
+        inactive: Inativo
+        items: Artigos
+        localize_menu: Traduções
+        menu_details: Detalhes do menu
+        menu_name: Nome do menu
+        menu_name_help: O nome que os clientes verão
+        menu_name_placeholder: Por exemplo, menu de jantar, especialidades de almoço
+        preview_customer: Vista do cliente
+        preview_customer_title: Pré-visualizar o menu como os clientes o vêem (autenticado
+          como funcionário mas a visualizar a interface do cliente)
+        preview_staff: Opinião do pessoal
+        preview_staff_title: Pré-visualizar o menu como pessoal (vista autenticada)
+        quick_actions: Acções rápidas
+        schedules: Horários
+        sections: Secções
+        statistics: Estatísticas do menu
+        unavailable: Não disponível
+      items_2025:
+        add_item: Adicionar item de menu
+        edit: Editar
+        go_to_sections: Ir para Secções
+        has_image_title: Tem imagem - passe o rato para pré-visualizar
+        included: Incluído
+        items_count:
+          one: 1 item
+          other: "%{count} itens"
+        items_description: Ver e gerir todos os itens de menu em todas as secções
+        menu_items: Itens do menu
+        name: Nome
+        no_items: Nenhum item ainda
+        no_items_desc: Adicionar secções primeiro, depois adicionar itens a essas
+          secções
+        per_person: "(por pessoa)"
+        per_table: "(por mesa)"
+        preview_customer: Pré-visualização (Cliente)
+        preview_customer_title: Pré-visualizar o menu como os clientes o vêem (autenticado
+          como funcionário mas a visualizar a interface do cliente)
+        preview_staff: Pré-visualização (Equipa)
+        preview_staff_title: Pré-visualizar o menu como pessoal (vista autenticada)
+        price: Preço
+        quick_actions: Acções rápidas
+        tasting_menu: Menu de degustação
       qrcode_2025:
-        all_qr_codes_for_menu: ''
-        all_qr_codes_for_menu_desc: ''
-        menu_only_qr: ''
-        all_tables: ''
-        print: ''
-        menu_table_qr: ''
-        no_qr_found: ''
-        download_options: ''
-        download_description: ''
-        png_format: ''
-        png_desc: ''
-        svg_format: ''
-        svg_desc: ''
-        pdf_format: ''
-        pdf_desc: ''
-        download: ''
-        usage_tips: ''
-        tip_1: ''
-        tip_2: ''
-        tip_3: ''
-        tip_4: ''
-        url_copied: ''
-        print_qr_title: ''
+        all_qr_codes_for_menu: Todos os códigos QR para este menu
+        all_qr_codes_for_menu_desc: Inclui o QR do menu geral (sem mesa) e um QR por
+          mesa para este menu.
+        all_tables: Todas as tabelas
+        download: Descarregar
+        download_description: Descarregue o seu código QR em diferentes formatos para
+          impressão
+        download_options: Opções de descarregamento
+        menu_only_qr: Menu QR (Todas as mesas)
+        menu_table_qr: Tabela Códigos QR para este menu
+        no_qr_found: Ainda não foram encontrados códigos QR. Certifique-se de que
+          são gerados Smartmenus para este menu e tabelas.
+        pdf_desc: Formato pronto para impressão
+        pdf_format: Documento PDF
+        png_desc: Alta qualidade para utilização digital
+        png_format: Imagem PNG
+        print: Imprimir
+        print_qr_title: Imprimir QR
+        svg_desc: Escalável para qualquer tamanho
+        svg_format: Vetor SVG
+        tip_1: Imprima códigos QR em toalhas de mesa ou placemats para facilitar o
+          acesso dos clientes
+        tip_2: Incluir o código QR nos recibos e cartões de visita
+        tip_3: Colocar códigos QR junto à entrada para os clientes que encomendam
+          comida
+        tip_4: Teste regularmente o código QR para garantir que funciona corretamente
+        url_copied: URL copiado para a área de transferência!
+        usage_tips: Dicas de utilização
       schedule_2025:
-        quick_actions: ''
-        copy_to_all: ''
-        menu_availabilities: ''
-        availabilities_description: ''
-        unavailable: ''
-        copied_success: ''
+        availabilities_description: Definir quando este menu está disponível para
+          os clientes durante a semana
+        copied_success: Copiado!
+        copy_to_all: Copiar de segunda-feira para todos os dias
+        menu_availabilities: Menu Disponibilidades
+        quick_actions: Acções rápidas
+        unavailable: Não disponível
+      sections_2025:
+        add_first_section: Adicionar a primeira secção
+        add_section: Adicionar secção
+        edit: Editar
+        items: Artigos
+        menu_sections: Secções do menu
+        name: Nome
+        no_sections: Ainda não há secções
+        no_sections_desc: Adicione a sua primeira secção para começar a criar o seu
+          menu
+        preview_customer: Pré-visualização (Cliente)
+        preview_customer_title: Pré-visualizar o menu como os clientes o vêem (autenticado
+          como funcionário mas a visualizar a interface do cliente)
+        preview_staff: Pré-visualização (Equipa)
+        preview_staff_title: Pré-visualizar o menu como pessoal (vista autenticada)
+        quick_actions: Acções rápidas
+        sections_description: Organize o seu menu em secções como Aperitivos, Pratos
+          Principais, Sobremesas, etc.
+      settings_2025:
+        allow_ordering: Permitir a encomenda
+        allow_ordering_help: Ativar a encomenda em linha para este menu
+        disabled_at_restaurant: Deficientes ao nível do restaurante
+        display_images: Exibir imagens
+        display_images_help: Mostrar imagens de itens de menu neste menu
+        display_images_popup: Exibir imagens no popup
+        display_images_popup_help: Abrir imagens de itens de menu num modal pop-up
+          quando clicado
+        feature_toggles: Alternativas de funcionalidades
+        images_info: Alternar entre fotos de itens de menu
+        inventory_tracking: Controlo do inventário
+        inventory_tracking_help: Controlar os níveis de stock dos itens do menu (Brevemente)
+        ordering_info: Ativar encomendas de clientes
+        parent_restriction: 'Nota:'
+        parent_restriction_desc: As definições desactivadas ao nível do restaurante
+          não podem ser activadas para menus individuais. Active-as primeiro ao nível
+          do restaurante.
+        popup_info: Visualização de imagens em ecrã completo
+        settings_info_desc: Estas definições controlam a funcionalidade deste menu
+          específico. As alterações são guardadas automaticamente.
+        settings_info_title: Acerca das definições de menu
+        status: Estado
+        status_info: Controla a visibilidade do menu
+        voice_ordering: Encomenda de voz
+        voice_ordering_help: Permitir que os clientes efectuem encomendas através
+          de comandos de voz neste menu
+        voice_ordering_info: Ativar comandos de voz para encomendas

@@ -2,6 +2,6 @@
 hu:
   ingredients:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Az összetevőt sikeresen létrehoztuk.
+      deleted: Az összetevőt sikeresen töröltük.
+      updated: Az összetevőt sikeresen frissítettük.

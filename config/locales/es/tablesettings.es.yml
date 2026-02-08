@@ -2,28 +2,28 @@
 es:
   tablesettings:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: La configuración de la mesa se ha creado correctamente.
+      deleted: La configuración de la tabla se ha eliminado correctamente.
+      updated: La configuración de la tabla se ha actualizado correctamente.
     edit:
       tablesetting: Editar mesa
     index:
-      archive: ''
-      seating_plan: ''
-      seats: ''
-      table_setting: ''
-      table_settings: ''
-      unarchive: ''
+      archive: Archivo
+      seating_plan: Plan de asientos
+      seats: 'Asientos:'
+      table_setting: Montaje de la mesa
+      table_settings: Configuración de la mesa
+      unarchive: Desarchivar
     new:
-      status: ''
+      status: 'Estado:'
       tablesetting: Nueva mesa
     show:
-      available_menus: ''
-      selectRestaurant: ''
-      show_table_setting: ''
+      available_menus: Menús disponibles
+      selectRestaurant: Seleccionar restaurante
+      show_table_setting: Mostrar montaje de la mesa
     tablesetting:
-      capacity: ''
-      description: ''
-      name: ''
-      restaurant: ''
-      status: ''
+      capacity: 'Capacidad:'
+      description: 'Descripción:'
+      name: 'Nombre:'
+      restaurant: 'Restaurante:'
+      status: 'Estado:'

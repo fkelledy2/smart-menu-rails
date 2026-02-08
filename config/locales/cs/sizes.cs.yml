@@ -6,36 +6,36 @@ cs:
       deleted: Velikost byla úspěšně odstraněna.
       updated: Velikost byla úspěšně aktualizována.
     edit:
-      sizes: Velikosti
-      edit_size: Upravit velikost
-      description: Aktualizace údajů o velikosti
       cancel: Zrušit
       confirm_delete: Smazat tuto velikost?
       delete: Odstranit
+      description: Aktualizace údajů o velikosti
+      edit_size: Upravit velikost
       size_details: Podrobnosti o velikosti
+      sizes: Velikosti
     form:
+      description: Popis
+      description_help: 'Volitelně: Přidejte další podrobnosti'
+      description_placeholder: Nepovinné údaje o této velikosti...
+      name: Zobrazení názvu
+      name_help: Takto se bude velikost zobrazovat zákazníkům
+      name_placeholder: např. velká, 16oz, rodinná velikost
       size_type: Typ velikosti
       size_type_help: Vyberte obecnou velikostní kategorii
-      name: Zobrazení názvu
-      name_placeholder: např. velká, 16oz, rodinná velikost
-      name_help: Takto se bude velikost zobrazovat zákazníkům
-      description: Popis
-      description_placeholder: Nepovinné údaje o této velikosti...
-      description_help: 'Volitelně: Přidejte další podrobnosti'
     index:
-      sizes: Velikosti
+      all_sizes: Všechny velikosti
+      back: Zpět
       description: Správa velikostních variant položek menu (např. malé, střední,
         velké).
-      back: Zpět
       new_size: Nová velikost
-      all_sizes: Všechny velikosti
-    new:
       sizes: Velikosti
+    new:
+      cancel: Zrušit
+      description: Vytvoření nové varianty velikosti pro položky nabídky
       new: Nový
       new_size: Nová velikost
-      description: Vytvoření nové varianty velikosti pro položky nabídky
-      cancel: Zrušit
       size_details: Podrobnosti o velikosti
+      sizes: Velikosti
     show:
       size: Zobrazit velikost
     size:

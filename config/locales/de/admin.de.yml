@@ -1,219 +1,233 @@
 ---
 de:
   admin:
-    performance:
-      title: Leistungsüberwachung
-      subtitle: Echtzeit-Leistungsmetriken und Analysen
-      card:
-        avg_response_time: Durchschn. Antwortzeit
-        memory_usage: Speichernutzung
-        error_rate: Fehlerrate
-        active_users: Aktive Benutzer
-        last_5_minutes: Letzte 5 Minuten
-        current_rss: Aktueller RSS
-      response_time_trend: Antwortzeit-Trend (24h)
-      memory_usage_trend: Speichernutzung-Trend (24h)
-      slowest_endpoints: Langsamste Endpunkte (Letzte Stunde)
-      table:
-        endpoint: Endpunkt
-        avg_response_time: Durchschn. Antwortzeit
-      no_slow_endpoints: Keine langsamen Endpunkte erkannt
-      recent_slow_queries: Aktuelle langsame Abfragen
-      query_table:
-        duration: Dauer
-        query: Abfrage
-        time: Zeit
-      no_slow_queries: Keine langsamen Abfragen erkannt
-      actions: Aktionen
     cache:
-      title: Cache-Verwaltung
-      health_status: Cache-Integritätsstatus
-      response_time: Antwortzeit
-      write_operation: Schreiboperation
-      read_operation: Leseoperation
-      delete_operation: Löschoperation
-      error: Fehler
-      performance_stats: Leistungsstatistiken
-      reset_stats: Statistiken zurücksetzen
-      cache_hits: Cache-Treffer
-      cache_misses: Cache-Fehlschläge
-      cache_writes: Cache-Schreibvorgänge
+      active_keys: Aktive Schlüssel
       cache_deletes: Cache-Löschungen
       cache_errors: Fehler
-      hit_rate: Trefferrate
+      cache_hits: Cache-Treffer
       cache_info: Cache-Informationen
-      service_version: Dienstversion
-      cache_methods: Cache-Methoden
-      active_keys: Aktive Schlüssel
-      memory_usage: Speichernutzung
-      cache_warming: Cache-Aufwärmung
-      cache_warming_description: Wichtige Cache-Daten vorab laden, um die Leistung
-        zu verbessern.
       cache_management: Cache-Verwaltung
       cache_management_description: Alle gecachten Daten löschen, um das Laden neuer
         Daten zu erzwingen.
+      cache_methods: Cache-Methoden
+      cache_misses: Cache-Fehlschläge
       cache_patterns: Cache-Muster
+      cache_warming: Cache-Aufwärmung
+      cache_warming_description: Wichtige Cache-Daten vorab laden, um die Leistung
+        zu verbessern.
+      cache_writes: Cache-Schreibvorgänge
+      delete_operation: Löschoperation
+      error: Fehler
+      health_status: Cache-Integritätsstatus
+      hit_rate: Trefferrate
+      memory_usage: Speichernutzung
       patterns:
-        restaurant: Restaurant-Dashboards und Analysen
+        employee: Mitarbeiterdaten und Leistung
         menu: Menüdaten und Leistung
         menuitem: Menüartikel-Details und Analysen
         order: Bestelldaten und Zusammenfassungen
-        employee: Mitarbeiterdaten und Leistung
+        restaurant: Restaurant-Dashboards und Analysen
         user: Benutzeraktivität und Daten mehrerer Restaurants
+      performance_stats: Leistungsstatistiken
+      read_operation: Leseoperation
+      reset_stats: Statistiken zurücksetzen
+      response_time: Antwortzeit
+      service_version: Dienstversion
+      title: Cache-Verwaltung
+      write_operation: Schreiboperation
+    dashboard:
+      kpis:
+        bounce_rate: Absprungrate
+        customers: Kunden
+        growth_rate: Wachstumsrate
+        page_views: Seitenaufrufe
+        total_orders: Gesamtbestellungen
+        total_revenue: Gesamtumsatz
+        unique_visitors: Eindeutige Besucher
+      loading: Laden...
+      sales:
+        no_data: Für diesen Zeitraum sind keine Verkaufsdaten verfügbar.
+        table:
+          item: Artikel
+          quantity_sold: Verkaufte Menge
+        title: Top-Verkaufsartikel
     metrics:
-      title: Anwendungsleistungsüberwachung
       card:
-        total_requests: Gesamtanfragen
-        avg_response_time: Durchschn. Antwortzeit
-        error_rate: Fehlerrate
-        total_users: Gesamte Benutzer
         all_time: Gesamte Zeit
+        all_time_registrations: Registrierungen gesamt
+        avg_response_time: Durchschn. Antwortzeit
         current_average: Aktueller Durchschnitt
         current_error_rate: Aktuelle Fehlerrate
-        all_time_registrations: Registrierungen gesamt
-      summary:
-        restaurants_created: Erstellte Restaurants
-        menu_imports: Menü-Importe
-      system:
-        memory_usage: Speichernutzung
-        active_users: Aktive Benutzer
+        error_rate: Fehlerrate
+        total_requests: Gesamtanfragen
+        total_users: Gesamte Benutzer
       metric_types:
-        title: Metriktypen
         counters: 'Zähler: Kumulative Werte, die nur steigen (z.B. Gesamtanfragen)'
         gauges: 'Messwerte: Aktuelle Werte, die steigen oder fallen können (z.B. aktive
           Benutzer)'
         histograms: 'Histogramme: Sammlungen von Messungen (z.B. Antwortzeiten)'
+        title: Metriktypen
+      no_recent_metrics:
+        description: Metriken erscheinen hier, wenn die Anwendung verwendet wird
+        message: Keine aktuellen Metriken verfügbar
+      summary:
+        menu_imports: Menü-Importe
+        restaurants_created: Erstellte Restaurants
+      system:
+        active_users: Aktive Benutzer
+        memory_usage: Speichernutzung
       table:
+        last_updated: Zuletzt aktualisiert
         metric: Metrik
         type: Typ
         value: Wert
-        last_updated: Zuletzt aktualisiert
-      no_recent_metrics:
-        message: Keine aktuellen Metriken verfügbar
-        description: Metriken erscheinen hier, wenn die Anwendung verwendet wird
-    dashboard:
-      kpis:
-        total_orders: Gesamtbestellungen
-        total_revenue: Gesamtumsatz
-        customers: Kunden
-        growth_rate: Wachstumsrate
-        page_views: Seitenaufrufe
-        unique_visitors: Eindeutige Besucher
-        bounce_rate: Absprungrate
-      sales:
-        title: Top-Verkaufsartikel
-        table:
-          item: Artikel
-          quantity_sold: Verkaufte Menge
-        no_data: Für diesen Zeitraum sind keine Verkaufsdaten verfügbar.
-      loading: Laden...
-  notifications:
-    index:
-      title: Benachrichtigungen
+      title: Anwendungsleistungsüberwachung
+    performance:
+      actions: Aktionen
+      card:
+        active_users: Aktive Benutzer
+        avg_response_time: Durchschn. Antwortzeit
+        current_rss: Aktueller RSS
+        error_rate: Fehlerrate
+        last_5_minutes: Letzte 5 Minuten
+        memory_usage: Speichernutzung
+      memory_usage_trend: Speichernutzung-Trend (24h)
+      no_slow_endpoints: Keine langsamen Endpunkte erkannt
+      no_slow_queries: Keine langsamen Abfragen erkannt
+      query_table:
+        duration: Dauer
+        query: Abfrage
+        time: Zeit
+      recent_slow_queries: Aktuelle langsame Abfragen
+      response_time_trend: Antwortzeit-Trend (24h)
+      slowest_endpoints: Langsamste Endpunkte (Letzte Stunde)
+      subtitle: Echtzeit-Leistungsmetriken und Analysen
+      table:
+        avg_response_time: Durchschn. Antwortzeit
+        endpoint: Endpunkt
+      title: Leistungsüberwachung
   announcements:
     index:
-      title: Neuigkeiten
       coming_soon: Aufregende Dinge kommen sehr bald!
+      title: Neuigkeiten
   beverage_review_queue:
-    title: Getränkeüberprüfungswarteschlange
-    recent_pipeline_runs: Aktuelle Pipeline-Ausführungen
-    table:
-      created: Erstellt
-      menu: Menü
-      status: Zustand
-      step: Schritt
-      processed: Verarbeitet
-      needs_review: Benötigt Überprüfung
-      unresolved: Ungelöst
-      actions: Aktionen
     items_needing_review: Elemente, die überprüft werden müssen
     items_table:
-      menu: Menü
-      section: Sektion
-      item: Artikel
       category: Kategorie
       class_conf: Klassenkonf
+      item: Artikel
+      menu: Menü
       parse_conf: Parse-Konf
       parsed: Analysiert
-  dw_orders_mv:
-    title: Bestellanalyse
-    loading: Daten werden geladen...
-  ordritems:
-    index:
-      title: Bestellartikel
-    new:
-      title: Neuer Bestellartikel
-    edit:
-      title: Bestellartikel bearbeiten
-    show:
-      title: Bestellartikel anzeigen
-      ordr: Bestellung
-      menuitem: Menüartikel
-  ordrparticipants:
-    index:
-      title: Bestellteilnehmer
-    new:
-      title: Neuer Menüteilnehmer
-    edit:
-      title: Menüteilnehmer bearbeiten
-    show:
-      title: Bestellteilnehmer anzeigen
+      section: Sektion
+    recent_pipeline_runs: Aktuelle Pipeline-Ausführungen
     table:
-      sessionid: Sitzungs-ID
-      role: Rolle
-      employee: Mitarbeiter
-      ordr: Bestellung
-      ordritem: Bestellartikel
-  ordractions:
-    index:
-      title: Bestellaktionen
-    new:
-      title: Neue Bestellaktion
-    edit:
-      title: Bestellaktion bearbeiten
-    show:
-      title: Bestellaktion anzeigen
-  ordritemnotes:
-    index:
-      title: Bestellartikelnotizen
-    new:
-      title: Neue Notiz
-    edit:
-      title: Notiz bearbeiten
-    show:
-      title: Notiz anzeigen
-  menuparticipants:
-    new:
-      title: Neuer Menüteilnehmer
-    edit:
-      title: Menüteilnehmer bearbeiten
-  ingredients:
-    index:
-      title: Zutaten
-    new:
-      title: Neue Zutat
-    edit:
-      title: Zutat bearbeiten
-    show:
-      title: Zutat anzeigen
+      actions: Aktionen
+      created: Erstellt
+      menu: Menü
+      needs_review: Benötigt Überprüfung
+      processed: Verarbeitet
+      status: Zustand
+      step: Schritt
+      unresolved: Ungelöst
+    title: Getränkeüberprüfungswarteschlange
+  dw_orders_mv:
+    loading: Daten werden geladen...
+    title: Bestellanalyse
   genimages:
+    edit:
+      title: Generiertes Bild bearbeiten
     index:
       title: Generierte Bilder
     new:
       title: Neues generiertes Bild
-    edit:
-      title: Generiertes Bild bearbeiten
     show:
       title: Generiertes Bild anzeigen
     table:
-      id: Kennung
-      name: Bezeichnung
       description: Beschreibung
-      restaurant: Gastronomiebetrieb
-      menu: Menü
-      menusection: Menüsektion
-      menuitem: Menüartikel
+      id: Kennung
       image_data: Bilddaten
+      menu: Menü
+      menuitem: Menüartikel
+      menusection: Menüsektion
+      name: Bezeichnung
+      restaurant: Gastronomiebetrieb
+  ingredients:
+    edit:
+      title: Zutat bearbeiten
+    index:
+      title: Zutaten
+    new:
+      title: Neue Zutat
+    show:
+      title: Zutat anzeigen
+  menuparticipants:
+    edit:
+      title: Menüteilnehmer bearbeiten
+    new:
+      title: Neuer Menüteilnehmer
+  metrics:
+    edit:
+      title: Metrik bearbeiten
+    index:
+      title: Metriken
+    new:
+      title: Neue Metrik
+    show:
+      title: Metrik anzeigen
+  notifications:
+    index:
+      title: Benachrichtigungen
+  onboarding:
+    show:
+      completed: Abgeschlossen
+      current_step: Aktueller Schritt
+      progress: Fortschritt
+  ordractions:
+    edit:
+      title: Bestellaktion bearbeiten
+    index:
+      title: Bestellaktionen
+    new:
+      title: Neue Bestellaktion
+    show:
+      title: Bestellaktion anzeigen
+  ordritemnotes:
+    edit:
+      title: Notiz bearbeiten
+    index:
+      title: Bestellartikelnotizen
+    new:
+      title: Neue Notiz
+    show:
+      title: Notiz anzeigen
+  ordritems:
+    edit:
+      title: Bestellartikel bearbeiten
+    index:
+      title: Bestellartikel
+    new:
+      title: Neuer Bestellartikel
+    show:
+      menuitem: Menüartikel
+      ordr: Bestellung
+      title: Bestellartikel anzeigen
+  ordrparticipants:
+    edit:
+      title: Menüteilnehmer bearbeiten
+    index:
+      title: Bestellteilnehmer
+    new:
+      title: Neuer Menüteilnehmer
+    show:
+      title: Bestellteilnehmer anzeigen
+    table:
+      employee: Mitarbeiter
+      ordr: Bestellung
+      ordritem: Bestellartikel
+      role: Rolle
+      sessionid: Sitzungs-ID
   restaurantlocales:
     index:
       title: Restaurant-Sprachen
@@ -221,38 +235,24 @@ de:
       title: Restaurant-Sprache anzeigen
     table:
       locale: Sprache
-      status: Zustand
       restaurant: Gastronomiebetrieb
+      status: Zustand
   tracks:
+    edit:
+      title: Track bearbeiten
     index:
       title: Titel
     new:
       title: Neuer Track
-    edit:
-      title: Track bearbeiten
   userplans:
+    edit:
+      manage_billing: Abrechnung verwalten
     index:
       title: Benutzerpläne
     new:
       title: Neuer Benutzerplan
     show:
       title: Benutzerplan anzeigen
-    edit:
-      manage_billing: Abrechnung verwalten
     table:
-      user: Benutzer
       plan: Tarif
-  metrics:
-    index:
-      title: Metriken
-    new:
-      title: Neue Metrik
-    edit:
-      title: Metrik bearbeiten
-    show:
-      title: Metrik anzeigen
-  onboarding:
-    show:
-      progress: Fortschritt
-      current_step: Aktueller Schritt
-      completed: Abgeschlossen
+      user: Benutzer

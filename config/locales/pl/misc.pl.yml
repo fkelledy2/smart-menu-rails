@@ -1,59 +1,5 @@
 ---
 pl:
-  time:
-    formats:
-      default: replace_me
-      short: replace_me
-      long: replace_me
-    date:
-      formats:
-        default: replace_me
-        short: replace_me
-        long: replace_me
-      abbr_day_names:
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      abbr_month_names:
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      day_names:
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      month_names:
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
-      - replace_me
   activerecord:
     attributes:
       employee:
@@ -63,24 +9,24 @@ pl:
       menu:
         restaurant: replace_me
         sequence: replace_me
+      menuavailability:
+        endmin: replace_me
+        menu: replace_me
+        startmin: replace_me
       menuitem:
-        sequence: replace_me
         ingredients: replace_me
         menusection_id: replace_me
+        sequence: replace_me
         tags: replace_me
         variantPricing: replace_me
       menusection:
         menu: replace_me
         sequence: replace_me
-      menuavailability:
-        endmin: replace_me
-        menu: replace_me
-        startmin: replace_me
       restaurant:
         capacity: replace_me
+        covercharge: replace_me
         music: replace_me
         tips: replace_me
-        covercharge: replace_me
       restaurantavailability:
         endmin: replace_me
         restaurant: replace_me
@@ -101,6 +47,55 @@ pl:
       deactivate: replace_me
     new:
       allergyn: replace_me
+  date:
+    abbr_day_names:
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    abbr_month_names:
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    day_names:
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    formats:
+      default: replace_me
+      long: replace_me
+      short: replace_me
+    month_names:
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
+    - replace_me
   devise:
     registrations:
       edit:
@@ -108,16 +103,67 @@ pl:
         password: replace_me
         passwordHelp: replace_me
         selectPlan: replace_me
+  employees:
+    form:
+      selectRestaurant: replace_me
+    new:
+      cancel: replace_me
+  feature1:
+    key: replace_me
+  feature2:
+    key: replace_me
+  feature3:
+    key: replace_me
+  feature4:
+    key: replace_me
+  feature5:
+    key: replace_me
+  feature6:
+    key: replace_me
+  genimages:
+    edit:
+      genimage: replace_me
+    form:
+      delete: replace_me
+      save: replace_me
+      sure: replace_me
+    index:
+      activate: replace_me
+      deactivate: replace_me
+      genimage: replace_me
+      genimages: replace_me
+    new:
+      cancel: replace_me
+      genimage: replace_me
+    show:
+      genimage: replace_me
   home:
     index:
       actions: replace_me
-      signup: replace_me
       activate: replace_me
       deactivate: replace_me
       emailAddress: replace_me
       featureDescription1: replace_me
       featureTitle1: replace_me
       message: replace_me
+      signup: replace_me
+  ingredients:
+    edit:
+      ingredient: replace_me
+    form:
+      delete: replace_me
+      save: replace_me
+      sure: replace_me
+    index:
+      activate: replace_me
+      deactivate: replace_me
+      ingredient: replace_me
+      ingredients: replace_me
+    new:
+      cancel: replace_me
+      ingredient: replace_me
+    show:
+      ingredient: replace_me
   inventories:
     index:
       activate: replace_me
@@ -125,11 +171,11 @@ pl:
   menuavailabilities:
     edit:
       menuAvailability: replace_me
+    form:
+      errors: replace_me
     index:
       activate: replace_me
       deactivate: replace_me
-    form:
-      errors: replace_me
   menuitems:
     edit:
       menuItem: replace_me
@@ -141,9 +187,9 @@ pl:
       deactivate: replace_me
   menus:
     form:
+      pdfMenuScan: replace_me
       preview: replace_me
       selectRestaurant: replace_me
-      pdfMenuScan: replace_me
     index:
       activate: replace_me
       deactivate: replace_me
@@ -165,11 +211,11 @@ pl:
   menusections:
     edit:
       menuSection: replace_me
+    form:
+      errors: replace_me
     index:
       activate: replace_me
       deactivate: replace_me
-    form:
-      errors: replace_me
     showInventories:
       actions: replace_me
       activate: replace_me
@@ -178,40 +224,136 @@ pl:
       actions: replace_me
       activate: replace_me
       deactivate: replace_me
+  metrics:
+    edit:
+      metric: replace_me
+    form:
+      delete: replace_me
+      save: replace_me
+      sure: replace_me
+    index:
+      activate: replace_me
+      deactivate: replace_me
+      metric: replace_me
+      metrics: replace_me
+    new:
+      cancel: replace_me
+      metric: replace_me
+    show:
+      metric: replace_me
+  number:
+    currency:
+      format:
+        delimiter: replace_me
+        format: replace_me
+        precision: replace_me
+        separator: replace_me
+        unit: replace_me
+  ocr_menu_imports:
+    create:
+      success: replace_me
+    edit:
+      ocrMenuImport: replace_me
+    form:
+      cancel: replace_me
+      import: replace_me
+      save: replace_me
+    index:
+      activate: replace_me
+      deactivate: replace_me
+      ocrMenuImport: replace_me
+      ocrMenuImports: replace_me
+    new:
+      ocrMenuImport: replace_me
+    show:
+      ocrMenuImport: replace_me
+  orders:
+    completed: replace_me
+    paid: replace_me
+    payment: replace_me
+    pending: replace_me
+    subtotal: replace_me
+    tax: replace_me
+    tip: replace_me
+    total: replace_me
+  ordrs:
+    index:
+      order: replace_me
+    show:
+      order: replace_me
+      table: replace_me
+  plan:
+    business:
+      attribut6: replace_me
+      attribute1: replace_me
+      attribute2: replace_me
+      attribute3: replace_me
+      attribute4: replace_me
+      attribute5: replace_me
+      key: replace_me
+    call: replace_me
+    enterprise:
+      attribut6: replace_me
+      attribute1: replace_me
+      attribute2: replace_me
+      attribute3: replace_me
+      attribute4: replace_me
+      attribute5: replace_me
+      key: replace_me
+    pro:
+      attribute1: replace_me
+      attribute2: replace_me
+      attribute3: replace_me
+      attribute4: replace_me
+      key: replace_me
+    register: replace_me
+    starter:
+      attribut6: replace_me
+      attribute1: replace_me
+      attribute2: replace_me
+      attribute3: replace_me
+      attribute4: replace_me
+      attribute5: replace_me
+      key: replace_me
+    trial:
+      attribute1: replace_me
+      attribute2: replace_me
+      attribute3: replace_me
+      key: replace_me
   restaurantavailabilities:
     form:
-      selectRestaurant: replace_me
       errors: replace_me
+      selectRestaurant: replace_me
     index:
       activate: replace_me
       deactivate: replace_me
     new:
       cancel: replace_me
   restaurants:
+    currency: replace_me
+    currency_symbol: replace_me
     edit:
       restaurant: replace_me
     form:
-      generateImage: replace_me
       errors: replace_me
+      generateImage: replace_me
     index:
+      actions: replace_me
       activate: replace_me
       deactivate: replace_me
       restaurant: replace_me
-      actions: replace_me
     new:
       cancel: replace_me
     show:
-      name: replace_me
-      restaurant: replace_me
       address1: replace_me
       address2: replace_me
       city: replace_me
       currency: replace_me
       description: replace_me
+      name: replace_me
       postcode: replace_me
+      restaurant: replace_me
       state: replace_me
-    currency: replace_me
-    currency_symbol: replace_me
     showAllergyns:
       actions: replace_me
       activate: replace_me
@@ -273,19 +415,19 @@ pl:
     navbar:
       allergyns: replace_me
       employees: replace_me
+      inventories: replace_me
+      menuAvailability: replace_me
       menuItems: replace_me
+      menuSections: replace_me
       menus: replace_me
       openingHours: replace_me
+      orderItems: replace_me
       orders: replace_me
       sizes: replace_me
       tableSettings: replace_me
       taxes: replace_me
       tips: replace_me
       whatsNew: replace_me
-      inventories: replace_me
-      menuAvailability: replace_me
-      menuSections: replace_me
-      orderItems: replace_me
   sizes:
     edit:
       size: replace_me
@@ -300,18 +442,8 @@ pl:
     new:
       size: replace_me
   smartmenus:
-    index:
-      activate: replace_me
-      deactivate: replace_me
-      menu: replace_me
-      menus: replace_me
-      unavailable: replace_me
-    orderCustomer:
-      takePayment: replace_me
-    show:
-      menu: replace_me
-      table: replace_me
     alcoholic: replace_me
+    alcoholic_tooltip: replace_me
     edit:
       menu: replace_me
     form:
@@ -320,23 +452,33 @@ pl:
       errors: replace_me
       preview: replace_me
       selectRestaurant: replace_me
+    index:
+      activate: replace_me
+      deactivate: replace_me
+      menu: replace_me
+      menus: replace_me
+      unavailable: replace_me
     new:
       cancel: replace_me
       menu: replace_me
+    orderCustomer:
+      takePayment: replace_me
     orderStaff:
       staffAlerted: replace_me
+    show:
+      menu: replace_me
+      table: replace_me
     showMenuBanner:
       table: replace_me
     showModals:
       menuItem: replace_me
-    alcoholic_tooltip: replace_me
   tablesettings:
     form:
       delete: replace_me
-      save: replace_me
-      sure: replace_me
       errors: replace_me
+      save: replace_me
       selectRestaurant: replace_me
+      sure: replace_me
     index:
       tablesetting: replace_me
       tablesettings: replace_me
@@ -344,166 +486,6 @@ pl:
       cancel: replace_me
     show:
       tablesetting: replace_me
-  taxes:
-    edit:
-      tax: replace_me
-    form:
-      delete: replace_me
-      save: replace_me
-      sure: replace_me
-      errors: replace_me
-      selectRestaurant: replace_me
-    index:
-      tax: replace_me
-      activate: replace_me
-      deactivate: replace_me
-    new:
-      tax: replace_me
-  tips:
-    edit:
-      tip: replace_me
-    form:
-      delete: replace_me
-      save: replace_me
-      sure: replace_me
-      errors: replace_me
-      selectRestaurant: replace_me
-    index:
-      tip: replace_me
-      activate: replace_me
-      deactivate: replace_me
-    new:
-      tip: replace_me
-  employees:
-    form:
-      selectRestaurant: replace_me
-    new:
-      cancel: replace_me
-  feature1:
-    key: replace_me
-  feature2:
-    key: replace_me
-  feature3:
-    key: replace_me
-  feature4:
-    key: replace_me
-  feature5:
-    key: replace_me
-  feature6:
-    key: replace_me
-  genimages:
-    edit:
-      genimage: replace_me
-    form:
-      delete: replace_me
-      save: replace_me
-      sure: replace_me
-    index:
-      activate: replace_me
-      deactivate: replace_me
-      genimage: replace_me
-      genimages: replace_me
-    new:
-      cancel: replace_me
-      genimage: replace_me
-    show:
-      genimage: replace_me
-  ingredients:
-    edit:
-      ingredient: replace_me
-    form:
-      delete: replace_me
-      save: replace_me
-      sure: replace_me
-    index:
-      activate: replace_me
-      deactivate: replace_me
-      ingredient: replace_me
-      ingredients: replace_me
-    new:
-      cancel: replace_me
-      ingredient: replace_me
-    show:
-      ingredient: replace_me
-  metrics:
-    edit:
-      metric: replace_me
-    form:
-      delete: replace_me
-      save: replace_me
-      sure: replace_me
-    index:
-      activate: replace_me
-      deactivate: replace_me
-      metric: replace_me
-      metrics: replace_me
-    new:
-      cancel: replace_me
-      metric: replace_me
-    show:
-      metric: replace_me
-  ocr_menu_imports:
-    create:
-      success: replace_me
-    edit:
-      ocrMenuImport: replace_me
-    form:
-      cancel: replace_me
-      import: replace_me
-      save: replace_me
-    index:
-      activate: replace_me
-      deactivate: replace_me
-      ocrMenuImport: replace_me
-      ocrMenuImports: replace_me
-    new:
-      ocrMenuImport: replace_me
-    show:
-      ocrMenuImport: replace_me
-  ordrs:
-    index:
-      order: replace_me
-    show:
-      order: replace_me
-      table: replace_me
-  plan:
-    business:
-      key: replace_me
-      attribut6: replace_me
-      attribute1: replace_me
-      attribute2: replace_me
-      attribute3: replace_me
-      attribute4: replace_me
-      attribute5: replace_me
-    call: replace_me
-    enterprise:
-      key: replace_me
-      attribut6: replace_me
-      attribute1: replace_me
-      attribute2: replace_me
-      attribute3: replace_me
-      attribute4: replace_me
-      attribute5: replace_me
-    pro:
-      key: replace_me
-      attribute1: replace_me
-      attribute2: replace_me
-      attribute3: replace_me
-      attribute4: replace_me
-    register: replace_me
-    starter:
-      key: replace_me
-      attribut6: replace_me
-      attribute1: replace_me
-      attribute2: replace_me
-      attribute3: replace_me
-      attribute4: replace_me
-      attribute5: replace_me
-    trial:
-      attribute1: replace_me
-      attribute2: replace_me
-      attribute3: replace_me
-      key: replace_me
   tags:
     edit:
       tag: replace_me
@@ -514,6 +496,90 @@ pl:
       tag: replace_me
     show:
       tag: replace_me
+  taxes:
+    edit:
+      tax: replace_me
+    form:
+      delete: replace_me
+      errors: replace_me
+      save: replace_me
+      selectRestaurant: replace_me
+      sure: replace_me
+    index:
+      activate: replace_me
+      deactivate: replace_me
+      tax: replace_me
+    new:
+      tax: replace_me
+  time:
+    date:
+      abbr_day_names:
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      abbr_month_names:
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      day_names:
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      formats:
+        default: replace_me
+        long: replace_me
+        short: replace_me
+      month_names:
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+      - replace_me
+    formats:
+      default: replace_me
+      long: replace_me
+      short: replace_me
+  tips:
+    edit:
+      tip: replace_me
+    form:
+      delete: replace_me
+      errors: replace_me
+      save: replace_me
+      selectRestaurant: replace_me
+      sure: replace_me
+    index:
+      activate: replace_me
+      deactivate: replace_me
+      tip: replace_me
+    new:
+      tip: replace_me
   tracks:
     edit:
       track: replace_me
@@ -534,69 +600,3 @@ pl:
       userplan: replace_me
     show:
       userplan: replace_me
-  orders:
-    total: replace_me
-    subtotal: replace_me
-    tax: replace_me
-    tip: replace_me
-    payment: replace_me
-    paid: replace_me
-    pending: replace_me
-    completed: replace_me
-  number:
-    currency:
-      format:
-        unit: replace_me
-        precision: replace_me
-        separator: replace_me
-        delimiter: replace_me
-        format: replace_me
-  date:
-    formats:
-      default: replace_me
-      short: replace_me
-      long: replace_me
-    abbr_day_names:
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    abbr_month_names:
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    day_names:
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    month_names:
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me
-    - replace_me

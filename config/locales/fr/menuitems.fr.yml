@@ -2,53 +2,60 @@
 fr:
   menuitems:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
-    errors:
-      menusection_required: ''
+      created: L'élément de menu a été créé avec succès.
+      deleted: L'élément de menu a été supprimé avec succès.
+      updated: L'élément de menu a été mis à jour avec succès.
     edit:
-      tab_item: ''
+      tab_item: Objet
+    errors:
+      menusection_required: Veuillez créer des éléments de menu à partir d'une section
+        de menu.
     form:
-      actions: ''
+      abv_help: Alcool en volume (0-100). Ne rien indiquer si le produit est sans
+        alcool.
+      abv_placeholder: par exemple 13,5
+      actions: Actions
+      alcohol_notes_ph: Notes facultatives, par exemple contient du rhum
+      alcohol_settings: Réglages de l'alcool
+      alcoholic_help: Vérifier si cet article contient de l'alcool.
+      classification_beer: Bière
+      classification_cocktail: Cocktail
+      classification_help: Choisissez une catégorie. Utilisez non_alcoholic pour les
+        variantes à 0,0 %.
+      classification_liqueur: Liqueur
+      classification_non_alcoholic: Sans alcool
+      classification_other: Autres
+      classification_spirit: L'esprit
+      classification_wine: Le vin
+      course_order: Ordre des cours
+      course_order_help: 'Facultatif : spécifier l''ordre de service dans la dégustation.'
       delete: Supprimer
       details: Détails
       errors: Erreurs
-      'false': ''
-      generateImage: ''
+      'false': faux
+      generateImage: Générer avec l'IA
+      hidden: Caché (non affiché sur le smartmenu)
       imageSettings: Paramètres d'image
-      no_image: ''
+      no_image: Pas encore d'image
       save: Enregistrer
       settings: Paramètres
       sure: Êtes-vous sûr ?
-      'true': ''
+      tasting_carrier: Utilisation comme support de dégustation
+      tasting_carrier_help: Un seul transporteur par section de dégustation. Les objets
+        porteurs sont automatiquement cachés.
+      tasting_item_settings: Paramètres de l'élément de dégustation
+      tasting_optional: Cours optionnel
+      tasting_optional_help: Si cette case est cochée, ce cours est facultatif (l'invité
+        peut le sauter).
+      tasting_price_ignored: Ce prix n'est pas pris en compte dans les sections du
+        menu dégustation. Utiliser le supplément ci-dessous.
+      tasting_supplement: Supplément (cents)
+      tasting_supplement_help: Laisser en blanc ou 0 pour inclus ; fixer un montant
+        pour les prix supplémentaires.
+      'true': vrai
       update: Mettre à jour
-      variantPricing: ''
-      tasting_price_ignored: ''
-      alcohol_settings: ''
-      alcoholic_help: ''
-      abv_placeholder: ''
-      abv_help: ''
-      classification_wine: ''
-      classification_beer: ''
-      classification_spirit: ''
-      classification_cocktail: ''
-      classification_liqueur: ''
-      classification_other: ''
-      classification_non_alcoholic: ''
-      classification_help: ''
-      alcohol_notes_ph: ''
-      tasting_item_settings: ''
-      tasting_optional: ''
-      tasting_optional_help: ''
-      tasting_supplement: ''
-      tasting_supplement_help: ''
-      course_order: ''
-      course_order_help: ''
-      visibility: ''
-      hidden: ''
-      tasting_carrier: ''
-      tasting_carrier_help: ''
+      variantPricing: Prix des variantes
+      visibility: Visibilité
     index:
       menuItem: Article
       menuItems: Articles
@@ -57,4 +64,4 @@ fr:
       menuItem: Nouvel article
     show:
       menuItem: Afficher l'article
-      selectMenuSection: ''
+      selectMenuSection: Sélectionner la section du menu

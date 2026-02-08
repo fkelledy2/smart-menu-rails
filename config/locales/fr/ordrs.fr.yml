@@ -2,8 +2,8 @@
 fr:
   ordrs:
     controller:
-      could_not_delete: ''
-      created: ''
-      deleted: ''
+      could_not_delete: 'Impossible de supprimer la commande : %{erreur}'
+      created: La commande a été créée avec succès.
+      deleted: L'ordre a été supprimé avec succès.
     index:
       orders: Commandes

@@ -2,31 +2,31 @@
 hu:
   employees:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Az alkalmazottat sikeresen létrehoztuk.
+      deleted: Az alkalmazottat sikeresen törölték.
+      updated: Az alkalmazottat sikeresen frissítettük.
     edit:
-      employee: ''
+      employee: Alkalmazott
     employee:
-      eid: ''
-      image: ''
-      name: ''
-      restaurant: ''
-      status: ''
+      eid: 'Alkalmazotti azonosító:'
+      image: 'Kép:'
+      name: 'Név:'
+      restaurant: 'Étterem:'
+      status: 'Állapot:'
     form:
-      delete: ''
-      errors: ''
-      save: ''
-      selectUser: ''
-      sure: ''
+      delete: Törölje a  címet.
+      errors: Hibák
+      save: Mentés
+      selectUser: Válasszon ki egy felhasználót
+      sure: Biztos vagy benne?
     index:
-      activate: ''
-      deactivate: ''
-      employee: ''
-      employees: ''
+      activate: Aktiválja a  címet.
+      deactivate: A  deaktiválása
+      employee: Alkalmazott
+      employees: Alkalmazottak
     new:
-      employee: ''
+      employee: Alkalmazott
     show:
-      employee: ''
-      selectRestaurant: ''
-      selectUser: ''
+      employee: Alkalmazott
+      selectRestaurant: Válasszon egy éttermet
+      selectUser: Válasszon ki egy felhasználót

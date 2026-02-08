@@ -2,136 +2,153 @@
 hu:
   ocr_menu_imports:
     controller:
-      attach_pdf: ''
-      confirm_section: ''
-      deleted: ''
-      fail_create: ''
-      processing_restarted: ''
-      published: ''
-      queued: ''
-      republished: ''
-      unable_restart: ''
-      unauthorized: ''
-      updated: ''
+      attach_pdf: Kérjük, csatoljon egy PDF-fájlt.
+      confirm_section: Kérjük, importálás előtt erősítsen meg legalább egy szakaszt.
+      deleted: A menü importálása sikeresen törlődött.
+      fail_create: 'Nem sikerült létrehozni a menüt: %{hiba}'
+      processing_restarted: A feldolgozás (újra)indult.
+      published: A menü sikeresen megjelent!
+      queued: A menü importálása feldolgozásra várakozik.
+      republished: A menü megerősített változtatásokkal került újraközlésre.
+      unable_restart: 'Nem sikerült a feldolgozást (újra)indítani a következő állapotból:
+        %{status}.'
+      unauthorized: Ön nem jogosult a művelet végrehajtására.
+      updated: A menü importálása sikeresen frissült.
     import_item:
-      default_title: ''
-      delete_confirm: ''
-      delete_title: ''
-      imported_ago: ''
-      item_label: ''
-      section_label: ''
+      default_title: Tétel importálása
+      delete_confirm: Törölje ezt az importálást? Ezt nem lehet visszacsinálni.
+      delete_title: Import törlése
+      imported_ago: Importált %{time} ago
+      item_label: tétel
+      section_label: szekció
     index:
-      empty_hint: ''
-      empty_title: ''
-      new_import: ''
-      title: ''
+      empty_hint: Kezdje egy új menü PDF feltöltésével.
+      empty_title: Nincs menüimport
+      new_import: Új menü importálása
+      title: Menü import
     menu_section:
-      edit: ''
-      hide: ''
-      items: ''
+      edit: Szerkesztés
+      hide: Rejtsd el
+      items: tételek
     new:
-      cancel: ''
-      choose_file: ''
-      name_invalid: ''
-      name_label: ''
-      name_placeholder: ''
-      no_file_chosen: ''
-      pdf_hint: ''
-      pdf_invalid: ''
-      pdf_label: ''
-      subtitle: ''
-      tip_file_quality_text: ''
-      tip_file_quality_title: ''
-      tip_format_text: ''
-      tip_format_title: ''
-      tip_processing_time_text: ''
-      tip_processing_time_title: ''
-      tips_title: ''
-      title: ''
-      upload_process: ''
+      cancel: Törölje
+      choose_file: Fájl kiválasztása
+      name_invalid: Kérjük, adjon nevet ennek a menünek.
+      name_label: Menü neve
+      name_placeholder: pl. Vacsora menü, ebédajánlatok stb.
+      no_file_chosen: Nincs kiválasztott fájl
+      pdf_hint: PDF legfeljebb 10MB
+      pdf_invalid: Kérjük, válasszon egy PDF-fájlt a feltöltéshez.
+      pdf_label: PDF fájl
+      subtitle: PDF-menü feltöltése a menüpontok és szakaszok automatikus kivonásához.
+      tip_file_quality_text: Használjon kiváló minőségű, jól olvasható szövegű PDF-eket.
+        Kerülje a kézzel írt menüket vagy az alacsony felbontású szkenneléseket.
+      tip_file_quality_title: Fájlminőség
+      tip_format_text: A rendszer a digitális PDF-ekkel működik a legjobban. A beszkennelt
+        dokumentumok pontossága alacsonyabb lehet.
+      tip_format_title: Formátum
+      tip_processing_time_text: A nagyobb fájlok feldolgozása több percet is igénybe
+        vehet. A feldolgozás befejeztével e-mailt kap.
+      tip_processing_time_title: Feldolgozási idő
+      tips_title: Tippek a legjobb eredményekhez
+      title: Menü importálása PDF-ből
+      upload_process: Feltöltés és feldolgozás
     new_2025:
-      title: ''
-      subtitle: ''
-      step_upload: ''
-      step_process: ''
-      step_review: ''
-      name_label: ''
-      name_placeholder: ''
-      name_help: ''
-      source_language_label: ''
-      auto_detect: ''
-      language_en: ''
-      language_fr: ''
-      language_it: ''
-      language_es: ''
-      source_language_help: ''
-      pdf_label: ''
-      drop_title: ''
-      drop_subtitle: ''
-      browse_files: ''
-      pdf_hint: ''
-      remove_file_aria: ''
-      estimated_time: ''
-      cancel: ''
-      start_processing: ''
-      tips_title: ''
-      tip_quality_title: ''
-      tip_quality_text: ''
-      tip_format_title: ''
-      tip_format_text: ''
-      tip_language_title: ''
-      tip_language_text: ''
-      pdf_invalid_js: ''
+      auto_detect: Automatikus felismerés
+      browse_files: Fájlok böngészése
+      cancel: Törölje
+      drop_subtitle: vagy
+      drop_title: Húzza ide a PDF-et
+      estimated_time: A feldolgozás ~2-5 percet vesz igénybe
+      language_en: Angol
+      language_es: Spanyol
+      language_fr: Francia
+      language_it: Olasz
+      name_help: Adjon a menüjének egy leíró nevet a könnyű azonosítás érdekében.
+      name_label: Menü neve
+      name_placeholder: pl. Nyári menü 2024
+      pdf_hint: PDF legfeljebb 10MB. A tiszta szkennelések működnek a legjobban.
+      pdf_invalid_js: Kérjük, válasszon egy PDF fájlt
+      pdf_label: Menü PDF
+      remove_file_aria: Fájl eltávolítása
+      source_language_help: Az eredeti nyelv megőrzésére szolgál a hiányzó leírások
+        generálásakor.
+      source_language_label: Menü nyelve
+      start_processing: Feldolgozás megkezdése
+      step_process: Folyamat
+      step_review: Felülvizsgálat
+      step_upload: Feltöltés
+      subtitle: Töltsön fel egy PDF menüt, és a mesterséges intelligencia automatikusan
+        kivonja az összes elemet.
+      tip_format_text: A legjobban az egyértelmű részekkel és az áraktól elkülönített
+        tételnevekkel rendelkező menük működnek. A mesterséges intelligenciánk a legtöbb
+        elrendezést képes kezelni.
+      tip_format_title: Standard menü elrendezése
+      tip_language_text: Támogatjuk az angol, olasz, spanyol, francia és egyéb nyelvű
+        menüket. A többnyelvű menük is működnek!
+      tip_language_title: Több nyelv támogatott
+      tip_quality_text: A legjobban a tiszta, nagy felbontású, jó kontrasztú PDF-ek
+        működnek. Kerülje a homályos vagy rossz minőségű fényképeket.
+      tip_quality_title: Használjon kiváló minőségű szkenneléseket
+      tips_title: Tippek a legjobb eredményekhez
+      title: Importálja a menüt
     show:
-      allergens: ''
-      approve_sections_items: ''
-      cancel: ''
-      click_to_add_description: ''
-      confirm_modal_body: ''
-      confirm_modal_title: ''
-      create_menu: ''
-      dairy_free: ''
-      default_title: ''
-      delete: ''
-      description: ''
-      dietary_information: ''
-      edit_item_modal_title: ''
-      failed_heading: ''
-      gluten_free: ''
-      hold_multi_select: ''
-      import_details: ''
-      imported_ago: ''
-      imported_menu_subtitle: ''
-      imported_menu_title: ''
-      item_name: ''
-      no_items_explainer: ''
-      no_items_heading: ''
-      no_items_tip1: ''
-      no_items_tip2: ''
-      no_items_tip3: ''
-      position: ''
-      price: ''
-      process_confirm: ''
-      process_pdf: ''
-      processing_page: ''
-      processing_title: ''
-      progress_complete: ''
-      progress_loading: ''
-      publish: ''
-      publish_menu: ''
-      reorder_hint: ''
-      save_changes: ''
-      section: ''
-      section_disabled_title: ''
-      status: ''
+      allergens: Allergének
+      approve_sections_items: Szakaszok és tételek jóváhagyása
+      cancel: Törölje
+      click_to_add_description: Kattintson a leírás hozzáadásához.
+      confirm_modal_body: Erősítse meg a menü közzétételét. Opcionálisan használhatja
+        a Szinkronizált közzététel funkciót a meglévő, az importálásban nem szereplő
+        szakaszok/elemek archiválásához.
+      confirm_modal_title: Menü közzététele
+      create_menu: Menü létrehozása
+      dairy_free: Tejmentes
+      default_title: 'Menü Importálás #%{id}'
+      delete: Törölje a  címet.
+      description: Leírás
+      dietary_information: Étrendi információk
+      edit_item_modal_title: Szerkesztés menüpont
+      failed_heading: A feldolgozás sikertelen
+      gluten_free: Gluténmentes
+      hold_multi_select: Tartsa lenyomva a Ctrl/Cmd billentyűt a többszörös kijelöléshez
+      import_details: Importálás részletei
+      imported_ago: Importált %{time} ago
+      imported_menu_subtitle: Tekintse át és erősítse meg az alábbi kivont menüpontokat.
+        A végleges menü létrehozása előtt bármelyik elemet szerkesztheti.
+      imported_menu_title: Importált menü
+      item_name: Tétel neve
+      no_items_explainer: Ebből a PDF-ből nem tudtunk semmilyen részt/tételt kimutatni.
+      no_items_heading: Nincs elemzett menüpont
+      no_items_tip1: A PDF nem tartalmazhat kivehető szöveget, és az OCR nem eredményezhet
+        szöveget. Ellenőrizze a Google Cloud Vision hitelesítő adatok beállítását.
+      no_items_tip2: Az OpenAI API-kulcs hiányozhat, vagy érvénytelen kimenetet küldött
+        vissza. Adja hozzá az openai_api_key-t a Rails hitelesítő adatokhoz.
+      no_items_tip3: A válasz formázása lehet, hogy érvénytelen volt. Keményítettük
+        a tagolást, de az újbóli futtatás segíthet.
+      position: Pozíció
+      price: Ár
+      process_confirm: Elkezdheti a PDF feldolgozását most?
+      process_pdf: Folyamat PDF
+      processing_page: Oldal %{aktuális} a %{összesen}
+      processing_title: A menü feldolgozása. Ez eltarthat néhány percig...
+      progress_complete: "%{százalék}% kész"
+      progress_loading: Betöltés...
+      publish: Közzététel
+      publish_menu: Menü közzététele
+      reorder_hint: Csak ebben a szakaszban lévő tételek újrarendelése.
+      save_changes: Változások mentése
+      section: Szekció
+      section_disabled_title: A szakasz itt nem módosítható
+      status: 'Állapot:'
       steps:
-        complete: ''
-        processing: ''
-        review: ''
-        upload: ''
-      sync_publish_label: ''
-      try_again: ''
-      updated_at: ''
-      upload_clearer_pdf: ''
-      vegan: ''
-      vegetarian: ''
+        complete: Teljes
+        processing: Feldolgozás
+        review: Felülvizsgálat
+        upload: Feltöltés
+      sync_publish_label: Szinkronizálás közzététele (archiválási szakaszok/tételek,
+        amelyek nem szerepelnek ebben az importban)
+      try_again: Próbáld újra
+      updated_at: Frissítve %{timestamp}
+      upload_clearer_pdf: Tiszta PDF feltöltése
+      vegan: Vegán
+      vegetarian: Vegetáriánus

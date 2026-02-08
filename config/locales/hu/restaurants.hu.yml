@@ -2,9 +2,9 @@
 hu:
   restaurants:
     controller:
-      archived: ''
-      created: ''
-      updated: ''
+      archived: Az éttermet sikeresen archiváltuk.
+      created: Az étterem sikeresen létrejött.
+      updated: Az étterem sikeresen frissült.
     edit:
       allergynsTab: Allergének
       employeesTab: Dolgozók
@@ -19,15 +19,21 @@ hu:
       taxesTab: Adók
       tipsTab: Borravalók
       tracksTab: Lejátszási lista
+    edit_2025:
+      subtitle: Az étterem konfigurációjának kezelése
+      toggle_navigation: Navigáció váltás
     form:
       address: Cím
-      connect: ''
+      connect: Csatlakozás
       delete: Törlés
       details: Részletek
       imageSettings: Kép beállítások
-      image_style_profile_hint: ''
-      image_style_profile_label: ''
-      image_style_profile_placeholder: ''
+      image_style_profile_hint: Az étteremben az összes generált menüpont képének
+        konzisztenciájára szolgál.
+      image_style_profile_label: Képstílus profil
+      image_style_profile_placeholder: pl., Realisztikus stúdió ételfotózás; sekély
+        mélységélesség; lágy természetes fény; matt kőedények; rusztikus faasztal;
+        minimális kellékanyag.
       music: Zene
       save: Mentés
       settings: Beállítások
@@ -36,236 +42,216 @@ hu:
       wifi: Wi‑Fi
     index:
       restaurants: Éttermek
+    index_2025:
+      heading: Éttermek
+      new_restaurant: Új étterem
+      quick_actions: Gyors akciók
+      search: Keresés
+      search_placeholder: Éttermek keresése...
+      subtitle: Helyszínek, étlapok és személyzet kezelése
+      title: Az Ön éttermei
+    index_frame_2025:
+      active: Aktív
+      apply: Alkalmazás
+      clear_search: Tiszta keresés
+      drag_to_reorder: Húzza átrendezéshez
+      edit: Szerkesztés
+      inactive: Inaktív
+      menus_action: Étlapok
+      menus_count_label: menük
+      no_restaurants: Nem találtunk éttermeket
+      no_results_for: Nincsenek eredmények a
+      pagination_aria_label: Éttermek oldalszámozása
+      restaurants: Éttermek
+      set_status: Állítsa be az állapotot...
+      staff_count_label: személyzet
+    insights:
+      back: Vissza
+      columns:
+        count: Count
+        dropoff: Dropoff
+        dropoff_rate: Visszalépési arány
+        fail: Fail
+        item: Tétel
+        median_seconds: Median (s)
+        orders: Megrendelések
+        outlier: Outlier
+        qty: Mennyiség
+        rate: Rate
+        sample_size: "N"
+        share: Megosztás
+        step: Lépés
+        success: Siker
+        triggers: Triggers
+      export_csv: CSV exportálása
+      filters:
+        all_menus: Minden menü
+        custom: Custom
+        end: Vége
+        last28: Utolsó 28 nap
+        last7: Utolsó 7 nap
+        last_month: Múlt hónap
+        menu_optional: Menü (opcionális)
+        mtd: MTD
+        refresh: Frissítés
+        start: Indítsa el a  oldalt.
+        time_window: Időablak
+        today: Ma
+        yesterday: Tegnap
+      funnel_steps:
+        bill_requested: Bill kérte
+        order_submitted: Beadott megrendelés
+        payment_succeeded: A fizetés sikeres volt
+      helper_text: 'v1: csak olvasható betekintés. Az elhagyási tölcsér jelenleg a
+        megrendelés/fizetési mérföldköveken alapul.'
+      no_data: Nincs adat a kiválasztott ablakhoz.
+      page_title: "%{restaurant_name} - Betekintés"
+      sections:
+        abandonment_funnel:
+          title: Elhagyási tölcsér
+        prep_time_bottlenecks:
+          helper_text: Az állomásjegyek időzítését (leadott → kész/átvett) használja
+            v1 proxy-ként.
+          title: Előkészítési időbeli szűk keresztmetszetek
+        slow_movers:
+          title: Lassú mozgók
+        top_performers:
+          title: A legjobbak
+        voice_triggers:
+          title: Hang-kioldó frekvencia
+      title: Betekintés
+      values:
+        'false': ''
+        'true': ''
     new:
       restaurant: Új étterem
-      restaurants: ''
+      restaurants: Éttermek
     restaurant:
-      address1: ''
-      address2: ''
-      capacity: ''
-      city: ''
-      country: ''
-      description: ''
-      image: ''
-      name: ''
-      postcode: ''
-      state: ''
-      status: ''
-      user: ''
-    show:
-      address: Cím
-      billing_content: ''
-      details: ''
-      imageSettings: ''
-      settings: ''
-      switch_off: ''
-      switch_on: ''
-      tab_billing: ''
-      tab_employees: ''
-      tab_menus: ''
-      tab_openinghours: ''
-      tab_restaurant: ''
-      tab_tables: ''
-      tab_taxes: ''
-      tab_tips: ''
-    showAllergyns:
-      allergyns: ''
-    showEmployees:
-      employees: ''
-    showLocales:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      default: ''
-      delete: ''
-      menus: ''
-    showMenus:
-      add_new_menu: ''
-      import_menu_from_pdf: ''
-      menus: ''
-    showOpeningHours:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      openings: ''
-    showOrdrs:
-      ordrs: ''
-    showSizes:
-      sizes: ''
-    showSmartMenus:
-      scan_to_join: ''
-      smartQRs: ''
-      wifi: ''
-    showTableSettings:
-      tableSettings: ''
-    showTaxes:
-      taxes: ''
-    showTips:
-      actions: ''
-      activate: ''
-      deactivate: ''
-      tips: ''
-    showTrack:
-      loading: ''
-    showTracks:
-      tracks: ''
-    insights:
-      page_title: ''
-      title: ''
-      back: ''
-      export_csv: ''
-      helper_text: ''
-      no_data: ''
-      values:
-        true: ''
-        false: ''
-      filters:
-        time_window: ''
-        today: ''
-        yesterday: ''
-        last7: ''
-        last28: ''
-        mtd: ''
-        last_month: ''
-        custom: ''
-        start: ''
-        end: ''
-        refresh: ''
-        menu_optional: ''
-        all_menus: ''
-      sections:
-        top_performers:
-          title: ''
-        slow_movers:
-          title: ''
-        prep_time_bottlenecks:
-          title: ''
-          helper_text: ''
-        voice_triggers:
-          title: ''
-        abandonment_funnel:
-          title: ''
-      columns:
-        item: ''
-        orders: ''
-        qty: ''
-        share: ''
-        median_seconds: ''
-        sample_size: ''
-        outlier: ''
-        triggers: ''
-        success: ''
-        fail: ''
-        rate: ''
-        step: ''
-        count: ''
-        dropoff: ''
-        dropoff_rate: ''
-      funnel_steps:
-        order_submitted: ''
-        bill_requested: ''
-        payment_succeeded: ''
-    edit_2025:
-      subtitle: ''
-      toggle_navigation: ''
-    sidebar_2025:
-      close_menu: ''
-      restaurant: ''
-      details: ''
-      schedule: ''
-      localization: ''
-      menus: ''
-      all_menus: ''
-      allergens: ''
-      sizes: ''
-      tables: ''
-      operations: ''
-      kitchen_dashboard: ''
-      bar_dashboard: ''
-      wifi: ''
-      team: ''
-      staff: ''
-      financials: ''
-      taxes_and_tips: ''
-      taxes: ''
-      tips: ''
-      ordering: ''
-      insights: ''
-      setup: ''
-      settings: ''
-      qr_codes: ''
-      jukebox: ''
-      advanced: ''
-    index_2025:
-      title: ''
-      heading: ''
-      subtitle: ''
-      quick_actions: ''
-      new_restaurant: ''
-      search_placeholder: ''
-      search: ''
-    index_frame_2025:
-      pagination_aria_label: ''
-      no_restaurants: ''
-      no_results_for: ''
-      clear_search: ''
-      menus_count_label: ''
-      staff_count_label: ''
-      edit: ''
-      menus_action: ''
-      restaurants: ''
-      active: ''
-      inactive: ''
-      set_status: ''
-      apply: ''
-      drag_to_reorder: ''
+      address1: 'Cím1:'
+      address2: 'Cím2:'
+      capacity: 'Kapacitás:'
+      city: 'Város:'
+      country: 'Ország:'
+      description: 'Leírás:'
+      image: 'Kép:'
+      name: 'Név:'
+      postcode: 'Irányítószám:'
+      state: 'Állam:'
+      status: 'Állapot:'
+      user: 'Felhasználó:'
     sections:
       details_2025:
-        quick_actions: ''
-        new_menu: ''
-        import_menu: ''
-        overview: ''
-        menus: ''
-        items: ''
-        tables: ''
-        staff: ''
-        restaurant_details: ''
-        restaurant_name: ''
-        restaurant_name_placeholder: ''
-        restaurant_name_help: ''
-        description: ''
-        description_placeholder: ''
-        description_help: ''
-        status: ''
-        active: ''
-        inactive: ''
-        status_help: ''
-        phone: ''
-        phone_placeholder: ''
-        phone_help: ''
-        website: ''
-        website_placeholder: ''
-        website_help: ''
-        currency: ''
-        currency_help: ''
-        timezone: ''
-        timezone_help: ''
-        location: ''
-        address: ''
-        address_placeholder: ''
-        address_help: ''
-        city: ''
-        city_placeholder: ''
-        state: ''
-        state_placeholder: ''
-        postcode: ''
-        postcode_placeholder: ''
-        country: ''
-        country_placeholder: ''
-        latitude: ''
-        latitude_placeholder: ''
-        longitude: ''
-        longitude_placeholder: ''
-        loading_map: ''
-        map_error: ''
-        location_label: ''
+        address: 'Cím:'
+        city: Város
+        city_placeholder: Város neve
+        country: Ország
+        country_placeholder: Ország
+        currency: Pénznem
+        description: Leírás
+        items: Tételek
+        latitude: Szélesség
+        latitude_placeholder: pl. 40.7128
+        longitude: Hosszúság
+        longitude_placeholder: pl. -74.0060
+        phone: Telefon
+        phone_help: Kapcsolattartási szám az ügyfelek számára
+        phone_placeholder: pl. +1 (555) 123-4567
+        postcode: Postai irányítószám
+        postcode_placeholder: pl. 12345
+        restaurant_name: Étterem neve
+        restaurant_name_help: A név, amelyet az ügyfelek látni fognak
+        restaurant_name_placeholder: pl. Bella Italia
+        state: Állam/Megye
+        state_placeholder: Állam vagy tartomány
+        status: Állapot
+        status_help: Csak az aktív éttermek láthatók az ügyfelek számára
+        timezone: Időzóna
+        timezone_help: Helyi időzóna az üzemidőhöz
+        website: Honlap
+        website_help: Az Ön éttermi honlapja
+        website_placeholder: https://example.com
+    show:
+      address: Cím
+      billing_content: Itt jelenik meg a számlázási konfiguráció.
+      details: Részletek
+      imageSettings: Képbeállítások
+      settings: Beállítások
+      switch_off: 'off'
+      switch_on: a  oldalon
+      tab_billing: Számlázás
+      tab_employees: Alkalmazottak
+      tab_menus: Étlapok
+      tab_openinghours: Nyitva tartás
+      tab_restaurant: Étterem
+      tab_tables: Táblák
+      tab_taxes: Adók
+      tab_tips: Tippek
+    showAllergyns:
+      allergyns: Allergének
+    showEmployees:
+      employees: Alkalmazottak
+    showLocales:
+      actions: Műveletek
+      activate: Aktiválja a  címet.
+      deactivate: A  deaktiválása
+      default: Alapértelmezett
+      delete: Törölje a  címet.
+      menus: Étlapok
+    showMenus:
+      add_new_menu: Új menü hozzáadása
+      import_menu_from_pdf: Menü importálása PDF-ből
+      menus: Étlapok
+    showOpeningHours:
+      actions: Műveletek
+      activate: Aktiválja a  címet.
+      deactivate: A  deaktiválása
+      openings: Nyitva tartás
+    showOrdrs:
+      ordrs: Megrendelések
+    showSizes:
+      sizes: Méretek
+    showSmartMenus:
+      scan_to_join: Beolvasás a csatlakozáshoz
+      smartQRs: SmartQRs
+      wifi: Wi‑Fi
+    showTableSettings:
+      tableSettings: Asztali beállítások
+    showTaxes:
+      taxes: Adók
+    showTips:
+      actions: Műveletek
+      activate: Aktiválja a  címet.
+      deactivate: A  deaktiválása
+      tips: Tippek
+    showTrack:
+      loading: Betöltés...
+    showTracks:
+      tracks: Nyomok
+    sidebar_2025:
+      advanced: Haladó
+      all_menus: Minden menü
+      allergens: Allergének
+      bar_dashboard: Bar
+      close_menu: Menü bezárása
+      details: Részletek
+      financials: PÉNZÜGYI ADATOK
+      insights: Betekintés
+      jukebox: Jukebox
+      kitchen_dashboard: Konyha
+      localization: Lokalizáció
+      menus: MENÜK
+      operations: OPERÁCIÓK
+      ordering: Rendelés
+      qr_codes: QR-kódok
+      restaurant: RESTAURANT
+      schedule: Ütemterv
+      settings: Beállítások
+      setup: BEÁLLÍTÁS
+      sizes: Méretek
+      staff: Személyzet
+      tables: Táblák
+      taxes: Adók
+      taxes_and_tips: Adók és tippek
+      team: TEAM
+      tips: Tippek
+      wifi: Wi‑Fi

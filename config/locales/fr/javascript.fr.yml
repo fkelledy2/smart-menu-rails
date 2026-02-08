@@ -1,115 +1,117 @@
 ---
 fr:
   javascript:
-    notifications:
-      auto_save:
-        error: ''
-        network_error: ''
-        saved: ''
-      sortable:
-        success: ''
-        error: ''
-      form:
-        auto_saved: ''
-        submit_error: ''
-      employee:
-        saved: ''
-        save_error: ''
-        status_error: ''
-        updated: ''
-        order_error: ''
-      menuitem:
-        saved: ''
-        save_error: ''
-        status_error: ''
-        updated: ''
-        image_generation: ''
-        no_images: ''
-        order_error: ''
-      order:
-        saved: ''
-        close_success: ''
-        close_error: ''
-        bill_success: ''
-        bill_error: ''
-        payment_success: ''
-        payment_error: ''
-        missing_payment: ''
-        payment_link: ''
-        payment_link_error: ''
-        delete_success: ''
-        delete_error: ''
-        created: ''
-        updated: ''
-        order_save_success: ''
-        order_save_error: ''
-      inventory:
-        saved: ''
-        saved_success: ''
-        save_error: ''
-        status_error: ''
-        updated: ''
-        reset_error: ''
-        reset_success: ''
-        order_error: ''
-      menu:
-        saved: ''
-        saved_success: ''
-        save_error: ''
-        status_error: ''
-        updated: ''
-        order_error: ''
-      restaurant:
-        saved: ''
-        saved_success: ''
-        save_error: ''
-        delete_success: ''
-        delete_error: ''
-        qr_error: ''
-      menusection:
-        saved: ''
-        saved_success: ''
-        save_error: ''
-        status_error: ''
-        updated: ''
-        order_error: ''
-      ocr:
-        all_confirmed: ''
-        all_confirm_error: ''
-        section_confirmed: ''
-        section_confirm_error: ''
-        inline_edit_success: ''
-        inline_edit_error: ''
-        inline_cancel: ''
-        section_order_success: ''
-        section_order_error: ''
-        item_move_success: ''
-        item_move_error: ''
-        import_error: ''
-        import_success: ''
-        delete_success: ''
-        export_success: ''
-        export_error: ''
-      pwa:
-        install_success: ''
-        notification_success: ''
-        sync_complete: ''
-        offline_action: ''
-      api:
-        upload_error: ''
+    buttons:
+      mark_collected: Marquer comme collecté
+      mark_ready: Mark Ready
+      start_preparing: Commencer à se préparer
     form:
       actions:
-        edit: ''
-        delete: ''
-        save: ''
-    table:
-      no_data: ''
+        delete: Supprimer
+        edit: Editer
+        save: Économiser
+    notifications:
+      api:
+        upload_error: 'Le téléchargement a échoué : Erreur de réseau'
+      auto_save:
+        error: L'enregistrement a échoué
+        network_error: Erreur de réseau
+        saved: Commande enregistrée
+      employee:
+        order_error: Échec de la mise à jour de la commande
+        save_error: L'employé n'a pas été sauvegardé
+        saved: L'employé a été enregistré avec succès
+        status_error: Échec de la mise à jour du statut du salarié
+        updated: Mise à jour de %{count} employé(s) à %{status}
+      form:
+        auto_saved: Détails sauvegardés automatiquement
+        submit_error: Échec de la sauvegarde
+      inventory:
+        order_error: Échec de la mise à jour de la commande
+        reset_error: Échec de la réinitialisation de l'inventaire
+        reset_success: Réinitialiser %{count} article(s) d'inventaire
+        save_error: Échec de l'enregistrement de l'inventaire
+        saved: Les détails de l'inventaire sont sauvegardés automatiquement
+        saved_success: Inventaire sauvegardé avec succès
+        status_error: Échec de la mise à jour de l'état des stocks
+        updated: Mise à jour de %{count} article(s) d'inventaire à %{status}
+      menu:
+        order_error: Échec de la mise à jour de la commande
+        save_error: Échec de l'enregistrement du menu
+        saved: Les détails du menu sont sauvegardés automatiquement
+        saved_success: Menu sauvegardé avec succès
+        status_error: Échec de la mise à jour de l'état du menu
+        updated: Mise à jour du(des) menu(s) %{count} vers %{status}
+      menuitem:
+        image_generation: Génération d'images pour %{count} élément(s) de menu
+        no_images: Aucune image n'a pu être générée
+        order_error: Échec de la mise à jour de la commande
+        save_error: Échec de l'enregistrement de l'élément de menu
+        saved: L'élément de menu a été sauvegardé avec succès
+        status_error: Échec de la mise à jour de l'état de l'élément de menu
+        updated: Mise à jour des éléments du menu %{count} vers %{status}
+      menusection:
+        order_error: Échec de la mise à jour de la commande
+        save_error: Échec de l'enregistrement de la section de menu
+        saved: Les détails de la section du menu sont enregistrés automatiquement
+        saved_success: Section de menu sauvegardée avec succès
+        status_error: Échec de la mise à jour de l'état de la section de menu
+        updated: Mise à jour de la (des) section(s) du menu %{count} vers %{status}
+      ocr:
+        all_confirm_error: Échec de la mise à jour des confirmations
+        all_confirmed: Toutes les sections %{status}
+        delete_success: Suppression de %{count} section(s) non confirmée(s)
+        export_error: Échec de l'exportation
+        export_success: Exportation terminée
+        import_error: L'importation a échoué. Veuillez réessayer.
+        import_success: L'importation a été effectuée avec succès
+        inline_cancel: Édition annulée
+        inline_edit_error: Échec de l'enregistrement des modifications
+        inline_edit_success: "%{type} mis à jour avec succès"
+        item_move_error: Échec du déplacement de l'article
+        item_move_success: L'article a été déplacé avec succès
+        section_confirm_error: Échec de la mise à jour de la confirmation de la section
+        section_confirmed: Section %{status}
+        section_order_error: Échec de la mise à jour de l'ordre des sections
+        section_order_success: Mise à jour de l'ordre des sections
+      order:
+        bill_error: La facture n'a pas été demandée
+        bill_success: Projet de loi demandé avec succès
+        close_error: La commande n'a pas été clôturée
+        close_success: La commande a été clôturée avec succès
+        created: 'Ordre #%{id} créé'
+        delete_error: Échec de la suppression de l'ordre
+        delete_success: Ordre supprimé avec succès
+        missing_payment: Informations de paiement manquantes
+        order_save_error: Échec de l'enregistrement de la commande
+        order_save_success: La commande a été enregistrée avec succès
+        payment_error: Le paiement n'a pas été traité
+        payment_link: Lien de paiement actualisé
+        payment_link_error: Le lien de paiement n'a pas été généré
+        payment_success: Paiement traité avec succès
+        saved: Les détails de la commande sont sauvegardés automatiquement
+        updated: 'Ordre #%{orderId} mis à jour'
+      pwa:
+        install_success: L'application a été installée avec succès ! Vous pouvez maintenant
+          utiliser Smart Menu hors ligne.
+        notification_success: Notifications activées ! Vous recevrez des mises à jour
+          en temps réel.
+        offline_action: Action enregistrée. La synchronisation se fera en ligne.
+        sync_complete: "%{count} éléments synchronisés avec succès"
+      restaurant:
+        delete_error: Échec de la suppression du restaurant
+        delete_success: Restaurant supprimé avec succès
+        qr_error: Échec de la génération du code QR
+        save_error: Le restaurant n'a pas été sauvé
+        saved: Enregistrement automatique des coordonnées du restaurant
+        saved_success: Restaurant sauvegardé avec succès
+      sortable:
+        error: L'enregistrement a échoué
+        success: Commande enregistrée
     order_status:
-      ordered: ''
-      preparing: ''
-      ready: ''
-      collected: ''
-    buttons:
-      start_preparing: ''
-      mark_ready: ''
-      mark_collected: ''
+      collected: collectés
+      ordered: ordonné
+      preparing: préparer
+      ready: prêt
+    table:
+      no_data: Pas de données disponibles

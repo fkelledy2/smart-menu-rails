@@ -1,115 +1,118 @@
 ---
 pt:
   javascript:
-    notifications:
-      auto_save:
-        error: ''
-        network_error: ''
-        saved: ''
-      sortable:
-        success: ''
-        error: ''
-      form:
-        auto_saved: ''
-        submit_error: ''
-      employee:
-        saved: ''
-        save_error: ''
-        status_error: ''
-        updated: ''
-        order_error: ''
-      menuitem:
-        saved: ''
-        save_error: ''
-        status_error: ''
-        updated: ''
-        image_generation: ''
-        no_images: ''
-        order_error: ''
-      order:
-        saved: ''
-        close_success: ''
-        close_error: ''
-        bill_success: ''
-        bill_error: ''
-        payment_success: ''
-        payment_error: ''
-        missing_payment: ''
-        payment_link: ''
-        payment_link_error: ''
-        delete_success: ''
-        delete_error: ''
-        created: ''
-        updated: ''
-        order_save_success: ''
-        order_save_error: ''
-      inventory:
-        saved: ''
-        saved_success: ''
-        save_error: ''
-        status_error: ''
-        updated: ''
-        reset_error: ''
-        reset_success: ''
-        order_error: ''
-      menu:
-        saved: ''
-        saved_success: ''
-        save_error: ''
-        status_error: ''
-        updated: ''
-        order_error: ''
-      restaurant:
-        saved: ''
-        saved_success: ''
-        save_error: ''
-        delete_success: ''
-        delete_error: ''
-        qr_error: ''
-      menusection:
-        saved: ''
-        saved_success: ''
-        save_error: ''
-        status_error: ''
-        updated: ''
-        order_error: ''
-      ocr:
-        all_confirmed: ''
-        all_confirm_error: ''
-        section_confirmed: ''
-        section_confirm_error: ''
-        inline_edit_success: ''
-        inline_edit_error: ''
-        inline_cancel: ''
-        section_order_success: ''
-        section_order_error: ''
-        item_move_success: ''
-        item_move_error: ''
-        import_error: ''
-        import_success: ''
-        delete_success: ''
-        export_success: ''
-        export_error: ''
-      pwa:
-        install_success: ''
-        notification_success: ''
-        sync_complete: ''
-        offline_action: ''
-      api:
-        upload_error: ''
+    buttons:
+      mark_collected: Marcar como Recolhido
+      mark_ready: Mark Ready
+      start_preparing: Iniciar a preparação
     form:
       actions:
-        edit: ''
-        delete: ''
-        save: ''
-    table:
-      no_data: ''
+        delete: Eliminar
+        edit: Editar
+        save: Guardar
+    notifications:
+      api:
+        upload_error: 'A transferência falhou: Erro de rede'
+      auto_save:
+        error: Falha na gravação
+        network_error: Erro de rede
+        saved: Encomenda guardada
+      employee:
+        order_error: Falha na atualização da ordem
+        save_error: Não foi possível salvar o empregado
+        saved: Empregado guardado com sucesso
+        status_error: Falha ao atualizar o estatuto do empregado
+        updated: Atualizado %{count} empregado(s) para %{status}
+      form:
+        auto_saved: Detalhes guardados automaticamente
+        submit_error: Falha ao guardar
+      inventory:
+        order_error: Falha na atualização da ordem
+        reset_error: Falha ao repor o inventário
+        reset_success: Repor %{count} item(ns) de inventário
+        save_error: Falha ao guardar o inventário
+        saved: Detalhes do inventário guardados automaticamente
+        saved_success: Inventário guardado com sucesso
+        status_error: Falha ao atualizar o estado do inventário
+        updated: Atualizado %{count} item(ns) de inventário para %{status}
+      menu:
+        order_error: Falha na atualização da ordem
+        save_error: Falha ao guardar o menu
+        saved: Detalhes do menu guardados automaticamente
+        saved_success: Menu guardado com sucesso
+        status_error: Falha ao atualizar o estado do menu
+        updated: Menu(s) %{count} atualizado(s) para %{status}
+      menuitem:
+        image_generation: Iniciada a geração de imagens para %{count} item(ns) de
+          menu
+        no_images: Não foi possível gerar imagens
+        order_error: Falha na atualização da ordem
+        save_error: Falha ao guardar o item de menu
+        saved: Item de menu guardado com sucesso
+        status_error: Falha ao atualizar o estado do item de menu
+        updated: Atualizado %{count} item(ns) de menu para %{status}
+      menusection:
+        order_error: Falha na atualização da ordem
+        save_error: Falha ao guardar a secção do menu
+        saved: Detalhes da secção do menu guardados automaticamente
+        saved_success: Secção de menu guardada com sucesso
+        status_error: Falha ao atualizar o estado da secção do menu
+        updated: Secção(ões) do menu %{count} actualizada(s) para %{status}
+      ocr:
+        all_confirm_error: Falha ao atualizar as confirmações
+        all_confirmed: Todas as secções %{status}
+        delete_success: Suprimida %{count} secção(ões) não confirmada(s)
+        export_error: A exportação falhou
+        export_success: Exportação concluída
+        import_error: A importação falhou. Tente novamente.
+        import_success: Importação concluída com êxito
+        inline_cancel: Editar cancelado
+        inline_edit_error: Falha ao guardar as alterações
+        inline_edit_success: "%{type} atualizado com sucesso"
+        item_move_error: Falha ao mover o item
+        item_move_success: Item movido com sucesso
+        section_confirm_error: Falha ao atualizar a confirmação da secção
+        section_confirmed: Secção %{status}
+        section_order_error: Falha ao atualizar a ordem das secções
+        section_order_success: Ordem das secções actualizada
+      order:
+        bill_error: Não foi possível solicitar a fatura
+        bill_success: Projeto de lei solicitado com êxito
+        close_error: Falha no fecho da encomenda
+        close_success: Encomenda encerrada com sucesso
+        created: 'Encomenda #%{id} criada'
+        delete_error: Falha na eliminação da encomenda
+        delete_success: Encomenda eliminada com sucesso
+        missing_payment: Informações de pagamento em falta
+        order_save_error: Falha ao guardar a encomenda
+        order_save_success: Encomenda guardada com sucesso
+        payment_error: Falha no processamento do pagamento
+        payment_link: Ligação de pagamento actualizada
+        payment_link_error: Falha ao gerar a ligação de pagamento
+        payment_success: Pagamento processado com sucesso
+        saved: Detalhes da encomenda guardados automaticamente
+        updated: 'Ordem #%{orderId} actualizada'
+      pwa:
+        install_success: Aplicação instalada com sucesso! Já pode utilizar o Smart
+          Menu offline.
+        notification_success: Notificações activadas! Receberá actualizações em tempo
+          real.
+        offline_action: Ação guardada. Será sincronizada quando estiver online.
+        sync_complete: "%{count} itens sincronizados com sucesso"
+      restaurant:
+        delete_error: Falha na eliminação do restaurante
+        delete_success: Restaurante eliminado com êxito
+        qr_error: Falha ao gerar o código QR
+        save_error: Não conseguiu salvar o restaurante
+        saved: Detalhes do restaurante guardados automaticamente
+        saved_success: Restaurante guardado com sucesso
+      sortable:
+        error: Falha na gravação
+        success: Encomenda guardada
     order_status:
-      ordered: ''
-      preparing: ''
-      ready: ''
-      collected: ''
-    buttons:
-      start_preparing: ''
-      mark_ready: ''
-      mark_collected: ''
+      collected: recolhidos
+      ordered: encomendado
+      preparing: preparação
+      ready: pronto
+    table:
+      no_data: Não existem dados disponíveis

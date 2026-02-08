@@ -17,18 +17,18 @@ es:
       menuSection: Sección
       menuSections: Secciones
     menusection:
-      description: ''
-      image: ''
-      menu: ''
-      name: ''
-      sequence: ''
-      status: ''
+      description: 'Descripción:'
+      image: 'Imagen:'
+      menu: 'Menú:'
+      name: 'Nombre:'
+      sequence: 'Secuencia:'
+      status: 'Estado:'
     new:
       cancel: Cancelar
       menuSection: Nueva sección
     show:
       menuSection: Mostrar sección
-      selectMenu: ''
+      selectMenu: Seleccionar menú
     showInventories:
       inventories: Inventarios
       reset: Reiniciar

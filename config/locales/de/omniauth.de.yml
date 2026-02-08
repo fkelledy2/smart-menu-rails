@@ -1,6 +1,7 @@
 ---
 de:
   omniauth:
-    connected: ''
-    email_exists: ''
-    failure: ''
+    connected: Ihr %{kind}-Konto wurde verbunden.
+    email_exists: Es existiert bereits ein Konto mit dieser E-Mail-Adresse. Bitte
+      melden Sie sich mit diesem Konto an, bevor Sie Ihr %{Provider}-Konto verbinden.
+    failure: Etwas ist schief gelaufen

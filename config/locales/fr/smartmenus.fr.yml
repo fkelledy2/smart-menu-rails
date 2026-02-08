@@ -1,30 +1,74 @@
 ---
 fr:
   smartmenus:
+    alcohol:
+      acknowledge_btn: Confirmer la vérification d'âge
+      acknowledged: Vérification d'âge confirmée
+      flag: Alcool
+      non_alcoholic: Sans alcool
+      policy_blocked: La vente d'alcool est actuellement bloquée par la politique.
+      sales_disabled: La vente d'alcool est interdite dans ce restaurant.
+      verify_age: Veuillez vérifier l'âge du client avant de lui servir des boissons
+        alcoolisées.
+      zero_abv_short: 0.0%
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Le Smartmenu a été créé avec succès.
+      deleted: Smartmenu a été supprimé avec succès.
+      updated: La mise à jour du Smartmenu a été effectuée avec succès.
     edit:
-      title: ''
+      title: Modifier le Smartmenu
+    empty_states:
+      adjust_filters: Ajuster les filtres
+      browse_menu: Parcourir le menu
+      cart_empty: Votre panier est vide
+      cart_empty_description: Commencez à ajouter de délicieux articles de notre menu
+        !
+      error_description: Nous avons des difficultés à charger ce contenu. Veuillez
+        réessayer.
+      error_occurred: Quelque chose n'a pas fonctionné
+      no_items_filtered: Aucun article ne correspond à vos filtres
+      no_items_filtered_description: Essayez d'ajuster vos filtres d'allergènes pour
+        voir plus d'articles.
+      no_menu_description: Nous continuons à ajouter des articles à notre menu. N'hésitez
+        pas à revenir bientôt !
+      no_menu_items: Pas encore de menu
+      no_results: Aucun résultat trouvé
+      no_results_description: Nous n'avons pas trouvé d'articles correspondant à votre
+        recherche. Essayez d'autres mots-clés.
+      no_table_description: Veuillez sélectionner une table pour commencer votre commande.
+      no_table_selected: Sélectionnez votre table
+      order_complete: Commande soumise !
+      order_complete_description: Votre commande a été envoyée à la cuisine. Bon appétit
+        !
+      refresh: Rafraîchir
+      try_again: Réessayer
     form:
-      cancel: ''
-      destroy: ''
+      cancel: Annuler
+      destroy: Détruire
       save: Enregistrer
       sure: Êtes-vous sûr ?
     index:
       smartmenus: Menus Intelligents
+    modal_footer_primary:
+      cancel: Annuler
     new:
-      title: ''
+      title: Nouveau Smartmenu
+    ocr:
+      alcohol:
+        abv: ABV
+        classification: Classe
+        override_label: Alcool
+        overrides_hint: Les dérogations s'appliquent lors de la publication.
+        review_needed: Nécessite une révision
     orderCustomer:
       bill: Addition
-      items_in_cart: ''
+      items_in_cart: articles dans le panier
       order: Commander
       staffAlerted: Personnel alerté
       startOrder: Commencer commande
     orderStaff:
       bill: Addition
-      items_in_cart: ''
+      items_in_cart: articles dans le panier
       order: Commander
       startOrder: Commencer commande
       takePayment: Payer
@@ -36,47 +80,47 @@ fr:
     showMenuBanner:
       allergyns: Allergènes
     showMenuContentCustomer:
-      search_placeholder: ''
+      search_placeholder: Recherche dans le menu...
     showMenuitem:
-      add_to_order: ''
-      allergyns: ''
-      loading: ''
+      add_to_order: Ajouter à la commande
+      allergyns: Allergènes
+      loading: Chargement...
     showMenuitemHorizontal:
-      loading: ''
+      loading: Chargement...
     showMenuitemHorizontalActionBar:
-      allergyns: ''
-      order: ''
-      toggle_dropdown: ''
+      allergyns: Allergènes
+      order: Commande
+      toggle_dropdown: Basculer vers le bas
     showModals:
       add: Ajouter un nom
       addToOrder: Ajouter à la commande
-      bill_prefix: ''
+      bill_prefix: 'Projet de loi :'
       cancel: Annuler
       confirmPayment: Confirmer le paiement
-      cover_charge: ''
+      cover_charge: Frais de couverture
       customiseOrderWithName: Personnalisez votre commande
-      partySize: ''
-      excluding_tip: ''
+      excluding_tip: sans pointe
       filterAllergyns: Filtrer les allergènes
       filterBy: Filtrer par
-      including_tip: ''
-      item: ''
-      name_label: ''
-      nett: ''
+      including_tip: y compris la pointe
+      item: Objet
+      name_label: 'Nom :'
+      nett: Nett
       noneAll: Aucun / tous
-      order_aria: ''
-      payBill: ''
-      payment_link: ''
+      order_aria: Commande
+      partySize: Taille du groupe
+      payBill: Payer la facture
+      payment_link: Lien de paiement
       price: Prix
       requestBill: Demander l'addition
-      selected: ''
-      service: ''
+      selected: Sélectionné
+      service: Service
       start: Commencer
       startOrder: Commencer commande
       submit: Envoyer la commande
-      submitted: ''
-      tax: ''
-      tip_options: ''
+      submitted: Soumis
+      tax: Impôts
+      tip_options: Options de conseil
       total: Total
       yourOrder: Votre commande
     showTableLocaleSelectorCustomer:
@@ -84,44 +128,7 @@ fr:
     showTableLocaleSelectorStaff:
       table: Tableau
     smartmenu:
-      menu: ''
-      restaurant: ''
-      slug: ''
-      tablesetting: ''
-    modal_footer_primary:
-      cancel: ''
-    alcohol:
-      flag: ''
-      non_alcoholic: ''
-      zero_abv_short: ''
-      verify_age: ''
-      sales_disabled: ''
-      policy_blocked: ''
-      acknowledge_btn: Confirmer la vérification d'âge
-      acknowledged: Vérification d'âge confirmée
-    ocr:
-      alcohol:
-        override_label: ''
-        abv: ''
-        classification: ''
-        review_needed: ''
-        overrides_hint: ''
-    empty_states:
-      no_menu_items: ''
-      no_menu_description: ''
-      refresh: ''
-      cart_empty: ''
-      cart_empty_description: ''
-      browse_menu: ''
-      no_results: ''
-      no_results_description: ''
-      no_items_filtered: ''
-      no_items_filtered_description: ''
-      adjust_filters: ''
-      no_table_selected: ''
-      no_table_description: ''
-      order_complete: ''
-      order_complete_description: ''
-      error_occurred: ''
-      error_description: ''
-      try_again: ''
+      menu: 'Carte :'
+      restaurant: 'Restaurant :'
+      slug: 'Limace :'
+      tablesetting: 'Mise en place des tables :'

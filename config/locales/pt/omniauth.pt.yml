@@ -1,6 +1,7 @@
 ---
 pt:
   omniauth:
-    connected: ''
-    email_exists: ''
-    failure: ''
+    connected: A sua conta %{kind} foi ligada.
+    email_exists: Já existe uma conta com este endereço de correio eletrónico. Inicie
+      sessão com essa conta antes de ligar a sua conta %{provider}.
+    failure: Algo correu mal

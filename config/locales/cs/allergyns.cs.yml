@@ -6,35 +6,35 @@ cs:
       deleted: Alergen byl úspěšně odstraněn.
       updated: Alergen byl úspěšně aktualizován.
     edit:
+      allergyn_details: Podrobnosti o alergenech
       allergyns: Alergeny
-      edit_allergyn: Upravit alergen
-      description: Aktualizace údajů o alergenech
       cancel: Zrušit
       confirm_delete: Vymazat tento alergen?
       delete: Odstranit
-      allergyn_details: Podrobnosti o alergenech
+      description: Aktualizace údajů o alergenech
+      edit_allergyn: Upravit alergen
     form:
-      name: Název alergenu
-      name_placeholder: např. arašídy, mléčné výrobky, lepek.
-      name_help: Název alergenu
       description: Popis
-      description_placeholder: Nepovinné údaje o tomto alergenu...
       description_help: 'Volitelně: Další informace o alergenu'
+      description_placeholder: Nepovinné údaje o tomto alergenu...
+      name: Název alergenu
+      name_help: Název alergenu
+      name_placeholder: např. arašídy, mléčné výrobky, lepek.
       symbol: Symbol
-      symbol_placeholder: "např. \U0001F95C, \U0001F95B, \U0001F33E."
       symbol_help: 'Volitelně: Emoji nebo krátký symbol, který představuje tento alergen.'
+      symbol_placeholder: "např. \U0001F95C, \U0001F95B, \U0001F33E."
     index:
-      allergyns: Alergeny
-      description: Správa informací o alergenech u položek menu
-      back: Zpět
-      new_allergyn: Nový alergen
       all_allergyns: Všechny alergeny
-    new:
       allergyns: Alergeny
+      back: Zpět
+      description: Správa informací o alergenech u položek menu
+      new_allergyn: Nový alergen
+    new:
+      allergyn_details: Podrobnosti o alergenech
+      allergyns: Alergeny
+      cancel: Zrušit
+      description: Vytvoření nového alergenu pro položky menu
       new: Nový
       new_allergyn: Nový alergen
-      description: Vytvoření nového alergenu pro položky menu
-      cancel: Zrušit
-      allergyn_details: Podrobnosti o alergenech
     show:
       allergyn: Zobrazit alergen

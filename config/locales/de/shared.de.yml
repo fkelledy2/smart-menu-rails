@@ -1,34 +1,45 @@
 ---
 de:
   shared:
-    head:
-      meta_title: ''
-      meta_description: ''
-      meta_keywords: ''
-      og_title: ''
-      og_description: ''
-      twitter_title: ''
-      twitter_description: ''
-      pwa_title: ''
     footer:
-      facebook: ''
-      instagram: ''
-      linkedin: ''
+      build: Bauen Sie
+      facebook: Facebook
+      instagram: Instagram
+      linkedin: LinkedIn
+      plan: Tarif
       privacy: Datenschutz
       terms: AGB
-      plan: ''
-      build: ''
-      twitter: ''
+      twitter: Twitter
+    head:
+      meta_description: Verwandeln Sie Ihr Restaurant mit kontaktlosen digitalen Speisekarten
+        und intelligenten Bestellsystemen. Beschleunigen Sie den Service, reduzieren
+        Sie Fehler und steigern Sie die Kundenzufriedenheit mit Leichtigkeit.
+      meta_keywords: Digitale Speisekarten für Restaurants | Kontaktlose Restaurantbestellung
+        | Tools für die Restauranteffizienz | Intelligente Restauranttechnologie |
+        QR-Code-Menüs | Online-Menüsysteme | Verbesserung der Restaurantabläufe |
+        Selbstbedienungs-Restaurantbestellung | Technologielösungen für das Gastgewerbe
+        | Umweltfreundliche Restauranttools
+      meta_title: Intelligente digitale Speisekarten und Bestellungen für Restaurants
+        | Effizienzsteigerung
+      og_description: Rüsten Sie Ihr Restaurant mit digitalen Speisekarten und intelligenter
+        Technik auf, die den Service optimieren, die Wartezeiten verkürzen und die
+        Gästezufriedenheit erhöhen.
+      og_title: Digitale Speisekarten & Smart Ordering für moderne Restaurants
+      pwa_title: Intelligentes Menü
+      twitter_description: Entdecken Sie, wie digitale Speisekarten und intelligente
+        Bestelltools den Service vereinfachen und das Esserlebnis Ihrer Gäste verbessern
+        können.
+      twitter_title: Machen Sie Ihr Restaurant intelligenter mit digitalen Speisekarten
     navbar:
       adminArea: Admin-Bereich
-      dashboard: ''
       billing: Abrechnung
-      heroImages: ''
-      impersonated_as: ''
+      dashboard: Dashboard
+      heroImages: Heldenbilder
+      impersonated_as: Sie sind eingeloggt als
       login: Anmelden
       logout: Abmelden
       restaurants: Gastronomiebetriebe
       settings: Einstellungen
       signUp: Registrieren
       testimonials: Referenzen
-      toggle_navigation: ''
+      toggle_navigation: Umschaltbare Navigation

@@ -2,42 +2,43 @@
 de:
   sizes:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Größe wurde erfolgreich erstellt.
+      deleted: Größe wurde erfolgreich gelöscht.
+      updated: Die Größe wurde erfolgreich aktualisiert.
     edit:
-      sizes: ''
-      edit_size: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      size_details: ''
-    form:
-      size_type: ''
-      size_type_help: ''
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      description: ''
-      description_placeholder: ''
-      description_help: ''
-    index:
-      sizes: Größen
-      description: ''
-      back: ''
-      new_size: ''
-      all_sizes: ''
-    new:
-      sizes: ''
-      new: ''
-      new_size: ''
-      description: ''
       cancel: Abbrechen
-      size_details: ''
+      confirm_delete: Diese Größe löschen?
+      delete: Löschen
+      description: Größenangaben aktualisieren
+      edit_size: Größe bearbeiten
+      size_details: Größe Details
+      sizes: Größen
+    form:
+      description: Beschreibung
+      description_help: 'Optional: Fügen Sie weitere Details hinzu'
+      description_placeholder: Optionale Details zu dieser Größe...
+      name: Name anzeigen
+      name_help: So wird die Größe für die Kunden aussehen
+      name_placeholder: z.B. Groß, 16oz, Familiengröße
+      size_type: Größe Typ
+      size_type_help: Wählen Sie die allgemeine Größenkategorie
+    index:
+      all_sizes: Alle Größen
+      back: Zurück
+      description: Verwalten Sie Größenvarianten für Ihre Menüpunkte (z. B. Klein,
+        Mittel, Groß)
+      new_size: Neue Größe
+      sizes: Größen
+    new:
+      cancel: Abbrechen
+      description: Erstellen Sie eine neue Größenvariante für Menüpunkte
+      new: Neu
+      new_size: Neue Größe
+      size_details: Größe Details
+      sizes: Größen
     show:
       size: Größe anzeigen
     size:
-      description: ''
-      name: ''
-      size: ''
+      description: 'Beschreibung:'
+      name: 'Name:'
+      size: 'Größe:'

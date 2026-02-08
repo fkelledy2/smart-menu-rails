@@ -11,18 +11,18 @@ pt:
         name: Nome
         role: Função
         status: Estado
-        user_id: ''
+        user_id: Utilizador
       ingredient:
-        description: ''
-        name: ''
+        description: Descrição
+        name: Nome
       inventory:
         currentInventory: Inventário atual
-        currentinventory: ''
+        currentinventory: Inventário atual
         menuItem: Item
         resetHour: Reiniciar às
-        resethour: ''
+        resethour: Reiniciar hora
         startingInventory: Inventário inicial
-        startinginventory: ''
+        startinginventory: Inventário inicial
       menu:
         allowOrdering: Pedidos
         covercharge: Couver
@@ -38,7 +38,7 @@ pt:
       menuavailability:
         dayofweek: Dia
         endhour: Hora de fecho
-        menu_id: ''
+        menu_id: Menu
         starthour: Hora de abertura
         status: Estado
       menuitem:
@@ -46,7 +46,7 @@ pt:
         calories: Calorias
         description: Descrição
         image: Imagem
-        itemtype: ''
+        itemtype: Tipo de item
         name: Nome
         preptime: Tempo de preparação
         price: Preço
@@ -55,48 +55,48 @@ pt:
         status: Estado
         unitcost: Custo unitário
       menuparticipant:
-        preferredlocale: ''
-        sessionid: ''
-        smartmenu_id: ''
+        preferredlocale: Local preferido
+        sessionid: ID da sessão
+        smartmenu_id: Smartmenu
       menusection:
         description: Descrição
-        endhour: ''
+        endhour: Hora do fim
         image: Imagem
-        menu_id: ''
+        menu_id: Menu
         name: Nome
-        restricted: ''
-        starthour: ''
+        restricted: Restrito
+        starthour: Hora de início
         status: Estado
       metric:
-        description: ''
-        name: ''
+        description: Descrição
+        name: Nome
       ordr:
-        employee_id: ''
-        menu_id: ''
-        restaurant_id: ''
-        tablesetting_id: ''
+        employee_id: Empregado
+        menu_id: Menu
+        restaurant_id: Restaurante
+        tablesetting_id: Configuração da mesa
       ordraction:
-        action: ''
-        employee_id: ''
-        ordr_id: ''
-        ordritem_id: ''
-        ordrparticipant_id: ''
-        sessionid: ''
+        action: Ação
+        employee_id: Empregado
+        ordr_id: Encomendar
+        ordritem_id: Item de encomenda
+        ordrparticipant_id: Ordem Participante
+        sessionid: ID da sessão
       ordritem:
-        menuitem_id: ''
-        ordr_id: ''
+        menuitem_id: Item do menu
+        ordr_id: Encomendar
       ordritemnote:
-        note: ''
-        ordritem_id: ''
+        note: Nota
+        ordritem_id: Item de encomenda
       ordrparticipant:
-        action: ''
-        employee_id: ''
-        ordr_id: ''
-        ordritem_id: ''
-        role: ''
-        sessionid: ''
+        action: Ação
+        employee_id: Empregado
+        ordr_id: Encomendar
+        ordritem_id: Item de encomenda
+        role: Função
+        sessionid: ID da sessão
       restaurant:
-        address: ''
+        address: Endereço
         address1: Endereço 1
         address2: Endereço 2
         allowOrdering: Pedidos
@@ -108,7 +108,7 @@ pt:
         displayImagesInPopup: Imagens (popup)
         genid: Gen ID
         image: Imagem
-        image_style_profile: ''
+        image_style_profile: Perfil de estilo de imagem
         imagecontext: Contexto
         inventoryTracking: Inventário
         name: Nome
@@ -135,74 +135,74 @@ pt:
         name: Nome
         size: Tamanho
       smartmenu:
-        menu_id: ''
-        restaurant_id: ''
-        slug: ''
-        tablesetting_id: ''
+        menu_id: Menu
+        restaurant_id: Restaurante
+        slug: Lesma
+        tablesetting_id: Configuração da mesa
       tablesetting:
-        capacity: ''
-        description: ''
-        name: ''
-        status: ''
-        tabletype: ''
+        capacity: Capacidade
+        description: Descrição
+        name: Nome
+        status: Estado
+        tabletype: Tipo de tabela
       tag:
-        description: ''
-        name: ''
+        description: Descrição
+        name: Nome
       tax:
         name: Nome
         taxPercentage: Percentagem
         taxType: Tipo
-        taxpercentage: ''
-        taxtype: ''
+        taxpercentage: Percentagem de imposto
+        taxtype: Tipo de imposto
       testimonial:
-        restaurant_id: ''
-        testimonial: ''
-        user_id: ''
+        restaurant_id: Restaurante
+        testimonial: Testemunho
+        user_id: Utilizador
       tip:
-        percentage: ''
+        percentage: Percentagem
       track:
-        description: ''
-        externalid: ''
-        image: ''
-        name: ''
-        restaurant_id: ''
-        sequence: ''
+        description: Descrição
+        externalid: ID externa
+        image: Imagem
+        name: Nome
+        restaurant_id: Restaurante
+        sequence: Sequência
       userplan:
-        plan_id: ''
+        plan_id: Plano
     errors:
-      format: ''
+      format: "%{atributo} %{mensagem}"
       messages:
-        blank: ''
-        greater_than: ''
-        greater_than_or_equal_to: ''
-        invalid: ''
-        less_than: ''
-        less_than_or_equal_to: ''
-        not_a_number: ''
-        taken: ''
+        blank: não pode estar em branco
+        greater_than: deve ser superior a %{count}
+        greater_than_or_equal_to: deve ser maior ou igual a %{count}
+        invalid: é inválido
+        less_than: deve ser inferior a %{count}
+        less_than_or_equal_to: deve ser menor ou igual a %{count}
+        not_a_number: não é um número
+        taken: já foi tomada
         too_long:
-          one: ''
-          other: ''
+          one: é demasiado longo (o máximo é 1 carácter)
+          other: é demasiado longo (o máximo é %{count} caracteres)
         too_short:
-          one: ''
-          other: ''
+          one: é demasiado curto (o mínimo é 1 carácter)
+          other: é demasiado curto (o mínimo é %{count} caracteres)
     models:
-      allergyn: ''
-      genimage: ''
-      ingredient: ''
-      inventory: ''
-      menu: ''
-      menuavailability: ''
-      menuitem: ''
-      menusection: ''
-      metric: ''
-      ordr: ''
-      restaurant: ''
-      restaurantavailability: ''
-      size: ''
-      smartmenu: ''
-      tablesetting: ''
-      tag: ''
-      testimonial: ''
-      track: ''
-      userplan: ''
+      allergyn: Alergénio
+      genimage: Imagem gerada
+      ingredient: Ingrediente
+      inventory: Inventário
+      menu: Menu
+      menuavailability: Disponibilidade do menu
+      menuitem: Item do menu
+      menusection: Secção do menu
+      metric: Métrica
+      ordr: Encomendar
+      restaurant: Restaurante
+      restaurantavailability: Disponibilidade do restaurante
+      size: Tamanho
+      smartmenu: Smartmenu
+      tablesetting: Configuração da mesa
+      tag: Etiqueta
+      testimonial: Testemunho
+      track: Pista
+      userplan: Plano do utilizador

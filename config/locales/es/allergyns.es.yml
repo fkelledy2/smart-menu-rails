@@ -2,39 +2,39 @@
 es:
   allergyns:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: El alérgeno se ha creado correctamente.
+      deleted: El alérgeno se ha eliminado correctamente.
+      updated: El alérgeno se ha actualizado correctamente.
     edit:
-      allergyns: ''
-      edit_allergyn: ''
-      description: ''
-      cancel: ''
-      confirm_delete: ''
-      delete: ''
-      allergyn_details: ''
-    form:
-      name: ''
-      name_placeholder: ''
-      name_help: ''
-      description: ''
-      description_placeholder: ''
-      description_help: ''
-      symbol: ''
-      symbol_placeholder: ''
-      symbol_help: ''
-    index:
+      allergyn_details: Detalles sobre alérgenos
       allergyns: Alérgenos
-      description: ''
-      back: ''
-      new_allergyn: ''
-      all_allergyns: ''
-    new:
-      allergyns: ''
-      new: ''
-      new_allergyn: ''
-      description: ''
       cancel: Cancelar
-      allergyn_details: ''
+      confirm_delete: "¿Suprimir este alérgeno?"
+      delete: Borrar
+      description: Actualizar los datos sobre alérgenos
+      edit_allergyn: Editar Alérgeno
+    form:
+      description: Descripción
+      description_help: 'Opcional: Información adicional sobre el alérgeno'
+      description_placeholder: Detalles opcionales sobre este alérgeno...
+      name: Nombre del alérgeno
+      name_help: El nombre del alérgeno
+      name_placeholder: por ejemplo, cacahuetes, productos lácteos, gluten
+      symbol: Símbolo
+      symbol_help: 'Opcional: Emoji o símbolo corto para representar este alérgeno'
+      symbol_placeholder: "por ejemplo, \U0001F95C, \U0001F95B, \U0001F33E"
+    index:
+      all_allergyns: Todos los alérgenos
+      allergyns: Alérgenos
+      back: Volver
+      description: Gestionar la información sobre alérgenos de los menús
+      new_allergyn: Nuevo alérgeno
+    new:
+      allergyn_details: Detalles sobre alérgenos
+      allergyns: Alérgenos
+      cancel: Cancelar
+      description: Crear un nuevo alérgeno para los platos del menú
+      new: Nuevo
+      new_allergyn: Nuevo alérgeno
     show:
       allergyn: Mostrar alérgeno

@@ -1,59 +1,5 @@
 ---
 hu:
-  time:
-    formats:
-      default: "%a, %d %b %Y %H:%M:%S %z"
-      short: "%d %b %H:%M"
-      long: "%B %d, %Y %H:%M"
-    date:
-      formats:
-        default: "%Y. %m. %d."
-        short: "%d %b"
-        long: "%B %d, %Y"
-      abbr_day_names:
-      - v
-      - h
-      - k
-      - sze
-      - cs
-      - p
-      - szo
-      abbr_month_names:
-      - ''
-      - jan
-      - feb
-      - márc
-      - ápr
-      - máj
-      - jún
-      - júl
-      - aug
-      - szept
-      - okt
-      - nov
-      - dec
-      day_names:
-      - vasárnap
-      - hétfő
-      - kedd
-      - szerda
-      - csütörtök
-      - péntek
-      - szombat
-      month_names:
-      - ''
-      - január
-      - február
-      - március
-      - április
-      - május
-      - június
-      - július
-      - augusztus
-      - szeptember
-      - október
-      - november
-      - december
   activerecord:
     attributes:
       employee:
@@ -63,24 +9,24 @@ hu:
       menu:
         restaurant: Étterem
         sequence: Megjelenítési sorrend
+      menuavailability:
+        endmin: ''
+        menu: ''
+        startmin: ''
       menuitem:
-        sequence: Megjelenítési sorrend
         ingredients: ''
         menusection_id: ''
+        sequence: Megjelenítési sorrend
         tags: ''
         variantPricing: ''
       menusection:
         menu: Menü
         sequence: Megjelenítési sorrend
-      menuavailability:
-        endmin: ''
-        menu: ''
-        startmin: ''
       restaurant:
         capacity: ''
+        covercharge: ''
         music: ''
         tips: ''
-        covercharge: ''
       restaurantavailability:
         endmin: ''
         restaurant: ''
@@ -101,6 +47,55 @@ hu:
       deactivate: Deaktiválás
     new:
       allergyn: Új allergén
+  date:
+    abbr_day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    abbr_month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    formats:
+      default: ''
+      long: ''
+      short: ''
+    month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
   devise:
     registrations:
       edit:
@@ -108,16 +103,67 @@ hu:
         password: Jelszó
         passwordHelp: ''
         selectPlan: ''
+  employees:
+    form:
+      selectRestaurant: ''
+    new:
+      cancel: ''
+  feature1:
+    key: ''
+  feature2:
+    key: ''
+  feature3:
+    key: ''
+  feature4:
+    key: ''
+  feature5:
+    key: ''
+  feature6:
+    key: ''
+  genimages:
+    edit:
+      genimage: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      genimage: ''
+      genimages: ''
+    new:
+      cancel: ''
+      genimage: ''
+    show:
+      genimage: ''
   home:
     index:
       actions: Műveletek
-      signup: Regisztráció
       activate: ''
       deactivate: ''
       emailAddress: ''
       featureDescription1: ''
       featureTitle1: ''
       message: ''
+      signup: Regisztráció
+  ingredients:
+    edit:
+      ingredient: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      ingredient: ''
+      ingredients: ''
+    new:
+      cancel: ''
+      ingredient: ''
+    show:
+      ingredient: ''
   inventories:
     index:
       activate: Aktiválás
@@ -125,11 +171,11 @@ hu:
   menuavailabilities:
     edit:
       menuAvailability: Elérhetőség szerkesztése
+    form:
+      errors: ''
     index:
       activate: Nyitás
       deactivate: Zárás
-    form:
-      errors: ''
   menuitems:
     edit:
       menuItem: Menü elem szerkesztése
@@ -141,9 +187,9 @@ hu:
       deactivate: Deaktiválás
   menus:
     form:
+      pdfMenuScan: ''
       preview: Előnézet
       selectRestaurant: Válasszon éttermet...
-      pdfMenuScan: ''
     index:
       activate: Aktiválás
       deactivate: Deaktiválás
@@ -165,11 +211,11 @@ hu:
   menusections:
     edit:
       menuSection: Menü szekció szerkesztése
+    form:
+      errors: ''
     index:
       activate: Aktiválás
       deactivate: Deaktiválás
-    form:
-      errors: ''
     showInventories:
       actions: ''
       activate: ''
@@ -178,40 +224,136 @@ hu:
       actions: ''
       activate: ''
       deactivate: ''
+  metrics:
+    edit:
+      metric: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      metric: ''
+      metrics: ''
+    new:
+      cancel: ''
+      metric: ''
+    show:
+      metric: ''
+  number:
+    currency:
+      format:
+        delimiter: ''
+        format: ''
+        precision: ''
+        separator: ''
+        unit: ''
+  ocr_menu_imports:
+    create:
+      success: ''
+    edit:
+      ocrMenuImport: ''
+    form:
+      cancel: ''
+      import: ''
+      save: ''
+    index:
+      activate: ''
+      deactivate: ''
+      ocrMenuImport: ''
+      ocrMenuImports: ''
+    new:
+      ocrMenuImport: ''
+    show:
+      ocrMenuImport: ''
+  orders:
+    completed: ''
+    paid: ''
+    payment: ''
+    pending: ''
+    subtotal: ''
+    tax: ''
+    tip: ''
+    total: ''
+  ordrs:
+    index:
+      order: ''
+    show:
+      order: ''
+      table: ''
+  plan:
+    business:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: ''
+    call: ''
+    enterprise:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: ''
+    pro:
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      key: ''
+    register: ''
+    starter:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: ''
+    trial:
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      key: ''
   restaurantavailabilities:
     form:
-      selectRestaurant: Válasszon éttermet...
       errors: ''
+      selectRestaurant: Válasszon éttermet...
     index:
       activate: Nyitás
       deactivate: Zárás
     new:
       cancel: Mégse
   restaurants:
+    currency: ''
+    currency_symbol: ''
     edit:
       restaurant: Étterem szerkesztése
     form:
-      generateImage: Kép generálása
       errors: ''
+      generateImage: Kép generálása
     index:
+      actions: ''
       activate: Aktiválás
       deactivate: Deaktiválás
       restaurant: Étterem
-      actions: ''
     new:
       cancel: Mégse
     show:
-      name: Név
-      restaurant: Étterem megtekintése
       address1: ''
       address2: ''
       city: ''
       currency: ''
       description: ''
+      name: Név
       postcode: ''
+      restaurant: Étterem megtekintése
       state: ''
-    currency: ''
-    currency_symbol: ''
     showAllergyns:
       actions: ''
       activate: ''
@@ -273,19 +415,19 @@ hu:
     navbar:
       allergyns: Allergének
       employees: Dolgozók
+      inventories: ''
+      menuAvailability: ''
       menuItems: Menü elemek
+      menuSections: ''
       menus: Menük
       openingHours: Nyitvatartás
+      orderItems: ''
       orders: Rendelések
       sizes: Méretek
       tableSettings: Asztal beállítások
       taxes: Adók
       tips: Borravalók
       whatsNew: Újdonságok
-      inventories: ''
-      menuAvailability: ''
-      menuSections: ''
-      orderItems: ''
   sizes:
     edit:
       size: Méret szerkesztése
@@ -300,18 +442,8 @@ hu:
     new:
       size: Új méret
   smartmenus:
-    index:
-      activate: Aktiválás
-      deactivate: Deaktiválás
-      menu: Menü
-      menus: Menük
-      unavailable: ''
-    orderCustomer:
-      takePayment: Fizetés
-    show:
-      menu: Menü megtekintése
-      table: Asztal
     alcoholic: Alkoholos
+    alcoholic_tooltip: ''
     edit:
       menu: ''
     form:
@@ -320,23 +452,33 @@ hu:
       errors: ''
       preview: ''
       selectRestaurant: ''
+    index:
+      activate: Aktiválás
+      deactivate: Deaktiválás
+      menu: Menü
+      menus: Menük
+      unavailable: ''
     new:
       cancel: ''
       menu: ''
+    orderCustomer:
+      takePayment: Fizetés
     orderStaff:
       staffAlerted: ''
+    show:
+      menu: Menü megtekintése
+      table: Asztal
     showMenuBanner:
       table: ''
     showModals:
       menuItem: ''
-    alcoholic_tooltip: ''
   tablesettings:
     form:
       delete: Törlés
-      save: Mentés
-      sure: Biztos vagy benne?
       errors: ''
+      save: Mentés
       selectRestaurant: ''
+      sure: Biztos vagy benne?
     index:
       tablesetting: Asztal
       tablesettings: Asztalok
@@ -344,166 +486,6 @@ hu:
       cancel: Mégse
     show:
       tablesetting: Asztal megtekintése
-  taxes:
-    edit:
-      tax: Adó szerkesztése
-    form:
-      delete: Törlés
-      save: Mentés
-      sure: Biztos vagy benne?
-      errors: ''
-      selectRestaurant: ''
-    index:
-      tax: Adó
-      activate: ''
-      deactivate: ''
-    new:
-      tax: Új adó
-  tips:
-    edit:
-      tip: Borravaló szerkesztése
-    form:
-      delete: Törlés
-      save: Mentés
-      sure: Biztos vagy benne?
-      errors: ''
-      selectRestaurant: ''
-    index:
-      tip: Borravaló
-      activate: ''
-      deactivate: ''
-    new:
-      tip: Új borravaló
-  employees:
-    form:
-      selectRestaurant: ''
-    new:
-      cancel: ''
-  feature1:
-    key: ''
-  feature2:
-    key: ''
-  feature3:
-    key: ''
-  feature4:
-    key: ''
-  feature5:
-    key: ''
-  feature6:
-    key: ''
-  genimages:
-    edit:
-      genimage: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: ''
-      deactivate: ''
-      genimage: ''
-      genimages: ''
-    new:
-      cancel: ''
-      genimage: ''
-    show:
-      genimage: ''
-  ingredients:
-    edit:
-      ingredient: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: ''
-      deactivate: ''
-      ingredient: ''
-      ingredients: ''
-    new:
-      cancel: ''
-      ingredient: ''
-    show:
-      ingredient: ''
-  metrics:
-    edit:
-      metric: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: ''
-      deactivate: ''
-      metric: ''
-      metrics: ''
-    new:
-      cancel: ''
-      metric: ''
-    show:
-      metric: ''
-  ocr_menu_imports:
-    create:
-      success: ''
-    edit:
-      ocrMenuImport: ''
-    form:
-      cancel: ''
-      import: ''
-      save: ''
-    index:
-      activate: ''
-      deactivate: ''
-      ocrMenuImport: ''
-      ocrMenuImports: ''
-    new:
-      ocrMenuImport: ''
-    show:
-      ocrMenuImport: ''
-  ordrs:
-    index:
-      order: ''
-    show:
-      order: ''
-      table: ''
-  plan:
-    business:
-      key: ''
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    call: ''
-    enterprise:
-      key: ''
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    pro:
-      key: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-    register: ''
-    starter:
-      key: ''
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    trial:
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      key: ''
   tags:
     edit:
       tag: ''
@@ -514,6 +496,90 @@ hu:
       tag: ''
     show:
       tag: ''
+  taxes:
+    edit:
+      tax: Adó szerkesztése
+    form:
+      delete: Törlés
+      errors: ''
+      save: Mentés
+      selectRestaurant: ''
+      sure: Biztos vagy benne?
+    index:
+      activate: ''
+      deactivate: ''
+      tax: Adó
+    new:
+      tax: Új adó
+  time:
+    date:
+      abbr_day_names:
+      - v
+      - h
+      - k
+      - sze
+      - cs
+      - p
+      - szo
+      abbr_month_names:
+      - ''
+      - jan
+      - feb
+      - márc
+      - ápr
+      - máj
+      - jún
+      - júl
+      - aug
+      - szept
+      - okt
+      - nov
+      - dec
+      day_names:
+      - vasárnap
+      - hétfő
+      - kedd
+      - szerda
+      - csütörtök
+      - péntek
+      - szombat
+      formats:
+        default: "%Y. %m. %d."
+        long: "%B %d, %Y"
+        short: "%d %b"
+      month_names:
+      - ''
+      - január
+      - február
+      - március
+      - április
+      - május
+      - június
+      - július
+      - augusztus
+      - szeptember
+      - október
+      - november
+      - december
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      long: "%B %d, %Y %H:%M"
+      short: "%d %b %H:%M"
+  tips:
+    edit:
+      tip: Borravaló szerkesztése
+    form:
+      delete: Törlés
+      errors: ''
+      save: Mentés
+      selectRestaurant: ''
+      sure: Biztos vagy benne?
+    index:
+      activate: ''
+      deactivate: ''
+      tip: Borravaló
+    new:
+      tip: Új borravaló
   tracks:
     edit:
       track: ''
@@ -534,69 +600,3 @@ hu:
       userplan: ''
     show:
       userplan: ''
-  orders:
-    total: ''
-    subtotal: ''
-    tax: ''
-    tip: ''
-    payment: ''
-    paid: ''
-    pending: ''
-    completed: ''
-  number:
-    currency:
-      format:
-        unit: ''
-        precision: ''
-        separator: ''
-        delimiter: ''
-        format: ''
-  date:
-    formats:
-      default: ''
-      short: ''
-      long: ''
-    abbr_day_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    abbr_month_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    day_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    month_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''

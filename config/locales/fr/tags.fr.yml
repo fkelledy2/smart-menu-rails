@@ -2,14 +2,14 @@
 fr:
   tags:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: L'étiquette a été créée avec succès.
+      deleted: L'étiquette a été supprimée avec succès.
+      updated: L'étiquette a été mise à jour avec succès.
     edit:
-      title: ''
+      title: Modifier l'étiquette
     form:
       delete: Supprimer
-      errors: ''
+      errors: Erreurs
       save: Enregistrer
       sure: Êtes-vous sûr ?
     index:
@@ -17,10 +17,10 @@ fr:
       tags: Étiquettes
     new:
       cancel: Annuler
-      title: ''
+      title: Nouvelle étiquette
     show:
-      show_tag: ''
+      show_tag: Afficher l'étiquette
     tag:
-      description: ''
-      menuitem: ''
-      name: ''
+      description: 'Description :'
+      menuitem: 'Point de menu :'
+      name: 'Nom :'

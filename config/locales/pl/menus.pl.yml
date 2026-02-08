@@ -2,17 +2,17 @@
 pl:
   menus:
     controller:
+      ai_image_generation_queued: Generowanie obrazów AI zostało ustawione w kolejce
+        dla pozycji tego menu.
       created: Menu zostało pomyślnie utworzone.
       deleted: Menu zostało pomyślnie usunięte.
       image_regeneration_queued: Regeneracja obrazu w kolejce dla %{count} pozycji
         w tym menu.
       image_regeneration_queued_rake: Zadanie regeneracji obrazu zostało ustawione
         w kolejce dla tego menu.
+      updated: Menu zostało pomyślnie zaktualizowane.
       webp_regeneration_queued: Regeneracja pochodnej WebP została ustawiona w kolejce
         dla obrazów tego menu.
-      ai_image_generation_queued: Generowanie obrazów AI zostało ustawione w kolejce
-        dla pozycji tego menu.
-      updated: Menu zostało pomyślnie zaktualizowane.
     edit:
       availabilities: Dostępność
       menu: Menu
@@ -68,10 +68,3 @@ pl:
       availabilities: Dostępność
     showMenusections:
       sections: Sekcje
-    sections:
-      settings_2025:
-        disabled_at_restaurant: Niepełnosprawni na poziomie restauracji
-        parent_restriction: 'Uwaga:'
-        parent_restriction_desc: Ustawień wyłączonych na poziomie restauracji nie
-          można włączyć dla poszczególnych menu. Należy je najpierw włączyć na poziomie
-          restauracji.

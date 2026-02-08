@@ -1,59 +1,5 @@
 ---
 pt:
-  time:
-    formats:
-      default: "%a, %d %b %Y %H:%M:%S %z"
-      short: "%d %b %H:%M"
-      long: "%d de %B de %Y %H:%M"
-    date:
-      formats:
-        default: "%d/%m/%Y"
-        short: "%d %b"
-        long: "%d de %B de %Y"
-      abbr_day_names:
-      - dom.
-      - seg.
-      - ter.
-      - qua.
-      - qui.
-      - sex.
-      - sáb.
-      abbr_month_names:
-      - ''
-      - jan.
-      - fev.
-      - mar.
-      - abr.
-      - mai.
-      - jun.
-      - jul.
-      - ago.
-      - set.
-      - out.
-      - nov.
-      - dez.
-      day_names:
-      - domingo
-      - segunda-feira
-      - terça-feira
-      - quarta-feira
-      - quinta-feira
-      - sexta-feira
-      - sábado
-      month_names:
-      - ''
-      - janeiro
-      - fevereiro
-      - março
-      - abril
-      - maio
-      - junho
-      - julho
-      - agosto
-      - setembro
-      - outubro
-      - novembro
-      - dezembro
   activerecord:
     attributes:
       employee:
@@ -63,24 +9,24 @@ pt:
       menu:
         restaurant: Restaurante
         sequence: Ordem de apresentação
+      menuavailability:
+        endmin: Minuto de fecho
+        menu: Menu
+        startmin: Minuto de abertura
       menuitem:
-        sequence: Ordem de apresentação
         ingredients: Ingredientes
         menusection_id: Secção
+        sequence: Ordem de apresentação
         tags: Etiquetas
         variantPricing: Preços de variantes
       menusection:
         menu: Menu
         sequence: Ordem de apresentação
-      menuavailability:
-        endmin: Minuto de fecho
-        menu: Menu
-        startmin: Minuto de abertura
       restaurant:
         capacity: Capacidade
+        covercharge: ''
         music: Música
         tips: Gorjetas
-        covercharge: ''
       restaurantavailability:
         endmin: Minuto de fecho
         restaurant: Restaurante
@@ -101,6 +47,55 @@ pt:
       deactivate: Desativar
     new:
       allergyn: Novo alergénio
+  date:
+    abbr_day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    abbr_month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    formats:
+      default: ''
+      long: ''
+      short: ''
+    month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
   devise:
     registrations:
       edit:
@@ -108,10 +103,43 @@ pt:
         password: Palavra-passe
         passwordHelp: Deixe em branco se não quiser alterar
         selectPlan: Selecionar plano
+  employees:
+    form:
+      selectRestaurant: Selecionar restaurante...
+    new:
+      cancel: Cancelar
+  feature1:
+    key: Menus Inteligentes
+  feature2:
+    key: Pedidos Personalizados
+  feature3:
+    key: Filtragem de Alergénios
+  feature4:
+    key: Pedidos de Clientes
+  feature5:
+    key: Traduções IA
+  feature6:
+    key: Criação de Imagens IA
+  genimages:
+    edit:
+      genimage: Editar imagem
+    form:
+      delete: Eliminar
+      save: Guardar
+      sure: Tem a certeza?
+    index:
+      activate: Ativar
+      deactivate: Desativar
+      genimage: Imagem
+      genimages: Imagens
+    new:
+      cancel: Cancelar
+      genimage: Nova imagem
+    show:
+      genimage: Mostrar imagem
   home:
     index:
       actions: Ações
-      signup: Registar
       activate: Ativar
       deactivate: Desativar
       emailAddress: Endereço de email
@@ -120,6 +148,24 @@ pt:
         pagar - sem menus impressos, terminais ou complicações.
       featureTitle1: Conforto sem contacto
       message: Mensagem
+      signup: Registar
+  ingredients:
+    edit:
+      ingredient: Editar ingrediente
+    form:
+      delete: Eliminar
+      save: Guardar
+      sure: Tem a certeza?
+    index:
+      activate: Ativar
+      deactivate: Desativar
+      ingredient: Ingrediente
+      ingredients: Ingredientes
+    new:
+      cancel: Cancelar
+      ingredient: Novo ingrediente
+    show:
+      ingredient: Mostrar ingrediente
   inventories:
     index:
       activate: Ativar
@@ -127,11 +173,11 @@ pt:
   menuavailabilities:
     edit:
       menuAvailability: Editar disponibilidade
+    form:
+      errors: Erros
     index:
       activate: Abrir
       deactivate: Fechar
-    form:
-      errors: Erros
   menuitems:
     edit:
       menuItem: Editar item
@@ -143,9 +189,9 @@ pt:
       deactivate: Desativar
   menus:
     form:
+      pdfMenuScan: PDF original
       preview: Pré-visualização
       selectRestaurant: Selecionar restaurante...
-      pdfMenuScan: PDF original
     index:
       activate: Ativar
       deactivate: Desativar
@@ -167,11 +213,11 @@ pt:
   menusections:
     edit:
       menuSection: Editar secção
+    form:
+      errors: Erros
     index:
       activate: Ativar
       deactivate: Desativar
-    form:
-      errors: Erros
     showInventories:
       actions: Ações
       activate: Ativar
@@ -180,40 +226,136 @@ pt:
       actions: Ações
       activate: Ativar
       deactivate: Desativar
+  metrics:
+    edit:
+      metric: Editar métrica
+    form:
+      delete: Eliminar
+      save: Guardar
+      sure: Tem a certeza?
+    index:
+      activate: Ativar
+      deactivate: Desativar
+      metric: Métrica
+      metrics: Métricas
+    new:
+      cancel: Cancelar
+      metric: Nova métrica
+    show:
+      metric: Mostrar métrica
+  number:
+    currency:
+      format:
+        delimiter: ''
+        format: ''
+        precision: ''
+        separator: ''
+        unit: ''
+  ocr_menu_imports:
+    create:
+      success: Importação de menu iniciada com sucesso.
+    edit:
+      ocrMenuImport: Editar importação
+    form:
+      cancel: Cancelar
+      import: Importar
+      save: Guardar
+    index:
+      activate: Ativar
+      deactivate: Desativar
+      ocrMenuImport: Importação OCR
+      ocrMenuImports: Importações
+    new:
+      ocrMenuImport: Nova importação
+    show:
+      ocrMenuImport: Mostrar importação
+  orders:
+    completed: Concluído
+    paid: Pago
+    payment: Pagamento
+    pending: Pendente
+    subtotal: Subtotal
+    tax: IVA
+    tip: Gorjeta
+    total: Total
+  ordrs:
+    index:
+      order: Pedido
+    show:
+      order: Pedido
+      table: Mesa
+  plan:
+    business:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: Business
+    call: Ligar
+    enterprise:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: Enterprise
+    pro:
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      key: Pro
+    register: Registar
+    starter:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: Starter
+    trial:
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      key: ''
   restaurantavailabilities:
     form:
-      selectRestaurant: Selecionar restaurante...
       errors: Erros
+      selectRestaurant: Selecionar restaurante...
     index:
       activate: Abrir
       deactivate: Fechar
     new:
       cancel: Cancelar
   restaurants:
+    currency: EUR (€)
+    currency_symbol: "€"
     edit:
       restaurant: ''
     form:
-      generateImage: ''
       errors: ''
+      generateImage: ''
     index:
+      actions: ''
       activate: ''
       deactivate: ''
       restaurant: ''
-      actions: ''
     new:
       cancel: ''
     show:
-      name: ''
-      restaurant: ''
       address1: ''
       address2: ''
       city: ''
       currency: ''
       description: ''
+      name: ''
       postcode: ''
+      restaurant: ''
       state: ''
-    currency: EUR (€)
-    currency_symbol: "€"
     showAllergyns:
       actions: ''
       activate: ''
@@ -275,19 +417,19 @@ pt:
     navbar:
       allergyns: Alergénios
       employees: Funcionários
+      inventories: Inventários
+      menuAvailability: Disponibilidade menu
       menuItems: Items
+      menuSections: Secções
       menus: Menus
       openingHours: Horário de funcionamento
+      orderItems: Items pedidos
       orders: Pedidos
       sizes: Tamanhos
       tableSettings: Mesas
       taxes: Impostos
       tips: Gorjetas
       whatsNew: Novidades
-      inventories: Inventários
-      menuAvailability: Disponibilidade menu
-      menuSections: Secções
-      orderItems: Items pedidos
   sizes:
     edit:
       size: Editar tamanho
@@ -302,18 +444,8 @@ pt:
     new:
       size: Novo tamanho
   smartmenus:
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      menu: Menu
-      menus: Menus
-      unavailable: O menu não está disponível atualmente.
-    orderCustomer:
-      takePayment: Pagar
-    show:
-      menu: Mostrar menu
-      table: Mesa
     alcoholic: Alcoólico
+    alcoholic_tooltip: ''
     edit:
       menu: Editar menu
     form:
@@ -322,23 +454,33 @@ pt:
       errors: Erros
       preview: Pré-visualização
       selectRestaurant: Selecionar restaurante...
+    index:
+      activate: Ativar
+      deactivate: Desativar
+      menu: Menu
+      menus: Menus
+      unavailable: O menu não está disponível atualmente.
     new:
       cancel: Cancelar
       menu: Novo menu
+    orderCustomer:
+      takePayment: Pagar
     orderStaff:
       staffAlerted: Staff alertado
+    show:
+      menu: Mostrar menu
+      table: Mesa
     showMenuBanner:
       table: Mesa
     showModals:
       menuItem: Item
-    alcoholic_tooltip: ''
   tablesettings:
     form:
       delete: Eliminar
-      save: Guardar
-      sure: Tem a certeza?
       errors: Erros
+      save: Guardar
       selectRestaurant: Selecionar restaurante...
+      sure: Tem a certeza?
     index:
       tablesetting: Mesa
       tablesettings: Mesas
@@ -346,166 +488,6 @@ pt:
       cancel: Cancelar
     show:
       tablesetting: Mostrar mesa
-  taxes:
-    edit:
-      tax: Editar imposto
-    form:
-      delete: Eliminar
-      save: Guardar
-      sure: Tem a certeza?
-      errors: Erros
-      selectRestaurant: Selecionar restaurante...
-    index:
-      tax: Imposto
-      activate: Ativar
-      deactivate: Desativar
-    new:
-      tax: Novo imposto
-  tips:
-    edit:
-      tip: Editar gorjeta
-    form:
-      delete: Eliminar
-      save: Guardar
-      sure: Tem a certeza?
-      errors: Erros
-      selectRestaurant: Selecionar restaurante...
-    index:
-      tip: Gorjeta
-      activate: Ativar
-      deactivate: Desativar
-    new:
-      tip: Nova gorjeta
-  employees:
-    form:
-      selectRestaurant: Selecionar restaurante...
-    new:
-      cancel: Cancelar
-  feature1:
-    key: Menus Inteligentes
-  feature2:
-    key: Pedidos Personalizados
-  feature3:
-    key: Filtragem de Alergénios
-  feature4:
-    key: Pedidos de Clientes
-  feature5:
-    key: Traduções IA
-  feature6:
-    key: Criação de Imagens IA
-  genimages:
-    edit:
-      genimage: Editar imagem
-    form:
-      delete: Eliminar
-      save: Guardar
-      sure: Tem a certeza?
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      genimage: Imagem
-      genimages: Imagens
-    new:
-      cancel: Cancelar
-      genimage: Nova imagem
-    show:
-      genimage: Mostrar imagem
-  ingredients:
-    edit:
-      ingredient: Editar ingrediente
-    form:
-      delete: Eliminar
-      save: Guardar
-      sure: Tem a certeza?
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      ingredient: Ingrediente
-      ingredients: Ingredientes
-    new:
-      cancel: Cancelar
-      ingredient: Novo ingrediente
-    show:
-      ingredient: Mostrar ingrediente
-  metrics:
-    edit:
-      metric: Editar métrica
-    form:
-      delete: Eliminar
-      save: Guardar
-      sure: Tem a certeza?
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      metric: Métrica
-      metrics: Métricas
-    new:
-      cancel: Cancelar
-      metric: Nova métrica
-    show:
-      metric: Mostrar métrica
-  ocr_menu_imports:
-    create:
-      success: Importação de menu iniciada com sucesso.
-    edit:
-      ocrMenuImport: Editar importação
-    form:
-      cancel: Cancelar
-      import: Importar
-      save: Guardar
-    index:
-      activate: Ativar
-      deactivate: Desativar
-      ocrMenuImport: Importação OCR
-      ocrMenuImports: Importações
-    new:
-      ocrMenuImport: Nova importação
-    show:
-      ocrMenuImport: Mostrar importação
-  ordrs:
-    index:
-      order: Pedido
-    show:
-      order: Pedido
-      table: Mesa
-  plan:
-    business:
-      key: Business
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    call: Ligar
-    enterprise:
-      key: Enterprise
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    pro:
-      key: Pro
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-    register: Registar
-    starter:
-      key: Starter
-      attribut6: ''
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      attribute4: ''
-      attribute5: ''
-    trial:
-      attribute1: ''
-      attribute2: ''
-      attribute3: ''
-      key: ''
   tags:
     edit:
       tag: Editar etiqueta
@@ -516,6 +498,90 @@ pt:
       tag: Nova etiqueta
     show:
       tag: Mostrar etiqueta
+  taxes:
+    edit:
+      tax: Editar imposto
+    form:
+      delete: Eliminar
+      errors: Erros
+      save: Guardar
+      selectRestaurant: Selecionar restaurante...
+      sure: Tem a certeza?
+    index:
+      activate: Ativar
+      deactivate: Desativar
+      tax: Imposto
+    new:
+      tax: Novo imposto
+  time:
+    date:
+      abbr_day_names:
+      - dom.
+      - seg.
+      - ter.
+      - qua.
+      - qui.
+      - sex.
+      - sáb.
+      abbr_month_names:
+      - ''
+      - jan.
+      - fev.
+      - mar.
+      - abr.
+      - mai.
+      - jun.
+      - jul.
+      - ago.
+      - set.
+      - out.
+      - nov.
+      - dez.
+      day_names:
+      - domingo
+      - segunda-feira
+      - terça-feira
+      - quarta-feira
+      - quinta-feira
+      - sexta-feira
+      - sábado
+      formats:
+        default: "%d/%m/%Y"
+        long: "%d de %B de %Y"
+        short: "%d %b"
+      month_names:
+      - ''
+      - janeiro
+      - fevereiro
+      - março
+      - abril
+      - maio
+      - junho
+      - julho
+      - agosto
+      - setembro
+      - outubro
+      - novembro
+      - dezembro
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      long: "%d de %B de %Y %H:%M"
+      short: "%d %b %H:%M"
+  tips:
+    edit:
+      tip: Editar gorjeta
+    form:
+      delete: Eliminar
+      errors: Erros
+      save: Guardar
+      selectRestaurant: Selecionar restaurante...
+      sure: Tem a certeza?
+    index:
+      activate: Ativar
+      deactivate: Desativar
+      tip: Gorjeta
+    new:
+      tip: Nova gorjeta
   tracks:
     edit:
       track: Editar faixa
@@ -536,69 +602,3 @@ pt:
       userplan: Novo plano de utilizador
     show:
       userplan: Mostrar plano de utilizador
-  orders:
-    total: Total
-    subtotal: Subtotal
-    tax: IVA
-    tip: Gorjeta
-    payment: Pagamento
-    paid: Pago
-    pending: Pendente
-    completed: Concluído
-  number:
-    currency:
-      format:
-        unit: ''
-        precision: ''
-        separator: ''
-        delimiter: ''
-        format: ''
-  date:
-    formats:
-      default: ''
-      short: ''
-      long: ''
-    abbr_day_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    abbr_month_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    day_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    month_names:
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''

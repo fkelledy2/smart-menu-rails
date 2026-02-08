@@ -1,127 +1,132 @@
 ---
 hu:
   smartmenus:
+    alcohol:
+      acknowledge_btn: A korellenőrzés nyugtázása
+      acknowledged: Életkor-ellenőrzés tudomásul véve
+      flag: Alkohol
+      non_alcoholic: Alkoholmentes
+      policy_blocked: Az alkoholárusítást jelenleg a szabályzat tiltja.
+      sales_disabled: Ebben az étteremben tilos az alkoholárusítás.
+      verify_age: Kérjük, ellenőrizze a vendég életkorát, mielőtt alkoholtartalmú
+        italokat szolgál fel.
+      zero_abv_short: 0.0%
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Az intelligens menü sikeresen létrejött.
+      deleted: A Smartmenu sikeresen törlődött.
+      updated: Az intelligens menü sikeresen frissült.
     edit:
-      title: ''
+      title: Smartmenu szerkesztése
+    empty_states:
+      adjust_filters: Szűrők beállítása
+      browse_menu: Menü böngészése
+      cart_empty: A kosár üres
+      cart_empty_description: Kezdje el hozzáadni az étlapunk ízletes elemeit!
+      error_description: Gondjaink vannak a tartalom betöltésével. Kérjük, próbálja
+        meg újra.
+      error_occurred: Valami rosszul sült el
+      no_items_filtered: Nincs olyan elem, amely megfelelne a szűrőinek
+      no_items_filtered_description: Próbálja meg beállítani az allergénszűrőket,
+        hogy több terméket láthasson.
+      no_menu_description: Továbbra is bővítjük az étlapunkat. Kérjük, nézzen vissza
+        hamarosan!
+      no_menu_items: Még nincsenek menüpontok
+      no_results: Nincs találat
+      no_results_description: Nem találtunk a keresésednek megfelelő elemeket. Próbáljon
+        ki más kulcsszavakat.
+      no_table_description: Kérjük, válasszon egy asztalt a rendelés megkezdéséhez.
+      no_table_selected: Válassza ki az asztalát
+      order_complete: Rendelés leadva!
+      order_complete_description: A rendelését elküldtük a konyhára. Jó étvágyat!
+      refresh: Frissítés
+      try_again: Próbáld újra
     form:
-      cancel: ''
-      destroy: ''
-      save: ''
-      sure: ''
+      cancel: Törölje
+      destroy: Destroy
+      save: Mentés
+      sure: Biztos vagy benne?
     index:
       smartmenus: Okos menük
+    modal_footer_primary:
+      cancel: Törölje
     new:
-      title: ''
+      title: Új intelligens menü
+    ocr:
+      alcohol:
+        abv: ABV
+        classification: Osztály
+        override_label: Alkohol
+        overrides_hint: A felülbírálatok a közzétételkor érvényesek.
+        review_needed: Felülvizsgálatra szorul
     orderCustomer:
       bill: Számlát kérek
-      items_in_cart: ''
+      items_in_cart: tételek a kosárban
       order: Rendelés
-      staffAlerted: ''
+      staffAlerted: Riasztott személyzet
       startOrder: Rendelés indítása
     orderStaff:
-      bill: ''
-      items_in_cart: ''
-      order: ''
-      startOrder: ''
-      takePayment: ''
+      bill: Bill
+      items_in_cart: tételek a kosárban
+      order: Megrendelés
+      startOrder: Start sorrend
+      takePayment: Fizetés átvétele
     showAllergyns:
-      allergyns: ''
+      allergyns: Allergének
     showCoverCharge:
-      covercharge: ''
-      coverchargeUnit: ''
+      covercharge: Fedezeti díj
+      coverchargeUnit: Fedezeti díj egység
     showMenuBanner:
-      allergyns: ''
+      allergyns: Allergének
     showMenuContentCustomer:
-      search_placeholder: ''
+      search_placeholder: Keresés menüpontok...
     showMenuitem:
-      add_to_order: ''
-      allergyns: ''
-      loading: ''
+      add_to_order: Hozzáadás a megrendeléshez
+      allergyns: Allergének
+      loading: Betöltés...
     showMenuitemHorizontal:
-      loading: ''
+      loading: Betöltés...
     showMenuitemHorizontalActionBar:
-      allergyns: ''
-      order: ''
-      toggle_dropdown: ''
+      allergyns: Allergének
+      order: Megrendelés
+      toggle_dropdown: Dropdown kapcsoló
     showModals:
       add: Név hozzáadása
       addToOrder: Hozzáadás a rendeléshez
-      bill_prefix: ''
+      bill_prefix: 'Bill:'
       cancel: Mégse
       confirmPayment: Fizetés megerősítése
-      cover_charge: ''
-      customiseOrderWithName: ''
-      partySize: ''
-      excluding_tip: ''
+      cover_charge: Fedezeti díj
+      customiseOrderWithName: Adja hozzá a nevét a megrendeléshez
+      excluding_tip: borravaló nélkül
       filterAllergyns: Allergének szűrése
-      filterBy: ''
-      including_tip: ''
-      item: ''
-      name_label: ''
-      nett: ''
-      noneAll: ''
-      order_aria: ''
-      payBill: ''
-      payment_link: ''
+      filterBy: Szűrő
+      including_tip: borravalóval együtt
+      item: Tétel
+      name_label: 'Név:'
+      nett: Nettó
+      noneAll: Egyik sem / Mindegyik
+      order_aria: Megrendelés
+      partySize: A párt mérete
+      payBill: Számla kifizetése
+      payment_link: Fizetési link
       price: Ár
       requestBill: Számlát kérek
-      selected: ''
-      service: ''
+      selected: Kiválasztott
+      service: Szolgáltatás
       start: Rendelés indítása
       startOrder: Új rendelés indítása
       submit: Rendelés beküldése
-      submitted: ''
-      tax: ''
-      tip_options: ''
+      submitted: Beküldve
+      tax: Adó
+      tip_options: Tipp Opciók
       total: Összesen
       yourOrder: Az Ön rendelése
     showTableLocaleSelectorCustomer:
-      table: ''
+      table: Asztal
     showTableLocaleSelectorStaff:
-      table: ''
+      table: Asztal
     smartmenu:
-      menu: ''
-      restaurant: ''
-      slug: ''
-      tablesetting: ''
-    modal_footer_primary:
-      cancel: ''
-    alcohol:
-      flag: ''
-      non_alcoholic: ''
-      zero_abv_short: ''
-      verify_age: ''
-      sales_disabled: ''
-      policy_blocked: ''
-      acknowledge_btn: ''
-      acknowledged: ''
-    ocr:
-      alcohol:
-        override_label: ''
-        abv: ''
-        classification: ''
-        review_needed: ''
-        overrides_hint: ''
-    empty_states:
-      no_menu_items: ''
-      no_menu_description: ''
-      refresh: ''
-      cart_empty: ''
-      cart_empty_description: ''
-      browse_menu: ''
-      no_results: ''
-      no_results_description: ''
-      no_items_filtered: ''
-      no_items_filtered_description: ''
-      adjust_filters: ''
-      no_table_selected: ''
-      no_table_description: ''
-      order_complete: ''
-      order_complete_description: ''
-      error_occurred: ''
-      error_description: ''
-      try_again: ''
+      menu: 'Étlap:'
+      restaurant: 'Étterem:'
+      slug: 'Csiga:'
+      tablesetting: 'Asztalok beállítása:'

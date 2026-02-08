@@ -1,78 +1,90 @@
 ---
 cs:
+  ai_generation:
+    modal:
+      confirm: Potvrdit a spustit
+      last_image: Poslední obrázek
+      progress: Právě se generuje
+      progress_log: Log průběhu
+      title: Generovat AI obrázky
   bar_dashboard:
-    title: Bar dashboard
     metrics:
       pending_tickets: Čekající tikety
       preparing: Příprava
       ready: Připraveno
+    title: Bar dashboard
+  details_2025:
+    menu_go_live_flow: Průběh živého menu
+  edit_2025:
+    onboarding_flow: Průběh přijímání na palubu
+  errors:
+    internal:
+      backtrace: Zpětná stopa
+      description: Omlouváme se, ale něco se pokazilo na naší straně.
+      error_details: Detaily chyby
+      suggestion: Zkuste to prosím později nebo kontaktujte podporu, pokud problém
+        přetrvává.
+      title: Interní chyba serveru
+    not_found:
+      description: Stránka, kterou hledáte, neexistuje.
+      suggestion: Mohla být přesunuta, smazána nebo jste zadali nesprávnou URL.
+      title: Stránka nenalezena
+    unprocessable:
+      description: Požadovaná změna byla zamítnuta.
+      suggestion: Možná jste se pokusili změnit něco, k čemuž nemáte přístup.
+      title: Neplatná entita
+  form_2025:
+    image_settings: Nastavení obrázků
+    menu_details: Podrobnosti o nabídce
+    menu_details_subtitle: Základní informace o vašem menu
+    menu_image: Obrázek nabídky
+  hero_images:
+    form:
+      alt_text_help: Popisný text pro přístupnost
+      alt_text_placeholder: Rušný interiér restaurace s hosty
+      image_url_help: Zadejte úplnou adresu URL obrázku ze serveru Pexels nebo jiného
+        zdroje.
+      image_url_placeholder: https://images.pexels.com/...
+      sequence_help: Pořadí zobrazení (nižší čísla se zobrazují jako první)
+      source_url_help: Odkaz na původní zdrojovou stránku
+      source_url_placeholder: https://www.pexels.com/photo/...
+      status_help: Na domovské stránce se zobrazí pouze schválené obrázky
+    new:
+      title: Nový obrázek hrdiny
   kitchen_dashboard:
-    title: Kuchyňský dashboard
+    buttons:
+      mark_collected: Označit jako vyzvednuto
+      mark_ready: Označit jako připraveno
+      start_preparing: Začít přípravu
     metrics:
       pending_tickets: Čekající tikety
       preparing: Příprava
       ready: Připraveno
       todays_orders: Dnešní objednávky
-    buttons:
-      start_preparing: Začít přípravu
-      mark_ready: Označit jako připraveno
-      mark_collected: Označit jako vyzvednuto
-  errors:
-    not_found:
-      title: Stránka nenalezena
-      description: Stránka, kterou hledáte, neexistuje.
-      suggestion: Mohla být přesunuta, smazána nebo jste zadali nesprávnou URL.
-    unprocessable:
-      title: Neplatná entita
-      description: Požadovaná změna byla zamítnuta.
-      suggestion: Možná jste se pokusili změnit něco, k čemuž nemáte přístup.
-    internal:
-      title: Interní chyba serveru
-      description: Omlouváme se, ale něco se pokazilo na naší straně.
-      suggestion: Zkuste to prosím později nebo kontaktujte podporu, pokud problém
-        přetrvává.
-      error_details: Detaily chyby
-      backtrace: Zpětná stopa
+    title: Kuchyňský dashboard
   menu_performance:
     not_available:
-      title: Údaje o výkonu nejsou k dispozici
       description: 'Nepodařilo se načíst údaje o výkonu tohoto menu. To může být způsobeno:'
       reasons:
       - Menu nenalezeno nebo přístup odepřen
       - Nedostatečná oprávnění
       - Systémová chyba při sběru dat
-  restaurant_analytics:
-    not_available:
-      title: Analytické údaje nejsou k dispozici
-      description: 'Nelze načíst analytická data pro tuto restauraci. To může být
-        způsobeno:'
-      reasons:
-      - Restaurace nenalezena nebo přístup odepřen
-      - Nedostatečná povolení
-      - Chyba systému při sběru dat
-  ai_generation:
-    modal:
-      title: Generovat AI obrázky
-      confirm: Potvrdit a spustit
-      progress: Právě se generuje
-      progress_log: Log průběhu
-      last_image: Poslední obrázek
+      title: Údaje o výkonu nejsou k dispozici
   menuitem_ai:
     modal:
-      title: Generování obrázku
       confirm: Potvrzení a spuštění
-      progress: V současné době generuje
       preview: Náhled obrázku
+      progress: V současné době generuje
+      title: Generování obrázku
   ocr_menu_imports:
     alcohol_override:
-      undecided: Nerozhodnuto
       alcoholic: Alkoholický
       non_alcoholic: Nealkoholický
+      undecided: Nerozhodnuto
     publish:
-      title: Publikovat menu
       submit: Publikovat menu
+      title: Publikovat menu
   offline:
-    title: Jste offline
     available_offline: 'Dostupné offline:'
     items:
     - Informace o restauraci
@@ -81,55 +93,43 @@ cs:
     - Cacheované obrázky
     - Základní analytika
     last_updated: Naposledy aktualizováno
-  smartmenus:
-    skeleton:
-      loading: Načítání položek nabídky...
-    no_image: Žádný obrázek
-  hero_images:
-    new:
-      title: Nový obrázek hrdiny
-    form:
-      image_url_placeholder: https://images.pexels.com/...
-      image_url_help: Zadejte úplnou adresu URL obrázku ze serveru Pexels nebo jiného
-        zdroje.
-      alt_text_placeholder: Rušný interiér restaurace s hosty
-      alt_text_help: Popisný text pro přístupnost
-      sequence_help: Pořadí zobrazení (nižší čísla se zobrazují jako první)
-      status_help: Na domovské stránce se zobrazí pouze schválené obrázky
-      source_url_placeholder: https://www.pexels.com/photo/...
-      source_url_help: Odkaz na původní zdrojovou stránku
+    title: Jste offline
   orders:
+    delivered: Doručeno na
     ordered: Objednáno
     prepared: Připraveno
-    delivered: Doručeno na
-  form_2025:
-    menu_details: Podrobnosti o nabídce
-    menu_details_subtitle: Základní informace o vašem menu
-    image_settings: Nastavení obrázků
-    menu_image: Obrázek nabídky
-  version_diff:
-    section: Sekce
-    item: Položka
-  version_diff_2025:
-    section: 'Oddíl #'
-    item: Položka č.
-  details_2025:
-    menu_go_live_flow: Průběh živého menu
-  edit_2025:
-    onboarding_flow: Průběh přijímání na palubu
+  restaurant_analytics:
+    not_available:
+      description: 'Nelze načíst analytická data pro tuto restauraci. To může být
+        způsobeno:'
+      reasons:
+      - Restaurace nenalezena nebo přístup odepřen
+      - Nedostatečná povolení
+      - Chyba systému při sběru dat
+      title: Analytické údaje nejsou k dispozici
   settings_2025:
     receipt_merchant_details: Účtenka / údaje o obchodníkovi
     statement_descriptor: Deskriptor výroku
-  tasting_courses_footer:
-    show_courses: Zobrazit kurzy
-    add_tasting_menu: Přidat degustační menu
-  tasting_badge: Ochutnávka
-  show_modals:
-    pairing: Párování
-    full: Úplný
   show_allergyns_debug:
-    title: Alergyns Debug
-    sql: SQL
     count: Hrabě
     ids: ID
     names: Jména
+    sql: SQL
+    title: Alergyns Debug
+  show_modals:
+    full: Úplný
+    pairing: Párování
+  smartmenus:
+    no_image: Žádný obrázek
+    skeleton:
+      loading: Načítání položek nabídky...
+  tasting_badge: Ochutnávka
+  tasting_courses_footer:
+    add_tasting_menu: Přidat degustační menu
+    show_courses: Zobrazit kurzy
+  version_diff:
+    item: Položka
+    section: Sekce
+  version_diff_2025:
+    item: Položka č.
+    section: 'Oddíl #'

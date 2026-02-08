@@ -1,789 +1,318 @@
 ---
 cs:
-  common:
-    remove: Odstranění stránky
-    archive: Archiv
   activerecord:
-    attributes:
-      allergyn:
-        description: Popis
-        name: Název
-        symbol: Symbol
-      employee:
-        eid: ID
-        image: Adresa URL obrázku
-        name: Název
-        restaurant: Restaurace
-        role: Role
-        status: Stav
-        user: Uživatel
-      inventory:
-        currentInventory: Ukončení
-        menuItem: Položka
-        resetHour: Resetuje se při
-        startingInventory: Začínáme na adrese
-      menu:
-        allowOrdering: Allow Ordering
-        covercharge: Poplatek za obálku
-        description: Popis
-        displayImages: Display Images
-        displayImagesInPopup: Display Images in Popup
-        image: Obrázek
-        imagecontext: Image Context
-        inventoryTracking: Inventory Tracking
-        name: Název
-        pdf_menu_scan: PDF Menu
-        restaurant: Restaurace
-        sequence: Zobrazení objednávky
-        status: Stav
-      menuavailability:
-        dayofweek: Day of Week
-        endhour: End Hour
-        endmin: Zavřít Mn
-        menu: Jídelní lístek
-        starthour: Start Hour
-        startmin: Otevřít Mn
-        status: Stav
-      menuitem:
-        allergyns: Allergens
-        calories: Kalorie
-        description: Popis
-        image: Obrázek
-        ingredients: Složení
-        menusection_id: Sekce
-        name: Název
-        preptime: Příprava Mn
-        price: Cena
-        sequence: Zobrazení objednávky
-        sizes: Sizes
-        sizesupport: Size Support
-        status: Stav
-        tags: Štítky
-        unitcost: Jednotkové náklady
-        variantPricing: Varianty cen
-      menusection:
-        description: Popis
-        image: Obrázek
-        menu: Jídelní lístek
-        name: Název
-        sequence: Zobrazení objednávky
-        status: Stav
-      restaurant:
-        address1: Adresní řádek 1
-        address2: Adresní řádek 2
-        allowOrdering: Allow Ordering
-        capacity: Kapacita
-        city: Město
-        country: Země
-        currency: Měna
-        description: Popis
-        displayImages: Display Images
-        displayImagesInPopup: Display Images in Popup
-        genid: Generation ID
-        image: Obrázek
-        imagecontext: Image Context
-        inventoryTracking: Inventory Tracking
-        music: Hudba
-        name: Název
-        postcode: Poštovní směrovací číslo
-        spotifyaccesstoken: Spotify Access Token
-        spotifyrefreshtoken: Spotify Refresh Token
-        spotifyuserid: Spotify User ID
-        state: Stát
-        status: Stav
-        tips: Tipy
-        wifiEncryptionType: WiFi Encryption Type
-        wifiHidden: WiFi Hidden
-        wifiPassword: WiFi Password
-        wifissid: WiFi SSID
-      restaurantavailability:
-        dayofweek: Day of Week
-        endhour: End Hour
-        endmin: Uzávěrka
-        restaurant: Restaurace
-        sequence: Sekvence
-        starthour: Start Hour
-        startmin: Otevření
-        status: Stav
-      restaurantlocale:
-        dfault: Výchozí
-        locale: Lokalita
-      size:
-        description: Popis
-        name: Název
-        size: Velikost
-      tax:
-        name: Název
-        restaurant: Restaurace
-        taxPercentage: Procento
-        taxType: Tax Type
-  allergyns:
-    edit:
-      allergyn: Upravit alergen
-    form:
-      delete: Odstranit
-      save: Uložit
-      sure: Jste si jistý?
-    index:
-      activate: Aktivace
-      allergyn: Alergeny
-      allergyns: Alergeny
-      deactivate: Deaktivace
-    new:
-      allergyn: Nový alergen
-      cancel: Zrušit
-    show:
-      allergyn: Zobrazit alergen
-  devise:
-    registrations:
-      edit:
-        account: Účet
-        billing: Fakturace
-        confirmPassword: Potvrzení hesla
-        currentPassword: Aktuální heslo
-        currentPasswordHelp: K potvrzení změn potřebujeme vaše aktuální heslo.
-        deactivateMyAccount: Deaktivovat můj účet
-        deactivateMyAccountAreYouSure: Are you sure you want to deactivate your account?
-        password: Heslo
-        passwordHelp: Pokud nechcete heslo měnit, nechte ho prázdné.
-        saveChanges: Uložení změn
-        selectPlan: Zvolte plán
-      new:
-        confirmPassword: Potvrzení hesla
-        emailAddress: E-mailová adresa
-        fullName: Celé jméno
-        password: Heslo
-        signUp: Zaregistrujte se
-    sessions:
-      new:
-        emailAddress: E-mailová adresa
-        login: Přihlášení
-        password: Heslo
-        rememberMe: Pamatuj si mě
-    shared:
-      links:
-        didntReceiverEmailConfirmation: Didn't receive confirmation instructions?
-        didntReceiverUnlockInstructions: Neobdrželi jste pokyny k odemknutí?
-        forgotYourPassword: Zapomněli jste heslo?
+    models:
+      menusectionlocale: Menusectionlocale
+      ordraction: Ordrakce
+      ordritemnote: Ordritemnote
+      ordrparticipant: Ordrparticipant
+  common:
+    archive: Archiv
+    flash:
+      restored: Obnovené stránky
+    remove: Odstranění stránky
   employees:
-    edit:
-      employee: Zaměstnanec
     form:
-      delete: Smazat
-      errors: Chyby
-      save: Uložit
-      selectRestaurant: Vyberte restauraci...
-      sure: Jste si jistý?
-    index:
-      activate: Aktivovat
-      deactivate: Deaktivovat
-      employee: Zaměstnanec
-      employees: Zaměstnanci
-    new:
-      cancel: Zrušit
-      employee: Zaměstnanec
-    show:
-      employee: Zaměstnanec
-  feature1:
-    key: Chytré nabídky
-  feature2:
-    key: Objednávání zaměstnanců
-  feature3:
-    key: Filtrování alergenů
-  feature4:
-    key: Objednávání zákazníků
-  feature5:
-    key: Překlady menu AI
-  feature6:
-    key: Generování obrázků AI Menu
-  home:
-    index:
-      actions: Akce
-      activate: Aktivace
-      browse: Browse
-      contactUs: Kontaktujte nás
-      ctaBody1: Create a QR menu guests love. Update items instantly. Add translations,
-        ordering, and AI dish images when you’re ready.
-      ctaBody2: Create a QR menu guests love. Update items instantly. Add translations,
-        ordering, and AI dish images when you’re ready.
-      ctaTitle1: Zefektivnění služeb. Zlepšete zážitek.
-      ctaTitle2: Chytřejší restaurace začínají zde
-      deactivate: Deaktivace
-      demoMenu: Demo Menu
-      demoMenuTag: Preview
-      demoMenuTagBrowse: Browse
-      emailAddress: E-mailová adresa
-      emailAddressTag: Email address
-      featureDescription1: Upřednostněte bezpečnost hostů díky plně bezdotykovému
-        ovládání. Hosté si mohou prohlížet, objednávat a platit pomocí QR kódu - žádné
-        tištěné menu, žádné terminály, žádné potíže.
-      featureDescription2: Serve guests in their own language with one click.
-      featureDescription3: Generate consistent, on-brand dish photos.
-      featureDescription4: Control what customers can see and order.
-      featureDescription5: Let guests order from the table and pay easily.
-      featureDescription6: Understand trends to improve your menu.
-      featureTitle1: Bezkontaktní pohodlí
-      featureTitle2: Translate instantly
-      featureTitle3: AI Images
-      featureTitle4: Inventory & Availability
-      featureTitle5: Smart Ordering
-      featureTitle6: Analytics
-      features: Naše funkce
-      menus: Jídelní lístky
-      message: Zpráva
-      next: Další
-      numbers: Čísla
-      numbersTag: At a glance
-      orderValue: Avg. order value
-      orders: Objednávky
-      previous: Předchozí
-      pricing: Pricing
-      pricingTag: Plans
-      restaurants: Restaurace
-      saveChanges: Save Changes
-      selectPlan: Select Plan
-      signUp: Sign up
-      signup: Registrace
-      submit: Odeslat
-      testimonials: Zkušenosti
-      testimonialsTag: What our customers say
-      welcome: Welcome
-  inventories:
-    edit:
-      inventory: Upravit inventář
-    form:
-      delete: Odstranit
-      save: Uložit
-      sure: Jste si jistý?
-    index:
-      activate: Aktivovat
-      deactivate: Deaktivovat
-      inventories: Inventáře
-      inventory: Inventář
-    new:
-      cancel: Zrušit
-      inventory: Nový inventář
-    show:
-      inventory: Zobrazit inventář
-  menuavailabilities:
-    edit:
-      menuAvailability: Upravit dostupnost
-    form:
-      delete: Smazat
-      errors: Chyby
-      save: Uložit
-      selectMenu: Vyberte menu...
-      sure: Jste si jistí?
-    index:
-      activate: Otevřít
-      deactivate: Zavřít
-      menuAvailabilities: Menu Availabilities
-      menuAvailability: Dostupnost
-    new:
-      cancel: Zrušit
-      menuAvailability: Nová dostupnost
-    show:
-      menuAvailability: Menu Availability
-  menuitems:
-    edit:
-      menuItem: Položka nabídky Upravit
-    form:
-      delete: Odstranit
-      details: Podrobnosti na
-      errors: Chyby
-      imageSettings: Nastavení obrázků
-      save: Uložit
-      selectMenuSection: Vyberte část nabídky ...
-      settings: Nastavení
-      sizes: Velikosti
-      sure: Jste si jistý?
-      update: Aktualizace
-    index:
-      activate: Aktivovat
-      deactivate: Deaktivovat
-      menuItem: Položka menu
-      menuItems: Položky menu
-    new:
-      cancel: Zrušit
-      menuItem: Nová položka menu
-    show:
-      menuItem: Zobrazit položku nabídky
-  menus:
-    edit:
-      availabilities: Dostupnost
-      menu: Jídelní lístek
-      sections: Sekce
-    form:
-      delete: Odstranit
-      details: Podrobnosti na
-      errors: Chyby
-      imageSettings: Nastavení obrázků
-      pdfMenuScan: Původní PDF
-      pdfSettings: Nastavení PDF
-      preview: Náhled
-      save: Uložit
-      selectRestaurant: Vyberte restauraci...
-      settings: Nastavení
-      sure: Jste si jistý?
-    index:
-      activate: Aktivace
-      deactivate: Deaktivace
-      menu: Jídelní lístek
-      menus: Jídelní lístky
-      unavailable: Unavailable
-    new:
-      cancel: Zrušit
-      menu: Nové menu
-    show:
-      menu: Jídelní lístek
-      table: Tabulka
-    showMenuBanner:
-      table: Tabulka
-    showMenuavailabilities:
-      actions: Akce
-      activate: Aktivace
-      availabilities: Dostupnost
-      deactivate: Deaktivace
-    showMenusections:
-      actions: Akce
-      activate: Aktivace
-      deactivate: Deaktivace
-      sections: Sekce
-  menusections:
-    edit:
-      inventories: Zásoby
-      items: Položky
-      menuSection: Sekce menu
-      section: Sekce
-    form:
-      delete: Smazat
-      details: Podrobnosti
-      errors: Chyby
-      imageSettings: Nastavení obrázku
-      save: Uložit
-      selectMenu: Vyberte menu...
-      settings: Nastavení
-      sure: Jste si jistí?
-    index:
-      activate: Aktivovat
-      deactivate: Deaktivovat
-      menuSection: Sekce menu
-      menuSections: Sekce menu
-    new:
-      cancel: Zrušit
-      menuSection: Nová sekce menu
-    show:
-      menuSection: Sekce menu
-    showInventories:
-      actions: Akce
-      activate: Aktivace
-      deactivate: Deaktivace
-      inventories: Zásoby
-      reset: Obnovení
-    showMenuitems:
-      actions: Akce
-      activate: Aktivace
-      deactivate: Deaktivace
-      genimage: Generování obrázku
-      menuItems: Menu Items
-  plan:
-    business:
-      attribut6: ''
-      attribute1: "<li><i class='bi bi-check-lg'></i> Pro místa s více lokacemi</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{lokality}</strong>
-        Restaurace</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menu}</strong> jídelní
-        lístek / restaurace</li><li><i class='bi bi-check-lg'></i> <strong>%{jídla}</strong>
-        jídla / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{jazyky}</strong>
-        jazyky</li><li><i class='bi bi-check-lg'></i> Správa zásob</li><li><i class='bi
-        bi-check-lg'></i> Branding s podporou AI</li><li><i class='bi bi-check-lg'></i>
-        Prioritní e-mailová podpora</li>"
-      attribute4: ''
-      attribute5: ''
-      key: Obchodní
-    call: Volejte
-    enterprise:
-      attribut6: ''
-      attribute1: "<li><i class='bi bi-check-lg'></i> Pro velké restaurační řetězce</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{lokality}</strong>
-        Restaurace</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menu}</strong> jídelní
-        lístek / restaurace</li><li><i class='bi bi-check-lg'></i> <strong>%{jídla}</strong>
-        jídla / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{jazyky}</strong>
-        jazyky</li><li><i class='bi bi-check-lg'></i> Přehled a analýza dat</li><li><i
-        class='bi bi-check-lg'></i> Specializovaný account manager</li><li><i class='bi
-        bi-check-lg'></i> Prioritní e-mailová podpora</li>"
-      attribute4: ''
-      attribute5: ''
-      key: Podnik
-    pro:
-      attribut6: ''
-      attribute1: "<li><i class='bi bi-check-lg'></i> Pro rostoucí restaurace</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{lokality}</strong>
-        Restaurace</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menu}</strong> jídelní
-        lístek / restaurace</li><li><i class='bi bi-check-lg'></i> <strong>%{jídla}</strong>
-        jídla / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{jazyky}</strong>
-        jazyky</li><li><i class='bi bi-check-lg'></i> Objednávání personálu a zákazníků</li><li><i
-        class='bi bi-check-lg'></i> Obrázky položek menu s umělou inteligencí</li><li><i
-        class='bi bi-check-lg'></i> Prioritní e-mailová podpora</li>"
-      attribute4: ''
-      attribute5: ''
-      key: Pro
-    register: Registrace
-    starter:
-      attribut6: ''
-      attribute1: "<li><i class='bi bi-check-lg'></i> Pro malé kavárny</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{lokality}</strong>
-        Restaurace</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> <strong>%{menu}</strong> jídelní
-        lístek / restaurace</li><li><i class='bi bi-check-lg'></i> <strong>%{jídla}</strong>
-        jídla / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{jazyky}</strong>
-        jazyk</li><li><i class='bi bi-check-lg'></i> Objednávání personálu</li><li><i
-        class='bi bi-check-lg'></i> E-mailová podpora</li><li>&nbsp;</li>"
-      attribute4: ''
-      attribute5: ''
-      greeting: Dobrý den, <strong>%{jméno}</strong>! Vítejte v %{společnosti}.
-      key: Startér
-  restaurantavailabilities:
-    edit:
-      restaurantavailability: Upravit otevírací dobu
-    form:
-      delete: Smazat
-      errors: Chyby
-      save: Uložit
-      selectRestaurant: Vyberte restauraci...
-      sure: Jste si jistí?
-    index:
-      activate: Otevřít
-      deactivate: Zavřít
-      restaurantavailabilities: Restaurant Availabilities
-      restaurantavailability: Volná místa
-    new:
-      cancel: Zrušit
-      restaurantavailability: Nová otevírací doba
-    show:
-      restaurantavailability: Restaurant Availability
-  restaurantlocales:
-    form:
-      save: Uložit
-    new:
-      restaurantlocale: Restaurant Locale
-  restaurants:
-    edit:
-      allergynsTab: Alergeny
-      employeesTab: Zaměstnanci
-      localesTab: Lokality
-      menuTab: Menu
-      openingsTab: Otevírací doba
-      ordersTab: Objednávky
-      restaurant: Upravit restauraci
-      restaurantTab: Restaurace
-      sizesTab: Velikosti
-      smartQRTab: QR kódy
-      tableTab: Stoly
-      taxesTab: Daně
-      tipsTab: Spropitné
-      tracksTab: Seznam skladeb
-    form:
-      address: Adresa
-      delete: Odstranit
-      details: Podrobnosti na
-      errors: Chyby
-      generateImage: Generování obrázku
-      imageSettings: Nastavení obrázků
-      music: Hudba
-      pdfSettings: Nastavení PDF
-      save: Uložit
-      settings: Nastavení
-      spotify: Spotify
-      sure: Jste si jistý?
-      wifi: Wi‑Fi
-    index:
-      actions: Akce
-      activate: Aktivovat
-      deactivate: Deaktivovat
-      restaurant: Restaurace
-      restaurants: Restaurace
-    new:
-      cancel: Zrušit
-      restaurant: Nová restaurace
-      restaurants: Restaurace
-    show:
-      address: Adresa
-      address1: Adresní řádek 1
-      address2: Adresní řádek 2
-      city: Město
-      currency: Měna
-      description: Popis
-      details: Detaily
-      imageSettings: Nastavení obrázků
-      name: Název
-      pdfSettings: Nastavení PDF
-      postcode: Poštovní směrovací číslo
-      restaurant: Zobrazit restauraci
-      settings: Nastavení
-      state: Stát
-    showAllergyns:
-      actions: Akce
-      activate: Aktivace
-      allergyns: Allergens
-      deactivate: Deaktivace
-    showEmployees:
-      actions: Akce
-      activate: Aktivace
-      deactivate: Deaktivace
-      employee: Zaměstnanci
-      employees: Zaměstnanci
-      id: ID
+      eid: Id
       name: Název
       role: Role
-    showLocales:
-      actions: Akce
-      activate: Aktivovat
-      deactivate: Deaktivovat
-      default: Default
-      delete: Smazat
-      menus: Menus
-    showMenus:
-      actions: Akce
-      activate: Aktivace
-      deactivate: Deaktivace
-      menus: Menu
-    showOpeningHours:
-      actions: Akce
-      activate: Aktivovat
-      closing: Čas ukončení
-      dayOfWeek: Den v týdnu
-      deactivate: Deaktivovat
-      opening: Čas otevření
-      openingHour: Hodina otevření
-      openingHours: Volná místa
-      openings: Opening Hours
-    showOrdrs:
-      actions: Akce
-      activate: Aktivace
-      deactivate: Deaktivace
-      ordrs: Objednávky
-    showSizes:
-      actions: Akce
-      activate: Aktivace
-      deactivate: Deaktivace
-      sizes: Velikosti
-    showSmartMenus:
-      actions: Akce
-      activate: Aktivace
-      deactivate: Deaktivace
-      smartQRs: SmartQRs
-    showTableSettings:
-      actions: Akce
-      activate: Aktivace
-      capacity: Kapacita
-      deactivate: Deaktivace
-      name: Název
-      tableSetting: Tabulka
-      tableSettings: Table Settings
-      type: Typ
-    showTaxes:
-      actions: Akce
-      activate: Aktivace
-      deactivate: Deaktivace
-      name: Název
-      percentage: Procento
-      tax: Daň
-      taxes: Daně
-      type: Typ
-    showTips:
-      actions: Akce
-      activate: Aktivovat
-      deactivate: Deaktivovat
-      percentage: Procento
-      tip: Tip
-      tips: Tipy
-    showTracks:
-      actions: Akce
-      activate: Aktivace
-      deactivate: Deaktivace
-      tracks: Tracks
-  shared:
-    footer:
-      privacy: Ochrana osobních údajů
-      terms: Podmínky
-    navbar:
-      adminArea: Admin
-      allergyns: Allergyns
-      billing: Fakturace
-      employees: Zaměstnanci
-      inventories: Zásoby
-      login: Přihlášení
-      logout: Odhlášení
-      menuAvailability: Dostupnost nabídky
-      menuItems: Položky nabídky
-      menuSections: Sekce menu
-      menus: Jídelní lístky
-      openingHours: Volná místa
-      orderItems: Položky objednávky
-      orders: Objednávky
-      restaurants: Restaurace
-      settings: Nastavení
-      signUp: Zaregistrujte se
-      sizes: Velikosti
-      tableSettings: Nastavení stolu
-      taxes: Daně
-      testimonials: Zkušenosti
-      whatsNew: Co je nového
-  sizes:
-    edit:
-      size: Upravit velikost
-    form:
-      delete: Odstranit
-      save: Uložit
-      sure: Jste si jistý?
-    index:
-      activate: Aktivace
-      deactivate: Deaktivace
-      size: Velikost
-      sizes: Velikosti
-    new:
-      cancel: Zrušit
-      size: Nová velikost
-    show:
-      size: Zobrazit velikost
-  smartmenus:
-    edit:
-      menu: Nabídka úprav
-    form:
-      delete: Odstranit
-      details: Podrobnosti na
-      errors: Chyby
-      preview: Náhled
-      save: Uložit
-      selectRestaurant: Vyberte restauraci...
-      sure: Jste si jistý?
-    index:
-      activate: Aktivovat
-      deactivate: Deaktivovat
-      menu: Nabídka
-      menus: Menu
-      smartmenus: Chytrá menu
-      unavailable: Nabídka je v současné době nedostupná.
-    new:
-      cancel: Zrušit
-      menu: Nové menu
-    orderCustomer:
-      bill: Získat účet
-      order: Objednávka
-      staffAlerted: Staff alerted
-      startOrder: Počáteční objednávka
-      takePayment: Přijmout platbu
-    orderStaff:
-      bill: Bill
-      order: Objednávka
-      staffAlerted: Zaměstnanci informováni
-      startOrder: Počáteční objednávka
-      takePayment: Přijmout platbu
-    show:
-      menu: Zobrazit menu
-      table: Stůl
-    alcoholic: Alkoholický
-    alcoholic_tooltip: Obsahuje alkohol
-    alcohol:
-      acknowledge_btn: Potvrzení kontroly věku
-      acknowledged: Kontrola věku uznána
-    showAllergyns:
-      allergyns: Alergeny
-    showCoverCharge:
-      covercharge: Cover Charge
-      coverchargeUnit: Cover Charge Unit
-    showMenuBanner:
-      allergyns: Alergeny
-      table: Tabulka
-    showModals:
-      add: Přidat jméno
-      addToOrder: Přidat k objednávce
-      cancel: Zrušit
-      confirmPayment: Potvrzení platby
-      customiseOrderWithName: Add your name to the order
-      filterAllergyns: Filtrování alergenů
-      filterBy: Filter
-      menuItem: Položka nabídky
-      noneAll: None / All
-      price: Cena
-      requestBill: Žádost o účet
-      start: Počáteční objednávka
-      startOrder: Zahájení nové objednávky
-      submit: Odeslat objednávku
-      total: Celkem
-      yourOrder: Vaše objednávka
-    showTableLocaleSelectorCustomer:
-      table: Stůl
-    showTableLocaleSelectorStaff:
-      table: Stůl
-  tablesettings:
-    edit:
-      tablesetting: Upravit stůl
-    form:
-      delete: Smazat
-      errors: Chyby
-      save: Uložit
-      selectRestaurant: Vyberte restauraci...
-      sure: Jste si jistí?
-    index:
-      tablesetting: Tabulka
-      tablesettings: Tabulky
-    new:
-      cancel: Zrušit
-      tablesetting: Nová tabulka
-    show:
-      tablesetting: Tabulka
-  taxes:
-    edit:
-      tax: Upravit daň
-    form:
-      delete: Odstranit
-      errors: Chyby
-      save: Uložit
-      selectRestaurant: Vyberte restauraci...
-      sure: Jste si jistý?
-    index:
-      tax: Daň
-      taxes: Daně
-    new:
-      cancel: Zrušit
-      tax: Nová daň
-    show:
-      tax: Zobrazit daň
-  testimonials:
-    index:
-      actions: Akce
-      approve: Schválit
-      testimonials: Reference
-      unapprove: Neschválit
-  tips:
-    edit:
-      tip: Tip na úpravu
-    form:
-      delete: Odstranit
-      errors: Chyby
-      save: Uložit
-      selectRestaurant: Vyberte restauraci...
-      sure: Jste si jistý?
-    index:
-      tip: Tip
-      tips: Tipy
-    new:
-      cancel: Zrušit
-      tip: Nový tip
-    show:
-      tip: Zobrazit spropitné
-  tracks:
-    index:
-      tracks: Seznam skladeb
-  userplans:
-    edit:
-      saveChanges: Aktualizace
-      selectPlan: Zvolte si plán
-  contacts:
-    controller:
-      thanks: Thank you for your message! We'll get back to you soon.
+      status: Stav
+      user: Uživatel
   free: Zdarma
+  menuitems:
+    edit_2025:
+      back_to_items: Zpět na položky
+      menu_item: Položka nabídky
+  menus:
+    controller:
+      localization_queued: Lokalizace ve frontě
+      localization_queued_force: Lokalizace ve frontě
+      no_active_locales: Pro tuto restauraci nejsou nakonfigurovány žádné aktivní
+        lokality.
+      polish_queued: Vylepšení nabídky AI bylo zařazeno do fronty.
+    edit:
+      back_to_menus: Zpět na menu
+      description: Úprava konfigurace a obsahu nabídky
+      localization_confirm: Potvrzení lokalizace
+      localization_description: Popis lokalizace
+      localization_title: Lokalizace nabídky
+      localize_button: Lokalizace nabídky
+      menus: Jídelní lístky
+    edit_2025:
+      active: Aktivní
+      inactive: Neaktivní
+      items: položky
+      menus: Jídelní lístky
+      read_only: Pouze pro čtení
+      sections: sekce
+    index:
+      all_menus: Všechny nabídky
+      back: Zpět
+      description: Správa jídelních lístků a sekcí restaurace
+      new_menu: Nové menu
+    new:
+      description: Vytvoření nového menu pro vaši restauraci
+      menu_details: Podrobnosti o nabídce
+      menus: Jídelní lístky
+      new: Nový
+      new_menu: Nové menu
+    sections:
+      details_2025:
+        archived: Archivováno
+      items_2025:
+        alcoholic: Alkoholické
+        alcoholic_false: Nealkoholické
+        alcoholic_true: Alkoholické
+        apply: Použít
+        archive_confirm: Tím se archivují vybrané položky nabídky. Archivované položky
+          se již v tomto seznamu nezobrazí.
+        bulk_action: Hromadná akce...
+        bulk_archive: Archiv
+        bulk_set_alcoholic: Souprava alkoholická
+        bulk_set_food_type: Nastavení typu potraviny
+        bulk_set_status: Nastavení stavu
+        choose: Vyberte si...
+        choose_food_type: Vyberte si...
+        choose_status: Vyberte si...
+        food_type: Typ potraviny
+        status: Stav
+      sections_2025:
+        apply: Použít
+        archive_confirm: Tím se archivují vybrané části nabídky. Archivované sekce
+          se již v tomto seznamu nezobrazí.
+        bulk_action: Hromadná akce...
+        bulk_archive: Archiv
+        bulk_set_status: Nastavení stavu
+        choose_status: Vyberte si...
+        status: Stav
+      version_diff_2025:
+        added: Přidáno
+        changed: Změněno
+        diff_subtitle: Změny mezi snímky
+        diff_title: Diff
+        items: Položky
+        no_item_changes: Žádné změny položek.
+        no_section_changes: Žádné změny v oddílech.
+        removed: Odstraněno
+        sections: Sekce
+        view_json: Zobrazit JSON
+      versions_2025:
+        activate_or_schedule: Aktivace/plánování
+        activate_version: Aktivace verze
+        activation_help: Pokud chcete, aby tato verze byla výchozí aktivní verzí,
+          ponechte obě prázdné. Zadejte okno pro naplánování aktivace.
+        active_now: Aktivní nyní
+        any_time: kdykoli
+        by_user: od uživatele
+        cancel: Zrušit
+        compare: Porovnat
+        compare_versions: Porovnání verzí
+        create_version: Vytvořit verzi
+        created: Vytvořeno
+        default_active: Výchozí aktivní
+        diff_json: Rozdíl (JSON)
+        ends_at: Končí na (nepovinné)
+        forever: navždy
+        from: Z
+        menu_versions: Verze nabídky
+        menu_versions_help: Verze jsou neměnné snímky. Aktivujte jeden z nich, aby
+          se Smartmenu vykreslovalo z tohoto snímku.
+        need_two_versions: Vytvořte alespoň dvě verze pro porovnání.
+        no_versions: Zatím žádné verze.
+        save: Uložit
+        starts_at: Začíná na (nepovinné)
+        to: Na
+        version_history: Historie verzí
+        window: Okno
+    sidebar_2025:
+      content: OBSAH
+      details: Podrobnosti na
+      items: Položky
+      menu: MENU
+      qrcode: QR kód
+      schedule: Plán
+      sections: Sekce
+      settings: Nastavení
+      setup: NASTAVENÍ
+      versions: Verze
+  menusections:
+    edit_2025:
+      back_to_sections: Zpět na sekce
+      items: položky
+      menu_section: Sekce menu
+    form:
+      allow_pairing_help: Povolte párování nápojů jako doplněk.
+      availability_time: Čas dostupnosti
+      carrier_auto_help: Vytvoří se skrytá nosná položka menu, která se automaticky
+        synchronizuje s názvem, popisem a cenou této sekce.
+      includes_description: Obsahuje (popis)
+      pairing_price: Párování Cena
+      party_size: Velikost party (nepovinné)
+      tasting_menu_help: Je-li tato sekce povolena, jedná se o ochutnávku s pevnou
+        cenou. Ceny položek jsou skryté; za každou položku lze přidat příplatek.
+      tasting_menu_settings: Nastavení degustačního menu
+      tasting_price: Cena za degustaci
+      tasting_price_help: Zadejte pevnou cenu v měně restaurace. Měna je odvozena
+        z nastavení restaurace.
+  ocr_menu_imports:
+    new:
+      auto_detect: Automatická detekce
+      source_language_help: Slouží k zachování původního jazyka při generování chybějících
+        popisů.
+      source_language_label: Jazyk nabídky
+    show:
+      back_to_imports: Zpět na Dovoz
+      image_prompt: Obrazová výzva
+  onboarding:
+    account_details:
+      restaurant_name_required: Pro pokračování zadejte název restaurace.
+    next_steps:
+      restaurant_edit_notice: Skvělé! Nyní vyplňte údaje o restauraci, adresu a nastavte
+        stoly.
+  ordritems:
+    errors:
+      create_failed: Nelze přidat položku právě teď
+      order_missing: 'Nelze přidat položku: objednávka neexistuje'
+      remove_failed: Položku nyní nelze odstranit
+  plan:
+    pro:
+      attribut6: Atribut6
+      attribute5: Atribut5
+    starter:
+      greeting: Dobrý den, <strong>%{jméno}</strong>! Vítejte v %{společnosti}.
+  restaurantavailabilities:
+    index:
+      restaurantAvailability: Dostupnost restaurace
+  restaurantlocales:
+    edit:
+      back: Zpět na nastavení
+      description: Aktualizace konfigurace jazyka
+      edit_locale: Upravit jazyk
+      settings: Nastavení
+    form:
+      default: Výchozí jazyk
+      default_help: Nastavení výchozího jazyka pro restauraci
+      locale: Jazyk
+      locale_help: Výběr jazyka pro překlady
+      locale_locked: Jazyk nelze po vytvoření změnit
+    new:
+      add_locale: Přidat jazyk
+      back: Zpět na nastavení
+      description: Přidání nového jazyka pro vaši restauraci
+      locale_details: Podrobnosti o jazyce
+      new_locale: Nový jazyk
+      settings: Nastavení
+  restaurants:
+    form:
+      pdfSettings: Nastavení PDF
+    index_frame_2025:
+      archive_confirm: Tím se vybrané restaurace archivují.
+      bulk_action: Hromadná akce...
+      bulk_archive: Archiv
+      bulk_restore: Obnovení
+      bulk_set_status: Nastavení stavu
+      choose_status: Vyberte si...
+      hide_archived: Skrýt archivované
+      restore_confirm: Tím se obnoví vybrané restaurace.
+      show_archived: Zobrazit archivované
+      status: Stav
+    insights:
+      values:
+        'no': Ne
+        'yes': Ano
+    sections:
+      catalog_2025:
+        total_taxes: Daně celkem
+        total_tips: Celkové tipy
+      import_2025:
+        actions: Akce
+        ai_powered_menu_import: Import menu s umělou inteligencí
+        delete: Odstranit
+        tips_body: Pro dosažení nejlepších výsledků nahrajte čistý soubor PDF.
+      localization_2025:
+        current_languages: Současné jazyky
+        total_languages: Celkem jazyků
+      menus_2025:
+        archive_confirm: Tím se archivují vybrané jídelní lístky této restaurace.
+        bulk_action: Hromadná akce...
+        bulk_archive: Archiv
+        bulk_restore: Obnovení
+        bulk_set_status: Nastavení stavu
+        bulk_share: Sdílet
+        choose_status: Vyberte si...
+        hide_archived: Skrýt archivované
+        restore_confirm: Tím se obnoví vybrané nabídky pro tuto restauraci.
+        share_to_restaurants: Sdílet do restaurací
+        show_archived: Zobrazit archivované
+        status: Stav
+      settings_2025:
+        enabled: Povoleno
+        not_connected: Nepřipojeno
+        payments: Platby
+        stripe_connect: Stripe Connect
+        stripe_connect_help: Připojte svůj účet Stripe a povolte platby MoR v restauraci.
+      tables_2025:
+        tables: Tabulky
+      wifi_2025:
+        'no': Ne
+        'yes': Ano
+    show:
+      pdfSettings: Nastavení PDF
+  smartmenus:
+    alcohol:
+      age_check: Kontrola věku
+    allergen_legend_modal:
+      allergen: Alergeny
+      allergen_key: Klíč k alergenům
+      allergen_key_description: K identifikaci alergenů používáme krátké kódy. Chcete-li
+        zobrazit úplný název alergenu, najeďte na kterýkoli odznak nebo na něj klepněte.
+      allergen_warning: Pokud máte nějaké potravinové alergie nebo dietní omezení,
+        informujte o tom prosím obsluhu před objednáním.
+      close: Zavřít
+      code: Kód
+      custom_allergens: Další alergeny
+    find_table: Najít tabulku
+    orderCustomer:
+      add_name: Přidejte své jméno
+      view_cart: Zobrazit košík
+    orderStaff:
+      view_cart: Zobrazit košík
+    showMenuBanner:
+      allergen_key: Klíč alergenů
+      filter_allergens: Filtrování alergenů
+      search_menu: Vyhledávací menu...
+      view_allergen_key: Zobrazit klíč alergenů
+    showModals:
+      remove_item: Odebrat položku
+    welcome_banner:
+      default_tip: Klepnutím na plovoucí červené tlačítko si můžete košík kdykoli
+        zobrazit.
+      dismiss: Odmítnout
+      got_it: Mám to!
+      learn_more: Dozvědět se více
+      need_help: Potřebujete pomoc?
+      step_1: Procházejte položky menu a klepnutím je přidejte do objednávky.
+      step_2: Prohlédněte si svůj košík pomocí červeného tlačítka
+      step_3: Odeslat objednávku a my vám ji přineseme na stůl.
+      tap_to_learn: Klepnutím se dozvíte, jak objednat
+      tip_title: Rychlá rada
+      welcome_subtitle: Prohlížejte si naše menu a objednávejte ze svého zařízení
+      welcome_title: Vítejte v %{název_restaurace}!
+  tablesettings:
+    form:
+      capacity: Sedadla
+      description: Popis
+      description_help: 'Volitelně: Přidejte poznámky, jako je umístění nebo zvláštní
+        pokyny'
+      name: Název
+      name_help: Zobrazený název tabulky (např. Tabulka 1, Patio A)
+      status: Stav
+      tabletype: Typ stolu
+    index:
+      add_table: Přidat tabulku
+      back: Zpět
+      quick_actions: Rychlé akce
+      tables_description: Spravujte své restaurační stoly, abyste mohli používat QR
+        kódy a objednávat podle stolů.
+      tables_overview: Tabulky
+      total_tables: Tabulky celkem

@@ -2,9 +2,9 @@
 hu:
   restaurantavailabilities:
     controller:
-      created: ''
-      deleted: ''
-      updated: ''
+      created: Az étterem elérhetőségét sikeresen létrehoztuk.
+      deleted: Az étterem elérhetőségét sikeresen törölték.
+      updated: Az étterem elérhetőségét sikeresen frissítettük.
     edit:
       restaurantavailability: Nyitvatartás szerkesztése
     form:
@@ -12,10 +12,10 @@ hu:
       save: Mentés
       sure: Biztos vagy benne?
     index:
-      restaurantavailabilities: ''
+      restaurantavailabilities: Étterem elérhetőségei
       restaurantavailability: Nyitvatartás
     new:
       restaurantavailability: Új nyitvatartás
     show:
-      restaurantavailability: ''
-      selectRestaurant: ''
+      restaurantavailability: Étterem elérhetősége
+      selectRestaurant: Válassza ki az éttermet

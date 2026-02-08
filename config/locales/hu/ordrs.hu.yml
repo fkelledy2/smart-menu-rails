@@ -2,8 +2,8 @@
 hu:
   ordrs:
     controller:
-      could_not_delete: ''
-      created: ''
-      deleted: ''
+      could_not_delete: 'Nem sikerült törölni a megrendelést: %{hiba}'
+      created: A megrendelés sikeresen létrejött.
+      deleted: A megrendelés sikeresen törlésre került.
     index:
-      orders: ''
+      orders: Megrendelések
