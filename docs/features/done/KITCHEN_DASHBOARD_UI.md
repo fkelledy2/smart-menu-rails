@@ -466,7 +466,7 @@ Add/remove columns by editing view and CSS grid:
 ---
 
 ## 📚 **Related Documentation**
-- [Enhanced Real-time Features Plan](../in-progress/enhanced-realtime-features-plan.md)
+- [Enhanced Real-time Features Plan](enhanced-realtime-features-plan.md)
 - [Real-time Phase 2 Complete](REALTIME_PHASE2_COMPLETE.md)
 - [KitchenBroadcastService Documentation](../../../app/services/kitchen_broadcast_service.rb)
 - [KitchenChannel Documentation](../../../app/channels/kitchen_channel.rb)
