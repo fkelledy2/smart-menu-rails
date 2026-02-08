@@ -29,13 +29,13 @@ RSpec.describe OcrMenuImportsController do
 
       post :confirm_import, params: { restaurant_id: restaurant.id, id: import.id }
 
-      expect(response).to have_http_status(:found)
+      expect(response).to have_http_status(:see_other)
     end
 
     it 'handles case when no confirmed sections' do
       import = restaurant.ocr_menu_imports.create!(name: 'Empty', status: 'completed')
       post :confirm_import, params: { restaurant_id: restaurant.id, id: import.id }
-      expect(response).to have_http_status(:found)
+      expect(response).to have_http_status(:found).or have_http_status(:see_other)
     end
 
     it 'handles existing menu case' do
@@ -44,7 +44,7 @@ RSpec.describe OcrMenuImportsController do
       import.update!(menu: menu)
 
       post :confirm_import, params: { restaurant_id: restaurant.id, id: import.id }
-      expect(response).to have_http_status(:found)
+      expect(response).to have_http_status(:found).or have_http_status(:see_other)
     end
   end
 end

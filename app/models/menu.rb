@@ -146,11 +146,10 @@ class Menu < ApplicationRecord
 
     return windowed if windowed
 
-    # Safely handle case where no menu versions exist
     active_version = menu_versions.find_by(is_active: true)
-    return active_version&.order&.call(:desc) if active_version
+    return active_version if active_version
 
-    nil
+    menu_versions.order(version_number: :desc).first
   end
 
   private

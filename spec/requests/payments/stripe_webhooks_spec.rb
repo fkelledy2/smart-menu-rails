@@ -2,10 +2,18 @@ require 'rails_helper'
 require 'ostruct'
 
 RSpec.describe 'Payments::Webhooks (Stripe)' do
+  include ActiveJob::TestHelper
+
+  before do
+    ActiveJob::Base.queue_adapter = :test
+    clear_enqueued_jobs
+    clear_performed_jobs
+  end
+
   around do |example|
     prev = ENV.fetch('STRIPE_WEBHOOK_SECRET', nil)
     ENV['STRIPE_WEBHOOK_SECRET'] = 'whsec_test'
-    example.run
+    perform_enqueued_jobs { example.run }
   ensure
     ENV['STRIPE_WEBHOOK_SECRET'] = prev
   end
@@ -58,9 +66,11 @@ RSpec.describe 'Payments::Webhooks (Stripe)' do
     end
 
     def post_webhook
-      post '/payments/webhooks/stripe',
-           params: payload_hash.to_json,
-           headers: { 'HTTP_STRIPE_SIGNATURE' => 't=1,v1=fake', 'CONTENT_TYPE' => 'application/json' }
+      perform_enqueued_jobs do
+        post '/payments/webhooks/stripe',
+             params: payload_hash.to_json,
+             headers: { 'HTTP_STRIPE_SIGNATURE' => 't=1,v1=fake', 'CONTENT_TYPE' => 'application/json' }
+      end
     end
 
     before do

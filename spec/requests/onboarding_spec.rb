@@ -16,8 +16,12 @@ RSpec.describe 'Onboardings' do
 
   describe 'PATCH /onboarding' do
     it 'processes onboarding update' do
-      patch '/onboarding', params: { step: 1, user: { first_name: 'Test', last_name: 'User' } }
-      expect(response).to have_http_status(:redirect)
+      patch '/onboarding', params: {
+        step: 1,
+        user: { name: 'Test User' },
+        onboarding_session: { restaurant_name: 'Test Restaurant' },
+      }
+      expect(response).to have_http_status(:see_other)
     end
   end
 end

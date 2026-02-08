@@ -15,13 +15,13 @@ RSpec.describe 'OrdrPayments' do
   end
 
   describe 'POST /restaurants/:restaurant_id/ordrs/:id/request_bill' do
-    it 'returns 422 when there are opened items' do
+    it 'submits any opened items and transitions to billrequested' do
       create(:ordritem, ordr: ordr, status: :opened)
 
       post "/restaurants/#{restaurant.id}/ordrs/#{ordr.id}/request_bill", headers: { 'ACCEPT' => 'application/json' }, as: :json
 
-      expect(response).to have_http_status(:unprocessable_content)
-      expect(ordr.reload.status).not_to eq('billrequested')
+      expect(response).to have_http_status(:ok)
+      expect(ordr.reload.status).to eq('billrequested')
     end
 
     it 'transitions to billrequested when eligible' do

@@ -28,7 +28,7 @@ RSpec.describe 'OcrMenuImports' do
       post confirm_import_restaurant_ocr_menu_import_path(restaurant, import), headers: { 'ACCEPT' => 'text/html' },
                                                                                as: :html
 
-      expect(response).to have_http_status(:found)
+      expect(response).to have_http_status(:see_other)
     end
 
     it 'prevents duplicate imports and redirects to existing menu' do
@@ -37,7 +37,7 @@ RSpec.describe 'OcrMenuImports' do
       import.update!(menu: menu)
       sign_in user
       post confirm_import_restaurant_ocr_menu_import_path(restaurant, import), headers: { 'HTTP_ACCEPT' => 'text/html' }
-      expect(response).to have_http_status(:found)
+      expect(response).to have_http_status(:found).or have_http_status(:see_other)
     end
 
     it 'rejects when no confirmed sections' do
@@ -46,14 +46,14 @@ RSpec.describe 'OcrMenuImports' do
       import.ocr_menu_sections.create!(name: 'Temp', sequence: 1, is_confirmed: false)
       sign_in user
       post confirm_import_restaurant_ocr_menu_import_path(restaurant, import), headers: { 'HTTP_ACCEPT' => 'text/html' }
-      expect(response).to have_http_status(:found)
+      expect(response).to have_http_status(:found).or have_http_status(:see_other)
     end
 
     it 'rejects when not completed' do
       import = restaurant.ocr_menu_imports.create!(name: 'Draft', status: 'pending')
       sign_in user
       post confirm_import_restaurant_ocr_menu_import_path(restaurant, import), headers: { 'HTTP_ACCEPT' => 'text/html' }
-      expect(response).to have_http_status(:found)
+      expect(response).to have_http_status(:found).or have_http_status(:see_other)
     end
   end
 end

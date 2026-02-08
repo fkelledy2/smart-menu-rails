@@ -8,6 +8,19 @@ RSpec.describe 'Shared menus' do
 
   before do
     sign_in user
+
+    RestaurantSubscription.create!(
+      restaurant: restaurant_a,
+      status: :active,
+      payment_method_on_file: true,
+    )
+
+    RestaurantSubscription.create!(
+      restaurant: restaurant_b,
+      status: :active,
+      payment_method_on_file: true,
+    )
+
     RestaurantMenu.find_or_create_by!(restaurant: restaurant_a, menu: menu) do |rm|
       rm.status = 'active'
       rm.sequence = 1

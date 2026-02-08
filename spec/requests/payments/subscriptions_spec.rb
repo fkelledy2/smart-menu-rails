@@ -47,7 +47,7 @@ RSpec.describe 'Payments::Subscriptions' do
 
     it 'returns 422 when plan is missing Stripe price id for the interval' do
       sign_in user
-      user.plan.update!(stripe_price_id_month: nil)
+      user.plan.update_column(:stripe_price_id_month, nil)
 
       post '/payments/subscriptions/start',
            params: { restaurant_id: restaurant.id, interval: 'month' },
