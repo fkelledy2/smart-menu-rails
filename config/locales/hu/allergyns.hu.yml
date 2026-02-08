@@ -22,7 +22,7 @@ hu:
       name_placeholder: pl. mogyoró, tejtermékek, glutén
       symbol: Szimbólum
       symbol_help: 'Választható: Emoji vagy rövid szimbólum az allergén ábrázolására.'
-      symbol_placeholder: "pl. \U0001F95C, \U0001F95B, \U0001F33E."
+      symbol_placeholder: "pl. 🥜, 🥛, 🌾."
     index:
       all_allergyns: Minden allergén
       allergyns: Allergének

@@ -22,7 +22,7 @@ pt:
       name_placeholder: por exemplo, amendoins, lacticínios, glúten
       symbol: Símbolo
       symbol_help: 'Opcional: Emoji ou símbolo curto para representar este alergénio'
-      symbol_placeholder: "Por exemplo, \U0001F95C, \U0001F95B, \U0001F33E"
+      symbol_placeholder: "Por exemplo, 🥜, 🥛, 🌾"
     index:
       all_allergyns: Todos os alergénios
       allergyns: Alergénios

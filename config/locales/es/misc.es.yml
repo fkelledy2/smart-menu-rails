@@ -246,11 +246,11 @@ es:
   number:
     currency:
       format:
-        delimiter: '.'
-        format: '%n %u'
+        delimiter: "."
+        format: "%n %u"
         precision: 2
-        separator: ','
-        unit: '€'
+        separator: ","
+        unit: "€"
   ocr_menu_imports:
     create:
       success: Importación de menú iniciada correctamente.

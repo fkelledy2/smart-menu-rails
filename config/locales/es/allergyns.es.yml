@@ -22,7 +22,7 @@ es:
       name_placeholder: por ejemplo, cacahuetes, productos lácteos, gluten
       symbol: Símbolo
       symbol_help: 'Opcional: Emoji o símbolo corto para representar este alérgeno'
-      symbol_placeholder: "por ejemplo, \U0001F95C, \U0001F95B, \U0001F33E"
+      symbol_placeholder: "por ejemplo, 🥜, 🥛, 🌾"
     index:
       all_allergyns: Todos los alérgenos
       allergyns: Alérgenos

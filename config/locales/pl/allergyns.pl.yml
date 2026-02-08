@@ -22,7 +22,7 @@ pl:
       name_placeholder: np. orzeszki ziemne, nabiał, gluten
       symbol: Symbol
       symbol_help: 'Opcjonalnie: Emoji lub krótki symbol reprezentujący ten alergen'
-      symbol_placeholder: "np. \U0001F95C, \U0001F95B, \U0001F33E"
+      symbol_placeholder: "np. 🥜, 🥛, 🌾"
     index:
       all_allergyns: Wszystkie alergeny
       allergyns: Alergeny
