@@ -53,43 +53,43 @@ it:
       title: Importa menu da PDF
       upload_process: Carica e elabora
     new_2025:
-      title: Importa il tuo menù
-      subtitle: Carica un menù PDF e la nostra IA estrarrà automaticamente tutti gli
-        articoli
-      step_upload: Caricamento
-      step_process: Elaborazione
-      step_review: Revisione
-      name_label: Nome menù
-      name_placeholder: es. Menù Estivo 2024
-      name_help: Dai al menù un nome descrittivo per identificarlo facilmente
-      source_language_label: Lingua del menù
       auto_detect: Rilevamento automatico
+      browse_files: Sfoglia file
+      cancel: Annulla
+      drop_subtitle: oppure
+      drop_title: Trascina e rilascia qui il tuo PDF
+      estimated_time: L'elaborazione richiede ~2-5 minuti
       language_en: Inglese
+      language_es: Spagnolo
       language_fr: Francese
       language_it: Italiano
-      language_es: Spagnolo
+      name_help: Dai al menù un nome descrittivo per identificarlo facilmente
+      name_label: Nome menù
+      name_placeholder: es. Menù Estivo 2024
+      pdf_hint: PDF fino a 10MB. Le scansioni nitide funzionano meglio.
+      pdf_invalid_js: Seleziona un file PDF
+      pdf_label: PDF del menù
+      remove_file_aria: Rimuovi file
       source_language_help: Usata per preservare la lingua originale quando si generano
         descrizioni mancanti.
-      pdf_label: PDF del menù
-      drop_title: Trascina e rilascia qui il tuo PDF
-      drop_subtitle: oppure
-      browse_files: Sfoglia file
-      pdf_hint: PDF fino a 10MB. Le scansioni nitide funzionano meglio.
-      remove_file_aria: Rimuovi file
-      estimated_time: L'elaborazione richiede ~2-5 minuti
-      cancel: Annulla
+      source_language_label: Lingua del menù
       start_processing: Avvia elaborazione
-      tips_title: Suggerimenti per risultati migliori
-      tip_quality_title: Usa scansioni di alta qualità
-      tip_quality_text: I PDF nitidi e ad alta risoluzione con buon contrasto funzionano
-        meglio. Evita foto sfocate o di bassa qualità.
-      tip_format_title: Layout del menù standard
+      step_process: Elaborazione
+      step_review: Revisione
+      step_upload: Caricamento
+      subtitle: Carica un menù PDF e la nostra IA estrarrà automaticamente tutti gli
+        articoli
       tip_format_text: I menù con sezioni chiare e nomi degli articoli separati dai
         prezzi funzionano meglio. La nostra IA gestisce la maggior parte dei layout.
-      tip_language_title: Supporto multilingua
+      tip_format_title: Layout del menù standard
       tip_language_text: Supportiamo menù in inglese, italiano, spagnolo, francese
         e altro. Anche i menù multilingua funzionano!
-      pdf_invalid_js: Seleziona un file PDF
+      tip_language_title: Supporto multilingua
+      tip_quality_text: I PDF nitidi e ad alta risoluzione con buon contrasto funzionano
+        meglio. Evita foto sfocate o di bassa qualità.
+      tip_quality_title: Usa scansioni di alta qualità
+      tips_title: Suggerimenti per risultati migliori
+      title: Importa il tuo menù
     show:
       allergens: Allergeni
       approve_sections_items: Approva sezioni e articoli

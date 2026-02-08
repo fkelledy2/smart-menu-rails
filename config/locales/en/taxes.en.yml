@@ -6,35 +6,35 @@ en:
       deleted: Tax was successfully deleted.
       updated: Tax was successfully updated.
     edit:
-      taxes: Taxes
-      edit_tax: Edit Tax
-      description: Update tax rate details
       cancel: Cancel
       confirm_delete: Delete this tax?
       delete: Delete
+      description: Update tax rate details
+      edit_tax: Edit Tax
       tax_details: Tax Details
+      taxes: Taxes
     form:
       name: Tax Name
-      name_placeholder: e.g., Sales Tax, VAT, GST
       name_help: Display name for this tax
+      name_placeholder: e.g., Sales Tax, VAT, GST
+      tax_percentage: Tax Percentage
+      tax_percentage_help: Enter the tax rate as a percentage (0-100)
+      tax_percentage_placeholder: e.g., 8.5
       tax_type: Tax Type
       tax_type_help: Select the type of tax
-      tax_percentage: Tax Percentage
-      tax_percentage_placeholder: e.g., 8.5
-      tax_percentage_help: Enter the tax rate as a percentage (0-100)
     index:
-      taxes: Taxes
-      description: Manage tax rates applied to menu items
-      back: Back
-      new_tax: New Tax
       all_taxes: All Taxes
-    new:
+      back: Back
+      description: Manage tax rates applied to menu items
+      new_tax: New Tax
       taxes: Taxes
+    new:
+      cancel: Cancel
+      description: Create a new tax rate for menu items
       new: New
       new_tax: New Tax
-      description: Create a new tax rate for menu items
-      cancel: Cancel
       tax_details: Tax Details
+      taxes: Taxes
     show:
       selectRestaurant: Select a restaurant
       tax: Tax

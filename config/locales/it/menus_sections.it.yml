@@ -2,160 +2,160 @@
 it:
   menus:
     sections:
-      details_2025:
-        quick_actions: Azioni Rapide
-        preview_staff: Vista Staff
-        preview_customer: Vista Cliente
-        preview_staff_title: Anteprima del menù come staff (vista autenticata)
+      design_2025:
+        display_settings: Impostazioni Visualizzazione
+        download: Scarica
+        generate_images: Genera Immagini IA
+        image_help: 'Immagine hero per il menù (consigliato: 1200x600px)'
+        menu_image: Immagine Menù
+        pdf_help: Carica una versione PDF del menù
+        pdf_menu: Menù PDF
+        pdf_menu_desc: Carica una versione PDF del menù da far scaricare ai clienti
+        popup_images: Immagini in Popup
+        popup_images_desc: Mostra un'immagine più grande al tocco
+        preview_customer: Anteprima (Cliente)
         preview_customer_title: Anteprima del menù come lo vedono i clienti (autenticato
           come staff ma in interfaccia cliente)
-        availability: Disponibilità
-        default: Predefinito
-        available: Disponibile
-        unavailable: Non disponibile
-        generate_images: Genera Immagini
-        localize_menu: Traduzioni
-        ai_polish: Rifinitura IA
+        preview_staff: Anteprima (Staff)
+        preview_staff_title: Anteprima del menù come staff (vista autenticata)
+        quick_actions: Azioni Rapide
+        remove_image: Rimuovi immagine attuale
+        remove_pdf: Rimuovi PDF attuale
+        show_images: Mostra Immagini
+        show_images_desc: Mostra le immagini degli articoli nel menù
+        upload_image: Carica Immagine
+        upload_pdf: Carica PDF
+      details_2025:
         active: Attivo
-        inactive: Inattivo
-        menu_details: Dettagli Menù
-        menu_name: Nome Menù
-        menu_name_placeholder: es. Menù Cena, Specialità Pranzo
-        menu_name_help: Il nome che vedranno i clienti
+        ai_polish: Rifinitura IA
+        availability: Disponibilità
+        available: Disponibile
+        default: Predefinito
         description: Descrizione
-        description_placeholder: Descrivi questo menù...
         description_help: Descrizione opzionale per aiutare i clienti a capire questo
           menù
-        statistics: Statistiche Menù
-        sections: Sezioni
+        description_placeholder: Descrivi questo menù...
+        generate_images: Genera Immagini
+        inactive: Inattivo
         items: Articoli
+        localize_menu: Traduzioni
+        menu_details: Dettagli Menù
+        menu_name: Nome Menù
+        menu_name_help: Il nome che vedranno i clienti
+        menu_name_placeholder: es. Menù Cena, Specialità Pranzo
+        preview_customer: Vista Cliente
+        preview_customer_title: Anteprima del menù come lo vedono i clienti (autenticato
+          come staff ma in interfaccia cliente)
+        preview_staff: Vista Staff
+        preview_staff_title: Anteprima del menù come staff (vista autenticata)
+        quick_actions: Azioni Rapide
         schedules: Orari
-      settings_2025:
-        feature_toggles: Attivazione Funzionalità
-        display_images: Mostra Immagini
-        display_images_help: Mostra le immagini degli articoli in questo menù
-        disabled_at_restaurant: Disabilitato a livello ristorante
-        display_images_popup: Mostra Immagini in Popup
-        display_images_popup_help: Apri le immagini degli articoli in un popup quando
-          cliccate
-        allow_ordering: Permetti Ordinazioni
-        allow_ordering_help: Abilita ordinazioni online per questo menù
-        voice_ordering: Ordinazione Vocale
-        voice_ordering_help: Consenti ai clienti di ordinare con comandi vocali in
-          questo menù
-        inventory_tracking: Tracciamento Inventario
-        inventory_tracking_help: Traccia i livelli di stock per gli articoli del menù
-          (Prossimamente)
-        settings_info_title: Informazioni sulle Impostazioni del Menù
-        settings_info_desc: Queste impostazioni controllano le funzionalità per questo
-          menù. Le modifiche vengono salvate automaticamente.
-        parent_restriction: 'Nota:'
-        parent_restriction_desc: Le impostazioni disabilitate a livello ristorante
-          non possono essere abilitate per i singoli menù. Abilitale prima a livello
-          ristorante.
-        status: Stato
-        status_info: Controlla la visibilità del menù
-        images_info: Attiva/disattiva foto degli articoli del menù
-        popup_info: Visualizzazione immagini a schermo intero
-        ordering_info: Abilita ordinazioni dei clienti
-        voice_ordering_info: Abilita comandi vocali per ordinare
-      sections_2025:
-        quick_actions: Azioni Rapide
-        add_section: Aggiungi Sezione
-        preview_staff: Anteprima (Staff)
-        preview_customer: Anteprima (Cliente)
-        preview_staff_title: Anteprima del menù come staff (vista autenticata)
-        preview_customer_title: Anteprima del menù come lo vedono i clienti (autenticato
-          come staff ma in interfaccia cliente)
-        menu_sections: Sezioni Menù
-        sections_description: Organizza il menù in sezioni come Antipasti, Primi,
-          Dolci, ecc.
-        name: Nome
-        items: Articoli
-        edit: Modifica
-        no_sections: Nessuna sezione ancora
-        no_sections_desc: Aggiungi la tua prima sezione per iniziare a costruire il
-          menù
-        add_first_section: Aggiungi Prima Sezione
+        sections: Sezioni
+        statistics: Statistiche Menù
+        unavailable: Non disponibile
       items_2025:
-        quick_actions: Azioni Rapide
         add_item: Aggiungi Articolo Menù
-        preview_staff: Anteprima (Staff)
-        preview_customer: Anteprima (Cliente)
-        preview_staff_title: Anteprima del menù come staff (vista autenticata)
-        preview_customer_title: Anteprima del menù come lo vedono i clienti (autenticato
-          come staff ma in interfaccia cliente)
-        menu_items: Articoli Menù
-        items_description: Visualizza e gestisci tutti gli articoli in tutte le sezioni
-        name: Nome
-        price: Prezzo
+        edit: Modifica
+        go_to_sections: Vai alle Sezioni
+        has_image_title: Immagine presente - passa il mouse per l'anteprima
+        included: Incluso
         items_count:
           one: 1 articolo
           other: "%{count} articoli"
-        tasting_menu: Menù Degustazione
-        per_table: "(per tavolo)"
-        per_person: "(per persona)"
-        has_image_title: Immagine presente - passa il mouse per l'anteprima
-        included: Incluso
-        edit: Modifica
+        items_description: Visualizza e gestisci tutti gli articoli in tutte le sezioni
+        menu_items: Articoli Menù
+        name: Nome
         no_items: Nessun articolo ancora
         no_items_desc: Aggiungi prima le sezioni, poi aggiungi gli articoli a quelle
           sezioni
-        go_to_sections: Vai alle Sezioni
-      design_2025:
-        quick_actions: Azioni Rapide
-        generate_images: Genera Immagini IA
-        preview_staff: Anteprima (Staff)
+        per_person: "(per persona)"
+        per_table: "(per tavolo)"
         preview_customer: Anteprima (Cliente)
-        preview_staff_title: Anteprima del menù come staff (vista autenticata)
         preview_customer_title: Anteprima del menù come lo vedono i clienti (autenticato
           come staff ma in interfaccia cliente)
-        menu_image: Immagine Menù
-        upload_image: Carica Immagine
-        image_help: 'Immagine hero per il menù (consigliato: 1200x600px)'
-        remove_image: Rimuovi immagine attuale
-        pdf_menu: Menù PDF
-        pdf_menu_desc: Carica una versione PDF del menù da far scaricare ai clienti
-        download: Scarica
-        upload_pdf: Carica PDF
-        pdf_help: Carica una versione PDF del menù
-        remove_pdf: Rimuovi PDF attuale
-        display_settings: Impostazioni Visualizzazione
-        show_images: Mostra Immagini
-        show_images_desc: Mostra le immagini degli articoli nel menù
-        popup_images: Immagini in Popup
-        popup_images_desc: Mostra un'immagine più grande al tocco
+        preview_staff: Anteprima (Staff)
+        preview_staff_title: Anteprima del menù come staff (vista autenticata)
+        price: Prezzo
+        quick_actions: Azioni Rapide
+        tasting_menu: Menù Degustazione
       qrcode_2025:
         all_qr_codes_for_menu: Tutti i Codici QR per questo Menù
         all_qr_codes_for_menu_desc: Include il QR del menù generale (senza tavolo)
           e un QR per ogni tavolo per questo menù.
-        menu_only_qr: QR Menù (Tutti i Tavoli)
         all_tables: Tutti i Tavoli
-        print: Stampa
+        download: Scarica
+        download_description: Scarica il codice QR in diversi formati per la stampa
+        download_options: Opzioni di Download
+        menu_only_qr: QR Menù (Tutti i Tavoli)
         menu_table_qr: Codici QR Tavolo per questo Menù
         no_qr_found: Nessun codice QR trovato. Assicurati che gli Smartmenu siano
           generati per questo menù e per i tavoli.
-        download_options: Opzioni di Download
-        download_description: Scarica il codice QR in diversi formati per la stampa
-        png_format: Immagine PNG
-        png_desc: Alta qualità per uso digitale
-        svg_format: Vettoriale SVG
-        svg_desc: Scalabile per qualsiasi dimensione
-        pdf_format: Documento PDF
         pdf_desc: Formato pronto per la stampa
-        download: Scarica
-        usage_tips: Suggerimenti d'Uso
+        pdf_format: Documento PDF
+        png_desc: Alta qualità per uso digitale
+        png_format: Immagine PNG
+        print: Stampa
+        print_qr_title: Stampa QR
+        svg_desc: Scalabile per qualsiasi dimensione
+        svg_format: Vettoriale SVG
         tip_1: Stampa i codici QR su segnatavolo o tovagliette per un accesso facile
         tip_2: Includi il codice QR su scontrini e biglietti da visita
         tip_3: Metti i codici QR vicino all'ingresso per i clienti d'asporto
         tip_4: Testa regolarmente il codice QR per assicurarti che funzioni correttamente
         url_copied: URL copiato negli appunti!
-        print_qr_title: Stampa QR
+        usage_tips: Suggerimenti d'Uso
       schedule_2025:
-        quick_actions: Azioni Rapide
-        copy_to_all: Copia Lunedì a Tutti i Giorni
-        menu_availabilities: Disponibilità Menù
         availabilities_description: Imposta quando questo menù è disponibile per i
           clienti durante la settimana
-        unavailable: Non disponibile
         copied_success: Copiato!
+        copy_to_all: Copia Lunedì a Tutti i Giorni
+        menu_availabilities: Disponibilità Menù
+        quick_actions: Azioni Rapide
+        unavailable: Non disponibile
+      sections_2025:
+        add_first_section: Aggiungi Prima Sezione
+        add_section: Aggiungi Sezione
+        edit: Modifica
+        items: Articoli
+        menu_sections: Sezioni Menù
+        name: Nome
+        no_sections: Nessuna sezione ancora
+        no_sections_desc: Aggiungi la tua prima sezione per iniziare a costruire il
+          menù
+        preview_customer: Anteprima (Cliente)
+        preview_customer_title: Anteprima del menù come lo vedono i clienti (autenticato
+          come staff ma in interfaccia cliente)
+        preview_staff: Anteprima (Staff)
+        preview_staff_title: Anteprima del menù come staff (vista autenticata)
+        quick_actions: Azioni Rapide
+        sections_description: Organizza il menù in sezioni come Antipasti, Primi,
+          Dolci, ecc.
+      settings_2025:
+        allow_ordering: Permetti Ordinazioni
+        allow_ordering_help: Abilita ordinazioni online per questo menù
+        disabled_at_restaurant: Disabilitato a livello ristorante
+        display_images: Mostra Immagini
+        display_images_help: Mostra le immagini degli articoli in questo menù
+        display_images_popup: Mostra Immagini in Popup
+        display_images_popup_help: Apri le immagini degli articoli in un popup quando
+          cliccate
+        feature_toggles: Attivazione Funzionalità
+        images_info: Attiva/disattiva foto degli articoli del menù
+        inventory_tracking: Tracciamento Inventario
+        inventory_tracking_help: Traccia i livelli di stock per gli articoli del menù
+          (Prossimamente)
+        ordering_info: Abilita ordinazioni dei clienti
+        parent_restriction: 'Nota:'
+        parent_restriction_desc: Le impostazioni disabilitate a livello ristorante
+          non possono essere abilitate per i singoli menù. Abilitale prima a livello
+          ristorante.
+        popup_info: Visualizzazione immagini a schermo intero
+        settings_info_desc: Queste impostazioni controllano le funzionalità per questo
+          menù. Le modifiche vengono salvate automaticamente.
+        settings_info_title: Informazioni sulle Impostazioni del Menù
+        status: Stato
+        status_info: Controlla la visibilità del menù
+        voice_ordering: Ordinazione Vocale
+        voice_ordering_help: Consenti ai clienti di ordinare con comandi vocali in
+          questo menù
+        voice_ordering_info: Abilita comandi vocali per ordinare

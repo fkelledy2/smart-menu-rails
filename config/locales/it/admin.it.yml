@@ -1,221 +1,235 @@
 ---
 it:
   admin:
-    performance:
-      title: Monitoraggio delle Prestazioni
-      subtitle: Metriche e analisi delle prestazioni in tempo reale
-      card:
-        avg_response_time: Tempo Medio di Risposta
-        memory_usage: Utilizzo Memoria
-        error_rate: Tasso di Errore
-        active_users: Utenti Attivi
-        last_5_minutes: Ultimi 5 minuti
-        current_rss: RSS Corrente
-      response_time_trend: Andamento Tempo di Risposta (24h)
-      memory_usage_trend: Andamento Utilizzo Memoria (24h)
-      slowest_endpoints: Endpoint più Lenti (Ultima Ora)
-      table:
-        endpoint: Punto finale
-        avg_response_time: Tempo Medio di Risposta
-      no_slow_endpoints: Nessun endpoint lento rilevato
-      recent_slow_queries: Query Lente Recenti
-      query_table:
-        duration: Durata
-        query: Interrogazione
-        time: Ora
-      no_slow_queries: Nessuna query lenta rilevata
-      actions: Azioni
     cache:
-      title: Amministrazione Cache
-      health_status: Stato Salute Cache
-      response_time: Tempo di Risposta
-      write_operation: Operazione di Scrittura
-      read_operation: Operazione di Lettura
-      delete_operation: Operazione di Cancellazione
-      error: Errore
-      performance_stats: Statistiche di Prestazione
-      reset_stats: Reset Statistiche
-      cache_hits: Hit Cache
-      cache_misses: Miss Cache
-      cache_writes: Scritture Cache
+      active_keys: Chiavi Attive
       cache_deletes: Cancellazioni Cache
       cache_errors: Errori
-      hit_rate: Tasso di Hit
+      cache_hits: Hit Cache
       cache_info: Informazioni Cache
-      service_version: Versione Servizio
-      cache_methods: Metodi Cache
-      active_keys: Chiavi Attive
-      memory_usage: Utilizzo Memoria
-      cache_warming: Riscaldamento Cache
-      cache_warming_description: Pre-carica i dati critici della cache per migliorare
-        le prestazioni.
       cache_management: Gestione Cache
       cache_management_description: Cancella tutti i dati memorizzati nella cache
         per forzare il caricamento di dati nuovi.
+      cache_methods: Metodi Cache
+      cache_misses: Miss Cache
       cache_patterns: Pattern Cache
+      cache_warming: Riscaldamento Cache
+      cache_warming_description: Pre-carica i dati critici della cache per migliorare
+        le prestazioni.
+      cache_writes: Scritture Cache
+      delete_operation: Operazione di Cancellazione
+      error: Errore
+      health_status: Stato Salute Cache
+      hit_rate: Tasso di Hit
+      memory_usage: Utilizzo Memoria
       patterns:
-        restaurant: Dashboard e analisi ristoranti
+        employee: Dati e prestazioni personale
         menu: Dati e prestazioni menu
         menuitem: Dettagli e analisi voci di menu
         order: Dati e riassunti ordini
-        employee: Dati e prestazioni personale
+        restaurant: Dashboard e analisi ristoranti
         user: Attività utente e dati multi-ristorante
+      performance_stats: Statistiche di Prestazione
+      read_operation: Operazione di Lettura
+      reset_stats: Reset Statistiche
+      response_time: Tempo di Risposta
+      service_version: Versione Servizio
+      title: Amministrazione Cache
+      write_operation: Operazione di Scrittura
+    dashboard:
+      kpis:
+        bounce_rate: Tasso di Rimbalzo
+        customers: Clienti
+        growth_rate: Tasso di Crescita
+        page_views: Visualizzazioni Pagina
+        total_orders: Ordini Totali
+        total_revenue: Fatturato Totale
+        unique_visitors: Visitatori Unici
+      loading: Caricamento...
+      sales:
+        no_data: Nessun dato di vendita disponibile per questo periodo.
+        table:
+          item: Articolo
+          quantity_sold: Quantità Venduta
+        title: Articoli più Venduti
     metrics:
-      title: Monitoraggio Prestazioni Applicazione
       card:
-        total_requests: Richieste Totali
-        avg_response_time: Tempo Medio di Risposta
-        error_rate: Tasso di Errore
-        total_users: Utenti Totali
         all_time: Da sempre
+        all_time_registrations: Registrazioni da sempre
+        avg_response_time: Tempo Medio di Risposta
         current_average: Media attuale
         current_error_rate: Tasso di errore attuale
-        all_time_registrations: Registrazioni da sempre
-      summary:
-        restaurants_created: Ristoranti Creati
-        menu_imports: Importazioni Menu
-      system:
-        memory_usage: Utilizzo Memoria
-        active_users: Utenti Attivi
+        error_rate: Tasso di Errore
+        total_requests: Richieste Totali
+        total_users: Utenti Totali
       metric_types:
-        title: Tipi di Metriche
         counters: 'Contatori: Valori cumulativi che aumentano solo (es. richieste
           totali)'
         gauges: 'Gauge: Valori attuali che possono aumentare o diminuire (es. utenti
           attivi)'
         histograms: 'Istogrammi: Raccolte di misurazioni (es. tempi di risposta)'
+        title: Tipi di Metriche
+      no_recent_metrics:
+        description: Le metriche appariranno qui man mano che l'applicazione viene
+          utilizzata
+        message: Nessuna metrica recente disponibile
+      summary:
+        menu_imports: Importazioni Menu
+        restaurants_created: Ristoranti Creati
+      system:
+        active_users: Utenti Attivi
+        memory_usage: Utilizzo Memoria
       table:
+        last_updated: Ultimo Aggiornamento
         metric: Metrica
         type: Tipo
         value: Valore
-        last_updated: Ultimo Aggiornamento
-      no_recent_metrics:
-        message: Nessuna metrica recente disponibile
-        description: Le metriche appariranno qui man mano che l'applicazione viene
-          utilizzata
-    dashboard:
-      kpis:
-        total_orders: Ordini Totali
-        total_revenue: Fatturato Totale
-        customers: Clienti
-        growth_rate: Tasso di Crescita
-        page_views: Visualizzazioni Pagina
-        unique_visitors: Visitatori Unici
-        bounce_rate: Tasso di Rimbalzo
-      sales:
-        title: Articoli più Venduti
-        table:
-          item: Articolo
-          quantity_sold: Quantità Venduta
-        no_data: Nessun dato di vendita disponibile per questo periodo.
-      loading: Caricamento...
-  notifications:
-    index:
-      title: Notifiche
+      title: Monitoraggio Prestazioni Applicazione
+    performance:
+      actions: Azioni
+      card:
+        active_users: Utenti Attivi
+        avg_response_time: Tempo Medio di Risposta
+        current_rss: RSS Corrente
+        error_rate: Tasso di Errore
+        last_5_minutes: Ultimi 5 minuti
+        memory_usage: Utilizzo Memoria
+      memory_usage_trend: Andamento Utilizzo Memoria (24h)
+      no_slow_endpoints: Nessun endpoint lento rilevato
+      no_slow_queries: Nessuna query lenta rilevata
+      query_table:
+        duration: Durata
+        query: Interrogazione
+        time: Ora
+      recent_slow_queries: Query Lente Recenti
+      response_time_trend: Andamento Tempo di Risposta (24h)
+      slowest_endpoints: Endpoint più Lenti (Ultima Ora)
+      subtitle: Metriche e analisi delle prestazioni in tempo reale
+      table:
+        avg_response_time: Tempo Medio di Risposta
+        endpoint: Punto finale
+      title: Monitoraggio delle Prestazioni
   announcements:
     index:
-      title: Novità
       coming_soon: Nuove激动anti funzionalità in arrivo!
+      title: Novità
   beverage_review_queue:
-    title: Coda Revisione Bevande
-    recent_pipeline_runs: Esecuzioni pipeline recenti
-    table:
-      created: Creato
-      menu: Menù
-      status: Stato
-      step: Passo
-      processed: Elaborato
-      needs_review: Richiede revisione
-      unresolved: Non risolto
-      actions: Azioni
     items_needing_review: Elementi che richiedono revisione
     items_table:
-      menu: Menù
-      section: Sezione
-      item: Elemento
       category: Categoria
       class_conf: Conf. Classe
+      item: Elemento
+      menu: Menù
       parse_conf: Conf. Parsing
       parsed: Elaborato
-  dw_orders_mv:
-    title: Analisi Ordini
-    loading: Caricamento dati...
-  ordritems:
-    index:
-      title: Elementi Ordine
-    new:
-      title: Nuovo elemento ordine
-    edit:
-      title: Modifica Elemento Ordine
-    show:
-      title: Visualizza Elemento Ordine
-      ordr: Ordine
-      menuitem: Voce Menu
-  ordrparticipants:
-    index:
-      title: Partecipanti Ordine
-    new:
-      title: Nuovo Partecipante Menu
-    edit:
-      title: Modifica Partecipante Menu
-    show:
-      title: Visualizza Partecipante Ordine
+      section: Sezione
+    recent_pipeline_runs: Esecuzioni pipeline recenti
     table:
-      sessionid: ID Sessione
-      role: Ruolo
-      employee: Dipendente
-      ordr: Ordine
-      ordritem: Elemento Ordine
-  ordractions:
-    index:
-      title: Azioni Ordine
-    new:
-      title: Nuova Azione Ordine
-    edit:
-      title: Modifica Azione Ordine
-    show:
-      title: Visualizza Azione Ordine
-  ordritemnotes:
-    index:
-      title: Note Elementi Ordine
-    new:
-      title: Nuova Nota Elemento
-    edit:
-      title: Modifica Nota Elemento
-    show:
-      title: Visualizza Nota Elemento
-  menuparticipants:
-    new:
-      title: Nuovo Partecipante Menu
-    edit:
-      title: Modifica Partecipante Menu
-  ingredients:
-    index:
-      title: Ingredienti
-    new:
-      title: Nuovo Ingrediente
-    edit:
-      title: Modifica Ingrediente
-    show:
-      title: Visualizza Ingrediente
+      actions: Azioni
+      created: Creato
+      menu: Menù
+      needs_review: Richiede revisione
+      processed: Elaborato
+      status: Stato
+      step: Passo
+      unresolved: Non risolto
+    title: Coda Revisione Bevande
+  dw_orders_mv:
+    loading: Caricamento dati...
+    title: Analisi Ordini
   genimages:
+    edit:
+      title: Modifica Immagine Generata
     index:
       title: Immagini Generate
     new:
       title: Nuova Immagine Generata
-    edit:
-      title: Modifica Immagine Generata
     show:
       title: Visualizza Immagine Generata
     table:
-      id: ID
-      name: Nome
       description: Descrizione
-      restaurant: Ristorante
-      menu: Menù
-      menusection: Sezione Menu
-      menuitem: Voce Menu
+      id: ID
       image_data: Dati Immagine
+      menu: Menù
+      menuitem: Voce Menu
+      menusection: Sezione Menu
+      name: Nome
+      restaurant: Ristorante
+  ingredients:
+    edit:
+      title: Modifica Ingrediente
+    index:
+      title: Ingredienti
+    new:
+      title: Nuovo Ingrediente
+    show:
+      title: Visualizza Ingrediente
+  menuparticipants:
+    edit:
+      title: Modifica Partecipante Menu
+    new:
+      title: Nuovo Partecipante Menu
+  metrics:
+    edit:
+      title: Modifica Metrica
+    index:
+      title: Metriche
+    new:
+      title: Nuova Metrica
+    show:
+      title: Visualizza Metrica
+  notifications:
+    index:
+      title: Notifiche
+  onboarding:
+    show:
+      completed: Completato
+      current_step: Passo attuale
+      progress: Progresso
+  ordractions:
+    edit:
+      title: Modifica Azione Ordine
+    index:
+      title: Azioni Ordine
+    new:
+      title: Nuova Azione Ordine
+    show:
+      title: Visualizza Azione Ordine
+  ordritemnotes:
+    edit:
+      title: Modifica Nota Elemento
+    index:
+      title: Note Elementi Ordine
+    new:
+      title: Nuova Nota Elemento
+    show:
+      title: Visualizza Nota Elemento
+  ordritems:
+    edit:
+      title: Modifica Elemento Ordine
+    index:
+      title: Elementi Ordine
+    new:
+      title: Nuovo elemento ordine
+    show:
+      menuitem: Voce Menu
+      ordr: Ordine
+      title: Visualizza Elemento Ordine
+  ordrparticipants:
+    edit:
+      title: Modifica Partecipante Menu
+    index:
+      title: Partecipanti Ordine
+    new:
+      title: Nuovo Partecipante Menu
+    show:
+      title: Visualizza Partecipante Ordine
+    table:
+      employee: Dipendente
+      ordr: Ordine
+      ordritem: Elemento Ordine
+      role: Ruolo
+      sessionid: ID Sessione
   restaurantlocales:
     index:
       title: Locali Ristorante
@@ -223,38 +237,24 @@ it:
       title: Visualizza Locale Ristorante
     table:
       locale: Lingua
-      status: Stato
       restaurant: Ristorante
+      status: Stato
   tracks:
+    edit:
+      title: Modifica Traccia
     index:
       title: Tracce
     new:
       title: Nuova Traccia
-    edit:
-      title: Modifica Traccia
   userplans:
+    edit:
+      manage_billing: Gestione Fatturazione
     index:
       title: Piani Utente
     new:
       title: Nuovo Piano Utente
     show:
       title: Visualizza Piano Utente
-    edit:
-      manage_billing: Gestione Fatturazione
     table:
-      user: Utente
       plan: Piano
-  metrics:
-    index:
-      title: Metriche
-    new:
-      title: Nuova Metrica
-    edit:
-      title: Modifica Metrica
-    show:
-      title: Visualizza Metrica
-  onboarding:
-    show:
-      progress: Progresso
-      current_step: Passo attuale
-      completed: Completato
+      user: Utente

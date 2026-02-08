@@ -19,6 +19,9 @@ it:
       taxesTab: Tasse
       tipsTab: Mance
       tracksTab: Brani
+    edit_2025:
+      subtitle: Gestisci la configurazione del tuo ristorante
+      toggle_navigation: Attiva/disattiva navigazione
     form:
       address: Indirizzo
       connect: Collega
@@ -39,6 +42,87 @@ it:
       wifi: Wi‑Fi
     index:
       restaurants: Ristoranti
+    index_2025:
+      heading: Ristoranti
+      new_restaurant: Nuovo Ristorante
+      quick_actions: Azioni Rapide
+      search: Cerca
+      search_placeholder: Cerca ristoranti…
+      subtitle: Gestisci sedi, menù e staff
+      title: I tuoi ristoranti
+    index_frame_2025:
+      active: Attivo
+      apply: Applica
+      clear_search: Cancella ricerca
+      drag_to_reorder: Trascina per riordinare
+      edit: Modifica
+      inactive: Inattivo
+      menus_action: Menù
+      menus_count_label: menù
+      no_restaurants: Nessun ristorante trovato
+      no_results_for: Nessun risultato per
+      pagination_aria_label: Paginazione ristoranti
+      restaurants: Ristoranti
+      set_status: Imposta stato...
+      staff_count_label: personale
+    insights:
+      back: Indietro
+      columns:
+        count: Conteggio
+        dropoff: Abbandono
+        dropoff_rate: Tasso di abbandono
+        fail: Errori
+        item: Articolo
+        median_seconds: Mediana (s)
+        orders: Ordini
+        outlier: Fuoriclasse
+        qty: Qtà
+        rate: Tasso
+        sample_size: "N"
+        share: Quota
+        step: Fase
+        success: Successi
+        triggers: Trigger
+      export_csv: Esporta CSV
+      filters:
+        all_menus: Tutti i menù
+        custom: Personalizzato
+        end: Fine
+        last28: Ultimi 28 giorni
+        last7: Ultimi 7 giorni
+        last_month: Mese scorso
+        menu_optional: Menù (opzionale)
+        mtd: Mese corrente
+        refresh: Aggiorna
+        start: Inizio
+        time_window: Periodo
+        today: Oggi
+        yesterday: Ieri
+      funnel_steps:
+        bill_requested: Conto richiesto
+        order_submitted: Ordine inviato
+        payment_succeeded: Pagamento riuscito
+      helper_text: 'v1: approfondimenti in sola lettura. Il funnel di abbandono è
+        attualmente basato su milestone ordine/pagamento.'
+      no_data: Nessun dato per il periodo selezionato.
+      page_title: "%{restaurant_name} - Approfondimenti"
+      sections:
+        abandonment_funnel:
+          title: Funnel di abbandono
+        prep_time_bottlenecks:
+          helper_text: Usa la tempistica dei ticket di stazione (inviato → pronto/ritirato)
+            come proxy v1.
+          title: Colli di bottiglia tempi di preparazione
+        slow_movers:
+          title: Articoli meno richiesti
+        top_performers:
+          title: Migliori risultati
+        voice_triggers:
+          title: Frequenza comandi vocali
+      title: Approfondimenti
+      values:
+        'false': false
+        'true': Sì
     new:
       restaurant: Ristorante
       restaurants: Ristoranti
@@ -55,6 +139,37 @@ it:
       state: 'Provincia:'
       status: 'Stato:'
       user: 'Utente:'
+    sections:
+      details_2025:
+        address: Indirizzo
+        city: Città
+        city_placeholder: Nome città
+        country: Paese
+        country_placeholder: Paese
+        currency: Valuta
+        description: Descrizione
+        items: Articoli
+        latitude: Latitudine
+        latitude_placeholder: es., 41.9028
+        longitude: Longitudine
+        longitude_placeholder: es., 12.4964
+        phone: Telefono
+        phone_help: Numero di contatto per i clienti
+        phone_placeholder: es., +39 333 123 4567
+        postcode: Codice Postale
+        postcode_placeholder: es., 00100
+        restaurant_name: Nome Ristorante
+        restaurant_name_help: Il nome che vedranno i clienti
+        restaurant_name_placeholder: es., Bella Italia
+        state: Provincia/Stato
+        state_placeholder: Provincia o stato
+        status: Stato
+        status_help: Solo i ristoranti attivi sono visibili ai clienti
+        timezone: Fuso Orario
+        timezone_help: Fuso orario locale per gli orari di apertura
+        website: Sito Web
+        website_help: Il sito web del tuo ristorante
+        website_placeholder: https://esempio.it
     show:
       address: Indirizzo
       billing_content: La configurazione di fatturazione verrà visualizzata qui.
@@ -112,165 +227,31 @@ it:
       loading: Caricamento...
     showTracks:
       tracks: Brani
-    insights:
-      page_title: "%{restaurant_name} - Approfondimenti"
-      title: Approfondimenti
-      back: Indietro
-      export_csv: Esporta CSV
-      helper_text: 'v1: approfondimenti in sola lettura. Il funnel di abbandono è
-        attualmente basato su milestone ordine/pagamento.'
-      no_data: Nessun dato per il periodo selezionato.
-      values:
-        true: Sì
-        false: false
-      filters:
-        time_window: Periodo
-        today: Oggi
-        yesterday: Ieri
-        last7: Ultimi 7 giorni
-        last28: Ultimi 28 giorni
-        mtd: Mese corrente
-        last_month: Mese scorso
-        custom: Personalizzato
-        start: Inizio
-        end: Fine
-        refresh: Aggiorna
-        menu_optional: Menù (opzionale)
-        all_menus: Tutti i menù
-      sections:
-        top_performers:
-          title: Migliori risultati
-        slow_movers:
-          title: Articoli meno richiesti
-        prep_time_bottlenecks:
-          title: Colli di bottiglia tempi di preparazione
-          helper_text: Usa la tempistica dei ticket di stazione (inviato → pronto/ritirato)
-            come proxy v1.
-        voice_triggers:
-          title: Frequenza comandi vocali
-        abandonment_funnel:
-          title: Funnel di abbandono
-      columns:
-        item: Articolo
-        orders: Ordini
-        qty: Qtà
-        share: Quota
-        median_seconds: Mediana (s)
-        sample_size: "N"
-        outlier: Fuoriclasse
-        triggers: Trigger
-        success: Successi
-        fail: Errori
-        rate: Tasso
-        step: Fase
-        count: Conteggio
-        dropoff: Abbandono
-        dropoff_rate: Tasso di abbandono
-      funnel_steps:
-        order_submitted: Ordine inviato
-        bill_requested: Conto richiesto
-        payment_succeeded: Pagamento riuscito
-    edit_2025:
-      subtitle: Gestisci la configurazione del tuo ristorante
-      toggle_navigation: Attiva/disattiva navigazione
     sidebar_2025:
-      close_menu: Chiudi menu
-      restaurant: RISTORANTE
-      details: Dettagli
-      schedule: Orari
-      localization: Localizzazione
-      menus: MENÙ
+      advanced: Avanzate
       all_menus: Tutti i Menù
       allergens: Allergeni
-      sizes: Dimensioni
-      tables: TAVOLI
-      operations: OPERAZIONI
-      kitchen_dashboard: Cucina
       bar_dashboard: Bar
-      wifi: Wi‑Fi
-      team: SQUADRA
-      staff: Personale
+      close_menu: Chiudi menu
+      details: Dettagli
       financials: FINANZE
-      taxes_and_tips: Tasse e Mance
-      taxes: Tasse
-      tips: Mance
-      ordering: Ordinazioni
       insights: Approfondimenti
-      setup: CONFIGURAZIONE
-      settings: Impostazioni
-      qr_codes: Codici QR
       jukebox: Jukebox
-      advanced: Avanzate
-    index_2025:
-      title: I tuoi ristoranti
-      heading: Ristoranti
-      subtitle: Gestisci sedi, menù e staff
-      quick_actions: Azioni Rapide
-      new_restaurant: Nuovo Ristorante
-      search_placeholder: Cerca ristoranti…
-      search: Cerca
-    index_frame_2025:
-      pagination_aria_label: Paginazione ristoranti
-      no_restaurants: Nessun ristorante trovato
-      no_results_for: Nessun risultato per
-      clear_search: Cancella ricerca
-      menus_count_label: menù
-      staff_count_label: personale
-      edit: Modifica
-      menus_action: Menù
-      restaurants: Ristoranti
-      active: Attivo
-      inactive: Inattivo
-      set_status: Imposta stato...
-      apply: Applica
-      drag_to_reorder: Trascina per riordinare
-    sections:
-      details_2025:
-        quick_actions: Azioni Rapide
-        new_menu: Nuovo Menù
-        import_menu: Importa Menù
-        overview: Panoramica
-        menus: Menù
-        items: Articoli
-        tables: Tavoli
-        staff: Personale
-        restaurant_details: Dettagli Ristorante
-        restaurant_name: Nome Ristorante
-        restaurant_name_placeholder: es., Bella Italia
-        restaurant_name_help: Il nome che vedranno i clienti
-        description: Descrizione
-        description_placeholder: Descrivi il tuo ristorante...
-        description_help: Breve descrizione del tuo ristorante
-        status: Stato
-        active: Attivo
-        inactive: Inattivo
-        status_help: Solo i ristoranti attivi sono visibili ai clienti
-        phone: Telefono
-        phone_placeholder: es., +39 333 123 4567
-        phone_help: Numero di contatto per i clienti
-        website: Sito Web
-        website_placeholder: https://esempio.it
-        website_help: Il sito web del tuo ristorante
-        currency: Valuta
-        currency_help: Valuta utilizzata per i prezzi
-        timezone: Fuso Orario
-        timezone_help: Fuso orario locale per gli orari di apertura
-        location: Posizione
-        address: Indirizzo
-        address_placeholder: Indirizzo
-        address_help: Indirizzo completo
-        city: Città
-        city_placeholder: Nome città
-        state: Provincia/Stato
-        state_placeholder: Provincia o stato
-        postcode: Codice Postale
-        postcode_placeholder: es., 00100
-        country: Paese
-        country_placeholder: Paese
-        latitude: Latitudine
-        latitude_placeholder: es., 41.9028
-        longitude: Longitudine
-        longitude_placeholder: es., 12.4964
-        loading_map: Caricamento mappa...
-        map_error: Impossibile caricare la mappa
-        location_label: 'Posizione:'
+      kitchen_dashboard: Cucina
+      localization: Localizzazione
+      menus: MENÙ
+      operations: OPERAZIONI
+      ordering: Ordinazioni
+      qr_codes: Codici QR
+      restaurant: RISTORANTE
+      schedule: Orari
+      settings: Impostazioni
+      setup: CONFIGURAZIONE
+      sizes: Dimensioni
+      staff: Personale
+      tables: TAVOLI
+      taxes: Tasse
+      taxes_and_tips: Tasse e Mance
+      team: SQUADRA
+      tips: Mance
+      wifi: Wi‑Fi

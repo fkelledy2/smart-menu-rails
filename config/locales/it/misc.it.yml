@@ -1,59 +1,5 @@
 ---
 it:
-  time:
-    formats:
-      default: "%a, %d %b %Y %H:%M:%S %z"
-      short: "%d %b %H:%M"
-      long: "%B %d, %Y %H:%M"
-    date:
-      formats:
-        default: ''
-        short: ''
-        long: ''
-      abbr_day_names:
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      abbr_month_names:
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      day_names:
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      month_names:
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
-      - ''
   activerecord:
     attributes:
       employee:
@@ -63,24 +9,24 @@ it:
       menu:
         restaurant: Ristorante
         sequence: Ordine di Visualizzazione
+      menuavailability:
+        endmin: Minuti Chiusura
+        menu: Menu
+        startmin: Minuti Apertura
       menuitem:
-        sequence: Ordine di Visualizzazione
         ingredients: Ingredienti
         menusection_id: Sezione
+        sequence: Ordine di Visualizzazione
         tags: Tag
         variantPricing: Prezzi Varianti
       menusection:
         menu: Menu
         sequence: Ordine di Visualizzazione
-      menuavailability:
-        endmin: Minuti Chiusura
-        menu: Menu
-        startmin: Minuti Apertura
       restaurant:
         capacity: Capacità
+        covercharge: ''
         music: Music
         tips: Tips
-        covercharge: ''
       restaurantavailability:
         endmin: Minuti Chiusura
         restaurant: Ristorante
@@ -101,6 +47,55 @@ it:
       deactivate: Disattiva
     new:
       allergyn: Nuovo Allergene
+  date:
+    abbr_day_names:
+    - dom
+    - lun
+    - mar
+    - mer
+    - gio
+    - ven
+    - sab
+    abbr_month_names:
+    - ''
+    - gen
+    - feb
+    - mar
+    - apr
+    - mag
+    - giu
+    - lug
+    - ago
+    - set
+    - ott
+    - nov
+    - dic
+    day_names:
+    - domenica
+    - lunedì
+    - martedì
+    - mercoledì
+    - giovedì
+    - venerdì
+    - sabato
+    formats:
+      default: "%d/%m/%Y"
+      long: "%B %d, %Y"
+      short: "%d %b"
+    month_names:
+    - ''
+    - gennaio
+    - febbraio
+    - marzo
+    - aprile
+    - maggio
+    - giugno
+    - luglio
+    - agosto
+    - settembre
+    - ottobre
+    - novembre
+    - dicembre
   devise:
     registrations:
       edit:
@@ -108,10 +103,43 @@ it:
         password: ''
         passwordHelp: ''
         selectPlan: ''
+  employees:
+    form:
+      selectRestaurant: Seleziona un Ristorante ...
+    new:
+      cancel: Annulla
+  feature1:
+    key: Menu Intelligenti
+  feature2:
+    key: Ordinazioni del Personale
+  feature3:
+    key: Filtro Allergeni
+  feature4:
+    key: Ordinazioni Clienti
+  feature5:
+    key: Traduzioni Automatiche del Menu
+  feature6:
+    key: Generazione Immagini del Menu con IA
+  genimages:
+    edit:
+      genimage: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      genimage: ''
+      genimages: ''
+    new:
+      cancel: ''
+      genimage: ''
+    show:
+      genimage: ''
   home:
     index:
       actions: Azioni
-      signup: Iscriviti
       activate: Attiva
       deactivate: Disattiva
       emailAddress: Indirizzo Email
@@ -120,6 +148,24 @@ it:
         il menu, ordinare e pagare—senza contanti, menu stampati o terminali.
       featureTitle1: Esperienza Contactless
       message: Messaggio
+      signup: Iscriviti
+  ingredients:
+    edit:
+      ingredient: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      ingredient: ''
+      ingredients: ''
+    new:
+      cancel: ''
+      ingredient: ''
+    show:
+      ingredient: ''
   inventories:
     index:
       activate: Attiva
@@ -127,11 +173,11 @@ it:
   menuavailabilities:
     edit:
       menuAvailability: Modifica Disponibilità
+    form:
+      errors: Errori
     index:
       activate: Apri
       deactivate: Chiudi
-    form:
-      errors: Errori
   menuitems:
     edit:
       menuItem: Elemento del Menu
@@ -143,9 +189,9 @@ it:
       deactivate: Disattiva
   menus:
     form:
+      pdfMenuScan: ''
       preview: Anteprima
       selectRestaurant: Seleziona un Ristorante ...
-      pdfMenuScan: ''
     index:
       activate: Attiva
       deactivate: Disattiva
@@ -167,11 +213,11 @@ it:
   menusections:
     edit:
       menuSection: ''
+    form:
+      errors: Errori
     index:
       activate: Attiva
       deactivate: Disattiva
-    form:
-      errors: Errori
     showInventories:
       actions: Azioni
       activate: Attiva
@@ -180,40 +226,156 @@ it:
       actions: Azioni
       activate: Attiva
       deactivate: Disattiva
+  metrics:
+    edit:
+      metric: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      metric: ''
+      metrics: ''
+    new:
+      cancel: ''
+      metric: ''
+    show:
+      metric: ''
+  number:
+    currency:
+      format:
+        delimiter: ''
+        format: ''
+        precision: ''
+        separator: ''
+        unit: ''
+  ocr_menu_imports:
+    create:
+      success: ''
+    edit:
+      ocrMenuImport: ''
+    form:
+      cancel: ''
+      import: ''
+      save: ''
+    index:
+      activate: ''
+      deactivate: ''
+      ocrMenuImport: ''
+      ocrMenuImports: ''
+    new:
+      ocrMenuImport: ''
+    show:
+      ocrMenuImport: ''
+  orders:
+    completed: ''
+    paid: ''
+    payment: ''
+    pending: ''
+    subtotal: ''
+    tax: ''
+    tip: ''
+    total: ''
+  ordrs:
+    index:
+      order: ''
+    show:
+      order: ''
+      table: ''
+  plan:
+    business:
+      attribut6: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Per locali multi-sede</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> Fino a <strong>%{locations}</strong>
+        ristoranti</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Fino a <strong>%{menus}</strong>
+        menu / ristorante</li><li><i class='bi bi-check-lg'></i> Fino a <strong>%{dishes}</strong>
+        piatti / menu</li><li><i class='bi bi-check-lg'></i> Fino a <strong>%{languages}</strong>
+        lingue</li><li><i class='bi bi-check-lg'></i> Gestione inventario</li><li><i
+        class='bi bi-check-lg'></i> Branding assistito da IA</li><li><i class='bi
+        bi-check-lg'></i> Supporto email prioritario</li>"
+      attribute4: ''
+      attribute5: ''
+      key: Business
+    call: Contattaci
+    enterprise:
+      attribut6: ''
+      attribute1: "<li>Località <strong>Illimitate</strong></li>"
+      attribute2: "<li>Menu <strong>Illimitati</strong></li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Suggerimenti Intelligenti con
+        IA</li><li><i class='bi bi-check-lg'></i> Anteprime Piatti con IA</li><li><i
+        class='bi bi-check-lg'></i> Supporto Multilingue Avanzato</li><li><i class='bi
+        bi-check-lg'></i> Account Manager Dedicato</li><li><i class='bi bi-check-lg'></i>
+        Branding Personalizzato</li>"
+      attribute4: ''
+      attribute5: ''
+      key: Enterprise
+    pro:
+      attribute1: "<li>Fino a <strong>3</strong> Ristoranti</li>"
+      attribute2: "<li><strong>3</strong> Menu per sede</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Visualizzazione Menu Digitale
+        (+Foto)</li><i class='bi bi-check-lg'></i> Ordinazioni Clienti</li><li><i
+        class='bi bi-check-lg'></i> Analisi dei Piatti più Venduti</li><li><i class='bi
+        bi-check-lg'></i> Supporto Multilingue Base</li><li>&nbsp;</li>"
+      attribute4: ''
+      key: Pro
+    register: Registrati
+    starter:
+      attribut6: ''
+      attribute1: "<li><i class='bi bi-check-lg'></i> Per piccoli bar e caffetterie</li>"
+      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
+        ristorante</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Fino a <strong>%{menus}</strong>
+        menu / ristorante</li><li><i class='bi bi-check-lg'></i> Fino a <strong>%{dishes}</strong>
+        piatti / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
+        lingua</li><li><i class='bi bi-check-lg'></i> Ordini del personale</li><li><i
+        class='bi bi-check-lg'></i> Supporto email</li><li>&nbsp;</li>"
+      attribute4: ''
+      attribute5: ''
+      key: Starter
+    trial:
+      attribute1: "<li><strong>1</strong> Ristorante</li>"
+      attribute2: "<li><strong>1</strong> Menu</li>"
+      attribute3: "<li><i class='bi bi-check-lg'></i> Visualizzazione Menu Digitale</li><li><i
+        class='bi bi-check-lg'></i> Ordinazioni solo per il personale</li><li><i class='bi
+        bi-check-lg'></i> Filtri Dietetici</li><li>&nbsp;</li><li>&nbsp;</li>"
+      key: Prova
   restaurantavailabilities:
     form:
-      selectRestaurant: Seleziona un Ristorante ...
       errors: Errori
+      selectRestaurant: Seleziona un Ristorante ...
     index:
       activate: Apri
       deactivate: Chiudi
     new:
       cancel: Annulla
   restaurants:
+    currency: ''
+    currency_symbol: ''
     edit:
       restaurant: Modifica Ristorante
     form:
-      generateImage: Genera Immagine
       errors: Errori
+      generateImage: Genera Immagine
     index:
+      actions: Azioni
       activate: Attiva
       deactivate: Disattiva
       restaurant: Ristorante
-      actions: Azioni
     new:
       cancel: Annulla
     show:
-      name: Nome
-      restaurant: Visualizza Ristorante
       address1: Indirizzo Linea 1
       address2: Indirizzo Linea 2
       city: Città
       currency: Valuta
       description: Descrizione
+      name: Nome
       postcode: CAP
+      restaurant: Visualizza Ristorante
       state: Stato
-    currency: ''
-    currency_symbol: ''
     showAllergyns:
       actions: Azioni
       activate: Attiva
@@ -275,19 +437,19 @@ it:
     navbar:
       allergyns: Allergeni
       employees: Dipendenti
+      inventories: Inventari
+      menuAvailability: Disponibilità del menu
       menuItems: Elementi del menu
+      menuSections: Sezioni del menu
       menus: Menu
       openingHours: Orari di apertura
+      orderItems: Articoli dell'ordine
       orders: Ordini
       sizes: Taglie
       tableSettings: Impostazioni tavolo
       taxes: Tasse
       tips: ''
       whatsNew: Novità
-      inventories: Inventari
-      menuAvailability: Disponibilità del menu
-      menuSections: Sezioni del menu
-      orderItems: Articoli dell'ordine
   sizes:
     edit:
       size: Modifica Taglia
@@ -302,18 +464,8 @@ it:
     new:
       size: Nuova Taglia
   smartmenus:
-    index:
-      activate: Attiva
-      deactivate: Disattiva
-      menu: Menu
-      menus: Menu
-      unavailable: Il menu non è attualmente disponibile.
-    orderCustomer:
-      takePayment: ''
-    show:
-      menu: Visualizza Menu
-      table: Tavolo
     alcoholic: Alcolico
+    alcoholic_tooltip: Contiene alcol
     edit:
       menu: Modifica Menu
     form:
@@ -322,23 +474,33 @@ it:
       errors: Errori
       preview: Anteprima
       selectRestaurant: Seleziona un Ristorante ...
+    index:
+      activate: Attiva
+      deactivate: Disattiva
+      menu: Menu
+      menus: Menu
+      unavailable: Il menu non è attualmente disponibile.
     new:
       cancel: Annulla
       menu: Nuovo Menu
+    orderCustomer:
+      takePayment: ''
     orderStaff:
       staffAlerted: ''
+    show:
+      menu: Visualizza Menu
+      table: Tavolo
     showMenuBanner:
       table: Tavolo
     showModals:
       menuItem: ''
-    alcoholic_tooltip: Contiene alcol
   tablesettings:
     form:
       delete: Elimina
-      save: Salva
-      sure: Sei sicuro?
       errors: Errori
+      save: Salva
       selectRestaurant: Seleziona un Ristorante ...
+      sure: Sei sicuro?
     index:
       tablesetting: Tavolo
       tablesettings: Tavoli
@@ -346,186 +508,6 @@ it:
       cancel: Annulla
     show:
       tablesetting: Tavolo
-  taxes:
-    edit:
-      tax: Modifica Tassa
-    form:
-      delete: Elimina
-      save: Salva
-      sure: Sei sicuro?
-      errors: Errori
-      selectRestaurant: Seleziona un Ristorante ...
-    index:
-      tax: Tassa
-      activate: ''
-      deactivate: ''
-    new:
-      tax: Nuova Tassa
-  tips:
-    edit:
-      tip: Modifica Mancia
-    form:
-      delete: Elimina
-      save: Salva
-      sure: Sei sicuro?
-      errors: Errori
-      selectRestaurant: Seleziona un Ristorante ...
-    index:
-      tip: Mancia
-      activate: ''
-      deactivate: ''
-    new:
-      tip: Nuova Mancia
-  employees:
-    form:
-      selectRestaurant: Seleziona un Ristorante ...
-    new:
-      cancel: Annulla
-  feature1:
-    key: Menu Intelligenti
-  feature2:
-    key: Ordinazioni del Personale
-  feature3:
-    key: Filtro Allergeni
-  feature4:
-    key: Ordinazioni Clienti
-  feature5:
-    key: Traduzioni Automatiche del Menu
-  feature6:
-    key: Generazione Immagini del Menu con IA
-  genimages:
-    edit:
-      genimage: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: ''
-      deactivate: ''
-      genimage: ''
-      genimages: ''
-    new:
-      cancel: ''
-      genimage: ''
-    show:
-      genimage: ''
-  ingredients:
-    edit:
-      ingredient: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: ''
-      deactivate: ''
-      ingredient: ''
-      ingredients: ''
-    new:
-      cancel: ''
-      ingredient: ''
-    show:
-      ingredient: ''
-  metrics:
-    edit:
-      metric: ''
-    form:
-      delete: ''
-      save: ''
-      sure: ''
-    index:
-      activate: ''
-      deactivate: ''
-      metric: ''
-      metrics: ''
-    new:
-      cancel: ''
-      metric: ''
-    show:
-      metric: ''
-  ocr_menu_imports:
-    create:
-      success: ''
-    edit:
-      ocrMenuImport: ''
-    form:
-      cancel: ''
-      import: ''
-      save: ''
-    index:
-      activate: ''
-      deactivate: ''
-      ocrMenuImport: ''
-      ocrMenuImports: ''
-    new:
-      ocrMenuImport: ''
-    show:
-      ocrMenuImport: ''
-  ordrs:
-    index:
-      order: ''
-    show:
-      order: ''
-      table: ''
-  plan:
-    business:
-      key: Business
-      attribut6: ''
-      attribute1: "<li><i class='bi bi-check-lg'></i> Per locali multi-sede</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> Fino a <strong>%{locations}</strong>
-        ristoranti</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Fino a <strong>%{menus}</strong>
-        menu / ristorante</li><li><i class='bi bi-check-lg'></i> Fino a <strong>%{dishes}</strong>
-        piatti / menu</li><li><i class='bi bi-check-lg'></i> Fino a <strong>%{languages}</strong>
-        lingue</li><li><i class='bi bi-check-lg'></i> Gestione inventario</li><li><i
-        class='bi bi-check-lg'></i> Branding assistito da IA</li><li><i class='bi
-        bi-check-lg'></i> Supporto email prioritario</li>"
-      attribute4: ''
-      attribute5: ''
-    call: Contattaci
-    enterprise:
-      key: Enterprise
-      attribut6: ''
-      attribute1: "<li>Località <strong>Illimitate</strong></li>"
-      attribute2: "<li>Menu <strong>Illimitati</strong></li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Suggerimenti Intelligenti con
-        IA</li><li><i class='bi bi-check-lg'></i> Anteprime Piatti con IA</li><li><i
-        class='bi bi-check-lg'></i> Supporto Multilingue Avanzato</li><li><i class='bi
-        bi-check-lg'></i> Account Manager Dedicato</li><li><i class='bi bi-check-lg'></i>
-        Branding Personalizzato</li>"
-      attribute4: ''
-      attribute5: ''
-    pro:
-      key: Pro
-      attribute1: "<li>Fino a <strong>3</strong> Ristoranti</li>"
-      attribute2: "<li><strong>3</strong> Menu per sede</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Visualizzazione Menu Digitale
-        (+Foto)</li><i class='bi bi-check-lg'></i> Ordinazioni Clienti</li><li><i
-        class='bi bi-check-lg'></i> Analisi dei Piatti più Venduti</li><li><i class='bi
-        bi-check-lg'></i> Supporto Multilingue Base</li><li>&nbsp;</li>"
-      attribute4: ''
-    register: Registrati
-    starter:
-      key: Starter
-      attribut6: ''
-      attribute1: "<li><i class='bi bi-check-lg'></i> Per piccoli bar e caffetterie</li>"
-      attribute2: "<li><i class='bi bi-check-lg'></i> <strong>%{locations}</strong>
-        ristorante</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Fino a <strong>%{menus}</strong>
-        menu / ristorante</li><li><i class='bi bi-check-lg'></i> Fino a <strong>%{dishes}</strong>
-        piatti / menu</li><li><i class='bi bi-check-lg'></i> <strong>%{languages}</strong>
-        lingua</li><li><i class='bi bi-check-lg'></i> Ordini del personale</li><li><i
-        class='bi bi-check-lg'></i> Supporto email</li><li>&nbsp;</li>"
-      attribute4: ''
-      attribute5: ''
-    trial:
-      attribute1: "<li><strong>1</strong> Ristorante</li>"
-      attribute2: "<li><strong>1</strong> Menu</li>"
-      attribute3: "<li><i class='bi bi-check-lg'></i> Visualizzazione Menu Digitale</li><li><i
-        class='bi bi-check-lg'></i> Ordinazioni solo per il personale</li><li><i class='bi
-        bi-check-lg'></i> Filtri Dietetici</li><li>&nbsp;</li><li>&nbsp;</li>"
-      key: Prova
   tags:
     edit:
       tag: ''
@@ -536,6 +518,90 @@ it:
       tag: ''
     show:
       tag: ''
+  taxes:
+    edit:
+      tax: Modifica Tassa
+    form:
+      delete: Elimina
+      errors: Errori
+      save: Salva
+      selectRestaurant: Seleziona un Ristorante ...
+      sure: Sei sicuro?
+    index:
+      activate: ''
+      deactivate: ''
+      tax: Tassa
+    new:
+      tax: Nuova Tassa
+  time:
+    date:
+      abbr_day_names:
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      abbr_month_names:
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      day_names:
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      formats:
+        default: ''
+        long: ''
+        short: ''
+      month_names:
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      long: "%B %d, %Y %H:%M"
+      short: "%d %b %H:%M"
+  tips:
+    edit:
+      tip: Modifica Mancia
+    form:
+      delete: Elimina
+      errors: Errori
+      save: Salva
+      selectRestaurant: Seleziona un Ristorante ...
+      sure: Sei sicuro?
+    index:
+      activate: ''
+      deactivate: ''
+      tip: Mancia
+    new:
+      tip: Nuova Mancia
   tracks:
     edit:
       track: ''
@@ -556,69 +622,3 @@ it:
       userplan: ''
     show:
       userplan: ''
-  orders:
-    total: ''
-    subtotal: ''
-    tax: ''
-    tip: ''
-    payment: ''
-    paid: ''
-    pending: ''
-    completed: ''
-  number:
-    currency:
-      format:
-        unit: ''
-        precision: ''
-        separator: ''
-        delimiter: ''
-        format: ''
-  date:
-    formats:
-      default: "%d/%m/%Y"
-      short: "%d %b"
-      long: "%B %d, %Y"
-    abbr_day_names:
-    - dom
-    - lun
-    - mar
-    - mer
-    - gio
-    - ven
-    - sab
-    abbr_month_names:
-    - ''
-    - gen
-    - feb
-    - mar
-    - apr
-    - mag
-    - giu
-    - lug
-    - ago
-    - set
-    - ott
-    - nov
-    - dic
-    day_names:
-    - domenica
-    - lunedì
-    - martedì
-    - mercoledì
-    - giovedì
-    - venerdì
-    - sabato
-    month_names:
-    - ''
-    - gennaio
-    - febbraio
-    - marzo
-    - aprile
-    - maggio
-    - giugno
-    - luglio
-    - agosto
-    - settembre
-    - ottobre
-    - novembre
-    - dicembre

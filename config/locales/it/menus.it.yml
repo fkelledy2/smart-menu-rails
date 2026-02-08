@@ -2,15 +2,15 @@
 it:
   menus:
     controller:
+      ai_image_generation_queued: ''
       created: Menu creato con successo.
       deleted: Menu eliminato con successo.
       image_regeneration_queued: Rigenerazione delle immagini in coda per %{count}
         elementi di questo menu.
       image_regeneration_queued_rake: Il lavoro di rigenerazione delle immagini è
         stato messo in coda per questo menu.
-      webp_regeneration_queued: ''
-      ai_image_generation_queued: ''
       updated: Menu aggiornato con successo.
+      webp_regeneration_queued: ''
     edit:
       availabilities: Disponibilità
       menu: Menù
@@ -66,10 +66,3 @@ it:
       availabilities: Disponibilità
     showMenusections:
       sections: Sezioni
-    sections:
-      settings_2025:
-        disabled_at_restaurant: Disabilitato a livello di ristorante
-        parent_restriction: 'Nota:'
-        parent_restriction_desc: Le impostazioni disabilitate a livello di ristorante
-          non possono essere abilitate per i singoli menù. Abilitarle prima a livello
-          di ristorante.

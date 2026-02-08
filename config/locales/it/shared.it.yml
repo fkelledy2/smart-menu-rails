@@ -1,8 +1,16 @@
 ---
 it:
   shared:
+    footer:
+      build: Costruire
+      facebook: Facebook
+      instagram: Instagram
+      linkedin: LinkedIn
+      plan: Piano
+      privacy: La privacy
+      terms: Termini
+      twitter: Twitter
     head:
-      meta_title: Menu digitali e ordini intelligenti per ristoranti | Più efficienza
       meta_description: Trasforma il tuo ristorante con menu digitali contactless
         e ordini intelligenti. Velocizza il servizio, riduci gli errori e migliora
         la soddisfazione dei clienti.
@@ -10,27 +18,19 @@ it:
         per efficienza ristorante | Tecnologia smart per ristoranti | Menu QR code
         | Sistemi menu online | Migliora operatività ristorante | Ordinazione self-service
         | Soluzioni tech per ospitalità | Soluzioni eco-friendly
-      og_title: Menu digitali e ordini intelligenti per ristoranti moderni
+      meta_title: Menu digitali e ordini intelligenti per ristoranti | Più efficienza
       og_description: Aggiorna il tuo ristorante con menu digitali e tecnologia smart
         che semplificano il servizio, riducono l’attesa e aumentano la soddisfazione
         degli ospiti.
-      twitter_title: Rendi il tuo ristorante più smart con menu digitali
+      og_title: Menu digitali e ordini intelligenti per ristoranti moderni
+      pwa_title: Menu intelligente
       twitter_description: Scopri come menu digitali e strumenti di ordinazione smart
         possono semplificare il servizio e migliorare l’esperienza dei tuoi ospiti.
-      pwa_title: Menu intelligente
-    footer:
-      facebook: Facebook
-      instagram: Instagram
-      linkedin: LinkedIn
-      privacy: La privacy
-      terms: Termini
-      plan: Piano
-      build: Costruire
-      twitter: Twitter
+      twitter_title: Rendi il tuo ristorante più smart con menu digitali
     navbar:
       adminArea: Amministrazione
-      dashboard: Cruscotto
       billing: Fatturazione
+      dashboard: Cruscotto
       heroImages: Immagini Hero
       impersonated_as: Accesso come
       login: Accedi

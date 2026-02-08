@@ -1,8 +1,16 @@
 ---
 en:
   shared:
+    footer:
+      build: Build
+      facebook: Facebook
+      instagram: Instagram
+      linkedin: LinkedIn
+      plan: Plan
+      privacy: Privacy
+      terms: Terms
+      twitter: Twitter
     head:
-      meta_title: Smart Digital Menus & Ordering for Restaurants | Boost Efficiency
       meta_description: Transform your restaurant with contactless digital menus and
         smart ordering. Speed up service, reduce errors, and boost customer satisfaction
         with ease.
@@ -10,26 +18,18 @@ en:
         | Restaurant efficiency tools | Smart restaurant technology | QR code menus
         | Online menu systems | Improve restaurant operations | Self-service restaurant
         ordering | Hospitality tech solutions | Eco-friendly restaurant tools
-      og_title: Digital Menus & Smart Ordering for Modern Restaurants
+      meta_title: Smart Digital Menus & Ordering for Restaurants | Boost Efficiency
       og_description: Upgrade your restaurant with digital menus and smart tech that
         streamline service, reduce wait times, and increase guest satisfaction.
-      twitter_title: Make Your Restaurant Smarter with Digital Menus
+      og_title: Digital Menus & Smart Ordering for Modern Restaurants
+      pwa_title: Smart Menu
       twitter_description: Discover how digital menus and smart ordering tools can
         simplify service and elevate your guests' dining experience.
-      pwa_title: Smart Menu
-    footer:
-      facebook: Facebook
-      instagram: Instagram
-      linkedin: LinkedIn
-      privacy: Privacy
-      terms: Terms
-      plan: Plan
-      build: Build
-      twitter: Twitter
+      twitter_title: Make Your Restaurant Smarter with Digital Menus
     navbar:
       adminArea: Admin
-      dashboard: Dashboard
       billing: Billing
+      dashboard: Dashboard
       heroImages: Hero Images
       impersonated_as: You're logged in as
       login: Log in

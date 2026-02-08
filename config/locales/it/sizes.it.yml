@@ -6,36 +6,36 @@ it:
       deleted: Taglia eliminata con successo.
       updated: Taglia aggiornata con successo.
     edit:
-      sizes: Taglie
-      edit_size: Modifica Taglia
-      description: Aggiorna i dettagli della taglia
       cancel: Annulla
       confirm_delete: Eliminare questa taglia?
       delete: Elimina
+      description: Aggiorna i dettagli della taglia
+      edit_size: Modifica Taglia
       size_details: Dettagli Taglia
+      sizes: Taglie
     form:
+      description: Descrizione
+      description_help: 'Opzionale: Aggiungi eventuali dettagli'
+      description_placeholder: Dettagli opzionali su questa taglia...
+      name: Nome visualizzato
+      name_help: Così la taglia verrà mostrata ai clienti
+      name_placeholder: es. Grande, 16oz, Formato famiglia
       size_type: Tipo taglia
       size_type_help: Seleziona la categoria generale della taglia
-      name: Nome visualizzato
-      name_placeholder: es. Grande, 16oz, Formato famiglia
-      name_help: Così la taglia verrà mostrata ai clienti
-      description: Descrizione
-      description_placeholder: Dettagli opzionali su questa taglia...
-      description_help: 'Opzionale: Aggiungi eventuali dettagli'
     index:
-      sizes: Taglie articoli menù
+      all_sizes: Tutte le Taglie
+      back: Indietro
       description: Gestisci le varianti di taglia per i tuoi articoli del menù (es.
         Piccola, Media, Grande)
-      back: Indietro
       new_size: Nuova Taglia
-      all_sizes: Tutte le Taglie
+      sizes: Taglie articoli menù
     new:
-      sizes: Taglie
+      cancel: Annulla
+      description: Crea una nuova variante di taglia per gli articoli del menù
       new: Nuovo
       new_size: Nuova Taglia
-      description: Crea una nuova variante di taglia per gli articoli del menù
-      cancel: Annulla
       size_details: Dettagli Taglia
+      sizes: Taglie
     show:
       size: Taglia
     size:

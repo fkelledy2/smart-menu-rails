@@ -1,115 +1,115 @@
 ---
 en:
   javascript:
+    buttons:
+      mark_collected: Mark as Collected
+      mark_ready: Mark Ready
+      start_preparing: Start Preparing
+    form:
+      actions:
+        delete: Delete
+        edit: Edit
+        save: Save
     notifications:
+      api:
+        upload_error: 'Upload failed: Network error'
       auto_save:
         error: Save failed
         network_error: Network error
         saved: Order saved
-      sortable:
-        success: Order saved
-        error: Save failed
+      employee:
+        order_error: Failed to update order
+        save_error: Failed to save employee
+        saved: Employee saved successfully
+        status_error: Failed to update employee status
+        updated: Updated %{count} employee(s) to %{status}
       form:
         auto_saved: Details saved automatically
         submit_error: Failed to save
-      employee:
-        saved: Employee saved successfully
-        save_error: Failed to save employee
-        status_error: Failed to update employee status
-        updated: Updated %{count} employee(s) to %{status}
+      inventory:
         order_error: Failed to update order
+        reset_error: Failed to reset inventory
+        reset_success: Reset %{count} inventory item(s)
+        save_error: Failed to save inventory
+        saved: Inventory details saved automatically
+        saved_success: Inventory saved successfully
+        status_error: Failed to update inventory status
+        updated: Updated %{count} inventory item(s) to %{status}
+      menu:
+        order_error: Failed to update order
+        save_error: Failed to save menu
+        saved: Menu details saved automatically
+        saved_success: Menu saved successfully
+        status_error: Failed to update menu status
+        updated: Updated %{count} menu(s) to %{status}
       menuitem:
-        saved: Menu item saved successfully
-        save_error: Failed to save menu item
-        status_error: Failed to update menu item status
-        updated: Updated %{count} menu item(s) to %{status}
         image_generation: Started image generation for %{count} menu item(s)
         no_images: No images could be generated
         order_error: Failed to update order
-      order:
-        saved: Order details saved automatically
-        close_success: Order closed successfully
-        close_error: Failed to close order
-        bill_success: Bill requested successfully
-        bill_error: Failed to request bill
-        payment_success: Payment processed successfully
-        payment_error: Failed to process payment
-        missing_payment: Missing payment information
-        payment_link: Payment link refreshed
-        payment_link_error: Failed to generate payment link
-        delete_success: Order deleted successfully
-        delete_error: Failed to delete order
-        created: 'Order #%{id} created'
-        updated: 'Order #%{orderId} updated'
-        order_save_success: Order saved successfully
-        order_save_error: Failed to save order
-      inventory:
-        saved: Inventory details saved automatically
-        saved_success: Inventory saved successfully
-        save_error: Failed to save inventory
-        status_error: Failed to update inventory status
-        updated: Updated %{count} inventory item(s) to %{status}
-        reset_error: Failed to reset inventory
-        reset_success: Reset %{count} inventory item(s)
-        order_error: Failed to update order
-      menu:
-        saved: Menu details saved automatically
-        saved_success: Menu saved successfully
-        save_error: Failed to save menu
-        status_error: Failed to update menu status
-        updated: Updated %{count} menu(s) to %{status}
-        order_error: Failed to update order
-      restaurant:
-        saved: Restaurant details saved automatically
-        saved_success: Restaurant saved successfully
-        save_error: Failed to save restaurant
-        delete_success: Restaurant deleted successfully
-        delete_error: Failed to delete restaurant
-        qr_error: Failed to generate QR code
+        save_error: Failed to save menu item
+        saved: Menu item saved successfully
+        status_error: Failed to update menu item status
+        updated: Updated %{count} menu item(s) to %{status}
       menusection:
+        order_error: Failed to update order
+        save_error: Failed to save menu section
         saved: Menu section details saved automatically
         saved_success: Menu section saved successfully
-        save_error: Failed to save menu section
         status_error: Failed to update menu section status
         updated: Updated %{count} menu section(s) to %{status}
-        order_error: Failed to update order
       ocr:
-        all_confirmed: All sections %{status}
         all_confirm_error: Failed to update confirmations
-        section_confirmed: Section %{status}
-        section_confirm_error: Failed to update section confirmation
-        inline_edit_success: "%{type} updated successfully"
-        inline_edit_error: Failed to save changes
-        inline_cancel: Edit cancelled
-        section_order_success: Section order updated
-        section_order_error: Failed to update section order
-        item_move_success: Item moved successfully
-        item_move_error: Failed to move item
+        all_confirmed: All sections %{status}
+        delete_success: Deleted %{count} unconfirmed section(s)
+        export_error: Export failed
+        export_success: Export completed
         import_error: Import failed. Please try again.
         import_success: Import completed successfully
-        delete_success: Deleted %{count} unconfirmed section(s)
-        export_success: Export completed
-        export_error: Export failed
+        inline_cancel: Edit cancelled
+        inline_edit_error: Failed to save changes
+        inline_edit_success: "%{type} updated successfully"
+        item_move_error: Failed to move item
+        item_move_success: Item moved successfully
+        section_confirm_error: Failed to update section confirmation
+        section_confirmed: Section %{status}
+        section_order_error: Failed to update section order
+        section_order_success: Section order updated
+      order:
+        bill_error: Failed to request bill
+        bill_success: Bill requested successfully
+        close_error: Failed to close order
+        close_success: Order closed successfully
+        created: 'Order #%{id} created'
+        delete_error: Failed to delete order
+        delete_success: Order deleted successfully
+        missing_payment: Missing payment information
+        order_save_error: Failed to save order
+        order_save_success: Order saved successfully
+        payment_error: Failed to process payment
+        payment_link: Payment link refreshed
+        payment_link_error: Failed to generate payment link
+        payment_success: Payment processed successfully
+        saved: Order details saved automatically
+        updated: 'Order #%{orderId} updated'
       pwa:
         install_success: App installed successfully! You can now use Smart Menu offline.
         notification_success: Notifications enabled! You'll receive real-time updates.
-        sync_complete: "%{count} items synced successfully"
         offline_action: Action saved. Will sync when online.
-      api:
-        upload_error: 'Upload failed: Network error'
-    form:
-      actions:
-        edit: Edit
-        delete: Delete
-        save: Save
-    table:
-      no_data: No data available
+        sync_complete: "%{count} items synced successfully"
+      restaurant:
+        delete_error: Failed to delete restaurant
+        delete_success: Restaurant deleted successfully
+        qr_error: Failed to generate QR code
+        save_error: Failed to save restaurant
+        saved: Restaurant details saved automatically
+        saved_success: Restaurant saved successfully
+      sortable:
+        error: Save failed
+        success: Order saved
     order_status:
+      collected: collected
       ordered: ordered
       preparing: preparing
       ready: ready
-      collected: collected
-    buttons:
-      start_preparing: Start Preparing
-      mark_ready: Mark Ready
-      mark_collected: Mark as Collected
+    table:
+      no_data: No data available

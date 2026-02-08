@@ -19,6 +19,9 @@ en:
       taxesTab: Taxes
       tipsTab: Tips
       tracksTab: Tracks
+    edit_2025:
+      subtitle: Manage your restaurant configuration
+      toggle_navigation: Toggle navigation
     form:
       address: Address
       connect: Connect
@@ -39,6 +42,87 @@ en:
       wifi: WiFi
     index:
       restaurants: Restaurants
+    index_2025:
+      heading: Restaurants
+      new_restaurant: New Restaurant
+      quick_actions: Quick Actions
+      search: Search
+      search_placeholder: Search restaurants…
+      subtitle: Manage locations, menus and staff
+      title: Your Restaurants
+    index_frame_2025:
+      active: Active
+      apply: Apply
+      clear_search: Clear search
+      drag_to_reorder: Drag to reorder
+      edit: Edit
+      inactive: Inactive
+      menus_action: Menus
+      menus_count_label: menus
+      no_restaurants: No restaurants found
+      no_results_for: No results for
+      pagination_aria_label: Restaurants pagination
+      restaurants: Restaurants
+      set_status: Set status...
+      staff_count_label: staff
+    insights:
+      back: Back
+      columns:
+        count: Count
+        dropoff: Dropoff
+        dropoff_rate: Dropoff rate
+        fail: Fail
+        item: Item
+        median_seconds: Median (s)
+        orders: Orders
+        outlier: Outlier
+        qty: Qty
+        rate: Rate
+        sample_size: "N"
+        share: Share
+        step: Step
+        success: Success
+        triggers: Triggers
+      export_csv: Export CSV
+      filters:
+        all_menus: All menus
+        custom: Custom
+        end: End
+        last28: Last 28 Days
+        last7: Last 7 Days
+        last_month: Last Month
+        menu_optional: Menu (optional)
+        mtd: MTD
+        refresh: Refresh
+        start: Start
+        time_window: Time window
+        today: Today
+        yesterday: Yesterday
+      funnel_steps:
+        bill_requested: Bill requested
+        order_submitted: Order submitted
+        payment_succeeded: Payment succeeded
+      helper_text: 'v1: read-only insights. Abandonment funnel is currently based
+        on order/payment milestones.'
+      no_data: No data for selected window.
+      page_title: "%{restaurant_name} - Insights"
+      sections:
+        abandonment_funnel:
+          title: Abandonment funnel
+        prep_time_bottlenecks:
+          helper_text: Uses station ticket timing (submitted → ready/collected) as
+            the v1 proxy.
+          title: Prep-time bottlenecks
+        slow_movers:
+          title: Slow movers
+        top_performers:
+          title: Top performers
+        voice_triggers:
+          title: Voice-trigger frequency
+      title: Insights
+      values:
+        'false': false
+        'true': true
     new:
       restaurant: Restaurant
       restaurants: Restaurants
@@ -55,6 +139,37 @@ en:
       state: 'State:'
       status: 'Status:'
       user: 'User:'
+    sections:
+      details_2025:
+        address: Address
+        city: City
+        city_placeholder: City name
+        country: Country
+        country_placeholder: Country
+        currency: Currency
+        description: Description
+        items: Items
+        latitude: Latitude
+        latitude_placeholder: e.g., 40.7128
+        longitude: Longitude
+        longitude_placeholder: e.g., -74.0060
+        phone: Phone
+        phone_help: Contact number for customers
+        phone_placeholder: e.g., +1 (555) 123-4567
+        postcode: Postal Code
+        postcode_placeholder: e.g., 12345
+        restaurant_name: Restaurant Name
+        restaurant_name_help: The name customers will see
+        restaurant_name_placeholder: e.g., Bella Italia
+        state: State/Province
+        state_placeholder: State or province
+        status: Status
+        status_help: Only active restaurants are visible to customers
+        timezone: Timezone
+        timezone_help: Local timezone for operating hours
+        website: Website
+        website_help: Your restaurant website
+        website_placeholder: https://example.com
     show:
       address: Address
       billing_content: Billing configuration will appear here.
@@ -112,165 +227,31 @@ en:
       loading: Loading...
     showTracks:
       tracks: Tracks
-    insights:
-      page_title: "%{restaurant_name} - Insights"
-      title: Insights
-      back: Back
-      export_csv: Export CSV
-      helper_text: 'v1: read-only insights. Abandonment funnel is currently based
-        on order/payment milestones.'
-      no_data: No data for selected window.
-      values:
-        true: true
-        false: false
-      filters:
-        time_window: Time window
-        today: Today
-        yesterday: Yesterday
-        last7: Last 7 Days
-        last28: Last 28 Days
-        mtd: MTD
-        last_month: Last Month
-        custom: Custom
-        start: Start
-        end: End
-        refresh: Refresh
-        menu_optional: Menu (optional)
-        all_menus: All menus
-      sections:
-        top_performers:
-          title: Top performers
-        slow_movers:
-          title: Slow movers
-        prep_time_bottlenecks:
-          title: Prep-time bottlenecks
-          helper_text: Uses station ticket timing (submitted → ready/collected) as
-            the v1 proxy.
-        voice_triggers:
-          title: Voice-trigger frequency
-        abandonment_funnel:
-          title: Abandonment funnel
-      columns:
-        item: Item
-        orders: Orders
-        qty: Qty
-        share: Share
-        median_seconds: Median (s)
-        sample_size: "N"
-        outlier: Outlier
-        triggers: Triggers
-        success: Success
-        fail: Fail
-        rate: Rate
-        step: Step
-        count: Count
-        dropoff: Dropoff
-        dropoff_rate: Dropoff rate
-      funnel_steps:
-        order_submitted: Order submitted
-        bill_requested: Bill requested
-        payment_succeeded: Payment succeeded
-    edit_2025:
-      subtitle: Manage your restaurant configuration
-      toggle_navigation: Toggle navigation
     sidebar_2025:
-      close_menu: Close menu
-      restaurant: RESTAURANT
-      details: Details
-      schedule: Schedule
-      localization: Localization
-      menus: MENUS
+      advanced: Advanced
       all_menus: All Menus
       allergens: Allergens
-      sizes: Sizes
-      tables: Tables
-      operations: OPERATIONS
-      kitchen_dashboard: Kitchen
       bar_dashboard: Bar
-      wifi: WiFi
-      team: TEAM
-      staff: Staff
+      close_menu: Close menu
+      details: Details
       financials: FINANCIALS
-      taxes_and_tips: Taxes & Tips
-      taxes: Taxes
-      tips: Tips
-      ordering: Ordering
       insights: Insights
-      setup: SETUP
-      settings: Settings
-      qr_codes: QR Codes
       jukebox: Jukebox
-      advanced: Advanced
-    index_2025:
-      title: Your Restaurants
-      heading: Restaurants
-      subtitle: Manage locations, menus and staff
-      quick_actions: Quick Actions
-      new_restaurant: New Restaurant
-      search_placeholder: Search restaurants…
-      search: Search
-    index_frame_2025:
-      pagination_aria_label: Restaurants pagination
-      no_restaurants: No restaurants found
-      no_results_for: No results for
-      clear_search: Clear search
-      menus_count_label: menus
-      staff_count_label: staff
-      edit: Edit
-      menus_action: Menus
-      restaurants: Restaurants
-      active: Active
-      inactive: Inactive
-      set_status: Set status...
-      apply: Apply
-      drag_to_reorder: Drag to reorder
-    sections:
-      details_2025:
-        quick_actions: Quick Actions
-        new_menu: New Menu
-        import_menu: Import Menu
-        overview: Overview
-        menus: Menus
-        items: Items
-        tables: Tables
-        staff: Staff
-        restaurant_details: Restaurant Details
-        restaurant_name: Restaurant Name
-        restaurant_name_placeholder: e.g., Bella Italia
-        restaurant_name_help: The name customers will see
-        description: Description
-        description_placeholder: Describe your restaurant...
-        description_help: Brief description of your restaurant
-        status: Status
-        active: Active
-        inactive: Inactive
-        status_help: Only active restaurants are visible to customers
-        phone: Phone
-        phone_placeholder: e.g., +1 (555) 123-4567
-        phone_help: Contact number for customers
-        website: Website
-        website_placeholder: https://example.com
-        website_help: Your restaurant website
-        currency: Currency
-        currency_help: Currency used for pricing
-        timezone: Timezone
-        timezone_help: Local timezone for operating hours
-        location: Location
-        address: Address
-        address_placeholder: Street address
-        address_help: Full street address
-        city: City
-        city_placeholder: City name
-        state: State/Province
-        state_placeholder: State or province
-        postcode: Postal Code
-        postcode_placeholder: e.g., 12345
-        country: Country
-        country_placeholder: Country
-        latitude: Latitude
-        latitude_placeholder: e.g., 40.7128
-        longitude: Longitude
-        longitude_placeholder: e.g., -74.0060
-        loading_map: Loading map...
-        map_error: Map could not be loaded
-        location_label: 'Location:'
+      kitchen_dashboard: Kitchen
+      localization: Localization
+      menus: MENUS
+      operations: OPERATIONS
+      ordering: Ordering
+      qr_codes: QR Codes
+      restaurant: RESTAURANT
+      schedule: Schedule
+      settings: Settings
+      setup: SETUP
+      sizes: Sizes
+      staff: Staff
+      tables: Tables
+      taxes: Taxes
+      taxes_and_tips: Taxes & Tips
+      team: TEAM
+      tips: Tips
+      wifi: WiFi

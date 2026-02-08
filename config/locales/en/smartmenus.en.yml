@@ -1,12 +1,44 @@
 ---
 en:
   smartmenus:
+    alcohol:
+      acknowledge_btn: Acknowledge age check
+      acknowledged: Age check acknowledged
+      flag: Alcohol
+      non_alcoholic: Non-alcoholic
+      policy_blocked: Alcohol sales are currently blocked by policy.
+      sales_disabled: Alcohol sales are disabled for this restaurant.
+      verify_age: Please verify the customer's age before serving alcoholic beverages.
+      zero_abv_short: 0.0%
     controller:
       created: Smartmenu was successfully created.
       deleted: Smartmenu was successfully deleted.
       updated: Smartmenu was successfully updated.
     edit:
       title: Edit Smartmenu
+    empty_states:
+      adjust_filters: Adjust Filters
+      browse_menu: Browse Menu
+      cart_empty: Your Cart is Empty
+      cart_empty_description: Start adding delicious items from our menu!
+      error_description: We're having trouble loading this content. Please try again.
+      error_occurred: Something Went Wrong
+      no_items_filtered: No Items Match Your Filters
+      no_items_filtered_description: Try adjusting your allergen filters to see more
+        items.
+      no_menu_description: We're still adding items to our menu. Please check back
+        soon!
+      no_menu_items: No Menu Items Yet
+      no_results: No Results Found
+      no_results_description: We couldn't find any items matching your search. Try
+        different keywords.
+      no_table_description: Please select a table to start your order.
+      no_table_selected: Select Your Table
+      order_complete: Order Submitted!
+      order_complete_description: Your order has been sent to the kitchen. Enjoy your
+        meal!
+      refresh: Refresh
+      try_again: Try Again
     form:
       cancel: Cancel
       destroy: Destroy
@@ -14,8 +46,17 @@ en:
       sure: Are you sure?
     index:
       smartmenus: Smartmenus
+    modal_footer_primary:
+      cancel: Cancel
     new:
       title: New Smartmenu
+    ocr:
+      alcohol:
+        abv: ABV
+        classification: Class
+        override_label: Alcohol
+        overrides_hint: Overrides apply at publish.
+        review_needed: Needs review
     orderCustomer:
       bill: Bill
       items_in_cart: items in cart
@@ -55,7 +96,6 @@ en:
       confirmPayment: Confirm Payment
       cover_charge: Cover Charge
       customiseOrderWithName: Add your name to the order
-      partySize: Party size
       excluding_tip: excl. tip
       filterAllergyns: Filter Allergens
       filterBy: Filter
@@ -65,6 +105,7 @@ en:
       nett: Nett
       noneAll: None / All
       order_aria: Order
+      partySize: Party size
       payBill: Pay Bill
       payment_link: Payment Link
       price: Price
@@ -88,44 +129,3 @@ en:
       restaurant: 'Restaurant:'
       slug: 'Slug:'
       tablesetting: 'Tablesetting:'
-    modal_footer_primary:
-      cancel: Cancel
-    alcohol:
-      flag: Alcohol
-      non_alcoholic: Non-alcoholic
-      zero_abv_short: 0.0%
-      verify_age: Please verify the customer's age before serving alcoholic beverages.
-      sales_disabled: Alcohol sales are disabled for this restaurant.
-      policy_blocked: Alcohol sales are currently blocked by policy.
-      acknowledge_btn: Acknowledge age check
-      acknowledged: Age check acknowledged
-    ocr:
-      alcohol:
-        override_label: Alcohol
-        abv: ABV
-        classification: Class
-        review_needed: Needs review
-        overrides_hint: Overrides apply at publish.
-    empty_states:
-      no_menu_items: No Menu Items Yet
-      no_menu_description: We're still adding items to our menu. Please check back
-        soon!
-      refresh: Refresh
-      cart_empty: Your Cart is Empty
-      cart_empty_description: Start adding delicious items from our menu!
-      browse_menu: Browse Menu
-      no_results: No Results Found
-      no_results_description: We couldn't find any items matching your search. Try
-        different keywords.
-      no_items_filtered: No Items Match Your Filters
-      no_items_filtered_description: Try adjusting your allergen filters to see more
-        items.
-      adjust_filters: Adjust Filters
-      no_table_selected: Select Your Table
-      no_table_description: Please select a table to start your order.
-      order_complete: Order Submitted!
-      order_complete_description: Your order has been sent to the kitchen. Enjoy your
-        meal!
-      error_occurred: Something Went Wrong
-      error_description: We're having trouble loading this content. Please try again.
-      try_again: Try Again

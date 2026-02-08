@@ -1,116 +1,116 @@
 ---
 it:
   javascript:
+    buttons:
+      mark_collected: Segna come Ritirato
+      mark_ready: Segna come Pronto
+      start_preparing: Inizia Preparazione
+    form:
+      actions:
+        delete: Elimina
+        edit: Modifica
+        save: Salva
     notifications:
+      api:
+        upload_error: 'Caricamento non riuscito: Errore di rete'
       auto_save:
         error: Salvataggio non riuscito
         network_error: Errore di rete
         saved: Ordine salvato
-      sortable:
-        success: Ordine salvato
-        error: Salvataggio non riuscito
+      employee:
+        order_error: Aggiornamento ordine non riuscito
+        save_error: Salvataggio dipendente non riuscito
+        saved: Dipendente salvato con successo
+        status_error: Aggiornamento stato dipendente non riuscito
+        updated: "%{count} dipendente(i) aggiornato(i) a %{status}"
       form:
         auto_saved: Dettagli salvati automaticamente
         submit_error: Salvataggio non riuscito
-      employee:
-        saved: Dipendente salvato con successo
-        save_error: Salvataggio dipendente non riuscito
-        status_error: Aggiornamento stato dipendente non riuscito
-        updated: "%{count} dipendente(i) aggiornato(i) a %{status}"
+      inventory:
         order_error: Aggiornamento ordine non riuscito
+        reset_error: Reset inventario non riuscito
+        reset_success: "%{count} elemento(i) inventario resettato(i)"
+        save_error: Salvataggio inventario non riuscito
+        saved: Dettagli inventario salvati automaticamente
+        saved_success: Inventario salvato con successo
+        status_error: Aggiornamento stato inventario non riuscito
+        updated: "%{count} elemento(i) inventario aggiornato(i) a %{status}"
+      menu:
+        order_error: Aggiornamento ordine non riuscito
+        save_error: Salvataggio menu non riuscito
+        saved: Dettagli menu salvati automaticamente
+        saved_success: Menu salvato con successo
+        status_error: Aggiornamento stato menu non riuscito
+        updated: "%{count} menu aggiornato(i) a %{status}"
       menuitem:
-        saved: Voce menu salvata con successo
-        save_error: Salvataggio voce menu non riuscito
-        status_error: Aggiornamento stato voce menu non riuscito
-        updated: "%{count} voce(i) menu aggiornata(e) a %{status}"
         image_generation: Generazione immagini avviata per %{count} voce(i) menu
         no_images: Nessuna immagine può essere generata
         order_error: Aggiornamento ordine non riuscito
-      order:
-        saved: Dettagli ordine salvati automaticamente
-        close_success: Ordine chiuso con successo
-        close_error: Chiusura ordine non riuscita
-        bill_success: Richiesta conto avvenuta con successo
-        bill_error: Richiesta conto non riuscita
-        payment_success: Pagamento elaborato con successo
-        payment_error: Elaborazione pagamento non riuscita
-        missing_payment: Informazioni di pagamento mancanti
-        payment_link: Link pagamento aggiornato
-        payment_link_error: Generazione link pagamento non riuscita
-        delete_success: Ordine eliminato con successo
-        delete_error: Eliminazione ordine non riuscita
-        created: 'Ordine #%{id} creato'
-        updated: 'Ordine #%{orderId} aggiornato'
-        order_save_success: Ordine salvato con successo
-        order_save_error: Salvataggio ordine non riuscito
-      inventory:
-        saved: Dettagli inventario salvati automaticamente
-        saved_success: Inventario salvato con successo
-        save_error: Salvataggio inventario non riuscito
-        status_error: Aggiornamento stato inventario non riuscito
-        updated: "%{count} elemento(i) inventario aggiornato(i) a %{status}"
-        reset_error: Reset inventario non riuscito
-        reset_success: "%{count} elemento(i) inventario resettato(i)"
-        order_error: Aggiornamento ordine non riuscito
-      menu:
-        saved: Dettagli menu salvati automaticamente
-        saved_success: Menu salvato con successo
-        save_error: Salvataggio menu non riuscito
-        status_error: Aggiornamento stato menu non riuscito
-        updated: "%{count} menu aggiornato(i) a %{status}"
-        order_error: Aggiornamento ordine non riuscito
-      restaurant:
-        saved: Dettagli ristorante salvati automaticamente
-        saved_success: Ristorante salvato con successo
-        save_error: Salvataggio ristorante non riuscito
-        delete_success: Ristorante eliminato con successo
-        delete_error: Eliminazione ristorante non riuscita
-        qr_error: Generazione QR non riuscita
+        save_error: Salvataggio voce menu non riuscito
+        saved: Voce menu salvata con successo
+        status_error: Aggiornamento stato voce menu non riuscito
+        updated: "%{count} voce(i) menu aggiornata(e) a %{status}"
       menusection:
+        order_error: Aggiornamento ordine non riuscito
+        save_error: Salvataggio sezione menu non riuscito
         saved: Dettagli sezione menu salvati automaticamente
         saved_success: Sezione menu salvata con successo
-        save_error: Salvataggio sezione menu non riuscito
         status_error: Aggiornamento stato sezione menu non riuscito
         updated: "%{count} sezione(i) menu aggiornata(e) a %{status}"
-        order_error: Aggiornamento ordine non riuscito
       ocr:
-        all_confirmed: Tutte le sezioni %{status}
         all_confirm_error: Aggiornamento conferme non riuscito
-        section_confirmed: Sezione %{status}
-        section_confirm_error: Aggiornamento conferma sezione non riuscito
-        inline_edit_success: "%{type} aggiornato con successo"
-        inline_edit_error: Salvataggio modifiche non riuscito
-        inline_cancel: Modifica annullata
-        section_order_success: Ordine sezioni aggiornato
-        section_order_error: Aggiornamento ordine sezioni non riuscito
-        item_move_success: Elemento spostato con successo
-        item_move_error: Spostamento elemento non riuscito
+        all_confirmed: Tutte le sezioni %{status}
+        delete_success: "%{count} sezione(i) non confermata(e) eliminata(e)"
+        export_error: Esportazione non riuscita
+        export_success: Esportazione completata
         import_error: Importazione non riuscita. Riprova.
         import_success: Importazione completata con successo
-        delete_success: "%{count} sezione(i) non confermata(e) eliminata(e)"
-        export_success: Esportazione completata
-        export_error: Esportazione non riuscita
+        inline_cancel: Modifica annullata
+        inline_edit_error: Salvataggio modifiche non riuscito
+        inline_edit_success: "%{type} aggiornato con successo"
+        item_move_error: Spostamento elemento non riuscito
+        item_move_success: Elemento spostato con successo
+        section_confirm_error: Aggiornamento conferma sezione non riuscito
+        section_confirmed: Sezione %{status}
+        section_order_error: Aggiornamento ordine sezioni non riuscito
+        section_order_success: Ordine sezioni aggiornato
+      order:
+        bill_error: Richiesta conto non riuscita
+        bill_success: Richiesta conto avvenuta con successo
+        close_error: Chiusura ordine non riuscita
+        close_success: Ordine chiuso con successo
+        created: 'Ordine #%{id} creato'
+        delete_error: Eliminazione ordine non riuscita
+        delete_success: Ordine eliminato con successo
+        missing_payment: Informazioni di pagamento mancanti
+        order_save_error: Salvataggio ordine non riuscito
+        order_save_success: Ordine salvato con successo
+        payment_error: Elaborazione pagamento non riuscita
+        payment_link: Link pagamento aggiornato
+        payment_link_error: Generazione link pagamento non riuscita
+        payment_success: Pagamento elaborato con successo
+        saved: Dettagli ordine salvati automaticamente
+        updated: 'Ordine #%{orderId} aggiornato'
       pwa:
         install_success: App installata con successo! Ora puoi usare Smart Menu offline.
         notification_success: Notifiche attivate! Riceverai aggiornamenti in tempo
           reale.
-        sync_complete: "%{count} elementi sincronizzati con successo"
         offline_action: Azione salvata. Sincronizzerà quando online.
-      api:
-        upload_error: 'Caricamento non riuscito: Errore di rete'
-    form:
-      actions:
-        edit: Modifica
-        delete: Elimina
-        save: Salva
-    table:
-      no_data: Nessun dato disponibile
+        sync_complete: "%{count} elementi sincronizzati con successo"
+      restaurant:
+        delete_error: Eliminazione ristorante non riuscita
+        delete_success: Ristorante eliminato con successo
+        qr_error: Generazione QR non riuscita
+        save_error: Salvataggio ristorante non riuscito
+        saved: Dettagli ristorante salvati automaticamente
+        saved_success: Ristorante salvato con successo
+      sortable:
+        error: Salvataggio non riuscito
+        success: Ordine salvato
     order_status:
+      collected: ritirato
       ordered: ordinato
       preparing: in preparazione
       ready: pronto
-      collected: ritirato
-    buttons:
-      start_preparing: Inizia Preparazione
-      mark_ready: Segna come Pronto
-      mark_collected: Segna come Ritirato
+    table:
+      no_data: Nessun dato disponibile
