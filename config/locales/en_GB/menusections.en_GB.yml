@@ -1,0 +1,37 @@
+---
+en_GB:
+  menusections:
+    edit:
+      inventories: ''
+      items: ''
+      section: ''
+    form:
+      delete: ''
+      details: ''
+      imageSettings: ''
+      save: ''
+      selectMenu: ''
+      settings: ''
+      sure: ''
+    index:
+      menuSection: ''
+      menuSections: ''
+    menusection:
+      description: ''
+      image: ''
+      menu: ''
+      name: ''
+      sequence: ''
+      status: ''
+    new:
+      cancel: ''
+      menuSection: ''
+    show:
+      menuSection: ''
+      selectMenu: ''
+    showInventories:
+      inventories: ''
+      reset: ''
+    showMenuitems:
+      genimage: ''
+      menuItems: ''

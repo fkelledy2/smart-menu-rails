@@ -1,0 +1,29 @@
+---
+pl:
+  tablesettings:
+    controller:
+      created: Ustawienie tabeli zostało pomyślnie utworzone.
+      deleted: Ustawienie tabeli zostało pomyślnie usunięte.
+      updated: Ustawienie tabeli zostało pomyślnie zaktualizowane.
+    edit:
+      tablesetting: Ustawienie stołu
+    index:
+      archive: Archiwum
+      seating_plan: Plan miejsc siedzących
+      seats: 'Miejsca siedzące:'
+      table_setting: Ustawienie stołu
+      table_settings: Ustawienia stołu
+      unarchive: Unarchive
+    new:
+      status: 'Status:'
+      tablesetting: Ustawienie stołu
+    show:
+      available_menus: Dostępne menu
+      selectRestaurant: Restauracja Select
+      show_table_setting: Pokaż ustawienie stołu
+    tablesetting:
+      capacity: 'Pojemność:'
+      description: 'Opis:'
+      name: 'Imię i nazwisko:'
+      restaurant: 'Restauracja:'
+      status: 'Status:'

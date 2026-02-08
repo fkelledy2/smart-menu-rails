@@ -1,0 +1,130 @@
+---
+pl:
+  smartmenus:
+    controller:
+      created: Smartmenu zostało pomyślnie utworzone.
+      deleted: Smartmenu zostało pomyślnie usunięte.
+      updated: Smartmenu zostało pomyślnie zaktualizowane.
+    edit:
+      title: Edytuj Smartmenu
+    form:
+      cancel: Anuluj
+      destroy: Zniszczenie
+      save: Zapisz
+      sure: Jesteś pewien?
+    index:
+      smartmenus: Smartmenus
+    new:
+      title: Nowe Smartmenu
+    orderCustomer:
+      bill: Bill
+      items_in_cart: produkty w koszyku
+      order: Zamówienie
+      staffAlerted: Personel powiadomiony
+      startOrder: Zamówienie początkowe
+    orderStaff:
+      bill: Bill
+      items_in_cart: produkty w koszyku
+      order: Zamówienie
+      startOrder: Zamówienie początkowe
+      takePayment: Przyjmowanie płatności
+    showAllergyns:
+      allergyns: Alergeny
+    showCoverCharge:
+      covercharge: Opłata za okładkę
+      coverchargeUnit: Jednostka ładowania pokrywy
+    showMenuBanner:
+      allergyns: Alergeny
+    showMenuContentCustomer:
+      search_placeholder: Pozycje menu wyszukiwania...
+    showMenuitem:
+      add_to_order: Dodaj do zamówienia
+      allergyns: Alergeny
+      loading: Ładowanie...
+    showMenuitemHorizontal:
+      loading: Ładowanie...
+    showMenuitemHorizontalActionBar:
+      allergyns: Alergeny
+      order: Zamówienie
+      toggle_dropdown: Przełączanie listy rozwijanej
+    showModals:
+      add: Dodaj
+      addToOrder: Dodaj do zamówienia
+      bill_prefix: 'Bill:'
+      cancel: Anuluj
+      confirmPayment: Potwierdź płatność
+      cover_charge: Opłata za okładkę
+      customiseOrderWithName: Dodaj swoje imię i nazwisko do zamówienia
+      partySize: Wielkość imprezy
+      excluding_tip: bez końcówki
+      filterAllergyns: Filtruj alergeny
+      filterBy: Filtr
+      including_tip: w tym końcówka
+      item: Pozycja
+      name_label: 'Imię i nazwisko:'
+      nett: Netto
+      noneAll: Brak / Wszystkie
+      order_aria: Zamówienie
+      payBill: Zapłać rachunek
+      payment_link: Link do płatności
+      price: Cena
+      requestBill: Wniosek o rachunek
+      selected: Wybrane
+      service: Usługa
+      start: Start
+      startOrder: Zamówienie początkowe
+      submit: Złóż zamówienie
+      submitted: Zgłoszony
+      tax: Podatek
+      tip_options: Opcje podpowiedzi
+      total: Łącznie
+      yourOrder: Twoje zamówienie
+    showTableLocaleSelectorCustomer:
+      table: Tabela
+    showTableLocaleSelectorStaff:
+      table: Tabela
+    smartmenu:
+      menu: 'Menu:'
+      restaurant: 'Restauracja:'
+      slug: 'Ślimak:'
+      tablesetting: 'Ustawienie stołów:'
+    modal_footer_primary:
+      cancel: Anuluj
+    alcohol:
+      flag: Alkohol
+      non_alcoholic: Bezalkoholowy
+      zero_abv_short: 0.0%
+      verify_age: Przed podaniem napojów alkoholowych należy zweryfikować wiek klienta.
+      sales_disabled: Sprzedaż alkoholu w tej restauracji jest wyłączona.
+      policy_blocked: Sprzedaż alkoholu jest obecnie zablokowana przez politykę.
+      acknowledge_btn: Potwierdzenie sprawdzenia wieku
+      acknowledged: Weryfikacja wieku potwierdzona
+    ocr:
+      alcohol:
+        override_label: Alkohol
+        abv: ABV
+        classification: Klasa
+        review_needed: Wymaga przeglądu
+        overrides_hint: Zastąpienia mają zastosowanie podczas publikacji.
+    empty_states:
+      no_menu_items: Nie ma jeszcze pozycji w menu
+      no_menu_description: Wciąż dodajemy pozycje do naszego menu. Sprawdź wkrótce!
+      refresh: Odświeżanie
+      cart_empty: Twój koszyk jest pusty
+      cart_empty_description: Zacznij dodawać pyszne pozycje z naszego menu!
+      browse_menu: Przeglądaj menu
+      no_results: Nie znaleziono wyników
+      no_results_description: Nie mogliśmy znaleźć żadnych elementów pasujących do
+        Twojego wyszukiwania. Wypróbuj inne słowa kluczowe.
+      no_items_filtered: Żadne elementy nie pasują do filtrów
+      no_items_filtered_description: Spróbuj dostosować filtry alergenów, aby zobaczyć
+        więcej pozycji.
+      adjust_filters: Regulacja filtrów
+      no_table_selected: Wybierz swój stół
+      no_table_description: Wybierz stolik, aby rozpocząć zamówienie.
+      order_complete: Zamówienie złożone!
+      order_complete_description: Twoje zamówienie zostało wysłane do kuchni. Życzymy
+        smacznego!
+      error_occurred: Coś poszło nie tak
+      error_description: Mamy problem z załadowaniem tej zawartości. Spróbuj ponownie.
+      try_again: Spróbuj ponownie

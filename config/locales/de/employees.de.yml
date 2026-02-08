@@ -1,0 +1,32 @@
+---
+de:
+  employees:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      employee: Mitarbeiter bearbeiten
+    employee:
+      eid: ''
+      image: ''
+      name: ''
+      restaurant: ''
+      status: ''
+    form:
+      delete: Löschen
+      errors: Fehler
+      save: Speichern
+      selectUser: ''
+      sure: Sind Sie sicher?
+    index:
+      activate: Aktivieren
+      deactivate: Deaktivieren
+      employee: Mitarbeiter
+      employees: Mitarbeiter
+    new:
+      employee: Neuer Mitarbeiter
+    show:
+      employee: Mitarbeiter anzeigen
+      selectRestaurant: ''
+      selectUser: ''

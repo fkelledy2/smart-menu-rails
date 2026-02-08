@@ -1,0 +1,257 @@
+---
+cs:
+  admin:
+    performance:
+      title: Sledování výkonu
+      subtitle: Metriky výkonu a analýzy v reálném čase
+      card:
+        avg_response_time: Prům. doba odezvy
+        memory_usage: Využití paměti
+        error_rate: Chybovost
+        active_users: Aktivní uživatelé
+        last_5_minutes: Posledních 5 minut
+        current_rss: Aktuální RSS
+      response_time_trend: Trend doby odezvy (24h)
+      memory_usage_trend: Trend využití paměti (24h)
+      slowest_endpoints: Nejpomalejší koncové body (poslední hodina)
+      table:
+        endpoint: Koncový bod
+        avg_response_time: Prům. doba odezvy
+      no_slow_endpoints: Nedetekovány žádné pomalé koncové body
+      recent_slow_queries: Nedávné pomalé dotazy
+      query_table:
+        duration: Trvání
+        query: Dotaz
+        time: Čas
+      no_slow_queries: Nedetekovány žádné pomalé dotazy
+      actions: Akce
+    cache:
+      title: Správa cache
+      health_status: Stav zdraví cache
+      response_time: Doba odezvy
+      write_operation: Operace zápisu
+      read_operation: Operace čtení
+      delete_operation: Operace smazání
+      error: Chyba
+      performance_stats: Statistiky výkonu
+      reset_stats: Resetovat statistiky
+      cache_hits: Cache přístupy
+      cache_misses: Cache selhání
+      cache_writes: Cache zápisy
+      cache_deletes: Cache smazání
+      cache_errors: Chyby
+      hit_rate: Poměr přístupů
+      cache_info: Informace o cache
+      service_version: Verze služby
+      cache_methods: Metody cache
+      active_keys: Aktivní klíče
+      memory_usage: Využití paměti
+      cache_warming: Rozhřívání cache
+      cache_warming_description: Přednačíst kritická data cache pro zlepšení výkonu.
+      cache_management: Správa cache
+      cache_management_description: Smazat všechna data v cache pro vynucení načtení
+        nových dat.
+      cache_patterns: Vzory cache
+      patterns:
+        restaurant: Dashboardy a analýzy restaurací
+        menu: Data a výkon menu
+        menuitem: Detaily a analýzy položek
+        order: Data a souhrny objednávek
+        employee: Data a výkon zaměstnanců
+        user: Aktivita uživatele a data více restaurací
+    metrics:
+      title: Sledování výkonu aplikace
+      card:
+        total_requests: Celkem požadavků
+        avg_response_time: Prům. doba odezvy
+        error_rate: Chybovost
+        total_users: Celkem uživatelů
+        all_time: Celou dobu
+        current_average: Současný průměr
+        current_error_rate: Současná chybovost
+        all_time_registrations: Registrace celou dobu
+      summary:
+        restaurants_created: Vytvořené restaurace
+        menu_imports: Importy menu
+      system:
+        memory_usage: Využití paměti
+        active_users: Aktivní uživatelé
+      metric_types:
+        title: Typy metrik
+        counters: 'Čítače: Kumulativní hodnoty, které pouze rostou (např. celkem požadavků)'
+        gauges: 'Měřidla: Současné hodnoty, které mohou růst nebo klesat (např. aktivní
+          uživatelé)'
+        histograms: 'Histogramy: Sbírky měření (např. doby odezvy)'
+      table:
+        metric: Metrika
+        type: Typ
+        value: Hodnota
+        last_updated: Naposledy aktualizováno
+      no_recent_metrics:
+        message: Nejsou k dispozici žádné nedávné metriky
+        description: Metriky se zde zobrazí při používání aplikace
+    dashboard:
+      kpis:
+        total_orders: Celkem objednávek
+        total_revenue: Celkové tržby
+        customers: Zákazníci
+        growth_rate: Míra růstu
+        page_views: Zobrazení stránek
+        unique_visitors: Unikátní návštěvníci
+        bounce_rate: Míra odchodů
+      sales:
+        title: Nejprodávanější položky
+        table:
+          item: Položka
+          quantity_sold: Prodané množství
+        no_data: Pro toto období nejsou k dispozici žádné údaje o prodeji.
+      loading: Načítání...
+  notifications:
+    index:
+      title: Oznámení
+  announcements:
+    index:
+      title: Co je nového
+      coming_soon: Vzrušující věci přijdou velmi brzy!
+  beverage_review_queue:
+    title: Fronta kontroly nápojů
+    recent_pipeline_runs: Nedávné běhy pipeline
+    table:
+      created: Vytvořeno
+      menu: Nabídka
+      status: Stav
+      step: Krok
+      processed: Zpracováno
+      needs_review: Vyžaduje kontrolu
+      unresolved: Nevyřešeno
+      actions: Akce
+    items_needing_review: Položky vyžadující kontrolu
+    items_table:
+      menu: Nabídka
+      section: Sekce
+      item: Položka
+      category: Kategorie
+      class_conf: Konf. třídy
+      parse_conf: Konf. parsování
+      parsed: Zparsováno
+  dw_orders_mv:
+    title: Analýza objednávek
+    loading: Načítání dat...
+  ordritems:
+    index:
+      title: Položky objednávky
+    new:
+      title: Nová položka objednávky
+    edit:
+      title: Upravit položku objednávky
+    show:
+      title: Zobrazit položku objednávky
+      ordr: Objednávka
+      menuitem: Položka menu
+  ordrparticipants:
+    index:
+      title: Účastníci objednávky
+    new:
+      title: Nový účastník menu
+    edit:
+      title: Upravit účastníka menu
+    show:
+      title: Zobrazit účastníka objednávky
+    table:
+      sessionid: ID relace
+      role: Role
+      employee: Zaměstnanec
+      ordr: Objednávka
+      ordritem: Položka objednávky
+  ordractions:
+    index:
+      title: Akce objednávky
+    new:
+      title: Nová akce objednávky
+    edit:
+      title: Upravit akci objednávky
+    show:
+      title: Zobrazit akci objednávky
+  ordritemnotes:
+    index:
+      title: Poznámky k položkám objednávky
+    new:
+      title: Nová poznámka
+    edit:
+      title: Upravit poznámku
+    show:
+      title: Zobrazit poznámku
+  menuparticipants:
+    new:
+      title: Nový účastník menu
+    edit:
+      title: Upravit účastníka menu
+  ingredients:
+    index:
+      title: Přísady
+    new:
+      title: Nová přísada
+    edit:
+      title: Upravit přísadu
+    show:
+      title: Zobrazit přísadu
+  genimages:
+    index:
+      title: Generované obrázky
+    new:
+      title: Nový generovaný obrázek
+    edit:
+      title: Upravit generovaný obrázek
+    show:
+      title: Zobrazit generovaný obrázek
+    table:
+      id: ID
+      name: Název
+      description: Popis
+      restaurant: Restaurace
+      menu: Nabídka
+      menusection: Sekce menu
+      menuitem: Položka menu
+      image_data: Data obrázku
+  restaurantlocales:
+    index:
+      title: Lokality restaurací
+    show:
+      title: Zobrazit lokalitu restaurace
+    table:
+      locale: Lokalita
+      status: Stav
+      restaurant: Restaurace
+  tracks:
+    index:
+      title: Skladby
+    new:
+      title: Nová skladba
+    edit:
+      title: Upravit skladbu
+  userplans:
+    index:
+      title: Plány uživatelů
+    new:
+      title: Nový plán uživatele
+    show:
+      title: Zobrazit plán uživatele
+    edit:
+      manage_billing: Spravovat fakturaci
+    table:
+      user: Uživatel
+      plan: Plán
+  metrics:
+    index:
+      title: Metriky
+    new:
+      title: Nová metrika
+    edit:
+      title: Upravit metriku
+    show:
+      title: Zobrazit metriku
+  onboarding:
+    show:
+      progress: Průběh
+      current_step: Aktuální krok
+      completed: Dokončeno

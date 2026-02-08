@@ -1,0 +1,34 @@
+---
+de:
+  shared:
+    head:
+      meta_title: ''
+      meta_description: ''
+      meta_keywords: ''
+      og_title: ''
+      og_description: ''
+      twitter_title: ''
+      twitter_description: ''
+      pwa_title: ''
+    footer:
+      facebook: ''
+      instagram: ''
+      linkedin: ''
+      privacy: Datenschutz
+      terms: AGB
+      plan: ''
+      build: ''
+      twitter: ''
+    navbar:
+      adminArea: Admin-Bereich
+      dashboard: ''
+      billing: Abrechnung
+      heroImages: ''
+      impersonated_as: ''
+      login: Anmelden
+      logout: Abmelden
+      restaurants: Gastronomiebetriebe
+      settings: Einstellungen
+      signUp: Registrieren
+      testimonials: Referenzen
+      toggle_navigation: ''

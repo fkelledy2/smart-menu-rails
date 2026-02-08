@@ -1,0 +1,21 @@
+---
+cs:
+  menuavailabilities:
+    controller:
+      created: Dostupnost nabídky byla úspěšně vytvořena.
+      deleted: Dostupnost nabídky byla úspěšně odstraněna.
+      updated: Dostupnost nabídky byla úspěšně aktualizována.
+    form:
+      delete: Smazat
+      save: Uložit
+      selectMenu: Vyberte menu...
+      sure: Jste si jistí?
+    index:
+      menuAvailabilities: Dostupnost nabídky
+      menuAvailability: Dostupnost
+    new:
+      cancel: Zrušit
+      menuAvailability: Nová dostupnost
+    show:
+      menuAvailability: Dostupnost nabídky
+      selectMenu: Vybrat nabídku

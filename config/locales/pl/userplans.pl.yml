@@ -1,0 +1,11 @@
+---
+pl:
+  userplans:
+    controller:
+      created: Plan użytkownika został pomyślnie utworzony.
+      deleted: Plan użytkownika został pomyślnie usunięty.
+      updated: Plan użytkownika został pomyślnie zaktualizowany.
+    edit:
+      contactUs: Kontakt
+      saveChanges: Aktualizacja
+      selectPlan: Wybierz plan

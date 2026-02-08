@@ -1,0 +1,69 @@
+---
+es:
+  menus:
+    controller:
+      created: ''
+      deleted: ''
+      image_regeneration_queued: ''
+      image_regeneration_queued_rake: ''
+      webp_regeneration_queued: ''
+      ai_image_generation_queued: ''
+      updated: ''
+    edit:
+      availabilities: Disponibilidades
+      menu: Menú
+      regenerate_images_confirm: ''
+      sections: Secciones
+    form:
+      current_pdf: ''
+      delete: Eliminar
+      details: Detalles
+      errors: Errores
+      'false': ''
+      imageSettings: Configuración de imagen
+      'off': ''
+      'on': ''
+      pdfSettings: Configuración PDF
+      regenerate_images: ''
+      regenerate_images_confirm: ''
+      remove: ''
+      save: Guardar
+      settings: Configuración
+      sure: "¿Estás seguro?"
+      'true': ''
+    index:
+      menu: Menú
+      menus: Menús
+      unavailable: El menú no está disponible actualmente.
+    menu:
+      description: ''
+      image: ''
+      name: ''
+      pdf_menu_scan: ''
+      restaurant: ''
+      sequence: ''
+      status: ''
+    new:
+      menu: Nuevo menú
+    show:
+      add_to_order: ''
+      allergens: ''
+      allergyns: ''
+      bill: ''
+      loading: ''
+      not_available: ''
+      order: ''
+      order_updated: ''
+      remaining: ''
+      staff_alerted: ''
+      start_order: ''
+      take_payment: ''
+    showMenuavailabilities:
+      availabilities: Disponibilidades
+    showMenusections:
+      sections: Secciones
+    sections:
+      settings_2025:
+        disabled_at_restaurant: ''
+        parent_restriction: ''
+        parent_restriction_desc: ''

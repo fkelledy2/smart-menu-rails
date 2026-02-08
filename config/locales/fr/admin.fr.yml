@@ -1,0 +1,260 @@
+---
+fr:
+  admin:
+    performance:
+      title: " Surveillance des Performances"
+      subtitle: Métriques et analyses de performance en temps réel
+      card:
+        avg_response_time: Temps de Réponse Moyen
+        memory_usage: Utilisation Mémoire
+        error_rate: Taux d'Erreur
+        active_users: Utilisateurs Actifs
+        last_5_minutes: Dernières 5 minutes
+        current_rss: RSS Actuel
+      response_time_trend: Tendance Temps de Réponse (24h)
+      memory_usage_trend: Tendance Utilisation Mémoire (24h)
+      slowest_endpoints: Points de Terminaison les Plus Lents (Dernière Heure)
+      table:
+        endpoint: Point de Terminaison
+        avg_response_time: Temps de Réponse Moyen
+      no_slow_endpoints: Aucun point de terminaison lent détecté
+      recent_slow_queries: Requêtes Lentes Récentes
+      query_table:
+        duration: Durée
+        query: Requête
+        time: Heure
+      no_slow_queries: Aucune requête lente détectée
+      actions: Actions
+    cache:
+      title: Administration Cache
+      health_status: État de Santé du Cache
+      response_time: Temps de Réponse
+      write_operation: Opération d'Écriture
+      read_operation: Opération de Lecture
+      delete_operation: Opération de Suppression
+      error: Erreur
+      performance_stats: Statistiques de Performance
+      reset_stats: Réinitialiser les Statistiques
+      cache_hits: Appels Cache
+      cache_misses: Défauts Cache
+      cache_writes: Écritures Cache
+      cache_deletes: Suppressions Cache
+      cache_errors: Erreurs
+      hit_rate: Taux de Succès
+      cache_info: Informations Cache
+      service_version: Version du Service
+      cache_methods: Méthodes Cache
+      active_keys: Clés Actives
+      memory_usage: Utilisation Mémoire
+      cache_warming: Préchauffage Cache
+      cache_warming_description: Précharger les données critiques du cache pour améliorer
+        les performances.
+      cache_management: Gestion du Cache
+      cache_management_description: Effacer toutes les données mises en cache pour
+        forcer le chargement de nouvelles données.
+      cache_patterns: Motifs Cache
+      patterns:
+        restaurant: Tableaux de bord et analyses des restaurants
+        menu: Données et performances du menu
+        menuitem: Détails et analyses des articles
+        order: Données et résumés des commandes
+        employee: Données et performances du personnel
+        user: Activité utilisateur et données multi-restaurants
+    metrics:
+      title: Surveillance des Performances de l'Application
+      card:
+        total_requests: Requêtes Totales
+        avg_response_time: Temps de Réponse Moyen
+        error_rate: Taux d'Erreur
+        total_users: Utilisateurs Totaux
+        all_time: Tout le temps
+        current_average: Moyenne actuelle
+        current_error_rate: Taux d'erreur actuel
+        all_time_registrations: Inscriptions depuis toujours
+      summary:
+        restaurants_created: Restaurants Créés
+        menu_imports: Imports de Menus
+      system:
+        memory_usage: Utilisation Mémoire
+        active_users: Utilisateurs Actifs
+      metric_types:
+        title: Types de Métriques
+        counters: 'Compteurs: Valeurs cumulatives qui augmentent uniquement (ex. requêtes
+          totales)'
+        gauges: 'Jauges: Valeurs actuelles qui peuvent augmenter ou diminuer (ex.
+          utilisateurs actifs)'
+        histograms: 'Histoogrammes: Collections de mesures (ex. temps de réponse)'
+      table:
+        metric: Métrique
+        type: Type
+        value: Valeur
+        last_updated: Dernière Mise à Jour
+      no_recent_metrics:
+        message: Aucune métrique récente disponible
+        description: Les métriques apparaîtront ici au fur et à mesure de l'utilisation
+          de l'application
+    dashboard:
+      kpis:
+        total_orders: Commandes Totales
+        total_revenue: Chiffre d'Affaires Total
+        customers: Clients
+        growth_rate: Taux de Croissance
+        page_views: Pages Vues
+        unique_visitors: Visiteurs Uniques
+        bounce_rate: Taux de Rebond
+      sales:
+        title: Articles les Plus Vendus
+        table:
+          item: Article
+          quantity_sold: Quantité Vendue
+        no_data: Aucune donnée de vente disponible pour cette période.
+      loading: Chargement...
+  notifications:
+    index:
+      title: Notifications
+  announcements:
+    index:
+      title: Nouveautés
+      coming_soon: De nouvelles fonctionnalités passionnantes arrivent bientôt!
+  beverage_review_queue:
+    title: File d'Attente de Révision des Boissons
+    recent_pipeline_runs: Exécutions de pipeline récentes
+    table:
+      created: Créé
+      menu: Carte
+      status: Statut
+      step: Étape
+      processed: Traité
+      needs_review: Nécessite révision
+      unresolved: Non résolu
+      actions: Actions
+    items_needing_review: Éléments nécessitant une révision
+    items_table:
+      menu: Carte
+      section: Section
+      item: Article
+      category: Catégorie
+      class_conf: Conf. Classe
+      parse_conf: Conf. Parsing
+      parsed: Analysé
+  dw_orders_mv:
+    title: Analyse des Commandes
+    loading: Chargement des données...
+  ordritems:
+    index:
+      title: Articles de Commande
+    new:
+      title: Nouvel article de commande
+    edit:
+      title: Modifier l'Article de Commande
+    show:
+      title: Afficher l'Article de Commande
+      ordr: Commande
+      menuitem: Article
+  ordrparticipants:
+    index:
+      title: Participants à la Commande
+    new:
+      title: Nouveau Participant au Menu
+    edit:
+      title: Modifier le Participant au Menu
+    show:
+      title: Afficher le Participant à la Commande
+    table:
+      sessionid: ID de Session
+      role: Rôle
+      employee: Employé
+      ordr: Commande
+      ordritem: Article de Commande
+  ordractions:
+    index:
+      title: Actions de Commande
+    new:
+      title: Nouvelle Action de Commande
+    edit:
+      title: Modifier l'Action de Commande
+    show:
+      title: Afficher l'Action de Commande
+  ordritemnotes:
+    index:
+      title: Notes des Articles de Commande
+    new:
+      title: Nouvelle Note
+    edit:
+      title: Modifier la Note
+    show:
+      title: Afficher la Note
+  menuparticipants:
+    new:
+      title: Nouveau Participant au Menu
+    edit:
+      title: Modifier le Participant au Menu
+  ingredients:
+    index:
+      title: Ingredientes
+    new:
+      title: Nouvel Ingrédient
+    edit:
+      title: Modifier l'Ingrédient
+    show:
+      title: Afficher l'Ingrédient
+  genimages:
+    index:
+      title: Images Générées
+    new:
+      title: Nouvelle Image Générée
+    edit:
+      title: Modifier l'Image Générée
+    show:
+      title: Afficher l'Image Générée
+    table:
+      id: ID
+      name: Nom
+      description: Description
+      restaurant: Établissement
+      menu: Carte
+      menusection: Section du Menu
+      menuitem: Article
+      image_data: Données d'Image
+  restaurantlocales:
+    index:
+      title: Langues du Restaurant
+    show:
+      title: Afficher la Langue du Restaurant
+    table:
+      locale: Langue
+      status: Statut
+      restaurant: Établissement
+  tracks:
+    index:
+      title: Pistes
+    new:
+      title: Nouvelle Piste
+    edit:
+      title: Modifier la Piste
+  userplans:
+    index:
+      title: Plans Utilisateur
+    new:
+      title: Nouveau Plan Utilisateur
+    show:
+      title: Afficher le Plan Utilisateur
+    edit:
+      manage_billing: Gérer la Facturation
+    table:
+      user: Utilisateur
+      plan: Forfait
+  metrics:
+    index:
+      title: Métriques
+    new:
+      title: Nouvelle Métrique
+    edit:
+      title: Modifier la Métrique
+    show:
+      title: Afficher la Métrique
+  onboarding:
+    show:
+      progress: Progression
+      current_step: Étape Actuelle
+      completed: Terminé

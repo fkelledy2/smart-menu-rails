@@ -1,0 +1,26 @@
+---
+es:
+  tags:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      title: ''
+    form:
+      delete: Eliminar
+      errors: ''
+      save: Guardar
+      sure: "¿Estás seguro?"
+    index:
+      tag: Etiqueta
+      tags: Etiquetas
+    new:
+      cancel: Cancelar
+      title: ''
+    show:
+      show_tag: ''
+    tag:
+      description: ''
+      menuitem: ''
+      name: ''

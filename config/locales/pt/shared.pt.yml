@@ -1,0 +1,34 @@
+---
+pt:
+  shared:
+    head:
+      meta_title: ''
+      meta_description: ''
+      meta_keywords: ''
+      og_title: ''
+      og_description: ''
+      twitter_title: ''
+      twitter_description: ''
+      pwa_title: ''
+    footer:
+      facebook: ''
+      instagram: ''
+      linkedin: ''
+      privacy: Privacidade
+      terms: Termos
+      plan: ''
+      build: ''
+      twitter: ''
+    navbar:
+      adminArea: Administrador
+      dashboard: ''
+      billing: Faturação
+      heroImages: ''
+      impersonated_as: ''
+      login: Iniciar sessão
+      logout: Terminar sessão
+      restaurants: Restaurantes
+      settings: Configurações
+      signUp: Registar
+      testimonials: Testemunhos
+      toggle_navigation: ''

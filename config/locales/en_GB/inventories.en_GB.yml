@@ -1,0 +1,29 @@
+---
+en_GB:
+  inventories:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      inventory: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      select_menu_item: ''
+      sure: ''
+    index:
+      inventories: ''
+      inventory: ''
+    inventory:
+      currentinventory: ''
+      menuitem: ''
+      resethour: ''
+      startinginventory: ''
+    new:
+      cancel: ''
+      inventory: ''
+    show:
+      inventory: ''
+      select_menu_item: ''

@@ -1,0 +1,26 @@
+---
+en_GB:
+  testimonials:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      title: ''
+    form:
+      cancel: ''
+      destroy: ''
+      save: ''
+      sure: ''
+    index:
+      actions: ''
+      approve: ''
+      testimonials: ''
+      unapprove: ''
+    new:
+      cancel: ''
+      title: ''
+    testimonial:
+      restaurant: ''
+      testimonial: ''
+      user: ''

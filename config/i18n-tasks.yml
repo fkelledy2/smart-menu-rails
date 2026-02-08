@@ -11,7 +11,7 @@ data:
   read:
     - config/locales/**/*.%{locale}.yml
   write:
-    - config/locales/%{locale}.yml
+    - config/locales/%{locale}/%{locale}.yml
 ignore_missing:
   - 'activerecord.attributes.*.*'
   - 'datetime.*'

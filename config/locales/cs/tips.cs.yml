@@ -1,0 +1,34 @@
+---
+cs:
+  tips:
+    controller:
+      created: Tip byl úspěšně vytvořen.
+      deleted: Tip byl úspěšně odstraněn.
+      updated: Tip byl úspěšně aktualizován.
+    edit:
+      tips: Tipy
+      edit_tip: Možnost Upravit tip
+      description: Aktualizace procentních údajů o spropitném
+      cancel: Zrušit
+      confirm_delete: Smazat tuto možnost tipu?
+      delete: Odstranit
+      tip_details: Podrobnosti o tipu
+    form:
+      percentage: Procento spropitného
+      percentage_placeholder: např. 15
+      percentage_help: Zadejte procento spropitného (0-100)
+    index:
+      tips: Spropitná
+      description: Správa procenta spropitného dostupného zákazníkům při placení.
+      back: Zpět
+      new_tip: Nová možnost tipu
+      all_tips: Všechny možnosti tipů
+    new:
+      tips: Tipy
+      new: Nový
+      new_tip: Nová možnost tipu
+      description: Vytvoření nového procenta spropitného pro zákazníky
+      cancel: Zrušit
+      tip_details: Podrobnosti o tipu
+    show:
+      tip: Zobrazit spropitné

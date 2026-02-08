@@ -1,0 +1,213 @@
+---
+it:
+  onboarding:
+    account_details:
+      continue: Continua
+      email_help: Questa email è già confermata e non può essere modificata durante
+        la configurazione.
+      email_label: Indirizzo Email
+      full_name_label: Nome Completo
+      full_name_placeholder: Inserisci il tuo nome completo
+      full_name_required: Fornisci il tuo nome completo.
+      restaurant_name_preview_help: Non preoccuparti, puoi cambiarlo nel prossimo
+        passaggio.
+      restaurant_name_preview_label: Nome Ristorante (Anteprima)
+      restaurant_name_preview_placeholder: Come si chiama il tuo ristorante?
+      stats:
+        restaurants_count: 1.000+
+        restaurants_label: Ristoranti si Fidano di Noi
+        satisfaction: 98%
+        satisfaction_label: Soddisfazione del Cliente
+        setup_time: 5 min
+        setup_time_label: Tempo Medio di Configurazione
+      subtitle: Configuriamo il tuo account. Ci vorrà solo un momento.
+      title: Benvenuto in Smart Menu!
+    completion:
+      completion_time: Questo di solito richiede 30-60 secondi. Sarai reindirizzato
+        automaticamente quando completato.
+      configuring_payments: Configurando opzioni di pagamento
+      creating_profile: Creando il profilo del tuo ristorante
+      customize_menu_description: Aggiungi più articoli, carica foto e imposta descrizioni
+        dettagliate
+      customize_menu_title: Personalizza il Tuo Menu
+      free_trial_status: Prova gratuita di 14 giorni
+      generating_qr: Generando codice QR...
+      generating_qr_codes: Generando codici QR
+      generating_status: Generando il tuo codice QR...
+      go_to_dashboard: Vai alla Dashboard
+      menu_published: Menu Pubblicato
+      plan_activated: Piano Attivato
+      print_qr_description: Scarica e stampa codici QR per i tuoi tavoli
+      print_qr_title: Stampa Codici QR
+      qr_code_ready: Codice QR Pronto!
+      qr_ready_title: Il Tuo Menu Digitale è Pronto
+      restaurant_created: Ristorante Creato
+      setting_up_menu: Configurando il tuo menu
+      setup_timeout: La configurazione sta richiedendo più tempo del previsto
+      setup_timeout_help: Aggiorna la pagina o contatta il supporto
+      subtitle: Il tuo ristorante è ora configurato e pronto a servire i clienti!
+      title: "Congratulazioni! \U0001F389"
+      track_orders_description: Monitora ordini dei clienti e analisi in tempo reale
+      track_orders_title: Traccia Ordini
+      view_live_menu: Visualizza Menu dal Vivo
+      whats_happening: 'Cosa sta succedendo ora:'
+      whats_next: Cosa c'è dopo?
+    menu_creation:
+      add_menu_item: Aggiungi Articolo Menu
+      back: Indietro
+      create_menu: Crea Menu
+      item_description_placeholder: Breve descrizione (opzionale)
+      item_name_placeholder: Nome articolo
+      item_price_placeholder: '0,00'
+      live_preview: Anteprima dal Vivo
+      menu_item_title: Articolo del Menu
+      menu_items_help: Aggiungi almeno 3 articoli per continuare. Non preoccuparti
+        della perfezione - puoi modificare tutto in seguito!
+      menu_items_label: Articoli del Menu
+      menu_name_default: Menu Principale
+      menu_name_label: Nome Menu
+      menu_name_placeholder: es. Menu Principale, Menu Pranzo, Menu Cena
+      menu_name_required: Fornisci un nome per il menu.
+      min_items_alert: Aggiungi almeno 3 articoli del menu per continuare.
+      need_more_items: Servono ancora %{count} articoli
+      preview_empty: I tuoi articoli del menu appariranno qui mentre li aggiungi
+      preview_empty_alt: I tuoi articoli del menu appariranno qui
+      quick_start_label: Modelli di Avvio Rapido
+      subtitle: Aggiungi alcuni articoli per iniziare. Puoi sempre aggiungerne altri
+        in seguito!
+      template_added: Aggiunto!
+      template_items:
+        american:
+          bbq_ribs:
+            description: Costolette di maiale cotte lentamente con salsa BBQ
+            name: Costolette BBQ
+          buffalo_wings:
+            description: 8 pezzi con sedano e salsa al formaggio blu
+            name: Alette Buffalo
+          classic_burger:
+            description: Hamburger di manzo, lattuga, pomodoro, cipolla, sottaceti
+            name: Hamburger Classico
+        asian:
+          chicken_teriyaki:
+            description: Pollo grigliato con salsa teriyaki e riso
+            name: Pollo Teriyaki
+          pad_thai:
+            description: Noodles di riso saltati con gamberi e arachidi
+            name: Pad Thai
+          spring_rolls:
+            description: Involtini croccanti con salsa agrodolce
+            name: Involtini Primavera Vegetariani
+        italian:
+          caesar_salad:
+            description: Lattuga romana, crostini, parmigiano, condimento caesar
+            name: Insalata Caesar
+          margherita_pizza:
+            description: Mozzarella fresca, salsa di pomodoro, basilico
+            name: Pizza Margherita
+          spaghetti_carbonara:
+            description: Pasta con uova, formaggio, pancetta e pepe
+            name: Spaghetti alla Carbonara
+        mexican:
+          beef_burrito:
+            description: Grande burrito con manzo condito, riso e fagioli
+            name: Burrito di Manzo
+          chicken_tacos:
+            description: Tre tacos morbidi con pollo grigliato e salsa
+            name: Tacos di Pollo
+          guacamole_chips:
+            description: Guacamole fresco con nachos di tortilla
+            name: Guacamole e Nachos
+      templates:
+        american: Americana
+        asian: Asiatica
+        italian: Italiana
+        mexican: Messicana
+      templates_help: Clicca su un modello per aggiungere articoli di esempio che
+        puoi personalizzare.
+      title: Crea il tuo primo menu
+    plan_selection:
+      always_free: Sempre gratuito
+      back: Indietro
+      choose_free_plan: Scegli Piano Gratuito
+      continue: Continua
+      features:
+        advanced_analytics: Analisi avanzate
+        api_access: Accesso API
+        custom_branding: Branding personalizzato
+        items_per_menu: articoli/menu
+        languages: lingue
+        locations: posizioni
+        menus_per_location: menu/posizione
+        online_ordering: Ordinazioni online
+        priority_support: Supporto prioritario
+        qr_code_menus: Menu con codice QR
+      free_trial: Prova gratuita di 14 giorni
+      most_popular: PIÙ POPOLARE
+      per_month: "/mese"
+      select_plan_alert: Seleziona un piano per continuare.
+      selected: Selezionato ✓
+      start_free_trial: Inizia Prova Gratuita
+      subtitle: Inizia con una prova gratuita di 14 giorni. Nessuna carta di credito
+        richiesta!
+      title: Scegli il tuo piano
+      trust_indicators:
+        mobile_subtitle: Perfetto su qualsiasi dispositivo
+        mobile_title: Ottimizzato per Mobile
+        secure_subtitle: Sicurezza a livello bancario
+        secure_title: Sicuro e Affidabile
+        support_subtitle: Siamo qui per aiutarti
+        support_title: Supporto 24/7
+    restaurant_details:
+      back: Indietro
+      continue: Continua
+      cuisine_type_label: Tipo di Cucina
+      cuisine_type_prompt: Seleziona cucina...
+      cuisine_type_required: Seleziona il tipo di cucina.
+      cuisine_types:
+        american: Americana
+        chinese: Cinese
+        french: Francese
+        fusion: Fusione
+        greek: Greca
+        indian: Indiana
+        italian: Italiana
+        japanese: Giapponese
+        korean: Coreana
+        mediterranean: Mediterranea
+        mexican: Messicana
+        middle_eastern: Mediorientale
+        other: Altro
+        spanish: Spagnola
+        thai: Thailandese
+        vietnamese: Vietnamita
+      location_help: Questo ci aiuta a impostare valuta e fuso orario predefiniti.
+      location_label: Posizione
+      location_placeholder: Città, Stato/Paese
+      location_required: Fornisci la posizione del tuo ristorante.
+      phone_help: Opzionale - per contatti clienti e prenotazioni.
+      phone_label: Numero di Telefono
+      phone_placeholder: "+39 123 456 7890"
+      pro_tips:
+        tip1: Scegli il tipo di ristorante che meglio si adatta al tuo stile di servizio
+        tip2: Il tipo di cucina ci aiuta a suggerire modelli di menu pertinenti
+        tip3: La posizione viene utilizzata per impostare valuta locale e fuso orario
+        title: Consigli Professionali
+      restaurant_name_label: Nome Ristorante
+      restaurant_name_placeholder: Inserisci il nome del tuo ristorante
+      restaurant_name_required: Fornisci il nome del tuo ristorante.
+      restaurant_type_label: Tipo di Ristorante
+      restaurant_type_prompt: Seleziona tipo...
+      restaurant_type_required: Seleziona il tipo di ristorante.
+      restaurant_types:
+        bakery: Panetteria
+        bar_grill: Bar e Grill
+        cafe: Caffè
+        casual_dining: Cena informale
+        fast_casual: Fast Casual
+        fine_dining: Cena raffinata
+        food_truck: Camioncino
+        other: Altro
+        quick_service: Servizio Rapido
+      subtitle: Aiutaci a personalizzare la tua esperienza con alcune informazioni
+        di base.
+      title: Parlaci del tuo ristorante

@@ -1,0 +1,602 @@
+---
+cs:
+  time:
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      short: "%d %b %H:%M"
+      long: "%B %d, %Y %H:%M"
+    date:
+      formats:
+        default: "%d.%m.%Y"
+        short: "%d %b"
+        long: "%B %d, %Y"
+      abbr_day_names:
+      - ne
+      - po
+      - út
+      - st
+      - čt
+      - pá
+      - so
+      abbr_month_names:
+      - ''
+      - led
+      - úno
+      - bře
+      - dub
+      - kvě
+      - čvn
+      - čvc
+      - srp
+      - zář
+      - říj
+      - lis
+      - pro
+      day_names:
+      - neděle
+      - pondělí
+      - úterý
+      - středa
+      - čtvrtek
+      - pátek
+      - sobota
+      month_names:
+      - ''
+      - leden
+      - únor
+      - březen
+      - duben
+      - květen
+      - červen
+      - červenec
+      - srpen
+      - září
+      - říjen
+      - listopad
+      - prosinec
+  activerecord:
+    attributes:
+      employee:
+        image: URL obrázku
+        restaurant: Restaurace
+        user: Uživatel
+      menu:
+        restaurant: Restaurace
+        sequence: Pořadí zobrazení
+      menuitem:
+        sequence: Pořadí zobrazení
+        ingredients: ''
+        menusection_id: ''
+        tags: ''
+        variantPricing: ''
+      menusection:
+        menu: Menu
+        sequence: Pořadí zobrazení
+      menuavailability:
+        endmin: ''
+        menu: ''
+        startmin: ''
+      restaurant:
+        capacity: ''
+        music: ''
+        tips: ''
+        covercharge: ''
+      restaurantavailability:
+        endmin: ''
+        restaurant: ''
+        sequence: ''
+        startmin: ''
+      tax:
+        restaurant: ''
+  allergyns:
+    edit:
+      allergyn: Upravit alergen
+    form:
+      delete: Smazat
+      save: Uložit
+      sure: Jste si jistí?
+    index:
+      activate: Aktivovat
+      allergyn: Alergen
+      deactivate: Deaktivovat
+    new:
+      allergyn: Nový alergen
+  devise:
+    registrations:
+      edit:
+        billing: Fakturace
+        password: Heslo
+        passwordHelp: ''
+        selectPlan: ''
+  home:
+    index:
+      actions: Akce
+      signup: Registrace
+      activate: ''
+      deactivate: ''
+      emailAddress: ''
+      featureDescription1: ''
+      featureTitle1: ''
+      message: ''
+  inventories:
+    index:
+      activate: Aktivovat
+      deactivate: Deaktivovat
+  menuavailabilities:
+    edit:
+      menuAvailability: Upravit dostupnost
+    index:
+      activate: Otevřít
+      deactivate: Zavřít
+    form:
+      errors: ''
+  menuitems:
+    edit:
+      menuItem: Upravit položku menu
+    form:
+      selectMenuSection: Vyberte sekci menu...
+      sizes: Velikosti
+    index:
+      activate: Aktivovat
+      deactivate: Deaktivovat
+  menus:
+    form:
+      preview: Náhled
+      selectRestaurant: Vyberte restauraci...
+      pdfMenuScan: ''
+    index:
+      activate: Aktivovat
+      deactivate: Deaktivovat
+    new:
+      cancel: Zrušit
+    show:
+      menu: Menu
+      table: Stůl
+    showMenuBanner:
+      table: ''
+    showMenuavailabilities:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showMenusections:
+      actions: ''
+      activate: ''
+      deactivate: ''
+  menusections:
+    edit:
+      menuSection: Upravit sekci menu
+    index:
+      activate: Aktivovat
+      deactivate: Deaktivovat
+    form:
+      errors: ''
+    showInventories:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showMenuitems:
+      actions: ''
+      activate: ''
+      deactivate: ''
+  restaurantavailabilities:
+    form:
+      selectRestaurant: Vyberte restauraci...
+      errors: ''
+    index:
+      activate: Otevřít
+      deactivate: Zavřít
+    new:
+      cancel: Zrušit
+  restaurants:
+    edit:
+      restaurant: Upravit restauraci
+    form:
+      generateImage: Generovat obrázek
+      errors: ''
+    index:
+      activate: Aktivovat
+      deactivate: Deaktivovat
+      restaurant: Restaurace
+      actions: ''
+    new:
+      cancel: Zrušit
+    show:
+      name: Název
+      restaurant: Zobrazit restauraci
+      address1: ''
+      address2: ''
+      city: ''
+      currency: ''
+      description: ''
+      postcode: ''
+      state: ''
+    currency: ''
+    currency_symbol: ''
+    showAllergyns:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showEmployees:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      employee: ''
+      id: ''
+      name: ''
+      role: ''
+    showMenus:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showOpeningHours:
+      closing: ''
+      dayOfWeek: ''
+      opening: ''
+      openingHour: ''
+      openingHours: ''
+    showOrdrs:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showSizes:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showSmartMenus:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showTableSettings:
+      actions: ''
+      activate: ''
+      capacity: ''
+      deactivate: ''
+      name: ''
+      tableSetting: ''
+      type: ''
+    showTaxes:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      name: ''
+      percentage: ''
+      tax: ''
+      type: ''
+    showTips:
+      percentage: ''
+      tip: ''
+    showTracks:
+      actions: ''
+      activate: ''
+      deactivate: ''
+  shared:
+    navbar:
+      allergyns: Alergeny
+      employees: Zaměstnanci
+      menuItems: Položky menu
+      menus: Menu
+      openingHours: Otevírací doba
+      orders: Objednávky
+      sizes: Velikosti
+      tableSettings: Nastavení stolů
+      taxes: Daně
+      tips: Spropitné
+      whatsNew: Co je nového
+      inventories: ''
+      menuAvailability: ''
+      menuSections: ''
+      orderItems: ''
+  sizes:
+    edit:
+      size: Upravit velikost
+    form:
+      delete: Smazat
+      save: Uložit
+      sure: Jste si jistí?
+    index:
+      activate: Aktivovat
+      deactivate: Deaktivovat
+      size: Velikost
+    new:
+      size: Nová velikost
+  smartmenus:
+    index:
+      activate: Aktivovat
+      deactivate: Deaktivovat
+      menu: Menu
+      menus: Menu
+      unavailable: ''
+    orderCustomer:
+      takePayment: Přijmout platbu
+    show:
+      menu: Zobrazit menu
+      table: Stůl
+    alcoholic: Alkoholický
+    edit:
+      menu: ''
+    form:
+      delete: ''
+      details: ''
+      errors: ''
+      preview: ''
+      selectRestaurant: ''
+    new:
+      cancel: ''
+      menu: ''
+    orderStaff:
+      staffAlerted: ''
+    showMenuBanner:
+      table: ''
+    showModals:
+      menuItem: ''
+    alcoholic_tooltip: ''
+  tablesettings:
+    form:
+      delete: Smazat
+      save: Uložit
+      sure: Jste si jistí?
+      errors: ''
+      selectRestaurant: ''
+    index:
+      tablesetting: Stůl
+      tablesettings: Stoly
+    new:
+      cancel: Zrušit
+    show:
+      tablesetting: Zobrazit stůl
+  taxes:
+    edit:
+      tax: Upravit daň
+    form:
+      delete: Smazat
+      save: Uložit
+      sure: Jste si jistí?
+      errors: ''
+      selectRestaurant: ''
+    index:
+      tax: Daň
+      activate: ''
+      deactivate: ''
+    new:
+      tax: Nová daň
+  tips:
+    edit:
+      tip: Upravit spropitné
+    form:
+      delete: Smazat
+      save: Uložit
+      sure: Jste si jistí?
+      errors: ''
+      selectRestaurant: ''
+    index:
+      tip: Spropitné
+      activate: ''
+      deactivate: ''
+    new:
+      tip: Nové spropitné
+  employees:
+    form:
+      selectRestaurant: ''
+    new:
+      cancel: ''
+  feature1:
+    key: ''
+  feature2:
+    key: ''
+  feature3:
+    key: ''
+  feature4:
+    key: ''
+  feature5:
+    key: ''
+  feature6:
+    key: ''
+  genimages:
+    edit:
+      genimage: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      genimage: ''
+      genimages: ''
+    new:
+      cancel: ''
+      genimage: ''
+    show:
+      genimage: ''
+  ingredients:
+    edit:
+      ingredient: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      ingredient: ''
+      ingredients: ''
+    new:
+      cancel: ''
+      ingredient: ''
+    show:
+      ingredient: ''
+  metrics:
+    edit:
+      metric: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      metric: ''
+      metrics: ''
+    new:
+      cancel: ''
+      metric: ''
+    show:
+      metric: ''
+  ocr_menu_imports:
+    create:
+      success: ''
+    edit:
+      ocrMenuImport: ''
+    form:
+      cancel: ''
+      import: ''
+      save: ''
+    index:
+      activate: ''
+      deactivate: ''
+      ocrMenuImport: ''
+      ocrMenuImports: ''
+    new:
+      ocrMenuImport: ''
+    show:
+      ocrMenuImport: ''
+  ordrs:
+    index:
+      order: ''
+    show:
+      order: ''
+      table: ''
+  plan:
+    business:
+      key: ''
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+    call: ''
+    enterprise:
+      key: ''
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+    pro:
+      key: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+    register: ''
+    starter:
+      key: ''
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+    trial:
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      key: ''
+  tags:
+    edit:
+      tag: ''
+    index:
+      activate: ''
+      deactivate: ''
+    new:
+      tag: ''
+    show:
+      tag: ''
+  tracks:
+    edit:
+      track: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    new:
+      cancel: ''
+      track: ''
+    show:
+      track: ''
+  userplans:
+    index:
+      userplan: ''
+      userplans: ''
+    new:
+      userplan: ''
+    show:
+      userplan: ''
+  orders:
+    total: ''
+    subtotal: ''
+    tax: ''
+    tip: ''
+    payment: ''
+    paid: ''
+    pending: ''
+    completed: ''
+  number:
+    currency:
+      format:
+        unit: ''
+        precision: ''
+        separator: ''
+        delimiter: ''
+        format: ''
+  date:
+    formats:
+      default: ''
+      short: ''
+      long: ''
+    abbr_day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    abbr_month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''

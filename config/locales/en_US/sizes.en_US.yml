@@ -1,0 +1,43 @@
+---
+en_US:
+  sizes:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      sizes: ''
+      edit_size: ''
+      description: ''
+      cancel: ''
+      confirm_delete: ''
+      delete: ''
+      size_details: ''
+    form:
+      size_type: ''
+      size_type_help: ''
+      name: ''
+      name_placeholder: ''
+      name_help: ''
+      description: ''
+      description_placeholder: ''
+      description_help: ''
+    index:
+      sizes: ''
+      description: ''
+      back: ''
+      new_size: ''
+      all_sizes: ''
+    new:
+      sizes: ''
+      new: ''
+      new_size: ''
+      description: ''
+      cancel: ''
+      size_details: ''
+    show:
+      size: ''
+    size:
+      description: ''
+      name: ''
+      size: ''

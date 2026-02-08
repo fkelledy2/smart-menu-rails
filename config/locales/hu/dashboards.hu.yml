@@ -1,0 +1,135 @@
+---
+hu:
+  bar_dashboard:
+    title: Bár irányítópult
+    metrics:
+      pending_tickets: Függő rendelések
+      preparing: Elkészítés alatt
+      ready: Kész
+  kitchen_dashboard:
+    title: Konyha irányítópult
+    metrics:
+      pending_tickets: Függő rendelések
+      preparing: Elkészítés alatt
+      ready: Kész
+      todays_orders: Mai rendelések
+    buttons:
+      start_preparing: Elkészítés indítása
+      mark_ready: Készként jelölés
+      mark_collected: Átvételként jelölés
+  errors:
+    not_found:
+      title: Oldal nem található
+      description: A keresett oldal nem létezik.
+      suggestion: Lehet, hogy áthelyezték, törölték vagy hibás URL-t adott meg.
+    unprocessable:
+      title: Feldolgozhatatlan entitás
+      description: A kért módosítást elutasították.
+      suggestion: Lehet, hogy olyan dolgot próbált megváltoztatni, amelyhez nincs
+        hozzáférése.
+    internal:
+      title: Belső szerver hiba
+      description: Sajnáljuk, de valami hiba történt a részünkről.
+      suggestion: Kérjük, próbálja újra később, vagy forduljon az ügyfélszolgálathoz,
+        ha a probléma fennáll.
+      error_details: Hiba részletei
+      backtrace: Visszakövetés
+  menu_performance:
+    not_available:
+      title: Teljesítmény adatok nem elérhetők
+      description: 'Nem sikerült betölteni a menü teljesítményadatait. Ez az alábbiak
+        miatt lehet:'
+      reasons:
+      - Menü nem található vagy hozzáférés megtagadva
+      - Nincs elegendő jogosultság
+      - Rendszerhiba az adatgyűjtés során
+  restaurant_analytics:
+    not_available:
+      title: ''
+      description: ''
+      reasons:
+      - ''
+      - ''
+      - ''
+  ai_generation:
+    modal:
+      title: AI képek generálása
+      confirm: Megerősítés és indítás
+      progress: Jelenlegi generálás
+      progress_log: Napló
+      last_image: Utolsó kép
+  menuitem_ai:
+    modal:
+      title: ''
+      confirm: ''
+      progress: ''
+      preview: ''
+  ocr_menu_imports:
+    alcohol_override:
+      undecided: Nem eldöntött
+      alcoholic: Alkoholos
+      non_alcoholic: Nem alkoholos
+    publish:
+      title: Menü közzététele
+      submit: Menü közzététele
+  offline:
+    title: Ön offline állapotban van
+    available_offline: 'Elérhető offline:'
+    items:
+    - Étterem információk
+    - Menü elemek és árak
+    - Legutóbbi rendelések
+    - Gyorsítótárazott képek
+    - Alapvető elemzések
+    last_updated: Utolsó frissítés
+  smartmenus:
+    skeleton:
+      loading: ''
+    no_image: ''
+  hero_images:
+    new:
+      title: ''
+    form:
+      image_url_placeholder: ''
+      image_url_help: ''
+      alt_text_placeholder: ''
+      alt_text_help: ''
+      sequence_help: ''
+      status_help: ''
+      source_url_placeholder: ''
+      source_url_help: ''
+  orders:
+    ordered: ''
+    prepared: ''
+    delivered: ''
+  form_2025:
+    menu_details: ''
+    menu_details_subtitle: ''
+    image_settings: ''
+    menu_image: ''
+  version_diff:
+    section: ''
+    item: ''
+  version_diff_2025:
+    section: ''
+    item: ''
+  details_2025:
+    menu_go_live_flow: ''
+  edit_2025:
+    onboarding_flow: ''
+  settings_2025:
+    receipt_merchant_details: ''
+    statement_descriptor: ''
+  tasting_courses_footer:
+    show_courses: ''
+    add_tasting_menu: ''
+  tasting_badge: ''
+  show_modals:
+    pairing: ''
+    full: ''
+  show_allergyns_debug:
+    title: ''
+    sql: ''
+    count: ''
+    ids: ''
+    names: ''

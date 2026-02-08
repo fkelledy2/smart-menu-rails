@@ -1,0 +1,117 @@
+---
+hu:
+  javascript:
+    notifications:
+      auto_save:
+        error: Mentés sikertelen
+        network_error: Hálózati hiba
+        saved: Rendelés mentve
+      sortable:
+        success: Sorrend mentve
+        error: Mentés sikertelen
+      form:
+        auto_saved: Részletek automatikusan mentve
+        submit_error: Mentés sikertelen
+      employee:
+        saved: Dolgozó sikeresen mentve
+        save_error: Dolgozó mentése sikertelen
+        status_error: Dolgozó állapot frissítése sikertelen
+        updated: "%{count} dolgozó frissítve: %{status}"
+        order_error: Rendelés frissítése sikertelen
+      menuitem:
+        saved: Menü elem sikeresen mentve
+        save_error: Menü elem mentése sikertelen
+        status_error: Menü elem állapot frissítése sikertelen
+        updated: "%{count} menü elem frissítve: %{status}"
+        image_generation: Kép generálás indítva %{count} menü elemhez
+        no_images: Nem sikerült képeket generálni
+        order_error: Rendelés frissítése sikertelen
+      order:
+        saved: Rendelés részletek automatikusan mentve
+        close_success: Rendelés sikeresen lezárva
+        close_error: Rendelés lezárása sikertelen
+        bill_success: Számla igénylés sikeres
+        bill_error: Számla igénylés sikertelen
+        payment_success: Fizetés sikeresen feldolgozva
+        payment_error: Fizetés feldolgozása sikertelen
+        missing_payment: Hiányzó fizetési információk
+        payment_link: Fizetési link frissítve
+        payment_link_error: Fizetési link generálása sikertelen
+        delete_success: Rendelés sikeresen törölve
+        delete_error: Rendelés törlése sikertelen
+        created: 'Rendelés #%{id} létrehozva'
+        updated: 'Rendelés #%{orderId} frissítve'
+        order_save_success: Rendelés sikeresen mentve
+        order_save_error: Rendelés mentése sikertelen
+      inventory:
+        saved: Készlet részletek automatikusan mentve
+        saved_success: Készlet sikeresen mentve
+        save_error: Készlet mentése sikertelen
+        status_error: Készlet állapot frissítése sikertelen
+        updated: "%{count} készlet elem frissítve: %{status}"
+        reset_error: Készlet visszaállítása sikertelen
+        reset_success: "%{count} készlet elem visszaállítva"
+        order_error: Rendelés frissítése sikertelen
+      menu:
+        saved: Menü részletek automatikusan mentve
+        saved_success: Menü sikeresen mentve
+        save_error: Menü mentése sikertelen
+        status_error: Menü állapot frissítése sikertelen
+        updated: "%{count} menü frissítve: %{status}"
+        order_error: Rendelés frissítése sikertelen
+      restaurant:
+        saved: Étterem részletek automatikusan mentve
+        saved_success: Étterem sikeresen mentve
+        save_error: Étterem mentése sikertelen
+        delete_success: Étterem sikeresen törölve
+        delete_error: Étterem törlése sikertelen
+        qr_error: QR kód generálása sikertelen
+      menusection:
+        saved: Menü szekció részletek automatikusan mentve
+        saved_success: Menü szekció sikeresen mentve
+        save_error: Menü szekció mentése sikertelen
+        status_error: Menü szekció állapot frissítése sikertelen
+        updated: "%{count} menü szekció frissítve: %{status}"
+        order_error: Rendelés frissítése sikertelen
+      ocr:
+        all_confirmed: Minden szekció %{status}
+        all_confirm_error: Megerősítések frissítése sikertelen
+        section_confirmed: Szekció %{status}
+        section_confirm_error: Szekció megerősítés frissítése sikertelen
+        inline_edit_success: "%{type} sikeresen frissítve"
+        inline_edit_error: Módosítások mentése sikertelen
+        inline_cancel: Szerkesztés visszavonva
+        section_order_success: Szekció sorrend frissítve
+        section_order_error: Szekció sorrend frissítése sikertelen
+        item_move_success: Elem sikeresen áthelyezve
+        item_move_error: Elem áthelyezése sikertelen
+        import_error: Importálás sikertelen. Próbálja újra.
+        import_success: Importálás sikeresen befejezve
+        delete_success: "%{count} nem megerősített szekció törölve"
+        export_success: Exportálás befejezve
+        export_error: Exportálás sikertelen
+      pwa:
+        install_success: Alkalmazás sikeresen telepítve! Most már offline is használhatja
+          az Okos Menüt.
+        notification_success: Értesítések engedélyezve! Valós idejű frissetéseket
+          fog kapni.
+        sync_complete: "%{count} elem sikeresen szinkronizálva"
+        offline_action: Művelet mentve. Szinkronizál, amikor online lesz.
+      api:
+        upload_error: 'Feltöltés sikertelen: Hálózati hiba'
+    form:
+      actions:
+        edit: Szerkesztés
+        delete: Törlés
+        save: Mentés
+    table:
+      no_data: Nincs elérhető adat
+    order_status:
+      ordered: megrendelt
+      preparing: elkészítés alatt
+      ready: kész
+      collected: átvéve
+    buttons:
+      start_preparing: Elkészítés indítása
+      mark_ready: Készként jelölés
+      mark_collected: Átvételként jelölés

@@ -1,0 +1,211 @@
+---
+cs:
+  onboarding:
+    account_details:
+      continue: Pokračovat
+      email_help: Tento e-mail je již potvrzen a během nastavení jej nelze změnit.
+      email_label: E-mailová adresa
+      full_name_label: Celé jméno
+      full_name_placeholder: Zadejte své celé jméno
+      full_name_required: Uveďte prosím své celé jméno.
+      restaurant_name_preview_help: Nebojte se, v dalším kroku to můžete změnit.
+      restaurant_name_preview_label: Název restaurace (náhled)
+      restaurant_name_preview_placeholder: Jak se jmenuje vaše restaurace?
+      stats:
+        restaurants_count: 1,000+
+        restaurants_label: Restaurace nám důvěřují
+        satisfaction: 98%
+        satisfaction_label: Spokojenost zákazníků
+        setup_time: 5 minut
+        setup_time_label: Průměrná doba nastavení
+      subtitle: Nastavíme váš účet. Zabere to jen chvilku.
+      title: Vítejte na stránkách Smart Menu!
+    completion:
+      completion_time: To obvykle trvá 30-60 sekund. Po dokončení budete automaticky
+        přesměrováni.
+      configuring_payments: Konfigurace možností platby
+      creating_profile: Vytvoření profilu restaurace
+      customize_menu_description: Přidávání dalších položek, nahrávání fotografií
+        a nastavování podrobných popisů
+      customize_menu_title: Přizpůsobení nabídky
+      free_trial_status: 14denní zkušební verze zdarma
+      generating_qr: Generování kódu QR...
+      generating_qr_codes: Generování kódů QR
+      generating_status: Generování kódu QR...
+      go_to_dashboard: Přejít na ovládací panel
+      menu_published: Zveřejněné menu
+      plan_activated: Aktivovaný plán
+      print_qr_description: Stáhněte si a vytiskněte QR kódy pro své stoly
+      print_qr_title: Tisk kódů QR
+      qr_code_ready: QR kód připraven!
+      qr_ready_title: Vaše digitální menu je připraveno
+      restaurant_created: Vytvořená restaurace
+      setting_up_menu: Nastavení nabídky
+      setup_timeout: Nastavení trvá déle, než se očekávalo
+      setup_timeout_help: Obnovte prosím stránku nebo kontaktujte podporu
+      subtitle: Vaše restaurace je nyní připravena k obsluze zákazníků!
+      title: "Gratulujeme! \U0001F389"
+      track_orders_description: Sledování objednávek a analýz zákazníků v reálném
+        čase
+      track_orders_title: Sledování objednávek
+      view_live_menu: Zobrazit živé menu
+      whats_happening: 'Co se děje nyní:'
+      whats_next: Co bude dál?
+    menu_creation:
+      add_menu_item: Přidání položky nabídky
+      back: Zpět
+      create_menu: Vytvořit nabídku
+      item_description_placeholder: Stručný popis (nepovinný)
+      item_name_placeholder: Název položky
+      item_price_placeholder: '0.00'
+      live_preview: Živý náhled
+      menu_item_title: Položka nabídky
+      menu_items_help: Chcete-li pokračovat, přidejte alespoň 3 položky. Nedělejte
+        si starosti s dokonalostí - vše můžete upravit později!
+      menu_items_label: Položky nabídky
+      menu_name_default: Hlavní nabídka
+      menu_name_label: Název nabídky
+      menu_name_placeholder: např. hlavní menu, obědové menu, večeřové menu
+      menu_name_required: Uveďte prosím název nabídky.
+      min_items_alert: Pro pokračování přidejte alespoň 3 položky menu.
+      need_more_items: Potřebujete %{count} více položek
+      preview_empty: Položky menu se zde budou zobrazovat tak, jak je budete přidávat.
+      preview_empty_alt: Zde se zobrazí položky vašeho menu
+      quick_start_label: Šablony pro rychlý start
+      subtitle: Pro začátek přidejte několik položek. Později můžete vždy přidat další!
+      template_added: Přidáno!
+      template_items:
+        american:
+          bbq_ribs:
+            description: Pomalu vařená vepřová žebra s BBQ omáčkou
+            name: Žebra na grilování
+          buffalo_wings:
+            description: 8 kusů s celerem a dipem z modrého sýra
+            name: Buffalo Wings
+          classic_burger:
+            description: Hovězí paštika, salát, rajče, cibule, okurky
+            name: Klasický burger
+        asian:
+          chicken_teriyaki:
+            description: Grilované kuře s teriyaki omáčkou a rýží
+            name: Kuřecí teriyaki
+          pad_thai:
+            description: Smažené rýžové nudle s krevetami a arašídy
+            name: Pad Thai
+          spring_rolls:
+            description: Křupavé závitky se sladkokyselou omáčkou
+            name: Zeleninové jarní závitky
+        italian:
+          caesar_salad:
+            description: Římský salát, krutony, parmazán, dresink caesar
+            name: Salát Caesar
+          margherita_pizza:
+            description: Čerstvá mozzarella, rajčatová omáčka, bazalka
+            name: Pizza Margherita
+          spaghetti_carbonara:
+            description: Těstoviny s vejci, sýrem, pancettou a pepřem
+            name: Špagety Carbonara
+        mexican:
+          beef_burrito:
+            description: Velké burrito s ochuceným hovězím masem, rýží a fazolemi
+            name: Hovězí burrito
+          chicken_tacos:
+            description: Tři měkké tacos s grilovaným kuřecím masem a salsou
+            name: Kuřecí tacos
+          guacamole_chips:
+            description: Čerstvé guacamole s tortillovými chipsy
+            name: Guacamole a hranolky
+      templates:
+        american: Americký
+        asian: Asijské
+        italian: Italský
+        mexican: Mexická
+      templates_help: Kliknutím na šablonu přidáte ukázkové položky, které si můžete
+        přizpůsobit.
+      title: Vytvoření prvního menu
+    plan_selection:
+      always_free: Vždy zdarma
+      back: Zpět
+      choose_free_plan: Vyberte si bezplatný plán
+      continue: Pokračovat
+      features:
+        advanced_analytics: Pokročilá analytika
+        api_access: Přístup k API
+        custom_branding: Vlastní značka
+        items_per_menu: položky/menu
+        languages: jazyky
+        locations: lokality
+        menus_per_location: menu/umístění
+        online_ordering: Objednávání online
+        priority_support: Prioritní podpora
+        qr_code_menus: Nabídky QR kódů
+      free_trial: 14denní zkušební verze zdarma
+      most_popular: NEJOBLÍBENĚJŠÍ
+      per_month: "/měsíc"
+      select_plan_alert: Pro pokračování vyberte plán.
+      selected: Vybrané ✓
+      start_free_trial: Zahájení bezplatné zkušební verze
+      subtitle: Začněte 14denní zkušební verzí zdarma. Nevyžaduje se žádná kreditní
+        karta!
+      title: Vyberte si svůj plán
+      trust_indicators:
+        mobile_subtitle: Perfektní na jakémkoli zařízení
+        mobile_title: Optimalizováno pro mobilní zařízení
+        secure_subtitle: Zabezpečení na úrovni banky
+        secure_title: Bezpečné a spolehlivé
+        support_subtitle: Jsme tu, abychom vám pomohli
+        support_title: Podpora 24/7
+    restaurant_details:
+      back: Zpět
+      continue: Pokračovat
+      cuisine_type_label: Typ kuchyně
+      cuisine_type_prompt: Vyberte si kuchyni...
+      cuisine_type_required: Vyberte typ kuchyně.
+      cuisine_types:
+        american: Americký
+        chinese: Čínský
+        french: Francouzština
+        fusion: Fusion
+        greek: Řecký
+        indian: Indický
+        italian: Italský
+        japanese: Japonský
+        korean: Korejský
+        mediterranean: Středomoří
+        mexican: Mexická
+        middle_eastern: Blízký východ
+        other: Další
+        spanish: Španělština
+        thai: Thai
+        vietnamese: Vietnamci
+      location_help: To nám pomůže nastavit výchozí měnu a časové pásmo.
+      location_label: Umístění
+      location_placeholder: Město, stát/země
+      location_required: Uveďte prosím místo, kde se nachází vaše restaurace.
+      phone_help: Volitelně - pro kontakt se zákazníky a rezervace.
+      phone_label: Telefonní číslo
+      phone_placeholder: "+1 (555) 123-4567"
+      pro_tips:
+        tip1: Vyberte si typ restaurace, který nejlépe odpovídá vašemu stylu obsluhy.
+        tip2: Typ kuchyně nám pomáhá navrhovat vhodné šablony menu.
+        tip3: Umístění slouží k nastavení místní měny a časového pásma.
+        title: Profesionální tipy
+      restaurant_name_label: Název restaurace
+      restaurant_name_placeholder: Zadejte název restaurace
+      restaurant_name_required: Uveďte prosím název restaurace.
+      restaurant_type_label: Typ restaurace
+      restaurant_type_prompt: Vyberte typ...
+      restaurant_type_required: Vyberte typ restaurace.
+      restaurant_types:
+        bakery: Pekařství
+        bar_grill: Bar & Grill
+        cafe: Kavárna
+        casual_dining: Příležitostné stravování
+        fast_casual: Fast Casual
+        fine_dining: Jemné stravování
+        food_truck: Food Truck
+        other: Další
+        quick_service: Rychlý servis
+      subtitle: Pomozte nám přizpůsobit vaše zkušenosti pomocí několika základních
+        informací.
+      title: Povězte nám o své restauraci

@@ -1,0 +1,258 @@
+---
+hu:
+  admin:
+    performance:
+      title: Teljesítményfigyelés
+      subtitle: Valós idejű teljesítménymutatók és elemzések
+      card:
+        avg_response_time: Átl. válaszidő
+        memory_usage: Memória használat
+        error_rate: Hibaarány
+        active_users: Aktív felhasználók
+        last_5_minutes: Utolsó 5 perc
+        current_rss: Jelenlegi RSS
+      response_time_trend: Válaszidő trend (24h)
+      memory_usage_trend: Memória használat trend (24h)
+      slowest_endpoints: Leglassabb végpontok (utolsó óra)
+      table:
+        endpoint: Végpont
+        avg_response_time: Átl. válaszidő
+      no_slow_endpoints: Nincs lassú végpont
+      recent_slow_queries: Legutóbbi lassú lekérdezések
+      query_table:
+        duration: Időtartam
+        query: Lekérdezés
+        time: Idő
+      no_slow_queries: Nincs lassú lekérdezés
+      actions: Műveletek
+    cache:
+      title: Cache adminisztráció
+      health_status: Cache egészségi állapot
+      response_time: Válaszidő
+      write_operation: Írási művelet
+      read_operation: Olvasási művelet
+      delete_operation: Törlési művelet
+      error: Hiba
+      performance_stats: Teljesítmény statisztikák
+      reset_stats: Statisztikák visszaállítása
+      cache_hits: Cache találatok
+      cache_misses: Cache hibák
+      cache_writes: Cache írások
+      cache_deletes: Cache törlések
+      cache_errors: Hibák
+      hit_rate: Találati arány
+      cache_info: Cache információ
+      service_version: Szolgáltatás verzió
+      cache_methods: Cache metódusok
+      active_keys: Aktív kulcsok
+      memory_usage: Memória használat
+      cache_warming: Cache felmelegítés
+      cache_warming_description: Kritikus cache adatok előzetes betöltése a teljesítmény
+        javítására.
+      cache_management: Cache kezelés
+      cache_management_description: Minden cached adat törlése az új adatok betöltésének
+        kényszerítésére.
+      cache_patterns: Cache minták
+      patterns:
+        restaurant: Restaurant dashboardok és elemzések
+        menu: Menü adatok és teljesítmény
+        menuitem: Menü elem részletek és elemzések
+        order: Rendelés adatok és összefoglalók
+        employee: Személyzet adatok és teljesítmény
+        user: Felhasználó tevékenység és több étterem adatok
+    metrics:
+      title: Alkalmazás teljesítményfigyelés
+      card:
+        total_requests: Összes kérés
+        avg_response_time: Átl. válaszidő
+        error_rate: Hibaarány
+        total_users: Összes felhasználó
+        all_time: Minden idő
+        current_average: Jelenlegi átlag
+        current_error_rate: Jelenlegi hibaarány
+        all_time_registrations: Összes regisztráció
+      summary:
+        restaurants_created: Létrehozott éttermek
+        menu_imports: Menü importok
+      system:
+        memory_usage: Memória használat
+        active_users: Aktív felhasználók
+      metric_types:
+        title: Metrika típusok
+        counters: 'Számlálók: Kumulatív értékek, amelyek csak nőnek (pl. összes kérés)'
+        gauges: 'Mérők: Jelenlegi értékek, amelyek nőhetnek vagy csökkenhetnek (pl.
+          aktív felhasználók)'
+        histograms: 'Hisztogramok: Mérések gyűjteményei (pl. válaszidők)'
+      table:
+        metric: Metrika
+        type: Típus
+        value: Érték
+        last_updated: Utoljára frissítve
+      no_recent_metrics:
+        message: Nincs elérhető legfrissebb metrika
+        description: A metrikák itt jelennek meg az alkalmazás használatával
+    dashboard:
+      kpis:
+        total_orders: Összes rendelés
+        total_revenue: Összes bevétel
+        customers: Vásárlók
+        growth_rate: Növekedési ráta
+        page_views: Oldal megtekintések
+        unique_visitors: Egyedi látogatók
+        bounce_rate: Visszafordulási arány
+      sales:
+        title: Legkelendőbb termékek
+        table:
+          item: Termék
+          quantity_sold: Eladott mennyiség
+        no_data: Nincs elérhető értékesítési adat erre az időszakra.
+      loading: Betöltés...
+  notifications:
+    index:
+      title: Értesítések
+  announcements:
+    index:
+      title: Újdonságok
+      coming_soon: Izgalmas dolgok arrive hamarosan!
+  beverage_review_queue:
+    title: Ital felülvizsgálati sor
+    recent_pipeline_runs: Legutóbbi folyamat futtatások
+    table:
+      created: Létrehozva
+      menu: Menü
+      status: Állapot
+      step: Lépés
+      processed: Feldolgozva
+      needs_review: Felülvizsgálat szükséges
+      unresolved: Megoldatlan
+      actions: Műveletek
+    items_needing_review: Felülvizsgálatot igénylő elemek
+    items_table:
+      menu: Menü
+      section: Szekció
+      item: Elem
+      category: Kategoria
+      class_conf: Osztály konf
+      parse_conf: Parse konf
+      parsed: Elemzve
+  dw_orders_mv:
+    title: Rendelés elemzés
+    loading: Adatok betöltése...
+  ordritems:
+    index:
+      title: Rendelés elemek
+    new:
+      title: Új rendelés elem
+    edit:
+      title: Rendelés elem szerkesztése
+    show:
+      title: Rendelés elem megtekintése
+      ordr: Rendelés
+      menuitem: Menü elem
+  ordrparticipants:
+    index:
+      title: Rendelés résztvevők
+    new:
+      title: Új menü résztvevő
+    edit:
+      title: Menü résztvevő szerkesztése
+    show:
+      title: Rendelés résztvevő megtekintése
+    table:
+      sessionid: Munkamenet ID
+      role: Szerepkör
+      employee: Alkalmazott
+      ordr: Rendelés
+      ordritem: Rendelés elem
+  ordractions:
+    index:
+      title: Rendelés műveletek
+    new:
+      title: Új rendelés művelet
+    edit:
+      title: Rendelés művelet szerkesztése
+    show:
+      title: Rendelés művelet megtekintése
+  ordritemnotes:
+    index:
+      title: Rendelés elem megjegyzések
+    new:
+      title: Új megjegyzés
+    edit:
+      title: Megjegyzés szerkesztése
+    show:
+      title: Megjegyzés megtekintése
+  menuparticipants:
+    new:
+      title: Új menü résztvevő
+    edit:
+      title: Menü résztvevő szerkesztése
+  ingredients:
+    index:
+      title: Összetevők
+    new:
+      title: Új összetevő
+    edit:
+      title: Összetevő szerkesztése
+    show:
+      title: Összetevő megtekintése
+  genimages:
+    index:
+      title: Generált képek
+    new:
+      title: Új generált kép
+    edit:
+      title: Generált kép szerkesztése
+    show:
+      title: Generált kép megtekintése
+    table:
+      id: Azonosító
+      name: Név
+      description: Leírás
+      restaurant: Étterem
+      menu: Menü
+      menusection: Menü szekció
+      menuitem: Menü elem
+      image_data: Kép adatok
+  restaurantlocales:
+    index:
+      title: Étterem nyelvek
+    show:
+      title: Étterem nyelv megtekintése
+    table:
+      locale: Nyelv
+      status: Állapot
+      restaurant: Étterem
+  tracks:
+    index:
+      title: Számok
+    new:
+      title: Új szám
+    edit:
+      title: Szám szerkesztése
+  userplans:
+    index:
+      title: Felhasználói tervek
+    new:
+      title: Új felhasználói terv
+    show:
+      title: Felhasználói terv megtekintése
+    edit:
+      manage_billing: Számlázás kezelése
+    table:
+      user: Felhasználó
+      plan: Terv
+  metrics:
+    index:
+      title: Metrikák
+    new:
+      title: Új metrika
+    edit:
+      title: Metrika szerkesztése
+    show:
+      title: Metrika megtekintése
+  onboarding:
+    show:
+      progress: Haladás
+      current_step: Jelenlegi lépés
+      completed: Befejezve

@@ -1,0 +1,44 @@
+---
+pl:
+  shared:
+    head:
+      meta_title: Inteligentne cyfrowe menu i zamówienia dla restauracji | Zwiększ
+        wydajność
+      meta_description: Przekształć swoją restaurację dzięki bezdotykowemu cyfrowemu
+        menu i inteligentnemu zamawianiu. Przyspiesz obsługę, zmniejsz liczbę błędów
+        i z łatwością zwiększ zadowolenie klientów.
+      meta_keywords: Cyfrowe menu dla restauracji | Bezdotykowe zamawianie w restauracji
+        | Narzędzia zwiększające wydajność restauracji | Inteligentna technologia
+        dla restauracji | Menu z kodem QR | Systemy menu online | Usprawnienie działania
+        restauracji | Samoobsługowe zamawianie w restauracji | Rozwiązania techniczne
+        dla hotelarstwa | Ekologiczne narzędzia dla restauracji
+      og_title: Cyfrowe menu i inteligentne zamawianie dla nowoczesnych restauracji
+      og_description: Ulepsz swoją restaurację dzięki cyfrowym menu i inteligentnym
+        technologiom, które usprawniają obsługę, skracają czas oczekiwania i zwiększają
+        zadowolenie gości.
+      twitter_title: Uczyń swoją restaurację inteligentniejszą dzięki cyfrowemu menu
+      twitter_description: Odkryj, w jaki sposób cyfrowe menu i inteligentne narzędzia
+        do zamawiania mogą uprościć obsługę i poprawić wrażenia kulinarne gości.
+      pwa_title: Inteligentne menu
+    footer:
+      facebook: Facebook
+      instagram: Instagram
+      linkedin: LinkedIn
+      privacy: Prywatność
+      terms: Warunki
+      plan: Plan
+      build: Budować
+      twitter: Twitter
+    navbar:
+      adminArea: Administracja
+      dashboard: Pulpit nawigacyjny
+      billing: Fakturowanie
+      heroImages: Hero Images
+      impersonated_as: Jesteś zalogowany jako
+      login: Zaloguj się
+      logout: Wylogowanie
+      restaurants: Restauracje
+      settings: Ustawienia
+      signUp: Zarejestruj się
+      testimonials: Referencje
+      toggle_navigation: Przełącz nawigację

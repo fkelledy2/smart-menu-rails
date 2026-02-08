@@ -1,0 +1,135 @@
+---
+it:
+  bar_dashboard:
+    title: Dashboard Bar
+    metrics:
+      pending_tickets: Biglietti in Attesa
+      preparing: In Preparazione
+      ready: Pronto
+  kitchen_dashboard:
+    title: Dashboard Cucina
+    metrics:
+      pending_tickets: Biglietti in Attesa
+      preparing: In Preparazione
+      ready: Pronto
+      todays_orders: Ordini di Oggi
+    buttons:
+      start_preparing: Inizia Preparazione
+      mark_ready: Segna come Pronto
+      mark_collected: Segna come Ritirato
+  errors:
+    not_found:
+      title: Pagina Non Trovata
+      description: La pagina che stai cercando non esiste.
+      suggestion: Potrebbe essere stata spostata, eliminata o hai inserito un URL
+        errato.
+    unprocessable:
+      title: Entità Non Elaborabile
+      description: La modifica richiesta è stata rifiutata.
+      suggestion: Forse hai provato a modificare qualcosa a cui non avevi accesso.
+    internal:
+      title: Errore Interno del Server
+      description: Ci scusiamo, ma qualcosa è andato storto.
+      suggestion: Riprova più tardi o contatta il supporto se il problema persiste.
+      error_details: Dettagli Errore
+      backtrace: Traccia
+  menu_performance:
+    not_available:
+      title: Dati di Prestazione Non Disponibili
+      description: 'Impossibile caricare i dati di prestazione per questo menu. Questo
+        potrebbe essere dovuto a:'
+      reasons:
+      - Menu non trovato o accesso negato
+      - Permessi insufficienti
+      - Errore di sistema durante la raccolta dati
+  restaurant_analytics:
+    not_available:
+      title: Dati Analitici Non Disponibili
+      description: 'Impossibile caricare i dati analitici per questo ristorante. Questo
+        potrebbe essere dovuto a:'
+      reasons:
+      - Ristorante non trovato o accesso negato
+      - Permessi insufficienti
+      - Errore di sistema durante la raccolta dati
+  ai_generation:
+    modal:
+      title: Genera Immagini IA
+      confirm: Conferma e Avvia
+      progress: Generazione in corso
+      progress_log: Log progressi
+      last_image: Ultima Immagine
+  menuitem_ai:
+    modal:
+      title: Genera Immagine
+      confirm: Conferma e Avvia
+      progress: Generazione in corso
+      preview: Anteprima immagine
+  ocr_menu_imports:
+    alcohol_override:
+      undecided: Indeciso
+      alcoholic: Alcolico
+      non_alcoholic: Non alcolico
+    publish:
+      title: Pubblica Menu
+      submit: Pubblica Menu
+  offline:
+    title: Sei Offline
+    available_offline: 'Disponibile Offline:'
+    items:
+    - Informazioni ristorante
+    - Voci menu e prezzi
+    - Ordini recenti
+    - Immagini memorizzate
+    - Analisi base
+    last_updated: Ultimo aggiornamento
+  smartmenus:
+    skeleton:
+      loading: Caricamento voci menu...
+    no_image: Nessuna Immagine
+  hero_images:
+    new:
+      title: Nuova Immagine Hero
+    form:
+      image_url_placeholder: https://images.pexels.com/...
+      image_url_help: Inserisci l'URL completo dell'immagine da Pexels o altra fonte
+      alt_text_placeholder: Interno ristorante affollato con clienti
+      alt_text_help: Testo descrittivo per l'accessibilità
+      sequence_help: Ordine di visualizzazione (i numeri più bassi appaiono prima)
+      status_help: Solo le immagini approvate appariranno sulla homepage
+      source_url_placeholder: https://www.pexels.com/photo/...
+      source_url_help: Link alla pagina sorgente originale
+  orders:
+    ordered: Ordinato
+    prepared: Preparato
+    delivered: Consegnato
+  form_2025:
+    menu_details: Dettagli Menu
+    menu_details_subtitle: Informazioni base sul tuo menu
+    image_settings: Impostazioni Immagine
+    menu_image: Immagine Menu
+  version_diff:
+    section: Sezione
+    item: Elemento
+  version_diff_2025:
+    section: 'Sezione #'
+    item: 'Elemento #'
+  details_2025:
+    menu_go_live_flow: Flusso di attivazione menu
+  edit_2025:
+    onboarding_flow: Flusso di onboarding
+  settings_2025:
+    receipt_merchant_details: Dettagli ricevuta / commerciante
+    statement_descriptor: Descriptor dichiarazione
+  tasting_courses_footer:
+    show_courses: Mostra percorsi
+    add_tasting_menu: Aggiungi Menu Degustazione
+  tasting_badge: Degustazione
+  show_modals:
+    pairing: Abbinamento
+    full: Pieno
+  show_allergyns_debug:
+    title: Debug Allergeni
+    sql: SQL
+    count: Conteggio
+    ids: ID
+    names: Nomi

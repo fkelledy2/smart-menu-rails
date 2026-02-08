@@ -1,0 +1,37 @@
+---
+de:
+  menusections:
+    edit:
+      inventories: Bestände
+      items: Artikel
+      section: Sektion
+    form:
+      delete: Löschen
+      details: Einzelheiten
+      imageSettings: Bildeinstellungen
+      save: Speichern
+      selectMenu: Menü auswählen...
+      settings: Einstellungen
+      sure: Sind Sie sicher?
+    index:
+      menuSection: Sektion
+      menuSections: Sektionen
+    menusection:
+      description: ''
+      image: ''
+      menu: ''
+      name: ''
+      sequence: ''
+      status: ''
+    new:
+      cancel: Abbrechen
+      menuSection: Neue Sektion
+    show:
+      menuSection: Sektion anzeigen
+      selectMenu: ''
+    showInventories:
+      inventories: Bestände
+      reset: Zurücksetzen
+    showMenuitems:
+      genimage: Bild erstellen
+      menuItems: Artikel

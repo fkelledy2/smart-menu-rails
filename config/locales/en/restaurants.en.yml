@@ -1,0 +1,276 @@
+---
+en:
+  restaurants:
+    controller:
+      archived: Restaurant was successfully archived.
+      created: Restaurant was successfully created.
+      updated: Restaurant was successfully updated.
+    edit:
+      allergynsTab: Allergens
+      employeesTab: Employees
+      localesTab: Locales
+      menuTab: Menus
+      openingsTab: Opening Hours
+      ordersTab: Orders
+      restaurantTab: Restaurant
+      sizesTab: Sizes
+      smartQRTab: SmartQRs
+      tableTab: Tables
+      taxesTab: Taxes
+      tipsTab: Tips
+      tracksTab: Tracks
+    form:
+      address: Address
+      connect: Connect
+      delete: Delete
+      details: Details
+      imageSettings: Image Settings
+      image_style_profile_hint: Used to keep all generated menu item images consistent
+        across this restaurant.
+      image_style_profile_label: Image style profile
+      image_style_profile_placeholder: e.g., Realistic studio food photography; shallow
+        depth of field; soft natural light; matte stoneware; rustic wooden table;
+        minimal props
+      music: Music
+      save: Save
+      settings: Settings
+      spotify: Spotify
+      sure: Are you sure?
+      wifi: WiFi
+    index:
+      restaurants: Restaurants
+    new:
+      restaurant: Restaurant
+      restaurants: Restaurants
+    restaurant:
+      address1: 'Address1:'
+      address2: 'Address2:'
+      capacity: 'Capacity:'
+      city: 'City:'
+      country: 'Country:'
+      description: 'Description:'
+      image: 'Image:'
+      name: 'Name:'
+      postcode: 'Postcode:'
+      state: 'State:'
+      status: 'Status:'
+      user: 'User:'
+    show:
+      address: Address
+      billing_content: Billing configuration will appear here.
+      details: Details
+      imageSettings: Image Settings
+      settings: Settings
+      switch_off: 'off'
+      switch_on: 'on'
+      tab_billing: Billing
+      tab_employees: Employees
+      tab_menus: Menus
+      tab_openinghours: Opening Hours
+      tab_restaurant: Restaurant
+      tab_tables: Tables
+      tab_taxes: Taxes
+      tab_tips: Tips
+    showAllergyns:
+      allergyns: Allergens
+    showEmployees:
+      employees: Employees
+    showLocales:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      default: Default
+      delete: Delete
+      menus: Menus
+    showMenus:
+      add_new_menu: Add New Menu
+      import_menu_from_pdf: Import Menu from PDF
+      menus: Menus
+    showOpeningHours:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      openings: Opening Hours
+    showOrdrs:
+      ordrs: Orders
+    showSizes:
+      sizes: Sizes
+    showSmartMenus:
+      scan_to_join: Scan to Join
+      smartQRs: SmartQRs
+      wifi: WiFi
+    showTableSettings:
+      tableSettings: Table Settings
+    showTaxes:
+      taxes: Taxes
+    showTips:
+      actions: Actions
+      activate: Activate
+      deactivate: Deactivate
+      tips: Tips
+    showTrack:
+      loading: Loading...
+    showTracks:
+      tracks: Tracks
+    insights:
+      page_title: "%{restaurant_name} - Insights"
+      title: Insights
+      back: Back
+      export_csv: Export CSV
+      helper_text: 'v1: read-only insights. Abandonment funnel is currently based
+        on order/payment milestones.'
+      no_data: No data for selected window.
+      values:
+        true: true
+        false: false
+      filters:
+        time_window: Time window
+        today: Today
+        yesterday: Yesterday
+        last7: Last 7 Days
+        last28: Last 28 Days
+        mtd: MTD
+        last_month: Last Month
+        custom: Custom
+        start: Start
+        end: End
+        refresh: Refresh
+        menu_optional: Menu (optional)
+        all_menus: All menus
+      sections:
+        top_performers:
+          title: Top performers
+        slow_movers:
+          title: Slow movers
+        prep_time_bottlenecks:
+          title: Prep-time bottlenecks
+          helper_text: Uses station ticket timing (submitted → ready/collected) as
+            the v1 proxy.
+        voice_triggers:
+          title: Voice-trigger frequency
+        abandonment_funnel:
+          title: Abandonment funnel
+      columns:
+        item: Item
+        orders: Orders
+        qty: Qty
+        share: Share
+        median_seconds: Median (s)
+        sample_size: "N"
+        outlier: Outlier
+        triggers: Triggers
+        success: Success
+        fail: Fail
+        rate: Rate
+        step: Step
+        count: Count
+        dropoff: Dropoff
+        dropoff_rate: Dropoff rate
+      funnel_steps:
+        order_submitted: Order submitted
+        bill_requested: Bill requested
+        payment_succeeded: Payment succeeded
+    edit_2025:
+      subtitle: Manage your restaurant configuration
+      toggle_navigation: Toggle navigation
+    sidebar_2025:
+      close_menu: Close menu
+      restaurant: RESTAURANT
+      details: Details
+      schedule: Schedule
+      localization: Localization
+      menus: MENUS
+      all_menus: All Menus
+      allergens: Allergens
+      sizes: Sizes
+      tables: Tables
+      operations: OPERATIONS
+      kitchen_dashboard: Kitchen
+      bar_dashboard: Bar
+      wifi: WiFi
+      team: TEAM
+      staff: Staff
+      financials: FINANCIALS
+      taxes_and_tips: Taxes & Tips
+      taxes: Taxes
+      tips: Tips
+      ordering: Ordering
+      insights: Insights
+      setup: SETUP
+      settings: Settings
+      qr_codes: QR Codes
+      jukebox: Jukebox
+      advanced: Advanced
+    index_2025:
+      title: Your Restaurants
+      heading: Restaurants
+      subtitle: Manage locations, menus and staff
+      quick_actions: Quick Actions
+      new_restaurant: New Restaurant
+      search_placeholder: Search restaurants…
+      search: Search
+    index_frame_2025:
+      pagination_aria_label: Restaurants pagination
+      no_restaurants: No restaurants found
+      no_results_for: No results for
+      clear_search: Clear search
+      menus_count_label: menus
+      staff_count_label: staff
+      edit: Edit
+      menus_action: Menus
+      restaurants: Restaurants
+      active: Active
+      inactive: Inactive
+      set_status: Set status...
+      apply: Apply
+      drag_to_reorder: Drag to reorder
+    sections:
+      details_2025:
+        quick_actions: Quick Actions
+        new_menu: New Menu
+        import_menu: Import Menu
+        overview: Overview
+        menus: Menus
+        items: Items
+        tables: Tables
+        staff: Staff
+        restaurant_details: Restaurant Details
+        restaurant_name: Restaurant Name
+        restaurant_name_placeholder: e.g., Bella Italia
+        restaurant_name_help: The name customers will see
+        description: Description
+        description_placeholder: Describe your restaurant...
+        description_help: Brief description of your restaurant
+        status: Status
+        active: Active
+        inactive: Inactive
+        status_help: Only active restaurants are visible to customers
+        phone: Phone
+        phone_placeholder: e.g., +1 (555) 123-4567
+        phone_help: Contact number for customers
+        website: Website
+        website_placeholder: https://example.com
+        website_help: Your restaurant website
+        currency: Currency
+        currency_help: Currency used for pricing
+        timezone: Timezone
+        timezone_help: Local timezone for operating hours
+        location: Location
+        address: Address
+        address_placeholder: Street address
+        address_help: Full street address
+        city: City
+        city_placeholder: City name
+        state: State/Province
+        state_placeholder: State or province
+        postcode: Postal Code
+        postcode_placeholder: e.g., 12345
+        country: Country
+        country_placeholder: Country
+        latitude: Latitude
+        latitude_placeholder: e.g., 40.7128
+        longitude: Longitude
+        longitude_placeholder: e.g., -74.0060
+        loading_map: Loading map...
+        map_error: Map could not be loaded
+        location_label: 'Location:'

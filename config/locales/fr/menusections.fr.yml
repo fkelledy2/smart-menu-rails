@@ -1,0 +1,37 @@
+---
+fr:
+  menusections:
+    edit:
+      inventories: Stocks
+      items: Articles
+      section: Section
+    form:
+      delete: Supprimer
+      details: Détails
+      imageSettings: Paramètres d'image
+      save: Enregistrer
+      selectMenu: Sélectionner un menu...
+      settings: Paramètres
+      sure: Êtes-vous sûr ?
+    index:
+      menuSection: Section
+      menuSections: Sections
+    menusection:
+      description: ''
+      image: ''
+      menu: ''
+      name: ''
+      sequence: ''
+      status: ''
+    new:
+      cancel: Annuler
+      menuSection: Nouvelle section
+    show:
+      menuSection: Afficher la section
+      selectMenu: ''
+    showInventories:
+      inventories: Stocks
+      reset: Réinitialiser
+    showMenuitems:
+      genimage: Créer une image
+      menuItems: Articles

@@ -1,0 +1,76 @@
+---
+cs:
+  menus:
+    controller:
+      created: Nabídka byla úspěšně vytvořena.
+      deleted: Nabídka byla úspěšně odstraněna.
+      image_regeneration_queued: Regenerace obrázku ve frontě pro položky %{count}
+        v této nabídce.
+      image_regeneration_queued_rake: Úloha regenerace obrazu byla pro tuto nabídku
+        zařazena do fronty.
+      webp_regeneration_queued: Regenerace derivátu WebP byla pro obrázky této nabídky
+        zařazena do fronty.
+      ai_image_generation_queued: Generování obrázků s umělou inteligencí bylo pro
+        položky této nabídky zařazeno do fronty.
+      updated: Nabídka byla úspěšně aktualizována.
+    edit:
+      availabilities: Dostupnost
+      menu: Nabídka
+      regenerate_images_confirm: Tím se do fronty zařadí úlohy regenerace obrazu pro
+        všechny položky v této nabídce. Pokračovat?
+      sections: Sekce
+    form:
+      current_pdf: 'Aktuální PDF:'
+      delete: Smazat
+      details: Podrobnosti
+      errors: Chyby
+      'false': mimo
+      imageSettings: Nastavení obrázku
+      'off': mimo
+      'on': na adrese
+      pdfSettings: Nastavení PDF
+      regenerate_images: Regenerace obrázků
+      regenerate_images_confirm: Tím se do fronty zařadí úlohy regenerace obrazu pro
+        všechny položky v této nabídce. Pokračovat?
+      remove: Odstranění stránky
+      save: Uložit
+      settings: Nastavení
+      sure: Jste si jistí?
+      'true': na adrese
+    index:
+      menu: Nabídka
+      menus: Menu
+      unavailable: Nedostupné
+    menu:
+      description: 'Popis:'
+      image: 'Obrázek:'
+      name: 'Jméno:'
+      pdf_menu_scan: 'Skenování nabídky PDF:'
+      restaurant: 'Restaurace:'
+      sequence: 'Sekvence:'
+      status: 'Stav:'
+    new:
+      menu: Nové menu
+    show:
+      add_to_order: Přidat k objednávce
+      allergens: Alergeny
+      allergyns: Alergeny
+      bill: Bill
+      loading: Načítání...
+      not_available: Není k dispozici.
+      order: Objednávka
+      order_updated: Objednávka aktualizována!
+      remaining: "%{count} zbývá."
+      staff_alerted: Upozornění pro zaměstnance
+      start_order: Počáteční objednávka
+      take_payment: Přijmout platbu
+    showMenuavailabilities:
+      availabilities: Dostupnost
+    showMenusections:
+      sections: Sekce
+    sections:
+      settings_2025:
+        disabled_at_restaurant: Bezbariérový přístup na úrovni restaurace
+        parent_restriction: 'Poznámka:'
+        parent_restriction_desc: Nastavení zakázaná na úrovni restaurace nelze povolit
+          pro jednotlivá menu. Nejprve je povolte na úrovni restaurace.

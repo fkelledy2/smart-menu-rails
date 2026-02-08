@@ -1,0 +1,21 @@
+---
+pl:
+  restaurantavailabilities:
+    controller:
+      created: Dostępność restauracji została pomyślnie utworzona.
+      deleted: Dostępność restauracji została pomyślnie usunięta.
+      updated: Dostępność restauracji została pomyślnie zaktualizowana.
+    edit:
+      restaurantavailability: Dostępność restauracji
+    form:
+      delete: Usuń
+      save: Zapisz
+      sure: Jesteś pewien?
+    index:
+      restaurantavailabilities: Dostępność restauracji
+      restaurantavailability: Dostępność restauracji
+    new:
+      restaurantavailability: Dostępność restauracji
+    show:
+      restaurantavailability: Dostępność restauracji
+      selectRestaurant: Restauracja Select

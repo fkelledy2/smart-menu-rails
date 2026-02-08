@@ -1,0 +1,34 @@
+---
+pt:
+  tips:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      tips: ''
+      edit_tip: ''
+      description: ''
+      cancel: ''
+      confirm_delete: ''
+      delete: ''
+      tip_details: ''
+    form:
+      percentage: ''
+      percentage_placeholder: ''
+      percentage_help: ''
+    index:
+      tips: Gorjetas
+      description: ''
+      back: ''
+      new_tip: ''
+      all_tips: ''
+    new:
+      tips: ''
+      new: ''
+      new_tip: ''
+      description: ''
+      cancel: Cancelar
+      tip_details: ''
+    show:
+      tip: Mostrar gorjeta

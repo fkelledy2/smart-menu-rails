@@ -1,0 +1,24 @@
+---
+cs:
+  common:
+    actions: Akce
+    activate: Aktivovat
+    back: Zpět
+    cancel: Zrušit
+    close: Zavřít
+    confirm: Potvrdit
+    create: Vytvořit
+    deactivate: Deaktivovat
+    delete: Smazat
+    edit: Upravit
+    errors: Chyby
+    flash:
+      action_failed: 'Akce selhala: %{error}'
+      archived: "%{resource} bylo úspěšně archivováno."
+      created: "%{resource} bylo úspěšně vytvořeno."
+      deleted: "%{resource} bylo úspěšně smazáno."
+      processing_restarted: Zpracování bylo (znovu)spuštěno.
+      updated: "%{resource} bylo úspěšně aktualizováno."
+    loading: Načítání...
+    save: Uložit
+    update: Aktualizovat

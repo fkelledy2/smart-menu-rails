@@ -1,0 +1,21 @@
+---
+cs:
+  restaurantavailabilities:
+    controller:
+      created: Dostupnost restaurace byla úspěšně vytvořena.
+      deleted: Dostupnost restaurace byla úspěšně odstraněna.
+      updated: Dostupnost restaurace byla úspěšně aktualizována.
+    edit:
+      restaurantavailability: Upravit otevírací dobu
+    form:
+      delete: Smazat
+      save: Uložit
+      sure: Jste si jistí?
+    index:
+      restaurantavailabilities: Dostupnost restaurací
+      restaurantavailability: Otevírací doba
+    new:
+      restaurantavailability: Nová otevírací doba
+    show:
+      restaurantavailability: Dostupnost restaurace
+      selectRestaurant: Vybraná restaurace

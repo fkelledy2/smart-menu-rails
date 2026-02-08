@@ -1,0 +1,32 @@
+---
+cs:
+  employees:
+    controller:
+      created: Zaměstnanec byl úspěšně vytvořen.
+      deleted: Zaměstnanec byl úspěšně odstraněn.
+      updated: Zaměstnanec byl úspěšně aktualizován.
+    edit:
+      employee: Zaměstnanci
+    employee:
+      eid: 'ID zaměstnance:'
+      image: 'Obrázek:'
+      name: 'Jméno:'
+      restaurant: 'Restaurace:'
+      status: 'Stav:'
+    form:
+      delete: Odstranit
+      errors: Chyby
+      save: Uložit
+      selectUser: Výběr uživatele
+      sure: Jste si jistý?
+    index:
+      activate: Aktivace
+      deactivate: Deaktivace
+      employee: Zaměstnanci
+      employees: Zaměstnanci
+    new:
+      employee: Zaměstnanci
+    show:
+      employee: Zaměstnanci
+      selectRestaurant: Výběr restaurace
+      selectUser: Výběr uživatele

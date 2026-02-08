@@ -1,0 +1,21 @@
+---
+hu:
+  restaurantavailabilities:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      restaurantavailability: Nyitvatartás szerkesztése
+    form:
+      delete: Törlés
+      save: Mentés
+      sure: Biztos vagy benne?
+    index:
+      restaurantavailabilities: ''
+      restaurantavailability: Nyitvatartás
+    new:
+      restaurantavailability: Új nyitvatartás
+    show:
+      restaurantavailability: ''
+      selectRestaurant: ''

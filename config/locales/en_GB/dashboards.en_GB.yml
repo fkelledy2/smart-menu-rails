@@ -1,0 +1,132 @@
+---
+en_GB:
+  bar_dashboard:
+    title: ''
+    metrics:
+      pending_tickets: ''
+      preparing: ''
+      ready: ''
+  kitchen_dashboard:
+    title: ''
+    metrics:
+      pending_tickets: ''
+      preparing: ''
+      ready: ''
+      todays_orders: ''
+    buttons:
+      start_preparing: ''
+      mark_ready: ''
+      mark_collected: ''
+  errors:
+    not_found:
+      title: ''
+      description: ''
+      suggestion: ''
+    unprocessable:
+      title: ''
+      description: ''
+      suggestion: ''
+    internal:
+      title: ''
+      description: ''
+      suggestion: ''
+      error_details: ''
+      backtrace: ''
+  menu_performance:
+    not_available:
+      title: ''
+      description: ''
+      reasons:
+      - ''
+      - ''
+      - ''
+  restaurant_analytics:
+    not_available:
+      title: ''
+      description: ''
+      reasons:
+      - ''
+      - ''
+      - ''
+  ai_generation:
+    modal:
+      title: ''
+      confirm: ''
+      progress: ''
+      progress_log: ''
+      last_image: ''
+  menuitem_ai:
+    modal:
+      title: ''
+      confirm: ''
+      progress: ''
+      preview: ''
+  ocr_menu_imports:
+    alcohol_override:
+      undecided: ''
+      alcoholic: ''
+      non_alcoholic: ''
+    publish:
+      title: ''
+      submit: ''
+  offline:
+    title: ''
+    available_offline: ''
+    items:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    last_updated: ''
+  smartmenus:
+    skeleton:
+      loading: ''
+    no_image: ''
+  hero_images:
+    new:
+      title: ''
+    form:
+      image_url_placeholder: ''
+      image_url_help: ''
+      alt_text_placeholder: ''
+      alt_text_help: ''
+      sequence_help: ''
+      status_help: ''
+      source_url_placeholder: ''
+      source_url_help: ''
+  orders:
+    ordered: ''
+    prepared: ''
+    delivered: ''
+  form_2025:
+    menu_details: ''
+    menu_details_subtitle: ''
+    image_settings: ''
+    menu_image: ''
+  version_diff:
+    section: ''
+    item: ''
+  version_diff_2025:
+    section: ''
+    item: ''
+  details_2025:
+    menu_go_live_flow: ''
+  edit_2025:
+    onboarding_flow: ''
+  settings_2025:
+    receipt_merchant_details: ''
+    statement_descriptor: ''
+  tasting_courses_footer:
+    show_courses: ''
+    add_tasting_menu: ''
+  tasting_badge: ''
+  show_modals:
+    pairing: ''
+    full: ''
+  show_allergyns_debug:
+    title: ''
+    sql: ''
+    count: ''
+    ids: ''
+    names: ''

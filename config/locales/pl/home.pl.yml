@@ -1,0 +1,143 @@
+---
+pl:
+  home:
+    index:
+      browse: Przeglądaj
+      page_title: Mellow Menu - cyfrowe rozwiązanie dla restauracji
+      page_description: Twórz piękne cyfrowe menu, umożliwiaj składanie zamówień online
+        i udostępniaj opcje płatności zbliżeniowych dla swojej restauracji.
+      error: 'Wystąpił błąd: %{komunikat}'
+      compare_plans: Porównanie planów
+      contactUs: Kontakt
+      ctaBody1: Stwórz menu QR, które pokochają goście. Natychmiast aktualizuj pozycje.
+        Dodawaj tłumaczenia, zamówienia i obrazy dań AI, gdy będziesz gotowy.
+      ctaBody2: Stwórz menu QR, które pokochają goście. Natychmiast aktualizuj pozycje.
+        Dodawaj tłumaczenia, zamówienia i obrazy dań AI, gdy będziesz gotowy.
+      ctaTitle1: Piękne cyfrowe menu w kilka minut.
+      ctaTitle2: Piękne cyfrowe menu w kilka minut.
+      demoMenu: Menu demonstracyjne
+      demoMenuTag: Podgląd
+      demoMenuTagBrowse: Przeglądaj
+      emailAddressTag: Adres e-mail
+      heroPrimaryCta: Utwórz moje menu
+      heroSecondaryCta: Wyświetl menu demo
+      heroTrust1: Goście nie potrzebują aplikacji
+      heroTrust2: Wielojęzyczne menu
+      heroTrust3: Natychmiastowe aktualizacje (bez przedruków)
+      overviewTitle: Wszystko, czego potrzebujesz od cyfrowego menu, na jednej platformie
+      overviewBody: Zachowaj świeże, spójne i łatwe do konwersji menu - bez przedruków
+        lub niechlujnych plików PDF.
+      overviewItem1: Szybkie menu dostosowane do urządzeń mobilnych
+      overviewItem2: Tłumaczenie jednym kliknięciem
+      overviewItem3: Obrazy naczyń AI (spójny styl)
+      overviewItem4: Zamawianie i płatności, kiedy chcesz
+      overviewItem5: Informacje, na podstawie których można działać
+      howTitle: Rozpocznij w kilka minut
+      howBody: Nie potrzebujesz programisty. Skonfiguruj swoje menu i szybko zacznij
+        działać.
+      howStep1Title: Stwórz swoją restaurację i menu
+      howStep1Body: Dodaj sekcje i dania lub zaimportuj istniejące menu.
+      howStep2Title: Przygotuj go dla gości
+      howStep2Body: Dodaj tłumaczenia, zasady dostępności, alergeny i obrazy.
+      howStep3Title: Udostępnij swój QR
+      howStep3Body: Wydrukuj i umieść - goście mogą natychmiast skanować i przeglądać.
+      trustTitle: Stworzony do prawdziwej obsługi restauracji
+      trustItem1Title: Szybkość na urządzeniach mobilnych
+      trustItem1Body: Zaprojektowany tak, aby szybko się ładował i był czytelny.
+      trustItem2Title: Kontrola i dostępność
+      trustItem2Body: Przełączaj pozycje i dostępność w miarę zmian w usłudze.
+      trustItem3Title: UX przyjazny dla gości
+      trustItem3Body: Nie jest wymagana żadna aplikacja - wystarczy zeskanować i gotowe.
+      trustItem4Title: Wsparcie, gdy go potrzebujesz
+      trustItem4Body: Uzyskaj szybką pomoc, gdy jesteś zajęty.
+      faqTitle: Często zadawane pytania
+      faqQ1: Czy goście potrzebują aplikacji?
+      faqA1: Nie. Goście po prostu skanują kod QR, a menu otwiera się w ich przeglądarce.
+      faqQ2: Czy mogę natychmiast zaktualizować menu?
+      faqA2: Tak. Zmiany są publikowane natychmiast - bez przedruków.
+      faqQ3: Czy obsługujecie wiele języków?
+      faqA3: Tak. Przetłumacz menu i pozwól gościom przeglądać je w ich języku.
+      faqQ4: Czy możemy dodać zdjęcia bez sesji zdjęciowej?
+      faqA4: Tak. Wygeneruj obrazy AI, aby zachować spójność i markę menu.
+      closingTitle: Uruchom swoje menu już dziś
+      closingBody: Stwórz swoje pierwsze menu już teraz lub zapoznaj się z wersją
+        demonstracyjną i zobacz, jak działa na urządzeniach mobilnych.
+      closingPrimaryCta: Utwórz moje menu
+      closingSecondaryCta: Wyświetl demo
+      featuresStoryTitle: Wreszcie cyfrowe menu, które sprawia wrażenie premium
+      featuresStoryBody: Zaprojektowany dla gości, stworzony do obsługi. Wybierz funkcje,
+        których potrzebujesz teraz i dodaj więcej w miarę rozwoju.
+      featuresStoryPrimaryCta: Utwórz moje menu
+      featuresStorySecondaryCta: Wyświetl demo
+      featuresStory1Kicker: Doświadczenie gościa
+      featuresStory1Title: Menu, które ładują się natychmiast i wyglądają świetnie
+      featuresStory1Body: Twoje menu powinno być częścią Twojej marki - szybkie, przejrzyste
+        i łatwe do przeglądania.
+      featuresStory1Bullet1: Układ dostosowany do urządzeń mobilnych z płynną nawigacją
+      featuresStory1Bullet2: Przejrzyste sekcje i szczegóły naczyń
+      featuresStory1Bullet3: Nie jest wymagana aplikacja - wystarczy zeskanować QR
+      featuresStory2Kicker: Tłumaczenie
+      featuresStory2Title: Obsługa każdego gościa w jego własnym języku
+      featuresStory2Body: Przetłumacz swoje menu za pomocą jednego kliknięcia i pozwól
+        gościom na swobodne przeglądanie - bez kłopotliwego zgadywania.
+      featuresStory2Bullet1: Wielojęzyczne menu dla turystów i mieszkańców
+      featuresStory2Bullet2: Spójne formatowanie we wszystkich językach
+      featuresStory2Bullet3: Szybsze zamawianie i mniej pytań
+      featuresStory3Kicker: Obrazy AI
+      featuresStory3Title: Zdjęcia potraw pasujące do stylu menu
+      featuresStory3Body: Generowanie spójnych, zgodnych z marką obrazów dań w celu
+        podniesienia postrzeganej jakości i zwiększenia wyboru.
+      featuresStory3Bullet1: Spójna identyfikacja wizualna we wszystkich potrawach
+      featuresStory3Bullet2: Do rozpoczęcia nie jest wymagana sesja zdjęciowa
+      featuresStory3Bullet3: Łatwa aktualizacja po zmianie menu
+      featuresStory4Kicker: Zamawianie
+      featuresStory4Title: Zamawianie i płatności, gdy będziesz gotowy
+      featuresStory4Body: Zacznij od pięknego menu. Dodaj zamawianie i płatności,
+        gdy będzie to pasowało do Twojego modelu usług.
+      featuresStory4Bullet1: Skrócenie czasu oczekiwania w godzinach szczytu
+      featuresStory4Bullet2: Kontrola dostępności i okien zamówień
+      featuresStory4Bullet3: Pracownicy powinni koncentrować się na gościnności
+      featuresStory5Kicker: Spostrzeżenia
+      featuresStory5Title: Zrozum, co się sprzedaje - a następnie zoptymalizuj
+      featuresStory5Body: Wykorzystaj prostą analitykę, aby ulepszyć swoje menu, zredukować
+        martwe zapasy i zwiększyć średnią wartość zamówienia.
+      featuresStory5Bullet1: Dostrzeganie trendów i najlepszych dań
+      featuresStory5Bullet2: Zobacz, co goście faktycznie oglądają i wybierają
+      featuresStory5Bullet3: Wprowadzaj zmiany i publikuj natychmiast
+      featureDescription2: Obsługuj gości w ich własnym języku za pomocą jednego kliknięcia.
+      featureDescription3: Generuj spójne, zgodne z marką zdjęcia potraw.
+      featureDescription4: Kontroluj, co klienci mogą zobaczyć i zamówić.
+      featureDescription5: Pozwól gościom zamawiać ze stołu i łatwo płacić.
+      featureDescription6: Poznaj trendy, aby ulepszyć swoje menu.
+      featureTitle2: Natychmiastowe tłumaczenie
+      featureTitle3: Obrazy AI
+      featureTitle4: Zapasy i dostępność
+      featureTitle5: Inteligentne zamawianie
+      featureTitle6: Analityka
+      features: Cechy
+      menus: Menu
+      next: Następny
+      numbers: Liczby
+      numbersTag: W skrócie
+      orderValue: Średnia wartość zamówienia
+      orders: Zamówienia
+      previous: Poprzedni
+      pricing: Wycena
+      pricingTag: Plany
+      restaurants: Restauracje
+      saveChanges: Zapisz zmiany
+      selectPlan: Wybierz plan
+      signUp: Zarejestruj się
+      submit: Prześlij
+      testimonials: Referencje
+      testimonialsTag: Co mówią nasi klienci
+      video_unsupported: Twoja przeglądarka nie obsługuje tagu wideo.
+      welcome: Witamy
+    terms:
+      page_title: Warunki korzystania z usługi - Mellow Menu
+      page_description: Zapoznaj się z naszymi Warunkami korzystania z usługi, aby
+        zrozumieć zasady i wytyczne dotyczące korzystania z Mellow Menu.
+    privacy:
+      page_title: Polityka prywatności - Mellow Menu
+      page_description: Dowiedz się, w jaki sposób Mellow Menu gromadzi, wykorzystuje
+        i chroni Twoje dane osobowe w naszej Polityce prywatności.

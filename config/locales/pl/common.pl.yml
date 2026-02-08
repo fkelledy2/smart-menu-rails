@@ -1,0 +1,24 @@
+---
+pl:
+  common:
+    actions: Działania
+    activate: Aktywuj
+    back: Powrót
+    cancel: Anuluj
+    close: Zamknij
+    confirm: Potwierdzenie
+    create: Utwórz
+    deactivate: Dezaktywuj
+    delete: Usuń
+    edit: Edytuj
+    errors: Błędy
+    flash:
+      action_failed: 'Akcja nie powiodła się: %{error}'
+      archived: "%{zasób} został pomyślnie zarchiwizowany."
+      created: "%{zasób} został pomyślnie utworzony."
+      deleted: "%{zasób} został pomyślnie usunięty."
+      processing_restarted: Przetwarzanie zostało (ponownie) rozpoczęte.
+      updated: "%{zasób} został pomyślnie zaktualizowany."
+    loading: Ładowanie...
+    save: Zapisz
+    update: Aktualizacja

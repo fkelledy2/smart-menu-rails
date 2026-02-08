@@ -1,0 +1,21 @@
+---
+pl:
+  menuavailabilities:
+    controller:
+      created: Dostępność menu została pomyślnie utworzona.
+      deleted: Dostępność menu została pomyślnie usunięta.
+      updated: Dostępność menu została pomyślnie zaktualizowana.
+    form:
+      delete: Usuń
+      save: Zapisz
+      selectMenu: Wybierz menu
+      sure: Jesteś pewien?
+    index:
+      menuAvailabilities: Dostępność menu
+      menuAvailability: Dostępność menu
+    new:
+      cancel: Anuluj
+      menuAvailability: Dostępność menu
+    show:
+      menuAvailability: Dostępność menu
+      selectMenu: Wybierz menu

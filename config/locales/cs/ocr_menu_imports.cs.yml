@@ -1,0 +1,153 @@
+---
+cs:
+  ocr_menu_imports:
+    controller:
+      attach_pdf: Přiložte prosím soubor PDF.
+      confirm_section: Před importem potvrďte alespoň jeden oddíl.
+      deleted: Import nabídky byl úspěšně odstraněn.
+      fail_create: 'Nepodařilo se vytvořit nabídku: %{chybka}'
+      processing_restarted: Zpracování bylo (znovu) zahájeno.
+      published: Menu bylo úspěšně zveřejněno!
+      queued: Import nabídky byl zařazen do fronty ke zpracování.
+      republished: Menu bylo znovu zveřejněno s potvrzenými změnami.
+      unable_restart: 'Nelze (znovu) spustit zpracování ze stavu: %{status}.'
+      unauthorized: K provedení této akce nejste oprávněni.
+      updated: Import nabídky byl úspěšně aktualizován.
+    import_item:
+      default_title: Importovat položku
+      delete_confirm: Smazat tento import? Tento import nelze zrušit.
+      delete_title: Odstranit import
+      imported_ago: Importováno před %{čas}
+      item_label: položka
+      section_label: sekce
+    index:
+      empty_hint: Začněte nahráním nového souboru PDF s nabídkou.
+      empty_title: Žádný import nabídky
+      new_import: Import nového menu
+      title: Menu Imports
+    menu_section:
+      edit: Upravit
+      hide: Skrýt
+      items: položky
+    new:
+      cancel: Zrušit
+      choose_file: Zvolte Soubor
+      name_invalid: Uveďte prosím název této nabídky.
+      name_label: Název nabídky
+      name_placeholder: např. jídelní lístek, obědové speciality atd.
+      no_file_chosen: Nebyl vybrán žádný soubor
+      pdf_hint: PDF do velikosti 10 MB
+      pdf_invalid: Vyberte soubor PDF, který chcete nahrát.
+      pdf_label: Soubor PDF
+      subtitle: Nahrajte menu ve formátu PDF a automaticky extrahujte položky a oddíly
+        menu.
+      tip_file_quality_text: Používejte vysoce kvalitní soubory PDF s jasným a čitelným
+        textem. Vyhněte se ručně psaným nabídkám nebo skenům s nízkým rozlišením.
+      tip_file_quality_title: Kvalita souborů
+      tip_format_text: Systém nejlépe funguje s digitálními soubory PDF. U naskenovaných
+        dokumentů může být přesnost nižší.
+      tip_format_title: Formát
+      tip_processing_time_text: Zpracování větších souborů může trvat několik minut.
+        Po dokončení zpracování obdržíte e-mail.
+      tip_processing_time_title: Doba zpracování
+      tips_title: Tipy pro dosažení nejlepších výsledků
+      title: Import nabídky z PDF
+      upload_process: Nahrávání a zpracování
+    new_2025:
+      title: Importování nabídky
+      subtitle: Nahrajte menu ve formátu PDF a naše umělá inteligence automaticky
+        extrahuje všechny položky.
+      step_upload: Nahrát
+      step_process: Proces
+      step_review: Recenze
+      name_label: Název nabídky
+      name_placeholder: např. letní menu 2024
+      name_help: Dejte nabídce popisný název pro snadnou identifikaci.
+      source_language_label: Jazyk nabídky
+      auto_detect: Automatická detekce
+      language_en: Angličtina
+      language_fr: Francouzština
+      language_it: Italský
+      language_es: Španělština
+      source_language_help: Slouží k zachování původního jazyka při generování chybějících
+        popisů.
+      pdf_label: Menu PDF
+      drop_title: Přetáhněte své PDF sem
+      drop_subtitle: nebo
+      browse_files: Procházet soubory
+      pdf_hint: PDF do velikosti 10 MB. Nejlépe fungují čitelné skeny.
+      remove_file_aria: Odstranění souboru
+      estimated_time: Zpracování trvá ~2-5 minut
+      cancel: Zrušit
+      start_processing: Zahájení zpracování
+      tips_title: Tipy pro dosažení nejlepších výsledků
+      tip_quality_title: Použití vysoce kvalitních skenů
+      tip_quality_text: Nejlépe se osvědčují jasné soubory PDF s vysokým rozlišením
+        a dobrým kontrastem. Vyhněte se rozmazaným nebo nekvalitním fotografiím.
+      tip_format_title: Standardní rozvržení nabídky
+      tip_format_text: Nejlépe fungují nabídky s přehlednými oddíly a názvy položek
+        oddělenými od cen. Naše umělá inteligence si poradí s většinou rozvržení.
+      tip_language_title: Podpora více jazyků
+      tip_language_text: Podporujeme nabídky v angličtině, italštině, španělštině,
+        francouzštině a dalších jazycích. Fungují i vícejazyčná menu!
+      pdf_invalid_js: Vyberte prosím soubor PDF
+    show:
+      allergens: Alergeny
+      approve_sections_items: Schválení oddílů a položek
+      cancel: Zrušit
+      click_to_add_description: Kliknutím přidáte popis.
+      confirm_modal_body: Potvrďte zveřejnění nabídky. Volitelně můžete použít funkci
+        Synchronizovat publikování k archivaci všech existujících sekcí/položek, které
+        nejsou v tomto importu přítomny.
+      confirm_modal_title: Zveřejnit nabídku
+      create_menu: Vytvořit nabídku
+      dairy_free: Bez mléka a mléčných výrobků
+      default_title: 'Import menu #%{id}'
+      delete: Odstranit
+      description: Popis
+      dietary_information: Informace o stravě
+      edit_item_modal_title: Položka nabídky Upravit
+      failed_heading: Zpracování se nezdařilo
+      gluten_free: Bez lepku
+      hold_multi_select: Podržením kláves Ctrl/Cmd vyberete více
+      import_details: Podrobnosti o importu
+      imported_ago: Importováno před %{čas}
+      imported_menu_subtitle: Zkontrolujte a potvrďte níže uvedené extrahované položky
+        nabídky. Před vytvořením konečné nabídky můžete upravit libovolnou položku.
+      imported_menu_title: Importované menu
+      item_name: Název položky
+      no_items_explainer: Z tohoto souboru PDF se nám nepodařilo zjistit žádné oddíly/položky.
+      no_items_heading: Nebyly analyzovány žádné položky nabídky
+      no_items_tip1: PDF nemusí obsahovat žádný extrahovatelný text a OCR nevytvořilo
+        žádný text. Zkontrolujte, zda jsou nakonfigurovány pověření Google Cloud Vision.
+      no_items_tip2: Klíč API OpenAI může chybět nebo vrátit neplatný výstup. Přidejte
+        openai_api_key do pověření Rails.
+      no_items_tip3: Formátování odpovědi mohlo být neplatné. Zpřísnili jsme parsování,
+        ale opětovné spuštění by mohlo pomoci.
+      position: Pozice
+      price: Cena
+      process_confirm: Začít zpracovávat toto PDF nyní?
+      process_pdf: Zpracování PDF
+      processing_page: Stránka %{aktuální} z %{celkem}
+      processing_title: Zpracování nabídky. To může trvat několik minut...
+      progress_complete: "%{procento}% dokončeno"
+      progress_loading: Načítání...
+      publish: Zveřejnit
+      publish_menu: Zveřejnit nabídku
+      reorder_hint: Objednávejte položky pouze v rámci této sekce.
+      save_changes: Uložení změn
+      section: Sekce
+      section_disabled_title: Zde nelze sekci měnit
+      status: 'Stav:'
+      steps:
+        complete: Kompletní
+        processing: Zpracování
+        review: Recenze
+        upload: Nahrát
+      sync_publish_label: Synchronizovat publikování (sekce archivu/položky, které
+        nejsou v tomto importu)
+      try_again: Zkuste to znovu
+      updated_at: Aktualizováno %{timestamp}
+      upload_clearer_pdf: Nahrání přehlednějšího souboru PDF
+      vegan: Vegan
+      vegetarian: Vegetariánské

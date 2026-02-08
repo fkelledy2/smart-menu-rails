@@ -1,0 +1,142 @@
+---
+es:
+  home:
+    index:
+      browse: Ver menús
+      page_title: ''
+      page_description: ''
+      error: ''
+      compare_plans: ''
+      contactUs: Contáctanos
+      ctaBody1: 'Gestiona un restaurante más inteligente con herramientas digitales
+        que trabajan tan duro como tu equipo. Desde menús inteligentes hasta sistemas
+        de pedidos, liberamos a tu personal para centrarse en lo esencial: un servicio
+        excepcional.'
+      ctaBody2: Haz más con menos - nuestros menús digitales y herramientas de pedidos
+        inteligentes liberan a tu equipo para centrarse en un servicio excelente.
+      ctaTitle1: Optimiza el servicio. Mejora la experiencia.
+      ctaTitle2: Los restaurantes inteligentes comienzan aquí
+      demoMenu: Nuestros Menús Inteligentes
+      demoMenuTag: "<strong>ESCANEA</strong> o <strong>TECLEA</strong> el QR para
+        probar un servicio más inteligente."
+      demoMenuTagBrowse: o
+      emailAddressTag: Nunca compartiremos tu correo.
+      heroPrimaryCta: ''
+      heroSecondaryCta: ''
+      heroTrust1: ''
+      heroTrust2: ''
+      heroTrust3: ''
+      overviewTitle: ''
+      overviewBody: ''
+      overviewItem1: ''
+      overviewItem2: ''
+      overviewItem3: ''
+      overviewItem4: ''
+      overviewItem5: ''
+      howTitle: ''
+      howBody: ''
+      howStep1Title: ''
+      howStep1Body: ''
+      howStep2Title: ''
+      howStep2Body: ''
+      howStep3Title: ''
+      howStep3Body: ''
+      trustTitle: ''
+      trustItem1Title: ''
+      trustItem1Body: ''
+      trustItem2Title: ''
+      trustItem2Body: ''
+      trustItem3Title: ''
+      trustItem3Body: ''
+      trustItem4Title: ''
+      trustItem4Body: ''
+      faqTitle: ''
+      faqQ1: ''
+      faqA1: ''
+      faqQ2: ''
+      faqA2: ''
+      faqQ3: ''
+      faqA3: ''
+      faqQ4: ''
+      faqA4: ''
+      closingTitle: ''
+      closingBody: ''
+      closingPrimaryCta: ''
+      closingSecondaryCta: ''
+      featuresStoryTitle: ''
+      featuresStoryBody: ''
+      featuresStoryPrimaryCta: ''
+      featuresStorySecondaryCta: ''
+      featuresStory1Kicker: ''
+      featuresStory1Title: ''
+      featuresStory1Body: ''
+      featuresStory1Bullet1: ''
+      featuresStory1Bullet2: ''
+      featuresStory1Bullet3: ''
+      featuresStory2Kicker: ''
+      featuresStory2Title: ''
+      featuresStory2Body: ''
+      featuresStory2Bullet1: ''
+      featuresStory2Bullet2: ''
+      featuresStory2Bullet3: ''
+      featuresStory3Kicker: ''
+      featuresStory3Title: ''
+      featuresStory3Body: ''
+      featuresStory3Bullet1: ''
+      featuresStory3Bullet2: ''
+      featuresStory3Bullet3: ''
+      featuresStory4Kicker: ''
+      featuresStory4Title: ''
+      featuresStory4Body: ''
+      featuresStory4Bullet1: ''
+      featuresStory4Bullet2: ''
+      featuresStory4Bullet3: ''
+      featuresStory5Kicker: ''
+      featuresStory5Title: ''
+      featuresStory5Body: ''
+      featuresStory5Bullet1: ''
+      featuresStory5Bullet2: ''
+      featuresStory5Bullet3: ''
+      featureDescription2: Adiós a los cambios de mesa lentos. Con pedidos de autoservicio,
+        los clientes controlan el ritmo - acelerando el servicio, reduciendo los tiempos
+        de espera.
+      featureDescription3: Minimiza los errores con pedidos digitales directos a cocina.
+        Sin solicitudes mal entendidas o tickets garabateados - solo comunicación
+        precisa y optimizada.
+      featureDescription4: Transforma tu menú en una experiencia visual. Fotos atractivas,
+        descripciones y ventas cruzadas inteligentes guían a los clientes hacia artículos
+        de alto margen - sin esfuerzo.
+      featureDescription5: Reduce el desperdicio de papel. Nuestros menús digitales
+        apoyan tu marca ecológica.
+      featureDescription6: Obtén acceso inmediato a los puntos críticos. Rastrea los
+        mejores artículos, tendencias de comedor.
+      featureTitle2: Ingresos más rápidos, mesas más satisfechas
+      featureTitle3: Precisión en pedidos, siempre
+      featureTitle4: Menús que se venden solos
+      featureTitle5: Servicio sostenible
+      featureTitle6: Datos reales, decisiones más inteligentes
+      features: Características
+      menus: Menús
+      next: Siguiente
+      numbers: Números
+      numbersTag: 'Nuestras estadísticas: Restaurantes, Menús, Pedidos y Valor:'
+      orderValue: Valor del pedido
+      orders: Pedidos
+      previous: Anterior
+      pricing: Nuestros precios
+      pricingTag: 'Elige entre nuestros modelos de precios flexibles:'
+      restaurants: Restaurantes
+      saveChanges: Guardar
+      selectPlan: Por favor <strong>elige un plan</strong>.
+      signUp: Registrarse
+      submit: Enviar
+      testimonials: Testimonios
+      testimonialsTag: 'Algunas palabras de nuestros clientes satisfechos:'
+      video_unsupported: ''
+      welcome: "¡Bienvenido!"
+    terms:
+      page_title: ''
+      page_description: ''
+    privacy:
+      page_title: ''
+      page_description: ''

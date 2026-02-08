@@ -1,0 +1,7 @@
+---
+cs:
+  omniauth:
+    connected: Váš účet %{druh} byl připojen.
+    email_exists: Účet s tímto e-mailem již existuje. Před připojením účtu %{poskytovatele}
+      se prosím přihlaste pomocí tohoto účtu.
+    failure: Něco se pokazilo

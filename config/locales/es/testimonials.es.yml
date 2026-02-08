@@ -1,0 +1,26 @@
+---
+es:
+  testimonials:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      title: ''
+    form:
+      cancel: ''
+      destroy: ''
+      save: ''
+      sure: ''
+    index:
+      actions: Acciones
+      approve: Aprobar
+      testimonials: Testimonios
+      unapprove: Desaprobar
+    new:
+      cancel: ''
+      title: ''
+    testimonial:
+      restaurant: ''
+      testimonial: ''
+      user: ''

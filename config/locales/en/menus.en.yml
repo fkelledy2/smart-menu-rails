@@ -1,0 +1,76 @@
+---
+en:
+  menus:
+    controller:
+      created: Menu was successfully created.
+      deleted: Menu was successfully deleted.
+      image_regeneration_queued: Queued image regeneration for %{count} items on this
+        menu.
+      image_regeneration_queued_rake: Image regeneration job has been queued for this
+        menu.
+      webp_regeneration_queued: WebP derivative regeneration has been queued for this
+        menu's images.
+      ai_image_generation_queued: AI image generation has been queued for this menu's
+        items.
+      updated: Menu was successfully updated.
+    edit:
+      availabilities: Availabilities
+      menu: Menu
+      regenerate_images_confirm: This will queue image regeneration jobs for all items
+        in this menu. Continue?
+      sections: Sections
+    form:
+      current_pdf: 'Current PDF:'
+      delete: Delete
+      details: Details
+      errors: Errors
+      'false': 'off'
+      imageSettings: Image Settings
+      'off': 'off'
+      'on': 'on'
+      pdfSettings: PDF Settings
+      regenerate_images: Regenerate images
+      regenerate_images_confirm: This will queue image regeneration jobs for all items
+        in this menu. Continue?
+      remove: Remove
+      save: Save
+      settings: Settings
+      sure: Are you sure?
+      'true': 'on'
+    index:
+      menu: Menu
+      menus: Menus
+      unavailable: Unavailable
+    menu:
+      description: 'Description:'
+      image: 'Image:'
+      name: 'Name:'
+      pdf_menu_scan: 'PDF Menu Scan:'
+      restaurant: 'Restaurant:'
+      sequence: 'Sequence:'
+      status: 'Status:'
+    new:
+      menu: Menu
+    show:
+      add_to_order: Add to Order
+      allergens: Allergens
+      allergyns: Allergens
+      bill: Bill
+      loading: Loading...
+      not_available: Not available.
+      order: Order
+      order_updated: Order Updated!
+      remaining: "%{count} remaining."
+      staff_alerted: Staff Alerted
+      start_order: Start Order
+      take_payment: Take Payment
+    showMenuavailabilities:
+      availabilities: Availabilities
+    showMenusections:
+      sections: Sections
+    sections:
+      settings_2025:
+        disabled_at_restaurant: Disabled at restaurant level
+        parent_restriction: 'Note:'
+        parent_restriction_desc: Settings disabled at the restaurant level cannot
+          be enabled for individual menus. Enable them at the restaurant level first.

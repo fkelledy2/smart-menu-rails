@@ -1,0 +1,7 @@
+---
+cs:
+  ingredients:
+    controller:
+      created: Přísada byla úspěšně vytvořena.
+      deleted: Přísada byla úspěšně odstraněna.
+      updated: Složka byla úspěšně aktualizována.

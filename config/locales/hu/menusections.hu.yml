@@ -1,0 +1,37 @@
+---
+hu:
+  menusections:
+    edit:
+      inventories: ''
+      items: ''
+      section: ''
+    form:
+      delete: Törlés
+      details: Részletek
+      imageSettings: Kép beállítások
+      save: Mentés
+      selectMenu: Válasszon menüt...
+      settings: Beállítások
+      sure: Biztos vagy benne?
+    index:
+      menuSection: Menü szekció
+      menuSections: Menü szekciók
+    menusection:
+      description: ''
+      image: ''
+      menu: ''
+      name: ''
+      sequence: ''
+      status: ''
+    new:
+      cancel: Mégse
+      menuSection: Új menü szekció
+    show:
+      menuSection: Menü szekció megtekintése
+      selectMenu: ''
+    showInventories:
+      inventories: ''
+      reset: ''
+    showMenuitems:
+      genimage: ''
+      menuItems: ''

@@ -1,0 +1,29 @@
+---
+cs:
+  tablesettings:
+    controller:
+      created: Nastavení tabulky bylo úspěšně vytvořeno.
+      deleted: Nastavení tabulky bylo úspěšně odstraněno.
+      updated: Nastavení tabulky bylo úspěšně aktualizováno.
+    edit:
+      tablesetting: Upravit stůl
+    index:
+      archive: Archiv
+      seating_plan: Plán sezení
+      seats: 'Místa k sezení:'
+      table_setting: Prostírání stolu
+      table_settings: Nastavení stolu
+      unarchive: Odarchivovat
+    new:
+      status: 'Stav:'
+      tablesetting: Nový stůl
+    show:
+      available_menus: Dostupné nabídky
+      selectRestaurant: Vybraná restaurace
+      show_table_setting: Zobrazit nastavení stolu
+    tablesetting:
+      capacity: 'Kapacita:'
+      description: 'Popis:'
+      name: 'Jméno:'
+      restaurant: 'Restaurace:'
+      status: 'Stav:'

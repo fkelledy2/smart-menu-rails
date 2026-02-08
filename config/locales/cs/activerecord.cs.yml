@@ -1,0 +1,208 @@
+---
+cs:
+  activerecord:
+    attributes:
+      allergyn:
+        description: Popis
+        name: Název
+        symbol: Symbol
+      employee:
+        eid: ID
+        name: Název
+        role: Role
+        status: Stav
+        user_id: Uživatel
+      ingredient:
+        description: Popis
+        name: Název
+      inventory:
+        currentInventory: Konečná
+        currentinventory: Aktuální zásoby
+        menuItem: Položka
+        resetHour: Resetuje v
+        resethour: Hodina resetování
+        startingInventory: Počáteční
+        startinginventory: Počáteční inventura
+      menu:
+        allowOrdering: Povolit objednávání
+        covercharge: Poplatek za obálku
+        description: Popis
+        displayImages: Zobrazení obrázků
+        displayImagesInPopup: Zobrazení obrázků ve vyskakovacím okně
+        image: Obrázek
+        imagecontext: Kontext obrázku
+        inventoryTracking: Sledování zásob
+        name: Název
+        pdf_menu_scan: PDF menu
+        status: Stav
+      menuavailability:
+        dayofweek: Den v týdnu
+        endhour: Hodina ukončení
+        menu_id: Jídelní lístek
+        starthour: Počáteční hodina
+        status: Stav
+      menuitem:
+        allergyns: Alergeny
+        calories: Kalorie
+        description: Popis
+        image: Obrázek
+        itemtype: Typ položky
+        name: Název
+        preptime: Doba přípravy
+        price: Cena
+        sizes: Velikosti
+        sizesupport: Podpora velikosti
+        status: Stav
+        unitcost: Jednotkové náklady
+      menuparticipant:
+        preferredlocale: Preferovaná lokalita
+        sessionid: ID relace
+        smartmenu_id: Smartmenu
+      menusection:
+        description: Popis
+        endhour: Hodina ukončení
+        image: Obrázek
+        menu_id: Jídelní lístek
+        name: Název
+        restricted: Omezené
+        starthour: Počáteční hodina
+        status: Stav
+      metric:
+        description: Popis
+        name: Název
+      ordr:
+        employee_id: Zaměstnanci
+        menu_id: Jídelní lístek
+        restaurant_id: Restaurace
+        tablesetting_id: Prostírání stolu
+      ordraction:
+        action: Akce
+        employee_id: Zaměstnanci
+        ordr_id: Objednávka
+        ordritem_id: Objednat položku
+        ordrparticipant_id: Účastník objednávky
+        sessionid: ID relace
+      ordritem:
+        menuitem_id: Položka nabídky
+        ordr_id: Objednávka
+      ordritemnote:
+        note: Poznámka
+        ordritem_id: Objednat položku
+      ordrparticipant:
+        action: Akce
+        employee_id: Zaměstnanci
+        ordr_id: Objednávka
+        ordritem_id: Objednat položku
+        role: Role
+        sessionid: ID relace
+      restaurant:
+        address: Adresa
+        address1: Adresa 1
+        address2: Adresa 2
+        allowOrdering: Povolit objednávání
+        city: Město
+        country: Země
+        currency: Měna
+        description: Popis
+        displayImages: Zobrazení obrázků
+        displayImagesInPopup: Zobrazení obrázků ve vyskakovacím okně
+        genid: ID generace
+        image: Obrázek
+        image_style_profile: Profil stylu obrazu
+        imagecontext: Kontext obrázku
+        inventoryTracking: Sledování zásob
+        name: Název
+        postcode: PSČ
+        spotifyaccesstoken: Přístupový token Spotify
+        spotifyrefreshtoken: Token Spotify Refresh
+        spotifyuserid: ID uživatele Spotify
+        state: Kraj
+        status: Stav
+        wifiEncryptionType: Typ šifrování WiFi
+        wifiHidden: Skrytá WiFi
+        wifiPassword: Heslo WiFi
+        wifissid: SSID WiFi
+      restaurantavailability:
+        dayofweek: Den v týdnu
+        endhour: Hodina ukončení
+        starthour: Počáteční hodina
+        status: Stav
+      restaurantlocale:
+        dfault: Výchozí
+        locale: Lokalita
+      size:
+        description: Popis
+        name: Název
+        size: Velikost
+      smartmenu:
+        menu_id: Jídelní lístek
+        restaurant_id: Restaurace
+        slug: Slug
+        tablesetting_id: Prostírání stolu
+      tablesetting:
+        capacity: Kapacita
+        description: Popis
+        name: Název
+        status: Stav
+        tabletype: Typ stolu
+      tag:
+        description: Popis
+        name: Název
+      tax:
+        name: Název
+        taxPercentage: Procento
+        taxType: Typ daně
+        taxpercentage: Procento daně
+        taxtype: Typ daně
+      testimonial:
+        restaurant_id: Restaurace
+        testimonial: Svědectví
+        user_id: Uživatel
+      tip:
+        percentage: Procento
+      track:
+        description: Popis
+        externalid: Externí ID
+        image: Obrázek
+        name: Název
+        restaurant_id: Restaurace
+        sequence: Sekvence
+      userplan:
+        plan_id: Plán
+    errors:
+      format: "%{atribut} %{zpráva}"
+      messages:
+        blank: nemůže být prázdný
+        greater_than: musí být větší než %{count}
+        greater_than_or_equal_to: musí být větší nebo rovno %{count}
+        invalid: je neplatný
+        less_than: musí být menší než %{count}
+        less_than_or_equal_to: musí být menší nebo rovno %{count}
+        not_a_number: není číslo
+        taken: již byla odebrána
+        too_long:
+          one: je příliš dlouhý (maximálně 1 znak)
+          other: je příliš dlouhý (maximum je %{počet} znaků).
+        too_short:
+          one: je příliš krátký (minimum je 1 znak)
+          other: je příliš krátký (minimum je %{počet} znaků).
+    models:
+      allergyn: Alergeny
+      genimage: Generovaný obrázek
+      ingredient: Přísady
+      inventory: Inventura
+      menu: Jídelní lístek
+      menuavailability: Dostupnost nabídky
+      menuitem: Položka nabídky
+      menusection: Sekce menu
+      metric: Metrické
+      ordr: Objednávka
+      restaurant: Restaurace
+      restaurantavailability: Dostupnost restaurace
+      size: Velikost
+      smartmenu: Smartmenu
+      tablesetting: Prostírání stolu
+      tag: Štítek
+      testimonial: Svědectví
+      track: Trať
+      userplan: Uživatelský plán

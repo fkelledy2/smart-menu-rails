@@ -1,0 +1,40 @@
+---
+it:
+  allergyns:
+    controller:
+      created: Allergene creato con successo.
+      deleted: Allergene eliminato con successo.
+      updated: Allergene aggiornato con successo.
+    edit:
+      allergyns: Allergeni
+      edit_allergyn: Modifica Allergene
+      description: Aggiorna i dettagli dell'allergene
+      cancel: Annulla
+      confirm_delete: Eliminare questo allergene?
+      delete: Elimina
+      allergyn_details: Dettagli Allergene
+    form:
+      name: Nome allergene
+      name_placeholder: es. Arachidi, Latticini, Glutine
+      name_help: Il nome dell'allergene
+      description: Descrizione
+      description_placeholder: Dettagli opzionali su questo allergene...
+      description_help: 'Opzionale: Informazioni aggiuntive sull''allergene'
+      symbol: Simbolo
+      symbol_placeholder: "es. \U0001F95C, \U0001F95B, \U0001F33E"
+      symbol_help: 'Opzionale: Emoji o simbolo breve per rappresentare questo allergene'
+    index:
+      allergyns: Allergeni
+      description: Gestisci le informazioni sugli allergeni per gli articoli del menù
+      back: Indietro
+      new_allergyn: Nuovo Allergene
+      all_allergyns: Tutti gli Allergeni
+    new:
+      allergyns: Allergeni
+      new: Nuovo
+      new_allergyn: Nuovo Allergene
+      description: Crea un nuovo allergene per gli articoli del menù
+      cancel: Annulla
+      allergyn_details: Dettagli Allergene
+    show:
+      allergyn: Allergene

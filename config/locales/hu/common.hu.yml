@@ -1,0 +1,24 @@
+---
+hu:
+  common:
+    actions: Műveletek
+    activate: Aktiválás
+    back: Vissza
+    cancel: Mégse
+    close: Bezárás
+    confirm: Megerősítés
+    create: Létrehozás
+    deactivate: Deaktiválás
+    delete: Törlés
+    edit: Szerkesztés
+    errors: Hibák
+    flash:
+      action_failed: 'A művelet sikertelen: %{error}'
+      archived: "%{resource} sikeresen archiválva."
+      created: "%{resource} sikeresen létrehozva."
+      deleted: "%{resource} sikeresen törölve."
+      processing_restarted: A feldolgozás újraindult.
+      updated: "%{resource} sikeresen frissítve."
+    loading: Betöltés...
+    save: Mentés
+    update: Frissítés

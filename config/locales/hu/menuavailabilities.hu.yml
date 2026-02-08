@@ -1,0 +1,21 @@
+---
+hu:
+  menuavailabilities:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    form:
+      delete: Törlés
+      save: Mentés
+      selectMenu: Válasszon menüt...
+      sure: Biztos vagy benne?
+    index:
+      menuAvailabilities: ''
+      menuAvailability: Elérhetőség
+    new:
+      cancel: Mégse
+      menuAvailability: Új elérhetőség
+    show:
+      menuAvailability: ''
+      selectMenu: ''

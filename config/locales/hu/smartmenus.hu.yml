@@ -1,0 +1,127 @@
+---
+hu:
+  smartmenus:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      title: ''
+    form:
+      cancel: ''
+      destroy: ''
+      save: ''
+      sure: ''
+    index:
+      smartmenus: Okos menük
+    new:
+      title: ''
+    orderCustomer:
+      bill: Számlát kérek
+      items_in_cart: ''
+      order: Rendelés
+      staffAlerted: ''
+      startOrder: Rendelés indítása
+    orderStaff:
+      bill: ''
+      items_in_cart: ''
+      order: ''
+      startOrder: ''
+      takePayment: ''
+    showAllergyns:
+      allergyns: ''
+    showCoverCharge:
+      covercharge: ''
+      coverchargeUnit: ''
+    showMenuBanner:
+      allergyns: ''
+    showMenuContentCustomer:
+      search_placeholder: ''
+    showMenuitem:
+      add_to_order: ''
+      allergyns: ''
+      loading: ''
+    showMenuitemHorizontal:
+      loading: ''
+    showMenuitemHorizontalActionBar:
+      allergyns: ''
+      order: ''
+      toggle_dropdown: ''
+    showModals:
+      add: Név hozzáadása
+      addToOrder: Hozzáadás a rendeléshez
+      bill_prefix: ''
+      cancel: Mégse
+      confirmPayment: Fizetés megerősítése
+      cover_charge: ''
+      customiseOrderWithName: ''
+      partySize: ''
+      excluding_tip: ''
+      filterAllergyns: Allergének szűrése
+      filterBy: ''
+      including_tip: ''
+      item: ''
+      name_label: ''
+      nett: ''
+      noneAll: ''
+      order_aria: ''
+      payBill: ''
+      payment_link: ''
+      price: Ár
+      requestBill: Számlát kérek
+      selected: ''
+      service: ''
+      start: Rendelés indítása
+      startOrder: Új rendelés indítása
+      submit: Rendelés beküldése
+      submitted: ''
+      tax: ''
+      tip_options: ''
+      total: Összesen
+      yourOrder: Az Ön rendelése
+    showTableLocaleSelectorCustomer:
+      table: ''
+    showTableLocaleSelectorStaff:
+      table: ''
+    smartmenu:
+      menu: ''
+      restaurant: ''
+      slug: ''
+      tablesetting: ''
+    modal_footer_primary:
+      cancel: ''
+    alcohol:
+      flag: ''
+      non_alcoholic: ''
+      zero_abv_short: ''
+      verify_age: ''
+      sales_disabled: ''
+      policy_blocked: ''
+      acknowledge_btn: ''
+      acknowledged: ''
+    ocr:
+      alcohol:
+        override_label: ''
+        abv: ''
+        classification: ''
+        review_needed: ''
+        overrides_hint: ''
+    empty_states:
+      no_menu_items: ''
+      no_menu_description: ''
+      refresh: ''
+      cart_empty: ''
+      cart_empty_description: ''
+      browse_menu: ''
+      no_results: ''
+      no_results_description: ''
+      no_items_filtered: ''
+      no_items_filtered_description: ''
+      adjust_filters: ''
+      no_table_selected: ''
+      no_table_description: ''
+      order_complete: ''
+      order_complete_description: ''
+      error_occurred: ''
+      error_description: ''
+      try_again: ''

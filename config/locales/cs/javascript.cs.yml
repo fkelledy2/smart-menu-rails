@@ -1,0 +1,117 @@
+---
+cs:
+  javascript:
+    notifications:
+      auto_save:
+        error: Uložení selhalo
+        network_error: Chyba sítě
+        saved: Objednávka uložena
+      sortable:
+        success: Pořadí uloženo
+        error: Uložení selhalo
+      form:
+        auto_saved: Podrobnosti automaticky uloženy
+        submit_error: Uložení selhalo
+      employee:
+        saved: Zaměstnanec úspěšně uložen
+        save_error: Uložení zaměstnance selhalo
+        status_error: Aktualizace stavu zaměstnance selhala
+        updated: "%{count} zaměstnanec/ů aktualizován na %{status}"
+        order_error: Aktualizace objednávky selhala
+      menuitem:
+        saved: Položka menu úspěšně uložena
+        save_error: Uložení položky menu selhalo
+        status_error: Aktualizace stavu položky menu selhala
+        updated: "%{count} položka/ek menu aktualizováno na %{status}"
+        image_generation: Generování obrázků zahájeno pro %{count} položku/ek menu
+        no_images: Nepodařilo se vygenerovat žádné obrázky
+        order_error: Aktualizace objednávky selhala
+      order:
+        saved: Podrobnosti objednávky automaticky uloženy
+        close_success: Objednávka úspěšně uzavřena
+        close_error: Uzavření objednávky selhalo
+        bill_success: Účet úspěšně vyžádán
+        bill_error: Vyžádání účtu selhalo
+        payment_success: Platba úspěšně zpracována
+        payment_error: Zpracování platby selhalo
+        missing_payment: Chybějící platební údaje
+        payment_link: Platební odkaz aktualizován
+        payment_link_error: Generování platebního odkazu selhalo
+        delete_success: Objednávka úspěšně smazána
+        delete_error: Smazání objednávky selhalo
+        created: 'Objednávka #%{id} vytvořena'
+        updated: 'Objednávka #%{orderId} aktualizována'
+        order_save_success: Objednávka úspěšně uložena
+        order_save_error: Uložení objednávky selhalo
+      inventory:
+        saved: Podrobnosti inventáře automaticky uloženy
+        saved_success: Inventář úspěšně uložen
+        save_error: Uložení inventáře selhalo
+        status_error: Aktualizace stavu inventáře selhala
+        updated: "%{count} položka/ek inventáře aktualizována na %{status}"
+        reset_error: Resetování inventáře selhalo
+        reset_success: "%{count} položka/ek inventáře resetována"
+        order_error: Aktualizace objednávky selhala
+      menu:
+        saved: Podrobnosti menu automaticky uloženy
+        saved_success: Menu úspěšně uloženo
+        save_error: Uložení menu selhalo
+        status_error: Aktualizace stavu menu selhala
+        updated: "%{count} menu aktualizováno na %{status}"
+        order_error: Aktualizace objednávky selhala
+      restaurant:
+        saved: Podrobnosti restaurace automaticky uloženy
+        saved_success: Restaurace úspěšně uložena
+        save_error: Uložení restaurace selhalo
+        delete_success: Restaurace úspěšně smazána
+        delete_error: Smazání restaurace selhalo
+        qr_error: Generování QR kódu selhalo
+      menusection:
+        saved: Podrobnosti sekce menu automaticky uloženy
+        saved_success: Sekce menu úspěšně uložena
+        save_error: Uložení sekce menu selhalo
+        status_error: Aktualizace stavu sekce menu selhala
+        updated: "%{count} sekce/í menu aktualizována na %{status}"
+        order_error: Aktualizace objednávky selhala
+      ocr:
+        all_confirmed: Všechny sekce %{status}
+        all_confirm_error: Aktualizace potvrzení selhala
+        section_confirmed: Sekce %{status}
+        section_confirm_error: Aktualizace potvrzení sekce selhala
+        inline_edit_success: "%{type} úspěšně aktualizováno"
+        inline_edit_error: Uložení změn selhalo
+        inline_cancel: Úprava zrušena
+        section_order_success: Pořadí sekcí aktualizováno
+        section_order_error: Aktualizace pořadí sekcí selhala
+        item_move_success: Položka úspěšně přesunuta
+        item_move_error: Přesunutí položky selhalo
+        import_error: Import selhal. Zkuste to prosím znovu.
+        import_success: Import úspěšně dokončen
+        delete_success: "%{count} nepotvrzená/é sekce/í smazána/ny"
+        export_success: Export dokončen
+        export_error: Export selhal
+      pwa:
+        install_success: Aplikace úspěšně nainstalována! Nyní můžete používat Chytrý
+          Menu offline.
+        notification_success: Oznámení povolena! Budete dostávat aktualizace v reálném
+          čase.
+        sync_complete: "%{count} položka/ek úspěšně synchronizována"
+        offline_action: Akce uložena. Synchronizuje, až budete online.
+      api:
+        upload_error: 'Nahrání selhalo: Chyba sítě'
+    form:
+      actions:
+        edit: Upravit
+        delete: Smazat
+        save: Uložit
+    table:
+      no_data: Žádná data k dispozici
+    order_status:
+      ordered: objednáno
+      preparing: příprava
+      ready: připraveno
+      collected: vyzvednuto
+    buttons:
+      start_preparing: Začít přípravu
+      mark_ready: Označit jako připraveno
+      mark_collected: Označit jako vyzvednuto

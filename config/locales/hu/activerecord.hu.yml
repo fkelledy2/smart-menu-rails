@@ -1,0 +1,208 @@
+---
+hu:
+  activerecord:
+    attributes:
+      allergyn:
+        description: Leírás
+        name: Név
+        symbol: Szimbólum
+      employee:
+        eid: ID
+        name: Név
+        role: Szerepkör
+        status: Állapot
+        user_id: ''
+      ingredient:
+        description: ''
+        name: ''
+      inventory:
+        currentInventory: Befejező
+        currentinventory: ''
+        menuItem: Elem
+        resetHour: Visszaállítás
+        resethour: ''
+        startingInventory: Kezdő
+        startinginventory: ''
+      menu:
+        allowOrdering: ''
+        covercharge: ''
+        description: Leírás
+        displayImages: ''
+        displayImagesInPopup: ''
+        image: Kép
+        imagecontext: ''
+        inventoryTracking: ''
+        name: Név
+        pdf_menu_scan: ''
+        status: Állapot
+      menuavailability:
+        dayofweek: ''
+        endhour: ''
+        menu_id: ''
+        starthour: ''
+        status: ''
+      menuitem:
+        allergyns: ''
+        calories: Kalória
+        description: Leírás
+        image: Kép
+        itemtype: ''
+        name: Név
+        preptime: Elkészítési idő
+        price: Ár
+        sizes: ''
+        sizesupport: ''
+        status: Állapot
+        unitcost: ''
+      menuparticipant:
+        preferredlocale: ''
+        sessionid: ''
+        smartmenu_id: ''
+      menusection:
+        description: Leírás
+        endhour: ''
+        image: Kép
+        menu_id: ''
+        name: Név
+        restricted: ''
+        starthour: ''
+        status: Állapot
+      metric:
+        description: ''
+        name: ''
+      ordr:
+        employee_id: ''
+        menu_id: ''
+        restaurant_id: ''
+        tablesetting_id: ''
+      ordraction:
+        action: ''
+        employee_id: ''
+        ordr_id: ''
+        ordritem_id: ''
+        ordrparticipant_id: ''
+        sessionid: ''
+      ordritem:
+        menuitem_id: ''
+        ordr_id: ''
+      ordritemnote:
+        note: ''
+        ordritem_id: ''
+      ordrparticipant:
+        action: ''
+        employee_id: ''
+        ordr_id: ''
+        ordritem_id: ''
+        role: ''
+        sessionid: ''
+      restaurant:
+        address: ''
+        address1: Cím 1
+        address2: Cím 2
+        allowOrdering: ''
+        city: Város
+        country: Ország
+        currency: Pénznem
+        description: Leírás
+        displayImages: ''
+        displayImagesInPopup: ''
+        genid: ''
+        image: ''
+        image_style_profile: ''
+        imagecontext: ''
+        inventoryTracking: ''
+        name: Név
+        postcode: Irányítószám
+        spotifyaccesstoken: ''
+        spotifyrefreshtoken: ''
+        spotifyuserid: ''
+        state: Megye
+        status: Állapot
+        wifiEncryptionType: ''
+        wifiHidden: ''
+        wifiPassword: ''
+        wifissid: ''
+      restaurantavailability:
+        dayofweek: ''
+        endhour: ''
+        starthour: ''
+        status: ''
+      restaurantlocale:
+        dfault: ''
+        locale: ''
+      size:
+        description: Leírás
+        name: Név
+        size: Méret
+      smartmenu:
+        menu_id: ''
+        restaurant_id: ''
+        slug: ''
+        tablesetting_id: ''
+      tablesetting:
+        capacity: ''
+        description: ''
+        name: ''
+        status: ''
+        tabletype: ''
+      tag:
+        description: ''
+        name: ''
+      tax:
+        name: Név
+        taxPercentage: Százalék
+        taxType: ''
+        taxpercentage: ''
+        taxtype: ''
+      testimonial:
+        restaurant_id: ''
+        testimonial: ''
+        user_id: ''
+      tip:
+        percentage: ''
+      track:
+        description: ''
+        externalid: ''
+        image: ''
+        name: ''
+        restaurant_id: ''
+        sequence: ''
+      userplan:
+        plan_id: ''
+    errors:
+      format: ''
+      messages:
+        blank: ''
+        greater_than: ''
+        greater_than_or_equal_to: ''
+        invalid: ''
+        less_than: ''
+        less_than_or_equal_to: ''
+        not_a_number: ''
+        taken: ''
+        too_long:
+          one: ''
+          other: ''
+        too_short:
+          one: ''
+          other: ''
+    models:
+      allergyn: ''
+      genimage: ''
+      ingredient: ''
+      inventory: ''
+      menu: ''
+      menuavailability: ''
+      menuitem: ''
+      menusection: ''
+      metric: ''
+      ordr: ''
+      restaurant: ''
+      restaurantavailability: ''
+      size: ''
+      smartmenu: ''
+      tablesetting: ''
+      tag: ''
+      testimonial: ''
+      track: ''
+      userplan: ''

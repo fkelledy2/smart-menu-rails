@@ -1,0 +1,14 @@
+---
+hu:
+  restaurantlocales:
+    controller:
+      active_not_deleted: ''
+      created: ''
+      deleted: ''
+      updated: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    new:
+      restaurantlocale: ''

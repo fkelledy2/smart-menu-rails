@@ -1,0 +1,40 @@
+---
+pl:
+  allergyns:
+    controller:
+      created: Alergen został pomyślnie utworzony.
+      deleted: Alergen został pomyślnie usunięty.
+      updated: Alergen został pomyślnie zaktualizowany.
+    edit:
+      allergyns: Alergeny
+      edit_allergyn: Edytuj alergen
+      description: Zaktualizuj szczegóły dotyczące alergenów
+      cancel: Anuluj
+      confirm_delete: Usunąć ten alergen?
+      delete: Usuń
+      allergyn_details: Szczegóły dotyczące alergenów
+    form:
+      name: Nazwa alergenu
+      name_placeholder: np. orzeszki ziemne, nabiał, gluten
+      name_help: Nazwa alergenu
+      description: Opis
+      description_placeholder: Opcjonalne szczegóły dotyczące tego alergenu...
+      description_help: 'Opcjonalnie: Dodatkowe informacje o alergenie'
+      symbol: Symbol
+      symbol_placeholder: "np. \U0001F95C, \U0001F95B, \U0001F33E"
+      symbol_help: 'Opcjonalnie: Emoji lub krótki symbol reprezentujący ten alergen'
+    index:
+      allergyns: Alergeny
+      description: Zarządzanie informacjami o alergenach dla pozycji menu
+      back: Powrót
+      new_allergyn: Nowy alergen
+      all_allergyns: Wszystkie alergeny
+    new:
+      allergyns: Alergeny
+      new: Nowość
+      new_allergyn: Nowy alergen
+      description: Utwórz nowy alergen dla pozycji menu
+      cancel: Anuluj
+      allergyn_details: Szczegóły dotyczące alergenów
+    show:
+      allergyn: Alergen

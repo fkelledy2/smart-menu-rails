@@ -1,0 +1,29 @@
+---
+fr:
+  tablesettings:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      tablesetting: Modifier la table
+    index:
+      archive: ''
+      seating_plan: ''
+      seats: ''
+      table_setting: ''
+      table_settings: ''
+      unarchive: ''
+    new:
+      status: ''
+      tablesetting: Nouvelle table
+    show:
+      available_menus: ''
+      selectRestaurant: ''
+      show_table_setting: ''
+    tablesetting:
+      capacity: ''
+      description: ''
+      name: ''
+      restaurant: ''
+      status: ''

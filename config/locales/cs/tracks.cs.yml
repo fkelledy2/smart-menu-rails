@@ -1,0 +1,9 @@
+---
+cs:
+  tracks:
+    controller:
+      created: Trať byla úspěšně vytvořena.
+      deleted: Stopa byla úspěšně odstraněna.
+      updated: Trať byla úspěšně aktualizována.
+    index:
+      tracks: Playlist

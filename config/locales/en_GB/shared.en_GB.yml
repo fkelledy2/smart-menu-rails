@@ -1,0 +1,34 @@
+---
+en_GB:
+  shared:
+    head:
+      meta_title: ''
+      meta_description: ''
+      meta_keywords: ''
+      og_title: ''
+      og_description: ''
+      twitter_title: ''
+      twitter_description: ''
+      pwa_title: ''
+    footer:
+      facebook: ''
+      instagram: ''
+      linkedin: ''
+      privacy: ''
+      terms: ''
+      plan: ''
+      build: ''
+      twitter: ''
+    navbar:
+      adminArea: ''
+      dashboard: ''
+      billing: ''
+      heroImages: ''
+      impersonated_as: ''
+      login: ''
+      logout: ''
+      restaurants: ''
+      settings: ''
+      signUp: ''
+      testimonials: ''
+      toggle_navigation: ''

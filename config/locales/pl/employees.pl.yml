@@ -1,0 +1,32 @@
+---
+pl:
+  employees:
+    controller:
+      created: Pracownik został pomyślnie utworzony.
+      deleted: Pracownik został pomyślnie usunięty.
+      updated: Pracownik został pomyślnie zaktualizowany.
+    edit:
+      employee: Pracownik
+    employee:
+      eid: 'Identyfikator pracownika:'
+      image: 'Obraz:'
+      name: 'Imię i nazwisko:'
+      restaurant: 'Restauracja:'
+      status: 'Status:'
+    form:
+      delete: Usuń
+      errors: Błędy
+      save: Zapisz
+      selectUser: Wybór użytkownika
+      sure: Jesteś pewien?
+    index:
+      activate: Aktywuj
+      deactivate: Dezaktywuj
+      employee: Pracownik
+      employees: Pracownicy
+    new:
+      employee: Pracownik
+    show:
+      employee: Pracownik
+      selectRestaurant: Wybierz restaurację
+      selectUser: Wybór użytkownika

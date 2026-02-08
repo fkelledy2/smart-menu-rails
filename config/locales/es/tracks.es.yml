@@ -1,0 +1,9 @@
+---
+es:
+  tracks:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    index:
+      tracks: Lista de reproducción

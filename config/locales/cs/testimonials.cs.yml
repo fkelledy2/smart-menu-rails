@@ -1,0 +1,26 @@
+---
+cs:
+  testimonials:
+    controller:
+      created: Svědectví bylo úspěšně vytvořeno.
+      deleted: Svědectví bylo úspěšně odstraněno.
+      updated: Testimonial byl úspěšně aktualizován.
+    edit:
+      title: Upravit svědectví
+    form:
+      cancel: Zrušit
+      destroy: Zničit
+      save: Uložit
+      sure: Jste si jistý?
+    index:
+      actions: Akce
+      approve: Schválit
+      testimonials: Reference
+      unapprove: Neschválit
+    new:
+      cancel: Zrušit
+      title: Nový testimonial
+    testimonial:
+      restaurant: 'Restaurace:'
+      testimonial: 'Zkušenosti:'
+      user: 'Uživatel:'

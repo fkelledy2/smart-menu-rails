@@ -29,7 +29,15 @@ module SmartMenu
     # Load locale files from config/locales directory
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
     config.i18n.default_locale = :en
-    config.i18n.available_locales = [:en, :it]
+    locale_dirs = Dir.children(Rails.root.join("config", "locales"))
+      .select { |d| File.directory?(Rails.root.join("config", "locales", d)) }
+
+    locales_from_fs = locale_dirs
+      .select { |d| d.match?(/\A[a-z]{2}(?:_[A-Z]{2})?\z/) }
+      .map { |d| d == "en" ? :en : d.to_sym }
+      .sort_by { |sym| sym == :en ? "0" : sym.to_s }
+
+    config.i18n.available_locales = locales_from_fs
 
     # Configuration for the application, engines, and railties goes here.
     #

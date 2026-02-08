@@ -1,0 +1,154 @@
+---
+it:
+  ocr_menu_imports:
+    controller:
+      attach_pdf: Allega un file PDF.
+      confirm_section: Conferma almeno una sezione prima di importare.
+      deleted: L'importazione del menu è stata eliminata con successo.
+      fail_create: 'Impossibile creare il menu: %{error}'
+      processing_restarted: L'elaborazione è stata (ri)avviata.
+      published: Il menu è stato pubblicato con successo!
+      queued: L'importazione del menu è stata messa in coda per l'elaborazione.
+      republished: Il menu è stato ripubblicato con le modifiche confermate.
+      unable_restart: 'Impossibile (ri)avviare l''elaborazione dallo stato: %{status}.'
+      unauthorized: Non sei autorizzato a eseguire questa azione.
+      updated: L'importazione del menu è stata aggiornata con successo.
+    import_item:
+      default_title: Elemento importato
+      delete_confirm: Eliminare questa importazione? Operazione irreversibile.
+      delete_title: Elimina importazione
+      imported_ago: Importato %{time} fa
+      item_label: articolo
+      section_label: sezione
+    index:
+      empty_hint: Inizia caricando un nuovo PDF del menu.
+      empty_title: Nessuna importazione
+      new_import: Nuova importazione menu
+      title: Importazioni menu
+    menu_section:
+      edit: Modifica
+      hide: Nascondi
+      items: elementi
+    new:
+      cancel: Annulla
+      choose_file: Scegli file
+      name_invalid: Inserisci un nome per questo menu.
+      name_label: Nome menu
+      name_placeholder: es. Menu Cena, Pranzi Speciali, ecc.
+      no_file_chosen: Nessun file selezionato
+      pdf_hint: PDF fino a 10MB
+      pdf_invalid: Seleziona un file PDF da caricare.
+      pdf_label: File PDF
+      subtitle: Carica un PDF per estrarre automaticamente sezioni e articoli.
+      tip_file_quality_text: Usa PDF di alta qualità con testo leggibile. Evita scritte
+        a mano o scansioni a bassa risoluzione.
+      tip_file_quality_title: Qualità del file
+      tip_format_text: Il sistema funziona meglio con PDF digitali. I documenti scansionati
+        possono avere minore accuratezza.
+      tip_format_title: Formato
+      tip_processing_time_text: I file più grandi possono richiedere alcuni minuti.
+        Riceverai un'email al termine.
+      tip_processing_time_title: Tempo di elaborazione
+      tips_title: Suggerimenti per risultati migliori
+      title: Importa menu da PDF
+      upload_process: Carica e elabora
+    new_2025:
+      title: Importa il tuo menù
+      subtitle: Carica un menù PDF e la nostra IA estrarrà automaticamente tutti gli
+        articoli
+      step_upload: Caricamento
+      step_process: Elaborazione
+      step_review: Revisione
+      name_label: Nome menù
+      name_placeholder: es. Menù Estivo 2024
+      name_help: Dai al menù un nome descrittivo per identificarlo facilmente
+      source_language_label: Lingua del menù
+      auto_detect: Rilevamento automatico
+      language_en: Inglese
+      language_fr: Francese
+      language_it: Italiano
+      language_es: Spagnolo
+      source_language_help: Usata per preservare la lingua originale quando si generano
+        descrizioni mancanti.
+      pdf_label: PDF del menù
+      drop_title: Trascina e rilascia qui il tuo PDF
+      drop_subtitle: oppure
+      browse_files: Sfoglia file
+      pdf_hint: PDF fino a 10MB. Le scansioni nitide funzionano meglio.
+      remove_file_aria: Rimuovi file
+      estimated_time: L'elaborazione richiede ~2-5 minuti
+      cancel: Annulla
+      start_processing: Avvia elaborazione
+      tips_title: Suggerimenti per risultati migliori
+      tip_quality_title: Usa scansioni di alta qualità
+      tip_quality_text: I PDF nitidi e ad alta risoluzione con buon contrasto funzionano
+        meglio. Evita foto sfocate o di bassa qualità.
+      tip_format_title: Layout del menù standard
+      tip_format_text: I menù con sezioni chiare e nomi degli articoli separati dai
+        prezzi funzionano meglio. La nostra IA gestisce la maggior parte dei layout.
+      tip_language_title: Supporto multilingua
+      tip_language_text: Supportiamo menù in inglese, italiano, spagnolo, francese
+        e altro. Anche i menù multilingua funzionano!
+      pdf_invalid_js: Seleziona un file PDF
+    show:
+      allergens: Allergeni
+      approve_sections_items: Approva sezioni e articoli
+      cancel: Annulla
+      click_to_add_description: Clicca per aggiungere una descrizione.
+      confirm_modal_body: Conferma per pubblicare il tuo menu. Puoi opzionalmente
+        usare la pubblicazione in sincronizzazione per archiviare eventuali sezioni/articoli
+        esistenti non presenti in questa importazione.
+      confirm_modal_title: Pubblica menu
+      create_menu: Crea menu
+      dairy_free: Senza lattosio
+      default_title: Importazione menu n. %{id}
+      delete: Elimina
+      description: Descrizione
+      dietary_information: Informazioni alimentari
+      edit_item_modal_title: Modifica voce di menu
+      failed_heading: Elaborazione non riuscita
+      gluten_free: Senza glutine
+      hold_multi_select: Tieni premuto Ctrl/Cmd per selezionare più elementi
+      import_details: Dettagli importazione
+      imported_ago: Importato %{time} fa
+      imported_menu_subtitle: Rivedi e conferma gli elementi estratti. Puoi modificare
+        ogni articolo prima della pubblicazione.
+      imported_menu_title: Menu importato
+      item_name: Nome articolo
+      no_items_explainer: Non siamo riusciti a rilevare sezioni/articoli da questo
+        PDF.
+      no_items_heading: Nessun elemento del menu è stato analizzato
+      no_items_tip1: Il PDF potrebbe non contenere testo estraibile e l'OCR non ha
+        prodotto testo. Verifica le credenziali di Google Cloud Vision.
+      no_items_tip2: La chiave API OpenAI potrebbe mancare o aver restituito output
+        non valido. Aggiungi openai_api_key alle credenziali Rails.
+      no_items_tip3: Il formato della risposta potrebbe non essere valido. Un nuovo
+        tentativo potrebbe aiutare.
+      position: Posizione
+      price: Prezzo
+      process_confirm: Avviare subito l'elaborazione di questo PDF?
+      process_pdf: Elabora PDF
+      processing_page: Pagina %{current} di %{total}
+      processing_title: Elaborazione del menu in corso. Potrebbero volerci alcuni
+        minuti...
+      progress_complete: "%{percent}%% completato"
+      progress_loading: Caricamento...
+      publish: Pubblica
+      publish_menu: Pubblica menu
+      reorder_hint: Riordina gli elementi solo all'interno di questa sezione.
+      save_changes: Salva modifiche
+      section: Sezione
+      section_disabled_title: La sezione non può essere modificata qui
+      status: 'Stato:'
+      steps:
+        complete: Completato
+        processing: Elaborazione
+        review: Revisione
+        upload: Caricamento
+      sync_publish_label: Pubblicazione sincronizzata (archivia sezioni/articoli non
+        presenti in questa importazione)
+      try_again: Riprova
+      updated_at: Aggiornato il %{timestamp}
+      upload_clearer_pdf: Carica un PDF più leggibile
+      vegan: Vegano
+      vegetarian: Vegetariano

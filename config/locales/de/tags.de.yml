@@ -1,0 +1,26 @@
+---
+de:
+  tags:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      title: ''
+    form:
+      delete: Löschen
+      errors: ''
+      save: Speichern
+      sure: Sind Sie sicher?
+    index:
+      tag: Schlagwort
+      tags: Schlagwörter
+    new:
+      cancel: Abbrechen
+      title: ''
+    show:
+      show_tag: ''
+    tag:
+      description: ''
+      menuitem: ''
+      name: ''

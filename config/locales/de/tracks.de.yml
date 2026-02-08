@@ -1,0 +1,9 @@
+---
+de:
+  tracks:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    index:
+      tracks: Playlist

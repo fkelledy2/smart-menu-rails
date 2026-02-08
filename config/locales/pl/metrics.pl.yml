@@ -1,0 +1,7 @@
+---
+pl:
+  metrics:
+    controller:
+      created: Metryka została pomyślnie utworzona.
+      deleted: Metryka została pomyślnie usunięta.
+      updated: Metryka została pomyślnie zaktualizowana.

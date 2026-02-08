@@ -7,7 +7,7 @@
         <div class="card border-0 shadow-sm">
           <div class="card-body text-center">
             <div class="display-4 fw-bold text-danger" id="pending-count"><%= @metrics[:total_pending] %></div>
-            <div class="text-muted text-uppercase small fw-bold">Pending Tickets</div>
+            <div class="text-muted text-uppercase small fw-bold"><%= t('bar_dashboard.metrics.pending_tickets') %></div>
           </div>
         </div>
       </div>
@@ -15,7 +15,7 @@
         <div class="card border-0 shadow-sm">
           <div class="card-body text-center">
             <div class="display-4 fw-bold text-warning" id="preparing-count"><%= @metrics[:total_preparing] %></div>
-            <div class="text-muted text-uppercase small fw-bold">Preparing</div>
+            <div class="text-muted text-uppercase small fw-bold"><%= t('bar_dashboard.metrics.preparing') %></div>
           </div>
         </div>
       </div>
@@ -23,7 +23,7 @@
         <div class="card border-0 shadow-sm">
           <div class="card-body text-center">
             <div class="display-4 fw-bold text-success" id="ready-count"><%= @metrics[:total_ready] %></div>
-            <div class="text-muted text-uppercase small fw-bold">Ready</div>
+            <div class="text-muted text-uppercase small fw-bold"><%= t('bar_dashboard.metrics.ready') %></div>
           </div>
         </div>
       </div>
@@ -44,15 +44,15 @@
         <div class="card border-0 shadow-sm h-100">
           <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
-              Pending
+              <%= t('kitchen_dashboard.metrics.pending_tickets') %>
               <span class="badge bg-white text-danger ms-2"><%= @pending_tickets.count %></span>
             </h5>
-            <button type="button" class="btn btn-light btn-sm sort-toggle-btn" data-column="pending" data-direction="asc" title="Sort: Oldest First">
+            <button type="button" class="btn btn-light btn-sm sort-toggle-btn" data-column="pending" data-direction="asc" title="<%= t('common.actions') %>">
               <i class="bi bi-sort-up"></i>
             </button>
           </div>
           <div class="card-body p-2 overflow-auto" style="max-height: calc(100vh - 350px);" id="pending-orders">
-            <div class="text-center text-muted py-4 empty-state" data-empty-for="pending" style="<%= @pending_tickets.any? ? 'display:none;' : '' %>">0 pending tickets</div>
+            <div class="text-center text-muted py-4 empty-state" data-empty-for="pending" style="<%= @pending_tickets.any? ? 'display:none;' : '' %>">0 <%= t('bar_dashboard.metrics.pending_tickets').downcase %></div>
             <%= render partial: 'station_ticket_card', collection: @pending_tickets, as: :ticket %>
           </div>
         </div>
@@ -62,15 +62,15 @@
         <div class="card border-0 shadow-sm h-100">
           <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
-              Preparing
+              <%= t('kitchen_dashboard.metrics.preparing') %>
               <span class="badge bg-white text-warning ms-2"><%= @preparing_tickets.count %></span>
             </h5>
-            <button type="button" class="btn btn-light btn-sm sort-toggle-btn" data-column="preparing" data-direction="asc" title="Sort: Oldest First">
+            <button type="button" class="btn btn-light btn-sm sort-toggle-btn" data-column="preparing" data-direction="asc" title="<%= t('common.actions') %>">
               <i class="bi bi-sort-up"></i>
             </button>
           </div>
           <div class="card-body p-2 overflow-auto" style="max-height: calc(100vh - 350px);" id="preparing-orders">
-            <div class="text-center text-muted py-4 empty-state" data-empty-for="preparing" style="<%= @preparing_tickets.any? ? 'display:none;' : '' %>">0 preparing tickets</div>
+            <div class="text-center text-muted py-4 empty-state" data-empty-for="preparing" style="<%= @preparing_tickets.any? ? 'display:none;' : '' %>">0 <%= t('kitchen_dashboard.metrics.preparing').downcase %></div>
             <%= render partial: 'station_ticket_card', collection: @preparing_tickets, as: :ticket %>
           </div>
         </div>
@@ -80,15 +80,15 @@
         <div class="card border-0 shadow-sm h-100">
           <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
-              Ready
+              <%= t('bar_dashboard.metrics.ready') %>
               <span class="badge bg-white text-success ms-2"><%= @ready_tickets.count %></span>
             </h5>
-            <button type="button" class="btn btn-light btn-sm sort-toggle-btn" data-column="ready" data-direction="asc" title="Sort: Oldest First">
+            <button type="button" class="btn btn-light btn-sm sort-toggle-btn" data-column="ready" data-direction="asc" title="<%= t('common.actions') %>">
               <i class="bi bi-sort-up"></i>
             </button>
           </div>
           <div class="card-body p-2 overflow-auto" style="max-height: calc(100vh - 350px);" id="ready-orders">
-            <div class="text-center text-muted py-4 empty-state" data-empty-for="ready" style="<%= @ready_tickets.any? ? 'display:none;' : '' %>">0 ready tickets</div>
+            <div class="text-center text-muted py-4 empty-state" data-empty-for="ready" style="<%= @ready_tickets.any? ? 'display:none;' : '' %>">0 <%= t('bar_dashboard.metrics.ready').downcase %></div>
             <%= render partial: 'station_ticket_card', collection: @ready_tickets, as: :ticket %>
           </div>
         </div>

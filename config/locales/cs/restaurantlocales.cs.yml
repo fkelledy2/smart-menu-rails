@@ -1,0 +1,14 @@
+---
+cs:
+  restaurantlocales:
+    controller:
+      active_not_deleted: Active Locale nebyl odstraněn.
+      created: Restaurace Locale byla úspěšně vytvořena.
+      deleted: Lokalita byla odstraněna.
+      updated: Restaurace Locale byla úspěšně aktualizována.
+    form:
+      delete: Odstranit
+      save: Uložit
+      sure: Jste si jistý?
+    new:
+      restaurantlocale: Restaurace Locale

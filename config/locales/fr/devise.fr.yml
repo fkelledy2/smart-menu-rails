@@ -1,0 +1,91 @@
+---
+fr:
+  devise:
+    confirmations:
+      confirmed: ''
+      send_instructions: ''
+      send_paranoid_instructions: ''
+    failure:
+      already_authenticated: ''
+      inactive: ''
+      invalid: ''
+      last_attempt: ''
+      locked: ''
+      not_found_in_database: ''
+      timeout: ''
+      unauthenticated: ''
+      unconfirmed: ''
+    mailer:
+      confirmation_instructions:
+        subject: ''
+      email_changed:
+        subject: ''
+      password_change:
+        subject: ''
+      reset_password_instructions:
+        subject: ''
+      unlock_instructions:
+        subject: ''
+    omniauth_callbacks:
+      failure: ''
+      success: ''
+    passwords:
+      no_token: ''
+      send_instructions: ''
+      send_paranoid_instructions: ''
+      updated: ''
+      updated_not_active: ''
+    registrations:
+      destroyed: ''
+      edit:
+        account: Compte
+        confirmPassword: Confirmer le mot de passe
+        currentPassword: Mot de passe actuel
+        currentPasswordHelp: Nous avons besoin de votre mot de passe actuel pour confirmer
+        deactivateMyAccount: Désactiver mon compte
+        deactivateMyAccountAreYouSure: Êtes-vous sûr ? Cette action est irréversible.
+        emailAddress: ''
+        fullName: ''
+        saveChanges: Enregistrer les modifications
+      new:
+        confirmPassword: Confirmer le mot de passe
+        emailAddress: Adresse e-mail
+        fullName: Nom complet
+        password: Mot de passe
+        signUp: S'inscrire
+      signed_up: ''
+      signed_up_but_inactive: ''
+      signed_up_but_locked: ''
+      signed_up_but_unconfirmed: ''
+      update_needs_confirmation: ''
+      updated: ''
+      updated_but_not_signed_in: ''
+    sessions:
+      already_signed_out: ''
+      new:
+        emailAddress: Adresse e-mail
+        login: Connexion
+        password: Mot de passe
+        rememberMe: Rester connecté
+      signed_in: ''
+      signed_out: ''
+    shared:
+      links:
+        didntReceiverEmailConfirmation: Pas reçu l'e-mail de confirmation ?
+        didntReceiverUnlockInstructions: Pas reçu les instructions de déverrouillage
+          ?
+        forgotYourPassword: Mot de passe oublié ?
+    unlocks:
+      send_instructions: ''
+      send_paranoid_instructions: ''
+      unlocked: ''
+  errors:
+    messages:
+      already_confirmed: ''
+      confirmation_period_expired: ''
+      expired: ''
+      not_found: ''
+      not_locked: ''
+      not_saved:
+        one: ''
+        other: ''

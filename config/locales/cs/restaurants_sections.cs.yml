@@ -1,0 +1,510 @@
+---
+cs:
+  restaurants:
+    sections:
+      details_2025:
+        quick_actions: Rychlé akce
+        new_menu: Nové menu
+        import_menu: Nabídka Import
+        active: Aktivní
+        inactive: Neaktivní
+        overview: Přehled
+        menus: Jídelní lístky
+        tables: Tabulky
+        staff: Zaměstnanci
+        restaurant_details: Podrobnosti o restauraci
+        name_placeholder: např. Pizza Place
+        name_help: Takto vaši restauraci uvidí zákazníci
+        description_placeholder: Popište svou restauraci, kuchyni a její výjimečnost...
+        description_help: Stručný popis, který se zobrazí v nabídce
+        currency_help: Měna pro všechny ceny
+        location: Umístění a adresa
+        address_placeholder: 123 Main Street
+        address_help: Adresa vaší restaurace
+        address2_placeholder: Apartmá 100 (volitelně)
+        address2_help: Další údaje o adrese
+        location_verified: Ověřená poloha
+        image_context_details: Podrobnosti o kontextu obrázku
+        imagecontext_placeholder: např. moderní italská restaurace s rustikální výzdobou...
+        imagecontext_help: Popište styl a atmosféru své restaurace, abyste pomohli
+          AI vytvořit vhodné obrázky položek menu.
+        image_style_profile_placeholder: např. profesionální fotografie jídla, dobře
+          osvětlené, bílé pozadí, pohled shora dolů...
+        image_style_profile_help: Určení stylu a předvoleb prezentace pro obrázky
+          položek menu generované umělou inteligencí
+        loading_map: Načítání mapy...
+        location_label: 'Umístění:'
+        map_error: Mapu se nepodařilo načíst
+      address_2025:
+        location: Umístění a adresa
+        address_placeholder: 123 Main Street
+        address_help: Adresa vaší restaurace
+        address2_placeholder: Apartmá 100 (volitelně)
+        address2_help: Další údaje o adrese
+        location_verified: Ověřená poloha
+        delivery_zones: Zóny dodání
+        delivery_zones_help: Definujte oblasti, kde nabízíte doručovací služby
+        add_zone: Přidání zóny doručení
+        map_loading: Načítání mapy...
+        map_location_label: 'Umístění:'
+        map_load_error: Mapu se nepodařilo načíst
+      wifi_2025:
+        wifi_configuration: Konfigurace WiFi
+        wifi_description: Konfigurace nastavení WiFi pro generování QR kódů pro přístup
+          zákazníků
+        ssid_placeholder: Zadejte název sítě WiFi
+        ssid_help: Název vaší sítě WiFi, ke které se budou zákazníci připojovat.
+        password_placeholder: Zadejte heslo WiFi
+        password_help: Heslo, které budou zákazníci potřebovat k připojení
+        select_encryption: Vyberte šifrování...
+        encryption_help: Protokol zabezpečení používaný sítí WiFi
+        select_option: Vyberte možnost...
+        false: ''
+        true: ''
+        hidden_help: Zda je název sítě vysílán veřejně
+      import_2025:
+        info_title: Import menu s umělou inteligencí
+        info_text: Nahrajte svůj jídelní lístek ve formátu PDF a naše umělá inteligence
+          automaticky extrahuje všechny položky, oddíly, ceny a popisy.
+        upload_title: Nahrát PDF menu
+        name_label: Název nabídky
+        name_placeholder: např. letní menu 2024
+        name_help: Dejte této nabídce popisný název
+        name_invalid: Uveďte prosím název menu
+        source_language_label: Jazyk nabídky
+        auto_detect: Automatická detekce
+        source_language_help: Slouží k zachování původního jazyka při generování chybějících
+          popisů.
+        pdf_label: Menu PDF
+        choose_file: Zvolte Soubor
+        no_file_chosen: Nebyl vybrán žádný soubor
+        pdf_hint: PDF do velikosti 10 MB. Nejlépe fungují čitelné skeny.
+        pdf_invalid: Vyberte prosím soubor PDF
+        upload_process: Nahrávání a zpracování
+        tips_title: Tipy pro dosažení nejlepších výsledků
+        tip_quality_title: Vysoce kvalitní PDF
+        tip_quality_text: Pro co nejlepší přesnost OCR použijte čistý soubor PDF s
+          vysokým rozlišením. Naskenované nabídky by měly být ostré a čitelné.
+        tip_format_title: Strukturovaný formát
+        tip_format_text: Nejlépe fungují nabídky s jasnými oddíly, názvy položek a
+          cenami. Vyhněte se složitým rozvržením nebo více sloupcům.
+        tip_processing_title: Doba zpracování
+        tip_processing_text: Zpracování velkých nabídek může trvat několik minut.
+          Jakmile bude import připraven ke kontrole, budete o tom informováni.
+        recent_imports: Nedávné dovozy
+        ago: před
+        status_completed: Dokončeno
+        status_failed: Neúspěšný
+        status_processing: Zpracování
+        status_pending: Čeká se na
+        confirm_delete: Opravdu chcete tento import odstranit?
+        delete_import: Odstranit import
+        select_all: Vyberte vše
+        delete_selected: Odstranit vybrané
+        view: Zobrazit
+        default_title: 'Importovat #%{id}'
+      menus_2025:
+        quick_actions: Rychlé akce
+        new_menu: Nové menu
+        import_menu: Nabídka Import
+        menus: Jídelní lístky
+        all: Všechny
+        active: Aktivní
+        inactive: Neaktivní
+        menus_all: Všechny nabídky
+        menus_active: Aktivní nabídky
+        menus_inactive: Neaktivní nabídky
+        sections: sekce
+        items: položky
+        edit: Upravit
+        view: Zobrazit
+        detach: Odpojení
+        preview: Náhled nabídky
+        no_preview: Nabídka zatím nebyla zveřejněna
+        duplicate: Duplikát
+        delete: Odstranit
+        confirm_delete: Jste si jistý?
+        no_menus: Nebyly nalezeny žádné nabídky
+        no_menus_description: Vytvořte si první nabídku a začněte
+        create_first_menu: Vytvoření prvního menu
+        drag_to_reorder: Přetažením změníte pořadí
+        select_all: Vyberte vše
+        set_status: Nastavení stavu...
+        apply: Použít
+        menu_name: Název
+        availability: Dostupnost
+        shared: Sdílené stránky
+        default: Výchozí
+        available: Dostupné na
+        unavailable: Nedostupné
+        share: Sdílet
+        share_menu: Sdílet menu
+        share_to_all: Všechny restaurace
+      ordering_2025:
+        ordering_dashboard: Objednávkový panel
+        today: Dnes
+        yesterday: Včera
+        last_7_days: Posledních 7 dní
+        last_28_days: Posledních 28 dní
+        mtd: Měsíc k datu
+        last_month: Poslední měsíc
+        custom: Vlastní...
+        compare: Srovnání s předchozím obdobím
+        menu: Jídelní lístek
+        all: Všechny
+        employee: Zaměstnanci
+        table: Tabulka
+        status: Stav
+        completed: Dokončeno
+        open: Otevřít
+        cancelled: Zrušeno
+        kpi_gross: Hrubé příjmy
+        kpi_net: Čisté příjmy
+        kpi_taxes: Daně
+        kpi_tips: Tipy
+        kpi_service: Poplatky za služby
+        kpi_orders: Objednávky
+        kpi_items: Prodané položky
+        kpi_aov: AOV
+        revenue_over_time: Příjmy v průběhu času
+        orders_over_time: Objednávky v průběhu času
+        menu_mix: Směs nabídek
+        top_items: Nejlepší předměty
+        staff_performance: Výkonnost zaměstnanců
+        table_utilization: Využití tabulky
+        orders_table: Objednávky
+        items_table: Položky
+        export_csv: Export CSV
+      tables_2025:
+        quick_actions: Rychlé akce
+        add_table: Přidat tabulku
+        tables_overview: Tabulky
+        tables_description: Správa stolů a generování QR kódů pro objednávání konkrétních
+          stolů.
+        total_tables: Tabulky celkem
+        table_settings: Nastavení stolu
+        table_number: Tabulka
+        table_name: Název
+        capacity: Kapacita
+        status: Stav
+        qr_code: QR kód
+        actions: Akce
+        select_all: Vyberte vše
+        set_status: Nastavení stavu...
+        apply: Použít
+        drag_to_reorder: Přetažením změníte pořadí
+        edit: Upravit
+        free: Zdarma
+        occupied: Obsazeno
+        archived: Archivováno
+        view: Zobrazit
+        view_qr: Zobrazit QR
+        view_qr_code: Zobrazit kód QR pro tuto tabulku
+        no_smartmenu: Zatím nebyl vygenerován žádný kód QR
+        no_capacity: Kapacita není nastavena
+        seats: sedadla
+        confirm_delete: Smazat tuto tabulku?
+        no_tables: Zatím nejsou nakonfigurovány žádné tabulky
+        no_tables_description: Nastavte stoly v restauraci tak, abyste mohli používat
+          QR kódy pro konkrétní stůl a objednávat.
+      allergens_2025:
+        quick_actions: Rychlé akce
+        add_allergen: Přidat alergen
+        allergens: Alergeny
+        allergens_description: Spravujte informace o alergenech v menu, abyste zákazníkům
+          pomohli s informovaným výběrem.
+        total_allergens: Alergeny celkem
+        manage_allergens: Správa alergenů
+        common_templates: Společné šablony
+        templates_description: Rychlé přidání standardních sad alergenů
+        fda_top_8: 8 nejčastějších alergenů FDA
+        recommended: Doporučené stránky
+        fda_top_8_desc: Mléko, vejce, ryby, korýši, stromové ořechy, arašídy, pšenice,
+          sója
+        eu_allergens: Alergeny EU 14
+        eu_allergens_desc: Všech 14 hlavních alergenů podle nařízení EU
+        common_dietary: Běžná dietní omezení
+        common_dietary_desc: Bezlepkové, veganské, vegetariánské, halal, košer
+        load_template: Načíst šablonu
+        current_allergens: Aktuální alergeny
+        select_all: Vyberte vše
+        status_active: Aktivní
+        status_inactive: Neaktivní
+        status_archived: Archivováno
+        set_status: Nastavení stavu...
+        apply: Použít
+        name: Název
+        drag_to_reorder: Přetažením změníte pořadí
+        active: Aktivní
+        inactive: Neaktivní
+        archived: Archivováno
+        edit: Upravit
+      sizes_2025:
+        quick_actions: Rychlé akce
+        add_size: Přidat velikost
+        sizes: Velikosti položek nabídky
+        sizes_description: Definujte varianty velikosti pro položky menu, jako jsou
+          malé, střední, velké atd.
+        total_sizes: Celkové velikosti
+        manage_sizes: Správa velikostí
+        current_sizes: Aktuální velikosti
+        common_templates: Společné šablony
+        templates_description: Rychlé přidávání sad standardních velikostí
+        pizza_sizes: Velikosti pizzy
+        recommended: Doporučené stránky
+        pizza_sizes_desc: Osobní, malé, střední, velké, X-Large
+        beverage_sizes: Velikosti nápojů
+        beverage_sizes_desc: Malé, střední, velké, extra velké
+        load_template: Načíst šablonu
+        select_all: Vyberte vše
+        status_active: Aktivní
+        status_inactive: Neaktivní
+        status_archived: Archivováno
+        set_status: Nastavení stavu...
+        apply: Použít
+        name: Název
+        drag_to_reorder: Přetažením změníte pořadí
+        edit: Upravit
+      jukebox_2025:
+        jukebox: Jukebox
+        jukebox_description: Integrace se službou Spotify pro přehrávání hudby v restauraci
+          a vytvoření dokonalé atmosféry
+        spotify: Spotify
+        connected: Připojeno
+        not_connected: Nepřipojeno
+        connect: Připojení
+        unknown_artist: Neznámý umělec
+        no_tracks: Žádné nakonfigurované stopy
+        spotify_integration: Připojte svůj účet Spotify a spravujte svůj seznam skladeb
+          v restauraci
+        jukebox_desc: Připojení služby Spotify a umožnění zákazníkům ovládat hudbu
+        spotify_status: Stav služby Spotify
+        connect_spotify: Připojení Spotify
+        disconnect: Odpojení
+        connected_as: 'Připojeno jako: %{uživatel}'
+      catalog_2025:
+        quick_actions: Rychlé akce
+        add_tax: Přidat daň
+        add_tip: Přidat tip
+        taxes_and_tips: Daně a tipy
+        taxes_and_tips_description: Správa konfigurací daní a spropitného
+        taxes: Daně
+        tips: Tipy
+        configured: nakonfigurováno
+        manage: Správa
+        tax_tip_templates: Šablony pro daně a spropitné
+        templates_description: Předkonfigurované sady daní a spropitného pro rychlé
+          nastavení
+        us_restaurant: Restaurace v USA
+        recommended: Doporučené stránky
+        us_restaurant_desc: Daň z obratu + spropitné (15%, 18%, 20%)
+        eu_restaurant: Restaurace EU
+        eu_restaurant_desc: Včetně DPH + poplatku za služby
+        load_template: Načíst šablonu
+        current_taxes: Běžné daně
+        current_tips: Aktuální tipy
+        select_all: Vyberte vše
+        status_active: Aktivní
+        status_inactive: Neaktivní
+        status_archived: Archivováno
+        set_status: Nastavení stavu...
+        apply: Použít
+        name: Název
+        rate: Hodnotit
+        status: Stav
+        drag_to_reorder: Přetažením změníte pořadí
+        inactive: Neaktivní
+        archived: Archivováno
+        active: Aktivní
+        edit: Upravit
+        tip: Tip
+      staff_2025:
+        quick_actions: Rychlé akce
+        add_staff: Přidat zaměstnance
+        staff_overview: Zaměstnanci
+        staff_overview_desc: Spravujte svůj tým a spolupracujte na své restauraci.
+        total_staff: Zaměstnanci celkem
+        staff: Zaměstnanci
+        name: Název
+        email: E-mail
+        role: Role
+        status: Stav
+        joined: Připojil se k
+        actions: Akce
+        select_all: Vyberte vše
+        status_active: Aktivní
+        status_inactive: Neaktivní
+        status_archived: Archivováno
+        status_open: Otevřít
+        set_status: Nastavení stavu...
+        apply: Použít
+        drag_to_reorder: Přetažením změníte pořadí
+        edit: Upravit
+        unnamed: Nejmenovaný
+        no_role: Žádná role
+        active: Aktivní
+        inactive: Neaktivní
+        confirm_remove: Odvolat tohoto zaměstnance?
+        no_staff: Zatím žádný zaměstnanec
+        no_staff_description: Přidejte členy týmu, kteří budou spolupracovat na vaší
+          restauraci
+        add_first_staff: Přidejte svého prvního zaměstnance
+        roles_permissions: Role a oprávnění
+        roles_description: Definujte, k čemu má každá role přístup a co může spravovat
+        manager: Manažer
+        manager_desc: Plný přístup ke všem nastavením a údajům restaurace
+        editor: Editor
+        editor_desc: Umí upravovat nabídky a spravovat obsah
+        viewer: Prohlížeč
+        viewer_desc: Přístup k nabídkám a objednávkám pouze pro čtení
+        edit_menus: Nabídky úprav
+        manage_staff: Řízení zaměstnanců
+        view_analytics: Zobrazit analýzy
+        manage_orders: Správa objednávek
+        edit_items: Upravit položky
+        no_staff_access: Žádný přístup zaměstnanců
+        no_analytics: Žádná analytika
+        view_menus: Zobrazit menu
+        view_orders: Zobrazit objednávky
+        no_editing: Žádné úpravy
+        no_deletion: Žádné mazání
+      settings_2025:
+        general_settings: Obecná nastavení
+        status_active: Aktivní - restaurace je otevřená a viditelná
+        status_inactive: Neaktivní - Restaurace je dočasně uzavřena
+        status_archived: Archivováno - Restaurace je trvale uzavřena
+        status_help: Kontroluje, zda je vaše restaurace viditelná pro zákazníky
+        feature_toggles: Přepínače funkcí
+        display_images: Zobrazení obrázků
+        display_images_help: Zobrazení obrázků položek menu v digitálním menu
+        alcohol_policy: Politika týkající se alkoholu
+        alcohol_policy_help: Konfigurace povolených dnů/časů a dat výpadku prodeje
+          alkoholu.
+        allowed_now: Povoleno nyní
+        blocked_now: Nyní zablokováno
+        allowed_days: Povolené dny
+        time_ranges: Povolené časové rozsahy
+        from: Z
+        to: Na
+        add_range: Přidat rozsah
+        blackout_dates: Data výpadku (RRRR-MM-DD, oddělená čárkou)
+        age_verification: Ověřování věku
+        age_verification_desc: Požadavek na ověření věku u položek alkoholu
+        allow_alcohol: Povolení prodeje alkoholu
+        allow_alcohol_help: umožnit prodej alkoholických nápojů. Za dodržování právních
+          předpisů odpovídáte vy.
+        display_images_popup: Zobrazení obrázků ve vyskakovacím okně
+        display_images_popup_help: Otevření obrázků položek menu v popup modalu po
+          kliknutí na ně
+        allow_ordering: Povolit objednávání
+        allow_ordering_help: Umožnění online objednávání pro zákazníky
+        inventory_tracking: Sledování zásob
+        inventory_tracking_help: Sledování skladových zásob položek menu (již brzy)
+        wifi_configuration: Konfigurace WiFi
+        wifi_description: Konfigurace nastavení WiFi pro generování QR kódů pro přístup
+          zákazníků
+        ssid_placeholder: Zadejte název sítě WiFi
+        ssid_help: Název vaší sítě WiFi, ke které se budou zákazníci připojovat.
+        select_encryption: Vyberte šifrování...
+        encryption_help: Protokol zabezpečení používaný sítí WiFi
+        password_placeholder: Zadejte heslo WiFi
+        password_help: Heslo, které budou zákazníci potřebovat k připojení
+        select_option: Vyberte možnost...
+        false: ''
+        true: ''
+        hidden_help: Zda je název sítě vysílán veřejně
+        settings_info_title: O nastavení
+        settings_info_desc: Tato nastavení ovládají základní funkce vaší restaurace.
+          Změny se ukládají automaticky.
+        status: Stav
+        status_info: Ovládání viditelnosti restaurace
+        images_info: Přepínání fotografií položek menu
+        popup_info: Prohlížení obrázků na celé obrazovce
+      qrcodes_2025:
+        quick_actions: Rychlé akce
+        view_all_qr: Zobrazit všechny kódy QR
+        qr_codes: Kódy QR
+        qr_description: Generování QR kódů pro menu. Zákazníci si je mohou naskenovat
+          a zobrazit si digitální menu.
+        qr_code_types: Typy kódů QR
+        general_qr: Obecné menu QR
+        general_qr_desc: Jeden kód QR pro všechny nabídky. Nejvhodnější pro malé restaurace
+          s jednou provozovnou.
+        download: Stáhnout
+        table_qr: QR pro konkrétní stůl
+        table_qr_desc: Jedinečný QR kód pro každý stůl. Umožňuje objednávání a sledování
+          stolů.
+        manage_tables: Správa tabulek
+        menu_qr: QR pro konkrétní nabídku
+        menu_qr_desc: Samostatné QR kódy pro každé menu. Skvělé pro snídaně, obědy
+          a večeře.
+        setup_tables: Tabulky nastavení
+        view_menus: Zobrazit menu
+        qr_customization: Přizpůsobení kódu QR
+        customization_description: Přizpůsobte vzhled svých QR kódů tak, aby odpovídal
+          vaší značce.
+        customization: Možnosti přizpůsobení
+        logo: Logo
+        logo_desc: Přidání loga restaurace do středu kódů QR
+        upload_logo: Nahrát logo
+        colors: Barvy
+        colors_desc: Výběr vlastních barev pro kódy QR
+        customize_colors: Přizpůsobení barev
+      hours_2025:
+        quick_actions: Rychlé akce
+        copy_to_all: Kopírovat pondělí na všechny dny
+        operating_hours: Otevírací doba
+        hours_description: Nastavení pravidelné provozní doby restaurace
+        closed: Uzavřeno
+        copied_success: Zkopírováno!
+        open_24h: Otevřeno 24 hodin denně
+        custom: Vlastní
+        monday: Pondělí
+        tuesday: Úterý
+        wednesday: Středa
+        thursday: Čtvrtek
+        friday: Pátek
+        saturday: Sobota
+        sunday: Neděle
+      localization_2025:
+        quick_actions: Rychlé akce
+        add_language: Přidat jazyk
+        localization: Lokalizace a jazyky
+        localization_description: Správa překladů nabídek ve více jazycích
+        language: Jazyk
+        locale_code: Kód
+        status: Stav
+        actions: Akce
+        select_all: Vyberte vše
+        status_active: Aktivní
+        status_inactive: Neaktivní
+        status_archived: Archivováno
+        set_status: Nastavení stavu...
+        apply: Použít
+        drag_to_reorder: Přetažením změníte pořadí
+        default: Výchozí
+        edit: Upravit
+        active: Aktivní
+        inactive: Neaktivní
+        no_locales: Žádné další nakonfigurované jazyky
+        no_locales_description: Přidejte překlady, aby vaše menu bylo dostupné ve
+          více jazycích
+        common_languages: Společné jazyky
+        common_languages_description: Rychle přidejte oblíbené jazykové překlady
+        spanish: Španělština
+        french: Francouzština
+        german: Němčina
+        italian: Italský
+        chinese: Čínský
+        japanese: Japonský
+        add: Přidat
+      advanced_2025:
+        advanced_features: Pokročilé funkce
+        ai_features: Funkce poháněné umělou inteligencí
+        ai_desc: Povolení popisů menu a generování obrázků AI
+        dynamic_pricing: Dynamická tvorba cen
+        dynamic_pricing_desc: Úprava cen v závislosti na denní době nebo poptávce
+        recommendations: Chytrá doporučení
+        recommendations_desc: Zobrazení personalizovaných doporučení pro zákazníky
+        age_verification: Ověřování věku
+        age_verification_desc: Požadavek na ověření věku u položek alkoholu

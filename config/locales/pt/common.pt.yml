@@ -1,0 +1,24 @@
+---
+pt:
+  common:
+    actions: Ações
+    activate: Ativar
+    back: Voltar
+    cancel: Cancelar
+    close: Fechar
+    confirm: Confirmar
+    create: Criar
+    deactivate: Desativar
+    delete: Eliminar
+    edit: Editar
+    errors: Erros
+    flash:
+      action_failed: 'Ação falhou: %{error}'
+      archived: "%{resource} foi arquivado."
+      created: "%{resource} foi criado."
+      deleted: "%{resource} foi eliminado."
+      processing_restarted: O processamento foi reiniciado.
+      updated: "%{resource} foi atualizado."
+    loading: A carregar...
+    save: Guardar
+    update: Atualizar

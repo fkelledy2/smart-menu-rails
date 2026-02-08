@@ -1,0 +1,21 @@
+---
+en_US:
+  menuavailabilities:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    form:
+      delete: ''
+      save: ''
+      selectMenu: ''
+      sure: ''
+    index:
+      menuAvailabilities: ''
+      menuAvailability: ''
+    new:
+      cancel: ''
+      menuAvailability: ''
+    show:
+      menuAvailability: ''
+      selectMenu: ''

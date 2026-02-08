@@ -1,0 +1,14 @@
+---
+pl:
+  restaurantlocales:
+    controller:
+      active_not_deleted: Aktywne ustawienia regionalne nie zostały usunięte.
+      created: Lokalizacja restauracji została pomyślnie utworzona.
+      deleted: Lokalizacja została usunięta.
+      updated: Lokalizacja restauracji została pomyślnie zaktualizowana.
+    form:
+      delete: Usuń
+      save: Zapisz
+      sure: Jesteś pewien?
+    new:
+      restaurantlocale: Restauracja Locale

@@ -1,0 +1,29 @@
+---
+hu:
+  inventories:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      inventory: Készlet szerkesztése
+    form:
+      delete: Törlés
+      errors: ''
+      save: Mentés
+      select_menu_item: ''
+      sure: Biztos vagy benne?
+    index:
+      inventories: Készletek
+      inventory: Készlet
+    inventory:
+      currentinventory: ''
+      menuitem: ''
+      resethour: ''
+      startinginventory: ''
+    new:
+      cancel: Mégse
+      inventory: Új készlet
+    show:
+      inventory: Készlet megtekintése
+      select_menu_item: ''

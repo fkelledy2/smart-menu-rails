@@ -1,0 +1,29 @@
+---
+pl:
+  inventories:
+    controller:
+      created: Inwentaryzacja została pomyślnie utworzona.
+      deleted: Inwentarz został pomyślnie usunięty.
+      updated: Inwentaryzacja została pomyślnie zaktualizowana.
+    edit:
+      inventory: Inwentaryzacja
+    form:
+      delete: Usuń
+      errors: Błędy
+      save: Zapisz
+      select_menu_item: Wybierz pozycję menu...
+      sure: Jesteś pewien?
+    index:
+      inventories: Zapasy
+      inventory: Inwentaryzacja
+    inventory:
+      currentinventory: 'Aktualny stan magazynowy:'
+      menuitem: 'Pozycja menu:'
+      resethour: 'Godzina resetowania:'
+      startinginventory: 'Ekwipunek początkowy:'
+    new:
+      cancel: Anuluj
+      inventory: Inwentaryzacja
+    show:
+      inventory: Inwentaryzacja
+      select_menu_item: Wybierz pozycję menu...

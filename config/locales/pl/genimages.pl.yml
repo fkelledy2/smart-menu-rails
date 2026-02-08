@@ -1,0 +1,6 @@
+---
+pl:
+  genimages:
+    controller:
+      deleted: Wygenerowany obraz został pomyślnie usunięty.
+      updated: Obraz został pomyślnie zregenerowany.

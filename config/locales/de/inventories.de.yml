@@ -1,0 +1,29 @@
+---
+de:
+  inventories:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      inventory: Bestand bearbeiten
+    form:
+      delete: Löschen
+      errors: ''
+      save: Speichern
+      select_menu_item: ''
+      sure: Sind Sie sicher?
+    index:
+      inventories: Bestände
+      inventory: Bestand
+    inventory:
+      currentinventory: ''
+      menuitem: ''
+      resethour: ''
+      startinginventory: ''
+    new:
+      cancel: Abbrechen
+      inventory: Neuer Bestand
+    show:
+      inventory: Bestand anzeigen
+      select_menu_item: ''

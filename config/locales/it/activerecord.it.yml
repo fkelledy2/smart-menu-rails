@@ -1,0 +1,208 @@
+---
+it:
+  activerecord:
+    attributes:
+      allergyn:
+        description: Descrizione
+        name: Nome
+        symbol: Simbolo
+      employee:
+        eid: ID Dipendente
+        name: Nome
+        role: Ruolo
+        status: Stato
+        user_id: Utente
+      ingredient:
+        description: Descrizione
+        name: Nome
+      inventory:
+        currentInventory: ''
+        currentinventory: Inventario attuale
+        menuItem: ''
+        resetHour: ''
+        resethour: Ora di reset
+        startingInventory: ''
+        startinginventory: Inventario iniziale
+      menu:
+        allowOrdering: Consenti ordini
+        covercharge: Coperto
+        description: ''
+        displayImages: Mostra immagini
+        displayImagesInPopup: Mostra immagini in popup
+        image: Immagine
+        imagecontext: Contesto immagine
+        inventoryTracking: Tracciamento inventario
+        name: ''
+        pdf_menu_scan: PDF del menu
+        status: ''
+      menuavailability:
+        dayofweek: Giorno della settimana
+        endhour: Ora di fine
+        menu_id: Menù
+        starthour: Ora di inizio
+        status: Stato
+      menuitem:
+        allergyns: Allergeni
+        calories: ''
+        description: ''
+        image: Immagine
+        itemtype: Tipo articolo
+        name: ''
+        preptime: Tempo di preparazione
+        price: ''
+        sizes: Taglie
+        sizesupport: Supporto taglie
+        status: ''
+        unitcost: Costo unitario
+      menuparticipant:
+        preferredlocale: Lingua preferita
+        sessionid: ID sessione
+        smartmenu_id: Smartmenu
+      menusection:
+        description: ''
+        endhour: Ora di fine
+        image: Immagine
+        menu_id: Menù
+        name: ''
+        restricted: Limitato
+        starthour: Ora di inizio
+        status: ''
+      metric:
+        description: Descrizione
+        name: Nome
+      ordr:
+        employee_id: Dipendente
+        menu_id: Menù
+        restaurant_id: Ristorante
+        tablesetting_id: Tavolo
+      ordraction:
+        action: Azione
+        employee_id: Dipendente
+        ordr_id: Ordine
+        ordritem_id: Voce ordine
+        ordrparticipant_id: Partecipante ordine
+        sessionid: ID sessione
+      ordritem:
+        menuitem_id: Voce di menu
+        ordr_id: Ordine
+      ordritemnote:
+        note: Nota
+        ordritem_id: Voce ordine
+      ordrparticipant:
+        action: Azione
+        employee_id: Dipendente
+        ordr_id: Ordine
+        ordritem_id: Voce ordine
+        role: Ruolo
+        sessionid: ID sessione
+      restaurant:
+        address: Indirizzo
+        address1: ''
+        address2: ''
+        allowOrdering: Consenti ordini
+        city: ''
+        country: ''
+        currency: Valuta
+        description: ''
+        displayImages: Mostra immagini
+        displayImagesInPopup: Mostra immagini in popup
+        genid: ID generazione
+        image: Immagine
+        image_style_profile: Profilo stile immagine
+        imagecontext: Contesto immagine
+        inventoryTracking: Tracciamento inventario
+        name: ''
+        postcode: ''
+        spotifyaccesstoken: Access token Spotify
+        spotifyrefreshtoken: Refresh token Spotify
+        spotifyuserid: ID utente Spotify
+        state: ''
+        status: ''
+        wifiEncryptionType: Tipo crittografia WiFi
+        wifiHidden: WiFi nascosto
+        wifiPassword: Password WiFi
+        wifissid: SSID WiFi
+      restaurantavailability:
+        dayofweek: Giorno della settimana
+        endhour: Ora di fine
+        starthour: Ora di inizio
+        status: Stato
+      restaurantlocale:
+        dfault: Predefinita
+        locale: Lingua
+      size:
+        description: Descrizione
+        name: Nome
+        size: Codice taglia
+      smartmenu:
+        menu_id: Menù
+        restaurant_id: Ristorante
+        slug: Lumaca
+        tablesetting_id: Tavolo
+      tablesetting:
+        capacity: ''
+        description: ''
+        name: ''
+        status: ''
+        tabletype: Tipo tavolo
+      tag:
+        description: Descrizione
+        name: Nome
+      tax:
+        name: Nome
+        taxPercentage: Percentuale imposta
+        taxType: Tipo imposta
+        taxpercentage: Percentuale imposta
+        taxtype: Tipo imposta
+      testimonial:
+        restaurant_id: Ristorante
+        testimonial: Testimonianza
+        user_id: Utente
+      tip:
+        percentage: Percentuale
+      track:
+        description: Descrizione
+        externalid: ID esterno
+        image: Immagine
+        name: Nome
+        restaurant_id: Ristorante
+        sequence: Sequenza
+      userplan:
+        plan_id: ''
+    errors:
+      format: "%{attributo} %{messaggio}"
+      messages:
+        blank: non può essere vuoto
+        greater_than: deve essere maggiore di %{count}
+        greater_than_or_equal_to: deve essere maggiore o uguale a %{count}
+        invalid: non è valido
+        less_than: deve essere minore di %{count}
+        less_than_or_equal_to: deve essere minore o uguale a %{count}
+        not_a_number: non è un numero
+        taken: è già stato utilizzato
+        too_long:
+          one: è troppo lungo (massimo 1 carattere)
+          other: è troppo lungo (massimo %{count} caratteri)
+        too_short:
+          one: è troppo corto (minimo 1 carattere)
+          other: è troppo corto (minimo %{count} caratteri)
+    models:
+      allergyn: Allergene
+      genimage: Immagine generata
+      ingredient: Ingrediente
+      inventory: Inventario
+      menu: Menù
+      menuavailability: Disponibilità menu
+      menuitem: Voce di menu
+      menusection: Sezione menu
+      metric: Metrica
+      ordr: Ordine
+      restaurant: Ristorante
+      restaurantavailability: Disponibilità ristorante
+      size: Taglia
+      smartmenu: Smartmenu
+      tablesetting: Impostazione tavolo
+      tag: Etichetta
+      testimonial: Testimonianza
+      track: Brano
+      userplan: Piano utente

@@ -1,0 +1,11 @@
+---
+es:
+  userplans:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      contactUs: ''
+      saveChanges: Actualizar
+      selectPlan: Seleccionar plan

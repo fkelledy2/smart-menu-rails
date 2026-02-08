@@ -1,0 +1,118 @@
+---
+pl:
+  javascript:
+    notifications:
+      auto_save:
+        error: Zapisywanie nie powiodło się
+        network_error: Błąd sieci
+        saved: Zapisane zamówienie
+      sortable:
+        success: Zapisane zamówienie
+        error: Zapisywanie nie powiodło się
+      form:
+        auto_saved: Szczegóły zapisywane automatycznie
+        submit_error: Nie udało się zapisać
+      employee:
+        saved: Pracownik został pomyślnie zapisany
+        save_error: Nie udało się zapisać pracownika
+        status_error: Nie udało się zaktualizować statusu pracownika
+        updated: Zaktualizowano %{liczba} pracowników do %{status}
+        order_error: Nie udało się zaktualizować zamówienia
+      menuitem:
+        saved: Pozycja menu została pomyślnie zapisana
+        save_error: Nie udało się zapisać pozycji menu
+        status_error: Nie udało się zaktualizować stanu pozycji menu
+        updated: Zaktualizowano elementy menu %{count} do %{status}
+        image_generation: Rozpoczęto generowanie obrazu dla pozycji menu %{count}
+        no_images: Nie udało się wygenerować żadnych obrazów
+        order_error: Nie udało się zaktualizować zamówienia
+      order:
+        saved: Szczegóły zamówienia zapisywane automatycznie
+        close_success: Zamówienie zostało pomyślnie zamknięte
+        close_error: Nie udało się zamknąć zamówienia
+        bill_success: Pomyślnie złożono wniosek o rachunek
+        bill_error: Nie udało się zażądać rachunku
+        payment_success: Płatność została pomyślnie przetworzona
+        payment_error: Nie udało się przetworzyć płatności
+        missing_payment: Brakujące informacje o płatności
+        payment_link: Odświeżono link do płatności
+        payment_link_error: Nie udało się wygenerować linku do płatności
+        delete_success: Zamówienie zostało pomyślnie usunięte
+        delete_error: Usunięcie zamówienia nie powiodło się
+        created: 'Utworzono zamówienie #%{id}'
+        updated: 'Zamówienie #%{orderId} zostało zaktualizowane'
+        order_save_success: Zamówienie zostało pomyślnie zapisane
+        order_save_error: Nie udało się zapisać zamówienia
+      inventory:
+        saved: Szczegóły zapasów zapisywane automatycznie
+        saved_success: Inwentaryzacja została pomyślnie zapisana
+        save_error: Nie udało się zapisać zapasów
+        status_error: Nie udało się zaktualizować stanu zapasów
+        updated: Zaktualizowano %{liczba} elementów ekwipunku do %{status}.
+        reset_error: Nie udało się zresetować ekwipunku
+        reset_success: Resetowanie %{liczba} elementów ekwipunku
+        order_error: Nie udało się zaktualizować zamówienia
+      menu:
+        saved: Szczegóły menu zapisywane automatycznie
+        saved_success: Menu zostało pomyślnie zapisane
+        save_error: Nie udało się zapisać menu
+        status_error: Nie udało się zaktualizować stanu menu
+        updated: Zaktualizowano menu %{count} do %{status}
+        order_error: Nie udało się zaktualizować zamówienia
+      restaurant:
+        saved: Szczegóły restauracji zapisywane automatycznie
+        saved_success: Restauracja została pomyślnie zapisana
+        save_error: Nie udało się uratować restauracji
+        delete_success: Restauracja usunięta pomyślnie
+        delete_error: Nie udało się usunąć restauracji
+        qr_error: Nie udało się wygenerować kodu QR
+      menusection:
+        saved: Szczegóły sekcji menu zapisywane automatycznie
+        saved_success: Sekcja menu została pomyślnie zapisana
+        save_error: Nie udało się zapisać sekcji menu
+        status_error: Nie udało się zaktualizować stanu sekcji menu
+        updated: Zaktualizowano sekcje menu %{count} do %{status}.
+        order_error: Nie udało się zaktualizować zamówienia
+      ocr:
+        all_confirmed: Wszystkie sekcje %{status}
+        all_confirm_error: Nie udało się zaktualizować potwierdzeń
+        section_confirmed: Sekcja %{status}
+        section_confirm_error: Nie udało się zaktualizować potwierdzenia sekcji
+        inline_edit_success: "%{typ} został pomyślnie zaktualizowany"
+        inline_edit_error: Nie udało się zapisać zmian
+        inline_cancel: Edycja anulowana
+        section_order_success: Zaktualizowano kolejność sekcji
+        section_order_error: Nie udało się zaktualizować kolejności sekcji
+        item_move_success: Przedmiot został pomyślnie przeniesiony
+        item_move_error: Nie udało się przenieść elementu
+        import_error: Import nie powiódł się. Spróbuj ponownie.
+        import_success: Import zakończył się pomyślnie
+        delete_success: Usunięto %{liczba} niepotwierdzonych sekcji
+        export_success: Eksport zakończony
+        export_error: Eksport nie powiódł się
+      pwa:
+        install_success: Aplikacja została pomyślnie zainstalowana! Możesz teraz korzystać
+          ze Smart Menu w trybie offline.
+        notification_success: Powiadomienia włączone! Będziesz otrzymywać aktualizacje
+          w czasie rzeczywistym.
+        sync_complete: "%{liczba} elementów zsynchronizowanych pomyślnie"
+        offline_action: Zapisane działanie. Zostanie zsynchronizowane po przejściu
+          do trybu online.
+      api:
+        upload_error: 'Przesyłanie nie powiodło się: Błąd sieci'
+    form:
+      actions:
+        edit: Edytuj
+        delete: Usuń
+        save: Zapisz
+    table:
+      no_data: Brak dostępnych danych
+    order_status:
+      ordered: zamówiony
+      preparing: przygotowanie
+      ready: gotowy
+      collected: zebrany
+    buttons:
+      start_preparing: Rozpocznij przygotowania
+      mark_ready: Mark Ready
+      mark_collected: Oznacz jako pobrane

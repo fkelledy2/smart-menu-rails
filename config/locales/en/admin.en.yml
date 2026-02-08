@@ -1,0 +1,255 @@
+---
+en:
+  admin:
+    performance:
+      title: Performance Monitoring
+      subtitle: Real-time performance metrics and analytics
+      card:
+        avg_response_time: Avg Response Time
+        memory_usage: Memory Usage
+        error_rate: Error Rate
+        active_users: Active Users
+        last_5_minutes: Last 5 minutes
+        current_rss: Current RSS
+      response_time_trend: Response Time Trend (24h)
+      memory_usage_trend: Memory Usage Trend (24h)
+      slowest_endpoints: Slowest Endpoints (Last Hour)
+      table:
+        endpoint: Endpoint
+        avg_response_time: Avg Response Time
+      no_slow_endpoints: No slow endpoints detected
+      recent_slow_queries: Recent Slow Queries
+      query_table:
+        duration: Duration
+        query: Query
+        time: Time
+      no_slow_queries: No slow queries detected
+      actions: Actions
+    cache:
+      title: Cache Administration
+      health_status: Cache Health Status
+      response_time: Response Time
+      write_operation: Write Operation
+      read_operation: Read Operation
+      delete_operation: Delete Operation
+      error: Error
+      performance_stats: Performance Statistics
+      reset_stats: Reset Stats
+      cache_hits: Cache Hits
+      cache_misses: Cache Misses
+      cache_writes: Cache Writes
+      cache_deletes: Cache Deletes
+      cache_errors: Errors
+      hit_rate: Hit Rate
+      cache_info: Cache Information
+      service_version: Service Version
+      cache_methods: Cache Methods
+      active_keys: Active Keys
+      memory_usage: Memory Usage
+      cache_warming: Cache Warming
+      cache_warming_description: Pre-load critical cache data to improve performance.
+      cache_management: Cache Management
+      cache_management_description: Clear all cached data to force fresh data loading.
+      cache_patterns: Cache Patterns
+      patterns:
+        restaurant: Restaurant dashboards and analytics
+        menu: Menu data and performance
+        menuitem: Menu item details and analytics
+        order: Order data and summaries
+        employee: Staff data and performance
+        user: User activity and cross-restaurant data
+    metrics:
+      title: Application Performance Monitoring
+      card:
+        total_requests: Total Requests
+        avg_response_time: Avg Response Time
+        error_rate: Error Rate
+        total_users: Total Users
+        all_time: All time
+        current_average: Current average
+        current_error_rate: Current error rate
+        all_time_registrations: All time registrations
+      summary:
+        restaurants_created: Restaurants Created
+        menu_imports: Menu Imports
+      system:
+        memory_usage: Memory Usage
+        active_users: Active Users
+      metric_types:
+        title: Metric Types
+        counters: 'Counters: Cumulative values that only increase (e.g., total requests)'
+        gauges: 'Gauges: Current values that can go up or down (e.g., active users)'
+        histograms: 'Histograms: Collections of measurements (e.g., response times)'
+      table:
+        metric: Metric
+        type: Type
+        value: Value
+        last_updated: Last Updated
+      no_recent_metrics:
+        message: No recent metrics available
+        description: Metrics will appear here as the application is used
+    dashboard:
+      kpis:
+        total_orders: Total Orders
+        total_revenue: Total Revenue
+        customers: Customers
+        growth_rate: Growth Rate
+        page_views: Page Views
+        unique_visitors: Unique Visitors
+        bounce_rate: Bounce Rate
+      sales:
+        title: Top Selling Items
+        table:
+          item: Item
+          quantity_sold: Quantity Sold
+        no_data: No sales data available for this period.
+      loading: Loading...
+  notifications:
+    index:
+      title: Notifications
+  announcements:
+    index:
+      title: What's New
+      coming_soon: Exciting stuff coming very soon!
+  beverage_review_queue:
+    title: Beverage Review Queue
+    recent_pipeline_runs: Recent pipeline runs
+    table:
+      created: Created
+      menu: Menu
+      status: Status
+      step: Step
+      processed: Processed
+      needs_review: Needs review
+      unresolved: Unresolved
+      actions: Actions
+    items_needing_review: Items needing review
+    items_table:
+      menu: Menu
+      section: Section
+      item: Item
+      category: Category
+      class_conf: Class conf
+      parse_conf: Parse conf
+      parsed: Parsed
+  dw_orders_mv:
+    title: Order Analytics
+    loading: Loading data...
+  ordritems:
+    index:
+      title: Order Items
+    new:
+      title: New ordritem
+    edit:
+      title: Edit Ordritem
+    show:
+      title: Show ordritem
+      ordr: Ordr
+      menuitem: Menuitem
+  ordrparticipants:
+    index:
+      title: Ordrparticipants
+    new:
+      title: New Menuparticipant
+    edit:
+      title: Edit Menuparticipant
+    show:
+      title: Show ordrparticipant
+    table:
+      sessionid: Sessionid
+      role: Role
+      employee: Employee
+      ordr: Ordr
+      ordritem: Ordritem
+  ordractions:
+    index:
+      title: Ordractions
+    new:
+      title: New ordraction
+    edit:
+      title: Edit Ordraction
+    show:
+      title: Show ordraction
+  ordritemnotes:
+    index:
+      title: Ordritemnotes
+    new:
+      title: New ordritemnote
+    edit:
+      title: Edit Ordritemnote
+    show:
+      title: Show ordritemnote
+  menuparticipants:
+    new:
+      title: New Menuparticipant
+    edit:
+      title: Edit Menuparticipant
+  ingredients:
+    index:
+      title: Ingredients
+    new:
+      title: New ingredient
+    edit:
+      title: Edit Ingredient
+    show:
+      title: Show Ingredient
+  genimages:
+    index:
+      title: Genimages
+    new:
+      title: New genimage
+    edit:
+      title: Edit Genimage
+    show:
+      title: Show genimage
+    table:
+      id: ID
+      name: Name
+      description: Description
+      restaurant: Restaurant
+      menu: Menu
+      menusection: Menusection
+      menuitem: Menuitem
+      image_data: Image data
+  restaurantlocales:
+    index:
+      title: Restaurantlocales
+    show:
+      title: Show restaurantlocale
+    table:
+      locale: Locale
+      status: Status
+      restaurant: Restaurant
+  tracks:
+    index:
+      title: Tracks
+    new:
+      title: New track
+    edit:
+      title: Edit Track
+  userplans:
+    index:
+      title: Userplans
+    new:
+      title: New userplan
+    show:
+      title: Show userplan
+    edit:
+      manage_billing: Manage Billing
+    table:
+      user: User
+      plan: Plan
+  metrics:
+    index:
+      title: Metrics
+    new:
+      title: New metric
+    edit:
+      title: Edit Metric
+    show:
+      title: Show metric
+  onboarding:
+    show:
+      progress: Progress
+      current_step: Current step
+      completed: Completed

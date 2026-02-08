@@ -1,0 +1,142 @@
+---
+fr:
+  home:
+    index:
+      browse: Parcourir les menus
+      page_title: ''
+      page_description: ''
+      error: ''
+      compare_plans: ''
+      contactUs: Nous contacter
+      ctaBody1: Gérez un restaurant plus intelligent avec des outils numériques qui
+        travaillent aussi dur que votre équipe. Des menus intelligents aux systèmes
+        de commande, nous libérons votre personnel pour se concentrer sur l'essentiel
+        - un service exceptionnel.
+      ctaBody2: Faites plus avec moins - nos menus numériques et outils de commande
+        intelligents libèrent votre équipe pour se concentrer sur un service excellent.
+      ctaTitle1: Optimisez le service. Améliorez l'expérience.
+      ctaTitle2: Les restaurants intelligents commencent ici
+      demoMenu: Nos Menus Intelligents
+      demoMenuTag: "<strong>SCANNEZ</strong> ou <strong>TAPEZ</strong> le QR pour
+        essayer un service plus intelligent."
+      demoMenuTagBrowse: ou
+      emailAddressTag: Nous ne partagerons jamais votre e-mail.
+      heroPrimaryCta: ''
+      heroSecondaryCta: ''
+      heroTrust1: ''
+      heroTrust2: ''
+      heroTrust3: ''
+      overviewTitle: ''
+      overviewBody: ''
+      overviewItem1: ''
+      overviewItem2: ''
+      overviewItem3: ''
+      overviewItem4: ''
+      overviewItem5: ''
+      howTitle: ''
+      howBody: ''
+      howStep1Title: ''
+      howStep1Body: ''
+      howStep2Title: ''
+      howStep2Body: ''
+      howStep3Title: ''
+      howStep3Body: ''
+      trustTitle: ''
+      trustItem1Title: ''
+      trustItem1Body: ''
+      trustItem2Title: ''
+      trustItem2Body: ''
+      trustItem3Title: ''
+      trustItem3Body: ''
+      trustItem4Title: ''
+      trustItem4Body: ''
+      faqTitle: ''
+      faqQ1: ''
+      faqA1: ''
+      faqQ2: ''
+      faqA2: ''
+      faqQ3: ''
+      faqA3: ''
+      faqQ4: ''
+      faqA4: ''
+      closingTitle: ''
+      closingBody: ''
+      closingPrimaryCta: ''
+      closingSecondaryCta: ''
+      featuresStoryTitle: ''
+      featuresStoryBody: ''
+      featuresStoryPrimaryCta: ''
+      featuresStorySecondaryCta: ''
+      featuresStory1Kicker: ''
+      featuresStory1Title: ''
+      featuresStory1Body: ''
+      featuresStory1Bullet1: ''
+      featuresStory1Bullet2: ''
+      featuresStory1Bullet3: ''
+      featuresStory2Kicker: ''
+      featuresStory2Title: ''
+      featuresStory2Body: ''
+      featuresStory2Bullet1: ''
+      featuresStory2Bullet2: ''
+      featuresStory2Bullet3: ''
+      featuresStory3Kicker: ''
+      featuresStory3Title: ''
+      featuresStory3Body: ''
+      featuresStory3Bullet1: ''
+      featuresStory3Bullet2: ''
+      featuresStory3Bullet3: ''
+      featuresStory4Kicker: ''
+      featuresStory4Title: ''
+      featuresStory4Body: ''
+      featuresStory4Bullet1: ''
+      featuresStory4Bullet2: ''
+      featuresStory4Bullet3: ''
+      featuresStory5Kicker: ''
+      featuresStory5Title: ''
+      featuresStory5Body: ''
+      featuresStory5Bullet1: ''
+      featuresStory5Bullet2: ''
+      featuresStory5Bullet3: ''
+      featureDescription2: Dites adieu aux changements de table lents. Avec les commandes
+        en libre-service, les clients contrôlent le rythme - accélérant le service,
+        réduisant les temps d'attente.
+      featureDescription3: Minimisez les erreurs avec des commandes numériques directes
+        vers la cuisine. Plus de demandes mal comprises ou de tickets griffonnés -
+        juste une communication précise et optimisée.
+      featureDescription4: Transformez votre menu en expérience visuelle. Des photos
+        attrayantes, des descriptions et des ventes croisées intelligentes guident
+        les clients vers des articles à forte marge - sans effort.
+      featureDescription5: Réduisez le gaspillage de papier. Nos menus numériques
+        soutiennent votre marque éco-responsable.
+      featureDescription6: Obtenez un accès immédiat aux points chauds. Suivez les
+        meilleurs articles, les tendances de restauration.
+      featureTitle2: Des revenus plus rapides, des tables plus satisfaites
+      featureTitle3: Précision des commandes, à chaque fois
+      featureTitle4: Des menus qui se vendent eux-mêmes
+      featureTitle5: Un service durable
+      featureTitle6: Des données réelles, des décisions plus intelligentes
+      features: Fonctionnalités
+      menus: Cartes
+      next: Suivant
+      numbers: Chiffres
+      numbersTag: 'Nos statistiques : Restaurants, Menus, Commandes & Valeur :'
+      orderValue: Valeur de commande
+      orders: Commandes
+      previous: Précédent
+      pricing: Nos tarifs
+      pricingTag: 'Choisissez parmi nos modèles de prix flexibles :'
+      restaurants: Établissements
+      saveChanges: Enregistrer
+      selectPlan: Veuillez <strong>choisir un forfait</strong>.
+      signUp: S'inscrire
+      submit: Envoyer
+      testimonials: Témoignages
+      testimonialsTag: " Quelques mots de nos clients satisfaits :"
+      video_unsupported: ''
+      welcome: Bienvenue !
+    terms:
+      page_title: ''
+      page_description: ''
+    privacy:
+      page_title: ''
+      page_description: ''

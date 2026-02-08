@@ -1,0 +1,45 @@
+---
+cs:
+  taxes:
+    controller:
+      created: Daň byla úspěšně vytvořena.
+      deleted: Daň byla úspěšně odstraněna.
+      updated: Daň byla úspěšně aktualizována.
+    edit:
+      taxes: Daně
+      edit_tax: Upravit daň
+      description: Aktualizace údajů o sazbě daně
+      cancel: Zrušit
+      confirm_delete: Zrušit tuto daň?
+      delete: Odstranit
+      tax_details: Daňové údaje
+    form:
+      name: Název daně
+      name_placeholder: např. daň z prodeje, DPH, GST.
+      name_help: Zobrazení názvu této daně
+      tax_type: Typ daně
+      tax_type_help: Vyberte typ daně
+      tax_percentage: Procento daně
+      tax_percentage_placeholder: např. 8,5
+      tax_percentage_help: Zadejte sazbu daně v procentech (0-100).
+    index:
+      taxes: Daně
+      description: Správa daňových sazeb uplatňovaných na položky menu
+      back: Zpět
+      new_tax: Nová daň
+      all_taxes: Všechny daně
+    new:
+      taxes: Daně
+      new: Nový
+      new_tax: Nová daň
+      description: Vytvoření nové sazby daně pro položky menu
+      cancel: Zrušit
+      tax_details: Daňové údaje
+    show:
+      selectRestaurant: Výběr restaurace
+      tax: Zobrazit daň
+    tax:
+      name: 'Jméno:'
+      restaurant: 'Restaurace:'
+      taxpercentage: 'Procento daně:'
+      taxtype: 'Typ daně:'

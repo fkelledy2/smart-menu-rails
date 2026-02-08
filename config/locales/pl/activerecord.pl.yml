@@ -1,0 +1,208 @@
+---
+pl:
+  activerecord:
+    attributes:
+      allergyn:
+        description: Opis
+        name: Nazwa
+        symbol: Symbol
+      employee:
+        eid: Identyfikator pracownika
+        name: Nazwa
+        role: Rola
+        status: Status
+        user_id: Użytkownik
+      ingredient:
+        description: Opis
+        name: Nazwa
+      inventory:
+        currentInventory: Bieżąca inwentaryzacja
+        currentinventory: Bieżąca inwentaryzacja
+        menuItem: Pozycja menu
+        resetHour: Godzina resetowania
+        resethour: Godzina resetowania
+        startingInventory: Inwentaryzacja początkowa
+        startinginventory: Inwentaryzacja początkowa
+      menu:
+        allowOrdering: Zezwalaj na zamawianie
+        covercharge: Opłata za okładkę
+        description: Opis
+        displayImages: Wyświetlanie obrazów
+        displayImagesInPopup: Wyświetlanie obrazów w wyskakującym okienku
+        image: Obraz
+        imagecontext: Kontekst obrazu
+        inventoryTracking: Śledzenie zapasów
+        name: Nazwa
+        pdf_menu_scan: Menu PDF
+        status: Status
+      menuavailability:
+        dayofweek: Dzień tygodnia
+        endhour: Godzina zakończenia
+        menu_id: Menu
+        starthour: Godzina rozpoczęcia
+        status: Status
+      menuitem:
+        allergyns: Alergeny
+        calories: Kalorie
+        description: Opis
+        image: Obraz
+        itemtype: Typ elementu
+        name: Nazwa
+        preptime: Czas przygotowania
+        price: Cena
+        sizes: Rozmiary
+        sizesupport: Wsparcie rozmiaru
+        status: Status
+        unitcost: Koszt jednostkowy
+      menuparticipant:
+        preferredlocale: Preferowana lokalizacja
+        sessionid: Identyfikator sesji
+        smartmenu_id: Smartmenu
+      menusection:
+        description: Opis
+        endhour: Godzina zakończenia
+        image: Obraz
+        menu_id: Menu
+        name: Nazwa
+        restricted: Ograniczony
+        starthour: Godzina rozpoczęcia
+        status: Status
+      metric:
+        description: Opis
+        name: Nazwa
+      ordr:
+        employee_id: Pracownik
+        menu_id: Menu
+        restaurant_id: Restauracja
+        tablesetting_id: Ustawienie stołu
+      ordraction:
+        action: Działanie
+        employee_id: Pracownik
+        ordr_id: Zamówienie
+        ordritem_id: Pozycja zamówienia
+        ordrparticipant_id: Uczestnik zamówienia
+        sessionid: Identyfikator sesji
+      ordritem:
+        menuitem_id: Pozycja menu
+        ordr_id: Zamówienie
+      ordritemnote:
+        note: Uwaga
+        ordritem_id: Pozycja zamówienia
+      ordrparticipant:
+        action: Działanie
+        employee_id: Pracownik
+        ordr_id: Zamówienie
+        ordritem_id: Pozycja zamówienia
+        role: Rola
+        sessionid: Identyfikator sesji
+      restaurant:
+        address: Adres
+        address1: Linia adresowa 1
+        address2: Linia adresowa 2
+        allowOrdering: Zezwalaj na zamawianie
+        city: Miasto
+        country: Kraj
+        currency: Waluta
+        description: Opis
+        displayImages: Wyświetlanie obrazów
+        displayImagesInPopup: Wyświetlanie obrazów w wyskakującym okienku
+        genid: Identyfikator generacji
+        image: Obraz
+        image_style_profile: Profil stylu obrazu
+        imagecontext: Kontekst obrazu
+        inventoryTracking: Śledzenie zapasów
+        name: Nazwa
+        postcode: Kod pocztowy/ZIP
+        spotifyaccesstoken: Token dostępu Spotify
+        spotifyrefreshtoken: Spotify Refresh Token
+        spotifyuserid: Identyfikator użytkownika Spotify
+        state: Państwo/Prowincja
+        status: Status
+        wifiEncryptionType: Typ szyfrowania WiFi
+        wifiHidden: Ukryte WiFi
+        wifiPassword: Hasło WiFi
+        wifissid: SSID WiFi
+      restaurantavailability:
+        dayofweek: Dzień tygodnia
+        endhour: Godzina zakończenia
+        starthour: Godzina rozpoczęcia
+        status: Status
+      restaurantlocale:
+        dfault: Domyślne
+        locale: Lokalizacja
+      size:
+        description: Opis
+        name: Nazwa
+        size: Kod rozmiaru
+      smartmenu:
+        menu_id: Menu
+        restaurant_id: Restauracja
+        slug: Ślimak
+        tablesetting_id: Ustawienie stołu
+      tablesetting:
+        capacity: Pojemność
+        description: Opis
+        name: Nazwa
+        status: Status
+        tabletype: Typ tabeli
+      tag:
+        description: Opis
+        name: Nazwa
+      tax:
+        name: Nazwa
+        taxPercentage: Procent podatku
+        taxType: Rodzaj podatku
+        taxpercentage: Procent podatku
+        taxtype: Rodzaj podatku
+      testimonial:
+        restaurant_id: Restauracja
+        testimonial: Opinia
+        user_id: Użytkownik
+      tip:
+        percentage: Procent
+      track:
+        description: Opis
+        externalid: Zewnętrzny identyfikator
+        image: Obraz
+        name: Nazwa
+        restaurant_id: Restauracja
+        sequence: Sekwencja
+      userplan:
+        plan_id: Plan
+    errors:
+      format: "%{atrybut} %{komunikat}"
+      messages:
+        blank: nie może być pusty
+        greater_than: musi być większa niż %{count}
+        greater_than_or_equal_to: musi być większa lub równa %{count}
+        invalid: jest nieprawidłowy
+        less_than: musi być mniejsza niż %{count}
+        less_than_or_equal_to: musi być mniejsza lub równa %{count}
+        not_a_number: nie jest liczbą
+        taken: został już pobrany
+        too_long:
+          one: jest zbyt długi (maksymalnie 1 znak)
+          other: jest zbyt długa (maksymalnie %{count} znaków)
+        too_short:
+          one: jest zbyt krótki (minimum to 1 znak)
+          other: jest zbyt krótki (minimum to %{count} znaków)
+    models:
+      allergyn: Alergen
+      genimage: Wygenerowany obraz
+      ingredient: Składnik
+      inventory: Inwentaryzacja
+      menu: Menu
+      menuavailability: Dostępność menu
+      menuitem: Pozycja menu
+      menusection: Sekcja menu
+      metric: Metryczny
+      ordr: Zamówienie
+      restaurant: Restauracja
+      restaurantavailability: Dostępność restauracji
+      size: Rozmiar
+      smartmenu: Smartmenu
+      tablesetting: Ustawienie stołu
+      tag: Tag
+      testimonial: Opinia
+      track: Ścieżka
+      userplan: Plan użytkownika

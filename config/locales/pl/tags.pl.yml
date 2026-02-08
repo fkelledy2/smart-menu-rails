@@ -1,0 +1,26 @@
+---
+pl:
+  tags:
+    controller:
+      created: Znacznik został pomyślnie utworzony.
+      deleted: Znacznik został pomyślnie usunięty.
+      updated: Znacznik został pomyślnie zaktualizowany.
+    edit:
+      title: Edytuj znacznik
+    form:
+      delete: Usuń
+      errors: Błędy
+      save: Zapisz
+      sure: Jesteś pewien?
+    index:
+      tag: Tag
+      tags: Tagi
+    new:
+      cancel: Anuluj
+      title: Nowa etykieta
+    show:
+      show_tag: Pokaż tag
+    tag:
+      description: 'Opis:'
+      menuitem: 'Pozycja menu:'
+      name: 'Imię i nazwisko:'

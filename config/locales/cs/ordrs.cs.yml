@@ -1,0 +1,9 @@
+---
+cs:
+  ordrs:
+    controller:
+      could_not_delete: 'Objednávku se nepodařilo smazat: %{chybička}'
+      created: Objednávka byla úspěšně vytvořena.
+      deleted: Objednávka byla úspěšně smazána.
+    index:
+      orders: Objednávky

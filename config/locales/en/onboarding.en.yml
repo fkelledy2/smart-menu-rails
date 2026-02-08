@@ -1,0 +1,207 @@
+---
+en:
+  onboarding:
+    account_details:
+      continue: Continue
+      email_help: This email is already confirmed and cannot be changed during setup.
+      email_label: Email Address
+      full_name_label: Full Name
+      full_name_placeholder: Enter your full name
+      full_name_required: Please provide your full name.
+      restaurant_name_preview_help: Don't worry, you can change this in the next step.
+      restaurant_name_preview_label: Restaurant Name (Preview)
+      restaurant_name_preview_placeholder: What's your restaurant called?
+      stats:
+        restaurants_count: 1,000+
+        restaurants_label: Restaurants Trust Us
+        satisfaction: 98%
+        satisfaction_label: Customer Satisfaction
+        setup_time: 5 min
+        setup_time_label: Average Setup Time
+      subtitle: Let's get your account set up. This will only take a moment.
+      title: Welcome to Smart Menu!
+    completion:
+      completion_time: This usually takes 30-60 seconds. You'll be redirected automatically
+        when complete.
+      configuring_payments: Configuring payment options
+      creating_profile: Creating your restaurant profile
+      customize_menu_description: Add more items, upload photos, and set detailed
+        descriptions
+      customize_menu_title: Customize Your Menu
+      free_trial_status: 14-day free trial
+      generating_qr: Generating QR code...
+      generating_qr_codes: Generating QR codes
+      generating_status: Generating your QR code...
+      go_to_dashboard: Go to Dashboard
+      menu_published: Menu Published
+      plan_activated: Plan Activated
+      print_qr_description: Download and print QR codes for your tables
+      print_qr_title: Print QR Codes
+      qr_code_ready: QR Code Ready!
+      qr_ready_title: Your Digital Menu is Ready
+      restaurant_created: Restaurant Created
+      setting_up_menu: Setting up your menu
+      setup_timeout: Setup taking longer than expected
+      setup_timeout_help: Please refresh the page or contact support
+      subtitle: Your restaurant is now set up and ready to serve customers!
+      title: "Congratulations! \U0001F389"
+      track_orders_description: Monitor customer orders and analytics in real-time
+      track_orders_title: Track Orders
+      view_live_menu: View Live Menu
+      whats_happening: 'What''s happening now:'
+      whats_next: What's next?
+    menu_creation:
+      add_menu_item: Add Menu Item
+      back: Back
+      create_menu: Create Menu
+      item_description_placeholder: Brief description (optional)
+      item_name_placeholder: Item name
+      item_price_placeholder: '0.00'
+      live_preview: Live Preview
+      menu_item_title: Menu Item
+      menu_items_help: Add at least 3 items to continue. Don't worry about perfection
+        - you can edit everything later!
+      menu_items_label: Menu Items
+      menu_name_default: Main Menu
+      menu_name_label: Menu Name
+      menu_name_placeholder: e.g., Main Menu, Lunch Menu, Dinner Menu
+      menu_name_required: Please provide a menu name.
+      min_items_alert: Please add at least 3 menu items to continue.
+      need_more_items: Need %{count} more items
+      preview_empty: Your menu items will appear here as you add them
+      preview_empty_alt: Your menu items will appear here
+      quick_start_label: Quick Start Templates
+      subtitle: Add a few items to get started. You can always add more later!
+      template_added: Added!
+      template_items:
+        american:
+          bbq_ribs:
+            description: Slow-cooked pork ribs with BBQ sauce
+            name: BBQ Ribs
+          buffalo_wings:
+            description: 8 pieces with celery and blue cheese dip
+            name: Buffalo Wings
+          classic_burger:
+            description: Beef patty, lettuce, tomato, onion, pickles
+            name: Classic Burger
+        asian:
+          chicken_teriyaki:
+            description: Grilled chicken with teriyaki sauce and rice
+            name: Chicken Teriyaki
+          pad_thai:
+            description: Stir-fried rice noodles with shrimp and peanuts
+            name: Pad Thai
+          spring_rolls:
+            description: Crispy rolls with sweet and sour sauce
+            name: Vegetable Spring Rolls
+        italian:
+          caesar_salad:
+            description: Romaine lettuce, croutons, parmesan, caesar dressing
+            name: Caesar Salad
+          margherita_pizza:
+            description: Fresh mozzarella, tomato sauce, basil
+            name: Margherita Pizza
+          spaghetti_carbonara:
+            description: Pasta with eggs, cheese, pancetta, and pepper
+            name: Spaghetti Carbonara
+        mexican:
+          beef_burrito:
+            description: Large burrito with seasoned beef, rice, and beans
+            name: Beef Burrito
+          chicken_tacos:
+            description: Three soft tacos with grilled chicken and salsa
+            name: Chicken Tacos
+          guacamole_chips:
+            description: Fresh guacamole with tortilla chips
+            name: Guacamole & Chips
+      templates:
+        american: American
+        asian: Asian
+        italian: Italian
+        mexican: Mexican
+      templates_help: Click a template to add sample items you can customize.
+      title: Create your first menu
+    plan_selection:
+      always_free: Always free
+      back: Back
+      choose_free_plan: Choose Free Plan
+      continue: Continue
+      features:
+        advanced_analytics: Advanced analytics
+        api_access: API access
+        custom_branding: Custom branding
+        items_per_menu: items/menu
+        languages: languages
+        locations: locations
+        menus_per_location: menus/location
+        online_ordering: Online ordering
+        priority_support: Priority support
+        qr_code_menus: QR code menus
+      free_trial: 14-day free trial
+      most_popular: MOST POPULAR
+      per_month: "/mo"
+      select_plan_alert: Please select a plan to continue.
+      selected: Selected ✓
+      start_free_trial: Start Free Trial
+      subtitle: Start with a 14-day free trial. No credit card required!
+      title: Choose your plan
+      trust_indicators:
+        mobile_subtitle: Perfect on any device
+        mobile_title: Mobile Optimized
+        secure_subtitle: Bank-level security
+        secure_title: Secure & Reliable
+        support_subtitle: We're here to help
+        support_title: 24/7 Support
+    restaurant_details:
+      back: Back
+      continue: Continue
+      cuisine_type_label: Cuisine Type
+      cuisine_type_prompt: Select cuisine...
+      cuisine_type_required: Please select your cuisine type.
+      cuisine_types:
+        american: American
+        chinese: Chinese
+        french: French
+        fusion: Fusion
+        greek: Greek
+        indian: Indian
+        italian: Italian
+        japanese: Japanese
+        korean: Korean
+        mediterranean: Mediterranean
+        mexican: Mexican
+        middle_eastern: Middle Eastern
+        other: Other
+        spanish: Spanish
+        thai: Thai
+        vietnamese: Vietnamese
+      location_help: This helps us set up currency and timezone defaults.
+      location_label: Location
+      location_placeholder: City, State/Country
+      location_required: Please provide your restaurant location.
+      phone_help: Optional - for customer contact and reservations.
+      phone_label: Phone Number
+      phone_placeholder: "+1 (555) 123-4567"
+      pro_tips:
+        tip1: Choose the restaurant type that best matches your service style
+        tip2: Cuisine type helps us suggest relevant menu templates
+        tip3: Location is used to set up local currency and timezone
+        title: Pro Tips
+      restaurant_name_label: Restaurant Name
+      restaurant_name_placeholder: Enter your restaurant name
+      restaurant_name_required: Please provide your restaurant name.
+      restaurant_type_label: Restaurant Type
+      restaurant_type_prompt: Select type...
+      restaurant_type_required: Please select your restaurant type.
+      restaurant_types:
+        bakery: Bakery
+        bar_grill: Bar & Grill
+        cafe: Cafe
+        casual_dining: Casual Dining
+        fast_casual: Fast Casual
+        fine_dining: Fine Dining
+        food_truck: Food Truck
+        other: Other
+        quick_service: Quick Service
+      subtitle: Help us customize your experience with some basic information.
+      title: Tell us about your restaurant

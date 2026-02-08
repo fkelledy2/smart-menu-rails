@@ -1,0 +1,115 @@
+---
+de:
+  javascript:
+    notifications:
+      auto_save:
+        error: ''
+        network_error: ''
+        saved: ''
+      sortable:
+        success: ''
+        error: ''
+      form:
+        auto_saved: ''
+        submit_error: ''
+      employee:
+        saved: ''
+        save_error: ''
+        status_error: ''
+        updated: ''
+        order_error: ''
+      menuitem:
+        saved: ''
+        save_error: ''
+        status_error: ''
+        updated: ''
+        image_generation: ''
+        no_images: ''
+        order_error: ''
+      order:
+        saved: ''
+        close_success: ''
+        close_error: ''
+        bill_success: ''
+        bill_error: ''
+        payment_success: ''
+        payment_error: ''
+        missing_payment: ''
+        payment_link: ''
+        payment_link_error: ''
+        delete_success: ''
+        delete_error: ''
+        created: ''
+        updated: ''
+        order_save_success: ''
+        order_save_error: ''
+      inventory:
+        saved: ''
+        saved_success: ''
+        save_error: ''
+        status_error: ''
+        updated: ''
+        reset_error: ''
+        reset_success: ''
+        order_error: ''
+      menu:
+        saved: ''
+        saved_success: ''
+        save_error: ''
+        status_error: ''
+        updated: ''
+        order_error: ''
+      restaurant:
+        saved: ''
+        saved_success: ''
+        save_error: ''
+        delete_success: ''
+        delete_error: ''
+        qr_error: ''
+      menusection:
+        saved: ''
+        saved_success: ''
+        save_error: ''
+        status_error: ''
+        updated: ''
+        order_error: ''
+      ocr:
+        all_confirmed: ''
+        all_confirm_error: ''
+        section_confirmed: ''
+        section_confirm_error: ''
+        inline_edit_success: ''
+        inline_edit_error: ''
+        inline_cancel: ''
+        section_order_success: ''
+        section_order_error: ''
+        item_move_success: ''
+        item_move_error: ''
+        import_error: ''
+        import_success: ''
+        delete_success: ''
+        export_success: ''
+        export_error: ''
+      pwa:
+        install_success: ''
+        notification_success: ''
+        sync_complete: ''
+        offline_action: ''
+      api:
+        upload_error: ''
+    form:
+      actions:
+        edit: ''
+        delete: ''
+        save: ''
+    table:
+      no_data: ''
+    order_status:
+      ordered: ''
+      preparing: ''
+      ready: ''
+      collected: ''
+    buttons:
+      start_preparing: ''
+      mark_ready: ''
+      mark_collected: ''

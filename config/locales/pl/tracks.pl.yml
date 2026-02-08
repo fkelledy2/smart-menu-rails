@@ -1,0 +1,9 @@
+---
+pl:
+  tracks:
+    controller:
+      created: Ścieżka została pomyślnie utworzona.
+      deleted: Ścieżka została pomyślnie usunięta.
+      updated: Ścieżka została pomyślnie zaktualizowana.
+    index:
+      tracks: Utwory

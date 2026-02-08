@@ -1,0 +1,37 @@
+---
+cs:
+  menusections:
+    edit:
+      inventories: Zásoby
+      items: Položky
+      section: Sekce
+    form:
+      delete: Smazat
+      details: Podrobnosti
+      imageSettings: Nastavení obrázku
+      save: Uložit
+      selectMenu: Vyberte menu...
+      settings: Nastavení
+      sure: Jste si jistí?
+    index:
+      menuSection: Sekce menu
+      menuSections: Sekce menu
+    menusection:
+      description: 'Popis:'
+      image: 'Obrázek:'
+      menu: 'Menu:'
+      name: 'Jméno:'
+      sequence: 'Sekvence:'
+      status: 'Stav:'
+    new:
+      cancel: Zrušit
+      menuSection: Nová sekce menu
+    show:
+      menuSection: Zobrazit sekci menu
+      selectMenu: Vybrat nabídku
+    showInventories:
+      inventories: Zásoby
+      reset: Resetovat
+    showMenuitems:
+      genimage: Generování obrázku
+      menuItems: Položky nabídky

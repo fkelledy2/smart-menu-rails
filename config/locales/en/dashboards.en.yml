@@ -1,0 +1,134 @@
+---
+en:
+  bar_dashboard:
+    title: Bar Dashboard
+    metrics:
+      pending_tickets: Pending Tickets
+      preparing: Preparing
+      ready: Ready
+  kitchen_dashboard:
+    title: Kitchen Dashboard
+    metrics:
+      pending_tickets: Pending Tickets
+      preparing: Preparing
+      ready: Ready
+      todays_orders: Today's Orders
+    buttons:
+      start_preparing: Start Preparing
+      mark_ready: Mark Ready
+      mark_collected: Mark as Collected
+  errors:
+    not_found:
+      title: Page Not Found
+      description: The page you're looking for doesn't exist.
+      suggestion: It may have been moved, deleted, or you entered the wrong URL.
+    unprocessable:
+      title: Unprocessable Entity
+      description: The change you wanted was rejected.
+      suggestion: Maybe you tried to change something you didn't have access to.
+    internal:
+      title: Internal Server Error
+      description: We're sorry, but something went wrong on our end.
+      suggestion: Please try again later or contact support if the problem persists.
+      error_details: Error Details
+      backtrace: Backtrace
+  menu_performance:
+    not_available:
+      title: Performance Data Not Available
+      description: 'Unable to load performance data for this menu. This could be due
+        to:'
+      reasons:
+      - Menu not found or access denied
+      - Insufficient permissions
+      - System error during data collection
+  restaurant_analytics:
+    not_available:
+      title: Analytics Data Not Available
+      description: 'Unable to load analytics data for this restaurant. This could
+        be due to:'
+      reasons:
+      - Restaurant not found or access denied
+      - Insufficient permissions
+      - System error during data collection
+  ai_generation:
+    modal:
+      title: Generate AI Images
+      confirm: Confirm & Start
+      progress: Currently generating
+      progress_log: Progress log
+      last_image: Last Image
+  menuitem_ai:
+    modal:
+      title: Generate Image
+      confirm: Confirm & Start
+      progress: Currently generating
+      preview: Image preview
+  ocr_menu_imports:
+    alcohol_override:
+      undecided: Undecided
+      alcoholic: Alcoholic
+      non_alcoholic: Non-alcoholic
+    publish:
+      title: Publish Menu
+      submit: Publish Menu
+  offline:
+    title: You're Offline
+    available_offline: 'Available Offline:'
+    items:
+    - Restaurant information
+    - Menu items and pricing
+    - Recent orders
+    - Cached images
+    - Basic analytics
+    last_updated: Last updated
+  smartmenus:
+    skeleton:
+      loading: Loading menu items...
+    no_image: No Image
+  hero_images:
+    new:
+      title: New Hero Image
+    form:
+      image_url_placeholder: https://images.pexels.com/...
+      image_url_help: Enter the full URL of the image from Pexels or other source
+      alt_text_placeholder: Busy restaurant interior with diners
+      alt_text_help: Descriptive text for accessibility
+      sequence_help: Display order (lower numbers appear first)
+      status_help: Only approved images will appear on the homepage
+      source_url_placeholder: https://www.pexels.com/photo/...
+      source_url_help: Link to the original source page
+  orders:
+    ordered: Ordered
+    prepared: Prepared
+    delivered: Delivered
+  form_2025:
+    menu_details: Menu Details
+    menu_details_subtitle: Basic information about your menu
+    image_settings: Image Settings
+    menu_image: Menu Image
+  version_diff:
+    section: Section
+    item: Item
+  version_diff_2025:
+    section: 'Section #'
+    item: 'Item #'
+  details_2025:
+    menu_go_live_flow: Menu go live flow
+  edit_2025:
+    onboarding_flow: Onboarding flow
+  settings_2025:
+    receipt_merchant_details: Receipt / merchant details
+    statement_descriptor: Statement descriptor
+  tasting_courses_footer:
+    show_courses: Show courses
+    add_tasting_menu: Add Tasting Menu
+  tasting_badge: Tasting
+  show_modals:
+    pairing: Pairing
+    full: Full
+  show_allergyns_debug:
+    title: Allergyns Debug
+    sql: SQL
+    count: Count
+    ids: IDs
+    names: Names

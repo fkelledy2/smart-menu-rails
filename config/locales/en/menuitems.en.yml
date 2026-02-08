@@ -1,0 +1,63 @@
+---
+en:
+  menuitems:
+    controller:
+      created: Menu item was successfully created.
+      deleted: Menu item was successfully deleted.
+      updated: Menu item was successfully updated.
+    errors:
+      menusection_required: Please create menu items from within a menu section.
+    edit:
+      tab_item: Item
+    form:
+      actions: Actions
+      delete: Delete
+      details: Details
+      errors: Errors
+      'false': 'false'
+      generateImage: Generate with AI
+      imageSettings: Image Settings
+      no_image: No image yet
+      save: Save
+      settings: Settings
+      sure: Are you sure?
+      'true': 'true'
+      update: Update
+      variantPricing: Variant Pricing
+      tasting_price_ignored: This price is ignored in tasting menu sections. Use supplement
+        below.
+      alcohol_settings: Alcohol Settings
+      alcoholic_help: Check if this item contains alcohol.
+      abv_placeholder: e.g. 13.5
+      abv_help: Alcohol by volume (0–100). Leave blank for non-alcoholic.
+      classification_wine: Wine
+      classification_beer: Beer
+      classification_spirit: Spirit
+      classification_cocktail: Cocktail
+      classification_liqueur: Liqueur
+      classification_other: Other
+      classification_non_alcoholic: Non-alcoholic
+      classification_help: Choose a category. Use non_alcoholic for 0.0% variants.
+      alcohol_notes_ph: Optional notes, e.g. contains rum
+      tasting_item_settings: Tasting Item Settings
+      tasting_optional: Optional Course
+      tasting_optional_help: If checked, this course is optional (guest may skip).
+      tasting_supplement: Supplement (cents)
+      tasting_supplement_help: Leave blank or 0 for included; set an amount for add-on
+        pricing.
+      course_order: Course Order
+      course_order_help: 'Optional: specify serving sequence within the tasting.'
+      visibility: Visibility
+      hidden: Hidden (not shown on smartmenu)
+      tasting_carrier: Use as Tasting Carrier
+      tasting_carrier_help: Only one carrier per tasting section. Carrier items are
+        automatically hidden.
+    index:
+      menuItem: Menu Item
+      menuItems: Menu Items
+    new:
+      cancel: Cancel
+      menuItem: Menu Item
+    show:
+      menuItem: Menu Item
+      selectMenuSection: Select Menu Section

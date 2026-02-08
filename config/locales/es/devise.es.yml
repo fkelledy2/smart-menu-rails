@@ -1,0 +1,90 @@
+---
+es:
+  devise:
+    confirmations:
+      confirmed: ''
+      send_instructions: ''
+      send_paranoid_instructions: ''
+    failure:
+      already_authenticated: ''
+      inactive: ''
+      invalid: ''
+      last_attempt: ''
+      locked: ''
+      not_found_in_database: ''
+      timeout: ''
+      unauthenticated: ''
+      unconfirmed: ''
+    mailer:
+      confirmation_instructions:
+        subject: ''
+      email_changed:
+        subject: ''
+      password_change:
+        subject: ''
+      reset_password_instructions:
+        subject: ''
+      unlock_instructions:
+        subject: ''
+    omniauth_callbacks:
+      failure: ''
+      success: ''
+    passwords:
+      no_token: ''
+      send_instructions: ''
+      send_paranoid_instructions: ''
+      updated: ''
+      updated_not_active: ''
+    registrations:
+      destroyed: ''
+      edit:
+        account: Cuenta
+        confirmPassword: Confirmar contraseña
+        currentPassword: Contraseña actual
+        currentPasswordHelp: Necesitamos tu contraseña actual para confirmar
+        deactivateMyAccount: Desactivar mi cuenta
+        deactivateMyAccountAreYouSure: "¿Estás seguro? Esta acción es irreversible."
+        emailAddress: ''
+        fullName: ''
+        saveChanges: Guardar cambios
+      new:
+        confirmPassword: Confirmar contraseña
+        emailAddress: Correo electrónico
+        fullName: Nombre completo
+        password: Contraseña
+        signUp: Registrarse
+      signed_up: ''
+      signed_up_but_inactive: ''
+      signed_up_but_locked: ''
+      signed_up_but_unconfirmed: ''
+      update_needs_confirmation: ''
+      updated: ''
+      updated_but_not_signed_in: ''
+    sessions:
+      already_signed_out: ''
+      new:
+        emailAddress: Correo electrónico
+        login: Iniciar sesión
+        password: Contraseña
+        rememberMe: Recordarme
+      signed_in: ''
+      signed_out: ''
+    shared:
+      links:
+        didntReceiverEmailConfirmation: "¿No recibiste el correo de confirmación?"
+        didntReceiverUnlockInstructions: "¿No recibiste las instrucciones de desbloqueo?"
+        forgotYourPassword: "¿Olvidaste tu contraseña?"
+    unlocks:
+      send_instructions: ''
+      send_paranoid_instructions: ''
+      unlocked: ''
+  errors:
+    messages:
+      already_confirmed: ''
+      confirmation_period_expired: ''
+      expired: ''
+      not_found: ''
+      not_locked: ''
+      not_saved:
+        one: ''
+        other: ''

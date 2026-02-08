@@ -1,0 +1,24 @@
+---
+en_US:
+  common:
+    actions: ''
+    activate: ''
+    back: ''
+    cancel: ''
+    close: ''
+    confirm: ''
+    create: ''
+    deactivate: ''
+    delete: ''
+    edit: ''
+    errors: ''
+    flash:
+      action_failed: ''
+      archived: ''
+      created: ''
+      deleted: ''
+      processing_restarted: ''
+      updated: ''
+    loading: ''
+    save: ''
+    update: ''

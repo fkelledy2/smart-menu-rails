@@ -1,0 +1,762 @@
+---
+es:
+  common:
+    remove: ''
+    archive: ''
+  activerecord:
+    attributes:
+      allergyn:
+        description: ''
+        name: ''
+        symbol: ''
+      employee:
+        eid: ''
+        image: ''
+        name: ''
+        restaurant: ''
+        role: ''
+        status: ''
+        user: ''
+      inventory:
+        currentInventory: ''
+        menuItem: ''
+        resetHour: ''
+        startingInventory: ''
+      menu:
+        allowOrdering: ''
+        covercharge: ''
+        description: ''
+        displayImages: ''
+        displayImagesInPopup: ''
+        image: ''
+        imagecontext: ''
+        inventoryTracking: ''
+        name: ''
+        pdf_menu_scan: ''
+        restaurant: ''
+        sequence: ''
+        status: ''
+      menuavailability:
+        dayofweek: ''
+        endhour: ''
+        endmin: ''
+        menu: ''
+        starthour: ''
+        startmin: ''
+        status: ''
+      menuitem:
+        allergyns: ''
+        calories: ''
+        description: ''
+        image: ''
+        ingredients: ''
+        menusection_id: ''
+        name: ''
+        preptime: ''
+        price: ''
+        sequence: ''
+        sizes: ''
+        sizesupport: ''
+        status: ''
+        tags: ''
+        unitcost: ''
+        variantPricing: ''
+      menusection:
+        description: ''
+        image: ''
+        menu: ''
+        name: ''
+        sequence: ''
+        status: ''
+      restaurant:
+        address1: ''
+        address2: ''
+        allowOrdering: ''
+        capacity: ''
+        city: ''
+        country: ''
+        currency: ''
+        description: ''
+        displayImages: ''
+        displayImagesInPopup: ''
+        genid: ''
+        image: ''
+        imagecontext: ''
+        inventoryTracking: ''
+        music: ''
+        name: ''
+        postcode: ''
+        spotifyaccesstoken: ''
+        spotifyrefreshtoken: ''
+        spotifyuserid: ''
+        state: ''
+        status: ''
+        tips: ''
+        wifiEncryptionType: ''
+        wifiHidden: ''
+        wifiPassword: ''
+        wifissid: ''
+      restaurantavailability:
+        dayofweek: ''
+        endhour: ''
+        endmin: ''
+        restaurant: ''
+        sequence: ''
+        starthour: ''
+        startmin: ''
+        status: ''
+      restaurantlocale:
+        dfault: ''
+        locale: ''
+      size:
+        description: ''
+        name: ''
+        size: ''
+      tax:
+        name: ''
+        restaurant: ''
+        taxPercentage: ''
+        taxType: ''
+  allergyns:
+    edit:
+      allergyn: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: Activar
+      allergyn: ''
+      allergyns: ''
+      deactivate: Desactivar
+    new:
+      allergyn: ''
+      cancel: ''
+    show:
+      allergyn: Mostrar alérgeno
+  devise:
+    registrations:
+      edit:
+        account: ''
+        billing: ''
+        confirmPassword: ''
+        currentPassword: ''
+        currentPasswordHelp: ''
+        deactivateMyAccount: ''
+        deactivateMyAccountAreYouSure: ''
+        password: ''
+        passwordHelp: ''
+        saveChanges: ''
+        selectPlan: ''
+      new:
+        confirmPassword: ''
+        emailAddress: ''
+        fullName: ''
+        password: ''
+        signUp: ''
+    sessions:
+      new:
+        emailAddress: ''
+        login: ''
+        password: ''
+        rememberMe: ''
+    shared:
+      links:
+        didntReceiverEmailConfirmation: "¿No recibiste el correo de confirmación?"
+        didntReceiverUnlockInstructions: "¿No recibiste las instrucciones de desbloqueo?"
+        forgotYourPassword: "¿Olvidaste tu contraseña?"
+  employees:
+    edit:
+      employee: Editar empleado
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      activate: Activar
+      deactivate: Desactivar
+      employee: Empleado
+      employees: Empleados
+    new:
+      cancel: Cancelar
+      employee: Nuevo empleado
+    show:
+      employee: ''
+  feature1:
+    key: Menús Inteligentes
+  feature2:
+    key: Pedidos Personalizados
+  feature3:
+    key: Filtrado de Alérgenos
+  feature4:
+    key: Pedidos de Clientes
+  feature5:
+    key: Traducciones IA
+  feature6:
+    key: Creación de Imágenes IA
+  home:
+    index:
+      actions: ''
+      activate: Activar
+      browse: ''
+      contactUs: ''
+      ctaBody1: ''
+      ctaBody2: ''
+      ctaTitle1: ''
+      ctaTitle2: ''
+      deactivate: Desactivar
+      demoMenu: ''
+      demoMenuTag: ''
+      demoMenuTagBrowse: ''
+      emailAddress: ''
+      emailAddressTag: ''
+      featureDescription1: ''
+      featureDescription2: ''
+      featureDescription3: ''
+      featureDescription4: ''
+      featureDescription5: ''
+      featureDescription6: ''
+      featureTitle1: ''
+      featureTitle2: ''
+      featureTitle3: ''
+      featureTitle4: ''
+      featureTitle5: ''
+      featureTitle6: ''
+      features: ''
+      menus: ''
+      message: ''
+      next: ''
+      numbers: ''
+      numbersTag: ''
+      orderValue: ''
+      orders: ''
+      previous: ''
+      pricing: ''
+      pricingTag: ''
+      restaurants: Restaurantes
+      saveChanges: ''
+      selectPlan: ''
+      signUp: ''
+      signup: ''
+      submit: ''
+      testimonials: ''
+      testimonialsTag: ''
+      welcome: ''
+  inventories:
+    edit:
+      inventory: Editar inventario
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: Activar
+      deactivate: Desactivar
+      inventories: Inventarios
+      inventory: Inventario
+    new:
+      cancel: Cancelar
+      inventory: Nuevo inventario
+    show:
+      inventory: ''
+  menuavailabilities:
+    edit:
+      menuAvailability: Editar disponibilidad
+    form:
+      delete: Eliminar
+      errors: Errores
+      save: Guardar
+      selectMenu: Seleccionar menú...
+      sure: "¿Estás seguro?"
+    index:
+      activate: Abrir
+      deactivate: Cerrar
+      menuAvailabilities: Disponibilidades
+      menuAvailability: Disponibilidad
+    new:
+      cancel: Cancelar
+      menuAvailability: Nueva disponibilidad
+    show:
+      menuAvailability: ''
+  menuitems:
+    edit:
+      menuItem: ''
+    form:
+      delete: ''
+      details: ''
+      errors: ''
+      imageSettings: ''
+      save: ''
+      selectMenuSection: ''
+      settings: ''
+      sizes: ''
+      sure: ''
+      update: ''
+    index:
+      activate: Activar
+      deactivate: Desactivar
+      menuItem: Artículo
+      menuItems: Artículos
+    new:
+      cancel: Cancelar
+      menuItem: Nuevo artículo
+    show:
+      menuItem: ''
+  menus:
+    edit:
+      availabilities: ''
+      menu: ''
+      sections: ''
+    form:
+      delete: ''
+      details: ''
+      errors: ''
+      imageSettings: ''
+      pdfMenuScan: ''
+      pdfSettings: ''
+      preview: ''
+      save: ''
+      selectRestaurant: ''
+      settings: ''
+      sure: ''
+    index:
+      activate: Activar
+      deactivate: Desactivar
+      menu: Menú
+      menus: Menús
+      unavailable: El menú no está disponible actualmente.
+    new:
+      cancel: Cancelar
+      menu: Nuevo menú
+    show:
+      menu: ''
+      table: ''
+    showMenuBanner:
+      table: Mesa
+    showMenuavailabilities:
+      actions: Acciones
+      activate: Activar
+      availabilities: Disponibilidades
+      deactivate: Desactivar
+    showMenusections:
+      actions: Acciones
+      activate: Activar
+      deactivate: Desactivar
+      sections: Secciones
+  menusections:
+    edit:
+      inventories: Inventarios
+      items: Artículos
+      menuSection: Editar sección
+      section: Sección
+    form:
+      delete: Eliminar
+      details: Detalles
+      errors: Errores
+      imageSettings: Configuración de imagen
+      save: Guardar
+      selectMenu: Seleccionar menú...
+      settings: Configuración
+      sure: "¿Estás seguro?"
+    index:
+      activate: Activar
+      deactivate: Desactivar
+      menuSection: Sección
+      menuSections: Secciones
+    new:
+      cancel: Cancelar
+      menuSection: Nueva sección
+    show:
+      menuSection: ''
+    showInventories:
+      actions: Acciones
+      activate: Activar
+      deactivate: Desactivar
+      inventories: Inventarios
+      reset: Reiniciar
+    showMenuitems:
+      actions: Acciones
+      activate: Activar
+      deactivate: Desactivar
+      genimage: Crear imagen
+      menuItems: Artículos
+  plan:
+    business:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: Empresas
+    call: Llamar
+    enterprise:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: Empresa
+    pro:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: Pro
+    register: Registrarse
+    starter:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      greeting: ''
+      key: Inicio
+  restaurantavailabilities:
+    edit:
+      restaurantavailability: Editar horarios
+    form:
+      delete: Eliminar
+      errors: Errores
+      save: Guardar
+      selectRestaurant: Seleccionar restaurante...
+      sure: "¿Estás seguro?"
+    index:
+      activate: Abrir
+      deactivate: Cerrar
+      restaurantavailabilities: Horario de apertura
+      restaurantavailability: Horario
+    new:
+      cancel: Cancelar
+      restaurantavailability: Nuevo horario
+    show:
+      restaurantavailability: ''
+  restaurantlocales:
+    form:
+      save: ''
+    new:
+      restaurantlocale: Nuevo idioma
+  restaurants:
+    edit:
+      allergynsTab: Allergens
+      employeesTab: Empleados
+      localesTab: Idiomas
+      menuTab: Menús
+      openingsTab: Opening Hours
+      ordersTab: Pedidos
+      restaurant: ''
+      restaurantTab: Restaurante
+      sizesTab: Tamaños
+      smartQRTab: SmartQRs
+      tableTab: Mesas
+      taxesTab: Impuestos
+      tipsTab: Propinas
+      tracksTab: Tracks
+    form:
+      address: Dirección
+      delete: Eliminar
+      details: Detalles
+      errors: ''
+      generateImage: ''
+      imageSettings: Ajustes de imagen
+      music: Música
+      pdfSettings: ''
+      save: Guardar
+      settings: Configuración
+      spotify: Spotify
+      sure: "¿Seguro?"
+      wifi: Wi‑Fi
+    index:
+      actions: ''
+      activate: Activar
+      deactivate: Desactivar
+      restaurant: Restaurante
+      restaurants: Restaurantes
+    new:
+      cancel: ''
+      restaurant: Restaurante
+      restaurants: Restaurantes
+    show:
+      address: Dirección
+      address1: ''
+      address2: ''
+      city: ''
+      currency: ''
+      description: ''
+      details: Detalles
+      imageSettings: Ajustes de imagen
+      name: ''
+      pdfSettings: ''
+      postcode: ''
+      restaurant: ''
+      settings: Configuración
+      state: ''
+    showAllergyns:
+      actions: ''
+      activate: ''
+      allergyns: Allergens
+      deactivate: ''
+    showEmployees:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      employee: ''
+      employees: Empleados
+      id: ''
+      name: ''
+      role: ''
+    showLocales:
+      actions: Acciones
+      activate: Activar
+      deactivate: Desactivar
+      default: Default
+      delete: Eliminar
+      menus: Menus
+    showMenus:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      menus: Menús
+    showOpeningHours:
+      actions: Acciones
+      activate: Activar
+      closing: ''
+      dayOfWeek: ''
+      deactivate: Desactivar
+      opening: ''
+      openingHour: ''
+      openingHours: ''
+      openings: Opening Hours
+    showOrdrs:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      ordrs: Pedidos
+    showSizes:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      sizes: Tamaños
+    showSmartMenus:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      smartQRs: SmartQRs
+    showTableSettings:
+      actions: ''
+      activate: ''
+      capacity: ''
+      deactivate: ''
+      name: ''
+      tableSetting: ''
+      tableSettings: Table Settings
+      type: ''
+    showTaxes:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      name: ''
+      percentage: ''
+      tax: ''
+      taxes: Impuestos
+      type: ''
+    showTips:
+      actions: Acciones
+      activate: Activar
+      deactivate: Desactivar
+      percentage: ''
+      tip: ''
+      tips: Propinas
+    showTracks:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      tracks: Tracks
+  shared:
+    footer:
+      privacy: ''
+      terms: ''
+    navbar:
+      adminArea: Admin
+      allergyns: ''
+      billing: Facturación
+      employees: ''
+      inventories: ''
+      login: ''
+      logout: ''
+      menuAvailability: ''
+      menuItems: ''
+      menuSections: ''
+      menus: ''
+      openingHours: ''
+      orderItems: ''
+      orders: ''
+      restaurants: ''
+      settings: ''
+      signUp: ''
+      sizes: ''
+      tableSettings: ''
+      taxes: ''
+      testimonials: ''
+      whatsNew: ''
+  sizes:
+    edit:
+      size: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: Activar
+      deactivate: Desactivar
+      size: ''
+      sizes: ''
+    new:
+      cancel: ''
+      size: ''
+    show:
+      size: Mostrar tamaño
+  smartmenus:
+    edit:
+      menu: ''
+    form:
+      delete: ''
+      details: ''
+      errors: ''
+      preview: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      activate: Activar
+      deactivate: Desactivar
+      menu: Menú
+      menus: Menús
+      smartmenus: Menús Inteligentes
+      unavailable: El menú no está disponible actualmente.
+    new:
+      cancel: ''
+      menu: ''
+    orderCustomer:
+      bill: ''
+      order: ''
+      staffAlerted: ''
+      startOrder: ''
+      takePayment: ''
+    orderStaff:
+      bill: ''
+      order: ''
+      staffAlerted: ''
+      startOrder: ''
+      takePayment: ''
+    show:
+      menu: Mostrar menú
+      table: Mesa
+    alcoholic: Con alcohol
+    alcoholic_tooltip: ''
+    alcohol:
+      acknowledge_btn: ''
+      acknowledged: ''
+    showAllergyns:
+      allergyns: Alérgenos
+    showCoverCharge:
+      covercharge: Cover
+      coverchargeUnit: por persona
+    showMenuBanner:
+      allergyns: Alérgenos
+      table: Mesa
+    showModals:
+      add: ''
+      addToOrder: ''
+      cancel: ''
+      confirmPayment: ''
+      customiseOrderWithName: ''
+      filterAllergyns: ''
+      filterBy: ''
+      menuItem: ''
+      noneAll: ''
+      price: ''
+      requestBill: ''
+      start: ''
+      startOrder: ''
+      submit: ''
+      total: ''
+      yourOrder: ''
+    showTableLocaleSelectorCustomer:
+      table: Mesa
+    showTableLocaleSelectorStaff:
+      table: Mesa
+  tablesettings:
+    edit:
+      tablesetting: Editar mesa
+    form:
+      delete: Eliminar
+      errors: Errores
+      save: Guardar
+      selectRestaurant: Seleccionar restaurante...
+      sure: "¿Estás seguro?"
+    index:
+      tablesetting: ''
+      tablesettings: ''
+    new:
+      cancel: ''
+      tablesetting: ''
+    show:
+      tablesetting: ''
+  taxes:
+    edit:
+      tax: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      tax: ''
+      taxes: ''
+    new:
+      cancel: ''
+      tax: ''
+    show:
+      tax: ''
+  testimonials:
+    index:
+      actions: Acciones
+      approve: Aprobar
+      testimonials: Testimonios
+      unapprove: Desaprobar
+  tips:
+    edit:
+      tip: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      tip: ''
+      tips: ''
+    new:
+      cancel: ''
+      tip: ''
+    show:
+      tip: Mostrar propine
+  tracks:
+    index:
+      tracks: ''
+  userplans:
+    edit:
+      saveChanges: ''
+      selectPlan: ''
+  contacts:
+    controller:
+      thanks: "¡Gracias por contactarnos! Nos pondremos en contacto contigo pronto."
+  free: ''

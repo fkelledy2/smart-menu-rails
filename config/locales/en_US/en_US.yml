@@ -1,0 +1,762 @@
+---
+en_US:
+  common:
+    remove: ''
+    archive: ''
+  activerecord:
+    attributes:
+      allergyn:
+        description: ''
+        name: ''
+        symbol: ''
+      employee:
+        eid: ''
+        image: ''
+        name: ''
+        restaurant: ''
+        role: ''
+        status: ''
+        user: ''
+      inventory:
+        currentInventory: ''
+        menuItem: ''
+        resetHour: ''
+        startingInventory: ''
+      menu:
+        allowOrdering: ''
+        covercharge: Cover Charge
+        description: ''
+        displayImages: ''
+        displayImagesInPopup: ''
+        image: ''
+        imagecontext: ''
+        inventoryTracking: ''
+        name: ''
+        pdf_menu_scan: ''
+        restaurant: ''
+        sequence: ''
+        status: ''
+      menuavailability:
+        dayofweek: ''
+        endhour: ''
+        endmin: ''
+        menu: ''
+        starthour: ''
+        startmin: ''
+        status: ''
+      menuitem:
+        allergyns: ''
+        calories: ''
+        description: ''
+        image: ''
+        ingredients: ''
+        menusection_id: ''
+        name: ''
+        preptime: ''
+        price: ''
+        sequence: ''
+        sizes: ''
+        sizesupport: ''
+        status: ''
+        tags: ''
+        unitcost: ''
+        variantPricing: ''
+      menusection:
+        description: ''
+        image: ''
+        menu: ''
+        name: ''
+        sequence: ''
+        status: ''
+      restaurant:
+        address1: ''
+        address2: ''
+        allowOrdering: ''
+        capacity: ''
+        city: ''
+        country: ''
+        currency: Currency
+        description: ''
+        displayImages: ''
+        displayImagesInPopup: ''
+        genid: ''
+        image: ''
+        imagecontext: ''
+        inventoryTracking: ''
+        music: ''
+        name: ''
+        postcode: ''
+        spotifyaccesstoken: ''
+        spotifyrefreshtoken: ''
+        spotifyuserid: ''
+        state: ''
+        status: ''
+        tips: ''
+        wifiEncryptionType: ''
+        wifiHidden: ''
+        wifiPassword: ''
+        wifissid: ''
+      restaurantavailability:
+        dayofweek: ''
+        endhour: ''
+        endmin: ''
+        restaurant: ''
+        sequence: ''
+        starthour: ''
+        startmin: ''
+        status: ''
+      restaurantlocale:
+        dfault: ''
+        locale: ''
+      size:
+        description: ''
+        name: ''
+        size: ''
+      tax:
+        name: ''
+        restaurant: ''
+        taxPercentage: ''
+        taxType: ''
+  allergyns:
+    edit:
+      allergyn: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      allergyn: ''
+      allergyns: ''
+      deactivate: ''
+    new:
+      allergyn: ''
+      cancel: ''
+    show:
+      allergyn: ''
+  devise:
+    registrations:
+      edit:
+        account: ''
+        billing: ''
+        confirmPassword: ''
+        currentPassword: ''
+        currentPasswordHelp: ''
+        deactivateMyAccount: ''
+        deactivateMyAccountAreYouSure: ''
+        password: ''
+        passwordHelp: ''
+        saveChanges: ''
+        selectPlan: ''
+      new:
+        confirmPassword: ''
+        emailAddress: ''
+        fullName: ''
+        password: ''
+        signUp: ''
+    sessions:
+      new:
+        emailAddress: ''
+        login: ''
+        password: ''
+        rememberMe: ''
+    shared:
+      links:
+        didntReceiverEmailConfirmation: ''
+        didntReceiverUnlockInstructions: ''
+        forgotYourPassword: ''
+  employees:
+    edit:
+      employee: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      employee: ''
+      employees: ''
+    new:
+      cancel: ''
+      employee: ''
+    show:
+      employee: ''
+  feature1:
+    key: ''
+  feature2:
+    key: ''
+  feature3:
+    key: ''
+  feature4:
+    key: ''
+  feature5:
+    key: ''
+  feature6:
+    key: ''
+  home:
+    index:
+      actions: ''
+      activate: ''
+      browse: ''
+      contactUs: ''
+      ctaBody1: ''
+      ctaBody2: ''
+      ctaTitle1: ''
+      ctaTitle2: ''
+      deactivate: ''
+      demoMenu: ''
+      demoMenuTag: ''
+      demoMenuTagBrowse: ''
+      emailAddress: ''
+      emailAddressTag: ''
+      featureDescription1: ''
+      featureDescription2: ''
+      featureDescription3: ''
+      featureDescription4: ''
+      featureDescription5: ''
+      featureDescription6: ''
+      featureTitle1: ''
+      featureTitle2: ''
+      featureTitle3: ''
+      featureTitle4: ''
+      featureTitle5: ''
+      featureTitle6: ''
+      features: ''
+      menus: ''
+      message: ''
+      next: ''
+      numbers: ''
+      numbersTag: ''
+      orderValue: ''
+      orders: ''
+      previous: ''
+      pricing: ''
+      pricingTag: ''
+      restaurants: ''
+      saveChanges: ''
+      selectPlan: ''
+      signUp: ''
+      signup: ''
+      submit: ''
+      testimonials: ''
+      testimonialsTag: ''
+      welcome: ''
+  inventories:
+    edit:
+      inventory: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      inventories: ''
+      inventory: ''
+    new:
+      cancel: ''
+      inventory: ''
+    show:
+      inventory: ''
+  menuavailabilities:
+    edit:
+      menuAvailability: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      selectMenu: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      menuAvailabilities: ''
+      menuAvailability: ''
+    new:
+      cancel: ''
+      menuAvailability: ''
+    show:
+      menuAvailability: ''
+  menuitems:
+    edit:
+      menuItem: ''
+    form:
+      delete: ''
+      details: ''
+      errors: ''
+      imageSettings: ''
+      save: ''
+      selectMenuSection: ''
+      settings: ''
+      sizes: ''
+      sure: ''
+      update: ''
+    index:
+      activate: ''
+      deactivate: ''
+      menuItem: ''
+      menuItems: ''
+    new:
+      cancel: ''
+      menuItem: ''
+    show:
+      menuItem: ''
+  menus:
+    edit:
+      availabilities: ''
+      menu: ''
+      sections: ''
+    form:
+      delete: ''
+      details: ''
+      errors: ''
+      imageSettings: ''
+      pdfMenuScan: ''
+      pdfSettings: ''
+      preview: ''
+      save: ''
+      selectRestaurant: ''
+      settings: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      menu: ''
+      menus: ''
+      unavailable: ''
+    new:
+      cancel: ''
+      menu: ''
+    show:
+      menu: ''
+      table: ''
+    showMenuBanner:
+      table: ''
+    showMenuavailabilities:
+      actions: ''
+      activate: ''
+      availabilities: ''
+      deactivate: ''
+    showMenusections:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      sections: ''
+  menusections:
+    edit:
+      inventories: ''
+      items: ''
+      menuSection: ''
+      section: ''
+    form:
+      delete: ''
+      details: ''
+      errors: ''
+      imageSettings: ''
+      save: ''
+      selectMenu: ''
+      settings: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      menuSection: ''
+      menuSections: ''
+    new:
+      cancel: ''
+      menuSection: ''
+    show:
+      menuSection: ''
+    showInventories:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      inventories: ''
+      reset: ''
+    showMenuitems:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      genimage: ''
+      menuItems: ''
+  plan:
+    business:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: ''
+    call: ''
+    enterprise:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: ''
+    pro:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      key: ''
+    register: ''
+    starter:
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+      greeting: ''
+      key: ''
+  restaurantavailabilities:
+    edit:
+      restaurantavailability: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      restaurantavailabilities: ''
+      restaurantavailability: ''
+    new:
+      cancel: ''
+      restaurantavailability: ''
+    show:
+      restaurantavailability: ''
+  restaurantlocales:
+    form:
+      save: ''
+    new:
+      restaurantlocale: ''
+  restaurants:
+    edit:
+      allergynsTab: ''
+      employeesTab: ''
+      localesTab: ''
+      menuTab: ''
+      openingsTab: ''
+      ordersTab: ''
+      restaurant: ''
+      restaurantTab: ''
+      sizesTab: ''
+      smartQRTab: ''
+      tableTab: ''
+      taxesTab: ''
+      tipsTab: ''
+      tracksTab: ''
+    form:
+      address: ''
+      delete: ''
+      details: ''
+      errors: ''
+      generateImage: ''
+      imageSettings: ''
+      music: ''
+      pdfSettings: ''
+      save: ''
+      settings: ''
+      spotify: ''
+      sure: ''
+      wifi: ''
+    index:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      restaurant: ''
+      restaurants: ''
+    new:
+      cancel: ''
+      restaurant: ''
+      restaurants: ''
+    show:
+      address: ''
+      address1: ''
+      address2: ''
+      city: ''
+      currency: ''
+      description: ''
+      details: ''
+      imageSettings: ''
+      name: ''
+      pdfSettings: ''
+      postcode: ''
+      restaurant: ''
+      settings: ''
+      state: ''
+    showAllergyns:
+      actions: ''
+      activate: ''
+      allergyns: ''
+      deactivate: ''
+    showEmployees:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      employee: ''
+      employees: ''
+      id: ''
+      name: ''
+      role: ''
+    showLocales:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      default: ''
+      delete: ''
+      menus: ''
+    showMenus:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      menus: ''
+    showOpeningHours:
+      actions: ''
+      activate: ''
+      closing: ''
+      dayOfWeek: ''
+      deactivate: ''
+      opening: ''
+      openingHour: ''
+      openingHours: ''
+      openings: ''
+    showOrdrs:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      ordrs: ''
+    showSizes:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      sizes: ''
+    showSmartMenus:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      smartQRs: ''
+    showTableSettings:
+      actions: ''
+      activate: ''
+      capacity: ''
+      deactivate: ''
+      name: ''
+      tableSetting: ''
+      tableSettings: ''
+      type: ''
+    showTaxes:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      name: ''
+      percentage: ''
+      tax: ''
+      taxes: ''
+      type: ''
+    showTips:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      percentage: ''
+      tip: ''
+      tips: ''
+    showTracks:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      tracks: ''
+  shared:
+    footer:
+      privacy: ''
+      terms: ''
+    navbar:
+      adminArea: ''
+      allergyns: ''
+      billing: ''
+      employees: ''
+      inventories: ''
+      login: ''
+      logout: ''
+      menuAvailability: ''
+      menuItems: ''
+      menuSections: ''
+      menus: ''
+      openingHours: ''
+      orderItems: ''
+      orders: ''
+      restaurants: ''
+      settings: ''
+      signUp: ''
+      sizes: ''
+      tableSettings: ''
+      taxes: ''
+      testimonials: ''
+      whatsNew: ''
+  sizes:
+    edit:
+      size: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      size: ''
+      sizes: ''
+    new:
+      cancel: ''
+      size: ''
+    show:
+      size: ''
+  smartmenus:
+    edit:
+      menu: ''
+    form:
+      delete: ''
+      details: ''
+      errors: ''
+      preview: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      menu: ''
+      menus: ''
+      smartmenus: ''
+      unavailable: ''
+    new:
+      cancel: ''
+      menu: ''
+    orderCustomer:
+      bill: ''
+      order: ''
+      staffAlerted: ''
+      startOrder: ''
+      takePayment: ''
+    orderStaff:
+      bill: ''
+      order: ''
+      staffAlerted: ''
+      startOrder: ''
+      takePayment: ''
+    show:
+      menu: ''
+      table: ''
+    alcoholic: ''
+    alcoholic_tooltip: ''
+    alcohol:
+      acknowledge_btn: ''
+      acknowledged: ''
+    showAllergyns:
+      allergyns: ''
+    showCoverCharge:
+      covercharge: ''
+      coverchargeUnit: ''
+    showMenuBanner:
+      allergyns: ''
+      table: ''
+    showModals:
+      add: ''
+      addToOrder: ''
+      cancel: ''
+      confirmPayment: ''
+      customiseOrderWithName: ''
+      filterAllergyns: ''
+      filterBy: ''
+      menuItem: ''
+      noneAll: ''
+      price: ''
+      requestBill: ''
+      start: ''
+      startOrder: ''
+      submit: ''
+      total: ''
+      yourOrder: ''
+    showTableLocaleSelectorCustomer:
+      table: ''
+    showTableLocaleSelectorStaff:
+      table: ''
+  tablesettings:
+    edit:
+      tablesetting: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      tablesetting: ''
+      tablesettings: ''
+    new:
+      cancel: ''
+      tablesetting: ''
+    show:
+      tablesetting: ''
+  taxes:
+    edit:
+      tax: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      tax: ''
+      taxes: ''
+    new:
+      cancel: ''
+      tax: ''
+    show:
+      tax: ''
+  testimonials:
+    index:
+      actions: ''
+      approve: ''
+      testimonials: ''
+      unapprove: ''
+  tips:
+    edit:
+      tip: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      selectRestaurant: ''
+      sure: ''
+    index:
+      tip: ''
+      tips: ''
+    new:
+      cancel: ''
+      tip: ''
+    show:
+      tip: ''
+  tracks:
+    index:
+      tracks: ''
+  userplans:
+    edit:
+      saveChanges: ''
+      selectPlan: ''
+  contacts:
+    controller:
+      thanks: ''
+  free: ''

@@ -1,0 +1,6 @@
+---
+pt:
+  omniauth:
+    connected: ''
+    email_exists: ''
+    failure: ''

@@ -1,0 +1,144 @@
+---
+cs:
+  home:
+    index:
+      browse: Procházet
+      page_title: Mellow Menu - Digitální menu pro restaurace
+      page_description: Vytvářejte krásné digitální jídelní lístky, umožněte online
+        objednávání a poskytněte možnosti bezkontaktních plateb ve vaší restauraci.
+      error: 'Došlo k chybě: %{zpráva}'
+      compare_plans: Porovnání plánů
+      contactUs: Kontaktujte nás
+      ctaBody1: Vytvořte menu QR, které si hosté oblíbí. Okamžitá aktualizace položek.
+        Až budete připraveni, přidejte překlady, objednávky a obrázky pokrmů s umělou
+        inteligencí.
+      ctaBody2: Vytvořte menu QR, které si hosté oblíbí. Okamžitá aktualizace položek.
+        Až budete připraveni, přidejte překlady, objednávky a obrázky pokrmů s umělou
+        inteligencí.
+      ctaTitle1: Zjednodušte službu. Pozvedněte zážitek.
+      ctaTitle2: Zde začíná chytřejší restaurace
+      demoMenu: Ukázkové menu
+      demoMenuTag: Náhled
+      demoMenuTagBrowse: Procházet
+      emailAddressTag: E-mailová adresa
+      heroPrimaryCta: Vytvoření mého menu
+      heroSecondaryCta: Zobrazit ukázkové menu
+      heroTrust1: Hosté nepotřebují žádnou aplikaci
+      heroTrust2: Vícejazyčné nabídky
+      heroTrust3: Okamžité aktualizace (bez přetisků)
+      overviewTitle: Vše, co potřebujete od digitálního menu, na jedné platformě
+      overviewBody: Udržujte svůj jídelníček svěží, konzistentní a vhodný pro konverzi
+        - bez přetisků a nepřehledných souborů PDF.
+      overviewItem1: Rychlé menu pro mobilní zařízení
+      overviewItem2: Překlad jedním kliknutím
+      overviewItem3: Obrázky pokrmů AI (jednotný styl)
+      overviewItem4: Objednávání a platby, kdy chcete
+      overviewItem5: Poznatky, podle kterých můžete jednat
+      howTitle: Začněte během několika minut
+      howBody: Nepotřebujete vývojáře. Nastavte si nabídku a začněte rychle fungovat.
+      howStep1Title: Vytvoření restaurace a jídelního lístku
+      howStep1Body: Přidejte oddíly a pokrmy nebo importujte stávající menu.
+      howStep2Title: Připravte ji pro hosty
+      howStep2Body: Přidejte překlady, pravidla dostupnosti, alergeny a obrázky.
+      howStep3Title: Sdílejte svůj QR
+      howStep3Body: Vytiskněte ji a umístěte - hosté ji okamžitě naskenují a prohlédnou.
+      trustTitle: Vytvořeno pro skutečné restaurační služby
+      trustItem1Title: Rychle v mobilu
+      trustItem1Body: Jsou navrženy tak, aby se rychle načítaly a zůstaly čitelné.
+      trustItem2Title: Kontrola a dostupnost
+      trustItem2Body: Přepínejte položky a dostupnost podle toho, jak se služba mění.
+      trustItem3Title: Uživatelská přívětivost pro hosty
+      trustItem3Body: Není potřeba žádná aplikace - stačí naskenovat a jít.
+      trustItem4Title: Podpora, když ji potřebujete
+      trustItem4Body: Rychle získejte pomoc, i když jste zaneprázdněni.
+      faqTitle: Často kladené otázky
+      faqQ1: Potřebují hosté aplikaci?
+      faqA1: Ne. Hosté pouze naskenují QR kód a nabídka se otevře v jejich prohlížeči.
+      faqQ2: Mohu nabídku okamžitě aktualizovat?
+      faqA2: Ano. Změny se zveřejňují okamžitě - bez přetisků.
+      faqQ3: Podporujete více jazyků?
+      faqA3: Ano. Přeložte nabídku a nechte hosty procházet v jejich jazyce.
+      faqQ4: Můžeme přidat fotografie bez focení?
+      faqA4: Ano. Generujte obrázky AI, aby vaše menu bylo konzistentní a jednotné.
+      closingTitle: Spusťte své menu ještě dnes
+      closingBody: Vytvořte si své první menu nebo si prohlédněte ukázku a zjistěte,
+        jak to vypadá na mobilním telefonu.
+      closingPrimaryCta: Vytvoření mého menu
+      closingSecondaryCta: Zobrazit ukázku
+      featuresStoryTitle: Konečně digitální menu, které působí prémiově
+      featuresStoryBody: Navrženo pro hosty, postaveno pro služby. Vyberte si funkce,
+        které potřebujete nyní, a přidávejte další, až budete růst.
+      featuresStoryPrimaryCta: Vytvoření mého menu
+      featuresStorySecondaryCta: Zobrazit ukázku
+      featuresStory1Kicker: Zkušenosti hostů
+      featuresStory1Title: Nabídky, které se načítají okamžitě a vypadají skvěle
+      featuresStory1Body: Vaše nabídka by měla působit jako součást vaší značky -
+        rychlá, přehledná a snadná k procházení.
+      featuresStory1Bullet1: Rozložení pro mobilní zařízení s plynulou navigací
+      featuresStory1Bullet2: Přehledné oddíly a detaily pokrmů
+      featuresStory1Bullet3: Není potřeba žádná aplikace - stačí naskenovat QR
+      featuresStory2Kicker: Překlad
+      featuresStory2Title: Obsluhovat každého hosta v jeho rodném jazyce
+      featuresStory2Body: Přeložte menu jedním kliknutím a nechte hosty bez obav procházet
+        - žádné nepříjemné hádání.
+      featuresStory2Bullet1: Vícejazyčné menu pro turisty i místní obyvatele
+      featuresStory2Bullet2: Konzistentní formátování v různých jazycích
+      featuresStory2Bullet3: Rychlejší objednávání s méně dotazy
+      featuresStory3Kicker: Obrázky AI
+      featuresStory3Title: Fotografie pokrmů, které odpovídají stylu vašeho menu
+      featuresStory3Body: Vytvářejte konzistentní, značkové obrázky pokrmů, abyste
+        zvýšili vnímanou kvalitu a zvýšili výběr.
+      featuresStory3Bullet1: Soudržná vizuální identita všech pokrmů
+      featuresStory3Bullet2: Pro začátek není nutné žádné focení
+      featuresStory3Bullet3: Snadná aktualizace při změně nabídky
+      featuresStory4Kicker: Objednávání
+      featuresStory4Title: Objednávání a platby, když jste připraveni
+      featuresStory4Body: Začněte krásným menu. Objednávky a platby přidejte, až to
+        bude vyhovovat vašemu modelu služeb.
+      featuresStory4Bullet1: Zkrácení čekací doby ve špičce
+      featuresStory4Bullet2: Kontrola dostupnosti a objednávkových oken
+      featuresStory4Bullet3: Zaměstnanci se soustředí na pohostinnost
+      featuresStory5Kicker: Insights
+      featuresStory5Title: Pochopte, co se prodává, a pak optimalizujte
+      featuresStory5Body: Pomocí jednoduché analýzy můžete vylepšit nabídku, snížit
+        množství mrtvých zásob a zvýšit průměrnou hodnotu objednávky.
+      featuresStory5Bullet1: Všimněte si trendů a nejlepších pokrmů
+      featuresStory5Bullet2: Podívejte se, co si hosté skutečně prohlížejí a vybírají
+      featuresStory5Bullet3: Provádění změn a okamžité publikování
+      featureDescription2: Obsluhujte hosty v jejich vlastním jazyce jediným kliknutím.
+      featureDescription3: Vytvářejte konzistentní, značkové fotografie pokrmů.
+      featureDescription4: Kontrolujte, co mohou zákazníci vidět a objednávat.
+      featureDescription5: Nechte hosty objednávat od stolu a snadno platit.
+      featureDescription6: Zjistěte, jaké jsou trendy, a vylepšete svůj jídelníček.
+      featureTitle2: Okamžitě přeložit
+      featureTitle3: Obrázky AI
+      featureTitle4: Inventář a dostupnost
+      featureTitle5: Chytré objednávání
+      featureTitle6: Analytika
+      features: Funkce
+      menus: Menu
+      next: Další
+      numbers: Čísla
+      numbersTag: Přehledně
+      orderValue: Průměrná hodnota objednávky
+      orders: Objednávky
+      previous: Předchozí
+      pricing: Stanovení cen
+      pricingTag: Plány
+      restaurants: Restaurace
+      saveChanges: Uložení změn
+      selectPlan: Zvolte plán
+      signUp: Zaregistrujte se
+      submit: Odeslat
+      testimonials: Zkušenosti
+      testimonialsTag: Co říkají naši zákazníci
+      video_unsupported: Váš prohlížeč nepodporuje značku videa.
+      welcome: Vítejte na
+    terms:
+      page_title: Podmínky služby - Mellow Menu
+      page_description: Přečtěte si naše Podmínky služby a seznamte se s pravidly
+        a pokyny pro používání Mellow Menu.
+    privacy:
+      page_title: Zásady ochrany osobních údajů - Mellow Menu
+      page_description: V našich Zásadách ochrany osobních údajů se dozvíte, jak společnost
+        Mellow Menu shromažďuje, používá a chrání vaše osobní údaje.

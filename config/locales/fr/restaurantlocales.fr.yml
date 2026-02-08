@@ -1,0 +1,14 @@
+---
+fr:
+  restaurantlocales:
+    controller:
+      active_not_deleted: ''
+      created: ''
+      deleted: ''
+      updated: ''
+    form:
+      delete: ''
+      save: Enregistrer
+      sure: ''
+    new:
+      restaurantlocale: Nouvelle langue

@@ -1,0 +1,9 @@
+---
+pl:
+  ordrs:
+    controller:
+      could_not_delete: 'Nie można usunąć zamówienia: %{error}'
+      created: Zamówienie zostało pomyślnie utworzone.
+      deleted: Zamówienie zostało pomyślnie usunięte.
+    index:
+      orders: Zamówienia

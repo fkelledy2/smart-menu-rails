@@ -1,0 +1,160 @@
+---
+pl:
+  menus:
+    sections:
+      details_2025:
+        quick_actions: Szybkie akcje
+        preview_staff: Widok z perspektywy personelu
+        preview_customer: Widok klienta
+        preview_staff_title: Podgląd menu jako personel (widok uwierzytelniony)
+        preview_customer_title: Podgląd menu tak, jak widzą je klienci (uwierzytelnieni
+          jako pracownicy, ale przeglądający interfejs klienta)
+        availability: Dostępność
+        default: Domyślne
+        available: Dostępne
+        unavailable: Niedostępne
+        generate_images: Generowanie obrazów
+        localize_menu: Tłumaczenia
+        ai_polish: AI Polish
+        active: Aktywny
+        inactive: Nieaktywny
+        menu_details: Szczegóły menu
+        menu_name: Nazwa menu
+        menu_name_placeholder: np. menu kolacji, oferty specjalne na lunch
+        menu_name_help: Nazwa, którą zobaczą klienci
+        description: Opis
+        description_placeholder: Opisz to menu...
+        description_help: Opcjonalny opis pomagający klientom zrozumieć to menu
+        statistics: Statystyki menu
+        sections: Sekcje
+        items: Przedmioty
+        schedules: Harmonogramy
+      settings_2025:
+        feature_toggles: Przełączniki funkcji
+        display_images: Wyświetlanie obrazów
+        display_images_help: Pokaż obrazy pozycji menu w tym menu
+        disabled_at_restaurant: Niepełnosprawni na poziomie restauracji
+        display_images_popup: Wyświetlanie obrazów w wyskakującym okienku
+        display_images_popup_help: Otwieranie obrazów pozycji menu w wyskakującym
+          oknie modalnym po kliknięciu
+        allow_ordering: Zezwalaj na zamawianie
+        allow_ordering_help: Włącz zamawianie online dla tego menu
+        voice_ordering: Zamawianie głosowe
+        voice_ordering_help: Umożliwienie klientom składania zamówień za pomocą poleceń
+          głosowych w tym menu
+        inventory_tracking: Śledzenie zapasów
+        inventory_tracking_help: Śledzenie stanów magazynowych dla pozycji menu (wkrótce)
+        settings_info_title: Informacje o ustawieniach menu
+        settings_info_desc: Te ustawienia kontrolują funkcjonalność tego konkretnego
+          menu. Zmiany są zapisywane automatycznie.
+        parent_restriction: 'Uwaga:'
+        parent_restriction_desc: Ustawień wyłączonych na poziomie restauracji nie
+          można włączyć dla poszczególnych menu. Należy je najpierw włączyć na poziomie
+          restauracji.
+        status: Status
+        status_info: Kontroluje widoczność menu
+        images_info: Przełączanie zdjęć pozycji menu
+        popup_info: Wyświetlanie obrazu na pełnym ekranie
+        ordering_info: Włączanie zamówień klientów
+        voice_ordering_info: Włączanie poleceń głosowych do zamawiania
+      sections_2025:
+        quick_actions: Szybkie akcje
+        add_section: Dodaj sekcję
+        preview_staff: Podgląd (personel)
+        preview_customer: Podgląd (Klient)
+        preview_staff_title: Podgląd menu jako personel (widok uwierzytelniony)
+        preview_customer_title: Podgląd menu tak, jak widzą je klienci (uwierzytelnieni
+          jako pracownicy, ale przeglądający interfejs klienta)
+        menu_sections: Sekcje menu
+        sections_description: Podziel swoje menu na sekcje, takie jak przystawki,
+          dania główne, desery itp.
+        name: Nazwa
+        items: Przedmioty
+        edit: Edytuj
+        no_sections: Nie ma jeszcze sekcji
+        no_sections_desc: Dodaj pierwszą sekcję, aby rozpocząć tworzenie menu
+        add_first_section: Dodaj pierwszą sekcję
+      items_2025:
+        quick_actions: Szybkie akcje
+        add_item: Dodaj pozycję menu
+        preview_staff: Podgląd (personel)
+        preview_customer: Podgląd (Klient)
+        preview_staff_title: Podgląd menu jako personel (widok uwierzytelniony)
+        preview_customer_title: Podgląd menu tak, jak widzą je klienci (uwierzytelnieni
+          jako pracownicy, ale przeglądający interfejs klienta)
+        menu_items: Pozycje menu
+        items_description: Wyświetlanie i zarządzanie wszystkimi pozycjami menu we
+          wszystkich sekcjach
+        name: Nazwa
+        price: Cena
+        items_count:
+          one: 1 szt.
+          other: "%{liczba} pozycji"
+        tasting_menu: Menu degustacyjne
+        per_table: "(na tabelę)"
+        per_person: "(na osobę)"
+        has_image_title: Ma obraz - najedź kursorem, aby wyświetlić podgląd
+        included: W zestawie
+        edit: Edytuj
+        no_items: Brak elementów
+        no_items_desc: Najpierw dodaj sekcje, a następnie elementy do tych sekcji.
+        go_to_sections: Przejdź do sekcji
+      design_2025:
+        quick_actions: Szybkie akcje
+        generate_images: Generowanie obrazów AI
+        preview_staff: Podgląd (personel)
+        preview_customer: Podgląd (Klient)
+        preview_staff_title: Podgląd menu jako personel (widok uwierzytelniony)
+        preview_customer_title: Podgląd menu tak, jak widzą je klienci (uwierzytelnieni
+          jako pracownicy, ale przeglądający interfejs klienta)
+        menu_image: Obraz menu
+        upload_image: Prześlij obraz
+        image_help: 'Obraz bohatera menu (zalecane: 1200x600px)'
+        remove_image: Usuń bieżący obraz
+        pdf_menu: Menu PDF
+        pdf_menu_desc: Prześlij wersję PDF swojego menu do pobrania przez klientów.
+        download: Pobierz
+        upload_pdf: Prześlij plik PDF
+        pdf_help: Prześlij wersję PDF swojego menu
+        remove_pdf: Usuń bieżący plik PDF
+        display_settings: Ustawienia wyświetlacza
+        show_images: Pokaż obrazy
+        show_images_desc: Wyświetlanie obrazów elementów w menu
+        popup_images: Obrazy wyskakujące
+        popup_images_desc: Pokaż większy obraz po dotknięciu
+      qrcode_2025:
+        all_qr_codes_for_menu: Wszystkie kody QR dla tego menu
+        all_qr_codes_for_menu_desc: Obejmuje QR menu ogólnego (bez stolika) i jeden
+          QR na stolik dla tego menu.
+        menu_only_qr: Menu QR (wszystkie stoliki)
+        all_tables: Wszystkie stoły
+        print: Drukuj
+        menu_table_qr: Tabela kodów QR dla tego menu
+        no_qr_found: Nie znaleziono jeszcze kodów QR. Upewnij się, że Smartmenus są
+          generowane dla tego menu i tabel.
+        download_options: Opcje pobierania
+        download_description: Pobierz kod QR w różnych formatach do wydrukowania
+        png_format: Obraz PNG
+        png_desc: Wysoka jakość do użytku cyfrowego
+        svg_format: Wektor SVG
+        svg_desc: Skalowalność dla dowolnego rozmiaru
+        pdf_format: Dokument PDF
+        pdf_desc: Format gotowy do druku
+        download: Pobierz
+        usage_tips: Wskazówki dotyczące użytkowania
+        tip_1: Drukowanie kodów QR na namiotach stołowych lub podkładkach dla łatwego
+          dostępu dla klientów.
+        tip_2: Umieszczanie kodu QR na paragonach i wizytówkach
+        tip_3: Umieść kody QR w pobliżu wejścia dla klientów korzystających z dań
+          na wynos.
+        tip_4: Regularnie testuj kod QR, aby upewnić się, że działa poprawnie.
+        url_copied: Adres URL skopiowany do schowka!
+        print_qr_title: Drukuj QR
+      schedule_2025:
+        quick_actions: Szybkie akcje
+        copy_to_all: Kopiuj poniedziałek do wszystkich dni
+        menu_availabilities: Dostępność menu
+        availabilities_description: Ustaw, kiedy to menu jest dostępne dla klientów
+          przez cały tydzień.
+        unavailable: Niedostępne
+        copied_success: Skopiowane!

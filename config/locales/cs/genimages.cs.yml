@@ -1,0 +1,6 @@
+---
+cs:
+  genimages:
+    controller:
+      deleted: Vygenerovaný obrázek byl úspěšně odstraněn.
+      updated: Obrázek byl úspěšně regenerován.

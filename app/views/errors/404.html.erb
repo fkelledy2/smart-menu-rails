@@ -1,7 +1,7 @@
 <div class="error-page">
-  <h1>Page Not Found</h1>
-  <p>The page you're looking for doesn't exist.</p>
-  <p>It may have been moved, deleted, or you entered the wrong URL.</p>
+  <h1><%= t('errors.not_found.title') %></h1>
+  <p><%= t('errors.not_found.description') %></p>
+  <p><%= t('errors.not_found.suggestion') %></p>
 
-  <%= link_to "Go Home", root_path, class: "btn btn-primary" %>
+  <%= link_to t('common.back'), root_path, class: "btn btn-primary" %>
 </div>

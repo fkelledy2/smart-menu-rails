@@ -1,0 +1,77 @@
+---
+pl:
+  menus:
+    controller:
+      created: Menu zostało pomyślnie utworzone.
+      deleted: Menu zostało pomyślnie usunięte.
+      image_regeneration_queued: Regeneracja obrazu w kolejce dla %{count} pozycji
+        w tym menu.
+      image_regeneration_queued_rake: Zadanie regeneracji obrazu zostało ustawione
+        w kolejce dla tego menu.
+      webp_regeneration_queued: Regeneracja pochodnej WebP została ustawiona w kolejce
+        dla obrazów tego menu.
+      ai_image_generation_queued: Generowanie obrazów AI zostało ustawione w kolejce
+        dla pozycji tego menu.
+      updated: Menu zostało pomyślnie zaktualizowane.
+    edit:
+      availabilities: Dostępność
+      menu: Menu
+      regenerate_images_confirm: Spowoduje to ustawienie w kolejce zadań regeneracji
+        obrazu dla wszystkich pozycji w tym menu. Kontynuować?
+      sections: Sekcje
+    form:
+      current_pdf: 'Aktualny PDF:'
+      delete: Usuń
+      details: Szczegóły
+      errors: Błędy
+      'false': wyłączony
+      imageSettings: Ustawienia obrazu
+      'off': wyłączony
+      'on': na
+      pdfSettings: Ustawienia PDF
+      regenerate_images: Regeneracja obrazów
+      regenerate_images_confirm: Spowoduje to ustawienie w kolejce zadań regeneracji
+        obrazu dla wszystkich pozycji w tym menu. Kontynuować?
+      remove: Usunąć
+      save: Zapisz
+      settings: Ustawienia
+      sure: Jesteś pewien?
+      'true': na
+    index:
+      menu: Menu
+      menus: Menu
+      unavailable: Niedostępne
+    menu:
+      description: 'Opis:'
+      image: 'Obraz:'
+      name: 'Imię i nazwisko:'
+      pdf_menu_scan: 'Skanowanie menu PDF:'
+      restaurant: 'Restauracja:'
+      sequence: 'Sekwencja:'
+      status: 'Status:'
+    new:
+      menu: Menu
+    show:
+      add_to_order: Dodaj do zamówienia
+      allergens: Alergeny
+      allergyns: Alergeny
+      bill: Bill
+      loading: Ładowanie...
+      not_available: Niedostępne.
+      order: Zamówienie
+      order_updated: Zamówienie zaktualizowane!
+      remaining: "%{count} pozostało."
+      staff_alerted: Personel ostrzeżony
+      start_order: Zamówienie początkowe
+      take_payment: Przyjmowanie płatności
+    showMenuavailabilities:
+      availabilities: Dostępność
+    showMenusections:
+      sections: Sekcje
+    sections:
+      settings_2025:
+        disabled_at_restaurant: Niepełnosprawni na poziomie restauracji
+        parent_restriction: 'Uwaga:'
+        parent_restriction_desc: Ustawień wyłączonych na poziomie restauracji nie
+          można włączyć dla poszczególnych menu. Należy je najpierw włączyć na poziomie
+          restauracji.

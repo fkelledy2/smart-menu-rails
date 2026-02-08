@@ -1,0 +1,276 @@
+---
+cs:
+  restaurants:
+    controller:
+      archived: Restaurace byla úspěšně archivována.
+      created: Restaurace byla úspěšně vytvořena.
+      updated: Restaurace byla úspěšně aktualizována.
+    edit:
+      allergynsTab: Alergeny
+      employeesTab: Zaměstnanci
+      localesTab: Lokality
+      menuTab: Menu
+      openingsTab: Otevírací doba
+      ordersTab: Objednávky
+      restaurantTab: Restaurace
+      sizesTab: Velikosti
+      smartQRTab: QR kódy
+      tableTab: Stoly
+      taxesTab: Daně
+      tipsTab: Spropitné
+      tracksTab: Playlist
+    form:
+      address: Adresa
+      connect: Připojení
+      delete: Smazat
+      details: Podrobnosti
+      imageSettings: Nastavení obrázku
+      image_style_profile_hint: Slouží k udržení konzistentních obrázků všech generovaných
+        položek menu v této restauraci.
+      image_style_profile_label: Profil stylu obrázku
+      image_style_profile_placeholder: např. realistická studiová fotografie jídla;
+        malá hloubka ostrosti; měkké přirozené světlo; matný kameninový stůl; rustikální
+        dřevěný stůl; minimum rekvizit.
+      music: Hudba
+      save: Uložit
+      settings: Nastavení
+      spotify: Spotify
+      sure: Jste si jistí?
+      wifi: Wi‑Fi
+    index:
+      restaurants: Restaurace
+    new:
+      restaurant: Nová restaurace
+      restaurants: Restaurace
+    restaurant:
+      address1: 'Adresa1:'
+      address2: 'Adresa2:'
+      capacity: 'Kapacita:'
+      city: 'Město:'
+      country: 'Země:'
+      description: 'Popis:'
+      image: 'Obrázek:'
+      name: 'Jméno:'
+      postcode: 'Poštovní směrovací číslo:'
+      state: 'Stát:'
+      status: 'Stav:'
+      user: 'Uživatel:'
+    show:
+      address: Adresa
+      billing_content: Zde se zobrazí konfigurace fakturace.
+      details: Podrobnosti na
+      imageSettings: Nastavení obrázků
+      settings: Nastavení
+      switch_off: mimo
+      switch_on: na adrese
+      tab_billing: Fakturace
+      tab_employees: Zaměstnanci
+      tab_menus: Jídelní lístky
+      tab_openinghours: Otevírací doba
+      tab_restaurant: Restaurace
+      tab_tables: Tabulky
+      tab_taxes: Daně
+      tab_tips: Tipy
+    showAllergyns:
+      allergyns: Alergeny
+    showEmployees:
+      employees: Zaměstnanci
+    showLocales:
+      actions: Akce
+      activate: Aktivace
+      deactivate: Deaktivace
+      default: Výchozí
+      delete: Odstranit
+      menus: Jídelní lístky
+    showMenus:
+      add_new_menu: Přidání nové nabídky
+      import_menu_from_pdf: Import nabídky z PDF
+      menus: Jídelní lístky
+    showOpeningHours:
+      actions: Akce
+      activate: Aktivace
+      deactivate: Deaktivace
+      openings: Otevírací doba
+    showOrdrs:
+      ordrs: Objednávky
+    showSizes:
+      sizes: Velikosti
+    showSmartMenus:
+      scan_to_join: Skenování pro připojení
+      smartQRs: SmartQRs
+      wifi: Wi‑Fi
+    showTableSettings:
+      tableSettings: Nastavení stolu
+    showTaxes:
+      taxes: Daně
+    showTips:
+      actions: Akce
+      activate: Aktivace
+      deactivate: Deaktivace
+      tips: Tipy
+    showTrack:
+      loading: Načítání...
+    showTracks:
+      tracks: Skladby
+    insights:
+      page_title: "%{název_restaurace} - Insights"
+      title: Insights
+      back: Zpět
+      export_csv: Export CSV
+      helper_text: 'v1: pouze pro čtení postřehy. Trychtýř opuštění je v současné
+        době založen na milnících objednávky/platby.'
+      no_data: Žádná data pro vybrané okno.
+      values:
+        true: ''
+        false: ''
+      filters:
+        time_window: Časové okno
+        today: Dnes
+        yesterday: Včera
+        last7: Posledních 7 dní
+        last28: Posledních 28 dní
+        mtd: MTD
+        last_month: Poslední měsíc
+        custom: Vlastní
+        start: Start
+        end: Konec
+        refresh: Obnovit
+        menu_optional: Menu (volitelné)
+        all_menus: Všechna menu
+      sections:
+        top_performers:
+          title: Nejvýkonnější hráči
+        slow_movers:
+          title: Pomalí stěhováci
+        prep_time_bottlenecks:
+          title: Úzká místa v přípravě
+          helper_text: Používá časování tipu stanice (odeslán → připraven/vyzvednut)
+            jako proxy v1.
+        voice_triggers:
+          title: Frekvence hlasové spouště
+        abandonment_funnel:
+          title: Opuštěný trychtýř
+      columns:
+        item: Položka
+        orders: Objednávky
+        qty: Množství
+        share: Sdílet
+        median_seconds: Medián (s)
+        sample_size: "N"
+        outlier: Odlišné hodnoty
+        triggers: Spouštěče
+        success: Úspěch
+        fail: Selhání
+        rate: Hodnotit
+        step: Krok
+        count: Hrabě
+        dropoff: Dropoff
+        dropoff_rate: Míra poklesu
+      funnel_steps:
+        order_submitted: Předložená objednávka
+        bill_requested: Bill si vyžádal
+        payment_succeeded: Platba proběhla úspěšně
+    edit_2025:
+      subtitle: Správa konfigurace restaurace
+      toggle_navigation: Přepínání navigace
+    sidebar_2025:
+      close_menu: Zavřít nabídku
+      restaurant: RESTAURACE
+      details: Podrobnosti na
+      schedule: Plán
+      localization: Lokalizace
+      menus: MENU
+      all_menus: Všechny nabídky
+      allergens: Alergeny
+      sizes: Velikosti
+      tables: Tabulky
+      operations: OPERACE
+      kitchen_dashboard: Kuchyně
+      bar_dashboard: Bar
+      wifi: Wi‑Fi
+      team: TEAM
+      staff: Zaměstnanci
+      financials: FINANCE
+      taxes_and_tips: Daně a tipy
+      taxes: Daně
+      tips: Tipy
+      ordering: Objednávání
+      insights: Insights
+      setup: NASTAVENÍ
+      settings: Nastavení
+      qr_codes: Kódy QR
+      jukebox: Jukebox
+      advanced: Pokročilé
+    index_2025:
+      title: Vaše restaurace
+      heading: Restaurace
+      subtitle: Správa míst, jídelníčků a zaměstnanců
+      quick_actions: Rychlé akce
+      new_restaurant: Nová restaurace
+      search_placeholder: Vyhledávání restaurací...
+      search: Vyhledávání
+    index_frame_2025:
+      pagination_aria_label: Stránkování restaurací
+      no_restaurants: Nebyly nalezeny žádné restaurace
+      no_results_for: Žádné výsledky pro
+      clear_search: Přehledné vyhledávání
+      menus_count_label: menu
+      staff_count_label: zaměstnanci
+      edit: Upravit
+      menus_action: Jídelní lístky
+      restaurants: Restaurace
+      active: Aktivní
+      inactive: Neaktivní
+      set_status: Nastavení stavu...
+      apply: Použít
+      drag_to_reorder: Přetažením změníte pořadí
+    sections:
+      details_2025:
+        quick_actions: Rychlé akce
+        new_menu: Nové menu
+        import_menu: Nabídka Import
+        overview: Přehled
+        menus: Jídelní lístky
+        items: Položky
+        tables: Tabulky
+        staff: Zaměstnanci
+        restaurant_details: Podrobnosti o restauraci
+        restaurant_name: Název restaurace
+        restaurant_name_placeholder: např. Bella Italia
+        restaurant_name_help: Název, který zákazníci uvidí
+        description: Popis
+        description_placeholder: Popište svou restauraci...
+        description_help: Stručný popis vaší restaurace
+        status: Stav
+        active: Aktivní
+        inactive: Neaktivní
+        status_help: Zákazníci vidí pouze aktivní restaurace
+        phone: Telefon
+        phone_placeholder: např. +1 (555) 123-4567.
+        phone_help: Kontaktní číslo pro zákazníky
+        website: Webové stránky
+        website_placeholder: https://example.com
+        website_help: Webové stránky vaší restaurace
+        currency: Měna
+        currency_help: Měna použitá pro stanovení ceny
+        timezone: Časové pásmo
+        timezone_help: Místní časové pásmo pro provozní dobu
+        location: Umístění
+        address: Adresa
+        address_placeholder: Adresa ulice
+        address_help: Úplná adresa
+        city: Město
+        city_placeholder: Název města
+        state: Stát/provincie
+        state_placeholder: Stát nebo provincie
+        postcode: Poštovní směrovací číslo
+        postcode_placeholder: např. 12345
+        country: Země
+        country_placeholder: Země
+        latitude: Zeměpisná šířka
+        latitude_placeholder: např. 40.7128
+        longitude: Zeměpisná délka
+        longitude_placeholder: např. -74.0060
+        loading_map: Načítání mapy...
+        map_error: Mapu se nepodařilo načíst
+        location_label: 'Umístění:'

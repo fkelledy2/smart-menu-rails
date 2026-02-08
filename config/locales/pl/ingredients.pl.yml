@@ -1,0 +1,7 @@
+---
+pl:
+  ingredients:
+    controller:
+      created: Składnik został pomyślnie utworzony.
+      deleted: Składnik został pomyślnie usunięty.
+      updated: Składnik został pomyślnie zaktualizowany.

@@ -27,21 +27,41 @@ class ApplicationController < ActionController::Base
     # Supports: en (English), it (Italian)
     
     requested_locale = nil
+
+    normalize = lambda do |raw|
+      v = raw.to_s.strip
+      return nil if v.empty?
+
+      # Support formats like:
+      # - cs
+      # - en_GB
+      # - en-GB
+      if v.match?(/\A[a-z]{2}\z/i)
+        v.downcase
+      elsif v.match?(/\A[a-z]{2}[-_][a-z]{2}\z/i)
+        parts = v.split(/[-_]/)
+        "#{parts[0].downcase}_#{parts[1].upcase}"
+      else
+        v
+      end
+    end
     
     # 1. Check for explicit URL parameter (for testing/debugging)
     if params[:locale].present?
-      requested_locale = params[:locale]
+      requested_locale = normalize.call(params[:locale])
       # Store in session when explicitly set
       session[:locale] = requested_locale
     else
-      # Clear session if no URL parameter, so browser preference takes over
-      session.delete(:locale)
-      
-      # 2. Use browser's Accept-Language header (primary method)
-      if request.env['HTTP_ACCEPT_LANGUAGE'].present?
+      # 2. Use session (persisted user choice) if present
+      if session[:locale].present?
+        requested_locale = normalize.call(session[:locale])
+      end
+
+      # 3. Use browser's Accept-Language header (fallback)
+      if requested_locale.nil? && request.env['HTTP_ACCEPT_LANGUAGE'].present?
         accept_language = request.env['HTTP_ACCEPT_LANGUAGE']
         # Extract the first two-letter language code
-        requested_locale = accept_language.scan(/^[a-z]{2}/).first
+        requested_locale = normalize.call(accept_language.scan(/^[a-z]{2}/).first)
       end
     end
 

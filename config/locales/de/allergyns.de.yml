@@ -1,0 +1,40 @@
+---
+de:
+  allergyns:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      allergyns: ''
+      edit_allergyn: ''
+      description: ''
+      cancel: ''
+      confirm_delete: ''
+      delete: ''
+      allergyn_details: ''
+    form:
+      name: ''
+      name_placeholder: ''
+      name_help: ''
+      description: ''
+      description_placeholder: ''
+      description_help: ''
+      symbol: ''
+      symbol_placeholder: ''
+      symbol_help: ''
+    index:
+      allergyns: Allergene
+      description: ''
+      back: ''
+      new_allergyn: ''
+      all_allergyns: ''
+    new:
+      allergyns: ''
+      new: ''
+      new_allergyn: ''
+      description: ''
+      cancel: Abbrechen
+      allergyn_details: ''
+    show:
+      allergyn: Allergen anzeigen

@@ -1,0 +1,29 @@
+---
+hu:
+  tablesettings:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      tablesetting: Asztal szerkesztése
+    index:
+      archive: ''
+      seating_plan: ''
+      seats: ''
+      table_setting: ''
+      table_settings: ''
+      unarchive: ''
+    new:
+      status: ''
+      tablesetting: Új asztal
+    show:
+      available_menus: ''
+      selectRestaurant: ''
+      show_table_setting: ''
+    tablesetting:
+      capacity: ''
+      description: ''
+      name: ''
+      restaurant: ''
+      status: ''

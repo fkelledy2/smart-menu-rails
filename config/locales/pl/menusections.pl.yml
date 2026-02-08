@@ -1,0 +1,37 @@
+---
+pl:
+  menusections:
+    edit:
+      inventories: Zapasy
+      items: Przedmioty
+      section: Sekcja
+    form:
+      delete: Usuń
+      details: Szczegóły
+      imageSettings: Ustawienia obrazu
+      save: Zapisz
+      selectMenu: Wybierz menu
+      settings: Ustawienia
+      sure: Jesteś pewien?
+    index:
+      menuSection: Sekcja menu
+      menuSections: Sekcje menu
+    menusection:
+      description: 'Opis:'
+      image: 'Obraz:'
+      menu: 'Menu:'
+      name: 'Imię i nazwisko:'
+      sequence: 'Sekwencja:'
+      status: 'Status:'
+    new:
+      cancel: Anuluj
+      menuSection: Sekcja menu
+    show:
+      menuSection: Sekcja menu
+      selectMenu: Wybierz menu
+    showInventories:
+      inventories: Zapasy
+      reset: Resetuj
+    showMenuitems:
+      genimage: Generowanie obrazu
+      menuItems: Pozycje menu

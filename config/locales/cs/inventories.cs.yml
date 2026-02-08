@@ -1,0 +1,29 @@
+---
+cs:
+  inventories:
+    controller:
+      created: Inventář byl úspěšně vytvořen.
+      deleted: Inventář byl úspěšně odstraněn.
+      updated: Inventář byl úspěšně aktualizován.
+    edit:
+      inventory: Upravit inventář
+    form:
+      delete: Smazat
+      errors: Chyby
+      save: Uložit
+      select_menu_item: Výběr položky nabídky...
+      sure: Jste si jistí?
+    index:
+      inventories: Inventáře
+      inventory: Inventář
+    inventory:
+      currentinventory: 'Současný stav zásob:'
+      menuitem: 'Položka nabídky:'
+      resethour: 'Hodina resetování:'
+      startinginventory: 'Počáteční zásoby:'
+    new:
+      cancel: Zrušit
+      inventory: Nový inventář
+    show:
+      inventory: Zobrazit inventář
+      select_menu_item: Výběr položky nabídky...

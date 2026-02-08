@@ -1,0 +1,26 @@
+---
+pl:
+  testimonials:
+    controller:
+      created: Testimonial został pomyślnie utworzony.
+      deleted: Opinia została pomyślnie usunięta.
+      updated: Opinia została pomyślnie zaktualizowana.
+    edit:
+      title: Edytuj opinię
+    form:
+      cancel: Anuluj
+      destroy: Zniszczenie
+      save: Zapisz
+      sure: Jesteś pewien?
+    index:
+      actions: Działania
+      approve: Zatwierdzić
+      testimonials: Referencje
+      unapprove: Niezatwierdzony
+    new:
+      cancel: Anuluj
+      title: Nowa opinia
+    testimonial:
+      restaurant: 'Restauracja:'
+      testimonial: 'Referencje:'
+      user: 'Użytkownik:'

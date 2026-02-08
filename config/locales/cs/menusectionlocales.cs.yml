@@ -1,0 +1,7 @@
+---
+cs:
+  menusectionlocales:
+    controller:
+      created: Menusectionlocale byl úspěšně vytvořen.
+      destroyed: Menusectionlocale byl úspěšně zničen.
+      updated: Menusectionlocale byl úspěšně aktualizován.

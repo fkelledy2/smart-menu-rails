@@ -1,0 +1,136 @@
+---
+pl:
+  bar_dashboard:
+    title: Pulpit nawigacyjny paska
+    metrics:
+      pending_tickets: Oczekujące bilety
+      preparing: Przygotowanie
+      ready: Gotowy
+  kitchen_dashboard:
+    title: Pulpit nawigacyjny kuchni
+    metrics:
+      pending_tickets: Oczekujące bilety
+      preparing: Przygotowanie
+      ready: Gotowy
+      todays_orders: Dzisiejsze zamówienia
+    buttons:
+      start_preparing: Rozpocznij przygotowania
+      mark_ready: Mark Ready
+      mark_collected: Oznacz jako pobrane
+  errors:
+    not_found:
+      title: Nie znaleziono strony
+      description: Strona, której szukasz, nie istnieje.
+      suggestion: Mogła ona zostać przeniesiona, usunięta lub wprowadzono nieprawidłowy
+        adres URL.
+    unprocessable:
+      title: Jednostka nieprzetwarzalna
+      description: Zmiana, której chciałeś, została odrzucona.
+      suggestion: Może próbowałeś zmienić coś, do czego nie miałeś dostępu.
+    internal:
+      title: Wewnętrzny błąd serwera
+      description: Przepraszamy, ale coś poszło nie tak po naszej stronie.
+      suggestion: Spróbuj ponownie później lub skontaktuj się z pomocą techniczną,
+        jeśli problem nadal występuje.
+      error_details: Szczegóły błędu
+      backtrace: Śledzenie wsteczne
+  menu_performance:
+    not_available:
+      title: Dane dotyczące wydajności nie są dostępne
+      description: 'Nie można załadować danych wydajności dla tego menu. Może to być
+        spowodowane:'
+      reasons:
+      - Nie znaleziono menu lub odmówiono dostępu
+      - Niewystarczające uprawnienia
+      - Błąd systemu podczas zbierania danych
+  restaurant_analytics:
+    not_available:
+      title: Dane analityczne niedostępne
+      description: 'Nie można załadować danych analitycznych dla tej restauracji.
+        Może to być spowodowane:'
+      reasons:
+      - Nie znaleziono restauracji lub odmówiono dostępu
+      - Niewystarczające uprawnienia
+      - Błąd systemu podczas zbierania danych
+  ai_generation:
+    modal:
+      title: Generowanie obrazów AI
+      confirm: Potwierdź i rozpocznij
+      progress: Obecnie generuje
+      progress_log: Dziennik postępów
+      last_image: Ostatni obraz
+  menuitem_ai:
+    modal:
+      title: Generowanie obrazu
+      confirm: Potwierdź i rozpocznij
+      progress: Obecnie generuje
+      preview: Podgląd obrazu
+  ocr_menu_imports:
+    alcohol_override:
+      undecided: Niezdecydowany
+      alcoholic: Alkohol
+      non_alcoholic: Bezalkoholowy
+    publish:
+      title: Publikuj menu
+      submit: Publikuj menu
+  offline:
+    title: Jesteś offline
+    available_offline: 'Dostępne w trybie offline:'
+    items:
+    - Informacje o restauracji
+    - Pozycje menu i ceny
+    - Ostatnie zamówienia
+    - Obrazy w pamięci podręcznej
+    - Podstawowa analityka
+    last_updated: Ostatnia aktualizacja
+  smartmenus:
+    skeleton:
+      loading: Ładowanie pozycji menu...
+    no_image: Brak obrazu
+  hero_images:
+    new:
+      title: Nowy wizerunek bohatera
+    form:
+      image_url_placeholder: https://images.pexels.com/...
+      image_url_help: Wprowadź pełny adres URL obrazu z Pexels lub innego źródła.
+      alt_text_placeholder: Ruchliwe wnętrze restauracji z gośćmi
+      alt_text_help: Tekst opisowy zapewniający dostępność
+      sequence_help: Kolejność wyświetlania (niższe numery pojawiają się jako pierwsze)
+      status_help: Tylko zatwierdzone obrazy będą wyświetlane na stronie głównej
+      source_url_placeholder: https://www.pexels.com/photo/...
+      source_url_help: Link do oryginalnej strony źródłowej
+  orders:
+    ordered: Zamówione
+    prepared: Przygotowany
+    delivered: Dostarczone
+  form_2025:
+    menu_details: Szczegóły menu
+    menu_details_subtitle: Podstawowe informacje o menu
+    image_settings: Ustawienia obrazu
+    menu_image: Obraz menu
+  version_diff:
+    section: Sekcja
+    item: Pozycja
+  version_diff_2025:
+    section: 'Sekcja #'
+    item: 'Pozycja #'
+  details_2025:
+    menu_go_live_flow: Przebieg uruchamiania menu
+  edit_2025:
+    onboarding_flow: Proces wdrażania
+  settings_2025:
+    receipt_merchant_details: Szczegóły paragonu / sprzedawcy
+    statement_descriptor: Deskryptor oświadczenia
+  tasting_courses_footer:
+    show_courses: Pokaż kursy
+    add_tasting_menu: Dodaj menu degustacyjne
+  tasting_badge: Degustacja
+  show_modals:
+    pairing: Parowanie
+    full: Pełny
+  show_allergyns_debug:
+    title: Debugowanie alergii
+    sql: SQL
+    count: Liczyć
+    ids: Identyfikatory
+    names: Nazwy

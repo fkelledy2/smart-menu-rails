@@ -1,0 +1,26 @@
+---
+cs:
+  tags:
+    controller:
+      created: Značka byla úspěšně vytvořena.
+      deleted: Značka byla úspěšně odstraněna.
+      updated: Tag byl úspěšně aktualizován.
+    edit:
+      title: Upravit štítek
+    form:
+      delete: Odstranit
+      errors: Chyby
+      save: Uložit
+      sure: Jste si jistý?
+    index:
+      tag: Štítek
+      tags: Štítky
+    new:
+      cancel: Zrušit
+      title: Nový štítek
+    show:
+      show_tag: Zobrazit štítek
+    tag:
+      description: 'Popis:'
+      menuitem: 'Položka nabídky:'
+      name: 'Jméno:'

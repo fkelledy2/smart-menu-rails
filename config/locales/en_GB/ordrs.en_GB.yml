@@ -1,0 +1,9 @@
+---
+en_GB:
+  ordrs:
+    controller:
+      could_not_delete: ''
+      created: ''
+      deleted: ''
+    index:
+      orders: ''

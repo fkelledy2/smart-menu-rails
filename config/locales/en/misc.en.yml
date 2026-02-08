@@ -1,0 +1,602 @@
+---
+en:
+  time:
+    formats:
+      default: ''
+      short: ''
+      long: ''
+    date:
+      formats:
+        default: ''
+        short: ''
+        long: ''
+      abbr_day_names:
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      abbr_month_names:
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      day_names:
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      month_names:
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+  activerecord:
+    attributes:
+      employee:
+        image: ''
+        restaurant: ''
+        user: ''
+      menu:
+        restaurant: ''
+        sequence: ''
+      menuitem:
+        sequence: ''
+        ingredients: ''
+        menusection_id: ''
+        tags: ''
+        variantPricing: ''
+      menusection:
+        menu: ''
+        sequence: ''
+      menuavailability:
+        endmin: ''
+        menu: ''
+        startmin: ''
+      restaurant:
+        capacity: ''
+        music: ''
+        tips: ''
+        covercharge: ''
+      restaurantavailability:
+        endmin: ''
+        restaurant: ''
+        sequence: ''
+        startmin: ''
+      tax:
+        restaurant: ''
+  allergyns:
+    edit:
+      allergyn: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      allergyn: ''
+      deactivate: ''
+    new:
+      allergyn: ''
+  devise:
+    registrations:
+      edit:
+        billing: ''
+        password: ''
+        passwordHelp: ''
+        selectPlan: ''
+  home:
+    index:
+      actions: ''
+      signup: ''
+      activate: ''
+      deactivate: ''
+      emailAddress: ''
+      featureDescription1: ''
+      featureTitle1: ''
+      message: ''
+  inventories:
+    index:
+      activate: ''
+      deactivate: ''
+  menuavailabilities:
+    edit:
+      menuAvailability: ''
+    index:
+      activate: ''
+      deactivate: ''
+    form:
+      errors: ''
+  menuitems:
+    edit:
+      menuItem: ''
+    form:
+      selectMenuSection: ''
+      sizes: ''
+    index:
+      activate: ''
+      deactivate: ''
+  menus:
+    form:
+      preview: ''
+      selectRestaurant: ''
+      pdfMenuScan: ''
+    index:
+      activate: ''
+      deactivate: ''
+    new:
+      cancel: ''
+    show:
+      menu: ''
+      table: ''
+    showMenuBanner:
+      table: ''
+    showMenuavailabilities:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showMenusections:
+      actions: ''
+      activate: ''
+      deactivate: ''
+  menusections:
+    edit:
+      menuSection: ''
+    index:
+      activate: ''
+      deactivate: ''
+    form:
+      errors: ''
+    showInventories:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showMenuitems:
+      actions: ''
+      activate: ''
+      deactivate: ''
+  restaurantavailabilities:
+    form:
+      selectRestaurant: ''
+      errors: ''
+    index:
+      activate: ''
+      deactivate: ''
+    new:
+      cancel: ''
+  restaurants:
+    edit:
+      restaurant: ''
+    form:
+      generateImage: ''
+      errors: ''
+    index:
+      activate: ''
+      deactivate: ''
+      restaurant: ''
+      actions: ''
+    new:
+      cancel: ''
+    show:
+      name: ''
+      restaurant: ''
+      address1: ''
+      address2: ''
+      city: ''
+      currency: ''
+      description: ''
+      postcode: ''
+      state: ''
+    currency: ''
+    currency_symbol: ''
+    showAllergyns:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showEmployees:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      employee: ''
+      id: ''
+      name: ''
+      role: ''
+    showMenus:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showOpeningHours:
+      closing: ''
+      dayOfWeek: ''
+      opening: ''
+      openingHour: ''
+      openingHours: ''
+    showOrdrs:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showSizes:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showSmartMenus:
+      actions: ''
+      activate: ''
+      deactivate: ''
+    showTableSettings:
+      actions: ''
+      activate: ''
+      capacity: ''
+      deactivate: ''
+      name: ''
+      tableSetting: ''
+      type: ''
+    showTaxes:
+      actions: ''
+      activate: ''
+      deactivate: ''
+      name: ''
+      percentage: ''
+      tax: ''
+      type: ''
+    showTips:
+      percentage: ''
+      tip: ''
+    showTracks:
+      actions: ''
+      activate: ''
+      deactivate: ''
+  shared:
+    navbar:
+      allergyns: ''
+      employees: ''
+      menuItems: ''
+      menus: ''
+      openingHours: ''
+      orders: ''
+      sizes: ''
+      tableSettings: ''
+      taxes: ''
+      tips: ''
+      whatsNew: ''
+      inventories: ''
+      menuAvailability: ''
+      menuSections: ''
+      orderItems: ''
+  sizes:
+    edit:
+      size: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      size: ''
+    new:
+      size: ''
+  smartmenus:
+    index:
+      activate: ''
+      deactivate: ''
+      menu: ''
+      menus: ''
+      unavailable: ''
+    orderCustomer:
+      takePayment: ''
+    show:
+      menu: ''
+      table: ''
+    alcoholic: ''
+    edit:
+      menu: ''
+    form:
+      delete: ''
+      details: ''
+      errors: ''
+      preview: ''
+      selectRestaurant: ''
+    new:
+      cancel: ''
+      menu: ''
+    orderStaff:
+      staffAlerted: ''
+    showMenuBanner:
+      table: ''
+    showModals:
+      menuItem: ''
+    alcoholic_tooltip: ''
+  tablesettings:
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+      errors: ''
+      selectRestaurant: ''
+    index:
+      tablesetting: ''
+      tablesettings: ''
+    new:
+      cancel: ''
+    show:
+      tablesetting: ''
+  taxes:
+    edit:
+      tax: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+      errors: ''
+      selectRestaurant: ''
+    index:
+      tax: ''
+      activate: ''
+      deactivate: ''
+    new:
+      tax: ''
+  tips:
+    edit:
+      tip: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+      errors: ''
+      selectRestaurant: ''
+    index:
+      tip: ''
+      activate: ''
+      deactivate: ''
+    new:
+      tip: ''
+  employees:
+    form:
+      selectRestaurant: ''
+    new:
+      cancel: ''
+  feature1:
+    key: ''
+  feature2:
+    key: ''
+  feature3:
+    key: ''
+  feature4:
+    key: ''
+  feature5:
+    key: ''
+  feature6:
+    key: ''
+  genimages:
+    edit:
+      genimage: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      genimage: ''
+      genimages: ''
+    new:
+      cancel: ''
+      genimage: ''
+    show:
+      genimage: ''
+  ingredients:
+    edit:
+      ingredient: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      ingredient: ''
+      ingredients: ''
+    new:
+      cancel: ''
+      ingredient: ''
+    show:
+      ingredient: ''
+  metrics:
+    edit:
+      metric: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      activate: ''
+      deactivate: ''
+      metric: ''
+      metrics: ''
+    new:
+      cancel: ''
+      metric: ''
+    show:
+      metric: ''
+  ocr_menu_imports:
+    create:
+      success: ''
+    edit:
+      ocrMenuImport: ''
+    form:
+      cancel: ''
+      import: ''
+      save: ''
+    index:
+      activate: ''
+      deactivate: ''
+      ocrMenuImport: ''
+      ocrMenuImports: ''
+    new:
+      ocrMenuImport: ''
+    show:
+      ocrMenuImport: ''
+  ordrs:
+    index:
+      order: ''
+    show:
+      order: ''
+      table: ''
+  plan:
+    business:
+      key: ''
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+    call: ''
+    enterprise:
+      key: ''
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+    pro:
+      key: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+    register: ''
+    starter:
+      key: ''
+      attribut6: ''
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      attribute4: ''
+      attribute5: ''
+    trial:
+      attribute1: ''
+      attribute2: ''
+      attribute3: ''
+      key: ''
+  tags:
+    edit:
+      tag: ''
+    index:
+      activate: ''
+      deactivate: ''
+    new:
+      tag: ''
+    show:
+      tag: ''
+  tracks:
+    edit:
+      track: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    new:
+      cancel: ''
+      track: ''
+    show:
+      track: ''
+  userplans:
+    index:
+      userplan: ''
+      userplans: ''
+    new:
+      userplan: ''
+    show:
+      userplan: ''
+  orders:
+    total: ''
+    subtotal: ''
+    tax: ''
+    tip: ''
+    payment: ''
+    paid: ''
+    pending: ''
+    completed: ''
+  number:
+    currency:
+      format:
+        unit: ''
+        precision: ''
+        separator: ''
+        delimiter: ''
+        format: ''
+  date:
+    formats:
+      default: ''
+      short: ''
+      long: ''
+    abbr_day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    abbr_month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    day_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    month_names:
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''

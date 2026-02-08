@@ -1,0 +1,69 @@
+---
+fr:
+  menus:
+    controller:
+      created: ''
+      deleted: ''
+      image_regeneration_queued: ''
+      image_regeneration_queued_rake: ''
+      webp_regeneration_queued: ''
+      ai_image_generation_queued: ''
+      updated: ''
+    edit:
+      availabilities: Disponibilités
+      menu: Carte
+      regenerate_images_confirm: ''
+      sections: Sections
+    form:
+      current_pdf: ''
+      delete: Supprimer
+      details: Détails
+      errors: Erreurs
+      'false': ''
+      imageSettings: Paramètres d'image
+      'off': ''
+      'on': ''
+      pdfSettings: Paramètres PDF
+      regenerate_images: ''
+      regenerate_images_confirm: ''
+      remove: ''
+      save: Enregistrer
+      settings: Paramètres
+      sure: Êtes-vous sûr ?
+      'true': ''
+    index:
+      menu: Carte
+      menus: Cartes
+      unavailable: Le menu n'est pas actuellement disponible.
+    menu:
+      description: ''
+      image: ''
+      name: ''
+      pdf_menu_scan: ''
+      restaurant: ''
+      sequence: ''
+      status: ''
+    new:
+      menu: Nouveau menu
+    show:
+      add_to_order: ''
+      allergens: ''
+      allergyns: ''
+      bill: ''
+      loading: ''
+      not_available: ''
+      order: ''
+      order_updated: ''
+      remaining: ''
+      staff_alerted: ''
+      start_order: ''
+      take_payment: ''
+    showMenuavailabilities:
+      availabilities: Disponibilités
+    showMenusections:
+      sections: Sections
+    sections:
+      settings_2025:
+        disabled_at_restaurant: ''
+        parent_restriction: ''
+        parent_restriction_desc: ''

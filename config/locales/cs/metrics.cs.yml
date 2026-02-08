@@ -1,0 +1,7 @@
+---
+cs:
+  metrics:
+    controller:
+      created: Metrika byla úspěšně vytvořena.
+      deleted: Metrika byla úspěšně odstraněna.
+      updated: Metrika byla úspěšně aktualizována.

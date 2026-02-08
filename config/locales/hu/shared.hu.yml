@@ -1,0 +1,34 @@
+---
+hu:
+  shared:
+    head:
+      meta_title: ''
+      meta_description: ''
+      meta_keywords: ''
+      og_title: ''
+      og_description: ''
+      twitter_title: ''
+      twitter_description: ''
+      pwa_title: ''
+    footer:
+      facebook: ''
+      instagram: ''
+      linkedin: ''
+      privacy: Adatvédelem
+      terms: Feltételek
+      plan: ''
+      build: ''
+      twitter: ''
+    navbar:
+      adminArea: ''
+      dashboard: ''
+      billing: ''
+      heroImages: ''
+      impersonated_as: ''
+      login: Bejelentkezés
+      logout: Kijelentkezés
+      restaurants: Éttermek
+      settings: Beállítások
+      signUp: ''
+      testimonials: Értékelések
+      toggle_navigation: ''

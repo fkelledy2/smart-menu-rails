@@ -1,0 +1,45 @@
+---
+es:
+  taxes:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      taxes: ''
+      edit_tax: ''
+      description: ''
+      cancel: ''
+      confirm_delete: ''
+      delete: ''
+      tax_details: ''
+    form:
+      name: ''
+      name_placeholder: ''
+      name_help: ''
+      tax_type: ''
+      tax_type_help: ''
+      tax_percentage: ''
+      tax_percentage_placeholder: ''
+      tax_percentage_help: ''
+    index:
+      taxes: Impuestos
+      description: ''
+      back: ''
+      new_tax: ''
+      all_taxes: ''
+    new:
+      taxes: ''
+      new: ''
+      new_tax: ''
+      description: ''
+      cancel: Cancelar
+      tax_details: ''
+    show:
+      selectRestaurant: ''
+      tax: Mostrar impuesto
+    tax:
+      name: ''
+      restaurant: ''
+      taxpercentage: ''
+      taxtype: ''

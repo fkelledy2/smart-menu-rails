@@ -1,0 +1,29 @@
+---
+es:
+  inventories:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      inventory: Editar inventario
+    form:
+      delete: Eliminar
+      errors: ''
+      save: Guardar
+      select_menu_item: ''
+      sure: "¿Estás seguro?"
+    index:
+      inventories: Inventarios
+      inventory: Inventario
+    inventory:
+      currentinventory: ''
+      menuitem: ''
+      resethour: ''
+      startinginventory: ''
+    new:
+      cancel: Cancelar
+      inventory: Nuevo inventario
+    show:
+      inventory: Mostrar inventario
+      select_menu_item: ''

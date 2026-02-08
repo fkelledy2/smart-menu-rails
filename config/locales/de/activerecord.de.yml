@@ -1,0 +1,208 @@
+---
+de:
+  activerecord:
+    attributes:
+      allergyn:
+        description: Beschreibung
+        name: Bezeichnung
+        symbol: Symbol
+      employee:
+        eid: ID
+        name: Bezeichnung
+        role: Rolle
+        status: Zustand
+        user_id: ''
+      ingredient:
+        description: ''
+        name: ''
+      inventory:
+        currentInventory: Endstand
+        currentinventory: ''
+        menuItem: Artikel
+        resetHour: Zurücksetzen um
+        resethour: ''
+        startingInventory: Anfangsbestand
+        startinginventory: ''
+      menu:
+        allowOrdering: Bestellungen
+        covercharge: Covergebühr
+        description: Beschreibung
+        displayImages: Bilder
+        displayImagesInPopup: Bilder (in Popup)
+        image: Bild
+        imagecontext: Kontext
+        inventoryTracking: Bestandsverfolgung
+        name: Bezeichnung
+        pdf_menu_scan: Original PDF
+        status: Zustand
+      menuavailability:
+        dayofweek: Tag
+        endhour: Schließzeit
+        menu_id: ''
+        starthour: Öffnungszeit
+        status: Zustand
+      menuitem:
+        allergyns: Allergene
+        calories: Kalorien
+        description: Beschreibung
+        image: Bild
+        itemtype: ''
+        name: Bezeichnung
+        preptime: Zubereitungszeit
+        price: Preis
+        sizes: Varianten
+        sizesupport: Größen
+        status: Zustand
+        unitcost: Stückkosten
+      menuparticipant:
+        preferredlocale: ''
+        sessionid: ''
+        smartmenu_id: ''
+      menusection:
+        description: Beschreibung
+        endhour: ''
+        image: Bild
+        menu_id: ''
+        name: Bezeichnung
+        restricted: ''
+        starthour: ''
+        status: Zustand
+      metric:
+        description: ''
+        name: ''
+      ordr:
+        employee_id: ''
+        menu_id: ''
+        restaurant_id: ''
+        tablesetting_id: ''
+      ordraction:
+        action: ''
+        employee_id: ''
+        ordr_id: ''
+        ordritem_id: ''
+        ordrparticipant_id: ''
+        sessionid: ''
+      ordritem:
+        menuitem_id: ''
+        ordr_id: ''
+      ordritemnote:
+        note: ''
+        ordritem_id: ''
+      ordrparticipant:
+        action: ''
+        employee_id: ''
+        ordr_id: ''
+        ordritem_id: ''
+        role: ''
+        sessionid: ''
+      restaurant:
+        address: ''
+        address1: Adresse 1
+        address2: Adresse 2
+        allowOrdering: Bestellungen
+        city: Stadt
+        country: Land
+        currency: Währung
+        description: Beschreibung
+        displayImages: Bilder
+        displayImagesInPopup: Bilder (in Popup)
+        genid: Gen ID
+        image: Bild
+        image_style_profile: ''
+        imagecontext: Kontext
+        inventoryTracking: Bestand
+        name: Bezeichnung
+        postcode: Postleitzahl
+        spotifyaccesstoken: Zugangstoken
+        spotifyrefreshtoken: Aktualisierungstoken
+        spotifyuserid: Spotify ID
+        state: Bundesland
+        status: Zustand
+        wifiEncryptionType: Verschlüsselung
+        wifiHidden: Versteckt
+        wifiPassword: Passwort
+        wifissid: SSID
+      restaurantavailability:
+        dayofweek: Tag
+        endhour: Schließzeit
+        starthour: Öffnungszeit
+        status: Zustand
+      restaurantlocale:
+        dfault: Standard
+        locale: Sprache
+      size:
+        description: Beschreibung
+        name: Bezeichnung
+        size: Größe
+      smartmenu:
+        menu_id: ''
+        restaurant_id: ''
+        slug: ''
+        tablesetting_id: ''
+      tablesetting:
+        capacity: ''
+        description: ''
+        name: ''
+        status: ''
+        tabletype: ''
+      tag:
+        description: ''
+        name: ''
+      tax:
+        name: Bezeichnung
+        taxPercentage: Prozentsatz
+        taxType: Typ
+        taxpercentage: ''
+        taxtype: ''
+      testimonial:
+        restaurant_id: ''
+        testimonial: ''
+        user_id: ''
+      tip:
+        percentage: ''
+      track:
+        description: ''
+        externalid: ''
+        image: ''
+        name: ''
+        restaurant_id: ''
+        sequence: ''
+      userplan:
+        plan_id: ''
+    errors:
+      format: ''
+      messages:
+        blank: ''
+        greater_than: ''
+        greater_than_or_equal_to: ''
+        invalid: ''
+        less_than: ''
+        less_than_or_equal_to: ''
+        not_a_number: ''
+        taken: ''
+        too_long:
+          one: ''
+          other: ''
+        too_short:
+          one: ''
+          other: ''
+    models:
+      allergyn: ''
+      genimage: ''
+      ingredient: ''
+      inventory: ''
+      menu: ''
+      menuavailability: ''
+      menuitem: ''
+      menusection: ''
+      metric: ''
+      ordr: ''
+      restaurant: ''
+      restaurantavailability: ''
+      size: ''
+      smartmenu: ''
+      tablesetting: ''
+      tag: ''
+      testimonial: ''
+      track: ''
+      userplan: ''

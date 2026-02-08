@@ -1,0 +1,26 @@
+---
+fr:
+  tags:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      title: ''
+    form:
+      delete: Supprimer
+      errors: ''
+      save: Enregistrer
+      sure: Êtes-vous sûr ?
+    index:
+      tag: Étiquette
+      tags: Étiquettes
+    new:
+      cancel: Annuler
+      title: ''
+    show:
+      show_tag: ''
+    tag:
+      description: ''
+      menuitem: ''
+      name: ''

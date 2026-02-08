@@ -1,0 +1,21 @@
+---
+fr:
+  restaurantavailabilities:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      restaurantavailability: Modifier les horaires
+    form:
+      delete: Supprimer
+      save: Enregistrer
+      sure: Êtes-vous sûr ?
+    index:
+      restaurantavailabilities: Horaire d'ouverture
+      restaurantavailability: Horaire
+    new:
+      restaurantavailability: Nouvel horaire
+    show:
+      restaurantavailability: Afficher l'horaire
+      selectRestaurant: ''

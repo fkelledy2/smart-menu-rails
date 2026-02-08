@@ -1,0 +1,7 @@
+---
+pl:
+  omniauth:
+    connected: Twoje konto %{kind} zostało połączone.
+    email_exists: Konto z tym adresem e-mail już istnieje. Zaloguj się za pomocą tego
+      konta przed podłączeniem konta %{dostawcy}.
+    failure: Coś poszło nie tak

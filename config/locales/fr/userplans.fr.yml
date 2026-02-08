@@ -1,0 +1,11 @@
+---
+fr:
+  userplans:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      contactUs: ''
+      saveChanges: Mettre à jour
+      selectPlan: Choisir un forfait

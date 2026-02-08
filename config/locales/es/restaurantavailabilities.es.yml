@@ -1,0 +1,21 @@
+---
+es:
+  restaurantavailabilities:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      restaurantavailability: Editar horarios
+    form:
+      delete: Eliminar
+      save: Guardar
+      sure: "¿Estás seguro?"
+    index:
+      restaurantavailabilities: Horario de apertura
+      restaurantavailability: Horario
+    new:
+      restaurantavailability: Nuevo horario
+    show:
+      restaurantavailability: Mostrar horario
+      selectRestaurant: ''

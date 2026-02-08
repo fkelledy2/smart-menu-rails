@@ -1,0 +1,26 @@
+---
+en_US:
+  tags:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      title: ''
+    form:
+      delete: ''
+      errors: ''
+      save: ''
+      sure: ''
+    index:
+      tag: ''
+      tags: ''
+    new:
+      cancel: ''
+      title: ''
+    show:
+      show_tag: ''
+    tag:
+      description: ''
+      menuitem: ''
+      name: ''

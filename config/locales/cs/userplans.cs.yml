@@ -1,0 +1,11 @@
+---
+cs:
+  userplans:
+    controller:
+      created: Uživatelský plán byl úspěšně vytvořen.
+      deleted: Uživatelský plán byl úspěšně odstraněn.
+      updated: Uživatelský plán byl úspěšně aktualizován.
+    edit:
+      contactUs: Kontaktujte nás
+      saveChanges: Aktualizace
+      selectPlan: Zvolte si plán

@@ -1,0 +1,44 @@
+---
+pl:
+  sizes:
+    controller:
+      created: Rozmiar został pomyślnie utworzony.
+      deleted: Rozmiar został pomyślnie usunięty.
+      updated: Rozmiar został pomyślnie zaktualizowany.
+    edit:
+      sizes: Rozmiary
+      edit_size: Rozmiar edycji
+      description: Zaktualizuj szczegóły rozmiaru
+      cancel: Anuluj
+      confirm_delete: Usunąć ten rozmiar?
+      delete: Usuń
+      size_details: Szczegóły dotyczące rozmiaru
+    form:
+      size_type: Rozmiar Typ
+      size_type_help: Wybierz ogólną kategorię rozmiaru
+      name: Wyświetlana nazwa
+      name_placeholder: np. duży, 16 uncji, rozmiar rodzinny
+      name_help: W ten sposób rozmiar będzie widoczny dla klientów
+      description: Opis
+      description_placeholder: Opcjonalne szczegóły dotyczące tego rozmiaru...
+      description_help: 'Opcjonalnie: Dodaj dodatkowe szczegóły'
+    index:
+      sizes: Rozmiary pozycji menu
+      description: Zarządzanie wariantami rozmiarów pozycji menu (np. małe, średnie,
+        duże).
+      back: Powrót
+      new_size: Nowy rozmiar
+      all_sizes: Wszystkie rozmiary
+    new:
+      sizes: Rozmiary
+      new: Nowość
+      new_size: Nowy rozmiar
+      description: Utwórz nowy wariant rozmiaru dla pozycji menu
+      cancel: Anuluj
+      size_details: Szczegóły dotyczące rozmiaru
+    show:
+      size: Rozmiar
+    size:
+      description: 'Opis:'
+      name: 'Imię i nazwisko:'
+      size: 'Rozmiar:'

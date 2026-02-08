@@ -1,0 +1,255 @@
+---
+en_US:
+  admin:
+    performance:
+      title: ''
+      subtitle: ''
+      card:
+        avg_response_time: ''
+        memory_usage: ''
+        error_rate: ''
+        active_users: ''
+        last_5_minutes: ''
+        current_rss: ''
+      response_time_trend: ''
+      memory_usage_trend: ''
+      slowest_endpoints: ''
+      table:
+        endpoint: ''
+        avg_response_time: ''
+      no_slow_endpoints: ''
+      recent_slow_queries: ''
+      query_table:
+        duration: ''
+        query: ''
+        time: ''
+      no_slow_queries: ''
+      actions: ''
+    cache:
+      title: ''
+      health_status: ''
+      response_time: ''
+      write_operation: ''
+      read_operation: ''
+      delete_operation: ''
+      error: ''
+      performance_stats: ''
+      reset_stats: ''
+      cache_hits: ''
+      cache_misses: ''
+      cache_writes: ''
+      cache_deletes: ''
+      cache_errors: ''
+      hit_rate: ''
+      cache_info: ''
+      service_version: ''
+      cache_methods: ''
+      active_keys: ''
+      memory_usage: ''
+      cache_warming: ''
+      cache_warming_description: ''
+      cache_management: ''
+      cache_management_description: ''
+      cache_patterns: ''
+      patterns:
+        restaurant: ''
+        menu: ''
+        menuitem: ''
+        order: ''
+        employee: ''
+        user: ''
+    metrics:
+      title: ''
+      card:
+        total_requests: ''
+        avg_response_time: ''
+        error_rate: ''
+        total_users: ''
+        all_time: ''
+        current_average: ''
+        current_error_rate: ''
+        all_time_registrations: ''
+      summary:
+        restaurants_created: ''
+        menu_imports: ''
+      system:
+        memory_usage: ''
+        active_users: ''
+      metric_types:
+        title: ''
+        counters: ''
+        gauges: ''
+        histograms: ''
+      table:
+        metric: ''
+        type: ''
+        value: ''
+        last_updated: ''
+      no_recent_metrics:
+        message: ''
+        description: ''
+    dashboard:
+      kpis:
+        total_orders: ''
+        total_revenue: ''
+        customers: ''
+        growth_rate: ''
+        page_views: ''
+        unique_visitors: ''
+        bounce_rate: ''
+      sales:
+        title: ''
+        table:
+          item: ''
+          quantity_sold: ''
+        no_data: ''
+      loading: ''
+  notifications:
+    index:
+      title: ''
+  announcements:
+    index:
+      title: ''
+      coming_soon: ''
+  beverage_review_queue:
+    title: ''
+    recent_pipeline_runs: ''
+    table:
+      created: ''
+      menu: ''
+      status: ''
+      step: ''
+      processed: ''
+      needs_review: ''
+      unresolved: ''
+      actions: ''
+    items_needing_review: ''
+    items_table:
+      menu: ''
+      section: ''
+      item: ''
+      category: ''
+      class_conf: ''
+      parse_conf: ''
+      parsed: ''
+  dw_orders_mv:
+    title: ''
+    loading: ''
+  ordritems:
+    index:
+      title: ''
+    new:
+      title: ''
+    edit:
+      title: ''
+    show:
+      title: ''
+      ordr: ''
+      menuitem: ''
+  ordrparticipants:
+    index:
+      title: ''
+    new:
+      title: ''
+    edit:
+      title: ''
+    show:
+      title: ''
+    table:
+      sessionid: ''
+      role: ''
+      employee: ''
+      ordr: ''
+      ordritem: ''
+  ordractions:
+    index:
+      title: ''
+    new:
+      title: ''
+    edit:
+      title: ''
+    show:
+      title: ''
+  ordritemnotes:
+    index:
+      title: ''
+    new:
+      title: ''
+    edit:
+      title: ''
+    show:
+      title: ''
+  menuparticipants:
+    new:
+      title: ''
+    edit:
+      title: ''
+  ingredients:
+    index:
+      title: ''
+    new:
+      title: ''
+    edit:
+      title: ''
+    show:
+      title: ''
+  genimages:
+    index:
+      title: ''
+    new:
+      title: ''
+    edit:
+      title: ''
+    show:
+      title: ''
+    table:
+      id: ''
+      name: ''
+      description: ''
+      restaurant: ''
+      menu: ''
+      menusection: ''
+      menuitem: ''
+      image_data: ''
+  restaurantlocales:
+    index:
+      title: ''
+    show:
+      title: ''
+    table:
+      locale: ''
+      status: ''
+      restaurant: ''
+  tracks:
+    index:
+      title: ''
+    new:
+      title: ''
+    edit:
+      title: ''
+  userplans:
+    index:
+      title: ''
+    new:
+      title: ''
+    show:
+      title: ''
+    edit:
+      manage_billing: ''
+    table:
+      user: ''
+      plan: ''
+  metrics:
+    index:
+      title: ''
+    new:
+      title: ''
+    edit:
+      title: ''
+    show:
+      title: ''
+  onboarding:
+    show:
+      progress: ''
+      current_step: ''
+      completed: ''

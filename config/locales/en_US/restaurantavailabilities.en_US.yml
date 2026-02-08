@@ -1,0 +1,21 @@
+---
+en_US:
+  restaurantavailabilities:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      restaurantavailability: ''
+    form:
+      delete: ''
+      save: ''
+      sure: ''
+    index:
+      restaurantavailabilities: ''
+      restaurantavailability: ''
+    new:
+      restaurantavailability: ''
+    show:
+      restaurantavailability: ''
+      selectRestaurant: ''

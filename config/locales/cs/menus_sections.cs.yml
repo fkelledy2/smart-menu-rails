@@ -1,0 +1,158 @@
+---
+cs:
+  menus:
+    sections:
+      details_2025:
+        quick_actions: Rychlé akce
+        preview_staff: Pohled zaměstnanců
+        preview_customer: Pohled zákazníka
+        preview_staff_title: Náhled nabídky jako zaměstnanec (ověřené zobrazení)
+        preview_customer_title: Náhled nabídky tak, jak ji vidí zákazníci (ověřené
+          jako zaměstnanci, ale zobrazující zákaznické rozhraní)
+        availability: Dostupnost
+        default: Výchozí
+        available: Dostupné na
+        unavailable: Nedostupné
+        generate_images: Generování obrázků
+        localize_menu: Překlady
+        ai_polish: Umělá inteligence v polštině
+        active: Aktivní
+        inactive: Neaktivní
+        menu_details: Podrobnosti o nabídce
+        menu_name: Název nabídky
+        menu_name_placeholder: např. večeřové menu, obědové speciality
+        menu_name_help: Název, který zákazníci uvidí
+        description: Popis
+        description_placeholder: Popište toto menu...
+        description_help: Nepovinný popis, který zákazníkům pomůže porozumět této
+          nabídce
+        statistics: Statistiky nabídky
+        sections: Sekce
+        items: Položky
+        schedules: Rozvrhy
+      settings_2025:
+        feature_toggles: Přepínače funkcí
+        display_images: Zobrazení obrázků
+        display_images_help: Zobrazení obrázků položek nabídky v této nabídce
+        disabled_at_restaurant: Bezbariérový přístup na úrovni restaurace
+        display_images_popup: Zobrazení obrázků ve vyskakovacím okně
+        display_images_popup_help: Otevření obrázků položek menu v popup modalu po
+          kliknutí na ně
+        allow_ordering: Povolit objednávání
+        allow_ordering_help: Povolení online objednávání pro toto menu
+        voice_ordering: Hlasové objednávání
+        voice_ordering_help: Umožnit zákazníkům objednávat pomocí hlasových příkazů
+          v této nabídce.
+        inventory_tracking: Sledování zásob
+        inventory_tracking_help: Sledování skladových zásob položek menu (již brzy)
+        settings_info_title: O nastaveních nabídky
+        settings_info_desc: Tato nastavení řídí funkce této konkrétní nabídky. Změny
+          se ukládají automaticky.
+        parent_restriction: 'Poznámka:'
+        parent_restriction_desc: Nastavení zakázaná na úrovni restaurace nelze povolit
+          pro jednotlivá menu. Nejprve je povolte na úrovni restaurace.
+        status: Stav
+        status_info: Ovládání viditelnosti nabídky
+        images_info: Přepínání fotografií položek menu
+        popup_info: Prohlížení obrázků na celé obrazovce
+        ordering_info: Povolení objednávek zákazníků
+        voice_ordering_info: Povolení hlasových příkazů pro objednávání
+      sections_2025:
+        quick_actions: Rychlé akce
+        add_section: Přidat oddíl
+        preview_staff: Náhled (zaměstnanci)
+        preview_customer: Náhled (zákazník)
+        preview_staff_title: Náhled nabídky jako zaměstnanec (ověřené zobrazení)
+        preview_customer_title: Náhled nabídky tak, jak ji vidí zákazníci (ověřené
+          jako zaměstnanci, ale zobrazující zákaznické rozhraní)
+        menu_sections: Sekce menu
+        sections_description: Uspořádejte si jídelníček do sekcí, jako jsou předkrmy,
+          hlavní jídla, dezerty atd.
+        name: Název
+        items: Položky
+        edit: Upravit
+        no_sections: Zatím žádné sekce
+        no_sections_desc: Přidejte první oddíl a začněte vytvářet nabídku
+        add_first_section: Přidat první oddíl
+      items_2025:
+        quick_actions: Rychlé akce
+        add_item: Přidání položky nabídky
+        preview_staff: Náhled (zaměstnanci)
+        preview_customer: Náhled (zákazník)
+        preview_staff_title: Náhled nabídky jako zaměstnanec (ověřené zobrazení)
+        preview_customer_title: Náhled nabídky tak, jak ji vidí zákazníci (ověřené
+          jako zaměstnanci, ale zobrazující zákaznické rozhraní)
+        menu_items: Položky nabídky
+        items_description: Zobrazení a správa všech položek menu ve všech sekcích
+        name: Název
+        price: Cena
+        items_count:
+          one: 1 položka
+          other: "%{počet} položek"
+        tasting_menu: Degustační menu
+        per_table: "(podle tabulky)"
+        per_person: "(na osobu)"
+        has_image_title: Má obrázek - pro náhled najetím myši
+        included: Zahrnuto
+        edit: Upravit
+        no_items: Zatím žádné položky
+        no_items_desc: Nejprve přidejte sekce a pak do nich přidávejte položky.
+        go_to_sections: Přejít na sekce
+      design_2025:
+        quick_actions: Rychlé akce
+        generate_images: Generování obrázků AI
+        preview_staff: Náhled (zaměstnanci)
+        preview_customer: Náhled (zákazník)
+        preview_staff_title: Náhled nabídky jako zaměstnanec (ověřené zobrazení)
+        preview_customer_title: Náhled nabídky tak, jak ji vidí zákazníci (ověřené
+          jako zaměstnanci, ale zobrazující zákaznické rozhraní)
+        menu_image: Obrázek nabídky
+        upload_image: Nahrát obrázek
+        image_help: 'Hlavní obrázek menu (doporučený: 1200x600px)'
+        remove_image: Odstranění aktuálního obrázku
+        pdf_menu: PDF menu
+        pdf_menu_desc: Nahrání verze jídelního lístku ve formátu PDF, kterou si mohou
+          zákazníci stáhnout.
+        download: Stáhnout
+        upload_pdf: Nahrát PDF
+        pdf_help: Nahrání verze menu ve formátu PDF
+        remove_pdf: Odstranění aktuálního PDF
+        display_settings: Nastavení displeje
+        show_images: Zobrazit obrázky
+        show_images_desc: Zobrazení obrázků položek v nabídce
+        popup_images: Vyskakovací obrázky
+        popup_images_desc: Zobrazení většího obrázku po klepnutí
+      qrcode_2025:
+        all_qr_codes_for_menu: Všechny kódy QR pro tuto nabídku
+        all_qr_codes_for_menu_desc: Zahrnuje QR pro obecné menu (bez stolu) a jeden
+          QR na stůl pro toto menu.
+        menu_only_qr: Nabídka QR (všechny stoly)
+        all_tables: Všechny tabulky
+        print: Tisk
+        menu_table_qr: Tabulka QR kódů pro tuto nabídku
+        no_qr_found: Zatím nebyly nalezeny žádné kódy QR. Zajistěte, aby byly pro
+          toto menu a tabulky vygenerovány Smartmenus.
+        download_options: Možnosti stažení
+        download_description: Stáhněte si kód QR v různých formátech pro tisk
+        png_format: Obrázek PNG
+        png_desc: Vysoká kvalita pro digitální použití
+        svg_format: Vektor SVG
+        svg_desc: Škálovatelné pro libovolnou velikost
+        pdf_format: PDF dokument
+        pdf_desc: Formát připravený pro tisk
+        download: Stáhnout
+        usage_tips: Tipy pro použití
+        tip_1: Tisk QR kódů na stoly nebo prostírání pro snadný přístup zákazníků.
+        tip_2: Uvádění QR kódu na účtenkách a vizitkách
+        tip_3: Umístění QR kódů u vchodu pro zákazníky, kteří si berou jídlo s sebou.
+        tip_4: Pravidelné testování QR kódu, abyste se ujistili, že funguje správně.
+        url_copied: URL zkopírováno do schránky!
+        print_qr_title: Tisk QR
+      schedule_2025:
+        quick_actions: Rychlé akce
+        copy_to_all: Kopírovat pondělí na všechny dny
+        menu_availabilities: Dostupnost nabídky
+        availabilities_description: Nastavení, kdy je tato nabídka v průběhu týdne
+          k dispozici zákazníkům.
+        unavailable: Nedostupné
+        copied_success: Zkopírováno!

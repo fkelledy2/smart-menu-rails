@@ -1,0 +1,155 @@
+---
+pl:
+  ocr_menu_imports:
+    controller:
+      attach_pdf: Prosimy o załączenie pliku PDF.
+      confirm_section: Przed importem należy potwierdzić co najmniej jedną sekcję.
+      deleted: Import menu został pomyślnie usunięty.
+      fail_create: 'Nie udało się utworzyć menu: %{error}'
+      processing_restarted: Przetwarzanie zostało (ponownie) rozpoczęte.
+      published: Menu zostało pomyślnie opublikowane!
+      queued: Import menu został umieszczony w kolejce do przetworzenia.
+      republished: Menu zostało ponownie opublikowane z potwierdzonymi zmianami.
+      unable_restart: 'Nie można (ponownie) rozpocząć przetwarzania od statusu: %{status}.'
+      unauthorized: Nie jesteś upoważniony do wykonania tej czynności.
+      updated: Import menu został pomyślnie zaktualizowany.
+    import_item:
+      default_title: Importuj pozycję
+      delete_confirm: Usunąć ten import? Nie można tego cofnąć.
+      delete_title: Usuń import
+      imported_ago: Zaimportowano %{czas} temu
+      item_label: pozycja
+      section_label: sekcja
+    index:
+      empty_hint: Rozpocznij od przesłania nowego pliku PDF z menu.
+      empty_title: Brak importu menu
+      new_import: Import nowego menu
+      title: Menu Imports
+    menu_section:
+      edit: Edytuj
+      hide: Ukryj
+      items: pozycje
+    new:
+      cancel: Anuluj
+      choose_file: Wybierz plik
+      name_invalid: Podaj nazwę tego menu.
+      name_label: Nazwa menu
+      name_placeholder: np. menu kolacji, oferty specjalne na lunch itp.
+      no_file_chosen: Nie wybrano żadnego pliku
+      pdf_hint: PDF do 10 MB
+      pdf_invalid: Wybierz plik PDF do przesłania.
+      pdf_label: Plik PDF
+      subtitle: Prześlij menu PDF, aby automatycznie wyodrębnić pozycje i sekcje menu.
+      tip_file_quality_text: Używaj wysokiej jakości plików PDF z wyraźnym, czytelnym
+        tekstem. Unikaj menu pisanych odręcznie lub skanów o niskiej rozdzielczości.
+      tip_file_quality_title: Jakość pliku
+      tip_format_text: System działa najlepiej z cyfrowymi plikami PDF. Skanowane
+        dokumenty mogą mieć niższą dokładność.
+      tip_format_title: Format
+      tip_processing_time_text: Przetwarzanie większych plików może potrwać kilka
+        minut. Po zakończeniu przetwarzania otrzymasz wiadomość e-mail.
+      tip_processing_time_title: Czas przetwarzania
+      tips_title: Wskazówki dotyczące najlepszych wyników
+      title: Import menu z pliku PDF
+      upload_process: Przesyłanie i przetwarzanie
+    new_2025:
+      title: Importowanie menu
+      subtitle: Prześlij menu PDF, a nasza sztuczna inteligencja automatycznie wyodrębni
+        wszystkie pozycje
+      step_upload: Przesyłanie
+      step_process: Proces
+      step_review: Recenzja
+      name_label: Nazwa menu
+      name_placeholder: np. menu letnie 2024
+      name_help: Nadaj swojemu menu opisową nazwę w celu łatwej identyfikacji.
+      source_language_label: Język menu
+      auto_detect: Automatyczne wykrywanie
+      language_en: Angielski
+      language_fr: Francuski
+      language_it: Włoski
+      language_es: Hiszpański
+      source_language_help: Służy do zachowania oryginalnego języka podczas generowania
+        brakujących opisów.
+      pdf_label: Menu PDF
+      drop_title: Przeciągnij i upuść plik PDF tutaj
+      drop_subtitle: lub
+      browse_files: Przeglądaj pliki
+      pdf_hint: PDF do 10 MB. Najlepiej sprawdzają się wyraźne skany.
+      remove_file_aria: Usuń plik
+      estimated_time: Przetwarzanie trwa około 2-5 minut
+      cancel: Anuluj
+      start_processing: Rozpoczęcie przetwarzania
+      tips_title: Wskazówki dotyczące najlepszych wyników
+      tip_quality_title: Używaj wysokiej jakości skanów
+      tip_quality_text: Najlepiej sprawdzają się wyraźne pliki PDF o wysokiej rozdzielczości
+        i dobrym kontraście. Unikaj rozmytych lub niskiej jakości zdjęć.
+      tip_format_title: Standardowy układ menu
+      tip_format_text: Najlepiej sprawdzają się menu z przejrzystymi sekcjami i nazwami
+        przedmiotów oddzielonymi od cen. Nasza sztuczna inteligencja poradzi sobie
+        z większością układów.
+      tip_language_title: Obsługa wielu języków
+      tip_language_text: Obsługujemy menu w języku angielskim, włoskim, hiszpańskim,
+        francuskim i nie tylko. Wielojęzyczne menu również działają!
+      pdf_invalid_js: Wybierz plik PDF
+    show:
+      allergens: Alergeny
+      approve_sections_items: Zatwierdzanie sekcji i pozycji
+      cancel: Anuluj
+      click_to_add_description: Kliknij, aby dodać opis.
+      confirm_modal_body: Potwierdź, aby opublikować menu. Opcjonalnie można użyć
+        opcji Sync publish, aby zarchiwizować wszystkie istniejące sekcje/pozycje,
+        które nie są obecne w tym imporcie.
+      confirm_modal_title: Publikuj menu
+      create_menu: Utwórz menu
+      dairy_free: Bez nabiału
+      default_title: 'Menu Import #%{id}'
+      delete: Usuń
+      description: Opis
+      dietary_information: Informacje o diecie
+      edit_item_modal_title: Edytuj pozycję menu
+      failed_heading: Przetwarzanie nie powiodło się
+      gluten_free: Bezglutenowy
+      hold_multi_select: Przytrzymaj Ctrl/Cmd, aby wybrać wiele
+      import_details: Szczegóły importu
+      imported_ago: Zaimportowano %{czas} temu
+      imported_menu_subtitle: Przejrzyj i potwierdź wyodrębnione pozycje menu poniżej.
+        Możesz edytować dowolny element przed utworzeniem ostatecznego menu.
+      imported_menu_title: Importowane menu
+      item_name: Nazwa przedmiotu
+      no_items_explainer: Nie mogliśmy wykryć żadnych sekcji/pozycji z tego pliku
+        PDF.
+      no_items_heading: Nie przeanalizowano żadnych elementów menu
+      no_items_tip1: Plik PDF może nie zawierać tekstu, który można wyodrębnić, a
+        OCR nie wygenerował żadnego tekstu. Sprawdź, czy poświadczenia Google Cloud
+        Vision są skonfigurowane.
+      no_items_tip2: Może brakować klucza API OpenAI lub zwrócono nieprawidłowe dane
+        wyjściowe. Dodaj openai_api_key do poświadczeń Rails.
+      no_items_tip3: Formatowanie odpowiedzi mogło być nieprawidłowe. Usprawniliśmy
+        parsowanie, ale ponowne uruchomienie może pomóc.
+      position: Pozycja
+      price: Cena
+      process_confirm: Rozpocząć przetwarzanie tego pliku PDF teraz?
+      process_pdf: Proces PDF
+      processing_page: Strona %{bieżąca} z %{całkowita}
+      processing_title: Przetwarzanie menu. Może to potrwać kilka minut...
+      progress_complete: "%{percent}% ukończone"
+      progress_loading: Ładowanie...
+      publish: Publikować
+      publish_menu: Publikuj menu
+      reorder_hint: Zmień kolejność elementów tylko w tej sekcji.
+      save_changes: Zapisz zmiany
+      section: Sekcja
+      section_disabled_title: Tutaj nie można zmienić sekcji
+      status: 'Status:'
+      steps:
+        complete: Kompletny
+        processing: Przetwarzanie
+        review: Recenzja
+        upload: Przesyłanie
+      sync_publish_label: Synchronizuj publikację (sekcje/elementy archiwum nieuwzględnione
+        w tym imporcie)
+      try_again: Spróbuj ponownie
+      updated_at: Zaktualizowano %{timestamp}
+      upload_clearer_pdf: Prześlij bardziej przejrzysty plik PDF
+      vegan: Wegański
+      vegetarian: Wegetariańskie

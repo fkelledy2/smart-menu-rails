@@ -1,0 +1,29 @@
+---
+en_GB:
+  tablesettings:
+    controller:
+      created: ''
+      deleted: ''
+      updated: ''
+    edit:
+      tablesetting: ''
+    index:
+      archive: ''
+      seating_plan: ''
+      seats: ''
+      table_setting: ''
+      table_settings: ''
+      unarchive: ''
+    new:
+      status: ''
+      tablesetting: ''
+    show:
+      available_menus: ''
+      selectRestaurant: ''
+      show_table_setting: ''
+    tablesetting:
+      capacity: ''
+      description: ''
+      name: ''
+      restaurant: ''
+      status: ''

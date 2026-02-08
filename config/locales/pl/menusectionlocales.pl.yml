@@ -1,0 +1,7 @@
+---
+pl:
+  menusectionlocales:
+    controller:
+      created: Menusectionlocale zostało pomyślnie utworzone.
+      destroyed: Menusectionlocale został pomyślnie zniszczony.
+      updated: Menusectionlocale zostało pomyślnie zaktualizowane.

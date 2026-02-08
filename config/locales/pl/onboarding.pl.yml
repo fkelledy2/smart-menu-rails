@@ -1,0 +1,212 @@
+---
+pl:
+  onboarding:
+    account_details:
+      continue: Kontynuuj
+      email_help: Ten adres e-mail jest już potwierdzony i nie można go zmienić podczas
+        konfiguracji.
+      email_label: Adres e-mail
+      full_name_label: Imię i nazwisko
+      full_name_placeholder: Wpisz swoje imię i nazwisko
+      full_name_required: Prosimy o podanie pełnego imienia i nazwiska.
+      restaurant_name_preview_help: Nie martw się, możesz to zmienić w następnym kroku.
+      restaurant_name_preview_label: Nazwa restauracji (podgląd)
+      restaurant_name_preview_placeholder: Jak nazywa się twoja restauracja?
+      stats:
+        restaurants_count: 1,000+
+        restaurants_label: Zaufały nam restauracje
+        satisfaction: 98%
+        satisfaction_label: Zadowolenie klienta
+        setup_time: 5 min
+        setup_time_label: Średni czas konfiguracji
+      subtitle: Skonfigurujmy twoje konto. Zajmie to tylko chwilę.
+      title: Witamy w Smart Menu!
+    completion:
+      completion_time: Zwykle zajmuje to 30-60 sekund. Po zakończeniu nastąpi automatyczne
+        przekierowanie.
+      configuring_payments: Konfigurowanie opcji płatności
+      creating_profile: Tworzenie profilu restauracji
+      customize_menu_description: Dodaj więcej przedmiotów, prześlij zdjęcia i ustaw
+        szczegółowe opisy
+      customize_menu_title: Dostosuj swoje menu
+      free_trial_status: 14-dniowy bezpłatny okres próbny
+      generating_qr: Generowanie kodu QR...
+      generating_qr_codes: Generowanie kodów QR
+      generating_status: Generowanie kodu QR...
+      go_to_dashboard: Przejdź do pulpitu nawigacyjnego
+      menu_published: Opublikowane menu
+      plan_activated: Plan aktywowany
+      print_qr_description: Pobieranie i drukowanie kodów QR dla stołów
+      print_qr_title: Drukowanie kodów QR
+      qr_code_ready: Kod QR gotowy!
+      qr_ready_title: Cyfrowe menu jest gotowe
+      restaurant_created: Restauracja stworzona
+      setting_up_menu: Konfigurowanie menu
+      setup_timeout: Konfiguracja trwa dłużej niż oczekiwano
+      setup_timeout_help: Odśwież stronę lub skontaktuj się z pomocą techniczną
+      subtitle: Twoja restauracja jest teraz skonfigurowana i gotowa do obsługi klientów!
+      title: "Gratulacje! \U0001F389"
+      track_orders_description: Monitorowanie zamówień klientów i analizy w czasie
+        rzeczywistym
+      track_orders_title: Śledzenie zamówień
+      view_live_menu: Wyświetlanie menu na żywo
+      whats_happening: 'Co się teraz dzieje:'
+      whats_next: Co dalej?
+    menu_creation:
+      add_menu_item: Dodaj pozycję menu
+      back: Powrót
+      create_menu: Utwórz menu
+      item_description_placeholder: Krótki opis (opcjonalnie)
+      item_name_placeholder: Nazwa przedmiotu
+      item_price_placeholder: '0.00'
+      live_preview: Podgląd na żywo
+      menu_item_title: Pozycja menu
+      menu_items_help: Dodaj co najmniej 3 elementy, aby kontynuować. Nie martw się
+        o perfekcję - wszystko możesz później edytować!
+      menu_items_label: Pozycje menu
+      menu_name_default: Menu główne
+      menu_name_label: Nazwa menu
+      menu_name_placeholder: np. menu główne, menu na lunch, menu na kolację
+      menu_name_required: Podaj nazwę menu.
+      min_items_alert: Aby kontynuować, dodaj co najmniej 3 pozycje menu.
+      need_more_items: Potrzebujesz %{count} więcej przedmiotów
+      preview_empty: Pozycje menu pojawią się tutaj po ich dodaniu
+      preview_empty_alt: Pozycje menu pojawią się tutaj
+      quick_start_label: Szablony szybkiego startu
+      subtitle: Dodaj kilka elementów na początek. Zawsze możesz dodać więcej później!
+      template_added: Dodano!
+      template_items:
+        american:
+          bbq_ribs:
+            description: Wolno gotowane żeberka wieprzowe z sosem BBQ
+            name: Żeberka BBQ
+          buffalo_wings:
+            description: 8 kawałków z selerem naciowym i dipem z sera pleśniowego
+            name: Buffalo Wings
+          classic_burger:
+            description: Kotlet wołowy, sałata, pomidor, cebula, pikle
+            name: Klasyczny burger
+        asian:
+          chicken_teriyaki:
+            description: Grillowany kurczak z sosem teriyaki i ryżem
+            name: Kurczak Teriyaki
+          pad_thai:
+            description: Smażony makaron ryżowy z krewetkami i orzeszkami ziemnymi
+            name: Pad Thai
+          spring_rolls:
+            description: Chrupiące bułeczki z sosem słodko-kwaśnym
+            name: Sajgonki warzywne
+        italian:
+          caesar_salad:
+            description: Sałata rzymska, grzanki, parmezan, sos cezar
+            name: Sałatka Cezar
+          margherita_pizza:
+            description: Świeża mozzarella, sos pomidorowy, bazylia
+            name: Margherita Pizza
+          spaghetti_carbonara:
+            description: Makaron z jajkami, serem, pancettą i papryką
+            name: Spaghetti Carbonara
+        mexican:
+          beef_burrito:
+            description: Duże burrito z sezonowaną wołowiną, ryżem i fasolą
+            name: Burrito wołowe
+          chicken_tacos:
+            description: Trzy miękkie tacos z grillowanym kurczakiem i salsą
+            name: Tacos z kurczakiem
+          guacamole_chips:
+            description: Świeże guacamole z chipsami tortilla
+            name: Guacamole i chipsy
+      templates:
+        american: Amerykański
+        asian: Azjatycki
+        italian: Włoski
+        mexican: Meksykański
+      templates_help: Kliknij szablon, aby dodać przykładowe elementy, które możesz
+        dostosować.
+      title: Utwórz swoje pierwsze menu
+    plan_selection:
+      always_free: Zawsze za darmo
+      back: Powrót
+      choose_free_plan: Wybierz bezpłatny plan
+      continue: Kontynuuj
+      features:
+        advanced_analytics: Zaawansowana analityka
+        api_access: Dostęp API
+        custom_branding: Niestandardowy branding
+        items_per_menu: elementy/menu
+        languages: języki
+        locations: lokalizacje
+        menus_per_location: menu/lokalizacja
+        online_ordering: Zamawianie online
+        priority_support: Priorytetowe wsparcie
+        qr_code_menus: Menu z kodem QR
+      free_trial: 14-dniowy bezpłatny okres próbny
+      most_popular: NAJBARDZIEJ POPULARNE
+      per_month: "/mo"
+      select_plan_alert: Wybierz plan, aby kontynuować.
+      selected: Wybrane ✓
+      start_free_trial: Rozpocznij bezpłatny okres próbny
+      subtitle: Zacznij od 14-dniowego bezpłatnego okresu próbnego. Karta kredytowa
+        nie jest wymagana!
+      title: Wybierz swój plan
+      trust_indicators:
+        mobile_subtitle: Idealny na każdym urządzeniu
+        mobile_title: Zoptymalizowany pod kątem urządzeń mobilnych
+        secure_subtitle: Bezpieczeństwo na poziomie banku
+        secure_title: Bezpieczeństwo i niezawodność
+        support_subtitle: Jesteśmy tutaj, aby pomóc
+        support_title: Wsparcie 24/7
+    restaurant_details:
+      back: Powrót
+      continue: Kontynuuj
+      cuisine_type_label: Rodzaj kuchni
+      cuisine_type_prompt: Wybierz kuchnię...
+      cuisine_type_required: Wybierz rodzaj kuchni.
+      cuisine_types:
+        american: Amerykański
+        chinese: Chiński
+        french: Francuski
+        fusion: Fuzja
+        greek: Grecki
+        indian: Hindus
+        italian: Włoski
+        japanese: Japoński
+        korean: Koreański
+        mediterranean: Morze Śródziemne
+        mexican: Meksykański
+        middle_eastern: Bliski Wschód
+        other: Inne
+        spanish: Hiszpański
+        thai: Tajski
+        vietnamese: Wietnamski
+      location_help: Pomaga nam to ustawić domyślną walutę i strefę czasową.
+      location_label: Lokalizacja
+      location_placeholder: Miasto, państwo/kraj
+      location_required: Prosimy o podanie lokalizacji restauracji.
+      phone_help: Opcjonalnie - do kontaktu z klientami i rezerwacji.
+      phone_label: Numer telefonu
+      phone_placeholder: "+1 (555) 123-4567"
+      pro_tips:
+        tip1: Wybierz typ restauracji, który najlepiej pasuje do Twojego stylu obsługi
+        tip2: Typ kuchni pomaga nam sugerować odpowiednie szablony menu
+        tip3: Lokalizacja służy do ustawienia lokalnej waluty i strefy czasowej.
+        title: Profesjonalne wskazówki
+      restaurant_name_label: Nazwa restauracji
+      restaurant_name_placeholder: Wprowadź nazwę restauracji
+      restaurant_name_required: Prosimy o podanie nazwy restauracji.
+      restaurant_type_label: Typ restauracji
+      restaurant_type_prompt: Wybierz typ...
+      restaurant_type_required: Wybierz typ restauracji.
+      restaurant_types:
+        bakery: Piekarnia
+        bar_grill: Bar & Grill
+        cafe: Kawiarnia
+        casual_dining: Nieformalne posiłki
+        fast_casual: Fast Casual
+        fine_dining: Wyśmienita kuchnia
+        food_truck: Food Truck
+        other: Inne
+        quick_service: Szybka obsługa
+      subtitle: Pomóż nam spersonalizować Twoje wrażenia, podając kilka podstawowych
+        informacji.
+      title: Opowiedz nam o swojej restauracji
