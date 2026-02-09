@@ -17,14 +17,16 @@ class MaterializedViewService
   def refresh_view(view_name, concurrently: true)
     validate_view_name!(view_name)
 
+    quoted_view_name = ActiveRecord::Base.connection.quote_table_name(view_name)
+
     start_time = Time.current
     Rails.logger.info "[MaterializedViewService] Starting refresh of #{view_name}"
 
     begin
       refresh_sql = if concurrently && supports_concurrent_refresh?(view_name)
-                      "REFRESH MATERIALIZED VIEW CONCURRENTLY #{view_name};"
+                      "REFRESH MATERIALIZED VIEW CONCURRENTLY #{quoted_view_name};"
                     else
-                      "REFRESH MATERIALIZED VIEW #{view_name};"
+                      "REFRESH MATERIALIZED VIEW #{quoted_view_name};"
                     end
 
       ActiveRecord::Base.connection.execute(refresh_sql)
@@ -150,6 +152,7 @@ class MaterializedViewService
 
   def get_last_refresh_time(view_name)
     # Query PostgreSQL system catalogs for last refresh time
+    quoted_view_name = ActiveRecord::Base.connection.quote(view_name)
     result = ActiveRecord::Base.connection.execute(<<~SQL.squish)
       SELECT#{' '}
         schemaname,
@@ -158,7 +161,7 @@ class MaterializedViewService
         ispopulated,
         pg_size_pretty(pg_total_relation_size(schemaname||'.'||matviewname)) as size
       FROM pg_matviews#{' '}
-      WHERE matviewname = '#{view_name}';
+      WHERE matviewname = #{quoted_view_name};
     SQL
 
     if result.any?
@@ -171,6 +174,7 @@ class MaterializedViewService
   end
 
   def get_single_view_stats(view_name)
+    quoted_view_name = ActiveRecord::Base.connection.quote(view_name)
     result = ActiveRecord::Base.connection.execute(<<~SQL.squish)
       SELECT#{' '}
         schemaname,
@@ -180,7 +184,7 @@ class MaterializedViewService
         pg_size_pretty(pg_total_relation_size(schemaname||'.'||matviewname)) as size,
         pg_total_relation_size(schemaname||'.'||matviewname) as size_bytes
       FROM pg_matviews#{' '}
-      WHERE matviewname = '#{view_name}';
+      WHERE matviewname = #{quoted_view_name};
     SQL
 
     if result.any?

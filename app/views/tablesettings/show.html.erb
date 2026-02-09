@@ -77,7 +77,14 @@
       </div>
     <% end %>
     <p>
-        <%= @qr.as_svg.html_safe %>
+        <%= sanitize(
+          @qr.as_svg,
+          tags: %w[svg g path rect circle line polyline polygon],
+          attributes: %w[
+            xmlns width height viewBox fill stroke stroke-width stroke-linecap stroke-linejoin
+            d x y x1 y1 x2 y2 cx cy r points transform
+          ]
+        ) %>
     </p>
 <% else %>
     <%= format('%02d',@currentDay) %> - <%= format('%02d',@currentHour) %>:<%= format('%02d',@currentMin) %>
