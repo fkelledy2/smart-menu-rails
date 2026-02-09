@@ -8,8 +8,7 @@ module Admin
     before_action :authenticate_user!
     before_action :require_super_admin!
 
-    def new
-    end
+    def new; end
 
     def create
       query = params[:query].to_s.strip
@@ -51,6 +50,7 @@ module Admin
 
     def require_super_admin!
       return if request.env['require_super_admin_running']
+
       request.env['require_super_admin_running'] = true
 
       user = if respond_to?(:true_user) && true_user.present?

@@ -20,6 +20,7 @@ module SentryContext
 
   def set_sentry_context
     return if request.env['sentry_context_set']
+
     request.env['sentry_context_set'] = true
 
     return unless defined?(Sentry) && Sentry.respond_to?(:set_user)

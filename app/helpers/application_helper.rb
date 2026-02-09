@@ -88,9 +88,9 @@ module ApplicationHelper
     return raw('') if k.blank?
 
     opts = options
-    value = I18n.t(k, **opts.merge(default: nil))
+    value = I18n.t(k, **opts, default: nil)
     if value.blank? || value.to_s.start_with?('translation missing:')
-      value = I18n.t(k, **opts.merge(locale: I18n.default_locale, default: k))
+      value = I18n.t(k, **opts, locale: I18n.default_locale, default: k)
     end
 
     raw value

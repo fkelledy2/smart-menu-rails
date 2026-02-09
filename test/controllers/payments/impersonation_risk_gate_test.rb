@@ -1,9 +1,8 @@
 require 'test_helper'
 
-class Payments::ImpersonationRiskGateTest < ActionController::TestCase
-  tests ApplicationController
-
+class Payments::ImpersonationRiskGateTest < ActiveSupport::TestCase
   setup do
+    @controller = ApplicationController.new
     @request = ActionDispatch::TestRequest.create
     @response = ActionDispatch::TestResponse.new
     @controller.request = @request

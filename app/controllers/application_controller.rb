@@ -26,6 +26,7 @@ class ApplicationController < ActionController::Base
 
   def impersonating_user?
     return false if request.env['impersonating_user_checking']
+
     request.env['impersonating_user_checking'] = true
 
     return true if session[:pretender_user_id].present?
@@ -117,6 +118,7 @@ class ApplicationController < ActionController::Base
 
   def enforce_impersonation_expiry
     return if request.env['impersonation_expiry_checked']
+
     request.env['impersonation_expiry_checked'] = true
 
     return unless impersonating_user?
@@ -137,6 +139,7 @@ class ApplicationController < ActionController::Base
 
   def block_high_risk_actions_when_impersonating
     return if request.env['impersonation_risk_block_checked']
+
     request.env['impersonation_risk_block_checked'] = true
 
     return unless impersonating_user?
@@ -238,6 +241,7 @@ class ApplicationController < ActionController::Base
 
   def set_current_employee
     return if request.env['set_current_employee_running']
+
     request.env['set_current_employee_running'] = true
 
     Thread.current[:set_current_employee_depth] ||= 0
