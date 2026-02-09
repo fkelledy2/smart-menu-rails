@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+COLOR_RED="\033[31m"
+COLOR_GREEN="\033[32m"
+COLOR_YELLOW="\033[33m"
+COLOR_BLUE="\033[34m"
+COLOR_BOLD="\033[1m"
+COLOR_RESET="\033[0m"
+
+say() { printf "%b\n" "$*"; }
+info() { say "${COLOR_BLUE}${1}${COLOR_RESET}"; }
+ok() { say "${COLOR_GREEN}${1}${COLOR_RESET}"; }
+warn() { say "${COLOR_YELLOW}${1}${COLOR_RESET}"; }
+err() { say "${COLOR_RED}${1}${COLOR_RESET}"; }
+
+die() { err "$1"; exit 1; }
+
+run() {
+  local desc="$1"; shift
+  info "==> ${desc}"
+  "$@"
+  ok "✔ ${desc}"
+}
+
+DEPLOY_CHECK=false
+SKIP_ASSETS=false
+SKIP_YARN=false
+SKIP_I18N=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --deploy) DEPLOY_CHECK=true; shift ;;
+    --skip-assets) SKIP_ASSETS=true; shift ;;
+    --skip-yarn) SKIP_YARN=true; shift ;;
+    --skip-i18n) SKIP_I18N=true; shift ;;
+    -h|--help)
+      cat <<'HELP'
+Usage: bin/ci [options]
+
+Mirrors the GitHub Actions checks locally.
+
+Options:
+  --deploy        Also run deploy-readiness checks (migrations status, credentials, prod assets:precompile)
+  --skip-assets   Skip assets:precompile (test env)
+  --skip-yarn     Skip yarn install and JS/CSS related steps
+  --skip-i18n     Skip i18n-tasks checks
+  -h, --help      Show this help
+
+Environment variables (optional):
+  DATABASE_URL  (default: postgres://postgres:postgres@localhost:5432/smart_menu_test)
+  REDIS_URL     (default: redis://localhost:6379/0)
+  RAILS_ENV     (default: test)
+  OPENAI_API_KEY (default: test)
+HELP
+      exit 0
+      ;;
+    *)
+      die "Unknown option: $1 (run with --help)"
+      ;;
+  esac
+done
+
+export RAILS_ENV="${RAILS_ENV:-test}"
+export DATABASE_URL="${DATABASE_URL:-postgres://postgres:postgres@localhost:5432/smart_menu_test}"
+export REDIS_URL="${REDIS_URL:-redis://localhost:6379/0}"
+export OPENAI_API_KEY="${OPENAI_API_KEY:-test}"
+
+[[ -f "Gemfile" && -f "config/application.rb" ]] || die "Not a Rails app root (Gemfile/config/application.rb missing)"
+
+mkdir -p tmp
+
+info "${COLOR_BOLD}Running local CI checks...${COLOR_RESET}"
+info "RAILS_ENV=${RAILS_ENV}"
+
+if [[ "$SKIP_YARN" == "false" && -f "yarn.lock" ]]; then
+  run "Install Node dependencies" yarn install --frozen-lockfile
+fi
+
+run "Install gem dependencies" bundle check || bundle install
+
+run "Bundler Audit (update + check)" bundle exec bundler-audit --update
+run "Bundler Audit (check)" bundle exec bundler-audit check
+
+run "Brakeman (JSON report)" bundle exec brakeman --config-file config/brakeman.yml --format json --output tmp/brakeman.json
+run "Brakeman" bundle exec brakeman --config-file config/brakeman.yml
+
+run "RuboCop (JSON report)" bundle exec rubocop --format json --out tmp/rubocop.json
+run "RuboCop" bundle exec rubocop
+
+run "UI/UX lint guardrails" bundle exec rake uiux:lint
+
+if [[ "$SKIP_I18N" == "false" ]] && bundle show i18n-tasks > /dev/null 2>&1; then
+  run "i18n-tasks check-normalized" bundle exec i18n-tasks check-normalized
+  run "i18n-tasks missing" bundle exec i18n-tasks missing
+else
+  warn "Skipping i18n-tasks checks (disabled or gem not present)"
+fi
+
+if [[ "$SKIP_ASSETS" == "false" ]]; then
+  run "Assets precompile (test env)" bundle exec rails assets:precompile
+else
+  warn "Skipping assets precompile"
+fi
+
+run "DB create" bundle exec rails db:create
+run "DB schema load" bundle exec rails db:schema:load
+
+run "Rails test" bundle exec rails test
+
+if bundle show rspec-rails > /dev/null 2>&1; then
+  run "RSpec" bundle exec rspec
+else
+  warn "RSpec not available, skipping"
+fi
+
+if [[ -f "test/performance/bullet_test.rb" ]]; then
+  run "Bullet N+1 detection test" bundle exec rails test test/performance/bullet_test.rb
+else
+  warn "Bullet performance test not present, skipping"
+fi
+
+if [[ "$DEPLOY_CHECK" == "true" ]]; then
+  run "Pending migrations status" bundle exec rails db:migrate:status
+  run "Verify credentials readable" bash -lc "bundle exec rails credentials:show > /dev/null"
+  run "Assets precompile (production)" bundle exec rails assets:precompile RAILS_ENV=production
+fi
+
+ok "All local CI checks passed ✅"
