@@ -34,6 +34,10 @@ Rails.application.routes.draw do
     mount Rswag::Ui::Engine => '/api-docs'
     mount Rswag::Api::Engine => '/api-docs'
   end
+
+  namespace :admin do
+    resource :impersonation, only: [:new, :create, :destroy]
+  end
   
   # ============================================================================
   # API ENDPOINTS
@@ -450,6 +454,10 @@ Rails.application.routes.draw do
     
     namespace :madmin do
       resources :impersonates do
+        collection do
+          get :new
+          post :start
+        end
         post :impersonate, on: :member
         post :stop_impersonating, on: :collection
       end

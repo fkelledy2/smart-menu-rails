@@ -4,12 +4,24 @@ module SentryContext
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_sentry_context, if: -> { defined?(Sentry) }
+    before_action :set_sentry_context, if: -> { sentry_context_enabled? }
   end
 
   private
 
+  def sentry_context_enabled?
+    return false if Rails.env.test?
+    return false unless defined?(Sentry) && Sentry.respond_to?(:set_user)
+    return false if ENV['SENTRY_DSN'].to_s.strip.empty?
+
+    enabled_envs = %w[production staging]
+    enabled_envs.include?(Rails.env)
+  end
+
   def set_sentry_context
+    return if request.env['sentry_context_set']
+    request.env['sentry_context_set'] = true
+
     return unless defined?(Sentry) && Sentry.respond_to?(:set_user)
 
     begin

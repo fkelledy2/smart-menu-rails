@@ -94,6 +94,10 @@ class User < ApplicationRecord
     employee_roles_for_restaurant(restaurant_id).include?('admin')
   end
 
+  def super_admin?
+    super_admin
+  end
+
   def manager_employee_for_restaurant?(restaurant_id)
     roles = employee_roles_for_restaurant(restaurant_id)
     roles.include?('admin') || roles.include?('manager')

@@ -2,6 +2,8 @@
 require 'simplecov'
 # SimpleCov configuration is loaded from .simplecov file
 
+SimpleCov.formatter = SimpleCov::Formatter::SimpleFormatter
+
 ENV['RAILS_ENV'] ||= 'test'
 
 # Speed optimizations for test environment

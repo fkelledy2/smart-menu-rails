@@ -22,4 +22,14 @@ admin:
   first_name: Admin
   last_name: User
   admin: true
+  super_admin: false
+  plan: one
+
+super_admin:
+  email: admin@mellow.menu
+  encrypted_password: $2a$04$R5z/kRsJKLQfYB3ks3mM0OXo5UY6E4K4V/SWz0jR5xNhTVW8Z.lK2
+  first_name: Super
+  last_name: Admin
+  admin: true
+  super_admin: true
   plan: one

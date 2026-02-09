@@ -10,14 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_05_183500) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_09_093000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  begin
-    enable_extension "vector"
-  rescue ActiveRecord::StatementInvalid
-    nil
-  end
+  enable_extension "vector"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -212,6 +208,25 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_05_183500) do
     t.index ["status"], name: "index_hero_images_on_status"
   end
 
+  create_table "impersonation_audits", force: :cascade do |t|
+    t.bigint "admin_user_id", null: false
+    t.bigint "impersonated_user_id", null: false
+    t.datetime "started_at", null: false
+    t.datetime "ended_at"
+    t.datetime "expires_at", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.string "ended_reason"
+    t.text "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_user_id", "started_at"], name: "index_impersonation_audits_on_admin_user_id_and_started_at"
+    t.index ["admin_user_id"], name: "index_impersonation_audits_on_admin_user_id"
+    t.index ["expires_at"], name: "index_impersonation_audits_on_expires_at"
+    t.index ["impersonated_user_id", "started_at"], name: "idx_on_impersonated_user_id_started_at_39d81181ba"
+    t.index ["impersonated_user_id"], name: "index_impersonation_audits_on_impersonated_user_id"
+  end
+
   create_table "ingredients", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -310,10 +325,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_05_183500) do
     t.index ["menuitem_id"], name: "index_menu_item_product_links_on_menuitem_id"
     t.index ["product_id"], name: "index_menu_item_product_links_on_product_id"
   end
-
-# Could not dump table "menu_item_search_documents" because of following StandardError
-#   Unknown type 'vector(1024)' for column 'embedding'
-
 
   create_table "menu_items", force: :cascade do |t|
     t.string "name"
@@ -1434,6 +1445,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_05_183500) do
     t.string "unconfirmed_email"
     t.integer "restaurants_count", default: 0
     t.integer "employees_count", default: 0
+    t.boolean "super_admin", default: false, null: false
+    t.index ["admin", "super_admin"], name: "index_users_on_admin_and_super_admin"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["plan_id", "admin"], name: "index_users_on_plan_admin"
@@ -1476,6 +1489,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_05_183500) do
   add_foreign_key "genimages", "menus"
   add_foreign_key "genimages", "menusections"
   add_foreign_key "genimages", "restaurants"
+  add_foreign_key "impersonation_audits", "users", column: "admin_user_id"
+  add_foreign_key "impersonation_audits", "users", column: "impersonated_user_id"
   add_foreign_key "inventories", "menuitems"
   add_foreign_key "menu_edit_sessions", "menus"
   add_foreign_key "menu_edit_sessions", "users"

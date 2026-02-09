@@ -1,0 +1,18 @@
+<div class="container py-4">
+  <h1>Act as user</h1>
+
+  <%= form_with url: admin_impersonation_path, method: :post, local: true do |f| %>
+    <div class="mb-3">
+      <%= f.label :query, 'User email or id', class: 'form-label' %>
+      <%= f.text_field :query, class: 'form-control', required: true, autofocus: true, data: { testid: 'admin-impersonation-query' } %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :reason, 'Reason (optional)', class: 'form-label' %>
+      <%= f.text_area :reason, class: 'form-control', rows: 2, data: { testid: 'admin-impersonation-reason' } %>
+    </div>
+
+    <%= f.submit 'Start impersonation', class: 'btn btn-primary', data: { testid: 'admin-impersonation-submit' } %>
+    <%= link_to 'Cancel', root_path, class: 'btn btn-link' %>
+  <% end %>
+</div>

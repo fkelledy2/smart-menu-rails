@@ -1,7 +1,11 @@
 <% if current_user != true_user %>
   <div class="alert alert-warning text-center">
     <%= t('.impersonated_as') %> <b><%= current_user.name %> (<%= current_user.email %>)</b>
-    <%= link_to stop_impersonating_madmin_impersonates_path, method: :post do %><%= icon("fas", "times") %> <%= t('.logout') %> <% end %>
+    <%= button_to admin_impersonation_path,
+          method: :delete,
+          form: { class: 'd-inline', data: { testid: 'stop-impersonation-form' } },
+          class: 'btn btn-link p-0 align-baseline',
+          data: { testid: 'stop-impersonation-btn' } do %><i class="fas fa-times" aria-hidden="true"></i> <%= t('.logout') %> <% end %>
   </div>
 <% end %>
 
@@ -36,9 +40,10 @@
                 <%= link_to restaurants_path, class: "dropdown-item" do %>
                     <%= t(".restaurants") %>
                 <% end %>
-                <% if @restaurants.count > 0 %>
+                <% restaurants_list = @restaurants || [] %>
+                <% if restaurants_list.count > 0 %>
                 <hr class="dropdown-divider">
-                <% @restaurants.each do |restaurant| %>
+                <% restaurants_list.each do |restaurant| %>
                     <%= link_to edit_restaurant_path(id: restaurant.id), class: "dropdown-item" do %>
                         <%= restaurant.name %>
                     <% end %>
@@ -78,6 +83,11 @@
                 <h6 class="dropdown-header"><i class="bi bi-shield-lock me-2"></i><%= t(".adminArea") %></h6>
                 <%= link_to madmin_root_path, class: "dropdown-item ps-4" do %>
                   <i class="bi bi-speedometer2 me-2"></i><%= t(".dashboard") %>
+                <% end %>
+                <% if current_user.respond_to?(:super_admin?) && current_user.super_admin? %>
+                  <%= link_to new_admin_impersonation_path, class: "dropdown-item ps-4" do %>
+                    <i class="bi bi-person-badge me-2"></i>Act as user
+                  <% end %>
                 <% end %>
                 <%= link_to testimonials_path, class: "dropdown-item ps-4" do %>
                   <i class="bi bi-chat-quote me-2"></i><%= t(".testimonials") %>

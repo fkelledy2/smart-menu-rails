@@ -78,9 +78,11 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+function onboardingAccountDetailsInit() {
   // Form validation
   const form = document.querySelector('.needs-validation');
+
+  if (!form) return;
 
   form.addEventListener('submit', function(event) {
     if (!form.checkValidity()) {
@@ -109,5 +111,9 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   updateContinueState();
-});
+
+}
+
+document.addEventListener('DOMContentLoaded', onboardingAccountDetailsInit);
+document.addEventListener('turbo:load', onboardingAccountDetailsInit);
 </script>

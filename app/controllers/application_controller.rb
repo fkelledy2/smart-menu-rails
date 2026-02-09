@@ -13,6 +13,9 @@ class ApplicationController < ActionController::Base
 
   before_action :debug_request_in_test
 
+  prepend_before_action :enforce_impersonation_expiry
+  prepend_before_action :block_high_risk_actions_when_impersonating
+
   # Authorization monitoring
   rescue_from Pundit::NotAuthorizedError, with: :handle_authorization_failure
 
@@ -21,7 +24,32 @@ class ApplicationController < ActionController::Base
     restaurants_path
   end
 
+  def impersonating_user?
+    return false if request.env['impersonating_user_checking']
+    request.env['impersonating_user_checking'] = true
+
+    return true if session[:pretender_user_id].present?
+    return true if session['pretender_user_id'].present?
+
+    cu = respond_to?(:current_user) ? current_user : nil
+    tu = respond_to?(:true_user) ? true_user : nil
+    cu.present? && tu.present? && cu != tu
+  rescue StandardError
+    false
+  ensure
+    request.env['impersonating_user_checking'] = false
+  end
+
   def switch_locale(&)
+    if request.env['switch_locale_running']
+      yield
+      return
+    end
+
+    request.env['switch_locale_running'] = true
+    Thread.current[:switch_locale_depth] ||= 0
+    Thread.current[:switch_locale_depth] += 1
+
     # Locale detection with optional URL override
     # Priority: URL parameter > Browser Accept-Language > Default
     # Supports: en (English), it (Italian)
@@ -80,9 +108,70 @@ class ApplicationController < ActionController::Base
     Rails.logger.error "Locale switching error: #{e.message}, falling back to default locale"
     @locale = I18n.default_locale
     I18n.with_locale(@locale, &)
+  ensure
+    Thread.current[:switch_locale_depth] -= 1 if Thread.current[:switch_locale_depth]
+    request.env['switch_locale_running'] = false
   end
 
   protect_from_forgery with: :exception, prepend: true
+
+  def enforce_impersonation_expiry
+    return if request.env['impersonation_expiry_checked']
+    request.env['impersonation_expiry_checked'] = true
+
+    return unless impersonating_user?
+
+    expires_at_raw = session[:impersonation_expires_at].to_s
+    expires_at = begin
+      Time.zone.parse(expires_at_raw)
+    rescue StandardError
+      nil
+    end
+
+    return if expires_at && Time.current <= expires_at
+
+    finalize_impersonation_audit!(ended_reason: 'expired')
+    stop_impersonating_user
+    redirect_to root_path, alert: 'Impersonation session expired.'
+  end
+
+  def block_high_risk_actions_when_impersonating
+    return if request.env['impersonation_risk_block_checked']
+    request.env['impersonation_risk_block_checked'] = true
+
+    return unless impersonating_user?
+
+    high_risk = false
+
+    # Payments / billing
+    if controller_path.start_with?('payments/')
+      high_risk = true
+    end
+
+    if controller_path == 'userplans'
+      high_risk = true
+    end
+
+    # Account takeover / profile updates
+    if (respond_to?(:devise_controller?) && devise_controller? && controller_name == 'registrations') ||
+       controller_path == 'devise/registrations' || (controller_path == 'users/registrations')
+      high_risk = true
+    end
+
+    return unless high_risk
+
+    if request.format.json?
+      render json: { error: 'Action not allowed while impersonating' }, status: :forbidden
+      return
+    end
+
+    if request.format.html?
+      redirect_back_or_to(root_path, alert: 'This action is not allowed while impersonating.', status: :see_other)
+      return
+    end
+
+    head :forbidden
+  end
 
   # Add debugging for CSRF issues
   rescue_from ActionController::InvalidAuthenticityToken do |exception|
@@ -148,15 +237,27 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_employee
-    if current_user
-      @current_employee ||= Employee.find_by(user_id: current_user.id)
-      @restaurants = current_user_restaurants
-      @userplan ||= Userplan.find_by(user_id: current_user.id)
-      if @userplan.nil?
+    return if request.env['set_current_employee_running']
+    request.env['set_current_employee_running'] = true
+
+    Thread.current[:set_current_employee_depth] ||= 0
+    Thread.current[:set_current_employee_depth] += 1
+
+    begin
+      if Thread.current[:set_current_employee_depth] > 1
+        return
+      end
+
+      if current_user
+        @current_employee ||= Employee.find_by(user_id: current_user.id)
+        @userplan ||= Userplan.find_by(user_id: current_user.id)
+        @userplan ||= Userplan.new
+      else
         @userplan = Userplan.new
       end
-    else
-      @userplan = Userplan.new
+    ensure
+      Thread.current[:set_current_employee_depth] -= 1 if Thread.current[:set_current_employee_depth]
+      request.env['set_current_employee_running'] = false
     end
   end
 
@@ -165,16 +266,37 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update, keys: %i[name avatar])
   end
 
+  def finalize_impersonation_audit!(ended_reason:)
+    audit_id = session[:impersonation_audit_id]
+    return if audit_id.blank?
+
+    audit = ImpersonationAudit.find_by(id: audit_id)
+    return unless audit
+    return if audit.ended_at.present?
+
+    audit.update!(ended_at: Time.current, ended_reason: ended_reason)
+  ensure
+    session.delete(:impersonation_audit_id)
+    session.delete(:impersonation_expires_at)
+  end
+
   def debug_request_in_test
     # Debug logging removed - was for API routing investigation
   end
 
   def redirect_to_onboarding_if_needed
     return unless user_signed_in?
+    return if performed?
     return if devise_controller?
     return if controller_name == 'onboarding'
     return if request.xhr? # Skip for AJAX requests
     return if request.format.json?
+
+    return if impersonating_user?
+
+    return if current_user&.email.to_s.downcase.end_with?('@mellow.menu')
+
+    return if current_user&.admin? || current_user&.super_admin?
 
     return if current_user.has_active_employment?
 
