@@ -11,7 +11,7 @@ module MenuDiscovery
       return nil if raw_about_text.to_s.strip.blank?
 
       input = raw_about_text.to_s.strip[0, MAX_INPUT_LENGTH]
-      types_str = Array(establishment_types).reject(&:blank?).join(', ')
+      types_str = Array(establishment_types).compact_blank.join(', ')
 
       system_msg = <<~PROMPT.strip
         You are a skilled copywriter for a restaurant discovery platform.

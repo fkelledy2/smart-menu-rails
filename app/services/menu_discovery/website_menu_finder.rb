@@ -1,5 +1,4 @@
 require 'nokogiri'
-require 'set'
 
 module MenuDiscovery
   class WebsiteMenuFinder
@@ -40,7 +39,7 @@ module MenuDiscovery
           next
         end
 
-        links = doc.css('a[href]').map { |a| a['href'].to_s }.map(&:strip).reject(&:blank?)
+        links = doc.css('a[href]').map { |a| a['href'].to_s }.map(&:strip).compact_blank
 
         links.each do |href|
           abs = absolutize(base_uri: base_uri, href: href)
@@ -78,7 +77,7 @@ module MenuDiscovery
       resp = @http_client.get(url, headers: {
         'User-Agent' => 'SmartMenuBot/1.0 (+https://www.mellow.menu)',
         'Accept' => 'text/html,application/xhtml+xml',
-      }, timeout: 20)
+      }, timeout: 20,)
 
       return nil unless resp.respond_to?(:code)
       return nil unless resp.code.to_i >= 200 && resp.code.to_i < 300
@@ -93,7 +92,7 @@ module MenuDiscovery
 
     def absolutize(base_uri:, href:)
       return nil if href.blank?
-      return nil if href.start_with?('mailto:') || href.start_with?('tel:') || href.start_with?('javascript:')
+      return nil if href.start_with?('mailto:', 'tel:', 'javascript:')
 
       URI.join(base_uri.to_s, href)
     rescue URI::InvalidURIError

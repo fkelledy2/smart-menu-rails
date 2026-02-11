@@ -9,20 +9,20 @@ class DiscoveredRestaurantWebsiteDeepDiveJob < ApplicationJob
     place_details = fetch_place_details(dr)
 
     website_result = if base_url.present?
-      extractor = MenuDiscovery::WebsiteContactExtractor.new(base_url: base_url)
-      extractor.extract
-    else
-      {
-        'source_base_url' => nil,
-        'visited_urls' => [],
-        'emails' => [],
-        'phones' => [],
-        'address_candidates' => [],
-        'extracted_at' => Time.current.iso8601,
-      }
-    end
+                       extractor = MenuDiscovery::WebsiteContactExtractor.new(base_url: base_url)
+                       extractor.extract
+                     else
+                       {
+                         'source_base_url' => nil,
+                         'visited_urls' => [],
+                         'emails' => [],
+                         'phones' => [],
+                         'address_candidates' => [],
+                         'extracted_at' => Time.current.iso8601,
+                       }
+                     end
 
-    updated = (dr.metadata || {})
+    updated = dr.metadata || {}
     updated['website_deep_dive'] = website_result.merge(
       'triggered_by_user_id' => triggered_by_user_id,
       'status' => 'completed',
@@ -92,7 +92,7 @@ class DiscoveredRestaurantWebsiteDeepDiveJob < ApplicationJob
     end
 
     if dr.address1.blank?
-      best_address = Array(website_result['address_candidates']).reject(&:blank?).first
+      best_address = Array(website_result['address_candidates']).compact_blank.first
       if best_address.present?
         dr.address1 = best_address.to_s.strip
         fs['address1'] = { 'source' => 'website', 'updated_at' => now }
@@ -108,10 +108,10 @@ class DiscoveredRestaurantWebsiteDeepDiveJob < ApplicationJob
     end
 
     if dr.preferred_phone.blank?
-      candidates = Array(website_result['phones']).reject(&:blank?)
+      candidates = Array(website_result['phones']).compact_blank
       google_phone = place_details && place_details['international_phone_number']
       candidates << google_phone if google_phone.present?
-      candidates = candidates.map { |p| p.to_s.strip }.reject(&:blank?).uniq
+      candidates = candidates.map { |p| p.to_s.strip }.compact_blank.uniq
 
       if candidates.length == 1
         dr.preferred_phone = candidates.first
@@ -120,8 +120,8 @@ class DiscoveredRestaurantWebsiteDeepDiveJob < ApplicationJob
     end
 
     if dr.preferred_email.blank?
-      candidates = Array(website_result['emails']).reject(&:blank?)
-      candidates = candidates.map { |e| e.to_s.strip.downcase }.reject(&:blank?).uniq
+      candidates = Array(website_result['emails']).compact_blank
+      candidates = candidates.map { |e| e.to_s.strip.downcase }.compact_blank.uniq
 
       if candidates.length == 1
         dr.preferred_email = candidates.first

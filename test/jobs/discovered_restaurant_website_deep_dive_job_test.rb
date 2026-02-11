@@ -126,7 +126,7 @@ class DiscoveredRestaurantWebsiteDeepDiveJobTest < ActiveJob::TestCase
   test 'description is overwritten on re-enrich even when previously set' do
     @dr.update!(description: 'Old manually written description', metadata: {
       'field_sources' => { 'description' => { 'source' => 'manual', 'updated_at' => 1.day.ago.iso8601 } },
-    })
+    },)
 
     run_job(
       website_result: base_website_result(
@@ -157,7 +157,7 @@ class DiscoveredRestaurantWebsiteDeepDiveJobTest < ActiveJob::TestCase
     run_job(
       website_result: base_website_result('context_types' => ['bar']),
       place_details: {
-        'types' => ['restaurant', 'food'],
+        'types' => %w[restaurant food],
         'address_components' => [],
         'location' => {},
       },

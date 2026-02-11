@@ -19,7 +19,7 @@ module GooglePlaces
         place_id: pid,
         key: config[:api_key],
         fields: 'place_id,name,website,url,types,formatted_address,international_phone_number,address_components,geometry',
-      })
+      },)
 
       body = response.parsed_response
       result = body['result'] || {}

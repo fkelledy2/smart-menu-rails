@@ -9,7 +9,7 @@ class EstablishmentTypeInference
   }.freeze
 
   def infer_from_google_places_types(types)
-    raw = Array(types).map { |t| t.to_s.strip.downcase }.reject(&:blank?)
+    raw = Array(types).map { |t| t.to_s.strip.downcase }.compact_blank
 
     inferred = []
     inferred << 'whiskey_bar' if raw.include?('whiskey_bar')
@@ -42,6 +42,6 @@ class EstablishmentTypeInference
 
   def labels_for(establishment_types)
     types = Array(establishment_types).map(&:to_s)
-    types.map { |t| LABELS[t] }.compact
+    types.filter_map { |t| LABELS[t] }
   end
 end

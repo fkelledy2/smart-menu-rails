@@ -1,5 +1,4 @@
 require 'nokogiri'
-require 'set'
 require 'cgi'
 
 module MenuDiscovery
@@ -50,11 +49,9 @@ module MenuDiscovery
       queue = []
 
       DEFAULT_PATH_HINTS.each do |path|
-        begin
-          queue << URI.join(base_uri.to_s, path).to_s
-        rescue URI::InvalidURIError
-          next
-        end
+        queue << URI.join(base_uri.to_s, path).to_s
+      rescue URI::InvalidURIError
+        next
       end
 
       emails = Set.new
@@ -84,7 +81,11 @@ module MenuDiscovery
 
         u_lower = url.to_s.downcase
         is_about = u_lower.include?('about') || u_lower.include?('our-story') || u_lower.include?('story')
-        is_home  = URI.parse(url).path.to_s.chomp('/').blank? rescue false
+        is_home  = begin
+          URI.parse(url).path.to_s.chomp('/').blank?
+        rescue StandardError
+          false
+        end
 
         page_text = extract_page_text(doc: doc)
         if page_text.present?
@@ -132,7 +133,7 @@ module MenuDiscovery
       resp = @http_client.get(url, headers: {
         'User-Agent' => 'SmartMenuBot/1.0 (+https://www.mellow.menu)',
         'Accept' => 'text/html,application/xhtml+xml',
-      }, timeout: 20)
+      }, timeout: 20,)
 
       return nil unless resp.respond_to?(:code)
       return nil unless resp.code.to_i >= 200 && resp.code.to_i < 300
@@ -210,7 +211,7 @@ module MenuDiscovery
 
           begin
             uri = URI.parse(href)
-            host = uri.host.to_s.downcase.sub(/\Awww\./, '')
+            host = uri.host.to_s.downcase.delete_prefix('www.')
             social_links << href if SOCIAL_DOMAINS.include?(host)
           rescue URI::InvalidURIError
             next
@@ -255,11 +256,10 @@ module MenuDiscovery
         candidates << t if t.length >= 120
       end
 
-      best = candidates.max_by { |t| t.length }
+      best = candidates.max_by(&:length)
       return nil if best.blank?
 
-      best = best[0, 2000]
-      best
+      best[0, 2000]
     rescue StandardError
       nil
     end
@@ -274,11 +274,11 @@ module MenuDiscovery
     end
 
     def extract_internal_links(doc:, base_uri:, host:)
-      links = doc.css('a[href]').map { |a| a['href'].to_s }.map(&:strip).reject(&:blank?)
+      links = doc.css('a[href]').map { |a| a['href'].to_s }.map(&:strip).compact_blank
 
       urls = []
       links.each do |href|
-        next if href.start_with?('mailto:') || href.start_with?('tel:') || href.start_with?('javascript:')
+        next if href.start_with?('mailto:', 'tel:', 'javascript:')
 
         begin
           abs = URI.join(base_uri.to_s, href)

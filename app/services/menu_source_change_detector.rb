@@ -52,7 +52,7 @@ class MenuSourceChangeDetector
     http_client.head(url, headers: {
       'User-Agent' => 'SmartMenuBot/1.0 (+https://www.mellow.menu)',
       'Accept' => '*/*',
-    }, timeout: 20)
+    }, timeout: 20,)
   rescue StandardError
     nil
   end

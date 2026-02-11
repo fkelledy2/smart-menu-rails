@@ -9,8 +9,7 @@ module Admin
     before_action :ensure_admin!
     before_action :require_super_admin!
 
-    def new
-    end
+    def new; end
 
     def create
       city_query = params[:city_query].to_s
@@ -42,7 +41,7 @@ module Admin
     end
 
     def require_super_admin!
-      return if current_user&.admin? && current_user&.super_admin?
+      return if current_user&.admin? && current_user.super_admin?
 
       redirect_to root_path, alert: 'Access denied. Super admin privileges required.'
     end

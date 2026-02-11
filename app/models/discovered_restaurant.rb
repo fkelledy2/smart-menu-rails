@@ -24,9 +24,8 @@ class DiscoveredRestaurant < ApplicationRecord
   has_many :menu_sources, dependent: :destroy
   belongs_to :restaurant, optional: true
 
-  after_commit :enqueue_restaurant_sync_if_needed, on: %i[create update]
-
   before_validation :normalize_establishment_types
+  after_commit :enqueue_restaurant_sync_if_needed, on: %i[create update]
 
   validates :city_name, presence: true
   validates :google_place_id, presence: true
@@ -97,7 +96,7 @@ class DiscoveredRestaurant < ApplicationRecord
     return unless approved?
 
     changed_keys = previous_changes.keys
-    return if (changed_keys & SYNC_TO_RESTAURANT_FIELDS).empty?
+    return unless changed_keys.intersect?(SYNC_TO_RESTAURANT_FIELDS)
 
     SyncDiscoveredRestaurantToRestaurantJob.perform_later(discovered_restaurant_id: id)
   end
@@ -105,6 +104,6 @@ class DiscoveredRestaurant < ApplicationRecord
   def normalize_establishment_types
     return if establishment_types.blank?
 
-    self.establishment_types = Array(establishment_types).map { |t| t.to_s.strip }.reject(&:blank?).uniq
+    self.establishment_types = Array(establishment_types).map { |t| t.to_s.strip }.compact_blank.uniq
   end
 end

@@ -72,8 +72,7 @@ module Admin
       @discovered_restaurants = scope.offset((page - 1) * per_page).limit(per_page)
     end
 
-    def show
-    end
+    def show; end
 
     def update
       @discovered_restaurant.assign_attributes(discovered_restaurant_params)
@@ -326,7 +325,7 @@ module Admin
     end
 
     def require_super_admin!
-      return if current_user&.admin? && current_user&.super_admin?
+      return if current_user&.admin? && current_user.super_admin?
 
       redirect_to root_path, alert: 'Access denied. Super admin privileges required.'
     end

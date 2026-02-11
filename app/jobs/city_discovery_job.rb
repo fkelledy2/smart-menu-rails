@@ -5,7 +5,7 @@ class CityDiscoveryJob < ApplicationJob
     city = city_query.to_s.strip
     return if city.blank?
 
-    types = Array(place_types).map { |t| t.to_s.strip }.reject(&:blank?).uniq
+    types = Array(place_types).map { |t| t.to_s.strip }.compact_blank.uniq
 
     key = ENV.fetch('GOOGLE_MAPS_API_KEY', nil) || ENV.fetch('GOOGLE_MAPS_BROWSER_API_KEY', nil)
     key ||= begin

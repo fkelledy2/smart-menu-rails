@@ -23,8 +23,7 @@ module Admin
       @reviews = scope.limit(500)
     end
 
-    def show
-    end
+    def show; end
 
     def resolve
       @review.update!(status: :resolved)
@@ -49,7 +48,7 @@ module Admin
     end
 
     def require_super_admin!
-      return if current_user&.admin? && current_user&.super_admin?
+      return if current_user&.admin? && current_user.super_admin?
 
       redirect_to root_path, alert: 'Access denied. Super admin privileges required.'
     end

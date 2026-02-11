@@ -19,7 +19,7 @@ module GooglePlaces
 
       city_place = resolve_city_place!(city)
 
-      types = Array(place_types).map { |t| t.to_s.strip }.reject(&:blank?).uniq
+      types = Array(place_types).map { |t| t.to_s.strip }.compact_blank.uniq
       types = DEFAULT_PLACE_TYPES if types.blank?
 
       types.each do |type|
@@ -55,14 +55,14 @@ module GooglePlaces
       response = get('/textsearch/json', query: {
         query: query,
         key: config[:api_key],
-      })
+      },)
 
       body = response.parsed_response
       status = body['status'].to_s
 
-      if status.present? && !%w[OK ZERO_RESULTS].include?(status)
+      if status.present? && %w[OK ZERO_RESULTS].exclude?(status)
         msg = body['error_message'].to_s.presence
-        raise ApiError, "Google Places textsearch failed (status=#{status})#{msg ? ": #{msg}" : ''}"
+        raise ApiError, "Google Places textsearch failed (status=#{status})#{": #{msg}" if msg}"
       end
 
       body
@@ -73,7 +73,7 @@ module GooglePlaces
 
       locality_like = results.find do |r|
         types = Array(r['types']).map(&:to_s)
-        (types & %w[locality postal_town administrative_area_level_3 administrative_area_level_2]).any?
+        types.intersect?(%w[locality postal_town administrative_area_level_3 administrative_area_level_2])
       end
 
       locality_like || results.first
@@ -87,7 +87,7 @@ module GooglePlaces
         query: "#{place_type} in #{city_place[:name]}",
         key: config[:api_key],
         type: place_type,
-      })
+      },)
 
       body = response.parsed_response
       Array(body['results']).each do |r|

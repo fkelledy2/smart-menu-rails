@@ -10,7 +10,7 @@ module MenuDiscovery
       return {} if @client.nil?
 
       input = raw_text.to_s.strip[0, MAX_INPUT_LENGTH]
-      types_str = Array(establishment_types).reject(&:blank?).join(', ')
+      types_str = Array(establishment_types).compact_blank.join(', ')
 
       system_msg = <<~PROMPT.strip
         You are an expert at understanding restaurant brand identity and translating it into visual direction for AI image generation.

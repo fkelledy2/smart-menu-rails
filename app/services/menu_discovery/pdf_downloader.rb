@@ -10,7 +10,7 @@ module MenuDiscovery
       resp = @http_client.get(url, headers: {
         'User-Agent' => 'SmartMenuBot/1.0 (+https://www.mellow.menu)',
         'Accept' => 'application/pdf,*/*',
-      }, timeout: 30)
+      }, timeout: 30,)
 
       return nil unless resp.respond_to?(:code)
       return nil unless resp.code.to_i >= 200 && resp.code.to_i < 300

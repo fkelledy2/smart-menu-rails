@@ -36,8 +36,7 @@ class ProvisionUnclaimedRestaurantJob < ApplicationJob
       begin
         best_pdf_source = discovered.menu_sources
           .includes(latest_file_attachment: :blob)
-          .select { |ms| ms.source_type.to_s == 'pdf' && ms.latest_file.attached? }
-          .first
+          .find { |ms| ms.source_type.to_s == 'pdf' && ms.latest_file.attached? }
 
         if best_pdf_source && !menu.pdf_menu_scan.attached?
           menu.pdf_menu_scan.attach(best_pdf_source.latest_file.blob)

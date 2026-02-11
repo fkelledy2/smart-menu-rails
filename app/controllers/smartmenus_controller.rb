@@ -20,7 +20,7 @@ class SmartmenusController < ApplicationController
   def show
     load_menu_associations_for_show
 
-    if @restaurant&.respond_to?(:preview_published?) && @restaurant.preview_published? && @restaurant.unclaimed?
+    if @restaurant.respond_to?(:preview_published?) && @restaurant.preview_published? && @restaurant.unclaimed?
       @meta_robots = @restaurant.preview_indexable? ? 'index, follow' : 'noindex, nofollow'
       response.headers['X-Robots-Tag'] = @meta_robots
     end

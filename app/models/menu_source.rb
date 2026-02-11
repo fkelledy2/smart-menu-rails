@@ -20,14 +20,14 @@ class MenuSource < ApplicationRecord
 
   def derived_menu_name
     raw = if latest_file.attached?
-      latest_file.filename.to_s
-    else
-      begin
-        File.basename(URI.parse(source_url.to_s).path.to_s)
-      rescue StandardError
-        nil
-      end
-    end
+            latest_file.filename.to_s
+          else
+            begin
+              File.basename(URI.parse(source_url.to_s).path.to_s)
+            rescue StandardError
+              nil
+            end
+          end
 
     raw = raw.to_s
     raw = raw.sub(/\.[a-z0-9]{2,8}\z/i, '')
