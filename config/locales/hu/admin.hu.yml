@@ -1,6 +1,16 @@
 ---
 hu:
   admin:
+    city_crawls:
+      new:
+        title: Város feltérképezése
+        place_types_label: Helytípusok
+        place_types_defaults_helper: Ha nincs kiválasztva, az alapértelmezettek lesznek használva.
+        place_type_labels:
+          restaurant: Étterem
+          bar: Bár
+          wine_bar: Borbár
+          whiskey_bar: Whisky bár
     cache:
       active_keys: Aktív kulcsok
       cache_deletes: Cache törlések

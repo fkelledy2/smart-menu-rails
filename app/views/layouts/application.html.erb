@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html class="h-100">
+<html class="h-100" <%= 'translate="no"' if request.path.to_s.start_with?('/admin') %>>
 
   <head>
     <%= render 'shared/head' %>

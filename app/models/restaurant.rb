@@ -39,6 +39,7 @@ class Restaurant < ApplicationRecord
   has_many :allergyns, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
   has_many :sizes, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
   has_many :ocr_menu_imports, -> { reorder(created_at: :desc, id: :desc) }, dependent: :destroy, counter_cache: :ocr_menu_imports_count
+  has_one :discovered_restaurant
 
   # IdentityCache configuration
   cache_index :id
@@ -83,12 +84,23 @@ class Restaurant < ApplicationRecord
     NONE: 2,
   }
 
+  enum :claim_status, {
+    unclaimed: 0,
+    soft_claimed: 1,
+    claimed: 2,
+    verified: 3,
+  }
+
   def spotifyAuthUrl
     "/auth/spotify?restaurant_id=#{id}"
   end
 
   def spotifyPlaylistUrl
     "/restaurants/#{id}/tracks"
+  end
+
+  def preview_published?
+    preview_enabled? && preview_published_at.present?
   end
 
   def gen_image_theme

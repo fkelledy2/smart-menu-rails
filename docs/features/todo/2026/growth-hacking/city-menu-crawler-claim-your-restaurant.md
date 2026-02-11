@@ -79,6 +79,14 @@ Disallowed (pre-claim):
 - AI image generation
 - tone/brand voice rewriting
 
+Normalize-only (v1 decisions):
+
+- Deduplicate items
+- Fix casing
+- Parse prices/currencies
+- Strip junk characters / whitespace cleanup
+- Infer section headings
+
 ## 📐 Scope
 
 ### In scope (v1)
@@ -90,6 +98,19 @@ Disallowed (pre-claim):
 - Minimal AI normalization mode
 - Change detection (detect → review → optionally re-import)
 - Claim flow including **Stripe KYC** step to unlock payments/ordering
+
+Discovery specifics (v1 decisions):
+
+- City selection is done by a **Google Places** city lookup (e.g. “Budapest”, “Paris”, “Prague”) to lock in a canonical target.
+- Venue discovery is done via **Google Places** search using **place types only**.
+- Venue types to include (v1):
+  - `restaurant`
+  - `bar`
+  - `wine_bar`
+  - `whiskey_bar`
+- Dedupe key is `google_place_id`.
+- Menu discovery should prefer publicly available **PDF menus**.
+- Restaurants without a first-party website should be skipped in v1.
 
 ### Out of scope (v1)
 
@@ -185,9 +206,15 @@ Add fields to `restaurants`:
 - `claim_status` enum: `unclaimed`, `soft_claimed`, `claimed`, `verified`
 - `provisioned_by` enum: `system`, `owner`
 - `source_url` string nullable
-- `preview_enabled` boolean default true
+- `preview_enabled` boolean default false
+- `preview_published_at` datetime nullable
+- `preview_indexable` boolean default false
 - `ordering_enabled` boolean default false
 - `payments_enabled` boolean default false
+
+Add fields to `restaurants` (v1 decisions):
+
+- `google_place_id` string, unique (copied from Places and treated as the authoritative identity)
 
 ### 3) Claim requests + audit
 
@@ -224,13 +251,25 @@ In `normalize_only`, AI must not introduce new claims, tone, or marketing.
 
 ### Discovery strategy (safe)
 
-- Use search APIs / curated seed lists rather than brute-force crawling.
+- Use Google Places to identify venues in the chosen city.
 - Candidate sources must be whitelisted by rule.
+
+Menu discovery strategies (v1 decisions):
+
+- Use both:
+  - Place details (e.g. website)
+  - Follow-on discovery on the first-party restaurant website domain
+- Additionally allow a Google search fallback to find publicly available menu PDFs (bounded and rate-limited).
 
 ### Extraction
 
 - HTML menus: parse structured text, prices, headings.
 - PDF menus: use existing OCR pipeline where applicable.
+
+Menu PDF corpus storage (v1 decisions):
+
+- Always store the latest discovered menu PDF/file in S3 via ActiveStorage.
+- Goal is to build a corpus for menu import/model development and tuning.
 
 ### Robots/noindex enforcement
 
@@ -270,6 +309,14 @@ All admin screens require `admin && super_admin`.
 - Show provisioning progress
 - Link to unclaimed restaurant preview
 
+Preview publish gate (v1 decisions):
+
+- Approval/provisioning creates `Restaurant + Menu` but does not make the preview indexable.
+- A super admin must explicitly “Publish preview” which sets:
+  - `preview_enabled = true`
+  - `preview_published_at = Time.current`
+  - `preview_indexable` remains false by default
+
 ### Screen 4: Source Rules
 
 - Whitelist rules
@@ -308,7 +355,12 @@ Required for:
 Implementation notes:
 
 - Stripe Connect onboarding + account verification
+- Stripe Connect mode (v1 decision): Standard
 - Require entity name + address consistency checks
+
+Soft verification (v1 decision):
+
+- Any method is acceptable for v1; implementation can start with the simplest workable flow and expand.
 
 ## 🧪 Test Plan
 
@@ -341,6 +393,14 @@ Implementation notes:
 - [ ] migrations for discovered restaurants + menu sources + claim requests + removal requests
 - [ ] restaurant fields for claim/provision state
 
+### Crawling + extraction
+
+- [ ] discovery implementation (Google Places city lookup + venue search by place types)
+- [ ] menu discovery implementation (Place details + website crawl + bounded Google search fallback)
+- [ ] extraction implementation (html/pdf)
+- [ ] store crawl evidence (robots/noindex)
+- [ ] always store latest PDF/file in ActiveStorage (S3 in production)
+
 ### Jobs
 
 - [ ] `CityDiscoveryJob`
@@ -354,6 +414,7 @@ Implementation notes:
 - [ ] Crawl City
 - [ ] Discovery Queue
 - [ ] Approved Imports
+- [ ] Publish preview (explicit action; defaults to noindex)
 - [ ] Source Rules
 - [ ] Change Detection Queue
 
@@ -377,6 +438,8 @@ Implementation notes:
 - [ ] No blind publishing; all provisioning/publishing requires explicit admin approval
 - [ ] Robust removal/unpublish capability
 - [ ] AI guardrails enforced pre-claim
+- [ ] Public URL shape is `/restaurants/:slug` (backed by `Smartmenu.slug`) and includes banner/watermark for unclaimed previews
+- [ ] Unclaimed previews are `noindex` by default with an explicit admin option to make them indexable
 
 ---
 

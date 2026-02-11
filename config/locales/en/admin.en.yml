@@ -1,6 +1,16 @@
 ---
 en:
   admin:
+    city_crawls:
+      new:
+        title: Crawl a City
+        place_types_label: Place types
+        place_types_defaults_helper: Defaults will be used if none are selected.
+        place_type_labels:
+          restaurant: Restaurant
+          bar: Bar
+          wine_bar: Wine bar
+          whiskey_bar: Whiskey bar
     cache:
       active_keys: Active Keys
       cache_deletes: Cache Deletes

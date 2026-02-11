@@ -200,6 +200,35 @@ class OcrMenuImportsController < ApplicationController
     @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
   end
 
+  # POST /restaurants/:restaurant_id/ocr_menu_imports/import_from_menu_source
+  def import_from_menu_source
+    menu_source = MenuSource.find(params[:menu_source_id])
+
+    unless menu_source.latest_file.attached?
+      redirect_to edit_restaurant_path(@restaurant, section: 'import'),
+                  alert: 'Menu source has no file attached', status: :see_other
+      return
+    end
+
+    import = @restaurant.ocr_menu_imports.new(
+      name: menu_source.derived_menu_name,
+      source_locale: '',
+    )
+    import.pdf_file.attach(menu_source.latest_file.blob)
+
+    if import.save
+      import.process_pdf_async
+      redirect_to restaurant_ocr_menu_import_path(@restaurant, import),
+                  notice: t('ocr_menu_imports.controller.queued')
+    else
+      redirect_to edit_restaurant_path(@restaurant, section: 'import'),
+                  alert: "Could not create import: #{import.errors.full_messages.join(', ')}", status: :see_other
+    end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to edit_restaurant_path(@restaurant, section: 'import'),
+                alert: 'Menu source not found', status: :see_other
+  end
+
   # POST /restaurants/:restaurant_id/ocr_menu_imports
   def create
     @ocr_menu_import = @restaurant.ocr_menu_imports.new(ocr_menu_import_params)

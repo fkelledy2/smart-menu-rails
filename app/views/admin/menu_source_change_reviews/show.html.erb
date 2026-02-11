@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center">
+    <h2>Menu source change</h2>
+    <div>
+      <%= link_to 'Back', admin_menu_source_change_reviews_path, class: 'btn btn-secondary' %>
+      <%= button_to 'Resolve', resolve_admin_menu_source_change_review_path(@review), method: :patch, class: 'btn btn-success' %>
+      <%= button_to 'Ignore', ignore_admin_menu_source_change_review_path(@review), method: :patch, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <div><strong>Status:</strong> <%= @review.status %></div>
+    <div><strong>Detected:</strong> <%= @review.detected_at %></div>
+    <div><strong>Source URL:</strong> <%= link_to @review.menu_source.source_url, @review.menu_source.source_url, target: '_blank', rel: 'noopener' %></div>
+
+    <% if @review.menu_source.restaurant %>
+      <div><strong>Restaurant:</strong> <%= @review.menu_source.restaurant.name %></div>
+    <% elsif @review.menu_source.discovered_restaurant %>
+      <div><strong>Discovered restaurant:</strong> <%= @review.menu_source.discovered_restaurant.name %></div>
+    <% end %>
+  </div>
+
+  <div class="mt-4">
+    <h4>Fingerprint</h4>
+    <div><strong>Previous:</strong> <%= @review.previous_fingerprint %></div>
+    <div><strong>New:</strong> <%= @review.new_fingerprint %></div>
+  </div>
+
+  <div class="mt-4">
+    <h4>Headers</h4>
+    <div><strong>Previous ETag:</strong> <%= @review.previous_etag %></div>
+    <div><strong>New ETag:</strong> <%= @review.new_etag %></div>
+    <div><strong>Previous Last-Modified:</strong> <%= @review.previous_last_modified %></div>
+    <div><strong>New Last-Modified:</strong> <%= @review.new_last_modified %></div>
+  </div>
+</div>

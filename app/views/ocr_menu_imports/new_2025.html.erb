@@ -62,23 +62,6 @@
               </div>
             </div>
 
-            <div class="form-group-2025 mb-6">
-              <%= f.label :source_locale, t('.source_language_label'), class: 'form-label-2025' %>
-              <%= f.select :source_locale,
-                  options_for_select([
-                    [t('.auto_detect'), ''],
-                    [t('.language_en'), 'en'],
-                    [t('.language_fr'), 'fr'],
-                    [t('.language_it'), 'it'],
-                    [t('.language_es'), 'es'],
-                  ], f.object.source_locale.to_s),
-                  {},
-                  class: 'form-control-2025' %>
-              <div class="form-help-2025">
-                <%= t('.source_language_help') %>
-              </div>
-            </div>
-
             <!-- Drag and Drop Upload Area -->
             <div class="form-group-2025">
               <%= f.label :pdf_file, t('.pdf_label'), class: 'form-label-2025' %>

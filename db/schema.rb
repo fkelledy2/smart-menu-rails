@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_09_093000) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_11_142805) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -123,6 +123,38 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_09_093000) do
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_contacts_on_created_at"
     t.index ["email"], name: "index_contacts_on_email"
+  end
+
+  create_table "discovered_restaurants", force: :cascade do |t|
+    t.string "city_name", null: false
+    t.string "city_place_id"
+    t.string "google_place_id", null: false
+    t.string "name", null: false
+    t.string "website_url"
+    t.integer "status", default: 0, null: false
+    t.decimal "confidence_score", precision: 5, scale: 4
+    t.datetime "discovered_at"
+    t.text "description"
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "restaurant_id"
+    t.string "establishment_types", default: [], null: false, array: true
+    t.string "address1"
+    t.string "address2"
+    t.string "city"
+    t.string "state"
+    t.string "postcode"
+    t.string "country_code"
+    t.string "currency"
+    t.string "preferred_phone"
+    t.string "preferred_email"
+    t.string "image_context"
+    t.text "image_style_profile"
+    t.index ["city_name", "status", "discovered_at"], name: "idx_on_city_name_status_discovered_at_524af6544b"
+    t.index ["country_code"], name: "index_discovered_restaurants_on_country_code"
+    t.index ["google_place_id"], name: "index_discovered_restaurants_on_google_place_id", unique: true
+    t.index ["restaurant_id"], name: "index_discovered_restaurants_on_restaurant_id"
   end
 
   create_table "employees", force: :cascade do |t|
@@ -326,6 +358,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_09_093000) do
     t.index ["product_id"], name: "index_menu_item_product_links_on_product_id"
   end
 
+# Could not dump table "menu_item_search_documents" because of following StandardError
+#   Unknown type 'vector(1024)' for column 'embedding'
+
+
   create_table "menu_items", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -346,6 +382,43 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_09_093000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["menu_id"], name: "index_menu_sections_on_menu_id"
+  end
+
+  create_table "menu_source_change_reviews", force: :cascade do |t|
+    t.bigint "menu_source_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "detected_at", null: false
+    t.string "previous_fingerprint"
+    t.string "new_fingerprint"
+    t.string "previous_etag"
+    t.string "new_etag"
+    t.datetime "previous_last_modified"
+    t.datetime "new_last_modified"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["detected_at"], name: "index_menu_source_change_reviews_on_detected_at"
+    t.index ["menu_source_id", "status"], name: "index_menu_source_change_reviews_on_menu_source_id_and_status"
+    t.index ["menu_source_id"], name: "index_menu_source_change_reviews_on_menu_source_id"
+  end
+
+  create_table "menu_sources", force: :cascade do |t|
+    t.bigint "restaurant_id"
+    t.bigint "discovered_restaurant_id"
+    t.string "source_url", null: false
+    t.integer "source_type", default: 0, null: false
+    t.datetime "last_checked_at"
+    t.string "last_fingerprint"
+    t.string "etag"
+    t.datetime "last_modified"
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discovered_restaurant_id", "status"], name: "index_menu_sources_on_discovered_restaurant_id_and_status"
+    t.index ["discovered_restaurant_id"], name: "index_menu_sources_on_discovered_restaurant_id"
+    t.index ["restaurant_id", "status"], name: "index_menu_sources_on_restaurant_id_and_status"
+    t.index ["restaurant_id"], name: "index_menu_sources_on_restaurant_id"
+    t.index ["source_url"], name: "index_menu_sources_on_source_url"
   end
 
   create_table "menu_versions", force: :cascade do |t|
@@ -1257,9 +1330,18 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_09_093000) do
     t.datetime "archived_at"
     t.string "archived_reason"
     t.bigint "archived_by_id"
+    t.string "google_place_id"
+    t.integer "claim_status", default: 0, null: false
+    t.boolean "preview_enabled", default: false, null: false
+    t.datetime "preview_published_at"
+    t.boolean "preview_indexable", default: false, null: false
+    t.string "establishment_types", default: [], null: false, array: true
     t.index ["archived_by_id"], name: "index_restaurants_on_archived_by_id"
+    t.index ["claim_status"], name: "index_restaurants_on_claim_status"
     t.index ["employees_count"], name: "index_restaurants_on_employees_count"
+    t.index ["google_place_id"], name: "index_restaurants_on_google_place_id", unique: true
     t.index ["menus_count"], name: "index_restaurants_on_menus_count"
+    t.index ["preview_published_at"], name: "index_restaurants_on_preview_published_at"
     t.index ["user_id", "status"], name: "index_restaurants_on_user_status_active", where: "(archived = false)"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
@@ -1481,6 +1563,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_09_093000) do
   add_foreign_key "allergyns", "restaurants"
   add_foreign_key "beverage_pipeline_runs", "menus"
   add_foreign_key "beverage_pipeline_runs", "restaurants"
+  add_foreign_key "discovered_restaurants", "restaurants"
   add_foreign_key "employees", "restaurants"
   add_foreign_key "employees", "users"
   add_foreign_key "features_plans", "features"
@@ -1500,6 +1583,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_09_093000) do
   add_foreign_key "menu_item_product_links", "products"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "menus"
+  add_foreign_key "menu_source_change_reviews", "menu_sources"
+  add_foreign_key "menu_sources", "discovered_restaurants"
+  add_foreign_key "menu_sources", "restaurants"
   add_foreign_key "menu_versions", "menus"
   add_foreign_key "menu_versions", "users", column: "created_by_user_id"
   add_foreign_key "menuavailabilities", "menus"

@@ -20,22 +20,6 @@
               </div>
             </div>
 
-            <div class="mb-4">
-              <%= f.label :source_locale, t('.source_language_label', default: 'Menu language'), class: 'form-label' %>
-              <%= f.select :source_locale,
-                  options_for_select([
-                    [t('.auto_detect', default: 'Auto-detect'), ''],
-                    ['English', 'en'],
-                    ['French', 'fr'],
-                    ['Italian', 'it'],
-                    ['Spanish', 'es'],
-                  ], f.object.source_locale.to_s),
-                  {},
-                  class: 'form-select' %>
-              <div class="form-text">
-                <%= t('.source_language_help', default: 'Used to preserve the original language when generating missing descriptions.') %>
-              </div>
-            </div>
 
             <div class="mb-4">
               <%= f.label :pdf_file, t('.pdf_label'), class: 'form-label' %>

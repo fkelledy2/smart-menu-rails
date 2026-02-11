@@ -1,0 +1,104 @@
+<div class="container">
+  <h2><%= t('admin.city_crawls.new.title', default: 'Crawl a City') %></h2>
+
+  <%= form_with url: admin_city_crawls_path, method: :post, local: true do |f| %>
+    <div class="mb-3">
+      <%= label_tag :city_query, 'City' %>
+      <%= text_field_tag :city_query, params[:city_query], class: 'form-control', placeholder: 'Budapest', id: 'admin_city_crawl_city_query', autocomplete: 'off' %>
+    </div>
+
+    <div class="mb-3">
+      <%= label_tag :place_types, t('admin.city_crawls.new.place_types_label', default: 'Place types') %>
+      <div class="form-text"><%= t('admin.city_crawls.new.place_types_defaults_helper', default: 'Defaults will be used if none are selected.') %></div>
+      <div>
+        <% default_types = %w[restaurant bar wine_bar whiskey_bar] %>
+        <% default_types.each do |t| %>
+          <div class="form-check">
+            <%= check_box_tag 'place_types[]', t, true, class: 'form-check-input', id: "place_type_#{t}" %>
+            <%= label_tag "place_type_#{t}",
+                I18n.t("admin.city_crawls.new.place_type_labels.#{t}", default: t.to_s.humanize),
+                class: 'form-check-label' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%= submit_tag 'Start discovery', class: 'btn btn-primary', id: 'admin_city_crawl_submit', disabled: true %>
+  <% end %>
+</div>
+
+<script>
+  (function () {
+    const input = document.getElementById('admin_city_crawl_city_query');
+    const submit = document.getElementById('admin_city_crawl_submit');
+    if (!input || !submit) return;
+
+    const setSubmitEnabled = () => {
+      submit.disabled = (input.value || '').trim().length === 0;
+    };
+
+    input.addEventListener('input', setSubmitEnabled);
+    input.addEventListener('change', setSubmitEnabled);
+    setSubmitEnabled();
+
+    const initAutocompleteIfReady = async () => {
+      if (!window.google || !window.google.maps) return false;
+
+      if (!window.google.maps.places && typeof window.google.maps.importLibrary === 'function') {
+        try {
+          await window.google.maps.importLibrary('places');
+        } catch (e) {
+        }
+      }
+
+      if (!window.google.maps.places) return false;
+
+      if (window.__adminCityCrawlAutocompleteBound) return true;
+
+      const autocomplete = new google.maps.places.Autocomplete(input, {
+        fields: ['name', 'place_id', 'types'],
+        types: ['(cities)'],
+      });
+
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (place && place.name) {
+          input.value = place.name;
+        }
+        try {
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+        } catch (e) {
+        }
+      });
+
+      window.__adminCityCrawlAutocompleteBound = true;
+      return true;
+    };
+
+    const ensureGooglePlacesLoading = () => {
+      if (window.google && window.google.maps && window.google.maps.places) return;
+      if (window.__adminCityCrawlGoogleInitRequested) return;
+      if (typeof window.initGoogleMaps !== 'function') return;
+      window.__adminCityCrawlGoogleInitRequested = true;
+      try {
+        window.initGoogleMaps();
+      } catch (e) {
+      }
+    };
+
+    const maxAttempts = 20;
+    const attemptDelayMs = 250;
+    let attempts = 0;
+
+    const attemptInit = async () => {
+      ensureGooglePlacesLoading();
+      attempts += 1;
+      const done = await initAutocompleteIfReady();
+      if (done) return;
+      if (attempts >= maxAttempts) return;
+      setTimeout(attemptInit, attemptDelayMs);
+    };
+
+    attemptInit();
+  })();
+</script>

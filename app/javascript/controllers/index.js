@@ -17,7 +17,9 @@ import LocalizationBulkController from "./localization_bulk_controller"
 import MenuitemsBulkController from "./menuitems_bulk_controller"
 import MenusectionsBulkController from "./menusections_bulk_controller"
 import RestaurantsBulkController from "./restaurants_bulk_controller"
+import DiscoveredRestaurantDeepDiveController from "./discovered_restaurant_deep_dive_controller"
 import RestaurantmenusBulkController from "./restaurantmenus_bulk_controller"
+import DiscoveredRestaurantsBulkController from "./discovered_restaurants_bulk_controller"
 import PasswordConfirmationToggleController from "./password_confirmation_toggle_controller"
 import DisabledActionController from "./disabled_action_controller"
 import UserplanPlanChangeController from "./userplan_plan_change_controller"
@@ -39,11 +41,13 @@ application.register("localization-bulk", LocalizationBulkController)
 application.register("menuitems-bulk", MenuitemsBulkController)
 application.register("menusections-bulk", MenusectionsBulkController)
 application.register("restaurants-bulk", RestaurantsBulkController)
+application.register("discovered-restaurant-deep-dive", DiscoveredRestaurantDeepDiveController)
 application.register("restaurantmenus-bulk", RestaurantmenusBulkController)
+application.register("discovered-restaurants-bulk", DiscoveredRestaurantsBulkController)
 application.register("password-confirmation-toggle", PasswordConfirmationToggleController)
 application.register("disabled-action", DisabledActionController)
 application.register("userplan-plan-change", UserplanPlanChangeController)
 application.register("go-live-progress", GoLiveProgressController)
 application.register("settings-dependencies", SettingsDependenciesController)
 
-console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'restaurantmenus-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies'])
+console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies'])

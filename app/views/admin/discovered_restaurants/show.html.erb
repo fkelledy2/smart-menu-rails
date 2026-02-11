@@ -1,0 +1,295 @@
+<% place_details = @discovered_restaurant.place_details %>
+<% deep_dive = @discovered_restaurant.metadata.is_a?(Hash) ? (@discovered_restaurant.metadata['website_deep_dive'] || {}) : {} %>
+<% phone_candidates = begin
+  c = Array(deep_dive['phones']).reject(&:blank?)
+  gp = place_details['international_phone_number'].to_s.strip
+  c << gp if gp.present?
+  c.map { |p| p.to_s.strip }.reject(&:blank?).uniq
+rescue StandardError; [] end %>
+<% email_candidates = begin
+  Array(deep_dive['emails']).reject(&:blank?).map { |e| e.to_s.strip.downcase }.reject(&:blank?).uniq
+rescue StandardError; [] end %>
+<% social_links = begin
+  Array(deep_dive['social_links']).reject(&:blank?).uniq
+rescue StandardError; [] end %>
+<% establishment_type_options = {
+  'Restaurant' => 'restaurant',
+  'Bar' => 'bar',
+  'Wine bar' => 'wine_bar',
+  'Whiskey bar' => 'whiskey_bar',
+} %>
+<% status_badge_class = case @discovered_restaurant.status
+  when 'approved' then 'bg-success'
+  when 'rejected' then 'bg-secondary'
+  when 'blacklisted' then 'bg-danger'
+  else 'bg-warning text-dark'
+end %>
+<% field_sources = (@discovered_restaurant.metadata.is_a?(Hash) && @discovered_restaurant.metadata['field_sources'].is_a?(Hash)) ? @discovered_restaurant.metadata['field_sources'] : {} %>
+<% source_badge = ->(field_name) {
+  info = field_sources[field_name.to_s]
+  return ''.html_safe unless info.is_a?(Hash) && info['source'].present?
+  src = info['source'].to_s
+  ts  = info['updated_at']
+  label, cls = case src
+    when 'ai_generated'          then ['AI', 'text-info']
+    when 'google_places'         then ['Google', 'text-primary']
+    when /google_places\+/       then ['Google + Web', 'text-primary']
+    when 'website'               then ['Website', 'text-warning']
+    when 'inferred'              then ['Inferred', 'text-secondary']
+    when 'manual'                then ['Manual', 'text-success']
+    else [src.humanize, 'text-secondary']
+  end
+  date_str = ts.present? ? (begin; Time.parse(ts).strftime('%b %d'); rescue; ts; end) : nil
+  txt = date_str ? "#{label} · #{date_str}" : label
+  %Q(<span class="#{cls}" style="font-size:0.7rem;margin-left:4px">#{ERB::Util.html_escape(txt)}</span>).html_safe
+} %>
+
+<div class="container-fluid px-0 py-4"
+     data-controller="discovered-restaurant-deep-dive"
+     data-discovered-restaurant-deep-dive-status-url-value="<%= deep_dive_status_admin_discovered_restaurant_path(@discovered_restaurant) %>"
+     data-discovered-restaurant-deep-dive-initial-status-value="<%= deep_dive['status'].to_s %>">
+
+  <%# ── HEADER ── %>
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <%= link_to admin_discovered_restaurants_path, class: 'link-secondary', title: 'Back', aria: { label: 'Back' } do %>
+        <i class="bi bi-chevron-left fs-5"></i>
+      <% end %>
+      <h1 class="h4 fw-semibold mb-0"><%= @discovered_restaurant.name %></h1>
+      <span class="badge <%= status_badge_class %> ms-1"><%= @discovered_restaurant.status.upcase %></span>
+    </div>
+
+    <div class="d-flex align-items-center gap-1 flex-wrap">
+      <%= button_to 'Approve', approve_admin_discovered_restaurant_path(@discovered_restaurant), method: :patch, class: 'btn btn-success btn-sm' %>
+      <%= button_to 'Reject', reject_admin_discovered_restaurant_path(@discovered_restaurant), method: :patch, class: 'btn btn-outline-secondary btn-sm' %>
+      <%= button_to 'Blacklist', blacklist_admin_discovered_restaurant_path(@discovered_restaurant), method: :patch, class: 'btn btn-outline-danger btn-sm' %>
+    </div>
+  </div>
+
+  <%# ── METADATA STRIP ── %>
+  <% place_fetched_at = place_details['fetched_at'] %>
+  <div class="d-flex align-items-center gap-3 flex-wrap text-muted small mb-1 ps-4">
+    <span><i class="bi bi-calendar3"></i> Discovered: <%= (@discovered_restaurant.discovered_at || @discovered_restaurant.created_at).strftime('%Y-%m-%d') %></span>
+  </div>
+  <div class="d-flex align-items-center gap-3 flex-wrap text-muted small mb-3 ps-4">
+    <span>
+      <i class="bi bi-geo-alt"></i>
+      <%= link_to 'Google Place',
+            place_details_admin_discovered_restaurant_path(@discovered_restaurant),
+            target: '_blank', rel: 'noopener', class: 'text-decoration-none',
+            title: @discovered_restaurant.google_place_id %>
+      <%= link_to refresh_place_details_admin_discovered_restaurant_path(@discovered_restaurant),
+            class: 'text-decoration-none ms-1', title: 'Re-fetch from Google Places',
+            data: { turbo: true, turbo_method: :post } do %>
+        <i class="bi bi-arrow-clockwise"></i>
+      <% end %>
+      <% if place_fetched_at.present? %>
+        <span class="text-muted">(last: <%= Time.parse(place_fetched_at).strftime('%b %d %H:%M') rescue place_fetched_at %>)</span>
+      <% end %>
+    </span>
+    <% if @discovered_restaurant.website_url.present? %>
+      <span>
+        <i class="bi bi-globe"></i>
+        <%= link_to 'Website', @discovered_restaurant.website_url, target: '_blank', rel: 'noopener', class: 'text-decoration-none' %>
+        <%= link_to deep_dive_website_admin_discovered_restaurant_path(@discovered_restaurant),
+              class: 'text-decoration-none ms-1', title: 'Enrich from website',
+              data: { turbo: true, turbo_method: :post } do %>
+          <i class="bi bi-arrow-clockwise"></i>
+        <% end %>
+        <% if deep_dive['status'] == 'queued' %>
+          <span class="spinner-border spinner-border-sm ms-1" role="status"></span>
+        <% elsif deep_dive['extracted_at'].present? %>
+          <span class="text-muted">(last: <%= Time.parse(deep_dive['extracted_at']).strftime('%b %d %H:%M') rescue deep_dive['extracted_at'] %>)</span>
+        <% end %>
+      </span>
+    <% end %>
+    <% if social_links.any? %>
+      <span class="d-flex gap-1">
+        <% social_links.each do |url| %>
+          <% icon = case url
+               when /instagram/ then 'bi-instagram'
+               when /facebook/  then 'bi-facebook'
+               when /twitter|x\.com/ then 'bi-twitter-x'
+               when /tripadvisor/ then 'bi-star'
+               when /linkedin/ then 'bi-linkedin'
+               else 'bi-link-45deg'
+             end %>
+          <%= link_to url, target: '_blank', rel: 'noopener', class: 'text-decoration-none' do %>
+            <i class="bi <%= icon %>"></i>
+          <% end %>
+        <% end %>
+      </span>
+    <% end %>
+  </div>
+
+  <%# ── PROVISIONING BAR (only when approved) ── %>
+  <% if @discovered_restaurant.approved? && @discovered_restaurant.restaurant %>
+    <% restaurant = @discovered_restaurant.restaurant %>
+    <% last_synced = @discovered_restaurant.metadata.is_a?(Hash) && @discovered_restaurant.metadata['last_synced_at'] %>
+    <div class="d-flex align-items-center justify-content-between flex-wrap small bg-light rounded px-3 py-2 mb-3" data-testid="provisioning-bar">
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <span>
+          <i class="bi bi-lightning-charge text-success"></i>
+          <%= link_to restaurant.name.presence || "##{restaurant.id}", edit_restaurant_path(restaurant, section: 'details'), target: '_blank', rel: 'noopener', class: 'text-decoration-none fw-semibold' %>
+        </span>
+        <% slug = restaurant.menus.first&.smartmenu&.slug %>
+        <% if slug.present? %>
+          <span>
+            <i class="bi bi-eye"></i>
+            <%= link_to 'Preview', "/restaurants/#{slug}", target: '_blank', rel: 'noopener', class: 'text-decoration-none' %>
+          </span>
+        <% end %>
+        <span>
+          <%= link_to resync_to_restaurant_admin_discovered_restaurant_path(@discovered_restaurant),
+                class: 'text-decoration-none', title: 'Re-sync to Restaurant',
+                data: { turbo: true, turbo_method: :post } do %>
+            <i class="bi bi-arrow-clockwise"></i>
+          <% end %>
+          <% if last_synced.present? %>
+            <span class="text-muted">(last: <%= Time.parse(last_synced).strftime('%b %d %H:%M') rescue last_synced %>)</span>
+          <% end %>
+        </span>
+      </div>
+      <div>
+        <% if !restaurant.preview_published? %>
+          <%= link_to 'Publish preview',
+                publish_preview_admin_discovered_restaurant_path(@discovered_restaurant),
+                data: { turbo: true, turbo_method: :patch },
+                class: 'btn btn-sm btn-outline-success' %>
+        <% else %>
+          <span class="badge bg-success bg-opacity-10 text-success"><i class="bi bi-check-lg"></i> Published</span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# ── FORM ── %>
+  <div class="p-3 mb-3" data-testid="discovered-restaurant-form">
+    <%= form_with model: @discovered_restaurant,
+          url: admin_discovered_restaurant_path(@discovered_restaurant),
+          method: :patch, local: true, data: { turbo: false } do |f| %>
+
+      <%# Identity & Vibe %>
+      <fieldset class="mb-4">
+        <legend class="h6 fw-semibold mb-3">Identity & Vibe</legend>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label text-muted small mb-0">Name<%= source_badge.call(:name) %></label>
+            <%= f.text_field :name, class: 'form-control' %>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small mb-0">Type<%= source_badge.call(:establishment_types) %></label>
+            <%= f.select :establishment_types,
+                  options_for_select(establishment_type_options.to_a, Array(@discovered_restaurant.establishment_types)),
+                  {}, { multiple: true, class: 'form-select', **select_data_attributes(:multi) } %>
+          </div>
+          <div class="col-12">
+            <label class="form-label text-muted small mb-0">Description<%= source_badge.call(:description) %></label>
+            <%= f.text_area :description, class: 'form-control', rows: 3,
+                  placeholder: 'Restaurant description — enriched automatically from the website About page' %>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small mb-0">Image Context<%= source_badge.call(:image_context) %></label>
+            <%= f.text_field :image_context, class: 'form-control',
+                  placeholder: 'Visual setting — AI generated from website context' %>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small mb-0">Image Style Profile<%= source_badge.call(:image_style_profile) %></label>
+            <%= f.text_area :image_style_profile, class: 'form-control', rows: 2,
+                  placeholder: 'Visual direction for AI image generation — AI generated' %>
+          </div>
+        </div>
+      </fieldset>
+
+      <%# Practical Details %>
+      <fieldset class="mb-3">
+        <legend class="h6 fw-semibold mb-3">Practical Details</legend>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label text-muted small mb-0">Phone<%= source_badge.call(:preferred_phone) %></label>
+            <% if phone_candidates.any? %>
+              <%= f.select :preferred_phone,
+                    options_for_select(phone_candidates, @discovered_restaurant.preferred_phone),
+                    { include_blank: 'Select…' }, { class: 'form-select' } %>
+            <% else %>
+              <%= f.text_field :preferred_phone, class: 'form-control', placeholder: 'No candidates yet' %>
+            <% end %>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small mb-0">Email<%= source_badge.call(:preferred_email) %></label>
+            <% if email_candidates.any? %>
+              <%= f.select :preferred_email,
+                    options_for_select(email_candidates, @discovered_restaurant.preferred_email),
+                    { include_blank: 'Select…' }, { class: 'form-select' } %>
+            <% else %>
+              <%= f.email_field :preferred_email, class: 'form-control', placeholder: 'No candidates yet' %>
+            <% end %>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small mb-0">Address<%= source_badge.call(:address1) %></label>
+            <%= f.text_field :address1, class: 'form-control',
+                  placeholder: @discovered_restaurant.inferred_address1.presence || place_details['formatted_address'].to_s.truncate(60) %>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small mb-0">City<%= source_badge.call(:city) %></label>
+            <%= f.text_field :city, class: 'form-control',
+                  placeholder: @discovered_restaurant.inferred_city.presence || @discovered_restaurant.city_name %>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label text-muted small mb-0">State<%= source_badge.call(:state) %></label>
+            <%= f.text_field :state, class: 'form-control', placeholder: @discovered_restaurant.inferred_state %>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label text-muted small mb-0">Postcode<%= source_badge.call(:postcode) %></label>
+            <%= f.text_field :postcode, class: 'form-control', placeholder: @discovered_restaurant.inferred_postcode %>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label text-muted small mb-0">Country<%= source_badge.call(:country_code) %></label>
+            <%= f.text_field :country_code, class: 'form-control', maxlength: 2,
+                  placeholder: @discovered_restaurant.inferred_country_code.presence || 'US' %>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label text-muted small mb-0">Currency<%= source_badge.call(:currency) %></label>
+            <%= currency_select(f, :currency) %>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="d-flex align-items-center gap-2">
+        <%= f.submit 'Save', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ── MENU SOURCES (only if any exist) ── %>
+  <% menu_sources = @discovered_restaurant.menu_sources.to_a %>
+  <% if menu_sources.any? %>
+    <div class="p-3 mb-3" data-testid="discovered-restaurant-menu-sources">
+      <h2 class="h6 fw-semibold mb-2">Menu Sources</h2>
+      <table class="table table-sm table-hover align-middle mb-0">
+        <thead>
+          <tr class="small text-muted">
+            <th>Type</th>
+            <th>Name</th>
+            <th>File</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% menu_sources.each do |ms| %>
+            <tr>
+              <td class="small"><%= ms.source_type %></td>
+              <td class="small"><%= ms.derived_menu_name %></td>
+              <td class="small">
+                <% if ms.latest_file.attached? %>
+                  <%= link_to ms.latest_file.filename.to_s, rails_blob_path(ms.latest_file, disposition: 'attachment') %>
+                <% else %>
+                  <span class="text-muted">—</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

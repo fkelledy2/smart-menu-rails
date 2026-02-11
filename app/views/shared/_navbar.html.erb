@@ -88,6 +88,18 @@
                   <%= link_to new_admin_impersonation_path, class: "dropdown-item ps-4" do %>
                     <i class="bi bi-person-badge me-2"></i>Act as user
                   <% end %>
+
+                  <%= link_to new_admin_city_crawl_path, class: "dropdown-item ps-4" do %>
+                    <i class="bi bi-geo-alt me-2"></i>Crawl a City
+                  <% end %>
+
+                  <%= link_to admin_discovered_restaurants_path, class: "dropdown-item ps-4" do %>
+                    <i class="bi bi-inboxes me-2"></i>Discovery Queue
+                  <% end %>
+
+                  <%= link_to admin_menu_source_change_reviews_path, class: "dropdown-item ps-4" do %>
+                    <i class="bi bi-arrow-repeat me-2"></i>Change Detection Queue
+                  <% end %>
                 <% end %>
                 <%= link_to testimonials_path, class: "dropdown-item ps-4" do %>
                   <i class="bi bi-chat-quote me-2"></i><%= t(".testimonials") %>

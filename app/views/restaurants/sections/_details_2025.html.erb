@@ -123,7 +123,7 @@
     <%= link_to edit_restaurant_path(restaurant, section: 'menus'),
                 class: 'count-panel-item-2025 text-decoration-none text-reset d-block',
                 data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'overview-menus-link' } do %>
-      <div class="count-panel-value-2025"><%= restaurant.restaurant_menus.joins(:menu).where(menus: { archived: false }).count %></div>
+      <div class="count-panel-value-2025"><%= restaurant.restaurant_menus.where.not(status: :archived).joins(:menu).where(menus: { archived: false }).count %></div>
       <div class="count-panel-label-2025"><%= t('.menus') %></div>
     <% end %>
 
@@ -190,6 +190,26 @@
           data: { testid: 'restaurant-description-input' } %>
       <div class="form-text">
         <%= t('.description_help') %>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :establishment_types, class: 'form-label d-inline-flex align-items-center gap-2' do %>
+        <%= t('activerecord.attributes.restaurant.establishment_types', default: 'Type') %>
+        <span class="form-autosave-inline small text-muted"></span>
+      <% end %>
+      <% establishment_type_options = {
+        'Restaurant' => 'restaurant',
+        'Bar' => 'bar',
+        'Wine bar' => 'wine_bar',
+        'Whiskey bar' => 'whiskey_bar',
+      } %>
+      <%= form.select :establishment_types,
+            options_for_select(establishment_type_options.to_a, Array(restaurant.establishment_types)),
+            {},
+            { multiple: true, class: 'form-select', data: { testid: 'restaurant-establishment-types-select' } } %>
+      <div class="form-text">
+        <%= t('.establishment_types_help', default: 'Select one or more types that describe this venue.') %>
       </div>
     </div>
 

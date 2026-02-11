@@ -49,33 +49,9 @@
   end
 %>
 
-<!-- Quick Actions Card -->
 <div id="restaurant-menus-section"></div>
 <div class="mb-3 p-3" data-testid="menus-quick-actions">
-  <h2 class="quick-actions-title">
-    <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions') %>
-  </h2>
-
   <div class="quick-actions-grid">
-    <% if can_add_menu %>
-      <%= link_to new_restaurant_menu_path(restaurant),
-          class: 'quick-action-btn',
-          data: { testid: 'new-menu-btn', turbo_frame: '_top' } do %>
-        <i class="bi bi-plus-circle"></i>
-        <span><%= t('.new_menu') %></span>
-      <% end %>
-    <% else %>
-      <%= link_to '#',
-          class: 'quick-action-btn disabled',
-          title: disabled_menu_action_message,
-          aria: { disabled: true },
-          data: { controller: 'disabled-action', action: 'click->disabled-action#explain', disabled_action_title_value: 'Menu limit reached', disabled_action_message_value: disabled_menu_action_message, testid: 'new-menu-btn', turbo: false } do %>
-        <i class="bi bi-plus-circle"></i>
-        <span><%= t('.new_menu') %></span>
-      <% end %>
-    <% end %>
-
     <% if can_add_menu %>
       <%= link_to edit_restaurant_path(restaurant, section: 'import'),
           class: 'quick-action-btn',

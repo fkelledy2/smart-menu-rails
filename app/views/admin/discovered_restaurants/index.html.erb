@@ -1,0 +1,161 @@
+<div class="container-fluid px-0 py-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+    <div>
+      <h1 class="text-2xl fw-semibold mb-1">Discovery Queue</h1>
+    </div>
+  </div>
+
+  <%= form_with url: admin_discovered_restaurants_path, method: :get, local: true do %>
+    <div class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <%= label_tag :status, 'Status' %>
+        <%= select_tag :status,
+              options_for_select([['All', '']] + DiscoveredRestaurant.statuses.keys.map { |k| [k.humanize, k] }, @status),
+              class: 'form-select' %>
+      </div>
+
+      <div class="col-md-4">
+        <%= label_tag :city, 'City' %>
+        <%= text_field_tag :city, @city, class: 'form-control', placeholder: 'Search city…' %>
+      </div>
+
+      <div class="col-md-2 ms-auto text-end">
+        <%= submit_tag 'Filter', class: 'btn btn-primary' %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="mb-3 p-3" data-testid="discovered-restaurants-list-card">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="text-muted">
+        Showing <%= @discovered_restaurants.length %> of <%= @total_count %>
+      </div>
+      <div class="d-flex align-items-center">
+        <% if @page > 1 %>
+          <%= link_to 'Prev', admin_discovered_restaurants_path(request.query_parameters.merge(page: @page - 1)), class: 'btn btn-sm btn-outline-secondary me-2' %>
+        <% end %>
+        <span class="text-muted">Page <%= @page %> / <%= [@total_pages, 1].max %></span>
+        <% if @page < @total_pages %>
+          <%= link_to 'Next', admin_discovered_restaurants_path(request.query_parameters.merge(page: @page + 1)), class: 'btn btn-sm btn-outline-secondary ms-2' %>
+        <% end %>
+      </div>
+    </div>
+
+    <div data-controller="discovered-restaurants-bulk">
+      <%= form_with url: bulk_update_admin_discovered_restaurants_path, method: :patch, data: { turbo: false, action: 'submit->discovered-restaurants-bulk#beforeSubmit' } do %>
+        <%= hidden_field_tag :operation, '', data: { 'discovered-restaurants-bulk-target': 'operation' } %>
+        <%= hidden_field_tag :value, '', data: { 'discovered-restaurants-bulk-target': 'value' } %>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th class="w-20px">
+                  <input type="checkbox" data-discovered-restaurants-bulk-target="selectAll" data-action="change->discovered-restaurants-bulk#toggleAll" />
+                </th>
+                <th class="text-end text-nowrap" colspan="8">
+                  <div class="d-flex justify-content-end flex-nowrap">
+                    <div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
+                      <input type="number"
+                             min="0"
+                             step="1"
+                             class="form-control form-control-sm"
+                             style="max-width: 140px;"
+                             value="1"
+                             placeholder="Menus ≥"
+                             aria-label="Minimum menus"
+                             data-discovered-restaurants-bulk-target="menusFilter"
+                             data-action="input->discovered-restaurants-bulk#filterMenus" />
+                      <select class="form-select form-select-sm" style="min-width: 0;" data-discovered-restaurants-bulk-target="actionSelect" data-action="change->discovered-restaurants-bulk#sync">
+                        <option value="">Bulk action…</option>
+                        <option value="approve">Approve</option>
+                        <option value="reject">Reject</option>
+                        <option value="blacklist">Blacklist</option>
+                      </select>
+                      <button type="submit"
+                              class="btn btn-primary"
+                              title="Apply"
+                              aria-label="Apply"
+                              disabled
+                              data-discovered-restaurants-bulk-target="apply"
+                              data-action="click->discovered-restaurants-bulk#apply">
+                        <i class="bi bi-check2"></i>
+                        <span class="visually-hidden">Apply</span>
+                      </button>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <th class="w-20px"></th>
+                <th>
+                  <%= link_to 'City', admin_discovered_restaurants_path(request.query_parameters.merge(sort: 'city_name', direction: (@sort == 'city_name' && @direction == 'asc') ? 'desc' : 'asc', page: 1)) %>
+                </th>
+                <th>
+                  <%= link_to 'Name', admin_discovered_restaurants_path(request.query_parameters.merge(sort: 'name', direction: (@sort == 'name' && @direction == 'asc') ? 'desc' : 'asc', page: 1)) %>
+                </th>
+                <th class="d-none d-md-table-cell">Type</th>
+                <th class="text-end">
+                  <%= link_to 'Status', admin_discovered_restaurants_path(request.query_parameters.merge(sort: 'status', direction: (@sort == 'status' && @direction == 'asc') ? 'desc' : 'asc', page: 1)) %>
+                </th>
+                <th class="d-none d-md-table-cell">Website</th>
+                <th class="text-end">
+                  <%= link_to 'Menus', admin_discovered_restaurants_path(request.query_parameters.merge(sort: 'menus_count', direction: (@sort == 'menus_count' && @direction == 'asc') ? 'desc' : 'asc', page: 1)) %>
+                </th>
+                <th class="text-nowrap d-none d-lg-table-cell">
+                  <%= link_to 'Discovered', admin_discovered_restaurants_path(request.query_parameters.merge(sort: 'discovered_at', direction: (@sort == 'discovered_at' && @direction == 'asc') ? 'desc' : 'asc', page: 1)) %>
+                </th>
+                <th class="text-end"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @discovered_restaurants.each do |dr| %>
+                <tr data-testid="discovered-restaurant-row-<%= dr.id %>" data-discovered-restaurants-bulk-target="row" data-menus-count="<%= dr.menu_sources.select { |ms| ms.source_type.to_s == 'pdf' }.count %>">
+                  <td class="w-20px">
+                    <input type="checkbox" name="discovered_restaurant_ids[]" value="<%= dr.id %>" data-discovered-restaurants-bulk-target="checkbox" data-action="change->discovered-restaurants-bulk#sync" />
+                  </td>
+                  <td><%= dr.city_name %></td>
+                  <td style="max-width: 320px;">
+                    <div class="fw-semibold text-truncate" title="<%= dr.name %>">
+                      <%= link_to dr.name, admin_discovered_restaurant_path(dr), class: 'text-decoration-none' %>
+                    </div>
+                  </td>
+                  <td class="d-none d-md-table-cell"><%= dr.establishment_type_label_text %></td>
+                  <td class="text-end">
+                    <% status = dr.status.to_s %>
+                    <% icon, label, klass = case status
+                      when 'approved' then ['bi-check-circle-fill', 'Approved', 'text-success']
+                      when 'rejected' then ['bi-x-circle-fill', 'Rejected', 'text-secondary']
+                      when 'blacklisted' then ['bi-slash-circle-fill', 'Blacklisted', 'text-danger']
+                      else ['bi-hourglass-split', 'Pending', 'text-warning']
+                    end %>
+                    <span class="d-inline-flex align-items-center" title="<%= label %>">
+                      <i class="bi <%= icon %> <%= klass %>"></i>
+                    </span>
+                  </td>
+                  <td class="d-none d-md-table-cell" style="max-width: 360px;">
+                    <% if dr.website_url.present? %>
+                      <div class="text-truncate" title="<%= dr.website_url %>">
+                        <%= link_to truncate(dr.website_url, length: 60), dr.website_url, target: '_blank', rel: 'noopener' %>
+                      </div>
+                    <% end %>
+                  </td>
+                  <td class="text-end"><%= dr.menu_sources.select { |ms| ms.source_type.to_s == 'pdf' }.count %></td>
+                  <td class="text-nowrap d-none d-lg-table-cell"><%= dr.discovered_at&.strftime('%Y-%m-%d') || dr.created_at.strftime('%Y-%m-%d') %></td>
+                  <td class="text-end">
+                    <%= link_to admin_discovered_restaurant_path(dr),
+                        class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
+                        title: 'View',
+                        aria: { label: 'View' } do %>
+                      <i class="bi bi-chevron-right"></i>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

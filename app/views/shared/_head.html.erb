@@ -10,6 +10,10 @@
 <!-- Author -->
 <meta name="author" content="Mellow Menu">
 
+<% if request.path.to_s.start_with?('/admin') %>
+  <meta name="google" content="notranslate">
+<% end %>
+
 <!-- Open Graph Metadata -->
 <meta property="og:title" content="<%= t('shared.head.og_title') %>">
 <meta property="og:description" content="<%= t('shared.head.og_description') %>">
@@ -31,7 +35,7 @@
 <meta name="ICBM" content="53.349805, -6.26031">
 
 <!-- Robots Meta Tag -->
-<meta name="robots" content="index, follow">
+<meta name="robots" content="<%= @meta_robots.presence || 'index, follow' %>">
 
 <!-- Canonical Tag -->
 <link rel="canonical" href="https://www.mellow.menu">

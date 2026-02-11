@@ -37,6 +37,30 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resource :impersonation, only: [:new, :create, :destroy]
+    resources :city_crawls, only: %i[new create]
+    resources :discovered_restaurants, only: %i[index show update] do
+      collection do
+        patch :bulk_update
+      end
+      member do
+        patch :approve
+        patch :reject
+        patch :blacklist
+        patch :publish_preview
+        post :deep_dive_website
+        post :refresh_place_details
+        post :resync_to_restaurant
+        get :deep_dive_status
+        get :place_details
+      end
+    end
+
+    resources :menu_source_change_reviews, only: %i[index show] do
+      member do
+        patch :resolve
+        patch :ignore
+      end
+    end
   end
   
   # ============================================================================
@@ -134,6 +158,10 @@ Rails.application.routes.draw do
   # ============================================================================
   # RESTAURANT MANAGEMENT
   # ============================================================================
+  get 'restaurants/:id', to: 'smartmenus#show', as: :public_restaurant, constraints: {
+    id: /(?!new$)(?!bulk_update$)(?!reorder$)(?!\d+$)[^\/]+/,
+  }
+
   resources :restaurants do
     collection do
       patch :bulk_update
@@ -351,6 +379,7 @@ Rails.application.routes.draw do
     resources :ocr_menu_imports, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
       collection do
         delete :bulk_destroy
+        post :import_from_menu_source
       end
       member do
         post :process_pdf

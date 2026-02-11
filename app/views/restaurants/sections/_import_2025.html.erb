@@ -6,92 +6,124 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 
 <!-- Quick Info Banner -->
-<div class="alert alert-info d-flex align-items-start gap-2" role="alert" data-testid="import-info-banner">
-  <i class="bi bi-stars mt-1"></i>
-  <div>
-    <strong><%= t('.ai_powered_menu_import', default: 'AI-Powered Menu Import') %></strong>
+<div class="mb-3 p-3" data-testid="import-info-banner">
+  <div class="alert alert-info d-flex align-items-start gap-2 mb-0" role="alert">
+    <i class="bi bi-stars mt-1"></i>
+    <div>
+      <strong><%= t('.ai_powered_menu_import', default: 'AI-Powered Menu Import') %></strong>
+    </div>
   </div>
 </div>
 
-<!-- Upload Form Card -->
-<div class="card" data-testid="import-form-card">
-  <div class="card-body">
-    <h2 class="h5 mb-3">
-      <i class="bi bi-cloud-upload"></i>
-      <%= t('.upload_title') %>
-    </h2>
+<% discovered = restaurant.discovered_restaurant %>
+<% discovered_sources = discovered.present? ? discovered.menu_sources.where(source_type: :pdf, status: :active) : MenuSource.none %>
+<% has_discovered = discovered_sources.any? %>
 
-  <%= form_with(model: [restaurant, restaurant.ocr_menu_imports.new], local: true, html: { class: 'needs-validation', novalidate: true }, data: { turbo_frame: '_top', testid: 'import-form' }) do |f| %>
-    <div class="mb-4">
-      <%= f.label :name, t('.name_label'), class: 'form-label' %>
-      <%= f.text_field :name,
-          class: 'form-control',
-          placeholder: t('.name_placeholder'),
-          required: true,
-          data: { testid: 'import-name-input' } %>
-      <div class="form-text">
-        <%= t('.name_help') %>
-      </div>
-      <div class="invalid-feedback">
-        <%= t('.name_invalid') %>
-      </div>
-    </div>
-
-    <div class="mb-4">
-      <%= f.label :source_locale, t('.source_language_label'), class: 'form-label' %>
-      <%= f.select :source_locale,
-          options_for_select(
-            [[t('.auto_detect'), '']] +
-              restaurant.restaurantlocales
-                        .select { |rl| rl.status.to_s == 'active' }
-                        .sort_by { |rl| rl.locale.to_s }
-                        .map { |rl| [rl.language.to_s, rl.locale.to_s.split(/[-_]/).first.to_s.downcase] },
-            f.object.source_locale.to_s
-          ),
-          {},
-          class: 'form-select' %>
-      <div class="form-text">
-        <%= t('.source_language_help') %>
-      </div>
-    </div>
-
-    <div class="mb-4">
-      <%= f.label :pdf_file, t('.pdf_label'), class: 'form-label' %>
-      <div class="file-upload-area">
-        <div class="file-upload-icon">
-          <i class="bi bi-file-earmark-pdf"></i>
-        </div>
-        <div class="file-upload-content">
-          <label for="file-upload" class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-upload me-1"></i> <%= t('.choose_file') %>
-            <%= f.file_field :pdf_file,
-                id: 'file-upload',
-                class: 'd-none',
-                accept: 'application/pdf',
-                required: true,
-                onchange: "document.getElementById('file-name').textContent = this.files[0]?.name || '#{j t('.no_file_chosen')}'",
-                data: { testid: 'import-pdf-input' } %>
-          </label>
-          <div id="file-name" class="file-upload-filename" data-testid="import-filename-display">
-            <%= t('.no_file_chosen') %>
-          </div>
-          <p class="file-upload-hint">
-            <%= t('.pdf_hint') %>
+<div class="row g-3 mb-3">
+  <% if has_discovered %>
+    <!-- Discovered Menu Sources -->
+    <div class="col-md-6">
+      <div class="h-100 p-3" data-testid="discovered-menus-card">
+          <h2 class="h5 mb-3">
+            <i class="bi bi-collection"></i>
+            <%= t('.discovered_menus_title', default: 'Discovered Menus') %>
+          </h2>
+          <p class="text-muted small mb-3">
+            <%= t('.discovered_menus_desc', default: 'Menu PDFs found on the restaurant website. Import one to start the AI extraction process.') %>
           </p>
-        </div>
+          <div class="list-group list-group-flush">
+            <% discovered_sources.each do |ms| %>
+              <div class="list-group-item d-flex align-items-center justify-content-between px-0">
+                <div class="d-flex align-items-center gap-2" style="min-width:0">
+                  <i class="bi bi-file-earmark-pdf text-danger"></i>
+                  <div style="min-width:0">
+                    <div class="fw-semibold text-truncate">
+                      <% if ms.latest_file.attached? %>
+                        <%= link_to ms.derived_menu_name, rails_blob_path(ms.latest_file, disposition: 'inline'), target: '_blank', rel: 'noopener' %>
+                      <% else %>
+                        <%= ms.derived_menu_name %>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+                <%= button_to import_from_menu_source_restaurant_ocr_menu_imports_path(restaurant),
+                      params: { menu_source_id: ms.id },
+                      method: :post,
+                      class: 'btn btn-danger btn-import flex-shrink-0',
+                      data: { turbo_confirm: "Import '#{j ms.derived_menu_name}' and start AI extraction?" } do %>
+                    <i class="bi bi-upload me-1"></i> Import
+                <% end %>
+              </div>
+            <% end %>
+          </div>
       </div>
-      <div class="invalid-feedback">
-        <%= t('.pdf_invalid') %>
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-      <button type="submit" id="upload-submit-btn" class="btn btn-danger btn-lg w-100 w-md-auto" disabled data-testid="import-submit-btn">
-        <i class="bi bi-upload me-1"></i> <%= t('.upload_process') %>
-      </button>
     </div>
   <% end %>
 
+  <!-- Upload Form -->
+  <div class="<%= has_discovered ? 'col-md-6' : 'col-12' %>">
+    <div class="h-100 p-3" data-testid="import-form-card">
+        <h2 class="h5 mb-3">
+          <i class="bi bi-cloud-upload"></i>
+          <%= t('.upload_title') %>
+        </h2>
+
+      <%= form_with(model: [restaurant, restaurant.ocr_menu_imports.new], local: true, html: { class: 'needs-validation', novalidate: true }, data: { turbo_frame: '_top', testid: 'import-form' }) do |f| %>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <%= f.label :name, t('.name_label'), class: 'form-label' %>
+            <%= f.text_field :name,
+                class: 'form-control',
+                placeholder: t('.name_placeholder'),
+                required: true,
+                data: { testid: 'import-name-input' } %>
+            <div class="form-text">
+              <%= t('.name_help') %>
+            </div>
+            <div class="invalid-feedback">
+              <%= t('.name_invalid') %>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <%= f.label :pdf_file, t('.pdf_label'), class: 'form-label' %>
+            <div class="file-upload-area">
+              <div class="file-upload-icon">
+                <i class="bi bi-file-earmark-pdf"></i>
+              </div>
+              <div class="file-upload-content">
+                <label for="file-upload" class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-upload me-1"></i> <%= t('.choose_file') %>
+                  <%= f.file_field :pdf_file,
+                      id: 'file-upload',
+                      class: 'd-none',
+                      accept: 'application/pdf',
+                      required: true,
+                      onchange: "document.getElementById('file-name').textContent = this.files[0]?.name || '#{j t('.no_file_chosen')}'",
+                      data: { testid: 'import-pdf-input' } %>
+                </label>
+                <div id="file-name" class="file-upload-filename" data-testid="import-filename-display">
+                  <%= t('.no_file_chosen') %>
+                </div>
+                <p class="file-upload-hint">
+                  <%= t('.pdf_hint') %>
+                </p>
+              </div>
+            </div>
+            <div class="invalid-feedback">
+              <%= t('.pdf_invalid') %>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+          <button type="submit" id="upload-submit-btn" class="btn btn-danger btn-import" disabled data-testid="import-submit-btn">
+            <i class="bi bi-upload me-1"></i> Import
+          </button>
+        </div>
+      <% end %>
+
+    </div>
   </div>
 </div>
 
@@ -146,24 +178,11 @@
   })();
 </script>
 
-<!-- Tips Card -->
-<div class="card mt-3" data-testid="import-tips-card">
-  <div class="card-body">
-    <h2 class="h5 mb-3">
-      <i class="bi bi-lightbulb"></i>
-      <%= t('.tips_title', default: 'Tips') %>
-    </h2>
-    <div class="text-muted">
-      <%= t('.tips_body', default: 'Upload a clear PDF for best results.') %>
-    </div>
-  </div>
-</div>
 
 <!-- Recent Imports -->
 <% recent_imports = restaurant.ocr_menu_imports.order(created_at: :desc).limit(5) %>
 <% if recent_imports.any? %>
-  <div class="card mt-3" data-testid="recent-imports-card">
-    <div class="card-body">
+  <div class="mb-3 p-3" data-testid="recent-imports-card">
       <h2 class="h5 mb-3">
         <i class="bi bi-clock-history"></i>
         <%= t('.recent_imports') %>
@@ -262,7 +281,6 @@
             </div>
           <% end %>
         </div>
-    </div>
   </div>
 <% end %>
 
@@ -333,23 +351,15 @@
     margin-bottom: 0.25rem;
   }
 
-  /* Mobile-friendly button styling */
-  #upload-submit-btn {
-    min-height: 48px;
-    font-size: 1rem;
+  /* Consistent import button styling */
+  .btn-import {
+    font-size: 0.875rem;
     font-weight: 600;
-    padding: 0.75rem 1.5rem;
-  }
-
-  @media (max-width: 768px) {
-    #upload-submit-btn {
-      min-height: 56px;
-      font-size: 1.125rem;
-    }
+    padding: 0.5rem 1.25rem;
   }
 
   /* Disabled state styling */
-  #upload-submit-btn:disabled {
+  .btn-import:disabled {
     cursor: not-allowed;
     opacity: 0.6;
   }
