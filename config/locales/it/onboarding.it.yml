@@ -46,7 +46,7 @@ it:
       setup_timeout: La configurazione sta richiedendo più tempo del previsto
       setup_timeout_help: Aggiorna la pagina o contatta il supporto
       subtitle: Il tuo ristorante è ora configurato e pronto a servire i clienti!
-      title: "Congratulazioni! 🎉"
+      title: "Congratulazioni! \U0001F389"
       track_orders_description: Monitora ordini dei clienti e analisi in tempo reale
       track_orders_title: Traccia Ordini
       view_live_menu: Visualizza Menu dal Vivo

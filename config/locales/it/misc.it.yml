@@ -298,7 +298,7 @@ it:
         bi-check-lg'></i> Supporto email prioritario</li>"
       attribute4: ''
       attribute5: ''
-      key: Business
+      key: Affari
     call: Contattaci
     enterprise:
       attribut6: ''
@@ -311,7 +311,7 @@ it:
         Branding Personalizzato</li>"
       attribute4: ''
       attribute5: ''
-      key: Enterprise
+      key: Impresa
     pro:
       attribute1: "<li>Fino a <strong>3</strong> Ristoranti</li>"
       attribute2: "<li><strong>3</strong> Menu per sede</li>"
@@ -334,7 +334,7 @@ it:
         class='bi bi-check-lg'></i> Supporto email</li><li>&nbsp;</li>"
       attribute4: ''
       attribute5: ''
-      key: Starter
+      key: Avviamento
     trial:
       attribute1: "<li><strong>1</strong> Ristorante</li>"
       attribute2: "<li><strong>1</strong> Menu</li>"

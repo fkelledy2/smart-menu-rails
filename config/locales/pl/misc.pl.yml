@@ -244,7 +244,7 @@ pl:
   number:
     currency:
       format:
-        delimiter: " "
+        delimiter: ","
         format: "%n %u"
         precision: 2
         separator: ","
@@ -295,7 +295,7 @@ pl:
         class='bi bi-check-lg'></i> Priorytetowe wsparcie</li>"
       attribute4: ''
       attribute5: ''
-      key: Business
+      key: Biznes
     call: Zadzwoń
     enterprise:
       attribut6: ''
@@ -308,7 +308,7 @@ pl:
         Personalizacja marki</li>"
       attribute4: ''
       attribute5: ''
-      key: Enterprise
+      key: Przedsiębiorstwo
     pro:
       attribute1: "<li><i class='bi bi-check-lg'></i> Do <strong>%{locations}</strong>
         restauracji</li>"

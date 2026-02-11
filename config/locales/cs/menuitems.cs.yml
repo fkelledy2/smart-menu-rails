@@ -49,7 +49,7 @@ cs:
       tasting_supplement: Příplatek (centy)
       tasting_supplement_help: Nechte prázdné nebo 0 pro zahrnuto; nastavte částku
         pro příplatkovou cenu.
-      'true': 'true'
+      'true': Pravda
       update: Aktualizovat
       variantPricing: Varianty cen
       visibility: Viditelnost

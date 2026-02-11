@@ -244,7 +244,7 @@ hu:
   number:
     currency:
       format:
-        delimiter: " "
+        delimiter: ","
         format: "%n %u"
         precision: 2
         separator: ","
@@ -295,7 +295,7 @@ hu:
         bi-check-lg'></i> Kiemelt támogatás</li>"
       attribute4: ''
       attribute5: ''
-      key: Business
+      key: Üzleti
     call: Hívás
     enterprise:
       attribut6: ''
@@ -307,7 +307,7 @@ hu:
         Dedikált kapcsolattartó</li><li><i class='bi bi-check-lg'></i> Egyedi arculat</li>"
       attribute4: ''
       attribute5: ''
-      key: Enterprise
+      key: Vállalat
     pro:
       attribute1: "<li><i class='bi bi-check-lg'></i> Akár <strong>%{locations}</strong>
         étterem</li>"
@@ -331,7 +331,7 @@ hu:
         class='bi bi-check-lg'></i> Email támogatás</li><li>&nbsp;</li>"
       attribute4: ''
       attribute5: ''
-      key: Starter
+      key: Indító
     trial:
       attribute1: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> étterem</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> menü</li>"

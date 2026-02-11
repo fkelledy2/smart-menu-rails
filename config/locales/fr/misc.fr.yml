@@ -246,7 +246,7 @@ fr:
   number:
     currency:
       format:
-        delimiter: " "
+        delimiter: ","
         format: "%n %u"
         precision: 2
         separator: ","
@@ -297,7 +297,7 @@ fr:
         class='bi bi-check-lg'></i> Support prioritaire</li>"
       attribute4: ''
       attribute5: ''
-      key: Business
+      key: Entreprises
     call: Appeler
     enterprise:
       attribut6: ''
@@ -309,7 +309,7 @@ fr:
         Account manager dédié</li><li><i class='bi bi-check-lg'></i> Branding personnalisé</li>"
       attribute4: ''
       attribute5: ''
-      key: Enterprise
+      key: Entreprise
     pro:
       attribute1: "<li><i class='bi bi-check-lg'></i> Jusqu'à <strong>%{locations}</strong>
         restaurants</li>"
@@ -333,7 +333,7 @@ fr:
         class='bi bi-check-lg'></i> Support email</li><li>&nbsp;</li>"
       attribute4: ''
       attribute5: ''
-      key: Starter
+      key: Démarrage
     trial:
       attribute1: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> restaurant</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> menu</li>"

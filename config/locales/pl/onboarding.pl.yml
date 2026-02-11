@@ -45,7 +45,7 @@ pl:
       setup_timeout: Konfiguracja trwa dłużej niż oczekiwano
       setup_timeout_help: Odśwież stronę lub skontaktuj się z pomocą techniczną
       subtitle: Twoja restauracja jest teraz skonfigurowana i gotowa do obsługi klientów!
-      title: "Gratulacje! 🎉"
+      title: "Gratulacje! \U0001F389"
       track_orders_description: Monitorowanie zamówień klientów i analizy w czasie
         rzeczywistym
       track_orders_title: Śledzenie zamówień

@@ -45,7 +45,7 @@ pt:
       setup_timeout: A instalação está a demorar mais tempo do que o previsto
       setup_timeout_help: Actualize a página ou contacte o apoio ao cliente
       subtitle: O seu restaurante está agora pronto para servir os clientes!
-      title: "Parabéns! 🎉"
+      title: "Parabéns! \U0001F389"
       track_orders_description: Monitorizar as encomendas dos clientes e as análises
         em tempo real
       track_orders_title: Acompanhar encomendas

@@ -298,7 +298,7 @@ pt:
         class='bi bi-check-lg'></i> Suporte prioritário</li>"
       attribute4: ''
       attribute5: ''
-      key: Business
+      key: Negócios
     call: Ligar
     enterprise:
       attribut6: ''
@@ -311,7 +311,7 @@ pt:
         Branding personalizado</li>"
       attribute4: ''
       attribute5: ''
-      key: Enterprise
+      key: Empresa
     pro:
       attribute1: "<li><i class='bi bi-check-lg'></i> Até <strong>%{locations}</strong>
         restaurantes</li>"
@@ -335,7 +335,7 @@ pt:
         class='bi bi-check-lg'></i> Suporte por email</li><li>&nbsp;</li>"
       attribute4: ''
       attribute5: ''
-      key: Starter
+      key: Arranque
     trial:
       attribute1: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> restaurante</li>"
       attribute2: "<li><i class='bi bi-check-lg'></i> <strong>1</strong> menu</li>"
