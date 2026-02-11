@@ -19,7 +19,7 @@ class CrawlSourceRule < ApplicationRecord
     candidates = domain_candidates(url_or_domain)
     return false if candidates.empty?
 
-    blacklisted.where('LOWER(domain) IN (?)', candidates).exists?
+    blacklisted.exists?(['LOWER(domain) IN (?)', candidates])
   end
 
   # Check if a URL or domain is whitelisted (matches with or without www.)
@@ -27,7 +27,7 @@ class CrawlSourceRule < ApplicationRecord
     candidates = domain_candidates(url_or_domain)
     return false if candidates.empty?
 
-    whitelisted.where('LOWER(domain) IN (?)', candidates).exists?
+    whitelisted.exists?(['LOWER(domain) IN (?)', candidates])
   end
 
   def self.extract_domain(url_or_domain)
@@ -43,7 +43,7 @@ class CrawlSourceRule < ApplicationRecord
     d = extract_domain(url_or_domain)
     return [] if d.blank?
 
-    stripped = d.sub(/\Awww\./, '')
+    stripped = d.delete_prefix('www.')
     [d, stripped, "www.#{stripped}"].uniq
   end
 

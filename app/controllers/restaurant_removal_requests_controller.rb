@@ -21,7 +21,7 @@ class RestaurantRemovalRequestsController < ApplicationController
       redirect_to submitted_restaurant_removal_requests_path(@restaurant),
                   notice: 'Your removal request has been received. The preview has been unpublished immediately.'
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

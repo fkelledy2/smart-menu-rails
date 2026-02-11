@@ -84,11 +84,11 @@ module Admin
 
       changed = @discovered_restaurant.changed
       trackable = %w[name description establishment_types preferred_phone preferred_email address1 city state postcode country_code currency image_context image_style_profile]
-      manual_fields = (changed & trackable).reject { |f|
+      manual_fields = (changed & trackable).reject do |f|
         old_val = @discovered_restaurant.attribute_was(f)
         new_val = @discovered_restaurant.read_attribute(f)
         old_val.blank? && new_val.blank?
-      }
+      end
       if manual_fields.any?
         meta = @discovered_restaurant.metadata.is_a?(Hash) ? @discovered_restaurant.metadata : {}
         fs = meta['field_sources'].is_a?(Hash) ? meta['field_sources'] : {}

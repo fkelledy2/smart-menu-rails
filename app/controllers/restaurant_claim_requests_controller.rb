@@ -19,7 +19,7 @@ class RestaurantClaimRequestsController < ApplicationController
       redirect_to submitted_restaurant_claim_requests_path(@restaurant),
                   notice: 'Your claim request has been submitted. Our team will review it shortly.'
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

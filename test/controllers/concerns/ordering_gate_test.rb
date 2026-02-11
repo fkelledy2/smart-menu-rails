@@ -21,7 +21,7 @@ class OrderingGateTest < ActiveSupport::TestCase
 
     def redirect_back_or_to(*); end
     def render(*); end
-    def root_path; '/'; end
+    def root_path = '/'
   end
 
   def setup

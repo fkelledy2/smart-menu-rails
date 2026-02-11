@@ -41,7 +41,7 @@ class SyncOpeningHoursTest < ActiveSupport::TestCase
     assert_equal 7, availabilities.count
 
     # Monday (day 1) should be open 09:00-22:00
-    monday = availabilities.find { |a| a.monday? }
+    monday = availabilities.find(&:monday?)
     assert monday.present?, 'Monday availability should exist'
     assert monday.open?
     assert_equal 9, monday.starthour
@@ -50,7 +50,7 @@ class SyncOpeningHoursTest < ActiveSupport::TestCase
     assert_equal 0, monday.endmin
 
     # Friday (day 5) should be open 11:30-23:30
-    friday = availabilities.find { |a| a.friday? }
+    friday = availabilities.find(&:friday?)
     assert friday.present?, 'Friday availability should exist'
     assert friday.open?
     assert_equal 11, friday.starthour
@@ -59,7 +59,7 @@ class SyncOpeningHoursTest < ActiveSupport::TestCase
     assert_equal 30, friday.endmin
 
     # Sunday (day 0) not in the data → should be closed
-    sunday = availabilities.find { |a| a.sunday? }
+    sunday = availabilities.find(&:sunday?)
     assert sunday.present?, 'Sunday availability should exist'
     assert sunday.closed?
   end

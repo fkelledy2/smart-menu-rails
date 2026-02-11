@@ -164,7 +164,7 @@ class DiscoveredRestaurantRestaurantSyncService
   }.freeze
 
   def sync_default_table!
-    return if @restaurant.tablesettings.where(archived: [false, nil]).exists?
+    return if @restaurant.tablesettings.exists?(archived: [false, nil])
 
     @restaurant.tablesettings.create!(
       name: 'T1',

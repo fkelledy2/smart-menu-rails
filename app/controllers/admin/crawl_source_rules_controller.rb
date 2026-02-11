@@ -27,6 +27,8 @@ module Admin
       @rule = CrawlSourceRule.new
     end
 
+    def edit; end
+
     def create
       @rule = CrawlSourceRule.new(rule_params)
       @rule.created_by_user = current_user
@@ -34,17 +36,15 @@ module Admin
       if @rule.save
         redirect_to admin_crawl_source_rules_path, notice: "#{@rule.rule_type.humanize} rule created for #{@rule.domain}", status: :see_other
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
-
-    def edit; end
 
     def update
       if @rule.update(rule_params)
         redirect_to admin_crawl_source_rules_path, notice: 'Rule updated', status: :see_other
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

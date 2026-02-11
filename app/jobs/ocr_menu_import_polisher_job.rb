@@ -34,20 +34,18 @@ class OcrMenuImportPolisherJob
           item.description = item.name
         end
 
-        if texts_equal?(item.name, item.description)
-          # AI guardrail: only generate new descriptions in full_enrich mode
-          unless normalize_only
-            begin
-              gen = generate_description_via_llm(
-                item_name: item.name,
-                section_name: section_name,
-                section_description: section_description,
-                language: target_language,
-              )
-              item.description = gen if gen.present?
-            rescue StandardError => e
-              Rails.logger.warn("[OcrMenuImportPolisherJob] LLM description failed for item ##{item.id}: #{e.class}: #{e.message}")
-            end
+        # AI guardrail: only generate new descriptions in full_enrich mode
+        if texts_equal?(item.name, item.description) && !normalize_only
+          begin
+            gen = generate_description_via_llm(
+              item_name: item.name,
+              section_name: section_name,
+              section_description: section_description,
+              language: target_language,
+            )
+            item.description = gen if gen.present?
+          rescue StandardError => e
+            Rails.logger.warn("[OcrMenuImportPolisherJob] LLM description failed for item ##{item.id}: #{e.class}: #{e.message}")
           end
         end
 

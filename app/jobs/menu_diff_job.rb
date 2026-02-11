@@ -71,7 +71,7 @@ class MenuDiffJob < ApplicationJob
       # HTML source — fetch and extract text
       resp = HTTParty.get(url, headers: {
         'User-Agent' => 'SmartMenuBot/1.0 (+https://www.mellow.menu)',
-      }, timeout: 20)
+      }, timeout: 20,)
       return nil unless resp.code == 200
 
       doc = Nokogiri::HTML(resp.body)
@@ -96,36 +96,36 @@ class MenuDiffJob < ApplicationJob
   end
 
   def generate_diff(old_text, new_text)
-    old_lines = old_text.split("\n").map(&:strip).reject(&:blank?)
-    new_lines = new_text.split("\n").map(&:strip).reject(&:blank?)
+    old_lines = old_text.split("\n").map(&:strip).compact_blank
+    new_lines = new_text.split("\n").map(&:strip).compact_blank
 
     old_set = old_lines.to_set
     new_set = new_lines.to_set
 
-    added = new_lines.select { |l| !old_set.include?(l) }
-    removed = old_lines.select { |l| !new_set.include?(l) }
+    added = new_lines.reject { |l| old_set.include?(l) }
+    removed = old_lines.reject { |l| new_set.include?(l) }
 
     parts = []
     parts << "--- Previous version (#{old_lines.length} lines)" if old_text.present?
     parts << "+++ New version (#{new_lines.length} lines)"
-    parts << ""
+    parts << ''
 
     if removed.any?
       parts << "REMOVED (#{removed.length} lines):"
       removed.first(100).each { |l| parts << "- #{l}" }
       parts << "... (#{removed.length - 100} more)" if removed.length > 100
-      parts << ""
+      parts << ''
     end
 
     if added.any?
       parts << "ADDED (#{added.length} lines):"
       added.first(100).each { |l| parts << "+ #{l}" }
       parts << "... (#{added.length - 100} more)" if added.length > 100
-      parts << ""
+      parts << ''
     end
 
     if added.empty? && removed.empty?
-      parts << "(No text differences detected — change may be in formatting or metadata only)"
+      parts << '(No text differences detected — change may be in formatting or metadata only)'
     end
 
     parts.join("\n")
