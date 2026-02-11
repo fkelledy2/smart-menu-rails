@@ -1,0 +1,91 @@
+<div class="container-fluid py-3">
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <%= link_to admin_restaurant_claim_requests_path, class: 'btn btn-sm btn-outline-secondary' do %>
+      <i class="bi bi-arrow-left"></i> Back
+    <% end %>
+    <h1 class="h4 mb-0">Claim Request #<%= @claim_request.id %></h1>
+    <% badge_class = case @claim_request.status
+      when 'started' then 'bg-warning text-dark'
+      when 'soft_verified' then 'bg-info'
+      when 'approved' then 'bg-success'
+      when 'rejected' then 'bg-secondary'
+      else 'bg-warning text-dark'
+    end %>
+    <span class="badge <%= badge_class %>"><%= @claim_request.status.humanize %></span>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="h6 mb-3">Claimant Details</h2>
+          <dl class="mb-0">
+            <dt class="text-muted small">Name</dt>
+            <dd><%= @claim_request.claimant_name.presence || '—' %></dd>
+
+            <dt class="text-muted small">Email</dt>
+            <dd><%= @claim_request.claimant_email %></dd>
+
+            <dt class="text-muted small">Verification Method</dt>
+            <dd><%= @claim_request.verification_method.humanize %></dd>
+
+            <dt class="text-muted small">Evidence / Details</dt>
+            <dd><%= simple_format(@claim_request.evidence.presence || '—') %></dd>
+
+            <dt class="text-muted small">Submitted</dt>
+            <dd><%= @claim_request.created_at.strftime('%Y-%m-%d %H:%M UTC') %></dd>
+
+            <% if @claim_request.verified_at.present? %>
+              <dt class="text-muted small">Verified At</dt>
+              <dd><%= @claim_request.verified_at.strftime('%Y-%m-%d %H:%M UTC') %></dd>
+            <% end %>
+
+            <% if @claim_request.reviewed_by_user.present? %>
+              <dt class="text-muted small">Reviewed By</dt>
+              <dd><%= @claim_request.reviewed_by_user.email %></dd>
+            <% end %>
+
+            <% if @claim_request.review_notes.present? %>
+              <dt class="text-muted small">Review Notes</dt>
+              <dd><%= simple_format(@claim_request.review_notes) %></dd>
+            <% end %>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="h6 mb-3">Restaurant</h2>
+          <dl class="mb-0">
+            <dt class="text-muted small">Name</dt>
+            <dd><%= @claim_request.restaurant.name %> (ID: <%= @claim_request.restaurant.id %>)</dd>
+
+            <dt class="text-muted small">Claim Status</dt>
+            <dd><%= @claim_request.restaurant.claim_status.humanize %></dd>
+
+            <% if @claim_request.restaurant.source_url.present? %>
+              <dt class="text-muted small">Website</dt>
+              <dd><%= link_to @claim_request.restaurant.source_url, @claim_request.restaurant.source_url, target: '_blank', rel: 'noopener' %></dd>
+            <% end %>
+          </dl>
+
+          <hr>
+          <h2 class="h6 mb-3">Actions</h2>
+          <div class="d-flex flex-column gap-2">
+            <% if @claim_request.started? || @claim_request.soft_verified? %>
+              <%= button_to 'Approve Claim', approve_admin_restaurant_claim_request_path(@claim_request),
+                  method: :patch, class: 'btn btn-success',
+                  data: { turbo_confirm: 'Approve this claim? Restaurant will become soft-claimed.' } %>
+              <%= button_to 'Reject Claim', reject_admin_restaurant_claim_request_path(@claim_request),
+                  method: :patch, class: 'btn btn-danger',
+                  data: { turbo_confirm: 'Reject this claim?' } %>
+            <% end %>
+            <%= link_to 'View Restaurant', edit_restaurant_path(@claim_request.restaurant), class: 'btn btn-outline-primary' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

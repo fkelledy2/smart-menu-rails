@@ -16,6 +16,8 @@ class EnforceRestaurantPlanLimitJob < ApplicationJob
   private
 
   def enforce_for_user(user)
+    return if user.super_admin?
+
     plan = user.plan
     return unless plan
     return if plan.locations == -1

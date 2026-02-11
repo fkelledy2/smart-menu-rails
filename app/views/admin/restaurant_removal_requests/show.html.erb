@@ -1,0 +1,73 @@
+<div class="container-fluid py-3">
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <%= link_to admin_restaurant_removal_requests_path, class: 'btn btn-sm btn-outline-secondary' do %>
+      <i class="bi bi-arrow-left"></i> Back
+    <% end %>
+    <h1 class="h4 mb-0">Removal Request #<%= @removal_request.id %></h1>
+    <% badge_class = case @removal_request.status
+      when 'received' then 'bg-warning text-dark'
+      when 'actioned_unpublished' then 'bg-info'
+      when 'resolved' then 'bg-success'
+      else 'bg-secondary'
+    end %>
+    <span class="badge <%= badge_class %>"><%= @removal_request.status.humanize %></span>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="h6 mb-3">Request Details</h2>
+          <dl class="mb-0">
+            <dt class="text-muted small">Restaurant</dt>
+            <dd><%= @removal_request.restaurant.name %> (ID: <%= @removal_request.restaurant.id %>)</dd>
+
+            <dt class="text-muted small">Requested By</dt>
+            <dd><%= @removal_request.requested_by_email %></dd>
+
+            <dt class="text-muted small">Source</dt>
+            <dd><%= @removal_request.source.humanize %></dd>
+
+            <dt class="text-muted small">Reason</dt>
+            <dd><%= simple_format(@removal_request.reason) %></dd>
+
+            <dt class="text-muted small">Submitted</dt>
+            <dd><%= @removal_request.created_at.strftime('%Y-%m-%d %H:%M UTC') %></dd>
+
+            <% if @removal_request.actioned_at.present? %>
+              <dt class="text-muted small">Actioned At</dt>
+              <dd><%= @removal_request.actioned_at.strftime('%Y-%m-%d %H:%M UTC') %></dd>
+            <% end %>
+
+            <% if @removal_request.actioned_by_user.present? %>
+              <dt class="text-muted small">Actioned By</dt>
+              <dd><%= @removal_request.actioned_by_user.email %></dd>
+            <% end %>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="h6 mb-3">Actions</h2>
+          <div class="d-flex flex-column gap-2">
+            <% if @removal_request.received? %>
+              <%= button_to 'Unpublish & Action', action_unpublish_admin_restaurant_removal_request_path(@removal_request),
+                  method: :patch, class: 'btn btn-danger',
+                  data: { turbo_confirm: 'Unpublish this restaurant preview and mark as actioned?' } %>
+            <% end %>
+            <% unless @removal_request.resolved? %>
+              <%= button_to 'Mark as Resolved', resolve_admin_restaurant_removal_request_path(@removal_request),
+                  method: :patch, class: 'btn btn-success' %>
+            <% end %>
+            <% if @removal_request.restaurant.present? %>
+              <%= link_to 'View Restaurant', edit_restaurant_path(@removal_request.restaurant), class: 'btn btn-outline-primary' %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

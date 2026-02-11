@@ -1,0 +1,33 @@
+<div class="container py-5" style="max-width: 600px;">
+  <h1 class="h3 mb-2">Request Removal</h1>
+  <p class="text-muted mb-4">
+    If you are the owner of <strong><%= @restaurant.name %></strong> and would like this preview removed,
+    please submit this form. The preview will be unpublished immediately.
+  </p>
+
+  <%= form_with(model: [@restaurant, @removal_request], url: restaurant_removal_requests_path(@restaurant), local: true, html: { class: 'needs-validation', novalidate: true }) do |f| %>
+    <% if @removal_request.errors.any? %>
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          <% @removal_request.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= f.label :requested_by_email, 'Your email address', class: 'form-label' %>
+      <%= f.email_field :requested_by_email, class: 'form-control', required: true, placeholder: 'you@example.com' %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :reason, 'Reason for removal', class: 'form-label' %>
+      <%= f.text_area :reason, class: 'form-control', rows: 4, required: true, placeholder: 'Please explain why you would like this listing removed.' %>
+    </div>
+
+    <div class="d-grid">
+      <button type="submit" class="btn btn-danger">Submit Removal Request</button>
+    </div>
+  <% end %>
+</div>

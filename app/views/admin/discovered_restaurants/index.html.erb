@@ -70,7 +70,6 @@
                         <option value="">Bulk action…</option>
                         <option value="approve">Approve</option>
                         <option value="reject">Reject</option>
-                        <option value="blacklist">Blacklist</option>
                       </select>
                       <button type="submit"
                               class="btn btn-primary"
@@ -126,7 +125,6 @@
                     <% icon, label, klass = case status
                       when 'approved' then ['bi-check-circle-fill', 'Approved', 'text-success']
                       when 'rejected' then ['bi-x-circle-fill', 'Rejected', 'text-secondary']
-                      when 'blacklisted' then ['bi-slash-circle-fill', 'Blacklisted', 'text-danger']
                       else ['bi-hourglass-split', 'Pending', 'text-warning']
                     end %>
                     <span class="d-inline-flex align-items-center" title="<%= label %>">

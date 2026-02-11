@@ -13,6 +13,12 @@ class OcrMenuImport < ApplicationRecord
   cache_index :id
   cache_belongs_to :restaurant
 
+  # AI mode: controls what enrichment is allowed
+  enum :ai_mode, {
+    normalize_only: 0,  # Pre-claim default: price parsing, name cleanup, whitespace, casing only
+    full_enrich: 1,     # Post-claim: translations, AI images, marketing copy, tone rewriting
+  }
+
   # Validations
   validates :name, presence: true
   validates :status, presence: true

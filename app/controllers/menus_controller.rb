@@ -745,7 +745,7 @@ class MenusController < ApplicationController
 
     plan = current_user&.plan
     menus_limit = plan&.menusperlocation
-    if menus_limit.present? && menus_limit != -1
+    if menus_limit.present? && menus_limit != -1 && !current_user&.super_admin?
       active_menu_count = Menu.where(restaurant: context_restaurant, status: 'active', archived: false).count
       if active_menu_count >= menus_limit
         @menu.errors.add(:base, 'Your plan limit has been reached for number of menus')

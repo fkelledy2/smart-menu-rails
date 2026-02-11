@@ -49,7 +49,7 @@ class RestaurantlocalesController < ApplicationController
 
     plan = current_user&.plan
     languages_limit = plan&.languages
-    if languages_limit.present? && languages_limit != -1
+    if languages_limit.present? && languages_limit != -1 && !current_user&.super_admin?
       context_restaurant = @restaurantlocale.restaurant || Restaurant.find_by(id: params.dig(:restaurantlocale, :restaurant_id))
       if context_restaurant
         existing_count = Restaurantlocale.where(restaurant_id: context_restaurant.id)

@@ -118,7 +118,7 @@ class ImportToMenu
             price: safe_price(item.price),
             sequence: item.sequence,
             status: 'active',
-            itemtype: 'food',
+            itemtype: infer_default_itemtype(section_name: section.name, item_name: item.name),
             preptime: 0,
             calories: 0,
           )
@@ -374,6 +374,29 @@ class ImportToMenu
     end
   rescue StandardError => e
     Rails.logger.warn("[ImportToMenu] alcohol detection failed for '#{item_name}': #{e.class}: #{e.message}")
+  end
+
+  # Infer default itemtype based on the restaurant's establishment_types and
+  # section/item name keywords. Wine bars default to :wine, bars to :beverage,
+  # restaurants to :food — with keyword overrides.
+  WINE_KEYWORDS = %w[wine vino vin château chateau cuvée cuvee prosecco champagne cava rioja barolo].freeze
+  BEVERAGE_KEYWORDS = %w[cocktail beer ale lager stout ipa draught draft spirit whiskey whisky bourbon gin rum vodka tequila mezcal aperitif digestif spritz].freeze
+  FOOD_KEYWORDS = %w[starter main dessert entrée entree appetizer soup salad pasta pizza burger steak fish sandwich].freeze
+
+  def infer_default_itemtype(section_name:, item_name:)
+    combined = "#{section_name} #{item_name}".downcase
+
+    # Explicit keyword matches take priority
+    return 'wine' if WINE_KEYWORDS.any? { |kw| combined.include?(kw) }
+    return 'beverage' if BEVERAGE_KEYWORDS.any? { |kw| combined.include?(kw) }
+    return 'food' if FOOD_KEYWORDS.any? { |kw| combined.include?(kw) }
+
+    # Fall back to venue type default
+    types = Array(@restaurant.try(:establishment_types)).map(&:to_s).compact_blank
+    return 'wine' if types.include?('wine_bar')
+    return 'beverage' if types.include?('bar') || types.include?('whiskey_bar')
+
+    'food'
   end
 
   # Collect a unique, normalized set of allergen names from confirmed sections/items

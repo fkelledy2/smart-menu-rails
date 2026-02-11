@@ -8,9 +8,14 @@ class DiscoveredRestaurantWebsiteDeepDiveJob < ApplicationJob
     base_url = dr.website_url.to_s.strip
     place_details = fetch_place_details(dr)
 
-    website_result = if base_url.present?
-                       extractor = MenuDiscovery::WebsiteContactExtractor.new(base_url: base_url)
+    robots_checker = MenuDiscovery::RobotsTxtChecker.new
+    crawl_evidence = base_url.present? ? robots_checker.evidence(base_url) : {}
+
+    website_result = if base_url.present? && crawl_evidence['robots_allowed'] != false
+                       extractor = MenuDiscovery::WebsiteContactExtractor.new(base_url: base_url, robots_checker: robots_checker)
                        extractor.extract
+                     elsif base_url.present?
+                       { 'source_base_url' => base_url, 'skipped' => 'robots_txt_blocked', 'extracted_at' => Time.current.iso8601 }
                      else
                        {
                          'source_base_url' => nil,
@@ -23,6 +28,7 @@ class DiscoveredRestaurantWebsiteDeepDiveJob < ApplicationJob
                      end
 
     updated = dr.metadata || {}
+    updated['crawl_evidence'] = (updated['crawl_evidence'].is_a?(Hash) ? updated['crawl_evidence'] : {}).merge(crawl_evidence) if crawl_evidence.present?
     updated['website_deep_dive'] = website_result.merge(
       'triggered_by_user_id' => triggered_by_user_id,
       'status' => 'completed',

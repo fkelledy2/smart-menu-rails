@@ -14,8 +14,13 @@ class ProvisionUnclaimedRestaurantJob < ApplicationJob
         user: admin_user,
         name: discovered.name,
         claim_status: :unclaimed,
-        preview_enabled: false,
+        provisioned_by: :provisioned_by_system,
+        source_url: discovered.website_url,
+        preview_enabled: true,
+        preview_published_at: Time.current,
         preview_indexable: false,
+        ordering_enabled: false,
+        payments_enabled: false,
         status: :inactive,
       )
 
@@ -23,47 +28,6 @@ class ProvisionUnclaimedRestaurantJob < ApplicationJob
         discovered_restaurant: discovered,
         restaurant: restaurant,
       ).sync!
-
-      menu = Menu.create!(
-        restaurant: restaurant,
-        name: 'Menu',
-        description: '',
-        status: 'active',
-        archived: false,
-        sequence: 1,
-      )
-
-      begin
-        best_pdf_source = discovered.menu_sources
-          .includes(latest_file_attachment: :blob)
-          .find { |ms| ms.source_type.to_s == 'pdf' && ms.latest_file.attached? }
-
-        if best_pdf_source && !menu.pdf_menu_scan.attached?
-          menu.pdf_menu_scan.attach(best_pdf_source.latest_file.blob)
-        end
-      rescue StandardError
-        nil
-      end
-
-      slug_base = discovered.name.to_s.downcase.gsub(/[^a-z0-9]+/, '-').gsub(/\A-|-\z/, '')
-      slug_base = 'restaurant' if slug_base.blank?
-
-      slug = nil
-      10.times do |i|
-        candidate = i.zero? ? slug_base : "#{slug_base}-#{SecureRandom.hex(3)}"
-        next if Smartmenu.exists?(slug: candidate)
-
-        slug = candidate
-        break
-      end
-      slug ||= "#{slug_base}-#{SecureRandom.hex(4)}"
-
-      Smartmenu.create!(
-        restaurant: restaurant,
-        menu: menu,
-        tablesetting: nil,
-        slug: slug,
-      )
 
       discovered.update!(restaurant_id: restaurant.id)
     end

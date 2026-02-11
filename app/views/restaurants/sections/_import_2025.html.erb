@@ -39,9 +39,9 @@
                   <div style="min-width:0">
                     <div class="fw-semibold text-truncate">
                       <% if ms.latest_file.attached? %>
-                        <%= link_to ms.derived_menu_name, rails_blob_path(ms.latest_file, disposition: 'inline'), target: '_blank', rel: 'noopener' %>
+                        <%= link_to ms.display_name, rails_blob_path(ms.latest_file, disposition: 'inline'), target: '_blank', rel: 'noopener' %>
                       <% else %>
-                        <%= ms.derived_menu_name %>
+                        <%= ms.display_name %>
                       <% end %>
                     </div>
                   </div>
@@ -50,7 +50,7 @@
                       params: { menu_source_id: ms.id },
                       method: :post,
                       class: 'btn btn-danger btn-import flex-shrink-0',
-                      data: { turbo_confirm: "Import '#{j ms.derived_menu_name}' and start AI extraction?" } do %>
+                      data: { turbo_frame: '_top' } do %>
                     <i class="bi bi-upload me-1"></i> Import
                 <% end %>
               </div>

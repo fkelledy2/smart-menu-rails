@@ -9,7 +9,7 @@ module Admin
     before_action :ensure_admin!
     before_action :require_super_admin!
 
-    before_action :set_discovered_restaurant, only: %i[show update approve reject blacklist publish_preview deep_dive_website deep_dive_status place_details refresh_place_details resync_to_restaurant]
+    before_action :set_discovered_restaurant, only: %i[show update approve reject deep_dive_website deep_dive_status place_details refresh_place_details resync_to_restaurant]
 
     def index
       base_scope = DiscoveredRestaurant.all
@@ -84,7 +84,11 @@ module Admin
 
       changed = @discovered_restaurant.changed
       trackable = %w[name description establishment_types preferred_phone preferred_email address1 city state postcode country_code currency image_context image_style_profile]
-      manual_fields = changed & trackable
+      manual_fields = (changed & trackable).reject { |f|
+        old_val = @discovered_restaurant.attribute_was(f)
+        new_val = @discovered_restaurant.read_attribute(f)
+        old_val.blank? && new_val.blank?
+      }
       if manual_fields.any?
         meta = @discovered_restaurant.metadata.is_a?(Hash) ? @discovered_restaurant.metadata : {}
         fs = meta['field_sources'].is_a?(Hash) ? meta['field_sources'] : {}
@@ -172,6 +176,8 @@ module Admin
           discovered_restaurant_id: @discovered_restaurant.id,
           provisioning_user_id: current_user.id,
         )
+      elsif @discovered_restaurant.restaurant.present?
+        @discovered_restaurant.restaurant.update!(preview_enabled: true, preview_published_at: Time.current)
       end
 
       redirect_back_or_to(admin_discovered_restaurants_path, notice: 'Approved', status: :see_other)
@@ -180,22 +186,6 @@ module Admin
     def reject
       @discovered_restaurant.update!(status: :rejected)
       redirect_back_or_to(admin_discovered_restaurants_path, notice: 'Rejected', status: :see_other)
-    end
-
-    def blacklist
-      @discovered_restaurant.update!(status: :blacklisted)
-      redirect_back_or_to(admin_discovered_restaurants_path, notice: 'Blacklisted', status: :see_other)
-    end
-
-    def publish_preview
-      restaurant = @discovered_restaurant.restaurant
-      if restaurant
-        restaurant.update!(preview_enabled: true, preview_published_at: Time.current)
-        redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), notice: 'Preview published', status: :see_other)
-        return
-      end
-
-      redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), alert: 'No restaurant provisioned yet', status: :see_other)
     end
 
     def deep_dive_website
@@ -262,6 +252,7 @@ module Admin
           'types' => Array(details[:types]),
           'address_components' => Array(details[:address_components]),
           'location' => details[:location],
+          'opening_hours' => details[:opening_hours],
           'fetched_at' => Time.current.iso8601,
         }.compact
 
@@ -273,6 +264,19 @@ module Admin
       redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), notice: 'Google Places data refreshed', status: :see_other)
     rescue StandardError => e
       redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), alert: "Google Places refresh failed: #{e.message}", status: :see_other)
+    end
+
+    def approved_imports
+      scope = DiscoveredRestaurant
+        .where(status: :approved)
+        .includes(:restaurant, menu_sources: { latest_file_attachment: :blob })
+        .order(updated_at: :desc)
+
+      city = params[:city].to_s.strip
+      scope = scope.where('city_name ILIKE ?', "%#{city}%") if city.present?
+
+      @city = city
+      @approved = scope.limit(200)
     end
 
     def resync_to_restaurant

@@ -24,6 +24,7 @@ class DiscoveredRestaurant < ApplicationRecord
   has_many :menu_sources, dependent: :destroy
   belongs_to :restaurant, optional: true
 
+  before_validation :infer_currency_from_country
   before_validation :normalize_establishment_types
   after_commit :enqueue_restaurant_sync_if_needed, on: %i[create update]
 
@@ -99,6 +100,15 @@ class DiscoveredRestaurant < ApplicationRecord
     return unless changed_keys.intersect?(SYNC_TO_RESTAURANT_FIELDS)
 
     SyncDiscoveredRestaurantToRestaurantJob.perform_later(discovered_restaurant_id: id)
+  end
+
+  def infer_currency_from_country
+    return if currency.present?
+
+    inferred = CountryCurrencyInference.new.infer(effective_country_code)
+    self.currency = inferred if inferred.present?
+  rescue StandardError
+    nil
   end
 
   def normalize_establishment_types

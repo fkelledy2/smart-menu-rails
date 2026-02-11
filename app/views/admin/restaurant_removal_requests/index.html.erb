@@ -1,0 +1,67 @@
+<div class="container-fluid py-3">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h4 mb-0">Removal Requests</h1>
+    <div class="d-flex gap-2">
+      <% %w[received actioned_unpublished resolved].each do |s| %>
+        <%= link_to s.humanize, admin_restaurant_removal_requests_path(status: s),
+            class: "btn btn-sm #{@status == s ? 'btn-primary' : 'btn-outline-secondary'}" %>
+      <% end %>
+      <%= link_to 'All', admin_restaurant_removal_requests_path,
+          class: "btn btn-sm #{@status.blank? ? 'btn-primary' : 'btn-outline-secondary'}" %>
+    </div>
+  </div>
+
+  <% if @removal_requests.empty? %>
+    <div class="alert alert-info">No removal requests found.</div>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Restaurant</th>
+            <th>Email</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Submitted</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @removal_requests.each do |rr| %>
+            <tr>
+              <td><%= rr.id %></td>
+              <td><%= rr.restaurant.name %></td>
+              <td><%= rr.requested_by_email %></td>
+              <td class="text-truncate" style="max-width: 250px;" title="<%= rr.reason %>"><%= rr.reason %></td>
+              <td>
+                <% badge_class = case rr.status
+                  when 'received' then 'bg-warning text-dark'
+                  when 'actioned_unpublished' then 'bg-info'
+                  when 'resolved' then 'bg-success'
+                  else 'bg-secondary'
+                end %>
+                <span class="badge <%= badge_class %>"><%= rr.status.humanize %></span>
+              </td>
+              <td><%= rr.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <%= link_to 'View', admin_restaurant_removal_request_path(rr), class: 'btn btn-sm btn-outline-primary' %>
+                  <% if rr.received? %>
+                    <%= button_to 'Unpublish', action_unpublish_admin_restaurant_removal_request_path(rr),
+                        method: :patch, class: 'btn btn-sm btn-danger',
+                        data: { turbo_confirm: 'Unpublish this restaurant preview?' } %>
+                  <% end %>
+                  <% if !rr.resolved? %>
+                    <%= button_to 'Resolve', resolve_admin_restaurant_removal_request_path(rr),
+                        method: :patch, class: 'btn btn-sm btn-success' %>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,70 @@
+<div class="container-fluid py-3">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h4 mb-0">Claim Requests</h1>
+    <div class="d-flex gap-2">
+      <% %w[started soft_verified approved rejected].each do |s| %>
+        <%= link_to s.humanize, admin_restaurant_claim_requests_path(status: s),
+            class: "btn btn-sm #{@status == s ? 'btn-primary' : 'btn-outline-secondary'}" %>
+      <% end %>
+      <%= link_to 'All', admin_restaurant_claim_requests_path,
+          class: "btn btn-sm #{@status.blank? ? 'btn-primary' : 'btn-outline-secondary'}" %>
+    </div>
+  </div>
+
+  <% if @claim_requests.empty? %>
+    <div class="alert alert-info">No claim requests found.</div>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Restaurant</th>
+            <th>Claimant</th>
+            <th>Method</th>
+            <th>Status</th>
+            <th>Submitted</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @claim_requests.each do |cr| %>
+            <tr>
+              <td><%= cr.id %></td>
+              <td><%= cr.restaurant.name %></td>
+              <td>
+                <div><%= cr.claimant_name %></div>
+                <div class="text-muted small"><%= cr.claimant_email %></div>
+              </td>
+              <td><%= cr.verification_method.humanize %></td>
+              <td>
+                <% badge_class = case cr.status
+                  when 'started' then 'bg-warning text-dark'
+                  when 'soft_verified' then 'bg-info'
+                  when 'approved' then 'bg-success'
+                  when 'rejected' then 'bg-secondary'
+                  else 'bg-warning text-dark'
+                end %>
+                <span class="badge <%= badge_class %>"><%= cr.status.humanize %></span>
+              </td>
+              <td><%= cr.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <%= link_to 'View', admin_restaurant_claim_request_path(cr), class: 'btn btn-sm btn-outline-primary' %>
+                  <% if cr.started? || cr.soft_verified? %>
+                    <%= button_to 'Approve', approve_admin_restaurant_claim_request_path(cr),
+                        method: :patch, class: 'btn btn-sm btn-success',
+                        data: { turbo_confirm: 'Approve this claim?' } %>
+                    <%= button_to 'Reject', reject_admin_restaurant_claim_request_path(cr),
+                        method: :patch, class: 'btn btn-sm btn-danger',
+                        data: { turbo_confirm: 'Reject this claim?' } %>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

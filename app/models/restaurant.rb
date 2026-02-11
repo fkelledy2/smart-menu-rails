@@ -40,6 +40,8 @@ class Restaurant < ApplicationRecord
   has_many :sizes, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
   has_many :ocr_menu_imports, -> { reorder(created_at: :desc, id: :desc) }, dependent: :destroy, counter_cache: :ocr_menu_imports_count
   has_one :discovered_restaurant
+  has_many :restaurant_removal_requests, dependent: :destroy
+  has_many :restaurant_claim_requests, dependent: :destroy
 
   # IdentityCache configuration
   cache_index :id
@@ -69,7 +71,7 @@ class Restaurant < ApplicationRecord
   end
 
   def publish_allowed?
-    restaurant_subscription&.active_or_trialing_with_payment_method?
+    user&.super_admin? || restaurant_subscription&.active_or_trialing_with_payment_method?
   end
 
   enum :status, {
@@ -90,6 +92,11 @@ class Restaurant < ApplicationRecord
     claimed: 2,
     verified: 3,
   }
+
+  enum :provisioned_by, {
+    provisioned_by_owner: 0,
+    provisioned_by_system: 1,
+  }, prefix: :provisioned
 
   def spotifyAuthUrl
     "/auth/spotify?restaurant_id=#{id}"

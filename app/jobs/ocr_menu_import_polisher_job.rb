@@ -10,6 +10,8 @@ class OcrMenuImportPolisherJob
     import = OcrMenuImport.includes(ocr_menu_sections: [:ocr_menu_items]).find_by(id: ocr_menu_import_id)
     return unless import
 
+    normalize_only = import.normalize_only?
+
     restaurant = import.restaurant
     target_locale = restaurant_default_locale(restaurant)
     target_language = locale_to_language(target_locale)
@@ -33,22 +35,26 @@ class OcrMenuImportPolisherJob
         end
 
         if texts_equal?(item.name, item.description)
-          begin
-            gen = generate_description_via_llm(
-              item_name: item.name,
-              section_name: section_name,
-              section_description: section_description,
-              language: target_language,
-            )
-            item.description = gen if gen.present?
-          rescue StandardError => e
-            Rails.logger.warn("[OcrMenuImportPolisherJob] LLM description failed for item ##{item.id}: #{e.class}: #{e.message}")
+          # AI guardrail: only generate new descriptions in full_enrich mode
+          unless normalize_only
+            begin
+              gen = generate_description_via_llm(
+                item_name: item.name,
+                section_name: section_name,
+                section_description: section_description,
+                language: target_language,
+              )
+              item.description = gen if gen.present?
+            rescue StandardError => e
+              Rails.logger.warn("[OcrMenuImportPolisherJob] LLM description failed for item ##{item.id}: #{e.class}: #{e.message}")
+            end
           end
         end
 
         item.description = normalize_sentence(item.description)
 
-        if item.respond_to?(:image_prompt) && item.image_prompt.to_s.strip == ''
+        # AI guardrail: only generate image prompts in full_enrich mode
+        if !normalize_only && item.respond_to?(:image_prompt) && item.image_prompt.to_s.strip == ''
           begin
             img_prompt = generate_image_prompt_via_llm(
               item_name: item.name,

@@ -41,18 +41,18 @@ Rails.application.routes.draw do
     resources :discovered_restaurants, only: %i[index show update] do
       collection do
         patch :bulk_update
+        get :approved_imports
       end
       member do
         patch :approve
         patch :reject
-        patch :blacklist
-        patch :publish_preview
         post :deep_dive_website
         post :refresh_place_details
         post :resync_to_restaurant
         get :deep_dive_status
         get :place_details
       end
+      resources :menu_sources, only: %i[update], controller: 'menu_sources'
     end
 
     resources :menu_source_change_reviews, only: %i[index show] do
@@ -61,6 +61,22 @@ Rails.application.routes.draw do
         patch :ignore
       end
     end
+
+    resources :restaurant_removal_requests, only: %i[index show] do
+      member do
+        patch :action_unpublish
+        patch :resolve
+      end
+    end
+
+    resources :restaurant_claim_requests, only: %i[index show] do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
+
+    resources :crawl_source_rules
   end
   
   # ============================================================================
@@ -163,6 +179,18 @@ Rails.application.routes.draw do
   }
 
   resources :restaurants do
+    resources :removal_requests, controller: 'restaurant_removal_requests', only: %i[new create] do
+      collection do
+        get :submitted
+      end
+    end
+
+    resources :claim_requests, controller: 'restaurant_claim_requests', only: %i[new create] do
+      collection do
+        get :submitted
+      end
+    end
+
     collection do
       patch :bulk_update
       patch :reorder

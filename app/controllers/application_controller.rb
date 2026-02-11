@@ -209,6 +209,7 @@ class ApplicationController < ActionController::Base
 
   def user_has_active_subscription?(user)
     return false unless user
+    return true if user.super_admin?
 
     user.restaurants
       .includes(:restaurant_subscription)
@@ -234,7 +235,7 @@ class ApplicationController < ActionController::Base
     return unless current_user&.plan
 
     @restaurants = current_user_restaurants
-    if @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
+    if current_user.super_admin? || @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
       @canAddRestaurant = true
     end
   end

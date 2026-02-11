@@ -82,6 +82,7 @@ module GooglePlaces
     def discover_places_by_type!(city_place:, place_type:)
       details_client = GooglePlaces::PlaceDetails.new(api_key: config[:api_key])
       pdf_downloader = MenuDiscovery::PdfDownloader.new
+      robots_checker = MenuDiscovery::RobotsTxtChecker.new
 
       response = get('/textsearch/json', query: {
         query: "#{place_type} in #{city_place[:name]}",
@@ -103,6 +104,16 @@ module GooglePlaces
         website_url = details.is_a?(Hash) ? details[:website].to_s.presence : nil
         next if website_url.blank?
 
+        # Check domain blacklist before any crawling
+        if CrawlSourceRule.blacklisted?(website_url)
+          Rails.logger.info("[CityDiscovery] Skipping blacklisted domain: #{website_url}")
+          next
+        end
+
+        # Check robots.txt before crawling the website
+        crawl_evidence = robots_checker.evidence(website_url)
+        robots_allowed = crawl_evidence['robots_allowed'] != false
+
         DiscoveredRestaurant.find_or_initialize_by(google_place_id: place_id).tap do |dr|
           dr.city_name = city_place[:name]
           dr.city_place_id = city_place[:place_id]
@@ -115,6 +126,7 @@ module GooglePlaces
 
           dr.metadata = (dr.metadata || {})
             .merge('place_types' => Array(r['types']))
+            .merge('crawl_evidence' => crawl_evidence)
             .merge(
               'place_details' => {
                 'formatted_address' => details[:formatted_address],
@@ -123,9 +135,13 @@ module GooglePlaces
                 'types' => Array(details[:types]),
                 'address_components' => Array(details[:address_components]),
                 'location' => details[:location],
+                'opening_hours' => details[:opening_hours],
               }.compact,
             )
           dr.save!
+
+          # Skip website crawling if robots.txt blocks us
+          next unless robots_allowed
 
           begin
             finder = MenuDiscovery::WebsiteMenuFinder.new(base_url: website_url)

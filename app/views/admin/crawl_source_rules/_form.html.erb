@@ -1,0 +1,34 @@
+<%= form_with(model: [:admin, rule], local: true) do |f| %>
+  <% if rule.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% rule.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :domain, 'Domain', class: 'form-label' %>
+    <%= f.text_field :domain, class: 'form-control', placeholder: 'example.com', required: true %>
+    <div class="form-text">Enter the domain (e.g. deliveroo.ie, justeat.ie). URLs will be normalized to domains.</div>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :rule_type, 'Rule type', class: 'form-label' %>
+    <%= f.select :rule_type,
+          [['Blacklist — block crawling from this domain', 'blacklist'], ['Whitelist — always allow crawling from this domain', 'whitelist']],
+          {}, { class: 'form-select', required: true } %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :reason, 'Reason', class: 'form-label' %>
+    <%= f.text_area :reason, class: 'form-control', rows: 3, placeholder: 'Why this rule exists (e.g. delivery platform, aggregator, etc.)' %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary"><%= rule.persisted? ? 'Update Rule' : 'Create Rule' %></button>
+    <%= link_to 'Cancel', admin_crawl_source_rules_path, class: 'btn btn-outline-secondary' %>
+  </div>
+<% end %>

@@ -31,9 +31,10 @@ module MenuDiscovery
       /terms
     ].freeze
 
-    def initialize(base_url:, http_client: HTTParty)
+    def initialize(base_url:, http_client: HTTParty, robots_checker: nil)
       @base_url = normalize_url(base_url)
       @http_client = http_client
+      @robots_checker = robots_checker || RobotsTxtChecker.new(http_client: http_client)
 
       raise ArgumentError, 'base_url required' if @base_url.blank?
     end
@@ -65,6 +66,7 @@ module MenuDiscovery
       while queue.any? && visited.size < max
         url = queue.shift
         next if visited.include?(url)
+        next unless @robots_checker.allowed?(url)
 
         visited << url
 
@@ -148,7 +150,7 @@ module MenuDiscovery
 
     def noindex?(doc:)
       robots = doc.at_css('meta[name="robots"]')&.[]('content').to_s.downcase
-      return true if robots.include?('noindex')
+      return true if robots.include?('noindex') || robots.include?('nosnippet')
 
       false
     end

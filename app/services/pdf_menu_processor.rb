@@ -223,28 +223,35 @@ class PdfMenuProcessor
       Rails.logger.info 'PdfMenuProcessor: No text extracted from PDF; returning empty menu structure'
       return { sections: [] }
     end
+
+    venue_context = build_venue_context
     prompt = <<~PROMPT
-      You are given the full text content of a restaurant menu, potentially with page breaks.\n\n
-      TASK:\n
-      1. Parse the menu into JSON with this exact schema:\n
-         {\n
-           "sections": [\n
-             {\n
-               "name": "<section name>",\n
-               "items": [\n
-                 {\n
-                   "name": "<item name>",\n
-                   "description": "<item description or empty>",\n
-                   "price": <numeric price or null>,\n
-                   "allergens": ["gluten", "dairy", ...]  // any allergens mentioned\n
-                 }\n
-               ]\n
-             }\n
-           ]\n
-         }\n\n
-      2. If something is unknown, use null or empty values.\n
-      3. Output only valid JSON. Do not include any commentary.\n\n
-      MENU TEXT:\n
+      You are given the full text content of a #{venue_context[:label]} menu, potentially with page breaks.
+
+      #{venue_context[:instructions]}
+
+      TASK:
+      1. Parse the menu into JSON with this exact schema:
+         {
+           "sections": [
+             {
+               "name": "<section name>",
+               "items": [
+                 {
+                   "name": "<item name>",
+                   "description": "<item description or empty>",
+                   "price": <numeric price or null>,
+                   "allergens": ["gluten", "dairy", ...]  // any allergens mentioned
+                 }
+               ]
+             }
+           ]
+         }
+
+      2. If something is unknown, use null or empty values.
+      3. Output only valid JSON. Do not include any commentary.
+
+      MENU TEXT:
       #{text}
     PROMPT
 
@@ -396,7 +403,7 @@ class PdfMenuProcessor
           name: section_data[:name],
           description: section_data[:description],
           sequence: section_index + 1,
-          is_confirmed: false,
+          is_confirmed: true,
         )
 
         Array(section_data[:items]).each_with_index do |item_data, item_index|
@@ -410,7 +417,7 @@ class PdfMenuProcessor
             is_gluten_free: item_data[:is_gluten_free] || false,
             is_dairy_free: item_data[:is_dairy_free] || false,
             sequence: item_index + 1,
-            is_confirmed: false,
+            is_confirmed: true,
           )
 
           items_processed += 1
@@ -422,6 +429,73 @@ class PdfMenuProcessor
         @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu', 'sections_total' => sections_total, 'sections_processed' => (section_index + 1), 'items_total' => items_total, 'items_processed' => items_processed))
       end
     end
+  end
+
+  def build_venue_context
+    types = Array(@restaurant.try(:establishment_types)).map(&:to_s).compact_blank
+
+    is_wine_bar = types.include?('wine_bar')
+    is_whiskey_bar = types.include?('whiskey_bar')
+    is_bar = types.include?('bar')
+    is_restaurant = types.include?('restaurant') || types.empty?
+
+    labels = []
+    instructions_parts = []
+
+    if is_wine_bar
+      labels << 'wine bar'
+      instructions_parts << <<~WINE.strip
+        WINE LIST GUIDANCE:
+        - Group wines by region, grape variety, or style as shown in the source.
+        - For each wine, include the full wine name (producer + cuvée if available).
+        - Include vintage year, grape/blend, and region/appellation in the description.
+        - If both glass and bottle prices are listed, create separate items: "<Wine Name> (Glass)" and "<Wine Name> (Bottle)".
+        - Use sections like "Red Wines", "White Wines", "Sparkling", "Rosé", "Dessert Wines" if the menu groups them this way.
+      WINE
+    end
+
+    if is_whiskey_bar
+      labels << 'whiskey/spirits bar'
+      instructions_parts << <<~WHISKEY.strip
+        SPIRITS/WHISKEY MENU GUIDANCE:
+        - Group spirits by type or origin (e.g. "Scotch", "Irish Whiskey", "Bourbon", "Japanese Whisky").
+        - Include distillery/brand name as the item name.
+        - Include age statement, ABV, region/distillery, and tasting notes in the description where available.
+        - If multiple pour sizes are listed (e.g. 25ml, 50ml), create separate items or note both in description.
+      WHISKEY
+    end
+
+    if is_bar && !is_wine_bar && !is_whiskey_bar
+      labels << 'bar'
+      instructions_parts << <<~BAR.strip
+        BAR/COCKTAIL MENU GUIDANCE:
+        - Group cocktails by style (e.g. "Signature Cocktails", "Classic Cocktails", "Mocktails").
+        - Include the base spirit and key ingredients in the description.
+        - For beer/draught lists, include brewery, style, and ABV in the description.
+        - If both draught and bottle prices exist, note this in the description or create separate items.
+      BAR
+    end
+
+    if is_restaurant
+      labels << 'restaurant'
+      instructions_parts << <<~REST.strip
+        RESTAURANT MENU GUIDANCE:
+        - Group items by course or category (e.g. "Starters", "Mains", "Desserts", "Sides").
+        - Include a concise description of each dish.
+        - Extract allergens where mentioned.
+      REST
+    end
+
+    label = labels.uniq.join(' / ')
+    label = 'restaurant' if label.blank?
+
+    instructions = if instructions_parts.any?
+                     instructions_parts.join("\n\n")
+                   else
+                     'Parse the menu items into structured sections with items, descriptions, and prices.'
+                   end
+
+    { label: label, instructions: instructions }
   end
 
   def normalize_allergen_source_text(text)

@@ -1,0 +1,46 @@
+<div class="container py-5" style="max-width: 600px;">
+  <h1 class="h3 mb-2">Claim This Restaurant</h1>
+  <p class="text-muted mb-4">
+    If you are the owner or manager of <strong><%= @restaurant.name %></strong>, submit this form to claim it.
+    Once verified, you'll be able to manage and publish the official menu.
+  </p>
+
+  <%= form_with(model: [@restaurant, @claim_request], url: restaurant_claim_requests_path(@restaurant), local: true, html: { class: 'needs-validation', novalidate: true }) do |f| %>
+    <% if @claim_request.errors.any? %>
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          <% @claim_request.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= f.label :claimant_name, 'Your name', class: 'form-label' %>
+      <%= f.text_field :claimant_name, class: 'form-control', placeholder: 'Jane Smith' %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :claimant_email, 'Your email address', class: 'form-label' %>
+      <%= f.email_field :claimant_email, class: 'form-control', required: true, placeholder: 'you@restaurant-domain.com' %>
+      <div class="form-text">Preferably an email on the restaurant's domain for faster verification.</div>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :verification_method, 'How can we verify you?', class: 'form-label' %>
+      <%= f.select :verification_method,
+            [['Email on restaurant domain', 'email_domain'], ['DNS TXT record', 'dns_txt'], ['Google Business Profile', 'gmb'], ['Upload proof document', 'manual_upload']],
+            {}, { class: 'form-select', required: true } %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :evidence, 'Additional details / evidence', class: 'form-label' %>
+      <%= f.text_area :evidence, class: 'form-control', rows: 4, placeholder: 'Provide any details that help us verify your ownership (e.g. your role, link to Google Business Profile, etc.)' %>
+    </div>
+
+    <div class="d-grid">
+      <button type="submit" class="btn btn-primary">Submit Claim Request</button>
+    </div>
+  <% end %>
+</div>

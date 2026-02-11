@@ -238,14 +238,14 @@
         <% if menu.active? %>
           <%= hidden_field_tag 'menu[status]', 'inactive' %>
           <%= hidden_field_tag :status, 'inactive' %>
-          <button type="submit" class="quick-action-btn quick-action-btn-secondary" data-testid="menu-status-toggle-btn">
+          <button type="submit" class="quick-action-btn quick-action-btn-secondary menu-status-pill menu-status-pill--active" data-testid="menu-status-toggle-btn">
             <i class="bi bi-toggle2-off"></i>
             <span><%= t('.active') %></span>
           </button>
         <% else %>
           <%= hidden_field_tag 'menu[status]', 'active' %>
           <%= hidden_field_tag :status, 'active' %>
-          <button type="submit" class="quick-action-btn" data-testid="menu-status-toggle-btn">
+          <button type="submit" class="quick-action-btn menu-status-pill menu-status-pill--inactive" data-testid="menu-status-toggle-btn">
             <i class="bi bi-toggle2-on"></i>
             <span><%= t('.inactive') %></span>
           </button>
@@ -411,5 +411,15 @@
   .quick-actions-grid .quick-action-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .menu-status-pill.menu-status-pill--active {
+    background: #d9f7e1;
+    border-color: rgba(25, 135, 84, 0.25);
+  }
+
+  .menu-status-pill.menu-status-pill--inactive {
+    background: #ffd9e1;
+    border-color: rgba(220, 53, 69, 0.25);
   }
 </style>

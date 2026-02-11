@@ -18,6 +18,10 @@ class MenuSource < ApplicationRecord
   has_one_attached :latest_file
   has_many :menu_source_change_reviews, dependent: :destroy
 
+  def display_name
+    self[:name].presence || derived_menu_name
+  end
+
   def derived_menu_name
     raw = if latest_file.attached?
             latest_file.filename.to_s

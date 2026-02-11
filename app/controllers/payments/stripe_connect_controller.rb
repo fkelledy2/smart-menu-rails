@@ -46,6 +46,25 @@ class Payments::StripeConnectController < ApplicationController
   def return
     authorize @restaurant, :update?
 
+    # Check if Stripe account is fully onboarded and enable ordering/payments
+    begin
+      provider_account = ProviderAccount.find_by(restaurant: @restaurant, provider: :stripe)
+      if provider_account.present?
+        acct = Stripe::Account.retrieve(provider_account.provider_account_id)
+        if acct.charges_enabled && acct.payouts_enabled
+          provider_account.update!(status: :active, payouts_enabled: true)
+          @restaurant.update!(payments_enabled: true, ordering_enabled: true)
+
+          # Upgrade claim_status if restaurant was soft_claimed
+          if @restaurant.soft_claimed?
+            @restaurant.update!(claim_status: :claimed)
+          end
+        end
+      end
+    rescue StandardError => e
+      Rails.logger.warn("[StripeConnect] return: account check failed for restaurant_id=#{@restaurant.id}: #{e.class}: #{e.message}")
+    end
+
     redirect_to edit_restaurant_path(@restaurant, section: 'settings')
   end
 

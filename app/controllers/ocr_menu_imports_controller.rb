@@ -211,7 +211,7 @@ class OcrMenuImportsController < ApplicationController
     end
 
     import = @restaurant.ocr_menu_imports.new(
-      name: menu_source.derived_menu_name,
+      name: menu_source.display_name,
       source_locale: '',
     )
     import.pdf_file.attach(menu_source.latest_file.blob)
@@ -233,6 +233,11 @@ class OcrMenuImportsController < ApplicationController
   def create
     @ocr_menu_import = @restaurant.ocr_menu_imports.new(ocr_menu_import_params)
     @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency)
+
+    # AI guardrail: auto-set ai_mode based on restaurant claim status
+    if @ocr_menu_import.ai_mode.blank? || !@ocr_menu_import.ai_mode_changed?
+      @ocr_menu_import.ai_mode = @restaurant.unclaimed? ? :normalize_only : :full_enrich
+    end
 
     if @ocr_menu_import.save
       if @ocr_menu_import.pdf_file.attached?
@@ -290,9 +295,15 @@ class OcrMenuImportsController < ApplicationController
 
   # POST /restaurants/:restaurant_id/ocr_menu_imports/:id/confirm_import
   def confirm_import
-    unless @ocr_menu_import.completed? && @ocr_menu_import.ocr_menu_sections.confirmed.any?
+    unless @ocr_menu_import.completed?
       return redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
                          alert: t('ocr_menu_imports.controller.confirm_section')
+    end
+
+    # Auto-confirm all sections/items if none are confirmed yet (backwards compat)
+    if @ocr_menu_import.ocr_menu_sections.confirmed.none? && @ocr_menu_import.ocr_menu_sections.any?
+      @ocr_menu_import.ocr_menu_sections.update_all(is_confirmed: true)
+      @ocr_menu_import.ocr_menu_sections.each { |s| s.ocr_menu_items.update_all(is_confirmed: true) }
     end
 
     begin

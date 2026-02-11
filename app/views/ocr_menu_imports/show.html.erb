@@ -70,42 +70,41 @@
     </div>
   </div>
 
-  <!-- Progress Slider -->
-  <%
-    # Calculate progress percentage based on status
-    progress_percent = if @ocr_menu_import.completed?
-                        100
-                      elsif @ocr_menu_import.processing?
-                        @ocr_menu_import.progress || 50
-                      elsif @ocr_menu_import.pending?
-                        25
-                      else
-                        0
-                      end
-  %>
-  <div class="card mb-2">
-    <div class="card-body py-4">
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <span class="text-muted small">0%</span>
-        <span class="fw-bold" data-menu-import-target="overallPercent"><%= progress_percent %>%</span>
-        <span class="text-muted small">100%</span>
-      </div>
-      <div class="progress-slider-container">
-        <input type="range"
-               class="progress-slider"
-               min="0"
-               max="100"
-               value="<%= progress_percent %>"
-               autocomplete="off"
-               disabled
-               data-menu-import-target="overallSlider"
-               style="width: 100%;">
-        <div class="progress-slider-track">
-          <div class="progress-slider-fill" data-menu-import-target="overallFill" style="width: <%= progress_percent %>%;"></div>
+  <% unless @ocr_menu_import.completed? %>
+    <!-- Progress Slider -->
+    <%
+      progress_percent = if @ocr_menu_import.processing?
+                          @ocr_menu_import.progress || 50
+                        elsif @ocr_menu_import.pending?
+                          25
+                        else
+                          0
+                        end
+    %>
+    <div class="card mb-2">
+      <div class="card-body py-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="text-muted small">0%</span>
+          <span class="fw-bold" data-menu-import-target="overallPercent"><%= progress_percent %>%</span>
+          <span class="text-muted small">100%</span>
+        </div>
+        <div class="progress-slider-container">
+          <input type="range"
+                 class="progress-slider"
+                 min="0"
+                 max="100"
+                 value="<%= progress_percent %>"
+                 autocomplete="off"
+                 disabled
+                 data-menu-import-target="overallSlider"
+                 style="width: 100%;">
+          <div class="progress-slider-track">
+            <div class="progress-slider-fill" data-menu-import-target="overallFill" style="width: <%= progress_percent %>%;"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  <% end %>
 
   <div class="card mb-4">
     <div class="card-header">
@@ -193,9 +192,9 @@
               <div class="mb-3 mb-md-0">
                 <h2 class="h4 mb-1"><%= t('.imported_menu_title') %></h2>
               </div>
-              <div class="w-100 w-md-auto">
+              <div class="w-100">
                 <button type="button"
-                        class="btn btn-danger btn-lg w-100 w-md-auto publish-btn"
+                        class="btn btn-danger btn-lg w-100 publish-btn"
                         data-bs-toggle="modal"
                         data-bs-target="#confirmModal">
                   <i class="bi bi-check-circle me-1" aria-hidden="true"></i> <%= t('.publish') %>
@@ -246,7 +245,7 @@
                                  role="button"
                                  data-bs-toggle="collapse"
                                  data-bs-target="#section-<%= section.id %>-items"
-                                 aria-expanded="false"
+                                 aria-expanded="true"
                                  aria-controls="section-<%= section.id %>-items">
                               <div class="flex-grow-1 d-flex align-items-center gap-2">
                                 <h3 class="h5 mb-0"><%= section.name %></h3>
@@ -263,7 +262,7 @@
                               <div class="py-2 px-3 text-muted"><%= t('.click_to_add_description') %></div>
                             <% end %>
 
-                            <div class="collapse" id="section-<%= section.id %>-items" data-menu-section-target="content">
+                            <div class="collapse show" id="section-<%= section.id %>-items" data-menu-section-target="content">
                               <div class="card-body">
                                 <div class="vstack gap-3">
                                   <% section.ocr_menu_items.ordered.each do |item| %>

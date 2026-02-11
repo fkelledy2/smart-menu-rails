@@ -1,0 +1,103 @@
+<div class="container-fluid py-3">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h4 mb-0">Approved Imports</h1>
+    <div class="d-flex gap-2">
+      <%= form_with url: approved_imports_admin_discovered_restaurants_path, method: :get, local: true, class: 'd-flex gap-2' do %>
+        <%= text_field_tag :city, @city, class: 'form-control form-control-sm', placeholder: 'Filter city…', style: 'width: 160px;' %>
+        <%= submit_tag 'Filter', class: 'btn btn-sm btn-primary' %>
+      <% end %>
+      <%= link_to 'Discovery Queue', admin_discovered_restaurants_path, class: 'btn btn-sm btn-outline-secondary' %>
+    </div>
+  </div>
+
+  <% if @approved.empty? %>
+    <div class="alert alert-info">No approved imports yet.</div>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th>Restaurant</th>
+            <th>City</th>
+            <th>Menu PDFs</th>
+            <th>Provisioned?</th>
+            <th>Preview</th>
+            <th>Claim Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @approved.each do |dr| %>
+            <% restaurant = dr.restaurant %>
+            <tr>
+              <td>
+                <div class="fw-semibold"><%= link_to dr.name, admin_discovered_restaurant_path(dr), class: 'text-decoration-none' %></div>
+                <% if dr.website_url.present? %>
+                  <div class="text-muted small text-truncate" style="max-width: 250px;" title="<%= dr.website_url %>"><%= dr.website_url %></div>
+                <% end %>
+              </td>
+              <td><%= dr.city_name %></td>
+              <td>
+                <% pdf_count = dr.menu_sources.select { |ms| ms.source_type.to_s == 'pdf' }.count %>
+                <span class="badge <%= pdf_count > 0 ? 'bg-success' : 'bg-secondary' %>"><%= pdf_count %></span>
+              </td>
+              <td>
+                <% if restaurant.present? %>
+                  <span class="badge bg-success"><i class="bi bi-check me-1"></i>Yes (ID: <%= restaurant.id %>)</span>
+                <% else %>
+                  <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Pending</span>
+                <% end %>
+              </td>
+              <td>
+                <% if restaurant.present? %>
+                  <% if restaurant.preview_published? %>
+                    <span class="badge bg-success">Published</span>
+                    <% if restaurant.preview_indexable? %>
+                      <span class="badge bg-info">Indexable</span>
+                    <% else %>
+                      <span class="badge bg-secondary">noindex</span>
+                    <% end %>
+                  <% elsif restaurant.preview_enabled? %>
+                    <span class="badge bg-warning text-dark">Enabled (not published)</span>
+                  <% else %>
+                    <span class="badge bg-secondary">Not published</span>
+                  <% end %>
+                <% else %>
+                  <span class="text-muted">—</span>
+                <% end %>
+              </td>
+              <td>
+                <% if restaurant.present? %>
+                  <% cs = restaurant.claim_status.to_s %>
+                  <% badge = case cs
+                    when 'unclaimed' then 'bg-secondary'
+                    when 'soft_claimed' then 'bg-info'
+                    when 'claimed' then 'bg-primary'
+                    when 'verified' then 'bg-success'
+                    else 'bg-secondary'
+                  end %>
+                  <span class="badge <%= badge %>"><%= cs.humanize %></span>
+                <% else %>
+                  <span class="text-muted">—</span>
+                <% end %>
+              </td>
+              <td>
+                <div class="d-flex gap-1 flex-wrap">
+                  <% if restaurant.present? %>
+                    <% smartmenu = restaurant.smartmenus.first %>
+                    <% if smartmenu.present? %>
+                      <%= link_to 'Preview', smartmenu_path(smartmenu.slug), class: 'btn btn-sm btn-outline-primary', target: '_blank' %>
+                    <% end %>
+                    <%= link_to 'Edit', edit_restaurant_path(restaurant), class: 'btn btn-sm btn-outline-secondary' %>
+                  <% else %>
+                    <span class="text-muted small">Awaiting provisioning</span>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

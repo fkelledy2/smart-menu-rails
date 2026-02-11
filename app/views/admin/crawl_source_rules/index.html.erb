@@ -1,0 +1,58 @@
+<div class="container-fluid py-3">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h4 mb-0">Source Rules</h1>
+    <div class="d-flex gap-2">
+      <%= link_to 'Blacklist', admin_crawl_source_rules_path(rule_type: 'blacklist'),
+          class: "btn btn-sm #{@rule_type == 'blacklist' ? 'btn-danger' : 'btn-outline-danger'}" %>
+      <%= link_to 'Whitelist', admin_crawl_source_rules_path(rule_type: 'whitelist'),
+          class: "btn btn-sm #{@rule_type == 'whitelist' ? 'btn-success' : 'btn-outline-success'}" %>
+      <%= link_to 'All', admin_crawl_source_rules_path,
+          class: "btn btn-sm #{@rule_type.blank? ? 'btn-primary' : 'btn-outline-secondary'}" %>
+      <%= link_to 'New Rule', new_admin_crawl_source_rule_path, class: 'btn btn-sm btn-primary' %>
+    </div>
+  </div>
+
+  <% if @rules.empty? %>
+    <div class="alert alert-info">No source rules configured yet.</div>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>Type</th>
+            <th>Reason</th>
+            <th>Created By</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @rules.each do |rule| %>
+            <tr>
+              <td><code><%= rule.domain %></code></td>
+              <td>
+                <% if rule.blacklist? %>
+                  <span class="badge bg-danger">Blacklist</span>
+                <% else %>
+                  <span class="badge bg-success">Whitelist</span>
+                <% end %>
+              </td>
+              <td class="text-muted small"><%= truncate(rule.reason.to_s, length: 80) %></td>
+              <td class="text-muted small"><%= rule.created_by_user&.email || '—' %></td>
+              <td class="text-muted small"><%= rule.created_at.strftime('%Y-%m-%d') %></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <%= link_to 'Edit', edit_admin_crawl_source_rule_path(rule), class: 'btn btn-sm btn-outline-primary' %>
+                  <%= button_to 'Delete', admin_crawl_source_rule_path(rule),
+                      method: :delete, class: 'btn btn-sm btn-outline-danger',
+                      data: { turbo_confirm: "Delete #{rule.rule_type} rule for #{rule.domain}?" } %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

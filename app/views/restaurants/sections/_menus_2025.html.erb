@@ -29,7 +29,7 @@
     .where(menus: { archived: false })
     .where(status: RestaurantMenu.statuses[:active])
     .count
-  can_add_menu = menus_limit == -1 || (menus_limit.to_i > 0 && active_menus_count < menus_limit.to_i)
+  can_add_menu = restaurant.user&.super_admin? || menus_limit == -1 || (menus_limit.to_i > 0 && active_menus_count < menus_limit.to_i)
   disabled_menu_action_message = if menus_limit.present? && menus_limit.to_i > 0
     "Your plan allows up to #{menus_limit} active menu#{menus_limit.to_i == 1 ? '' : 's'} per restaurant. Archive or deactivate a menu to add another."
   else
@@ -51,17 +51,17 @@
 
 <div id="restaurant-menus-section"></div>
 <div class="mb-3 p-3" data-testid="menus-quick-actions">
-  <div class="quick-actions-grid">
+  <div>
     <% if can_add_menu %>
       <%= link_to edit_restaurant_path(restaurant, section: 'import'),
-          class: 'quick-action-btn',
+          class: 'quick-action-btn w-100',
           data: { testid: 'import-menu-btn', turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
         <i class="bi bi-file-earmark-arrow-up"></i>
         <span><%= t('.import_menu') %></span>
       <% end %>
     <% else %>
       <%= link_to '#',
-          class: 'quick-action-btn disabled',
+          class: 'quick-action-btn disabled w-100',
           title: disabled_menu_action_message,
           aria: { disabled: true },
           data: { controller: 'disabled-action', action: 'click->disabled-action#explain', disabled_action_title_value: 'Menu limit reached', disabled_action_message_value: disabled_menu_action_message, testid: 'import-menu-btn', turbo: false } do %>

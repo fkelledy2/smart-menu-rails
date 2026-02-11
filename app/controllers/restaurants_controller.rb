@@ -671,7 +671,7 @@ class RestaurantsController < ApplicationController
     @restaurant.status ||= :inactive
     authorize @restaurant
 
-    if current_user&.plan && current_user.plan.locations != -1
+    if current_user&.plan && current_user.plan.locations != -1 && !current_user.super_admin?
       active_count = current_user.restaurants.where(archived: false, status: :active).count
       if active_count >= current_user.plan.locations
         @restaurant.errors.add(:base, 'Plan limit reached: maximum active restaurants')
@@ -1086,7 +1086,7 @@ class RestaurantsController < ApplicationController
                      Menu.where(restaurant: @restaurant, status: 'active', archived: false).count
                    end
 
-      @canAddMenu = @menuCount < current_user.plan.menusperlocation || current_user.plan.menusperlocation == -1
+      @canAddMenu = current_user.super_admin? || @menuCount < current_user.plan.menusperlocation || current_user.plan.menusperlocation == -1
     end
   rescue ActiveRecord::RecordNotFound => e
     Rails.logger.warn "[RestaurantsController] Restaurant not found for id=#{id_param} or does not belong to current_user: #{e.message}"

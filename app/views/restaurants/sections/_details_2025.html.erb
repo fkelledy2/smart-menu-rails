@@ -4,7 +4,6 @@
 %>
 
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
-
 <!-- Quick Actions Card -->
 <div id="restaurant-details-section"></div>
 <div class="mb-3 p-3<%= ' is-disabled' if restaurant.onboarding_quick_actions_blocked? %>">
@@ -19,23 +18,14 @@
     </div>
   </div>
 
-  <div class="quick-actions-grid">
-    <%= link_to edit_restaurant_path(restaurant, section: 'import'),
-        class: 'quick-action-btn',
-        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' },
-        aria: { disabled: restaurant.onboarding_quick_actions_blocked? },
-        tabindex: (restaurant.onboarding_quick_actions_blocked? ? -1 : nil) do %>
-      <i class="bi bi-file-earmark-arrow-up"></i>
-      <span><%= t('.import_menu') %></span>
-    <% end %>
-
+  <div>
     <!-- Status Toggle Quick Action -->
     <%= form_with model: restaurant,
           url: restaurant_path(restaurant),
           method: :patch,
           local: true,
           data: { turbo: false },
-          html: { class: 'd-inline' } do |f| %>
+          html: { class: 'd-block' } do |f| %>
       <%= hidden_field_tag :return_to, 'restaurant_edit' %>
       <% owner_has_subscription = user_has_active_subscription?(restaurant.user) %>
       <% disabled_by_subscription = !owner_has_subscription %>
@@ -44,7 +34,7 @@
         <%= hidden_field_tag 'restaurant[status]', 'inactive' %>
         <%= hidden_field_tag :status, 'inactive' %>
         <button type="submit"
-                class="quick-action-btn quick-action-btn-secondary restaurant-status-pill restaurant-status-pill--active"
+                class="quick-action-btn quick-action-btn-secondary restaurant-status-pill restaurant-status-pill--active w-100"
                 data-testid="restaurant-status-toggle-btn"
                 <%= 'disabled' if disabled_by_subscription || restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>
                 <%= "title=\"#{subscription_disabled_message}\"" if disabled_by_subscription %>>
@@ -55,7 +45,7 @@
         <%= hidden_field_tag 'restaurant[status]', 'active' %>
         <%= hidden_field_tag :status, 'active' %>
         <button type="submit"
-                class="quick-action-btn restaurant-status-pill restaurant-status-pill--inactive"
+                class="quick-action-btn restaurant-status-pill restaurant-status-pill--inactive w-100"
                 data-testid="restaurant-status-toggle-btn"
                 <%= 'disabled' if disabled_by_subscription || restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>
                 <%= "title=\"#{subscription_disabled_message}\"" if disabled_by_subscription %>>

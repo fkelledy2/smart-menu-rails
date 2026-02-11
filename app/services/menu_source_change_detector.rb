@@ -84,7 +84,7 @@ class MenuSourceChangeDetector
   def create_review!(previous_fingerprint:, new_fingerprint:, previous_etag:, new_etag:, previous_last_modified:, new_last_modified:)
     return if menu_source.menu_source_change_reviews.pending.exists?
 
-    menu_source.menu_source_change_reviews.create!(
+    review = menu_source.menu_source_change_reviews.create!(
       status: :pending,
       detected_at: Time.current,
       previous_fingerprint: previous_fingerprint,
@@ -94,5 +94,7 @@ class MenuSourceChangeDetector
       previous_last_modified: previous_last_modified,
       new_last_modified: new_last_modified,
     )
+
+    MenuDiffJob.perform_later(review_id: review.id)
   end
 end

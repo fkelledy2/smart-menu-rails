@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_11_142805) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_11_194831) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -123,6 +123,18 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_142805) do
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_contacts_on_created_at"
     t.index ["email"], name: "index_contacts_on_email"
+  end
+
+  create_table "crawl_source_rules", force: :cascade do |t|
+    t.string "domain", null: false
+    t.integer "rule_type", default: 0, null: false
+    t.text "reason"
+    t.bigint "created_by_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_user_id"], name: "index_crawl_source_rules_on_created_by_user_id"
+    t.index ["domain"], name: "index_crawl_source_rules_on_domain", unique: true
+    t.index ["rule_type"], name: "index_crawl_source_rules_on_rule_type"
   end
 
   create_table "discovered_restaurants", force: :cascade do |t|
@@ -397,6 +409,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_142805) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "diff_content"
+    t.integer "diff_status", default: 0, null: false
     t.index ["detected_at"], name: "index_menu_source_change_reviews_on_detected_at"
     t.index ["menu_source_id", "status"], name: "index_menu_source_change_reviews_on_menu_source_id_and_status"
     t.index ["menu_source_id"], name: "index_menu_source_change_reviews_on_menu_source_id"
@@ -414,6 +428,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_142805) do
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
     t.index ["discovered_restaurant_id", "status"], name: "index_menu_sources_on_discovered_restaurant_id_and_status"
     t.index ["discovered_restaurant_id"], name: "index_menu_sources_on_discovered_restaurant_id"
     t.index ["restaurant_id", "status"], name: "index_menu_sources_on_restaurant_id_and_status"
@@ -716,6 +731,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_142805) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "source_locale"
+    t.integer "ai_mode", default: 0, null: false
     t.index ["menu_id"], name: "index_ocr_menu_imports_on_menu_id"
     t.index ["restaurant_id", "status", "created_at"], name: "index_ocr_imports_on_restaurant_status_created"
     t.index ["restaurant_id", "status"], name: "index_ocr_menu_imports_on_restaurant_and_status"
@@ -1214,6 +1230,25 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_142805) do
     t.index ["user_id"], name: "index_resource_locks_on_user_id"
   end
 
+  create_table "restaurant_claim_requests", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.bigint "initiated_by_user_id"
+    t.integer "status", default: 0, null: false
+    t.integer "verification_method", default: 0, null: false
+    t.string "claimant_email", null: false
+    t.string "claimant_name"
+    t.text "evidence"
+    t.text "review_notes"
+    t.datetime "verified_at"
+    t.bigint "reviewed_by_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["initiated_by_user_id"], name: "index_restaurant_claim_requests_on_initiated_by_user_id"
+    t.index ["restaurant_id", "status"], name: "index_restaurant_claim_requests_on_restaurant_id_and_status"
+    t.index ["restaurant_id"], name: "index_restaurant_claim_requests_on_restaurant_id"
+    t.index ["reviewed_by_user_id"], name: "index_restaurant_claim_requests_on_reviewed_by_user_id"
+  end
+
   create_table "restaurant_menus", force: :cascade do |t|
     t.bigint "restaurant_id", null: false
     t.bigint "menu_id", null: false
@@ -1240,6 +1275,22 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_142805) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["restaurant_id"], name: "index_restaurant_onboardings_on_restaurant_id"
+  end
+
+  create_table "restaurant_removal_requests", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.string "requested_by_email", null: false
+    t.integer "source", default: 0, null: false
+    t.integer "status", default: 0, null: false
+    t.text "reason"
+    t.text "admin_notes"
+    t.datetime "actioned_at"
+    t.bigint "actioned_by_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actioned_by_user_id"], name: "index_restaurant_removal_requests_on_actioned_by_user_id"
+    t.index ["restaurant_id", "status"], name: "index_restaurant_removal_requests_on_restaurant_id_and_status"
+    t.index ["restaurant_id"], name: "index_restaurant_removal_requests_on_restaurant_id"
   end
 
   create_table "restaurant_subscriptions", force: :cascade do |t|
@@ -1336,6 +1387,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_142805) do
     t.datetime "preview_published_at"
     t.boolean "preview_indexable", default: false, null: false
     t.string "establishment_types", default: [], null: false, array: true
+    t.integer "provisioned_by", default: 0
+    t.string "source_url"
+    t.boolean "ordering_enabled", default: false, null: false
+    t.boolean "payments_enabled", default: false, null: false
     t.index ["archived_by_id"], name: "index_restaurants_on_archived_by_id"
     t.index ["claim_status"], name: "index_restaurants_on_claim_status"
     t.index ["employees_count"], name: "index_restaurants_on_employees_count"
@@ -1563,6 +1618,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_142805) do
   add_foreign_key "allergyns", "restaurants"
   add_foreign_key "beverage_pipeline_runs", "menus"
   add_foreign_key "beverage_pipeline_runs", "restaurants"
+  add_foreign_key "crawl_source_rules", "users", column: "created_by_user_id"
   add_foreign_key "discovered_restaurants", "restaurants"
   add_foreign_key "employees", "restaurants"
   add_foreign_key "employees", "users"
@@ -1651,10 +1707,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_142805) do
   add_foreign_key "provider_accounts", "restaurants"
   add_foreign_key "push_subscriptions", "users"
   add_foreign_key "resource_locks", "users"
+  add_foreign_key "restaurant_claim_requests", "restaurants"
+  add_foreign_key "restaurant_claim_requests", "users", column: "initiated_by_user_id"
+  add_foreign_key "restaurant_claim_requests", "users", column: "reviewed_by_user_id"
   add_foreign_key "restaurant_menus", "menus"
   add_foreign_key "restaurant_menus", "restaurants"
   add_foreign_key "restaurant_menus", "users", column: "archived_by_id"
   add_foreign_key "restaurant_onboardings", "restaurants"
+  add_foreign_key "restaurant_removal_requests", "restaurants"
+  add_foreign_key "restaurant_removal_requests", "users", column: "actioned_by_user_id"
   add_foreign_key "restaurant_subscriptions", "restaurants"
   add_foreign_key "restaurantavailabilities", "restaurants"
   add_foreign_key "restaurantlocales", "restaurants"

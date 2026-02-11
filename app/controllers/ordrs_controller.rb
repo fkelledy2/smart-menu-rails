@@ -43,6 +43,7 @@ end
 
 class OrdrsController < ApplicationController
   include CachePerformanceMonitoring
+  include OrderingGate
 
   before_action :authenticate_user!, except: %i[show create update] # Allow customers to create/update orders
   skip_before_action :verify_authenticity_token, only: %i[ack_alcohol]
@@ -316,6 +317,8 @@ class OrdrsController < ApplicationController
 
   # POST /ordrs or /ordrs.json
   def create
+    return unless ensure_ordering_enabled!(@restaurant)
+
     # Ensure restaurant_id is set from nested route
     restaurant_id = @restaurant&.id || ordr_params[:restaurant_id]
     @ordr = Ordr.new(ordr_params.merge(

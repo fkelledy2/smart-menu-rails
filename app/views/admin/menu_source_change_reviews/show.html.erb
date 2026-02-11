@@ -33,4 +33,31 @@
     <div><strong>Previous Last-Modified:</strong> <%= @review.previous_last_modified %></div>
     <div><strong>New Last-Modified:</strong> <%= @review.new_last_modified %></div>
   </div>
+
+  <div class="mt-4">
+    <div class="d-flex align-items-center gap-2 mb-2">
+      <h4 class="mb-0">Menu Diff</h4>
+      <% case @review.diff_status.to_s
+         when 'diff_complete' %>
+        <span class="badge bg-success">Complete</span>
+      <% when 'diff_failed' %>
+        <span class="badge bg-danger">Failed</span>
+      <% else %>
+        <span class="badge bg-warning text-dark">Pending</span>
+      <% end %>
+    </div>
+
+    <% if @review.diff_content.present? %>
+      <pre class="bg-dark text-light p-3 rounded" style="max-height: 600px; overflow-y: auto; font-size: 0.85rem; line-height: 1.4;"><% @review.diff_content.each_line do |line| %><% stripped = line.rstrip %><% if stripped.start_with?('+ ') %><span style="color: #98c379;"><%= stripped %>
+</span><% elsif stripped.start_with?('- ') %><span style="color: #e06c75;"><%= stripped %>
+</span><% elsif stripped.start_with?('ADDED') || stripped.start_with?('REMOVED') %><span style="color: #e5c07b; font-weight: bold;"><%= stripped %>
+</span><% elsif stripped.start_with?('---') || stripped.start_with?('+++') %><span style="color: #61afef;"><%= stripped %>
+</span><% else %><%= stripped %>
+<% end %><% end %></pre>
+    <% elsif @review.diff_pending? %>
+      <div class="alert alert-info">Diff is being generated…</div>
+    <% else %>
+      <div class="text-muted">No diff content available.</div>
+    <% end %>
+  </div>
 </div>

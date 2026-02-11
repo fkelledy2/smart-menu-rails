@@ -27,6 +27,8 @@ class EnforceRestaurantMenuPlanLimitJob < ApplicationJob
 
   def enforce_for_restaurant(restaurant)
     user = restaurant.user
+    return if user&.super_admin?
+
     plan = user&.plan
     return unless plan
 

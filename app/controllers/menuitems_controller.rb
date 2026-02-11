@@ -333,7 +333,7 @@ class MenuitemsController < ApplicationController
 
     plan = current_user&.plan
     items_limit = plan&.itemspermenu
-    if items_limit.present? && items_limit != -1
+    if items_limit.present? && items_limit != -1 && !current_user&.super_admin?
       context_menu = @menuitem.menusection&.menu
       if context_menu
         existing_count = Menuitem.joins(:menusection)
