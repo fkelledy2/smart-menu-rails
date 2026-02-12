@@ -51,6 +51,29 @@ class OcrMenuImportPolisherJob
 
         item.description = normalize_sentence(item.description)
 
+        # Alcohol detection (heuristic — runs in all modes)
+        begin
+          det = AlcoholDetectionService.detect(
+            section_name: section_name,
+            item_name: item.name.to_s,
+            item_description: [item.description.to_s, section_description.to_s].compact_blank.join('. '),
+          )
+          if det && det[:decided]
+            meta = item.metadata.is_a?(Hash) ? item.metadata.dup : {}
+            existing_override = meta['alcohol_override'].to_s
+            if existing_override.blank? || existing_override == 'undecided'
+              meta['alcohol_override'] = det[:alcoholic] ? 'alcoholic' : 'non_alcoholic'
+              meta['alcohol_classification'] = det[:classification].to_s if det[:classification].present?
+              meta['alcohol_abv'] = det[:abv] if det[:abv].present?
+              meta['alcohol_detection_note'] = det[:note]
+              meta['alcohol_detection_confidence'] = det[:confidence]
+              item.metadata = meta
+            end
+          end
+        rescue StandardError => e
+          Rails.logger.warn("[OcrMenuImportPolisherJob] Alcohol detection failed for item ##{item.id}: #{e.class}: #{e.message}")
+        end
+
         # AI guardrail: only generate image prompts in full_enrich mode
         if !normalize_only && item.respond_to?(:image_prompt) && item.image_prompt.to_s.strip == ''
           begin

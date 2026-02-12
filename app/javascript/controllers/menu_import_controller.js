@@ -36,6 +36,7 @@ export default class extends Controller {
     progressUrl: String,
     polishUrl: String,
     polishProgressUrl: String,
+    status: String,
   };
 
   connect() {
@@ -65,9 +66,8 @@ export default class extends Controller {
     if (!this.hasProgressUrlValue) return;
     if (this.progressTimer) return;
 
-    const statusBadge = document.querySelector('.card-header .badge');
-    const statusText = (statusBadge && statusBadge.textContent) ? statusBadge.textContent.toLowerCase() : '';
-    const shouldPoll = statusText.includes('processing') || statusText.includes('pending');
+    const currentStatus = (this.hasStatusValue ? this.statusValue : '').toLowerCase();
+    const shouldPoll = currentStatus === 'processing' || currentStatus === 'pending';
     if (!shouldPoll) return;
 
     const tick = async () => {

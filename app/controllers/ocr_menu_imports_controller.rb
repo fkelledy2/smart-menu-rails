@@ -7,10 +7,10 @@ class OcrMenuImportsController < ApplicationController
   skip_forgery_protection only: %i[reorder_sections reorder_items]
   before_action :set_restaurant
   before_action :set_ocr_menu_import,
-                only: %i[show edit update destroy process_pdf confirm_import reorder_sections reorder_items toggle_section_confirmation
+                only: %i[show edit update destroy process_pdf progress confirm_import reorder_sections reorder_items toggle_section_confirmation
                          toggle_all_confirmation polish polish_progress]
   before_action :authorize_import,
-                only: %i[show edit update destroy process_pdf confirm_import reorder_sections reorder_items toggle_section_confirmation
+                only: %i[show edit update destroy process_pdf progress confirm_import reorder_sections reorder_items toggle_section_confirmation
                          toggle_all_confirmation polish polish_progress]
 
   # GET /restaurants/:restaurant_id/ocr_menu_imports
@@ -63,8 +63,6 @@ class OcrMenuImportsController < ApplicationController
 
   # GET /restaurants/:restaurant_id/ocr_menu_imports/:id/progress
   def progress
-    authorize @ocr_menu_import
-
     meta = (@ocr_menu_import.metadata || {}).with_indifferent_access
     phase = meta[:phase].presence || (@ocr_menu_import.processing? ? 'processing' : @ocr_menu_import.status)
 

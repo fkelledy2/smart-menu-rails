@@ -499,6 +499,8 @@ export function initOCRMenuImportDnD() {
           ghostClass: 'dragging',
           forceFallback: true, // avoid native HTML5 drag interfering with collapse header
           fallbackOnBody: true,
+          filter: '.item-drag-handle, .item-row, .vstack',
+          preventOnFilter: false, // let filtered events propagate to item Sortable
           onChoose: (evt) => {
             console.log(
               '[OCR DnD][sections] onChoose index=',
@@ -605,17 +607,22 @@ export function initOCRMenuImportDnD() {
               } catch (_) {}
             },
             onFilter: (evt) => {},
-            onChoose: (evt) => {},
-            onStart: (evt) => {},
+            onChoose: (evt) => {
+              console.log('[OCR DnD][items] onChoose section=', sectionId, 'item=', evt.item?.dataset?.itemId);
+            },
+            onStart: (evt) => {
+              console.log('[OCR DnD][items] onStart section=', sectionId, 'item=', evt.item?.dataset?.itemId);
+            },
             onMove: (evt) => {},
             onUnchoose: (evt) => {},
             onEnd: () => {
               persistItems();
             },
           });
+          console.log('[OCR DnD][items] SortableJS initialized for section', sectionId, 'with', itemContainer.querySelectorAll('.item-row').length, 'items');
           return;
         } catch (e) {
-          console.warn('[OCR DnD][items] Sortable init failed, fallback', e);
+          console.warn('[OCR DnD][items] Sortable init failed for section', sectionId, ', fallback', e);
         }
       }
 

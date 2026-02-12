@@ -428,9 +428,43 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Override authorize to add monitoring
+  # Super admins bypass Pundit verification checks
+  def verify_authorized
+    return if current_user&.super_admin?
+
+    super
+  end
+
+  def verify_policy_scoped
+    return if current_user&.super_admin?
+
+    super
+  end
+
+  # Override authorize to add monitoring and super_admin bypass
   def authorize(record, query = nil)
     query ||= "#{action_name}?"
+
+    if current_user&.super_admin?
+      # Super admins bypass all policy checks
+      @_pundit_policy_authorized = true
+
+      AuthorizationMonitoringService.track_authorization_check(
+        current_user,
+        record,
+        query.to_s.delete('?'),
+        true,
+        {
+          controller: controller_name,
+          action: action_name,
+          request_ip: request.remote_ip,
+          user_agent: request.user_agent,
+          super_admin_bypass: true,
+        },
+      )
+
+      return record
+    end
 
     # Call Pundit's original authorize method to ensure proper tracking
     result = super

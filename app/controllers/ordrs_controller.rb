@@ -353,9 +353,13 @@ class OrdrsController < ApplicationController
         end
 
         if ordr_params[:status].to_i.zero?
-          update_tablesetting_status(@tablesetting, 0)
-          broadcast_partials(@ordr, @tablesetting, @ordrparticipant, false)
-          broadcast_state(@ordr, @tablesetting, @ordrparticipant)
+          update_tablesetting_status(@tablesetting, 0) if @tablesetting
+          begin
+            broadcast_partials(@ordr, @tablesetting, @ordrparticipant, false)
+            broadcast_state(@ordr, @tablesetting, @ordrparticipant)
+          rescue StandardError => e
+            Rails.logger.warn("[OrdrsController#create] broadcast failed (non-fatal): #{e.class}: #{e.message}")
+          end
         end
 
         respond_to do |format|
@@ -648,7 +652,7 @@ class OrdrsController < ApplicationController
         ] },
       ],
       tablesetting: [:restaurant],
-      restaurant: %i[restaurantlocales taxes allergyns],
+      restaurant: %i[restaurantlocales taxes allergyns alcohol_policy],
     ).find(ordr.id)
 
     menu = ordr.menu

@@ -242,23 +242,33 @@ export default class extends Controller {
       // If server-rendered spans are missing (e.g., initial load had no order), inject a minimal layout
       const hasGross = !!this.element.querySelector('#orderGross');
       if (!hasGross) {
-        const currency = totals?.currency?.symbol || '';
+        const currency = totals?.currency?.symbol || this.element.dataset.currencySymbol || '';
         const price = (n) => `${currency}${(typeof n === 'number' ? n : parseFloat(n || 0)).toFixed(2)}`;
         const row = (cols) => `<div class="row">${cols}</div>`;
         const col = (n, html) => `<div class="col-${n}">${html}</div>`;
+        const grossVal = (typeof totals.gross === 'number' ? totals.gross : parseFloat(totals.gross || 0)).toFixed(2);
         let html = '';
         // Provide a local currency symbol for tip handlers
-        html += `<span id="restaurantCurrency" style="display:none">${currency}</span>`;
+        html += `<span id="restaurantCurrency" style="display:none">${this.escape(currency)}</span>`;
         html += row(col(9, '<b>Nett</b>') + col(3, `<span class="float-end"><span id="orderNett">${price(totals.nett||0)}</span></span>`));
         if ((totals.service||0) > 0) html += row(col(9, '<b>Service</b>') + col(3, `<span class="float-end"><span id="orderService">${price(totals.service||0)}</span></span>`));
         if ((totals.tax||0) > 0) html += row(col(9, '<b>Tax</b>') + col(3, `<span class="float-end"><span id="orderTax">${price(totals.tax||0)}</span></span>`));
         html += row(col(9, '') + col(3, '<hr>'));
-        html += row(col(9, '<b>Total</b> <i>(excluding tip)</i>') + col(3, `<span class="float-end">${currency}<b><span id="orderGross">${(typeof totals.gross==='number'?totals.gross:parseFloat(totals.gross||0)).toFixed(2)}</span></b></span>`));
-        // Tip input (simple, without presets to avoid server data dependency)
-        html += row(col(12, `<div class="row"><p></p><div style="display:flex;justify-content:center;" class="col-12">
-          <input id="tipNumberField" style="width:120px" type="number" min="0.00" class="form-control float-end text-end" value="0.00">
-        </div></div>`));
-        html += row(col(9, '<b>Total</b> <i>(including tip)</i>') + col(3, `<span class="float-end"><b><span id="orderGrandTotal">${currency}${(typeof totals.gross==='number'?totals.gross:parseFloat(totals.gross||0)).toFixed(2)}</span></b></span>`));
+        html += row(col(9, '<b>Total</b> <i>(excluding tip)</i>') + col(3, `<span class="float-end">${currency}<b><span id="orderGross">${grossVal}</span></b></span>`));
+        // Tip presets + manual input
+        let tipPresets = [];
+        try { tipPresets = JSON.parse(this.element.dataset.tipPresets || '[]'); } catch (_) {}
+        let tipHtml = '<div class="row"><p></p><div class="col-12"><span class="float-end">';
+        tipHtml += '<div style="position:relative;left:15px" class="btn-toolbar btn-toolbar-sm mb-3" role="toolbar">';
+        tipHtml += '<div class="btn-group btn-group-sm mr-2" role="group">';
+        tipPresets.forEach(pct => {
+          tipHtml += `<button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset">${pct}</span>%</button>`;
+        });
+        tipHtml += `<input id="tipNumberField" style="width:80px" type="number" min="0.00" class="form-control float-end text-end" value="0.00">`;
+        tipHtml += '</div></div></span></div></div>';
+        html += tipHtml;
+        html += row(col(9, '') + col(3, '<hr>'));
+        html += row(col(9, '<b>Total</b> <i>(including tip)</i>') + col(3, `<span class="float-end"><b><span id="orderGrandTotal">${currency}${grossVal}</span></b></span>`));
         body.innerHTML = html;
       }
     } catch (e) {

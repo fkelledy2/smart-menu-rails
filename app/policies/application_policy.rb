@@ -9,14 +9,20 @@ class ApplicationPolicy
   end
 
   def index?
+    return true if super_admin?
+
     false
   end
 
   def show?
+    return true if super_admin?
+
     false
   end
 
   def create?
+    return true if super_admin?
+
     false
   end
 
@@ -25,6 +31,8 @@ class ApplicationPolicy
   end
 
   def update?
+    return true if super_admin?
+
     false
   end
 
@@ -33,7 +41,15 @@ class ApplicationPolicy
   end
 
   def destroy?
+    return true if super_admin?
+
     false
+  end
+
+  private
+
+  def super_admin?
+    user.respond_to?(:super_admin?) && user.super_admin?
   end
 
   class Scope
@@ -43,6 +59,8 @@ class ApplicationPolicy
     end
 
     def resolve
+      return scope.all if user.respond_to?(:super_admin?) && user.super_admin?
+
       raise NotImplementedError, "You must define #resolve in #{self.class}"
     end
 

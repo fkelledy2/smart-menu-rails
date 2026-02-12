@@ -6,6 +6,7 @@ module OrderingGate
   # Call this before allowing order creation or payment processing.
   # Returns true if ordering is allowed, or renders an error and returns false.
   def ensure_ordering_enabled!(restaurant)
+    return true if current_user&.super_admin?
     return true if restaurant.nil?
     return true if restaurant.ordering_enabled?
     return true unless restaurant.respond_to?(:claim_status)

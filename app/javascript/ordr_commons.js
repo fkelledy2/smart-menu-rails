@@ -768,6 +768,11 @@ export function initOrderBindings() {
             const inst = window.bootstrap.Modal.getInstance(modalEl) || window.bootstrap.Modal.getOrCreateInstance(modalEl);
             inst.hide();
           }
+          // Reload page to show the new order context
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.error('[StartOrder] Failed to create order:', err);
         })
         .finally(() => {
           btn.removeAttribute('disabled');

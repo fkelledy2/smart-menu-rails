@@ -381,7 +381,7 @@
       </div>
     </div>
 
-    <div class="modal fade" id="payOrderModal" tabindex="-1" aria-labelledby="payOrderModalLabel" data-controller="order-totals">
+    <div class="modal fade" id="payOrderModal" tabindex="-1" aria-labelledby="payOrderModalLabel" data-controller="order-totals" data-tip-presets="<%= restaurant.tips.sort_by(&:percentage).map(&:percentage).to_json %>" data-currency-symbol="<%= restaurantCurrency.symbol || '' %>">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
