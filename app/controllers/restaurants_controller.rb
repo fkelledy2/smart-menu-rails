@@ -5,7 +5,7 @@ class RestaurantsController < ApplicationController
   include CachePerformanceMonitoring
 
   before_action :authenticate_user!
-  before_action :set_restaurant, only: %i[show edit update destroy archive restore performance analytics user_activity update_hours update_alcohol_policy alcohol_status]
+  before_action :set_restaurant, only: %i[show edit update destroy archive restore performance analytics user_activity update_hours update_alcohol_policy alcohol_status publish_preview]
   before_action :set_currency, only: %i[show index]
   before_action :disable_turbo, only: [:edit]
 
@@ -66,6 +66,39 @@ class RestaurantsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to restaurants_url, notice: t('common.flash.restored', resource: t('activerecord.models.restaurant')) }
       format.json { render json: { success: true }, status: :accepted }
+    end
+  end
+
+  # PATCH /restaurants/:id/publish_preview
+  def publish_preview
+    authorize @restaurant
+    unless current_user&.super_admin?
+      redirect_to edit_restaurant_path(@restaurant), alert: 'Only super admins can publish previews.' and return
+    end
+
+    if params[:unpublish].present?
+      @restaurant.update!(preview_enabled: false)
+      redirect_to edit_restaurant_path(@restaurant), notice: 'Preview unpublished.'
+    else
+      ActiveRecord::Base.transaction do
+        @restaurant.update!(
+          preview_enabled: true,
+          preview_published_at: @restaurant.preview_published_at || Time.current,
+        )
+
+        # Ensure every active menu has at least one smartmenu (public link)
+        @restaurant.menus.where(status: 'active').find_each do |menu|
+          next if Smartmenu.exists?(restaurant_id: @restaurant.id, menu_id: menu.id, tablesetting_id: nil)
+
+          Smartmenu.create!(
+            restaurant: @restaurant,
+            menu: menu,
+            slug: SecureRandom.uuid,
+          )
+        end
+      end
+
+      redirect_to edit_restaurant_path(@restaurant), notice: 'Preview published for all menus.'
     end
   end
 

@@ -204,6 +204,7 @@ Rails.application.routes.draw do
       patch :restore
       patch 'update_hours', to: 'restaurants#update_hours'
       patch 'update_alcohol_policy', to: 'restaurants#update_alcohol_policy'
+      patch 'publish_preview', to: 'restaurants#publish_preview'
       get 'alcohol_status', to: 'restaurants#alcohol_status'
 
       get 'beverage_review_queue', to: 'beverage_review_queues#show'

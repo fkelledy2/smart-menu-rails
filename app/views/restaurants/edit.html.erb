@@ -10,6 +10,25 @@
     </div>
   </div>
 </div>
+<% if current_user&.super_admin? && @restaurant.respond_to?(:unclaimed?) && @restaurant.unclaimed? %>
+  <div class="alert alert-info d-flex align-items-center justify-content-between py-2 mb-2" role="alert">
+    <div>
+      <strong>Unclaimed restaurant</strong>
+      <% if @restaurant.preview_enabled? %>
+        — <span class="badge bg-success">Preview Live</span>
+        <small class="text-muted">since <%= @restaurant.preview_published_at&.strftime('%b %d, %Y') %></small>
+      <% else %>
+        — <span class="badge bg-secondary">Preview Off</span>
+      <% end %>
+    </div>
+    <%= button_to publish_preview_restaurant_path(@restaurant),
+          method: :patch,
+          class: "btn btn-warning btn-sm",
+          data: { turbo_confirm: "Publish preview for all active menus?" } do %>
+      <i class="bi bi-globe"></i> Publish Preview
+    <% end %>
+  </div>
+<% end %>
 <ul class="nav nav-tabs overflow-auto flex-nowrap restaurant-tabs-back" id="restaurantTabsBack" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link link-dark">

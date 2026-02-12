@@ -1,5 +1,5 @@
   <!-- Restaurant Name & Locale Selector -->
-  <% if !current_user && @restaurant&.respond_to?(:preview_published?) && @restaurant.preview_published? && @restaurant.unclaimed? %>
+  <% if !current_user && @restaurant&.respond_to?(:unclaimed?) && @restaurant.unclaimed? %>
     <div class="alert alert-warning mb-2" role="alert">
       <div><strong>This is an auto-generated preview</strong> based on publicly available information.</div>
       <div>

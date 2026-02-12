@@ -6,7 +6,8 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 <!-- Quick Actions Card -->
 <div id="restaurant-details-section"></div>
-<div class="mb-3 p-3<%= ' is-disabled' if restaurant.onboarding_quick_actions_blocked? %>">
+<% super_admin_unclaimed = current_user&.super_admin? && restaurant.respond_to?(:unclaimed?) && restaurant.unclaimed? %>
+<div class="mb-3 p-3<%= ' is-disabled' if restaurant.onboarding_quick_actions_blocked? && !super_admin_unclaimed %>">
   <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
     <h2 class="quick-actions-title mb-0">
       <i class="bi bi-lightning-charge"></i>
@@ -18,41 +19,72 @@
     </div>
   </div>
 
-  <div>
-    <!-- Status Toggle Quick Action -->
-    <%= form_with model: restaurant,
-          url: restaurant_path(restaurant),
-          method: :patch,
-          local: true,
-          data: { turbo: false },
-          html: { class: 'd-block' } do |f| %>
-      <%= hidden_field_tag :return_to, 'restaurant_edit' %>
-      <% owner_has_subscription = user_has_active_subscription?(restaurant.user) %>
-      <% disabled_by_subscription = !owner_has_subscription %>
-      <% subscription_disabled_message = 'You need an active subscription to activate a restaurant.' %>
-      <% if restaurant.respond_to?(:active?) ? restaurant.active? : (restaurant.status.to_s == 'active' || restaurant.status_before_type_cast.to_i == 1) %>
-        <%= hidden_field_tag 'restaurant[status]', 'inactive' %>
-        <%= hidden_field_tag :status, 'inactive' %>
-        <button type="submit"
-                class="quick-action-btn quick-action-btn-secondary restaurant-status-pill restaurant-status-pill--active w-100"
-                data-testid="restaurant-status-toggle-btn"
-                <%= 'disabled' if disabled_by_subscription || restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>
-                <%= "title=\"#{subscription_disabled_message}\"" if disabled_by_subscription %>>
-          <i class="bi bi-toggle2-off"></i>
-          <span><%= t('.active') %></span>
-        </button>
-      <% else %>
-        <%= hidden_field_tag 'restaurant[status]', 'active' %>
-        <%= hidden_field_tag :status, 'active' %>
-        <button type="submit"
-                class="quick-action-btn restaurant-status-pill restaurant-status-pill--inactive w-100"
-                data-testid="restaurant-status-toggle-btn"
-                <%= 'disabled' if disabled_by_subscription || restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none? %>
-                <%= "title=\"#{subscription_disabled_message}\"" if disabled_by_subscription %>>
-          <i class="bi bi-toggle2-on"></i>
-          <span><%= t('.inactive') %></span>
-        </button>
+  <div class="<%= 'row g-2' if super_admin_unclaimed %>">
+    <div class="<%= super_admin_unclaimed ? 'col-6' : '' %>">
+      <!-- Status Toggle Quick Action -->
+      <%= form_with model: restaurant,
+            url: restaurant_path(restaurant),
+            method: :patch,
+            local: true,
+            data: { turbo: false },
+            html: { class: 'd-block' } do |f| %>
+        <%= hidden_field_tag :return_to, 'restaurant_edit' %>
+        <% owner_has_subscription = user_has_active_subscription?(restaurant.user) %>
+        <% disabled_by_subscription = !owner_has_subscription && !super_admin_unclaimed %>
+        <% subscription_disabled_message = 'You need an active subscription to activate a restaurant.' %>
+        <% blocked = !super_admin_unclaimed && (disabled_by_subscription || restaurant.onboarding_quick_actions_blocked? || restaurant.menus.none?) %>
+        <% if restaurant.respond_to?(:active?) ? restaurant.active? : (restaurant.status.to_s == 'active' || restaurant.status_before_type_cast.to_i == 1) %>
+          <%= hidden_field_tag 'restaurant[status]', 'inactive' %>
+          <%= hidden_field_tag :status, 'inactive' %>
+          <button type="submit"
+                  class="quick-action-btn quick-action-btn-secondary restaurant-status-pill restaurant-status-pill--active w-100"
+                  data-testid="restaurant-status-toggle-btn"
+                  <%= 'disabled' if blocked %>
+                  <%= "title=\"#{subscription_disabled_message}\"" if disabled_by_subscription %>>
+            <i class="bi bi-toggle2-off"></i>
+            <span><%= t('.active') %></span>
+          </button>
+        <% else %>
+          <%= hidden_field_tag 'restaurant[status]', 'active' %>
+          <%= hidden_field_tag :status, 'active' %>
+          <button type="submit"
+                  class="quick-action-btn restaurant-status-pill restaurant-status-pill--inactive w-100"
+                  data-testid="restaurant-status-toggle-btn"
+                  <%= 'disabled' if blocked %>
+                  <%= "title=\"#{subscription_disabled_message}\"" if disabled_by_subscription %>>
+            <i class="bi bi-toggle2-on"></i>
+            <span><%= t('.inactive') %></span>
+          </button>
+        <% end %>
       <% end %>
+    </div>
+
+    <% if super_admin_unclaimed %>
+      <div class="col-6">
+        <!-- Preview Published Toggle (super_admin only) -->
+        <%= form_with url: publish_preview_restaurant_path(restaurant),
+              method: :patch,
+              local: true,
+              data: { turbo: false },
+              html: { class: 'd-block' } do %>
+          <% if restaurant.preview_enabled? %>
+            <%= hidden_field_tag :unpublish, 'true' %>
+            <button type="submit"
+                    class="quick-action-btn quick-action-btn-secondary restaurant-status-pill restaurant-status-pill--active w-100"
+                    data-testid="restaurant-preview-toggle-btn">
+              <i class="bi bi-toggle2-off"></i>
+              <span>Published</span>
+            </button>
+          <% else %>
+            <button type="submit"
+                    class="quick-action-btn restaurant-status-pill restaurant-status-pill--inactive w-100"
+                    data-testid="restaurant-preview-toggle-btn">
+              <i class="bi bi-toggle2-on"></i>
+              <span>Unpublished</span>
+            </button>
+          <% end %>
+        <% end %>
+      </div>
     <% end %>
   </div>
 </div>

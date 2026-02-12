@@ -54,7 +54,7 @@ class SmartmenusController < ApplicationController
       @needs_age_check = false
     end
 
-    @menuparticipant = Menuparticipant.find_or_create_by(sessionid: session.id.to_s) do |mp|
+    @menuparticipant = Menuparticipant.find_or_create_by(sessionid: safe_session_id) do |mp|
       mp.smartmenu = @smartmenu
     end
     @menuparticipant.update(smartmenu: @smartmenu) unless @menuparticipant.smartmenu == @smartmenu
@@ -124,7 +124,7 @@ class SmartmenusController < ApplicationController
           open_order: @openOrder,
           ordrparticipant: @ordrparticipant,
           menuparticipant: @menuparticipant,
-          session_id: session.id.to_s,
+          session_id: safe_session_id,
         )
 
         if @active_menu_version
@@ -338,7 +338,7 @@ class SmartmenusController < ApplicationController
       ordr: @openOrder,
       employee: @current_employee,
       role: :staff,
-      sessionid: session.id.to_s,
+      sessionid: safe_session_id,
     )
 
     return unless @ordrparticipant.persisted?
@@ -347,7 +347,7 @@ class SmartmenusController < ApplicationController
   end
 
   def maybe_sync_customer_preferred_locale
-    @menuparticipant = Menuparticipant.find_by(sessionid: session.id.to_s)
+    @menuparticipant = Menuparticipant.find_by(sessionid: safe_session_id)
     return unless @menuparticipant
     return if @ordrparticipant.preferredlocale == @menuparticipant.preferredlocale
 
@@ -371,7 +371,7 @@ class SmartmenusController < ApplicationController
     @ordrparticipant = Ordrparticipant.find_or_create_by!(
       ordr: @openOrder,
       role: :customer,
-      sessionid: session.id.to_s,
+      sessionid: safe_session_id,
     )
     maybe_sync_customer_preferred_locale
 
@@ -382,6 +382,11 @@ class SmartmenusController < ApplicationController
 
   def load_open_order_and_participant
     return unless @tablesetting
+
+    # Ensure a stable session identifier exists.
+    # Rails cookie store may return nil for session.id until after the response,
+    # so we maintain our own UUID in the session for reliable lookups.
+    session[:sid] ||= SecureRandom.uuid
 
     @openOrder = Ordr.where(
       menu_id: @menu.id,
@@ -445,6 +450,13 @@ class SmartmenusController < ApplicationController
     @menu.menusections.each do |section|
       section.association(:menuitems).target.select!(&:active?)
     end
+  end
+
+  # Stable session identifier — Rails cookie store may return nil for session.id
+  # until after the first response, so fall back to a UUID stored in session[:sid].
+  def safe_session_id
+    sid = session.id.to_s.presence || (session[:sid] ||= SecureRandom.uuid)
+    sid.to_s
   end
 
   # Only allow a list of trusted parameters through.
