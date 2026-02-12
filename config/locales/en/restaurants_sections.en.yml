@@ -101,6 +101,7 @@ en:
         description_help: A brief description that appears on your menu
         description_placeholder: Describe your restaurant, cuisine, and what makes
           it special...
+        establishment_types_help: Select one or more types that describe this venue.
         image_context_details: Image Context Details
         image_style_profile_help: Specify the style and presentation preferences for
           AI-generated menu item images
@@ -149,6 +150,9 @@ en:
         default_title: 'Import #%{id}'
         delete_import: Delete import
         delete_selected: Delete selected
+        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one
+          to start the AI extraction process.
+        discovered_menus_title: Discovered Menus
         info_text: Upload your PDF menu and our AI will automatically extract all
           items, sections, prices, and descriptions.
         info_title: AI-Powered Menu Import

@@ -36,6 +36,16 @@ pl:
       service_version: Wersja serwisowa
       title: Administracja pamięcią podręczną
       write_operation: Operacja zapisu
+    city_crawls:
+      new:
+        place_type_labels:
+          bar: Bar
+          restaurant: Restaurant
+          whiskey_bar: Whiskey bar
+          wine_bar: Wine bar
+        place_types_defaults_helper: Defaults will be used if none are selected.
+        place_types_label: Place types
+        title: Crawl a City
     dashboard:
       kpis:
         bounce_rate: Współczynnik odrzuceń

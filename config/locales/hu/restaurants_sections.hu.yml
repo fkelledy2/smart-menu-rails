@@ -105,6 +105,7 @@ hu:
         description_help: Rövid leírás, amely megjelenik a menüben
         description_placeholder: Írja le az éttermét, a konyháját és azt, hogy mi
           teszi különlegessé...
+        establishment_types_help: Select one or more types that describe this venue.
         image_context_details: Képi kontextus részletek
         image_style_profile_help: Az AI által generált menüpontok képeinek stílus-
           és megjelenítési beállításainak megadása
@@ -153,6 +154,8 @@ hu:
         default_title: 'Import #%{id}'
         delete_import: Import törlése
         delete_selected: Kijelölt törlése
+        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one to start the AI extraction process.
+        discovered_menus_title: Discovered Menus
         info_text: Töltse fel PDF-menüjét, és a mesterséges intelligencia automatikusan
           kivonja az összes elemet, részt, árat és leírást.
         info_title: AI-alapú menü importálása

@@ -99,6 +99,7 @@ en_US:
         currency_help: ''
         description_help: ''
         description_placeholder: ''
+        establishment_types_help: Select one or more types that describe this venue.
         image_context_details: ''
         image_style_profile_help: ''
         image_style_profile_placeholder: ''
@@ -144,6 +145,8 @@ en_US:
         default_title: ''
         delete_import: ''
         delete_selected: ''
+        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one to start the AI extraction process.
+        discovered_menus_title: Discovered Menus
         info_text: ''
         info_title: ''
         name_help: ''

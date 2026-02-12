@@ -106,6 +106,7 @@ es:
         description_help: Una breve descripción que aparece en su menú
         description_placeholder: Describa su restaurante, su cocina y lo que lo hace
           especial...
+        establishment_types_help: Select one or more types that describe this venue.
         image_context_details: Detalles del contexto de la imagen
         image_style_profile_help: Especifique las preferencias de estilo y presentación
           de las imágenes de los elementos de menú generadas por la IA.
@@ -155,6 +156,8 @@ es:
         default_title: 'Importar #%{id}'
         delete_import: Borrar importación
         delete_selected: Borrar seleccionados
+        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one to start the AI extraction process.
+        discovered_menus_title: Discovered Menus
         info_text: Cargue su menú en PDF y nuestra IA extraerá automáticamente todos
           los artículos, secciones, precios y descripciones.
         info_title: Importación de menús con IA
