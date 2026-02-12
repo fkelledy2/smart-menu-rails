@@ -143,6 +143,28 @@ module Admin
             )
           end
         end
+      when 'publish_preview'
+        scope.where.not(restaurant_id: nil).includes(:restaurant).find_each do |dr|
+          next unless dr.restaurant
+
+          dr.restaurant.update!(
+            preview_enabled: true,
+            preview_published_at: dr.restaurant.preview_published_at || Time.current,
+          )
+
+          # Create smartmenus for active menus that don't have one
+          dr.restaurant.menus.where(status: 'active').find_each do |menu|
+            next if Smartmenu.exists?(restaurant_id: dr.restaurant.id, menu_id: menu.id, tablesetting_id: nil)
+
+            Smartmenu.create!(restaurant: dr.restaurant, menu: menu, slug: SecureRandom.uuid)
+          end
+        end
+      when 'unpublish_preview'
+        scope.where.not(restaurant_id: nil).includes(:restaurant).find_each do |dr|
+          next unless dr.restaurant
+
+          dr.restaurant.update!(preview_enabled: false, preview_indexable: false)
+        end
       else
         redirect_to admin_discovered_restaurants_path, alert: 'Invalid bulk operation', status: :see_other
         return

@@ -120,6 +120,12 @@ export default class extends Controller {
     } else if (action === "blacklist") {
       if (this.hasOperationTarget) this.operationTarget.value = "set_status";
       if (this.hasValueTarget) this.valueTarget.value = "blacklisted";
+    } else if (action === "publish_preview") {
+      if (this.hasOperationTarget) this.operationTarget.value = "publish_preview";
+      if (this.hasValueTarget) this.valueTarget.value = "true";
+    } else if (action === "unpublish_preview") {
+      if (this.hasOperationTarget) this.operationTarget.value = "unpublish_preview";
+      if (this.hasValueTarget) this.valueTarget.value = "true";
     }
 
     const form = this.element.querySelector("form") || this.element.closest("form");

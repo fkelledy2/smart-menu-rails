@@ -77,7 +77,7 @@ class RestaurantsController < ApplicationController
     end
 
     if params[:unpublish].present?
-      @restaurant.update!(preview_enabled: false)
+      @restaurant.update!(preview_enabled: false, preview_indexable: false)
       redirect_to edit_restaurant_path(@restaurant), notice: 'Preview unpublished.'
     else
       ActiveRecord::Base.transaction do

@@ -19,9 +19,13 @@ class ApplicationController < ActionController::Base
   # Authorization monitoring
   rescue_from Pundit::NotAuthorizedError, with: :handle_authorization_failure
 
-  # Redirect to restaurants index after sign in
+  # Redirect to restaurants index after sign in (or back to claim flow if pending)
   def after_sign_in_path_for(resource)
-    restaurants_path
+    claim_redirect_or(restaurants_path)
+  end
+
+  def after_sign_up_path_for(resource)
+    claim_redirect_or(restaurants_path)
   end
 
   def impersonating_user?
@@ -484,5 +488,15 @@ class ApplicationController < ActionController::Base
     )
 
     result
+  end
+
+  # If the user arrived via a "Claim this restaurant" link, redirect back to the claim form
+  def claim_redirect_or(default_path)
+    restaurant_id = session.delete(:claim_restaurant_id)
+    if restaurant_id.present? && (restaurant = Restaurant.find_by(id: restaurant_id))
+      new_restaurant_claim_request_path(restaurant)
+    else
+      default_path
+    end
   end
 end

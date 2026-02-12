@@ -3,7 +3,7 @@ require 'application_system_test_case'
 class ClaimAndRemovalFlowTest < ApplicationSystemTestCase
   test 'public user can submit a removal request which unpublishes the preview' do
     admin = User.create!(
-      email: 'admin@mellow.menu',
+      email: "claim_removal_#{SecureRandom.hex(4)}@mellow.menu",
       password: 'password123',
       password_confirmation: 'password123',
       first_name: 'Admin',
@@ -23,9 +23,9 @@ class ClaimAndRemovalFlowTest < ApplicationSystemTestCase
     visit new_restaurant_removal_request_path(restaurant)
     assert_text 'Request Removal'
 
-    fill_in 'Email', with: 'owner@myrestaurant.com'
-    fill_in 'Reason', with: 'I am the owner and did not consent to this listing'
-    click_on 'Submit'
+    fill_in 'Your email address', with: 'owner@myrestaurant.com'
+    fill_in 'Reason for removal', with: 'I am the owner and did not consent to this listing'
+    click_on 'Submit Removal Request'
 
     assert_text 'removal request has been received'
 
@@ -36,7 +36,7 @@ class ClaimAndRemovalFlowTest < ApplicationSystemTestCase
 
   test 'public user can submit a claim request' do
     admin = User.create!(
-      email: 'admin@mellow.menu',
+      email: "claim_submit_#{SecureRandom.hex(4)}@mellow.menu",
       password: 'password123',
       password_confirmation: 'password123',
       first_name: 'Admin',
@@ -54,11 +54,12 @@ class ClaimAndRemovalFlowTest < ApplicationSystemTestCase
     )
 
     visit new_restaurant_claim_request_path(restaurant)
-    assert_text 'Claim'
+    assert_text 'Claim This Restaurant'
 
-    fill_in 'Email', with: 'owner@unclaimedplace.com'
-    fill_in 'Name', with: 'John Owner'
-    click_on 'Submit'
+    fill_in 'Your name', with: 'John Owner'
+    fill_in 'Your email address', with: 'owner@unclaimedplace.com'
+    select 'Email on restaurant domain', from: 'How can we verify you?'
+    click_on 'Submit Claim Request'
 
     assert_text 'claim request has been submitted'
 
@@ -70,13 +71,14 @@ class ClaimAndRemovalFlowTest < ApplicationSystemTestCase
 
   test 'admin can approve a claim request which soft-claims the restaurant' do
     admin = User.create!(
-      email: 'admin@mellow.menu',
+      email: "claim_approve_#{SecureRandom.hex(4)}@mellow.menu",
       password: 'password123',
       password_confirmation: 'password123',
       first_name: 'Admin',
       last_name: 'User',
+      admin: true,
+      super_admin: true,
     )
-    admin.update!(admin: true, super_admin: true)
 
     restaurant = Restaurant.create!(
       name: 'Pending Claim Restaurant',
@@ -98,6 +100,7 @@ class ClaimAndRemovalFlowTest < ApplicationSystemTestCase
     fill_testid('login-email-input', admin.email)
     fill_testid('login-password-input', 'password123')
     click_testid('login-submit-btn')
+    assert_no_text 'Welcome back'
 
     visit admin_restaurant_claim_requests_path
     assert_text 'Claim Requests'
@@ -106,7 +109,10 @@ class ClaimAndRemovalFlowTest < ApplicationSystemTestCase
     visit admin_restaurant_claim_request_path(cr)
     assert_text 'Pending Claim Restaurant'
 
-    click_on 'Approve'
+    accept_confirm do
+      click_on 'Approve Claim'
+    end
+    assert_text 'soft-claimed' # Wait for redirect
 
     cr.reload
     assert cr.approved?
@@ -118,13 +124,14 @@ class ClaimAndRemovalFlowTest < ApplicationSystemTestCase
 
   test 'admin can resolve a removal request' do
     admin = User.create!(
-      email: 'admin@mellow.menu',
+      email: "claim_resolve_#{SecureRandom.hex(4)}@mellow.menu",
       password: 'password123',
       password_confirmation: 'password123',
       first_name: 'Admin',
       last_name: 'User',
+      admin: true,
+      super_admin: true,
     )
-    admin.update!(admin: true, super_admin: true)
 
     restaurant = Restaurant.create!(
       name: 'Removed Restaurant',
@@ -148,6 +155,7 @@ class ClaimAndRemovalFlowTest < ApplicationSystemTestCase
     fill_testid('login-email-input', admin.email)
     fill_testid('login-password-input', 'password123')
     click_testid('login-submit-btn')
+    assert_no_text 'Welcome back'
 
     visit admin_restaurant_removal_requests_path
     assert_text 'Removal Requests'
@@ -156,7 +164,8 @@ class ClaimAndRemovalFlowTest < ApplicationSystemTestCase
     visit admin_restaurant_removal_request_path(rr)
     assert_text 'Removed Restaurant'
 
-    click_on 'Resolve'
+    click_on 'Mark as Resolved'
+    assert_text 'Resolved' # Wait for redirect
 
     rr.reload
     assert rr.resolved?

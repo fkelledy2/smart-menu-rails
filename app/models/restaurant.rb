@@ -20,6 +20,7 @@ class Restaurant < ApplicationRecord
     alcohol_policy.allowed_now?(now: now)
   end
 
+  has_many :smartmenus, dependent: :delete_all
   has_many :ordrs, -> { reorder(orderedAt: :desc, id: :desc) }, dependent: :delete_all, counter_cache: :ordrs_count
   has_many :ordr_station_tickets, dependent: :delete_all
   has_many :taxes, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all

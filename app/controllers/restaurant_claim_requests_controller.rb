@@ -8,6 +8,8 @@ class RestaurantClaimRequestsController < ApplicationController
 
   def new
     @claim_request = RestaurantClaimRequest.new
+    # Store for post-registration redirect
+    session[:claim_restaurant_id] = @restaurant.id
   end
 
   def create

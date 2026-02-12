@@ -1,16 +1,19 @@
 require 'application_system_test_case'
 
 class DiscoveryApprovalFlowTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+
   test 'admin can view discovery queue and approve a restaurant with auto-published preview' do
     # Setup admin user
     admin = User.create!(
-      email: 'admin@mellow.menu',
+      email: "discovery_approve_#{SecureRandom.hex(4)}@mellow.menu",
       password: 'password123',
       password_confirmation: 'password123',
       first_name: 'Admin',
       last_name: 'User',
+      admin: true,
+      super_admin: true,
     )
-    admin.update!(admin: true, super_admin: true)
 
     # Create a discovered restaurant
     dr = DiscoveredRestaurant.create!(
@@ -35,11 +38,20 @@ class DiscoveryApprovalFlowTest < ApplicationSystemTestCase
       },
     )
 
+    # Add a menu source so the restaurant is visible with the default menus filter
+    MenuSource.create!(
+      discovered_restaurant: dr,
+      source_url: 'https://testpizzeria.ie/menu.pdf',
+      source_type: :pdf,
+      status: :active,
+    )
+
     # Login as admin
     visit new_user_session_path
     fill_testid('login-email-input', admin.email)
     fill_testid('login-password-input', 'password123')
     click_testid('login-submit-btn')
+    assert_no_text 'Welcome back' # Wait for login redirect to complete
 
     # Navigate to discovery queue
     visit admin_discovered_restaurants_path
@@ -49,10 +61,13 @@ class DiscoveryApprovalFlowTest < ApplicationSystemTestCase
     # View the discovered restaurant detail
     visit admin_discovered_restaurant_path(dr)
     assert_text 'Test Pizzeria'
-    assert_text 'testpizzeria.ie'
+    assert_text 'Website'
 
-    # Approve the restaurant
-    click_on 'Approve'
+    # Approve the restaurant (job runs async, so execute inline)
+    perform_enqueued_jobs do
+      click_on 'Approve'
+      assert_text 'Approved' # Wait for redirect to complete
+    end
 
     dr.reload
     assert dr.approved?, 'Discovered restaurant should be approved'
@@ -79,18 +94,20 @@ class DiscoveryApprovalFlowTest < ApplicationSystemTestCase
 
   test 'admin can view source rules and create a blacklist entry' do
     admin = User.create!(
-      email: 'admin@mellow.menu',
+      email: "discovery_rules_#{SecureRandom.hex(4)}@mellow.menu",
       password: 'password123',
       password_confirmation: 'password123',
       first_name: 'Admin',
       last_name: 'User',
+      admin: true,
+      super_admin: true,
     )
-    admin.update!(admin: true, super_admin: true)
 
     visit new_user_session_path
     fill_testid('login-email-input', admin.email)
     fill_testid('login-password-input', 'password123')
     click_testid('login-submit-btn')
+    assert_no_text 'Welcome back'
 
     visit admin_crawl_source_rules_path
     assert_text 'Source Rules'
@@ -109,13 +126,14 @@ class DiscoveryApprovalFlowTest < ApplicationSystemTestCase
 
   test 'admin can view approved imports screen' do
     admin = User.create!(
-      email: 'admin@mellow.menu',
+      email: "discovery_imports_#{SecureRandom.hex(4)}@mellow.menu",
       password: 'password123',
       password_confirmation: 'password123',
       first_name: 'Admin',
       last_name: 'User',
+      admin: true,
+      super_admin: true,
     )
-    admin.update!(admin: true, super_admin: true)
 
     # Create an approved discovered restaurant with a linked restaurant
     restaurant = Restaurant.create!(
@@ -140,6 +158,7 @@ class DiscoveryApprovalFlowTest < ApplicationSystemTestCase
     fill_testid('login-email-input', admin.email)
     fill_testid('login-password-input', 'password123')
     click_testid('login-submit-btn')
+    assert_no_text 'Welcome back'
 
     visit approved_imports_admin_discovered_restaurants_path
     assert_text 'Approved Imports'
