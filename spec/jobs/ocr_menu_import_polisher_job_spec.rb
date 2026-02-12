@@ -5,7 +5,7 @@ RSpec.describe OcrMenuImportPolisherJob do
     restaurant = create(:restaurant)
     Restaurantlocale.create!(restaurant: restaurant, locale: 'IT', status: 'active', dfault: true)
 
-    import = create(:ocr_menu_import, :completed, restaurant: restaurant)
+    import = create(:ocr_menu_import, :completed, restaurant: restaurant, ai_mode: :full_enrich)
     section = create(:ocr_menu_section, ocr_menu_import: import, name: 'Bevande', description: 'Acqua e bibite')
     create(:ocr_menu_item, ocr_menu_section: section, name: 'Acqua', description: 'Acqua', image_prompt: nil)
 
