@@ -145,7 +145,8 @@ en_US:
         default_title: ''
         delete_import: ''
         delete_selected: ''
-        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one to start the AI extraction process.
+        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one
+          to start the AI extraction process.
         discovered_menus_title: Discovered Menus
         info_text: ''
         info_title: ''

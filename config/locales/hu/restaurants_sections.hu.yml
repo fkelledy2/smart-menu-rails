@@ -154,7 +154,8 @@ hu:
         default_title: 'Import #%{id}'
         delete_import: Import törlése
         delete_selected: Kijelölt törlése
-        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one to start the AI extraction process.
+        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one
+          to start the AI extraction process.
         discovered_menus_title: Discovered Menus
         info_text: Töltse fel PDF-menüjét, és a mesterséges intelligencia automatikusan
           kivonja az összes elemet, részt, árat és leírást.

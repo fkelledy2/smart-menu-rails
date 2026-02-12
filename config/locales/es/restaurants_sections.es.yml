@@ -156,7 +156,8 @@ es:
         default_title: 'Importar #%{id}'
         delete_import: Borrar importación
         delete_selected: Borrar seleccionados
-        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one to start the AI extraction process.
+        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one
+          to start the AI extraction process.
         discovered_menus_title: Discovered Menus
         info_text: Cargue su menú en PDF y nuestra IA extraerá automáticamente todos
           los artículos, secciones, precios y descripciones.

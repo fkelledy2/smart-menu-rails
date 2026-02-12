@@ -151,7 +151,8 @@ cs:
         default_title: 'Importovat #%{id}'
         delete_import: Odstranit import
         delete_selected: Odstranit vybrané
-        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one to start the AI extraction process.
+        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one
+          to start the AI extraction process.
         discovered_menus_title: Discovered Menus
         info_text: Nahrajte svůj jídelní lístek ve formátu PDF a naše umělá inteligence
           automaticky extrahuje všechny položky, oddíly, ceny a popisy.
