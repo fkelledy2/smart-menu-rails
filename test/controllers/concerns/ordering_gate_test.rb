@@ -5,7 +5,7 @@ class OrderingGateTest < ActiveSupport::TestCase
   class FakeController
     include OrderingGate
 
-    attr_accessor :format_html_called, :format_json_called
+    attr_accessor :format_html_called, :format_json_called, :current_user
 
     def respond_to
       yield(self)
