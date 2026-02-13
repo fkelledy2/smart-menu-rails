@@ -244,6 +244,20 @@ jobs:
     needs: [security, quality, test, performance]
     if: github.ref == 'refs/heads/main'
     
+    services:
+      postgres:
+        image: pgvector/pgvector:pg15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: smart_menu_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -254,7 +268,16 @@ jobs:
           ruby-version: ${{ env.RUBY_VERSION }}
           bundler-cache: true
 
+      - name: Set up database
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
+
       - name: Check for pending migrations
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
         run: |
           bundle exec rails db:migrate:status
 
