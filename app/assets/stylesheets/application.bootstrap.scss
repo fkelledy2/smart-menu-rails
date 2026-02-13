@@ -48,6 +48,11 @@
 @import 'components/ocr_2025';
 @import 'components/sidebar_2025';
 
+// Phase 1: Foundation (UI/UX Upgrade 2026)
+@import 'components/bottom_sheet';
+@import 'components/tab_bar';
+@import 'components/skeleton_frame';
+
 // Fix for dropdown button clickability issues
 .dropdown-toggle {
   position: relative;

@@ -121,32 +121,26 @@ This specification defines a **mobile-first, SaaS self-serve UI/UX upgrade** for
 
 ---
 
-## 3. Clarifying Questions
+## 3. Design Decisions (Confirmed 2026-02-13)
 
-Before finalising the implementation plan, I need your input on a few decisions:
+| # | Question | Decision |
+|---|---|---|
+| 1 | Onboarding approach | **Kill the wizard.** Use the restaurant edit go-live checklist as canonical onboarding. |
+| 2 | Customer smartmenu layout | **List-based** (Deliveroo/Uber Eats style) — denser, faster to scan on mobile. |
+| 3 | Cart/order UX | **Persistent bottom sheet** (mini-cart always visible, expandable). Replace modal-based order review. |
+| 4 | Stimulus mandate | **Yes.** All new interactive JS must be Stimulus controllers. |
+| 5 | ViewComponent | **Yes.** Adopt ViewComponent for reusable UI primitives (status badges, action menus, empty states). |
+| 6 | Inline menu item editing | **Yes, in scope.** Implement click-to-edit for item name/price in the menu management view. |
+| 7 | Dark mode | **Yes, in scope.** Implement as Phase 6 using `prefers-color-scheme` + manual toggle. |
+| 8 | Lighthouse CI | **Yes.** Add to GitHub Actions pipeline to gate smartmenu page performance. |
+| 9 | CSS framework | **Bootstrap 5 + custom SCSS.** No framework change; extend the existing design system. |
 
-### Design Direction
-1. **Component library** — The existing `uiuxoverhaul.md` decided to converge on Bootstrap. Do you want to stay with **Bootstrap 5 + custom SCSS** for this upgrade, or move to a component system like **ViewComponent** (Rails) for better testability and encapsulation?
+### Implications of These Decisions
 
-2. **Customer smartmenu look-and-feel** — Should the customer menu remain **card-based** (current), or would you prefer a **list-based** layout (like Deliveroo/Uber Eats) which is denser and faster to scan on mobile?
-
-3. **Ordering model on customer view** — Currently the order is modal-based. Would you prefer a **persistent bottom sheet** (mini-cart always visible at the bottom, expandable) like modern food ordering apps?
-
-### Scope & Priority
-4. **Onboarding wizard** — Given step 1 already redirects to the restaurant edit page (making steps 2-5 dead code), should we:
-   - **(a)** Fix the wizard to complete all 5 steps inline, OR
-   - **(b)** Officially kill the wizard and make the restaurant edit page's go-live checklist the canonical onboarding?
-
-5. **Inline menu item editing** — Is this a priority for this upgrade, or should we keep the current edit-on-separate-page pattern and focus on the customer-facing smartmenu performance?
-
-6. **Dark mode** — The `_variables.scss` has commented-out dark mode variables. Is dark mode in scope for this upgrade?
-
-### Technical
-7. **Stimulus adoption** — The codebase has some Stimulus controllers (`sidebar`, `go-live-progress`, `disabled-action`) but the AI modal and auto-save are vanilla JS. Should this upgrade mandate **Stimulus for all new interactive behavior**?
-
-8. **ViewComponent** — Would you like to adopt `ViewComponent` for reusable UI primitives (status badges, action menus, empty states), giving us unit-testable components?
-
-9. **Performance budget enforcement** — Should we add **Lighthouse CI** to the GitHub Actions pipeline to gate smartmenu page performance?
+- **Onboarding wizard (steps 2-5) becomes dead code** — will be removed in Phase 2. Step 1 (account details) remains as initial account setup, then redirects to restaurant edit with go-live checklist.
+- **ViewComponent gem** must be added to `Gemfile`.
+- **Customer smartmenu** will undergo a significant layout change from cards to list rows — this is the largest visual change.
+- **Dark mode** is deferred to Phase 6 but tokens should be defined in Phase 1 for forward compatibility.
 
 ---
 
@@ -312,63 +306,77 @@ Used in: Add-to-cart, form save, error states.
 
 ## 5. Flow-by-Flow Redesign
 
-### 5.1 Onboarding Flow
+### 5.1 Onboarding Flow — Kill Wizard, Enhance Go-Live Checklist
 
-#### Design: Mobile-First Single-Page Wizard
+> **Decision:** The 5-step onboarding wizard is dead code (step 1 already redirects to restaurant edit). Kill it. The restaurant edit page's **go-live checklist** becomes the canonical onboarding experience.
 
-Replace the current sidebar wizard with a **stepper-based single-column flow** that works identically on all screen sizes.
+#### Design: Streamlined Account Setup → Go-Live Checklist
 
 ```
-Mobile (375px):
-┌─────────────────────────────────┐
-│ ● ● ○ ○ ○  Step 2 of 5         │
-│ ───────────── 40%               │
-├─────────────────────────────────┤
-│                                 │
-│ Tell us about your restaurant   │
-│                                 │
-│ Restaurant Name ____________    │
-│ Type          [▾ Select]        │
-│ Cuisine       [▾ Select]        │
-│ City/Location ____________      │
-│                                 │
-│ [← Back]           [Continue →] │
-└─────────────────────────────────┘
+Step 1 (unchanged): Account Details (lightweight form)
+  ┌─────────────────────────────────┐
+  │ Welcome to mellow.menu!         │
+  │                                 │
+  │ Your Name _______________       │
+  │ Restaurant Name _________       │
+  │                                 │
+  │ [Get Started →]                 │
+  └─────────────────────────────────┘
+          │
+          ▼
+Step 2: Redirect → Restaurant Edit with Go-Live checklist expanded
+  ┌─────────────────────────────────┐
+  │ ✦ Go Live Checklist    2/9 [▸] │
+  │ ████░░░░░░░░░░░░░░░░   22%     │
+  │                                 │
+  │ ✓ Create account                │
+  │ ✓ Name your restaurant          │
+  │ → Add restaurant details        │  ← highlighted next step
+  │ ○ Set opening hours             │
+  │ ○ Create your first menu        │
+  │ ○ Add menu sections             │
+  │ ○ Add menu items                │
+  │ ○ Choose a plan                 │
+  │ ○ Activate restaurant           │
+  └─────────────────────────────────┘
 ```
 
 **Key changes:**
-- [ ] Remove the left sidebar layout; use a compact **horizontal stepper** (dots + progress bar) at the top.
-- [ ] Fix step 1 to NOT redirect to restaurant edit. Complete the full wizard flow.
-- [ ] Add "Skip for now" on optional steps (plan selection, menu creation).
-- [ ] After completion, redirect to restaurant edit with the go-live checklist open.
-- [ ] Extract inline styles to `_onboarding.scss`.
-- [ ] Add `data-testid` to every field and button.
-- [ ] Convert to Stimulus controller (`onboarding-wizard`) for step validation and transitions.
-- [ ] Localise the testimonial or remove it.
+- [ ] Simplify `OnboardingController` to only handle step 1 (account details + restaurant name).
+- [ ] After step 1, mark onboarding as `completed` and redirect to `edit_restaurant_path` with `?onboarding=true` param.
+- [ ] Enhance the existing go-live checklist (`_go_live_progress_2025.html.erb`) to be the full onboarding guide.
+- [ ] Go-live checklist auto-expands when `?onboarding=true` is present.
+- [ ] Each checklist item links directly to the relevant sidebar section.
+- [ ] Add a **welcome modal** on first visit (brief, dismissible, 3-second auto-dismiss).
+- [ ] Remove dead wizard views: `restaurant_details.html.erb`, `plan_selection.html.erb`, `menu_creation.html.erb`, `show.html.erb` (wizard layout).
+- [ ] Remove dead wizard steps from `OnboardingSession` model.
+- [ ] Add `data-testid` to all checklist items and account details form.
 
 #### Technical Implementation
 
 ```
-New files:
-- [ ] app/javascript/controllers/onboarding_wizard_controller.js
-- [ ] app/views/shared/_stepper.html.erb (reusable horizontal stepper partial)
+Remove (dead code):
+- [ ] app/views/onboarding/show.html.erb (wizard layout)
+- [ ] app/views/onboarding/restaurant_details.html.erb
+- [ ] app/views/onboarding/plan_selection.html.erb
+- [ ] app/views/onboarding/menu_creation.html.erb
+- [ ] app/assets/stylesheets/pages/_onboarding.scss (inline styles for wizard)
 
 Modified files:
-- [ ] app/views/onboarding/show.html.erb — replace sidebar layout with stepper
-- [ ] app/views/onboarding/account_details.html.erb — add data-testid attrs
-- [ ] app/views/onboarding/restaurant_details.html.erb — add data-testid attrs
-- [ ] app/views/onboarding/plan_selection.html.erb — add "skip for now" link
-- [ ] app/views/onboarding/menu_creation.html.erb — add "skip for now" link
-- [ ] app/controllers/onboarding_controller.rb — fix handle_account_details to NOT redirect
-- [ ] app/assets/stylesheets/pages/_onboarding.scss — absorb inline styles
+- [ ] app/controllers/onboarding_controller.rb — simplify to step 1 only, redirect to restaurant edit
+- [ ] app/models/onboarding_session.rb — simplify status enum (remove dead steps)
+- [ ] app/views/onboarding/account_details.html.erb — add data-testid, mobile-first layout
+- [ ] app/views/restaurants/sections/_go_live_progress_2025.html.erb — enhance as canonical onboarding
+- [ ] app/views/restaurants/edit_2025.html.erb — auto-expand checklist when ?onboarding=true
+- [ ] app/javascript/controllers/go_live_progress_controller.js — enhance with onboarding mode
 ```
 
 #### Acceptance Criteria
-- [ ] Wizard completes all 5 steps without leaving the onboarding flow.
-- [ ] On mobile (375px), stepper + form are fully visible without horizontal scroll.
-- [ ] Each step has `data-testid` on all interactive elements.
-- [ ] System test: complete onboarding end-to-end (Capybara/Playwright).
-- [ ] "Skip for now" on steps 3 and 4 advances to next step.
+- [ ] New user signs up → account details form → restaurant edit page with go-live checklist expanded.
+- [ ] No wizard steps 2-5 are reachable via any URL.
+- [ ] Go-live checklist items link to correct sidebar sections.
+- [ ] System test: sign up → complete account details → land on restaurant edit with checklist visible.
+- [ ] Checklist progress updates in real-time as user completes items.
 
 ### 5.2 Restaurant Management Flow
 
@@ -488,14 +496,64 @@ Modified files:
 
 ### 5.5 Smart Menu — Customer View (Performance Focus)
 
-#### Design: Ultra-Fast Mobile Menu Experience
+#### Design: List-Based Mobile Menu with Persistent Cart
+
+> **Decision:** Switch from card-based to **list-based layout** (Deliveroo/Uber Eats style). Replace modal cart with **persistent bottom sheet**.
 
 This is the highest-impact flow. Every millisecond counts.
 
+```
+Mobile (375px):
+┌─────────────────────────────────┐
+│ [Restaurant Logo]  🌐 EN  🔍   │  ← sticky header
+├─────────────────────────────────┤
+│ [Starters] [Mains] [Desserts]  │  ← sticky section tabs (scrollable)
+├─────────────────────────────────┤
+│                                 │
+│ STARTERS                        │
+│ ┌─────────────────────────────┐ │
+│ │ [img] Bruschetta        €8  │ │  ← list row: thumbnail + name + price
+│ │       Tomato, basil, gar…   │ │     description truncated to 1 line
+│ │       🥜 🌾          [+ Add]│ │     allergen icons + add button
+│ ├─────────────────────────────┤ │
+│ │ [img] Caprese Salad    €10  │ │
+│ │       Fresh mozzarella…     │ │
+│ │                      [+ Add]│ │
+│ ├─────────────────────────────┤ │
+│ │ [img] Arancini          €7  │ │
+│ │       Fried risotto bal…    │ │
+│ │       🧀             [+ Add]│ │
+│ └─────────────────────────────┘ │
+│                                 │
+│ MAINS                           │
+│ ...                             │
+│                                 │
+├─────────────────────────────────┤  ← persistent bottom sheet (peek)
+│ ─── Cart · 3 items · €25.00    │
+│ [View Order →]                  │
+└─────────────────────────────────┘
+
+Bottom sheet expanded (half):
+┌─────────────────────────────────┐
+│ ─── Your Order          [✕]    │
+├─────────────────────────────────┤
+│ Bruschetta          1 ×  €8.00 │
+│ [−] [1] [+]                    │
+│ Caprese Salad       1 × €10.00 │
+│ [−] [1] [+]                    │
+│ Arancini            1 ×  €7.00 │
+│ [−] [1] [+]                    │
+├─────────────────────────────────┤
+│ Subtotal                €25.00 │
+│ [Place Order — €25.00]          │
+└─────────────────────────────────┘
+```
+
 **Key changes:**
-- [ ] Add a **sticky action bar** at the bottom (Pattern 3) with Search, Sections, and Cart.
+- [ ] **Replace card layout** with list rows: 60px thumbnail (left) + name/desc/price (right) + add button.
+- [ ] Add a **sticky action bar / persistent bottom sheet** (peek state) showing cart summary + item count.
+- [ ] Bottom sheet expands to half/full for order review with quantity controls.
 - [ ] Implement **client-side search/filter** — instant filter menu items as user types (no server round-trip).
-- [ ] Replace Bootstrap modals with **bottom sheets** (Pattern 4) for cart and section navigation.
 - [ ] Wire the **skeleton loading** partial (`_skeleton_loading.html.erb`) as a placeholder while content loads.
 - [ ] Add **LQIP (Low Quality Image Placeholder)** for menu item images — 20px wide blurred placeholder inline as base64.
 - [ ] **Lazy-load Stripe JS** — only load `stripe.js` when the user opens the payment flow, not on page load.
@@ -503,6 +561,19 @@ This is the highest-impact flow. Every millisecond counts.
 - [ ] Add **section sticky tabs** — horizontal scrollable section names that stick below the header.
 - [ ] Add **micro-animations** on add-to-cart: button animates, cart badge bounces.
 - [ ] Convert welcome banner from inline `<script>` to Stimulus controller.
+
+#### List Row Specification
+
+```
+┌────┬──────────────────────────────┐
+│    │ Item Name              €12.50│  ← font-semibold, var(--text-base)
+│ img│ Short description text…      │  ← text-gray-500, var(--text-sm), max 1 line, ellipsis
+│60px│ 🥜 🌾                [+ Add] │  ← allergen icons (14px) + 44px touch target button
+└────┴──────────────────────────────┘
+Height: 80px (no image) / 88px (with image)
+Separator: 1px var(--color-gray-100) bottom border
+Thumbnail: 60×60px, rounded-md, object-fit: cover
+```
 
 #### Performance Budget
 
@@ -606,7 +677,7 @@ Examples:
 
 ### 6.3 Component Tests (ViewComponent)
 
-If ViewComponent is adopted, each UI primitive gets a unit test:
+ViewComponent is adopted for all reusable UI primitives. Each gets a unit test:
 
 ```ruby
 # test/components/status_badge_component_test.rb
@@ -660,50 +731,61 @@ lighthouse:
 ## 7. Implementation Roadmap
 
 ### Phase 1 — Foundation (1 week)
-- [ ] Create shared UI partials: `_stepper`, `_empty_state`, `_bottom_sheet`, `_mobile_tab_bar`, `_inline_save_indicator`
+- [ ] Add `view_component` gem to Gemfile; run `bundle install`
+- [ ] Create ViewComponents: `StatusBadgeComponent`, `EmptyStateComponent`, `ActionMenuComponent`
+- [ ] Create shared partials: `_empty_state`, `_bottom_sheet`, `_mobile_tab_bar`, `_inline_save_indicator`, `_skeleton_frame`
 - [ ] Create Stimulus controllers: `form-autosave`, `bottom-sheet`, `tab-bar`
-- [ ] Add design tokens to `design_system_2025.scss` (motion, breakpoints, touch targets)
-- [ ] Add `data-testid` to all existing interactive elements across 5 flows
-- [ ] Set up Lighthouse CI job in GitHub Actions
+- [ ] Add design tokens to `design_system_2025.scss` (motion, breakpoints, touch targets, dark mode tokens)
+- [ ] Add `data-testid` to all existing interactive elements across all flows
+- [ ] Set up Lighthouse CI job in GitHub Actions + `lighthouse-budget.json`
+- [ ] Write ViewComponent unit tests
 
-### Phase 2 — Onboarding (3-4 days)
-- [ ] Rebuild wizard as single-column stepper flow
-- [ ] Fix `handle_account_details` to not redirect out of wizard
-- [ ] Add "Skip for now" to optional steps
-- [ ] Extract inline styles
-- [ ] Write system test: complete onboarding end-to-end
+### Phase 2 — Kill Wizard, Enhance Go-Live Checklist (3-4 days)
+- [ ] Simplify `OnboardingController` to step 1 only (account details + restaurant name)
+- [ ] After step 1: mark onboarding complete, redirect to restaurant edit with `?onboarding=true`
+- [ ] Enhance go-live checklist as canonical onboarding (auto-expand, linked steps)
+- [ ] Delete dead wizard views: `show.html.erb`, `restaurant_details.html.erb`, `plan_selection.html.erb`, `menu_creation.html.erb`
+- [ ] Simplify `OnboardingSession` model (remove dead step enums)
+- [ ] Delete `_onboarding.scss` inline styles
+- [ ] Write system test: sign up → account details → restaurant edit with checklist
 
 ### Phase 3 — Restaurant & Menu Management (1-2 weeks)
-- [ ] Add mobile tab bar to restaurant edit
+- [ ] Add mobile tab bar to restaurant edit (`d-md-none` scrollable tabs)
 - [ ] Add Turbo frame skeleton loading
-- [ ] Extract AI modal JS to Stimulus controller
-- [ ] Add drag-to-reorder for sections and items
-- [ ] Standardise all empty states
-- [ ] Write system tests for section switching and reorder
+- [ ] Extract AI modal JS (~420 lines) to `ai-progress` Stimulus controller
+- [ ] Add drag-to-reorder for menu sections and items (Sortable.js + Stimulus)
+- [ ] Add inline click-to-edit for menu item name/price
+- [ ] Standardise all empty states using `EmptyStateComponent`
+- [ ] Add breadcrumb to restaurant edit
+- [ ] Convert auto-save to `form-autosave` Stimulus controller
+- [ ] Write system tests for section switching, reorder, and inline edit
 
 ### Phase 4 — Smart Menu Customer (1-2 weeks) ← **Highest ROI**
-- [ ] Implement sticky action bar (search, sections, cart)
-- [ ] Build client-side menu search
-- [ ] Replace modals with bottom sheets
-- [ ] Add section sticky tabs
-- [ ] Defer Stripe JS loading
-- [ ] Add LQIP for images
-- [ ] Remove footer for customers
-- [ ] Add micro-animations (cart badge, add button)
+- [ ] Replace card layout with list-based rows (Deliveroo/Uber Eats style)
+- [ ] Implement persistent bottom sheet cart (peek/half/full snap points)
+- [ ] Build client-side menu search (Stimulus, filter via data attrs)
+- [ ] Add section sticky tabs (scrollable, highlight on scroll)
+- [ ] Defer Stripe JS loading (lazy-load on checkout)
+- [ ] Add LQIP for menu item images (base64 blur-up)
+- [ ] Remove footer for customer smartmenu
+- [ ] Add micro-animations (cart badge bounce, add button scale)
 - [ ] Wire skeleton loading partial
-- [ ] Run Lighthouse audit; iterate until budget met
+- [ ] Convert welcome banner to Stimulus controller
+- [ ] Run Lighthouse audit; iterate until budget met (LCP <1.2s, INP <100ms)
 
 ### Phase 5 — Smart Menu Staff (3-4 days)
-- [ ] Add staff banner with table switcher
-- [ ] Add quick-add quantity selector
-- [ ] Fix duplicate class attributes
-- [ ] Visual differentiation (border/background)
+- [ ] Add staff banner with table switcher dropdown
+- [ ] Add quick-add quantity selector (long-press / stepper)
+- [ ] Fix duplicate `class` attributes in `_showMenuContentStaff.html.erb`
+- [ ] Visual differentiation (coloured top border + background tint)
 
-### Phase 6 — Polish & Cleanup (ongoing)
+### Phase 6 — Dark Mode & Polish (1 week)
+- [ ] Implement dark mode: `prefers-color-scheme` + manual toggle
+- [ ] Define dark mode token overrides in `:root[data-theme="dark"]`
 - [ ] Remove all inline `<script>` and `<style>` blocks from views
 - [ ] Localise all remaining hardcoded strings
-- [ ] Remove dead onboarding code (if wizard approach confirmed)
-- [ ] Delete orphaned partials/assets
+- [ ] Delete orphaned wizard code, partials, and assets
+- [ ] Final accessibility audit (axe-core scan)
 
 ---
 
@@ -711,20 +793,26 @@ lighthouse:
 
 | File | Phase | Type |
 |---|---|---|
-| `app/javascript/controllers/onboarding_wizard_controller.js` | 2 | Stimulus |
+| `app/components/status_badge_component.rb` | 1 | ViewComponent |
+| `app/components/status_badge_component.html.erb` | 1 | ViewComponent |
+| `app/components/empty_state_component.rb` | 1 | ViewComponent |
+| `app/components/empty_state_component.html.erb` | 1 | ViewComponent |
+| `app/components/action_menu_component.rb` | 1 | ViewComponent |
+| `app/components/action_menu_component.html.erb` | 1 | ViewComponent |
+| `test/components/status_badge_component_test.rb` | 1 | Test |
+| `test/components/empty_state_component_test.rb` | 1 | Test |
+| `test/components/action_menu_component_test.rb` | 1 | Test |
 | `app/javascript/controllers/form_autosave_controller.js` | 1 | Stimulus |
 | `app/javascript/controllers/tab_bar_controller.js` | 1 | Stimulus |
+| `app/javascript/controllers/bottom_sheet_controller.js` | 1 | Stimulus |
 | `app/javascript/controllers/ai_progress_controller.js` | 3 | Stimulus |
 | `app/javascript/controllers/sortable_controller.js` | 3 | Stimulus |
 | `app/javascript/controllers/inline_edit_controller.js` | 3 | Stimulus |
 | `app/javascript/controllers/menu_search_controller.js` | 4 | Stimulus |
-| `app/javascript/controllers/bottom_sheet_controller.js` | 1 | Stimulus |
 | `app/javascript/controllers/section_tabs_controller.js` | 4 | Stimulus |
 | `app/javascript/controllers/cart_badge_controller.js` | 4 | Stimulus |
 | `app/javascript/controllers/welcome_banner_controller.js` | 4 | Stimulus |
 | `app/javascript/controllers/lazy_stripe_controller.js` | 4 | Stimulus |
-| `app/views/shared/_stepper.html.erb` | 1 | Partial |
-| `app/views/shared/_empty_state.html.erb` | 1 | Partial |
 | `app/views/shared/_bottom_sheet.html.erb` | 1 | Partial |
 | `app/views/shared/_mobile_tab_bar.html.erb` | 1 | Partial |
 | `app/views/shared/_skeleton_frame.html.erb` | 1 | Partial |
@@ -738,29 +826,41 @@ lighthouse:
 
 ## 9. Modified Files Summary
 
+### Modified Files
+
 | File | Phase | Changes |
 |---|---|---|
-| `app/views/onboarding/show.html.erb` | 2 | Replace sidebar layout with stepper |
-| `app/views/onboarding/account_details.html.erb` | 2 | Add data-testid attrs |
-| `app/views/onboarding/restaurant_details.html.erb` | 2 | Add data-testid attrs |
-| `app/views/onboarding/plan_selection.html.erb` | 2 | Add skip, data-testid |
-| `app/views/onboarding/menu_creation.html.erb` | 2 | Add skip, data-testid |
-| `app/controllers/onboarding_controller.rb` | 2 | Fix step 1 redirect |
-| `app/assets/stylesheets/pages/_onboarding.scss` | 2 | Absorb inline styles |
-| `app/views/restaurants/edit_2025.html.erb` | 3 | Breadcrumb, tab bar, remove inline styles |
+| `Gemfile` | 1 | Add `view_component` gem |
+| `app/assets/stylesheets/design_system_2025.scss` | 1 | New tokens (motion, breakpoints, touch, dark mode) |
+| `.github/workflows/ci.yml` | 1 | Lighthouse CI job |
+| `app/controllers/onboarding_controller.rb` | 2 | Simplify to step 1 only, redirect to restaurant edit |
+| `app/models/onboarding_session.rb` | 2 | Remove dead step enums |
+| `app/views/onboarding/account_details.html.erb` | 2 | Add data-testid, mobile-first layout |
+| `app/views/restaurants/sections/_go_live_progress_2025.html.erb` | 2 | Enhance as canonical onboarding |
+| `app/views/restaurants/edit_2025.html.erb` | 2+3 | Auto-expand checklist, breadcrumb, tab bar, remove inline styles |
+| `app/javascript/controllers/go_live_progress_controller.js` | 2 | Enhance with onboarding mode |
 | `app/views/restaurants/_sidebar_2025.html.erb` | 3 | Expandable groups, mobile hide |
-| `app/views/menus/edit_2025.html.erb` | 3 | Remove inline script, wire Stimulus |
+| `app/views/menus/edit_2025.html.erb` | 3 | Remove inline script (~420 lines), wire Stimulus |
 | `app/views/menus/sections/_sections_2025.html.erb` | 3 | Sortable + inline edit |
 | `app/views/menus/sections/_items_2025.html.erb` | 3 | Sortable + inline edit |
-| `app/views/layouts/smartmenu.html.erb` | 4 | Defer Stripe, conditional footer |
-| `app/views/smartmenus/show.html.erb` | 4 | Section tabs, action bar, skeleton |
-| `app/views/smartmenus/_showMenuitemHorizontal.html.erb` | 4 | LQIP placeholders |
-| `app/views/smartmenus/_showMenuContentStaff.html.erb` | 5 | Fix duplicate class attr |
+| `app/views/layouts/smartmenu.html.erb` | 4 | Defer Stripe, remove footer for customers |
+| `app/views/smartmenus/show.html.erb` | 4 | Section tabs, bottom sheet cart, list layout, skeleton |
+| `app/views/smartmenus/_showMenuitemHorizontal.html.erb` | 4 | Replace card with list row, LQIP placeholders |
+| `app/views/smartmenus/_showMenuContentCustomer.html.erb` | 4 | Wire list layout + bottom sheet |
 | `app/views/smartmenus/_welcome_banner.html.erb` | 4 | Convert to Stimulus |
 | `app/controllers/smartmenus_controller.rb` | 4 | Cache-Control headers |
-| `app/assets/stylesheets/design_system_2025.scss` | 1 | New tokens |
-| `app/assets/stylesheets/pages/_smartmenu.scss` | 4 | Action bar, tabs, LQIP |
-| `.github/workflows/ci.yml` | 1 | Lighthouse CI job |
+| `app/assets/stylesheets/pages/_smartmenu.scss` | 4 | List rows, action bar, tabs, LQIP, bottom sheet |
+| `app/views/smartmenus/_showMenuContentStaff.html.erb` | 5 | Fix duplicate class attr |
+
+### Deleted Files (Phase 2 — Dead Wizard Code)
+
+| File | Reason |
+|---|---|
+| `app/views/onboarding/show.html.erb` | Wizard layout — replaced by go-live checklist |
+| `app/views/onboarding/restaurant_details.html.erb` | Dead wizard step 2 |
+| `app/views/onboarding/plan_selection.html.erb` | Dead wizard step 3 |
+| `app/views/onboarding/menu_creation.html.erb` | Dead wizard step 4 |
+| `app/assets/stylesheets/pages/_onboarding.scss` | Inline wizard styles |
 
 ---
 
@@ -780,7 +880,8 @@ lighthouse:
 ## 11. Future Directions
 
 - **Per-restaurant theming** — allow restaurants to customise smartmenu colours/fonts via admin UI.
-- **Dark mode** — toggle based on system preference; tokens already partially defined.
 - **Offline support** — Service Worker for smartmenu pages (browse menu without connectivity).
 - **Native-feel transitions** — View Transitions API for page/section transitions (Chrome 111+).
 - **Analytics dashboard redesign** — apply same mobile-first patterns to insights/analytics views.
+- **Menu item detail modal** — tap list row to expand full description, allergens, and image gallery.
+- **Voice ordering** — Web Speech API for hands-free menu navigation (accessibility + novelty).

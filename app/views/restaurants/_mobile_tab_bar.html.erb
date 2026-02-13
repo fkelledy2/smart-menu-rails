@@ -1,0 +1,54 @@
+<%#
+  Mobile Bottom Tab Bar
+  Fixed bottom navigation for quick section access on small screens.
+  Shows 4 key sections + "More" to open the full sidebar.
+%>
+<% restaurant = local_assigns[:restaurant] || @restaurant %>
+<% current_section = local_assigns[:current_section] || 'details' %>
+
+<nav class="mobile-tab-bar" data-controller="mobile-tab-bar" data-testid="mobile-tab-bar"
+     aria-label="<%= t('.quick_navigation', default: 'Quick navigation') %>">
+
+  <%= link_to edit_restaurant_path(restaurant, section: 'details'),
+      class: "mobile-tab-bar-item",
+      data: { mobile_tab_bar_target: "tab", section: "details",
+              turbo_frame: "restaurant_content", turbo_action: "advance",
+              testid: "mobile-tab-details" } do %>
+    <i class="bi bi-shop"></i>
+    <span><%= t('.details', default: 'Details') %></span>
+  <% end %>
+
+  <%= link_to edit_restaurant_path(restaurant, section: 'menus'),
+      class: "mobile-tab-bar-item",
+      data: { mobile_tab_bar_target: "tab", section: "menus",
+              turbo_frame: "restaurant_content", turbo_action: "advance",
+              testid: "mobile-tab-menus" } do %>
+    <i class="bi bi-menu-button-wide"></i>
+    <span><%= t('.menus', default: 'Menus') %></span>
+  <% end %>
+
+  <%= link_to edit_restaurant_path(restaurant, section: 'tables'),
+      class: "mobile-tab-bar-item",
+      data: { mobile_tab_bar_target: "tab", section: "tables",
+              turbo_frame: "restaurant_content", turbo_action: "advance",
+              testid: "mobile-tab-tables" } do %>
+    <i class="bi bi-layout-wtf"></i>
+    <span><%= t('.tables', default: 'Tables') %></span>
+  <% end %>
+
+  <%= link_to edit_restaurant_path(restaurant, section: 'staff'),
+      class: "mobile-tab-bar-item",
+      data: { mobile_tab_bar_target: "tab", section: "staff",
+              turbo_frame: "restaurant_content", turbo_action: "advance",
+              testid: "mobile-tab-staff" } do %>
+    <i class="bi bi-person-badge"></i>
+    <span><%= t('.staff', default: 'Staff') %></span>
+  <% end %>
+
+  <a href="#" class="mobile-tab-bar-item"
+     data-action="click->mobile-tab-bar#openSidebar"
+     data-testid="mobile-tab-more">
+    <i class="bi bi-three-dots"></i>
+    <span><%= t('.more', default: 'More') %></span>
+  </a>
+</nav>

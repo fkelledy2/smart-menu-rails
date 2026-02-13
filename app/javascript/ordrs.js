@@ -157,24 +157,47 @@ export function initOrders() {
     if (!searchInput) return;
     searchInput.addEventListener('input', function () {
       const term = searchInput.value.trim().toLowerCase();
+      const cards = document.querySelectorAll('.menu-item-card-mobile');
       if (term.length === 0) {
-        // If search is empty, show all items
-        document.querySelectorAll('.menu-item-card').forEach((card) => (card.style.display = ''));
+        cards.forEach((card) => (card.style.display = ''));
+        // Show all section anchors and headers
+        document.querySelectorAll('.padding-top-lg').forEach((el) => (el.style.display = ''));
+        document.querySelectorAll('[data-testid^="menu-section-"]').forEach((el) => {
+          const row = el.closest('.row');
+          if (row) row.style.display = '';
+        });
+        document.querySelectorAll('[data-testid^="menu-items-row-"]').forEach((el) => (el.style.display = ''));
         return;
       }
 
-      document.querySelectorAll('.menu-item-card').forEach(function (card) {
-        // Search in data attributes (original English text)
+      cards.forEach(function (card) {
         const name = card.getAttribute('data-name') || '';
         const desc = card.getAttribute('data-description') || '';
-
-        // Search in visible text content (localized text)
         const cardText = card.textContent.toLowerCase();
 
         if (name.includes(term) || desc.includes(term) || cardText.includes(term)) {
           card.style.display = '';
         } else {
           card.style.display = 'none';
+        }
+      });
+
+      // Hide section headers when all items in that section are hidden
+      document.querySelectorAll('[data-testid^="menu-items-row-"]').forEach(function (row) {
+        const visibleItems = row.querySelectorAll('.menu-item-card-mobile:not([style*="display: none"])');
+        const sectionId = row.getAttribute('data-testid').replace('menu-items-row-', '');
+        const anchor = document.getElementById('menusection_' + sectionId);
+        const header = document.querySelector('[data-testid="menu-section-title-' + sectionId + '"]');
+        const headerRow = header ? header.closest('.row') : null;
+
+        if (visibleItems.length === 0) {
+          row.style.display = 'none';
+          if (anchor) anchor.style.display = 'none';
+          if (headerRow) headerRow.style.display = 'none';
+        } else {
+          row.style.display = '';
+          if (anchor) anchor.style.display = '';
+          if (headerRow) headerRow.style.display = '';
         }
       });
     });

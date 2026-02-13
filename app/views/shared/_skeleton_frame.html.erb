@@ -1,0 +1,21 @@
+<%# Skeleton loading frame — shown inside a Turbo Frame while content loads
+  Locals:
+    - lines:  (Integer) number of skeleton text lines (default 4)
+    - image:  (Boolean) show a skeleton image placeholder (default false)
+    - height: (String) explicit height for the skeleton container (default "auto")
+%>
+<% lines  ||= 4 %>
+<% image  ||= false %>
+<% height ||= "auto" %>
+
+<div class="skeleton-frame" style="min-height: <%= height %>" data-testid="skeleton-frame" aria-hidden="true">
+  <% if image %>
+    <div class="skeleton-image skeleton-shimmer"></div>
+  <% end %>
+
+  <% lines.times do |i| %>
+    <div class="skeleton-line skeleton-shimmer<%= ' skeleton-line--short' if i == lines - 1 %>"
+         style="animation-delay: <%= i * 0.08 %>s">
+    </div>
+  <% end %>
+</div>

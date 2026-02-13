@@ -122,7 +122,31 @@
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  
+
+  // ============================================
+  // MOTION (reduced-motion aware)
+  // ============================================
+  --motion-duration-fast: 100ms;
+  --motion-duration-base: 200ms;
+  --motion-duration-slow: 350ms;
+  --motion-easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --motion-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --motion-easing-accelerate: cubic-bezier(0.4, 0, 1, 1);
+
+  // ============================================
+  // BREAKPOINTS (mobile-first)
+  // ============================================
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  // ============================================
+  // TOUCH TARGETS (WCAG 2.2 AA)
+  // ============================================
+  --touch-target-min: 44px;
+  --touch-target-comfortable: 48px;
+
   // ============================================
   // Z-INDEX SCALE
   // ============================================
@@ -133,6 +157,67 @@
   --z-modal: 1050;
   --z-popover: 1060;
   --z-tooltip: 1070;
+  --z-bottom-sheet: 1080;
+  --z-bottom-sheet-backdrop: 1075;
+}
+
+// ============================================
+// DARK MODE TOKENS (Phase 6 — forward-compat)
+// Activated via data-theme="dark" on <html> or
+// prefers-color-scheme: dark media query
+// ============================================
+:root[data-theme="dark"] {
+  --color-primary: #60A5FA;
+  --color-primary-hover: #93C5FD;
+  --color-primary-light: #1E3A5F;
+  --color-primary-dark: #93C5FD;
+
+  --color-gray-50: #111827;
+  --color-gray-100: #1F2937;
+  --color-gray-200: #374151;
+  --color-gray-300: #4B5563;
+  --color-gray-400: #6B7280;
+  --color-gray-500: #9CA3AF;
+  --color-gray-600: #D1D5DB;
+  --color-gray-700: #E5E7EB;
+  --color-gray-800: #F3F4F6;
+  --color-gray-900: #F9FAFB;
+
+  --color-success: #34D399;
+  --color-success-light: #064E3B;
+  --color-warning: #FBBF24;
+  --color-warning-light: #78350F;
+  --color-danger: #F87171;
+  --color-danger-light: #7F1D1D;
+  --color-info: #60A5FA;
+  --color-info-light: #1E3A5F;
+
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  --shadow-focus: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+// Respect system preference as fallback (Phase 6 activation)
+// @media (prefers-color-scheme: dark) {
+//   :root:not([data-theme="light"]) {
+//     // Same overrides as [data-theme="dark"] above
+//   }
+// }
+
+// ============================================
+// REDUCED MOTION
+// ============================================
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-fast: 0ms;
+    --motion-duration-base: 0ms;
+    --motion-duration-slow: 0ms;
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+  }
 }
 
 .clickable-row.row-status-inactive {

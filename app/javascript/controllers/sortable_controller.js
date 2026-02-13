@@ -12,6 +12,42 @@ import { Controller } from "@hotwired/stimulus"
  *   <div data-sortable-id="2">Item 2</div>
  * </div>
  */
+
+// Module-level shared promise — prevents race conditions when multiple
+// sortable controllers connect simultaneously and all try to load the CDN script.
+let _sortableLoadPromise = null
+
+function ensureSortableLoaded() {
+  if (window.Sortable) return Promise.resolve()
+
+  if (!_sortableLoadPromise) {
+    _sortableLoadPromise = new Promise((resolve, reject) => {
+      // Check if a script tag for SortableJS already exists in DOM
+      const existing = document.querySelector('script[src*="sortablejs"]')
+      if (existing) {
+        // Script tag exists but library not yet on window — poll for it
+        const check = setInterval(() => {
+          if (window.Sortable) { clearInterval(check); resolve() }
+        }, 50)
+        setTimeout(() => { clearInterval(check); resolve() }, 10000)
+        return
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js'
+      script.onload = () => resolve()
+      script.onerror = () => {
+        // Reset promise so a future connect() can retry
+        _sortableLoadPromise = null
+        reject(new Error('SortableJS CDN load failed'))
+      }
+      document.head.appendChild(script)
+    })
+  }
+
+  return _sortableLoadPromise
+}
+
 export default class extends Controller {
   static values = {
     url: String,
@@ -20,19 +56,28 @@ export default class extends Controller {
   }
   
   connect() {
-    this.loadSortable()
+    this._destroyed = false
+    this.initSortable()
   }
   
-  async loadSortable() {
-    // Load Sortable from CDN if not already loaded
-    if (!window.Sortable) {
-      await this.loadSortableScript()
+  async initSortable() {
+    try {
+      await ensureSortableLoaded()
+    } catch (e) {
+      console.error('[Sortable] Failed to load SortableJS library:', e)
+      return
     }
-    
-    const isTbody = this.element && this.element.tagName === 'TBODY'
+
+    // Guard: element may have disconnected while we were loading the CDN script
+    if (this._destroyed || !this.element || !this.element.isConnected) return
+
+    // Guard: don't double-init if disconnect/reconnect happened
+    if (this.sortable) return
+
+    const isTbody = this.element.tagName === 'TBODY'
 
     if (!this.urlValue) {
-      console.warn('Sortable missing urlValue on element:', this.element)
+      console.warn('[Sortable] Missing urlValue on element:', this.element)
     }
 
     const options = {
@@ -40,28 +85,23 @@ export default class extends Controller {
       handle: this.handleValue,
       ghostClass: 'sortable-ghost',
       dragClass: 'sortable-drag',
+      forceFallback: true,          // Use custom drag impl — more reliable in overflow containers & Turbo Frames
+      fallbackClass: 'sortable-fallback',
+      fallbackOnBody: true,         // Append ghost to <body> so it isn't clipped by overflow:auto
       onEnd: this.onEnd.bind(this)
     }
     if (isTbody) options.draggable = 'tr'
 
     this.sortable = new window.Sortable(this.element, options)
     
-    console.log('Sortable connected', this.urlValue)
+    console.log('[Sortable] Connected', this.handleValue, this.urlValue)
   }
-  
-  loadSortableScript() {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script')
-      script.src = 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js'
-      script.onload = resolve
-      script.onerror = reject
-      document.head.appendChild(script)
-    })
-  }
-  
+
   disconnect() {
+    this._destroyed = true
     if (this.sortable) {
       this.sortable.destroy()
+      this.sortable = null
     }
   }
   

@@ -1,0 +1,41 @@
+<%# Shared bottom sheet partial
+  Locals:
+    - id:      (String) unique DOM id (required)
+    - peek:    (Integer) peek height in px (default 64)
+    - half:    (Integer) half height as % of viewport (default 50)
+    - initial: (String) initial state: "peek", "half", "full", "closed" (default "peek")
+%>
+<% id      ||= "bottom-sheet" %>
+<% peek    ||= 64 %>
+<% half    ||= 50 %>
+<% initial ||= "peek" %>
+
+<div class="bottom-sheet-backdrop"
+     data-bottom-sheet-target="backdrop"
+     data-action="click->bottom-sheet#close"
+     data-testid="<%= id %>-backdrop">
+</div>
+
+<div id="<%= id %>"
+     class="bottom-sheet"
+     data-controller="bottom-sheet"
+     data-bottom-sheet-peek-value="<%= peek %>"
+     data-bottom-sheet-half-value="<%= half %>"
+     data-bottom-sheet-initial-value="<%= initial %>"
+     data-testid="<%= id %>"
+     role="dialog"
+     aria-modal="true">
+
+  <div class="bottom-sheet__handle"
+       data-bottom-sheet-target="handle"
+       data-action="click->bottom-sheet#toggle"
+       data-testid="<%= id %>-handle">
+    <div class="bottom-sheet__handle-bar"></div>
+  </div>
+
+  <div class="bottom-sheet__content"
+       data-bottom-sheet-target="content"
+       data-testid="<%= id %>-content">
+    <%= yield if block_given? %>
+  </div>
+</div>

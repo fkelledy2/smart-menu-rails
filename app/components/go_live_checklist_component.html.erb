@@ -1,0 +1,67 @@
+<div class="card mb-3" data-testid="onboarding-guidance" data-controller="go-live-progress">
+  <div class="card-body py-3">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <div class="fw-semibold">
+          <i class="bi bi-rocket-takeoff me-1"></i>
+          Go-live checklist
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="text-muted small"><%= completed_count %>/<%= total_count %></div>
+        <button class="btn btn-sm btn-outline-secondary"
+                type="button"
+                aria-expanded="false"
+                aria-controls="go-live-progress-details"
+                data-testid="go-live-toggle-btn"
+                data-go-live-progress-target="toggle"
+                data-action="click->go-live-progress#toggle mouseenter->go-live-progress#open">
+          <i class="bi bi-chevron-right" data-go-live-progress-target="chevron"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="progress mt-2" style="height: 8px;" role="progressbar"
+         aria-valuenow="<%= percent_complete %>" aria-valuemin="0" aria-valuemax="100"
+         aria-label="Go-live progress">
+      <div class="progress-bar <%= all_complete? ? 'bg-success' : 'progress-bar-striped progress-bar-animated' %>"
+           style="width: <%= percent_complete %>%;"></div>
+    </div>
+
+    <div class="collapse mt-3" id="go-live-progress-details"
+         data-go-live-progress-target="details"
+         data-action="mouseenter->go-live-progress#open mouseleave->go-live-progress#close">
+      <div class="row g-2">
+        <% steps.each do |step| %>
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="d-flex align-items-start gap-2 small" data-testid="go-live-step">
+              <% if step[:complete] %>
+                <i class="bi bi-check-circle-fill text-success mt-1"></i>
+              <% else %>
+                <i class="bi <%= step[:icon] || 'bi-circle' %> text-muted mt-1"></i>
+              <% end %>
+              <div class="<%= step[:complete] ? 'text-muted text-decoration-line-through' : '' %>">
+                <% if !step[:complete] && step[:path].present? %>
+                  <% if step[:external] %>
+                    <%= link_to step[:label], step[:path], data: { testid: "go-live-step-link" } %>
+                  <% else %>
+                    <%= link_to step[:label], step[:path], data: { turbo_frame: "restaurant_content", turbo_action: "advance", testid: "go-live-step-link" } %>
+                  <% end %>
+                <% else %>
+                  <%= step[:label] %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <% if all_complete? %>
+        <div class="alert alert-success mt-3 mb-0 py-2 small" data-testid="go-live-complete-banner">
+          <i class="bi bi-check-circle-fill me-1"></i>
+          All set! Your restaurant is ready to go live.
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

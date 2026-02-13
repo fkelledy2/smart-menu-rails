@@ -1,0 +1,139 @@
+<%# Bottom Sheet Cart — replaces the full-screen viewOrderModal for customers
+    Uses the existing bottom-sheet Stimulus controller with peek/half/full snap points.
+    The peek state shows a summary bar; half shows the item list; full adds totals + checkout.
+%>
+<% order = local_assigns[:order] %>
+<% restaurantCurrency = local_assigns[:restaurantCurrency] %>
+<% ordrparticipant = local_assigns[:ordrparticipant] %>
+<% menuparticipant = local_assigns[:menuparticipant] %>
+
+<%# Backdrop %>
+<div class="bottom-sheet-backdrop"
+     data-bottom-sheet-target="backdrop"
+     data-action="click->bottom-sheet#close"></div>
+
+<%# Bottom Sheet %>
+<div class="bottom-sheet cart-bottom-sheet"
+     data-controller="bottom-sheet"
+     data-bottom-sheet-peek-value="72"
+     data-bottom-sheet-half-value="55"
+     data-bottom-sheet-initial-value="<%= order ? 'peek' : 'closed' %>"
+     data-testid="cart-bottom-sheet"
+     id="cartBottomSheet">
+
+  <%# Drag Handle + Summary Bar (always visible in peek) %>
+  <div class="bottom-sheet__handle cart-sheet__peek-bar"
+       data-bottom-sheet-target="handle"
+       data-action="click->bottom-sheet#toggle">
+    <div class="bottom-sheet__handle-bar"></div>
+    <div class="cart-sheet__summary">
+      <div class="cart-sheet__summary-left">
+        <i class="bi bi-cart3"></i>
+        <span class="cart-sheet__count" id="cartItemCount" data-testid="cart-item-count">
+          <%= order ? order.addedCount.to_i : 0 %>
+        </span>
+        <span class="cart-sheet__label"><%= t('smartmenus.showModals.yourOrder', default: 'Your order') %></span>
+      </div>
+      <div class="cart-sheet__summary-right">
+        <span class="cart-sheet__total" id="cartTotalAmount" data-testid="cart-total-amount">
+          <% if order %>
+            <%= number_to_currency(order.runningTotal.to_f, unit: restaurantCurrency&.symbol || '') %>
+          <% else %>
+            <%= number_to_currency(0, unit: restaurantCurrency&.symbol || '') %>
+          <% end %>
+        </span>
+        <i class="bi bi-chevron-up cart-sheet__chevron"></i>
+      </div>
+    </div>
+  </div>
+
+  <%# Scrollable Content (visible in half/full) %>
+  <div class="bottom-sheet__content cart-sheet__content" data-bottom-sheet-target="content" data-testid="cart-sheet-content">
+    <% if order %>
+      <%# Selected (not yet submitted) items %>
+      <% selected_items = order.ordractions.select { |a| a.ordritem&.status == 'opened' && order.ordritems.include?(a.ordritem) } %>
+      <% if selected_items.any? %>
+        <div class="cart-sheet__section-label"><%= t('smartmenus.showModals.selected', default: 'Selected') %></div>
+        <% selected_items.each do |ordraction| %>
+          <div class="cart-sheet__item" data-testid="cart-item-<%= ordraction.ordritem.id %>">
+            <button type="button" class="cart-sheet__remove removeItemFromOrderButton"
+                    data-bs-ordritem_id="<%= ordraction.ordritem.id %>"
+                    aria-label="<%= t('smartmenus.showModals.remove_item', default: 'Remove') %>"
+                    data-testid="remove-cart-item-<%= ordraction.ordritem.id %>">
+              <i class="bi bi-x-circle"></i>
+            </button>
+            <div class="cart-sheet__item-name">
+              <% if ordrparticipant&.preferredlocale %>
+                <%= ordraction.ordritem.menuitem.localised_name(ordrparticipant.preferredlocale) %>
+              <% elsif menuparticipant&.preferredlocale %>
+                <%= ordraction.ordritem.menuitem.localised_name(menuparticipant.preferredlocale) %>
+              <% else %>
+                <%= ordraction.ordritem.menuitem.name %>
+              <% end %>
+            </div>
+            <div class="cart-sheet__item-price">
+              <%= number_to_currency(ordraction.ordritem.ordritemprice, unit: restaurantCurrency&.symbol || '') %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+
+      <%# Submitted items %>
+      <% submitted_items = order.ordractions.select { |a| a.ordritem && %w[ordered preparing ready delivered].include?(a.ordritem.status) && order.ordritems.include?(a.ordritem) } %>
+      <% if submitted_items.any? %>
+        <div class="cart-sheet__section-label cart-sheet__section-label--muted"><%= t('smartmenus.showModals.submitted', default: 'Submitted') %></div>
+        <% submitted_items.each do |ordraction| %>
+          <div class="cart-sheet__item cart-sheet__item--submitted">
+            <div class="cart-sheet__status-icon">
+              <i class="bi bi-check-circle-fill text-success"></i>
+            </div>
+            <div class="cart-sheet__item-name">
+              <% if ordrparticipant&.preferredlocale %>
+                <%= ordraction.ordritem.menuitem.localised_name(ordrparticipant.preferredlocale) %>
+              <% elsif menuparticipant&.preferredlocale %>
+                <%= ordraction.ordritem.menuitem.localised_name(menuparticipant.preferredlocale) %>
+              <% else %>
+                <%= ordraction.ordritem.menuitem.name %>
+              <% end %>
+            </div>
+            <div class="cart-sheet__item-price text-muted">
+              <%= number_to_currency(ordraction.ordritem.menuitem.price, unit: restaurantCurrency&.symbol || '') %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+
+      <%# Totals %>
+      <div class="cart-sheet__totals" data-testid="cart-totals">
+        <div class="cart-sheet__total-row">
+          <span><%= t('smartmenus.showModals.total', default: 'Total') %></span>
+          <span class="cart-sheet__total-value" id="cartTotalValue">
+            <%= number_to_currency(order.runningTotal.to_f, unit: restaurantCurrency&.symbol || '') %>
+          </span>
+        </div>
+      </div>
+
+      <%# Action buttons %>
+      <div class="cart-sheet__actions" data-testid="cart-actions">
+        <% if order.addedCount.to_i > 0 %>
+          <button type="button" class="btn-touch-primary w-100 submitOrderButton" id="cartSubmitOrder" data-testid="cart-submit-order-btn">
+            <i class="bi bi-send"></i>
+            <%= t('smartmenus.showModals.submit', default: 'Submit order') %>
+          </button>
+        <% end %>
+        <button type="button" class="btn-touch-secondary w-100 mt-2"
+                data-bs-toggle="modal" data-bs-target="#viewOrderModal"
+                data-action="click->bottom-sheet#close">
+          <i class="bi bi-receipt"></i>
+          <%= t('smartmenus.showModals.view_full_order', default: 'View full order') %>
+        </button>
+      </div>
+    <% else %>
+      <div class="text-center text-muted py-4">
+        <i class="bi bi-cart3 fs-1 mb-2 d-block"></i>
+        <p><%= t('smartmenus.showModals.empty_cart', default: 'Your cart is empty') %></p>
+        <p class="small"><%= t('smartmenus.showModals.add_items_hint', default: 'Tap + on any item to add it') %></p>
+      </div>
+    <% end %>
+  </div>
+</div>

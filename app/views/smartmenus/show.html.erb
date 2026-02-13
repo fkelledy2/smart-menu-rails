@@ -1,5 +1,6 @@
 <%= render 'shared/currency' %>
 
+<div data-controller="menu-layout">
 <% if @restaurant.respond_to?(:unclaimed?) && @restaurant.unclaimed? && @restaurant.preview_enabled? %>
   <div class="alert alert-warning text-center mb-0 rounded-0" role="alert" data-testid="unclaimed-preview-banner">
     <small>
@@ -91,6 +92,7 @@
 
 <%# Allergen Legend Modal - outside cache to always be available %>
 <%= render partial: "smartmenus/allergen_legend_modal", locals: { allergyns: @allergyns } %>
+</div><%# close menu-layout controller %>
 
 <%# Test-only: ensure staff add buttons are enabled for automation stability %>
 <% if Rails.env.test? %>

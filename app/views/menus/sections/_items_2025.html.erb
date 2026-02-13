@@ -151,7 +151,14 @@
                   <% section_items.each do |item| %>
                     <% row_status_class = item.active? ? 'row-status-active' : 'row-status-inactive' %>
                     <% row_status_title = item.active? ? t('menus.sections.details_2025.active', default: 'Active') : t('menus.sections.details_2025.inactive', default: 'Inactive') %>
-                    <tr data-sortable-id="<%= item.id %>" data-testid="menu-item-<%= item.id %>" class="<%= row_status_class %>" title="<%= row_status_title %>">
+                    <tr data-sortable-id="<%= item.id %>"
+                        data-testid="menu-item-<%= item.id %>"
+                        class="<%= row_status_class %>"
+                        title="<%= row_status_title %>"
+                        <% unless read_only %>
+                          data-controller="inline-edit"
+                          data-inline-edit-url-value="<%= restaurant_menu_menusection_menuitem_path(restaurant, menu, section, item) %>"
+                        <% end %>>
                       <% unless read_only %>
                         <td class="w-40px">
                           <input type="checkbox" name="menuitem_ids[]" value="<%= item.id %>" data-menuitems-bulk-target="checkbox" data-action="change->menuitems-bulk#sync" />
@@ -170,14 +177,23 @@
                       <td>
                         <div class="item-name-cell">
                           <div class="d-flex align-items-center gap-2">
-                            <strong><%= item.name %></strong>
+                            <% unless read_only %>
+                              <strong class="inline-editable"
+                                      data-inline-edit-target="cell"
+                                      data-field="name"
+                                      data-value="<%= item.name %>"
+                                      data-action="click->inline-edit#edit"
+                                      title="<%= t('.click_to_edit', default: 'Click to edit') %>"><%= item.name %></strong>
+                            <% else %>
+                              <strong><%= item.name %></strong>
+                            <% end %>
                             <% if item.image.present? %>
                               <i class="bi bi-image text-primary text-14px" title="<%= t('.has_image_title') %>"></i>
                             <% end %>
                           </div>
                           <% if item.description.present? %>
                             <div class="text-sm text-muted">
-                              <%= truncate(item.description, length: 50) %>
+                              <%= item.description %>
                             </div>
                           <% end %>
 
@@ -213,10 +229,25 @@
                             <span class="text-muted"><%= t('.included') %></span>
                           <% end %>
                         <% else %>
-                          <% if item.price.present? && item.price > 0 %>
-                            <%= number_to_currency(item.price, unit: currency_symbol) %>
+                          <% unless read_only %>
+                            <span class="inline-editable"
+                                  data-inline-edit-target="cell"
+                                  data-field="price"
+                                  data-value="<%= item.price.present? ? item.price : '' %>"
+                                  data-action="click->inline-edit#edit"
+                                  title="<%= t('.click_to_edit', default: 'Click to edit') %>">
+                              <% if item.price.present? && item.price > 0 %>
+                                <%= number_to_currency(item.price, unit: currency_symbol) %>
+                              <% else %>
+                                <span class="text-muted">-</span>
+                              <% end %>
+                            </span>
                           <% else %>
-                            <span class="text-muted">-</span>
+                            <% if item.price.present? && item.price > 0 %>
+                              <%= number_to_currency(item.price, unit: currency_symbol) %>
+                            <% else %>
+                              <span class="text-muted">-</span>
+                            <% end %>
                           <% end %>
                         <% end %>
 
@@ -321,6 +352,20 @@
     width: 100%;
   }
 
+  /* Inline edit visual hint */
+  .inline-editable {
+    cursor: text;
+    border-bottom: 1px dashed var(--color-gray-300);
+    padding-bottom: 1px;
+    transition: border-color var(--transition-base), background var(--transition-base);
+  }
+
+  .inline-editable:hover {
+    border-bottom-color: var(--color-primary);
+    background: var(--color-primary-light);
+    border-radius: 2px;
+  }
+
   .table-section-header {
     background-color: var(--color-gray-100);
     border-top: 2px solid var(--color-gray-300);
@@ -354,6 +399,11 @@
   .sortable-drag {
     opacity: 1;
     cursor: grabbing;
+  }
+
+  .sortable-fallback {
+    opacity: 0.85;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   /* Item image tooltip on hover/tap */

@@ -310,10 +310,12 @@ class ApplicationController < ActionController::Base
     return if current_user.has_active_employment?
 
     # Skip for certain controllers that should always be accessible
-    skip_controllers = %w[home sessions registrations passwords confirmations unlocks]
+    # restaurants is included because the go-live checklist on the restaurant edit page
+    # is now the canonical onboarding flow after initial restaurant creation.
+    skip_controllers = %w[home sessions registrations passwords confirmations unlocks restaurants]
     return if skip_controllers.include?(controller_name)
 
-    # Redirect to onboarding if user needs it
+    # Redirect to onboarding if user needs it (no restaurants yet)
     if current_user.needs_onboarding?
       redirect_to onboarding_path
     end

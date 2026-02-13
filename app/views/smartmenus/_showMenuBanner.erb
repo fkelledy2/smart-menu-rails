@@ -1,5 +1,5 @@
   <!-- Restaurant Name & Locale Selector -->
-  <% if !current_user && @restaurant&.respond_to?(:unclaimed?) && @restaurant.unclaimed? %>
+  <% if !current_user && @restaurant&.respond_to?(:unclaimed?) && @restaurant.unclaimed? && @restaurant.preview_enabled? %>
     <div class="alert alert-warning mb-2" role="alert">
       <div><strong>This is an auto-generated preview</strong> based on publicly available information.</div>
       <div>
@@ -51,7 +51,7 @@
     <% end %>
   </div>
   <!-- Navigation: Search & Sections -->
-  <div class="menu-sections-nav-mobile">
+  <div class="menu-sections-nav-mobile" data-controller="scrollspy" data-scrollspy-offset-value="200">
     <!-- Search and Filter Row -->
     <div class="sections-filter-row">
       <input type="text" 
@@ -76,6 +76,26 @@
         <% end %>
       <% end %>
       
+      <!-- Layout Toggle -->
+      <div class="layout-toggle-group" role="group" aria-label="<%= t('.layout', default: 'Layout') %>">
+        <button type="button"
+                class="layout-toggle-btn active"
+                data-action="click->menu-layout#setCard"
+                data-menu-layout-target="cardBtn"
+                aria-label="<%= t('.card_view', default: 'Card view') %>"
+                title="<%= t('.card_view', default: 'Card view') %>">
+          <i class="bi bi-grid"></i>
+        </button>
+        <button type="button"
+                class="layout-toggle-btn"
+                data-action="click->menu-layout#setList"
+                data-menu-layout-target="listBtn"
+                aria-label="<%= t('.list_view', default: 'List view') %>"
+                title="<%= t('.list_view', default: 'List view') %>">
+          <i class="bi bi-list-ul"></i>
+        </button>
+      </div>
+
       <!-- Allergen Legend Info Button -->
       <button type="button" 
               class="filter-button" 
@@ -89,7 +109,7 @@
     
     <!-- Section Tabs -->
     <div class="sections-tabs-container">
-      <nav id="navbar-example2" class="sections-tabs">
+      <nav id="navbar-example2" class="sections-tabs" data-scrollspy-target="nav">
         <% @menu.menusections.sort_by { |s| s.sequence.to_i }.each do |menusection| %>
           <a class="section-tab sectionnav" href="#menusection_<%= menusection.id %>">
             <% if @ordrparticipant && @ordrparticipant.preferredlocale %>

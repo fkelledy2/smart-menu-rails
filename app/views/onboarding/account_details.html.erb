@@ -5,7 +5,7 @@
   </div>
 
   <%= form_with model: current_user, url: onboarding_path, method: :patch, local: true,
-                data: { step: 1 }, class: "needs-validation", novalidate: true do |f| %>
+                data: { step: 1, testid: 'onboarding-account-form' }, class: "needs-validation", novalidate: true do |f| %>
     <%= hidden_field_tag :step, 1 %>
 
     <div class="mb-4">
@@ -15,7 +15,8 @@
           placeholder: t('onboarding.account_details.full_name_placeholder'),
           required: true,
           autocomplete: "name",
-          value: current_user.name %>
+          value: current_user.name,
+          data: { testid: 'onboarding-user-name' } %>
       <div class="invalid-feedback">
         <%= t('onboarding.account_details.full_name_required') %>
       </div>
@@ -47,7 +48,7 @@
         <!-- No back button on first step -->
       </div>
 
-      <button type="submit" class="btn btn-primary btn-lg btn-wizard" id="continue-btn" disabled>
+      <button type="submit" class="btn btn-primary btn-lg btn-wizard" id="continue-btn" data-testid="onboarding-continue-btn" disabled>
         <%= t('onboarding.account_details.continue') %>
         <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i>
       </button>

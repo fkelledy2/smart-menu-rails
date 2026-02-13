@@ -39,83 +39,7 @@
     <!-- Main Content Area -->
     <div class="sidebar-main-content">
       <%= render('shared/notices') unless @current_section.to_s == 'details' %>
-      <% if @onboarding_next.present? && @current_section.to_s != 'menus' %>
-        <% stripe_account = @restaurant.provider_accounts.find { |a| a.provider.to_s == 'stripe' } || @restaurant.provider_accounts.where(provider: :stripe).first %>
-        <% stripe_connect_enabled = stripe_account&.status.to_s == 'enabled' %>
-        <% address_ok = @restaurant.address1.present? || @restaurant.city.present? || @restaurant.postcode.present? %>
-        <% default_language_ok = @restaurant.restaurantlocales.where(status: 'active', dfault: true).exists? %>
-        <% has_table_ok = @restaurant.tablesettings.where(archived: false).exists? %>
-        <% has_menu_ok = @restaurant.restaurant_menus.where.not(status: RestaurantMenu.statuses[:archived]).joins(:menu).exists? %>
-        <% subscription_ok = user_has_active_subscription?(@restaurant.user) %>
-
-        <% onboarding_steps = [
-          { label: 'Restaurant Name', complete: @restaurant.name.present?, path: edit_restaurant_path(@restaurant, section: 'details', anchor: 'restaurant-details-section') },
-          { label: 'Restaurant Currency', complete: @restaurant.currency.present?, path: edit_restaurant_path(@restaurant, section: 'details', anchor: 'restaurant-details-section') },
-          { label: 'Restaurant Address', complete: address_ok, path: edit_restaurant_path(@restaurant, section: 'details', anchor: 'restaurant-details-section') },
-          { label: 'Restaurant Country', complete: @restaurant.country.present?, path: edit_restaurant_path(@restaurant, section: 'details', anchor: 'restaurant-details-section') },
-          { label: 'Add Language', complete: default_language_ok, path: edit_restaurant_path(@restaurant, section: 'localization', anchor: 'restaurant-localization-section') },
-          { label: 'Add Table', complete: has_table_ok, path: edit_restaurant_path(@restaurant, section: 'tables', anchor: 'restaurant-tables-section') },
-          { label: 'Add Menu', complete: has_menu_ok, path: edit_restaurant_path(@restaurant, section: 'menus', anchor: 'restaurant-menus-section') },
-          { label: 'Set Merchant Of Record', complete: stripe_connect_enabled, path: edit_restaurant_path(@restaurant, section: 'settings', anchor: 'restaurant-settings-section') },
-          { label: 'Billing Configured', complete: subscription_ok, path: (@userplan&.id ? edit_userplan_path(@userplan) : nil) },
-        ] %>
-        <% completed_steps = onboarding_steps.count { |s| s[:complete] } %>
-        <% total_steps = onboarding_steps.size %>
-        <% percent_complete = total_steps.positive? ? ((completed_steps.to_f / total_steps) * 100).round : 0 %>
-        <% go_live_complete = (completed_steps == total_steps) %>
-
-        <div class="card mb-3" data-testid="onboarding-guidance" data-controller="go-live-progress">
-          <div class="card-body py-3">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-              <div class="d-flex align-items-center gap-2">
-                <div class="fw-semibold">Onboarding flow</div>
-              </div>
-              <div class="d-flex align-items-center gap-3">
-                <div class="text-muted small"><%= completed_steps %>/<%= total_steps %></div>
-                <button class="btn btn-sm btn-outline-secondary"
-                        type="button"
-                        aria-expanded="false"
-                        aria-controls="go-live-progress-details"
-                        data-go-live-progress-target="toggle"
-                        data-action="click->go-live-progress#toggle mouseenter->go-live-progress#open">
-                  <i class="bi bi-chevron-right" data-go-live-progress-target="chevron"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="progress mt-2" style="height: 8px;" role="progressbar" aria-valuenow="<%= percent_complete %>" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar <%= go_live_complete ? 'bg-success' : 'progress-bar-striped progress-bar-animated' %>" style="width: <%= percent_complete %>%;"></div>
-            </div>
-
-            <div class="collapse mt-3" id="go-live-progress-details" data-go-live-progress-target="details" data-action="mouseenter->go-live-progress#open mouseleave->go-live-progress#close">
-              <div class="row g-2">
-                <% onboarding_steps.each do |step| %>
-                  <div class="col-12 col-md-6 col-lg-4">
-                    <div class="d-flex align-items-start gap-2 small">
-                      <% if step[:complete] %>
-                        <i class="bi bi-check-circle-fill text-success mt-1"></i>
-                      <% else %>
-                        <i class="bi bi-circle text-muted mt-1"></i>
-                      <% end %>
-                      <div class="<%= step[:complete] ? 'text-muted' : '' %>">
-                        <% if !step[:complete] && step[:path].present? %>
-                          <% if step[:path].to_s.include?('/userplans/') %>
-                            <%= link_to step[:label], step[:path] %>
-                          <% else %>
-                            <%= link_to step[:label], step[:path], data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } %>
-                          <% end %>
-                        <% else %>
-                          <%= step[:label] %>
-                        <% end %>
-                      </div>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-          </div>
-        </div>
-      <% end %>
+      <%= render(GoLiveChecklistComponent.new(restaurant: @restaurant, userplan: @userplan)) unless @current_section.to_s == 'menus' %>
       <%= turbo_frame_tag 'restaurant_content' do %>
         <%
           partial_name = case @current_section
@@ -144,6 +68,11 @@
       <% end %>
     </div>
   </div>
+
+  <!-- Mobile Bottom Tab Bar -->
+  <%= render 'restaurants/mobile_tab_bar',
+      restaurant: @restaurant,
+      current_section: @current_section %>
 </div>
 
 <% content_for :head do %>

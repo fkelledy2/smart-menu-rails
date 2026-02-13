@@ -123,7 +123,6 @@ Rails.application.routes.draw do
   # ONBOARDING AND USER MANAGEMENT
   # ============================================================================
   get 'onboarding', to: 'onboarding#show'
-  get 'onboarding/step/:step', to: 'onboarding#show', as: :onboarding_step
   patch 'onboarding', to: 'onboarding#update'
   post 'onboarding', to: 'onboarding#update'
   

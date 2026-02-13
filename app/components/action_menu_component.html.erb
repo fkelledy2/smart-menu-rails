@@ -1,0 +1,27 @@
+<div class="dropdown" data-testid="action-menu-<%= id %>">
+  <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+          type="button"
+          id="<%= id %>"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          data-testid="action-menu-trigger-<%= id %>">
+    <i class="bi bi-three-dots-vertical"></i>
+  </button>
+
+  <ul class="dropdown-menu dropdown-menu-<%= align %>" aria-labelledby="<%= id %>">
+    <% items.each do |item| %>
+      <% if item.divider? %>
+        <li><hr class="dropdown-divider"></li>
+      <% else %>
+        <li>
+          <%= link_to item.url, class: item.css_class, data: item.data_attrs do %>
+            <% if item.icon.present? %>
+              <i class="bi <%= item.icon %> me-2"></i>
+            <% end %>
+            <%= item.label %>
+          <% end %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>

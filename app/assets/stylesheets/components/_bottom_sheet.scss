@@ -1,0 +1,260 @@
+// ============================================================================
+// BOTTOM SHEET — Phase 1 Foundation
+// Mobile-friendly sheet with peek/half/full snap points
+// ============================================================================
+
+.bottom-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-bottom-sheet, 1080);
+  background: #fff;
+  border-radius: var(--radius-xl, 1rem) var(--radius-xl, 1rem) 0 0;
+  box-shadow: var(--shadow-xl);
+  transform: translateY(100%);
+  transition: transform var(--motion-duration-slow, 350ms) var(--motion-easing-decelerate, cubic-bezier(0, 0, 0.2, 1));
+  will-change: transform;
+  max-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &--closed {
+    pointer-events: none;
+  }
+
+  &--peek,
+  &--half,
+  &--full {
+    pointer-events: auto;
+  }
+
+  &--full {
+    border-radius: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+// Handle / drag grip
+.bottom-sheet__handle {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 8px;
+  cursor: grab;
+  touch-action: none;
+  flex-shrink: 0;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.bottom-sheet__handle-bar {
+  width: 36px;
+  height: 4px;
+  border-radius: var(--radius-full, 9999px);
+  background: var(--color-gray-300, #D1D5DB);
+}
+
+// Content area
+.bottom-sheet__content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 var(--space-4, 1rem) var(--space-6, 1.5rem);
+}
+
+// Backdrop overlay
+.bottom-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-bottom-sheet-backdrop, 1075);
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-duration-base, 200ms) ease;
+
+  &--visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+// ============================================================================
+// CART BOTTOM SHEET
+// ============================================================================
+
+.cart-bottom-sheet {
+  z-index: 1090; // Above FAB
+}
+
+.cart-sheet__peek-bar {
+  padding: 8px 16px 12px;
+
+  .bottom-sheet__handle-bar {
+    margin-bottom: 8px;
+  }
+}
+
+.cart-sheet__summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.cart-sheet__summary-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+
+  i { font-size: 1.25rem; }
+}
+
+.cart-sheet__count {
+  background: #dc2626;
+  color: white;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 0 6px;
+}
+
+.cart-sheet__label {
+  color: #374151;
+}
+
+.cart-sheet__summary-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cart-sheet__total {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #111827;
+}
+
+.cart-sheet__chevron {
+  color: #9ca3af;
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+
+  .bottom-sheet--half &,
+  .bottom-sheet--full & {
+    transform: rotate(180deg);
+  }
+}
+
+.cart-sheet__content {
+  padding: 0 16px 24px;
+}
+
+.cart-sheet__section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #dc2626;
+  padding: 12px 0 6px;
+  border-bottom: 1px solid #f3f4f6;
+
+  &--muted {
+    color: #9ca3af;
+  }
+}
+
+.cart-sheet__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f9fafb;
+}
+
+.cart-sheet__item--submitted {
+  opacity: 0.65;
+}
+
+.cart-sheet__remove {
+  background: none;
+  border: none;
+  color: #ef4444;
+  padding: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 1.125rem;
+  line-height: 1;
+
+  &:active { transform: scale(0.9); }
+}
+
+.cart-sheet__status-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+.cart-sheet__item-name {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9375rem;
+}
+
+.cart-sheet__item-price {
+  flex-shrink: 0;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.cart-sheet__totals {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 2px solid #e5e7eb;
+}
+
+.cart-sheet__total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.cart-sheet__total-value {
+  color: #dc2626;
+}
+
+.cart-sheet__actions {
+  margin-top: 16px;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+// ============================================================================
+// DARK MODE
+// ============================================================================
+:root[data-theme="dark"] {
+  .bottom-sheet {
+    background: var(--color-gray-100, #1F2937);
+  }
+
+  .bottom-sheet__handle-bar {
+    background: var(--color-gray-500, #6B7280);
+  }
+
+  .bottom-sheet-backdrop {
+    background: rgba(0, 0, 0, 0.6);
+  }
+}

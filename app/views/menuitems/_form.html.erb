@@ -123,16 +123,11 @@
                   <%
                     initial_image_url = (menuitem.webp_url(:medium) || menuitem.medium_url || menuitem.image_url)
                   %>
-                  <%= link_to generate_ai_image_restaurant_menu_menusection_menuitem_path(
-                        menuitem.menusection.menu.restaurant,
-                        menuitem.menusection.menu,
-                        menuitem.menusection,
-                        menuitem,
-                      ),
+                  <%= link_to '#',
                       class: 'btn-2025 btn-2025-secondary btn-2025-md',
                       data: {
                         turbo: false,
-                        menuitem_ai_generate: true,
+                        action: 'click->ai-image-generator#open',
                         generate_url: generate_ai_image_restaurant_menu_menusection_menuitem_path(
                           menuitem.menusection.menu.restaurant,
                           menuitem.menusection.menu,

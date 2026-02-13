@@ -1,0 +1,13 @@
+<%# Inline save indicator — shows saving/saved/error status
+  Use as the data-auto-save-target="status" element for the auto-save controller.
+  Locals:
+    - position: (String) "inline" (default) or "fixed" — fixed floats bottom-right
+%>
+<% position ||= "inline" %>
+
+<div class="form-autosave-2025 form-autosave-2025--<%= position %>"
+     data-auto-save-target="status"
+     data-testid="save-indicator"
+     aria-live="polite"
+     aria-atomic="true">
+</div>

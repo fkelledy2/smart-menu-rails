@@ -1,0 +1,27 @@
+<div class="empty-state<%= ' empty-state--compact' if compact %>" data-testid="empty-state">
+  <div class="empty-icon">
+    <i class="bi <%= icon %>"></i>
+  </div>
+
+  <h3 class="empty-title"><%= title %></h3>
+
+  <% if description.present? %>
+    <p class="empty-description"><%= description %></p>
+  <% end %>
+
+  <% if action_text.present? && action_url.present? %>
+    <div class="empty-action">
+      <% if action_method == :get %>
+        <%= link_to action_text, action_url, class: "btn btn-primary", data: { testid: "empty-state-action" } %>
+      <% else %>
+        <%= button_to action_text, action_url, method: action_method, class: "btn btn-primary", data: { testid: "empty-state-action" } %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if content.present? %>
+    <div class="empty-extra">
+      <%= content %>
+    </div>
+  <% end %>
+</div>

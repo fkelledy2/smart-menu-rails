@@ -101,7 +101,7 @@
     <%= render partial: "smartmenus/tasting_courses_footer", locals: { tasting_meta: tasting_meta, menusection: menusection, order: order } %>
   </div>
 <% else %>
-  <div class="row" data-testid="menu-items-row-<%= menusection.id %>">
+  <div class="row menu-layout-card" data-testid="menu-items-row-<%= menusection.id %>" data-menu-layout-target="container">
     <% menusection.menuitems.sort_by { |it| it.sequence.to_i }.each do |mi| %>
       <% if ordrparticipant.nil? || (ordrparticipant.allergyns & mi.allergyns).empty? %>
         <%= render partial: view_type == :customer ? "smartmenus/showMenuitemHorizontal" : "smartmenus/showMenuitemStaff",

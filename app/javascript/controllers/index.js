@@ -25,6 +25,13 @@ import DisabledActionController from "./disabled_action_controller"
 import UserplanPlanChangeController from "./userplan_plan_change_controller"
 import GoLiveProgressController from "./go_live_progress_controller"
 import SettingsDependenciesController from "./settings_dependencies_controller"
+import BottomSheetController from "./bottom_sheet_controller"
+import TabBarController from "./tab_bar_controller"
+import MenuLayoutController from "./menu_layout_controller"
+import InlineEditController from "./inline_edit_controller"
+import MobileTabBarController from "./mobile_tab_bar_controller"
+import AiImageGeneratorController from "./ai_image_generator_controller"
+import ScrollspyController from "./scrollspy_controller"
 
 application.register("sortable", SortableController)
 application.register("auto-save", AutoSaveController)
@@ -49,5 +56,12 @@ application.register("disabled-action", DisabledActionController)
 application.register("userplan-plan-change", UserplanPlanChangeController)
 application.register("go-live-progress", GoLiveProgressController)
 application.register("settings-dependencies", SettingsDependenciesController)
+application.register("bottom-sheet", BottomSheetController)
+application.register("tab-bar", TabBarController)
+application.register("menu-layout", MenuLayoutController)
+application.register("inline-edit", InlineEditController)
+application.register("mobile-tab-bar", MobileTabBarController)
+application.register("ai-image-generator", AiImageGeneratorController)
+application.register("scrollspy", ScrollspyController)
 
-console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies'])
+console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy'])

@@ -81,6 +81,116 @@
 }
 
 // ============================================================================
+// 1b. LAYOUT TOGGLE & LIST MODE
+// ============================================================================
+
+// Layout toggle button group in the search/filter row
+.layout-toggle-group {
+  display: flex;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  .layout-toggle-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: white;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 0;
+
+    i { font-size: 1.125rem; }
+
+    &.active {
+      background: #dc2626;
+      color: white;
+    }
+
+    &:not(.active):hover {
+      background: #f3f4f6;
+    }
+
+    & + .layout-toggle-btn {
+      border-left: 1px solid #e5e5e5;
+    }
+  }
+}
+
+// List layout mode — compact rows instead of full cards
+.menu-layout-list {
+  .menu-item-card-mobile {
+    width: 100% !important;
+    padding: 0;
+    display: block !important;
+
+    .card {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+      border-bottom: 1px solid #f0f0f0;
+      min-height: auto;
+      flex-direction: row;
+      align-items: center;
+      padding: 10px 12px;
+
+      &:active { transform: none; box-shadow: none; }
+    }
+
+    // Hide image in list mode for compactness
+    .card .row .col-5 { display: none; }
+    .card .row .col-7 { flex: 0 0 100%; max-width: 100%; }
+
+    // Restyle card-header as inline name
+    .card-header {
+      background: none;
+      border: none;
+      padding: 0;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      flex: 1;
+      min-width: 0;
+
+      span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+    }
+
+    // Hide full description in list mode — keep it tight
+    .card .row { display: none; }
+
+    // Compact footer with price + add button
+    .card-footer {
+      background: none;
+      border: none;
+      padding: 0 0 0 8px;
+      min-height: auto;
+      flex-shrink: 0;
+
+      .d-flex.justify-content-between { flex-wrap: nowrap; gap: 4px; }
+
+      // Hide allergen badges in list mode
+      .allergen-badges { display: none; }
+
+      .d-flex.gap-0 {
+        margin-left: 0;
+
+        .addItemToOrder {
+          font-size: 0.8125rem;
+          min-height: 36px;
+          padding: 4px 12px;
+          border-radius: 6px !important;
+          position: static !important;
+        }
+      }
+    }
+  }
+}
+
+// ============================================================================
 // 2. STICKY HEADER - Optimized for Touch
 // ============================================================================
 
@@ -506,6 +616,12 @@
 
 .menu-item-card-mobile {
   contain: layout style paint;
+}
+
+// Auto-skip rendering for off-screen sections — big win on menus with many sections
+[data-testid^="menu-items-row-"] {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 400px;
 }
 
 // ============================================================================

@@ -1,0 +1,38 @@
+<%# Mobile tab bar partial — visible only on mobile (d-md-none)
+  Locals:
+    - tabs:        (Array<Hash>) each with :label, :section, :url, :icon (optional), :active (boolean)
+    - frame_id:    (String) optional Turbo Frame id to target on click
+    - active_class: (String) CSS class for the active tab (default "tab-bar__tab--active")
+%>
+<% tabs         ||= [] %>
+<% frame_id     ||= nil %>
+<% active_class ||= "tab-bar__tab--active" %>
+
+<nav class="tab-bar d-md-none"
+     data-controller="tab-bar"
+     <% if frame_id %>data-tab-bar-frame-value="<%= frame_id %>"<% end %>
+     data-tab-bar-active-class-value="<%= active_class %>"
+     data-testid="mobile-tab-bar"
+     role="tablist"
+     aria-label="Section navigation">
+
+  <div class="tab-bar__scroll" data-tab-bar-target="scroll">
+    <% tabs.each do |tab| %>
+      <a class="tab-bar__tab<%= ' ' + active_class if tab[:active] %>"
+         href="<%= tab[:url] || '#' %>"
+         data-tab-bar-target="tab"
+         data-action="click->tab-bar#select"
+         data-tab-bar-section-param="<%= tab[:section] %>"
+         data-testid="tab-bar-<%= tab[:section] %>"
+         role="tab"
+         aria-selected="<%= tab[:active] ? 'true' : 'false' %>">
+        <% if tab[:icon] %>
+          <i class="bi <%= tab[:icon] %> me-1"></i>
+        <% end %>
+        <%= tab[:label] %>
+      </a>
+    <% end %>
+  </div>
+
+  <div class="tab-bar__indicator" data-tab-bar-target="indicator"></div>
+</nav>
