@@ -39,12 +39,13 @@ fr:
     city_crawls:
       new:
         place_type_labels:
-          bar: Bar
-          restaurant: Restaurant
-          whiskey_bar: Whiskey bar
-          wine_bar: Wine bar
-        place_types_defaults_helper: Defaults will be used if none are selected.
-        place_types_label: Place types
+          bar: Barre
+          restaurant: Établissement
+          whiskey_bar: Bar à whisky
+          wine_bar: Bar à vin
+        place_types_defaults_helper: Les valeurs par défaut seront utilisées si aucune
+          n'est sélectionnée.
+        place_types_label: Types de lieux
         title: Crawl a City
     dashboard:
       kpis:

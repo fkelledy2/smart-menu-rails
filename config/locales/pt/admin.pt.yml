@@ -40,12 +40,13 @@ pt:
       new:
         place_type_labels:
           bar: Bar
-          restaurant: Restaurant
-          whiskey_bar: Whiskey bar
-          wine_bar: Wine bar
-        place_types_defaults_helper: Defaults will be used if none are selected.
-        place_types_label: Place types
-        title: Crawl a City
+          restaurant: Restaurante
+          whiskey_bar: Bar de uísque
+          wine_bar: Bar de vinhos
+        place_types_defaults_helper: As predefinições serão utilizadas se não for
+          selecionada nenhuma.
+        place_types_label: Tipos de locais
+        title: Rastejar uma cidade
     dashboard:
       kpis:
         bounce_rate: Taxa de Rejeição

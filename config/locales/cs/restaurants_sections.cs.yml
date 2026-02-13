@@ -102,7 +102,7 @@ cs:
         currency_help: Měna pro všechny ceny
         description_help: Stručný popis, který se zobrazí v nabídce
         description_placeholder: Popište svou restauraci, kuchyni a její výjimečnost...
-        establishment_types_help: Select one or more types that describe this venue.
+        establishment_types_help: Vyberte jeden nebo více typů, které toto místo popisují.
         image_context_details: Podrobnosti o kontextu obrázku
         image_style_profile_help: Určení stylu a předvoleb prezentace pro obrázky
           položek menu generované umělou inteligencí
@@ -151,9 +151,9 @@ cs:
         default_title: 'Importovat #%{id}'
         delete_import: Odstranit import
         delete_selected: Odstranit vybrané
-        discovered_menus_desc: Menu PDFs found on the restaurant website. Import one
-          to start the AI extraction process.
-        discovered_menus_title: Discovered Menus
+        discovered_menus_desc: PDF s jídelním lístkem najdete na webových stránkách
+          restaurace. Importem jednoho z nich zahájíte proces extrakce umělé inteligence.
+        discovered_menus_title: Objevené nabídky
         info_text: Nahrajte svůj jídelní lístek ve formátu PDF a naše umělá inteligence
           automaticky extrahuje všechny položky, oddíly, ceny a popisy.
         info_title: Import menu s umělou inteligencí

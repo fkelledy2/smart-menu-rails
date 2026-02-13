@@ -22,7 +22,7 @@ de:
       name_placeholder: z.B. Erdnüsse, Molkereiprodukte, Gluten
       symbol: Symbol
       symbol_help: 'Fakultativ: Emoji oder kurzes Symbol zur Darstellung dieses Allergens'
-      symbol_placeholder: "z.B. 🥜, 🥛, 🌾"
+      symbol_placeholder: "z.B. \U0001F95C, \U0001F95B, \U0001F33E"
     index:
       all_allergyns: Alle Allergene
       allergyns: Allergene
