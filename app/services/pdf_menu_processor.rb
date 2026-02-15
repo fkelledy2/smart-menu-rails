@@ -177,7 +177,7 @@ class PdfMenuProcessor
       # Using ImageMagick via MiniMagick. Requires ImageMagick installed.
       # Output filenames will be like page-0.png, page-1.png, ...
       begin
-        MiniMagick::Tool::Convert.new do |convert|
+        MiniMagick.convert do |convert|
           convert.density(300)
           convert << pdf_path
           convert.quality(90)
