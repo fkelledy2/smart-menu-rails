@@ -15,10 +15,6 @@ class JavascriptHelperAutoSaveTest < ActionView::TestCase
     assert_equal 'true', attributes['auto-save']
     assert_equal 2000, attributes['auto-save-delay']
 
-    puts '✓ Auto-save attributes generated:'
-    puts "  restaurant-form: #{attributes['restaurant-form']}"
-    puts "  auto-save: #{attributes['auto-save']}"
-    puts "  auto-save-delay: #{attributes['auto-save-delay']}"
   end
 
   test 'form_data_attributes respects custom auto-save delay' do
@@ -27,7 +23,6 @@ class JavascriptHelperAutoSaveTest < ActionView::TestCase
     assert_equal 'true', attributes['auto-save']
     assert_equal 5000, attributes['auto-save-delay']
 
-    puts "✓ Custom delay respected: #{attributes['auto-save-delay']}ms"
   end
 
   test 'form_data_attributes omits auto-save when disabled' do
@@ -37,7 +32,6 @@ class JavascriptHelperAutoSaveTest < ActionView::TestCase
     assert_nil attributes['auto-save']
     assert_nil attributes['auto-save-delay']
 
-    puts '✓ Auto-save attributes omitted when disabled'
   end
 
   test 'restaurant_form_with passes auto-save option correctly' do
@@ -52,9 +46,6 @@ class JavascriptHelperAutoSaveTest < ActionView::TestCase
     assert_match(/data-auto-save="true"/, form_html)
     assert_match(/data-auto-save-delay="2000"/, form_html)
 
-    puts '✓ restaurant_form_with generates correct HTML:'
-    puts '  Contains data-auto-save="true"'
-    puts '  Contains data-auto-save-delay="2000"'
   end
 
   test 'restaurant_form_with works with custom delay' do
@@ -65,7 +56,6 @@ class JavascriptHelperAutoSaveTest < ActionView::TestCase
     assert_match(/data-auto-save="true"/, form_html)
     assert_match(/data-auto-save-delay="3000"/, form_html)
 
-    puts '✓ Custom delay applied: 3000ms'
   end
 
   test 'restaurant_form_with without auto-save does not add attributes' do
@@ -75,7 +65,6 @@ class JavascriptHelperAutoSaveTest < ActionView::TestCase
 
     assert_no_match(/data-auto-save="true"/, form_html)
 
-    puts '✓ No auto-save attributes when not enabled'
   end
 
   test 'restaurant_form_with uses correct form action for existing restaurant' do
@@ -87,7 +76,6 @@ class JavascriptHelperAutoSaveTest < ActionView::TestCase
     assert_match(/method="post"/, form_html)
     assert_match(/<input[^>]*name="_method"[^>]*value="patch"/, form_html)
 
-    puts '✓ Form uses PATCH method for existing restaurant'
   end
 
   test 'form_data_attributes includes both auto-save and validate' do
@@ -96,9 +84,6 @@ class JavascriptHelperAutoSaveTest < ActionView::TestCase
     assert_equal 'true', attributes['auto-save']
     assert_equal 'true', attributes['validate']
 
-    puts '✓ Both auto-save and validate attributes present'
-    puts "  auto-save: #{attributes['auto-save']}"
-    puts "  validate: #{attributes['validate']}"
   end
 
   test 'menu_form_with also supports auto-save' do
@@ -111,6 +96,5 @@ class JavascriptHelperAutoSaveTest < ActionView::TestCase
     assert_match(/data-auto-save="true"/, form_html)
     assert_match(/data-auto-save-delay="2000"/, form_html)
 
-    puts '✓ menu_form_with also supports auto-save'
   end
 end

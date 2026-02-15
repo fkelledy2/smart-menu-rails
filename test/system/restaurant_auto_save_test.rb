@@ -28,8 +28,6 @@ class RestaurantAutoSaveTest < ApplicationSystemTestCase
     assert_equal 'true', form['data-auto-save']
     assert_equal '2000', form['data-auto-save-delay']
 
-    puts "✓ Form has data-auto-save='true'"
-    puts "✓ Form has data-auto-save-delay='2000'"
   end
 
   test 'FormManager initializes and detects auto-save forms' do
@@ -40,7 +38,6 @@ class RestaurantAutoSaveTest < ApplicationSystemTestCase
 
     # Verify the auto-save controller is wired on at least one form
     assert_selector('form[data-controller~="auto-save"]', wait: 5)
-    puts '✓ Auto-save controller present on a form'
   end
 
   test 'auto-save triggers after typing stops' do
@@ -54,7 +51,6 @@ class RestaurantAutoSaveTest < ApplicationSystemTestCase
     # Clear and type new name
     name_field.fill_in with: new_name
 
-    puts "✓ Typed new restaurant name: #{new_name}"
 
     # Wait for DB persistence (poll)
     saved = false
@@ -68,9 +64,6 @@ class RestaurantAutoSaveTest < ApplicationSystemTestCase
     end
     assert saved, 'Restaurant name should be auto-saved'
 
-    puts '✓ Restaurant name was auto-saved to database'
-    puts "  Original: #{original_name}"
-    puts "  New: #{@restaurant.name}"
   end
 
   test 'auto-save shows success indicator' do
@@ -97,7 +90,6 @@ class RestaurantAutoSaveTest < ApplicationSystemTestCase
       sleep 0.5
     end
     assert saved, 'Description should be auto-saved'
-    puts '✓ Description was saved to database'
   end
 
   test 'auto-save makes PATCH request with correct data' do
@@ -108,7 +100,6 @@ class RestaurantAutoSaveTest < ApplicationSystemTestCase
     new_description = 'Auto-save patch test'
     description_field.fill_in with: new_description
 
-    puts '✓ Changed description'
 
     begin
       page.has_selector?('#auto-save-indicator', wait: 5)
@@ -137,7 +128,6 @@ class RestaurantAutoSaveTest < ApplicationSystemTestCase
     forms = all('form[data-auto-save="true"]')
     assert forms.count >= 2, 'Should have at least 2 auto-save forms'
 
-    puts "✓ Found #{forms.count} auto-save forms"
 
     name_field = find('input[name="restaurant[name]"]')
     name_field.fill_in with: 'Test Restaurant 1'
@@ -147,7 +137,6 @@ class RestaurantAutoSaveTest < ApplicationSystemTestCase
       nil
     end
 
-    puts '✓ Auto-save triggered'
   end
 
   test 'auto-save handles validation errors gracefully' do
@@ -173,7 +162,5 @@ class RestaurantAutoSaveTest < ApplicationSystemTestCase
     assert_not_nil @restaurant.name, 'Name should not be blank after failed save'
     assert @restaurant.name.present?, 'Name should still have value'
 
-    puts '✓ Validation error handled gracefully'
-    puts "✓ Restaurant name preserved: #{@restaurant.name}"
   end
 end

@@ -334,9 +334,4 @@ class LocalizeMenuServiceTest < ActiveSupport::TestCase
       assert_equal 0, stats[:errors].length
     end
   end
-
-  test 'localize_all_menus_to_locale_continues_on_individual_menu_errors' do
-    # Skip this test - stub_any_instance not available in minitest
-    skip 'Requires mocha or similar mocking library for stub_any_instance'
-  end
 end

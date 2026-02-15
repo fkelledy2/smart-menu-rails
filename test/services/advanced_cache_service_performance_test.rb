@@ -59,12 +59,6 @@ class AdvancedCacheServicePerformanceTest < ActiveSupport::TestCase
     # Cached calls should be significantly faster
     assert cached_time < uncached_time, 'Cached calls should be faster than uncached calls'
     assert cached_time < first_cached_time, 'Subsequent cached calls should be faster than first cached call'
-
-    puts "\nRestaurant Dashboard Performance:"
-    puts "  Uncached (5 calls): #{(uncached_time * 1000).round(2)}ms"
-    puts "  First cached call: #{(first_cached_time * 1000).round(2)}ms"
-    puts "  Cached (5 calls): #{(cached_time * 1000).round(2)}ms"
-    puts "  Performance improvement: #{((uncached_time - cached_time) / uncached_time * 100).round(1)}%"
   end
 
   test 'menu caching performance with complex data' do
@@ -84,11 +78,6 @@ class AdvancedCacheServicePerformanceTest < ActiveSupport::TestCase
     performance_ratio = cached_time / uncached_time
     assert performance_ratio < 1.5,
            "Cached menu calls should not be significantly slower (ratio: #{performance_ratio.round(2)})"
-
-    puts "\nMenu Caching Performance:"
-    puts "  Uncached (3 calls): #{(uncached_time * 1000).round(2)}ms"
-    puts "  Cached (3 calls): #{(cached_time * 1000).round(2)}ms"
-    puts "  Performance improvement: #{((uncached_time - cached_time) / uncached_time * 100).round(1)}%"
   end
 
   test 'cache warming performance' do
@@ -102,9 +91,6 @@ class AdvancedCacheServicePerformanceTest < ActiveSupport::TestCase
       assert_equal 1, result[:restaurants_warmed], 'Should warm exactly 1 restaurant'
     end
 
-    puts "\nCache Warming Performance:"
-    puts "  Warming time for 1 restaurant: #{(warming_time * 1000).round(2)}ms"
-
     # Verify caches are actually warmed
     dashboard_time = Benchmark.realtime do
       AdvancedCacheService.cached_restaurant_dashboard(@restaurant.id)
@@ -112,7 +98,6 @@ class AdvancedCacheServicePerformanceTest < ActiveSupport::TestCase
 
     # Should be very fast since cache is warmed
     assert dashboard_time < 0.01, 'Warmed cache should respond very quickly'
-    puts "  Dashboard access after warming: #{(dashboard_time * 1000).round(2)}ms"
   end
 
   test 'cache health check performance' do
@@ -123,9 +108,6 @@ class AdvancedCacheServicePerformanceTest < ActiveSupport::TestCase
       assert health[:operations][:read], 'Read operation should succeed'
       assert health[:operations][:delete], 'Delete operation should succeed'
     end
-
-    puts "\nCache Health Check Performance:"
-    puts "  Health check time: #{(health_check_time * 1000).round(2)}ms"
 
     # Health check should be fast
     assert health_check_time < 0.1, 'Health check should complete quickly'
@@ -140,9 +122,6 @@ class AdvancedCacheServicePerformanceTest < ActiveSupport::TestCase
     invalidation_time = Benchmark.realtime do
       AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id)
     end
-
-    puts "\nCache Invalidation Performance:"
-    puts "  Restaurant cache invalidation: #{(invalidation_time * 1000).round(2)}ms"
 
     # Invalidation should be fast
     assert invalidation_time < 0.1, 'Cache invalidation should be fast'
@@ -173,9 +152,6 @@ class AdvancedCacheServicePerformanceTest < ActiveSupport::TestCase
       threads.each(&:join)
     end
 
-    puts "\nConcurrent Cache Access Performance:"
-    puts "  5 concurrent operations: #{(concurrent_time * 1000).round(2)}ms"
-
     # All results should be the same (from cache)
     first_result = results.first
     results.each do |result|
@@ -195,11 +171,6 @@ class AdvancedCacheServicePerformanceTest < ActiveSupport::TestCase
     assert cache_info[:memory_usage][:estimated_mb].positive?, 'Should estimate some memory usage'
     assert cache_info[:active_keys].positive?, 'Should estimate some active keys'
     assert cache_info[:total_methods] > 10, 'Should have multiple cache methods'
-
-    puts "\nMemory Usage Estimation:"
-    puts "  Estimated memory: #{cache_info[:memory_usage][:estimated_mb]}MB"
-    puts "  Estimated active keys: #{cache_info[:active_keys]}"
-    puts "  Total cache methods: #{cache_info[:total_methods]}"
   end
 
   private

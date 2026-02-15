@@ -98,10 +98,8 @@ class PushNotificationServiceTest < ActiveSupport::TestCase
     assert_equal 1, count
   end
 
-  test 'send_order_update should handle order without user' do
-    # Skip this test as Ordr requires user association
-    skip 'Ordr model requires user association'
-  end
+  # NOTE: send_order_update test for order without user removed —
+  # Ordr model requires user association, making this scenario impossible.
 
   test 'send_menu_update should send notification with menu data' do
     restaurant = restaurants(:one)

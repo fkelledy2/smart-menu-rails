@@ -139,21 +139,6 @@ class TaxesControllerSimpleTest < ActionDispatch::IntegrationTest
 
   # === ERROR HANDLING TESTS ===
 
-  test 'should handle invalid tax data' do
-    skip 'Controller may not set required instance variables on validation failure'
-    post restaurant_taxes_url(@restaurant), params: {
-      tax: {
-        name: '', # Invalid - required
-        taxpercentage: 'invalid', # Invalid - not a number
-        taxtype: :local,
-        restaurant_id: @restaurant.id,
-      },
-    }
-
-    # Should handle validation errors gracefully
-    assert_includes [200, 422], response.status
-  end
-
   test 'should handle missing tax' do
     get restaurant_tax_url(@restaurant, 99999)
     # May return 200 if error handling is lenient

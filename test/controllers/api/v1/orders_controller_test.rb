@@ -96,11 +96,6 @@ class Api::V1::OrdersControllerBasicTest < ActionDispatch::IntegrationTest
 
   # === ERROR HANDLING TESTS ===
 
-  test 'should handle invalid JSON gracefully' do
-    # Test with malformed JSON - skip this test as it causes parsing errors
-    skip 'JSON parsing errors are handled at middleware level'
-  end
-
   test 'should handle missing content type' do
     # Test without proper content type
     post api_v1_restaurant_orders_url(@restaurant),
