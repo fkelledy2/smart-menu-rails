@@ -198,6 +198,43 @@
             <p class="text-muted small mb-2 ms-4"><%= section.description %></p>
           <% end %>
 
+          <%# Section-level pricing tool %>
+          <% section_items = section.ocr_menu_items.ordered %>
+          <% estimated_count = section_items.count { |i| (i.metadata || {})['price_estimated'] == true } %>
+          <% unpriced_count = section_items.count { |i| i.price.blank? || i.price.to_f.zero? } %>
+          <% if estimated_count > 0 || unpriced_count > 0 %>
+            <div class="ms-4 mb-2 p-2 rounded-2 d-flex align-items-center gap-2 flex-wrap" style="background: #fff8e1; border: 1px solid #ffe082;">
+              <i class="bi bi-lightbulb text-warning" aria-hidden="true"></i>
+              <span class="small text-dark">
+                <% if estimated_count > 0 && unpriced_count > 0 %>
+                  <%= estimated_count %> estimated price<%= estimated_count == 1 ? '' : 's' %>, <%= unpriced_count %> unpriced
+                <% elsif estimated_count > 0 %>
+                  <%= estimated_count %> estimated price<%= estimated_count == 1 ? '' : 's' %>
+                <% else %>
+                  <%= unpriced_count %> unpriced item<%= unpriced_count == 1 ? '' : 's' %>
+                <% end %>
+              </span>
+              <span class="text-muted small">|</span>
+              <span class="small text-muted">Set section price:</span>
+              <input type="number" step="0.5" min="0" class="form-control form-control-sm" style="width: 80px;"
+                     data-role="section-price-input" data-section-id="<%= section.id %>">
+              <button type="button" class="btn btn-sm btn-warning px-2 py-0"
+                      data-role="section-price-btn"
+                      data-section-id="<%= section.id %>"
+                      data-url="<%= set_section_price_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>"
+                      title="Apply to unpriced/estimated items only">
+                <i class="bi bi-check-lg" aria-hidden="true"></i> Apply
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-secondary px-2 py-0"
+                      data-role="section-price-all-btn"
+                      data-section-id="<%= section.id %>"
+                      data-url="<%= set_section_price_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>"
+                      title="Override ALL items in this section">
+                All
+              </button>
+            </div>
+          <% end %>
+
           <%# Items %>
           <div class="collapse show ms-4" id="section-<%= section.id %>-items" data-menu-section-target="content">
             <div class="vstack">
@@ -226,6 +263,11 @@
                   </div>
                   <div class="d-flex align-items-center gap-2 flex-shrink-0">
                     <span class="fw-medium"><%= number_to_currency(item.price, unit: @restaurantCurrency&.symbol || "$") %></span>
+                    <% if (item.metadata || {})['price_estimated'] == true %>
+                      <span class="badge bg-warning bg-opacity-25 text-dark border border-warning border-opacity-50" style="font-size: 0.65rem;" title="Price estimated by AI — click edit to adjust">
+                        <i class="bi bi-lightbulb me-1" aria-hidden="true"></i>est.
+                      </span>
+                    <% end %>
                     <button type="button" class="btn btn-sm btn-outline-secondary px-1 py-0"
                             data-bs-toggle="modal"
                             data-bs-target="#editItemModal"

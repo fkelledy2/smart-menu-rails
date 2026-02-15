@@ -1,5 +1,6 @@
 <% place_details = @discovered_restaurant.place_details %>
 <% deep_dive = @discovered_restaurant.metadata.is_a?(Hash) ? (@discovered_restaurant.metadata['website_deep_dive'] || {}) : {} %>
+<% web_scrape = @discovered_restaurant.metadata.is_a?(Hash) ? (@discovered_restaurant.metadata['web_menu_scrape'] || {}) : {} %>
 <% phone_candidates = begin
   c = Array(deep_dive['phones']).reject(&:blank?)
   gp = place_details['international_phone_number'].to_s.strip
@@ -44,9 +45,11 @@ end %>
 } %>
 
 <div class="container-fluid px-0 py-4"
-     data-controller="discovered-restaurant-deep-dive"
+     data-controller="discovered-restaurant-deep-dive discovered-restaurant-web-scrape"
      data-discovered-restaurant-deep-dive-status-url-value="<%= deep_dive_status_admin_discovered_restaurant_path(@discovered_restaurant) %>"
-     data-discovered-restaurant-deep-dive-initial-status-value="<%= deep_dive['status'].to_s %>">
+     data-discovered-restaurant-deep-dive-initial-status-value="<%= deep_dive['status'].to_s %>"
+     data-discovered-restaurant-web-scrape-status-url-value="<%= web_menu_scrape_status_admin_discovered_restaurant_path(@discovered_restaurant) %>"
+     data-discovered-restaurant-web-scrape-initial-status-value="<%= web_scrape['status'].to_s %>">
 
   <%# ── HEADER ── %>
   <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
@@ -122,6 +125,14 @@ end %>
                 <span class="spinner-border spinner-border-sm ms-1" role="status"></span>
               <% elsif deep_dive['extracted_at'].present? %>
                 <span class="text-muted">(last: <%= Time.parse(deep_dive['extracted_at']).strftime('%b %d %H:%M') rescue deep_dive['extracted_at'] %>)</span>
+              <% end %>
+              <%= link_to scrape_web_menus_admin_discovered_restaurant_path(@discovered_restaurant),
+                    class: 'text-decoration-none ms-2', title: 'Scrape web menus',
+                    data: { turbo: true, turbo_method: :post } do %>
+                <i class="bi bi-file-earmark-text"></i>
+              <% end %>
+              <% if web_scrape['status'] == 'queued' || web_scrape['status'] == 'scraping' || web_scrape['status'] == 'processing' %>
+                <span class="spinner-border spinner-border-sm ms-1" role="status"></span>
               <% end %>
             </span>
           <% end %>
@@ -244,6 +255,53 @@ end %>
     </div>
   </div>
 
+  <%# ── WEB MENU SCRAPE STATUS ── %>
+  <% if web_scrape.present? && web_scrape['status'].present? %>
+    <div class="p-3 mb-3" data-testid="discovered-restaurant-web-scrape">
+      <h2 class="h6 fw-semibold mb-2">
+        <i class="bi bi-file-earmark-text me-1"></i>Web Menu Scrape
+        <% case web_scrape['status'] %>
+        <% when 'queued', 'scraping', 'processing' %>
+          <span class="badge bg-warning text-dark ms-1"><%= web_scrape['status'] %></span>
+          <span class="spinner-border spinner-border-sm ms-1" role="status"></span>
+        <% when 'completed' %>
+          <span class="badge bg-success ms-1">completed</span>
+        <% when 'failed' %>
+          <span class="badge bg-danger ms-1">failed</span>
+        <% end %>
+      </h2>
+      <div class="small">
+        <% if web_scrape['message'].present? %>
+          <p class="mb-1"><%= web_scrape['message'] %></p>
+        <% end %>
+        <% if web_scrape['error'].present? %>
+          <p class="mb-1 text-danger"><%= web_scrape['error'] %></p>
+        <% end %>
+        <% if web_scrape['html_pages_found'].present? %>
+          <span class="text-muted me-3">HTML pages: <strong><%= web_scrape['html_pages_found'] %></strong></span>
+        <% end %>
+        <% if web_scrape['pdf_urls_found'].present? %>
+          <span class="text-muted me-3">PDF URLs: <strong><%= web_scrape['pdf_urls_found'] %></strong></span>
+        <% end %>
+        <% if web_scrape['sections_count'].present? %>
+          <span class="text-muted me-3">Sections: <strong><%= web_scrape['sections_count'] %></strong></span>
+        <% end %>
+        <% if web_scrape['items_count'].present? %>
+          <span class="text-muted me-3">Items: <strong><%= web_scrape['items_count'] %></strong></span>
+        <% end %>
+        <% if web_scrape['ocr_menu_import_id'].present? && @discovered_restaurant.restaurant.present? %>
+          <br>
+          <%= link_to "View import ##{web_scrape['ocr_menu_import_id']}",
+                restaurant_ocr_menu_import_path(@discovered_restaurant.restaurant, web_scrape['ocr_menu_import_id']),
+                class: 'text-decoration-none' %>
+        <% end %>
+        <% if web_scrape['updated_at'].present? %>
+          <br><span class="text-muted">Updated: <%= Time.parse(web_scrape['updated_at']).strftime('%b %d %H:%M') rescue web_scrape['updated_at'] %></span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
   <%# ── MENU SOURCES (only if any exist) ── %>
   <% menu_sources = @discovered_restaurant.menu_sources.order(:name, :id).to_a %>
   <% if menu_sources.any? %>
@@ -253,7 +311,8 @@ end %>
         <thead>
           <tr class="small text-muted">
             <th>Name</th>
-            <th>File</th>
+            <th>Type</th>
+            <th>Source</th>
           </tr>
         </thead>
         <tbody>
@@ -272,8 +331,17 @@ end %>
                 <% end %>
               </td>
               <td class="small">
+                <% if ms.pdf? %>
+                  <span class="badge bg-danger-subtle text-danger">PDF</span>
+                <% else %>
+                  <span class="badge bg-info-subtle text-info">HTML</span>
+                <% end %>
+              </td>
+              <td class="small">
                 <% if ms.latest_file.attached? %>
                   <%= link_to ms.latest_file.filename.to_s, rails_blob_path(ms.latest_file, disposition: 'attachment') %>
+                <% elsif ms.source_url.present? %>
+                  <%= link_to truncate(ms.source_url, length: 60), ms.source_url, target: '_blank', rel: 'noopener' %>
                 <% else %>
                   <span class="text-muted">—</span>
                 <% end %>

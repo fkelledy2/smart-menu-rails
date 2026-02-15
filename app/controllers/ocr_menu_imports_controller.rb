@@ -8,10 +8,10 @@ class OcrMenuImportsController < ApplicationController
   before_action :set_restaurant
   before_action :set_ocr_menu_import,
                 only: %i[show edit update destroy process_pdf progress confirm_import reorder_sections reorder_items toggle_section_confirmation
-                         toggle_all_confirmation polish polish_progress]
+                         toggle_all_confirmation polish polish_progress set_section_price]
   before_action :authorize_import,
                 only: %i[show edit update destroy process_pdf progress confirm_import reorder_sections reorder_items toggle_section_confirmation
-                         toggle_all_confirmation polish polish_progress]
+                         toggle_all_confirmation polish polish_progress set_section_price]
 
   # GET /restaurants/:restaurant_id/ocr_menu_imports
   def index
@@ -48,6 +48,34 @@ class OcrMenuImportsController < ApplicationController
   rescue StandardError => e
     Rails.logger.error("toggle_all_confirmation error: #{e.class}: #{e.message}")
     render json: { ok: false, error: 'unable to update all' }, status: :unprocessable_content
+  end
+
+  # PATCH /restaurants/:restaurant_id/ocr_menu_imports/:id/set_section_price
+  def set_section_price
+    section = @ocr_menu_import.ocr_menu_sections.find(params[:section_id])
+    price = BigDecimal(params[:price].to_s)
+
+    if price.negative?
+      return render json: { ok: false, error: 'Price must be >= 0' }, status: :unprocessable_content
+    end
+
+    scope = section.ocr_menu_items
+    scope = scope.where('price IS NULL OR price = 0') unless ActiveModel::Type::Boolean.new.cast(params[:override_all])
+
+    updated = 0
+    scope.find_each do |item|
+      item.update!(
+        price: price,
+        metadata: (item.metadata || {}).merge('price_estimated' => false, 'price_source' => 'admin_section_override'),
+      )
+      updated += 1
+    end
+
+    render json: { ok: true, updated: updated, section_id: section.id, price: price.to_f }
+  rescue ActiveRecord::RecordNotFound
+    render json: { ok: false, error: 'Section not found' }, status: :not_found
+  rescue StandardError => e
+    render json: { ok: false, error: e.message }, status: :unprocessable_content
   end
 
   # GET /restaurants/:restaurant_id/ocr_menu_imports/:id
@@ -221,6 +249,56 @@ class OcrMenuImportsController < ApplicationController
     else
       redirect_to edit_restaurant_path(@restaurant, section: 'import'),
                   alert: "Could not create import: #{import.errors.full_messages.join(', ')}", status: :see_other
+    end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to edit_restaurant_path(@restaurant, section: 'import'),
+                alert: 'Menu source not found', status: :see_other
+  end
+
+  # POST /restaurants/:restaurant_id/ocr_menu_imports/import_from_web_menu_source
+  def import_from_web_menu_source
+    menu_source = MenuSource.find(params[:menu_source_id])
+
+    unless menu_source.html? && menu_source.source_url.present?
+      redirect_to edit_restaurant_path(@restaurant, section: 'import'),
+                  alert: 'Not a valid web menu source', status: :see_other
+      return
+    end
+
+    # Scrape the HTML page(s)
+    scraper = MenuDiscovery::WebMenuScraper.new
+    scrape_result = scraper.scrape([{ url: menu_source.source_url, html: nil }])
+
+    if scrape_result[:menu_text].blank?
+      redirect_to edit_restaurant_path(@restaurant, section: 'import'),
+                  alert: 'Could not extract menu text from the web page', status: :see_other
+      return
+    end
+
+    import = @restaurant.ocr_menu_imports.create!(
+      name: "Web menu – #{menu_source.display_name}",
+      status: 'pending',
+      metadata: {
+        'source' => 'web_scrape',
+        'menu_source_id' => menu_source.id,
+        'source_urls' => scrape_result[:source_urls],
+      },
+    )
+
+    begin
+      import.process!
+      processor = WebMenuProcessor.new(import)
+      processor.process(
+        menu_text: scrape_result[:menu_text],
+        source_urls: scrape_result[:source_urls],
+      )
+      import.complete!
+      redirect_to restaurant_ocr_menu_import_path(@restaurant, import),
+                  notice: 'Web menu imported and processed successfully'
+    rescue StandardError => e
+      import.fail!(e.message) rescue nil
+      redirect_to restaurant_ocr_menu_import_path(@restaurant, import),
+                  alert: "Import created but processing failed: #{e.message}", status: :see_other
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to edit_restaurant_path(@restaurant, section: 'import'),

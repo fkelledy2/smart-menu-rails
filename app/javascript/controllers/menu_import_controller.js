@@ -52,6 +52,9 @@ export default class extends Controller {
     // Add event listener for keyboard shortcuts
     document.addEventListener('keydown', this.handleKeyDown.bind(this));
 
+    // Section-level pricing buttons
+    this.element.addEventListener('click', this.handleSectionPriceClick.bind(this));
+
     this.progressTimer = null;
     this.startProgressPolling();
   }
@@ -114,6 +117,8 @@ export default class extends Controller {
         this.phaseTextTarget.textContent = 'Parsing menu structure…';
       } else if (phase === 'saving_menu') {
         this.phaseTextTarget.textContent = 'Saving menu items…';
+      } else if (phase === 'estimating_prices') {
+        this.phaseTextTarget.textContent = 'Estimating missing prices…';
       }
     }
 
@@ -541,6 +546,62 @@ export default class extends Controller {
     const itemsContainer = document.querySelector(`[data-section-id="${sectionId}"]`);
     if (itemsContainer) {
       itemsContainer.classList.toggle('hidden');
+    }
+  }
+
+  // Section-level pricing: delegated click handler
+  async handleSectionPriceClick(event) {
+    const applyBtn = event.target.closest('[data-role="section-price-btn"]');
+    const allBtn = event.target.closest('[data-role="section-price-all-btn"]');
+    const btn = applyBtn || allBtn;
+    if (!btn) return;
+
+    const sectionId = btn.dataset.sectionId;
+    const url = btn.dataset.url;
+    const input = this.element.querySelector(`[data-role="section-price-input"][data-section-id="${sectionId}"]`);
+    if (!input) return;
+
+    const price = parseFloat(input.value);
+    if (isNaN(price) || price < 0) {
+      input.classList.add('is-invalid');
+      return;
+    }
+    input.classList.remove('is-invalid');
+
+    const overrideAll = !!allBtn;
+    const origHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
+
+    try {
+      const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
+      const res = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'X-CSRF-Token': csrfToken,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ section_id: sectionId, price: price, override_all: overrideAll }),
+        credentials: 'same-origin',
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      if (data.ok) {
+        // Reload to reflect updated prices and badges
+        window.location.reload();
+      } else {
+        alert(data.error || 'Failed to update prices');
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+      }
+    } catch (e) {
+      console.error('Section pricing error:', e);
+      alert('Failed to update section prices');
+      btn.disabled = false;
+      btn.innerHTML = origHtml;
     }
   }
 

@@ -9,7 +9,7 @@ module Admin
     before_action :ensure_admin!
     before_action :require_super_admin!
 
-    before_action :set_discovered_restaurant, only: %i[show update approve reject deep_dive_website deep_dive_status place_details refresh_place_details resync_to_restaurant]
+    before_action :set_discovered_restaurant, only: %i[show update approve reject deep_dive_website deep_dive_status scrape_web_menus web_menu_scrape_status place_details refresh_place_details resync_to_restaurant]
 
     def index
       base_scope = DiscoveredRestaurant.all
@@ -110,6 +110,45 @@ module Admin
       redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), notice: 'Saved', status: :see_other)
     rescue ActiveRecord::RecordInvalid => e
       redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), alert: e.record.errors.full_messages.first, status: :see_other)
+    end
+
+    # POST /admin/discovered_restaurants
+    def create
+      website_url = params.dig(:discovered_restaurant, :website_url).to_s.strip
+      name = params.dig(:discovered_restaurant, :name).to_s.strip
+      city_name = params.dig(:discovered_restaurant, :city_name).to_s.strip
+
+      if website_url.blank?
+        redirect_to admin_discovered_restaurants_path, alert: 'Website URL is required', status: :see_other
+        return
+      end
+
+      # Normalize URL
+      website_url = "https://#{website_url}" unless website_url.match?(%r{\Ahttps?://}i)
+
+      # Auto-fill name from domain if not provided
+      if name.blank?
+        uri = URI.parse(website_url) rescue nil
+        name = uri&.host&.sub(/\Awww\./, '')&.split('.')&.first&.titleize || 'Unknown'
+      end
+
+      city_name = 'Manual Entry' if city_name.blank?
+
+      dr = DiscoveredRestaurant.new(
+        name: name,
+        website_url: website_url,
+        city_name: city_name,
+        google_place_id: "manual_#{SecureRandom.hex(8)}",
+        status: :pending,
+        discovered_at: Time.current,
+        metadata: { 'source' => 'manual', 'created_by' => current_user&.id },
+      )
+
+      if dr.save
+        redirect_to admin_discovered_restaurant_path(dr), notice: "#{dr.name} added — run Deep Dive or Web Menu Scrape to populate details", status: :see_other
+      else
+        redirect_to admin_discovered_restaurants_path, alert: "Could not create: #{dr.errors.full_messages.join(', ')}", status: :see_other
+      end
     end
 
     def bulk_update
@@ -239,6 +278,45 @@ module Admin
         status: deep_dive['status'].to_s.presence || 'unknown',
         extracted_at: deep_dive['extracted_at'],
         error: deep_dive['error'],
+      }
+    end
+
+    def scrape_web_menus
+      if @discovered_restaurant.website_url.blank?
+        redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), alert: 'No website URL available', status: :see_other)
+        return
+      end
+
+      metadata = @discovered_restaurant.metadata.is_a?(Hash) ? @discovered_restaurant.metadata : {}
+      metadata['web_menu_scrape'] = (metadata['web_menu_scrape'].is_a?(Hash) ? metadata['web_menu_scrape'] : {}).merge(
+        'status' => 'queued',
+        'queued_at' => Time.current.iso8601,
+        'error' => nil,
+      )
+      @discovered_restaurant.update!(metadata: metadata)
+
+      DiscoveredRestaurantWebMenuScrapeJob.perform_later(
+        discovered_restaurant_id: @discovered_restaurant.id,
+        triggered_by_user_id: current_user.id,
+      )
+
+      redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), notice: 'Web menu scrape queued', status: :see_other)
+    end
+
+    def web_menu_scrape_status
+      scrape = @discovered_restaurant.metadata.is_a?(Hash) ? (@discovered_restaurant.metadata['web_menu_scrape'] || {}) : {}
+
+      render json: {
+        status: scrape['status'].to_s.presence || 'unknown',
+        html_pages_found: scrape['html_pages_found'],
+        pdf_urls_found: scrape['pdf_urls_found'],
+        pages_scraped: scrape['pages_scraped'],
+        ocr_menu_import_id: scrape['ocr_menu_import_id'],
+        sections_count: scrape['sections_count'],
+        items_count: scrape['items_count'],
+        message: scrape['message'],
+        error: scrape['error'],
+        updated_at: scrape['updated_at'],
       }
     end
 

@@ -16,7 +16,7 @@
 </div>
 
 <% discovered = restaurant.discovered_restaurant %>
-<% discovered_sources = discovered.present? ? discovered.menu_sources.where(source_type: :pdf, status: :active) : MenuSource.none %>
+<% discovered_sources = discovered.present? ? discovered.menu_sources.where(status: :active) : MenuSource.none %>
 <% has_discovered = discovered_sources.any? %>
 
 <div class="row g-3 mb-3">
@@ -29,29 +29,52 @@
             <%= t('.discovered_menus_title', default: 'Discovered Menus') %>
           </h2>
           <p class="text-muted small mb-3">
-            <%= t('.discovered_menus_desc', default: 'Menu PDFs found on the restaurant website. Import one to start the AI extraction process.') %>
+            Menus discovered on the restaurant website. Import one to start the AI extraction process.
           </p>
           <div class="list-group list-group-flush">
             <% discovered_sources.each do |ms| %>
               <div class="list-group-item d-flex align-items-center justify-content-between px-0">
                 <div class="d-flex align-items-center gap-2" style="min-width:0">
-                  <i class="bi bi-file-earmark-pdf text-danger"></i>
+                  <% if ms.pdf? %>
+                    <i class="bi bi-file-earmark-pdf text-danger"></i>
+                  <% else %>
+                    <i class="bi bi-globe text-info"></i>
+                  <% end %>
                   <div style="min-width:0">
                     <div class="fw-semibold text-truncate">
-                      <% if ms.latest_file.attached? %>
+                      <% if ms.pdf? && ms.latest_file.attached? %>
                         <%= link_to ms.display_name, rails_blob_path(ms.latest_file, disposition: 'inline'), target: '_blank', rel: 'noopener' %>
+                      <% elsif ms.source_url.present? %>
+                        <%= link_to ms.display_name, ms.source_url, target: '_blank', rel: 'noopener' %>
                       <% else %>
                         <%= ms.display_name %>
                       <% end %>
                     </div>
+                    <div class="text-muted" style="font-size:0.7rem">
+                      <% if ms.pdf? %>
+                        PDF
+                      <% else %>
+                        Web page
+                      <% end %>
+                    </div>
                   </div>
                 </div>
-                <%= button_to import_from_menu_source_restaurant_ocr_menu_imports_path(restaurant),
-                      params: { menu_source_id: ms.id },
-                      method: :post,
-                      class: 'btn btn-danger btn-import flex-shrink-0',
-                      data: { turbo_frame: '_top' } do %>
-                    <i class="bi bi-upload me-1"></i> Import
+                <% if ms.pdf? %>
+                  <%= button_to import_from_menu_source_restaurant_ocr_menu_imports_path(restaurant),
+                        params: { menu_source_id: ms.id },
+                        method: :post,
+                        class: 'btn btn-danger btn-import flex-shrink-0',
+                        data: { turbo_frame: '_top' } do %>
+                      <i class="bi bi-upload me-1"></i> Import
+                  <% end %>
+                <% else %>
+                  <%= button_to import_from_web_menu_source_restaurant_ocr_menu_imports_path(restaurant),
+                        params: { menu_source_id: ms.id },
+                        method: :post,
+                        class: 'btn btn-info btn-import flex-shrink-0 text-white',
+                        data: { turbo_frame: '_top' } do %>
+                      <i class="bi bi-globe me-1"></i> Import
+                  <% end %>
                 <% end %>
               </div>
             <% end %>

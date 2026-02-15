@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resource :impersonation, only: [:new, :create, :destroy]
     resources :city_crawls, only: %i[new create]
-    resources :discovered_restaurants, only: %i[index show update] do
+    resources :discovered_restaurants, only: %i[index show update create] do
       collection do
         patch :bulk_update
         get :approved_imports
@@ -47,9 +47,11 @@ Rails.application.routes.draw do
         patch :approve
         patch :reject
         post :deep_dive_website
+        post :scrape_web_menus
         post :refresh_place_details
         post :resync_to_restaurant
         get :deep_dive_status
+        get :web_menu_scrape_status
         get :place_details
       end
       resources :menu_sources, only: %i[update], controller: 'menu_sources'
@@ -408,6 +410,7 @@ Rails.application.routes.draw do
       collection do
         delete :bulk_destroy
         post :import_from_menu_source
+        post :import_from_web_menu_source
       end
       member do
         post :process_pdf
@@ -419,6 +422,7 @@ Rails.application.routes.draw do
         patch :reorder_items
         patch :toggle_section_confirmation
         patch :toggle_all_confirmation
+        patch :set_section_price
       end
     end
   end

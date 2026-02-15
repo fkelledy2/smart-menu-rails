@@ -25,6 +25,29 @@
     </div>
   <% end %>
 
+  <%# Manual add form %>
+  <div class="mb-3 p-3 rounded-2" style="background: #f0f7ff; border: 1px solid #b6d4fe;">
+    <%= form_with url: admin_discovered_restaurants_path, method: :post, local: true, class: 'd-flex align-items-end gap-2 flex-wrap' do %>
+      <div>
+        <%= label_tag 'discovered_restaurant[website_url]', 'Website URL', class: 'form-label small mb-0' %>
+        <%= text_field_tag 'discovered_restaurant[website_url]', nil, class: 'form-control form-control-sm', placeholder: 'https://example.com', required: true, style: 'min-width: 260px;' %>
+      </div>
+      <div>
+        <%= label_tag 'discovered_restaurant[name]', 'Name', class: 'form-label small mb-0' %>
+        <%= text_field_tag 'discovered_restaurant[name]', nil, class: 'form-control form-control-sm', placeholder: 'Optional — auto-detected from URL' %>
+      </div>
+      <div>
+        <%= label_tag 'discovered_restaurant[city_name]', 'City', class: 'form-label small mb-0' %>
+        <%= text_field_tag 'discovered_restaurant[city_name]', nil, class: 'form-control form-control-sm', placeholder: 'Optional' %>
+      </div>
+      <div>
+        <button type="submit" class="btn btn-sm btn-primary">
+          <i class="bi bi-plus-lg me-1"></i> Add Restaurant
+        </button>
+      </div>
+    <% end %>
+  </div>
+
   <div class="mb-3 p-3" data-testid="discovered-restaurants-list-card">
     <div class="d-flex justify-content-between align-items-center mb-2">
       <div class="text-muted">
