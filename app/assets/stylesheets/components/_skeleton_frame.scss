@@ -46,6 +46,46 @@
 }
 
 // ============================================================================
+// TURBO FRAME LOADING STATE
+// Turbo adds [busy] to <turbo-frame> during navigation.
+// We dim content and show a shimmer bar at the top.
+// ============================================================================
+turbo-frame[busy] {
+  position: relative;
+  pointer-events: none;
+
+  > * {
+    opacity: 0.45;
+    transition: opacity var(--motion-duration-base, 200ms) ease;
+  }
+
+  // Shimmer progress bar at top of frame
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 10;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--color-primary, #2563EB) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer var(--motion-duration-slow, 1.5s) ease-in-out infinite;
+  }
+}
+
+// Restore pointer events after load
+turbo-frame:not([busy]) > * {
+  opacity: 1;
+  transition: opacity var(--motion-duration-fast, 100ms) ease;
+}
+
+// ============================================================================
 // DARK MODE
 // ============================================================================
 :root[data-theme="dark"] {

@@ -1,6 +1,8 @@
 <%# Welcome Banner for First-Time Users - Phase 2 %>
-<div class="welcome-banner" id="welcomeBanner" data-dismissible="true">
-  <button type="button" class="welcome-dismiss" onclick="dismissWelcomeBanner()" aria-label="<%= t('.dismiss', default: 'Dismiss') %>">
+<div data-controller="welcome-banner" data-welcome-banner-key-value="<%= @smartmenu&.id %>">
+
+<div class="welcome-banner" id="welcomeBanner" data-dismissible="true" data-testid="welcome-banner" data-welcome-banner-target="banner">
+  <button type="button" class="welcome-dismiss" data-action="click->welcome-banner#dismiss" aria-label="<%= t('.dismiss', default: 'Dismiss') %>">
     <i class="bi bi-x"></i>
   </button>
 
@@ -31,7 +33,7 @@
     </ul>
 
     <div class="welcome-actions">
-      <button type="button" class="btn-welcome primary" onclick="dismissWelcomeBanner()">
+      <button type="button" class="btn-welcome primary" data-action="click->welcome-banner#dismiss" data-testid="welcome-dismiss-btn">
         <%= t('.got_it', default: 'Got It!') %>
       </button>
       <button type="button" class="btn-welcome secondary" data-bs-toggle="modal" data-bs-target="#helpModal">
@@ -41,31 +43,8 @@
   </div>
 </div>
 
-<script>
-  function dismissWelcomeBanner() {
-    const banner = document.getElementById('welcomeBanner');
-    if (banner) {
-      banner.classList.add('dismissing');
-      setTimeout(() => {
-        banner.classList.add('d-none');
-        // Store in localStorage so it doesn't show again
-        localStorage.setItem('welcomeBannerDismissed_<%= @smartmenu&.id %>', 'true');
-      }, 300);
-    }
-  }
-
-  // Check if banner was already dismissed
-  document.addEventListener('DOMContentLoaded', function() {
-    const dismissed = localStorage.getItem('welcomeBannerDismissed_<%= @smartmenu&.id %>');
-    const banner = document.getElementById('welcomeBanner');
-    if (dismissed && banner) {
-      banner.classList.add('d-none');
-    }
-  });
-</script>
-
 <%# Compact Welcome Banner (shown after first interaction) %>
-<div class="welcome-banner-compact d-none" id="welcomeBannerCompact" onclick="showWelcomeDetails()">
+<div class="welcome-banner-compact d-none" id="welcomeBannerCompact" data-action="click->welcome-banner#showDetails" data-welcome-banner-target="compact" data-testid="welcome-banner-compact">
   <div class="compact-icon">💡</div>
   <div class="compact-text">
     <div class="compact-title"><%= t('.need_help', default: 'Need Help?') %></div>
@@ -76,17 +55,9 @@
   </div>
 </div>
 
-<script>
-  function showWelcomeDetails() {
-    // Show help modal or expand banner
-    const modal = new bootstrap.Modal(document.getElementById('helpModal'));
-    modal.show();
-  }
-</script>
-
 <%# Help Tip Banner (contextual help) %>
 <% if defined?(show_help_tip) && show_help_tip %>
-  <div class="help-tip-banner" id="helpTipBanner">
+  <div class="help-tip-banner" id="helpTipBanner" data-welcome-banner-target="helpTip">
     <div class="help-icon">
       <i class="bi bi-lightbulb"></i>
     </div>
@@ -96,20 +67,10 @@
         <%= defined?(help_text) ? help_text : t('.default_tip', default: 'Tap the floating red button to view your cart at any time.') %>
       </div>
     </div>
-    <button type="button" class="help-dismiss" onclick="dismissHelpTip()" aria-label="<%= t('.dismiss', default: 'Dismiss') %>">
+    <button type="button" class="help-dismiss" data-action="click->welcome-banner#dismissTip" aria-label="<%= t('.dismiss', default: 'Dismiss') %>">
       <i class="bi bi-x"></i>
     </button>
   </div>
-
-  <script>
-    function dismissHelpTip() {
-      const tipBanner = document.getElementById('helpTipBanner');
-      if (tipBanner) {
-        tipBanner.classList.add('dismissing');
-        setTimeout(() => {
-          tipBanner.classList.add('d-none');
-        }, 300);
-      }
-    }
-  </script>
 <% end %>
+
+</div>

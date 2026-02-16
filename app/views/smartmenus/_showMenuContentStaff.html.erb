@@ -2,7 +2,7 @@
     Uses the shared _menu_section.html.erb for section rendering
 %>
 <div class="row">
-  <div class="col-12 col-md-12 col-lg-12" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+  <div class="col-12 col-md-12 col-lg-12 scrollspy-example" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" tabindex="0" data-testid="staff-menu-sections-container">
     <% menu.menusections.sort_by { |s| s.sequence.to_i }.each do |menusection| %>
       <%= render partial: "smartmenus/menu_section",
                  locals: {

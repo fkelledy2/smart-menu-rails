@@ -9,13 +9,15 @@
 <% restaurant_context = @restaurant || @menu.restaurant %>
 <% read_only = defined?(@read_only_menu_context) && @read_only_menu_context %>
 
-<div data-controller="sidebar">
+<div data-controller="sidebar ai-progress"
+     data-ai-progress-csrf-value="<%= form_authenticity_token %>"
+     data-action="submit->ai-progress#intercept">
   <!-- Page Header -->
   <div class="container-fluid px-0 py-4 bg-white border-bottom sticky-header">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
       <div>
         <!-- Breadcrumb -->
-        <div class="text-gray-500 mb-2">
+        <div class="text-gray-500 mb-2" data-testid="menu-breadcrumb">
           <%= link_to restaurant_context.name,
               edit_restaurant_path(restaurant_context),
               class: 'text-primary' %>
@@ -23,7 +25,7 @@
           <%= t('.menus', default: 'Menus') %>
         </div>
 
-        <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+        <h1 class="text-2xl font-semibold text-gray-900 mb-1" data-testid="menu-title">
           <%= @menu.name %>
         </h1>
 
@@ -60,7 +62,8 @@
       <!-- Mobile Sidebar Toggle -->
       <button class="sidebar-toggle-btn"
               data-action="click->sidebar#toggle"
-              aria-label="Toggle navigation">
+              aria-label="Toggle navigation"
+              data-testid="menu-sidebar-toggle">
         <i class="bi bi-list"></i>
       </button>
     </div>
@@ -161,18 +164,20 @@
 <% end %>
 
 <!-- AI Image Generation Modal -->
-<div class="modal fade z-index-7000" id="aiProgressModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade z-index-7000" id="aiProgressModal" tabindex="-1" aria-hidden="true"
+     data-ai-progress-target="modal"
+     data-action="hidden.bs.modal->ai-progress#dismiss">
   <div class="modal-dialog ai-bottom-sheet z-index-7001 position-fixed bottom-0 left-0 right-0 m-0 width-full max-width-100">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Generate AI Images</h5>
+        <h5 class="modal-title" data-ai-progress-target="modalTitle">Generate AI Images</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div id="ai-confirm-pane">
-          <p>This will generate new AI images for your menu items and may consume API credits. Proceed?</p>
+        <div id="ai-confirm-pane" data-ai-progress-target="confirmPane">
+          <p data-ai-progress-target="confirmText">This will generate new AI images for your menu items and may consume API credits. Proceed?</p>
           <!-- Localization options (visible only for Translate Menu) -->
-          <div id="localize-options" class="mt-3" style="display: none;">
+          <div id="localize-options" class="mt-3" style="display: none;" data-ai-progress-target="localizeOptions">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="localizeMode" id="localize-missing" value="missing" checked>
               <label class="form-check-label" for="localize-missing">
@@ -187,24 +192,24 @@
             </div>
           </div>
         </div>
-        <div id="ai-progress-pane" class="d-none">
+        <div id="ai-progress-pane" class="d-none" data-ai-progress-target="progressPane">
           <div class="mb-2">
             <div class="small text-muted">Currently generating:</div>
-            <div id="ai-progress-text" class="fw-semibold">Starting…</div>
+            <div id="ai-progress-text" class="fw-semibold" data-ai-progress-target="progressText">Starting…</div>
           </div>
           <div class="progress">
-            <div id="ai-progress-bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            <div id="ai-progress-bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" data-ai-progress-target="progressBar"></div>
           </div>
-          <div id="ai-progress-log" class="mt-3 d-none" style="max-height: 220px; overflow: auto;">
+          <div id="ai-progress-log" class="mt-3 d-none" style="max-height: 220px; overflow: auto;" data-ai-progress-target="logWrap">
             <div class="small text-muted mb-2">Progress log</div>
-            <div id="ai-progress-log-items" class="small"></div>
+            <div id="ai-progress-log-items" class="small" data-ai-progress-target="logItems"></div>
           </div>
-          <div class="mt-3 d-none" id="ai-preview">
+          <div class="mt-3 d-none" id="ai-preview" data-ai-progress-target="preview">
             <div class="mb-2">
               <span class="small text-muted me-1">Last Image:</span>
               <span id="ai-preview-name" class="fw-semibold"></span>
             </div>
-            <img id="ai-preview-img" src="" alt="Generated item image" class="img-fluid w-100 rounded border" />
+            <img id="ai-preview-img" src="" alt="Generated item image" class="img-fluid w-100 rounded border" data-ai-progress-target="previewImg" />
             <div class="row mt-3 g-2">
               <div class="col-6 d-flex justify-content-center">
                 <button type="button" class="btn btn-light border d-flex justify-content-center align-items-center py-2 w-100" id="ai-like-btn" title="Thumbs up" aria-label="Thumbs up">
@@ -222,427 +227,11 @@
       </div>
       <div class="modal-footer gap-2">
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><%= t('common.cancel', default: 'Cancel') %></button>
-        <button type="button" id="ai-confirm-btn" class="btn btn-primary">Confirm & Start</button>
+        <button type="button" id="ai-confirm-btn" class="btn btn-primary"
+                data-ai-progress-target="confirmBtn"
+                data-action="click->ai-progress#confirm">Confirm & Start</button>
       </div>
     </div>
   </div>
  </div>
 
-<script>
-  (function(){
-    // Defensive cleanup for any lingering TomSelect wrapper for menu status (Turbo cache safety)
-    function __cleanupMenuStatusTomSelect(){
-      try {
-        const tsCtrl = document.getElementById('menu_status-ts-control');
-        if (tsCtrl) {
-          const wrap = tsCtrl.closest('.ts-wrapper');
-          if (wrap) wrap.remove();
-        }
-        const sel = document.getElementById('menu_status');
-        if (sel) {
-          if (sel.tomselect && typeof sel.tomselect.destroy === 'function') {
-            try { sel.tomselect.destroy(); } catch(_) {}
-          }
-          sel.remove();
-        }
-      } catch(_) {}
-    }
-
-    // Run immediately and on Turbo swaps
-    __cleanupMenuStatusTomSelect();
-    document.addEventListener('turbo:load', __cleanupMenuStatusTomSelect);
-    document.addEventListener('turbo:frame-load', __cleanupMenuStatusTomSelect);
-
-    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
-    let pendingForm = null;
-    let pollTimer = null;
-    let currentJobId = null;
-    let currentMode = 'ai'; // 'ai' | 'localize' | 'polish'
-
-    // Global auto-save: submit any form marked with data-auto-save on input changes
-    function bindAutosave(){
-      // Delegated change handler; attaches once
-      if (document.documentElement.dataset.autosaveBound === 'true') return;
-      document.addEventListener('change', function(e){
-        const target = e.target;
-        if (!target || !(target instanceof Element)) return;
-        const form = target.closest('form[data-auto-save="true"], form[data-auto-save=true]');
-        if (!form) return;
-        // Avoid submitting on changes to elements that shouldn't trigger autosave
-        if (target.matches('[data-no-autosave]')) return;
-        try {
-          if (form.requestSubmit) { form.requestSubmit(); }
-          else { form.submit(); }
-        } catch(err) { console.warn('Auto-save submit failed', err); }
-      }, true);
-      document.documentElement.dataset.autosaveBound = 'true';
-    }
-
-    function showModalForConfirmation(form){
-      pendingForm = form;
-      currentMode = (form.dataset.localize === 'true') ? 'localize' : (form.dataset.polish === 'true' ? 'polish' : 'ai');
-      const modalEl = document.getElementById('aiProgressModal');
-      // Move modal to body once to avoid stacking context issues (e.g., navbar dropdown overlap)
-      if (modalEl && !modalEl.dataset.movedToBody) {
-        document.body.appendChild(modalEl);
-        modalEl.dataset.movedToBody = 'true';
-      }
-      const confirmPane = document.getElementById('ai-confirm-pane');
-      const progressPane = document.getElementById('ai-progress-pane');
-      // Show confirm, hide progress (must remove/add d-none due to !important in Bootstrap)
-      confirmPane.classList.remove('d-none');
-      confirmPane.style.display = '';
-      progressPane.classList.add('d-none');
-      progressPane.style.display = 'none';
-      // Set modal title per mode
-      const titleEl = modalEl.querySelector('.modal-title');
-      if (titleEl) {
-        titleEl.textContent = (currentMode === 'localize') ? 'Translate Menu' : (currentMode === 'polish' ? 'AI Polish Menu' : 'Generate AI Images');
-      }
-      // Set confirmation text per mode
-      confirmText = (currentMode === 'localize')
-        ? 'This will translate your menu to active restaurant locales and may consume API credits. Proceed?'
-        : (currentMode === 'polish'
-            ? 'This will clean up item names/descriptions, generate missing descriptions with AI, assess allergens/alcohol and reorder sections. Proceed?'
-            : 'This will generate new AI images for your menu items and may consume API credits. AI Polish is strongly recommended first for best results. Proceed?');
-      confirmPane.querySelector('p').textContent = confirmText;
-      // Hide image preview for localization mode, show for AI mode
-      document.getElementById('ai-preview').style.display = (currentMode === 'localize' || currentMode === 'polish') ? 'none' : '';
-
-      const logWrap = document.getElementById('ai-progress-log');
-      const logItems = document.getElementById('ai-progress-log-items');
-      if (logItems) logItems.innerHTML = '';
-      if (logWrap) {
-        logWrap.classList.toggle('d-none', !(currentMode === 'localize' || currentMode === 'polish'));
-      }
-
-      // Show localization options only in localize mode
-      const locOpts = document.getElementById('localize-options');
-      if (locOpts) {
-        locOpts.style.display = (currentMode === 'localize') ? '' : 'none';
-        // default selection
-        const missingRadio = document.getElementById('localize-missing');
-        const forceRadio = document.getElementById('localize-force');
-        if (currentMode === 'localize') {
-          if (missingRadio) missingRadio.checked = true;
-          if (forceRadio) forceRadio.checked = false;
-        }
-      }
-      document.getElementById('ai-confirm-btn').disabled = false;
-      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-      modal.show();
-    }
-
-    async function startJob(){
-      if(!pendingForm) return;
-      // Swap to progress pane
-      const confirmPane = document.getElementById('ai-confirm-pane');
-      const progressPane = document.getElementById('ai-progress-pane');
-      confirmPane.classList.add('d-none');
-      confirmPane.style.display = 'none';
-      progressPane.classList.remove('d-none');
-      progressPane.style.display = '';
-      document.getElementById('ai-progress-text').textContent = (currentMode === 'localize') ? 'Queued localization…' : (currentMode === 'polish' ? 'Queued polishing…' : 'Queued…');
-      updateBar(0);
-
-      const logItems = document.getElementById('ai-progress-log-items');
-      if (logItems) logItems.innerHTML = '';
-
-      const url = pendingForm.action;
-      const formData = new FormData(pendingForm);
-      try {
-        // Ensure .json is appended before query string
-        const u = new URL(url, window.location.origin);
-        u.pathname = u.pathname.endsWith('.json') ? u.pathname : (u.pathname + '.json');
-        // Add localization mode if needed
-        if (currentMode === 'localize') {
-          const selected = document.querySelector('input[name="localizeMode"]:checked')?.value || 'missing';
-          u.searchParams.set('force', selected === 'force' ? 'true' : 'false');
-        }
-        const jsonUrl = u.toString();
-        const resp = await fetch(jsonUrl, {
-          method: 'POST',
-          headers: { 'X-CSRF-Token': csrfToken, 'Accept': 'application/json' },
-          body: formData
-        });
-        const ct = resp.headers.get('Content-Type') || '';
-        console.debug('[AI Images] startJob response', resp.status, ct);
-        let data = null;
-        const text = await resp.text();
-        if (text && ct.includes('application/json')) {
-          try { data = JSON.parse(text); } catch(parseErr) { console.warn('JSON parse failed', parseErr, text); }
-        }
-        if(data && data.job_id){
-          currentJobId = data.job_id;
-          if (currentMode === 'localize') {
-            pollLocalizationProgress(pendingForm, currentJobId);
-          } else if (currentMode === 'polish') {
-            pollPolishProgress(pendingForm, currentJobId);
-          } else {
-            pollProgress(pendingForm, currentJobId);
-          }
-        } else {
-          const msg = resp.status >= 400 ? `Failed to start job (HTTP ${resp.status})` : 'Failed to start job';
-          document.getElementById('ai-progress-text').textContent = msg;
-        }
-      } catch(e){
-        document.getElementById('ai-progress-text').textContent = 'Error starting job';
-        console.error(e);
-      }
-    }
-
-    function updateBar(percent){
-      const bar = document.getElementById('ai-progress-bar');
-      bar.style.width = percent + '%';
-      bar.setAttribute('aria-valuenow', percent);
-    }
-
-    async function pollProgress(form, jobId){
-      const menuId = form.dataset.menuId || form.querySelector('[name="menu_id"]')?.value;
-      // Build progress URL from form.action, regardless of existing query params
-      const base = new URL(form.action, window.location.origin);
-      base.pathname = base.pathname.replace(/\/regenerate_images(\.json)?$/, '/image_generation_progress');
-      // Preserve existing query (like generate_ai=true) and add job_id
-      base.searchParams.set('job_id', jobId);
-      const url = base.toString();
-
-      let lastLogStamp = null;
-
-      // Clear any existing timer
-      if(pollTimer){ clearInterval(pollTimer); }
-
-      pollTimer = setInterval(async () => {
-        try{
-          const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
-          if(!resp.ok) return;
-          const p = await resp.json();
-          const current = p.current || 0;
-          const total = p.total || 0;
-          const status = p.status || 'running';
-          const name = p.current_item_name || '';
-          document.getElementById('ai-progress-text').textContent = name || (p.message || status);
-          const percent = total > 0 ? Math.floor((current / total) * 100) : (status === 'completed' ? 100 : 0);
-          updateBar(percent);
-
-          const logItemsEl = document.getElementById('ai-progress-log-items');
-          if (logItemsEl && Array.isArray(p.log) && p.log.length > 0) {
-            const newest = p.log[p.log.length - 1];
-            const newestStamp = newest && (newest.at || newest.message);
-            if (newestStamp && newestStamp !== lastLogStamp) {
-              lastLogStamp = newestStamp;
-              logItemsEl.innerHTML = p.log
-                .slice(-50)
-                .map((row) => {
-                  const msg = (row && row.message) ? row.message : '';
-                  return `<div class="mb-1">${msg.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</div>`;
-                })
-                .join('');
-              logItemsEl.scrollTop = logItemsEl.scrollHeight;
-            }
-          }
-
-          // Update preview if we have an image URL
-          const previewWrap = document.getElementById('ai-preview');
-          const previewImg = document.getElementById('ai-preview-img');
-          if (p.current_item_image_url) {
-            // Normalize any literal \u0026 to & from JSON representation
-            const normalized = (p.current_item_image_url || '').replace(/\\u0026/g, '&');
-            // Build absolute URL; avoid altering S3 pre-signed URLs (X-Amz-* params)
-            const abs = new URL(normalized, window.location.origin);
-            const hasS3Sig = abs.search.includes('X-Amz-') || abs.searchParams.has('X-Amz-Signature');
-            const hasVersion = abs.searchParams.has('v');
-            if (!hasS3Sig && !hasVersion) {
-              abs.searchParams.set('t', Date.now().toString());
-            }
-            // Dedupe multiple v params if present
-            if (abs.searchParams.getAll('v').length > 1) {
-              const v = abs.searchParams.getAll('v').pop();
-              abs.searchParams.delete('v');
-              abs.searchParams.set('v', v);
-            }
-            previewImg.src = abs.toString();
-            previewWrap.classList.remove('d-none');
-            previewWrap.style.display = '';
-          }
-          if(status === 'completed' || status === 'failed'){
-            clearInterval(pollTimer);
-            pollTimer = null;
-            if(status === 'completed'){
-              document.getElementById('ai-progress-text').textContent = 'Completed';
-              updateBar(100);
-              // Auto-close after a short delay
-              setTimeout(() => {
-                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('aiProgressModal'));
-                modal.hide();
-              }, 900);
-            }
-          }
-        } catch(e){
-          console.warn('Progress poll failed', e);
-        }
-      }, 1500);
-    }
-
-    async function pollPolishProgress(form, jobId){
-      const base = new URL(form.action, window.location.origin);
-      base.pathname = base.pathname.replace(/\/(polish)(\.json)?$/, '/polish_progress');
-      base.searchParams.set('job_id', jobId);
-      const url = base.toString();
-
-      let lastLogStamp = null;
-
-      if(pollTimer){ clearInterval(pollTimer); }
-      pollTimer = setInterval(async () => {
-        try{
-          const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
-          if(!resp.ok) return;
-          const p = await resp.json();
-          const current = p.current || 0;
-          const total = p.total || 0;
-          const status = p.status || 'running';
-          const name = p.current_item_name || '';
-          const msg = p.message || status;
-          const baseMsg = name || msg;
-          document.getElementById('ai-progress-text').textContent = total > 0 ? `${baseMsg} — ${current}/${total}` : baseMsg;
-          const percent = total > 0 ? Math.floor((current / total) * 100) : (status === 'completed' ? 100 : 0);
-          updateBar(percent);
-
-          const logItemsEl = document.getElementById('ai-progress-log-items');
-          if (logItemsEl && Array.isArray(p.log) && p.log.length > 0) {
-            const newest = p.log[p.log.length - 1];
-            const newestStamp = newest && (newest.at || newest.message);
-            if (newestStamp && newestStamp !== lastLogStamp) {
-              lastLogStamp = newestStamp;
-              logItemsEl.innerHTML = p.log
-                .slice(-50)
-                .map((row) => {
-                  const msg = (row && row.message) ? row.message : '';
-                  return `<div class="mb-1">${msg.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</div>`;
-                })
-                .join('');
-              logItemsEl.scrollTop = logItemsEl.scrollHeight;
-            }
-          }
-
-          if(status === 'completed' || status === 'failed'){
-            clearInterval(pollTimer);
-            pollTimer = null;
-            if(status === 'completed'){
-              document.getElementById('ai-progress-text').textContent = 'Completed';
-              updateBar(100);
-              setTimeout(() => {
-                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('aiProgressModal'));
-                modal.hide();
-              }, 900);
-            }
-          }
-        } catch(e){
-          console.warn('Polish progress poll failed', e);
-        }
-      }, 1500);
-    }
-
-    async function pollLocalizationProgress(form, jobId){
-      const base = new URL(form.action, window.location.origin);
-      base.pathname = base.pathname.replace(/\/localize(\.json)?$/, '/localization_progress');
-      base.searchParams.set('job_id', jobId);
-      const url = base.toString();
-
-      let lastLogStamp = null;
-
-      if(pollTimer){ clearInterval(pollTimer); }
-      pollTimer = setInterval(async () => {
-        try{
-          const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
-          if(!resp.ok) return;
-          const p = await resp.json();
-          const current = p.current || 0;
-          const total = p.total || 0;
-          const status = p.status || 'running';
-          const locale = p.current_locale || '';
-          const displayLocale = (() => {
-            try {
-              if (locale && window.Intl && Intl.DisplayNames) {
-                const dn = new Intl.DisplayNames([locale, 'en'], { type: 'language' });
-                const n = dn.of(locale);
-                if (n) return `${n} (${locale.toUpperCase()})`;
-              }
-            } catch(_) {}
-            return locale.toUpperCase();
-          })();
-          const baseMsg = p.message || (locale ? `Localized ${displayLocale}` : status);
-          document.getElementById('ai-progress-text').textContent = total > 0 ? `${baseMsg} — ${current}/${total}` : baseMsg;
-
-          const logItemsEl = document.getElementById('ai-progress-log-items');
-          if (logItemsEl && Array.isArray(p.log) && p.log.length > 0) {
-            const newest = p.log[p.log.length - 1];
-            const newestStamp = newest && (newest.at || newest.message);
-            if (newestStamp && newestStamp !== lastLogStamp) {
-              lastLogStamp = newestStamp;
-              logItemsEl.innerHTML = p.log
-                .slice(-50)
-                .map((row) => {
-                  const msg = (row && row.message) ? row.message : '';
-                  return `<div class="mb-1">${msg.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</div>`;
-                })
-                .join('');
-              logItemsEl.scrollTop = logItemsEl.scrollHeight;
-            }
-          }
-
-          const percent = total > 0 ? Math.floor((current / total) * 100) : (status === 'completed' ? 100 : 0);
-          updateBar(percent);
-          if(status === 'completed' || status === 'failed'){
-            clearInterval(pollTimer);
-            pollTimer = null;
-            if(status === 'completed'){
-              document.getElementById('ai-progress-text').textContent = 'Completed';
-              updateBar(100);
-              setTimeout(() => {
-                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('aiProgressModal'));
-                modal.hide();
-              }, 900);
-            }
-          }
-        } catch(e){
-          console.warn('Localization progress poll failed', e);
-        }
-      }, 1500);
-    }
-
-    document.addEventListener('submit', function(e){
-      const form = e.target;
-      if(form && form.matches && (form.matches('form[data-ai-generate="true"]') || form.matches('form[data-localize="true"]') || form.matches('form[data-polish="true"]'))){
-        e.preventDefault();
-        showModalForConfirmation(form);
-      }
-    }, true);
-
-    // Also intercept click on submit buttons within the AI form (extra safety)
-    document.addEventListener('click', function(e){
-      const btn = e.target.closest('button[type="submit"], input[type="submit"]');
-      if(!btn) return;
-      const form = btn.form;
-      if(form && form.matches && (form.matches('form[data-ai-generate="true"]') || form.matches('form[data-localize="true"]') || form.matches('form[data-polish="true"]'))){
-        // Prevent immediate submission; show confirm modal instead
-        e.preventDefault();
-        showModalForConfirmation(form);
-      }
-    }, true);
-
-    document.getElementById('ai-confirm-btn').addEventListener('click', function(){
-      this.disabled = true;
-      startJob();
-    });
-
-    const modalEl = document.getElementById('aiProgressModal');
-    modalEl.addEventListener('hidden.bs.modal', function(){
-      pendingForm = null;
-    });
-
-    // Ensure auto-save is active on full page and on Turbo frame swaps
-    bindAutosave();
-    document.addEventListener('turbo:load', bindAutosave);
-    document.addEventListener('turbo:frame-load', bindAutosave);
-  })();
-</script>
