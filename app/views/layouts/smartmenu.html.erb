@@ -7,7 +7,7 @@
     <%= javascript_system_tags %>
     <script>window.USE_JSON_STATE = true;</script>
     <meta name="stripe-publishable-key" content="<%= Rails.application.credentials.stripe_publishable_key %>">
-    <script src="https://js.stripe.com/v3"></script>
+    <script src="https://js.stripe.com/v3" defer></script>
   </head>
   <body class="d-flex flex-column min-vh-100"
       data-smartmenu-id="<%= @smartmenu.slug %>"

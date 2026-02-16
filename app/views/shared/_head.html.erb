@@ -68,7 +68,10 @@
   <% end %>
 <% end %>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<%# Font Awesome: only load on admin/non-customer pages — customer smartmenu uses Bootstrap Icons only %>
+<% unless controller_name == 'smartmenus' && action_name == 'show' && !current_user %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<% end %>
 <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
 
 <script>
@@ -109,7 +112,10 @@
   window.initGoogleMaps = loadGoogleMapsAPI;
 </script>
 
-<script async type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+<%# QR Code Styling: only needed for payment pages, not customer menu browsing %>
+<% unless controller_name == 'smartmenus' && action_name == 'show' && !current_user %>
+  <script async type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+<% end %>
 <!-- <script async type="text/javascript" src="https://sdk.scdn.co/spotify-player.js"></script> -->
 
 <style>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_15_223253) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_16_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -60,6 +60,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_15_223253) do
     t.index ["customer_sessionid"], name: "index_alcohol_order_events_on_customer_sessionid"
     t.index ["employee_id"], name: "index_alcohol_order_events_on_employee_id"
     t.index ["menuitem_id"], name: "index_alcohol_order_events_on_menuitem_id"
+    t.index ["ordr_id", "age_check_acknowledged"], name: "index_alcohol_events_on_ordr_ack"
     t.index ["ordr_id"], name: "index_alcohol_order_events_on_ordr_id"
     t.index ["ordritem_id"], name: "index_alcohol_order_events_on_ordritem_id"
     t.index ["restaurant_id"], name: "index_alcohol_order_events_on_restaurant_id"
@@ -370,6 +371,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_15_223253) do
     t.index ["product_id"], name: "index_menu_item_product_links_on_product_id"
   end
 
+# Could not dump table "menu_item_search_documents" because of following StandardError
+#   Unknown type 'vector(1024)' for column 'embedding'
+
+
   create_table "menu_items", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -590,6 +595,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_15_223253) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["sessionid", "preferredlocale"], name: "index_menuparticipants_on_session_locale"
+    t.index ["sessionid", "smartmenu_id"], name: "index_menuparticipants_on_session_smartmenu", unique: true
     t.index ["sessionid"], name: "index_menuparticipants_on_sessionid"
     t.index ["smartmenu_id"], name: "index_menuparticipants_on_smartmenu_id"
   end
@@ -860,6 +866,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_15_223253) do
     t.datetime "updated_at", null: false
     t.index ["ordr_id"], name: "index_ordractions_on_ordr_id"
     t.index ["ordritem_id"], name: "index_ordractions_on_ordritem_id"
+    t.index ["ordrparticipant_id", "ordr_id", "action"], name: "index_ordractions_on_participant_ordr_action"
     t.index ["ordrparticipant_id"], name: "index_ordractions_on_ordrparticipant_id"
   end
 
@@ -947,6 +954,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_15_223253) do
     t.index ["employee_id", "created_at"], name: "index_ordrs_on_employee_created_at"
     t.index ["employee_id"], name: "index_ordrs_on_employee_id"
     t.index ["last_projected_order_event_sequence"], name: "index_ordrs_on_last_projected_order_event_sequence"
+    t.index ["menu_id", "tablesetting_id", "status"], name: "index_ordrs_on_menu_table_status"
     t.index ["menu_id"], name: "index_ordrs_on_menu_id"
     t.index ["ordritems_count"], name: "index_ordrs_on_ordritems_count"
     t.index ["restaurant_id", "created_at", "gross"], name: "index_ordrs_on_restaurant_created_gross"

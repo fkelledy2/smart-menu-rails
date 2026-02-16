@@ -57,7 +57,9 @@ class SmartmenusController < ApplicationController
     @menuparticipant = Menuparticipant.find_or_create_by(sessionid: safe_session_id) do |mp|
       mp.smartmenu = @smartmenu
     end
-    @menuparticipant.update(smartmenu: @smartmenu) unless @menuparticipant.smartmenu == @smartmenu
+    if @menuparticipant.persisted? && @menuparticipant.smartmenu_id != @smartmenu.id
+      @menuparticipant.update_column(:smartmenu_id, @smartmenu.id)
+    end
 
     if params[:locale].present?
       requested = params[:locale].to_s.downcase
@@ -237,9 +239,8 @@ class SmartmenusController < ApplicationController
   end
 
   def load_restaurant_locales
-    # Pre-load restaurantlocales to avoid N+1 queries
-    # Force reload to ensure we have fresh data
-    @restaurant&.reload
+    # Restaurantlocales are already eager-loaded via set_smartmenu includes.
+    # No reload needed — avoids 3-5 extra queries per request.
     @active_locales = @restaurant&.restaurantlocales&.select { |rl| rl.status.to_s == 'active' } || []
     @default_locale = @active_locales.find { |rl| rl.dfault == true }
   rescue StandardError
@@ -412,7 +413,19 @@ class SmartmenusController < ApplicationController
     @smartmenu = Smartmenu.where(slug: params[:id]).includes(
       :tablesetting,
       restaurant: %i[user restaurantlocales tips alcohol_policy],
-      menu: [restaurant: %i[user restaurantlocales tips alcohol_policy]],
+      menu: [
+        { restaurant: %i[user restaurantlocales tips alcohol_policy] },
+        :menulocales,
+        :menuavailabilities,
+        { menusections: [
+          :menusectionlocales,
+          { menuitems: [
+            :menuitemlocales,
+            :allergyns,
+            { menuitem_size_mappings: :size },
+          ] },
+        ] },
+      ],
     ).first
     if @smartmenu
       @restaurant = @smartmenu.restaurant
@@ -425,25 +438,10 @@ class SmartmenusController < ApplicationController
   end
 
   # Load menu associations specifically needed for the show action
+  # NOTE: Associations are now eager-loaded in set_smartmenu. This method
+  # only filters to active items without issuing additional queries.
   def load_menu_associations_for_show
     return unless @menu
-
-    # Comprehensive eager loading to prevent N+1 queries
-    # This loads all associations needed for rendering the smartmenu view
-    # Only load active menu items for public-facing smart menu
-    @menu = Menu.includes(
-      { restaurant: %i[restaurantlocales tips alcohol_policy] },
-      :menulocales,
-      :menuavailabilities,
-      menusections: [
-        :menusectionlocales,
-        { menuitems: [
-          :menuitemlocales,
-          :allergyns,
-          { menuitem_size_mappings: :size },
-        ] },
-      ],
-    ).find(@menu.id)
 
     # Filter to only active menu items after loading
     # This ensures inactive items are not shown in the smart menu
