@@ -23,26 +23,35 @@ class ImageUploader < Shrine
     # Original format derivatives (PNG/JPEG)
     derivatives = {
       thumb: magick.resize_to_limit!(200, 200),
-      medium: magick.resize_to_limit!(600, 480),
-      large: magick.resize_to_limit!(1000, 800),
+      medium: ImageProcessing::MiniMagick.source(original).resize_to_limit!(600, 480),
+      large: ImageProcessing::MiniMagick.source(original).resize_to_limit!(1000, 800),
     }
 
-    # WebP derivatives for better performance
+    # WebP derivatives — optimised for customer-facing smartmenu performance.
+    # card_webp (150px, q70): mobile card thumbnails in the horizontal layout
+    # thumb_webp (200px, q75): small thumbnails
+    # medium_webp (600px, q75): modal "add to order" popup and tablet card view
+    # large_webp (1000px, q80): full-screen / desktop hero images
     derivatives.merge!({
+      card_webp: ImageProcessing::MiniMagick
+        .source(original)
+        .convert('webp')
+        .saver(quality: 70)
+        .resize_to_limit!(150, 150),
       thumb_webp: ImageProcessing::MiniMagick
         .source(original)
         .convert('webp')
-        .saver(quality: 85)
+        .saver(quality: 75)
         .resize_to_limit!(200, 200),
       medium_webp: ImageProcessing::MiniMagick
         .source(original)
         .convert('webp')
-        .saver(quality: 85)
+        .saver(quality: 75)
         .resize_to_limit!(600, 480),
       large_webp: ImageProcessing::MiniMagick
         .source(original)
         .convert('webp')
-        .saver(quality: 85)
+        .saver(quality: 80)
         .resize_to_limit!(1000, 800),
     })
 

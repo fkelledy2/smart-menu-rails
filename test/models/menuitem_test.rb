@@ -167,7 +167,7 @@ class MenuitemTest < ActiveSupport::TestCase
   end
 
   test 'should return proper image sizes string' do
-    expected_sizes = '(max-width: 600px) 200px, (max-width: 1200px) 600px, 1000px'
+    expected_sizes = '(max-width: 480px) 150px, (max-width: 768px) 200px, (max-width: 1200px) 600px, 1000px'
     assert_equal expected_sizes, @menuitem.image_sizes
   end
 

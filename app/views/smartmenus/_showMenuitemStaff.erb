@@ -11,7 +11,7 @@
                                                 data-bs-menuitem_name="<%= menuitem.name %>"
                                                 data-bs-menuitem_price="<%= menuitem.price %>"
                                                 data-bs-menuitem_description="<%= menuitem.description %>"
-                                                data-bs-menuitem_image="<%= menuitem.medium_url %>"
+                                                data-bs-menuitem_image="<%= menuitem.optimised_modal_url %>"
                                                 data-testid="add-item-btn-<%= menuitem.id %>">
                                                     <%= menuitem.name %>
                                     </button>
@@ -33,7 +33,7 @@
                                                             data-bs-menuitem_name="<%= menuitem.name %>"
                                                             data-bs-menuitem_price="<%= menuitemsize.price %>"
                                                             data-bs-menuitem_description="<%= menuitem.description %> (<%= menuitemsize.size.name %>)"
-                                                            data-bs-menuitem_image="<%= menuitem.medium_url %>">
+                                                            data-bs-menuitem_image="<%= menuitem.optimised_modal_url %>">
                                                                 <i class="bi bi-plus"></i> <%= menuitemsize.size.name %>
                                                         </button>
                                                     </a>

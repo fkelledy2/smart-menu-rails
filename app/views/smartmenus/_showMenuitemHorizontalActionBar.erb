@@ -28,7 +28,7 @@
                                             data-bs-menuitem_name="<%= mi.localised_name(ordrparticipant.preferredlocale) %>"
                                             data-bs-menuitem_description="<%= mi.localised_description(ordrparticipant.preferredlocale) %>"
                                             data-bs-menuitem_price="<%= mi.price %>"
-                                            data-bs-menuitem_image="<%= mi.image_url %>"
+                                            data-bs-menuitem_image="<%= mi.optimised_modal_url %>"
                                             data-testid="add-item-btn-<%= mi.id %>">
                             <i class="bi bi-plus"></i>
                             <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
@@ -43,7 +43,7 @@
                                                 data-bs-menuitem_name="<%= mi.localised_name(menuparticipant.preferredlocale) %>"
                                                 data-bs-menuitem_description="<%= mi.localised_description(menuparticipant.preferredlocale) %>"
                                                 data-bs-menuitem_price="<%= mi.price %>"
-                                                data-bs-menuitem_image="<%= mi.medium_url %>"
+                                                data-bs-menuitem_image="<%= mi.optimised_modal_url %>"
                                                 data-testid="add-item-btn-<%= mi.id %>">
                             <i class="bi bi-plus"></i>
                             <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
@@ -57,7 +57,7 @@
                                                 data-bs-menuitem_name="<%= mi.name %>"
                                                 data-bs-menuitem_description="<%= mi.description %>"
                                                 data-bs-menuitem_price="<%= mi.price %>"
-                                                data-bs-menuitem_image="<%= mi.medium_url %>"
+                                                data-bs-menuitem_image="<%= mi.optimised_modal_url %>"
                                                 data-testid="add-item-btn-<%= mi.id %>">
                             <i class="bi bi-plus"></i>
                             <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
@@ -82,7 +82,7 @@
                                                             data-bs-menuitem_name="<%= mi.name %>"
                                                             data-bs-menuitem_price="<%= mi.price %>"
                                                             data-bs-menuitem_description="<%= mi.description %> (<%= menuitemsize.size.name %>)"
-                                                            data-bs-menuitem_image="<%= mi.image_url %>">
+                                                            data-bs-menuitem_image="<%= mi.optimised_modal_url %>">
                                                             <span class="float-end">
                                                             <%= menuitemsize.size.name %>: <%= number_to_currency(menuitemsize.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
                                                             </span>

@@ -162,8 +162,9 @@ module ResponsiveImageHelper
       sources = []
 
       # WebP source if derivatives exist
-      if derivatives && derivatives[:medium_webp]
+      if derivatives && (derivatives[:card_webp] || derivatives[:medium_webp])
         webp_srcset = [
+          derivatives[:card_webp] ? "#{derivatives[:card_webp].url} 150w" : nil,
           derivatives[:thumb_webp] ? "#{derivatives[:thumb_webp].url} 200w" : nil,
           derivatives[:medium_webp] ? "#{derivatives[:medium_webp].url} 600w" : nil,
           derivatives[:large_webp] ? "#{derivatives[:large_webp].url} 1000w" : nil,

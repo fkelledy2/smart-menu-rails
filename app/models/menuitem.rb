@@ -171,8 +171,31 @@ class Menuitem < ApplicationRecord
   end
 
   # Returns a default sizes attribute for responsive images
+  # Mobile card view: col-5 ≈ 150px; tablet: ~300px; desktop card: ~400px
   def image_sizes
-    '(max-width: 600px) 200px, (max-width: 1200px) 600px, 1000px'
+    '(max-width: 480px) 150px, (max-width: 768px) 200px, (max-width: 1200px) 600px, 1000px'
+  end
+
+  # Best available WebP URL for the "add to order" modal popup
+  def optimised_modal_url
+    return image_url_or_fallback(:medium) if image.blank?
+
+    if image_attacher.derivatives&.key?(:medium_webp)
+      cache_busted(image_url(:medium_webp))
+    else
+      medium_url
+    end
+  end
+
+  # Smallest WebP thumbnail for mobile card view
+  def card_webp_url
+    return thumb_url if image.blank?
+
+    if image_attacher.derivatives&.key?(:card_webp)
+      cache_busted(image_url(:card_webp))
+    else
+      thumb_url
+    end
   end
 
   # Get WebP URL if available, fallback to original
@@ -200,19 +223,13 @@ class Menuitem < ApplicationRecord
 
     begin
       srcset_parts = []
+      derivs = image_attacher.derivatives
+      return '' unless derivs
 
-      # Add WebP derivatives if they exist
-      if image_attacher.derivatives&.key?(:thumb_webp)
-        srcset_parts << "#{image_url(:thumb_webp)} 200w"
-      end
-
-      if image_attacher.derivatives&.key?(:medium_webp)
-        srcset_parts << "#{image_url(:medium_webp)} 600w"
-      end
-
-      if image_attacher.derivatives&.key?(:large_webp)
-        srcset_parts << "#{image_url(:large_webp)} 1000w"
-      end
+      srcset_parts << "#{image_url(:card_webp)} 150w" if derivs.key?(:card_webp)
+      srcset_parts << "#{image_url(:thumb_webp)} 200w" if derivs.key?(:thumb_webp)
+      srcset_parts << "#{image_url(:medium_webp)} 600w" if derivs.key?(:medium_webp)
+      srcset_parts << "#{image_url(:large_webp)} 1000w" if derivs.key?(:large_webp)
 
       srcset_parts.join(', ')
     rescue StandardError => e
@@ -230,7 +247,8 @@ class Menuitem < ApplicationRecord
   # Check if WebP derivatives exist
   def has_webp_derivatives?
     image.present? &&
-      image_attacher.derivatives&.key?(:thumb_webp) &&
+      image_attacher.derivatives&.key?(:card_webp) &&
+      image_attacher.derivatives.key?(:thumb_webp) &&
       image_attacher.derivatives.key?(:medium_webp) &&
       image_attacher.derivatives.key?(:large_webp)
   end
