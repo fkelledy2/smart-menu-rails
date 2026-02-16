@@ -176,7 +176,7 @@ end %>
 
 <% unless read_only %>
   <div class="modal fade" id="activateMenuVersionModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">
@@ -205,7 +205,7 @@ end %>
             </div>
           </div>
 
-          <div class="modal-footer">
+          <div class="modal-footer gap-2">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><%= t('.cancel', default: 'Cancel') %></button>
             <button type="submit" class="btn btn-dark"><%= t('.save', default: 'Save') %></button>
           </div>

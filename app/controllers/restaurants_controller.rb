@@ -239,7 +239,7 @@ class RestaurantsController < ApplicationController
         has_restaurants: @restaurants.any?,
       })
 
-      if current_user.plan.locations == -1
+      if current_user.super_admin? || current_user.plan.locations == -1
         @canAddRestaurant = true
       else
         active_count = policy_scope(Restaurant).where(archived: false, status: :active).count

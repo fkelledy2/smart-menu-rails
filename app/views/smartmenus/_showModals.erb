@@ -1,10 +1,11 @@
 <div id="modalsContainer">
 
-    <div class="modal fade" id="openOrderModal" tabindex="-1" aria-labelledby="openOrderModalLabel">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
+    <div class="modal fade" id="openOrderModal" tabindex="-1" aria-labelledby="openOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="openOrderModalLabel"><%= t(".startOrder") %></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"></button>
                 </div>
                 <div class="modal-body">
                     <% if tablesetting %>
@@ -47,12 +48,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="addItemToOrderModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel">
-      <% if menu.displayImages == true && menu.restaurant.displayImages == true %>
-      <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
-      <% else %>
-      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
-      <% end %>
+    <div class="modal fade" id="addItemToOrderModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
         <div class="modal-content">
           <%= render partial: "smartmenus/modal_header_add_item" %>
           <div class="modal-body modal-body-no-padding">
@@ -110,11 +107,12 @@
     </div>
 
     <% if ordrparticipant %>
-    <div class="modal fade" id="filterOrderModal" tabindex="-1" aria-labelledby="filterOrderModalLabel">
-        <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+    <div class="modal fade" id="filterOrderModal" tabindex="-1" aria-labelledby="filterOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="filterOrderModalLabel"><%= t(".filterAllergyns") %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"></button>
                 </div>
                 <%= form_with(model: [restaurant, ordrparticipant]) do |form| %>
                     <div class="modal-body">
@@ -148,11 +146,12 @@
         </div>
     </div>
     <% end %>
-    <div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" data-testid="view-order-modal" data-controller="order-totals">
-      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
+    <div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" aria-hidden="true" data-testid="view-order-modal" data-controller="order-totals">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="viewOrderModalLabel"><%= t(".yourOrder")%></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"></button>
           </div>
           <div class="modal-body" data-testid="order-modal-body">
             <% if order %>
@@ -292,11 +291,12 @@
       </div>
     </div>
 
-    <div class="modal fade" id="requestBillModal" tabindex="-1" aria-labelledby="requestBillModalLabel" data-controller="order-totals">
-      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
+    <div class="modal fade" id="requestBillModal" tabindex="-1" aria-labelledby="requestBillModalLabel" aria-hidden="true" data-controller="order-totals">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="requestBillModalLabel"><%= t(".requestBill") %></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"></button>
           </div>
           <div class="modal-body">
                 <% if order %>
@@ -381,11 +381,12 @@
       </div>
     </div>
 
-    <div class="modal fade" id="payOrderModal" tabindex="-1" aria-labelledby="payOrderModalLabel" data-controller="order-totals" data-tip-presets="<%= restaurant.tips.sort_by(&:percentage).map(&:percentage).to_json %>" data-currency-symbol="<%= restaurantCurrency.symbol || '' %>">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
+    <div class="modal fade" id="payOrderModal" tabindex="-1" aria-labelledby="payOrderModalLabel" aria-hidden="true" data-controller="order-totals" data-tip-presets="<%= restaurant.tips.sort_by(&:percentage).map(&:percentage).to_json %>" data-currency-symbol="<%= restaurantCurrency.symbol || '' %>">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="payOrderModalLabel"><%= t(".payBill") %></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"></button>
                 </div>
                 <div style='padding-right:0px' class="modal-body">
                     <form>
@@ -539,11 +540,12 @@
         </div>
     </div>
 
-    <div class="modal fade" id="addNameToParticipantModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered  modal-fullscreen">
+    <div class="modal fade" id="addNameToParticipantModal" tabindex="-1" aria-labelledby="addNameToParticipantModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="addNameToParticipantModalLabel"><%= t(".customiseOrderWithName") %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"></button>
                 </div>
                 <div class="modal-body">
                     <form>

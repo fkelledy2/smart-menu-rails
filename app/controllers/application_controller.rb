@@ -236,10 +236,16 @@ class ApplicationController < ActionController::Base
 
   def set_permissions
     @canAddRestaurant = false
+
+    if current_user&.super_admin?
+      @canAddRestaurant = true
+      return
+    end
+
     return unless current_user&.plan
 
     @restaurants = current_user_restaurants
-    if current_user.super_admin? || @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
+    if @restaurants.size < current_user.plan.locations || current_user.plan.locations == -1
       @canAddRestaurant = true
     end
   end
