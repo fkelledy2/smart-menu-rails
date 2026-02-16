@@ -79,12 +79,12 @@ module ResponsiveImageHelper
   # @param loading [String] Loading strategy
   # @param quality [Integer] Image quality
   # @return [String] HTML picture tag with WebP and fallback
-  def picture_tag_with_webp(image, alt:, sizes: '100vw', class_name: '', loading: 'lazy', quality: 85)
+  def picture_tag_with_webp(image, alt:, sizes: '100vw', class_name: '', loading: 'lazy', quality: 85, model: nil)
     return '' if image.blank?
 
     # Handle Shrine uploads differently from ActiveStorage
     if shrine_upload?(image)
-      return picture_tag_for_shrine(image, alt: alt, sizes: sizes, class_name: class_name, loading: loading)
+      return picture_tag_for_shrine(image, alt: alt, sizes: sizes, class_name: class_name, loading: loading, model: model)
     end
 
     blob = image.is_a?(ActiveStorage::Attachment) ? image.blob : image
@@ -153,9 +153,9 @@ module ResponsiveImageHelper
   end
 
   # Generate picture tag for Shrine uploads using existing derivatives
-  def picture_tag_for_shrine(image, alt:, sizes:, class_name:, loading:)
-    # Get derivatives - Shrine stores them in the uploaded file's metadata
-    derivatives = get_shrine_derivatives(image)
+  def picture_tag_for_shrine(image, alt:, sizes:, class_name:, loading:, model: nil)
+    # Get derivatives from the model's attacher (preferred) or from the uploaded file data
+    derivatives = get_shrine_derivatives(image, model: model)
 
     # Use Shrine's derivative system
     content_tag(:picture) do
@@ -212,20 +212,28 @@ module ResponsiveImageHelper
   end
 
   # Get derivatives from Shrine uploaded file
-  def get_shrine_derivatives(image)
-    # Shrine stores derivatives in the uploaded file's metadata
-    # Access via image['derivatives'] hash
-    return nil unless image.respond_to?(:[]) && image['derivatives']
-
-    # Convert string keys to symbols and wrap in UploadedFile objects
-    derivatives_data = image['derivatives']
-    return nil unless derivatives_data.is_a?(Hash)
-
-    derivatives = {}
-    derivatives_data.each do |key, data|
-      derivatives[key.to_sym] = Shrine.uploaded_file(data) if data
+  # @param image [Shrine::UploadedFile] The uploaded file
+  # @param model [ActiveRecord::Base, nil] The model that owns the image (e.g., Menuitem)
+  def get_shrine_derivatives(image, model: nil)
+    # Preferred path: use the model's attacher which has direct access to derivatives
+    if model && model.respond_to?(:image_attacher)
+      attacher_derivs = model.image_attacher.derivatives
+      return attacher_derivs if attacher_derivs.present?
     end
-    derivatives
+
+    # Fallback: try accessing derivatives from the uploaded file's data hash
+    if image.respond_to?(:[]) && image['derivatives']
+      derivatives_data = image['derivatives']
+      return nil unless derivatives_data.is_a?(Hash)
+
+      derivatives = {}
+      derivatives_data.each do |key, data|
+        derivatives[key.to_sym] = Shrine.uploaded_file(data) if data
+      end
+      return derivatives if derivatives.present?
+    end
+
+    nil
   rescue StandardError => e
     Rails.logger.error "[ResponsiveImageHelper] Error accessing Shrine derivatives: #{e.message}"
     nil
