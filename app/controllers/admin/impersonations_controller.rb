@@ -23,6 +23,15 @@ module Admin
         return
       end
 
+      # Alert on rapid impersonation (potential insider threat)
+      recent_count = ImpersonationAudit.where(admin_user: current_user)
+                                       .where('started_at > ?', 1.hour.ago)
+                                       .count
+      if recent_count >= 5
+        Rails.logger.warn("[SECURITY] Rapid impersonation detected: admin=#{current_user.id} (#{current_user.email}) " \
+                          "has impersonated #{recent_count} users in the last hour")
+      end
+
       audit = ImpersonationAudit.create!(
         admin_user: current_user,
         impersonated_user: user,

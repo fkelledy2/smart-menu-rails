@@ -41,6 +41,8 @@ rescue StandardError => e
 end
 
 class OrdritemsController < ApplicationController
+  include CsrfSafeGuestActions
+
   before_action :authenticate_user!, except: %i[create update destroy] # Allow customers to manage order items
   skip_before_action :verify_authenticity_token, only: %i[create update destroy]
   before_action :set_restaurant
@@ -50,6 +52,10 @@ class OrdritemsController < ApplicationController
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
+
+  private def csrf_skipped_action?
+    %w[create update destroy].include?(action_name)
+  end
 
   # GET /ordritems or /ordritems.json
   def index

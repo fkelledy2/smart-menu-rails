@@ -131,6 +131,7 @@ gem 'pdf-reader'
 gem 'pgvector', '= 0.3.2'
 gem 'pretender', '~> 0.3.4'
 gem 'pundit', '~> 2.1'
+gem 'rack-attack'
 gem 'rack-cors'
 gem 'receipts', '~> 2.0'
 gem 'redis-activesupport' # Required to hook into Rails cache store

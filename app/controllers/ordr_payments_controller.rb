@@ -1,4 +1,6 @@
 class OrdrPaymentsController < ApplicationController
+  include CsrfSafeGuestActions
+
   require 'stripe'
   require 'digest'
 
@@ -9,6 +11,10 @@ class OrdrPaymentsController < ApplicationController
   before_action :set_ordr
 
   after_action :verify_authorized
+
+  private def csrf_skipped_action?
+    %w[request_bill split_evenly checkout_session].include?(action_name)
+  end
 
   def request_bill
     authorize @ordr, :update?

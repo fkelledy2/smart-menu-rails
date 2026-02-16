@@ -86,9 +86,8 @@ class Payments::WebhooksController < ApplicationController
     if secret.present?
       Stripe::Webhook.construct_event(payload, sig_header, secret)
     else
-      # No signature verification configured; accept but log.
-      Rails.logger.warn('[StripeWebhook] STRIPE_WEBHOOK_SECRET not configured; skipping signature verification')
-      Stripe::Event.construct_from(JSON.parse(payload, symbolize_names: true))
+      Rails.logger.error('[StripeWebhook] STRIPE_WEBHOOK_SECRET not configured; rejecting unsigned event')
+      nil
     end
   rescue StandardError => e
     Rails.logger.warn("[StripeWebhook] Invalid payload/signature: #{e.class}: #{e.message}")

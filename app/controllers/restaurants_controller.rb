@@ -1535,7 +1535,7 @@ class RestaurantsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def restaurant_params
     permitted = params.require(:restaurant).permit(:name, :description, :address1, :address2, :state, :city, :postcode, :country,
-                                                   :image, :remove_image, :status, :sequence, :capacity, :user_id, :displayImages, :displayImagesInPopup, :allowOrdering, :allow_alcohol, :inventoryTracking, :currency, :genid, :latitude, :longitude, :imagecontext, :image_style_profile, :wifissid, :wifiEncryptionType, :wifiPassword, :wifiHidden, :spotifyuserid, establishment_types: [],)
+                                                   :image, :remove_image, :status, :sequence, :capacity, :displayImages, :displayImagesInPopup, :allowOrdering, :allow_alcohol, :inventoryTracking, :currency, :genid, :latitude, :longitude, :imagecontext, :image_style_profile, :wifissid, :wifiEncryptionType, :wifiPassword, :wifiHidden, :spotifyuserid, establishment_types: [],)
 
     # Convert status to integer if it's a string (from select dropdown)
     if permitted[:status].present? && permitted[:status].is_a?(String)

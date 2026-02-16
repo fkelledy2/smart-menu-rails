@@ -92,7 +92,7 @@ module Api
 
         valid_types = %w[
           image/jpeg image/jpg image/png image/gif
-          image/bmp image/webp image/tiff image/svg+xml
+          image/bmp image/webp image/tiff
         ]
 
         valid_types.include?(uploaded_file.content_type&.downcase)

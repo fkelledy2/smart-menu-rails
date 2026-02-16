@@ -18,5 +18,5 @@ if defined?(OmniAuth) && spotify_key.present? && spotify_secret.present?
 end
 
 if defined?(OmniAuth)
-  OmniAuth.config.allowed_request_methods = [:post, :get]
+  OmniAuth.config.allowed_request_methods = [:post]
 end

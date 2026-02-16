@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_11_194831) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_15_223253) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -369,10 +369,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_194831) do
     t.index ["menuitem_id"], name: "index_menu_item_product_links_on_menuitem_id"
     t.index ["product_id"], name: "index_menu_item_product_links_on_product_id"
   end
-
-# Could not dump table "menu_item_search_documents" because of following StandardError
-#   Unknown type 'vector(1024)' for column 'embedding'
-
 
   create_table "menu_items", force: :cascade do |t|
     t.string "name"
@@ -1583,12 +1579,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_194831) do
     t.integer "restaurants_count", default: 0
     t.integer "employees_count", default: 0
     t.boolean "super_admin", default: false, null: false
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.index ["admin", "super_admin"], name: "index_users_on_admin_and_super_admin"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["plan_id", "admin"], name: "index_users_on_plan_admin"
     t.index ["plan_id"], name: "index_users_on_plan_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
   create_table "voice_commands", force: :cascade do |t|
