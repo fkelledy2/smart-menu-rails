@@ -80,8 +80,11 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test 'onboarding_progress should return progress percentage' do
-    @user.onboarding_session.update!(status: :restaurant_details)
-    assert_equal 60, @user.onboarding_progress # restaurant_details is step 2, so (2+1)*20 = 60%
+    @user.onboarding_session.update!(status: :started)
+    assert_equal 0, @user.onboarding_progress
+
+    @user.onboarding_session.update!(status: :completed)
+    assert_equal 100, @user.onboarding_progress
   end
 
   test 'onboarding_progress should return 0 when no onboarding session' do

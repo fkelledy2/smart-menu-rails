@@ -42,8 +42,8 @@ class OnboardingControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test 'should render account details regardless of session status' do
-    @onboarding.update!(status: :account_created)
+  test 'should render account details for started session' do
+    @onboarding.update!(status: :started)
     get onboarding_path
     assert_response :success
   end

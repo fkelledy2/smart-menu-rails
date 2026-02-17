@@ -6,6 +6,11 @@ export default class extends Controller {
   connect() {
     this.isOpen = this.detailsTarget.classList.contains("show")
     this.hoverCloseTimer = null
+
+    // Auto-expand when arriving from onboarding flow
+    if (new URLSearchParams(window.location.search).has("onboarding")) {
+      requestAnimationFrame(() => this.open())
+    }
   }
 
   disconnect() {

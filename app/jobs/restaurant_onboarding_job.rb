@@ -74,10 +74,9 @@ class RestaurantOnboardingJob < ApplicationJob
   def create_restaurant(user, onboarding)
     restaurant = user.restaurants.create!(
       name: onboarding.restaurant_name,
-      description: "#{onboarding.restaurant_type&.humanize} restaurant serving #{onboarding.cuisine_type&.humanize} cuisine",
-      address1: onboarding.location,
+      description: 'New restaurant',
       # Set sensible defaults
-      currency: detect_currency_from_location(onboarding.location),
+      currency: 'USD',
       archived: false,
       status: 1, # active
       capacity: 50, # default capacity
@@ -93,16 +92,16 @@ class RestaurantOnboardingJob < ApplicationJob
     restaurant
   end
 
-  def create_menu(restaurant, onboarding)
+  def create_menu(restaurant, _onboarding)
     menu = restaurant.menus.create!(
-      name: onboarding.menu_name || 'Demo Menu',
+      name: 'Demo Menu',
       status: 1, # active
       archived: false,
       allowOrdering: true, # enable ordering for menu
     )
 
-    # Create menu items from wizard data
-    create_menu_items(menu, onboarding.menu_items)
+    # Create demo menu items
+    create_menu_items(menu, [])
 
     # Create menu availabilities matching restaurant opening times
     create_menu_availabilities(menu)

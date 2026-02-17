@@ -176,28 +176,17 @@ class AnalyticsService
   end
 
   def track_onboarding_completed(user, completion_data = {})
-    onboarding = user.onboarding_session
-
     track_user_event(user, ONBOARDING_COMPLETED, {
       total_time: calculate_total_onboarding_time(user),
-      restaurant_type: onboarding&.restaurant_type,
-      cuisine_type: onboarding&.cuisine_type,
-      menu_items_count: onboarding&.menu_items&.length || 0,
-      selected_plan: onboarding&.selected_plan_id,
       completion_rate: 100,
     }.merge(completion_data),)
   end
 
   def track_restaurant_created(user, restaurant)
-    onboarding = user.onboarding_session
-
     track_user_event(user, RESTAURANT_CREATED, {
       restaurant_id: restaurant.id,
       restaurant_name: restaurant.name,
-      restaurant_type: onboarding&.restaurant_type,
-      cuisine_type: onboarding&.cuisine_type,
       location: restaurant.address1,
-      phone: restaurant.respond_to?(:phone) ? restaurant.phone.present? : false,
       via_onboarding: true, # Always true when called from onboarding
     })
   end

@@ -99,7 +99,7 @@ class OnboardingController < ApplicationController
 
     # Redirect to the restaurant edit page — go-live checklist is the canonical onboarding now
     flash[:notice] = I18n.t('onboarding.next_steps.restaurant_edit_notice', default: 'Great! Complete the go-live checklist to get your restaurant online.')
-    redirect_to edit_restaurant_path(restaurant), status: :see_other
+    redirect_to edit_restaurant_path(restaurant, onboarding: true), status: :see_other
   end
 
   # Mark the onboarding session as completed so the user is never redirected back here

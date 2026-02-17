@@ -1,0 +1,28 @@
+<%#
+  Shared empty state partial — thin wrapper around EmptyStateComponent.
+
+  Locals:
+    title:         [String]  Main heading (required)
+    description:   [String]  Explanatory subtext (optional)
+    icon:          [Symbol]  One of EmptyStateComponent::ICON_MAP keys, or a raw "bi-*" class (default: :default)
+    action_text:   [String]  CTA button label (optional)
+    action_url:    [String]  CTA button URL (optional)
+    action_method: [Symbol]  HTTP method for the CTA (default: :get)
+    compact:       [Boolean] Smaller variant for inline use (default: false)
+    testid:        [String]  data-testid value (optional)
+%>
+<% icon          = local_assigns.fetch(:icon, :default) %>
+<% action_text   = local_assigns[:action_text] %>
+<% action_url    = local_assigns[:action_url] %>
+<% action_method = local_assigns.fetch(:action_method, :get) %>
+<% compact       = local_assigns.fetch(:compact, false) %>
+
+<%= render(EmptyStateComponent.new(
+  title: title,
+  description: local_assigns[:description],
+  icon: icon,
+  action_text: action_text,
+  action_url: action_url,
+  action_method: action_method,
+  compact: compact,
+)) %>
