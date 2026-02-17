@@ -27,6 +27,7 @@ export default class extends Controller {
 
   connect() {
     this.editing = false
+    this._cancelled = false
   }
 
   edit(event) {
@@ -39,6 +40,7 @@ export default class extends Controller {
     const isDescription = field === "description"
 
     // Store original for cancel
+    this._cancelled = false
     cell.dataset.originalHtml = cell.innerHTML
 
     // Create input
@@ -72,12 +74,16 @@ export default class extends Controller {
         input.blur()
       }
       if (e.key === "Escape") {
+        this._cancelled = true
         this.cancel(cell)
       }
     })
   }
 
   async save(cell, input) {
+    // Skip save if edit was cancelled via Escape
+    if (this._cancelled) return
+
     const field = input.dataset.field
     const newValue = input.value.trim()
     const originalHtml = cell.dataset.originalHtml
