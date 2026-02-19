@@ -5,7 +5,7 @@
 class ExplorePageGeneratorJob < ApplicationJob
   queue_as :low
 
-  MIN_RESTAURANTS_FOR_PAGE = 2
+  MIN_RESTAURANTS_FOR_PAGE = 1
 
   def perform
     @category_counts = Hash.new(0)
