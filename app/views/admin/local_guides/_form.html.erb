@@ -1,0 +1,50 @@
+<%= form_with(model: [:admin, local_guide], class: 'needs-validation') do |f| %>
+  <% if local_guide.errors.any? %>
+    <div class="alert alert-danger">
+      <h6><%= pluralize(local_guide.errors.count, 'error') %> prevented this guide from being saved:</h6>
+      <ul class="mb-0">
+        <% local_guide.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="mb-3">
+        <%= f.label :title, class: 'form-label' %>
+        <%= f.text_field :title, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :content, class: 'form-label' %>
+        <%= f.text_area :content, class: 'form-control', rows: 15 %>
+        <div class="form-text">HTML content for the guide.</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="mb-3">
+        <%= f.label :city, class: 'form-label' %>
+        <%= f.text_field :city, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :country, class: 'form-label' %>
+        <%= f.text_field :country, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :category, class: 'form-label' %>
+        <%= f.text_field :category, class: 'form-control' %>
+        <div class="form-text">e.g. "Italian", "Vegan", "Wine Bars"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= f.submit local_guide.persisted? ? 'Update Guide' : 'Create Guide', class: 'btn btn-dark' %>
+    <%= link_to 'Cancel', admin_local_guides_path, class: 'btn btn-outline-secondary' %>
+  </div>
+<% end %>

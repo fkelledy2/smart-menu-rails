@@ -19,6 +19,7 @@ class SmartmenusController < ApplicationController
   # GET /smartmenus/1 or /smartmenus/1.json
   def show
     load_menu_associations_for_show
+    set_seo_metadata
 
     if @restaurant.respond_to?(:preview_published?) && @restaurant.preview_published? && @restaurant.unclaimed?
       @meta_robots = @restaurant.preview_indexable? ? 'index, follow' : 'noindex, nofollow'
@@ -406,6 +407,38 @@ class SmartmenusController < ApplicationController
         load_customer_participant
       end
     end
+  end
+
+  # SEO: Build Schema.org JSON-LD and dynamic meta tags for public smartmenu pages
+  def set_seo_metadata
+    return unless @restaurant && @menu && @smartmenu
+
+    # Schema.org JSON-LD
+    menusections = Menusection.where(menu_id: @menu.id, archived: false)
+                              .includes(menuitems: :allergyns)
+                              .order(:sequence)
+    @schema_org_json_ld = SchemaOrgSerializer.new(
+      restaurant: @restaurant,
+      menu: @menu,
+      menusections: menusections,
+      smartmenu: @smartmenu,
+    ).to_json_ld
+
+    # Dynamic meta tags
+    @page_title = "#{@restaurant.name} — Menu | mellow.menu"
+    @page_description = "View the menu for #{@restaurant.name}" +
+      (@restaurant.city.present? ? " in #{@restaurant.city}" : "") +
+      ". Prices, allergens, and descriptions."
+    @og_title = @page_title
+    @og_description = @page_description
+    @og_url = "https://www.mellow.menu/smartmenus/#{@smartmenu.slug}"
+    @og_image = @restaurant.try(:image_url) || "https://www.mellow.menu/images/featured-dish.jpg"
+    @canonical_url = @og_url
+    @geo_lat = @restaurant.latitude
+    @geo_lng = @restaurant.longitude
+    @geo_city = @restaurant.city
+  rescue StandardError => e
+    Rails.logger.warn("[SmartmenusController#set_seo_metadata] #{e.class}: #{e.message}")
   end
 
   # Use callbacks to share common setup or constraints between actions.

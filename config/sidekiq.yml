@@ -9,3 +9,11 @@
     cron: "0 * * * *"  # hourly
     class: "ProductEnrichmentRefreshJob"
     queue: "low_priority"
+  sitemap_generator:
+    cron: "0 3 * * *"  # 3am UTC nightly
+    class: "SitemapGeneratorJob"
+    queue: "low_priority"
+  explore_page_generator:
+    cron: "30 3 * * *"  # 3:30am UTC nightly, after sitemap
+    class: "ExplorePageGeneratorJob"
+    queue: "low_priority"

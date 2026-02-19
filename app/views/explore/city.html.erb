@@ -1,0 +1,34 @@
+<div class="container py-5">
+  <%= render 'explore/breadcrumbs', crumbs: [
+    { label: 'Explore', path: explore_index_path },
+    { label: @page.country_name, path: explore_country_path(country: @page.country_slug) },
+    { label: @page.city_name },
+  ] %>
+
+  <h1 class="mb-2">Restaurants in <%= @page.city_name %></h1>
+  <p class="lead text-muted mb-4"><%= @page.restaurant_count %> restaurant<%= @page.restaurant_count == 1 ? '' : 's' %> with menus on mellow.menu</p>
+
+  <% if @categories.any? %>
+    <div class="mb-4">
+      <strong class="me-2">Filter by cuisine:</strong>
+      <% @categories.each do |cat| %>
+        <a href="<%= explore_category_path(country: @page.country_slug, city: @page.city_slug, category: cat.category_slug) %>"
+           class="badge bg-secondary text-decoration-none me-1 mb-1"><%= cat.category_name %></a>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="row g-4">
+    <% @restaurants.each do |restaurant| %>
+      <div class="col-md-6 col-lg-4">
+        <%= render 'explore/restaurant_card', restaurant: restaurant %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @restaurants.empty? %>
+    <div class="text-center text-muted py-5">
+      <p>No restaurants found in <%= @page.city_name %> yet.</p>
+    </div>
+  <% end %>
+</div>

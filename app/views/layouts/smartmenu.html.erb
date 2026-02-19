@@ -3,6 +3,7 @@
 <html class="h-100">
   <head>
     <%= render 'shared/head' %>
+    <%= render 'shared/schema_org_json_ld' if @schema_org_json_ld.present? %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
     <%= javascript_system_tags %>
     <script>window.USE_JSON_STATE = true;</script>

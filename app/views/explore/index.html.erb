@@ -1,0 +1,24 @@
+<div class="container py-5">
+  <h1 class="mb-4">Explore Restaurant Menus</h1>
+  <p class="lead text-muted mb-5">Discover menus, prices, and allergen info from restaurants around the world.</p>
+
+  <div class="row g-4">
+    <% @countries.each do |page| %>
+      <div class="col-md-4 col-sm-6">
+        <a href="<%= explore_country_path(country: page.country_slug) %>" class="text-decoration-none">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center py-4">
+              <h5 class="card-title mb-0"><%= page.country_name %></h5>
+            </div>
+          </div>
+        </a>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @countries.empty? %>
+    <div class="text-center text-muted py-5">
+      <p>No explore pages available yet. Check back soon!</p>
+    </div>
+  <% end %>
+</div>

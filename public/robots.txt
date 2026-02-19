@@ -11,6 +11,8 @@ Sitemap: https://www.mellow.menu/sitemap.xml.gz
 # Block specific paths that don't need to be indexed
 Disallow: /admin
 Disallow: /admin/*
+Disallow: /madmin
+Disallow: /madmin/*
 Disallow: /users/*
 Disallow: /account/*
 Disallow: /billing
@@ -35,7 +37,13 @@ Allow: /
 
 # For GPTBot (OpenAI's web crawler)
 User-agent: GPTBot
-Allow: /
+Allow: /smartmenus/
+Allow: /explore/
+Allow: /guides/
+Disallow: /admin
+Disallow: /madmin
+Disallow: /users/*
+Disallow: /api/*
 
 # For CCBot (Common Crawl)
 User-agent: CCBot

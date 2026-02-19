@@ -1,0 +1,24 @@
+<div class="container py-5">
+  <%= render 'explore/breadcrumbs', crumbs: [
+    { label: 'Explore', path: explore_index_path },
+    { label: @cities.first&.country_name || @country.titleize },
+  ] %>
+
+  <h1 class="mb-4">Restaurants in <%= @cities.first&.country_name || @country.titleize %></h1>
+  <p class="lead text-muted mb-5">Browse by city to discover local menus.</p>
+
+  <div class="row g-4">
+    <% @cities.each do |page| %>
+      <div class="col-md-4 col-sm-6">
+        <a href="<%= explore_city_path(country: page.country_slug, city: page.city_slug) %>" class="text-decoration-none">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body py-4">
+              <h5 class="card-title mb-1"><%= page.city_name %></h5>
+              <small class="text-muted"><%= page.restaurant_count %> restaurant<%= page.restaurant_count == 1 ? '' : 's' %></small>
+            </div>
+          </div>
+        </a>
+      </div>
+    <% end %>
+  </div>
+</div>

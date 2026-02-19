@@ -1,0 +1,47 @@
+<%# Tiered display: claimed/verified restaurants get full cards, unclaimed get lighter cards with CTA %>
+<% claimed = restaurant.claim_status.to_i >= 2 %>
+<div class="card h-100 shadow-sm border-0">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+      <h5 class="card-title mb-0"><%= restaurant.name %></h5>
+      <% if claimed %>
+        <span class="badge bg-success" title="Verified listing"><i class="bi bi-patch-check-fill"></i> Verified</span>
+      <% else %>
+        <span class="badge bg-light text-muted" title="Unclaimed listing">Unclaimed</span>
+      <% end %>
+    </div>
+
+    <% if restaurant.description.present? && claimed %>
+      <p class="card-text text-muted small mb-2"><%= truncate(restaurant.description, length: 120) %></p>
+    <% end %>
+
+    <% if restaurant.establishment_types.present? %>
+      <div class="mb-2">
+        <% restaurant.establishment_types.each do |etype| %>
+          <span class="badge bg-light text-dark me-1"><%= etype %></span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if restaurant.address1.present? %>
+      <p class="card-text small text-muted mb-2">
+        <i class="bi bi-geo-alt"></i> <%= [restaurant.address1, restaurant.city].compact_blank.join(', ') %>
+      </p>
+    <% end %>
+
+    <%# Link to smartmenu if available %>
+    <% sm = Smartmenu.find_by(restaurant_id: restaurant.id, tablesetting_id: nil) %>
+    <% if sm %>
+      <a href="<%= smartmenu_path(sm.slug) %>" class="btn btn-sm btn-outline-dark">
+        <i class="bi bi-book"></i> View Menu
+      </a>
+    <% end %>
+
+    <% unless claimed %>
+      <div class="mt-2 pt-2 border-top">
+        <small class="text-muted">Is this your restaurant?</small>
+        <a href="<%= new_restaurant_claim_request_path(restaurant) %>" class="btn btn-sm btn-outline-primary ms-2">Claim this listing</a>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -79,6 +79,14 @@ Rails.application.routes.draw do
     end
 
     resources :crawl_source_rules
+
+    resources :local_guides do
+      member do
+        patch :approve
+        patch :archive
+        post :regenerate
+      end
+    end
   end
   
   # ============================================================================
@@ -118,6 +126,15 @@ Rails.application.routes.draw do
       # Analytics tracking endpoints
       post 'analytics/track', to: 'analytics#track'
       post 'analytics/track_anonymous', to: 'analytics#track_anonymous'
+    end
+
+    namespace :v2 do
+      resources :restaurants, only: [:index, :show] do
+        member do
+          get :menu
+        end
+      end
+      resources :explore, only: [:index, :show], param: :path
     end
   end
   
@@ -436,6 +453,21 @@ Rails.application.routes.draw do
   # Direct ordrparticipant updates (for frontend compatibility)
   resources :ordrparticipants, only: [:update]
   
+  # ============================================================================
+  # EXPLORE PAGES (SEO / Geo)
+  # ============================================================================
+  scope :explore, controller: 'explore' do
+    get '/', action: :index, as: :explore_index
+    get '/:country', action: :country, as: :explore_country
+    get '/:country/:city', action: :city, as: :explore_city
+    get '/:country/:city/:category', action: :show, as: :explore_category
+  end
+
+  # ============================================================================
+  # LOCAL GUIDES (Public)
+  # ============================================================================
+  resources :guides, only: [:index, :show], param: :slug, controller: 'guides'
+
   # ============================================================================
   # SMART MENU SYSTEM
   # ============================================================================

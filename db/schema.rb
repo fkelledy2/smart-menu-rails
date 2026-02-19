@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_16_090000) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_18_180140) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -191,6 +191,25 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_16_090000) do
     t.index ["user_id"], name: "index_employees_on_user_id"
   end
 
+  create_table "explore_pages", force: :cascade do |t|
+    t.string "country_slug", null: false
+    t.string "country_name", null: false
+    t.string "city_slug", null: false
+    t.string "city_name", null: false
+    t.string "category_slug"
+    t.string "category_name"
+    t.integer "restaurant_count", default: 0, null: false
+    t.text "meta_title"
+    t.text "meta_description"
+    t.datetime "last_refreshed_at"
+    t.boolean "published", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["country_slug", "city_slug", "category_slug"], name: "idx_explore_pages_unique_path", unique: true
+    t.index ["published"], name: "index_explore_pages_on_published"
+    t.index ["restaurant_count"], name: "index_explore_pages_on_restaurant_count"
+  end
+
   create_table "features", force: :cascade do |t|
     t.string "key"
     t.string "descriptionKey"
@@ -313,6 +332,28 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_16_090000) do
     t.index ["entity_type", "entity_id"], name: "index_ledger_events_on_entity_type_and_entity_id"
     t.index ["occurred_at"], name: "index_ledger_events_on_occurred_at"
     t.index ["provider", "provider_event_id"], name: "index_ledger_events_on_provider_and_provider_event_id", unique: true
+  end
+
+  create_table "local_guides", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug", null: false
+    t.string "city", null: false
+    t.string "country", null: false
+    t.string "category"
+    t.text "content", null: false
+    t.text "content_source"
+    t.jsonb "referenced_restaurants", default: []
+    t.jsonb "faq_data", default: []
+    t.integer "status", default: 0, null: false
+    t.datetime "published_at"
+    t.datetime "regenerated_at"
+    t.bigint "approved_by_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approved_by_user_id"], name: "index_local_guides_on_approved_by_user_id"
+    t.index ["city", "category"], name: "index_local_guides_on_city_and_category"
+    t.index ["slug"], name: "index_local_guides_on_slug", unique: true
+    t.index ["status"], name: "index_local_guides_on_status"
   end
 
   create_table "memory_metrics", force: :cascade do |t|
@@ -1396,10 +1437,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_16_090000) do
     t.boolean "ordering_enabled", default: false, null: false
     t.boolean "payments_enabled", default: false, null: false
     t.index ["archived_by_id"], name: "index_restaurants_on_archived_by_id"
+    t.index ["city", "country", "preview_enabled"], name: "idx_restaurants_geo_preview"
     t.index ["claim_status"], name: "index_restaurants_on_claim_status"
     t.index ["employees_count"], name: "index_restaurants_on_employees_count"
     t.index ["google_place_id"], name: "index_restaurants_on_google_place_id", unique: true
     t.index ["menus_count"], name: "index_restaurants_on_menus_count"
+    t.index ["preview_enabled", "claim_status"], name: "idx_restaurants_preview_claim"
     t.index ["preview_published_at"], name: "index_restaurants_on_preview_published_at"
     t.index ["user_id", "status"], name: "index_restaurants_on_user_status_active", where: "(archived = false)"
     t.index ["user_id"], name: "index_restaurants_on_user_id"

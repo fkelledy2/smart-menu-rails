@@ -15,30 +15,35 @@
 <% end %>
 
 <!-- Open Graph Metadata -->
-<meta property="og:title" content="<%= t('shared.head.og_title') %>">
-<meta property="og:description" content="<%= t('shared.head.og_description') %>">
-<meta property="og:image" content="https://www.mellow.menu/images/featured-dish.jpg">
-<meta property="og:url" content="https://www.mellow.menu">
+<meta property="og:title" content="<%= @og_title.presence || t('shared.head.og_title') %>">
+<meta property="og:description" content="<%= @og_description.presence || t('shared.head.og_description') %>">
+<meta property="og:image" content="<%= @og_image.presence || 'https://www.mellow.menu/images/featured-dish.jpg' %>">
+<meta property="og:url" content="<%= @og_url.presence || 'https://www.mellow.menu' %>">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="<%= I18n.locale.to_s == 'it' ? 'it_IT' : 'en_IE' %>">
 
 <!-- Twitter Metadata -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<%= t('shared.head.twitter_title') %>">
-<meta name="twitter:description" content="<%= t('shared.head.twitter_description') %>">
-<meta name="twitter:image" content="https://www.mellow.menu/images/featured-dish.jpg">
+<meta name="twitter:title" content="<%= @og_title.presence || t('shared.head.twitter_title') %>">
+<meta name="twitter:description" content="<%= @og_description.presence || t('shared.head.twitter_description') %>">
+<meta name="twitter:image" content="<%= @og_image.presence || 'https://www.mellow.menu/images/featured-dish.jpg' %>">
 
 <!-- Local SEO Metadata -->
 <meta name="geo.region" content="IE-D">
-<meta name="geo.placename" content="Dublin">
-<meta name="geo.position" content="53.349805;-6.26031">
-<meta name="ICBM" content="53.349805, -6.26031">
+<meta name="geo.placename" content="<%= @geo_city.presence || 'Dublin' %>">
+<% if @geo_lat.present? && @geo_lng.present? %>
+  <meta name="geo.position" content="<%= @geo_lat %>;<%= @geo_lng %>">
+  <meta name="ICBM" content="<%= @geo_lat %>, <%= @geo_lng %>">
+<% else %>
+  <meta name="geo.position" content="53.349805;-6.26031">
+  <meta name="ICBM" content="53.349805, -6.26031">
+<% end %>
 
 <!-- Robots Meta Tag -->
 <meta name="robots" content="<%= @meta_robots.presence || 'index, follow' %>">
 
 <!-- Canonical Tag -->
-<link rel="canonical" href="https://www.mellow.menu">
+<link rel="canonical" href="<%= @canonical_url.presence || 'https://www.mellow.menu' %>">
 
 <!-- PWA Meta Tags -->
 <%= tag.meta name: "theme-color", content: "#007bff" %>

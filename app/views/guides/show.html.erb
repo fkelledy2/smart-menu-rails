@@ -1,0 +1,77 @@
+<div class="container py-5">
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%= guides_path %>">Guides</a></li>
+      <li class="breadcrumb-item active" aria-current="page"><%= @guide.title %></li>
+    </ol>
+  </nav>
+
+  <article>
+    <h1 class="mb-2"><%= @guide.title %></h1>
+    <div class="text-muted mb-4">
+      <small>
+        <i class="bi bi-geo-alt"></i> <%= @guide.city %>, <%= @guide.country %>
+        <% if @guide.category.present? %>
+          &middot; <span class="badge bg-light text-dark"><%= @guide.category %></span>
+        <% end %>
+        <% if @guide.published_at.present? %>
+          &middot; Published <%= @guide.published_at.strftime('%B %d, %Y') %>
+        <% end %>
+      </small>
+    </div>
+
+    <div class="guide-content mb-5">
+      <%= @guide.content.html_safe %>
+    </div>
+
+    <% if @guide.faq_data.present? && @guide.faq_data.any? %>
+      <section class="mb-5">
+        <h2 class="h4 mb-3">Frequently Asked Questions</h2>
+        <div class="accordion" id="guideFaq">
+          <% @guide.faq_data.each_with_index do |faq, i| %>
+            <div class="accordion-item">
+              <h3 class="accordion-header">
+                <button class="accordion-button <%= 'collapsed' unless i == 0 %>" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#faq-<%= i %>">
+                  <%= faq['question'] %>
+                </button>
+              </h3>
+              <div id="faq-<%= i %>" class="accordion-collapse collapse <%= 'show' if i == 0 %>"
+                   data-bs-parent="#guideFaq">
+                <div class="accordion-body"><%= faq['answer'] %></div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <% if @guide.referenced_restaurants.present? && @guide.referenced_restaurants.any? %>
+      <section class="mb-5">
+        <h2 class="h4 mb-3">Restaurants Mentioned</h2>
+        <div class="list-group">
+          <% @guide.referenced_restaurants.each do |ref| %>
+            <% restaurant = Restaurant.find_by(id: ref['id'] || ref[:id]) %>
+            <% next unless restaurant %>
+            <% sm = Smartmenu.find_by(restaurant_id: restaurant.id, tablesetting_id: nil) %>
+            <% if sm %>
+              <a href="<%= smartmenu_path(sm.slug) %>" class="list-group-item list-group-item-action">
+                <strong><%= restaurant.name %></strong>
+                <% if restaurant.city.present? %>
+                  <small class="text-muted ms-2"><%= restaurant.city %></small>
+                <% end %>
+              </a>
+            <% else %>
+              <div class="list-group-item">
+                <strong><%= restaurant.name %></strong>
+                <% if restaurant.city.present? %>
+                  <small class="text-muted ms-2"><%= restaurant.city %></small>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+  </article>
+</div>

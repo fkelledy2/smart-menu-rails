@@ -1,0 +1,25 @@
+<div class="container py-5">
+  <%= render 'explore/breadcrumbs', crumbs: [
+    { label: 'Explore', path: explore_index_path },
+    { label: @page.country_name, path: explore_country_path(country: @page.country_slug) },
+    { label: @page.city_name, path: explore_city_path(country: @page.country_slug, city: @page.city_slug) },
+    { label: @page.category_name },
+  ] %>
+
+  <h1 class="mb-2"><%= @page.category_name %> Restaurants in <%= @page.city_name %></h1>
+  <p class="lead text-muted mb-4"><%= @restaurants.size %> restaurant<%= @restaurants.size == 1 ? '' : 's' %></p>
+
+  <div class="row g-4">
+    <% @restaurants.each do |restaurant| %>
+      <div class="col-md-6 col-lg-4">
+        <%= render 'explore/restaurant_card', restaurant: restaurant %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @restaurants.empty? %>
+    <div class="text-center text-muted py-5">
+      <p>No <%= @page.category_name&.downcase %> restaurants found in <%= @page.city_name %> yet.</p>
+    </div>
+  <% end %>
+</div>
