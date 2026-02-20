@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_18_180140) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_19_220838) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -228,6 +228,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_18_180140) do
     t.index ["feature_id"], name: "index_features_plans_on_feature_id"
     t.index ["plan_id", "feature_id"], name: "index_features_plans_on_plan_id_and_feature_id", unique: true
     t.index ["plan_id"], name: "index_features_plans_on_plan_id"
+  end
+
+  create_table "flavor_profiles", force: :cascade do |t|
+    t.string "profilable_type", null: false
+    t.bigint "profilable_id", null: false
+    t.string "tags", default: [], null: false, array: true
+    t.jsonb "structure_metrics", default: {}, null: false
+    t.string "provenance"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profilable_type", "profilable_id"], name: "idx_flavor_profiles_profilable", unique: true
+    t.index ["profilable_type", "profilable_id"], name: "index_flavor_profiles_on_profilable"
+    t.index ["tags"], name: "index_flavor_profiles_on_tags", using: :gin
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -1010,6 +1023,22 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_18_180140) do
     t.index ["updated_at"], name: "index_ordrs_on_updated_at"
   end
 
+  create_table "pairing_recommendations", force: :cascade do |t|
+    t.bigint "drink_menuitem_id", null: false
+    t.bigint "food_menuitem_id", null: false
+    t.decimal "complement_score", precision: 5, scale: 4, default: "0.0"
+    t.decimal "contrast_score", precision: 5, scale: 4, default: "0.0"
+    t.decimal "score", precision: 5, scale: 4, default: "0.0"
+    t.text "rationale"
+    t.jsonb "risk_flags", default: [], null: false
+    t.string "pairing_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["drink_menuitem_id", "food_menuitem_id"], name: "idx_pairings_drink_food", unique: true
+    t.index ["drink_menuitem_id"], name: "index_pairing_recommendations_on_drink_menuitem_id"
+    t.index ["food_menuitem_id"], name: "index_pairing_recommendations_on_food_menuitem_id"
+  end
+
   create_table "pay_charges", force: :cascade do |t|
     t.bigint "customer_id", null: false
     t.bigint "subscription_id"
@@ -1462,6 +1491,18 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_18_180140) do
     t.index ["user_id"], name: "index_services_on_user_id"
   end
 
+  create_table "similar_product_recommendations", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.bigint "recommended_product_id", null: false
+    t.decimal "score", precision: 5, scale: 4, default: "0.0"
+    t.text "rationale"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id", "recommended_product_id"], name: "idx_similar_products_pair", unique: true
+    t.index ["product_id"], name: "index_similar_product_recommendations_on_product_id"
+    t.index ["recommended_product_id"], name: "idx_on_recommended_product_id_d9294a2c90"
+  end
+
   create_table "sizes", force: :cascade do |t|
     t.integer "size"
     t.string "name"
@@ -1743,6 +1784,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_18_180140) do
   add_foreign_key "ordrs", "menus"
   add_foreign_key "ordrs", "restaurants"
   add_foreign_key "ordrs", "tablesettings"
+  add_foreign_key "pairing_recommendations", "menuitems", column: "drink_menuitem_id"
+  add_foreign_key "pairing_recommendations", "menuitems", column: "food_menuitem_id"
   add_foreign_key "pay_charges", "pay_customers", column: "customer_id"
   add_foreign_key "pay_charges", "pay_subscriptions", column: "subscription_id"
   add_foreign_key "pay_payment_methods", "pay_customers", column: "customer_id"
@@ -1773,6 +1816,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_18_180140) do
   add_foreign_key "restaurants", "users"
   add_foreign_key "restaurants", "users", column: "archived_by_id"
   add_foreign_key "services", "users"
+  add_foreign_key "similar_product_recommendations", "products"
+  add_foreign_key "similar_product_recommendations", "products", column: "recommended_product_id"
   add_foreign_key "sizes", "restaurants"
   add_foreign_key "smartmenus", "menus"
   add_foreign_key "smartmenus", "restaurants"

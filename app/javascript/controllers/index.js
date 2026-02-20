@@ -33,6 +33,7 @@ import InlineEditController from "./inline_edit_controller"
 import MobileTabBarController from "./mobile_tab_bar_controller"
 import AiImageGeneratorController from "./ai_image_generator_controller"
 import ScrollspyController from "./scrollspy_controller"
+import SommelierController from "./sommelier_controller"
 
 application.register("sortable", SortableController)
 application.register("auto-save", AutoSaveController)
@@ -65,5 +66,6 @@ application.register("inline-edit", InlineEditController)
 application.register("mobile-tab-bar", MobileTabBarController)
 application.register("ai-image-generator", AiImageGeneratorController)
 application.register("scrollspy", ScrollspyController)
+application.register("sommelier", SommelierController)
 
 console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'discovered-restaurant-web-scrape', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy'])

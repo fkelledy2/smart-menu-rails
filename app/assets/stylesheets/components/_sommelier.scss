@@ -1,0 +1,205 @@
+// =============================================================================
+// AI Sommelier — Guest-facing "Help me choose" UI
+// =============================================================================
+
+.sommelier-fab {
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  &:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5); }
+  &:active { transform: translateY(0); }
+  svg { flex-shrink: 0; }
+}
+.sommelier-fab-label { white-space: nowrap; @media (max-width: 380px) { display: none; } }
+
+.sommelier-panel {
+  position: fixed; inset: 0; z-index: 1060;
+  background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
+  animation: sommelier-fade-in 0.2s ease;
+  @media (min-width: 768px) { align-items: center; }
+}
+.sommelier-panel-inner {
+  width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
+  background: #fff; border-radius: 20px 20px 0 0;
+  padding: 24px 20px 32px; box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+  animation: sommelier-slide-up 0.3s ease;
+  @media (min-width: 768px) { border-radius: 20px; max-height: 80vh; }
+}
+
+.sommelier-header { position: relative; text-align: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9; }
+.sommelier-title { font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0; }
+.sommelier-subtitle { font-size: 0.875rem; color: #64748b; margin: 4px 0 0; }
+.sommelier-close {
+  position: absolute; top: 0; right: 0; background: none; border: none;
+  color: #94a3b8; cursor: pointer; padding: 4px; border-radius: 8px;
+  transition: color 0.15s, background 0.15s;
+  &:hover { color: #475569; background: #f1f5f9; }
+}
+
+.sommelier-step { text-align: center; }
+.sommelier-step-question {
+  margin-bottom: 24px;
+  h3 { font-size: 1.125rem; font-weight: 600; color: #1e293b; margin: 0 0 4px; }
+  p { font-size: 0.8125rem; color: #94a3b8; margin: 0; }
+}
+.sommelier-step-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.sommelier-step-options-3 { grid-template-columns: 1fr 1fr 1fr; }
+.sommelier-option-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 20px 12px; border: 2px solid #e2e8f0; border-radius: 16px;
+  background: #fff; cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  &:hover { border-color: #8b5cf6; background: #faf5ff; transform: translateY(-1px); }
+  &:active { transform: translateY(0); background: #ede9fe; }
+}
+.sommelier-option-icon { font-size: 2rem; line-height: 1; }
+.sommelier-option-text { font-size: 0.8125rem; font-weight: 600; color: #334155; }
+
+.sommelier-loading {
+  text-align: center; padding: 40px 0;
+  p { margin-top: 16px; color: #64748b; font-size: 0.875rem; }
+}
+.sommelier-spinner {
+  width: 40px; height: 40px; margin: 0 auto;
+  border: 3px solid #e2e8f0; border-top-color: #8b5cf6;
+  border-radius: 50%; animation: sommelier-spin 0.8s linear infinite;
+}
+
+.sommelier-results-header { text-align: center; margin-bottom: 20px; }
+.sommelier-results-title { font-size: 1.125rem; font-weight: 700; color: #1e293b; margin: 0; }
+.sommelier-results-subtitle { font-size: 0.8125rem; color: #94a3b8; margin: 4px 0 0; }
+.sommelier-cards { display: flex; flex-direction: column; gap: 16px; }
+
+.sommelier-card {
+  border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; background: #fff;
+  transition: box-shadow 0.15s;
+  &:hover { box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); }
+}
+.sommelier-card-header { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+.sommelier-medal { font-size: 1.5rem; flex-shrink: 0; }
+.sommelier-card-title-wrap { flex: 1; min-width: 0; }
+.sommelier-card-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin: 0; line-height: 1.3; }
+.sommelier-region { font-size: 0.75rem; color: #64748b; }
+.sommelier-card-price { font-size: 0.9375rem; font-weight: 700; color: #6366f1; white-space: nowrap; }
+.sommelier-card-desc { font-size: 0.8125rem; color: #475569; margin: 0 0 8px; line-height: 1.4; }
+
+.sommelier-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.sommelier-tag {
+  display: inline-block; padding: 3px 10px; background: #f1f5f9;
+  color: #475569; border-radius: 20px; font-size: 0.6875rem;
+  font-weight: 500; text-transform: capitalize;
+}
+
+.sommelier-tasting {
+  background: #faf5ff; border-radius: 12px; padding: 10px 14px;
+  margin-bottom: 10px; font-size: 0.8125rem; color: #475569; line-height: 1.5;
+  strong { color: #6366f1; font-weight: 600; }
+  div + div { margin-top: 2px; }
+}
+.sommelier-story { font-size: 0.8125rem; color: #64748b; font-style: italic; margin: 0 0 10px; line-height: 1.4; }
+
+.sommelier-pairing { display: flex; align-items: center; gap: 6px; font-size: 0.8125rem; margin-bottom: 10px; }
+.sommelier-pairing-label { color: #94a3b8; font-weight: 500; }
+.sommelier-pairing-food { color: #059669; font-weight: 600; }
+
+.sommelier-card-footer { display: flex; align-items: center; justify-content: space-between; }
+.sommelier-match-score { font-size: 0.75rem; font-weight: 600; color: #8b5cf6; }
+
+.sommelier-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border: none; border-radius: 10px;
+  font-size: 0.8125rem; font-weight: 600; cursor: pointer;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
+  transition: opacity 0.15s;
+  &:hover { opacity: 0.9; }
+}
+.sommelier-btn-outline {
+  background: #fff; color: #6366f1; border: 1.5px solid #6366f1;
+  &:hover { background: #faf5ff; }
+}
+.sommelier-btn-sm { padding: 6px 12px; font-size: 0.75rem; }
+
+.sommelier-actions { text-align: center; margin-top: 20px; }
+.sommelier-empty { text-align: center; padding: 24px 0; }
+.sommelier-empty-text { color: #64748b; font-size: 0.875rem; margin-bottom: 16px; }
+
+// Pairings modal
+.sommelier-modal-overlay {
+  position: fixed; inset: 0; z-index: 1070;
+  background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  animation: sommelier-fade-in 0.2s ease;
+}
+.sommelier-modal {
+  width: 90%; max-width: 440px; max-height: 80vh; overflow-y: auto;
+  background: #fff; border-radius: 20px; padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
+}
+.sommelier-modal-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+  h3 { font-size: 1.125rem; font-weight: 700; color: #1e293b; margin: 0; }
+}
+.sommelier-modal-close {
+  background: none; border: none; font-size: 1.25rem; color: #94a3b8;
+  cursor: pointer; padding: 4px 8px; border-radius: 8px;
+  &:hover { color: #475569; background: #f1f5f9; }
+}
+.sommelier-modal-body {
+  h4 { font-size: 0.9375rem; font-weight: 600; color: #334155; margin: 0 0 12px; }
+}
+
+.sommelier-pairing-card, .sommelier-similar-card {
+  border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-bottom: 10px;
+  h5 { font-size: 0.9375rem; font-weight: 600; color: #1e293b; margin: 0 0 4px; }
+}
+.sommelier-pairing-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.sommelier-pairing-desc { font-size: 0.8125rem; color: #475569; margin: 0 0 4px; }
+.sommelier-pairing-price { font-size: 0.8125rem; font-weight: 600; color: #6366f1; }
+.sommelier-pairing-rationale, .sommelier-similar-rationale {
+  font-size: 0.75rem; color: #94a3b8; margin: 4px 0 0; line-height: 1.4;
+}
+.sommelier-badge-surprise {
+  display: inline-block; padding: 2px 8px; background: #fef3c7; color: #92400e;
+  border-radius: 10px; font-size: 0.6875rem; font-weight: 600; margin-top: 6px;
+}
+
+// Animations
+@keyframes sommelier-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sommelier-slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes sommelier-spin { to { transform: rotate(360deg); } }
+
+// Wine-specific card styling
+.sommelier-card-wine {
+  border-left: 3px solid #722F37;
+}
+
+.sommelier-wine-meta {
+  font-size: 0.8rem;
+  color: #722F37;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.sommelier-option-btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  min-width: auto;
+}
+
+// Body scroll lock when sommelier is active
+body.sommelier-active { overflow: hidden; }

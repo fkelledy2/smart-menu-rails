@@ -97,6 +97,14 @@ class Menu::ExtractCandidatesJob
 
     parsed, parse_conf = parse_fields(menuitem, text)
 
+    # Wine-specific deep parsing
+    if category == 'wine'
+      wine_fields, wine_conf = wine_parser.parse(menuitem)
+      parsed.merge!(wine_fields) if wine_fields.is_a?(Hash)
+      parse_conf = [parse_conf, wine_conf].max
+      confidence = [confidence, wine_conf].max
+    end
+
     if category.blank? && llm_client_available?
       llm = llm_classify_fallback(section_name: section_name, item_name: item_name, item_description: item_description)
       if llm.is_a?(Hash) && llm['category'].present?
@@ -142,6 +150,10 @@ class Menu::ExtractCandidatesJob
 
     conf = [conf, 1.0].min
     [parsed, conf]
+  end
+
+  def wine_parser
+    @wine_parser ||= BeverageIntelligence::WineParser.new
   end
 
   def llm_client_available?

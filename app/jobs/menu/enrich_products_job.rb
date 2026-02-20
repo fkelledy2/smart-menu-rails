@@ -23,7 +23,7 @@ class Menu::EnrichProductsJob
       Rails.logger.warn("[EnrichProductsJob] Enrichment failed for product ##{product.id}: #{e.class}: #{e.message}")
     end
 
-    Menu::PublishSommelierJob.perform_async(run.id, trigger)
+    Menu::GeneratePairingsJob.perform_async(run.id, trigger)
   rescue StandardError => e
     run&.update!(status: 'failed', error_summary: "#{e.class}: #{e.message}")
     raise

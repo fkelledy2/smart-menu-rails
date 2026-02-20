@@ -16,6 +16,11 @@ class Menuitem < ApplicationRecord
   has_many :ordritems, dependent: :destroy, counter_cache: :ordritems_count
   has_one :inventory, dependent: :destroy
   has_one :genimage, dependent: :destroy
+  has_many :menu_item_product_links, dependent: :destroy
+  has_many :products, through: :menu_item_product_links
+  has_one :flavor_profile, as: :profilable, dependent: :destroy
+  has_many :drink_pairings, class_name: 'PairingRecommendation', foreign_key: :drink_menuitem_id, dependent: :destroy
+  has_many :food_pairings, class_name: 'PairingRecommendation', foreign_key: :food_menuitem_id, dependent: :destroy
 
   # IdentityCache configuration
   cache_index :id

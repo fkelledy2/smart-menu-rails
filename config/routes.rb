@@ -473,6 +473,9 @@ Rails.application.routes.draw do
   # ============================================================================
   resources :smartmenus do
     resources :voice_commands, only: %i[create show], controller: 'smartmenus_voice_commands'
+    post 'sommelier/recommend', to: 'sommelier#recommend', as: :sommelier_recommend
+    post 'sommelier/recommend_wine', to: 'sommelier#recommend_wine', as: :sommelier_recommend_wine
+    get 'sommelier/pairings/:menuitem_id', to: 'sommelier#pairings', as: :sommelier_pairings
   end
   patch 'smartmenus/:smartmenu_id/locale', to: 'smartmenus_locale#update', as: :smartmenu_locale
   

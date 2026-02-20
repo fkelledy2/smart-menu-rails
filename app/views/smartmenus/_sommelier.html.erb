@@ -1,0 +1,209 @@
+<%# AI Sommelier — "Help me choose" tap-driven flow
+    Rendered inside the customer smartmenu view when the menu has beverage items.
+    Uses the sommelier Stimulus controller for the interactive flow.
+%>
+<% recommend_url = sommelier_recommend_smartmenu_path(smartmenu) %>
+<% recommend_wine_url = sommelier_recommend_wine_smartmenu_path(smartmenu) %>
+<% pairings_url_template = sommelier_pairings_smartmenu_path(smartmenu, menuitem_id: ':menuitem_id') %>
+
+<div data-controller="sommelier"
+     data-sommelier-url-value="<%= recommend_url %>"
+     data-sommelier-wine-url-value="<%= recommend_wine_url %>"
+     data-sommelier-pairings-url-value="<%= pairings_url_template %>">
+
+  <%# Floating action button — "Help me choose" %>
+  <button class="sommelier-fab"
+          data-action="click->sommelier#open"
+          aria-label="Help me choose a drink"
+          title="AI Sommelier">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 2h8l-2 7h4l-7 11 1-7H8l2-7z"/>
+    </svg>
+    <span class="sommelier-fab-label">Help me choose</span>
+  </button>
+
+  <%# Panel overlay %>
+  <div class="sommelier-panel d-none" data-sommelier-target="panel">
+    <div class="sommelier-panel-inner">
+
+      <%# Header %>
+      <div class="sommelier-header">
+        <h2 class="sommelier-title">AI Sommelier</h2>
+        <p class="sommelier-subtitle">Let me help you find the perfect drink</p>
+        <button class="sommelier-close" data-action="click->sommelier#close" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <%# Step 0: Mode selection — Whiskey/Spirits or Wine %>
+      <div class="sommelier-step" data-sommelier-target="step">
+        <div class="sommelier-step-question">
+          <h3>What are you in the mood for?</h3>
+          <p>Let me guide you to the perfect drink</p>
+        </div>
+        <div class="sommelier-step-options">
+          <button class="sommelier-option-btn" data-action="click->sommelier#setMode" data-value="spirits">
+            <span class="sommelier-option-icon">🥃</span>
+            <span class="sommelier-option-text">Whiskey & Spirits</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setMode" data-value="wine">
+            <span class="sommelier-option-icon">🍷</span>
+            <span class="sommelier-option-text">Wine</span>
+          </button>
+        </div>
+      </div>
+
+      <%# === SPIRITS FLOW (steps 1-3) === %>
+
+      <%# Step 1: Smoky preference %>
+      <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="spirits">
+        <div class="sommelier-step-question">
+          <h3>Do you enjoy smoky flavors?</h3>
+          <p>Think campfire, peat, charred wood</p>
+        </div>
+        <div class="sommelier-step-options">
+          <button class="sommelier-option-btn" data-action="click->sommelier#setSmoky" data-value="true">
+            <span class="sommelier-option-icon">🔥</span>
+            <span class="sommelier-option-text">Yes, love it</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setSmoky" data-value="false">
+            <span class="sommelier-option-icon">🌿</span>
+            <span class="sommelier-option-text">Not for me</span>
+          </button>
+        </div>
+      </div>
+
+      <%# Step 2: Taste preference (spirits) %>
+      <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="spirits">
+        <div class="sommelier-step-question">
+          <h3>What's your taste preference?</h3>
+          <p>Pick the one that speaks to you most</p>
+        </div>
+        <div class="sommelier-step-options sommelier-step-options-3">
+          <button class="sommelier-option-btn" data-action="click->sommelier#setTaste" data-value="sweet">
+            <span class="sommelier-option-icon">🍯</span>
+            <span class="sommelier-option-text">Sweet & Rich</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setTaste" data-value="dry">
+            <span class="sommelier-option-icon">🍋</span>
+            <span class="sommelier-option-text">Dry & Crisp</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setTaste" data-value="spicy">
+            <span class="sommelier-option-icon">🌶️</span>
+            <span class="sommelier-option-text">Bold & Spicy</span>
+          </button>
+        </div>
+      </div>
+
+      <%# Step 3: Budget preference (spirits) %>
+      <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="spirits">
+        <div class="sommelier-step-question">
+          <h3>What's your budget?</h3>
+          <p>We'll find the best value for you</p>
+        </div>
+        <div class="sommelier-step-options sommelier-step-options-3">
+          <button class="sommelier-option-btn" data-action="click->sommelier#setBudget" data-value="1">
+            <span class="sommelier-option-icon">💰</span>
+            <span class="sommelier-option-text">Budget-friendly</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setBudget" data-value="2">
+            <span class="sommelier-option-icon">💎</span>
+            <span class="sommelier-option-text">Mid-range</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setBudget" data-value="3">
+            <span class="sommelier-option-icon">👑</span>
+            <span class="sommelier-option-text">Premium</span>
+          </button>
+        </div>
+      </div>
+
+      <%# === WINE FLOW (steps 4-6) === %>
+
+      <%# Step 4: Wine color %>
+      <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="wine">
+        <div class="sommelier-step-question">
+          <h3>What type of wine?</h3>
+          <p>Choose your preferred style</p>
+        </div>
+        <div class="sommelier-step-options sommelier-step-options-3">
+          <button class="sommelier-option-btn" data-action="click->sommelier#setWineColor" data-value="red">
+            <span class="sommelier-option-icon">🍷</span>
+            <span class="sommelier-option-text">Red</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setWineColor" data-value="white">
+            <span class="sommelier-option-icon">🥂</span>
+            <span class="sommelier-option-text">White</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setWineColor" data-value="rosé">
+            <span class="sommelier-option-icon">🌸</span>
+            <span class="sommelier-option-text">Rosé</span>
+          </button>
+        </div>
+        <div class="sommelier-step-options mt-2" style="justify-content: center;">
+          <button class="sommelier-option-btn sommelier-option-btn-sm" data-action="click->sommelier#setWineColor" data-value="sparkling">
+            <span class="sommelier-option-icon">✨</span>
+            <span class="sommelier-option-text">Sparkling</span>
+          </button>
+          <button class="sommelier-option-btn sommelier-option-btn-sm" data-action="click->sommelier#setWineColor" data-value="no_preference">
+            <span class="sommelier-option-icon">🎲</span>
+            <span class="sommelier-option-text">Surprise me</span>
+          </button>
+        </div>
+      </div>
+
+      <%# Step 5: Wine body + taste %>
+      <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="wine">
+        <div class="sommelier-step-question">
+          <h3>How do you like your wine?</h3>
+          <p>Pick the style that appeals most</p>
+        </div>
+        <div class="sommelier-step-options sommelier-step-options-3">
+          <button class="sommelier-option-btn" data-action="click->sommelier#setWineStyle" data-body="light" data-taste="dry">
+            <span class="sommelier-option-icon">💧</span>
+            <span class="sommelier-option-text">Light & Crisp</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setWineStyle" data-body="medium" data-taste="fruity">
+            <span class="sommelier-option-icon">🍇</span>
+            <span class="sommelier-option-text">Fruity & Balanced</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setWineStyle" data-body="full" data-taste="dry">
+            <span class="sommelier-option-icon">🏔️</span>
+            <span class="sommelier-option-text">Bold & Full</span>
+          </button>
+        </div>
+      </div>
+
+      <%# Step 6: Budget (wine) %>
+      <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="wine">
+        <div class="sommelier-step-question">
+          <h3>What's your budget?</h3>
+          <p>We'll find the perfect bottle for you</p>
+        </div>
+        <div class="sommelier-step-options sommelier-step-options-3">
+          <button class="sommelier-option-btn" data-action="click->sommelier#setWineBudget" data-value="1">
+            <span class="sommelier-option-icon">💰</span>
+            <span class="sommelier-option-text">House selection</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setWineBudget" data-value="2">
+            <span class="sommelier-option-icon">💎</span>
+            <span class="sommelier-option-text">Mid-range</span>
+          </button>
+          <button class="sommelier-option-btn" data-action="click->sommelier#setWineBudget" data-value="3">
+            <span class="sommelier-option-icon">👑</span>
+            <span class="sommelier-option-text">Premium</span>
+          </button>
+        </div>
+      </div>
+
+      <%# Loading spinner %>
+      <div class="sommelier-loading d-none" data-sommelier-target="loading">
+        <div class="sommelier-spinner"></div>
+        <p>Finding your perfect match&hellip;</p>
+      </div>
+
+      <%# Results container — populated by JS %>
+      <div class="sommelier-results d-none" data-sommelier-target="results"></div>
+
+    </div>
+  </div>
+</div>
